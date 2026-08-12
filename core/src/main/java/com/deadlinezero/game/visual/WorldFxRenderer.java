@@ -46,6 +46,20 @@ public final class WorldFxRenderer {
                 p.position.x - nx * (p.critical ? .85f : .58f),
                 p.position.y - ny * (p.critical ? .85f : .58f),
                 p.critical ? .09f : .055f);
+
+            // Initial projectile lifetime doubles as a zero-allocation muzzle flash marker.
+            if (p.life > 1.41f) {
+                float bx = p.position.x - nx * .20f;
+                float by = p.position.y - ny * .20f;
+                float sideX = -ny;
+                float sideY = nx;
+                shapes.setColor(1f, .86f, .30f, .70f);
+                shapes.triangle(bx - sideX * .12f, by - sideY * .12f,
+                    bx + sideX * .12f, by + sideY * .12f,
+                    bx + nx * .55f, by + ny * .55f);
+                shapes.setColor(1f, 1f, .82f, .88f);
+                shapes.circle(bx, by, .105f, 10);
+            }
         }
 
         for (EnemyProjectile p : hostileProjectiles) {
@@ -80,7 +94,7 @@ public final class WorldFxRenderer {
 
     public void drawElectricArcs(ShapeRenderer shapes, Array<ArcFx> arcs, float time) {
         for (ArcFx arc : arcs) {
-            if (!arc.active) continue;
+            if (!arc.refreshFromClock()) continue;
             float dx = arc.x2 - arc.x1;
             float dy = arc.y2 - arc.y1;
             float length = (float)Math.sqrt(dx * dx + dy * dy);
