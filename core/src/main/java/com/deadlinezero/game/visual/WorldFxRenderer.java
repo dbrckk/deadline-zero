@@ -10,6 +10,7 @@ import com.deadlinezero.game.entities.EnemyProjectile;
 import com.deadlinezero.game.entities.HomingMissile;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.entities.Projectile;
+import com.deadlinezero.game.fx.ArcFx;
 
 /** Procedural combat presentation layer used until authored sprite/VFX assets replace primitives. */
 public final class WorldFxRenderer {
@@ -73,6 +74,35 @@ public final class WorldFxRenderer {
                 shapes.circle(m.position.x - nx * (.22f + i * .22f) + ny * jitter,
                     m.position.y - ny * (.22f + i * .22f) - nx * jitter,
                     .10f * (1f - t * .45f), 10);
+            }
+        }
+    }
+
+    public void drawElectricArcs(ShapeRenderer shapes, Array<ArcFx> arcs, float time) {
+        for (ArcFx arc : arcs) {
+            if (!arc.active) continue;
+            float dx = arc.x2 - arc.x1;
+            float dy = arc.y2 - arc.y1;
+            float length = (float)Math.sqrt(dx * dx + dy * dy);
+            if (length < .001f) continue;
+            float nx = -dy / length;
+            float ny = dx / length;
+            float alpha = MathUtils.clamp(arc.life / Math.max(.001f, arc.maxLife), 0f, 1f);
+            float prevX = arc.x1;
+            float prevY = arc.y1;
+            int segments = 7;
+            for (int i = 1; i <= segments; i++) {
+                float t = i / (float)segments;
+                float envelope = MathUtils.sin(t * MathUtils.PI);
+                float jitter = MathUtils.sin(time * 43f + i * 5.71f + arc.x1 * 2.3f) * .15f * envelope;
+                float x = arc.x1 + dx * t + nx * jitter;
+                float y = arc.y1 + dy * t + ny * jitter;
+                shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, 1f, .72f * alpha);
+                shapes.rectLine(prevX, prevY, x, y, .055f);
+                shapes.setColor(1f, 1f, 1f, .52f * alpha);
+                shapes.rectLine(prevX, prevY, x, y, .018f);
+                prevX = x;
+                prevY = y;
             }
         }
     }
