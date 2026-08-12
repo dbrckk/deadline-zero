@@ -5,9 +5,13 @@ public final class RunLoadoutContext {
     private static float maxHpMultiplier = 1f;
     private static float moveSpeedMultiplier = 1f;
     private static float dashCooldownMultiplier = 1f;
+    private static float dashInvulnerabilitySeconds = .30f;
     private static float weaponDamageMultiplier = 1f;
     private static float critChanceBonus;
+    private static float critDamageBonus;
     private static float abilityPowerMultiplier = 1f;
+    private static float damageTakenMultiplier = 1f;
+    private static int startingTeslaLevel;
     private static SurvivorCatalog.Survivor survivor = SurvivorCatalog.Survivor.REX;
 
     private RunLoadoutContext() {}
@@ -15,6 +19,7 @@ public final class RunLoadoutContext {
     public static void begin(PlayerProfile profile) {
         float hp = 0f, speed = 0f, dash = 0f, weapon = 0f, crit = 0f, ability = 0f;
         survivor = profile == null ? SurvivorCatalog.Survivor.REX : profile.selectedSurvivor;
+        float levelPower = profile == null ? 1f : profile.survivors.levelPowerMultiplier(survivor);
         if (profile != null) {
             EquipmentItem weaponItem = profile.equipped(PlayerProfile.EquipmentSlot.WEAPON);
             EquipmentItem armor = profile.equipped(PlayerProfile.EquipmentSlot.ARMOR);
@@ -34,19 +39,29 @@ public final class RunLoadoutContext {
             if (core != null) dash += core.powerBonus * .28f;
             if (boots != null) dash += boots.powerBonus * .18f;
         }
-        maxHpMultiplier = (1f + hp) * survivor.hpMultiplier;
-        moveSpeedMultiplier = (1f + speed) * survivor.speedMultiplier;
-        dashCooldownMultiplier = Math.max(.68f, 1f - dash);
-        weaponDamageMultiplier = (1f + weapon) * survivor.weaponMultiplier;
-        critChanceBonus = Math.min(.22f, crit + survivor.critBonus);
-        abilityPowerMultiplier = (1f + ability) * (1f + survivor.abilityBonus);
+
+        float adaptive = survivor == SurvivorCatalog.Survivor.REX ? 1.05f : 1f;
+        maxHpMultiplier = (1f + hp) * survivor.hpMultiplier * (1f + (levelPower - 1f) * .55f) * adaptive;
+        moveSpeedMultiplier = (1f + speed) * survivor.speedMultiplier * adaptive;
+        dashCooldownMultiplier = Math.max(.60f, (1f - dash) * (survivor == SurvivorCatalog.Survivor.WRAITH ? .76f : 1f));
+        dashInvulnerabilitySeconds = survivor == SurvivorCatalog.Survivor.WRAITH ? .42f : .30f;
+        weaponDamageMultiplier = (1f + weapon) * survivor.weaponMultiplier * levelPower * adaptive;
+        critChanceBonus = Math.min(.25f, crit + survivor.critBonus + (survivor == SurvivorCatalog.Survivor.NYX ? .04f : 0f));
+        critDamageBonus = survivor == SurvivorCatalog.Survivor.NYX ? .40f : 0f;
+        abilityPowerMultiplier = (1f + ability) * (1f + survivor.abilityBonus) * levelPower * adaptive;
+        damageTakenMultiplier = survivor == SurvivorCatalog.Survivor.BASTION ? .82f : 1f;
+        startingTeslaLevel = survivor == SurvivorCatalog.Survivor.VOLT ? 1 : 0;
     }
 
     public static float maxHpMultiplier() { return maxHpMultiplier; }
     public static float moveSpeedMultiplier() { return moveSpeedMultiplier; }
     public static float dashCooldownMultiplier() { return dashCooldownMultiplier; }
+    public static float dashInvulnerabilitySeconds() { return dashInvulnerabilitySeconds; }
     public static float weaponDamageMultiplier() { return weaponDamageMultiplier; }
     public static float critChanceBonus() { return critChanceBonus; }
+    public static float critDamageBonus() { return critDamageBonus; }
     public static float abilityPowerMultiplier() { return abilityPowerMultiplier; }
+    public static float damageTakenMultiplier() { return damageTakenMultiplier; }
+    public static int startingTeslaLevel() { return startingTeslaLevel; }
     public static SurvivorCatalog.Survivor survivor() { return survivor; }
 }
