@@ -19,6 +19,8 @@ public final class Player extends ActorState {
 
     public Player(float x, float y) {
         super(x, y, 0.42f, GameConfig.PLAYER_MAX_HP * RunLoadoutContext.maxHpMultiplier());
+        weapon.damage *= RunLoadoutContext.weaponDamageMultiplier();
+        weapon.critChance = Math.min(.75f, weapon.critChance + RunLoadoutContext.critChanceBonus());
     }
 
     public boolean canDash() { return dashTimer <= 0f; }
