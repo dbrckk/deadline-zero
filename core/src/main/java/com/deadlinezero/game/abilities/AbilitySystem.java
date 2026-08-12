@@ -9,6 +9,7 @@ import com.deadlinezero.game.entities.HomingMissile;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.fx.DamageNumber;
 import com.deadlinezero.game.fx.ImpactFx;
+import com.deadlinezero.game.meta.RunLoadoutContext;
 import com.deadlinezero.game.util.Pools;
 
 /** Executes passive player abilities without allocating during the frame loop. */
@@ -20,12 +21,14 @@ public final class AbilitySystem {
     private final Pools pools;
     private final Listener listener;
     private final AbilityRuntime runtime = new AbilityRuntime();
+    private final float abilityPower;
 
     public AbilitySystem(Player player, Array<Enemy> enemies, Pools pools, Listener listener) {
         this.player = player;
         this.enemies = enemies;
         this.pools = pools;
         this.listener = listener;
+        this.abilityPower = RunLoadoutContext.abilityPowerMultiplier();
     }
 
     public AbilityRuntime runtime() { return runtime; }
@@ -47,7 +50,7 @@ public final class AbilitySystem {
         Enemy target = nearest(player.position.x, player.position.y, 10f, null);
         if (target == null) return;
 
-        float damage = 18f + level * 9f;
+        float damage = (18f + level * 9f) * abilityPower;
         int chains = 1 + level;
         if (player.abilities.hasTeslaEvolution()) {
             damage *= 1.7f;
@@ -70,7 +73,7 @@ public final class AbilitySystem {
 
         int count = 1 + level;
         float radius = 1.6f + level * .18f;
-        float damage = 24f + level * 13f;
+        float damage = (24f + level * 13f) * abilityPower;
         boolean cryoEvolution = player.abilities.hasCryoMissileEvolution();
         if (cryoEvolution) {
             radius *= 1.45f;
@@ -119,7 +122,7 @@ public final class AbilitySystem {
         int level = player.abilities.level(AbilityType.CRYO_NOVA);
         if (level <= 0 || !runtime.readyCryo()) return;
         float radius = 3.5f + level * .55f;
-        float damage = 8f + level * 5f;
+        float damage = (8f + level * 5f) * abilityPower;
         impact(player.position.x, player.position.y, radius, .36f, new Color(.25f, .8f, 1f, 1f));
         float r2 = radius * radius;
         for (Enemy e : enemies) {
@@ -137,7 +140,7 @@ public final class AbilitySystem {
         float y = player.position.y + MathUtils.sinDeg(angle) * 1.8f;
         Enemy target = nearest(x, y, 11f, null);
         if (target != null) {
-            float damage = 12f + level * 7f;
+            float damage = (12f + level * 7f) * abilityPower;
             DamageElement element = player.abilities.hasTeslaEvolution() ? DamageElement.SHOCK : DamageElement.KINETIC;
             damageEnemy(target, damage, element, element == DamageElement.SHOCK ? Color.CYAN : Color.LIME, .42f);
             impact(x, y, .25f, .08f, Color.LIME);
@@ -153,7 +156,7 @@ public final class AbilitySystem {
         float y = player.position.y + MathUtils.sinDeg(runtime.orbitalAngle) * orbit;
         float radius = .55f + level * .05f;
         float r2 = radius * radius;
-        float damage = 10f + level * 5f;
+        float damage = (10f + level * 5f) * abilityPower;
         for (Enemy e : enemies) {
             if (!e.alive) continue;
             float dx = e.position.x - x;
