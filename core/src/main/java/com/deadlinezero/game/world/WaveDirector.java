@@ -42,7 +42,10 @@ public final class WaveDirector {
     public float elapsed() { return elapsed; }
     public boolean bossPending() { return bossPending; }
     public boolean bossSpawned() { return bossSpawned; }
+    public float bossArrivalSeconds() { return bossArrival; }
     public float secondsUntilBoss() { return Math.max(0f, bossArrival - elapsed); }
+    public float bossProgress() { return MathUtils.clamp(elapsed / Math.max(1f, bossArrival), 0f, 1f); }
+    public boolean bossWarning() { return !bossSpawned && secondsUntilBoss() <= 30f; }
 
     public Enemy.Type chooseType() {
         if (bossPending) return Enemy.Type.BOSS;
