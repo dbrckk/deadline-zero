@@ -7,13 +7,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.meta.SurvivorCatalog;
+import com.deadlinezero.game.visual.GameArt;
 import com.deadlinezero.game.visual.VisualTheme;
 
-/** Functional survivor roster screen before final character art. */
+/** Functional survivor roster screen with authored-art support and procedural fallback. */
 public final class SurvivorScreen extends ScreenAdapter {
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
@@ -21,6 +23,7 @@ public final class SurvivorScreen extends ScreenAdapter {
     private final BitmapFont font = new BitmapFont();
     private int index;
     private String status = "";
+    private float artTime;
 
     public SurvivorScreen(DeadlineZeroGame game) {
         this.game = game;
@@ -29,6 +32,7 @@ public final class SurvivorScreen extends ScreenAdapter {
     }
 
     @Override public void render(float delta) {
+        artTime += Math.max(0f, delta);
         handleInput();
         Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -46,9 +50,22 @@ public final class SurvivorScreen extends ScreenAdapter {
         shapes.setColor(unlocked ? VisualTheme.CYAN : VisualTheme.RED); shapes.rect(w * .31f, h * .235f, w * .38f, 58f);
         shapes.setColor(.04f, .07f, .09f, 1f); shapes.rect(w * .24f, h * .325f, w * .52f, 9f);
         shapes.setColor(VisualTheme.VIOLET); shapes.rect(w * .24f, h * .325f, w * .52f * progress, 9f);
+        if (!game.art.authoredAvailable()) {
+            shapes.setColor(unlocked ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED);
+            shapes.circle(w * .20f, h * .705f, Math.min(w, h) * .045f, 28);
+        }
         shapes.end();
 
         batch.begin();
+        if (game.art.authoredAvailable()) {
+            TextureRegion portrait = game.art.survivor(survivor, GameArt.Motion.IDLE, artTime);
+            float ph = Math.min(h * .19f, 170f);
+            float pw = ph * portrait.getRegionWidth() / (float)Math.max(1, portrait.getRegionHeight());
+            batch.setColor(unlocked ? Color.WHITE : new Color(.38f, .42f, .46f, 1f));
+            batch.draw(portrait, w * .20f - pw * .5f, h * .62f, pw, ph);
+            batch.setColor(Color.WHITE);
+        }
+
         font.getData().setScale(1.18f); font.setColor(VisualTheme.TEXT);
         font.draw(batch, "SURVIVORS", 0, h * .89f, w, Align.center, false);
         font.getData().setScale(.82f); font.setColor(unlocked ? VisualTheme.CYAN : VisualTheme.MUTED);
