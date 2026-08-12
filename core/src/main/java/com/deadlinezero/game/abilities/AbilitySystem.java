@@ -7,6 +7,7 @@ import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.HomingMissile;
 import com.deadlinezero.game.entities.Player;
+import com.deadlinezero.game.fx.ArcFx;
 import com.deadlinezero.game.fx.DamageNumber;
 import com.deadlinezero.game.fx.ImpactFx;
 import com.deadlinezero.game.meta.RunLoadoutContext;
@@ -35,7 +36,6 @@ public final class AbilitySystem {
 
     public void update(float dt) {
         runtime.update(dt);
-        player.updateRuntime(dt);
         updateHomingMissiles(dt);
         updateTesla();
         updateMissiles();
@@ -56,11 +56,16 @@ public final class AbilitySystem {
             damage *= 1.7f;
             chains += 3;
         }
+        float originX = player.position.x;
+        float originY = player.position.y;
         Enemy current = target;
         Enemy previous = null;
         for (int i = 0; i < chains && current != null; i++) {
+            arc(originX, originY, current.position.x, current.position.y, .13f);
             damageEnemy(current, damage, DamageElement.SHOCK, Color.CYAN, .65f);
             previous = current;
+            originX = previous.position.x;
+            originY = previous.position.y;
             current = nearest(previous.position.x, previous.position.y, 4.2f, previous);
             damage *= .82f;
         }
@@ -142,6 +147,7 @@ public final class AbilitySystem {
         if (target != null) {
             float damage = (12f + level * 7f) * abilityPower;
             DamageElement element = player.abilities.hasTeslaEvolution() ? DamageElement.SHOCK : DamageElement.KINETIC;
+            if (element == DamageElement.SHOCK) arc(x, y, target.position.x, target.position.y, .10f);
             damageEnemy(target, damage, element, element == DamageElement.SHOCK ? Color.CYAN : Color.LIME, .42f);
             impact(x, y, .25f, .08f, Color.LIME);
         }
@@ -207,5 +213,10 @@ public final class AbilitySystem {
     private void impact(float x, float y, float size, float duration, Color color) {
         ImpactFx fx = pools.impact();
         if (fx != null) fx.spawn(x, y, size, duration, color);
+    }
+
+    private void arc(float x1, float y1, float x2, float y2, float duration) {
+        ArcFx fx = pools.arc();
+        if (fx != null) fx.spawn(x1, y1, x2, y2, duration);
     }
 }
