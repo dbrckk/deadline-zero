@@ -2,6 +2,7 @@ package com.deadlinezero.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.MathUtils;
+import com.deadlinezero.game.meta.DailyService;
 import com.deadlinezero.game.meta.EquipmentDropTable;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.PlayerProfile;
@@ -10,11 +11,14 @@ import com.deadlinezero.game.meta.RunResult;
 import com.deadlinezero.game.meta.RunRewardCalculator;
 import com.deadlinezero.game.meta.RunSettlement;
 import com.deadlinezero.game.screen.GameScreen;
+import com.deadlinezero.game.screen.GearScreen;
 import com.deadlinezero.game.screen.MenuScreen;
+import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.screen.RunResultScreen;
 import com.deadlinezero.game.services.GameServices;
 
 public final class DeadlineZeroGame extends Game {
+    private static final long DAY_MS = 86_400_000L;
     public final GameServices services;
     public PlayerProfile profile;
 
@@ -24,17 +28,23 @@ public final class DeadlineZeroGame extends Game {
 
     @Override public void create() {
         profile = ProfileStore.load();
+        DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
         services.billing.initialize();
         services.ads.preload();
+        saveProfile();
         showMenu();
     }
 
     public void showMenu() { setScreen(new MenuScreen(this)); }
+    public void showGear() { setScreen(new GearScreen(this)); }
+    public void showMissions() { setScreen(new MissionsScreen(this)); }
     public void startRun() { setScreen(new GameScreen(this)); }
 
     public void finishRun(int kills, float secondsSurvived, boolean bossKilled, int stage) {
         int safeStage = Math.max(1, stage);
         RunRewardCalculator.Rewards rewards = RunSettlement.apply(profile, kills, secondsSurvived, bossKilled, safeStage);
+        DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
+        DailyService.recordRun(profile, kills, bossKilled);
         EquipmentItem drop = null;
         if (!profile.inventory.full() && (bossKilled || MathUtils.randomBoolean(.55f))) {
             drop = EquipmentDropTable.roll(safeStage, bossKilled);
