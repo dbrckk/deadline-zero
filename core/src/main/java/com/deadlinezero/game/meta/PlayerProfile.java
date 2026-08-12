@@ -10,6 +10,7 @@ public final class PlayerProfile {
     private final EnumMap<Currency, Long> currencies = new EnumMap<>(Currency.class);
     private final EnumMap<EquipmentSlot, EquipmentItem> equipped = new EnumMap<>(EquipmentSlot.class);
     public final Inventory inventory = new Inventory();
+    public final DailyProgress daily = new DailyProgress();
     public int accountLevel = 1;
     public long accountXp;
     public int highestStage = 1;
