@@ -6,7 +6,6 @@ import com.badlogic.gdx.Preferences;
 /** Persistent account storage backed by libGDX Preferences on Android/Desktop. */
 public final class ProfileStore {
     private static final String PREFS = "deadline-zero-profile-v1";
-
     private ProfileStore() {}
 
     public static PlayerProfile load() {
@@ -20,6 +19,7 @@ public final class ProfileStore {
         profile.totalKills = Math.max(0L, p.getLong("totalKills", 0L));
         profile.removeAdsPurchased = p.getBoolean("purchase.removeAds", false);
         profile.starterPackGranted = p.getBoolean("purchase.starterPackGranted", false);
+        profile.selectedSurvivor = SurvivorCatalog.byName(p.getString("survivor.selected", SurvivorCatalog.Survivor.REX.name()));
         profile.addCurrency(PlayerProfile.Currency.CREDITS, Math.max(0L, p.getLong("credits", 0L)));
         profile.addCurrency(PlayerProfile.Currency.GEMS, Math.max(0L, p.getLong("gems", 0L)));
 
@@ -40,18 +40,13 @@ public final class ProfileStore {
             try {
                 String id = p.getString(key + "id", "");
                 if (id.isEmpty()) continue;
-                EquipmentItem item = new EquipmentItem(
-                    id,
-                    p.getString(key + "name", "Equipment"),
+                EquipmentItem item = new EquipmentItem(id, p.getString(key + "name", "Equipment"),
                     PlayerProfile.EquipmentSlot.valueOf(p.getString(key + "slot", "WEAPON")),
                     EquipmentItem.Rarity.valueOf(p.getString(key + "rarity", "COMMON")),
-                    Math.max(1, p.getInteger(key + "level", 1)),
-                    Math.max(0f, p.getFloat(key + "power", 0f))
-                );
+                    Math.max(1, p.getInteger(key + "level", 1)), Math.max(0f, p.getFloat(key + "power", 0f)));
                 profile.inventory.add(item);
             } catch (IllegalArgumentException ignored) { }
         }
-
         for (PlayerProfile.EquipmentSlot slot : PlayerProfile.EquipmentSlot.values()) {
             String id = p.getString("equipped." + slot.name(), "");
             EquipmentItem item = profile.inventory.find(id);
@@ -71,6 +66,7 @@ public final class ProfileStore {
         p.putLong("totalKills", profile.totalKills);
         p.putBoolean("purchase.removeAds", profile.removeAdsPurchased);
         p.putBoolean("purchase.starterPackGranted", profile.starterPackGranted);
+        p.putString("survivor.selected", profile.selectedSurvivor.name());
         p.putLong("credits", profile.currency(PlayerProfile.Currency.CREDITS));
         p.putLong("gems", profile.currency(PlayerProfile.Currency.GEMS));
 
