@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.entities.Enemy;
+import com.deadlinezero.game.entities.HomingMissile;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.fx.DamageNumber;
 import com.deadlinezero.game.fx.ImpactFx;
@@ -32,6 +33,7 @@ public final class AbilitySystem {
     public void update(float dt) {
         runtime.update(dt);
         player.updateRuntime(dt);
+        updateHomingMissiles(dt);
         updateTesla();
         updateMissiles();
         updateCryo();
@@ -65,20 +67,52 @@ public final class AbilitySystem {
     private void updateMissiles() {
         int level = player.abilities.level(AbilityType.MISSILE_SWARM);
         if (level <= 0 || !runtime.readyMissile()) return;
+
         int count = 1 + level;
         float radius = 1.6f + level * .18f;
         float damage = 24f + level * 13f;
-        if (player.abilities.hasCryoMissileEvolution()) {
+        boolean cryoEvolution = player.abilities.hasCryoMissileEvolution();
+        if (cryoEvolution) {
             radius *= 1.45f;
             damage *= 1.35f;
         }
+
         for (int i = 0; i < count; i++) {
-            Enemy target = nearest(player.position.x, player.position.y, 16f, null);
+            Enemy target = nearest(player.position.x, player.position.y, 18f, null);
             if (target == null) break;
-            explode(target.position.x, target.position.y, radius, damage,
-                player.abilities.hasCryoMissileEvolution() ? DamageElement.FROST : DamageElement.KINETIC);
+            HomingMissile missile = pools.homingMissile();
+            if (missile == null) break;
+            missile.spawn(player.position.x, player.position.y, target,
+                8.5f + level * .45f, 230f + level * 22f, damage, radius, 4.2f,
+                cryoEvolution ? DamageElement.FROST : DamageElement.KINETIC);
         }
         runtime.resetMissile(level);
+    }
+
+    private void updateHomingMissiles(float dt) {
+        for (HomingMissile missile : pools.homingMissiles) {
+            if (!missile.active) continue;
+            if (missile.target == null || !missile.target.alive) {
+                missile.target = nearest(missile.position.x, missile.position.y, 12f, null);
+                if (missile.target == null) {
+                    missile.update(dt);
+                    continue;
+                }
+            }
+
+            missile.update(dt);
+            if (!missile.active) continue;
+            Enemy target = missile.target;
+            if (target == null || !target.alive) continue;
+            float rr = missile.radius + target.radius;
+            float dx = missile.position.x - target.position.x;
+            float dy = missile.position.y - target.position.y;
+            if (dx * dx + dy * dy > rr * rr) continue;
+
+            missile.active = false;
+            explode(missile.position.x, missile.position.y, missile.explosionRadius,
+                missile.damage, missile.element);
+        }
     }
 
     private void updateCryo() {
