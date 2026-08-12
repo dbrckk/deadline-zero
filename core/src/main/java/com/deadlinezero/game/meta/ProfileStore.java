@@ -23,6 +23,16 @@ public final class ProfileStore {
         profile.addCurrency(PlayerProfile.Currency.CREDITS, Math.max(0L, p.getLong("credits", 0L)));
         profile.addCurrency(PlayerProfile.Currency.GEMS, Math.max(0L, p.getLong("gems", 0L)));
 
+        for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
+            String key = "survivor." + survivor.name() + ".";
+            profile.survivors.setState(survivor,
+                Math.max(1, p.getInteger(key + "level", 1)),
+                Math.max(0L, p.getLong(key + "xp", 0L)),
+                p.getBoolean(key + "unlocked", survivor == SurvivorCatalog.Survivor.REX));
+        }
+        profile.survivors.refreshUnlocks(profile);
+        if (!profile.survivors.unlocked(profile.selectedSurvivor)) profile.selectedSurvivor = SurvivorCatalog.Survivor.REX;
+
         profile.daily.epochDay = p.getLong("daily.epochDay", -1L);
         profile.daily.loginStreak = Math.max(0, p.getInteger("daily.loginStreak", 0));
         profile.daily.loginClaimed = p.getBoolean("daily.loginClaimed", false);
@@ -67,6 +77,12 @@ public final class ProfileStore {
         p.putBoolean("purchase.removeAds", profile.removeAdsPurchased);
         p.putBoolean("purchase.starterPackGranted", profile.starterPackGranted);
         p.putString("survivor.selected", profile.selectedSurvivor.name());
+        for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
+            String key = "survivor." + survivor.name() + ".";
+            p.putInteger(key + "level", profile.survivors.level(survivor));
+            p.putLong(key + "xp", profile.survivors.xp(survivor));
+            p.putBoolean(key + "unlocked", profile.survivors.unlocked(survivor));
+        }
         p.putLong("credits", profile.currency(PlayerProfile.Currency.CREDITS));
         p.putLong("gems", profile.currency(PlayerProfile.Currency.GEMS));
 
