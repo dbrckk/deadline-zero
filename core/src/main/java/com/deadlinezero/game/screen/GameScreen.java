@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -32,6 +31,9 @@ import com.deadlinezero.game.progression.Upgrade;
 import com.deadlinezero.game.progression.UpgradeSelector;
 import com.deadlinezero.game.services.AdsService;
 import com.deadlinezero.game.util.Pools;
+import com.deadlinezero.game.visual.CombatHudRenderer;
+import com.deadlinezero.game.visual.VisualTheme;
+import com.deadlinezero.game.visual.WorldFxRenderer;
 import com.deadlinezero.game.world.SpatialHash;
 import com.deadlinezero.game.world.WaveDirector;
 
@@ -50,9 +52,10 @@ public final class GameScreen extends ScreenAdapter {
     private final VirtualStick stick = new VirtualStick();
     private final Vector2 aim = new Vector2();
     private final Vector2 shotVelocity = new Vector2();
-    private final Matrix4 hudMatrix = new Matrix4();
     private final AbilitySystem abilitySystem;
-    private float accumulator, fireTimer, contactTimer, cameraShake;
+    private final CombatHudRenderer combatHud = new CombatHudRenderer();
+    private final WorldFxRenderer worldFx = new WorldFxRenderer();
+    private float accumulator, fireTimer, contactTimer, cameraShake, visualTime;
     private boolean choosingUpgrade, gameOver, revived, bossKilledThisRun, settling;
     private final Upgrade[] choices = new Upgrade[3];
 
@@ -68,6 +71,8 @@ public final class GameScreen extends ScreenAdapter {
 
     @Override public void render(float delta) {
         delta = Math.min(delta, .05f);
+        visualTime += delta;
+        combatHud.update(delta);
         accumulator += delta;
         while (accumulator >= GameConfig.FIXED_STEP) {
             if (!choosingUpgrade && !gameOver) update(GameConfig.FIXED_STEP);
@@ -79,6 +84,7 @@ public final class GameScreen extends ScreenAdapter {
 
     private void update(float dt) {
         director.update(dt);
+        player.updateRuntime(dt);
         fireTimer -= dt;
         contactTimer -= dt;
         Vector2 move = stick.update(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
@@ -87,7 +93,7 @@ public final class GameScreen extends ScreenAdapter {
             player.position.mulAdd(move, 4.8f);
             player.triggerDash();
             cameraShake = Math.max(cameraShake, .12f);
-            impact(player.position.x, player.position.y, .9f, .16f, Color.CYAN);
+            impact(player.position.x, player.position.y, .9f, .16f, VisualTheme.CYAN);
         }
         player.position.mulAdd(player.velocity, dt);
         player.position.x = MathUtils.clamp(player.position.x, -31, 31);
@@ -135,7 +141,7 @@ public final class GameScreen extends ScreenAdapter {
                 int phase = e.bossPhases.phase();
                 if (e.bossCombat.consumeCharge(phase)) {
                     cameraShake = Math.max(cameraShake, .16f);
-                    impact(e.position.x, e.position.y, 2.8f, .24f, Color.SCARLET);
+                    impact(e.position.x, e.position.y, 2.8f, .24f, VisualTheme.RED);
                 }
                 if (e.bossCombat.consumeSummon(phase)) spawnBossMinions(e, phase);
                 if (e.bossCombat.consumeEnragePulse(phase)) bossEnragePulse(e);
@@ -177,7 +183,7 @@ public final class GameScreen extends ScreenAdapter {
                 ? new Enemy(type, x, y, 68f * scale, 2.2f, .42f, 12f, 10)
                 : new Enemy(type, x, y, 30f * scale, 4.35f, .34f, 8f, 5);
             enemies.add(minion);
-            impact(x, y, .65f, .18f, Color.VIOLET);
+            impact(x, y, .65f, .18f, VisualTheme.VIOLET);
         }
         cameraShake = Math.max(cameraShake, .12f);
     }
@@ -188,7 +194,7 @@ public final class GameScreen extends ScreenAdapter {
             spawnHostileShot(boss.position.x, boss.position.y, i * (360f / shots), 8.2f,
                 boss.contactDamage * .65f, .24f, i % 4 == 0, 2.0f);
         }
-        impact(boss.position.x, boss.position.y, 5.1f, .34f, Color.MAGENTA);
+        impact(boss.position.x, boss.position.y, 5.1f, .34f, VisualTheme.VIOLET);
         cameraShake = Math.max(cameraShake, .38f);
     }
 
@@ -208,10 +214,10 @@ public final class GameScreen extends ScreenAdapter {
                 e.hitFlash = 1f;
                 e.applyElement(p.element, p.damage);
                 damageNumber(e.position.x, e.position.y + e.radius, p.damage, p.critical,
-                    p.critical ? Color.GOLD : Color.WHITE);
+                    p.critical ? VisualTheme.GOLD : VisualTheme.TEXT);
                 float vlen = p.velocity.len();
                 if (vlen > .001f) e.addImpulse(p.velocity.x / vlen * p.knockback, p.velocity.y / vlen * p.knockback);
-                impact(p.position.x, p.position.y, p.critical ? .6f : .38f, .12f, p.critical ? Color.GOLD : Color.CYAN);
+                impact(p.position.x, p.position.y, p.critical ? .6f : .38f, .12f, p.critical ? VisualTheme.GOLD : VisualTheme.CYAN);
                 if (p.element == DamageElement.SHOCK && e.alive) chainShock(e, p.damage * .42f, 3);
                 if (wasAlive && !e.alive) onEnemyKilled(e);
                 p.lastHit = e;
@@ -231,7 +237,7 @@ public final class GameScreen extends ScreenAdapter {
             if (p.position.dst2(player.position) <= rr * rr) {
                 p.active = false;
                 if (p.explosive) {
-                    impact(p.position.x, p.position.y, p.explosionRadius, .32f, Color.ORANGE);
+                    impact(p.position.x, p.position.y, p.explosionRadius, .32f, VisualTheme.GOLD);
                     if (p.position.dst2(player.position) <= p.explosionRadius * p.explosionRadius) damagePlayer(p.damage, .48f);
                 } else damagePlayer(p.damage, .22f);
             }
@@ -279,8 +285,8 @@ public final class GameScreen extends ScreenAdapter {
             boolean wasAlive = nearest.alive;
             nearest.damage(damage);
             nearest.applyElement(DamageElement.SHOCK, damage);
-            damageNumber(nearest.position.x, nearest.position.y + nearest.radius, damage, false, Color.CYAN);
-            impact(nearest.position.x, nearest.position.y, .62f, .16f, Color.CYAN);
+            damageNumber(nearest.position.x, nearest.position.y + nearest.radius, damage, false, VisualTheme.CYAN);
+            impact(nearest.position.x, nearest.position.y, .62f, .16f, VisualTheme.CYAN);
             if (wasAlive && !nearest.alive) onEnemyKilled(nearest);
             current = nearest;
             damage *= .78f;
@@ -291,9 +297,10 @@ public final class GameScreen extends ScreenAdapter {
         float hpBefore = player.hp;
         player.damage(damage);
         if (player.hp == hpBefore) return;
+        combatHud.triggerDamageFlash();
         cameraShake = Math.max(cameraShake, shake);
-        impact(player.position.x, player.position.y, 1.1f, .18f, Color.RED);
-        damageNumber(player.position.x, player.position.y + player.radius, damage, false, Color.SCARLET);
+        impact(player.position.x, player.position.y, 1.1f, .18f, VisualTheme.RED);
+        damageNumber(player.position.x, player.position.y + player.radius, damage, false, VisualTheme.RED);
         if (!player.alive) gameOver = true;
     }
 
@@ -306,7 +313,7 @@ public final class GameScreen extends ScreenAdapter {
         if (e.type == Enemy.Type.BOSS) bossKilledThisRun = true;
         director.onKill();
         if (player.addXp(e.xpValue)) prepareUpgrade();
-        impact(e.position.x, e.position.y, e.radius * 2.3f, .28f, new Color(.2f, 1f, .65f, 1f));
+        impact(e.position.x, e.position.y, e.radius * 2.3f, .28f, VisualTheme.GREEN);
     }
 
     private void spawnEnemy() {
@@ -370,84 +377,116 @@ public final class GameScreen extends ScreenAdapter {
     private void finishRun() {
         if (settling) return;
         settling = true;
-        int stage = game.profile == null ? 1 : Math.max(1, game.profile.highestStage);
-        game.finishRun(director.kills(), director.elapsed(), bossKilledThisRun, stage);
+        game.finishRun(director.kills(), director.elapsed(), bossKilledThisRun, 0);
     }
 
     private void draw() {
-        Gdx.gl.glClearColor(.015f, .022f, .03f, 1f);
+        Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         shapes.setProjectionMatrix(cam.combined);
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(.025f, .04f, .052f, 1f); shapes.rect(-40, -24, 80, 48);
-        shapes.setColor(.06f, .14f, .17f, .55f);
+        shapes.setColor(.018f, .030f, .040f, 1f); shapes.rect(-40, -24, 80, 48);
+        shapes.setColor(.06f, .14f, .17f, .38f);
         for (int x = -40; x < 40; x += 2) shapes.rect(x, -24, .02f, 48);
         for (int y = -24; y < 24; y += 2) shapes.rect(-40, y, 80, .02f);
+
+        worldFx.drawGroundShadows(shapes, player, enemies);
+        worldFx.drawProjectileTrails(shapes, pools.projectiles, pools.hostileProjectiles, pools.homingMissiles);
+
         for (ImpactFx f : pools.impacts) if (f.active) {
-            float a = f.life / f.maxLife;
-            shapes.setColor(f.color.r, f.color.g, f.color.b, a * .55f);
-            shapes.circle(f.position.x, f.position.y, f.size * (1f - a * .45f), 18);
+            float a = MathUtils.clamp(f.life / f.maxLife, 0f, 1f);
+            shapes.setColor(f.color.r, f.color.g, f.color.b, a * .12f);
+            shapes.circle(f.position.x, f.position.y, f.size * (1.45f - a * .32f), 24);
+            shapes.setColor(f.color.r, f.color.g, f.color.b, a * .50f);
+            shapes.circle(f.position.x, f.position.y, f.size * (1f - a * .42f), 20);
+            shapes.setColor(1f, 1f, 1f, a * .42f);
+            shapes.circle(f.position.x, f.position.y, Math.max(.06f, f.size * .18f * a), 12);
         }
         for (Projectile p : pools.projectiles) if (p.active) {
-            shapes.setColor(p.critical ? Color.GOLD : Color.CYAN);
+            Color c = switch (p.element) {
+                case FIRE -> Color.ORANGE;
+                case FROST -> VisualTheme.CYAN;
+                case SHOCK -> VisualTheme.VIOLET;
+                default -> p.critical ? VisualTheme.GOLD : VisualTheme.CYAN;
+            };
+            shapes.setColor(c);
             shapes.circle(p.position.x, p.position.y, p.critical ? .16f : .11f, 12);
         }
         for (EnemyProjectile p : pools.hostileProjectiles) if (p.active) {
-            shapes.setColor(p.explosive ? Color.ORANGE : Color.SCARLET);
+            shapes.setColor(p.explosive ? VisualTheme.GOLD : VisualTheme.RED);
             shapes.circle(p.position.x, p.position.y, p.radius, 14);
         }
         for (HomingMissile m : pools.homingMissiles) if (m.active) {
-            shapes.setColor(m.element == DamageElement.FROST ? Color.CYAN : Color.ORANGE);
+            shapes.setColor(m.element == DamageElement.FROST ? VisualTheme.CYAN : VisualTheme.GOLD);
             shapes.circle(m.position.x, m.position.y, m.radius * 1.35f, 10);
-            float len = m.velocity.len();
-            if (len > .001f) {
-                float tx = m.position.x - m.velocity.x / len * .55f;
-                float ty = m.position.y - m.velocity.y / len * .55f;
-                shapes.rectLine(m.position.x, m.position.y, tx, ty, .08f);
-            }
         }
         drawAbilityObjects();
-        for (Enemy e : enemies) {
-            Color c = switch (e.type) {
-                case RUNNER -> new Color(.95f, .35f, .25f, 1f);
-                case BRUTE -> new Color(.6f, .12f, .16f, 1f);
-                case RANGED -> new Color(.95f, .62f, .16f, 1f);
-                case ELITE -> new Color(.85f, .18f, .8f, 1f);
-                case BOSS -> new Color(.95f, .08f, .06f, 1f);
-                default -> new Color(.35f, .75f, .42f, 1f);
-            };
-            if (e.attack.state() == EnemyState.TELEGRAPHING) {
-                shapes.setColor(1f, .12f, .04f, .20f);
-                shapes.circle(e.position.x, e.position.y, e.type == Enemy.Type.BOSS ? 4.4f : 1.1f, 28);
-            }
-            if (e.type == Enemy.Type.BOSS && e.bossCombat != null && e.bossCombat.charging()) {
-                shapes.setColor(1f, .15f, .05f, .18f);
-                shapes.circle(e.position.x, e.position.y, 2.4f, 28);
-            }
-            if (e.hitFlash > 0f) c = Color.WHITE;
-            shapes.setColor(c); shapes.circle(e.position.x, e.position.y, e.radius, 20);
-            shapes.setColor(.1f, .1f, .1f, .8f); shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f, .07f);
-            shapes.setColor(Color.RED); shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f * (e.hp / e.maxHp), .07f);
-        }
-        shapes.setColor(player.invulnerable() ? Color.WHITE : new Color(.12f, .85f, 1f, 1f));
-        shapes.circle(player.position.x, player.position.y, player.radius, 24);
+        for (Enemy e : enemies) drawEnemy(e);
+
+        shapes.setColor(player.invulnerable() ? Color.WHITE : VisualTheme.CYAN);
+        float playerPulse = 1f + MathUtils.sin(visualTime * 7f) * .035f;
+        shapes.circle(player.position.x, player.position.y, player.radius * playerPulse, 24);
+        shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .18f);
+        shapes.circle(player.position.x, player.position.y, player.radius * 1.45f * playerPulse, 24);
         shapes.end();
+
         drawCombatText();
         drawHud();
+    }
+
+    private void drawEnemy(Enemy e) {
+        if (!e.alive) return;
+        Color c = switch (e.type) {
+            case RUNNER -> new Color(.95f, .35f, .25f, 1f);
+            case BRUTE -> new Color(.58f, .10f, .15f, 1f);
+            case RANGED -> new Color(.95f, .62f, .16f, 1f);
+            case ELITE -> new Color(.76f, .18f, .86f, 1f);
+            case BOSS -> VisualTheme.RED;
+            default -> new Color(.30f, .70f, .39f, 1f);
+        };
+        float speedRatio = MathUtils.clamp(e.velocity.len() / Math.max(.01f, e.speed), 0f, 1.5f);
+        float gait = MathUtils.sin(visualTime * (5f + speedRatio * 3f) + e.position.x * .7f) * .06f * speedRatio;
+        if (e.attack.state() == EnemyState.TELEGRAPHING) {
+            float pulse = .82f + MathUtils.sin(visualTime * 14f) * .18f;
+            shapes.setColor(VisualTheme.RED.r, VisualTheme.RED.g, VisualTheme.RED.b, .11f + .09f * pulse);
+            shapes.circle(e.position.x, e.position.y, (e.type == Enemy.Type.BOSS ? 4.4f : 1.15f) * pulse, 28);
+        }
+        if (e.type == Enemy.Type.BOSS && e.bossCombat != null && e.bossCombat.charging()) {
+            shapes.setColor(1f, .15f, .05f, .16f);
+            shapes.circle(e.position.x, e.position.y, 2.3f + MathUtils.sin(visualTime * 20f) * .18f, 28);
+        }
+        if (e.hitFlash > 0f) c = Color.WHITE;
+        shapes.setColor(c);
+        float sx = e.radius * (1f - gait);
+        float sy = e.radius * (1f + gait);
+        shapes.ellipse(e.position.x - sx, e.position.y - sy, sx * 2f, sy * 2f);
+        if (e.type != Enemy.Type.BOSS) {
+            shapes.setColor(.08f, .09f, .10f, .82f);
+            shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f, .07f);
+            shapes.setColor(VisualTheme.RED);
+            shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f,
+                e.radius * 2f * MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f), .07f);
+        }
     }
 
     private void drawAbilityObjects() {
         float angle = abilitySystem.runtime().orbitalAngle;
         if (player.abilities.unlocked(AbilityType.DRONE)) {
-            shapes.setColor(Color.LIME);
-            shapes.circle(player.position.x + MathUtils.cosDeg(angle + 180f) * 1.8f,
-                player.position.y + MathUtils.sinDeg(angle + 180f) * 1.8f, .20f, 12);
+            float dx = player.position.x + MathUtils.cosDeg(angle + 180f) * 1.8f;
+            float dy = player.position.y + MathUtils.sinDeg(angle + 180f) * 1.8f;
+            shapes.setColor(VisualTheme.GREEN.r, VisualTheme.GREEN.g, VisualTheme.GREEN.b, .20f);
+            shapes.circle(dx, dy, .34f, 14);
+            shapes.setColor(VisualTheme.GREEN);
+            shapes.circle(dx, dy, .18f, 12);
         }
         if (player.abilities.unlocked(AbilityType.ORBITAL_BLADE)) {
             float orbit = 2f + player.abilities.level(AbilityType.ORBITAL_BLADE) * .12f;
-            shapes.setColor(Color.GOLD);
-            shapes.rect(player.position.x + MathUtils.cosDeg(angle) * orbit - .12f,
-                player.position.y + MathUtils.sinDeg(angle) * orbit - .34f, .24f, .68f);
+            float bx = player.position.x + MathUtils.cosDeg(angle) * orbit;
+            float by = player.position.y + MathUtils.sinDeg(angle) * orbit;
+            shapes.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b, .20f);
+            shapes.circle(bx, by, .46f, 16);
+            shapes.setColor(VisualTheme.GOLD);
+            shapes.rect(bx - .12f, by - .34f, .24f, .68f);
         }
     }
 
@@ -468,43 +507,34 @@ public final class GameScreen extends ScreenAdapter {
 
     private void drawHud() {
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-        hudMatrix.setToOrtho2D(0, 0, w, h);
-        shapes.setProjectionMatrix(hudMatrix);
-        shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(.02f, .03f, .04f, .8f); shapes.rect(24, h - 58, w * .32f, 22);
-        shapes.setColor(.08f, .8f, .95f, 1f); shapes.rect(28, h - 54, (w * .32f - 8) * (player.hp / player.maxHp), 14);
-        shapes.setColor(.02f, .03f, .04f, .8f); shapes.rect(w * .34f, h - 58, w * .32f, 22);
-        shapes.setColor(.55f, .25f, 1f, 1f); shapes.rect(w * .34f + 4, h - 54, (w * .32f - 8) * (player.xp / (float)player.xpNext), 14);
-        shapes.end();
+        combatHud.render(shapes, batch, font, player, director, enemies, w, h);
+        if (!choosingUpgrade && !gameOver) return;
         batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
         batch.begin();
-        font.setColor(Color.WHITE);
-        font.draw(batch, "HP " + (int)player.hp + " / " + (int)player.maxHp, 32, h - 64);
-        font.draw(batch, "LV " + player.level, w * .34f + 8, h - 64);
-        font.draw(batch, "KILLS  " + director.kills(), w - 190, h - 42);
-        font.draw(batch, String.format("%02d:%02d", (int)director.elapsed() / 60, (int)director.elapsed() % 60), w - 190, h - 68);
-        font.draw(batch, "DASH " + (player.canDash() ? "READY" : String.format("%.1f", player.dashTimer)), 28, 48);
         if (choosingUpgrade) drawUpgradeText(w, h);
         if (gameOver) drawGameOverText(w, h);
         batch.end();
     }
 
     private void drawUpgradeText(float w, float h) {
-        font.getData().setScale(1.3f); font.setColor(Color.WHITE);
+        font.getData().setScale(1.3f); font.setColor(VisualTheme.TEXT);
         font.draw(batch, "PROTOCOL UPGRADE", 0, h * .76f, w, Align.center, false);
         font.getData().setScale(.72f);
         for (int i = 0; i < 3; i++) {
             float x = w * (.17f + i * .33f);
-            font.setColor(Color.CYAN); font.draw(batch, "[" + (i + 1) + "] " + choices[i].title, x - 120, h * .52f, 240, Align.center, false);
-            font.setColor(Color.LIGHT_GRAY); font.draw(batch, choices[i].rarity.name() + " • " + choices[i].description, x - 120, h * .45f, 240, Align.center, true);
+            font.setColor(VisualTheme.upgradeRarity(choices[i].rarity));
+            font.draw(batch, "[" + (i + 1) + "] " + choices[i].title, x - 120, h * .52f, 240, Align.center, false);
+            font.setColor(VisualTheme.MUTED);
+            font.draw(batch, choices[i].rarity.name() + " • " + choices[i].description, x - 120, h * .45f, 240, Align.center, true);
         }
         font.getData().setScale(.75f);
     }
 
     private void drawGameOverText(float w, float h) {
-        font.getData().setScale(1.5f); font.setColor(Color.WHITE);
+        font.getData().setScale(1.5f); font.setColor(VisualTheme.TEXT);
         font.draw(batch, "SIGNAL LOST", 0, h * .62f, w, Align.center, false);
         font.getData().setScale(.72f);
+        font.setColor(VisualTheme.MUTED);
         font.draw(batch, revived ? "TAP / ENTER FOR RESULTS" : "TAP TO REVIVE (rewarded ad)  •  ENTER FOR RESULTS", 0, h * .45f, w, Align.center, false);
         font.getData().setScale(.75f);
     }
