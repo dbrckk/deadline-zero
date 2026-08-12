@@ -1,6 +1,7 @@
 package com.deadlinezero.game.entities;
 
 import com.deadlinezero.game.abilities.AbilityLoadout;
+import com.deadlinezero.game.abilities.AbilityType;
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.combat.WeaponRuntime;
 import com.deadlinezero.game.config.GameConfig;
@@ -21,13 +22,15 @@ public final class Player extends ActorState {
         super(x, y, 0.42f, GameConfig.PLAYER_MAX_HP * RunLoadoutContext.maxHpMultiplier());
         weapon.damage *= RunLoadoutContext.weaponDamageMultiplier();
         weapon.critChance = Math.min(.75f, weapon.critChance + RunLoadoutContext.critChanceBonus());
+        weapon.critMultiplier += RunLoadoutContext.critDamageBonus();
+        for (int i = 0; i < RunLoadoutContext.startingTeslaLevel(); i++) abilities.upgrade(AbilityType.TESLA_ORB);
     }
 
     public boolean canDash() { return dashTimer <= 0f; }
 
     public void triggerDash() {
         dashTimer = dashCooldown;
-        invulnerabilityTimer = Math.max(invulnerabilityTimer, .30f);
+        invulnerabilityTimer = Math.max(invulnerabilityTimer, RunLoadoutContext.dashInvulnerabilitySeconds());
     }
 
     public boolean invulnerable() { return invulnerabilityTimer > 0f; }
@@ -39,7 +42,7 @@ public final class Player extends ActorState {
 
     @Override public void damage(float amount) {
         if (invulnerable()) return;
-        super.damage(amount);
+        super.damage(amount * RunLoadoutContext.damageTakenMultiplier());
     }
 
     public boolean addXp(int amount) {
