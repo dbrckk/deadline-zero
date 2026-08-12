@@ -10,6 +10,7 @@ import com.deadlinezero.game.meta.ProfileStore;
 import com.deadlinezero.game.meta.RunResult;
 import com.deadlinezero.game.meta.RunRewardCalculator;
 import com.deadlinezero.game.meta.RunSettlement;
+import com.deadlinezero.game.meta.StageRules;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.GearScreen;
 import com.deadlinezero.game.screen.MenuScreen;
@@ -45,6 +46,12 @@ public final class DeadlineZeroGame extends Game {
         RunRewardCalculator.Rewards rewards = RunSettlement.apply(profile, kills, secondsSurvived, bossKilled, safeStage);
         DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
         DailyService.recordRun(profile, kills, bossKilled);
+
+        if (bossKilled && safeStage >= profile.highestStage) {
+            profile.highestStage = StageRules.nextStage(safeStage);
+            profile.selectedStage = profile.highestStage;
+        }
+
         EquipmentItem drop = null;
         if (!profile.inventory.full() && (bossKilled || MathUtils.randomBoolean(.55f))) {
             drop = EquipmentDropTable.roll(safeStage, bossKilled);
