@@ -2,37 +2,47 @@ package com.deadlinezero.game.world;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.deadlinezero.game.entities.Enemy;
+import com.deadlinezero.game.meta.RunMissionRuntime;
+import com.deadlinezero.game.meta.RunStageContext;
+import com.deadlinezero.game.meta.StageMissionRules;
 
 public final class WaveDirector {
     private float elapsed;
     private float spawnTimer;
     private int kills;
-    private int bossesSpawned;
     private boolean bossPending;
+    private boolean bossSpawned;
+    private final float bossArrival = StageMissionRules.bossArrivalSeconds(RunStageContext.stage());
 
     public void update(float dt) {
         elapsed += dt;
         spawnTimer -= dt;
-        int expectedBosses = (int)(elapsed / 90f);
-        if (expectedBosses > bossesSpawned) bossPending = true;
+        if (!bossSpawned && elapsed >= bossArrival) bossPending = true;
+        RunMissionRuntime.update(elapsed, kills);
     }
 
-    public boolean shouldSpawn() { return spawnTimer <= 0f; }
+    public boolean shouldSpawn() { return !bossSpawned && spawnTimer <= 0f; }
 
     public void onSpawn() {
         spawnTimer = Math.max(0.07f, 0.58f - elapsed * 0.0042f);
     }
 
     public void onBossSpawned() {
-        bossesSpawned++;
+        bossSpawned = true;
         bossPending = false;
-        spawnTimer = 1.2f;
+        spawnTimer = Float.MAX_VALUE;
     }
 
-    public void onKill() { kills++; }
+    public void onKill() {
+        kills++;
+        RunMissionRuntime.update(elapsed, kills);
+    }
+
     public int kills() { return kills; }
     public float elapsed() { return elapsed; }
     public boolean bossPending() { return bossPending; }
+    public boolean bossSpawned() { return bossSpawned; }
+    public float secondsUntilBoss() { return Math.max(0f, bossArrival - elapsed); }
 
     public Enemy.Type chooseType() {
         if (bossPending) return Enemy.Type.BOSS;
