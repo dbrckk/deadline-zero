@@ -11,8 +11,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.meta.SurvivorCatalog;
+import com.deadlinezero.game.visual.VisualTheme;
 
-/** Functional survivor roster screen before final art pass. */
+/** Functional survivor roster screen before final character art. */
 public final class SurvivorScreen extends ScreenAdapter {
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
@@ -29,7 +30,7 @@ public final class SurvivorScreen extends ScreenAdapter {
 
     @Override public void render(float delta) {
         handleInput();
-        Gdx.gl.glClearColor(.012f, .018f, .027f, 1f);
+        Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
         SurvivorCatalog.Survivor survivor = SurvivorCatalog.Survivor.values()[index];
@@ -37,29 +38,35 @@ public final class SurvivorScreen extends ScreenAdapter {
         int level = game.profile.survivors.level(survivor);
         long xp = game.profile.survivors.xp(survivor);
         long next = game.profile.survivors.xpForNext(survivor);
+        float progress = next <= 0 ? 0f : Math.min(1f, xp / (float)next);
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(.025f, .05f, .075f, .96f);
-        shapes.rect(w * .12f, h * .22f, w * .76f, h * .55f);
-        shapes.setColor(unlocked ? .08f : .08f, unlocked ? .55f : .12f, unlocked ? .72f : .15f, 1f);
-        shapes.rect(w * .31f, h * .255f, w * .38f, 58f);
+        shapes.setColor(VisualTheme.PANEL); shapes.rect(w * .10f, h * .18f, w * .80f, h * .62f);
+        shapes.setColor(VisualTheme.PANEL_ALT); shapes.rect(w * .15f, h * .36f, w * .70f, h * .29f);
+        shapes.setColor(unlocked ? VisualTheme.CYAN : VisualTheme.RED); shapes.rect(w * .31f, h * .235f, w * .38f, 58f);
+        shapes.setColor(.04f, .07f, .09f, 1f); shapes.rect(w * .24f, h * .325f, w * .52f, 9f);
+        shapes.setColor(VisualTheme.VIOLET); shapes.rect(w * .24f, h * .325f, w * .52f * progress, 9f);
         shapes.end();
 
         batch.begin();
-        font.getData().setScale(1.25f); font.setColor(Color.WHITE);
-        font.draw(batch, "SURVIVORS", 0, h * .88f, w, Align.center, false);
-        font.getData().setScale(.88f); font.setColor(unlocked ? Color.CYAN : Color.DARK_GRAY);
-        font.draw(batch, survivor.displayName.toUpperCase(), 0, h * .68f, w, Align.center, false);
-        font.getData().setScale(.58f); font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, survivor.role + "   Lv." + level, 0, h * .61f, w, Align.center, false);
-        font.draw(batch, "HP x" + fmt(survivor.hpMultiplier) + "   DMG x" + fmt(survivor.weaponMultiplier) + "   SPD x" + fmt(survivor.speedMultiplier), 0, h * .53f, w, Align.center, false);
-        font.draw(batch, "Crit +" + Math.round(survivor.critBonus * 100f) + "%   Ability +" + Math.round(survivor.abilityBonus * 100f) + "%", 0, h * .47f, w, Align.center, false);
-        font.draw(batch, "XP " + xp + " / " + next, 0, h * .40f, w, Align.center, false);
-        font.setColor(unlocked ? Color.WHITE : Color.SCARLET);
-        font.draw(batch, unlocked ? (game.profile.selectedSurvivor == survivor ? "SELECTED" : "SELECT [ENTER]") : unlockText(survivor), w * .31f, h * .255f + 37f, w * .38f, Align.center, false);
-        font.setColor(Color.GRAY);
-        font.draw(batch, "← / → browse    ESC back", 0, h * .15f, w, Align.center, false);
-        if (!status.isEmpty()) { font.setColor(Color.CYAN); font.draw(batch, status, 0, h * .10f, w, Align.center, false); }
+        font.getData().setScale(1.18f); font.setColor(VisualTheme.TEXT);
+        font.draw(batch, "SURVIVORS", 0, h * .89f, w, Align.center, false);
+        font.getData().setScale(.82f); font.setColor(unlocked ? VisualTheme.CYAN : VisualTheme.MUTED);
+        font.draw(batch, survivor.displayName.toUpperCase(), 0, h * .70f, w, Align.center, false);
+        font.getData().setScale(.52f); font.setColor(VisualTheme.MUTED);
+        font.draw(batch, survivor.role.toUpperCase() + "   •   LV " + level, 0, h * .645f, w, Align.center, false);
+
+        font.setColor(VisualTheme.TEXT);
+        font.draw(batch, "HP  x" + fmt(survivor.hpMultiplier) + "     DMG  x" + fmt(survivor.weaponMultiplier) + "     SPD  x" + fmt(survivor.speedMultiplier), 0, h * .56f, w, Align.center, false);
+        font.draw(batch, "CRIT  +" + Math.round(survivor.critBonus * 100f) + "%     ABILITY  +" + Math.round(survivor.abilityBonus * 100f) + "%", 0, h * .505f, w, Align.center, false);
+        font.setColor(VisualTheme.VIOLET);
+        font.draw(batch, "XP  " + xp + " / " + next, 0, h * .39f, w, Align.center, false);
+
+        font.setColor(unlocked ? Color.WHITE : Color.LIGHT_GRAY);
+        font.draw(batch, unlocked ? (game.profile.selectedSurvivor == survivor ? "SELECTED" : "SELECT [ENTER]") : unlockText(survivor), w * .31f, h * .235f + 37f, w * .38f, Align.center, false);
+        font.setColor(VisualTheme.MUTED);
+        font.draw(batch, "← / → BROWSE     ESC BACK", 0, h * .125f, w, Align.center, false);
+        if (!status.isEmpty()) { font.setColor(VisualTheme.CYAN); font.draw(batch, status, 0, h * .08f, w, Align.center, false); }
         batch.end();
     }
 
@@ -81,10 +88,10 @@ public final class SurvivorScreen extends ScreenAdapter {
     private String unlockText(SurvivorCatalog.Survivor survivor) {
         return switch (survivor) {
             case REX -> "DEFAULT";
-            case NYX -> "Unlock: Account Lv.3";
-            case BASTION -> "Unlock: Reach Stage 3";
-            case VOLT -> "Unlock: Reach Stage 5";
-            case WRAITH -> "Unlock: Account Lv.8 or Stage 7";
+            case NYX -> "UNLOCK: ACCOUNT LV.3";
+            case BASTION -> "UNLOCK: REACH STAGE 3";
+            case VOLT -> "UNLOCK: REACH STAGE 5";
+            case WRAITH -> "UNLOCK: ACCOUNT LV.8 OR STAGE 7";
         };
     }
 
