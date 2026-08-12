@@ -33,8 +33,9 @@ public final class CharacterSpriteRenderer {
         float h = 1.65f;
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
+        float facing = player.velocity.x < -.02f ? -1f : 1f;
         batch.setColor(1f, 1f, 1f, player.invulnerable() ? .78f : 1f);
-        batch.draw(region, player.position.x - w * .5f, player.position.y - .58f, w, h);
+        drawFacing(batch, region, player.position.x, player.position.y - .58f, w, h, facing);
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
@@ -49,8 +50,23 @@ public final class CharacterSpriteRenderer {
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
         float flash = Math.min(1f, Math.max(0f, enemy.hitFlash));
+        float facing = enemy.velocity.x < -.02f ? -1f : 1f;
         batch.setColor(1f, 1f - flash * .32f, 1f - flash * .32f, 1f);
-        batch.draw(region, enemy.position.x - w * .5f, enemy.position.y - enemy.radius * .72f, w, h);
+        drawFacing(batch, region, enemy.position.x, enemy.position.y - enemy.radius * .72f, w, h, facing);
         batch.setColor(1f, 1f, 1f, 1f);
+    }
+
+    private void drawFacing(SpriteBatch batch, TextureRegion region, float centerX, float y, float width, float height, float facing) {
+        float x = centerX - width * .5f;
+        if (facing >= 0f) {
+            batch.draw(region, x, y, width, height);
+        } else {
+            batch.draw(region,
+                x, y,
+                width * .5f, height * .5f,
+                width, height,
+                -1f, 1f,
+                0f);
+        }
     }
 }
