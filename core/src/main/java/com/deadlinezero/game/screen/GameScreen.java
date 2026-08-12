@@ -1,0 +1,108 @@
+package com.deadlinezero.game.screen;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
+import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.config.GameConfig;
+import com.deadlinezero.game.entities.Enemy;
+import com.deadlinezero.game.entities.Player;
+import com.deadlinezero.game.entities.Projectile;
+import com.deadlinezero.game.fx.ImpactFx;
+import com.deadlinezero.game.input.VirtualStick;
+import com.deadlinezero.game.progression.Upgrade;
+import com.deadlinezero.game.services.AdsService;
+import com.deadlinezero.game.util.Pools;
+import com.deadlinezero.game.world.WaveDirector;
+
+public final class GameScreen extends ScreenAdapter {
+    private final DeadlineZeroGame game;
+    private final OrthographicCamera cam = new OrthographicCamera(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
+    private final ShapeRenderer shapes = new ShapeRenderer();
+    private final SpriteBatch batch = new SpriteBatch();
+    private final BitmapFont font = new BitmapFont();
+    private final Player player = new Player(0,0);
+    private final Array<Enemy> enemies = new Array<>(false, GameConfig.MAX_ENEMIES);
+    private final Pools pools = new Pools();
+    private final WaveDirector director = new WaveDirector();
+    private final VirtualStick stick = new VirtualStick();
+    private float accumulator, fireTimer, contactTimer, cameraShake;
+    private boolean choosingUpgrade, gameOver, revived;
+    private final Upgrade[] choices = new Upgrade[3];
+
+    public GameScreen(DeadlineZeroGame game) { this.game=game; cam.position.set(0,0,0); cam.update(); font.getData().setScale(.75f); }
+
+    @Override public void render(float delta) {
+        delta = Math.min(delta, .05f); accumulator += delta;
+        while(accumulator >= GameConfig.FIXED_STEP) { if(!choosingUpgrade && !gameOver) update(GameConfig.FIXED_STEP); accumulator -= GameConfig.FIXED_STEP; }
+        draw(); handleOverlayInput();
+    }
+
+    private void update(float dt) {
+        director.update(dt); fireTimer-=dt; contactTimer-=dt;
+        Vector2 move = stick.update(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
+        player.velocity.set(move).scl(player.moveSpeed); player.position.mulAdd(player.velocity,dt);
+        player.position.x = MathUtils.clamp(player.position.x,-31,31); player.position.y = MathUtils.clamp(player.position.y,-17,17);
+        if(director.shouldSpawn() && enemies.size < GameConfig.MAX_ENEMIES) { spawnEnemy(); director.onSpawn(); }
+        Enemy target = nearestEnemy();
+        if(target!=null && fireTimer<=0){ fire(target); fireTimer=player.fireInterval; }
+        for(Enemy e: enemies){
+            if(!e.alive) continue; Vector2 d=new Vector2(player.position).sub(e.position); if(d.len2()>.001f) e.velocity.set(d).nor().scl(e.speed); e.position.mulAdd(e.velocity,dt); e.hitFlash=Math.max(0,e.hitFlash-dt*6);
+            float rr=player.radius+e.radius; if(e.position.dst2(player.position)<rr*rr && contactTimer<=0){ player.damage(e.contactDamage); contactTimer=.28f; cameraShake=.35f; impact(player.position.x,player.position.y,1.1f,.18f,Color.RED); if(!player.alive){ gameOver=true; } }
+        }
+        for(Projectile p:pools.projectiles){ if(!p.active)continue; p.position.mulAdd(p.velocity,dt); p.life-=dt; if(p.life<=0){p.active=false;continue;} for(Enemy e:enemies){ if(!e.alive)continue; float rr=p.radius+e.radius; if(p.position.dst2(e.position)<rr*rr){ e.damage(p.damage); e.hitFlash=1; p.active=false; impact(p.position.x,p.position.y,p.critical?.6f:.38f,.12f,p.critical?Color.GOLD:Color.CYAN); if(!e.alive){ director.onKill(); if(player.addXp(e.xpValue)) prepareUpgrade(); impact(e.position.x,e.position.y,e.radius*2.3f,.28f,new Color(.2f,1f,.65f,1)); } break; } } }
+        for(ImpactFx f:pools.impacts){ if(f.active){f.life-=dt;if(f.life<=0)f.active=false;} }
+        for(int i=enemies.size-1;i>=0;i--) if(!enemies.get(i).alive) enemies.removeIndex(i);
+        cam.position.x += (MathUtils.random(-1f,1f)*cameraShake); cam.position.y += (MathUtils.random(-1f,1f)*cameraShake); cameraShake=Math.max(0,cameraShake-dt*2.7f); cam.position.x = MathUtils.lerp(cam.position.x, 0f, .08f); cam.position.y = MathUtils.lerp(cam.position.y, 0f, .08f); cam.update();
+    }
+
+    private void spawnEnemy(){
+        Enemy.Type t=director.chooseType(); float angle=MathUtils.random(MathUtils.PI2); float dist=MathUtils.random(13f,19f); float x=player.position.x+MathUtils.cos(angle)*dist,y=player.position.y+MathUtils.sin(angle)*dist;
+        float scale=1f+director.elapsed()/180f; Enemy e;
+        switch(t){
+            case RUNNER -> e=new Enemy(t,x,y,28*scale,4.2f,.34f,8,6);
+            case BRUTE -> e=new Enemy(t,x,y,145*scale,1.6f,.72f,18,15);
+            case ELITE -> e=new Enemy(t,x,y,420*scale,2.1f,1.05f,28,42);
+            default -> e=new Enemy(t,x,y,52*scale,2.55f,.46f,10,8);
+        } enemies.add(e);
+    }
+
+    private Enemy nearestEnemy(){ Enemy best=null; float bestD=Float.MAX_VALUE; for(Enemy e:enemies){float d=e.position.dst2(player.position);if(d<bestD){bestD=d;best=e;}} return best; }
+    private void fire(Enemy target){ Vector2 dir=new Vector2(target.position).sub(player.position).nor(); float base=dir.angleDeg(); for(int i=0;i<player.projectileCount;i++){ float spread=(i-(player.projectileCount-1)/2f)*5.5f; Vector2 v=new Vector2(player.projectileSpeed,0).setAngleDeg(base+spread); boolean crit=MathUtils.random()<player.critChance; Projectile p=pools.projectile(); if(p!=null)p.spawn(player.position.x,player.position.y,v.x,v.y,player.damage*(crit?player.critMultiplier:1),crit); } cameraShake=Math.max(cameraShake,.035f); }
+    private void impact(float x,float y,float s,float d,Color c){ ImpactFx f=pools.impact(); if(f!=null)f.spawn(x,y,s,d,c); }
+    private void prepareUpgrade(){ choosingUpgrade=true; Upgrade[] all=Upgrade.values(); for(int i=0;i<3;i++){ Upgrade u; do{u=all[MathUtils.random(all.length-1)];}while(i>0&&(u==choices[0]||u==choices[1])); choices[i]=u; } }
+
+    private void draw(){
+        Gdx.gl.glClearColor(.015f,.022f,.03f,1); Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        shapes.setProjectionMatrix(cam.combined); shapes.begin(ShapeRenderer.ShapeType.Filled);
+        shapes.setColor(.025f,.04f,.052f,1); shapes.rect(-40,-24,80,48);
+        shapes.setColor(.06f,.14f,.17f,.55f); for(int x=-40;x<40;x+=2)shapes.rect(x,-24,.02f,48); for(int y=-24;y<24;y+=2)shapes.rect(-40,y,80,.02f);
+        for(ImpactFx f:pools.impacts) if(f.active){float a=f.life/f.maxLife; shapes.setColor(f.color.r,f.color.g,f.color.b,a*.55f); shapes.circle(f.position.x,f.position.y,f.size*(1-a*.45f),18);}
+        for(Projectile p:pools.projectiles)if(p.active){shapes.setColor(p.critical?Color.GOLD:Color.CYAN);shapes.circle(p.position.x,p.position.y,p.critical?.16f:.11f,12);}
+        for(Enemy e:enemies){ Color c=switch(e.type){case RUNNER->new Color(.95f,.35f,.25f,1);case BRUTE->new Color(.6f,.12f,.16f,1);case ELITE->new Color(.85f,.18f,.8f,1);default->new Color(.35f,.75f,.42f,1);}; if(e.hitFlash>0)c=Color.WHITE; shapes.setColor(c);shapes.circle(e.position.x,e.position.y,e.radius,20); shapes.setColor(.1f,.1f,.1f,.8f);shapes.rect(e.position.x-e.radius,e.position.y+e.radius+.12f,e.radius*2,.07f);shapes.setColor(Color.RED);shapes.rect(e.position.x-e.radius,e.position.y+e.radius+.12f,e.radius*2*(e.hp/e.maxHp),.07f); }
+        shapes.setColor(.12f,.85f,1f,1);shapes.circle(player.position.x,player.position.y,player.radius,24);shapes.setColor(.8f,.97f,1f,.6f);shapes.circle(player.position.x,player.position.y,player.radius*.45f,18);
+        shapes.end();
+        drawHud();
+    }
+
+    private void drawHud(){ float w=Gdx.graphics.getWidth(),h=Gdx.graphics.getHeight(); shapes.setProjectionMatrix(new com.badlogic.gdx.math.Matrix4().setToOrtho2D(0,0,w,h)); shapes.begin(ShapeRenderer.ShapeType.Filled); shapes.setColor(.02f,.03f,.04f,.8f);shapes.rect(24,h-58,w*.32f,22);shapes.setColor(.08f,.8f,.95f,1);shapes.rect(28,h-54,(w*.32f-8)*(player.hp/player.maxHp),14); shapes.setColor(.02f,.03f,.04f,.8f);shapes.rect(w*.34f,h-58,w*.32f,22);shapes.setColor(.55f,.25f,1f,1);shapes.rect(w*.34f+4,h-54,(w*.32f-8)*(player.xp/(float)player.xpNext),14);shapes.end(); batch.getProjectionMatrix().setToOrtho2D(0,0,w,h);batch.begin();font.setColor(Color.WHITE);font.draw(batch,"HP "+(int)player.hp+" / "+(int)player.maxHp,32,h-64);font.draw(batch,"LV "+player.level,w*.34f+8,h-64);font.draw(batch,"KILLS  "+director.kills(),w-190,h-42);font.draw(batch,String.format("%02d:%02d",(int)director.elapsed()/60,(int)director.elapsed()%60),w-190,h-68); if(choosingUpgrade)drawUpgradeText(w,h); if(gameOver)drawGameOverText(w,h);batch.end(); }
+    private void drawUpgradeText(float w,float h){font.getData().setScale(1.3f);font.setColor(Color.WHITE);font.draw(batch,"PROTOCOL UPGRADE",0,h*.76f,w,Align.center,false);font.getData().setScale(.72f);for(int i=0;i<3;i++){float x=w*(.17f+i*.33f);font.setColor(Color.CYAN);font.draw(batch,"["+(i+1)+"] "+choices[i].title,x-120,h*.52f,240,Align.center,false);font.setColor(Color.LIGHT_GRAY);font.draw(batch,choices[i].description,x-120,h*.45f,240,Align.center,true);} }
+    private void drawGameOverText(float w,float h){font.getData().setScale(1.5f);font.setColor(Color.WHITE);font.draw(batch,"SIGNAL LOST",0,h*.62f,w,Align.center,false);font.getData().setScale(.72f);font.draw(batch,revived?"TAP TO RETURN TO BASE":"TAP TO REVIVE (rewarded ad) • R = retry",0,h*.45f,w,Align.center,false);}
+    private void handleOverlayInput(){
+        if(choosingUpgrade){int idx=-1;if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1))idx=0;if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2))idx=1;if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_3))idx=2;if(Gdx.input.justTouched()){float x=Gdx.input.getX()/(float)Gdx.graphics.getWidth();idx=Math.min(2,(int)(x*3));}if(idx>=0){choices[idx].apply(player);choosingUpgrade=false;}}
+        if(gameOver){if(Gdx.input.isKeyJustPressed(Input.Keys.R)){game.startRun();return;}if(Gdx.input.justTouched()){if(!revived){game.services.ads.showRewarded(AdsService.Reward.REVIVE,()->{player.alive=true;player.hp=player.maxHp*.45f;gameOver=false;revived=true;},()->game.showMenu());}else game.showMenu();}}
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.showMenu();
+    }
+    @Override public void resize(int width,int height){ cam.viewportWidth=GameConfig.WORLD_WIDTH;cam.viewportHeight=GameConfig.WORLD_WIDTH*((float)height/width);cam.update(); }
+    @Override public void dispose(){shapes.dispose();batch.dispose();font.dispose();}
+}
