@@ -8,6 +8,8 @@ import com.deadlinezero.game.ai.BossPhaseController;
 import com.deadlinezero.game.ai.EnemyArchetype;
 import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.combat.DamageElement;
+import com.deadlinezero.game.meta.RunStageContext;
+import com.deadlinezero.game.meta.StageRules;
 
 public final class Enemy extends ActorState {
     public enum Type { SHAMBLER, RUNNER, BRUTE, RANGED, ELITE, BOSS }
@@ -28,11 +30,12 @@ public final class Enemy extends ActorState {
     public final BossCombatRuntime bossCombat;
 
     public Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp) {
-        super(x, y, radius, hp);
+        super(x, y, radius, hp * StageRules.enemyHpMultiplier(RunStageContext.stage()));
+        int stage = RunStageContext.stage();
         this.type = type;
-        this.speed = speed;
-        this.contactDamage = damage;
-        this.xpValue = xp;
+        this.speed = speed * StageRules.enemySpeedMultiplier(stage);
+        this.contactDamage = damage * StageRules.enemyDamageMultiplier(stage);
+        this.xpValue = Math.max(1, Math.round(xp * (1f + (stage - 1) * .035f)));
         EnemyArchetype archetype = switch (type) {
             case RANGED -> EnemyArchetype.RANGED;
             case BOSS -> EnemyArchetype.BOSS;
