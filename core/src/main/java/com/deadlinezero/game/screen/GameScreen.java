@@ -22,12 +22,14 @@ import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.config.GameConfig;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.EnemyProjectile;
+import com.deadlinezero.game.entities.HomingMissile;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.entities.Projectile;
 import com.deadlinezero.game.fx.DamageNumber;
 import com.deadlinezero.game.fx.ImpactFx;
 import com.deadlinezero.game.input.VirtualStick;
 import com.deadlinezero.game.progression.Upgrade;
+import com.deadlinezero.game.progression.UpgradeSelector;
 import com.deadlinezero.game.services.AdsService;
 import com.deadlinezero.game.util.Pools;
 import com.deadlinezero.game.world.SpatialHash;
@@ -127,6 +129,16 @@ public final class GameScreen extends ScreenAdapter {
             float distance = (float)Math.sqrt(Math.max(len2, .0001f));
             e.updateAi(dt, distance);
 
+            if (e.type == Enemy.Type.BOSS && e.bossCombat != null && e.bossPhases != null) {
+                int phase = e.bossPhases.phase();
+                if (e.bossCombat.consumeCharge(phase)) {
+                    cameraShake = Math.max(cameraShake, .16f);
+                    impact(e.position.x, e.position.y, 2.8f, .24f, Color.SCARLET);
+                }
+                if (e.bossCombat.consumeSummon(phase)) spawnBossMinions(e, phase);
+                if (e.bossCombat.consumeEnragePulse(phase)) bossEnragePulse(e);
+            }
+
             if (len2 > .0001f) {
                 float inv = 1f / distance;
                 float speed = e.effectiveSpeed();
@@ -148,6 +160,34 @@ public final class GameScreen extends ScreenAdapter {
                 contactTimer = .28f;
             }
         }
+    }
+
+    private void spawnBossMinions(Enemy boss, int phase) {
+        int count = phase >= 3 ? 6 : 3;
+        for (int i = 0; i < count && enemies.size < GameConfig.MAX_ENEMIES; i++) {
+            float angle = i * (MathUtils.PI2 / count) + MathUtils.random(-.18f, .18f);
+            float dist = 2.6f + MathUtils.random(0f, 1.2f);
+            float x = boss.position.x + MathUtils.cos(angle) * dist;
+            float y = boss.position.y + MathUtils.sin(angle) * dist;
+            float scale = 1f + director.elapsed() / 210f;
+            Enemy.Type type = (i % 3 == 0 && phase >= 3) ? Enemy.Type.RANGED : Enemy.Type.RUNNER;
+            Enemy minion = type == Enemy.Type.RANGED
+                ? new Enemy(type, x, y, 68f * scale, 2.2f, .42f, 12f, 10)
+                : new Enemy(type, x, y, 30f * scale, 4.35f, .34f, 8f, 5);
+            enemies.add(minion);
+            impact(x, y, .65f, .18f, Color.VIOLET);
+        }
+        cameraShake = Math.max(cameraShake, .12f);
+    }
+
+    private void bossEnragePulse(Enemy boss) {
+        int shots = 20;
+        for (int i = 0; i < shots; i++) {
+            spawnHostileShot(boss.position.x, boss.position.y, i * (360f / shots), 8.2f,
+                boss.contactDamage * .65f, .24f, i % 4 == 0, 2.0f);
+        }
+        impact(boss.position.x, boss.position.y, 5.1f, .34f, Color.MAGENTA);
+        cameraShake = Math.max(cameraShake, .38f);
     }
 
     private void updatePlayerProjectiles(float dt) {
@@ -246,7 +286,9 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private void damagePlayer(float damage, float shake) {
+        float hpBefore = player.hp;
         player.damage(damage);
+        if (player.hp == hpBefore) return;
         cameraShake = Math.max(cameraShake, shake);
         impact(player.position.x, player.position.y, 1.1f, .18f, Color.RED);
         damageNumber(player.position.x, player.position.y + player.radius, damage, false, Color.SCARLET);
@@ -319,13 +361,7 @@ public final class GameScreen extends ScreenAdapter {
 
     private void prepareUpgrade() {
         choosingUpgrade = true;
-        Upgrade[] all = Upgrade.values();
-        for (int i = 0; i < 3; i++) {
-            Upgrade u;
-            do { u = all[MathUtils.random(all.length - 1)]; }
-            while (i > 0 && (u == choices[0] || u == choices[1]));
-            choices[i] = u;
-        }
+        UpgradeSelector.fillChoices(player, choices);
     }
 
     private void draw() {
@@ -350,6 +386,16 @@ public final class GameScreen extends ScreenAdapter {
             shapes.setColor(p.explosive ? Color.ORANGE : Color.SCARLET);
             shapes.circle(p.position.x, p.position.y, p.radius, 14);
         }
+        for (HomingMissile m : pools.homingMissiles) if (m.active) {
+            shapes.setColor(m.element == DamageElement.FROST ? Color.CYAN : Color.ORANGE);
+            shapes.circle(m.position.x, m.position.y, m.radius * 1.35f, 10);
+            float len = m.velocity.len();
+            if (len > .001f) {
+                float tx = m.position.x - m.velocity.x / len * .55f;
+                float ty = m.position.y - m.velocity.y / len * .55f;
+                shapes.rectLine(m.position.x, m.position.y, tx, ty, .08f);
+            }
+        }
         drawAbilityObjects();
         for (Enemy e : enemies) {
             Color c = switch (e.type) {
@@ -364,12 +410,17 @@ public final class GameScreen extends ScreenAdapter {
                 shapes.setColor(1f, .12f, .04f, .20f);
                 shapes.circle(e.position.x, e.position.y, e.type == Enemy.Type.BOSS ? 4.4f : 1.1f, 28);
             }
+            if (e.type == Enemy.Type.BOSS && e.bossCombat != null && e.bossCombat.charging()) {
+                shapes.setColor(1f, .15f, .05f, .18f);
+                shapes.circle(e.position.x, e.position.y, 2.4f, 28);
+            }
             if (e.hitFlash > 0f) c = Color.WHITE;
             shapes.setColor(c); shapes.circle(e.position.x, e.position.y, e.radius, 20);
             shapes.setColor(.1f, .1f, .1f, .8f); shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f, .07f);
             shapes.setColor(Color.RED); shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f * (e.hp / e.maxHp), .07f);
         }
-        shapes.setColor(.12f, .85f, 1f, 1f); shapes.circle(player.position.x, player.position.y, player.radius, 24);
+        shapes.setColor(player.invulnerable() ? Color.WHITE : new Color(.12f, .85f, 1f, 1f));
+        shapes.circle(player.position.x, player.position.y, player.radius, 24);
         shapes.end();
         drawCombatText();
         drawHud();
