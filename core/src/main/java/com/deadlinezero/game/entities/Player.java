@@ -12,14 +12,30 @@ public final class Player extends ActorState {
     public float moveSpeed = GameConfig.PLAYER_SPEED;
     public float dashCooldown = 3.2f;
     public float dashTimer;
+    public float invulnerabilityTimer;
     public final WeaponRuntime weapon = new WeaponRuntime(WeaponCatalog.AR9);
     public final AbilityLoadout abilities = new AbilityLoadout();
 
     public Player(float x, float y) { super(x, y, 0.42f, GameConfig.PLAYER_MAX_HP); }
 
     public boolean canDash() { return dashTimer <= 0f; }
-    public void triggerDash() { dashTimer = dashCooldown; }
-    public void updateRuntime(float dt) { dashTimer = Math.max(0f, dashTimer - dt); }
+
+    public void triggerDash() {
+        dashTimer = dashCooldown;
+        invulnerabilityTimer = Math.max(invulnerabilityTimer, .30f);
+    }
+
+    public boolean invulnerable() { return invulnerabilityTimer > 0f; }
+
+    public void updateRuntime(float dt) {
+        dashTimer = Math.max(0f, dashTimer - dt);
+        invulnerabilityTimer = Math.max(0f, invulnerabilityTimer - dt);
+    }
+
+    @Override public void damage(float amount) {
+        if (invulnerable()) return;
+        super.damage(amount);
+    }
 
     public boolean addXp(int amount) {
         xp += amount;
