@@ -3,6 +3,7 @@ package com.deadlinezero.game.entities;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.deadlinezero.game.ai.AttackController;
+import com.deadlinezero.game.ai.BossCombatRuntime;
 import com.deadlinezero.game.ai.BossPhaseController;
 import com.deadlinezero.game.ai.EnemyArchetype;
 import com.deadlinezero.game.ai.EnemyState;
@@ -24,6 +25,7 @@ public final class Enemy extends ActorState {
     public final Vector2 impulse = new Vector2();
     public final AttackController attack;
     public final BossPhaseController bossPhases;
+    public final BossCombatRuntime bossCombat;
 
     public Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp) {
         super(x, y, radius, hp);
@@ -38,6 +40,7 @@ public final class Enemy extends ActorState {
         };
         this.attack = new AttackController(archetype);
         this.bossPhases = type == Type.BOSS ? new BossPhaseController() : null;
+        this.bossCombat = type == Type.BOSS ? new BossCombatRuntime() : null;
     }
 
     public void applyElement(DamageElement element, float power) {
@@ -69,7 +72,10 @@ public final class Enemy extends ActorState {
         hitFlash = Math.max(0f, hitFlash - dt * 6f);
         float damping = MathUtils.clamp(1f - dt * 8f, 0f, 1f);
         impulse.scl(damping);
-        if (bossPhases != null) bossPhases.update(maxHp <= 0f ? 0f : hp / maxHp);
+        if (bossPhases != null) {
+            bossPhases.update(maxHp <= 0f ? 0f : hp / maxHp);
+            bossCombat.update(dt, bossPhases.phase());
+        }
     }
 
     public void updateAi(float dt, float distanceToPlayer) {
@@ -80,6 +86,7 @@ public final class Enemy extends ActorState {
     public float effectiveSpeed() {
         if (attack.state() == EnemyState.STUNNED) return 0f;
         float phaseMultiplier = bossPhases == null ? 1f : bossPhases.speedMultiplier();
-        return speed * slowMultiplier * phaseMultiplier;
+        float chargeMultiplier = bossCombat != null && bossCombat.charging() ? 3.4f : 1f;
+        return speed * slowMultiplier * phaseMultiplier * chargeMultiplier;
     }
 }
