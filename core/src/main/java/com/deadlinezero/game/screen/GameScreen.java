@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.config.GameConfig;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
@@ -91,22 +92,28 @@ public final class GameScreen extends ScreenAdapter {
             float dx = player.position.x - e.position.x;
             float dy = player.position.y - e.position.y;
             float len2 = dx * dx + dy * dy;
+            float distance = (float)Math.sqrt(Math.max(len2, .0001f));
+            e.updateAi(dt, distance);
+
             if (len2 > .0001f) {
-                float inv = 1f / (float)Math.sqrt(len2);
+                float inv = 1f / distance;
                 float speed = e.effectiveSpeed();
-                e.velocity.set(dx * inv * speed, dy * inv * speed).add(e.impulse);
+                float direction = 1f;
+                if (e.type == Enemy.Type.RANGED && distance < e.attack.archetype().preferredRange) direction = -0.65f;
+                if (e.attack.state() == EnemyState.TELEGRAPHING || e.attack.state() == EnemyState.RECOVERING) speed *= 0.22f;
+                e.velocity.set(dx * inv * speed * direction, dy * inv * speed * direction).add(e.impulse);
             }
             e.position.mulAdd(e.velocity, dt);
+
+            if (e.attack.consumeAttack()) resolveEnemyAttack(e, distance);
+
             boolean aliveBeforeStatus = e.alive;
             e.updateStatus(dt);
             if (aliveBeforeStatus && !e.alive) onEnemyKilled(e);
             float rr = player.radius + e.radius;
-            if (e.alive && len2 < rr * rr && contactTimer <= 0f) {
-                player.damage(e.contactDamage);
+            if (e.alive && e.type != Enemy.Type.RANGED && len2 < rr * rr && contactTimer <= 0f) {
+                damagePlayer(e.contactDamage, .35f);
                 contactTimer = .28f;
-                cameraShake = .35f;
-                impact(player.position.x, player.position.y, 1.1f, .18f, Color.RED);
-                if (!player.alive) gameOver = true;
             }
         }
 
@@ -146,6 +153,29 @@ public final class GameScreen extends ScreenAdapter {
         cam.update();
     }
 
+    private void resolveEnemyAttack(Enemy e, float distance) {
+        if (e.type == Enemy.Type.RANGED) {
+            if (distance <= e.attack.archetype().attackRange) {
+                impact(player.position.x, player.position.y, .8f, .14f, Color.ORANGE);
+                damagePlayer(e.contactDamage, .18f);
+            }
+            return;
+        }
+        if (e.type == Enemy.Type.BOSS) {
+            int phase = e.bossPhases == null ? 1 : e.bossPhases.phase();
+            float radius = 3.2f + phase * .8f;
+            impact(e.position.x, e.position.y, radius, .34f, new Color(1f, .18f, .08f, 1f));
+            if (distance <= radius) damagePlayer(e.contactDamage * (.75f + phase * .25f), .55f);
+        }
+    }
+
+    private void damagePlayer(float damage, float shake) {
+        player.damage(damage);
+        cameraShake = Math.max(cameraShake, shake);
+        impact(player.position.x, player.position.y, 1.1f, .18f, Color.RED);
+        if (!player.alive) gameOver = true;
+    }
+
     private void onEnemyKilled(Enemy e) {
         director.onKill();
         if (player.addXp(e.xpValue)) prepareUpgrade();
@@ -155,17 +185,20 @@ public final class GameScreen extends ScreenAdapter {
     private void spawnEnemy() {
         Enemy.Type t = director.chooseType();
         float angle = MathUtils.random(MathUtils.PI2);
-        float dist = MathUtils.random(13f, 19f);
+        float dist = t == Enemy.Type.BOSS ? 15f : MathUtils.random(13f, 19f);
         float x = player.position.x + MathUtils.cos(angle) * dist;
         float y = player.position.y + MathUtils.sin(angle) * dist;
         float scale = 1f + director.elapsed() / 180f;
         Enemy e = switch (t) {
             case RUNNER -> new Enemy(t, x, y, 28 * scale, 4.2f, .34f, 8, 6);
             case BRUTE -> new Enemy(t, x, y, 145 * scale, 1.6f, .72f, 18, 15);
+            case RANGED -> new Enemy(t, x, y, 72 * scale, 2.15f, .42f, 13, 12);
             case ELITE -> new Enemy(t, x, y, 420 * scale, 2.1f, 1.05f, 28, 42);
+            case BOSS -> new Enemy(t, x, y, 2200 * scale, 1.35f, 1.65f, 24, 280);
             default -> new Enemy(t, x, y, 52 * scale, 2.55f, .46f, 10, 8);
         };
         enemies.add(e);
+        if (t == Enemy.Type.BOSS) director.onBossSpawned();
     }
 
     private Enemy nearestEnemy() {
@@ -190,11 +223,9 @@ public final class GameScreen extends ScreenAdapter {
             shotVelocity.set(player.weapon.projectileSpeed, 0f).setAngleDeg(base + spread);
             boolean crit = MathUtils.random() < player.weapon.critChance;
             Projectile p = pools.projectile();
-            if (p != null) {
-                p.spawn(player.position.x, player.position.y, shotVelocity.x, shotVelocity.y,
-                    player.weapon.damage * (crit ? player.weapon.critMultiplier : 1f), crit,
-                    player.weapon.penetration, player.weapon.knockback, player.weapon.element);
-            }
+            if (p != null) p.spawn(player.position.x, player.position.y, shotVelocity.x, shotVelocity.y,
+                player.weapon.damage * (crit ? player.weapon.critMultiplier : 1f), crit,
+                player.weapon.penetration, player.weapon.knockback, player.weapon.element);
         }
         cameraShake = Math.max(cameraShake, .035f);
     }
@@ -220,8 +251,7 @@ public final class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         shapes.setProjectionMatrix(cam.combined);
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(.025f, .04f, .052f, 1f);
-        shapes.rect(-40, -24, 80, 48);
+        shapes.setColor(.025f, .04f, .052f, 1f); shapes.rect(-40, -24, 80, 48);
         shapes.setColor(.06f, .14f, .17f, .55f);
         for (int x = -40; x < 40; x += 2) shapes.rect(x, -24, .02f, 48);
         for (int y = -24; y < 24; y += 2) shapes.rect(-40, y, 80, .02f);
@@ -238,19 +268,21 @@ public final class GameScreen extends ScreenAdapter {
             Color c = switch (e.type) {
                 case RUNNER -> new Color(.95f, .35f, .25f, 1f);
                 case BRUTE -> new Color(.6f, .12f, .16f, 1f);
+                case RANGED -> new Color(.95f, .62f, .16f, 1f);
                 case ELITE -> new Color(.85f, .18f, .8f, 1f);
+                case BOSS -> new Color(.95f, .08f, .06f, 1f);
                 default -> new Color(.35f, .75f, .42f, 1f);
             };
+            if (e.attack.state() == EnemyState.TELEGRAPHING) {
+                shapes.setColor(1f, .12f, .04f, .20f);
+                shapes.circle(e.position.x, e.position.y, e.type == Enemy.Type.BOSS ? 4.4f : 1.1f, 28);
+            }
             if (e.hitFlash > 0f) c = Color.WHITE;
-            shapes.setColor(c);
-            shapes.circle(e.position.x, e.position.y, e.radius, 20);
-            shapes.setColor(.1f, .1f, .1f, .8f);
-            shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f, .07f);
-            shapes.setColor(Color.RED);
-            shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f * (e.hp / e.maxHp), .07f);
+            shapes.setColor(c); shapes.circle(e.position.x, e.position.y, e.radius, 20);
+            shapes.setColor(.1f, .1f, .1f, .8f); shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f, .07f);
+            shapes.setColor(Color.RED); shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f * (e.hp / e.maxHp), .07f);
         }
-        shapes.setColor(.12f, .85f, 1f, 1f);
-        shapes.circle(player.position.x, player.position.y, player.radius, 24);
+        shapes.setColor(.12f, .85f, 1f, 1f); shapes.circle(player.position.x, player.position.y, player.radius, 24);
         shapes.end();
         drawHud();
     }
