@@ -15,10 +15,21 @@ public final class ProfileStore {
         profile.accountLevel = Math.max(1, p.getInteger("accountLevel", 1));
         profile.accountXp = Math.max(0L, p.getLong("accountXp", 0L));
         profile.highestStage = Math.max(1, p.getInteger("highestStage", 1));
+        profile.selectedStage = Math.min(profile.highestStage, Math.max(1, p.getInteger("selectedStage", 1)));
         profile.totalRuns = Math.max(0, p.getInteger("totalRuns", 0));
         profile.totalKills = Math.max(0L, p.getLong("totalKills", 0L));
         profile.addCurrency(PlayerProfile.Currency.CREDITS, Math.max(0L, p.getLong("credits", 0L)));
         profile.addCurrency(PlayerProfile.Currency.GEMS, Math.max(0L, p.getLong("gems", 0L)));
+
+        profile.daily.epochDay = p.getLong("daily.epochDay", -1L);
+        profile.daily.loginStreak = Math.max(0, p.getInteger("daily.loginStreak", 0));
+        profile.daily.loginClaimed = p.getBoolean("daily.loginClaimed", false);
+        profile.daily.killsToday = Math.max(0, p.getInteger("daily.kills", 0));
+        profile.daily.runsToday = Math.max(0, p.getInteger("daily.runs", 0));
+        profile.daily.bossesToday = Math.max(0, p.getInteger("daily.bosses", 0));
+        profile.daily.killMissionClaimed = p.getBoolean("daily.killClaimed", false);
+        profile.daily.runMissionClaimed = p.getBoolean("daily.runClaimed", false);
+        profile.daily.bossMissionClaimed = p.getBoolean("daily.bossClaimed", false);
 
         int itemCount = Math.min(Inventory.MAX_ITEMS, Math.max(0, p.getInteger("inventory.count", 0)));
         for (int i = 0; i < itemCount; i++) {
@@ -52,10 +63,21 @@ public final class ProfileStore {
         p.putInteger("accountLevel", profile.accountLevel);
         p.putLong("accountXp", profile.accountXp);
         p.putInteger("highestStage", profile.highestStage);
+        p.putInteger("selectedStage", profile.selectedStage);
         p.putInteger("totalRuns", profile.totalRuns);
         p.putLong("totalKills", profile.totalKills);
         p.putLong("credits", profile.currency(PlayerProfile.Currency.CREDITS));
         p.putLong("gems", profile.currency(PlayerProfile.Currency.GEMS));
+
+        p.putLong("daily.epochDay", profile.daily.epochDay);
+        p.putInteger("daily.loginStreak", profile.daily.loginStreak);
+        p.putBoolean("daily.loginClaimed", profile.daily.loginClaimed);
+        p.putInteger("daily.kills", profile.daily.killsToday);
+        p.putInteger("daily.runs", profile.daily.runsToday);
+        p.putInteger("daily.bosses", profile.daily.bossesToday);
+        p.putBoolean("daily.killClaimed", profile.daily.killMissionClaimed);
+        p.putBoolean("daily.runClaimed", profile.daily.runMissionClaimed);
+        p.putBoolean("daily.bossClaimed", profile.daily.bossMissionClaimed);
 
         int count = Math.min(profile.inventory.size(), Inventory.MAX_ITEMS);
         p.putInteger("inventory.count", count);
