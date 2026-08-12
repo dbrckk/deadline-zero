@@ -2,7 +2,7 @@ package com.deadlinezero.game.meta;
 
 import com.badlogic.gdx.utils.Array;
 
-/** Persistent-ready equipment inventory. Serialization will be added to ProfileStore after schema stabilization. */
+/** Persistent equipment inventory with stable IDs for serialization and UI selection. */
 public final class Inventory {
     public static final int MAX_ITEMS = 120;
     private final Array<EquipmentItem> items = new Array<>(false, MAX_ITEMS);
@@ -12,7 +12,7 @@ public final class Inventory {
     public boolean full() { return items.size >= MAX_ITEMS; }
 
     public boolean add(EquipmentItem item) {
-        if (item == null || full()) return false;
+        if (item == null || full() || find(item.id) != null) return false;
         items.add(item);
         return true;
     }
@@ -23,7 +23,19 @@ public final class Inventory {
         return null;
     }
 
+    public boolean replace(EquipmentItem replacement) {
+        if (replacement == null) return false;
+        for (int i = 0; i < items.size; i++) {
+            if (items.get(i).id.equals(replacement.id)) {
+                items.set(i, replacement);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean remove(String id) {
+        if (id == null) return false;
         for (int i = 0; i < items.size; i++) {
             if (items.get(i).id.equals(id)) {
                 items.removeIndex(i);
