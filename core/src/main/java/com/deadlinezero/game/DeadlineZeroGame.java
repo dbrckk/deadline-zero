@@ -25,15 +25,18 @@ import com.deadlinezero.game.screen.ShopScreen;
 import com.deadlinezero.game.screen.SurvivorScreen;
 import com.deadlinezero.game.screen.VictoryScreen;
 import com.deadlinezero.game.services.GameServices;
+import com.deadlinezero.game.visual.GameArt;
 
 public final class DeadlineZeroGame extends Game {
     private static final long DAY_MS = 86_400_000L;
     public final GameServices services;
     public PlayerProfile profile;
+    public GameArt art;
 
     public DeadlineZeroGame(GameServices services) { this.services = services == null ? GameServices.noOp() : services; }
 
     @Override public void create() {
+        art = new GameArt();
         profile = ProfileStore.load();
         DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
         profile.survivors.refreshUnlocks(profile);
@@ -99,6 +102,11 @@ public final class DeadlineZeroGame extends Game {
 
     public void saveProfile() { ProfileStore.save(profile); }
     @Override public void pause() { saveProfile(); }
-    @Override public void dispose() { RunMissionRuntime.end(); saveProfile(); super.dispose(); }
+    @Override public void dispose() {
+        RunMissionRuntime.end();
+        saveProfile();
+        super.dispose();
+        if (art != null) art.dispose();
+    }
     @Override public void setScreen(com.badlogic.gdx.Screen screen) { if (getScreen() != null) getScreen().dispose(); super.setScreen(screen); }
 }
