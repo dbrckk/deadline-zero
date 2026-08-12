@@ -1,0 +1,14 @@
+plugins { id 'application' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(17) } }
+application { mainClass = 'com.deadlinezero.game.desktop.DesktopLauncher' }
+
+dependencies {
+    implementation project(':core')
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:${gdxVersion}"
+    implementation "com.badlogicgames.gdx:gdx-platform:${gdxVersion}:natives-desktop"
+}
+
+run {
+    workingDir = rootProject.file('assets')
+    ignoreExitValue = true
+}

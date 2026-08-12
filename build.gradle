@@ -1,0 +1,9 @@
+plugins {
+    id 'java' apply false
+    id 'com.android.application' version '8.10.1' apply false
+}
+
+allprojects {
+    group = 'com.deadlinezero'
+    version = providers.gradleProperty('appVersion').get()
+}
