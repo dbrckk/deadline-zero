@@ -57,7 +57,7 @@ public final class GearScreen extends ScreenAdapter {
             boolean isEquipped = equipped != null && equipped.id.equals(item.id);
             float itemScore = EquipmentService.score(item);
             float equippedScore = EquipmentService.score(equipped);
-            float delta = itemScore - equippedScore;
+            float scoreDelta = itemScore - equippedScore;
 
             font.getData().setScale(.82f); font.setColor(rarityColor(item.rarity));
             font.draw(batch, item.name, 0, h * .59f, w, Align.center, false);
@@ -67,9 +67,9 @@ public final class GearScreen extends ScreenAdapter {
             font.draw(batch, isEquipped ? "EQUIPPED" : "UNEQUIPPED", 0, h * .465f, w, Align.center, false);
 
             if (!isEquipped) {
-                font.setColor(delta >= 0f ? Color.LIME : Color.SCARLET);
+                font.setColor(scoreDelta >= 0f ? Color.LIME : Color.SCARLET);
                 String compare = equipped == null ? "No item equipped in this slot" :
-                    String.format("Compared to equipped: %+.1f%% score", equippedScore <= 0f ? 100f : (delta / equippedScore) * 100f);
+                    String.format("Compared to equipped: %+.1f%% score", equippedScore <= 0f ? 100f : (scoreDelta / equippedScore) * 100f);
                 font.draw(batch, compare, 0, h * .425f, w, Align.center, false);
             }
 
