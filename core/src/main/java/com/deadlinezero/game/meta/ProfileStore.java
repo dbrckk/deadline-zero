@@ -19,6 +19,30 @@ public final class ProfileStore {
         profile.totalKills = Math.max(0L, p.getLong("totalKills", 0L));
         profile.addCurrency(PlayerProfile.Currency.CREDITS, Math.max(0L, p.getLong("credits", 0L)));
         profile.addCurrency(PlayerProfile.Currency.GEMS, Math.max(0L, p.getLong("gems", 0L)));
+
+        int itemCount = Math.min(Inventory.MAX_ITEMS, Math.max(0, p.getInteger("inventory.count", 0)));
+        for (int i = 0; i < itemCount; i++) {
+            String key = "inventory." + i + ".";
+            try {
+                String id = p.getString(key + "id", "");
+                if (id.isEmpty()) continue;
+                EquipmentItem item = new EquipmentItem(
+                    id,
+                    p.getString(key + "name", "Equipment"),
+                    PlayerProfile.EquipmentSlot.valueOf(p.getString(key + "slot", "WEAPON")),
+                    EquipmentItem.Rarity.valueOf(p.getString(key + "rarity", "COMMON")),
+                    Math.max(1, p.getInteger(key + "level", 1)),
+                    Math.max(0f, p.getFloat(key + "power", 0f))
+                );
+                profile.inventory.add(item);
+            } catch (IllegalArgumentException ignored) { }
+        }
+
+        for (PlayerProfile.EquipmentSlot slot : PlayerProfile.EquipmentSlot.values()) {
+            String id = p.getString("equipped." + slot.name(), "");
+            EquipmentItem item = profile.inventory.find(id);
+            if (item != null) profile.equip(item);
+        }
         return profile;
     }
 
@@ -32,6 +56,23 @@ public final class ProfileStore {
         p.putLong("totalKills", profile.totalKills);
         p.putLong("credits", profile.currency(PlayerProfile.Currency.CREDITS));
         p.putLong("gems", profile.currency(PlayerProfile.Currency.GEMS));
+
+        int count = Math.min(profile.inventory.size(), Inventory.MAX_ITEMS);
+        p.putInteger("inventory.count", count);
+        for (int i = 0; i < count; i++) {
+            EquipmentItem item = profile.inventory.items().get(i);
+            String key = "inventory." + i + ".";
+            p.putString(key + "id", item.id);
+            p.putString(key + "name", item.name);
+            p.putString(key + "slot", item.slot.name());
+            p.putString(key + "rarity", item.rarity.name());
+            p.putInteger(key + "level", item.level);
+            p.putFloat(key + "power", item.powerBonus);
+        }
+        for (PlayerProfile.EquipmentSlot slot : PlayerProfile.EquipmentSlot.values()) {
+            EquipmentItem item = profile.equipped(slot);
+            p.putString("equipped." + slot.name(), item == null ? "" : item.id);
+        }
         p.flush();
     }
 }
