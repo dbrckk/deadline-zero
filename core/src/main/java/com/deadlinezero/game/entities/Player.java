@@ -4,19 +4,22 @@ import com.deadlinezero.game.abilities.AbilityLoadout;
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.combat.WeaponRuntime;
 import com.deadlinezero.game.config.GameConfig;
+import com.deadlinezero.game.meta.RunLoadoutContext;
 
 public final class Player extends ActorState {
     public int level = 1;
     public int xp = 0;
     public int xpNext = 28;
-    public float moveSpeed = GameConfig.PLAYER_SPEED;
-    public float dashCooldown = 3.2f;
+    public float moveSpeed = GameConfig.PLAYER_SPEED * RunLoadoutContext.moveSpeedMultiplier();
+    public float dashCooldown = 3.2f * RunLoadoutContext.dashCooldownMultiplier();
     public float dashTimer;
     public float invulnerabilityTimer;
     public final WeaponRuntime weapon = new WeaponRuntime(WeaponCatalog.AR9);
     public final AbilityLoadout abilities = new AbilityLoadout();
 
-    public Player(float x, float y) { super(x, y, 0.42f, GameConfig.PLAYER_MAX_HP); }
+    public Player(float x, float y) {
+        super(x, y, 0.42f, GameConfig.PLAYER_MAX_HP * RunLoadoutContext.maxHpMultiplier());
+    }
 
     public boolean canDash() { return dashTimer <= 0f; }
 
