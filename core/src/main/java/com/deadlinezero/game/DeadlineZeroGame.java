@@ -18,6 +18,7 @@ import com.deadlinezero.game.screen.GearScreen;
 import com.deadlinezero.game.screen.MenuScreen;
 import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.screen.RunResultScreen;
+import com.deadlinezero.game.screen.ShopScreen;
 import com.deadlinezero.game.services.GameServices;
 
 public final class DeadlineZeroGame extends Game {
@@ -41,6 +42,7 @@ public final class DeadlineZeroGame extends Game {
     public void showMenu() { setScreen(new MenuScreen(this)); }
     public void showGear() { setScreen(new GearScreen(this)); }
     public void showMissions() { setScreen(new MissionsScreen(this)); }
+    public void showShop() { setScreen(new ShopScreen(this)); }
     public void startRun() {
         RunStageContext.begin(profile == null ? 1 : profile.selectedStage);
         RunLoadoutContext.begin(profile);
