@@ -24,6 +24,7 @@ public final class ProfileStore {
         profile.daily.epochDay = p.getLong("daily.epochDay", -1L);
         profile.daily.loginStreak = Math.max(0, p.getInteger("daily.loginStreak", 0));
         profile.daily.loginClaimed = p.getBoolean("daily.loginClaimed", false);
+        profile.daily.rewardedChestClaimed = p.getBoolean("daily.rewardedChestClaimed", false);
         profile.daily.killsToday = Math.max(0, p.getInteger("daily.kills", 0));
         profile.daily.runsToday = Math.max(0, p.getInteger("daily.runs", 0));
         profile.daily.bossesToday = Math.max(0, p.getInteger("daily.bosses", 0));
@@ -72,6 +73,7 @@ public final class ProfileStore {
         p.putLong("daily.epochDay", profile.daily.epochDay);
         p.putInteger("daily.loginStreak", profile.daily.loginStreak);
         p.putBoolean("daily.loginClaimed", profile.daily.loginClaimed);
+        p.putBoolean("daily.rewardedChestClaimed", profile.daily.rewardedChestClaimed);
         p.putInteger("daily.kills", profile.daily.killsToday);
         p.putInteger("daily.runs", profile.daily.runsToday);
         p.putInteger("daily.bosses", profile.daily.bossesToday);
