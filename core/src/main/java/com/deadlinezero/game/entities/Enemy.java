@@ -8,6 +8,7 @@ import com.deadlinezero.game.ai.BossPhaseController;
 import com.deadlinezero.game.ai.EnemyArchetype;
 import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.combat.DamageElement;
+import com.deadlinezero.game.meta.RunMissionRuntime;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageRules;
 
@@ -44,6 +45,12 @@ public final class Enemy extends ActorState {
         this.attack = new AttackController(archetype);
         this.bossPhases = type == Type.BOSS ? new BossPhaseController() : null;
         this.bossCombat = type == Type.BOSS ? new BossCombatRuntime() : null;
+    }
+
+    @Override public void damage(float amount) {
+        boolean wasAlive = alive;
+        super.damage(amount);
+        if (wasAlive && !alive && type == Type.BOSS) RunMissionRuntime.signalBossDefeated();
     }
 
     public void applyElement(DamageElement element, float power) {
