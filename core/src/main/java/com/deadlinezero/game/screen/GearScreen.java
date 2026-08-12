@@ -13,7 +13,6 @@ import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.EquipmentService;
 import com.deadlinezero.game.meta.EquipmentUpgradeService;
-import com.deadlinezero.game.meta.PlayerProfile;
 
 /** Functional pre-art gear management screen. */
 public final class GearScreen extends ScreenAdapter {
@@ -22,6 +21,7 @@ public final class GearScreen extends ScreenAdapter {
     private final ShapeRenderer shapes = new ShapeRenderer();
     private final BitmapFont font = new BitmapFont();
     private int index;
+    private String status = "";
 
     public GearScreen(DeadlineZeroGame game) { this.game = game; }
 
@@ -36,9 +36,10 @@ public final class GearScreen extends ScreenAdapter {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(.025f, .04f, .06f, 1f); shapes.rect(20, 95, w - 40, h - 145);
         shapes.setColor(.04f, .09f, .12f, 1f); shapes.rect(35, h * .31f, w - 70, h * .32f);
-        shapes.setColor(.06f, .55f, .75f, 1f); shapes.rect(35, 32, w * .25f, 48);
-        shapes.setColor(.16f, .42f, .25f, 1f); shapes.rect(w * .37f, 32, w * .25f, 48);
-        shapes.setColor(.45f, .3f, .08f, 1f); shapes.rect(w * .69f, 32, w * .25f, 48);
+        shapes.setColor(.06f, .55f, .75f, 1f); shapes.rect(35, 32, w * .20f, 48);
+        shapes.setColor(.16f, .42f, .25f, 1f); shapes.rect(w * .30f, 32, w * .20f, 48);
+        shapes.setColor(.45f, .3f, .08f, 1f); shapes.rect(w * .55f, 32, w * .20f, 48);
+        shapes.setColor(.42f, .16f, .52f, 1f); shapes.rect(w * .79f, 32, w * .17f, 48);
         shapes.end();
 
         batch.begin();
@@ -54,22 +55,40 @@ public final class GearScreen extends ScreenAdapter {
             EquipmentItem item = game.profile.inventory.items().get(index);
             EquipmentItem equipped = game.profile.equipped(item.slot);
             boolean isEquipped = equipped != null && equipped.id.equals(item.id);
+            float itemScore = EquipmentService.score(item);
+            float equippedScore = EquipmentService.score(equipped);
+            float delta = itemScore - equippedScore;
+
             font.getData().setScale(.82f); font.setColor(rarityColor(item.rarity));
-            font.draw(batch, item.name, 0, h * .58f, w, Align.center, false);
+            font.draw(batch, item.name, 0, h * .59f, w, Align.center, false);
             font.getData().setScale(.55f); font.setColor(Color.WHITE);
-            font.draw(batch, "Slot " + item.slot + "   Lv." + item.level + "   Bonus +" + Math.round(item.powerBonus * 1000f) / 10f + "%", 0, h * .51f, w, Align.center, false);
+            font.draw(batch, "Slot " + item.slot + "   Lv." + item.level + "   Bonus +" + Math.round(item.powerBonus * 1000f) / 10f + "%", 0, h * .52f, w, Align.center, false);
             font.setColor(isEquipped ? Color.LIME : Color.LIGHT_GRAY);
-            font.draw(batch, isEquipped ? "EQUIPPED" : "UNEQUIPPED", 0, h * .45f, w, Align.center, false);
+            font.draw(batch, isEquipped ? "EQUIPPED" : "UNEQUIPPED", 0, h * .465f, w, Align.center, false);
+
+            if (!isEquipped) {
+                font.setColor(delta >= 0f ? Color.LIME : Color.SCARLET);
+                String compare = equipped == null ? "No item equipped in this slot" :
+                    String.format("Compared to equipped: %+.1f%% score", equippedScore <= 0f ? 100f : (delta / equippedScore) * 100f);
+                font.draw(batch, compare, 0, h * .425f, w, Align.center, false);
+            }
+
             font.setColor(Color.GOLD);
-            font.draw(batch, "Upgrade: " + EquipmentUpgradeService.cost(item) + " credits", 0, h * .39f, w, Align.center, false);
+            font.draw(batch, "Upgrade: " + EquipmentUpgradeService.cost(item) + " credits", 0, h * .375f, w, Align.center, false);
             font.setColor(Color.GRAY);
-            font.draw(batch, (index + 1) + " / " + size + "   ← → select", 0, h * .25f, w, Align.center, false);
+            font.draw(batch, (index + 1) + " / " + size + "   ← → select   F = fuse 3 matching", 0, h * .25f, w, Align.center, false);
         }
 
-        font.getData().setScale(.48f); font.setColor(Color.WHITE);
-        font.draw(batch, "ESC / BACK", 35, 61, w * .25f, Align.center, false);
-        font.draw(batch, "EQUIP [E]", w * .37f, 61, w * .25f, Align.center, false);
-        font.draw(batch, "UPGRADE [U]", w * .69f, 61, w * .25f, Align.center, false);
+        if (!status.isEmpty()) {
+            font.getData().setScale(.44f); font.setColor(Color.CYAN);
+            font.draw(batch, status, 0, 105, w, Align.center, false);
+        }
+
+        font.getData().setScale(.44f); font.setColor(Color.WHITE);
+        font.draw(batch, "BACK", 35, 61, w * .20f, Align.center, false);
+        font.draw(batch, "EQUIP [E]", w * .30f, 61, w * .20f, Align.center, false);
+        font.draw(batch, "UPGRADE [U]", w * .55f, 61, w * .20f, Align.center, false);
+        font.draw(batch, "FUSE [F]", w * .79f, 61, w * .17f, Align.center, false);
         batch.end();
     }
 
@@ -84,9 +103,32 @@ public final class GearScreen extends ScreenAdapter {
             EquipmentItem current = game.profile.equipped(item.slot);
             if (current != null && current.id.equals(item.id)) EquipmentService.unequip(game.profile, item.slot);
             else EquipmentService.equip(game.profile, item.id);
+            status = "Loadout updated";
             game.saveProfile();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.U) && EquipmentService.upgrade(game.profile, item.id)) game.saveProfile();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+            if (EquipmentService.upgrade(game.profile, item.id)) {
+                status = "Equipment upgraded";
+                game.saveProfile();
+            } else status = "Upgrade unavailable or insufficient credits";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) fuseSelected(item);
+    }
+
+    private void fuseSelected(EquipmentItem selected) {
+        if (selected.rarity == EquipmentItem.Rarity.MYTHIC) { status = "Mythic gear cannot be fused further"; return; }
+        EquipmentItem second = null, third = null;
+        for (EquipmentItem candidate : game.profile.inventory.items()) {
+            if (candidate.id.equals(selected.id) || candidate.slot != selected.slot || candidate.rarity != selected.rarity) continue;
+            if (second == null) second = candidate;
+            else { third = candidate; break; }
+        }
+        if (second == null || third == null) { status = "Need 3 items with same slot and rarity"; return; }
+        EquipmentItem merged = EquipmentService.mergeThree(game.profile, selected.id, second.id, third.id);
+        if (merged == null) { status = "Fusion failed"; return; }
+        status = "Created " + merged.rarity + " " + merged.name;
+        index = Math.max(0, game.profile.inventory.size() - 1);
+        game.saveProfile();
     }
 
     private Color rarityColor(EquipmentItem.Rarity rarity) {
