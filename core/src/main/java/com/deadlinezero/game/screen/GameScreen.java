@@ -16,10 +16,13 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.ai.EnemyState;
+import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.config.GameConfig;
 import com.deadlinezero.game.entities.Enemy;
+import com.deadlinezero.game.entities.EnemyProjectile;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.entities.Projectile;
+import com.deadlinezero.game.fx.DamageNumber;
 import com.deadlinezero.game.fx.ImpactFx;
 import com.deadlinezero.game.input.VirtualStick;
 import com.deadlinezero.game.progression.Upgrade;
@@ -87,6 +90,24 @@ public final class GameScreen extends ScreenAdapter {
             fireTimer = player.weapon.fireInterval;
         }
 
+        updateEnemies(dt);
+        spatial.rebuild(enemies);
+        updatePlayerProjectiles(dt);
+        updateHostileProjectiles(dt);
+
+        for (ImpactFx f : pools.impacts) if (f.active) { f.life -= dt; if (f.life <= 0f) f.active = false; }
+        for (DamageNumber n : pools.damageNumbers) n.update(dt);
+        for (int i = enemies.size - 1; i >= 0; i--) if (!enemies.get(i).alive) enemies.removeIndex(i);
+
+        cam.position.x += MathUtils.random(-1f, 1f) * cameraShake;
+        cam.position.y += MathUtils.random(-1f, 1f) * cameraShake;
+        cameraShake = Math.max(0f, cameraShake - dt * 2.7f);
+        cam.position.x = MathUtils.lerp(cam.position.x, 0f, .08f);
+        cam.position.y = MathUtils.lerp(cam.position.y, 0f, .08f);
+        cam.update();
+    }
+
+    private void updateEnemies(float dt) {
         for (Enemy e : enemies) {
             if (!e.alive) continue;
             float dx = player.position.x - e.position.x;
@@ -105,7 +126,7 @@ public final class GameScreen extends ScreenAdapter {
             }
             e.position.mulAdd(e.velocity, dt);
 
-            if (e.attack.consumeAttack()) resolveEnemyAttack(e, distance);
+            if (e.attack.consumeAttack()) resolveEnemyAttack(e);
 
             boolean aliveBeforeStatus = e.alive;
             e.updateStatus(dt);
@@ -116,8 +137,9 @@ public final class GameScreen extends ScreenAdapter {
                 contactTimer = .28f;
             }
         }
+    }
 
-        spatial.rebuild(enemies);
+    private void updatePlayerProjectiles(float dt) {
         for (Projectile p : pools.projectiles) {
             if (!p.active) continue;
             p.position.mulAdd(p.velocity, dt);
@@ -132,40 +154,91 @@ public final class GameScreen extends ScreenAdapter {
                 e.damage(p.damage);
                 e.hitFlash = 1f;
                 e.applyElement(p.element, p.damage);
+                damageNumber(e.position.x, e.position.y + e.radius, p.damage, p.critical,
+                    p.critical ? Color.GOLD : Color.WHITE);
                 float vlen = p.velocity.len();
                 if (vlen > .001f) e.addImpulse(p.velocity.x / vlen * p.knockback, p.velocity.y / vlen * p.knockback);
                 impact(p.position.x, p.position.y, p.critical ? .6f : .38f, .12f, p.critical ? Color.GOLD : Color.CYAN);
+                if (p.element == DamageElement.SHOCK && e.alive) chainShock(e, p.damage * .42f, 3);
                 if (wasAlive && !e.alive) onEnemyKilled(e);
                 p.lastHit = e;
                 if (p.penetrationRemaining > 0) p.penetrationRemaining--; else p.active = false;
                 break;
             }
         }
-
-        for (ImpactFx f : pools.impacts) if (f.active) { f.life -= dt; if (f.life <= 0f) f.active = false; }
-        for (int i = enemies.size - 1; i >= 0; i--) if (!enemies.get(i).alive) enemies.removeIndex(i);
-
-        cam.position.x += MathUtils.random(-1f, 1f) * cameraShake;
-        cam.position.y += MathUtils.random(-1f, 1f) * cameraShake;
-        cameraShake = Math.max(0f, cameraShake - dt * 2.7f);
-        cam.position.x = MathUtils.lerp(cam.position.x, 0f, .08f);
-        cam.position.y = MathUtils.lerp(cam.position.y, 0f, .08f);
-        cam.update();
     }
 
-    private void resolveEnemyAttack(Enemy e, float distance) {
-        if (e.type == Enemy.Type.RANGED) {
-            if (distance <= e.attack.archetype().attackRange) {
-                impact(player.position.x, player.position.y, .8f, .14f, Color.ORANGE);
-                damagePlayer(e.contactDamage, .18f);
+    private void updateHostileProjectiles(float dt) {
+        for (EnemyProjectile p : pools.hostileProjectiles) {
+            if (!p.active) continue;
+            p.position.mulAdd(p.velocity, dt);
+            p.life -= dt;
+            if (p.life <= 0f) { p.active = false; continue; }
+            float rr = p.radius + player.radius;
+            if (p.position.dst2(player.position) <= rr * rr) {
+                p.active = false;
+                if (p.explosive) {
+                    impact(p.position.x, p.position.y, p.explosionRadius, .32f, Color.ORANGE);
+                    if (p.position.dst2(player.position) <= p.explosionRadius * p.explosionRadius) damagePlayer(p.damage, .48f);
+                } else {
+                    damagePlayer(p.damage, .22f);
+                }
             }
+        }
+    }
+
+    private void resolveEnemyAttack(Enemy e) {
+        aim.set(player.position).sub(e.position);
+        if (aim.len2() < .0001f) aim.set(1f, 0f); else aim.nor();
+
+        if (e.type == Enemy.Type.RANGED) {
+            spawnHostileShot(e.position.x, e.position.y, aim.angleDeg(), 8.5f, e.contactDamage, .18f, false, 0f);
             return;
         }
+
         if (e.type == Enemy.Type.BOSS) {
             int phase = e.bossPhases == null ? 1 : e.bossPhases.phase();
-            float radius = 3.2f + phase * .8f;
-            impact(e.position.x, e.position.y, radius, .34f, new Color(1f, .18f, .08f, 1f));
-            if (distance <= radius) damagePlayer(e.contactDamage * (.75f + phase * .25f), .55f);
+            if (phase == 1) {
+                for (int i = -2; i <= 2; i++)
+                    spawnHostileShot(e.position.x, e.position.y, aim.angleDeg() + i * 11f, 7.2f, e.contactDamage * .72f, .22f, false, 0f);
+            } else if (phase == 2) {
+                for (int i = 0; i < 10; i++)
+                    spawnHostileShot(e.position.x, e.position.y, i * 36f, 6.4f, e.contactDamage * .62f, .22f, false, 0f);
+            } else {
+                for (int i = 0; i < 14; i++)
+                    spawnHostileShot(e.position.x, e.position.y, i * (360f / 14f), 6.8f, e.contactDamage * .58f, .24f, i % 3 == 0, 2.2f);
+            }
+            cameraShake = Math.max(cameraShake, .18f + phase * .05f);
+        }
+    }
+
+    private void spawnHostileShot(float x, float y, float angle, float speed, float damage,
+                                  float radius, boolean explosive, float explosionRadius) {
+        EnemyProjectile p = pools.hostileProjectile();
+        if (p == null) return;
+        shotVelocity.set(speed, 0f).setAngleDeg(angle);
+        p.spawn(x, y, shotVelocity.x, shotVelocity.y, damage, radius, 4.5f, explosive, explosionRadius);
+    }
+
+    private void chainShock(Enemy source, float damage, int maxChains) {
+        Enemy current = source;
+        for (int chain = 0; chain < maxChains; chain++) {
+            Enemy nearest = null;
+            float best = 3.4f * 3.4f;
+            for (Enemy candidate : enemies) {
+                if (!candidate.alive || candidate == current || candidate == source) continue;
+                float d2 = current.position.dst2(candidate.position);
+                if (d2 < best) { best = d2; nearest = candidate; }
+            }
+            if (nearest == null) break;
+            boolean wasAlive = nearest.alive;
+            nearest.damage(damage);
+            nearest.applyElement(DamageElement.SHOCK, damage);
+            damageNumber(nearest.position.x, nearest.position.y + nearest.radius, damage, false, Color.CYAN);
+            impact(nearest.position.x, nearest.position.y, .62f, .16f, Color.CYAN);
+            if (wasAlive && !nearest.alive) onEnemyKilled(nearest);
+            current = nearest;
+            damage *= .78f;
         }
     }
 
@@ -173,7 +246,13 @@ public final class GameScreen extends ScreenAdapter {
         player.damage(damage);
         cameraShake = Math.max(cameraShake, shake);
         impact(player.position.x, player.position.y, 1.1f, .18f, Color.RED);
+        damageNumber(player.position.x, player.position.y + player.radius, damage, false, Color.SCARLET);
         if (!player.alive) gameOver = true;
+    }
+
+    private void damageNumber(float x, float y, float value, boolean critical, Color color) {
+        DamageNumber n = pools.damageNumber();
+        if (n != null) n.spawn(x, y, value, critical, color);
     }
 
     private void onEnemyKilled(Enemy e) {
@@ -264,6 +343,10 @@ public final class GameScreen extends ScreenAdapter {
             shapes.setColor(p.critical ? Color.GOLD : Color.CYAN);
             shapes.circle(p.position.x, p.position.y, p.critical ? .16f : .11f, 12);
         }
+        for (EnemyProjectile p : pools.hostileProjectiles) if (p.active) {
+            shapes.setColor(p.explosive ? Color.ORANGE : Color.SCARLET);
+            shapes.circle(p.position.x, p.position.y, p.radius, 14);
+        }
         for (Enemy e : enemies) {
             Color c = switch (e.type) {
                 case RUNNER -> new Color(.95f, .35f, .25f, 1f);
@@ -284,7 +367,24 @@ public final class GameScreen extends ScreenAdapter {
         }
         shapes.setColor(.12f, .85f, 1f, 1f); shapes.circle(player.position.x, player.position.y, player.radius, 24);
         shapes.end();
+
+        drawCombatText();
         drawHud();
+    }
+
+    private void drawCombatText() {
+        batch.setProjectionMatrix(cam.combined);
+        batch.begin();
+        font.getData().setScale(.034f);
+        for (DamageNumber n : pools.damageNumbers) {
+            if (!n.active) continue;
+            float alpha = MathUtils.clamp(n.life / n.maxLife, 0f, 1f);
+            font.setColor(n.color.r, n.color.g, n.color.b, alpha);
+            font.getData().setScale(n.critical ? .050f : .034f);
+            font.draw(batch, Integer.toString(Math.max(1, Math.round(n.value))), n.x - .45f, n.y, .9f, Align.center, false);
+        }
+        batch.end();
+        font.getData().setScale(.75f);
     }
 
     private void drawHud() {
@@ -318,6 +418,7 @@ public final class GameScreen extends ScreenAdapter {
             font.setColor(Color.CYAN); font.draw(batch, "[" + (i + 1) + "] " + choices[i].title, x - 120, h * .52f, 240, Align.center, false);
             font.setColor(Color.LIGHT_GRAY); font.draw(batch, choices[i].description, x - 120, h * .45f, 240, Align.center, true);
         }
+        font.getData().setScale(.75f);
     }
 
     private void drawGameOverText(float w, float h) {
@@ -325,6 +426,7 @@ public final class GameScreen extends ScreenAdapter {
         font.draw(batch, "SIGNAL LOST", 0, h * .62f, w, Align.center, false);
         font.getData().setScale(.72f);
         font.draw(batch, revived ? "TAP TO RETURN TO BASE" : "TAP TO REVIVE (rewarded ad) • R = retry", 0, h * .45f, w, Align.center, false);
+        font.getData().setScale(.75f);
     }
 
     private void handleOverlayInput() {
