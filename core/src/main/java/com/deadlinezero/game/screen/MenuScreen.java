@@ -72,7 +72,7 @@ public final class MenuScreen extends ScreenAdapter {
         font.draw(batch, "BASE", 28, 58);
         font.draw(batch, "GEAR [G]", w * .22f, 58);
         font.draw(batch, "MISSIONS [M]", w * .47f, 58);
-        font.draw(batch, "SHOP", w * .79f, 58);
+        font.draw(batch, "SHOP [S]", w * .79f, 58);
         font.getData().setScale(2.2f);
         batch.end();
 
@@ -82,6 +82,7 @@ public final class MenuScreen extends ScreenAdapter {
     private void handleInput(float w, float h) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) { game.showGear(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) { game.showMissions(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) { game.showShop(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) { game.profile.selectStage(Math.max(1, game.profile.selectedStage - 1)); game.saveProfile(); }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) { game.profile.selectStage(Math.min(game.profile.highestStage, game.profile.selectedStage + 1)); game.saveProfile(); }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) { game.startRun(); return; }
@@ -91,6 +92,7 @@ public final class MenuScreen extends ScreenAdapter {
         if (y <= 95f) {
             if (x >= w * .18f && x < w * .43f) game.showGear();
             else if (x >= w * .43f && x < w * .72f) game.showMissions();
+            else if (x >= w * .72f) game.showShop();
             return;
         }
         if (x >= w * .30f && x <= w * .70f && y >= h * .255f && y <= h * .255f + 64f) game.startRun();
