@@ -18,6 +18,8 @@ public final class ProfileStore {
         profile.selectedStage = Math.min(profile.highestStage, Math.max(1, p.getInteger("selectedStage", 1)));
         profile.totalRuns = Math.max(0, p.getInteger("totalRuns", 0));
         profile.totalKills = Math.max(0L, p.getLong("totalKills", 0L));
+        profile.removeAdsPurchased = p.getBoolean("purchase.removeAds", false);
+        profile.starterPackGranted = p.getBoolean("purchase.starterPackGranted", false);
         profile.addCurrency(PlayerProfile.Currency.CREDITS, Math.max(0L, p.getLong("credits", 0L)));
         profile.addCurrency(PlayerProfile.Currency.GEMS, Math.max(0L, p.getLong("gems", 0L)));
 
@@ -67,6 +69,8 @@ public final class ProfileStore {
         p.putInteger("selectedStage", profile.selectedStage);
         p.putInteger("totalRuns", profile.totalRuns);
         p.putLong("totalKills", profile.totalKills);
+        p.putBoolean("purchase.removeAds", profile.removeAdsPurchased);
+        p.putBoolean("purchase.starterPackGranted", profile.starterPackGranted);
         p.putLong("credits", profile.currency(PlayerProfile.Currency.CREDITS));
         p.putLong("gems", profile.currency(PlayerProfile.Currency.GEMS));
 
