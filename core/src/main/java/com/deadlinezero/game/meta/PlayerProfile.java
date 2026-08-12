@@ -9,6 +9,7 @@ public final class PlayerProfile {
 
     private final EnumMap<Currency, Long> currencies = new EnumMap<>(Currency.class);
     private final EnumMap<EquipmentSlot, EquipmentItem> equipped = new EnumMap<>(EquipmentSlot.class);
+    public final Inventory inventory = new Inventory();
     public int accountLevel = 1;
     public long accountXp;
     public int highestStage = 1;
@@ -50,7 +51,12 @@ public final class PlayerProfile {
     }
 
     public EquipmentItem equipped(EquipmentSlot slot) { return equipped.get(slot); }
-    public void equip(EquipmentItem item) { if (item != null) equipped.put(item.slot, item); }
+    public void equip(EquipmentItem item) {
+        if (item != null) {
+            equipped.put(item.slot, item);
+            if (inventory.find(item.id) == null) inventory.add(item);
+        }
+    }
 
     public float aggregatePowerMultiplier() {
         float bonus = 0f;
