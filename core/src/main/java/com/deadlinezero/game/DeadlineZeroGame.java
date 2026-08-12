@@ -10,6 +10,7 @@ import com.deadlinezero.game.meta.ProfileStore;
 import com.deadlinezero.game.meta.RunResult;
 import com.deadlinezero.game.meta.RunRewardCalculator;
 import com.deadlinezero.game.meta.RunSettlement;
+import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageRules;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.GearScreen;
@@ -39,10 +40,13 @@ public final class DeadlineZeroGame extends Game {
     public void showMenu() { setScreen(new MenuScreen(this)); }
     public void showGear() { setScreen(new GearScreen(this)); }
     public void showMissions() { setScreen(new MissionsScreen(this)); }
-    public void startRun() { setScreen(new GameScreen(this)); }
+    public void startRun() {
+        RunStageContext.begin(profile == null ? 1 : profile.selectedStage);
+        setScreen(new GameScreen(this));
+    }
 
-    public void finishRun(int kills, float secondsSurvived, boolean bossKilled, int stage) {
-        int safeStage = Math.max(1, stage);
+    public void finishRun(int kills, float secondsSurvived, boolean bossKilled, int ignoredStage) {
+        int safeStage = RunStageContext.stage();
         RunRewardCalculator.Rewards rewards = RunSettlement.apply(profile, kills, secondsSurvived, bossKilled, safeStage);
         DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
         DailyService.recordRun(profile, kills, bossKilled);
