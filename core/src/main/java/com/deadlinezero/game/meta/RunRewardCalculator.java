@@ -7,13 +7,17 @@ public final class RunRewardCalculator {
     private RunRewardCalculator() {}
 
     public static Rewards calculate(int kills, float secondsSurvived, boolean bossKilled, int stage) {
+        int safeStage = Math.max(1, stage);
         long credits = Math.max(0, kills) * 2L + (long)(Math.max(0f, secondsSurvived) / 6f);
         long xp = Math.max(0, kills) + (long)(Math.max(0f, secondsSurvived) / 4f);
         if (bossKilled) {
-            credits += 180L + Math.max(1, stage) * 25L;
-            xp += 90L + Math.max(1, stage) * 15L;
+            credits += 180L + safeStage * 25L;
+            xp += 90L + safeStage * 15L;
         }
-        int gems = bossKilled ? Math.min(8, 1 + Math.max(1, stage) / 3) : 0;
+        float multiplier = StageRules.rewardMultiplier(safeStage);
+        credits = Math.max(0L, Math.round(credits * multiplier));
+        xp = Math.max(0L, Math.round(xp * (1f + (multiplier - 1f) * .65f)));
+        int gems = bossKilled ? Math.min(12, 1 + safeStage / 3) : 0;
         return new Rewards(credits, xp, gems);
     }
 }
