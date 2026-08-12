@@ -2,10 +2,15 @@ package com.deadlinezero.game.entities;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.deadlinezero.game.ai.AttackController;
+import com.deadlinezero.game.ai.BossPhaseController;
+import com.deadlinezero.game.ai.EnemyArchetype;
+import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.combat.DamageElement;
 
 public final class Enemy extends ActorState {
-    public enum Type { SHAMBLER, RUNNER, BRUTE, ELITE, BOSS }
+    public enum Type { SHAMBLER, RUNNER, BRUTE, RANGED, ELITE, BOSS }
+
     public Type type;
     public float speed;
     public float contactDamage;
@@ -17,6 +22,8 @@ public final class Enemy extends ActorState {
     public float burnDps;
     public float shockTimer;
     public final Vector2 impulse = new Vector2();
+    public final AttackController attack;
+    public final BossPhaseController bossPhases;
 
     public Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp) {
         super(x, y, radius, hp);
@@ -24,13 +31,23 @@ public final class Enemy extends ActorState {
         this.speed = speed;
         this.contactDamage = damage;
         this.xpValue = xp;
+        EnemyArchetype archetype = switch (type) {
+            case RANGED -> EnemyArchetype.RANGED;
+            case BOSS -> EnemyArchetype.BOSS;
+            default -> EnemyArchetype.MELEE;
+        };
+        this.attack = new AttackController(archetype);
+        this.bossPhases = type == Type.BOSS ? new BossPhaseController() : null;
     }
 
     public void applyElement(DamageElement element, float power) {
         switch (element) {
             case FIRE -> { burnTimer = Math.max(burnTimer, 2.4f); burnDps = Math.max(burnDps, power * 0.22f); }
             case FROST -> { slowTimer = Math.max(slowTimer, 1.6f); slowMultiplier = Math.min(slowMultiplier, 0.62f); }
-            case SHOCK -> shockTimer = Math.max(shockTimer, 0.35f);
+            case SHOCK -> {
+                shockTimer = Math.max(shockTimer, 0.35f);
+                attack.forceStunned(0.35f);
+            }
             default -> { }
         }
     }
@@ -38,17 +55,31 @@ public final class Enemy extends ActorState {
     public void addImpulse(float x, float y) { impulse.add(x, y); }
 
     public void updateStatus(float dt) {
-        if (!alive) return;
+        if (!alive) {
+            attack.markDead();
+            return;
+        }
         if (burnTimer > 0f) {
             burnTimer -= dt;
             damage(burnDps * dt);
         }
         if (slowTimer > 0f) slowTimer -= dt; else slowMultiplier = 1f;
         if (shockTimer > 0f) shockTimer -= dt;
+        attack.updateStun(dt);
         hitFlash = Math.max(0f, hitFlash - dt * 6f);
         float damping = MathUtils.clamp(1f - dt * 8f, 0f, 1f);
         impulse.scl(damping);
+        if (bossPhases != null) bossPhases.update(maxHp <= 0f ? 0f : hp / maxHp);
     }
 
-    public float effectiveSpeed() { return shockTimer > 0f ? speed * 0.18f : speed * slowMultiplier; }
+    public void updateAi(float dt, float distanceToPlayer) {
+        if (!alive || attack.state() == EnemyState.STUNNED) return;
+        attack.update(dt, distanceToPlayer);
+    }
+
+    public float effectiveSpeed() {
+        if (attack.state() == EnemyState.STUNNED) return 0f;
+        float phaseMultiplier = bossPhases == null ? 1f : bossPhases.speedMultiplier();
+        return speed * slowMultiplier * phaseMultiplier;
+    }
 }
