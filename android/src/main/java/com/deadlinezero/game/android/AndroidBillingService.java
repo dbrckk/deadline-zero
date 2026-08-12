@@ -6,12 +6,122 @@ import com.deadlinezero.game.services.BillingService;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/** Client-side Play Billing bridge. Production purchase verification should move server-side before launch. */
 public final class AndroidBillingService implements BillingService, PurchasesUpdatedListener {
-    private final Activity activity; private BillingClient client; private final Set<String> owned=ConcurrentHashMap.newKeySet(); private ProductDetails pendingDetails; private Runnable success, failure;
-    public AndroidBillingService(Activity activity){this.activity=activity;}
-    @Override public void initialize(){client=BillingClient.newBuilder(activity).setListener(this).enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build()).enableAutoServiceReconnection().build();client.startConnection(new BillingClientStateListener(){public void onBillingSetupFinished(BillingResult r){if(r.getResponseCode()==BillingClient.BillingResponseCode.OK)restore();}public void onBillingServiceDisconnected(){}});}
-    @Override public boolean owns(String id){return owned.contains(id);}
-    @Override public void restore(){if(client==null||!client.isReady())return;client.queryPurchasesAsync(QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),(r,list)->{if(r.getResponseCode()==BillingClient.BillingResponseCode.OK)for(Purchase p:list)for(String id:p.getProducts())owned.add(id);});}
-    @Override public void purchase(String productId,Runnable onSuccess,Runnable onFailure){this.success=onSuccess;this.failure=onFailure;QueryProductDetailsParams.Product p=QueryProductDetailsParams.Product.newBuilder().setProductId(productId).setProductType(BillingClient.ProductType.INAPP).build();client.queryProductDetailsAsync(QueryProductDetailsParams.newBuilder().setProductList(Collections.singletonList(p)).build(),(r,result)->{if(r.getResponseCode()!=BillingClient.BillingResponseCode.OK||result.getProductDetailsList().isEmpty()){onFailure.run();return;}pendingDetails=result.getProductDetailsList().get(0);BillingFlowParams.ProductDetailsParams pd=BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(pendingDetails).build();client.launchBillingFlow(activity,BillingFlowParams.newBuilder().setProductDetailsParamsList(Collections.singletonList(pd)).build());});}
-    @Override public void onPurchasesUpdated(BillingResult r,List<Purchase> purchases){if(r.getResponseCode()==BillingClient.BillingResponseCode.OK&&purchases!=null){for(Purchase p:purchases){for(String id:p.getProducts())owned.add(id);if(p.getPurchaseState()==Purchase.PurchaseState.PURCHASED&&!p.isAcknowledged())client.acknowledgePurchase(AcknowledgePurchaseParams.newBuilder().setPurchaseToken(p.getPurchaseToken()).build(),x->{});}if(success!=null)success.run();}else if(failure!=null)failure.run();}
+    private final Activity activity;
+    private BillingClient client;
+    private final Set<String> owned = ConcurrentHashMap.newKeySet();
+    private Runnable success, failure;
+
+    public AndroidBillingService(Activity activity) { this.activity = activity; }
+
+    @Override public void initialize() {
+        client = BillingClient.newBuilder(activity)
+            .setListener(this)
+            .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+            .enableAutoServiceReconnection()
+            .build();
+        client.startConnection(new BillingClientStateListener() {
+            @Override public void onBillingSetupFinished(BillingResult result) {
+                if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) restore();
+            }
+            @Override public void onBillingServiceDisconnected() { }
+        });
+    }
+
+    @Override public boolean owns(String id) { return owned.contains(id); }
+
+    @Override public void restore() {
+        if (client == null || !client.isReady()) return;
+        client.queryPurchasesAsync(
+            QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
+            (result, purchases) -> {
+                if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) return;
+                for (Purchase purchase : purchases) processPurchase(purchase, false);
+            });
+    }
+
+    @Override public void purchase(String productId, Runnable onSuccess, Runnable onFailure) {
+        if (client == null || !client.isReady()) { onFailure.run(); return; }
+        this.success = onSuccess;
+        this.failure = onFailure;
+
+        QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
+            .setProductId(productId)
+            .setProductType(BillingClient.ProductType.INAPP)
+            .build();
+
+        client.queryProductDetailsAsync(
+            QueryProductDetailsParams.newBuilder().setProductList(Collections.singletonList(product)).build(),
+            (result, detailsResult) -> {
+                if (result.getResponseCode() != BillingClient.BillingResponseCode.OK || detailsResult.getProductDetailsList().isEmpty()) {
+                    failPending();
+                    return;
+                }
+                ProductDetails details = detailsResult.getProductDetailsList().get(0);
+                BillingFlowParams.ProductDetailsParams params = BillingFlowParams.ProductDetailsParams.newBuilder()
+                    .setProductDetails(details)
+                    .build();
+                BillingResult launch = client.launchBillingFlow(activity,
+                    BillingFlowParams.newBuilder().setProductDetailsParamsList(Collections.singletonList(params)).build());
+                if (launch.getResponseCode() != BillingClient.BillingResponseCode.OK) failPending();
+            });
+    }
+
+    @Override public void onPurchasesUpdated(BillingResult result, List<Purchase> purchases) {
+        if (result.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
+            boolean handled = false;
+            for (Purchase purchase : purchases) handled |= processPurchase(purchase, true);
+            if (!handled) failPending();
+        } else if (result.getResponseCode() != BillingClient.BillingResponseCode.USER_CANCELED) {
+            failPending();
+        } else {
+            failPending();
+        }
+    }
+
+    private boolean processPurchase(Purchase purchase, boolean notifyPending) {
+        if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED) return false;
+        boolean hasConsumable = false;
+        for (String id : purchase.getProducts()) {
+            if (BillingService.isConsumable(id)) hasConsumable = true;
+            else owned.add(id);
+        }
+
+        if (hasConsumable) {
+            ConsumeParams params = ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
+            client.consumeAsync(params, (result, token) -> {
+                if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    if (notifyPending) succeedPending();
+                } else if (notifyPending) failPending();
+            });
+            return true;
+        }
+
+        if (!purchase.isAcknowledged()) {
+            AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder()
+                .setPurchaseToken(purchase.getPurchaseToken()).build();
+            client.acknowledgePurchase(params, result -> {
+                if (notifyPending) {
+                    if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) succeedPending();
+                    else failPending();
+                }
+            });
+        } else if (notifyPending) succeedPending();
+        return true;
+    }
+
+    private void succeedPending() {
+        Runnable callback = success;
+        success = null;
+        failure = null;
+        if (callback != null) callback.run();
+    }
+
+    private void failPending() {
+        Runnable callback = failure;
+        success = null;
+        failure = null;
+        if (callback != null) callback.run();
+    }
 }
