@@ -17,6 +17,8 @@ public final class PlayerProfile {
     public int selectedStage = 1;
     public int totalRuns;
     public long totalKills;
+    public boolean removeAdsPurchased;
+    public boolean starterPackGranted;
 
     public PlayerProfile() {
         for (Currency currency : Currency.values()) currencies.put(currency, 0L);
