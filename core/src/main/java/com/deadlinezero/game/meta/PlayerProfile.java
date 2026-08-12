@@ -32,6 +32,23 @@ public final class PlayerProfile {
         return true;
     }
 
+    public long xpForNextLevel() { return 250L + (long)(accountLevel - 1) * 110L; }
+
+    public void addAccountXp(long amount) {
+        if (amount <= 0) return;
+        accountXp += amount;
+        while (accountXp >= xpForNextLevel()) {
+            accountXp -= xpForNextLevel();
+            accountLevel++;
+        }
+    }
+
+    public void recordRun(int kills, int stage) {
+        totalRuns++;
+        totalKills += Math.max(0, kills);
+        highestStage = Math.max(highestStage, Math.max(1, stage));
+    }
+
     public EquipmentItem equipped(EquipmentSlot slot) { return equipped.get(slot); }
     public void equip(EquipmentItem item) { if (item != null) equipped.put(item.slot, item); }
 
