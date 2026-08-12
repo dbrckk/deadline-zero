@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.config.GameConfig;
 import com.deadlinezero.game.meta.PlayerProfile;
+import com.deadlinezero.game.visual.VisualTheme;
 
 /** Production-shaped Base/Home shell with functional navigation. */
 public final class MenuScreen extends ScreenAdapter {
@@ -25,41 +26,55 @@ public final class MenuScreen extends ScreenAdapter {
 
     @Override public void render(float delta) {
         t += delta;
-        Gdx.gl.glClearColor(.012f, .018f, .027f, 1f);
+        Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        for (int i = 0; i < 14; i++) {
-            float y = (i + 1) * h / 15f;
-            float a = .025f + .015f * (float)Math.sin(t * 1.3f + i);
-            shapes.setColor(.15f, .7f, .9f, a); shapes.rect(0, y, w, 1.5f);
+        for (int i = 0; i < 16; i++) {
+            float y = (i + 1) * h / 17f;
+            float a = .018f + .012f * (float)Math.sin(t * 1.25f + i * .7f);
+            shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, a);
+            shapes.rect(0, y, w, 1.2f);
         }
-        shapes.setColor(.05f, .75f, 1f, .12f); shapes.circle(w * .5f, h * .48f, Math.min(w, h) * .24f, 96);
-        shapes.setColor(.02f, .035f, .05f, .92f); shapes.rect(18, h - 92, w - 36, 62);
-        shapes.setColor(.025f, .05f, .075f, .95f); shapes.rect(18, 18, w - 36, 72);
-        shapes.setColor(.07f, .62f, .82f, .95f); shapes.rect(w * .30f, h * .255f, w * .40f, 64);
+        shapes.setColor(VisualTheme.PANEL); shapes.rect(18, h - 94, w - 36, 64);
+        shapes.setColor(VisualTheme.PANEL); shapes.rect(18, 18, w - 36, 74);
+        shapes.setColor(VisualTheme.PANEL_ALT); shapes.rect(w * .18f, h * .40f, w * .64f, h * .16f);
+        shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .12f);
+        shapes.circle(w * .5f, h * .48f, Math.min(w, h) * .25f, 96);
+        shapes.setColor(VisualTheme.CYAN); shapes.rect(w * .30f, h * .255f, w * .40f, 64);
+        shapes.setColor(VisualTheme.CYAN_SOFT); shapes.rect(w * .30f, h * .255f, w * .40f, 3f);
         shapes.end();
 
         PlayerProfile p = game.profile;
         batch.begin();
-        font.setColor(Color.WHITE); font.draw(batch, GameConfig.TITLE, 0, h * .68f, w, Align.center, false);
-        font.getData().setScale(.72f); font.setColor(.52f, .9f, 1f, 1f);
-        font.draw(batch, "SURVIVE THE LAST PROTOCOL", 0, h * .59f, w, Align.center, false);
-        font.getData().setScale(.58f);
-        font.setColor(Color.WHITE); font.draw(batch, "LV " + p.accountLevel, 34, h - 52);
-        font.setColor(Color.GOLD); font.draw(batch, "CREDITS  " + p.currency(PlayerProfile.Currency.CREDITS), w * .28f, h - 52);
-        font.setColor(Color.CYAN); font.draw(batch, "GEMS  " + p.currency(PlayerProfile.Currency.GEMS), w * .58f, h - 52);
-        font.setColor(Color.LIGHT_GRAY); font.draw(batch, "STAGE  " + p.selectedStage + "/" + p.highestStage, w - 165, h - 52);
-        font.setColor(Color.CYAN);
-        font.draw(batch, p.selectedSurvivor.displayName + " • " + p.selectedSurvivor.role + " [R]", 0, h * .49f, w, Align.center, false);
-        font.getData().setScale(.84f); font.setColor(Color.WHITE);
+        font.setColor(VisualTheme.TEXT); font.draw(batch, GameConfig.TITLE, 0, h * .71f, w, Align.center, false);
+        font.getData().setScale(.67f); font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, "SURVIVE THE LAST PROTOCOL", 0, h * .635f, w, Align.center, false);
+
+        font.getData().setScale(.55f);
+        font.setColor(VisualTheme.TEXT); font.draw(batch, "LV " + p.accountLevel, 34, h - 53);
+        font.setColor(VisualTheme.GOLD); font.draw(batch, "CREDITS  " + p.currency(PlayerProfile.Currency.CREDITS), w * .27f, h - 53);
+        font.setColor(VisualTheme.CYAN); font.draw(batch, "GEMS  " + p.currency(PlayerProfile.Currency.GEMS), w * .57f, h - 53);
+        font.setColor(VisualTheme.MUTED); font.draw(batch, "STAGE  " + p.selectedStage + "/" + p.highestStage, w - 165, h - 53);
+
+        font.getData().setScale(.70f); font.setColor(VisualTheme.TEXT);
+        font.draw(batch, p.selectedSurvivor.displayName.toUpperCase(), 0, h * .515f, w, Align.center, false);
+        font.getData().setScale(.47f); font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, p.selectedSurvivor.role + "  •  TAP / R TO CHANGE", 0, h * .465f, w, Align.center, false);
+
+        font.getData().setScale(.82f); font.setColor(Color.WHITE);
         font.draw(batch, "DEPLOY", w * .30f, h * .255f + 42, w * .40f, Align.center, false);
-        font.getData().setScale(.48f); font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, "TAP • SPACE • ENTER", w * .30f, h * .255f + 17, w * .40f, Align.center, false);
-        font.getData().setScale(.46f); font.setColor(Color.GRAY);
-        font.draw(batch, "BASE", 28, 58); font.draw(batch, "GEAR [G]", w * .22f, 58);
-        font.draw(batch, "MISSIONS [M]", w * .47f, 58); font.draw(batch, "SHOP [S]", w * .79f, 58);
-        font.getData().setScale(2.2f); batch.end();
+        font.getData().setScale(.43f); font.setColor(new Color(.86f, .95f, 1f, 1f));
+        font.draw(batch, "STAGE " + p.selectedStage + "  •  TAP / SPACE / ENTER", w * .30f, h * .255f + 17, w * .40f, Align.center, false);
+
+        font.getData().setScale(.43f); font.setColor(VisualTheme.MUTED);
+        font.draw(batch, "BASE", 28, 59);
+        font.draw(batch, "GEAR [G]", w * .22f, 59);
+        font.draw(batch, "MISSIONS [M]", w * .47f, 59);
+        font.draw(batch, "SHOP [S]", w * .79f, 59);
+        font.getData().setScale(2.2f);
+        batch.end();
         handleInput(w, h);
     }
 
@@ -79,7 +94,7 @@ public final class MenuScreen extends ScreenAdapter {
             else if (x >= w * .72f) game.showShop();
             return;
         }
-        if (y >= h * .43f && y <= h * .54f) { game.showSurvivors(); return; }
+        if (y >= h * .40f && y <= h * .56f) { game.showSurvivors(); return; }
         if (x >= w * .30f && x <= w * .70f && y >= h * .255f && y <= h * .255f + 64f) game.startRun();
     }
 
