@@ -19,6 +19,7 @@ import com.deadlinezero.game.screen.MenuScreen;
 import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.screen.RunResultScreen;
 import com.deadlinezero.game.screen.ShopScreen;
+import com.deadlinezero.game.screen.SurvivorScreen;
 import com.deadlinezero.game.services.GameServices;
 
 public final class DeadlineZeroGame extends Game {
@@ -26,13 +27,12 @@ public final class DeadlineZeroGame extends Game {
     public final GameServices services;
     public PlayerProfile profile;
 
-    public DeadlineZeroGame(GameServices services) {
-        this.services = services == null ? GameServices.noOp() : services;
-    }
+    public DeadlineZeroGame(GameServices services) { this.services = services == null ? GameServices.noOp() : services; }
 
     @Override public void create() {
         profile = ProfileStore.load();
         DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
+        profile.survivors.refreshUnlocks(profile);
         services.billing.initialize();
         services.ads.preload();
         saveProfile();
@@ -43,6 +43,7 @@ public final class DeadlineZeroGame extends Game {
     public void showGear() { setScreen(new GearScreen(this)); }
     public void showMissions() { setScreen(new MissionsScreen(this)); }
     public void showShop() { setScreen(new ShopScreen(this)); }
+    public void showSurvivors() { setScreen(new SurvivorScreen(this)); }
     public void startRun() {
         RunStageContext.begin(profile == null ? 1 : profile.selectedStage);
         RunLoadoutContext.begin(profile);
@@ -54,10 +55,13 @@ public final class DeadlineZeroGame extends Game {
         RunRewardCalculator.Rewards rewards = RunSettlement.apply(profile, kills, secondsSurvived, bossKilled, safeStage);
         DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
         DailyService.recordRun(profile, kills, bossKilled);
+        long survivorXp = 35L + Math.max(0, kills) / 4L + safeStage * 12L + (bossKilled ? 80L : 0L);
+        profile.survivors.addXp(profile.selectedSurvivor, survivorXp);
 
         if (bossKilled && safeStage >= profile.highestStage) {
             profile.highestStage = StageRules.nextStage(safeStage);
             profile.selectedStage = profile.highestStage;
+            profile.survivors.refreshUnlocks(profile);
         }
 
         EquipmentItem drop = null;
@@ -70,12 +74,7 @@ public final class DeadlineZeroGame extends Game {
     }
 
     public void saveProfile() { ProfileStore.save(profile); }
-
     @Override public void pause() { saveProfile(); }
     @Override public void dispose() { saveProfile(); super.dispose(); }
-
-    @Override public void setScreen(com.badlogic.gdx.Screen screen) {
-        if (getScreen() != null) getScreen().dispose();
-        super.setScreen(screen);
-    }
+    @Override public void setScreen(com.badlogic.gdx.Screen screen) { if (getScreen() != null) getScreen().dispose(); super.setScreen(screen); }
 }
