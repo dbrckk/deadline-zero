@@ -11,6 +11,7 @@ public final class PlayerProfile {
     private final EnumMap<EquipmentSlot, EquipmentItem> equipped = new EnumMap<>(EquipmentSlot.class);
     public final Inventory inventory = new Inventory();
     public final DailyProgress daily = new DailyProgress();
+    public final SurvivorProgression survivors = new SurvivorProgression();
     public int accountLevel = 1;
     public long accountXp;
     public int highestStage = 1;
@@ -26,12 +27,12 @@ public final class PlayerProfile {
     public void addCurrency(Currency currency, long amount) { if (amount > 0) currencies.put(currency, currency(currency) + amount); }
     public boolean spend(Currency currency, long amount) { if (amount <= 0 || currency(currency) < amount) return false; currencies.put(currency, currency(currency) - amount); return true; }
     public long xpForNextLevel() { return 250L + (long)(accountLevel - 1) * 110L; }
-    public void addAccountXp(long amount) { if (amount <= 0) return; accountXp += amount; while (accountXp >= xpForNextLevel()) { accountXp -= xpForNextLevel(); accountLevel++; } }
-    public void recordRun(int kills, int stage) { totalRuns++; totalKills += Math.max(0, kills); highestStage = Math.max(highestStage, Math.max(1, stage)); selectedStage = Math.min(Math.max(1, selectedStage), highestStage); }
+    public void addAccountXp(long amount) { if (amount <= 0) return; accountXp += amount; while (accountXp >= xpForNextLevel()) { accountXp -= xpForNextLevel(); accountLevel++; } survivors.refreshUnlocks(this); }
+    public void recordRun(int kills, int stage) { totalRuns++; totalKills += Math.max(0, kills); highestStage = Math.max(highestStage, Math.max(1, stage)); selectedStage = Math.min(Math.max(1, selectedStage), highestStage); survivors.refreshUnlocks(this); }
     public EquipmentItem equipped(EquipmentSlot slot) { return equipped.get(slot); }
     public void equip(EquipmentItem item) { if (item != null) { equipped.put(item.slot, item); if (inventory.find(item.id) == null) inventory.add(item); } }
     public void unequip(EquipmentSlot slot) { if (slot != null) equipped.remove(slot); }
     public boolean selectStage(int stage) { if (stage < 1 || stage > highestStage) return false; selectedStage = stage; return true; }
-    public void selectSurvivor(SurvivorCatalog.Survivor survivor) { if (survivor != null) selectedSurvivor = survivor; }
+    public boolean selectSurvivor(SurvivorCatalog.Survivor survivor) { if (survivor == null || !survivors.unlocked(survivor)) return false; selectedSurvivor = survivor; return true; }
     public float aggregatePowerMultiplier() { float bonus = 0f; for (EquipmentItem item : equipped.values()) if (item != null) bonus += item.powerBonus; return 1f + bonus; }
 }
