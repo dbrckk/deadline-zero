@@ -15,6 +15,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.abilities.AbilitySystem;
+import com.deadlinezero.game.abilities.AbilityType;
 import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.config.GameConfig;
@@ -47,12 +49,14 @@ public final class GameScreen extends ScreenAdapter {
     private final Vector2 aim = new Vector2();
     private final Vector2 shotVelocity = new Vector2();
     private final Matrix4 hudMatrix = new Matrix4();
+    private final AbilitySystem abilitySystem;
     private float accumulator, fireTimer, contactTimer, cameraShake;
     private boolean choosingUpgrade, gameOver, revived;
     private final Upgrade[] choices = new Upgrade[3];
 
     public GameScreen(DeadlineZeroGame game) {
         this.game = game;
+        this.abilitySystem = new AbilitySystem(player, enemies, pools, this::onEnemyKilled);
         cam.position.set(0, 0, 0);
         cam.update();
         font.getData().setScale(.75f);
@@ -75,6 +79,12 @@ public final class GameScreen extends ScreenAdapter {
         contactTimer -= dt;
         Vector2 move = stick.update(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
         player.velocity.set(move).scl(player.moveSpeed);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && player.canDash() && move.len2() > .08f) {
+            player.position.mulAdd(move, 4.8f);
+            player.triggerDash();
+            cameraShake = Math.max(cameraShake, .12f);
+            impact(player.position.x, player.position.y, .9f, .16f, Color.CYAN);
+        }
         player.position.mulAdd(player.velocity, dt);
         player.position.x = MathUtils.clamp(player.position.x, -31, 31);
         player.position.y = MathUtils.clamp(player.position.y, -17, 17);
@@ -92,6 +102,7 @@ public final class GameScreen extends ScreenAdapter {
 
         updateEnemies(dt);
         spatial.rebuild(enemies);
+        abilitySystem.update(dt);
         updatePlayerProjectiles(dt);
         updateHostileProjectiles(dt);
 
@@ -180,9 +191,7 @@ public final class GameScreen extends ScreenAdapter {
                 if (p.explosive) {
                     impact(p.position.x, p.position.y, p.explosionRadius, .32f, Color.ORANGE);
                     if (p.position.dst2(player.position) <= p.explosionRadius * p.explosionRadius) damagePlayer(p.damage, .48f);
-                } else {
-                    damagePlayer(p.damage, .22f);
-                }
+                } else damagePlayer(p.damage, .22f);
             }
         }
     }
@@ -190,30 +199,24 @@ public final class GameScreen extends ScreenAdapter {
     private void resolveEnemyAttack(Enemy e) {
         aim.set(player.position).sub(e.position);
         if (aim.len2() < .0001f) aim.set(1f, 0f); else aim.nor();
-
         if (e.type == Enemy.Type.RANGED) {
             spawnHostileShot(e.position.x, e.position.y, aim.angleDeg(), 8.5f, e.contactDamage, .18f, false, 0f);
             return;
         }
-
         if (e.type == Enemy.Type.BOSS) {
             int phase = e.bossPhases == null ? 1 : e.bossPhases.phase();
             if (phase == 1) {
-                for (int i = -2; i <= 2; i++)
-                    spawnHostileShot(e.position.x, e.position.y, aim.angleDeg() + i * 11f, 7.2f, e.contactDamage * .72f, .22f, false, 0f);
+                for (int i = -2; i <= 2; i++) spawnHostileShot(e.position.x, e.position.y, aim.angleDeg() + i * 11f, 7.2f, e.contactDamage * .72f, .22f, false, 0f);
             } else if (phase == 2) {
-                for (int i = 0; i < 10; i++)
-                    spawnHostileShot(e.position.x, e.position.y, i * 36f, 6.4f, e.contactDamage * .62f, .22f, false, 0f);
+                for (int i = 0; i < 10; i++) spawnHostileShot(e.position.x, e.position.y, i * 36f, 6.4f, e.contactDamage * .62f, .22f, false, 0f);
             } else {
-                for (int i = 0; i < 14; i++)
-                    spawnHostileShot(e.position.x, e.position.y, i * (360f / 14f), 6.8f, e.contactDamage * .58f, .24f, i % 3 == 0, 2.2f);
+                for (int i = 0; i < 14; i++) spawnHostileShot(e.position.x, e.position.y, i * (360f / 14f), 6.8f, e.contactDamage * .58f, .24f, i % 3 == 0, 2.2f);
             }
             cameraShake = Math.max(cameraShake, .18f + phase * .05f);
         }
     }
 
-    private void spawnHostileShot(float x, float y, float angle, float speed, float damage,
-                                  float radius, boolean explosive, float explosionRadius) {
+    private void spawnHostileShot(float x, float y, float angle, float speed, float damage, float radius, boolean explosive, float explosionRadius) {
         EnemyProjectile p = pools.hostileProjectile();
         if (p == null) return;
         shotVelocity.set(speed, 0f).setAngleDeg(angle);
@@ -347,6 +350,7 @@ public final class GameScreen extends ScreenAdapter {
             shapes.setColor(p.explosive ? Color.ORANGE : Color.SCARLET);
             shapes.circle(p.position.x, p.position.y, p.radius, 14);
         }
+        drawAbilityObjects();
         for (Enemy e : enemies) {
             Color c = switch (e.type) {
                 case RUNNER -> new Color(.95f, .35f, .25f, 1f);
@@ -367,9 +371,23 @@ public final class GameScreen extends ScreenAdapter {
         }
         shapes.setColor(.12f, .85f, 1f, 1f); shapes.circle(player.position.x, player.position.y, player.radius, 24);
         shapes.end();
-
         drawCombatText();
         drawHud();
+    }
+
+    private void drawAbilityObjects() {
+        float angle = abilitySystem.runtime().orbitalAngle;
+        if (player.abilities.unlocked(AbilityType.DRONE)) {
+            shapes.setColor(Color.LIME);
+            shapes.circle(player.position.x + MathUtils.cosDeg(angle + 180f) * 1.8f,
+                player.position.y + MathUtils.sinDeg(angle + 180f) * 1.8f, .20f, 12);
+        }
+        if (player.abilities.unlocked(AbilityType.ORBITAL_BLADE)) {
+            float orbit = 2f + player.abilities.level(AbilityType.ORBITAL_BLADE) * .12f;
+            shapes.setColor(Color.GOLD);
+            shapes.rect(player.position.x + MathUtils.cosDeg(angle) * orbit - .12f,
+                player.position.y + MathUtils.sinDeg(angle) * orbit - .34f, .24f, .68f);
+        }
     }
 
     private void drawCombatText() {
@@ -404,6 +422,7 @@ public final class GameScreen extends ScreenAdapter {
         font.draw(batch, "LV " + player.level, w * .34f + 8, h - 64);
         font.draw(batch, "KILLS  " + director.kills(), w - 190, h - 42);
         font.draw(batch, String.format("%02d:%02d", (int)director.elapsed() / 60, (int)director.elapsed() % 60), w - 190, h - 68);
+        font.draw(batch, "DASH " + (player.canDash() ? "READY" : String.format("%.1f", player.dashTimer)), 28, 48);
         if (choosingUpgrade) drawUpgradeText(w, h);
         if (gameOver) drawGameOverText(w, h);
         batch.end();
@@ -416,7 +435,7 @@ public final class GameScreen extends ScreenAdapter {
         for (int i = 0; i < 3; i++) {
             float x = w * (.17f + i * .33f);
             font.setColor(Color.CYAN); font.draw(batch, "[" + (i + 1) + "] " + choices[i].title, x - 120, h * .52f, 240, Align.center, false);
-            font.setColor(Color.LIGHT_GRAY); font.draw(batch, choices[i].description, x - 120, h * .45f, 240, Align.center, true);
+            font.setColor(Color.LIGHT_GRAY); font.draw(batch, choices[i].rarity.name() + " • " + choices[i].description, x - 120, h * .45f, 240, Align.center, true);
         }
         font.getData().setScale(.75f);
     }
