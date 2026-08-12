@@ -7,6 +7,7 @@ import com.deadlinezero.game.meta.EquipmentDropTable;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.meta.ProfileStore;
+import com.deadlinezero.game.meta.RunLoadoutContext;
 import com.deadlinezero.game.meta.RunResult;
 import com.deadlinezero.game.meta.RunRewardCalculator;
 import com.deadlinezero.game.meta.RunSettlement;
@@ -42,6 +43,7 @@ public final class DeadlineZeroGame extends Game {
     public void showMissions() { setScreen(new MissionsScreen(this)); }
     public void startRun() {
         RunStageContext.begin(profile == null ? 1 : profile.selectedStage);
+        RunLoadoutContext.begin(profile);
         setScreen(new GameScreen(this));
     }
 
