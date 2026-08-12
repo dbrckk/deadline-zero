@@ -1,6 +1,7 @@
 package com.deadlinezero.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.deadlinezero.game.meta.DailyService;
 import com.deadlinezero.game.meta.EquipmentDropTable;
@@ -8,10 +9,12 @@ import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.meta.ProfileStore;
 import com.deadlinezero.game.meta.RunLoadoutContext;
+import com.deadlinezero.game.meta.RunMissionRuntime;
 import com.deadlinezero.game.meta.RunResult;
 import com.deadlinezero.game.meta.RunRewardCalculator;
 import com.deadlinezero.game.meta.RunSettlement;
 import com.deadlinezero.game.meta.RunStageContext;
+import com.deadlinezero.game.meta.StageMissionRules;
 import com.deadlinezero.game.meta.StageRules;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.GearScreen;
@@ -20,6 +23,7 @@ import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.screen.RunResultScreen;
 import com.deadlinezero.game.screen.ShopScreen;
 import com.deadlinezero.game.screen.SurvivorScreen;
+import com.deadlinezero.game.screen.VictoryScreen;
 import com.deadlinezero.game.services.GameServices;
 
 public final class DeadlineZeroGame extends Game {
@@ -39,26 +43,43 @@ public final class DeadlineZeroGame extends Game {
         showMenu();
     }
 
-    public void showMenu() { setScreen(new MenuScreen(this)); }
+    public void showMenu() { RunMissionRuntime.end(); setScreen(new MenuScreen(this)); }
     public void showGear() { setScreen(new GearScreen(this)); }
     public void showMissions() { setScreen(new MissionsScreen(this)); }
     public void showShop() { setScreen(new ShopScreen(this)); }
     public void showSurvivors() { setScreen(new SurvivorScreen(this)); }
+
     public void startRun() {
         RunStageContext.begin(profile == null ? 1 : profile.selectedStage);
         RunLoadoutContext.begin(profile);
+        RunMissionRuntime.begin(() -> Gdx.app.postRunnable(() -> finishVictory()));
         setScreen(new GameScreen(this));
     }
 
+    private void finishVictory() {
+        if (!(getScreen() instanceof GameScreen)) return;
+        finishRunInternal(RunMissionRuntime.kills(), RunMissionRuntime.elapsed(), true, true);
+    }
+
     public void finishRun(int kills, float secondsSurvived, boolean bossKilled, int ignoredStage) {
+        finishRunInternal(kills, secondsSurvived, bossKilled, false);
+    }
+
+    private void finishRunInternal(int kills, float secondsSurvived, boolean bossKilled, boolean victorySignal) {
         int safeStage = RunStageContext.stage();
+        boolean firstClear = bossKilled && safeStage >= profile.highestStage;
+        long firstClearCredits = firstClear ? StageMissionRules.firstClearCredits(safeStage) : 0L;
+        int firstClearGems = firstClear ? StageMissionRules.firstClearGems(safeStage) : 0;
+
         RunRewardCalculator.Rewards rewards = RunSettlement.apply(profile, kills, secondsSurvived, bossKilled, safeStage);
         DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
         DailyService.recordRun(profile, kills, bossKilled);
         long survivorXp = 35L + Math.max(0, kills) / 4L + safeStage * 12L + (bossKilled ? 80L : 0L);
         profile.survivors.addXp(profile.selectedSurvivor, survivorXp);
 
-        if (bossKilled && safeStage >= profile.highestStage) {
+        if (firstClear) {
+            profile.addCurrency(PlayerProfile.Currency.CREDITS, firstClearCredits);
+            profile.addCurrency(PlayerProfile.Currency.GEMS, firstClearGems);
             profile.highestStage = StageRules.nextStage(safeStage);
             profile.selectedStage = profile.highestStage;
             profile.survivors.refreshUnlocks(profile);
@@ -69,12 +90,15 @@ public final class DeadlineZeroGame extends Game {
             drop = EquipmentDropTable.roll(safeStage, bossKilled);
             profile.inventory.add(drop);
         }
+        RunMissionRuntime.end();
         saveProfile();
-        setScreen(new RunResultScreen(this, new RunResult(kills, secondsSurvived, bossKilled, safeStage, rewards, drop)));
+        RunResult result = new RunResult(kills, secondsSurvived, bossKilled, safeStage, rewards, drop);
+        if (bossKilled || victorySignal) setScreen(new VictoryScreen(this, result, firstClear, firstClearCredits, firstClearGems));
+        else setScreen(new RunResultScreen(this, result));
     }
 
     public void saveProfile() { ProfileStore.save(profile); }
     @Override public void pause() { saveProfile(); }
-    @Override public void dispose() { saveProfile(); super.dispose(); }
+    @Override public void dispose() { RunMissionRuntime.end(); saveProfile(); super.dispose(); }
     @Override public void setScreen(com.badlogic.gdx.Screen screen) { if (getScreen() != null) getScreen().dispose(); super.setScreen(screen); }
 }
