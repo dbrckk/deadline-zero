@@ -53,12 +53,14 @@ public final class GameScreen extends ScreenAdapter {
     private final Matrix4 hudMatrix = new Matrix4();
     private final AbilitySystem abilitySystem;
     private float accumulator, fireTimer, contactTimer, cameraShake;
-    private boolean choosingUpgrade, gameOver, revived;
+    private boolean choosingUpgrade, gameOver, revived, bossKilledThisRun, settling;
     private final Upgrade[] choices = new Upgrade[3];
 
     public GameScreen(DeadlineZeroGame game) {
         this.game = game;
         this.abilitySystem = new AbilitySystem(player, enemies, pools, this::onEnemyKilled);
+        float gearPower = game.profile == null ? 1f : game.profile.aggregatePowerMultiplier();
+        player.weapon.damage *= gearPower;
         cam.position.set(0, 0, 0);
         cam.update();
         font.getData().setScale(.75f);
@@ -301,6 +303,7 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private void onEnemyKilled(Enemy e) {
+        if (e.type == Enemy.Type.BOSS) bossKilledThisRun = true;
         director.onKill();
         if (player.addXp(e.xpValue)) prepareUpgrade();
         impact(e.position.x, e.position.y, e.radius * 2.3f, .28f, new Color(.2f, 1f, .65f, 1f));
@@ -362,6 +365,13 @@ public final class GameScreen extends ScreenAdapter {
     private void prepareUpgrade() {
         choosingUpgrade = true;
         UpgradeSelector.fillChoices(player, choices);
+    }
+
+    private void finishRun() {
+        if (settling) return;
+        settling = true;
+        int stage = game.profile == null ? 1 : Math.max(1, game.profile.highestStage);
+        game.finishRun(director.kills(), director.elapsed(), bossKilledThisRun, stage);
     }
 
     private void draw() {
@@ -495,7 +505,7 @@ public final class GameScreen extends ScreenAdapter {
         font.getData().setScale(1.5f); font.setColor(Color.WHITE);
         font.draw(batch, "SIGNAL LOST", 0, h * .62f, w, Align.center, false);
         font.getData().setScale(.72f);
-        font.draw(batch, revived ? "TAP TO RETURN TO BASE" : "TAP TO REVIVE (rewarded ad) • R = retry", 0, h * .45f, w, Align.center, false);
+        font.draw(batch, revived ? "TAP / ENTER FOR RESULTS" : "TAP TO REVIVE (rewarded ad)  •  ENTER FOR RESULTS", 0, h * .45f, w, Align.center, false);
         font.getData().setScale(.75f);
     }
 
@@ -509,15 +519,22 @@ public final class GameScreen extends ScreenAdapter {
             if (idx >= 0) { choices[idx].apply(player); choosingUpgrade = false; }
         }
         if (gameOver) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.R)) { game.startRun(); return; }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+                finishRun();
+                return;
+            }
             if (Gdx.input.justTouched()) {
                 if (!revived) game.services.ads.showRewarded(AdsService.Reward.REVIVE, () -> {
-                    player.alive = true; player.hp = player.maxHp * .45f; gameOver = false; revived = true;
-                }, game::showMenu);
-                else game.showMenu();
+                    player.alive = true;
+                    player.hp = player.maxHp * .45f;
+                    gameOver = false;
+                    revived = true;
+                    game.services.ads.preload();
+                }, this::finishRun);
+                else finishRun();
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.showMenu();
+        if (!gameOver && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) finishRun();
     }
 
     @Override public void resize(int width, int height) {
