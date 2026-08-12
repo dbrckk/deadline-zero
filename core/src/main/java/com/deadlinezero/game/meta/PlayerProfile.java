@@ -13,6 +13,7 @@ public final class PlayerProfile {
     public int accountLevel = 1;
     public long accountXp;
     public int highestStage = 1;
+    public int selectedStage = 1;
     public int totalRuns;
     public long totalKills;
 
@@ -48,14 +49,24 @@ public final class PlayerProfile {
         totalRuns++;
         totalKills += Math.max(0, kills);
         highestStage = Math.max(highestStage, Math.max(1, stage));
+        selectedStage = Math.min(Math.max(1, selectedStage), highestStage);
     }
 
     public EquipmentItem equipped(EquipmentSlot slot) { return equipped.get(slot); }
+
     public void equip(EquipmentItem item) {
         if (item != null) {
             equipped.put(item.slot, item);
             if (inventory.find(item.id) == null) inventory.add(item);
         }
+    }
+
+    public void unequip(EquipmentSlot slot) { if (slot != null) equipped.remove(slot); }
+
+    public boolean selectStage(int stage) {
+        if (stage < 1 || stage > highestStage) return false;
+        selectedStage = stage;
+        return true;
     }
 
     public float aggregatePowerMultiplier() {
