@@ -24,6 +24,7 @@ import com.deadlinezero.game.entities.EnemyProjectile;
 import com.deadlinezero.game.entities.HomingMissile;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.entities.Projectile;
+import com.deadlinezero.game.fx.ArcFx;
 import com.deadlinezero.game.fx.DamageNumber;
 import com.deadlinezero.game.fx.ImpactFx;
 import com.deadlinezero.game.input.VirtualStick;
@@ -118,6 +119,7 @@ public final class GameScreen extends ScreenAdapter {
 
         for (ImpactFx f : pools.impacts) if (f.active) { f.life -= dt; if (f.life <= 0f) f.active = false; }
         for (DamageNumber n : pools.damageNumbers) n.update(dt);
+        for (ArcFx arc : pools.arcs) arc.update(dt);
         for (int i = enemies.size - 1; i >= 0; i--) if (!enemies.get(i).alive) enemies.removeIndex(i);
 
         cam.position.x += MathUtils.random(-1f, 1f) * cameraShake;
@@ -282,9 +284,13 @@ public final class GameScreen extends ScreenAdapter {
                 if (d2 < best) { best = d2; nearest = candidate; }
             }
             if (nearest == null) break;
+            float fromX = current.position.x;
+            float fromY = current.position.y;
             boolean wasAlive = nearest.alive;
             nearest.damage(damage);
             nearest.applyElement(DamageElement.SHOCK, damage);
+            ArcFx arc = pools.arc();
+            if (arc != null) arc.spawn(fromX, fromY, nearest.position.x, nearest.position.y, .11f);
             damageNumber(nearest.position.x, nearest.position.y + nearest.radius, damage, false, VisualTheme.CYAN);
             impact(nearest.position.x, nearest.position.y, .62f, .16f, VisualTheme.CYAN);
             if (wasAlive && !nearest.alive) onEnemyKilled(nearest);
@@ -392,6 +398,7 @@ public final class GameScreen extends ScreenAdapter {
 
         worldFx.drawGroundShadows(shapes, player, enemies);
         worldFx.drawProjectileTrails(shapes, pools.projectiles, pools.hostileProjectiles, pools.homingMissiles);
+        worldFx.drawElectricArcs(shapes, pools.arcs, visualTime);
 
         for (ImpactFx f : pools.impacts) if (f.active) {
             float a = MathUtils.clamp(f.life / f.maxLife, 0f, 1f);
