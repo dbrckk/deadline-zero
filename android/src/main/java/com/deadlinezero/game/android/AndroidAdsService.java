@@ -12,19 +12,29 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class AndroidAdsService implements AdsService {
     private final Activity activity;
+    private final AndroidConsentManager consent;
     private RewardedAd ad;
     private boolean loading;
 
     public AndroidAdsService(Activity activity) {
+        this(activity, null);
+    }
+
+    public AndroidAdsService(Activity activity, AndroidConsentManager consent) {
         this.activity = activity;
+        this.consent = consent;
     }
 
     @Override public void preload() {
         load();
     }
 
+    private boolean canRequestAds() {
+        return consent == null || consent.canRequestAds();
+    }
+
     private void load() {
-        if (loading || ad != null) return;
+        if (!canRequestAds() || loading || ad != null) return;
         loading = true;
         activity.runOnUiThread(() -> RewardedAd.load(
             activity,
@@ -45,12 +55,12 @@ public final class AndroidAdsService implements AdsService {
     }
 
     @Override public boolean isRewardedReady() {
-        return ad != null;
+        return canRequestAds() && ad != null;
     }
 
     @Override public void showRewarded(Reward reward, Runnable earned, Runnable unavailable) {
         activity.runOnUiThread(() -> {
-            if (ad == null) {
+            if (!canRequestAds() || ad == null) {
                 load();
                 unavailable.run();
                 return;
