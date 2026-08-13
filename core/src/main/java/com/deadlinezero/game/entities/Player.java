@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.deadlinezero.game.abilities.AbilityLoadout;
 import com.deadlinezero.game.abilities.AbilityType;
 import com.deadlinezero.game.audio.AudioDirector;
-import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.combat.WeaponRuntime;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.config.GameConfig;
@@ -22,7 +21,7 @@ public final class Player extends ActorState {
     public float dashTimer;
     public float invulnerabilityTimer;
     public float visualHitTimer;
-    public final WeaponRuntime weapon = new WeaponRuntime(WeaponCatalog.AR9);
+    public final WeaponRuntime weapon = new WeaponRuntime(RunLoadoutContext.weaponDefinition());
     public final AbilityLoadout abilities = new AbilityLoadout();
     private final MobileCombatInput mobileCombatInput = new MobileCombatInput();
     private final Vector2 dashDirection = new Vector2();
