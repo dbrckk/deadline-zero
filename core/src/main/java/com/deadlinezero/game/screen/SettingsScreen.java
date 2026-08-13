@@ -13,8 +13,11 @@ import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.visual.VisualTheme;
 
-/** Lightweight production settings screen with persistent accessibility and audio controls. */
+/** Lightweight production settings screen with persistent accessibility, audio and privacy controls. */
 public final class SettingsScreen extends ScreenAdapter {
+    private static final int PRIVACY_ROW = 11;
+    private static final int LAST_ROW = PRIVACY_ROW;
+
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
     private final BitmapFont font = new BitmapFont();
@@ -28,24 +31,27 @@ public final class SettingsScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
         AccessibilitySettings s = game.accessibility;
+        boolean privacyRequired = game.services.privacy.optionsRequired();
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(VisualTheme.PANEL); shapes.rect(w * .14f, h * .10f, w * .72f, h * .75f);
         shapes.setColor(VisualTheme.CYAN); shapes.rect(w * .14f, h * .84f, w * .72f, 3f);
         float startY = h * .72f;
-        float step = h * .059f;
+        float step = h * .055f;
         shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .13f);
         shapes.rect(w * .18f, startY - row * step - 24f, w * .64f, 36f);
         shapes.end();
 
         String[] labels = {
             "Screen shake", "Shake strength", "Hit stop", "Damage flash", "High contrast telegraphs",
-            "Reduce flashes", "Haptics", "UI scale", "Master volume", "SFX volume", "Music volume"
+            "Reduce flashes", "Haptics", "UI scale", "Master volume", "SFX volume", "Music volume",
+            "Privacy choices"
         };
         String[] values = {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
             onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), pct(s.uiScale),
-            pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume)
+            pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
+            privacyRequired ? "OPEN" : "NOT REQUIRED"
         };
 
         batch.begin();
@@ -53,26 +59,38 @@ public final class SettingsScreen extends ScreenAdapter {
         font.draw(batch, "SETTINGS", 0, h * .91f, w, Align.center, false);
         font.getData().setScale(.55f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "UP/DOWN SELECT  •  LEFT/RIGHT ADJUST  •  ESC BACK", 0, h * .855f, w, Align.center, false);
+        font.draw(batch, "UP/DOWN SELECT  •  LEFT/RIGHT ADJUST  •  ENTER ACTIVATE  •  ESC BACK", 0, h * .855f, w, Align.center, false);
 
         for (int i = 0; i < labels.length; i++) {
             float y = startY - i * step;
-            font.setColor(i == row ? VisualTheme.CYAN : VisualTheme.TEXT);
+            boolean disabled = i == PRIVACY_ROW && !privacyRequired;
+            font.setColor(disabled ? VisualTheme.MUTED : (i == row ? VisualTheme.CYAN : VisualTheme.TEXT));
             font.draw(batch, labels[i], w * .20f, y);
-            font.setColor(i == row ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED);
+            font.setColor(disabled ? VisualTheme.MUTED : (i == row ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED));
             font.draw(batch, values[i], w * .58f, y, w * .20f, Align.right, false);
         }
         batch.end();
-        handleInput(s);
+        handleInput(s, privacyRequired);
     }
 
-    private void handleInput(AccessibilitySettings s) {
+    private void handleInput(AccessibilitySettings s, boolean privacyRequired) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) { saveAndBack(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) row = Math.max(0, row - 1);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) row = Math.min(10, row + 1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) row = Math.min(LAST_ROW, row + 1);
         boolean left = Gdx.input.isKeyJustPressed(Input.Keys.LEFT);
         boolean right = Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER);
         if (!left && !right) return;
+
+        if (row == PRIVACY_ROW) {
+            if (right && privacyRequired) {
+                AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+                game.services.privacy.showOptions(() -> Gdx.app.postRunnable(
+                    () -> AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK)
+                ));
+            }
+            return;
+        }
+
         float dir = right ? 1f : -1f;
         switch (row) {
             case 0 -> s.screenShake = !s.screenShake;
