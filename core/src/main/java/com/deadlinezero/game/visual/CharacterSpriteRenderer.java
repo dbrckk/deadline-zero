@@ -43,13 +43,15 @@ public final class CharacterSpriteRenderer {
             motion = player.velocity.len2() > .04f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
         }
 
-        TextureRegion region = art.survivor(RunLoadoutContext.survivor(), motion, stateTime);
-        float h = 1.65f;
+        var survivor = RunLoadoutContext.survivor();
+        ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.survivor(survivor);
+        TextureRegion region = art.survivor(survivor, motion, stateTime);
+        float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
         float facing = player.velocity.x < -.02f ? -1f : 1f;
         batch.setColor(1f, 1f, 1f, player.invulnerable() ? .78f : 1f);
-        drawFacing(batch, region, player.position.x, player.position.y - .58f, w, h, facing);
+        drawFacing(batch, region, player.position.x, player.position.y - profile.footOffset(), w, h, facing);
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
@@ -69,14 +71,15 @@ public final class CharacterSpriteRenderer {
             motion = enemy.velocity.len2() > .025f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
         }
 
+        ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.enemy(enemy.type);
         TextureRegion region = art.enemy(enemy.type, motion, stateTime + enemy.position.x * .07f + enemy.position.y * .05f);
-        float h = Math.max(.95f, enemy.radius * (enemy.type == Enemy.Type.BOSS ? 3.1f : 2.55f));
+        float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
         float flash = Math.min(1f, Math.max(0f, enemy.hitFlash));
         float facing = enemy.velocity.x < -.02f ? -1f : 1f;
         batch.setColor(1f, 1f - flash * .22f, 1f - flash * .22f, 1f);
-        drawFacing(batch, region, enemy.position.x, enemy.position.y - enemy.radius * .72f, w, h, facing);
+        drawFacing(batch, region, enemy.position.x, enemy.position.y - profile.footOffset(), w, h, facing);
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
