@@ -33,6 +33,7 @@ import com.deadlinezero.game.progression.UpgradeSelector;
 import com.deadlinezero.game.services.AdsService;
 import com.deadlinezero.game.util.Pools;
 import com.deadlinezero.game.visual.CombatHudRenderer;
+import com.deadlinezero.game.visual.CombatPolishController;
 import com.deadlinezero.game.visual.CombatSpritePass;
 import com.deadlinezero.game.visual.VisualTheme;
 import com.deadlinezero.game.visual.WorldFxRenderer;
@@ -58,6 +59,7 @@ public final class GameScreen extends ScreenAdapter {
     private final CombatHudRenderer combatHud = new CombatHudRenderer();
     private final WorldFxRenderer worldFx = new WorldFxRenderer();
     private final CombatSpritePass spritePass;
+    private final CombatPolishController polish;
     private float accumulator, fireTimer, contactTimer, cameraShake, visualTime;
     private boolean choosingUpgrade, gameOver, revived, bossKilledThisRun, settling;
     private final Upgrade[] choices = new Upgrade[3];
@@ -66,6 +68,7 @@ public final class GameScreen extends ScreenAdapter {
         this.game = game;
         this.abilitySystem = new AbilitySystem(player, enemies, pools, this::onEnemyKilled);
         this.spritePass = new CombatSpritePass(game.art);
+        this.polish = new CombatPolishController(game.art);
         float gearPower = game.profile == null ? 1f : game.profile.aggregatePowerMultiplier();
         player.weapon.damage *= gearPower;
         cam.position.set(0, 0, 0);
@@ -77,8 +80,10 @@ public final class GameScreen extends ScreenAdapter {
         delta = Math.min(delta, .05f);
         visualTime += delta;
         combatHud.update(delta);
-        spritePass.update(delta);
-        accumulator += delta;
+        polish.updateVisual(delta);
+        float simulationScale = polish.simulationScale(delta);
+        spritePass.update(delta * simulationScale);
+        accumulator += delta * simulationScale;
         while (accumulator >= GameConfig.FIXED_STEP) {
             if (!choosingUpgrade && !gameOver) update(GameConfig.FIXED_STEP);
             accumulator -= GameConfig.FIXED_STEP;
@@ -124,6 +129,7 @@ public final class GameScreen extends ScreenAdapter {
         for (ImpactFx f : pools.impacts) if (f.active) { f.life -= dt; if (f.life <= 0f) f.active = false; }
         for (DamageNumber n : pools.damageNumbers) n.update(dt);
         for (ArcFx arc : pools.arcs) arc.update(dt);
+        polish.updateSimulation(dt, pools);
         for (int i = enemies.size - 1; i >= 0; i--) if (!enemies.get(i).alive) enemies.removeIndex(i);
 
         cam.position.x += MathUtils.random(-1f, 1f) * cameraShake;
@@ -131,6 +137,7 @@ public final class GameScreen extends ScreenAdapter {
         cameraShake = Math.max(0f, cameraShake - dt * 2.7f);
         cam.position.x = MathUtils.lerp(cam.position.x, 0f, .08f);
         cam.position.y = MathUtils.lerp(cam.position.y, 0f, .08f);
+        polish.applyCameraRecoil(cam);
         cam.update();
     }
 
@@ -224,6 +231,7 @@ public final class GameScreen extends ScreenAdapter {
                 float vlen = p.velocity.len();
                 if (vlen > .001f) e.addImpulse(p.velocity.x / vlen * p.knockback, p.velocity.y / vlen * p.knockback);
                 impact(p.position.x, p.position.y, p.critical ? .6f : .38f, .12f, p.critical ? VisualTheme.GOLD : VisualTheme.CYAN);
+                polish.onProjectileHit(p.critical);
                 if (p.element == DamageElement.SHOCK && e.alive) chainShock(e, p.damage * .42f, 3);
                 if (wasAlive && !e.alive) onEnemyKilled(e);
                 p.lastHit = e;
@@ -321,9 +329,12 @@ public final class GameScreen extends ScreenAdapter {
 
     private void onEnemyKilled(Enemy e) {
         if (e.type == Enemy.Type.BOSS) bossKilledThisRun = true;
+        polish.onEnemyKilled(e, pools);
         director.onKill();
         if (player.addXp(e.xpValue)) prepareUpgrade();
         impact(e.position.x, e.position.y, e.radius * 2.3f, .28f, VisualTheme.GREEN);
+        if (e.type == Enemy.Type.BOSS) cameraShake = Math.max(cameraShake, .72f);
+        else cameraShake = Math.max(cameraShake, .08f);
     }
 
     private void spawnEnemy() {
@@ -371,6 +382,7 @@ public final class GameScreen extends ScreenAdapter {
                 player.weapon.damage * (crit ? player.weapon.critMultiplier : 1f), crit,
                 player.weapon.penetration, player.weapon.knockback, player.weapon.element);
         }
+        polish.onShot(base);
         cameraShake = Math.max(cameraShake, .035f);
     }
 
@@ -401,6 +413,7 @@ public final class GameScreen extends ScreenAdapter {
         for (int x = -40; x < 40; x += 2) shapes.rect(x, -24, .02f, 48);
         for (int y = -24; y < 24; y += 2) shapes.rect(-40, y, 80, .02f);
 
+        polish.drawWorldUnderlay(shapes, player, enemies, pools, visualTime);
         worldFx.drawGroundShadows(shapes, player, enemies);
         worldFx.drawProjectileTrails(shapes, pools.projectiles, pools.hostileProjectiles, pools.homingMissiles);
         worldFx.drawElectricArcs(shapes, pools.arcs, visualTime);
@@ -445,6 +458,7 @@ public final class GameScreen extends ScreenAdapter {
         shapes.end();
 
         batch.setProjectionMatrix(cam.combined);
+        polish.drawAuthoredDeaths(batch, pools);
         spritePass.render(batch, player, enemies);
         drawCombatText();
         drawHud();
