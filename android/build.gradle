@@ -1,5 +1,10 @@
 plugins { id 'com.android.application' }
 
+def testAdmobAppId = 'ca-app-pub-3940256099942544~3347511713'
+def testRewardedId = 'ca-app-pub-3940256099942544/5224354917'
+def admobAppId = providers.gradleProperty('admobAppId').orElse(testAdmobAppId).get()
+def admobRewardedId = providers.gradleProperty('admobRewardedId').orElse(testRewardedId).get()
+
 android {
     namespace 'com.deadlinezero.game.android'
     compileSdk 36
@@ -11,6 +16,8 @@ android {
         versionCode providers.gradleProperty('appVersionCode').get().toInteger()
         versionName providers.gradleProperty('appVersion').get()
         multiDexEnabled true
+        manifestPlaceholders = [ADMOB_APP_ID: admobAppId]
+        buildConfigField 'String', 'ADMOB_REWARDED_ID', '"' + admobRewardedId + '"'
     }
 
     compileOptions {
@@ -32,6 +39,7 @@ dependencies {
     natives "com.badlogicgames.gdx:gdx-platform:${gdxVersion}:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:${gdxVersion}:natives-x86_64"
     implementation 'com.google.android.gms:play-services-ads:25.4.0'
+    implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
     implementation 'com.android.billingclient:billing:9.1.0'
 }
 
@@ -53,4 +61,11 @@ tasks.register('copyAndroidNatives') {
 
 tasks.configureEach { task ->
     if (task.name.contains("merge") && task.name.contains("JniLibFolders")) task.dependsOn copyAndroidNatives
+    if (task.name in ['assembleRelease', 'bundleRelease']) {
+        task.doFirst {
+            if (admobAppId == testAdmobAppId || admobRewardedId == testRewardedId) {
+                throw new GradleException('Release ads configuration is missing. Supply -PadmobAppId and -PadmobRewardedId with production AdMob IDs.')
+            }
+        }
+    }
 }
