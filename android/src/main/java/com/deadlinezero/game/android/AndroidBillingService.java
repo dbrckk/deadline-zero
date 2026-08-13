@@ -73,8 +73,6 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
             boolean handled = false;
             for (Purchase purchase : purchases) handled |= processPurchase(purchase, true);
             if (!handled) failPending();
-        } else if (result.getResponseCode() != BillingClient.BillingResponseCode.USER_CANCELED) {
-            failPending();
         } else {
             failPending();
         }
@@ -82,33 +80,48 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
 
     private boolean processPurchase(Purchase purchase, boolean notifyPending) {
         if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED) return false;
-        boolean hasConsumable = false;
+
+        boolean consumable = false;
         for (String id : purchase.getProducts()) {
-            if (BillingService.isConsumable(id)) hasConsumable = true;
-            else owned.add(id);
+            if (BillingService.isConsumable(id)) {
+                consumable = true;
+                break;
+            }
         }
 
-        if (hasConsumable) {
+        if (consumable) {
             ConsumeParams params = ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
             client.consumeAsync(params, (result, token) -> {
-                if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    if (notifyPending) succeedPending();
-                } else if (notifyPending) failPending();
+                if (!notifyPending) return;
+                if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) succeedPending();
+                else failPending();
             });
             return true;
         }
 
-        if (!purchase.isAcknowledged()) {
-            AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder()
-                .setPurchaseToken(purchase.getPurchaseToken()).build();
-            client.acknowledgePurchase(params, result -> {
-                if (notifyPending) {
-                    if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) succeedPending();
-                    else failPending();
-                }
-            });
-        } else if (notifyPending) succeedPending();
+        if (purchase.isAcknowledged()) {
+            grantDurableProducts(purchase);
+            if (notifyPending) succeedPending();
+            return true;
+        }
+
+        AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder()
+            .setPurchaseToken(purchase.getPurchaseToken()).build();
+        client.acknowledgePurchase(params, result -> {
+            if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                grantDurableProducts(purchase);
+                if (notifyPending) succeedPending();
+            } else if (notifyPending) {
+                failPending();
+            }
+        });
         return true;
+    }
+
+    private void grantDurableProducts(Purchase purchase) {
+        for (String id : purchase.getProducts()) {
+            if (!BillingService.isConsumable(id)) owned.add(id);
+        }
     }
 
     private void succeedPending() {
