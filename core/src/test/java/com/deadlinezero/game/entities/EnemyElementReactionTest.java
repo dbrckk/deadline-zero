@@ -41,7 +41,21 @@ public final class EnemyElementReactionTest {
     @Test public void shockOnPrimedTargetTriggersLongerOverloadStun() {
         Enemy e = enemy();
         e.applyElement(DamageElement.FIRE, 30f);
-        e.applyElement(DamageElement.FROST, 30f);
-        e.applyElement(DamageElement.SH0CK, 30f);
+        float hpBefore = e.hp;
+        e.applyElement(DamageElement.SHOCK, 30f);
+
+        assertEquals(Enemy.ElementReaction.OVERLOAD, e.lastReaction);
+        assertTrue(e.hp < hpBefore);
+        assertTrue(e.shockTimer >= .55f);
+    }
+
+    @Test public void reactionMarkerExpiresWithRuntimeUpdate() {
+        Enemy e = enemy();
+        e.applyElement(DamageElement.FIRE, 30f);
+        e.applyElement(DamageElement.SHOCK, 30f);
+        e.updateStatus(.30f);
+
+        assertEquals(Enemy.ElementReaction.NONE, e.lastReaction);
+        assertEquals(0f, e.reactionFlash, .0001f);
     }
 }
