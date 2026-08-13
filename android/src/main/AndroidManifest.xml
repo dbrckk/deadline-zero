@@ -6,8 +6,9 @@
         android:hardwareAccelerated="true"
         android:label="Deadline: Zero"
         android:theme="@style/AppTheme">
-        <!-- Google test App ID. Replace before Play Store release. -->
-        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
         <activity android:name=".AndroidLauncher" android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
