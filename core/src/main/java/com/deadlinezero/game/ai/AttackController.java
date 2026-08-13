@@ -5,6 +5,9 @@ public final class AttackController {
     private final EnemyArchetype archetype;
     private EnemyState state = EnemyState.CHASING;
     private float timer;
+    private float cooldownMultiplier = 1f;
+    private float telegraphMultiplier = 1f;
+    private float recoveryMultiplier = 1f;
 
     public AttackController(EnemyArchetype archetype) {
         this.archetype = archetype;
@@ -14,6 +17,14 @@ public final class AttackController {
     public EnemyState state() { return state; }
     public EnemyArchetype archetype() { return archetype; }
     public float timer() { return timer; }
+    public float cooldownMultiplier() { return cooldownMultiplier; }
+    public float telegraphMultiplier() { return telegraphMultiplier; }
+
+    public void setCadence(float cooldownMultiplier, float telegraphMultiplier, float recoveryMultiplier) {
+        this.cooldownMultiplier = clamp(cooldownMultiplier, .45f, 1.8f);
+        this.telegraphMultiplier = clamp(telegraphMultiplier, .45f, 1.8f);
+        this.recoveryMultiplier = clamp(recoveryMultiplier, .45f, 1.8f);
+    }
 
     public void update(float dt, float distance) {
         timer -= dt;
@@ -24,7 +35,7 @@ public final class AttackController {
                     ? EnemyState.HOLDING_RANGE : EnemyState.CHASING;
                 if (inRange && timer <= 0f) {
                     state = EnemyState.TELEGRAPHING;
-                    timer = archetype.telegraphDuration;
+                    timer = archetype.telegraphDuration * telegraphMultiplier;
                 }
             }
             case TELEGRAPHING -> {
@@ -35,12 +46,12 @@ public final class AttackController {
             }
             case ATTACKING -> {
                 state = EnemyState.RECOVERING;
-                timer = archetype.recoveryDuration;
+                timer = archetype.recoveryDuration * recoveryMultiplier;
             }
             case RECOVERING -> {
                 if (timer <= 0f) {
                     state = EnemyState.CHASING;
-                    timer = archetype.attackCooldown;
+                    timer = archetype.attackCooldown * cooldownMultiplier;
                 }
             }
             case STUNNED, SPAWNING, DEAD -> { }
@@ -50,7 +61,7 @@ public final class AttackController {
     public boolean consumeAttack() {
         if (state != EnemyState.ATTACKING) return false;
         state = EnemyState.RECOVERING;
-        timer = archetype.recoveryDuration;
+        timer = archetype.recoveryDuration * recoveryMultiplier;
         return true;
     }
 
@@ -64,9 +75,11 @@ public final class AttackController {
         timer -= dt;
         if (timer <= 0f) {
             state = EnemyState.CHASING;
-            timer = archetype.attackCooldown * 0.5f;
+            timer = archetype.attackCooldown * cooldownMultiplier * 0.5f;
         }
     }
 
     public void markDead() { state = EnemyState.DEAD; }
+
+    private static float clamp(float v, float min, float max) { return Math.max(min, Math.min(max, v)); }
 }
