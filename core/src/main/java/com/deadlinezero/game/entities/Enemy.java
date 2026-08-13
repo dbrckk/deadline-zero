@@ -48,6 +48,7 @@ public final class Enemy extends ActorState {
         this.attack = new AttackController(archetype);
         this.bossPhases = type == Type.BOSS ? new BossPhaseController() : null;
         this.bossCombat = type == Type.BOSS ? new BossCombatRuntime() : null;
+        configureAttackCadence();
 
         if (type != Type.BOSS) {
             float chance = MathUtils.clamp(.02f + (stage - 1) * .018f, .02f, .20f);
@@ -84,6 +85,26 @@ public final class Enemy extends ActorState {
             }
             default -> { }
         }
+        configureAttackCadence();
+    }
+
+    private void configureAttackCadence() {
+        float cooldown = 1f, telegraph = 1f, recovery = 1f;
+        switch (type) {
+            case RUNNER -> { cooldown = .84f; telegraph = .72f; recovery = .82f; }
+            case BRUTE -> { cooldown = 1.12f; telegraph = 1.34f; recovery = 1.18f; }
+            case RANGED -> { cooldown = 1f; telegraph = .92f; recovery = .95f; }
+            case ELITE -> { cooldown = .82f; telegraph = .78f; recovery = .80f; }
+            case BOSS -> { cooldown = 1f; telegraph = 1f; recovery = 1f; }
+            default -> { }
+        }
+        switch (variant) {
+            case SWIFT -> { cooldown *= .78f; telegraph *= .80f; recovery *= .82f; }
+            case ARMORED -> { cooldown *= 1.12f; telegraph *= 1.12f; recovery *= 1.08f; }
+            case FERAL -> { cooldown *= .72f; telegraph *= .74f; recovery *= .76f; }
+            default -> { }
+        }
+        attack.setCadence(cooldown, telegraph, recovery);
     }
 
     @Override public void damage(float amount) {
