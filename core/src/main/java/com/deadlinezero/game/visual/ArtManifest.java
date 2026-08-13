@@ -18,18 +18,15 @@ public final class ArtManifest {
     public static int validate(GameArt art) {
         if (!art.authoredAvailable()) return 0;
         int missing = 0;
-        for (String key : REQUIRED_STATIC) {
-            if (!art.hasRegion(key)) {
-                missing++;
-                Gdx.app.log("ArtManifest", "Missing authored region: " + key);
-            }
-        }
+        for (String key : REQUIRED_STATIC) missing += requireRegion(art, key);
+
         for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
             String root = "survivor/" + survivor.name().toLowerCase();
             missing += requireMotion(art, root, "idle");
             missing += requireMotion(art, root, "run");
             missing += requireMotion(art, root, "attack");
             missing += requireMotion(art, root, "hit");
+            missing += requireMotion(art, root, "death");
         }
         for (Enemy.Type type : Enemy.Type.values()) {
             String root = "enemy/" + type.name().toLowerCase();
@@ -37,6 +34,8 @@ public final class ArtManifest {
             missing += requireMotion(art, root, "run");
             missing += requireMotion(art, root, "attack");
             missing += requireMotion(art, root, "hit");
+            missing += requireMotion(art, root, "death");
+            missing += requireRegion(art, root + "/corpse");
         }
         if (missing == 0) Gdx.app.log("ArtManifest", "Production atlas validation passed.");
         else Gdx.app.log("ArtManifest", "Production atlas incomplete: " + missing + " required entries missing.");
@@ -45,8 +44,14 @@ public final class ArtManifest {
 
     private static int requireMotion(GameArt art, String root, String motion) {
         String key = root + "/" + motion;
-        if (art.hasRegion(key)) return 0;
+        if (art.hasAnimation(key)) return 0;
         Gdx.app.log("ArtManifest", "Missing authored animation/region: " + key);
+        return 1;
+    }
+
+    private static int requireRegion(GameArt art, String key) {
+        if (art.hasRegion(key)) return 0;
+        Gdx.app.log("ArtManifest", "Missing authored region: " + key);
         return 1;
     }
 }
