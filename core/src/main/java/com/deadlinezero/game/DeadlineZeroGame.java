@@ -3,6 +3,7 @@ package com.deadlinezero.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.meta.DailyService;
 import com.deadlinezero.game.meta.EquipmentDropTable;
 import com.deadlinezero.game.meta.EquipmentItem;
@@ -32,11 +33,13 @@ public final class DeadlineZeroGame extends Game {
     public final GameServices services;
     public PlayerProfile profile;
     public GameArt art;
+    public AudioDirector audio;
 
     public DeadlineZeroGame(GameServices services) { this.services = services == null ? GameServices.noOp() : services; }
 
     @Override public void create() {
         art = new GameArt();
+        audio = new AudioDirector();
         profile = ProfileStore.load();
         DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
         profile.survivors.refreshUnlocks(profile);
@@ -46,7 +49,7 @@ public final class DeadlineZeroGame extends Game {
         showMenu();
     }
 
-    public void showMenu() { RunMissionRuntime.end(); setScreen(new MenuScreen(this)); }
+    public void showMenu() { RunMissionRuntime.end(); if (audio != null) audio.stopCombatMusic(); setScreen(new MenuScreen(this)); }
     public void showGear() { setScreen(new GearScreen(this)); }
     public void showMissions() { setScreen(new MissionsScreen(this)); }
     public void showShop() { setScreen(new ShopScreen(this)); }
@@ -56,6 +59,7 @@ public final class DeadlineZeroGame extends Game {
         RunStageContext.begin(profile == null ? 1 : profile.selectedStage);
         RunLoadoutContext.begin(profile);
         RunMissionRuntime.begin(() -> Gdx.app.postRunnable(() -> finishVictory()));
+        if (audio != null) audio.startCombatMusic();
         setScreen(new GameScreen(this));
     }
 
@@ -94,6 +98,7 @@ public final class DeadlineZeroGame extends Game {
             profile.inventory.add(drop);
         }
         RunMissionRuntime.end();
+        if (audio != null) audio.stopCombatMusic();
         saveProfile();
         RunResult result = new RunResult(kills, secondsSurvived, bossKilled, safeStage, rewards, drop);
         if (bossKilled || victorySignal) setScreen(new VictoryScreen(this, result, firstClear, firstClearCredits, firstClearGems));
@@ -106,6 +111,7 @@ public final class DeadlineZeroGame extends Game {
         RunMissionRuntime.end();
         saveProfile();
         super.dispose();
+        if (audio != null) audio.dispose();
         if (art != null) art.dispose();
     }
     @Override public void setScreen(com.badlogic.gdx.Screen screen) { if (getScreen() != null) getScreen().dispose(); super.setScreen(screen); }
