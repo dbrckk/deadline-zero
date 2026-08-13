@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 
 /** Multi-touch combat actions kept separate from movement stick ownership. */
 public final class MobileCombatInput {
+    private static boolean dashDownGlobal;
     private boolean dashWasDown;
 
     public boolean dashJustPressed(float uiScale) {
@@ -25,8 +26,11 @@ public final class MobileCombatInput {
                 break;
             }
         }
+        dashDownGlobal = down;
         boolean justPressed = down && !dashWasDown;
         dashWasDown = down;
         return justPressed;
     }
+
+    public static boolean dashDown() { return dashDownGlobal; }
 }
