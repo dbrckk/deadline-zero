@@ -21,6 +21,7 @@ public final class CombatPolishController {
     private final LocalLightRenderer lights = new LocalLightRenderer();
     private final DeathFxRenderer deaths;
     private final AccessibilitySettings settings;
+    private final AdaptiveFxBudget fxBudget = new AdaptiveFxBudget();
 
     public CombatPolishController(GameArt art) {
         this(art, AccessibilitySettings.load());
@@ -37,6 +38,7 @@ public final class CombatPolishController {
 
     public void updateVisual(float dt) {
         feel.update(dt);
+        fxBudget.update(dt);
     }
 
     public void updateSimulation(float dt, Pools pools) {
@@ -59,7 +61,7 @@ public final class CombatPolishController {
     public void onEnemyKilled(Enemy enemy, Pools pools) {
         DeathFx fx = pools.deathFx();
         if (fx != null) {
-            float duration = enemy.type == Enemy.Type.BOSS ? 26f : 13f;
+            float duration = enemy.type == Enemy.Type.BOSS ? 26f : (fxBudget.allowHeavyFx() ? 13f : 8f);
             float rotation = enemy.velocity.len2() > .001f ? enemy.velocity.angleDeg() - 90f : MathUtils.random(0f, 360f);
             fx.spawn(enemy.type, enemy.position.x, enemy.position.y, rotation, enemy.radius, duration);
         }
@@ -83,10 +85,12 @@ public final class CombatPolishController {
 
     public void drawWorldUnderlay(ShapeRenderer shapes, Player player, Array<Enemy> enemies, Pools pools, float time) {
         deaths.drawFallback(shapes, pools.deathFx);
-        if (!settings.reduceFlashes) lights.draw(shapes, player, enemies, pools, time);
+        if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
     }
 
     public void drawAuthoredDeaths(SpriteBatch batch, Pools pools) {
         deaths.drawAuthored(batch, pools.deathFx);
     }
+
+    public float fxQuality() { return fxBudget.quality(); }
 }
