@@ -1,6 +1,9 @@
 package com.deadlinezero.game.meta;
 
-/** Immutable snapshot of gear and survivor bonuses for the active run. */
+import com.deadlinezero.game.combat.WeaponCatalog;
+import com.deadlinezero.game.combat.WeaponDefinition;
+
+/** Immutable snapshot of gear, weapon and survivor bonuses for the active run. */
 public final class RunLoadoutContext {
     private static float maxHpMultiplier = 1f;
     private static float moveSpeedMultiplier = 1f;
@@ -13,12 +16,14 @@ public final class RunLoadoutContext {
     private static float damageTakenMultiplier = 1f;
     private static int startingTeslaLevel;
     private static SurvivorCatalog.Survivor survivor = SurvivorCatalog.Survivor.REX;
+    private static WeaponDefinition weaponDefinition = WeaponCatalog.AR9;
 
     private RunLoadoutContext() {}
 
     public static void begin(PlayerProfile profile) {
         float hp = 0f, speed = 0f, dash = 0f, weapon = 0f, crit = 0f, ability = 0f;
         survivor = profile == null ? SurvivorCatalog.Survivor.REX : profile.selectedSurvivor;
+        weaponDefinition = profile == null ? WeaponCatalog.AR9 : profile.selectedWeapon();
         float levelPower = profile == null ? 1f : profile.survivors.levelPowerMultiplier(survivor);
         if (profile != null) {
             EquipmentItem weaponItem = profile.equipped(PlayerProfile.EquipmentSlot.WEAPON);
@@ -64,4 +69,5 @@ public final class RunLoadoutContext {
     public static float damageTakenMultiplier() { return damageTakenMultiplier; }
     public static int startingTeslaLevel() { return startingTeslaLevel; }
     public static SurvivorCatalog.Survivor survivor() { return survivor; }
+    public static WeaponDefinition weaponDefinition() { return weaponDefinition; }
 }
