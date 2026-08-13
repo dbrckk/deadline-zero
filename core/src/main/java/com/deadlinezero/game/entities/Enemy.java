@@ -27,6 +27,7 @@ public final class Enemy extends ActorState {
     public float burnTimer;
     public float burnDps;
     public float shockTimer;
+    public float variantTime;
     public final Vector2 impulse = new Vector2();
     public final AttackController attack;
     public final BossPhaseController bossPhases;
@@ -47,15 +48,14 @@ public final class Enemy extends ActorState {
         this.attack = new AttackController(archetype);
         this.bossPhases = type == Type.BOSS ? new BossPhaseController() : null;
         this.bossCombat = type == Type.BOSS ? new BossCombatRuntime() : null;
-        rollVariant(stage);
-    }
 
-    private void rollVariant(int stage) {
-        if (type == Type.BOSS) return;
-        float chance = MathUtils.clamp(.02f + Math.max(0, stage - 1) * .012f, .02f, .20f);
-        if (MathUtils.random() >= chance) return;
-        float r = MathUtils.random();
-        applyVariant(r < .38f ? Variant.SWIFT : r < .72f ? Variant.ARMORED : Variant.FERAL);
+        if (type != Type.BOSS) {
+            float chance = MathUtils.clamp(.02f + (stage - 1) * .018f, .02f, .20f);
+            if (MathUtils.random() < chance) {
+                float roll = MathUtils.random();
+                applyVariant(roll < .36f ? Variant.SWIFT : (roll < .69f ? Variant.ARMORED : Variant.FERAL));
+            }
+        }
     }
 
     /** Applies a champion variant once, preserving the base archetype while changing combat priorities. */
@@ -104,13 +104,17 @@ public final class Enemy extends ActorState {
         }
     }
 
-    public void addImpulse(float x, float y) { impulse.add(x, y); }
+    public void addImpulse(float x, float y) {
+        float resistance = variant == Variant.ARMORED ? .34f : 1f;
+        impulse.add(x * resistance, y * resistance);
+    }
 
     public void updateStatus(float dt) {
         if (!alive) {
             attack.markDead();
             return;
         }
+        variantTime += Math.max(0f, dt);
         if (burnTimer > 0f) {
             burnTimer -= dt;
             damage(burnDps * dt);
@@ -119,7 +123,7 @@ public final class Enemy extends ActorState {
         if (shockTimer > 0f) shockTimer -= dt;
         attack.updateStun(dt);
         hitFlash = Math.max(0f, hitFlash - dt * 6f);
-        float damping = MathUtils.clamp(1f - dt * 8f, 0f, 1f);
+        float damping = MathUtils.clamp(1f - dt * (variant == Variant.ARMORED ? 12f : 8f), 0f, 1f);
         impulse.scl(damping);
         if (bossPhases != null) {
             bossPhases.update(maxHp <= 0f ? 0f : hp / maxHp);
@@ -136,6 +140,13 @@ public final class Enemy extends ActorState {
         if (attack.state() == EnemyState.STUNNED) return 0f;
         float phaseMultiplier = bossPhases == null ? 1f : bossPhases.speedMultiplier();
         float chargeMultiplier = bossCombat != null && bossCombat.charging() ? 3.4f : 1f;
-        return speed * slowMultiplier * phaseMultiplier * chargeMultiplier;
+        float variantMultiplier = 1f;
+        if (variant == Variant.SWIFT) {
+            float cycle = variantTime % 3.2f;
+            if (cycle < .48f) variantMultiplier = 1.28f;
+        } else if (variant == Variant.FERAL && maxHp > 0f && hp / maxHp < .42f) {
+            variantMultiplier = 1.24f;
+        }
+        return speed * slowMultiplier * phaseMultiplier * chargeMultiplier * variantMultiplier;
     }
 }
