@@ -21,6 +21,7 @@ public final class CombatPolishController {
     private static Pools currentPools;
     private final CombatFeel feel = new CombatFeel();
     private final LocalLightRenderer lights = new LocalLightRenderer();
+    private final LegendaryFxRenderer legendaryFx = new LegendaryFxRenderer();
     private final DeathFxRenderer deaths;
     private final AccessibilitySettings settings;
     private final AdaptiveFxBudget fxBudget = new AdaptiveFxBudget();
@@ -102,6 +103,7 @@ public final class CombatPolishController {
     public void drawWorldUnderlay(ShapeRenderer shapes, Player player, Array<Enemy> enemies, Pools pools, float time) {
         currentPools = pools;
         deaths.drawFallback(shapes, pools.deathFx);
+        legendaryFx.render(shapes, player, time, fxBudget.quality());
         if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
     }
 
