@@ -6,13 +6,14 @@ import com.deadlinezero.game.meta.RunMissionRuntime;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageMissionRules;
 
-/** Stage-aware wave pacing with readable pressure bands before the boss. */
+/** Stage-aware wave pacing with readable pressure bands and short squad bursts before the boss. */
 public final class WaveDirector {
     public enum PressureBand { OPENING, BUILD, ASSAULT, CRISIS }
 
     private float elapsed;
     private float spawnTimer;
     private int kills;
+    private int squadRemaining;
     private boolean bossPending;
     private boolean bossSpawned;
     private final int stage = Math.max(1, RunStageContext.stage());
@@ -28,6 +29,12 @@ public final class WaveDirector {
     public boolean shouldSpawn() { return !bossSpawned && spawnTimer <= 0f; }
 
     public void onSpawn() {
+        if (squadRemaining > 0) {
+            squadRemaining--;
+            spawnTimer = .085f + MathUtils.random(0f, .035f);
+            return;
+        }
+
         float base = switch (pressureBand()) {
             case OPENING -> .58f;
             case BUILD -> .45f;
@@ -37,11 +44,25 @@ public final class WaveDirector {
         float stageAcceleration = Math.min(.11f, (stage - 1) * .008f);
         float lateAcceleration = Math.min(.10f, elapsed * .00055f);
         spawnTimer = Math.max(.075f, base - stageAcceleration - lateAcceleration);
+
+        float squadChance = switch (pressureBand()) {
+            case OPENING -> .025f;
+            case BUILD -> .055f;
+            case ASSAULT -> .085f;
+            case CRISIS -> .12f;
+        };
+        squadChance = Math.min(.22f, squadChance + (stage - 1) * .008f);
+        if (!bossPending && MathUtils.random() < squadChance) {
+            int min = pressureBand().ordinal() >= PressureBand.ASSAULT.ordinal() ? 2 : 1;
+            int max = Math.min(5, min + 1 + stage / 5);
+            squadRemaining = MathUtils.random(min, max);
+        }
     }
 
     public void onBossSpawned() {
         bossSpawned = true;
         bossPending = false;
+        squadRemaining = 0;
         spawnTimer = Float.MAX_VALUE;
     }
 
@@ -54,6 +75,7 @@ public final class WaveDirector {
     public float elapsed() { return elapsed; }
     public boolean bossPending() { return bossPending; }
     public boolean bossSpawned() { return bossSpawned; }
+    public int squadRemaining() { return squadRemaining; }
     public float bossArrivalSeconds() { return bossArrival; }
     public float secondsUntilBoss() { return Math.max(0f, bossArrival - elapsed); }
     public float bossProgress() { return MathUtils.clamp(elapsed / Math.max(1f, bossArrival), 0f, 1f); }
