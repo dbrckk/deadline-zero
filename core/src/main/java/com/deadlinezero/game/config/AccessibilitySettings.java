@@ -14,6 +14,7 @@ public final class AccessibilitySettings {
     public boolean damageFlash = true;
     public boolean highContrastTelegraphs = false;
     public boolean reduceFlashes = false;
+    public boolean haptics = true;
     public float uiScale = 1f;
     public float masterVolume = 1f;
     public float sfxVolume = .85f;
@@ -28,6 +29,7 @@ public final class AccessibilitySettings {
         s.damageFlash = p.getBoolean("damageFlash", true);
         s.highContrastTelegraphs = p.getBoolean("highContrastTelegraphs", false);
         s.reduceFlashes = p.getBoolean("reduceFlashes", false);
+        s.haptics = p.getBoolean("haptics", true);
         s.uiScale = clamp(p.getFloat("uiScale", 1f), .85f, 1.35f);
         s.masterVolume = clamp(p.getFloat("masterVolume", 1f), 0f, 1f);
         s.sfxVolume = clamp(p.getFloat("sfxVolume", .85f), 0f, 1f);
@@ -50,6 +52,7 @@ public final class AccessibilitySettings {
             .putBoolean("damageFlash", damageFlash)
             .putBoolean("highContrastTelegraphs", highContrastTelegraphs)
             .putBoolean("reduceFlashes", reduceFlashes)
+            .putBoolean("haptics", haptics)
             .putFloat("uiScale", clamp(uiScale, .85f, 1.35f))
             .putFloat("masterVolume", clamp(masterVolume, 0f, 1f))
             .putFloat("sfxVolume", clamp(sfxVolume, 0f, 1f))
