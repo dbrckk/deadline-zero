@@ -15,6 +15,7 @@ import com.deadlinezero.game.meta.StageRules;
 public final class Enemy extends ActorState {
     public enum Type { SHAMBLER, RUNNER, BRUTE, RANGED, ELITE, BOSS }
     public enum Variant { NORMAL, SWIFT, ARMORED, FERAL }
+    public enum Tactic { NONE, STRAFE, CHARGE }
 
     public Type type;
     public Variant variant = Variant.NORMAL;
@@ -28,10 +29,14 @@ public final class Enemy extends ActorState {
     public float burnDps;
     public float shockTimer;
     public float variantTime;
+    public float tacticalCooldown;
+    public float tacticalWindup;
     public final Vector2 impulse = new Vector2();
     public final AttackController attack;
     public final BossPhaseController bossPhases;
     public final BossCombatRuntime bossCombat;
+    private Tactic pendingTactic = Tactic.NONE;
+    private float tacticSide = 1f;
 
     public Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp) {
         super(x, y, radius, hp * StageRules.enemyHpMultiplier(RunStageContext.stage()));
@@ -136,6 +141,8 @@ public final class Enemy extends ActorState {
             return;
         }
         variantTime += Math.max(0f, dt);
+        tacticalCooldown = Math.max(0f, tacticalCooldown - dt);
+        tacticalWindup = Math.max(0f, tacticalWindup - dt);
         if (burnTimer > 0f) {
             burnTimer -= dt;
             damage(burnDps * dt);
@@ -155,7 +162,52 @@ public final class Enemy extends ActorState {
     public void updateAi(float dt, float distanceToPlayer) {
         if (!alive || attack.state() == EnemyState.STUNNED) return;
         attack.update(dt, distanceToPlayer);
+        updateTactics(distanceToPlayer);
     }
+
+    private void updateTactics(float distanceToPlayer) {
+        if (pendingTactic != Tactic.NONE && tacticalWindup <= 0f) {
+            executePendingTactic();
+            pendingTactic = Tactic.NONE;
+            return;
+        }
+        if (pendingTactic != Tactic.NONE || tacticalCooldown > 0f || attack.state() != EnemyState.CHASING) return;
+
+        float cadence = switch (variant) {
+            case SWIFT -> .78f;
+            case FERAL -> .82f;
+            case ARMORED -> 1.12f;
+            default -> 1f;
+        };
+        if (type == Type.RANGED && distanceToPlayer >= 3.8f && distanceToPlayer <= 9.5f) {
+            pendingTactic = Tactic.STRAFE;
+            tacticalWindup = .16f;
+            tacticalCooldown = (1.45f + MathUtils.random(.35f)) * cadence;
+            tacticSide = MathUtils.randomBoolean() ? 1f : -1f;
+        } else if ((type == Type.BRUTE || type == Type.ELITE) && distanceToPlayer >= 2.4f && distanceToPlayer <= 7.2f) {
+            pendingTactic = Tactic.CHARGE;
+            tacticalWindup = type == Type.ELITE ? .24f : .34f;
+            tacticalCooldown = (type == Type.ELITE ? 2.35f : 3.05f) * cadence;
+        }
+    }
+
+    private void executePendingTactic() {
+        float len = velocity.len();
+        if (len < .05f) return;
+        float nx = velocity.x / len;
+        float ny = velocity.y / len;
+        if (pendingTactic == Tactic.STRAFE) {
+            float strength = variant == Variant.SWIFT ? 2.15f : 1.65f;
+            impulse.add(-ny * strength * tacticSide, nx * strength * tacticSide);
+        } else if (pendingTactic == Tactic.CHARGE) {
+            float strength = type == Type.ELITE ? 3.6f : 2.85f;
+            if (variant == Variant.FERAL) strength *= 1.18f;
+            impulse.add(nx * strength, ny * strength);
+        }
+    }
+
+    public Tactic pendingTactic() { return pendingTactic; }
+    public boolean tacticalTelegraph() { return pendingTactic != Tactic.NONE && tacticalWindup > 0f; }
 
     public float effectiveSpeed() {
         if (attack.state() == EnemyState.STUNNED) return 0f;
