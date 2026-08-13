@@ -32,7 +32,7 @@ public final class CombatPolishController {
     }
 
     public void updateSimulation(float dt, Pools pools) {
-        for (DeathFx fx : pools.deaths) fx.update(dt);
+        for (DeathFx fx : pools.deathFx) fx.update(dt);
     }
 
     public void onShot(float angleDeg) {
@@ -65,11 +65,11 @@ public final class CombatPolishController {
     }
 
     public void drawWorldUnderlay(ShapeRenderer shapes, Player player, Array<Enemy> enemies, Pools pools, float time) {
-        deaths.drawFallback(shapes, pools.deaths);
+        deaths.drawFallback(shapes, pools.deathFx);
         lights.draw(shapes, player, enemies, pools, time);
     }
 
     public void drawAuthoredDeaths(SpriteBatch batch, Pools pools) {
-        deaths.drawAuthored(batch, pools.deaths);
+        deaths.drawAuthored(batch, pools.deathFx);
     }
 }
