@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.deadlinezero.game.abilities.AbilityType;
 import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.EnemyProjectile;
@@ -25,6 +26,7 @@ public final class WorldFxRenderer {
         shapes.setColor(0f, 0f, 0f, .24f * MathUtils.lerp(.65f, 1f, budget.quality()));
         shapes.ellipse(player.position.x - player.radius * 1.05f, player.position.y - player.radius * .82f,
             player.radius * 2.1f, player.radius * .72f);
+        drawAbilityEvolutionAura(shapes, player);
         int stride = budget.quality() < .55f ? 2 : 1;
         for (int i = 0; i < enemies.size; i += stride) {
             Enemy e = enemies.get(i);
@@ -59,6 +61,59 @@ public final class WorldFxRenderer {
                     }
                 }
             }
+        }
+    }
+
+    private void drawAbilityEvolutionAura(ShapeRenderer shapes, Player player) {
+        if (budget.quality() < .42f) return;
+        float t = (float)(System.nanoTime() * 0.000000001);
+        float pulse = .82f + MathUtils.sin(t * 4.8f) * .18f;
+        int segments = budget.geometrySegments(30, 16);
+        float base = player.radius * (2.25f + pulse * .18f);
+
+        if (player.abilities.hasSuperconductorSynergy()) {
+            shapes.setColor(.35f, .92f, 1f, .16f);
+            shapes.circle(player.position.x, player.position.y, base * 1.22f, segments);
+            if (budget.allowHeavyFx()) {
+                shapes.setColor(.72f, .52f, 1f, .20f);
+                shapes.circle(player.position.x, player.position.y, base * .98f, segments);
+            }
+        }
+
+        if (player.abilities.hasTeslaEvolution()) {
+            shapes.setColor(.32f, .86f, 1f, .20f + pulse * .06f);
+            shapes.circle(player.position.x, player.position.y, base * 1.48f, segments);
+        }
+
+        if (player.abilities.hasCryoMissileEvolution()) {
+            shapes.setColor(.58f, .92f, 1f, .13f + pulse * .05f);
+            shapes.circle(player.position.x, player.position.y, base * 1.72f, segments);
+        }
+
+        if (player.abilities.hasTargetNetworkSynergy() && budget.allowHeavyFx()) {
+            for (int i = 0; i < 3; i++) {
+                float angle = t * 55f + i * 120f;
+                float r = base * 1.92f;
+                float x = player.position.x + MathUtils.cosDeg(angle) * r;
+                float y = player.position.y + MathUtils.sinDeg(angle) * r;
+                shapes.setColor(.42f, 1f, .54f, .35f);
+                shapes.circle(x, y, .08f + pulse * .025f, budget.geometrySegments(10, 6));
+            }
+        }
+
+        if (player.abilities.hasStormBladeSynergy()) {
+            shapes.setColor(.70f, .40f, 1f, .20f + pulse * .08f);
+            shapes.circle(player.position.x, player.position.y, base * 2.15f, segments);
+        } else if (player.abilities.hasPermafrostBladeSynergy()) {
+            shapes.setColor(.62f, .94f, 1f, .17f + pulse * .06f);
+            shapes.circle(player.position.x, player.position.y, base * 2.05f, segments);
+        }
+
+        int evolved = 0;
+        for (AbilityType type : AbilityType.values()) if (player.abilities.evolved(type)) evolved++;
+        if (evolved >= 3 && budget.allowExtraFx()) {
+            shapes.setColor(1f, .82f, .28f, .12f + pulse * .05f);
+            shapes.circle(player.position.x, player.position.y, base * 2.42f, segments);
         }
     }
 
@@ -142,7 +197,12 @@ public final class WorldFxRenderer {
             if (speed < .001f) continue;
             float nx = m.velocity.x / speed;
             float ny = m.velocity.y / speed;
-            Color c = m.element == DamageElement.FROST ? VisualTheme.CYAN : VisualTheme.GOLD;
+            Color c = switch (m.element) {
+                case FROST -> VisualTheme.CYAN;
+                case FIRE -> Color.ORANGE;
+                case SHOCK -> VisualTheme.VIOLET;
+                default -> VisualTheme.GOLD;
+            };
             int trailNodes = budget.allowExtraFx() ? 3 : (budget.allowHeavyFx() ? 2 : 1);
             for (int i = 1; i <= trailNodes; i++) {
                 float t = i / (float)trailNodes;
