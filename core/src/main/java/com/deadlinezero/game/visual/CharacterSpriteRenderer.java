@@ -78,8 +78,28 @@ public final class CharacterSpriteRenderer {
         float w = h * aspect;
         float flash = Math.min(1f, Math.max(0f, enemy.hitFlash));
         float facing = enemy.velocity.x < -.02f ? -1f : 1f;
-        batch.setColor(1f, 1f - flash * .22f, 1f - flash * .22f, 1f);
-        drawFacing(batch, region, enemy.position.x, enemy.position.y - profile.footOffset(), w, h, facing);
+
+        float r = 1f;
+        float g = 1f - flash * .22f;
+        float b = 1f - flash * .22f;
+        float scale = 1f;
+        if (enemy.type == Enemy.Type.BOSS && enemy.bossPhases != null) {
+            int phase = enemy.bossPhases.phase();
+            if (phase == 2) {
+                r = 1f;
+                g *= .88f;
+                b *= .82f;
+                scale = 1.025f;
+            } else if (phase >= 3) {
+                r = 1f;
+                g *= .70f;
+                b *= .78f;
+                scale = 1.055f;
+            }
+        }
+
+        batch.setColor(r, g, b, 1f);
+        drawFacing(batch, region, enemy.position.x, enemy.position.y - profile.footOffset(), w * scale, h * scale, facing);
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
