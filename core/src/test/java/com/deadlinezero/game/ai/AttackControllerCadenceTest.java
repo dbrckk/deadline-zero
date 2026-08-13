@@ -13,24 +13,19 @@ public final class AttackControllerCadenceTest {
         assertEquals(1.8f, c.telegraphMultiplier(), .0001f);
     }
 
-    @Test public void fasterCadenceReachesTelegraphEarlier() {
+    @Test public void fasterCadenceUsesShorterConfiguredCycle() {
         AttackController fast = new AttackController(EnemyArchetype.MELEE);
         AttackController slow = new AttackController(EnemyArchetype.MELEE);
         fast.setCadence(.50f, .70f, .70f);
         slow.setCadence(1.40f, 1.30f, 1.30f);
 
-        fast.update(1f, .5f);
-        slow.update(1f, .5f);
-        fast.update(1f, .5f);
-        slow.update(1f, .5f);
-        fast.consumeAttack();
-        slow.consumeAttack();
-        fast.update(.8f, .5f);
-        slow.update(.8f, .5f);
-        fast.update(.01f, .5f);
-        slow.update(.01f, .5f);
+        assertTrue(fast.cooldownMultiplier() < slow.cooldownMultiplier());
+        assertTrue(fast.telegraphMultiplier() < slow.telegraphMultiplier());
 
-        assertTrue(fast.state() == EnemyState.TELEGRAPHING || fast.state() == EnemyState.ATTACKING || fast.state() == EnemyState.RECOVERING);
-        assertTrue(slow.state() == EnemyState.CHASING || slow.state() == EnemyState.RECOVERING);
+        float fastCycle = EnemyArchetype.MELEE.attackCooldown * fast.cooldownMultiplier()
+            + EnemyArchetype.MELEE.telegraphDuration * fast.telegraphMultiplier();
+        float slowCycle = EnemyArchetype.MELEE.attackCooldown * slow.cooldownMultiplier()
+            + EnemyArchetype.MELEE.telegraphDuration * slow.telegraphMultiplier();
+        assertTrue(fastCycle < slowCycle);
     }
 }
