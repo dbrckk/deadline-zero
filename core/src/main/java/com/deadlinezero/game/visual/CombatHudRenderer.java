@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
+import com.deadlinezero.game.input.MobileCombatInput;
+import com.deadlinezero.game.input.VirtualStick;
 import com.deadlinezero.game.meta.OnboardingState;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.world.WaveDirector;
@@ -88,15 +90,34 @@ public final class CombatHudRenderer {
             shapes.rect(bossX + 3f * s, bossY + 3f * s, (bossW - 6f * s) * ratio, 13f * s);
         }
 
-        float dashRadius = 34f * s;
+        drawMobileControls(shapes, player, w, h, s);
+        shapes.end();
+    }
+
+    private void drawMobileControls(ShapeRenderer shapes, Player player, float w, float h, float s) {
+        if (VirtualStick.hudActive()) {
+            float max = Math.max(64f, h * .12f);
+            float ox = VirtualStick.hudOriginX();
+            float oy = VirtualStick.hudOriginY();
+            float vx = VirtualStick.hudValueX();
+            float vy = VirtualStick.hudValueY();
+            shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .10f);
+            shapes.circle(ox, oy, max, 40);
+            shapes.setColor(VisualTheme.CYAN_SOFT.r, VisualTheme.CYAN_SOFT.g, VisualTheme.CYAN_SOFT.b, .24f);
+            shapes.circle(ox, oy, max * .62f, 32);
+            shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .42f);
+            shapes.circle(ox + vx * max * .68f, oy + vy * max * .68f, max * .24f, 28);
+        }
+
+        float dashRadius = (MobileCombatInput.dashDown() ? 40f : 34f) * s;
         float dashX = w - 58f * s;
         float dashY = 62f * s;
-        shapes.setColor(player.canDash() ? new Color(VisualTheme.CYAN).mul(1f, 1f, 1f, .22f)
+        float alpha = MobileCombatInput.dashDown() ? .38f : .22f;
+        shapes.setColor(player.canDash() ? new Color(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha)
                                          : new Color(VisualTheme.PANEL_ALT));
         shapes.circle(dashX, dashY, dashRadius, 32);
         shapes.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
-        shapes.circle(dashX, dashY, 4f * s, 16);
-        shapes.end();
+        shapes.circle(dashX, dashY, MobileCombatInput.dashDown() ? 7f * s : 4f * s, 16);
     }
 
     private void drawText(SpriteBatch batch, BitmapFont font, Player player,
