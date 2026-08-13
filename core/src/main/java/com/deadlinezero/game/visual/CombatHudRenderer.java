@@ -15,6 +15,7 @@ import com.deadlinezero.game.input.MobileCombatInput;
 import com.deadlinezero.game.input.VirtualStick;
 import com.deadlinezero.game.meta.OnboardingState;
 import com.deadlinezero.game.meta.RunStageContext;
+import com.deadlinezero.game.world.RunEncounterDirector;
 import com.deadlinezero.game.world.WaveDirector;
 
 /** Dedicated mobile HUD renderer. Keeps combat presentation separate from simulation. */
@@ -141,6 +142,21 @@ public final class CombatHudRenderer {
         } else {
             font.setColor(contrast ? Color.WHITE : VisualTheme.RED);
             font.draw(batch, "ELIMINATE THE ALPHA", 0f, h - 100f * s, w, Align.center, false);
+        }
+
+        RunEncounterDirector.Type encounter = director.activeEncounter();
+        if (encounter != RunEncounterDirector.Type.NONE && !director.bossSpawned()) {
+            String name = switch (encounter) {
+                case SWARM_SURGE -> "SWARM SURGE";
+                case HUNTER_PACK -> "HUNTER PACK";
+                case JUGGERNAUT_PUSH -> "JUGGERNAUT PUSH";
+                default -> "";
+            };
+            int seconds = Math.max(1, Math.round(director.encounterSecondsRemaining()));
+            font.getData().setScale(.58f * s);
+            font.setColor(contrast ? Color.WHITE : VisualTheme.GOLD);
+            font.draw(batch, name + "  •  HOLD THE LINE  " + seconds + "s", 0f, h - 126f * s, w, Align.center, false);
+            font.getData().setScale(.68f * s);
         }
 
         font.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
