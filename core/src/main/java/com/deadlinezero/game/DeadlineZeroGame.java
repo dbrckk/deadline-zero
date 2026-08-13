@@ -23,6 +23,7 @@ import com.deadlinezero.game.screen.GearScreen;
 import com.deadlinezero.game.screen.MenuScreen;
 import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.screen.RunResultScreen;
+import com.deadlinezero.game.screen.SettingsScreen;
 import com.deadlinezero.game.screen.ShopScreen;
 import com.deadlinezero.game.screen.SurvivorScreen;
 import com.deadlinezero.game.screen.VictoryScreen;
@@ -58,6 +59,7 @@ public final class DeadlineZeroGame extends Game {
     public void showMissions() { setScreen(new MissionsScreen(this)); }
     public void showShop() { setScreen(new ShopScreen(this)); }
     public void showSurvivors() { setScreen(new SurvivorScreen(this)); }
+    public void showSettings() { setScreen(new SettingsScreen(this)); }
 
     public void startRun() {
         RunStageContext.begin(profile == null ? 1 : profile.selectedStage);
