@@ -1,5 +1,7 @@
 package com.deadlinezero.game.ai;
 
+import com.deadlinezero.game.meta.RunStageContext;
+
 /** Runtime timers and phase-gated decisions for advanced boss actions. */
 public final class BossCombatRuntime {
     private final boolean revenant;
@@ -9,7 +11,7 @@ public final class BossCombatRuntime {
     private float chargeDuration;
 
     public BossCombatRuntime() {
-        this(false);
+        this(RevenantBossProfile.useForStage(RunStageContext.stage()));
     }
 
     public BossCombatRuntime(boolean revenant) {
