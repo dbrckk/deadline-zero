@@ -117,6 +117,30 @@ public final class CharacterSpriteRenderer {
             }
         }
 
+        if (enemy.reactionFlash > 0f && enemy.lastReaction != Enemy.ElementReaction.NONE) {
+            float reaction = MathUtils.clamp(enemy.reactionFlash / .24f, 0f, 1f);
+            float wave = MathUtils.sin(reaction * MathUtils.PI);
+            switch (enemy.lastReaction) {
+                case THERMAL_SHOCK -> {
+                    r = MathUtils.lerp(r, 1f, .58f * wave);
+                    g = MathUtils.lerp(g, .58f, .45f * wave);
+                    b = MathUtils.lerp(b, .20f, .50f * wave);
+                }
+                case STEAM_BURST -> {
+                    r = MathUtils.lerp(r, .82f, .46f * wave);
+                    g = MathUtils.lerp(g, .96f, .56f * wave);
+                    b = MathUtils.lerp(b, 1f, .66f * wave);
+                }
+                case OVERLOAD -> {
+                    r = MathUtils.lerp(r, .72f, .50f * wave);
+                    g = MathUtils.lerp(g, .58f, .48f * wave);
+                    b = MathUtils.lerp(b, 1f, .68f * wave);
+                }
+                default -> { }
+            }
+            scale *= 1f + wave * .055f;
+        }
+
         if (enemy.tacticalTelegraph()) {
             float pulse = .5f + .5f * MathUtils.sin(enemy.variantTime * 32f);
             if (enemy.pendingTactic() == Enemy.Tactic.STRAFE) {
