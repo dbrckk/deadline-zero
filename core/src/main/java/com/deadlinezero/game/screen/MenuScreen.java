@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.config.GameConfig;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.visual.VisualTheme;
@@ -68,30 +69,33 @@ public final class MenuScreen extends ScreenAdapter {
         font.getData().setScale(.43f); font.setColor(new Color(.86f, .95f, 1f, 1f));
         font.draw(batch, "STAGE " + p.selectedStage + "  •  TAP / SPACE / ENTER", w * .30f, h * .255f + 17, w * .40f, Align.center, false);
 
-        font.getData().setScale(.43f); font.setColor(VisualTheme.MUTED);
+        font.getData().setScale(.41f); font.setColor(VisualTheme.MUTED);
         font.draw(batch, "BASE", 28, 59);
-        font.draw(batch, "GEAR [G]", w * .22f, 59);
-        font.draw(batch, "MISSIONS [M]", w * .47f, 59);
-        font.draw(batch, "SHOP [S]", w * .79f, 59);
+        font.draw(batch, "GEAR [G]", w * .18f, 59);
+        font.draw(batch, "MISSIONS [M]", w * .40f, 59);
+        font.draw(batch, "SHOP [S]", w * .66f, 59);
+        font.draw(batch, "SETTINGS [O]", w * .82f, 59);
         font.getData().setScale(2.2f);
         batch.end();
         handleInput(w, h);
     }
 
     private void handleInput(float w, float h) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) { game.showGear(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) { game.showMissions(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) { game.showShop(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) { game.showSurvivors(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showGear(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showMissions(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showShop(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showSurvivors(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.O)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showSettings(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) { game.profile.selectStage(Math.max(1, game.profile.selectedStage - 1)); game.saveProfile(); }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) { game.profile.selectStage(Math.min(game.profile.highestStage, game.profile.selectedStage + 1)); game.saveProfile(); }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) { game.startRun(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.startRun(); return; }
         if (!Gdx.input.justTouched()) return;
         float x = Gdx.input.getX(), y = h - Gdx.input.getY();
         if (y <= 95f) {
-            if (x >= w * .18f && x < w * .43f) game.showGear();
-            else if (x >= w * .43f && x < w * .72f) game.showMissions();
-            else if (x >= w * .72f) game.showShop();
+            if (x >= w * .15f && x < w * .37f) game.showGear();
+            else if (x >= w * .37f && x < w * .62f) game.showMissions();
+            else if (x >= w * .62f && x < w * .80f) game.showShop();
+            else if (x >= w * .80f) game.showSettings();
             return;
         }
         if (y >= h * .40f && y <= h * .56f) { game.showSurvivors(); return; }
