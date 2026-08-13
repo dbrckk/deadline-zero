@@ -1,6 +1,8 @@
 package com.deadlinezero.game.visual;
 
 import com.badlogic.gdx.Gdx;
+import com.deadlinezero.game.combat.WeaponCatalog;
+import com.deadlinezero.game.combat.WeaponDefinition;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.SurvivorCatalog;
 
@@ -9,7 +11,6 @@ public final class ArtManifest {
     private ArtManifest() {}
 
     public static final String[] REQUIRED_STATIC = {
-        "weapon/ar9",
         "environment/decal/crack_a",
         "environment/decal/blood_a",
         "environment/prop/barrier_a"
@@ -19,6 +20,7 @@ public final class ArtManifest {
         if (!art.authoredAvailable()) return 0;
         int missing = 0;
         for (String key : REQUIRED_STATIC) missing += requireRegion(art, key);
+        for (WeaponDefinition weapon : WeaponCatalog.all()) missing += requireRegion(art, "weapon/" + weapon.id);
 
         for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
             String root = "survivor/" + survivor.name().toLowerCase();
