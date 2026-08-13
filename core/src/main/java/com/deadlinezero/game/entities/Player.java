@@ -15,6 +15,7 @@ public final class Player extends ActorState {
     public float dashCooldown = 3.2f * RunLoadoutContext.dashCooldownMultiplier();
     public float dashTimer;
     public float invulnerabilityTimer;
+    public float visualHitTimer;
     public final WeaponRuntime weapon = new WeaponRuntime(WeaponCatalog.AR9);
     public final AbilityLoadout abilities = new AbilityLoadout();
 
@@ -38,11 +39,14 @@ public final class Player extends ActorState {
     public void updateRuntime(float dt) {
         dashTimer = Math.max(0f, dashTimer - dt);
         invulnerabilityTimer = Math.max(0f, invulnerabilityTimer - dt);
+        visualHitTimer = Math.max(0f, visualHitTimer - dt);
     }
 
     @Override public void damage(float amount) {
         if (invulnerable()) return;
+        float before = hp;
         super.damage(amount * RunLoadoutContext.damageTakenMultiplier());
+        if (hp < before) visualHitTimer = Math.max(visualHitTimer, .16f);
     }
 
     public boolean addXp(int amount) {
