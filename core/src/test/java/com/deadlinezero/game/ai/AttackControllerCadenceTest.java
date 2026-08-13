@@ -1,9 +1,9 @@
 package com.deadlinezero.game.ai;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public final class AttackControllerCadenceTest {
     @Test public void cadenceModifiersAreClamped() {
@@ -19,7 +19,6 @@ public final class AttackControllerCadenceTest {
         fast.setCadence(.50f, .70f, .70f);
         slow.setCadence(1.40f, 1.30f, 1.30f);
 
-        // First cycle starts from the archetype default cooldown; consume once so modifiers govern the next cycle.
         fast.update(1f, .5f);
         slow.update(1f, .5f);
         fast.update(1f, .5f);
