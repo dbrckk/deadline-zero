@@ -47,6 +47,15 @@ public final class Enemy extends ActorState {
         this.attack = new AttackController(archetype);
         this.bossPhases = type == Type.BOSS ? new BossPhaseController() : null;
         this.bossCombat = type == Type.BOSS ? new BossCombatRuntime() : null;
+        rollVariant(stage);
+    }
+
+    private void rollVariant(int stage) {
+        if (type == Type.BOSS) return;
+        float chance = MathUtils.clamp(.02f + Math.max(0, stage - 1) * .012f, .02f, .20f);
+        if (MathUtils.random() >= chance) return;
+        float r = MathUtils.random();
+        applyVariant(r < .38f ? Variant.SWIFT : r < .72f ? Variant.ARMORED : Variant.FERAL);
     }
 
     /** Applies a champion variant once, preserving the base archetype while changing combat priorities. */
