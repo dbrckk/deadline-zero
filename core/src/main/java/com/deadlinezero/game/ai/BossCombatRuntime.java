@@ -53,13 +53,13 @@ public final class BossCombatRuntime {
 
     public int summonCount(int phase) {
         if (!revenant) return phase >= 3 ? 6 : 3;
-        return phase >= 3 ? 8 : 4;
+        return phase >= 3 ? RevenantBossProfile.PHASE3_SUMMON_COUNT : RevenantBossProfile.PHASE2_SUMMON_COUNT;
     }
 
-    public int enrageShots() { return revenant ? 24 : 20; }
-    public float enrageProjectileSpeed() { return revenant ? 9.0f : 8.2f; }
-    public int enrageExplosiveEvery() { return revenant ? 3 : 4; }
-    public float enrageExplosionRadius() { return revenant ? 2.15f : 2.0f; }
+    public int enrageShots() { return revenant ? RevenantBossProfile.ENRAGE_SHOTS : 20; }
+    public float enrageProjectileSpeed() { return revenant ? RevenantBossProfile.ENRAGE_PROJECTILE_SPEED : 8.2f; }
+    public int enrageExplosiveEvery() { return revenant ? RevenantBossProfile.ENRAGE_EXPLOSIVE_EVERY : 4; }
+    public float enrageExplosionRadius() { return revenant ? RevenantBossProfile.ENRAGE_EXPLOSION_RADIUS : 2.0f; }
 
     public boolean charging() { return chargeDuration > 0f; }
     public float chargeDuration() { return chargeDuration; }
