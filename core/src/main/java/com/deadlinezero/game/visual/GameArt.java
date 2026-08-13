@@ -40,16 +40,18 @@ public final class GameArt implements Disposable {
 
     public TextureRegion survivor(SurvivorCatalog.Survivor survivor, Motion motion, float stateTime) {
         String prefix = "survivor/" + survivor.name().toLowerCase() + "/" + motion.name().toLowerCase();
-        return animated(prefix, motion == Motion.RUN ? .085f : .12f, stateTime);
+        float frameDuration = AnimationProfileCatalog.survivor(survivor).duration(motion);
+        return animated(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
     }
 
     public TextureRegion enemy(Enemy.Type type, Motion motion, float stateTime) {
         String prefix = "enemy/" + type.name().toLowerCase() + "/" + motion.name().toLowerCase();
-        return animated(prefix, motion == Motion.RUN ? .095f : .13f, stateTime);
+        float frameDuration = AnimationProfileCatalog.enemy(type).duration(motion);
+        return animated(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
     }
 
     public TextureRegion effect(String name, float stateTime, float frameDuration) {
-        return animated("fx/" + name, frameDuration, stateTime);
+        return animated("fx/" + name, frameDuration, stateTime, false);
     }
 
     public TextureRegion region(String name) {
@@ -65,14 +67,21 @@ public final class GameArt implements Disposable {
 
     public boolean hasRegion(String name) { return regionOrNull(name) != null; }
 
-    private TextureRegion animated(String prefix, float frameDuration, float stateTime) {
+    public boolean hasAnimation(String prefix) {
+        if (atlas == null) return false;
+        Array<TextureAtlas.AtlasRegion> frames = atlas.findRegions(prefix);
+        return (frames != null && frames.size > 0) || atlas.findRegion(prefix) != null;
+    }
+
+    private TextureRegion animated(String prefix, float frameDuration, float stateTime, boolean loop) {
         if (atlas == null) return fallbackRegion;
         Array<TextureAtlas.AtlasRegion> frames = atlas.findRegions(prefix);
         if (frames == null || frames.size == 0) {
             TextureAtlas.AtlasRegion single = atlas.findRegion(prefix);
             return single == null ? fallbackRegion : single;
         }
-        int frame = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration)) % frames.size;
+        int rawFrame = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
+        int frame = loop ? rawFrame % frames.size : Math.min(frames.size - 1, rawFrame);
         return frames.get(frame);
     }
 
