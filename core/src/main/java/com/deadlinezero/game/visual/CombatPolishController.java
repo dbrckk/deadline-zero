@@ -1,5 +1,6 @@
 package com.deadlinezero.game.visual;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -14,7 +15,7 @@ import com.deadlinezero.game.util.Pools;
 
 /**
  * Centralized presentation-only combat feedback: micro hit-stop, recoil, local lighting,
- * persistent death marks, corpses and resilient event-driven audio.
+ * persistent death marks, corpses, resilient event-driven audio and accessible haptics.
  */
 public final class CombatPolishController {
     private final CombatFeel feel = new CombatFeel();
@@ -55,6 +56,7 @@ public final class CombatPolishController {
     public void onProjectileHit(boolean critical) {
         AudioDirector.playGlobal(critical ? AudioDirector.Cue.CRIT : AudioDirector.Cue.HIT,
             critical ? 1.04f : .98f + MathUtils.random(.04f), 0f);
+        if (critical) vibrate(14);
         if (settings.hitStop && critical) feel.triggerHitStop(.014f);
     }
 
@@ -67,6 +69,10 @@ public final class CombatPolishController {
         }
         AudioDirector.playGlobal(enemy.type == Enemy.Type.BOSS ? AudioDirector.Cue.BOSS_KILL : AudioDirector.Cue.KILL,
             enemy.type == Enemy.Type.BOSS ? .88f : .96f + MathUtils.random(.08f), 0f);
+
+        if (enemy.type == Enemy.Type.BOSS) vibrate(48);
+        else if (enemy.type == Enemy.Type.ELITE || enemy.type == Enemy.Type.BRUTE) vibrate(24);
+
         if (!settings.hitStop) return;
         if (enemy.type == Enemy.Type.BOSS) {
             feel.triggerHitStop(.065f);
@@ -75,6 +81,11 @@ public final class CombatPolishController {
         } else {
             feel.triggerHitStop(.018f);
         }
+    }
+
+    private void vibrate(int millis) {
+        if (!settings.haptics || millis <= 0) return;
+        try { Gdx.input.vibrate(millis); } catch (RuntimeException ignored) { }
     }
 
     public void applyCameraRecoil(OrthographicCamera camera) {
