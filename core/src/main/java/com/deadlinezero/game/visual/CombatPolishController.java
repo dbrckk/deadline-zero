@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
@@ -13,13 +14,17 @@ import com.deadlinezero.game.util.Pools;
 
 /**
  * Centralized presentation-only combat feedback: micro hit-stop, recoil, local lighting,
- * persistent death marks and corpse rendering. Keeps tuning out of GameScreen.
+ * persistent death marks, corpses and resilient event-driven audio.
  */
 public final class CombatPolishController {
     private final CombatFeel feel = new CombatFeel();
     private final LocalLightRenderer lights = new LocalLightRenderer();
     private final DeathFxRenderer deaths;
     private final AccessibilitySettings settings;
+
+    public CombatPolishController(GameArt art) {
+        this(art, AccessibilitySettings.load());
+    }
 
     public CombatPolishController(GameArt art, AccessibilitySettings settings) {
         deaths = new DeathFxRenderer(art);
@@ -39,12 +44,15 @@ public final class CombatPolishController {
     }
 
     public void onShot(float angleDeg) {
+        AudioDirector.playGlobal(AudioDirector.Cue.SHOT, .96f + MathUtils.random(.08f), 0f);
         if (settings.screenShake && settings.screenShakeStrength > 0f) {
             feel.triggerRecoil(angleDeg, .075f * settings.screenShakeStrength);
         }
     }
 
     public void onProjectileHit(boolean critical) {
+        AudioDirector.playGlobal(critical ? AudioDirector.Cue.CRIT : AudioDirector.Cue.HIT,
+            critical ? 1.04f : .98f + MathUtils.random(.04f), 0f);
         if (settings.hitStop && critical) feel.triggerHitStop(.014f);
     }
 
@@ -55,6 +63,8 @@ public final class CombatPolishController {
             float rotation = enemy.velocity.len2() > .001f ? enemy.velocity.angleDeg() - 90f : MathUtils.random(0f, 360f);
             fx.spawn(enemy.type, enemy.position.x, enemy.position.y, rotation, enemy.radius, duration);
         }
+        AudioDirector.playGlobal(enemy.type == Enemy.Type.BOSS ? AudioDirector.Cue.BOSS_KILL : AudioDirector.Cue.KILL,
+            enemy.type == Enemy.Type.BOSS ? .88f : .96f + MathUtils.random(.08f), 0f);
         if (!settings.hitStop) return;
         if (enemy.type == Enemy.Type.BOSS) {
             feel.triggerHitStop(.065f);
