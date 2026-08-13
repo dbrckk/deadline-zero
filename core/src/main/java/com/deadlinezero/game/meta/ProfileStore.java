@@ -2,6 +2,7 @@ package com.deadlinezero.game.meta;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.deadlinezero.game.combat.WeaponCatalog;
 
 /** Persistent account storage backed by libGDX Preferences on Android/Desktop. */
 public final class ProfileStore {
@@ -20,6 +21,7 @@ public final class ProfileStore {
         profile.removeAdsPurchased = p.getBoolean("purchase.removeAds", false);
         profile.starterPackGranted = p.getBoolean("purchase.starterPackGranted", false);
         profile.selectedSurvivor = SurvivorCatalog.byName(p.getString("survivor.selected", SurvivorCatalog.Survivor.REX.name()));
+        profile.selectedWeaponId = WeaponCatalog.byId(p.getString("weapon.selected", WeaponCatalog.AR9.id)).id;
         profile.addCurrency(PlayerProfile.Currency.CREDITS, Math.max(0L, p.getLong("credits", 0L)));
         profile.addCurrency(PlayerProfile.Currency.GEMS, Math.max(0L, p.getLong("gems", 0L)));
 
@@ -32,6 +34,7 @@ public final class ProfileStore {
         }
         profile.survivors.refreshUnlocks(profile);
         if (!profile.survivors.unlocked(profile.selectedSurvivor)) profile.selectedSurvivor = SurvivorCatalog.Survivor.REX;
+        profile.validateSelectedWeapon();
 
         profile.daily.epochDay = p.getLong("daily.epochDay", -1L);
         profile.daily.loginStreak = Math.max(0, p.getInteger("daily.loginStreak", 0));
@@ -77,6 +80,7 @@ public final class ProfileStore {
         p.putBoolean("purchase.removeAds", profile.removeAdsPurchased);
         p.putBoolean("purchase.starterPackGranted", profile.starterPackGranted);
         p.putString("survivor.selected", profile.selectedSurvivor.name());
+        p.putString("weapon.selected", profile.selectedWeapon().id);
         for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
             String key = "survivor." + survivor.name() + ".";
             p.putInteger(key + "level", profile.survivors.level(survivor));
