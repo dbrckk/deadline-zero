@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.deadlinezero.game.ai.LeaperRuntime;
+import com.deadlinezero.game.ai.LeaperSharedRuntime;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.entities.Enemy;
@@ -22,6 +24,7 @@ public final class CombatPolishController {
     private final CombatFeel feel = new CombatFeel();
     private final LocalLightRenderer lights = new LocalLightRenderer();
     private final LegendaryFxRenderer legendaryFx = new LegendaryFxRenderer();
+    private final LeaperRuntime leapers = LeaperSharedRuntime.get();
     private final DeathFxRenderer deaths;
     private final AccessibilitySettings settings;
     private final AdaptiveFxBudget fxBudget = new AdaptiveFxBudget();
@@ -104,7 +107,25 @@ public final class CombatPolishController {
         currentPools = pools;
         deaths.drawFallback(shapes, pools.deathFx);
         legendaryFx.render(shapes, player, time, fxBudget.quality());
+        drawLeaperTelegraphs(shapes, enemies, time);
         if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
+    }
+
+    private void drawLeaperTelegraphs(ShapeRenderer shapes, Array<Enemy> enemies, float time) {
+        for (Enemy enemy : enemies) {
+            if (!enemy.alive || !leapers.contains(enemy)) continue;
+            if (leapers.telegraphing(enemy)) {
+                float pulse = .84f + MathUtils.sin(time * 22f) * .16f;
+                float radius = enemy.radius * (2.15f + .32f * pulse);
+                shapes.setColor(1f, .28f, .08f, .18f + .10f * pulse);
+                shapes.circle(enemy.position.x, enemy.position.y, radius, 22);
+                shapes.setColor(1f, .78f, .18f, .72f);
+                shapes.circle(enemy.position.x, enemy.position.y, Math.max(.08f, enemy.radius * .28f), 12);
+            } else if (fxBudget.allowHeavyFx()) {
+                shapes.setColor(1f, .45f, .12f, .10f);
+                shapes.circle(enemy.position.x, enemy.position.y, enemy.radius * 1.32f, 16);
+            }
+        }
     }
 
     public void drawAuthoredDeaths(SpriteBatch batch, Pools pools) {
