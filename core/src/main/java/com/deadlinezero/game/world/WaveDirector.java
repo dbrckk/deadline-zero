@@ -56,4 +56,16 @@ public final class WaveDirector {
         if (elapsed > 15f && r < .48f) return Enemy.Type.RUNNER;
         return Enemy.Type.SHAMBLER;
     }
+
+    /** Champion pressure scales with both stage and elapsed run time, while bosses remain unique. */
+    public Enemy.Variant chooseVariant(Enemy.Type type) {
+        if (type == null || type == Enemy.Type.BOSS) return Enemy.Variant.NORMAL;
+        int stage = Math.max(1, RunStageContext.stage());
+        float chance = MathUtils.clamp(.025f + (stage - 1) * .012f + elapsed / 900f, .025f, .24f);
+        if (MathUtils.random() >= chance) return Enemy.Variant.NORMAL;
+        float r = MathUtils.random();
+        if (r < .38f) return Enemy.Variant.SWIFT;
+        if (r < .72f) return Enemy.Variant.ARMORED;
+        return Enemy.Variant.FERAL;
+    }
 }
