@@ -16,6 +16,7 @@ public final class Enemy extends ActorState {
     public enum Type { SHAMBLER, RUNNER, BRUTE, RANGED, ELITE, BOSS }
     public enum Variant { NORMAL, SWIFT, ARMORED, FERAL }
     public enum Tactic { NONE, STRAFE, CHARGE }
+    public enum ElementReaction { NONE, THERMAL_SHOCK, STEAM_BURST, OVERLOAD }
 
     public Type type;
     public Variant variant = Variant.NORMAL;
@@ -28,6 +29,8 @@ public final class Enemy extends ActorState {
     public float burnTimer;
     public float burnDps;
     public float shockTimer;
+    public float reactionFlash;
+    public ElementReaction lastReaction = ElementReaction.NONE;
     public float variantTime;
     public float tacticalCooldown;
     public float tacticalWindup;
@@ -118,16 +121,56 @@ public final class Enemy extends ActorState {
         if (wasAlive && !alive && type == Type.BOSS) RunMissionRuntime.signalBossDefeated();
     }
 
+    /**
+     * Applies elemental status and resolves deterministic cross-element reactions.
+     * Reactions intentionally live on Enemy so every weapon/ability path gets the same rules.
+     */
     public void applyElement(DamageElement element, float power) {
+        if (!alive || element == null) return;
+        lastReaction = ElementReaction.NONE;
+        float safePower = Math.max(0f, power);
+
         switch (element) {
-            case FIRE -> { burnTimer = Math.max(burnTimer, 2.4f); burnDps = Math.max(burnDps, power * 0.22f); }
-            case FROST -> { slowTimer = Math.max(slowTimer, 1.6f); slowMultiplier = Math.min(slowMultiplier, 0.62f); }
+            case FIRE -> {
+                if (slowTimer > .05f) {
+                    damage(safePower * .34f);
+                    slowTimer = 0f;
+                    slowMultiplier = 1f;
+                    triggerReaction(ElementReaction.THERMAL_SHOCK);
+                }
+                burnTimer = Math.max(burnTimer, 2.4f);
+                burnDps = Math.max(burnDps, safePower * .22f);
+            }
+            case FROST -> {
+                if (burnTimer > .05f) {
+                    damage(safePower * .28f);
+                    burnTimer = 0f;
+                    burnDps = 0f;
+                    triggerReaction(ElementReaction.STEAM_BURST);
+                }
+                slowTimer = Math.max(slowTimer, 1.6f);
+                slowMultiplier = Math.min(slowMultiplier, .62f);
+            }
             case SHOCK -> {
-                shockTimer = Math.max(shockTimer, 0.35f);
-                attack.forceStunned(0.35f);
+                boolean burning = burnTimer > .05f;
+                boolean frozen = slowTimer > .05f;
+                float stun = .35f;
+                if (burning || frozen) {
+                    damage(safePower * (burning && frozen ? .34f : .22f));
+                    stun = .55f;
+                    triggerReaction(ElementReaction.OVERLOAD);
+                }
+                shockTimer = Math.max(shockTimer, stun);
+                attack.forceStunned(stun);
             }
             default -> { }
         }
+    }
+
+    private void triggerReaction(ElementReaction reaction) {
+        lastReaction = reaction;
+        reactionFlash = .24f;
+        hitFlash = Math.max(hitFlash, .72f);
     }
 
     public void addImpulse(float x, float y) {
@@ -143,6 +186,8 @@ public final class Enemy extends ActorState {
         variantTime += Math.max(0f, dt);
         tacticalCooldown = Math.max(0f, tacticalCooldown - dt);
         tacticalWindup = Math.max(0f, tacticalWindup - dt);
+        reactionFlash = Math.max(0f, reactionFlash - dt);
+        if (reactionFlash <= 0f) lastReaction = ElementReaction.NONE;
         if (burnTimer > 0f) {
             burnTimer -= dt;
             damage(burnDps * dt);
