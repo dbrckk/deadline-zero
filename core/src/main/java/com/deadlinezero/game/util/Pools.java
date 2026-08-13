@@ -7,6 +7,7 @@ import com.deadlinezero.game.entities.HomingMissile;
 import com.deadlinezero.game.entities.Projectile;
 import com.deadlinezero.game.fx.ArcFx;
 import com.deadlinezero.game.fx.DamageNumber;
+import com.deadlinezero.game.fx.DeathFx;
 import com.deadlinezero.game.fx.ImpactFx;
 
 public final class Pools {
@@ -14,6 +15,7 @@ public final class Pools {
     public static final int MAX_HOMING_MISSILES = 96;
     public static final int MAX_DAMAGE_NUMBERS = 256;
     public static final int MAX_ARCS = 96;
+    public static final int MAX_DEATH_FX = 72;
 
     public final Array<Projectile> projectiles = new Array<>(false, GameConfig.MAX_PROJECTILES);
     public final Array<EnemyProjectile> hostileProjectiles = new Array<>(false, MAX_HOSTILE_PROJECTILES);
@@ -21,6 +23,7 @@ public final class Pools {
     public final Array<ImpactFx> impacts = new Array<>(false, 256);
     public final Array<DamageNumber> damageNumbers = new Array<>(false, MAX_DAMAGE_NUMBERS);
     public final Array<ArcFx> arcs = new Array<>(false, MAX_ARCS);
+    public final Array<DeathFx> deathFx = new Array<>(false, MAX_DEATH_FX);
 
     private int projectileCursor;
     private int hostileProjectileCursor;
@@ -28,6 +31,7 @@ public final class Pools {
     private int impactCursor;
     private int damageNumberCursor;
     private int arcCursor;
+    private int deathFxCursor;
 
     public Pools() {
         for (int i = 0; i < GameConfig.MAX_PROJECTILES; i++) projectiles.add(new Projectile());
@@ -36,6 +40,7 @@ public final class Pools {
         for (int i = 0; i < 256; i++) impacts.add(new ImpactFx());
         for (int i = 0; i < MAX_DAMAGE_NUMBERS; i++) damageNumbers.add(new DamageNumber());
         for (int i = 0; i < MAX_ARCS; i++) arcs.add(new ArcFx());
+        for (int i = 0; i < MAX_DEATH_FX; i++) deathFx.add(new DeathFx());
     }
 
     public Projectile projectile() {
@@ -96,5 +101,17 @@ public final class Pools {
             if (!arc.active) return arc;
         }
         return null;
+    }
+
+    public DeathFx deathFx() {
+        int size = deathFx.size;
+        for (int i = 0; i < size; i++) {
+            deathFxCursor = (deathFxCursor + 1) % size;
+            DeathFx fx = deathFx.get(deathFxCursor);
+            if (!fx.active) return fx;
+        }
+        DeathFx oldest = deathFx.get(deathFxCursor);
+        oldest.active = false;
+        return oldest;
     }
 }
