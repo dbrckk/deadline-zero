@@ -3,7 +3,18 @@ package com.deadlinezero.game.services;
 public final class GameServices {
     public final AdsService ads;
     public final BillingService billing;
-    public GameServices(AdsService ads, BillingService billing) { this.ads = ads; this.billing = billing; }
+    public final PrivacyService privacy;
+
+    public GameServices(AdsService ads, BillingService billing) {
+        this(ads, billing, PrivacyService.noOp());
+    }
+
+    public GameServices(AdsService ads, BillingService billing, PrivacyService privacy) {
+        this.ads = ads;
+        this.billing = billing;
+        this.privacy = privacy == null ? PrivacyService.noOp() : privacy;
+    }
+
     public static GameServices noOp() {
         return new GameServices(new AdsService() {
             public boolean isRewardedReady() { return false; }
@@ -13,6 +24,6 @@ public final class GameServices {
             public boolean owns(String id) { return false; }
             public void purchase(String id, Runnable success, Runnable failure) { failure.run(); }
             public void restore() {}
-        });
+        }, PrivacyService.noOp());
     }
 }
