@@ -1,8 +1,12 @@
 package com.deadlinezero.game.abilities;
 
+import java.util.WeakHashMap;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.deadlinezero.game.ai.LeaperRuntime;
+import com.deadlinezero.game.ai.LeaperSharedRuntime;
 import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.HomingMissile;
@@ -11,7 +15,12 @@ import com.deadlinezero.game.fx.ArcFx;
 import com.deadlinezero.game.fx.DamageNumber;
 import com.deadlinezero.game.fx.ImpactFx;
 import com.deadlinezero.game.meta.RunLoadoutContext;
+import com.deadlinezero.game.meta.RunMissionRuntime;
+import com.deadlinezero.game.meta.RunStageContext;
+import com.deadlinezero.game.meta.StageMissionRules;
 import com.deadlinezero.game.util.Pools;
+import com.deadlinezero.game.world.LeaperSpawnRules;
+import com.deadlinezero.game.world.WaveDirector;
 
 /** Executes passive player abilities without allocating during the frame loop. */
 public final class AbilitySystem {
@@ -22,6 +31,8 @@ public final class AbilitySystem {
     private final Pools pools;
     private final Listener listener;
     private final AbilityRuntime runtime = new AbilityRuntime();
+    private final LeaperRuntime leapers = LeaperSharedRuntime.get();
+    private final WeakHashMap<Enemy, Boolean> leaperDecisions = new WeakHashMap<>();
     private final float abilityPower;
 
     public AbilitySystem(Player player, Array<Enemy> enemies, Pools pools, Listener listener) {
@@ -36,12 +47,41 @@ public final class AbilitySystem {
 
     public void update(float dt) {
         runtime.update(dt);
+        updateLeapers(dt);
         updateHomingMissiles(dt);
         updateTesla();
         updateMissiles();
         updateCryo();
         updateDrone();
         updateOrbital();
+    }
+
+    private void updateLeapers(float dt) {
+        int stage = RunStageContext.stage();
+        float arrival = Math.max(1f, StageMissionRules.bossArrivalSeconds(stage));
+        float progress = MathUtils.clamp(RunMissionRuntime.elapsed() / arrival, 0f, 1f);
+        WaveDirector.PressureBand band = progress < .24f ? WaveDirector.PressureBand.OPENING
+            : progress < .52f ? WaveDirector.PressureBand.BUILD
+            : progress < .80f ? WaveDirector.PressureBand.ASSAULT
+            : WaveDirector.PressureBand.CRISIS;
+        float chance = LeaperSpawnRules.share(stage, band);
+
+        for (Enemy e : enemies) {
+            if (!e.alive || e.type != Enemy.Type.RUNNER) continue;
+            Boolean selected = leaperDecisions.get(e);
+            if (selected == null) {
+                selected = MathUtils.random() < chance;
+                leaperDecisions.put(e, selected);
+                if (selected) leapers.register(e);
+            }
+            if (!selected) continue;
+
+            float dx = player.position.x - e.position.x;
+            float dy = player.position.y - e.position.y;
+            float distance2 = dx * dx + dy * dy;
+            float distance = (float)Math.sqrt(Math.max(.0001f, distance2));
+            leapers.update(e, dt, distance, dx / distance, dy / distance);
+        }
     }
 
     private void updateTesla() {
@@ -73,7 +113,6 @@ public final class AbilitySystem {
         Enemy previous = null;
         for (int i = 0; i < chains && current != null; i++) {
             arc(originX, originY, current.position.x, current.position.y, .13f);
-            // Prime with frost immediately before shock so the shared elemental reaction engine produces OVERLOAD.
             if (superconductor && current.alive) current.applyElement(DamageElement.FROST, damage * .18f);
             damageEnemy(current, damage, DamageElement.SHOCK, Color.CYAN, .65f);
             previous = current;
@@ -186,7 +225,6 @@ public final class AbilitySystem {
             if (element == DamageElement.SHOCK) arc(x, y, target.position.x, target.position.y, .10f);
             damageEnemy(target, damage, element, element == DamageElement.SHOCK ? Color.CYAN : Color.LIME, .42f);
 
-            // Target Network gives the mature drone a second independent mark/shot when another target exists.
             if (player.abilities.hasTargetNetworkSynergy()) {
                 Enemy second = nearest(x, y, 10f, target);
                 if (second != null) {
