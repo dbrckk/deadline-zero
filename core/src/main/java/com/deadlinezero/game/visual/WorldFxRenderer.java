@@ -35,6 +35,32 @@ public final class WorldFxRenderer {
         }
     }
 
+    public void drawChampionAuras(ShapeRenderer shapes, Array<Enemy> enemies, float time) {
+        if (budget.quality() < .42f) return;
+        int segments = budget.geometrySegments(28, 14);
+        for (Enemy e : enemies) {
+            if (!e.alive || e.type == Enemy.Type.BOSS || e.variant == Enemy.Variant.NORMAL) continue;
+            float pulse = .82f + MathUtils.sin(time * 7.5f + e.position.x * .37f) * .18f;
+            float radius = e.radius * (1.45f + pulse * .18f);
+            switch (e.variant) {
+                case SWIFT -> shapes.setColor(.25f, .72f, 1f, .16f + .07f * pulse);
+                case ARMORED -> shapes.setColor(.70f, .80f, .95f, .16f + .06f * pulse);
+                case FERAL -> shapes.setColor(1f, .18f, .10f, .18f + .08f * pulse);
+                default -> { continue; }
+            }
+            shapes.circle(e.position.x, e.position.y, radius, segments);
+            if (budget.allowHeavyFx()) {
+                switch (e.variant) {
+                    case SWIFT -> shapes.setColor(.62f, .92f, 1f, .24f);
+                    case ARMORED -> shapes.setColor(.88f, .94f, 1f, .22f);
+                    case FERAL -> shapes.setColor(1f, .52f, .28f, .25f);
+                    default -> { continue; }
+                }
+                shapes.circle(e.position.x, e.position.y, radius * .82f, segments);
+            }
+        }
+    }
+
     public void drawProjectileTrails(ShapeRenderer shapes, Array<Projectile> projectiles,
                                      Array<EnemyProjectile> hostileProjectiles,
                                      Array<HomingMissile> missiles) {
