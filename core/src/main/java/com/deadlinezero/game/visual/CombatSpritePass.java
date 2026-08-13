@@ -5,16 +5,18 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
+import com.deadlinezero.game.util.Pools;
 
 /**
  * Single entry point for authored combat presentation and optional lightweight grading.
- * Environment decals, animated characters and the equipped weapon are composed here so
+ * Environment decals, animated characters, equipped weapon and authored VFX are composed here so
  * GameScreen remains focused on simulation and high-level pass ordering.
  */
 public final class CombatSpritePass {
     private final CharacterSpriteRenderer characters;
     private final EnvironmentRenderer environment;
     private final WeaponRenderer weapon;
+    private final AuthoredVfxRenderer vfx;
     private final PostFxShader postFx = new PostFxShader();
     private GraphicsQuality quality;
     private float stateTime;
@@ -23,6 +25,7 @@ public final class CombatSpritePass {
         characters = new CharacterSpriteRenderer(art);
         environment = new EnvironmentRenderer(art);
         weapon = new WeaponRenderer(art);
+        vfx = new AuthoredVfxRenderer(art);
         quality = GraphicsQuality.autoDetect();
     }
 
@@ -40,10 +43,9 @@ public final class CombatSpritePass {
         if (quality != null) this.quality = quality;
     }
 
-    public void render(SpriteBatch batch, Player player, Array<Enemy> enemies) {
+    public void render(SpriteBatch batch, Player player, Array<Enemy> enemies, Pools pools) {
         if (!characters.authoredAvailable()) return;
 
-        // World-authored decals/props sit below actors and are intentionally not graded twice.
         environment.drawAuthored(batch);
 
         if (postFx.available() && quality.postFxIntensity > 0f) {
@@ -55,8 +57,9 @@ public final class CombatSpritePass {
         Enemy target = nearestEnemy(player, enemies);
         float aimAngle = target == null ? fallbackAim(player) :
             MathUtils.atan2(target.position.y - player.position.y, target.position.x - player.position.x) * MathUtils.radiansToDegrees;
-        float shotFlash = target == null || !player.alive ? 0f : cadenceFlash(player.weapon.fireInterval);
+        float shotFlash = target == null || !player.alive ? 0f : MathUtils.clamp(1f - CombatVisualEvents.playerShotAgeSeconds() / .075f, 0f, 1f);
         weapon.draw(batch, player, aimAngle, shotFlash);
+        vfx.draw(batch, player, enemies, pools);
     }
 
     private Enemy nearestEnemy(Player player, Array<Enemy> enemies) {
@@ -76,12 +79,6 @@ public final class CombatSpritePass {
     private float fallbackAim(Player player) {
         if (player.velocity.len2() > .01f) return player.velocity.angleDeg();
         return 0f;
-    }
-
-    private float cadenceFlash(float interval) {
-        float cadence = Math.max(.06f, interval);
-        float phase = stateTime % cadence;
-        return MathUtils.clamp(1f - phase / .075f, 0f, 1f);
     }
 
     public void dispose() { postFx.dispose(); }
