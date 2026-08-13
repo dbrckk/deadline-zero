@@ -43,9 +43,10 @@ public final class EnvironmentRenderer {
 
     public void drawAuthored(SpriteBatch batch) {
         if (!art.authoredAvailable()) return;
-        TextureRegion decalA = art.region("environment/decal/crack_a");
-        TextureRegion decalB = art.region("environment/decal/blood_a");
-        TextureRegion prop = art.region("environment/prop/barrier_a");
+        TextureRegion decalA = art.regionOrNull("environment/decal/crack_a");
+        TextureRegion decalB = art.regionOrNull("environment/decal/blood_a");
+        TextureRegion prop = art.regionOrNull("environment/prop/barrier_a");
+        if (decalA == null && decalB == null && prop == null) return;
 
         batch.begin();
         batch.setColor(1f, 1f, 1f, .72f);
