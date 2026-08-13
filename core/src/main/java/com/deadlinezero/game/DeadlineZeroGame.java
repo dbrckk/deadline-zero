@@ -18,6 +18,7 @@ import com.deadlinezero.game.meta.RunSettlement;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageMissionRules;
 import com.deadlinezero.game.meta.StageRules;
+import com.deadlinezero.game.screen.ArsenalScreen;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.GearScreen;
 import com.deadlinezero.game.screen.MenuScreen;
@@ -56,6 +57,7 @@ public final class DeadlineZeroGame extends Game {
 
     public void showMenu() { RunMissionRuntime.end(); if (audio != null) audio.stopCombatMusic(); setScreen(new MenuScreen(this)); }
     public void showGear() { setScreen(new GearScreen(this)); }
+    public void showArsenal() { setScreen(new ArsenalScreen(this)); }
     public void showMissions() { setScreen(new MissionsScreen(this)); }
     public void showShop() { setScreen(new ShopScreen(this)); }
     public void showSurvivors() { setScreen(new SurvivorScreen(this)); }
