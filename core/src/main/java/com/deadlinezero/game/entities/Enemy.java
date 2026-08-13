@@ -40,6 +40,8 @@ public final class Enemy extends ActorState {
     public final BossCombatRuntime bossCombat;
     private Tactic pendingTactic = Tactic.NONE;
     private float tacticSide = 1f;
+    private float chargeImpactWindow;
+    private boolean chargeImpactConsumed;
 
     public Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp) {
         super(x, y, radius, hp * StageRules.enemyHpMultiplier(RunStageContext.stage()));
@@ -186,6 +188,7 @@ public final class Enemy extends ActorState {
         variantTime += Math.max(0f, dt);
         tacticalCooldown = Math.max(0f, tacticalCooldown - dt);
         tacticalWindup = Math.max(0f, tacticalWindup - dt);
+        chargeImpactWindow = Math.max(0f, chargeImpactWindow - dt);
         reactionFlash = Math.max(0f, reactionFlash - dt);
         if (reactionFlash <= 0f) lastReaction = ElementReaction.NONE;
         if (burnTimer > 0f) {
@@ -248,11 +251,19 @@ public final class Enemy extends ActorState {
             float strength = type == Type.ELITE ? 3.6f : 2.85f;
             if (variant == Variant.FERAL) strength *= 1.18f;
             impulse.add(nx * strength, ny * strength);
+            chargeImpactWindow = .26f;
+            chargeImpactConsumed = false;
         }
     }
 
     public Tactic pendingTactic() { return pendingTactic; }
     public boolean tacticalTelegraph() { return pendingTactic != Tactic.NONE && tacticalWindup > 0f; }
+    public boolean chargeImpactActive() { return chargeImpactWindow > 0f && !chargeImpactConsumed; }
+    public boolean consumeChargeImpact() {
+        if (!chargeImpactActive()) return false;
+        chargeImpactConsumed = true;
+        return true;
+    }
 
     public float effectiveSpeed() {
         if (attack.state() == EnemyState.STUNNED) return 0f;
