@@ -1,5 +1,7 @@
 package com.deadlinezero.game.ai;
 
+import com.deadlinezero.game.meta.RunStageContext;
+
 /** Allocation-free attack timing state machine. Rendering/gameplay consume the state transitions. */
 public final class AttackController {
     private final EnemyArchetype archetype;
@@ -21,9 +23,14 @@ public final class AttackController {
     public float telegraphMultiplier() { return telegraphMultiplier; }
 
     public void setCadence(float cooldownMultiplier, float telegraphMultiplier, float recoveryMultiplier) {
-        this.cooldownMultiplier = clamp(cooldownMultiplier, .45f, 1.8f);
-        this.telegraphMultiplier = clamp(telegraphMultiplier, .45f, 1.8f);
-        this.recoveryMultiplier = clamp(recoveryMultiplier, .45f, 1.8f);
+        boolean revenantBoss = archetype.role == EnemyArchetype.Role.BOSS
+            && RevenantBossProfile.useForStage(RunStageContext.stage());
+        float bossCooldown = revenantBoss ? .78f : 1f;
+        float bossTelegraph = revenantBoss ? .86f : 1f;
+        float bossRecovery = revenantBoss ? .82f : 1f;
+        this.cooldownMultiplier = clamp(cooldownMultiplier * bossCooldown, .45f, 1.8f);
+        this.telegraphMultiplier = clamp(telegraphMultiplier * bossTelegraph, .45f, 1.8f);
+        this.recoveryMultiplier = clamp(recoveryMultiplier * bossRecovery, .45f, 1.8f);
     }
 
     public void update(float dt, float distance) {
