@@ -30,8 +30,35 @@ public final class WorldFxRenderer {
             Enemy e = enemies.get(i);
             if (!e.alive) continue;
             float width = e.radius * 2.1f;
+            shapes.setColor(0f, 0f, 0f, .24f * MathUtils.lerp(.65f, 1f, budget.quality()));
             shapes.ellipse(e.position.x - width * .5f, e.position.y - e.radius * .72f,
                 width, e.radius * .66f);
+
+            if (e.tacticalTelegraph()) {
+                float phase = e.tacticalWindup <= 0f ? 0f : MathUtils.clamp(e.tacticalWindup / .34f, 0f, 1f);
+                float pulse = .55f + .45f * MathUtils.sin(e.variantTime * 34f);
+                int segments = budget.geometrySegments(24, 12);
+                if (e.pendingTactic() == Enemy.Tactic.STRAFE) {
+                    shapes.setColor(.30f, .88f, 1f, .16f + pulse * .16f);
+                    shapes.circle(e.position.x, e.position.y, e.radius * (1.55f + pulse * .15f), segments);
+                    if (budget.allowHeavyFx() && e.velocity.len2() > .01f) {
+                        float len = e.velocity.len();
+                        float nx = -e.velocity.y / len;
+                        float ny = e.velocity.x / len;
+                        shapes.setColor(.68f, .96f, 1f, .42f);
+                        shapes.rectLine(e.position.x - nx * e.radius * 1.8f, e.position.y - ny * e.radius * 1.8f,
+                            e.position.x + nx * e.radius * 1.8f, e.position.y + ny * e.radius * 1.8f, .045f);
+                    }
+                } else if (e.pendingTactic() == Enemy.Tactic.CHARGE) {
+                    float radius = e.radius * (1.35f + phase * .72f);
+                    shapes.setColor(1f, .38f, .10f, .18f + pulse * .18f);
+                    shapes.circle(e.position.x, e.position.y, radius, segments);
+                    if (budget.allowHeavyFx()) {
+                        shapes.setColor(1f, .72f, .28f, .32f + pulse * .12f);
+                        shapes.circle(e.position.x, e.position.y, radius * .72f, segments);
+                    }
+                }
+            }
         }
     }
 
