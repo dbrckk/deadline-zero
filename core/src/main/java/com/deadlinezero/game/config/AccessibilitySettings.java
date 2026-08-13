@@ -6,6 +6,7 @@ import com.badlogic.gdx.Preferences;
 /** Persistent comfort/accessibility options kept independent from gameplay balance. */
 public final class AccessibilitySettings {
     private static final String PREFS = "deadline-zero-accessibility";
+    private static AccessibilitySettings active;
 
     public boolean screenShake = true;
     public float screenShakeStrength = 1f;
@@ -31,10 +32,17 @@ public final class AccessibilitySettings {
         s.masterVolume = clamp(p.getFloat("masterVolume", 1f), 0f, 1f);
         s.sfxVolume = clamp(p.getFloat("sfxVolume", .85f), 0f, 1f);
         s.musicVolume = clamp(p.getFloat("musicVolume", .65f), 0f, 1f);
+        active = s;
         return s;
     }
 
+    public static AccessibilitySettings active() {
+        if (active == null) active = new AccessibilitySettings();
+        return active;
+    }
+
     public void save() {
+        active = this;
         Gdx.app.getPreferences(PREFS)
             .putBoolean("screenShake", screenShake)
             .putFloat("screenShakeStrength", clamp(screenShakeStrength, 0f, 1f))
