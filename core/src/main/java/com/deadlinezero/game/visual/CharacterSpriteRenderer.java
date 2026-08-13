@@ -73,7 +73,7 @@ public final class CharacterSpriteRenderer {
         GameArt.Motion motion;
         if (enemy.hitFlash > .22f || enemy.attack.state() == EnemyState.STUNNED) {
             motion = GameArt.Motion.HIT;
-        } else if (enemy.attack.state() == EnemyState.ATTACKING || enemy.attack.state() == EnemyState.TELEGRAPHING) {
+        } else if (enemy.attack.state() == EnemyState.ATTACKING || enemy.attack.state() == EnemyState.TELEGRAPHING || enemy.tacticalTelegraph()) {
             motion = GameArt.Motion.ATTACK;
         } else {
             motion = enemy.velocity.len2() > .025f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
@@ -114,6 +114,21 @@ public final class CharacterSpriteRenderer {
                     scale *= 1.04f;
                 }
                 default -> { }
+            }
+        }
+
+        if (enemy.tacticalTelegraph()) {
+            float pulse = .5f + .5f * MathUtils.sin(enemy.variantTime * 32f);
+            if (enemy.pendingTactic() == Enemy.Tactic.STRAFE) {
+                r = MathUtils.lerp(r, .50f, .34f + pulse * .18f);
+                g = MathUtils.lerp(g, .92f, .34f + pulse * .18f);
+                b = MathUtils.lerp(b, 1f, .42f + pulse * .22f);
+                scale *= 1f + pulse * .025f;
+            } else if (enemy.pendingTactic() == Enemy.Tactic.CHARGE) {
+                r = MathUtils.lerp(r, 1f, .40f + pulse * .22f);
+                g = MathUtils.lerp(g, .48f, .28f + pulse * .16f);
+                b = MathUtils.lerp(b, .22f, .24f + pulse * .14f);
+                scale *= 1.035f + pulse * .045f;
             }
         }
 
