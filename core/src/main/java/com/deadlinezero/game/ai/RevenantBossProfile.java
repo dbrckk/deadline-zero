@@ -15,6 +15,13 @@ public final class RevenantBossProfile {
     public static final float PHASE3_SUMMON_COOLDOWN = 4.4f;
     public static final float PHASE3_PULSE_COOLDOWN = 3.05f;
 
+    public static final int PHASE2_SUMMON_COUNT = 4;
+    public static final int PHASE3_SUMMON_COUNT = 8;
+    public static final int ENRAGE_SHOTS = 24;
+    public static final float ENRAGE_PROJECTILE_SPEED = 9.0f;
+    public static final int ENRAGE_EXPLOSIVE_EVERY = 3;
+    public static final float ENRAGE_EXPLOSION_RADIUS = 2.15f;
+
     public static boolean unlocked(int stage) { return stage >= MIN_STAGE; }
 
     /** Alternates boss identities after unlock so runs gain predictable variety without RNG streaks. */
