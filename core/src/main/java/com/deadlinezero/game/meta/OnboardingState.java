@@ -6,6 +6,7 @@ import com.badlogic.gdx.Preferences;
 /** Small persistent onboarding state. Tutorial hints never block gameplay and disappear permanently once learned. */
 public final class OnboardingState {
     private static final String PREFS = "deadline-zero-onboarding";
+    private static OnboardingState active;
     private final Preferences prefs;
 
     private boolean movementSeen;
@@ -24,7 +25,13 @@ public final class OnboardingState {
     }
 
     public static OnboardingState load() {
-        return new OnboardingState(Gdx.app.getPreferences(PREFS));
+        active = new OnboardingState(Gdx.app.getPreferences(PREFS));
+        return active;
+    }
+
+    public static OnboardingState active() {
+        if (active == null) active = load();
+        return active;
     }
 
     public boolean completed() { return completed; }
@@ -33,10 +40,10 @@ public final class OnboardingState {
     public boolean upgradeSeen() { return upgradeSeen; }
     public boolean bossSeen() { return bossSeen; }
 
-    public void markMovementSeen() { movementSeen = true; persist(); }
-    public void markDashSeen() { dashSeen = true; persist(); }
-    public void markUpgradeSeen() { upgradeSeen = true; persist(); }
-    public void markBossSeen() { bossSeen = true; persist(); }
+    public void markMovementSeen() { if (!movementSeen) { movementSeen = true; persist(); } }
+    public void markDashSeen() { if (!dashSeen) { dashSeen = true; persist(); } }
+    public void markUpgradeSeen() { if (!upgradeSeen) { upgradeSeen = true; persist(); } }
+    public void markBossSeen() { if (!bossSeen) { bossSeen = true; persist(); } }
 
     public void refreshCompletion() {
         if (movementSeen && dashSeen && upgradeSeen && bossSeen) completed = true;
