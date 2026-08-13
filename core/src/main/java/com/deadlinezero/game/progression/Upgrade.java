@@ -14,9 +14,27 @@ public enum Upgrade {
     BALLISTICS("Rail Accelerator", "Projectile speed +22%", UpgradeRarity.COMMON) { public void apply(Player p) { p.weapon.projectileSpeed *= 1.22f; } },
     PENETRATION("Tungsten Core", "+1 penetration", UpgradeRarity.RARE) { public void apply(Player p) { p.weapon.penetration = Math.min(8, p.weapon.penetration + 1); } },
     KNOCKBACK("Kinetic Driver", "Knockback +35%", UpgradeRarity.COMMON) { public void apply(Player p) { p.weapon.knockback *= 1.35f; } },
-    INCENDIARY("Thermite Protocol", "Shots ignite enemies", UpgradeRarity.RARE) { public void apply(Player p) { p.weapon.element = DamageElement.FIRE; } },
-    CRYO("Cryo Protocol", "Shots slow enemies", UpgradeRarity.RARE) { public void apply(Player p) { p.weapon.element = DamageElement.FROST; } },
-    SHOCK("Arc Protocol", "Shots briefly stun enemies", UpgradeRarity.RARE) { public void apply(Player p) { p.weapon.element = DamageElement.SHOCK; } },
+    INCENDIARY("Thermite Protocol", "FIRE rounds: +14% damage, -6% fire rate", UpgradeRarity.RARE) {
+        public void apply(Player p) {
+            p.weapon.element = DamageElement.FIRE;
+            p.weapon.damage *= 1.14f;
+            p.weapon.fireInterval *= 1.06f;
+        }
+    },
+    CRYO("Cryo Protocol", "FROST rounds: +18% knockback, +10% projectile speed", UpgradeRarity.RARE) {
+        public void apply(Player p) {
+            p.weapon.element = DamageElement.FROST;
+            p.weapon.knockback *= 1.18f;
+            p.weapon.projectileSpeed *= 1.10f;
+        }
+    },
+    SHOCK("Arc Protocol", "SHOCK rounds: +10% fire rate, -6% damage", UpgradeRarity.RARE) {
+        public void apply(Player p) {
+            p.weapon.element = DamageElement.SHOCK;
+            p.weapon.fireInterval *= .90f;
+            p.weapon.damage *= .94f;
+        }
+    },
     TESLA_ORB("Tesla Orb", "Unlock/upgrade autonomous chain lightning", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.TESLA_ORB); } },
     MISSILE_SWARM("Missile Swarm", "Unlock/upgrade homing missile volleys", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.MISSILE_SWARM); } },
     CRYO_NOVA("Cryo Nova", "Unlock/upgrade periodic freezing pulse", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.CRYO_NOVA); } },
