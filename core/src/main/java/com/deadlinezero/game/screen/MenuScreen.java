@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.audio.AudioDirector;
+import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.config.GameConfig;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.visual.VisualTheme;
@@ -62,25 +63,29 @@ public final class MenuScreen extends ScreenAdapter {
         font.getData().setScale(.70f); font.setColor(VisualTheme.TEXT);
         font.draw(batch, p.selectedSurvivor.displayName.toUpperCase(), 0, h * .515f, w, Align.center, false);
         font.getData().setScale(.47f); font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, p.selectedSurvivor.role + "  •  TAP / R TO CHANGE", 0, h * .465f, w, Align.center, false);
+        font.draw(batch, p.selectedSurvivor.role + "  •  TAP / R TO CHANGE", 0, h * .472f, w, Align.center, false);
+        font.setColor(VisualTheme.GOLD);
+        font.draw(batch, WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase() + "  •  A FOR ARSENAL", 0, h * .438f, w, Align.center, false);
 
         font.getData().setScale(.82f); font.setColor(Color.WHITE);
         font.draw(batch, "DEPLOY", w * .30f, h * .255f + 42, w * .40f, Align.center, false);
         font.getData().setScale(.43f); font.setColor(new Color(.86f, .95f, 1f, 1f));
         font.draw(batch, "STAGE " + p.selectedStage + "  •  TAP / SPACE / ENTER", w * .30f, h * .255f + 17, w * .40f, Align.center, false);
 
-        font.getData().setScale(.41f); font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "BASE", 28, 59);
-        font.draw(batch, "GEAR [G]", w * .18f, 59);
-        font.draw(batch, "MISSIONS [M]", w * .40f, 59);
-        font.draw(batch, "SHOP [S]", w * .66f, 59);
-        font.draw(batch, "SETTINGS [O]", w * .82f, 59);
+        font.getData().setScale(.36f); font.setColor(VisualTheme.MUTED);
+        font.draw(batch, "BASE", 22, 59);
+        font.draw(batch, "ARSENAL [A]", w * .12f, 59);
+        font.draw(batch, "GEAR [G]", w * .31f, 59);
+        font.draw(batch, "MISSIONS [M]", w * .45f, 59);
+        font.draw(batch, "SHOP [S]", w * .65f, 59);
+        font.draw(batch, "SETTINGS [O]", w * .81f, 59);
         font.getData().setScale(2.2f);
         batch.end();
         handleInput(w, h);
     }
 
     private void handleInput(float w, float h) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showArsenal(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showGear(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showMissions(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showShop(); return; }
@@ -92,10 +97,11 @@ public final class MenuScreen extends ScreenAdapter {
         if (!Gdx.input.justTouched()) return;
         float x = Gdx.input.getX(), y = h - Gdx.input.getY();
         if (y <= 95f) {
-            if (x >= w * .15f && x < w * .37f) game.showGear();
-            else if (x >= w * .37f && x < w * .62f) game.showMissions();
-            else if (x >= w * .62f && x < w * .80f) game.showShop();
-            else if (x >= w * .80f) game.showSettings();
+            if (x >= w * .08f && x < w * .28f) game.showArsenal();
+            else if (x >= w * .28f && x < w * .42f) game.showGear();
+            else if (x >= w * .42f && x < w * .62f) game.showMissions();
+            else if (x >= w * .62f && x < w * .79f) game.showShop();
+            else if (x >= w * .79f) game.showSettings();
             return;
         }
         if (y >= h * .40f && y <= h * .56f) { game.showSurvivors(); return; }
