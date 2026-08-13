@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
+import com.deadlinezero.game.meta.OnboardingState;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.world.WaveDirector;
 
@@ -29,12 +30,23 @@ public final class CombatHudRenderer {
                        Player player, WaveDirector director, Array<Enemy> enemies,
                        float width, float height) {
         projection.setToOrtho2D(0, 0, width, height);
+        updateOnboarding(player, director);
         drawBars(shapes, player, director, enemies, width, height);
         drawText(batch, font, player, director, width, height);
         drawDamageVignette(shapes, width, height);
     }
 
     private float ui() { return AccessibilitySettings.active().uiScale; }
+
+    private void updateOnboarding(Player player, WaveDirector director) {
+        OnboardingState onboarding = OnboardingState.active();
+        if (onboarding.completed()) return;
+        if (player.velocity.len2() > .12f) onboarding.markMovementSeen();
+        if (player.dashTimer > .05f) onboarding.markDashSeen();
+        if (player.level > 1) onboarding.markUpgradeSeen();
+        if (director.bossWarning() || director.bossSpawned()) onboarding.markBossSeen();
+        onboarding.refreshCompletion();
+    }
 
     private void drawBars(ShapeRenderer shapes, Player player, WaveDirector director,
                           Array<Enemy> enemies, float w, float h) {
@@ -113,7 +125,23 @@ public final class CombatHudRenderer {
         font.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
         font.draw(batch, player.canDash() ? "DASH" : String.format("%.1f", player.dashTimer),
             w - 93f * s, 67f * s, 70f * s, Align.center, false);
+
+        drawOnboardingHint(batch, font, w, h, s);
         batch.end();
+    }
+
+    private void drawOnboardingHint(SpriteBatch batch, BitmapFont font, float w, float h, float s) {
+        OnboardingState o = OnboardingState.active();
+        if (o.completed()) return;
+        String hint;
+        if (!o.movementSeen()) hint = "MOVE  •  DRAG LEFT SIDE / WASD";
+        else if (!o.dashSeen()) hint = "DASH  •  BUTTON / SPACE";
+        else if (!o.upgradeSeen()) hint = "ELIMINATE HOSTILES  •  LEVEL UP TO CHOOSE AN UPGRADE";
+        else if (!o.bossSeen()) hint = "SURVIVE UNTIL THE ALPHA SIGNAL";
+        else return;
+        font.getData().setScale(.52f * s);
+        font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, hint, 0f, 118f * s, w, Align.center, false);
     }
 
     private void drawDamageVignette(ShapeRenderer shapes, float w, float h) {
