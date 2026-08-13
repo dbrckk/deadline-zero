@@ -29,6 +29,8 @@ import com.deadlinezero.game.fx.ArcFx;
 import com.deadlinezero.game.fx.DamageNumber;
 import com.deadlinezero.game.fx.ImpactFx;
 import com.deadlinezero.game.input.VirtualStick;
+import com.deadlinezero.game.progression.LegendaryChoice;
+import com.deadlinezero.game.progression.LegendarySelector;
 import com.deadlinezero.game.progression.Upgrade;
 import com.deadlinezero.game.progression.UpgradeSelector;
 import com.deadlinezero.game.services.AdsService;
@@ -62,8 +64,10 @@ public final class GameScreen extends ScreenAdapter {
     private final CombatSpritePass spritePass;
     private final CombatPolishController polish;
     private float accumulator, fireTimer, contactTimer, cameraShake, visualTime;
-    private boolean choosingUpgrade, gameOver, revived, bossKilledThisRun, settling;
+    private boolean choosingUpgrade, choosingLegendary, gameOver, revived, bossKilledThisRun, settling;
     private final Upgrade[] choices = new Upgrade[3];
+    private final LegendaryChoice[] legendaryChoices = new LegendaryChoice[3];
+    private int legendaryChoiceCount;
 
     public GameScreen(DeadlineZeroGame game) {
         this.game = game;
@@ -86,7 +90,7 @@ public final class GameScreen extends ScreenAdapter {
         spritePass.update(delta * simulationScale);
         accumulator += delta * simulationScale;
         while (accumulator >= GameConfig.FIXED_STEP) {
-            if (!choosingUpgrade && !gameOver) update(GameConfig.FIXED_STEP);
+            if (!choosingUpgrade && !choosingLegendary && !gameOver) update(GameConfig.FIXED_STEP);
             accumulator -= GameConfig.FIXED_STEP;
         }
         draw();
@@ -417,6 +421,17 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private void prepareUpgrade() {
+        if (LegendarySelector.shouldOffer(player)) {
+            legendaryChoiceCount = LegendarySelector.fillChoices(player, legendaryChoices);
+            if (legendaryChoiceCount > 0) {
+                choosingLegendary = true;
+                return;
+            }
+        }
+        prepareStandardUpgrade();
+    }
+
+    private void prepareStandardUpgrade() {
         choosingUpgrade = true;
         UpgradeSelector.fillChoices(player, choices);
     }
@@ -565,12 +580,35 @@ public final class GameScreen extends ScreenAdapter {
     private void drawHud() {
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
         combatHud.render(shapes, batch, font, player, director, enemies, w, h);
-        if (!choosingUpgrade && !gameOver) return;
+        if (!choosingUpgrade && !choosingLegendary && !gameOver) return;
         batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
         batch.begin();
-        if (choosingUpgrade) drawUpgradeText(w, h);
+        if (choosingLegendary) drawLegendaryText(w, h);
+        else if (choosingUpgrade) drawUpgradeText(w, h);
         if (gameOver) drawGameOverText(w, h);
         batch.end();
+    }
+
+    private void drawLegendaryText(float w, float h) {
+        font.getData().setScale(1.45f);
+        font.setColor(VisualTheme.GOLD);
+        font.draw(batch, "LEGENDARY PROTOCOL", 0, h * .79f, w, Align.center, false);
+        font.getData().setScale(.68f);
+        font.setColor(VisualTheme.MUTED);
+        font.draw(batch, "SELECT ONE • STANDARD LEVEL-UP FOLLOWS", 0, h * .70f, w, Align.center, false);
+        for (int i = 0; i < legendaryChoiceCount; i++) {
+            LegendaryChoice choice = legendaryChoices[i];
+            float x = w * ((i + 1f) / (legendaryChoiceCount + 1f));
+            font.getData().setScale(.86f);
+            font.setColor(VisualTheme.GOLD);
+            font.draw(batch, "[" + (i + 1) + "] " + choice.title, x - 145f, h * .53f, 290f, Align.center, false);
+            font.getData().setScale(.66f);
+            font.setColor(VisualTheme.TEXT);
+            font.draw(batch, choice.description, x - 145f, h * .44f, 290f, Align.center, true);
+            font.setColor(VisualTheme.MUTED);
+            font.draw(batch, "LEGENDARY • ONE-SHOT", x - 145f, h * .35f, 290f, Align.center, false);
+        }
+        font.getData().setScale(.75f);
     }
 
     private void drawUpgradeText(float w, float h) {
@@ -597,6 +635,26 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private void handleOverlayInput() {
+        if (choosingLegendary) {
+            int idx = -1;
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) idx = 0;
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) idx = 1;
+            if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) idx = 2;
+            if (Gdx.input.justTouched() && legendaryChoiceCount > 0) {
+                idx = Math.min(legendaryChoiceCount - 1,
+                    (int)(Gdx.input.getX() / (float)Gdx.graphics.getWidth() * legendaryChoiceCount));
+            }
+            if (idx >= 0 && idx < legendaryChoiceCount && legendaryChoices[idx] != null) {
+                if (legendaryChoices[idx].apply(player)) {
+                    cameraShake = Math.max(cameraShake, .64f);
+                    impact(player.position.x, player.position.y, 2.9f, .42f, VisualTheme.GOLD);
+                }
+                choosingLegendary = false;
+                legendaryChoiceCount = 0;
+                prepareStandardUpgrade();
+            }
+            return;
+        }
         if (choosingUpgrade) {
             int idx = -1;
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) idx = 0;
@@ -621,7 +679,7 @@ public final class GameScreen extends ScreenAdapter {
                 else finishRun();
             }
         }
-        if (!gameOver && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) finishRun();
+        if (!gameOver && !choosingUpgrade && !choosingLegendary && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) finishRun();
     }
 
     @Override public void resize(int width, int height) {
