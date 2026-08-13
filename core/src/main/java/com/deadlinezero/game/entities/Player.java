@@ -11,6 +11,7 @@ import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.config.GameConfig;
 import com.deadlinezero.game.input.MobileCombatInput;
 import com.deadlinezero.game.meta.RunLoadoutContext;
+import com.deadlinezero.game.visual.CombatVisualEvents;
 
 public final class Player extends ActorState {
     public int level = 1;
@@ -53,6 +54,7 @@ public final class Player extends ActorState {
             dashDirection.set(velocity).nor();
             position.mulAdd(dashDirection, 4.8f);
             triggerDash();
+            CombatVisualEvents.markDash();
             AudioDirector.playGlobal(AudioDirector.Cue.DASH);
             if (settings.haptics) {
                 try { Gdx.input.vibrate(18); } catch (Throwable ignored) { }
@@ -73,6 +75,7 @@ public final class Player extends ActorState {
             xp -= xpNext;
             level++;
             xpNext = Math.round(xpNext * 1.32f + 8);
+            CombatVisualEvents.markLevelUp();
             return true;
         }
         return false;
