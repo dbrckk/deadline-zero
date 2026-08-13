@@ -30,22 +30,22 @@ public final class SettingsScreen extends ScreenAdapter {
         AccessibilitySettings s = game.accessibility;
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(VisualTheme.PANEL); shapes.rect(w * .14f, h * .13f, w * .72f, h * .72f);
+        shapes.setColor(VisualTheme.PANEL); shapes.rect(w * .14f, h * .10f, w * .72f, h * .75f);
         shapes.setColor(VisualTheme.CYAN); shapes.rect(w * .14f, h * .84f, w * .72f, 3f);
-        float startY = h * .71f;
-        float step = h * .065f;
+        float startY = h * .72f;
+        float step = h * .059f;
         shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .13f);
         shapes.rect(w * .18f, startY - row * step - 24f, w * .64f, 36f);
         shapes.end();
 
         String[] labels = {
             "Screen shake", "Shake strength", "Hit stop", "Damage flash", "High contrast telegraphs",
-            "Reduce flashes", "UI scale", "Master volume", "SFX volume", "Music volume"
+            "Reduce flashes", "Haptics", "UI scale", "Master volume", "SFX volume", "Music volume"
         };
         String[] values = {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
-            onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), pct(s.uiScale), pct(s.masterVolume),
-            pct(s.sfxVolume), pct(s.musicVolume)
+            onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), pct(s.uiScale),
+            pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume)
         };
 
         batch.begin();
@@ -69,7 +69,7 @@ public final class SettingsScreen extends ScreenAdapter {
     private void handleInput(AccessibilitySettings s) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) { saveAndBack(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) row = Math.max(0, row - 1);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) row = Math.min(9, row + 1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) row = Math.min(10, row + 1);
         boolean left = Gdx.input.isKeyJustPressed(Input.Keys.LEFT);
         boolean right = Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER);
         if (!left && !right) return;
@@ -81,10 +81,11 @@ public final class SettingsScreen extends ScreenAdapter {
             case 3 -> s.damageFlash = !s.damageFlash;
             case 4 -> s.highContrastTelegraphs = !s.highContrastTelegraphs;
             case 5 -> s.reduceFlashes = !s.reduceFlashes;
-            case 6 -> s.uiScale = clamp(s.uiScale + dir * .05f, .85f, 1.35f);
-            case 7 -> s.masterVolume = clamp(s.masterVolume + dir * .05f, 0f, 1f);
-            case 8 -> s.sfxVolume = clamp(s.sfxVolume + dir * .05f, 0f, 1f);
-            case 9 -> s.musicVolume = clamp(s.musicVolume + dir * .05f, 0f, 1f);
+            case 6 -> s.haptics = !s.haptics;
+            case 7 -> s.uiScale = clamp(s.uiScale + dir * .05f, .85f, 1.35f);
+            case 8 -> s.masterVolume = clamp(s.masterVolume + dir * .05f, 0f, 1f);
+            case 9 -> s.sfxVolume = clamp(s.sfxVolume + dir * .05f, 0f, 1f);
+            case 10 -> s.musicVolume = clamp(s.musicVolume + dir * .05f, 0f, 1f);
         }
         s.save();
         game.audio.setVolumes(s.masterVolume, s.sfxVolume, s.musicVolume);
