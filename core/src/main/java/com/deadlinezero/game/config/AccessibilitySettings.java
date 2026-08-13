@@ -24,16 +24,17 @@ public final class AccessibilitySettings {
         AccessibilitySettings s = new AccessibilitySettings();
         Preferences p = Gdx.app.getPreferences(PREFS);
         s.screenShake = p.getBoolean("screenShake", true);
-        s.screenShakeStrength = clamp(p.getFloat("screenShakeStrength", 1f), 0f, 1f);
+        s.screenShakeStrength = p.getFloat("screenShakeStrength", 1f);
         s.hitStop = p.getBoolean("hitStop", true);
         s.damageFlash = p.getBoolean("damageFlash", true);
         s.highContrastTelegraphs = p.getBoolean("highContrastTelegraphs", false);
         s.reduceFlashes = p.getBoolean("reduceFlashes", false);
         s.haptics = p.getBoolean("haptics", true);
-        s.uiScale = clamp(p.getFloat("uiScale", 1f), .85f, 1.35f);
-        s.masterVolume = clamp(p.getFloat("masterVolume", 1f), 0f, 1f);
-        s.sfxVolume = clamp(p.getFloat("sfxVolume", .85f), 0f, 1f);
-        s.musicVolume = clamp(p.getFloat("musicVolume", .65f), 0f, 1f);
+        s.uiScale = p.getFloat("uiScale", 1f);
+        s.masterVolume = p.getFloat("masterVolume", 1f);
+        s.sfxVolume = p.getFloat("sfxVolume", .85f);
+        s.musicVolume = p.getFloat("musicVolume", .65f);
+        s.normalize();
         active = s;
         return s;
     }
@@ -43,22 +44,34 @@ public final class AccessibilitySettings {
         return active;
     }
 
+    /** Keeps all scalar comfort settings inside the ranges supported by runtime render/audio systems. */
+    public void normalize() {
+        screenShakeStrength = clampFinite(screenShakeStrength, 0f, 1f, 1f);
+        uiScale = clampFinite(uiScale, .85f, 1.35f, 1f);
+        masterVolume = clampFinite(masterVolume, 0f, 1f, 1f);
+        sfxVolume = clampFinite(sfxVolume, 0f, 1f, .85f);
+        musicVolume = clampFinite(musicVolume, 0f, 1f, .65f);
+    }
+
     public void save() {
+        normalize();
         active = this;
         Gdx.app.getPreferences(PREFS)
             .putBoolean("screenShake", screenShake)
-            .putFloat("screenShakeStrength", clamp(screenShakeStrength, 0f, 1f))
+            .putFloat("screenShakeStrength", screenShakeStrength)
             .putBoolean("hitStop", hitStop)
             .putBoolean("damageFlash", damageFlash)
             .putBoolean("highContrastTelegraphs", highContrastTelegraphs)
             .putBoolean("reduceFlashes", reduceFlashes)
             .putBoolean("haptics", haptics)
-            .putFloat("uiScale", clamp(uiScale, .85f, 1.35f))
-            .putFloat("masterVolume", clamp(masterVolume, 0f, 1f))
-            .putFloat("sfxVolume", clamp(sfxVolume, 0f, 1f))
-            .putFloat("musicVolume", clamp(musicVolume, 0f, 1f))
+            .putFloat("uiScale", uiScale)
+            .putFloat("masterVolume", masterVolume)
+            .putFloat("sfxVolume", sfxVolume)
+            .putFloat("musicVolume", musicVolume)
             .flush();
     }
 
-    private static float clamp(float v, float min, float max) { return Math.max(min, Math.min(max, v)); }
+    private static float clampFinite(float v, float min, float max, float fallback) {
+        return Float.isFinite(v) ? Math.max(min, Math.min(max, v)) : fallback;
+    }
 }
