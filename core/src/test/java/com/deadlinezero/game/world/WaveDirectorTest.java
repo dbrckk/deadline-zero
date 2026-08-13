@@ -1,9 +1,9 @@
 package com.deadlinezero.game.world;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.deadlinezero.game.meta.RunStageContext;
 
@@ -26,7 +26,7 @@ public final class WaveDirectorTest {
         WaveDirector opening = new WaveDirector();
         opening.onSpawn();
         opening.update(.30f);
-        assertTrue(opening.shouldSpawn() == false);
+        assertTrue(!opening.shouldSpawn());
 
         WaveDirector crisis = new WaveDirector();
         crisis.update(crisis.bossArrivalSeconds() * .85f);
