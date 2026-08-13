@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Align;
@@ -39,10 +40,11 @@ public final class ArsenalScreen extends ScreenAdapter {
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
         WeaponDefinition[] all = WeaponCatalog.all();
 
+        float detailH = 112f;
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(VisualTheme.PANEL); shapes.rect(18, h - 88, w - 36, 58);
         float cardW = (w - 56f) / 2f;
-        float cardH = Math.min(116f, (h - 180f) / 4f);
+        float cardH = Math.min(102f, (h - 290f) / 4f);
         float top = h - 126f;
         for (int i = 0; i < all.length; i++) {
             int row = i / 2, col = i % 2;
@@ -57,6 +59,8 @@ public final class ArsenalScreen extends ScreenAdapter {
             if (selected) { shapes.setColor(VisualTheme.CYAN); shapes.rect(x, y, 4f, cardH); }
             if (!unlocked) { shapes.setColor(0f, 0f, 0f, .38f); shapes.rect(x, y, cardW, cardH); }
         }
+        shapes.setColor(VisualTheme.PANEL); shapes.rect(20, 42, w - 40, detailH);
+        drawStatBars(all[MathUtils.clamp(focus, 0, all.length - 1)], WeaponCatalog.byId(game.profile.selectedWeaponId), 34f, 56f, w * .46f, 76f);
         shapes.end();
 
         batch.begin();
@@ -65,49 +69,141 @@ public final class ArsenalScreen extends ScreenAdapter {
         font.getData().setScale(.48f); font.setColor(VisualTheme.MUTED);
         font.draw(batch, "SELECT YOUR STARTING WEAPON  •  FREE PROGRESSION UNLOCKS", 28, h - 70);
 
-        for (int i = 0; i < all.length; i++) drawCard(all[i], i, cardW, cardH, top, w, h);
+        for (int i = 0; i < all.length; i++) drawCard(all[i], i, cardW, cardH, top);
 
         WeaponDefinition weapon = all[MathUtils.clamp(focus, 0, all.length - 1)];
-        float dps = weapon.damage * weapon.projectileCount / Math.max(.05f, weapon.fireInterval);
-        font.getData().setScale(.48f); font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, "DPS " + Math.round(dps) + "   FIRE " + String.format(java.util.Locale.US, "%.2fs", weapon.fireInterval)
-            + "   CRIT " + Math.round(weapon.critChance * 100f) + "%   PEN " + weapon.penetration
-            + "   ELEMENT " + weapon.element.name(), 24, 48);
-        font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "A/D OR ←/→  •  ENTER TO SELECT  •  ESC/BACK TO BASE", 24, 26);
+        WeaponDefinition equipped = WeaponCatalog.byId(game.profile.selectedWeaponId);
+        drawDetailText(weapon, equipped, w);
+        drawAuthoredPreview(weapon, w, detailH);
         batch.end();
 
         handleInput(w, h, all, cardW, cardH, top);
     }
 
-    private void drawCard(WeaponDefinition weapon, int i, float cardW, float cardH, float top, float w, float h) {
+    private void drawCard(WeaponDefinition weapon, int i, float cardW, float cardH, float top) {
         int row = i / 2, col = i % 2;
         float x = 20f + col * (cardW + 16f);
         float y = top - row * (cardH + 10f) - cardH;
         boolean selected = weapon.id.equals(game.profile.selectedWeaponId);
         boolean unlocked = WeaponProgression.unlocked(game.profile, weapon);
-        float dps = weapon.damage * weapon.projectileCount / Math.max(.05f, weapon.fireInterval);
+        float dps = paperDps(weapon);
 
-        font.getData().setScale(.58f);
+        font.getData().setScale(.56f);
         font.setColor(unlocked ? VisualTheme.TEXT : VisualTheme.MUTED);
-        font.draw(batch, weapon.displayName.toUpperCase(), x + 14f, y + cardH - 18f);
-        font.getData().setScale(.43f);
+        font.draw(batch, weapon.displayName.toUpperCase(), x + 14f, y + cardH - 17f);
+        font.getData().setScale(.41f);
         font.setColor(elementColor(weapon));
-        font.draw(batch, weapon.element.name() + "  •  " + Math.round(dps) + " DPS", x + 14f, y + cardH - 42f);
+        font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x + 14f, y + cardH - 38f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, Math.round(weapon.damage) + " DMG   " + weapon.projectileCount + "x SHOT   "
-            + Math.round(weapon.knockback * 10f) / 10f + " KB", x + 14f, y + cardH - 64f);
+        font.draw(batch, Math.round(dps) + " DPS   " + Math.round(weapon.damage) + " DMG   " + weapon.projectileCount + "x", x + 14f, y + cardH - 59f);
         if (selected) {
-            font.setColor(VisualTheme.CYAN); font.draw(batch, "EQUIPPED", x + 14f, y + 18f);
+            font.setColor(VisualTheme.CYAN); font.draw(batch, "EQUIPPED", x + 14f, y + 17f);
         } else if (unlocked) {
             font.setColor(i == focus ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED);
-            font.draw(batch, i == focus ? "SELECT" : "AVAILABLE", x + 14f, y + 18f);
+            font.draw(batch, i == focus ? "SELECT" : "AVAILABLE", x + 14f, y + 17f);
         } else {
             font.setColor(VisualTheme.GOLD);
             int level = WeaponProgression.unlockAccountLevel(weapon);
-            font.draw(batch, "LOCKED  •  ACCOUNT LV " + level, x + 14f, y + 18f);
+            font.draw(batch, "LOCKED  •  ACCOUNT LV " + level, x + 14f, y + 17f);
         }
     }
+
+    private void drawDetailText(WeaponDefinition weapon, WeaponDefinition equipped, float w) {
+        float dps = paperDps(weapon);
+        float equippedDps = paperDps(equipped);
+        float x = w * .50f;
+        font.getData().setScale(.50f); font.setColor(VisualTheme.TEXT);
+        font.draw(batch, weapon.displayName.toUpperCase(), x, 132f);
+        font.getData().setScale(.42f); font.setColor(elementColor(weapon));
+        font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x, 111f);
+        font.setColor(VisualTheme.MUTED);
+        font.draw(batch, "DPS " + Math.round(dps) + deltaText(dps - equippedDps)
+            + "   FIRE " + String.format(java.util.Locale.US, "%.2fs", weapon.fireInterval)
+            + "   CRIT " + Math.round(weapon.critChance * 100f) + "%", x, 90f);
+        font.draw(batch, "PEN " + weapon.penetration + deltaText(weapon.penetration - equipped.penetration)
+            + "   KB " + oneDecimal(weapon.knockback) + deltaText(weapon.knockback - equipped.knockback)
+            + "   SHOTS " + weapon.projectileCount + deltaText(weapon.projectileCount - equipped.projectileCount), x, 70f);
+        font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, description(weapon), x, 50f, w * .45f, Align.left, true);
+        font.setColor(VisualTheme.MUTED);
+        font.draw(batch, "A/D OR ←/→  •  ENTER SELECT  •  ESC/BACK BASE", 24, 25);
+    }
+
+    private void drawStatBars(WeaponDefinition weapon, WeaponDefinition equipped, float x, float y, float width, float height) {
+        float[] values = {
+            MathUtils.clamp(paperDps(weapon) / 240f, 0f, 1f),
+            MathUtils.clamp((1f / weapon.fireInterval) / 8f, 0f, 1f),
+            MathUtils.clamp(weapon.penetration / 5f, 0f, 1f),
+            MathUtils.clamp(weapon.knockback / 5f, 0f, 1f)
+        };
+        float[] base = {
+            MathUtils.clamp(paperDps(equipped) / 240f, 0f, 1f),
+            MathUtils.clamp((1f / equipped.fireInterval) / 8f, 0f, 1f),
+            MathUtils.clamp(equipped.penetration / 5f, 0f, 1f),
+            MathUtils.clamp(equipped.knockback / 5f, 0f, 1f)
+        };
+        float barW = width - 54f;
+        for (int i = 0; i < values.length; i++) {
+            float yy = y + i * (height / 4f);
+            shapes.setColor(.06f, .08f, .10f, 1f); shapes.rect(x + 54f, yy, barW, 6f);
+            shapes.setColor(VisualTheme.MUTED.r, VisualTheme.MUTED.g, VisualTheme.MUTED.b, .65f); shapes.rect(x + 54f, yy, barW * base[i], 6f);
+            shapes.setColor(VisualTheme.CYAN); shapes.rect(x + 54f, yy, barW * values[i], 3f);
+        }
+    }
+
+    private void drawAuthoredPreview(WeaponDefinition weapon, float w, float detailH) {
+        if (game.art == null || !game.art.authoredAvailable()) return;
+        TextureRegion region = game.art.regionOrNull("weapon/" + weapon.id);
+        if (region == null) return;
+        float maxW = w * .16f;
+        float maxH = detailH - 28f;
+        float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
+        float drawW = maxW;
+        float drawH = drawW / Math.max(.01f, aspect);
+        if (drawH > maxH) { drawH = maxH; drawW = drawH * aspect; }
+        batch.setColor(Color.WHITE);
+        batch.draw(region, w * .30f - drawW * .5f, 55f, drawW, drawH);
+    }
+
+    private float paperDps(WeaponDefinition weapon) {
+        return weapon.damage * weapon.projectileCount / Math.max(.05f, weapon.fireInterval);
+    }
+
+    private String role(WeaponDefinition weapon) {
+        return switch (weapon.id) {
+            case "scattergun" -> "CLOSE BURST";
+            case "rail_rifle" -> "PRECISION PIERCER";
+            case "inferno_smg" -> "RAPID BURN";
+            case "cryo_lance" -> "CONTROL";
+            case "arc_carbine" -> "CHAIN CONTROL";
+            case "breacher" -> "HEAVY BREACH";
+            default -> "BALANCED RIFLE";
+        };
+    }
+
+    private String description(WeaponDefinition weapon) {
+        return switch (weapon.id) {
+            case "scattergun" -> "Wide close-range burst with strong stagger. Best when kiting dense packs.";
+            case "rail_rifle" -> "Slow precision rifle with extreme penetration and high critical ceiling.";
+            case "inferno_smg" -> "Very high cadence FIRE weapon built to stack pressure across moving hordes.";
+            case "cryo_lance" -> "FROST-focused rifle trading raw DPS for safer spacing and crowd control.";
+            case "arc_carbine" -> "SHOCK carbine optimized for chained hits and clustered targets.";
+            case "breacher" -> "Nine-projectile blast with brutal knockback, limited by range and reload cadence.";
+            default -> "Reliable all-round rifle with stable damage, cadence and accuracy for every stage.";
+        };
+    }
+
+    private String deltaText(float delta) {
+        if (Math.abs(delta) < .05f) return "";
+        return delta > 0f ? "  +" + Math.round(delta) : "  " + Math.round(delta);
+    }
+
+    private String deltaText(int delta) {
+        if (delta == 0) return "";
+        return delta > 0 ? "  +" + delta : "  " + delta;
+    }
+
+    private String oneDecimal(float value) { return String.format(java.util.Locale.US, "%.1f", value); }
 
     private Color elementColor(WeaponDefinition weapon) {
         return switch (weapon.element) {
