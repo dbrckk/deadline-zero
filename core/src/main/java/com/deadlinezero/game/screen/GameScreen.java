@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.abilities.AbilitySystem;
 import com.deadlinezero.game.abilities.AbilityType;
+import com.deadlinezero.game.ai.EnemyPatternCatalog;
 import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.config.GameConfig;
@@ -177,8 +178,21 @@ public final class GameScreen extends ScreenAdapter {
             if (aliveBeforeStatus && !e.alive) onEnemyKilled(e);
             float rr = player.radius + e.radius;
             if (e.alive && e.type != Enemy.Type.RANGED && len2 < rr * rr && contactTimer <= 0f) {
-                damagePlayer(e.contactDamage, .35f);
-                contactTimer = .28f;
+                if (e.consumeChargeImpact()) {
+                    EnemyPatternCatalog.ChargePattern charge = EnemyPatternCatalog.charge(e.type, e.variant);
+                    damagePlayer(e.contactDamage * charge.impactDamageMultiplier(), .58f);
+                    float inv = 1f / distance;
+                    player.position.x += dx * inv * charge.knockbackStrength();
+                    player.position.y += dy * inv * charge.knockbackStrength();
+                    player.position.x = MathUtils.clamp(player.position.x, -31, 31);
+                    player.position.y = MathUtils.clamp(player.position.y, -17, 17);
+                    impact(e.position.x, e.position.y, charge.impactRadius(), .26f, VisualTheme.GOLD);
+                    cameraShake = Math.max(cameraShake, e.type == Enemy.Type.ELITE ? .52f : .38f);
+                    contactTimer = Math.max(.30f, .42f * charge.recoveryMultiplier());
+                } else {
+                    damagePlayer(e.contactDamage, .35f);
+                    contactTimer = .28f;
+                }
             }
         }
     }
@@ -262,7 +276,18 @@ public final class GameScreen extends ScreenAdapter {
         aim.set(player.position).sub(e.position);
         if (aim.len2() < .0001f) aim.set(1f, 0f); else aim.nor();
         if (e.type == Enemy.Type.RANGED) {
-            spawnHostileShot(e.position.x, e.position.y, aim.angleDeg(), 8.5f, e.contactDamage, .18f, false, 0f);
+            EnemyPatternCatalog.RangedPattern pattern = EnemyPatternCatalog.ranged(e.variant);
+            float base = aim.angleDeg();
+            for (int i = 0; i < pattern.shots(); i++) {
+                float spread = (i - (pattern.shots() - 1) / 2f) * pattern.spreadDegrees();
+                spawnHostileShot(e.position.x, e.position.y, base + spread,
+                    8.5f * pattern.speedMultiplier(),
+                    e.contactDamage * pattern.damageMultiplier(),
+                    pattern.explosive() ? .24f : .18f,
+                    pattern.explosive(), pattern.explosionRadius());
+            }
+            impact(e.position.x, e.position.y, pattern.explosive() ? .85f : .46f, .12f,
+                pattern.explosive() ? VisualTheme.GOLD : VisualTheme.RED);
             return;
         }
         if (e.type == Enemy.Type.BOSS) {
