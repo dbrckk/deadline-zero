@@ -1,12 +1,14 @@
 package com.deadlinezero.game.android;
 
 import android.app.Activity;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.deadlinezero.game.services.AdsService;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class AndroidAdsService implements AdsService {
     private final Activity activity;
@@ -53,14 +55,26 @@ public final class AndroidAdsService implements AdsService {
                 unavailable.run();
                 return;
             }
+
             RewardedAd showing = ad;
             ad = null;
+            AtomicBoolean completed = new AtomicBoolean(false);
+
             showing.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override public void onAdDismissedFullScreenContent() {
                     load();
+                    if (completed.compareAndSet(false, true)) unavailable.run();
+                }
+
+                @Override public void onAdFailedToShowFullScreenContent(AdError error) {
+                    load();
+                    if (completed.compareAndSet(false, true)) unavailable.run();
                 }
             });
-            showing.show(activity, item -> earned.run());
+
+            showing.show(activity, item -> {
+                if (completed.compareAndSet(false, true)) earned.run();
+            });
         });
     }
 }
