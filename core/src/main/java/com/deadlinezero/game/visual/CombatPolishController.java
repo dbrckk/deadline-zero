@@ -31,6 +31,7 @@ public final class CombatPolishController {
     public CombatPolishController(GameArt art, AccessibilitySettings settings) {
         deaths = new DeathFxRenderer(art);
         this.settings = settings == null ? new AccessibilitySettings() : settings;
+        CombatVisualEvents.reset();
     }
 
     public float simulationScale(float visualDelta) {
@@ -47,6 +48,7 @@ public final class CombatPolishController {
     }
 
     public void onShot(float angleDeg) {
+        CombatVisualEvents.markPlayerShot();
         AudioDirector.playGlobal(AudioDirector.Cue.SHOT, .96f + MathUtils.random(.08f), 0f);
         if (settings.screenShake && settings.screenShakeStrength > 0f) {
             feel.triggerRecoil(angleDeg, .075f * settings.screenShakeStrength);
