@@ -10,6 +10,7 @@ import com.deadlinezero.game.meta.EquipmentDropTable;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.meta.ProfileStore;
+import com.deadlinezero.game.meta.RunEncounterRuntime;
 import com.deadlinezero.game.meta.RunLoadoutContext;
 import com.deadlinezero.game.meta.RunMissionRuntime;
 import com.deadlinezero.game.meta.RunResult;
@@ -55,7 +56,7 @@ public final class DeadlineZeroGame extends Game {
         showMenu();
     }
 
-    public void showMenu() { RunMissionRuntime.end(); if (audio != null) audio.stopCombatMusic(); setScreen(new MenuScreen(this)); }
+    public void showMenu() { RunMissionRuntime.end(); RunEncounterRuntime.end(); if (audio != null) audio.stopCombatMusic(); setScreen(new MenuScreen(this)); }
     public void showGear() { setScreen(new GearScreen(this)); }
     public void showArsenal() { setScreen(new ArsenalScreen(this)); }
     public void showMissions() { setScreen(new MissionsScreen(this)); }
@@ -66,6 +67,7 @@ public final class DeadlineZeroGame extends Game {
     public void startRun() {
         RunStageContext.begin(profile == null ? 1 : profile.selectedStage);
         RunLoadoutContext.begin(profile);
+        RunEncounterRuntime.begin();
         RunMissionRuntime.begin(() -> Gdx.app.postRunnable(() -> finishVictory()));
         if (audio != null) audio.startCombatMusic();
         setScreen(new GameScreen(this));
@@ -87,6 +89,8 @@ public final class DeadlineZeroGame extends Game {
         int firstClearGems = firstClear ? StageMissionRules.firstClearGems(safeStage) : 0;
 
         RunRewardCalculator.Rewards rewards = RunSettlement.apply(profile, kills, secondsSurvived, bossKilled, safeStage);
+        long encounterCredits = RunEncounterRuntime.consumeBonusCredits();
+        if (encounterCredits > 0L) profile.addCurrency(PlayerProfile.Currency.CREDITS, encounterCredits);
         DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
         DailyService.recordRun(profile, kills, bossKilled);
         long survivorXp = 35L + Math.max(0, kills) / 4L + safeStage * 12L + (bossKilled ? 80L : 0L);
@@ -106,6 +110,7 @@ public final class DeadlineZeroGame extends Game {
             profile.inventory.add(drop);
         }
         RunMissionRuntime.end();
+        RunEncounterRuntime.end();
         if (audio != null) audio.stopCombatMusic();
         saveProfile();
         RunResult result = new RunResult(kills, secondsSurvived, bossKilled, safeStage, rewards, drop);
@@ -117,6 +122,7 @@ public final class DeadlineZeroGame extends Game {
     @Override public void pause() { saveProfile(); }
     @Override public void dispose() {
         RunMissionRuntime.end();
+        RunEncounterRuntime.end();
         saveProfile();
         super.dispose();
         if (audio != null) audio.dispose();
