@@ -14,8 +14,10 @@ import com.deadlinezero.game.meta.StageRules;
 
 public final class Enemy extends ActorState {
     public enum Type { SHAMBLER, RUNNER, BRUTE, RANGED, ELITE, BOSS }
+    public enum Variant { NORMAL, SWIFT, ARMORED, FERAL }
 
     public Type type;
+    public Variant variant = Variant.NORMAL;
     public float speed;
     public float contactDamage;
     public int xpValue;
@@ -45,6 +47,34 @@ public final class Enemy extends ActorState {
         this.attack = new AttackController(archetype);
         this.bossPhases = type == Type.BOSS ? new BossPhaseController() : null;
         this.bossCombat = type == Type.BOSS ? new BossCombatRuntime() : null;
+    }
+
+    /** Applies a champion variant once, preserving the base archetype while changing combat priorities. */
+    public void applyVariant(Variant next) {
+        if (next == null || next == Variant.NORMAL || type == Type.BOSS || variant != Variant.NORMAL) return;
+        variant = next;
+        switch (next) {
+            case SWIFT -> {
+                speed *= 1.34f;
+                maxHp *= .84f;
+                hp = maxHp;
+                xpValue = Math.max(1, Math.round(xpValue * 1.20f));
+            }
+            case ARMORED -> {
+                maxHp *= 1.72f;
+                hp = maxHp;
+                speed *= .84f;
+                xpValue = Math.max(1, Math.round(xpValue * 1.55f));
+            }
+            case FERAL -> {
+                contactDamage *= 1.48f;
+                speed *= 1.10f;
+                maxHp *= 1.12f;
+                hp = maxHp;
+                xpValue = Math.max(1, Math.round(xpValue * 1.45f));
+            }
+            default -> { }
+        }
     }
 
     @Override public void damage(float amount) {
