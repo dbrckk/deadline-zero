@@ -1,10 +1,15 @@
 package com.deadlinezero.game.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.deadlinezero.game.abilities.AbilityLoadout;
 import com.deadlinezero.game.abilities.AbilityType;
+import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.combat.WeaponRuntime;
+import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.config.GameConfig;
+import com.deadlinezero.game.input.MobileCombatInput;
 import com.deadlinezero.game.meta.RunLoadoutContext;
 
 public final class Player extends ActorState {
@@ -18,6 +23,8 @@ public final class Player extends ActorState {
     public float visualHitTimer;
     public final WeaponRuntime weapon = new WeaponRuntime(WeaponCatalog.AR9);
     public final AbilityLoadout abilities = new AbilityLoadout();
+    private final MobileCombatInput mobileCombatInput = new MobileCombatInput();
+    private final Vector2 dashDirection = new Vector2();
 
     public Player(float x, float y) {
         super(x, y, 0.42f, GameConfig.PLAYER_MAX_HP * RunLoadoutContext.maxHpMultiplier());
@@ -40,6 +47,14 @@ public final class Player extends ActorState {
         dashTimer = Math.max(0f, dashTimer - dt);
         invulnerabilityTimer = Math.max(0f, invulnerabilityTimer - dt);
         visualHitTimer = Math.max(0f, visualHitTimer - dt);
+
+        if (canDash() && velocity.len2() > .08f && mobileCombatInput.dashJustPressed(AccessibilitySettings.active().uiScale)) {
+            dashDirection.set(velocity).nor();
+            position.mulAdd(dashDirection, 4.8f);
+            triggerDash();
+            AudioDirector.playGlobal(AudioDirector.Cue.DASH);
+            try { Gdx.input.vibrate(18); } catch (Throwable ignored) { }
+        }
     }
 
     @Override public void damage(float amount) {
