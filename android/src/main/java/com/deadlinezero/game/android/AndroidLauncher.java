@@ -22,7 +22,11 @@ public final class AndroidLauncher extends AndroidApplication {
         config.numSamples = 2;
 
         initialize(
-            new DeadlineZeroGame(new GameServices(ads, new AndroidBillingService(this))),
+            new DeadlineZeroGame(new GameServices(
+                ads,
+                new AndroidBillingService(this),
+                new AndroidPrivacyService(consent)
+            )),
             config
         );
 
