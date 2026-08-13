@@ -21,17 +21,27 @@ public final class CharacterSpriteRenderer {
 
     public void draw(SpriteBatch batch, Player player, Array<Enemy> enemies) {
         if (!art.authoredAvailable()) return;
+        boolean hasTarget = false;
+        for (Enemy enemy : enemies) {
+            if (enemy.alive) { hasTarget = true; break; }
+        }
         batch.begin();
-        drawPlayer(batch, player);
+        drawPlayer(batch, player, hasTarget);
         for (Enemy enemy : enemies) if (enemy.alive) drawEnemy(batch, enemy);
         batch.end();
     }
 
-    private void drawPlayer(SpriteBatch batch, Player player) {
+    private void drawPlayer(SpriteBatch batch, Player player, boolean hasTarget) {
         GameArt.Motion motion;
-        if (!player.alive) motion = GameArt.Motion.DEATH;
-        else if (player.visualHitTimer > 0f) motion = GameArt.Motion.HIT;
-        else motion = player.velocity.len2() > .04f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
+        if (!player.alive) {
+            motion = GameArt.Motion.DEATH;
+        } else if (player.visualHitTimer > 0f) {
+            motion = GameArt.Motion.HIT;
+        } else if (hasTarget && attackWindow(player)) {
+            motion = GameArt.Motion.ATTACK;
+        } else {
+            motion = player.velocity.len2() > .04f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
+        }
 
         TextureRegion region = art.survivor(RunLoadoutContext.survivor(), motion, stateTime);
         float h = 1.65f;
@@ -41,6 +51,12 @@ public final class CharacterSpriteRenderer {
         batch.setColor(1f, 1f, 1f, player.invulnerable() ? .78f : 1f);
         drawFacing(batch, region, player.position.x, player.position.y - .58f, w, h, facing);
         batch.setColor(1f, 1f, 1f, 1f);
+    }
+
+    private boolean attackWindow(Player player) {
+        float cadence = Math.max(.06f, player.weapon.fireInterval);
+        float attackDuration = Math.min(.13f, cadence * .60f);
+        return stateTime % cadence < attackDuration;
     }
 
     private void drawEnemy(SpriteBatch batch, Enemy enemy) {
