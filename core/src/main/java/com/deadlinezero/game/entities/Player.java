@@ -48,12 +48,15 @@ public final class Player extends ActorState {
         invulnerabilityTimer = Math.max(0f, invulnerabilityTimer - dt);
         visualHitTimer = Math.max(0f, visualHitTimer - dt);
 
-        if (canDash() && velocity.len2() > .08f && mobileCombatInput.dashJustPressed(AccessibilitySettings.active().uiScale)) {
+        AccessibilitySettings settings = AccessibilitySettings.active();
+        if (canDash() && velocity.len2() > .08f && mobileCombatInput.dashJustPressed(settings.uiScale)) {
             dashDirection.set(velocity).nor();
             position.mulAdd(dashDirection, 4.8f);
             triggerDash();
             AudioDirector.playGlobal(AudioDirector.Cue.DASH);
-            try { Gdx.input.vibrate(18); } catch (Throwable ignored) { }
+            if (settings.haptics) {
+                try { Gdx.input.vibrate(18); } catch (Throwable ignored) { }
+            }
         }
     }
 
