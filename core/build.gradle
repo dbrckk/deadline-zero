@@ -4,4 +4,10 @@ java { toolchain { languageVersion = JavaLanguageVersion.of(17) } }
 dependencies {
     api "com.badlogicgames.gdx:gdx:${gdxVersion}"
     api "com.badlogicgames.gdx:gdx-ai:1.8.2"
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }
