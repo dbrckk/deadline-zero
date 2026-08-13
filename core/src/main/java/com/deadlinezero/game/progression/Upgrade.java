@@ -35,11 +35,11 @@ public enum Upgrade {
             p.weapon.damage *= .94f;
         }
     },
-    TESLA_ORB("Tesla Orb", "Unlock/upgrade autonomous chain lightning", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.TESLA_ORB); } },
-    MISSILE_SWARM("Missile Swarm", "Unlock/upgrade homing missile volleys", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.MISSILE_SWARM); } },
-    CRYO_NOVA("Cryo Nova", "Unlock/upgrade periodic freezing pulse", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.CRYO_NOVA); } },
-    DRONE("Sentinel Drone", "Unlock/upgrade autonomous combat drone", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.DRONE); } },
-    ORBITAL("Orbital Blade", "Unlock/upgrade rotating close-range blade", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.ORBITAL_BLADE); } },
+    TESLA_ORB("Tesla Orb", "Chain lightning • Tier II at Lv3 • evolves at Lv5 • synergizes with Cryo/Drone", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.TESLA_ORB); } },
+    MISSILE_SWARM("Missile Swarm", "Homing volleys • Tier II at Lv3 • evolved warheads at Lv5 • synergizes with Cryo/Drone", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.MISSILE_SWARM); } },
+    CRYO_NOVA("Cryo Nova", "Freeze pulse • larger Tier II nova at Lv3 • evolved damage at Lv5 • enables frost synergies", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.CRYO_NOVA); } },
+    DRONE("Sentinel Drone", "Autonomous fire • improved range at Lv3 • evolved damage at Lv5 • network synergies", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.DRONE); } },
+    ORBITAL("Orbital Blade", "Close-range blade • larger Tier II hitbox at Lv3 • evolves at Lv5 • Frost/Storm forms", UpgradeRarity.EPIC) { public void apply(Player p) { p.abilities.upgrade(AbilityType.ORBITAL_BLADE); } },
     DASH_CORE("Phase Dash", "Dash cooldown -18%", UpgradeRarity.RARE) { public void apply(Player p) { p.dashCooldown = Math.max(1.25f, p.dashCooldown * .82f); } };
 
     public final String title, description;
