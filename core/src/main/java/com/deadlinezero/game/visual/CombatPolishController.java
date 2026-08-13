@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.fx.DeathFx;
@@ -18,13 +19,15 @@ public final class CombatPolishController {
     private final CombatFeel feel = new CombatFeel();
     private final LocalLightRenderer lights = new LocalLightRenderer();
     private final DeathFxRenderer deaths;
+    private final AccessibilitySettings settings;
 
-    public CombatPolishController(GameArt art) {
+    public CombatPolishController(GameArt art, AccessibilitySettings settings) {
         deaths = new DeathFxRenderer(art);
+        this.settings = settings == null ? new AccessibilitySettings() : settings;
     }
 
     public float simulationScale(float visualDelta) {
-        return feel.consumeSimulationScale(visualDelta);
+        return settings.hitStop ? feel.consumeSimulationScale(visualDelta) : 1f;
     }
 
     public void updateVisual(float dt) {
@@ -36,11 +39,13 @@ public final class CombatPolishController {
     }
 
     public void onShot(float angleDeg) {
-        feel.triggerRecoil(angleDeg, .075f);
+        if (settings.screenShake && settings.screenShakeStrength > 0f) {
+            feel.triggerRecoil(angleDeg, .075f * settings.screenShakeStrength);
+        }
     }
 
     public void onProjectileHit(boolean critical) {
-        if (critical) feel.triggerHitStop(.014f);
+        if (settings.hitStop && critical) feel.triggerHitStop(.014f);
     }
 
     public void onEnemyKilled(Enemy enemy, Pools pools) {
@@ -50,6 +55,7 @@ public final class CombatPolishController {
             float rotation = enemy.velocity.len2() > .001f ? enemy.velocity.angleDeg() - 90f : MathUtils.random(0f, 360f);
             fx.spawn(enemy.type, enemy.position.x, enemy.position.y, rotation, enemy.radius, duration);
         }
+        if (!settings.hitStop) return;
         if (enemy.type == Enemy.Type.BOSS) {
             feel.triggerHitStop(.065f);
         } else if (enemy.type == Enemy.Type.ELITE || enemy.type == Enemy.Type.BRUTE) {
@@ -60,13 +66,14 @@ public final class CombatPolishController {
     }
 
     public void applyCameraRecoil(OrthographicCamera camera) {
+        if (!settings.screenShake || settings.screenShakeStrength <= 0f) return;
         camera.position.x += feel.recoilX();
         camera.position.y += feel.recoilY();
     }
 
     public void drawWorldUnderlay(ShapeRenderer shapes, Player player, Array<Enemy> enemies, Pools pools, float time) {
         deaths.drawFallback(shapes, pools.deathFx);
-        lights.draw(shapes, player, enemies, pools, time);
+        if (!settings.reduceFlashes) lights.draw(shapes, player, enemies, pools, time);
     }
 
     public void drawAuthoredDeaths(SpriteBatch batch, Pools pools) {
