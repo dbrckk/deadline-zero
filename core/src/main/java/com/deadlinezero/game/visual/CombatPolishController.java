@@ -18,6 +18,7 @@ import com.deadlinezero.game.util.Pools;
  * persistent death marks, corpses, resilient event-driven audio and accessible haptics.
  */
 public final class CombatPolishController {
+    private static Pools currentPools;
     private final CombatFeel feel = new CombatFeel();
     private final LocalLightRenderer lights = new LocalLightRenderer();
     private final DeathFxRenderer deaths;
@@ -33,6 +34,8 @@ public final class CombatPolishController {
         this.settings = settings == null ? new AccessibilitySettings() : settings;
         CombatVisualEvents.reset();
     }
+
+    static Pools currentPools() { return currentPools; }
 
     public float simulationScale(float visualDelta) {
         return settings.hitStop ? feel.consumeSimulationScale(visualDelta) : 1f;
@@ -97,11 +100,13 @@ public final class CombatPolishController {
     }
 
     public void drawWorldUnderlay(ShapeRenderer shapes, Player player, Array<Enemy> enemies, Pools pools, float time) {
+        currentPools = pools;
         deaths.drawFallback(shapes, pools.deathFx);
         if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
     }
 
     public void drawAuthoredDeaths(SpriteBatch batch, Pools pools) {
+        currentPools = pools;
         deaths.drawAuthored(batch, pools.deathFx);
     }
 
