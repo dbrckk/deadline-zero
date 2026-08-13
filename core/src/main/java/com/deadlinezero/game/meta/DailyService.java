@@ -20,9 +20,9 @@ public final class DailyService {
 
     public static void recordRun(PlayerProfile profile, int kills, boolean bossKilled) {
         if (profile == null) return;
-        profile.daily.runsToday++;
-        profile.daily.killsToday += Math.max(0, kills);
-        if (bossKilled) profile.daily.bossesToday++;
+        profile.daily.runsToday = DailyCounterMath.increment(profile.daily.runsToday);
+        profile.daily.killsToday = DailyCounterMath.addKills(profile.daily.killsToday, kills);
+        if (bossKilled) profile.daily.bossesToday = DailyCounterMath.increment(profile.daily.bossesToday);
     }
 
     public static boolean claimKillMission(PlayerProfile profile) {
