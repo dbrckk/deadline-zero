@@ -8,9 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 /** Floating left-side movement stick with keyboard fallback and stable multi-touch ownership. */
 public final class VirtualStick {
     private static final int MAX_POINTERS = 10;
+    private static VirtualStick activeInstance;
+
     private final Vector2 value = new Vector2();
     private final Vector2 origin = new Vector2();
     private int pointer = -1;
+
+    public VirtualStick() { activeInstance = this; }
 
     public Vector2 update(float worldW, float worldH) {
         float x = 0f, y = 0f;
@@ -58,4 +62,12 @@ public final class VirtualStick {
     public boolean active() { return pointer >= 0; }
     public float originX() { return origin.x; }
     public float originY() { return origin.y; }
+    public float valueX() { return value.x; }
+    public float valueY() { return value.y; }
+
+    public static boolean hudActive() { return activeInstance != null && activeInstance.active(); }
+    public static float hudOriginX() { return activeInstance == null ? 0f : activeInstance.originX(); }
+    public static float hudOriginY() { return activeInstance == null ? 0f : activeInstance.originY(); }
+    public static float hudValueX() { return activeInstance == null ? 0f : activeInstance.valueX(); }
+    public static float hudValueY() { return activeInstance == null ? 0f : activeInstance.valueY(); }
 }
