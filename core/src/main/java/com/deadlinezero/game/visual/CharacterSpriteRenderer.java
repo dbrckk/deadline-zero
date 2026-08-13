@@ -92,6 +92,31 @@ public final class CharacterSpriteRenderer {
         float g = 1f - flash * .22f;
         float b = 1f - flash * .22f;
         float scale = 1f;
+
+        if (enemy.type != Enemy.Type.BOSS) {
+            switch (enemy.variant) {
+                case SWIFT -> {
+                    r *= .72f;
+                    g *= .92f;
+                    b *= 1.00f;
+                    scale *= .94f;
+                }
+                case ARMORED -> {
+                    r *= .82f;
+                    g *= .86f;
+                    b *= .94f;
+                    scale *= 1.10f;
+                }
+                case FERAL -> {
+                    r *= 1.00f;
+                    g *= .62f;
+                    b *= .56f;
+                    scale *= 1.04f;
+                }
+                default -> { }
+            }
+        }
+
         if (enemy.type == Enemy.Type.BOSS && enemy.bossPhases != null) {
             int phase = enemy.bossPhases.phase();
             if (clock.bossPhase < 0) clock.bossPhase = phase;
