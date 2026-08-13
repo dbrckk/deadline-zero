@@ -2,10 +2,19 @@ package com.deadlinezero.game.ai;
 
 /** Runtime timers and phase-gated decisions for advanced boss actions. */
 public final class BossCombatRuntime {
+    private final boolean revenant;
     private float chargeTimer = 4.5f;
     private float summonTimer = 8.0f;
     private float enragePulseTimer = 5.0f;
     private float chargeDuration;
+
+    public BossCombatRuntime() {
+        this(false);
+    }
+
+    public BossCombatRuntime(boolean revenant) {
+        this.revenant = revenant;
+    }
 
     public void update(float dt, int phase) {
         chargeTimer -= dt;
@@ -19,23 +28,28 @@ public final class BossCombatRuntime {
 
     public boolean consumeCharge(int phase) {
         if (phase < 2 || chargeDuration > 0f || chargeTimer > 0f) return false;
-        chargeTimer = phase >= 3 ? 3.0f : 4.2f;
-        chargeDuration = phase >= 3 ? .72f : .58f;
+        chargeTimer = revenant
+            ? (phase >= 3 ? RevenantBossProfile.PHASE3_CHARGE_COOLDOWN : RevenantBossProfile.PHASE2_CHARGE_COOLDOWN)
+            : (phase >= 3 ? 3.0f : 4.2f);
+        chargeDuration = revenant ? (phase >= 3 ? .66f : .54f) : (phase >= 3 ? .72f : .58f);
         return true;
     }
 
     public boolean consumeSummon(int phase) {
         if (phase < 2 || summonTimer > 0f) return false;
-        summonTimer = phase >= 3 ? 5.2f : 8.5f;
+        summonTimer = revenant
+            ? (phase >= 3 ? RevenantBossProfile.PHASE3_SUMMON_COOLDOWN : RevenantBossProfile.PHASE2_SUMMON_COOLDOWN)
+            : (phase >= 3 ? 5.2f : 8.5f);
         return true;
     }
 
     public boolean consumeEnragePulse(int phase) {
         if (phase < 3 || enragePulseTimer > 0f) return false;
-        enragePulseTimer = 3.8f;
+        enragePulseTimer = revenant ? RevenantBossProfile.PHASE3_PULSE_COOLDOWN : 3.8f;
         return true;
     }
 
     public boolean charging() { return chargeDuration > 0f; }
     public float chargeDuration() { return chargeDuration; }
+    public boolean revenant() { return revenant; }
 }
