@@ -16,6 +16,8 @@ import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.abilities.AbilitySystem;
 import com.deadlinezero.game.abilities.AbilityType;
+import com.deadlinezero.game.ai.BossAttackPatternCatalog;
+import com.deadlinezero.game.ai.BossVariantStats;
 import com.deadlinezero.game.ai.EnemyPatternCatalog;
 import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.combat.DamageElement;
@@ -29,6 +31,7 @@ import com.deadlinezero.game.fx.ArcFx;
 import com.deadlinezero.game.fx.DamageNumber;
 import com.deadlinezero.game.fx.ImpactFx;
 import com.deadlinezero.game.input.VirtualStick;
+import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.progression.LegendaryChoice;
 import com.deadlinezero.game.progression.LegendarySelector;
 import com.deadlinezero.game.progression.Upgrade;
@@ -202,31 +205,39 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private void spawnBossMinions(Enemy boss, int phase) {
-        int count = phase >= 3 ? 6 : 3;
+        int count = boss.bossCombat == null ? (phase >= 3 ? 6 : 3) : boss.bossCombat.summonCount(phase);
+        boolean revenant = boss.bossCombat != null && boss.bossCombat.revenant();
         for (int i = 0; i < count && enemies.size < GameConfig.MAX_ENEMIES; i++) {
             float angle = i * (MathUtils.PI2 / count) + MathUtils.random(-.18f, .18f);
             float dist = 2.6f + MathUtils.random(0f, 1.2f);
             float x = boss.position.x + MathUtils.cos(angle) * dist;
             float y = boss.position.y + MathUtils.sin(angle) * dist;
             float scale = 1f + director.elapsed() / 210f;
-            Enemy.Type type = (i % 3 == 0 && phase >= 3) ? Enemy.Type.RANGED : Enemy.Type.RUNNER;
+            boolean rangedSlot = phase >= 3 && (revenant ? i % 2 == 0 : i % 3 == 0);
+            Enemy.Type type = rangedSlot ? Enemy.Type.RANGED : Enemy.Type.RUNNER;
             Enemy minion = type == Enemy.Type.RANGED
                 ? new Enemy(type, x, y, 68f * scale, 2.2f, .42f, 12f, 10)
                 : new Enemy(type, x, y, 30f * scale, 4.35f, .34f, 8f, 5);
             enemies.add(minion);
-            impact(x, y, .65f, .18f, VisualTheme.VIOLET);
+            impact(x, y, .65f, .18f, revenant ? VisualTheme.RED : VisualTheme.VIOLET);
         }
-        cameraShake = Math.max(cameraShake, .12f);
+        cameraShake = Math.max(cameraShake, revenant ? .18f : .12f);
     }
 
     private void bossEnragePulse(Enemy boss) {
-        int shots = 20;
+        int shots = boss.bossCombat == null ? 20 : boss.bossCombat.enrageShots();
+        float speed = boss.bossCombat == null ? 8.2f : boss.bossCombat.enrageProjectileSpeed();
+        int explosiveEvery = boss.bossCombat == null ? 4 : boss.bossCombat.enrageExplosiveEvery();
+        float explosionRadius = boss.bossCombat == null ? 2.0f : boss.bossCombat.enrageExplosionRadius();
         for (int i = 0; i < shots; i++) {
-            spawnHostileShot(boss.position.x, boss.position.y, i * (360f / shots), 8.2f,
-                boss.contactDamage * .65f, .24f, i % 4 == 0, 2.0f);
+            boolean explosive = explosiveEvery > 0 && i % explosiveEvery == 0;
+            spawnHostileShot(boss.position.x, boss.position.y, i * (360f / shots), speed,
+                boss.contactDamage * .65f, explosive ? .26f : .24f, explosive, explosionRadius);
         }
-        impact(boss.position.x, boss.position.y, 5.1f, .34f, VisualTheme.VIOLET);
-        cameraShake = Math.max(cameraShake, .38f);
+        boolean revenant = boss.bossCombat != null && boss.bossCombat.revenant();
+        impact(boss.position.x, boss.position.y, revenant ? 5.8f : 5.1f, .34f,
+            revenant ? VisualTheme.RED : VisualTheme.VIOLET);
+        cameraShake = Math.max(cameraShake, revenant ? .46f : .38f);
     }
 
     private void updatePlayerProjectiles(float dt) {
@@ -296,14 +307,23 @@ public final class GameScreen extends ScreenAdapter {
         }
         if (e.type == Enemy.Type.BOSS) {
             int phase = e.bossPhases == null ? 1 : e.bossPhases.phase();
-            if (phase == 1) {
-                for (int i = -2; i <= 2; i++) spawnHostileShot(e.position.x, e.position.y, aim.angleDeg() + i * 11f, 7.2f, e.contactDamage * .72f, .22f, false, 0f);
-            } else if (phase == 2) {
-                for (int i = 0; i < 10; i++) spawnHostileShot(e.position.x, e.position.y, i * 36f, 6.4f, e.contactDamage * .62f, .22f, false, 0f);
-            } else {
-                for (int i = 0; i < 14; i++) spawnHostileShot(e.position.x, e.position.y, i * (360f / 14f), 6.8f, e.contactDamage * .58f, .24f, i % 3 == 0, 2.2f);
+            boolean revenant = e.bossCombat != null && e.bossCombat.revenant();
+            BossAttackPatternCatalog.Pattern pattern = BossAttackPatternCatalog.forPhase(revenant, phase);
+            float base = aim.angleDeg();
+            for (int i = 0; i < pattern.shots(); i++) {
+                float angle = pattern.radial()
+                    ? i * pattern.spreadDegrees()
+                    : base + (i - (pattern.shots() - 1) / 2f) * pattern.spreadDegrees();
+                boolean explosive = pattern.explosiveEvery() > 0 && i % pattern.explosiveEvery() == 0;
+                spawnHostileShot(e.position.x, e.position.y, angle,
+                    7.2f * pattern.speedMultiplier(),
+                    e.contactDamage * pattern.damageMultiplier(),
+                    explosive ? .24f : .22f,
+                    explosive, explosive ? pattern.explosionRadius() : 0f);
             }
-            cameraShake = Math.max(cameraShake, .18f + phase * .05f);
+            impact(e.position.x, e.position.y, revenant ? .82f : .64f, .15f,
+                revenant ? VisualTheme.VIOLET : VisualTheme.RED);
+            cameraShake = Math.max(cameraShake, .18f + phase * .05f + (revenant ? .04f : 0f));
         }
     }
 
@@ -378,7 +398,11 @@ public final class GameScreen extends ScreenAdapter {
             case BRUTE -> new Enemy(t, x, y, 145 * scale, 1.6f, .72f, 18, 15);
             case RANGED -> new Enemy(t, x, y, 72 * scale, 2.15f, .42f, 13, 12);
             case ELITE -> new Enemy(t, x, y, 420 * scale, 2.1f, 1.05f, 28, 42);
-            case BOSS -> new Enemy(t, x, y, 2200 * scale, 1.35f, 1.65f, 24, 280);
+            case BOSS -> {
+                BossVariantStats.Stats stats = BossVariantStats.forStage(RunStageContext.stage(),
+                    2200f * scale, 1.35f, 24f);
+                yield new Enemy(t, x, y, stats.hp(), stats.speed(), 1.65f, stats.damage(), 280);
+            }
             default -> new Enemy(t, x, y, 52 * scale, 2.55f, .46f, 10, 8);
         };
         enemies.add(e);
