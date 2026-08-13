@@ -28,7 +28,11 @@ public final class CharacterSpriteRenderer {
     }
 
     private void drawPlayer(SpriteBatch batch, Player player) {
-        GameArt.Motion motion = player.velocity.len2() > .04f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
+        GameArt.Motion motion;
+        if (!player.alive) motion = GameArt.Motion.DEATH;
+        else if (player.visualHitTimer > 0f) motion = GameArt.Motion.HIT;
+        else motion = player.velocity.len2() > .04f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
+
         TextureRegion region = art.survivor(RunLoadoutContext.survivor(), motion, stateTime);
         float h = 1.65f;
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
@@ -40,18 +44,22 @@ public final class CharacterSpriteRenderer {
     }
 
     private void drawEnemy(SpriteBatch batch, Enemy enemy) {
-        GameArt.Motion motion = switch (enemy.attack.state()) {
-            case ATTACKING, TELEGRAPHING -> GameArt.Motion.ATTACK;
-            case STUNNED -> GameArt.Motion.HIT;
-            default -> enemy.velocity.len2() > .025f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
-        };
+        GameArt.Motion motion;
+        if (enemy.hitFlash > .22f || enemy.attack.state() == EnemyState.STUNNED) {
+            motion = GameArt.Motion.HIT;
+        } else if (enemy.attack.state() == EnemyState.ATTACKING || enemy.attack.state() == EnemyState.TELEGRAPHING) {
+            motion = GameArt.Motion.ATTACK;
+        } else {
+            motion = enemy.velocity.len2() > .025f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
+        }
+
         TextureRegion region = art.enemy(enemy.type, motion, stateTime + enemy.position.x * .07f + enemy.position.y * .05f);
         float h = Math.max(.95f, enemy.radius * (enemy.type == Enemy.Type.BOSS ? 3.1f : 2.55f));
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
         float flash = Math.min(1f, Math.max(0f, enemy.hitFlash));
         float facing = enemy.velocity.x < -.02f ? -1f : 1f;
-        batch.setColor(1f, 1f - flash * .32f, 1f - flash * .32f, 1f);
+        batch.setColor(1f, 1f - flash * .22f, 1f - flash * .22f, 1f);
         drawFacing(batch, region, enemy.position.x, enemy.position.y - enemy.radius * .72f, w, h, facing);
         batch.setColor(1f, 1f, 1f, 1f);
     }
