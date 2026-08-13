@@ -51,7 +51,13 @@ public final class GameArt implements Disposable {
     }
 
     public TextureRegion effect(String name, float stateTime, float frameDuration) {
-        return animated("fx/" + name, frameDuration, stateTime, false);
+        TextureRegion region = effectOrNull(name, stateTime, frameDuration);
+        return region == null ? fallbackRegion : region;
+    }
+
+    /** Returns null when an authored FX sequence is absent, preserving procedural fallback. */
+    public TextureRegion effectOrNull(String name, float stateTime, float frameDuration) {
+        return animatedOrNull("fx/" + name, frameDuration, stateTime, false);
     }
 
     public TextureRegion region(String name) {
@@ -74,12 +80,14 @@ public final class GameArt implements Disposable {
     }
 
     private TextureRegion animated(String prefix, float frameDuration, float stateTime, boolean loop) {
-        if (atlas == null) return fallbackRegion;
+        TextureRegion region = animatedOrNull(prefix, frameDuration, stateTime, loop);
+        return region == null ? fallbackRegion : region;
+    }
+
+    private TextureRegion animatedOrNull(String prefix, float frameDuration, float stateTime, boolean loop) {
+        if (atlas == null) return null;
         Array<TextureAtlas.AtlasRegion> frames = atlas.findRegions(prefix);
-        if (frames == null || frames.size == 0) {
-            TextureAtlas.AtlasRegion single = atlas.findRegion(prefix);
-            return single == null ? fallbackRegion : single;
-        }
+        if (frames == null || frames.size == 0) return atlas.findRegion(prefix);
         int rawFrame = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
         int frame = loop ? rawFrame % frames.size : Math.min(frames.size - 1, rawFrame);
         return frames.get(frame);
