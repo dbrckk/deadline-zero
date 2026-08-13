@@ -6,7 +6,7 @@ import com.deadlinezero.game.meta.RunMissionRuntime;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageMissionRules;
 
-/** Stage-aware wave pacing with readable pressure bands and short squad bursts before the boss. */
+/** Stage-aware wave pacing with readable pressure bands, squad bursts and named special encounters. */
 public final class WaveDirector {
     public enum PressureBand { OPENING, BUILD, ASSAULT, CRISIS }
 
@@ -18,10 +18,12 @@ public final class WaveDirector {
     private boolean bossSpawned;
     private final int stage = Math.max(1, RunStageContext.stage());
     private final float bossArrival = StageMissionRules.bossArrivalSeconds(stage);
+    private final RunEncounterDirector encounters = new RunEncounterDirector(stage);
 
     public void update(float dt) {
         elapsed += dt;
         spawnTimer -= dt;
+        encounters.update(dt, bossProgress());
         if (!bossSpawned && elapsed >= bossArrival) bossPending = true;
         RunMissionRuntime.update(elapsed, kills);
     }
@@ -31,7 +33,7 @@ public final class WaveDirector {
     public void onSpawn() {
         if (squadRemaining > 0) {
             squadRemaining--;
-            spawnTimer = .085f + MathUtils.random(0f, .035f);
+            spawnTimer = (.085f + MathUtils.random(0f, .035f)) * encounters.spawnIntervalMultiplier();
             return;
         }
 
@@ -43,7 +45,7 @@ public final class WaveDirector {
         };
         float stageAcceleration = Math.min(.11f, (stage - 1) * .008f);
         float lateAcceleration = Math.min(.10f, elapsed * .00055f);
-        spawnTimer = Math.max(.075f, base - stageAcceleration - lateAcceleration);
+        spawnTimer = Math.max(.065f, (base - stageAcceleration - lateAcceleration) * encounters.spawnIntervalMultiplier());
 
         float squadChance = switch (pressureBand()) {
             case OPENING -> .025f;
@@ -52,6 +54,7 @@ public final class WaveDirector {
             case CRISIS -> .12f;
         };
         squadChance = Math.min(.22f, squadChance + (stage - 1) * .008f);
+        if (encounters.activeEncounter()) squadChance = Math.min(.32f, squadChance + .08f);
         if (!bossPending && MathUtils.random() < squadChance) {
             int min = pressureBand().ordinal() >= PressureBand.ASSAULT.ordinal() ? 2 : 1;
             int max = Math.min(5, min + 1 + stage / 5);
@@ -80,6 +83,8 @@ public final class WaveDirector {
     public float secondsUntilBoss() { return Math.max(0f, bossArrival - elapsed); }
     public float bossProgress() { return MathUtils.clamp(elapsed / Math.max(1f, bossArrival), 0f, 1f); }
     public boolean bossWarning() { return !bossSpawned && secondsUntilBoss() <= 30f; }
+    public RunEncounterDirector.Type activeEncounter() { return encounters.active(); }
+    public float encounterSecondsRemaining() { return encounters.remaining(); }
 
     public PressureBand pressureBand() {
         float p = bossProgress();
@@ -93,7 +98,7 @@ public final class WaveDirector {
         if (bossPending) return Enemy.Type.BOSS;
         float r = MathUtils.random();
         float stageBias = Math.min(.14f, (stage - 1) * .012f);
-        return switch (pressureBand()) {
+        Enemy.Type fallback = switch (pressureBand()) {
             case OPENING -> {
                 if (stage >= 4 && r < .04f + stageBias * .20f) yield Enemy.Type.RANGED;
                 if (r < .24f + stageBias) yield Enemy.Type.RUNNER;
@@ -121,5 +126,6 @@ public final class WaveDirector {
                 yield Enemy.Type.SHAMBLER;
             }
         };
+        return encounters.overrideType(MathUtils.random(), fallback);
     }
 }
