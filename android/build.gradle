@@ -1,5 +1,11 @@
 plugins { id 'com.android.application' }
 
+def testAdmobAppId = 'ca-app-pub-3940256099942544~3347511713'
+def testRewardedId = 'ca-app-pub-3940256099942544/5224354917'
+def admobAppId = providers.gradleProperty('admobAppId').orElse(testAdmobAppId).get()
+def admobRewardedId = providers.gradleProperty('admobRewardedId').orElse(testRewardedId).get()
+def allowTestAds = providers.gradleProperty('allowTestAds').map { it.toBoolean() }.orElse(false)
+
 android {
     namespace 'com.deadlinezero.game.android'
     compileSdk 36
@@ -11,6 +17,8 @@ android {
         versionCode providers.gradleProperty('appVersionCode').get().toInteger()
         versionName providers.gradleProperty('appVersion').get()
         multiDexEnabled true
+        manifestPlaceholders = [admobAppId: admobAppId]
+        buildConfigField 'String', 'ADMOB_REWARDED_ID', '"' + admobRewardedId + '"'
     }
 
     compileOptions {
@@ -53,4 +61,15 @@ tasks.register('copyAndroidNatives') {
 
 tasks.configureEach { task ->
     if (task.name.contains("merge") && task.name.contains("JniLibFolders")) task.dependsOn copyAndroidNatives
+    if (task.name in ['bundleRelease', 'assembleRelease']) {
+        task.doFirst {
+            boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
+            if (usingTestIds && !allowTestAds.get()) {
+                throw new GradleException('Release build blocked: configure -PadmobAppId and -PadmobRewardedId with production AdMob IDs. Use -PallowTestAds=true only for CI build verification.')
+            }
+            if (!admobAppId.startsWith('ca-app-pub-') || !admobRewardedId.startsWith('ca-app-pub-')) {
+                throw new GradleException('Release build blocked: invalid AdMob ID format.')
+            }
+        }
+    }
 }
