@@ -4,6 +4,7 @@ import java.util.WeakHashMap;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.entities.Enemy;
@@ -15,6 +16,8 @@ public final class CharacterSpriteRenderer {
     private static final class Clock {
         GameArt.Motion motion;
         float time;
+        int bossPhase = -1;
+        float phasePulse;
     }
 
     private final GameArt art;
@@ -48,9 +51,9 @@ public final class CharacterSpriteRenderer {
             motion = player.velocity.len2() > .04f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
         }
 
-        float motionTime = clock(player, motion);
+        Clock clock = clock(player, motion);
         ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.survivor(survivor);
-        TextureRegion region = art.survivor(survivor, motion, motionTime);
+        TextureRegion region = art.survivor(survivor, motion, clock.time);
         float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
@@ -76,9 +79,9 @@ public final class CharacterSpriteRenderer {
             motion = enemy.velocity.len2() > .025f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
         }
 
-        float motionTime = clock(enemy, motion);
+        Clock clock = clock(enemy, motion);
         ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.enemy(enemy.type);
-        TextureRegion region = art.enemy(enemy.type, motion, motionTime);
+        TextureRegion region = art.enemy(enemy.type, motion, clock.time);
         float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
@@ -91,6 +94,12 @@ public final class CharacterSpriteRenderer {
         float scale = 1f;
         if (enemy.type == Enemy.Type.BOSS && enemy.bossPhases != null) {
             int phase = enemy.bossPhases.phase();
+            if (clock.bossPhase < 0) clock.bossPhase = phase;
+            else if (phase != clock.bossPhase) {
+                clock.bossPhase = phase;
+                clock.phasePulse = .42f;
+            }
+
             if (phase == 2) {
                 g *= .88f;
                 b *= .82f;
@@ -100,6 +109,14 @@ public final class CharacterSpriteRenderer {
                 b *= .78f;
                 scale = 1.055f;
             }
+
+            if (clock.phasePulse > 0f) {
+                float pulse = MathUtils.clamp(clock.phasePulse / .42f, 0f, 1f);
+                float wave = MathUtils.sin(pulse * MathUtils.PI);
+                scale *= 1f + wave * .075f;
+                g = MathUtils.lerp(g, .92f, wave * .35f);
+                b = MathUtils.lerp(b, 1f, wave * .45f);
+            }
         }
 
         batch.setColor(r, g, b, 1f);
@@ -107,21 +124,22 @@ public final class CharacterSpriteRenderer {
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
-    private float clock(Object actor, GameArt.Motion motion) {
+    private Clock clock(Object actor, GameArt.Motion motion) {
         Clock clock = clocks.get(actor);
         if (clock == null) {
             clock = new Clock();
             clock.motion = motion;
             clocks.put(actor, clock);
-            return 0f;
+            return clock;
         }
+        clock.phasePulse = Math.max(0f, clock.phasePulse - frameDelta);
         if (clock.motion != motion) {
             clock.motion = motion;
             clock.time = 0f;
         } else {
             clock.time += frameDelta;
         }
-        return clock.time;
+        return clock;
     }
 
     private void drawFacing(SpriteBatch batch, TextureRegion region, float centerX, float y, float width, float height, float facing) {
