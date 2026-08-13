@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class AndroidConsentManager {
     private final Activity activity;
     private final ConsentInformation consentInformation;
-    private final AtomicBoolean completed = new AtomicBoolean(false);
 
     public AndroidConsentManager(Activity activity) {
         this.activity = activity;
@@ -18,15 +17,16 @@ public final class AndroidConsentManager {
     }
 
     public void gatherConsent(Runnable onComplete) {
+        AtomicBoolean completed = new AtomicBoolean(false);
         ConsentRequestParameters params = new ConsentRequestParameters.Builder().build();
         consentInformation.requestConsentInfoUpdate(
             activity,
             params,
             () -> UserMessagingPlatform.loadAndShowConsentFormIfRequired(
                 activity,
-                formError -> completeOnce(onComplete)
+                formError -> completeOnce(completed, onComplete)
             ),
-            requestError -> completeOnce(onComplete)
+            requestError -> completeOnce(completed, onComplete)
         );
     }
 
@@ -45,7 +45,7 @@ public final class AndroidConsentManager {
         });
     }
 
-    private void completeOnce(Runnable onComplete) {
+    private static void completeOnce(AtomicBoolean completed, Runnable onComplete) {
         if (onComplete != null && completed.compareAndSet(false, true)) onComplete.run();
     }
 }
