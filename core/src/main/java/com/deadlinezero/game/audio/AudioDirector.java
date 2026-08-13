@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 public final class AudioDirector {
     public enum Cue { SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK }
 
+    private static AudioDirector active;
     private final ObjectMap<Cue, Sound> sounds = new ObjectMap<>();
     private Music combatMusic;
     private float master = 1f;
@@ -17,6 +18,7 @@ public final class AudioDirector {
     private float music = .65f;
 
     public AudioDirector() {
+        active = this;
         load(Cue.SHOT, "audio/sfx/shot.ogg");
         load(Cue.CRIT, "audio/sfx/crit.ogg");
         load(Cue.HIT, "audio/sfx/hit.ogg");
@@ -38,6 +40,14 @@ public final class AudioDirector {
     private void load(Cue cue, String path) {
         FileHandle file = Gdx.files.internal(path);
         if (file.exists()) sounds.put(cue, Gdx.audio.newSound(file));
+    }
+
+    public static void playGlobal(Cue cue) {
+        if (active != null) active.play(cue);
+    }
+
+    public static void playGlobal(Cue cue, float pitch, float pan) {
+        if (active != null) active.play(cue, pitch, pan);
     }
 
     public void play(Cue cue) {
@@ -74,6 +84,7 @@ public final class AudioDirector {
     private float clamp01(float v) { return Math.max(0f, Math.min(1f, v)); }
 
     public void dispose() {
+        if (active == this) active = null;
         for (Sound sound : sounds.values()) sound.dispose();
         sounds.clear();
         if (combatMusic != null) combatMusic.dispose();
