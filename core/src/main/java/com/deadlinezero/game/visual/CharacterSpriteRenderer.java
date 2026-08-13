@@ -1,5 +1,7 @@
 package com.deadlinezero.game.visual;
 
+import java.util.WeakHashMap;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -8,44 +10,47 @@ import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.meta.RunLoadoutContext;
 
-/** Draws authored character art when present. Procedural shapes remain available underneath as fallback/debug. */
+/** Draws authored character art with event-driven attacks and independent per-entity state clocks. */
 public final class CharacterSpriteRenderer {
+    private static final class Clock {
+        GameArt.Motion motion;
+        float time;
+    }
+
     private final GameArt art;
-    private float stateTime;
+    private final WeakHashMap<Object, Clock> clocks = new WeakHashMap<>();
+    private float frameDelta;
 
     public CharacterSpriteRenderer(GameArt art) { this.art = art; }
 
-    public void update(float dt) { stateTime += Math.max(0f, dt); }
+    public void update(float dt) { frameDelta = Math.max(0f, dt); }
 
     public boolean authoredAvailable() { return art.authoredAvailable(); }
 
     public void draw(SpriteBatch batch, Player player, Array<Enemy> enemies) {
         if (!art.authoredAvailable()) return;
-        boolean hasTarget = false;
-        for (Enemy enemy : enemies) {
-            if (enemy.alive) { hasTarget = true; break; }
-        }
         batch.begin();
-        drawPlayer(batch, player, hasTarget);
+        drawPlayer(batch, player);
         for (Enemy enemy : enemies) if (enemy.alive) drawEnemy(batch, enemy);
         batch.end();
     }
 
-    private void drawPlayer(SpriteBatch batch, Player player, boolean hasTarget) {
+    private void drawPlayer(SpriteBatch batch, Player player) {
+        var survivor = RunLoadoutContext.survivor();
         GameArt.Motion motion;
         if (!player.alive) {
             motion = GameArt.Motion.DEATH;
         } else if (player.visualHitTimer > 0f) {
             motion = GameArt.Motion.HIT;
-        } else if (hasTarget && attackWindow(player)) {
+        } else if (playerAttackWindow(survivor)) {
             motion = GameArt.Motion.ATTACK;
         } else {
             motion = player.velocity.len2() > .04f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
         }
 
-        var survivor = RunLoadoutContext.survivor();
+        float motionTime = clock(player, motion);
         ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.survivor(survivor);
-        TextureRegion region = art.survivor(survivor, motion, stateTime);
+        TextureRegion region = art.survivor(survivor, motion, motionTime);
         float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
@@ -55,10 +60,10 @@ public final class CharacterSpriteRenderer {
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
-    private boolean attackWindow(Player player) {
-        float cadence = Math.max(.06f, player.weapon.fireInterval);
-        float attackDuration = Math.min(.13f, cadence * .60f);
-        return stateTime % cadence < attackDuration;
+    private boolean playerAttackWindow(com.deadlinezero.game.meta.SurvivorCatalog.Survivor survivor) {
+        float frame = AnimationProfileCatalog.survivor(survivor).attack();
+        float window = Math.max(.085f, Math.min(.18f, frame * 2.5f));
+        return CombatVisualEvents.playerShotAgeSeconds() <= window;
     }
 
     private void drawEnemy(SpriteBatch batch, Enemy enemy) {
@@ -71,8 +76,9 @@ public final class CharacterSpriteRenderer {
             motion = enemy.velocity.len2() > .025f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
         }
 
+        float motionTime = clock(enemy, motion);
         ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.enemy(enemy.type);
-        TextureRegion region = art.enemy(enemy.type, motion, stateTime + enemy.position.x * .07f + enemy.position.y * .05f);
+        TextureRegion region = art.enemy(enemy.type, motion, motionTime);
         float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
@@ -86,12 +92,10 @@ public final class CharacterSpriteRenderer {
         if (enemy.type == Enemy.Type.BOSS && enemy.bossPhases != null) {
             int phase = enemy.bossPhases.phase();
             if (phase == 2) {
-                r = 1f;
                 g *= .88f;
                 b *= .82f;
                 scale = 1.025f;
             } else if (phase >= 3) {
-                r = 1f;
                 g *= .70f;
                 b *= .78f;
                 scale = 1.055f;
@@ -101,6 +105,23 @@ public final class CharacterSpriteRenderer {
         batch.setColor(r, g, b, 1f);
         drawFacing(batch, region, enemy.position.x, enemy.position.y - profile.footOffset(), w * scale, h * scale, facing);
         batch.setColor(1f, 1f, 1f, 1f);
+    }
+
+    private float clock(Object actor, GameArt.Motion motion) {
+        Clock clock = clocks.get(actor);
+        if (clock == null) {
+            clock = new Clock();
+            clock.motion = motion;
+            clocks.put(actor, clock);
+            return 0f;
+        }
+        if (clock.motion != motion) {
+            clock.motion = motion;
+            clock.time = 0f;
+        } else {
+            clock.time += frameDelta;
+        }
+        return clock.time;
     }
 
     private void drawFacing(SpriteBatch batch, TextureRegion region, float centerX, float y, float width, float height, float facing) {
