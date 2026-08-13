@@ -51,6 +51,16 @@ public final class BossCombatRuntime {
         return true;
     }
 
+    public int summonCount(int phase) {
+        if (!revenant) return phase >= 3 ? 6 : 3;
+        return phase >= 3 ? 8 : 4;
+    }
+
+    public int enrageShots() { return revenant ? 24 : 20; }
+    public float enrageProjectileSpeed() { return revenant ? 9.0f : 8.2f; }
+    public int enrageExplosiveEvery() { return revenant ? 3 : 4; }
+    public float enrageExplosionRadius() { return revenant ? 2.15f : 2.0f; }
+
     public boolean charging() { return chargeDuration > 0f; }
     public float chargeDuration() { return chargeDuration; }
     public boolean revenant() { return revenant; }
