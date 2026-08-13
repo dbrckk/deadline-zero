@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -54,12 +53,17 @@ public final class GameArt implements Disposable {
     }
 
     public TextureRegion region(String name) {
-        if (atlas != null) {
-            TextureAtlas.AtlasRegion region = atlas.findRegion(name);
-            if (region != null) return region;
-        }
-        return fallbackRegion;
+        TextureRegion region = regionOrNull(name);
+        return region == null ? fallbackRegion : region;
     }
+
+    /** Returns null instead of fallback when an authored region is absent. */
+    public TextureRegion regionOrNull(String name) {
+        if (atlas == null) return null;
+        return atlas.findRegion(name);
+    }
+
+    public boolean hasRegion(String name) { return regionOrNull(name) != null; }
 
     private TextureRegion animated(String prefix, float frameDuration, float stateTime) {
         if (atlas == null) return fallbackRegion;
