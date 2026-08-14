@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * Maps the compact legacy bootstrap art sheet to the production naming contract.
- * Final atlas regions and the directional vertical-slice texture take priority.
+ * Final atlas regions and the generated bootstrap textures take priority.
  */
 public final class BootstrapArtCatalog {
     static final int TILE = 64;
@@ -45,6 +45,8 @@ public final class BootstrapArtCatalog {
         if (key.startsWith("enemy/boss/")) return 9;
         if (key.startsWith("boss/alpha/")) return 9;
         if (key.startsWith("boss/revenant/")) return 10;
+        if (key.startsWith("boss/warden/")) return 6;
+        if (key.startsWith("boss/harvester/")) return 12;
 
         if (key.equals("weapon/ar9")) return 11;
         if (key.equals("weapon/scattergun")) return 12;
@@ -53,6 +55,8 @@ public final class BootstrapArtCatalog {
         if (key.equals("weapon/cryo_lance")) return 13;
         if (key.equals("weapon/arc_carbine")) return 14;
         if (key.equals("weapon/breacher")) return 11;
+        if (key.equals("weapon/ion_needle")) return 14;
+        if (key.equals("weapon/cinder_cannon")) return 12;
 
         if (key.equals("fx/muzzle_fire") || key.equals("fx/impact_fire") || key.equals("fx/boss_explosion")) return 12;
         if (key.equals("fx/impact_frost") || key.equals("fx/dash") || key.equals("fx/impact_energy")) return 13;
