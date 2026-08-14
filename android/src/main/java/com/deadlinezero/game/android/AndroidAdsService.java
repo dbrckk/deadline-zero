@@ -1,6 +1,7 @@
 package com.deadlinezero.game.android;
 
 import android.app.Activity;
+import com.badlogic.gdx.Gdx;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
@@ -13,8 +14,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class AndroidAdsService implements AdsService {
     private final Activity activity;
     private final AndroidConsentManager consent;
-    private RewardedAd ad;
-    private boolean loading;
+    private volatile RewardedAd ad;
+    private volatile boolean loading;
 
     public AndroidAdsService(Activity activity) {
         this(activity, null);
@@ -62,7 +63,7 @@ public final class AndroidAdsService implements AdsService {
         activity.runOnUiThread(() -> {
             if (!canRequestAds() || ad == null) {
                 load();
-                unavailable.run();
+                dispatchToGameThread(unavailable);
                 return;
             }
 
@@ -73,18 +74,27 @@ public final class AndroidAdsService implements AdsService {
             showing.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override public void onAdDismissedFullScreenContent() {
                     load();
-                    if (completed.compareAndSet(false, true)) unavailable.run();
+                    if (completed.compareAndSet(false, true)) dispatchToGameThread(unavailable);
                 }
 
                 @Override public void onAdFailedToShowFullScreenContent(AdError error) {
                     load();
-                    if (completed.compareAndSet(false, true)) unavailable.run();
+                    if (completed.compareAndSet(false, true)) dispatchToGameThread(unavailable);
                 }
             });
 
             showing.show(activity, item -> {
-                if (completed.compareAndSet(false, true)) earned.run();
+                if (completed.compareAndSet(false, true)) dispatchToGameThread(earned);
             });
         });
+    }
+
+    private void dispatchToGameThread(Runnable callback) {
+        if (callback == null) return;
+        if (Gdx.app != null) {
+            Gdx.app.postRunnable(callback);
+        } else {
+            activity.runOnUiThread(callback);
+        }
     }
 }
