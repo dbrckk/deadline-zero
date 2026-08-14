@@ -59,7 +59,7 @@ public final class SettingsScreen extends ScreenAdapter {
         font.draw(batch, "SETTINGS", 0, h * .91f, w, Align.center, false);
         font.getData().setScale(.55f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "UP/DOWN SELECT  •  LEFT/RIGHT ADJUST  •  ENTER ACTIVATE  •  ESC BACK", 0, h * .855f, w, Align.center, false);
+        font.draw(batch, "TAP TO ADJUST  •  TAP TOP-LEFT TO GO BACK", 0, h * .855f, w, Align.center, false);
 
         for (int i = 0; i < labels.length; i++) {
             float y = startY - i * step;
@@ -70,28 +70,75 @@ public final class SettingsScreen extends ScreenAdapter {
             font.draw(batch, values[i], w * .58f, y, w * .20f, Align.right, false);
         }
         batch.end();
-        handleInput(s, privacyRequired);
+        handleInput(s, privacyRequired, w, h, startY, step);
     }
 
-    private void handleInput(AccessibilitySettings s, boolean privacyRequired) {
+    private void handleInput(AccessibilitySettings s, boolean privacyRequired,
+                             float w, float h, float startY, float step) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) { saveAndBack(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) row = Math.max(0, row - 1);
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) row = Math.min(LAST_ROW, row + 1);
+
+        if (Gdx.input.justTouched()) {
+            float x = Gdx.input.getX();
+            float y = h - Gdx.input.getY();
+            if (x <= w * .24f && y >= h * .86f) {
+                saveAndBack();
+                return;
+            }
+            int touchedRow = Math.round((startY - y) / step);
+            if (touchedRow >= 0 && touchedRow <= LAST_ROW
+                && Math.abs(y - (startY - touchedRow * step)) <= Math.max(22f, step * .48f)) {
+                row = touchedRow;
+                if (row == PRIVACY_ROW) {
+                    if (privacyRequired) openPrivacy();
+                    return;
+                }
+                if (isSliderRow(row)) {
+                    setSliderFromTouch(s, row, x, w);
+                } else {
+                    applyAdjustment(s, 1f);
+                }
+                persistSettings(s);
+                return;
+            }
+        }
+
         boolean left = Gdx.input.isKeyJustPressed(Input.Keys.LEFT);
         boolean right = Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER);
         if (!left && !right) return;
 
         if (row == PRIVACY_ROW) {
-            if (right && privacyRequired) {
-                AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
-                game.services.privacy.showOptions(() -> Gdx.app.postRunnable(
-                    () -> AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK)
-                ));
-            }
+            if (right && privacyRequired) openPrivacy();
             return;
         }
 
-        float dir = right ? 1f : -1f;
+        applyAdjustment(s, right ? 1f : -1f);
+        persistSettings(s);
+    }
+
+    private void openPrivacy() {
+        AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+        game.services.privacy.showOptions(() -> Gdx.app.postRunnable(
+            () -> AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK)
+        ));
+    }
+
+    private void setSliderFromTouch(AccessibilitySettings s, int targetRow, float x, float w) {
+        float left = w * .55f;
+        float right = w * .80f;
+        float t = clamp((x - left) / Math.max(1f, right - left), 0f, 1f);
+        switch (targetRow) {
+            case 1 -> s.screenShakeStrength = t;
+            case 7 -> s.uiScale = .85f + t * .50f;
+            case 8 -> s.masterVolume = t;
+            case 9 -> s.sfxVolume = t;
+            case 10 -> s.musicVolume = t;
+            default -> { }
+        }
+    }
+
+    private void applyAdjustment(AccessibilitySettings s, float dir) {
         switch (row) {
             case 0 -> s.screenShake = !s.screenShake;
             case 1 -> s.screenShakeStrength = clamp(s.screenShakeStrength + dir * .1f, 0f, 1f);
@@ -104,10 +151,18 @@ public final class SettingsScreen extends ScreenAdapter {
             case 8 -> s.masterVolume = clamp(s.masterVolume + dir * .05f, 0f, 1f);
             case 9 -> s.sfxVolume = clamp(s.sfxVolume + dir * .05f, 0f, 1f);
             case 10 -> s.musicVolume = clamp(s.musicVolume + dir * .05f, 0f, 1f);
+            default -> { }
         }
+    }
+
+    private void persistSettings(AccessibilitySettings s) {
         s.save();
         game.audio.setVolumes(s.masterVolume, s.sfxVolume, s.musicVolume);
         AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+    }
+
+    private static boolean isSliderRow(int value) {
+        return value == 1 || value == 7 || value == 8 || value == 9 || value == 10;
     }
 
     private void saveAndBack() {
