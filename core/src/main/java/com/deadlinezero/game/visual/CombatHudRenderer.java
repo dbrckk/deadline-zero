@@ -15,6 +15,7 @@ import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.input.MobileCombatInput;
 import com.deadlinezero.game.input.VirtualStick;
 import com.deadlinezero.game.meta.OnboardingState;
+import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.world.RunEncounterDirector;
 import com.deadlinezero.game.world.WaveDirector;
@@ -139,6 +140,13 @@ public final class CombatHudRenderer {
         font.draw(batch, "LV " + player.level, w * .355f, h - 67f * s);
         font.draw(batch, "KILLS  " + director.kills(), w - 176f * s, h - 42f * s);
         font.draw(batch, "STAGE " + RunStageContext.stage(), 28f * s, h - 100f * s);
+        if (RunModifierContext.active()) {
+            font.getData().setScale(.48f * s);
+            font.setColor(VisualTheme.GOLD);
+            font.draw(batch, "CONTRACT  " + RunModifierContext.title() + "  //  +" + RunModifierContext.rewardBonusPercent() + "%",
+                28f * s, h - 122f * s, w * .30f, Align.left, false);
+            font.getData().setScale(.68f * s);
+        }
 
         boolean contrast = AccessibilitySettings.active().highContrastTelegraphs;
         Enemy boss = findBoss(enemies);
