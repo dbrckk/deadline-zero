@@ -29,6 +29,9 @@ public interface BillingService {
     /** Current store lifecycle state. Implementations without a platform store remain READY/no-op. */
     default State state() { return State.READY; }
 
+    /** True only when owns() reflects a completed authoritative store query. */
+    default boolean authoritativeEntitlements() { return false; }
+
     /** Product associated with an active or pending purchase, or an empty string when none exists. */
     default String activeProductId() { return ""; }
 
