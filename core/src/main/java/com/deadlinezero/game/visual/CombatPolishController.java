@@ -197,8 +197,19 @@ public final class CombatPolishController {
 
         for (ArenaHazardRuntime.Hazard hazard : hazards.hazards()) {
             boolean warning = hazard.phase() == ArenaHazardRuntime.Phase.WARNING;
-            float pulse = .5f + .5f * MathUtils.sin(time * (hazard.type() == ArenaHazardRuntime.Type.DEATH_BURST ? 18f : 12f));
             float flashScale = settings.reduceFlashes ? .55f : 1f;
+            if (FoundryHazardPresentation.isFoundry(hazard.type())) {
+                FoundryHazardPresentation.Profile profile = FoundryHazardPresentation.forType(hazard.type());
+                if (hazard.consumeActivationCue()) {
+                    float pitch = hazard.type() == ArenaHazardRuntime.Type.STEAM_JET ? 1.10f
+                        : hazard.type() == ArenaHazardRuntime.Type.HEAT_LINE ? 1.02f : .88f;
+                    AudioDirector.playGlobal(profile.cue, pitch, 0f);
+                }
+                drawFoundryHazard(shapes, hazard, profile, warning, time, flashScale);
+                continue;
+            }
+
+            float pulse = .5f + .5f * MathUtils.sin(time * (hazard.type() == ArenaHazardRuntime.Type.DEATH_BURST ? 18f : 12f));
             if (warning) {
                 float urgency = 1f - hazard.warningFraction();
                 float alpha = (.08f + urgency * .12f + pulse * .04f) * flashScale;
@@ -221,6 +232,64 @@ public final class CombatPolishController {
                 shapes.setColor(1f, .82f, .26f, .30f * flashScale);
                 shapes.circle(hazard.x(), hazard.y(), hazard.radius() * .34f, 24);
             }
+        }
+    }
+
+    private void drawFoundryHazard(ShapeRenderer shapes, ArenaHazardRuntime.Hazard hazard,
+                                   FoundryHazardPresentation.Profile profile, boolean warning,
+                                   float time, float flashScale) {
+        float pulse = .5f + .5f * MathUtils.sin(time * profile.pulseSpeed);
+        float urgency = warning ? 1f - hazard.warningFraction() : 1f;
+        int segments = fxBudget.geometrySegments(40, 22);
+        float r = warning ? profile.warningR : profile.activeR;
+        float g = warning ? profile.warningG : profile.activeG;
+        float b = warning ? profile.warningB : profile.activeB;
+        float alpha = (warning ? .10f + urgency * .16f + pulse * .04f : .34f + pulse * .12f) * flashScale;
+        float radius = hazard.radius() * (warning ? 1f + pulse * .035f : 1f);
+
+        shapes.setColor(r, g, b, alpha);
+        shapes.circle(hazard.x(), hazard.y(), radius, segments);
+
+        switch (hazard.type()) {
+            case LAVA_VENT -> {
+                shapes.setColor(1f, .70f, .10f, (warning ? .16f + urgency * .24f : .48f) * flashScale);
+                shapes.circle(hazard.x(), hazard.y(), hazard.radius() * (.24f + pulse * .06f), segments / 2);
+                int spokes = fxBudget.allowHeavyFx() ? profile.spokes : 4;
+                for (int i = 0; i < spokes; i++) {
+                    float angle = i * (360f / spokes) + pulse * 18f;
+                    float inner = hazard.radius() * .26f;
+                    float outer = hazard.radius() * (.68f + .12f * MathUtils.sinDeg(angle * 3f + time * 90f));
+                    shapes.setColor(1f, .34f, .03f, (warning ? .20f : .52f) * flashScale);
+                    shapes.rectLine(
+                        hazard.x() + MathUtils.cosDeg(angle) * inner,
+                        hazard.y() + MathUtils.sinDeg(angle) * inner,
+                        hazard.x() + MathUtils.cosDeg(angle + 7f) * outer,
+                        hazard.y() + MathUtils.sinDeg(angle + 7f) * outer,
+                        warning ? .035f : .07f);
+                }
+            }
+            case STEAM_JET -> {
+                shapes.setColor(.92f, .97f, 1f, (warning ? .22f + urgency * .22f : .58f) * flashScale);
+                shapes.circle(hazard.x(), hazard.y(), hazard.radius() * (.18f + pulse * .05f), segments / 2);
+                int jets = fxBudget.allowHeavyFx() ? profile.spokes : 3;
+                for (int i = 0; i < jets; i++) {
+                    float offset = (i - (jets - 1) * .5f) * hazard.radius() * .18f;
+                    float length = hazard.radius() * (warning ? .58f + urgency * .20f : .95f + pulse * .16f);
+                    shapes.setColor(.82f, .93f, 1f, (warning ? .16f : .38f) * flashScale);
+                    shapes.rectLine(hazard.x() + offset, hazard.y() - hazard.radius() * .18f,
+                        hazard.x() + offset * .72f, hazard.y() + length, warning ? .035f : .075f);
+                }
+            }
+            case HEAT_LINE -> {
+                float band = hazard.radius() * (warning ? .12f + urgency * .05f : .22f);
+                shapes.setColor(1f, .80f, .18f, (warning ? .18f + urgency * .24f : .52f) * flashScale);
+                shapes.rectLine(hazard.x() - hazard.radius() * .78f, hazard.y(),
+                    hazard.x() + hazard.radius() * .78f, hazard.y(), band);
+                shapes.setColor(1f, .32f, .04f, (warning ? .12f : .34f) * flashScale);
+                shapes.rectLine(hazard.x(), hazard.y() - hazard.radius() * .78f,
+                    hazard.x(), hazard.y() + hazard.radius() * .78f, band * .58f);
+            }
+            default -> { }
         }
     }
 
