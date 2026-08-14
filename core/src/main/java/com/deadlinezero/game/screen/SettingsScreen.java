@@ -16,7 +16,8 @@ import com.deadlinezero.game.visual.VisualTheme;
 /** Lightweight production settings screen with persistent accessibility, audio and privacy controls. */
 public final class SettingsScreen extends ScreenAdapter {
     private static final int PRIVACY_ROW = 11;
-    private static final int LAST_ROW = PRIVACY_ROW;
+    private static final int POLICY_ROW = 12;
+    private static final int LAST_ROW = POLICY_ROW;
 
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
@@ -32,12 +33,13 @@ public final class SettingsScreen extends ScreenAdapter {
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
         AccessibilitySettings s = game.accessibility;
         boolean privacyRequired = game.services.privacy.optionsRequired();
+        boolean policyAvailable = game.services.privacy.policyAvailable();
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(VisualTheme.PANEL); shapes.rect(w * .14f, h * .10f, w * .72f, h * .75f);
+        shapes.setColor(VisualTheme.PANEL); shapes.rect(w * .14f, h * .08f, w * .72f, h * .77f);
         shapes.setColor(VisualTheme.CYAN); shapes.rect(w * .14f, h * .84f, w * .72f, 3f);
         float startY = h * .72f;
-        float step = h * .055f;
+        float step = h * .052f;
         shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .13f);
         shapes.rect(w * .18f, startY - row * step - 24f, w * .64f, 36f);
         shapes.end();
@@ -45,13 +47,14 @@ public final class SettingsScreen extends ScreenAdapter {
         String[] labels = {
             "Screen shake", "Shake strength", "Hit stop", "Damage flash", "High contrast telegraphs",
             "Reduce flashes", "Haptics", "UI scale", "Master volume", "SFX volume", "Music volume",
-            "Privacy choices"
+            "Privacy choices", "Privacy policy"
         };
         String[] values = {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
             onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), pct(s.uiScale),
             pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
-            privacyRequired ? "OPEN" : "NOT REQUIRED"
+            privacyRequired ? "OPEN" : "NOT REQUIRED",
+            policyAvailable ? "OPEN" : "UNAVAILABLE"
         };
 
         batch.begin();
@@ -63,17 +66,17 @@ public final class SettingsScreen extends ScreenAdapter {
 
         for (int i = 0; i < labels.length; i++) {
             float y = startY - i * step;
-            boolean disabled = i == PRIVACY_ROW && !privacyRequired;
+            boolean disabled = (i == PRIVACY_ROW && !privacyRequired) || (i == POLICY_ROW && !policyAvailable);
             font.setColor(disabled ? VisualTheme.MUTED : (i == row ? VisualTheme.CYAN : VisualTheme.TEXT));
             font.draw(batch, labels[i], w * .20f, y);
             font.setColor(disabled ? VisualTheme.MUTED : (i == row ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED));
             font.draw(batch, values[i], w * .58f, y, w * .20f, Align.right, false);
         }
         batch.end();
-        handleInput(s, privacyRequired, w, h, startY, step);
+        handleInput(s, privacyRequired, policyAvailable, w, h, startY, step);
     }
 
-    private void handleInput(AccessibilitySettings s, boolean privacyRequired,
+    private void handleInput(AccessibilitySettings s, boolean privacyRequired, boolean policyAvailable,
                              float w, float h, float startY, float step) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) { saveAndBack(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) row = Math.max(0, row - 1);
@@ -94,6 +97,10 @@ public final class SettingsScreen extends ScreenAdapter {
                     if (privacyRequired) openPrivacy();
                     return;
                 }
+                if (row == POLICY_ROW) {
+                    if (policyAvailable) openPolicy();
+                    return;
+                }
                 if (isSliderRow(row)) {
                     setSliderFromTouch(s, row, x, w);
                 } else {
@@ -112,6 +119,10 @@ public final class SettingsScreen extends ScreenAdapter {
             if (right && privacyRequired) openPrivacy();
             return;
         }
+        if (row == POLICY_ROW) {
+            if (right && policyAvailable) openPolicy();
+            return;
+        }
 
         applyAdjustment(s, right ? 1f : -1f);
         persistSettings(s);
@@ -122,6 +133,11 @@ public final class SettingsScreen extends ScreenAdapter {
         game.services.privacy.showOptions(() -> Gdx.app.postRunnable(
             () -> AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK)
         ));
+    }
+
+    private void openPolicy() {
+        AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+        game.services.privacy.openPolicy();
     }
 
     private void setSliderFromTouch(AccessibilitySettings s, int targetRow, float x, float w) {
