@@ -47,7 +47,22 @@ public final class GameArt implements Disposable {
     public TextureRegion enemy(Enemy.Type type, Motion motion, float stateTime) {
         String prefix = "enemy/" + type.name().toLowerCase() + "/" + motion.name().toLowerCase();
         float frameDuration = AnimationProfileCatalog.enemy(type).duration(motion);
-        return animated(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
+        TextureRegion region = animatedOrNull(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
+        if (region != null) return region;
+
+        Enemy.Type readableFallback = switch (type) {
+            case SHIELDED -> Enemy.Type.BRUTE;
+            case REGENERATOR -> Enemy.Type.SHAMBLER;
+            case PHANTOM -> Enemy.Type.RUNNER;
+            default -> null;
+        };
+        if (readableFallback != null) {
+            String fallbackPrefix = "enemy/" + readableFallback.name().toLowerCase() + "/" + motion.name().toLowerCase();
+            float fallbackDuration = AnimationProfileCatalog.enemy(readableFallback).duration(motion);
+            region = animatedOrNull(fallbackPrefix, fallbackDuration, stateTime, AnimationProfileCatalog.loops(motion));
+            if (region != null) return region;
+        }
+        return fallbackRegion;
     }
 
     /** Uses dedicated boss identity art when present, falling back to the generic BOSS authored set. */
