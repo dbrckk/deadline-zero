@@ -3,16 +3,20 @@ package com.deadlinezero.game.visual;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Disposable;
 
 /** Draws deterministic authored environment tiles and set dressing behind combat. */
-public final class EnvironmentSpriteRenderer {
+public final class EnvironmentSpriteRenderer implements Disposable {
     private static final float TILE_WORLD = 4f;
     private final GameArt art;
+    private final BootstrapEnvironmentArt bootstrap;
 
-    public EnvironmentSpriteRenderer(GameArt art) { this.art = art; }
+    public EnvironmentSpriteRenderer(GameArt art) {
+        this.art = art;
+        this.bootstrap = BootstrapEnvironmentArt.create();
+    }
 
     public void render(SpriteBatch batch, OrthographicCamera cam) {
-        if (!art.authoredAvailable()) return;
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
         drawFloor(batch);
@@ -25,12 +29,12 @@ public final class EnvironmentSpriteRenderer {
             for (int gx = -10; gx < 10; gx++) {
                 int variant = Math.floorMod(gx * 31 + gy * 17, 3);
                 String key = "environment/floor/concrete_" + (char)('a' + variant);
-                TextureRegion region = art.regionOrNull(key);
+                TextureRegion region = region(key);
                 if (region == null) continue;
                 batch.draw(region, gx * TILE_WORLD, gy * TILE_WORLD, TILE_WORLD, TILE_WORLD);
             }
         }
-        TextureRegion hazard = art.regionOrNull("environment/floor/hazard_a");
+        TextureRegion hazard = region("environment/floor/hazard_a");
         if (hazard != null) {
             for (int x = -8; x <= 8; x += 4) batch.draw(hazard, x, -2f, 4f, 4f);
         }
@@ -48,7 +52,14 @@ public final class EnvironmentSpriteRenderer {
     }
 
     private void draw(SpriteBatch batch, String key, float x, float y, float w, float h) {
-        TextureRegion region = art.regionOrNull(key);
+        TextureRegion region = region(key);
         if (region != null) batch.draw(region, x, y, w, h);
     }
+
+    private TextureRegion region(String key) {
+        TextureRegion finalOrLegacy = art.regionOrNull(key);
+        return finalOrLegacy != null ? finalOrLegacy : bootstrap.region(key);
+    }
+
+    @Override public void dispose() { bootstrap.dispose(); }
 }
