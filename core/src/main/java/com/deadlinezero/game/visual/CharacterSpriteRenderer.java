@@ -94,6 +94,7 @@ public final class CharacterSpriteRenderer {
         float r = 1f;
         float g = 1f - flash * .22f;
         float b = 1f - flash * .22f;
+        float alpha = 1f;
         float scale = 1f;
 
         if (enemy.type != Enemy.Type.BOSS) {
@@ -118,6 +119,32 @@ public final class CharacterSpriteRenderer {
                 }
                 default -> { }
             }
+        }
+
+        switch (enemy.type) {
+            case SHIELDED -> {
+                float shield = enemy.shieldFraction();
+                r *= .58f + shield * .12f;
+                g *= .78f + shield * .18f;
+                b *= 1.08f;
+                scale *= 1.08f;
+            }
+            case REGENERATOR -> {
+                float pulse = .5f + .5f * MathUtils.sin(enemy.variantTime * 4.6f);
+                r *= .62f;
+                g *= .90f + pulse * .08f;
+                b *= .58f;
+                scale *= 1f + pulse * .025f;
+            }
+            case PHANTOM -> {
+                float pulse = .5f + .5f * MathUtils.sin(enemy.variantTime * 10f);
+                r *= .72f;
+                g *= .72f + pulse * .10f;
+                b *= 1.12f;
+                alpha = enemy.phased() ? .48f : .86f + pulse * .12f;
+                scale *= enemy.phased() ? .94f : 1f;
+            }
+            default -> { }
         }
 
         if (enemy.reactionFlash > 0f && enemy.lastReaction != Enemy.ElementReaction.NONE) {
@@ -193,7 +220,7 @@ public final class CharacterSpriteRenderer {
             }
         }
 
-        batch.setColor(r, g, b, 1f);
+        batch.setColor(MathUtils.clamp(r, 0f, 1f), MathUtils.clamp(g, 0f, 1f), MathUtils.clamp(b, 0f, 1f), alpha);
         drawFacing(batch, region, enemy.position.x, enemy.position.y - profile.footOffset(), w * scale, h * scale, facing);
         batch.setColor(1f, 1f, 1f, 1f);
     }
