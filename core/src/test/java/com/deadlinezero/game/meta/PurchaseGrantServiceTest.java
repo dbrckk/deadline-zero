@@ -38,6 +38,25 @@ public final class PurchaseGrantServiceTest {
         assertEquals(1_700L, profile.currency(PlayerProfile.Currency.GEMS));
     }
 
+    @Test public void sameConsumableReceiptCanOnlyBeGrantedOnce() {
+        PlayerProfile profile = new PlayerProfile();
+        String receipt = "play-token-123";
+
+        assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));
+        assertEquals(250L, profile.currency(PlayerProfile.Currency.GEMS));
+        assertTrue(profile.hasDeliveredPurchaseReceipt(receipt));
+
+        assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));
+        assertEquals(250L, profile.currency(PlayerProfile.Currency.GEMS));
+    }
+
+    @Test public void differentConsumableReceiptsStillStack() {
+        PlayerProfile profile = new PlayerProfile();
+        assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "receipt-a"));
+        assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "receipt-b"));
+        assertEquals(500L, profile.currency(PlayerProfile.Currency.GEMS));
+    }
+
     @Test public void restoreOnlyRehydratesPermanentEntitlements() {
         PlayerProfile profile = new PlayerProfile();
         FakeBilling billing = new FakeBilling(BillingService.REMOVE_ADS, BillingService.STARTER_PACK, BillingService.GEMS_LARGE);
