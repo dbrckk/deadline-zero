@@ -114,7 +114,8 @@ public final class DeadlineZeroGame extends Game {
     }
 
     public void finishRun(int kills, float secondsSurvived, boolean bossKilled, int ignoredStage) {
-        finishRunInternal(kills, secondsSurvived, bossKilled, false);
+        boolean objectiveComplete = bossKilled && RunMissionRuntime.bossKills() >= RunMissionRuntime.requiredBossKills();
+        finishRunInternal(kills, secondsSurvived, objectiveComplete, false);
     }
 
     private void finishRunInternal(int kills, float secondsSurvived, boolean bossKilled, boolean victorySignal) {
