@@ -1,6 +1,7 @@
 package com.deadlinezero.game.meta;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,9 +24,21 @@ final class RunModifierContextTest {
         assertEquals(first, RunModifierContext.modifier());
     }
 
-    @Test void rotationExposesEveryContractAcrossRunHistory() {
+    @Test void consecutiveRunsNeverRepeatTheSameContract() {
+        RunModifierContext.Modifier previous = null;
+        for (int ordinal = 0; ordinal < 40; ordinal++) {
+            RunStageContext.begin(9, ordinal);
+            RunModifierContext.begin();
+            RunModifierContext.Modifier current = RunModifierContext.modifier();
+            if (previous != null) assertNotEquals(previous, current);
+            previous = current;
+            RunModifierContext.end();
+        }
+    }
+
+    @Test void rotationExposesEveryContractWithinFiveRuns() {
         EnumSet<RunModifierContext.Modifier> seen = EnumSet.noneOf(RunModifierContext.Modifier.class);
-        for (int ordinal = 0; ordinal < 80; ordinal++) {
+        for (int ordinal = 0; ordinal < 5; ordinal++) {
             RunStageContext.begin(9, ordinal);
             RunModifierContext.begin();
             seen.add(RunModifierContext.modifier());
