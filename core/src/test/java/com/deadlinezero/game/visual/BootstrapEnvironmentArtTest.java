@@ -35,4 +35,18 @@ final class BootstrapEnvironmentArtTest {
         assertTrue(BootstrapEnvironmentArt.indexOf("environment/prop/debris_a") >= 0);
         assertTrue(BootstrapEnvironmentArt.indexOf("environment/prop/debris_b") >= 0);
     }
+
+    @Test void floorVariationIsStableAndCoversAllConcreteTiles() {
+        boolean[] seen = new boolean[3];
+        for (int y = -6; y < 6; y++) {
+            for (int x = -10; x < 10; x++) {
+                int first = EnvironmentRenderer.floorVariant(x, y);
+                int second = EnvironmentRenderer.floorVariant(x, y);
+                assertEquals(first, second);
+                assertTrue(first >= 0 && first < 3);
+                seen[first] = true;
+            }
+        }
+        assertTrue(seen[0] && seen[1] && seen[2]);
+    }
 }
