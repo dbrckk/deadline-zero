@@ -40,6 +40,13 @@ public final class BossAttackPatternCatalog {
                 default -> new Pattern(24, 15f, 1.20f, .50f, 4, 1.85f, true);
             };
         }
+        if (safeIdentity == BossIdentity.NULL_ARCHON) {
+            return switch (safePhase) {
+                case 1 -> new Pattern(8, 9f, 1.22f, .58f, 0, 0f, false);
+                case 2 -> new Pattern(18, 20f, 1.18f, .52f, 6, 1.55f, true);
+                default -> new Pattern(30, 12f, 1.26f, .46f, 5, 1.75f, true);
+            };
+        }
         return switch (safePhase) {
             case 1 -> new Pattern(5, 11f, 1f, .72f, 0, 0f, false);
             case 2 -> new Pattern(10, 36f, .89f, .62f, 0, 0f, true);
