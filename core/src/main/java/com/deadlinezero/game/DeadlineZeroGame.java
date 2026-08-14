@@ -11,6 +11,7 @@ import com.deadlinezero.game.meta.EquipmentDropTable;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.meta.ProfileStore;
+import com.deadlinezero.game.meta.PurchaseGrantService;
 import com.deadlinezero.game.meta.RunEncounterRuntime;
 import com.deadlinezero.game.meta.RunLoadoutContext;
 import com.deadlinezero.game.meta.RunMissionRuntime;
@@ -56,6 +57,11 @@ public final class DeadlineZeroGame extends Game {
         services.ads.preload();
         saveProfile();
         showMenu();
+    }
+
+    @Override public void render() {
+        if (profile != null && PurchaseGrantService.syncPermanent(profile, services.billing)) saveProfile();
+        super.render();
     }
 
     public void showMenu() { RunMissionRuntime.end(); RunEncounterRuntime.end(); if (audio != null) audio.stopCombatMusic(); setScreen(new MenuScreen(this)); }
