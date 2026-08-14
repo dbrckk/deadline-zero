@@ -1,13 +1,18 @@
 package com.deadlinezero.game.ai;
 
-/** Applies deterministic stat selection for all boss identities. */
+import com.deadlinezero.game.meta.RunStageContext;
+
+/** Applies deterministic stat selection for all boss identities and active endgame affix. */
 public final class BossVariantStats {
     private BossVariantStats() { }
 
     public record Stats(float hp, float speed, float damage) { }
 
     public static Stats forStage(int stage, float baseHp, float baseSpeed, float baseDamage) {
-        return forIdentity(BossIdentity.forStage(stage), baseHp, baseSpeed, baseDamage);
+        Stats identityStats = forIdentity(BossIdentity.forStage(stage), baseHp, baseSpeed, baseDamage);
+        BossAffixRules.Affix affix = BossAffixRules.forRun(stage, RunStageContext.threatTier());
+        return new Stats(identityStats.hp() * affix.hp, identityStats.speed() * affix.speed,
+            identityStats.damage() * affix.damage);
     }
 
     public static Stats forIdentity(BossIdentity identity, float baseHp, float baseSpeed, float baseDamage) {
