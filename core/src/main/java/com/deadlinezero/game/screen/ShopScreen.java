@@ -35,6 +35,7 @@ public final class ShopScreen extends ScreenAdapter {
             consumableRestoreRequested = true;
             game.services.billing.restoreConsumables(this::deliverConsumable);
         }
+        syncBillingStatus();
 
         Gdx.gl.glClearColor(.012f, .018f, .027f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -104,6 +105,22 @@ public final class ShopScreen extends ScreenAdapter {
         }
     }
 
+    private void syncBillingStatus() {
+        BillingService.State state = game.services.billing.state();
+        if (state == BillingService.State.PURCHASE_PENDING) {
+            String product = game.services.billing.activeProductId();
+            status = product.isBlank()
+                ? "Google Play payment pending • delivery is automatic after approval"
+                : "Payment pending for " + product + " • delivery is automatic after approval";
+        } else if (state == BillingService.State.CONNECTING) {
+            status = "Connecting to Google Play...";
+        } else if (state == BillingService.State.UNAVAILABLE) {
+            status = "Google Play billing unavailable";
+        } else if (state == BillingService.State.PURCHASE_IN_PROGRESS) {
+            status = "Waiting for Google Play purchase confirmation...";
+        }
+    }
+
     private void open(boolean premium) {
         EquipmentItem item = premium ? ChestService.openGemChest(game.profile) : ChestService.openCreditChest(game.profile);
         if (item == null) {
@@ -132,6 +149,10 @@ public final class ShopScreen extends ScreenAdapter {
     private void purchase(String productId) {
         if (BillingService.REMOVE_ADS.equals(productId) && game.profile.removeAdsPurchased) { status = "Ad-free already owned"; return; }
         if (BillingService.STARTER_PACK.equals(productId) && game.profile.starterPackGranted) { status = "Starter Pack already claimed"; return; }
+        if (game.services.billing.state() == BillingService.State.PURCHASE_PENDING) {
+            status = "A Google Play payment is already pending";
+            return;
+        }
         status = "Opening Google Play purchase...";
         if (BillingService.isConsumable(productId)) {
             game.services.billing.purchaseWithReceipt(productId, this::deliverConsumable,
