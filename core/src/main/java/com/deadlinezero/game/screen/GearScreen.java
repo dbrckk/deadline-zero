@@ -14,6 +14,7 @@ import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.EquipmentService;
 import com.deadlinezero.game.meta.EquipmentUpgradeService;
 import com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog;
+import com.deadlinezero.game.meta.ThreatSetBonusRules;
 
 /** Functional pre-art gear management screen. */
 public final class GearScreen extends ScreenAdapter {
@@ -33,6 +34,7 @@ public final class GearScreen extends ScreenAdapter {
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
         int size = game.profile.inventory.size();
         if (size > 0) index = Math.max(0, Math.min(index, size - 1)); else index = 0;
+        int ascensionPieces = ThreatSetBonusRules.equippedPieces(game.profile);
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(.025f, .04f, .06f, 1f); shapes.rect(20, 95, w - 40, h - 145);
@@ -49,6 +51,9 @@ public final class GearScreen extends ScreenAdapter {
         font.getData().setScale(.58f);
         font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "POWER x" + String.format("%.3f", game.profile.aggregatePowerMultiplier()), 0, h - 72, w, Align.center, false);
+        font.getData().setScale(.40f);
+        font.setColor(ascensionPieces >= 2 ? Color.GOLD : Color.GRAY);
+        font.draw(batch, ThreatSetBonusRules.summary(ascensionPieces), 0, h - 96, w, Align.center, false);
 
         if (size == 0) {
             font.draw(batch, "No equipment yet. Complete runs to obtain drops.", 0, h * .52f, w, Align.center, false);
