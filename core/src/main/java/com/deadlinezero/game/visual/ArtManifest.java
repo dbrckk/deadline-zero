@@ -26,7 +26,10 @@ public final class ArtManifest {
         "fx/impact_frost",
         "fx/impact_shock",
         "fx/impact_kill",
-        "fx/boss_explosion"
+        "fx/boss_explosion",
+        "fx/legendary_overdrive",
+        "fx/legendary_singularity",
+        "fx/legendary_apex"
     };
 
     public static int validate(GameArt art) {
