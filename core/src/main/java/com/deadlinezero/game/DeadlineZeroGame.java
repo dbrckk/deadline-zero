@@ -31,6 +31,7 @@ import com.deadlinezero.game.screen.SettingsScreen;
 import com.deadlinezero.game.screen.ShopScreen;
 import com.deadlinezero.game.screen.SurvivorScreen;
 import com.deadlinezero.game.screen.VictoryScreen;
+import com.deadlinezero.game.services.AdsService;
 import com.deadlinezero.game.services.GameServices;
 import com.deadlinezero.game.visual.GameArt;
 
@@ -41,6 +42,7 @@ public final class DeadlineZeroGame extends Game {
     public GameArt art;
     public AudioDirector audio;
     public AccessibilitySettings accessibility;
+    private int fullscreenPresentationDepth;
 
     public DeadlineZeroGame(GameServices services) { this.services = services == null ? GameServices.noOp() : services; }
 
@@ -49,6 +51,18 @@ public final class DeadlineZeroGame extends Game {
         accessibility = AccessibilitySettings.load();
         audio = new AudioDirector();
         audio.setVolumes(accessibility.masterVolume, accessibility.sfxVolume, accessibility.musicVolume);
+        services.ads.setFullscreenListener(new AdsService.FullscreenListener() {
+            @Override public void onOpening() {
+                fullscreenPresentationDepth++;
+                if (audio != null) audio.suspend();
+            }
+
+            @Override public void onClosed() {
+                if (fullscreenPresentationDepth <= 0) return;
+                fullscreenPresentationDepth--;
+                if (audio != null) audio.resume();
+            }
+        });
         profile = ProfileStore.load();
         EntitlementStore.loadInto(profile);
         DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
@@ -61,6 +75,7 @@ public final class DeadlineZeroGame extends Game {
 
     @Override public void render() {
         if (profile != null && PurchaseGrantService.syncPermanent(profile, services.billing)) saveProfile();
+        if (fullscreenPresentationDepth > 0) return;
         super.render();
     }
 
