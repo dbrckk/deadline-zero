@@ -17,6 +17,6 @@ public final class EquipmentItem {
         this.slot = slot;
         this.rarity = rarity;
         this.level = Math.max(1, level);
-        this.powerBonus = Math.max(0f, powerBonus);
+        this.powerBonus = Float.isFinite(powerBonus) ? Math.max(0f, powerBonus) : 0f;
     }
 }
