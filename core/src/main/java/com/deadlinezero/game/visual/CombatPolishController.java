@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.deadlinezero.game.ai.BossIdentity;
 import com.deadlinezero.game.ai.LeaperRuntime;
 import com.deadlinezero.game.ai.LeaperSharedRuntime;
 import com.deadlinezero.game.audio.AudioDirector;
@@ -28,6 +29,10 @@ public final class CombatPolishController {
     private final DeathFxRenderer deaths;
     private final AccessibilitySettings settings;
     private final AdaptiveFxBudget fxBudget = new AdaptiveFxBudget();
+    private Enemy phaseBoss;
+    private float phaseFxStarted;
+    private float phaseFxUntil;
+    private int phaseFxPhase;
 
     public CombatPolishController(GameArt art) {
         this(art, AccessibilitySettings.load());
@@ -108,9 +113,49 @@ public final class CombatPolishController {
         deaths.drawFallback(shapes, pools.deathFx);
         legendaryFx.render(shapes, player, time, fxBudget.quality());
         drawLeaperTelegraphs(shapes, enemies, time);
+        drawBossPhaseTransitions(shapes, enemies, time);
         drawRevenantIdentity(shapes, enemies, time);
         drawWardenIdentity(shapes, enemies, time);
         if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
+    }
+
+    private void drawBossPhaseTransitions(ShapeRenderer shapes, Array<Enemy> enemies, float time) {
+        for (Enemy enemy : enemies) {
+            if (!enemy.alive || enemy.type != Enemy.Type.BOSS || enemy.bossPhases == null || enemy.bossCombat == null) continue;
+            if (!enemy.bossPhases.consumePhaseChanged()) continue;
+            phaseBoss = enemy;
+            phaseFxPhase = enemy.bossPhases.phase();
+            BossPhaseTransitionProfile.Spec spec = BossPhaseTransitionProfile.forPhase(enemy.bossCombat.identity(), phaseFxPhase);
+            phaseFxStarted = time;
+            phaseFxUntil = time + spec.duration();
+            AudioDirector.playGlobal(AudioDirector.Cue.BOSS_HIT, spec.audioPitch(), 0f);
+            vibrate(spec.vibrationMs());
+            if (settings.hitStop) feel.triggerHitStop(phaseFxPhase >= 3 ? .045f : .030f);
+        }
+
+        if (phaseBoss == null || !phaseBoss.alive || time >= phaseFxUntil || phaseBoss.bossCombat == null) {
+            phaseBoss = null;
+            return;
+        }
+
+        BossIdentity identity = phaseBoss.bossCombat.identity();
+        BossPhaseTransitionProfile.Spec spec = BossPhaseTransitionProfile.forPhase(identity, phaseFxPhase);
+        float progress = MathUtils.clamp((time - phaseFxStarted) / Math.max(.001f, spec.duration()), 0f, 1f);
+        float fade = 1f - progress;
+        float radius = phaseBoss.radius * MathUtils.lerp(1.08f, spec.radiusMultiplier(), progress);
+        float r = identity == BossIdentity.REVENANT ? .82f : identity == BossIdentity.WARDEN ? .22f : 1f;
+        float g = identity == BossIdentity.REVENANT ? .18f : identity == BossIdentity.WARDEN ? .68f : .22f;
+        float b = identity == BossIdentity.REVENANT ? 1f : identity == BossIdentity.WARDEN ? 1f : .12f;
+        float alphaScale = settings.reduceFlashes ? .42f : 1f;
+
+        shapes.setColor(r, g, b, (.28f + .20f * fade) * fade * alphaScale);
+        shapes.circle(phaseBoss.position.x, phaseBoss.position.y, radius, 36);
+        shapes.setColor(r, g, b, .14f * fade * alphaScale);
+        shapes.circle(phaseBoss.position.x, phaseBoss.position.y, radius * 1.34f, 38);
+        if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) {
+            shapes.setColor(1f, 1f, 1f, .20f * fade);
+            shapes.circle(phaseBoss.position.x, phaseBoss.position.y, phaseBoss.radius * (.42f + .34f * fade), 20);
+        }
     }
 
     private void drawLeaperTelegraphs(ShapeRenderer shapes, Array<Enemy> enemies, float time) {
