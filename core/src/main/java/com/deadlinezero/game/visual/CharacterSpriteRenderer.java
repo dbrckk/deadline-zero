@@ -11,6 +11,8 @@ import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.meta.RunLoadoutContext;
+import com.deadlinezero.game.meta.RunStageContext;
+import com.deadlinezero.game.world.BiomeEnemyRoster;
 
 /** Draws authored character art with event-driven attacks and independent per-entity state clocks. */
 public final class CharacterSpriteRenderer {
@@ -172,6 +174,16 @@ public final class CharacterSpriteRenderer {
             default -> { }
         }
 
+        if (enemy.type != Enemy.Type.BOSS) {
+            BiomeEnemyRoster.Identity biomeIdentity = BiomeEnemyRoster.identityFor(RunStageContext.stage(), enemy.type);
+            if (biomeIdentity != BiomeEnemyRoster.Identity.NONE) {
+                r *= biomeIdentity.tintR;
+                g *= biomeIdentity.tintG;
+                b *= biomeIdentity.tintB;
+                scale *= biomeIdentity.visualScale;
+            }
+        }
+
         if (enemy.reactionFlash > 0f && enemy.lastReaction != Enemy.ElementReaction.NONE) {
             float reaction = MathUtils.clamp(enemy.reactionFlash / .24f, 0f, 1f);
             float wave = MathUtils.sin(reaction * MathUtils.PI);
@@ -236,6 +248,12 @@ public final class CharacterSpriteRenderer {
                     g *= .82f;
                     b *= .66f;
                     scale *= 1.035f;
+                }
+                case NULL_ARCHON -> {
+                    r *= .66f;
+                    g *= .74f;
+                    b *= 1.10f;
+                    scale *= 1.065f;
                 }
                 default -> { }
             }
