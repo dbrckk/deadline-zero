@@ -47,17 +47,25 @@ public final class VictoryScreen extends ScreenAdapter {
         font.draw(batch, "PROTOCOL CLEARED", 0, h * .78f, w, Align.center, false);
         font.getData().setScale(.72f); font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "Stage " + result.stage() + "  •  Kills " + result.kills() + "  •  " + formatTime(result.secondsSurvived()), 0, h * .65f, w, Align.center, false);
-        font.getData().setScale(.56f); font.setColor(Color.ORANGE);
+        font.getData().setScale(.52f); font.setColor(Color.ORANGE);
         font.draw(batch, "CONTRACT  " + result.contractTitle() + "  •  +" + result.contractBonusPercent() + "% REWARD", 0, h * .605f, w, Align.center, false);
+        font.setColor(result.threatTier() > 0 ? Color.GOLD : Color.LIGHT_GRAY);
+        font.draw(batch, "THREAT " + result.threatTier() + "  •  +" + result.threatBonusPercent() + "% ASCENSION", 0, h * .565f, w, Align.center, false);
         font.getData().setScale(.72f); font.setColor(Color.GOLD);
-        font.draw(batch, "+" + result.rewards().credits() + " Credits", 0, h * .54f, w, Align.center, false);
+        font.draw(batch, "+" + result.rewards().credits() + " Credits", 0, h * .51f, w, Align.center, false);
         font.setColor(Color.CYAN);
-        font.draw(batch, "+" + result.rewards().gems() + " Gems   +" + result.rewards().accountXp() + " Account XP", 0, h * .48f, w, Align.center, false);
-        if (firstClear) {
+        font.draw(batch, "+" + result.rewards().gems() + " Gems   +" + result.rewards().accountXp() + " Account XP", 0, h * .455f, w, Align.center, false);
+        if (result.unlockedThreatTier() > 0) {
+            font.getData().setScale(.60f);
+            font.setColor(Color.GOLD);
+            String milestone = result.threatMilestoneGems() > 0 ? "  +" + result.threatMilestoneGems() + " MILESTONE GEMS" : "";
+            font.draw(batch, "THREAT " + result.unlockedThreatTier() + " UNLOCKED" + milestone, 0, h * .405f, w, Align.center, false);
+        } else if (firstClear) {
             font.setColor(Color.LIME);
             font.draw(batch, "FIRST CLEAR  +" + bonusCredits + " Credits  +" + bonusGems + " Gems", 0, h * .40f, w, Align.center, false);
         }
         if (result.drop() != null) {
+            font.getData().setScale(.68f);
             font.setColor(Color.WHITE);
             font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + " Lv." + result.drop().level, 0, h * .33f, w, Align.center, false);
         }
