@@ -47,17 +47,19 @@ public final class VictoryScreen extends ScreenAdapter {
         font.draw(batch, "PROTOCOL CLEARED", 0, h * .78f, w, Align.center, false);
         font.getData().setScale(.72f); font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "Stage " + result.stage() + "  •  Kills " + result.kills() + "  •  " + formatTime(result.secondsSurvived()), 0, h * .65f, w, Align.center, false);
-        font.setColor(Color.GOLD);
-        font.draw(batch, "+" + result.rewards().credits() + " Credits", 0, h * .56f, w, Align.center, false);
+        font.getData().setScale(.56f); font.setColor(Color.ORANGE);
+        font.draw(batch, "CONTRACT  " + result.contractTitle() + "  •  +" + result.contractBonusPercent() + "% REWARD", 0, h * .605f, w, Align.center, false);
+        font.getData().setScale(.72f); font.setColor(Color.GOLD);
+        font.draw(batch, "+" + result.rewards().credits() + " Credits", 0, h * .54f, w, Align.center, false);
         font.setColor(Color.CYAN);
-        font.draw(batch, "+" + result.rewards().gems() + " Gems   +" + result.rewards().accountXp() + " Account XP", 0, h * .50f, w, Align.center, false);
+        font.draw(batch, "+" + result.rewards().gems() + " Gems   +" + result.rewards().accountXp() + " Account XP", 0, h * .48f, w, Align.center, false);
         if (firstClear) {
             font.setColor(Color.LIME);
-            font.draw(batch, "FIRST CLEAR  +" + bonusCredits + " Credits  +" + bonusGems + " Gems", 0, h * .42f, w, Align.center, false);
+            font.draw(batch, "FIRST CLEAR  +" + bonusCredits + " Credits  +" + bonusGems + " Gems", 0, h * .40f, w, Align.center, false);
         }
         if (result.drop() != null) {
             font.setColor(Color.WHITE);
-            font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + " Lv." + result.drop().level, 0, h * .35f, w, Align.center, false);
+            font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + " Lv." + result.drop().level, 0, h * .33f, w, Align.center, false);
         }
         font.setColor(Color.WHITE);
         font.draw(batch, "BASE", w * .24f, h * .18f + 36f, w * .22f, Align.center, false);
