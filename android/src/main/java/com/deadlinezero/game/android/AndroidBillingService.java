@@ -7,7 +7,7 @@ import com.deadlinezero.game.services.SingleFlightGate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Client-side Play Billing bridge with crash-safe consumable delivery. */
+/** Client-side Play Billing bridge with crash-safe consumable delivery and explicit pending-state handling. */
 public final class AndroidBillingService implements BillingService, PurchasesUpdatedListener {
     private final Activity activity;
     private BillingClient client;
@@ -16,11 +16,13 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
     private Runnable success, failure;
     private PurchaseReceiptListener receiptSuccess;
     private boolean receiptAwarePending;
-    private String pendingProductId;
+    private volatile State billingState = State.UNAVAILABLE;
+    private volatile String pendingProductId;
 
     public AndroidBillingService(Activity activity) { this.activity = activity; }
 
     @Override public void initialize() {
+        billingState = State.CONNECTING;
         client = BillingClient.newBuilder(activity)
             .setListener(this)
             .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
@@ -28,12 +30,19 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
             .build();
         client.startConnection(new BillingClientStateListener() {
             @Override public void onBillingSetupFinished(BillingResult result) {
-                if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) restore();
+                if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    billingState = State.READY;
+                    restore();
+                } else {
+                    billingState = State.UNAVAILABLE;
+                }
             }
-            @Override public void onBillingServiceDisconnected() { }
+            @Override public void onBillingServiceDisconnected() { billingState = State.CONNECTING; }
         });
     }
 
+    @Override public State state() { return billingState; }
+    @Override public String activeProductId() { return pendingProductId == null ? "" : pendingProductId; }
     @Override public boolean owns(String id) { return owned.contains(id); }
 
     @Override public void restore() {
@@ -42,9 +51,20 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
             QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
             (result, purchases) -> {
                 if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) return;
+                boolean foundPending = false;
                 for (Purchase purchase : purchases) {
+                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
+                        foundPending = true;
+                        if (!purchase.getProducts().isEmpty()) pendingProductId = purchase.getProducts().get(0);
+                        continue;
+                    }
                     if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED) continue;
                     if (!containsConsumable(purchase)) processPurchase(purchase, false);
+                }
+                if (foundPending) billingState = State.PURCHASE_PENDING;
+                else if (!purchaseGate.active()) {
+                    billingState = State.READY;
+                    pendingProductId = null;
                 }
             });
     }
@@ -56,6 +76,11 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
             (result, purchases) -> {
                 if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) return;
                 for (Purchase purchase : purchases) {
+                    if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
+                        billingState = State.PURCHASE_PENDING;
+                        if (!purchase.getProducts().isEmpty()) pendingProductId = purchase.getProducts().get(0);
+                        continue;
+                    }
                     if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED || !containsConsumable(purchase)) continue;
                     for (String id : purchase.getProducts()) {
                         if (BillingService.isConsumable(id)) {
@@ -77,7 +102,8 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
 
     private void beginPurchase(String productId, PurchaseReceiptListener receiptCallback, Runnable legacySuccess,
                                Runnable onFailure, boolean receiptAware) {
-        if (productId == null || productId.isBlank() || client == null || !client.isReady()) {
+        if (productId == null || productId.isBlank() || client == null || !client.isReady()
+            || billingState == State.PURCHASE_PENDING) {
             if (onFailure != null) onFailure.run();
             return;
         }
@@ -91,6 +117,7 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
         this.failure = onFailure;
         this.receiptAwarePending = receiptAware;
         this.pendingProductId = productId;
+        this.billingState = State.PURCHASE_IN_PROGRESS;
 
         QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
             .setProductId(productId)
@@ -117,7 +144,21 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
     @Override public void onPurchasesUpdated(BillingResult result, List<Purchase> purchases) {
         if (result.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null) {
             boolean handled = false;
-            for (Purchase purchase : purchases) handled |= processPurchase(purchase, true);
+            boolean pending = false;
+            for (Purchase purchase : purchases) {
+                if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
+                    if (pendingProductId == null || purchase.getProducts().contains(pendingProductId)) {
+                        pending = true;
+                        handled = true;
+                    }
+                    continue;
+                }
+                handled |= processPurchase(purchase, true);
+            }
+            if (pending) {
+                billingState = State.PURCHASE_PENDING;
+                return;
+            }
             if (!handled) failPending();
         } else {
             failPending();
@@ -207,5 +248,6 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
         receiptAwarePending = false;
         pendingProductId = null;
         purchaseGate.end();
+        billingState = client != null && client.isReady() ? State.READY : State.CONNECTING;
     }
 }
