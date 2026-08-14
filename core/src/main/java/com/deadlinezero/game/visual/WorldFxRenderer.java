@@ -36,6 +36,8 @@ public final class WorldFxRenderer {
             shapes.ellipse(e.position.x - width * .5f, e.position.y - e.radius * .72f,
                 width, e.radius * .66f);
 
+            drawSpecialistTelegraph(shapes, e);
+
             if (e.tacticalTelegraph()) {
                 float phase = e.tacticalWindup <= 0f ? 0f : MathUtils.clamp(e.tacticalWindup / .34f, 0f, 1f);
                 float pulse = .55f + .45f * MathUtils.sin(e.variantTime * 34f);
@@ -61,6 +63,54 @@ public final class WorldFxRenderer {
                     }
                 }
             }
+        }
+    }
+
+    private void drawSpecialistTelegraph(ShapeRenderer shapes, Enemy e) {
+        if (budget.quality() < .34f) return;
+        float pulse = .5f + .5f * MathUtils.sin(e.variantTime * 6.5f + e.position.y * .31f);
+        int segments = budget.geometrySegments(28, 14);
+        switch (e.type) {
+            case SHIELDED -> {
+                if (e.shieldHp <= 0f) return;
+                float shield = e.shieldFraction();
+                float radius = e.radius * (1.34f + .10f * pulse);
+                shapes.setColor(.24f, .76f, 1f, .10f + shield * .16f);
+                shapes.circle(e.position.x, e.position.y, radius, segments);
+                if (budget.allowHeavyFx()) {
+                    shapes.setColor(.72f, .94f, 1f, .16f + shield * .18f);
+                    shapes.circle(e.position.x, e.position.y, radius * .88f, segments);
+                }
+            }
+            case REGENERATOR -> {
+                float wounded = 1f - MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f);
+                if (wounded <= .02f) return;
+                float radius = e.radius * (1.35f + pulse * .34f);
+                shapes.setColor(.30f, 1f, .42f, .07f + wounded * .15f);
+                shapes.circle(e.position.x, e.position.y, radius, segments);
+                if (budget.allowHeavyFx()) {
+                    shapes.setColor(.72f, 1f, .58f, .10f + wounded * .18f);
+                    shapes.circle(e.position.x, e.position.y, radius * .72f, segments);
+                }
+            }
+            case PHANTOM -> {
+                float radius = e.radius * (e.phased() ? 2.05f : 1.48f + pulse * .18f);
+                float alpha = e.phased() ? .28f : .10f + pulse * .06f;
+                shapes.setColor(.60f, .36f, 1f, alpha);
+                shapes.circle(e.position.x, e.position.y, radius, segments);
+                if (e.phased() && budget.allowHeavyFx() && e.velocity.len2() > .01f) {
+                    float len = e.velocity.len();
+                    float nx = e.velocity.x / len;
+                    float ny = e.velocity.y / len;
+                    shapes.setColor(.72f, .60f, 1f, .18f);
+                    shapes.circle(e.position.x - nx * e.radius * 1.15f, e.position.y - ny * e.radius * 1.15f,
+                        e.radius * .72f, segments);
+                    shapes.setColor(.82f, .72f, 1f, .10f);
+                    shapes.circle(e.position.x - nx * e.radius * 2.0f, e.position.y - ny * e.radius * 2.0f,
+                        e.radius * .52f, segments);
+                }
+            }
+            default -> { }
         }
     }
 
