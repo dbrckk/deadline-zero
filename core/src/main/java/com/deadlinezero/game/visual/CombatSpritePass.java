@@ -36,14 +36,24 @@ public final class CombatSpritePass {
     public GraphicsQuality quality() { return quality; }
     public void setQuality(GraphicsQuality quality) { if (quality != null) this.quality = quality; }
 
-    public void render(SpriteBatch batch, Player player, Array<Enemy> enemies) {
-        render(batch, player, enemies, CombatPolishController.currentPools());
-    }
-
-    public void render(SpriteBatch batch, Player player, Array<Enemy> enemies, Pools pools) {
-        audio.update(player, enemies);
+    /**
+     * Draws environment-only authored art. This method is intentionally separate so GameScreen can
+     * place the environment before ShapeRenderer world FX without duplicating sprite-pass logic.
+     */
+    public void renderEnvironment(SpriteBatch batch) {
         if (!characters.authoredAvailable()) return;
         environment.drawAuthored(batch);
+    }
+
+    /** Draws characters, weapons and authored combat VFX, but never draws the environment. */
+    public void renderCombat(SpriteBatch batch, Player player, Array<Enemy> enemies) {
+        renderCombat(batch, player, enemies, CombatPolishController.currentPools());
+    }
+
+    /** Draws characters, weapons and authored combat VFX, but never draws the environment. */
+    public void renderCombat(SpriteBatch batch, Player player, Array<Enemy> enemies, Pools pools) {
+        audio.update(player, enemies);
+        if (!characters.authoredAvailable()) return;
         if (postFx.available() && quality.postFxIntensity > 0f) batch.setShader(postFx.shader(quality.postFxIntensity));
         characters.draw(batch, player, enemies);
         batch.setShader(null);
@@ -54,6 +64,17 @@ public final class CombatSpritePass {
         float shotFlash = target == null || !player.alive ? 0f : MathUtils.clamp(1f - CombatVisualEvents.playerShotAgeSeconds() / .075f, 0f, 1f);
         weapon.draw(batch, player, aimAngle, shotFlash);
         if (pools != null) vfx.draw(batch, player, enemies, pools);
+    }
+
+    /** Compatibility wrapper preserving the historical environment + combat ordering. */
+    public void render(SpriteBatch batch, Player player, Array<Enemy> enemies) {
+        render(batch, player, enemies, CombatPolishController.currentPools());
+    }
+
+    /** Compatibility wrapper preserving the historical environment + combat ordering. */
+    public void render(SpriteBatch batch, Player player, Array<Enemy> enemies, Pools pools) {
+        renderEnvironment(batch);
+        renderCombat(batch, player, enemies, pools);
     }
 
     private Enemy nearestEnemy(Player player, Array<Enemy> enemies) {
