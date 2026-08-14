@@ -88,7 +88,9 @@ public final class DeadlineZeroGame extends Game {
     public void showSettings() { setScreen(new SettingsScreen(this)); }
 
     public void startRun() {
-        RunStageContext.begin(profile == null ? 1 : profile.selectedStage);
+        int selectedStage = profile == null ? 1 : profile.selectedStage;
+        int runOrdinal = profile == null ? 0 : Math.max(0, profile.totalRuns);
+        RunStageContext.begin(selectedStage, runOrdinal);
         RunLoadoutContext.begin(profile);
         RunEncounterRuntime.begin();
         RunMissionRuntime.begin(() -> Gdx.app.postRunnable(() -> finishVictory()));
