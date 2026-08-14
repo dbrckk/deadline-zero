@@ -15,6 +15,7 @@ import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.ThreatTierRules;
+import com.deadlinezero.game.visual.EnvironmentBiomeRules;
 import com.deadlinezero.game.visual.VisualTheme;
 
 /** Three-card pre-run risk/reward selection. No persistent state is mutated until combat settles. */
@@ -75,13 +76,21 @@ public final class RunContractScreen extends ScreenAdapter {
             0f, h - 76f, w, Align.center, false);
 
         int tier = RunStageContext.threatTier();
+        float hazardY = h - 104f;
+        if (EnvironmentBiomeRules.isFoundry(RunStageContext.stage())) {
+            font.getData().setScale(.34f);
+            font.setColor(VisualTheme.GOLD);
+            font.draw(batch, "CINDER FOUNDRY  •  LAVA VENTS  •  STEAM JETS  •  HEAT LINES",
+                0f, hazardY, w, Align.center, false);
+            hazardY -= 20f;
+        }
         if (tier >= 5) {
             font.getData().setScale(.34f);
             font.setColor(tier >= 8 ? VisualTheme.RED : VisualTheme.GOLD);
             String endgame = tier >= 8
                 ? "ENDGAME HAZARDS  •  TELEGRAPHED ORBITAL STRIKES  •  VOLATILE HEAVIES"
                 : "ENDGAME HAZARDS  •  TELEGRAPHED ORBITAL STRIKES";
-            font.draw(batch, endgame, 0f, h - 104f, w, Align.center, false);
+            font.draw(batch, endgame, 0f, hazardY, w, Align.center, false);
         }
 
         for (int i = 0; i < offers.length; i++) {
