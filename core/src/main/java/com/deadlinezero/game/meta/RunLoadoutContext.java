@@ -15,6 +15,7 @@ public final class RunLoadoutContext {
     private static float abilityPowerMultiplier = 1f;
     private static float damageTakenMultiplier = 1f;
     private static int startingTeslaLevel;
+    private static int ascensionSetPieces;
     private static SurvivorCatalog.Survivor survivor = SurvivorCatalog.Survivor.REX;
     private static WeaponDefinition weaponDefinition = WeaponCatalog.AR9;
 
@@ -25,6 +26,7 @@ public final class RunLoadoutContext {
         survivor = profile == null ? SurvivorCatalog.Survivor.REX : profile.selectedSurvivor;
         weaponDefinition = profile == null ? WeaponCatalog.AR9 : profile.selectedWeapon();
         float levelPower = profile == null ? 1f : profile.survivors.levelPowerMultiplier(survivor);
+        ascensionSetPieces = ThreatSetBonusRules.equippedPieces(profile);
         if (profile != null) {
             EquipmentItem weaponItem = profile.equipped(PlayerProfile.EquipmentSlot.WEAPON);
             EquipmentItem armor = profile.equipped(PlayerProfile.EquipmentSlot.ARMOR);
@@ -46,15 +48,21 @@ public final class RunLoadoutContext {
         }
 
         float adaptive = survivor == SurvivorCatalog.Survivor.REX ? 1.05f : 1f;
-        maxHpMultiplier = (1f + hp) * survivor.hpMultiplier * (1f + (levelPower - 1f) * .55f) * adaptive;
-        moveSpeedMultiplier = (1f + speed) * survivor.speedMultiplier * adaptive;
+        maxHpMultiplier = (1f + hp) * survivor.hpMultiplier * (1f + (levelPower - 1f) * .55f) * adaptive
+            * ThreatSetBonusRules.hpMultiplier(ascensionSetPieces);
+        moveSpeedMultiplier = (1f + speed) * survivor.speedMultiplier * adaptive
+            * ThreatSetBonusRules.moveSpeedMultiplier(ascensionSetPieces);
         dashCooldownMultiplier = Math.max(.60f, (1f - dash) * (survivor == SurvivorCatalog.Survivor.WRAITH ? .76f : 1f));
-        dashInvulnerabilitySeconds = survivor == SurvivorCatalog.Survivor.WRAITH ? .42f : .30f;
-        weaponDamageMultiplier = (1f + weapon) * survivor.weaponMultiplier * levelPower * adaptive;
+        dashInvulnerabilitySeconds = (survivor == SurvivorCatalog.Survivor.WRAITH ? .42f : .30f)
+            + ThreatSetBonusRules.dashInvulnerabilityBonus(ascensionSetPieces);
+        weaponDamageMultiplier = (1f + weapon) * survivor.weaponMultiplier * levelPower * adaptive
+            * ThreatSetBonusRules.weaponMultiplier(ascensionSetPieces);
         critChanceBonus = Math.min(.25f, crit + survivor.critBonus + (survivor == SurvivorCatalog.Survivor.NYX ? .04f : 0f));
         critDamageBonus = survivor == SurvivorCatalog.Survivor.NYX ? .40f : 0f;
-        abilityPowerMultiplier = (1f + ability) * (1f + survivor.abilityBonus) * levelPower * adaptive;
-        damageTakenMultiplier = survivor == SurvivorCatalog.Survivor.BASTION ? .82f : 1f;
+        abilityPowerMultiplier = (1f + ability) * (1f + survivor.abilityBonus) * levelPower * adaptive
+            * ThreatSetBonusRules.abilityMultiplier(ascensionSetPieces);
+        damageTakenMultiplier = (survivor == SurvivorCatalog.Survivor.BASTION ? .82f : 1f)
+            * ThreatSetBonusRules.damageTakenMultiplier(ascensionSetPieces);
         startingTeslaLevel = survivor == SurvivorCatalog.Survivor.VOLT ? 1 : 0;
     }
 
@@ -68,6 +76,7 @@ public final class RunLoadoutContext {
     public static float abilityPowerMultiplier() { return abilityPowerMultiplier; }
     public static float damageTakenMultiplier() { return damageTakenMultiplier; }
     public static int startingTeslaLevel() { return startingTeslaLevel; }
+    public static int ascensionSetPieces() { return ascensionSetPieces; }
     public static SurvivorCatalog.Survivor survivor() { return survivor; }
     public static WeaponDefinition weaponDefinition() { return weaponDefinition; }
 }
