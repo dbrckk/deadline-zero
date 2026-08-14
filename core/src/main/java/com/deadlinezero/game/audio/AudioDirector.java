@@ -13,8 +13,9 @@ public final class AudioDirector {
 
     private static AudioDirector active;
     private final ObjectMap<Cue, Sound> sounds = new ObjectMap<>();
+    private final ObjectMap<MusicProfileSelector.Profile, Music> combatMusic = new ObjectMap<>();
     private final AudioCueLimiter limiter = new AudioCueLimiter();
-    private Music combatMusic;
+    private Music activeCombatMusic;
     private float master = 1f;
     private float sfx = .85f;
     private float music = .65f;
@@ -32,17 +33,23 @@ public final class AudioDirector {
         load(Cue.LEVEL_UP, "audio/sfx/level_up.ogg");
         load(Cue.UI_SELECT, "audio/sfx/ui_select.ogg");
         load(Cue.UI_BACK, "audio/sfx/ui_back.ogg");
-        FileHandle musicFile = Gdx.files.internal("audio/music/combat.ogg");
-        if (musicFile.exists()) {
-            combatMusic = Gdx.audio.newMusic(musicFile);
-            combatMusic.setLooping(true);
-            applyMusicVolume();
+        for (MusicProfileSelector.Profile profile : MusicProfileSelector.Profile.values()) {
+            loadMusic(profile, MusicProfileSelector.assetPath(profile));
         }
     }
 
     private void load(Cue cue, String path) {
         FileHandle file = Gdx.files.internal(path);
         if (file.exists()) sounds.put(cue, Gdx.audio.newSound(file));
+    }
+
+    private void loadMusic(MusicProfileSelector.Profile profile, String path) {
+        FileHandle file = Gdx.files.internal(path);
+        if (!file.exists()) return;
+        Music track = Gdx.audio.newMusic(file);
+        track.setLooping(true);
+        track.setVolume(master * music);
+        combatMusic.put(profile, track);
     }
 
     static Cue fallbackCue(Cue cue) {
@@ -54,6 +61,12 @@ public final class AudioDirector {
         if (sound != null) return sound;
         Cue fallback = fallbackCue(cue);
         return fallback == null ? null : sounds.get(fallback);
+    }
+
+    private Music resolveMusic(MusicProfileSelector.Profile profile) {
+        Music track = combatMusic.get(profile);
+        if (track != null) return track;
+        return combatMusic.get(MusicProfileSelector.Profile.SURVIVAL);
     }
 
     public static void playGlobal(Cue cue) {
@@ -76,12 +89,21 @@ public final class AudioDirector {
         sound.play(master * sfx, Math.max(.5f, Math.min(2f, pitch)), Math.max(-1f, Math.min(1f, pan)));
     }
 
-    public void startCombatMusic() {
-        if (combatMusic != null && !combatMusic.isPlaying()) combatMusic.play();
+    /** Backward-compatible stage-one music entry point. */
+    public void startCombatMusic() { startCombatMusic(1); }
+
+    public void startCombatMusic(int stage) {
+        Music next = resolveMusic(MusicProfileSelector.forStage(stage));
+        if (next == null) return;
+        if (activeCombatMusic != null && activeCombatMusic != next && activeCombatMusic.isPlaying()) activeCombatMusic.stop();
+        activeCombatMusic = next;
+        activeCombatMusic.setVolume(master * music);
+        if (!activeCombatMusic.isPlaying()) activeCombatMusic.play();
     }
 
     public void stopCombatMusic() {
-        if (combatMusic != null) combatMusic.stop();
+        if (activeCombatMusic != null) activeCombatMusic.stop();
+        activeCombatMusic = null;
     }
 
     public void setVolumes(float master, float sfx, float music) {
@@ -92,7 +114,8 @@ public final class AudioDirector {
     }
 
     private void applyMusicVolume() {
-        if (combatMusic != null) combatMusic.setVolume(master * music);
+        float volume = master * music;
+        for (Music track : combatMusic.values()) track.setVolume(volume);
     }
 
     static float normalizeVolume(float value) {
@@ -105,6 +128,8 @@ public final class AudioDirector {
         limiter.reset();
         for (Sound sound : sounds.values()) sound.dispose();
         sounds.clear();
-        if (combatMusic != null) combatMusic.dispose();
+        for (Music track : combatMusic.values()) track.dispose();
+        combatMusic.clear();
+        activeCombatMusic = null;
     }
 }
