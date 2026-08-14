@@ -30,6 +30,7 @@ public final class AudioCueLimiter {
             case CRIT -> 52L;
             case KILL -> 44L;
             case BOSS_HIT -> 60L;
+            case BOSS_PHASE -> 700L;
             case BOSS_KILL -> 140L;
             case DASH -> 90L;
             case LEVEL_UP -> 180L;
