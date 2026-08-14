@@ -15,6 +15,7 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
     private final SingleFlightGate purchaseGate = new SingleFlightGate();
     private Runnable success, failure;
     private PurchaseReceiptListener receiptSuccess;
+    private PurchaseReceiptListener restoreReceiptListener;
     private boolean receiptAwarePending;
     private volatile State billingState = State.UNAVAILABLE;
     private volatile String pendingProductId;
@@ -71,6 +72,7 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
 
     @Override public void restoreConsumables(PurchaseReceiptListener listener) {
         if (listener == null || client == null || !client.isReady()) return;
+        restoreReceiptListener = listener;
         client.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
             (result, purchases) -> {
@@ -172,11 +174,21 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
         String consumableId = firstConsumable(purchase);
         if (consumableId != null) {
             if (!notifyPending) return true;
+            PurchaseReceipt receipt = new PurchaseReceipt(consumableId, purchase.getPurchaseToken());
             if (receiptAwarePending) {
                 PurchaseReceiptListener callback = receiptSuccess;
                 clearPending();
-                if (callback != null) callback.onPurchased(new PurchaseReceipt(consumableId, purchase.getPurchaseToken()));
+                if (callback != null) callback.onPurchased(receipt);
+            } else if (!purchaseGate.active()) {
+                // A PENDING consumable may complete after process death. Never consume it here:
+                // deliver through the restore listener when the shop is active, or leave it owned
+                // so restoreConsumables() can replay it later without losing the paid entitlement.
+                PurchaseReceiptListener callback = restoreReceiptListener;
+                billingState = State.READY;
+                pendingProductId = null;
+                if (callback != null) callback.onPurchased(receipt);
             } else {
+                // Legacy in-process consumable path retained for callers that do not request receipts.
                 finishConsumable(purchase.getPurchaseToken(), this::succeedPending, this::failPending);
             }
             return true;
