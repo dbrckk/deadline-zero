@@ -34,12 +34,13 @@ public final class RunEncounterDirector {
 
     public RunEncounterDirector(int stage) {
         this.stage = Math.max(1, stage);
-        buildPlan(RunStageContext.encounterSeed());
+        buildPlan(RunStageContext.encounterSeed(), RunStageContext.runOrdinal());
     }
 
-    private void buildPlan(int seed) {
-        int start = Math.floorMod(seed, CATALOG.length);
-        int direction = ((seed >>> 3) & 1) == 0 ? 1 : -1;
+    private void buildPlan(int seed, int runOrdinal) {
+        int safeOrdinal = Math.max(0, runOrdinal);
+        int start = Math.floorMod(seed + safeOrdinal, CATALOG.length);
+        int direction = (safeOrdinal & 1) == 0 ? 1 : -1;
         for (int i = 0; i < plan.length; i++) {
             plan[i] = CATALOG[Math.floorMod(start + i * direction, CATALOG.length)];
         }
