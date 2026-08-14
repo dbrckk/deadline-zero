@@ -38,6 +38,9 @@ public final class BootstrapArtCatalog {
         if (key.startsWith("enemy/brute/")) return 6;
         if (key.startsWith("enemy/ranged/")) return 7;
         if (key.startsWith("enemy/elite/")) return 8;
+        if (key.startsWith("enemy/shielded/")) return 6;
+        if (key.startsWith("enemy/regenerator/")) return 4;
+        if (key.startsWith("enemy/phantom/")) return 10;
         if (key.startsWith("enemy/boss/")) return 9;
         if (key.startsWith("boss/alpha/")) return 9;
         if (key.startsWith("boss/revenant/")) return 10;
