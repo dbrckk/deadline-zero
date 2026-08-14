@@ -11,6 +11,8 @@ public final class RunSettlement {
         profile.addCurrency(PlayerProfile.Currency.GEMS, rewards.gems());
         profile.addAccountXp(rewards.accountXp());
         profile.recordRun(kills, stage);
+        BalanceRunSample sample = BalanceTelemetryRuntime.settle(bossKilled, secondsSurvived, kills);
+        BalanceTelemetryStore.append(sample);
         return rewards;
     }
 }
