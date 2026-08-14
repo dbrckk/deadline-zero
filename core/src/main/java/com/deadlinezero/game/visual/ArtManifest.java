@@ -1,6 +1,7 @@
 package com.deadlinezero.game.visual;
 
 import com.badlogic.gdx.Gdx;
+import com.deadlinezero.game.ai.BossIdentity;
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.combat.WeaponDefinition;
 import com.deadlinezero.game.entities.Enemy;
@@ -56,8 +57,8 @@ public final class ArtManifest {
             missing += requireMotion(art, root, "death");
             missing += requireRegion(art, root + "/corpse");
         }
-        for (String bossIdentity : new String[] { "alpha", "revenant" }) {
-            String root = "boss/" + bossIdentity;
+        for (BossIdentity identity : BossIdentity.values()) {
+            String root = "boss/" + identity.name().toLowerCase();
             missing += requireMotion(art, root, "idle");
             missing += requireMotion(art, root, "run");
             missing += requireMotion(art, root, "attack");
