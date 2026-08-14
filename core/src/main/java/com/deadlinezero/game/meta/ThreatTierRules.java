@@ -40,4 +40,11 @@ public final class ThreatTierRules {
     public static int rewardBonusPercent(int tier) {
         return Math.round((rewardMultiplier(tier) - 1f) * 100f);
     }
+
+    /** One-time premium reward when a 5-tier ascension milestone is first unlocked. */
+    public static int milestoneGemReward(int newlyUnlockedTier) {
+        int tier = sanitizeTier(newlyUnlockedTier);
+        if (tier <= 0 || tier % 5 != 0) return 0;
+        return 4 + tier / 5 * 2;
+    }
 }
