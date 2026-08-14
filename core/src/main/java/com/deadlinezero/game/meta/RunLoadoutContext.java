@@ -16,6 +16,7 @@ public final class RunLoadoutContext {
     private static float damageTakenMultiplier = 1f;
     private static int startingTeslaLevel;
     private static int ascensionSetPieces;
+    private static boolean zeroDayCoreEquipped;
     private static SurvivorCatalog.Survivor survivor = SurvivorCatalog.Survivor.REX;
     private static WeaponDefinition weaponDefinition = WeaponCatalog.AR9;
 
@@ -27,6 +28,7 @@ public final class RunLoadoutContext {
         weaponDefinition = profile == null ? WeaponCatalog.AR9 : profile.selectedWeapon();
         float levelPower = profile == null ? 1f : profile.survivors.levelPowerMultiplier(survivor);
         ascensionSetPieces = ThreatSetBonusRules.equippedPieces(profile);
+        zeroDayCoreEquipped = SingularityCoreRules.equipped(profile);
         if (profile != null) {
             EquipmentItem weaponItem = profile.equipped(PlayerProfile.EquipmentSlot.WEAPON);
             EquipmentItem armor = profile.equipped(PlayerProfile.EquipmentSlot.ARMOR);
@@ -77,6 +79,7 @@ public final class RunLoadoutContext {
     public static float damageTakenMultiplier() { return damageTakenMultiplier; }
     public static int startingTeslaLevel() { return startingTeslaLevel; }
     public static int ascensionSetPieces() { return ascensionSetPieces; }
+    public static boolean zeroDayCoreEquipped() { return zeroDayCoreEquipped; }
     public static SurvivorCatalog.Survivor survivor() { return survivor; }
     public static WeaponDefinition weaponDefinition() { return weaponDefinition; }
 }
