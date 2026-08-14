@@ -13,8 +13,8 @@ import com.deadlinezero.game.meta.SurvivorCatalog;
 import java.io.ByteArrayOutputStream;
 
 /**
- * Authored-art gateway. Final atlas art takes priority, while a compact bootstrap sheet fills
- * missing regions so production code never collapses back to one generic placeholder silhouette.
+ * Authored-art gateway. Final atlas art takes priority, then the eight-way vertical slice,
+ * followed by compact legacy bootstrap art and finally the procedural emergency fallback.
  */
 public final class GameArt implements Disposable {
     public enum Motion { IDLE, RUN, ATTACK, HIT, DEATH }
@@ -23,6 +23,7 @@ public final class GameArt implements Disposable {
     private static final String BOOTSTRAP_PATH = "art/game.png.b64";
 
     private TextureAtlas atlas;
+    private DirectionalBootstrapArt directionalBootstrap;
     private Texture bootstrapTexture;
     private Texture fallbackTexture;
     private TextureRegion fallbackRegion;
@@ -30,8 +31,9 @@ public final class GameArt implements Disposable {
 
     public GameArt() {
         loadAtlas();
+        loadDirectionalBootstrap();
         loadBootstrap();
-        authoredAvailable = atlas != null || bootstrapTexture != null;
+        authoredAvailable = atlas != null || directionalBootstrap != null || bootstrapTexture != null;
         createFallback();
     }
 
@@ -142,6 +144,7 @@ public final class GameArt implements Disposable {
             Array<TextureAtlas.AtlasRegion> frames = atlas.findRegions(prefix);
             if ((frames != null && frames.size > 0) || atlas.findRegion(prefix) != null) return true;
         }
+        if (directionalBootstrap != null && directionalBootstrap.supports(prefix)) return true;
         return bootstrapTexture != null && BootstrapArtCatalog.supports(prefix);
     }
 
@@ -161,7 +164,11 @@ public final class GameArt implements Disposable {
             TextureRegion single = atlas.findRegion(prefix);
             if (single != null) return single;
         }
-        return BootstrapArtCatalog.animatedRegion(bootstrapTexture, prefix, stateTime, frameDuration, loop);
+        if (directionalBootstrap != null) {
+            TextureRegion region = directionalBootstrap.region(prefix, stateTime, frameDuration, loop);
+            if (region != null) return region;
+        }
+        return BootstrapArtCatalog.region(bootstrapTexture, prefix);
     }
 
     static String directionalPrefix(String root, Direction8 direction, Motion motion) {
@@ -185,6 +192,16 @@ public final class GameArt implements Disposable {
         } catch (RuntimeException exception) {
             Gdx.app.error("GameArt", "Unable to load production atlas; bootstrap art will be used.", exception);
             atlas = null;
+        }
+    }
+
+    private void loadDirectionalBootstrap() {
+        try {
+            directionalBootstrap = DirectionalBootstrapArt.create();
+        } catch (RuntimeException exception) {
+            Gdx.app.error("GameArt", "Unable to create directional bootstrap art; legacy bootstrap remains active.", exception);
+            if (directionalBootstrap != null) directionalBootstrap.dispose();
+            directionalBootstrap = null;
         }
     }
 
@@ -251,6 +268,7 @@ public final class GameArt implements Disposable {
 
     @Override public void dispose() {
         if (atlas != null) atlas.dispose();
+        if (directionalBootstrap != null) directionalBootstrap.dispose();
         if (bootstrapTexture != null) bootstrapTexture.dispose();
         if (fallbackTexture != null) fallbackTexture.dispose();
     }
