@@ -7,6 +7,7 @@ import com.deadlinezero.game.combat.WeaponCatalog;
 /** Persistent account storage backed by libGDX Preferences on Android/Desktop. */
 public final class ProfileStore {
     private static final String PREFS = "deadline-zero-profile-v1";
+    private static final int MAX_PURCHASE_RECEIPTS = 128;
     private ProfileStore() {}
 
     public static PlayerProfile load() {
@@ -20,6 +21,8 @@ public final class ProfileStore {
         profile.totalKills = Math.max(0L, p.getLong("totalKills", 0L));
         profile.removeAdsPurchased = p.getBoolean("purchase.removeAds", false);
         profile.starterPackGranted = p.getBoolean("purchase.starterPackGranted", false);
+        int receiptCount = Math.min(MAX_PURCHASE_RECEIPTS, Math.max(0, p.getInteger("purchase.receipt.count", 0)));
+        for (int i = 0; i < receiptCount; i++) profile.recordDeliveredPurchaseReceipt(p.getString("purchase.receipt." + i, ""));
         profile.selectedSurvivor = SurvivorCatalog.byName(p.getString("survivor.selected", SurvivorCatalog.Survivor.REX.name()));
         profile.selectedWeaponId = WeaponCatalog.byId(p.getString("weapon.selected", WeaponCatalog.AR9.id)).id;
         profile.addCurrency(PlayerProfile.Currency.CREDITS, Math.max(0L, p.getLong("credits", 0L)));
@@ -79,6 +82,12 @@ public final class ProfileStore {
         p.putLong("totalKills", profile.totalKills);
         p.putBoolean("purchase.removeAds", profile.removeAdsPurchased);
         p.putBoolean("purchase.starterPackGranted", profile.starterPackGranted);
+        int receiptIndex = 0;
+        for (String receipt : profile.deliveredPurchaseReceipts()) {
+            if (receiptIndex >= MAX_PURCHASE_RECEIPTS) break;
+            p.putString("purchase.receipt." + receiptIndex++, receipt);
+        }
+        p.putInteger("purchase.receipt.count", receiptIndex);
         p.putString("survivor.selected", profile.selectedSurvivor.name());
         p.putString("weapon.selected", profile.selectedWeapon().id);
         for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
