@@ -470,15 +470,26 @@ public final class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         boolean authored = spritePass.authoredAvailable();
+
+        batch.setProjectionMatrix(cam.combined);
+        if (authored) spritePass.renderEnvironmentFloor(batch);
+
         shapes.setProjectionMatrix(cam.combined);
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(.018f, .030f, .040f, 1f); shapes.rect(-40, -24, 80, 48);
-        shapes.setColor(.06f, .14f, .17f, .38f);
-        for (int x = -40; x < 40; x += 2) shapes.rect(x, -24, .02f, 48);
-        for (int y = -24; y < 24; y += 2) shapes.rect(-40, y, 80, .02f);
-
+        if (!authored) {
+            shapes.setColor(.018f, .030f, .040f, 1f);
+            shapes.rect(-40, -24, 80, 48);
+            shapes.setColor(.06f, .14f, .17f, .38f);
+            for (int x = -40; x < 40; x += 2) shapes.rect(x, -24, .02f, 48);
+            for (int y = -24; y < 24; y += 2) shapes.rect(-40, y, 80, .02f);
+        }
         polish.drawWorldUnderlay(shapes, player, enemies, pools, visualTime);
         worldFx.drawGroundShadows(shapes, player, enemies);
+        shapes.end();
+
+        if (authored) spritePass.renderEnvironmentDressing(batch);
+
+        shapes.begin(ShapeRenderer.ShapeType.Filled);
         worldFx.drawProjectileTrails(shapes, pools.projectiles, pools.hostileProjectiles, pools.homingMissiles);
         worldFx.drawElectricArcs(shapes, pools.arcs, visualTime);
 
@@ -523,7 +534,7 @@ public final class GameScreen extends ScreenAdapter {
 
         batch.setProjectionMatrix(cam.combined);
         polish.drawAuthoredDeaths(batch, pools);
-        spritePass.render(batch, player, enemies);
+        spritePass.renderCombat(batch, player, enemies, pools);
         drawCombatText();
         drawHud();
     }
