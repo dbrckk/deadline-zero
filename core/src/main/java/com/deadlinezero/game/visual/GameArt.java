@@ -55,9 +55,14 @@ public final class GameArt implements Disposable {
         return region == null ? fallbackRegion : region;
     }
 
-    /** Returns null when an authored FX sequence is absent, preserving procedural fallback. */
+    /** Returns null when a one-shot authored FX sequence is absent, preserving procedural fallback. */
     public TextureRegion effectOrNull(String name, float stateTime, float frameDuration) {
         return animatedOrNull("fx/" + name, frameDuration, stateTime, false);
+    }
+
+    /** Returns null when a looping authored FX sequence is absent. */
+    public TextureRegion loopingEffectOrNull(String name, float stateTime, float frameDuration) {
+        return animatedOrNull("fx/" + name, frameDuration, stateTime, true);
     }
 
     public TextureRegion region(String name) {
