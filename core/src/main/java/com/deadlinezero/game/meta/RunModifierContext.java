@@ -85,7 +85,10 @@ public final class RunModifierContext {
     }
 
     /** Legacy/direct-run fallback: activates the first deterministic offer. */
-    public static void begin() { active = offers()[0]; }
+    public static void begin() {
+        active = offers()[0];
+        BalanceTelemetryRuntime.setContract(active.title);
+    }
 
     /** Activates only a contract that belongs to the current run's offer set. */
     public static boolean choose(Modifier selection) {
@@ -93,6 +96,7 @@ public final class RunModifierContext {
         for (Modifier offered : offers()) {
             if (offered == selection) {
                 active = selection;
+                BalanceTelemetryRuntime.setContract(active.title);
                 return true;
             }
         }
