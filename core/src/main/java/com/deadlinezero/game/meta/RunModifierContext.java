@@ -35,9 +35,9 @@ public final class RunModifierContext {
 
     public static void begin() {
         Modifier[] values = Modifier.values();
-        int seed = RunStageContext.encounterSeed();
-        int mixed = seed ^ (seed >>> 11) ^ 0x5f356495;
-        active = values[Math.floorMod(mixed, values.length)];
+        int stageOffset = Math.floorMod(RunStageContext.stage() * 2, values.length);
+        int ordinalOffset = Math.floorMod(RunStageContext.runOrdinal() * 3, values.length);
+        active = values[(stageOffset + ordinalOffset) % values.length];
     }
 
     public static void end() { active = null; }
