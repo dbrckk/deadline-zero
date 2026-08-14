@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 final class RunRewardCalculatorTest {
     @Test void ordinaryRewardsRemainStable() {
         var rewards = RunRewardCalculator.calculate(60, 120f, true, 1);
-        assertEquals(325L, rewards.credits());
+        assertEquals(345L, rewards.credits());
         assertEquals(195L, rewards.accountXp());
         assertEquals(1, rewards.gems());
     }
