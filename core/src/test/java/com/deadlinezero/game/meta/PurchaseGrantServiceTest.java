@@ -59,7 +59,7 @@ public final class PurchaseGrantServiceTest {
 
     @Test public void restoreOnlyRehydratesPermanentEntitlements() {
         PlayerProfile profile = new PlayerProfile();
-        FakeBilling billing = new FakeBilling(BillingService.REMOVE_ADS, BillingService.STARTER_PACK, BillingService.GEMS_LARGE);
+        FakeBilling billing = new FakeBilling(true, BillingService.REMOVE_ADS, BillingService.STARTER_PACK, BillingService.GEMS_LARGE);
 
         assertTrue(PurchaseGrantService.syncPermanent(profile, billing));
         assertTrue(profile.removeAdsPurchased);
@@ -68,6 +68,22 @@ public final class PurchaseGrantServiceTest {
         assertEquals(250L, profile.currency(PlayerProfile.Currency.GEMS));
         assertFalse(PurchaseGrantService.syncPermanent(profile, billing));
         assertEquals(250L, profile.currency(PlayerProfile.Currency.GEMS));
+    }
+
+    @Test public void cachedRemoveAdsSurvivesUntilStoreSnapshotIsAuthoritative() {
+        PlayerProfile profile = new PlayerProfile();
+        profile.removeAdsPurchased = true;
+
+        assertFalse(PurchaseGrantService.syncPermanent(profile, new FakeBilling(false)));
+        assertTrue(profile.removeAdsPurchased);
+    }
+
+    @Test public void authoritativeStoreSnapshotRevokesStaleRemoveAds() {
+        PlayerProfile profile = new PlayerProfile();
+        profile.removeAdsPurchased = true;
+
+        assertTrue(PurchaseGrantService.syncPermanent(profile, new FakeBilling(true)));
+        assertFalse(profile.removeAdsPurchased);
     }
 
     @Test public void unknownProductCannotMutateProfile() {
@@ -79,9 +95,16 @@ public final class PurchaseGrantServiceTest {
 
     private static final class FakeBilling implements BillingService {
         private final Set<String> owned = new HashSet<>();
-        FakeBilling(String... ids) { for (String id : ids) owned.add(id); }
+        private final boolean authoritative;
+
+        FakeBilling(boolean authoritative, String... ids) {
+            this.authoritative = authoritative;
+            for (String id : ids) owned.add(id);
+        }
+
         @Override public void initialize() { }
         @Override public boolean owns(String productId) { return owned.contains(productId); }
+        @Override public boolean authoritativeEntitlements() { return authoritative; }
         @Override public void purchase(String productId, Runnable onSuccess, Runnable onFailure) { onFailure.run(); }
         @Override public void restore() { }
     }
