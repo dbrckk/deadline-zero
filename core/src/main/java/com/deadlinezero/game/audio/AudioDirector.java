@@ -7,7 +7,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
 
-/** Resilient production audio gateway. Missing files degrade to silence instead of breaking the game. */
+/** Resilient production audio gateway. Missing files degrade to safe fallbacks or silence instead of breaking the game. */
 public final class AudioDirector {
     public enum Cue { SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_PHASE, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK }
 
@@ -45,6 +45,17 @@ public final class AudioDirector {
         if (file.exists()) sounds.put(cue, Gdx.audio.newSound(file));
     }
 
+    static Cue fallbackCue(Cue cue) {
+        return cue == Cue.BOSS_PHASE ? Cue.BOSS_HIT : null;
+    }
+
+    private Sound resolveSound(Cue cue) {
+        Sound sound = sounds.get(cue);
+        if (sound != null) return sound;
+        Cue fallback = fallbackCue(cue);
+        return fallback == null ? null : sounds.get(fallback);
+    }
+
     public static void playGlobal(Cue cue) {
         if (active != null) active.play(cue);
     }
@@ -54,13 +65,13 @@ public final class AudioDirector {
     }
 
     public void play(Cue cue) {
-        Sound sound = sounds.get(cue);
+        Sound sound = resolveSound(cue);
         if (sound == null || !limiter.allow(cue, TimeUtils.nanoTime())) return;
         sound.play(master * sfx);
     }
 
     public void play(Cue cue, float pitch, float pan) {
-        Sound sound = sounds.get(cue);
+        Sound sound = resolveSound(cue);
         if (sound == null || !limiter.allow(cue, TimeUtils.nanoTime())) return;
         sound.play(master * sfx, Math.max(.5f, Math.min(2f, pitch)), Math.max(-1f, Math.min(1f, pan)));
     }
