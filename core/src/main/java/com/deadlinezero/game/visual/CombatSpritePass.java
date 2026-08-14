@@ -36,10 +36,19 @@ public final class CombatSpritePass {
     public GraphicsQuality quality() { return quality; }
     public void setQuality(GraphicsQuality quality) { if (quality != null) this.quality = quality; }
 
-    /**
-     * Draws environment-only authored art. This method is intentionally separate so GameScreen can
-     * place the environment before ShapeRenderer world FX without duplicating sprite-pass logic.
-     */
+    /** First world pass: opaque authored/bootstrap floor and hazard tiles. */
+    public void renderEnvironmentFloor(SpriteBatch batch) {
+        if (!characters.authoredAvailable()) return;
+        environment.drawFloor(batch, 1f);
+    }
+
+    /** Second world pass: decals and props, intended above ground FX but below combatants. */
+    public void renderEnvironmentDressing(SpriteBatch batch) {
+        if (!characters.authoredAvailable()) return;
+        environment.drawSetDressing(batch);
+    }
+
+    /** Transitional environment-only wrapper retaining the historical blended floor. */
     public void renderEnvironment(SpriteBatch batch) {
         if (!characters.authoredAvailable()) return;
         environment.drawAuthored(batch);
