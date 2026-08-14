@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.ai.BossAffixRules;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
@@ -41,7 +42,7 @@ public final class RunContractScreen extends ScreenAdapter {
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(VisualTheme.PANEL);
-        shapes.rect(18f, h - 94f, w - 36f, 64f);
+        shapes.rect(18f, h - 104f, w - 36f, 74f);
         for (int i = 0; i < offers.length; i++) {
             float x = margin + i * (cardW + gap);
             float pulse = .50f + .50f * (float)Math.sin(time * (offers[i].legendary() ? 4.2f : 2.5f) + i * .8f);
@@ -59,16 +60,18 @@ public final class RunContractScreen extends ScreenAdapter {
         }
         shapes.end();
 
+        BossAffixRules.Affix bossAffix = BossAffixRules.forRun(RunStageContext.stage(), RunStageContext.threatTier());
         batch.begin();
         font.getData().setScale(.92f);
         font.setColor(VisualTheme.TEXT);
         font.draw(batch, "SELECT RUN CONTRACT", 0f, h - 50f, w, Align.center, false);
-        font.getData().setScale(.43f);
+        font.getData().setScale(.41f);
         font.setColor(RunStageContext.threatTier() > 0 ? VisualTheme.GOLD : VisualTheme.MUTED);
-        font.draw(batch, "STAGE " + RunStageContext.stage()
+        String threatLine = "STAGE " + RunStageContext.stage()
             + "  •  THREAT " + RunStageContext.threatTier()
-            + "  •  +" + ThreatTierRules.rewardBonusPercent(RunStageContext.threatTier())
-            + "% ASCENSION REWARDS", 0f, h - 76f, w, Align.center, false);
+            + "  •  +" + ThreatTierRules.rewardBonusPercent(RunStageContext.threatTier()) + "% ASCENSION";
+        if (bossAffix != BossAffixRules.Affix.NONE) threatLine += "  •  BOSS AFFIX " + bossAffix.title;
+        font.draw(batch, threatLine, 0f, h - 76f, w, Align.center, false);
 
         for (int i = 0; i < offers.length; i++) {
             RunModifierContext.Modifier m = offers[i];
