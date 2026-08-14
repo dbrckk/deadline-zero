@@ -29,9 +29,11 @@ public final class LegendarySelector {
 
     /** Rare enough to feel exceptional while guaranteeing exposure in longer runs. */
     public static boolean shouldOffer(Player player) {
-        if (player.level < 8) return false;
-        if (player.legendary.hasOverdrive() && player.legendary.hasSingularity() && player.legendary.hasApex()) return false;
-        if (player.level == 8 || player.level == 12 || player.level == 16) return true;
-        return player.level > 16 && player.level % 5 == 0;
+        if (player == null || player.level < 8) return false;
+        boolean scheduled = player.level == 8 || player.level == 12 || player.level == 16
+            || (player.level > 16 && player.level % 5 == 0);
+        if (!scheduled) return false;
+        for (LegendaryChoice choice : ALL) if (choice.eligible(player)) return true;
+        return false;
     }
 }
