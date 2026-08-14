@@ -43,18 +43,22 @@ public final class GameArt implements Disposable {
         return animated(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
     }
 
+    /** Directional atlas contract: survivor/{id}/{n|ne|e|se|s|sw|w|nw}/{motion}. */
+    public TextureRegion survivor(SurvivorCatalog.Survivor survivor, Motion motion, Direction8 direction, float stateTime) {
+        String root = "survivor/" + survivor.name().toLowerCase();
+        float frameDuration = AnimationProfileCatalog.survivor(survivor).duration(motion);
+        TextureRegion directional = animatedOrNull(
+            directionalPrefix(root, direction, motion), frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
+        return directional == null ? survivor(survivor, motion, stateTime) : directional;
+    }
+
     public TextureRegion enemy(Enemy.Type type, Motion motion, float stateTime) {
         String prefix = "enemy/" + type.name().toLowerCase() + "/" + motion.name().toLowerCase();
         float frameDuration = AnimationProfileCatalog.enemy(type).duration(motion);
         TextureRegion region = animatedOrNull(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
         if (region != null) return region;
 
-        Enemy.Type readableFallback = switch (type) {
-            case SHIELDED -> Enemy.Type.BRUTE;
-            case REGENERATOR -> Enemy.Type.SHAMBLER;
-            case PHANTOM -> Enemy.Type.RUNNER;
-            default -> null;
-        };
+        Enemy.Type readableFallback = readableFallback(type);
         if (readableFallback != null) {
             String fallbackPrefix = "enemy/" + readableFallback.name().toLowerCase() + "/" + motion.name().toLowerCase();
             float fallbackDuration = AnimationProfileCatalog.enemy(readableFallback).duration(motion);
@@ -64,6 +68,25 @@ public final class GameArt implements Disposable {
         return fallbackRegion;
     }
 
+    /** Directional atlas contract: enemy/{type}/{n|ne|e|se|s|sw|w|nw}/{motion}. */
+    public TextureRegion enemy(Enemy.Type type, Motion motion, Direction8 direction, float stateTime) {
+        String root = "enemy/" + type.name().toLowerCase();
+        float frameDuration = AnimationProfileCatalog.enemy(type).duration(motion);
+        TextureRegion region = animatedOrNull(
+            directionalPrefix(root, direction, motion), frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
+        if (region != null) return region;
+
+        Enemy.Type readableFallback = readableFallback(type);
+        if (readableFallback != null) {
+            String fallbackRoot = "enemy/" + readableFallback.name().toLowerCase();
+            float fallbackDuration = AnimationProfileCatalog.enemy(readableFallback).duration(motion);
+            region = animatedOrNull(
+                directionalPrefix(fallbackRoot, direction, motion), fallbackDuration, stateTime, AnimationProfileCatalog.loops(motion));
+            if (region != null) return region;
+        }
+        return enemy(type, motion, stateTime);
+    }
+
     /** Uses dedicated boss identity art when present, falling back to the generic BOSS authored set. */
     public TextureRegion boss(boolean revenant, Motion motion, float stateTime) {
         String identity = revenant ? "revenant" : "alpha";
@@ -71,6 +94,16 @@ public final class GameArt implements Disposable {
         float frameDuration = AnimationProfileCatalog.enemy(Enemy.Type.BOSS).duration(motion);
         TextureRegion region = animatedOrNull(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
         return region == null ? enemy(Enemy.Type.BOSS, motion, stateTime) : region;
+    }
+
+    /** Directional atlas contract: boss/{identity}/{n|ne|e|se|s|sw|w|nw}/{motion}. */
+    public TextureRegion boss(boolean revenant, Motion motion, Direction8 direction, float stateTime) {
+        String identity = revenant ? "revenant" : "alpha";
+        String root = "boss/" + identity;
+        float frameDuration = AnimationProfileCatalog.enemy(Enemy.Type.BOSS).duration(motion);
+        TextureRegion region = animatedOrNull(
+            directionalPrefix(root, direction, motion), frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
+        return region == null ? boss(revenant, motion, stateTime) : region;
     }
 
     public TextureRegion effect(String name, float stateTime, float frameDuration) {
@@ -129,6 +162,20 @@ public final class GameArt implements Disposable {
             if (single != null) return single;
         }
         return BootstrapArtCatalog.region(bootstrapTexture, prefix);
+    }
+
+    static String directionalPrefix(String root, Direction8 direction, Motion motion) {
+        Direction8 safeDirection = direction == null ? Direction8.E : direction;
+        return root + "/" + safeDirection.atlasToken() + "/" + motion.name().toLowerCase();
+    }
+
+    private static Enemy.Type readableFallback(Enemy.Type type) {
+        return switch (type) {
+            case SHIELDED -> Enemy.Type.BRUTE;
+            case REGENERATOR -> Enemy.Type.SHAMBLER;
+            case PHANTOM -> Enemy.Type.RUNNER;
+            default -> null;
+        };
     }
 
     private void loadAtlas() {
