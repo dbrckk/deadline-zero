@@ -16,10 +16,24 @@ public final class ArtManifest {
         "environment/prop/barrier_a"
     };
 
+    /** Atlas-driven effects already consumed by AuthoredVfxRenderer. */
+    public static final String[] REQUIRED_FX = {
+        "fx/muzzle_fire",
+        "fx/dash",
+        "fx/level_up",
+        "fx/impact_energy",
+        "fx/impact_fire",
+        "fx/impact_frost",
+        "fx/impact_shock",
+        "fx/impact_kill",
+        "fx/boss_explosion"
+    };
+
     public static int validate(GameArt art) {
         if (!art.authoredAvailable()) return 0;
         int missing = 0;
         for (String key : REQUIRED_STATIC) missing += requireRegion(art, key);
+        for (String key : REQUIRED_FX) missing += requireMotion(art, key);
         for (WeaponDefinition weapon : WeaponCatalog.all()) missing += requireRegion(art, "weapon/" + weapon.id);
 
         for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
@@ -45,7 +59,10 @@ public final class ArtManifest {
     }
 
     private static int requireMotion(GameArt art, String root, String motion) {
-        String key = root + "/" + motion;
+        return requireMotion(art, root + "/" + motion);
+    }
+
+    private static int requireMotion(GameArt art, String key) {
         if (art.hasAnimation(key)) return 0;
         Gdx.app.log("ArtManifest", "Missing authored animation/region: " + key);
         return 1;
