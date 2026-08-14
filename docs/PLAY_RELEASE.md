@@ -24,6 +24,18 @@ Set upload signing with either Gradle properties or the equivalent environment v
 
 Never commit keystores, passwords, aliases, production ad IDs, or generated credential files.
 
+## Play Store graphics
+
+Place final authored listing exports under `play/store/` as defined in `docs/STORE_RELEASE.md` and `play/store/README.md`.
+
+You can validate only the listing graphics with:
+
+```bash
+gradle :android:verifyPlayStoreAssets
+```
+
+The production gate requires the Play icon, feature graphic and at least three recommendation-grade 16:9 gameplay screenshots. Temporary mockups must not use the final filenames.
+
 ## Versioning
 
 Update `appVersion` and increment `appVersionCode` in `gradle.properties` before every Play upload. Google Play requires every uploaded artifact to use a version code greater than the previous uploaded version. The release gate accepts version codes from `1` through `2100000000`.
@@ -45,14 +57,15 @@ Replace the example privacy URL above with the real production URL. The signing 
 
 1. `:core:test`
 2. `:android:lintRelease`
-3. authored production-asset validation
-4. AdMob production-ID validation
-5. public HTTPS privacy-policy validation
-6. upload-keystore/signing validation
-7. Play version metadata validation
-8. `:android:bundleRelease`
+3. authored runtime production-asset validation
+4. Play Store icon / feature graphic / screenshot validation
+5. AdMob production-ID validation
+6. public HTTPS privacy-policy validation
+7. upload-keystore/signing validation
+8. Play version metadata validation
+9. `:android:bundleRelease`
 
-The command refuses to produce a Play bundle when production AdMob IDs, the public privacy-policy URL, authored assets, upload signing, or valid version metadata are missing.
+The command refuses to produce a Play bundle when production AdMob IDs, the public privacy-policy URL, authored runtime assets, final Store graphics, upload signing, or valid version metadata are missing.
 
 The resulting signed Android App Bundle is produced under `android/build/outputs/bundle/release/`.
 
