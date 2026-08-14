@@ -11,16 +11,17 @@ import com.deadlinezero.game.fx.DeathFx;
 import com.deadlinezero.game.fx.ImpactFx;
 
 public final class Pools {
-    public static final int MAX_HOSTILE_PROJECTILES = 512;
+    public static final int MAX_HOSTILE_PROJECTILES = 384;
     public static final int MAX_HOMING_MISSILES = 96;
-    public static final int MAX_DAMAGE_NUMBERS = 256;
+    public static final int MAX_IMPACTS = 192;
+    public static final int MAX_DAMAGE_NUMBERS = 192;
     public static final int MAX_ARCS = 96;
     public static final int MAX_DEATH_FX = 72;
 
     public final Array<Projectile> projectiles = new Array<>(false, GameConfig.MAX_PROJECTILES);
     public final Array<EnemyProjectile> hostileProjectiles = new Array<>(false, MAX_HOSTILE_PROJECTILES);
     public final Array<HomingMissile> homingMissiles = new Array<>(false, MAX_HOMING_MISSILES);
-    public final Array<ImpactFx> impacts = new Array<>(false, 256);
+    public final Array<ImpactFx> impacts = new Array<>(false, MAX_IMPACTS);
     public final Array<DamageNumber> damageNumbers = new Array<>(false, MAX_DAMAGE_NUMBERS);
     public final Array<ArcFx> arcs = new Array<>(false, MAX_ARCS);
     public final Array<DeathFx> deathFx = new Array<>(false, MAX_DEATH_FX);
@@ -37,7 +38,7 @@ public final class Pools {
         for (int i = 0; i < GameConfig.MAX_PROJECTILES; i++) projectiles.add(new Projectile());
         for (int i = 0; i < MAX_HOSTILE_PROJECTILES; i++) hostileProjectiles.add(new EnemyProjectile());
         for (int i = 0; i < MAX_HOMING_MISSILES; i++) homingMissiles.add(new HomingMissile());
-        for (int i = 0; i < 256; i++) impacts.add(new ImpactFx());
+        for (int i = 0; i < MAX_IMPACTS; i++) impacts.add(new ImpactFx());
         for (int i = 0; i < MAX_DAMAGE_NUMBERS; i++) damageNumbers.add(new DamageNumber());
         for (int i = 0; i < MAX_ARCS; i++) arcs.add(new ArcFx());
         for (int i = 0; i < MAX_DEATH_FX; i++) deathFx.add(new DeathFx());
