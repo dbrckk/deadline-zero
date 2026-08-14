@@ -122,6 +122,8 @@ public final class DeadlineZeroGame extends Game {
         boolean firstClear = bossKilled && safeStage >= profile.highestStage;
         long firstClearCredits = firstClear ? StageMissionRules.firstClearCredits(safeStage) : 0L;
         int firstClearGems = firstClear ? StageMissionRules.firstClearGems(safeStage) : 0;
+        String contractTitle = RunModifierContext.title();
+        int contractBonus = RunModifierContext.rewardBonusPercent();
 
         RunRewardCalculator.Rewards rewards = RunSettlement.apply(profile, kills, secondsSurvived, bossKilled, safeStage);
         long encounterCredits = RunEncounterRuntime.consumeBonusCredits();
@@ -149,7 +151,8 @@ public final class DeadlineZeroGame extends Game {
         RunModifierContext.end();
         if (audio != null) audio.stopCombatMusic();
         saveProfile();
-        RunResult result = new RunResult(kills, secondsSurvived, bossKilled, safeStage, rewards, drop);
+        RunResult result = new RunResult(kills, secondsSurvived, bossKilled, safeStage, rewards, drop,
+            contractTitle, contractBonus);
         if (bossKilled || victorySignal) setScreen(new VictoryScreen(this, result, firstClear, firstClearCredits, firstClearGems));
         else setScreen(new RunResultScreen(this, result));
     }
