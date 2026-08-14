@@ -103,7 +103,7 @@ public final class DeadlineZeroGame extends Game {
         if (!RunModifierContext.choose(contract)) return;
         RunLoadoutContext.begin(profile);
         RunEncounterRuntime.begin();
-        RunMissionRuntime.begin(() -> Gdx.app.postRunnable(() -> finishVictory()));
+        RunMissionRuntime.begin(() -> Gdx.app.postRunnable(() -> finishVictory()), RunModifierContext.requiredBossKills());
         if (audio != null) audio.startCombatMusic(RunStageContext.stage());
         setScreen(new GameScreen(this));
     }
