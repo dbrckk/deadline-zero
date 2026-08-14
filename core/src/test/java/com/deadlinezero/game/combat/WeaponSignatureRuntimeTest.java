@@ -18,10 +18,11 @@ final class WeaponSignatureRuntimeTest {
             var mark = WeaponSignatureRuntime.consumeShot(false);
             assertEquals(i % 5 == 0, mark.active());
             if (i % 5 == 0) {
+                assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, mark.kind());
                 assertTrue(mark.forceCritical());
                 assertEquals(1, mark.penetrationBonus());
                 assertTrue(mark.damageMultiplier() >= 2f);
-            }
+            } else assertEquals(WeaponSignatureRuntime.Kind.NONE, mark.kind());
         }
     }
 
@@ -31,10 +32,11 @@ final class WeaponSignatureRuntimeTest {
             var mark = WeaponSignatureRuntime.consumeShot(false);
             assertEquals(i % 4 == 0, mark.active());
             if (i % 4 == 0) {
+                assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, mark.kind());
                 assertFalse(mark.forceCritical());
                 assertEquals(1.55f, mark.damageMultiplier(), .0001f);
                 assertEquals(.17f, mark.radius(), .0001f);
-            }
+            } else assertEquals(WeaponSignatureRuntime.Kind.NONE, mark.kind());
         }
     }
 
@@ -51,6 +53,7 @@ final class WeaponSignatureRuntimeTest {
         for (int i = 0; i < 4; i++) new Projectile().spawn(0, 0, 1, 0, 10f, false, 2, 1f, DamageElement.SHOCK);
         Projectile p = new Projectile().spawn(0, 0, 1, 0, 10f, false, 2, 1f, DamageElement.SHOCK);
         assertTrue(p.weaponSignature);
+        assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, p.weaponSignatureKind);
         assertTrue(p.critical);
         assertEquals(3, p.penetrationRemaining);
         assertTrue(p.damage >= 20f);
@@ -62,6 +65,7 @@ final class WeaponSignatureRuntimeTest {
         for (int i = 0; i < 3; i++) new Projectile().spawn(0, 0, 1, 0, 20f, false, 1, 4f, DamageElement.FIRE);
         Projectile p = new Projectile().spawn(0, 0, 1, 0, 20f, false, 1, 4f, DamageElement.FIRE);
         assertTrue(p.weaponSignature);
+        assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, p.weaponSignatureKind);
         assertEquals(DamageElement.FIRE, p.element);
         assertEquals(31f, p.damage, .0001f);
         assertEquals(2, p.penetrationRemaining);
