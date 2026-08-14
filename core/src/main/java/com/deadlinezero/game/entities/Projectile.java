@@ -13,6 +13,7 @@ public final class Projectile {
     public int penetrationRemaining;
     public boolean active;
     public boolean critical;
+    public boolean singularity;
     public DamageElement element = DamageElement.KINETIC;
     public Enemy lastHit;
 
@@ -24,6 +25,7 @@ public final class Projectile {
         this.life = 1.5f;
         this.active = true;
         this.critical = critical;
+        this.singularity = false;
         this.penetrationRemaining = penetration;
         this.knockback = knockback;
         this.element = element;
