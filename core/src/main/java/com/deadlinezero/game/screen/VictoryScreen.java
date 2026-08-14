@@ -10,7 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.RunResult;
+import com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog;
 
 public final class VictoryScreen extends ScreenAdapter {
     private final DeadlineZeroGame game;
@@ -60,6 +62,12 @@ public final class VictoryScreen extends ScreenAdapter {
             font.setColor(Color.GOLD);
             String milestone = result.threatMilestoneGems() > 0 ? "  +" + result.threatMilestoneGems() + " MILESTONE GEMS" : "";
             font.draw(batch, "THREAT " + result.unlockedThreatTier() + " UNLOCKED" + milestone, 0, h * .405f, w, Align.center, false);
+            EquipmentItem exclusive = ThreatMilestoneRewardCatalog.forTier(result.unlockedThreatTier());
+            if (exclusive != null) {
+                font.getData().setScale(.52f);
+                font.setColor(Color.MAGENTA);
+                font.draw(batch, "MYTHIC UNLOCK  •  " + exclusive.name.toUpperCase(), 0, h * .365f, w, Align.center, false);
+            }
         } else if (firstClear) {
             font.setColor(Color.LIME);
             font.draw(batch, "FIRST CLEAR  +" + bonusCredits + " Credits  +" + bonusGems + " Gems", 0, h * .40f, w, Align.center, false);
@@ -67,7 +75,7 @@ public final class VictoryScreen extends ScreenAdapter {
         if (result.drop() != null) {
             font.getData().setScale(.68f);
             font.setColor(Color.WHITE);
-            font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + " Lv." + result.drop().level, 0, h * .33f, w, Align.center, false);
+            font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + " Lv." + result.drop().level, 0, h * .31f, w, Align.center, false);
         }
         font.setColor(Color.WHITE);
         font.draw(batch, "BASE", w * .24f, h * .18f + 36f, w * .22f, Align.center, false);
