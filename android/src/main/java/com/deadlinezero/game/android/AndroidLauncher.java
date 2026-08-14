@@ -25,7 +25,7 @@ public final class AndroidLauncher extends AndroidApplication {
             new DeadlineZeroGame(new GameServices(
                 ads,
                 new AndroidBillingService(this),
-                new AndroidPrivacyService(consent)
+                new AndroidPrivacyService(this, consent)
             )),
             config
         );
