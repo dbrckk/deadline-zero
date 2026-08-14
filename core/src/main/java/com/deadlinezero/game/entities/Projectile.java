@@ -15,11 +15,13 @@ public final class Projectile {
     public boolean active;
     public boolean critical;
     public boolean singularity;
+    public long generation;
     public DamageElement element = DamageElement.KINETIC;
     public Enemy lastHit;
 
     public Projectile spawn(float x, float y, float vx, float vy, float damage, boolean critical,
                             int penetration, float knockback, DamageElement element) {
+        generation++;
         position.set(x, y);
         velocity.set(vx, vy);
         singularity = SingularityCoreRuntime.consumeShotMark();
