@@ -107,7 +107,10 @@ public final class RunModifierContext {
     public static float enemyHpMultiplier() { return active == null ? 1f : active.enemyHp; }
     public static float enemySpeedMultiplier() { return active == null ? 1f : active.enemySpeed; }
     public static float enemyDamageMultiplier() { return active == null ? 1f : active.enemyDamage; }
-    public static float spawnIntervalMultiplier() { return active == null ? 1f : active.spawnInterval; }
+    public static float spawnIntervalMultiplier() {
+        float contract = active == null ? 1f : active.spawnInterval;
+        return contract * ThreatTierRules.spawnIntervalMultiplier(RunStageContext.threatTier());
+    }
     public static float rewardMultiplier() { return active == null ? 1f : active.reward; }
     public static int rewardBonusPercent() { return Math.round((rewardMultiplier() - 1f) * 100f); }
     public static boolean eliteHunt() { return active == Modifier.ELITE_HUNT; }
