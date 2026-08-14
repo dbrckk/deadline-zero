@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.deadlinezero.game.ai.BossIdentity;
 import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
@@ -105,9 +106,10 @@ public final class CharacterSpriteRenderer {
         Clock clock = clock(enemy, motion);
         clock.direction = Direction8.fromVector(enemy.velocity.x, enemy.velocity.y, clock.direction);
         ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.enemy(enemy.type);
-        boolean revenantBoss = enemy.type == Enemy.Type.BOSS && enemy.bossCombat != null && enemy.bossCombat.revenant();
+        BossIdentity bossIdentity = enemy.type == Enemy.Type.BOSS && enemy.bossCombat != null
+            ? enemy.bossCombat.identity() : BossIdentity.ALPHA;
         TextureRegion region = enemy.type == Enemy.Type.BOSS
-            ? art.boss(revenantBoss, motion, clock.direction, clock.time)
+            ? art.boss(bossIdentity, motion, clock.direction, clock.time)
             : art.enemy(enemy.type, motion, clock.direction, clock.time);
         float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
@@ -217,11 +219,25 @@ public final class CharacterSpriteRenderer {
                 clock.phasePulse = .42f;
             }
 
-            if (revenantBoss) {
-                r *= 1.00f;
-                g *= .86f;
-                b *= 1.08f;
-                scale *= 1.025f;
+            switch (bossIdentity) {
+                case REVENANT -> {
+                    g *= .86f;
+                    b *= 1.08f;
+                    scale *= 1.025f;
+                }
+                case WARDEN -> {
+                    r *= .82f;
+                    g *= .94f;
+                    b *= 1.08f;
+                    scale *= 1.04f;
+                }
+                case HARVESTER -> {
+                    r *= 1.08f;
+                    g *= .82f;
+                    b *= .66f;
+                    scale *= 1.035f;
+                }
+                default -> { }
             }
 
             if (phase == 2) {
