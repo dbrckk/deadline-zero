@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 /** Resilient production audio gateway. Missing files degrade to safe fallbacks or silence instead of breaking the game. */
 public final class AudioDirector {
-    public enum Cue { SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_PHASE, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK, SINGULARITY }
+    public enum Cue { SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_PHASE, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK, SINGULARITY, ION_OVERCHARGE, CINDER_OVERHEAT }
 
     private static AudioDirector active;
     private final ObjectMap<Cue, Sound> sounds = new ObjectMap<>();
@@ -36,9 +36,9 @@ public final class AudioDirector {
         load(Cue.UI_SELECT, "audio/sfx/ui_select.ogg");
         load(Cue.UI_BACK, "audio/sfx/ui_back.ogg");
         load(Cue.SINGULARITY, "audio/sfx/singularity.ogg");
-        for (MusicProfileSelector.Profile profile : MusicProfileSelector.Profile.values()) {
-            loadMusic(profile, MusicProfileSelector.assetPath(profile));
-        }
+        load(Cue.ION_OVERCHARGE, "audio/sfx/ion_overcharge.ogg");
+        load(Cue.CINDER_OVERHEAT, "audio/sfx/cinder_overheat.ogg");
+        for (MusicProfileSelector.Profile profile : MusicProfileSelector.Profile.values()) loadMusic(profile, MusicProfileSelector.assetPath(profile));
     }
 
     private void load(Cue cue, String path) {
@@ -58,7 +58,8 @@ public final class AudioDirector {
     static Cue fallbackCue(Cue cue) {
         return switch (cue) {
             case BOSS_PHASE -> Cue.BOSS_HIT;
-            case SINGULARITY -> Cue.CRIT;
+            case SINGULARITY, ION_OVERCHARGE -> Cue.CRIT;
+            case CINDER_OVERHEAT -> Cue.BOSS_HIT;
             default -> null;
         };
     }
@@ -76,13 +77,8 @@ public final class AudioDirector {
         return combatMusic.get(MusicProfileSelector.Profile.SURVIVAL);
     }
 
-    public static void playGlobal(Cue cue) {
-        if (active != null) active.play(cue);
-    }
-
-    public static void playGlobal(Cue cue, float pitch, float pan) {
-        if (active != null) active.play(cue, pitch, pan);
-    }
+    public static void playGlobal(Cue cue) { if (active != null) active.play(cue); }
+    public static void playGlobal(Cue cue, float pitch, float pan) { if (active != null) active.play(cue, pitch, pan); }
 
     public void play(Cue cue) {
         Sound sound = resolveSound(cue);
@@ -96,9 +92,7 @@ public final class AudioDirector {
         sound.play(master * sfx, Math.max(.5f, Math.min(2f, pitch)), Math.max(-1f, Math.min(1f, pan)));
     }
 
-    /** Backward-compatible stage-one music entry point. */
     public void startCombatMusic() { startCombatMusic(1); }
-
     public void startCombatMusic(int stage) {
         Music next = resolveMusic(MusicProfileSelector.forStage(stage));
         if (next == null) return;
@@ -120,10 +114,6 @@ public final class AudioDirector {
         resumeAfterSuspension = false;
     }
 
-    /**
-     * Suspends active combat music. Calls may be nested (for example Android backgrounding while a
-     * fullscreen ad is already open); playback resumes only after every suspension is released.
-     */
     public void suspend() {
         if (suspensionDepth == 0 && activeCombatMusic != null) {
             resumeAfterSuspension = activeCombatMusic.isPlaying();
@@ -132,7 +122,6 @@ public final class AudioDirector {
         suspensionDepth++;
     }
 
-    /** Releases one suspension and resumes only when the outermost suspension has ended. */
     public void resume() {
         if (suspensionDepth <= 0) return;
         suspensionDepth--;
