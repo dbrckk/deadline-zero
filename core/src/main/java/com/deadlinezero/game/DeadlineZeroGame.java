@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.meta.DailyService;
+import com.deadlinezero.game.meta.EntitlementStore;
 import com.deadlinezero.game.meta.EquipmentDropTable;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.PlayerProfile;
@@ -48,6 +49,7 @@ public final class DeadlineZeroGame extends Game {
         audio = new AudioDirector();
         audio.setVolumes(accessibility.masterVolume, accessibility.sfxVolume, accessibility.musicVolume);
         profile = ProfileStore.load();
+        EntitlementStore.loadInto(profile);
         DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
         profile.survivors.refreshUnlocks(profile);
         services.billing.initialize();
@@ -118,7 +120,11 @@ public final class DeadlineZeroGame extends Game {
         else setScreen(new RunResultScreen(this, result));
     }
 
-    public void saveProfile() { ProfileStore.save(profile); if (accessibility != null) accessibility.save(); }
+    public void saveProfile() {
+        ProfileStore.save(profile);
+        EntitlementStore.save(profile);
+        if (accessibility != null) accessibility.save();
+    }
     @Override public void pause() {
         if (audio != null) audio.suspend();
         saveProfile();
