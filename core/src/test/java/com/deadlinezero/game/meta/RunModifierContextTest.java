@@ -12,6 +12,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 final class RunModifierContextTest {
+    private static final EnumSet<RunModifierContext.Modifier> STANDARD = EnumSet.of(
+        RunModifierContext.Modifier.OVERCLOCKED,
+        RunModifierContext.Modifier.GLASS_HORDE,
+        RunModifierContext.Modifier.BLOOD_MOON,
+        RunModifierContext.Modifier.ELITE_HUNT,
+        RunModifierContext.Modifier.REDLINE);
+
     @AfterEach void cleanup() { RunModifierContext.end(); }
 
     @Test void selectionIsDeterministicForSameStageAndRunOrdinal() {
@@ -25,19 +32,20 @@ final class RunModifierContextTest {
         assertEquals(first, RunModifierContext.modifier());
     }
 
-    @Test void consecutiveRunsNeverRepeatTheSameContract() {
+    @Test void consecutiveFallbackRunsNeverRepeatTheSameStandardContract() {
         RunModifierContext.Modifier previous = null;
         for (int ordinal = 0; ordinal < 40; ordinal++) {
             RunStageContext.begin(9, ordinal);
             RunModifierContext.begin();
             RunModifierContext.Modifier current = RunModifierContext.modifier();
+            assertTrue(STANDARD.contains(current));
             if (previous != null) assertNotEquals(previous, current);
             previous = current;
             RunModifierContext.end();
         }
     }
 
-    @Test void rotationExposesEveryContractWithinFiveRuns() {
+    @Test void fallbackRotationExposesEveryStandardContractWithinFiveRuns() {
         EnumSet<RunModifierContext.Modifier> seen = EnumSet.noneOf(RunModifierContext.Modifier.class);
         for (int ordinal = 0; ordinal < 5; ordinal++) {
             RunStageContext.begin(9, ordinal);
@@ -45,7 +53,7 @@ final class RunModifierContextTest {
             seen.add(RunModifierContext.modifier());
             RunModifierContext.end();
         }
-        assertEquals(EnumSet.allOf(RunModifierContext.Modifier.class), seen);
+        assertEquals(STANDARD, seen);
     }
 
     @Test void offerSetContainsThreeUniqueDeterministicContracts() {
@@ -58,6 +66,34 @@ final class RunModifierContextTest {
         assertEquals(first[1], second[1]);
         assertEquals(first[2], second[2]);
         assertEquals(3, EnumSet.of(first[0], first[1], first[2]).size());
+    }
+
+    @Test void legendaryOfferAppearsOnDeterministicCadenceAfterStageThree() {
+        RunStageContext.begin(3, 1);
+        assertTrue(RunModifierContext.legendaryOfferAvailable());
+        RunModifierContext.Modifier[] offers = RunModifierContext.offers();
+        assertTrue(offers[2].legendary());
+        assertTrue(offers[2].rewardBonusPercent() >= 48);
+
+        RunStageContext.begin(2, 2);
+        assertFalse(RunModifierContext.legendaryOfferAvailable());
+        for (RunModifierContext.Modifier offer : RunModifierContext.offers()) assertFalse(offer.legendary());
+    }
+
+    @Test void legendaryRotationExposesAllThreeLegendaryMutators() {
+        EnumSet<RunModifierContext.Modifier> seen = EnumSet.noneOf(RunModifierContext.Modifier.class);
+        for (int stage = 3; stage <= 14; stage++) {
+            for (int ordinal = 0; ordinal < 12; ordinal++) {
+                RunStageContext.begin(stage, ordinal);
+                if (RunModifierContext.legendaryOfferAvailable()) {
+                    RunModifierContext.Modifier legendary = RunModifierContext.offers()[2];
+                    assertTrue(legendary.legendary());
+                    seen.add(legendary);
+                }
+            }
+        }
+        assertEquals(EnumSet.of(RunModifierContext.Modifier.VOLATILE_DEAD,
+            RunModifierContext.Modifier.TWIN_APEX, RunModifierContext.Modifier.VOID_STORM), seen);
     }
 
     @Test void onlyOfferedContractsCanBeActivated() {
@@ -98,6 +134,28 @@ final class RunModifierContextTest {
         assertTrue(contracted.credits() > baseline.credits());
         assertTrue(contracted.accountXp() > baseline.accountXp());
         assertEquals(baseline.gems(), contracted.gems());
+    }
+
+    @Test void twinApexRequiresTwoBossDefeats() {
+        RunStageContext.begin(3, 1);
+        assertTrue(RunModifierContext.choose(RunModifierContext.Modifier.TWIN_APEX)
+            || !EnumSet.of(RunModifierContext.offers()[0], RunModifierContext.offers()[1], RunModifierContext.offers()[2])
+                .contains(RunModifierContext.Modifier.TWIN_APEX));
+
+        RunModifierContext.end();
+        for (int stage = 3; stage <= 14; stage++) {
+            for (int ordinal = 0; ordinal < 12; ordinal++) {
+                RunStageContext.begin(stage, ordinal);
+                for (RunModifierContext.Modifier offer : RunModifierContext.offers()) {
+                    if (offer == RunModifierContext.Modifier.TWIN_APEX) {
+                        assertTrue(RunModifierContext.choose(offer));
+                        assertEquals(2, RunModifierContext.requiredBossKills());
+                        return;
+                    }
+                }
+            }
+        }
+        throw new AssertionError("TWIN_APEX was never offered");
     }
 
     @Test void stageRulesApplyCombatContractMultipliers() {
