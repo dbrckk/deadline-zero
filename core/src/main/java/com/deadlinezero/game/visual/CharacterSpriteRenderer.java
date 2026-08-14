@@ -15,6 +15,7 @@ import com.deadlinezero.game.meta.RunLoadoutContext;
 public final class CharacterSpriteRenderer {
     private static final class Clock {
         GameArt.Motion motion;
+        Direction8 direction = Direction8.E;
         float time;
         int bossPhase = -1;
         float phasePulse;
@@ -52,12 +53,12 @@ public final class CharacterSpriteRenderer {
         }
 
         Clock clock = clock(player, motion);
+        clock.direction = Direction8.fromVector(player.velocity.x, player.velocity.y, clock.direction);
         ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.survivor(survivor);
-        TextureRegion region = art.survivor(survivor, motion, clock.time);
+        TextureRegion region = art.survivor(survivor, motion, clock.direction, clock.time);
         float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
-        float facing = player.velocity.x < -.02f ? -1f : 1f;
 
         int pieces = RunLoadoutContext.ascensionSetPieces();
         float pulse = .5f + .5f * MathUtils.sin(clock.time * (pieces >= 4 ? 7.5f : 4.5f));
@@ -81,7 +82,7 @@ public final class CharacterSpriteRenderer {
         }
         float alpha = player.invulnerable() ? .78f : 1f;
         batch.setColor(r, g, b, alpha);
-        drawFacing(batch, region, player.position.x, player.position.y - profile.footOffset(), w * scale, h * scale, facing);
+        drawCentered(batch, region, player.position.x, player.position.y - profile.footOffset(), w * scale, h * scale);
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
@@ -102,16 +103,16 @@ public final class CharacterSpriteRenderer {
         }
 
         Clock clock = clock(enemy, motion);
+        clock.direction = Direction8.fromVector(enemy.velocity.x, enemy.velocity.y, clock.direction);
         ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.enemy(enemy.type);
         boolean revenantBoss = enemy.type == Enemy.Type.BOSS && enemy.bossCombat != null && enemy.bossCombat.revenant();
         TextureRegion region = enemy.type == Enemy.Type.BOSS
-            ? art.boss(revenantBoss, motion, clock.time)
-            : art.enemy(enemy.type, motion, clock.time);
+            ? art.boss(revenantBoss, motion, clock.direction, clock.time)
+            : art.enemy(enemy.type, motion, clock.direction, clock.time);
         float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
         float flash = Math.min(1f, Math.max(0f, enemy.hitFlash));
-        float facing = enemy.velocity.x < -.02f ? -1f : 1f;
 
         float r = 1f;
         float g = 1f - flash * .22f;
@@ -243,7 +244,7 @@ public final class CharacterSpriteRenderer {
         }
 
         batch.setColor(MathUtils.clamp(r, 0f, 1f), MathUtils.clamp(g, 0f, 1f), MathUtils.clamp(b, 0f, 1f), alpha);
-        drawFacing(batch, region, enemy.position.x, enemy.position.y - profile.footOffset(), w * scale, h * scale, facing);
+        drawCentered(batch, region, enemy.position.x, enemy.position.y - profile.footOffset(), w * scale, h * scale);
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
@@ -265,17 +266,7 @@ public final class CharacterSpriteRenderer {
         return clock;
     }
 
-    private void drawFacing(SpriteBatch batch, TextureRegion region, float centerX, float y, float width, float height, float facing) {
-        float x = centerX - width * .5f;
-        if (facing >= 0f) {
-            batch.draw(region, x, y, width, height);
-        } else {
-            batch.draw(region,
-                x, y,
-                width * .5f, height * .5f,
-                width, height,
-                -1f, 1f,
-                0f);
-        }
+    private void drawCentered(SpriteBatch batch, TextureRegion region, float centerX, float y, float width, float height) {
+        batch.draw(region, centerX - width * .5f, y, width, height);
     }
 }
