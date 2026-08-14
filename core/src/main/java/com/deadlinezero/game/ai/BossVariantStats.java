@@ -24,6 +24,9 @@ public final class BossVariantStats {
             case WARDEN -> new Stats(baseHp * WardenBossProfile.HP_MULTIPLIER,
                 baseSpeed * WardenBossProfile.SPEED_MULTIPLIER,
                 baseDamage * WardenBossProfile.DAMAGE_MULTIPLIER);
+            case HARVESTER -> new Stats(baseHp * HarvesterBossProfile.HP_MULTIPLIER,
+                baseSpeed * HarvesterBossProfile.SPEED_MULTIPLIER,
+                baseDamage * HarvesterBossProfile.DAMAGE_MULTIPLIER);
             default -> new Stats(baseHp, baseSpeed, baseDamage);
         };
     }
