@@ -148,6 +148,15 @@ public final class CombatHudRenderer {
             font.getData().setScale(.68f * s);
         }
 
+        WeaponLegendaryPresentation.Style legendaryStyle = WeaponLegendaryPresentation.style(player);
+        if (legendaryStyle != WeaponLegendaryPresentation.Style.NONE) {
+            font.getData().setScale(.50f * s);
+            font.setColor(legendaryStyle.r, legendaryStyle.g, legendaryStyle.b, 1f);
+            font.draw(batch, "WEAPON LEGENDARY  •  " + legendaryStyle.label,
+                w * .61f, h - 118f * s, w * .36f, Align.right, false);
+            font.getData().setScale(.68f * s);
+        }
+
         boolean contrast = AccessibilitySettings.active().highContrastTelegraphs;
         Enemy boss = findBoss(enemies);
         if (!director.bossSpawned()) {
@@ -231,6 +240,7 @@ public final class CombatHudRenderer {
         return switch (bossIdentity(boss)) {
             case REVENANT -> "REVENANT";
             case WARDEN -> "WARDEN";
+            case HARVESTER -> "HARVESTER";
             default -> "ALPHA";
         };
     }
@@ -239,6 +249,7 @@ public final class CombatHudRenderer {
         return switch (bossIdentity(boss)) {
             case REVENANT -> VisualTheme.VIOLET;
             case WARDEN -> VisualTheme.GOLD;
+            case HARVESTER -> new Color(.96f, .42f, .10f, 1f);
             default -> VisualTheme.RED;
         };
     }
