@@ -66,21 +66,25 @@ public final class WaveDirectorTest {
         assertTrue(d.bossSpawned());
     }
 
-    @Test public void phantomEclipseDominatesNormalWaveSelection() {
+    @Test public void phantomEclipseHasDeterministicPhantomDominatedMapping() {
         activateLegendary(RunModifierContext.Modifier.PHANTOM_ECLIPSE);
         WaveDirector d = new WaveDirector();
-        int phantoms = 0;
-        for (int i = 0; i < 400; i++) if (d.chooseType() == Enemy.Type.PHANTOM) phantoms++;
-        assertTrue(phantoms > 170);
+        assertEquals(Enemy.Type.PHANTOM, d.legendaryOverride(.00f));
+        assertEquals(Enemy.Type.PHANTOM, d.legendaryOverride(.55f));
+        assertEquals(Enemy.Type.RUNNER, d.legendaryOverride(.60f));
+        assertEquals(Enemy.Type.RANGED, d.legendaryOverride(.80f));
+        assertEquals(Enemy.Type.REGENERATOR, d.legendaryOverride(.90f));
+        assertEquals(Enemy.Type.ELITE, d.legendaryOverride(.99f));
     }
 
-    @Test public void specialistSiegeRemovesBasicShamblersAndRunners() {
+    @Test public void specialistSiegeMapsEveryRollToHeavySpecialists() {
         activateLegendary(RunModifierContext.Modifier.SPECIALIST_SIEGE);
         WaveDirector d = new WaveDirector();
-        for (int i = 0; i < 200; i++) {
-            Enemy.Type type = d.chooseType();
-            assertTrue(type != Enemy.Type.SHAMBLER && type != Enemy.Type.RUNNER && type != Enemy.Type.PHANTOM);
-        }
+        assertEquals(Enemy.Type.SHIELDED, d.legendaryOverride(.00f));
+        assertEquals(Enemy.Type.REGENERATOR, d.legendaryOverride(.40f));
+        assertEquals(Enemy.Type.ELITE, d.legendaryOverride(.70f));
+        assertEquals(Enemy.Type.BRUTE, d.legendaryOverride(.85f));
+        assertEquals(Enemy.Type.RANGED, d.legendaryOverride(.99f));
     }
 
     private static void activateLegendary(RunModifierContext.Modifier target) {
