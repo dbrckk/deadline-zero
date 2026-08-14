@@ -113,26 +113,29 @@ public final class WaveDirector {
         return PressureBand.CRISIS;
     }
 
-    public Enemy.Type chooseType() {
-        if (bossPending) return Enemy.Type.BOSS;
-
+    Enemy.Type legendaryOverride(float rawRoll) {
+        float r = MathUtils.clamp(rawRoll, 0f, 1f);
         if (RunModifierContext.phantomEclipse()) {
-            float r = MathUtils.random();
             if (r < .56f) return Enemy.Type.PHANTOM;
             if (r < .72f) return Enemy.Type.RUNNER;
             if (r < .84f) return Enemy.Type.RANGED;
             if (r < .93f) return Enemy.Type.REGENERATOR;
             return Enemy.Type.ELITE;
         }
-
         if (RunModifierContext.specialistSiege()) {
-            float r = MathUtils.random();
             if (r < .30f) return Enemy.Type.SHIELDED;
             if (r < .56f) return Enemy.Type.REGENERATOR;
             if (r < .78f) return Enemy.Type.ELITE;
             if (r < .90f) return Enemy.Type.BRUTE;
             return Enemy.Type.RANGED;
         }
+        return null;
+    }
+
+    public Enemy.Type chooseType() {
+        if (bossPending) return Enemy.Type.BOSS;
+        Enemy.Type legendary = legendaryOverride(MathUtils.random());
+        if (legendary != null) return legendary;
 
         if (RunModifierContext.eliteHunt()) {
             float eliteRoll = MathUtils.random();
