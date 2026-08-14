@@ -128,7 +128,7 @@ public final class CombatPolishController {
             BossPhaseTransitionProfile.Spec spec = BossPhaseTransitionProfile.forPhase(enemy.bossCombat.identity(), phaseFxPhase);
             phaseFxStarted = time;
             phaseFxUntil = time + spec.duration();
-            AudioDirector.playGlobal(AudioDirector.Cue.BOSS_HIT, spec.audioPitch(), 0f);
+            AudioDirector.playGlobal(AudioDirector.Cue.BOSS_PHASE, spec.audioPitch(), 0f);
             vibrate(spec.vibrationMs());
             if (settings.hitStop) feel.triggerHitStop(phaseFxPhase >= 3 ? .045f : .030f);
         }
