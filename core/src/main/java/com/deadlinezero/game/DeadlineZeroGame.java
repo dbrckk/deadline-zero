@@ -23,6 +23,7 @@ import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageMissionRules;
 import com.deadlinezero.game.meta.StageRules;
 import com.deadlinezero.game.meta.ThreatProgressionService;
+import com.deadlinezero.game.meta.ThreatTierRules;
 import com.deadlinezero.game.screen.ArsenalScreen;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.GearScreen;
@@ -145,7 +146,9 @@ public final class DeadlineZeroGame extends Game {
             profile.survivors.refreshUnlocks(profile);
         }
 
-        if (bossKilled) ThreatProgressionService.applyBossClear(profile, safeStage, runThreatTier);
+        ThreatProgressionService.UnlockResult threatUnlock = bossKilled
+            ? ThreatProgressionService.applyBossClear(profile, safeStage, runThreatTier)
+            : ThreatProgressionService.UnlockResult.none();
 
         EquipmentItem drop = null;
         if (!profile.inventory.full() && (bossKilled || MathUtils.randomBoolean(.55f))) {
@@ -158,7 +161,10 @@ public final class DeadlineZeroGame extends Game {
         if (audio != null) audio.stopCombatMusic();
         saveProfile();
         RunResult result = new RunResult(kills, secondsSurvived, bossKilled, safeStage, rewards, drop,
-            contractTitle, contractBonus);
+            contractTitle, contractBonus,
+            runThreatTier, ThreatTierRules.rewardBonusPercent(runThreatTier),
+            threatUnlock.unlocked() ? threatUnlock.tier() : 0,
+            threatUnlock.milestoneGems());
         if (bossKilled || victorySignal) setScreen(new VictoryScreen(this, result, firstClear, firstClearCredits, firstClearGems));
         else setScreen(new RunResultScreen(this, result));
     }
