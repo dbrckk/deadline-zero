@@ -50,6 +50,20 @@ public final class PlayerProfile {
         survivors.refreshUnlocks(this);
         validateSelectedWeapon();
     }
+    /** Canonicalizes fields restored from persistence before gameplay consumes them. */
+    public void normalizeLoadedState() {
+        ProfileCounterMath.LevelProgress progress = ProfileCounterMath.advanceAccountXp(accountLevel, accountXp, 0L);
+        accountLevel = progress.level();
+        accountXp = progress.xp();
+        highestStage = Math.max(1, highestStage);
+        selectedStage = Math.min(highestStage, Math.max(1, selectedStage));
+        totalRuns = Math.max(0, totalRuns);
+        totalKills = Math.max(0L, totalKills);
+        if (selectedSurvivor == null) selectedSurvivor = SurvivorCatalog.Survivor.REX;
+        survivors.refreshUnlocks(this);
+        if (!survivors.unlocked(selectedSurvivor)) selectedSurvivor = SurvivorCatalog.Survivor.REX;
+        validateSelectedWeapon();
+    }
     public void recordRun(int kills, int stage) {
         totalRuns = ProfileCounterMath.incrementNonNegative(totalRuns);
         totalKills = ProfileCounterMath.addKills(totalKills, kills);
