@@ -4,17 +4,36 @@ import com.badlogic.gdx.utils.Array;
 
 /** Persistent equipment inventory with stable IDs for serialization and UI selection. */
 public final class Inventory {
-    public static final int MAX_ITEMS = 120;
+    public static final int NORMAL_CAPACITY = 120;
+    public static final int EXCLUSIVE_RESERVE = 4;
+    public static final int MAX_ITEMS = NORMAL_CAPACITY + EXCLUSIVE_RESERVE;
     private final Array<EquipmentItem> items = new Array<>(false, MAX_ITEMS);
 
     public Array<EquipmentItem> items() { return items; }
     public int size() { return items.size; }
-    public boolean full() { return items.size >= MAX_ITEMS; }
+    /** Normal drops stop at 120 so four milestone rewards can never be capacity-blocked. */
+    public boolean full() { return normalItemCount() >= NORMAL_CAPACITY; }
 
     public boolean add(EquipmentItem item) {
         if (item == null || full() || find(item.id) != null) return false;
         items.add(item);
         return true;
+    }
+
+    /** Adds only catalogued Threat milestone gear into the reserved capacity. */
+    public boolean addExclusive(EquipmentItem item) {
+        if (item == null || !ThreatMilestoneRewardCatalog.isExclusiveId(item.id)
+            || items.size >= MAX_ITEMS || find(item.id) != null) return false;
+        items.add(item);
+        return true;
+    }
+
+    private int normalItemCount() {
+        int count = 0;
+        for (EquipmentItem item : items) {
+            if (!ThreatMilestoneRewardCatalog.isExclusiveId(item.id)) count++;
+        }
+        return count;
     }
 
     public EquipmentItem find(String id) {
