@@ -23,19 +23,22 @@ public final class LegendarySelectorTest {
         assertTrue(LegendaryEffects.applyOverdrive(p));
         LegendaryChoice[] choices = new LegendaryChoice[3];
         int count = LegendarySelector.fillChoices(p, choices);
-        assertEquals(2, count);
+        assertEquals(3, count);
         for (int i = 0; i < count; i++) {
             assertNotNull(choices[i]);
             assertTrue(choices[i] != LegendaryChoice.OVERDRIVE);
         }
     }
 
-    @Test public void allOwnedStopsFutureOffers() {
+    @Test public void weaponFamilyChoiceKeepsOffersAliveAfterGenericChoicesAreOwned() {
         Player p = new Player(0f, 0f);
         p.level = 20;
         assertTrue(LegendaryEffects.applyOverdrive(p));
         assertTrue(LegendaryEffects.applySingularity(p));
         assertTrue(LegendaryEffects.applyApex(p));
+        assertTrue(LegendarySelector.shouldOffer(p));
+        assertTrue(LegendaryChoice.VANGUARD_PROTOCOL.eligible(p));
+        assertTrue(LegendaryEffects.applyVanguardProtocol(p));
         assertFalse(LegendarySelector.shouldOffer(p));
     }
 }
