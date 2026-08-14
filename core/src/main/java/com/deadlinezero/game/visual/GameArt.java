@@ -161,7 +161,7 @@ public final class GameArt implements Disposable {
             TextureRegion single = atlas.findRegion(prefix);
             if (single != null) return single;
         }
-        return BootstrapArtCatalog.region(bootstrapTexture, prefix);
+        return BootstrapArtCatalog.animatedRegion(bootstrapTexture, prefix, stateTime, frameDuration, loop);
     }
 
     static String directionalPrefix(String root, Direction8 direction, Motion motion) {
