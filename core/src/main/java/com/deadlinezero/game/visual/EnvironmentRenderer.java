@@ -19,6 +19,7 @@ public final class EnvironmentRenderer implements Disposable {
     private static final float TRANSITION_FLOOR_ALPHA = .62f;
     private static final float SHADOW_OFFSET_X = .22f;
     private static final float SHADOW_OFFSET_Y = -.28f;
+    private static final Color FOUNDRY_WALL_TINT = new Color(1f, .58f, .32f, 1f);
     private final GameArt art;
     private BootstrapEnvironmentArt bootstrap;
     private float visualTime;
@@ -142,6 +143,12 @@ public final class EnvironmentRenderer implements Disposable {
         return Math.floorMod(gridX * 31 + gridY * 17, 3);
     }
 
+    static int detailVariant(int gridX, int gridY) {
+        int h = gridX * 0x45d9f3b ^ gridY * 0x119de1f3;
+        h ^= h >>> 16;
+        return Math.floorMod(h, 8);
+    }
+
     static float beaconPulse(float time) {
         return .5f + .5f * MathUtils.sin(time * 2.8f);
     }
@@ -157,6 +164,8 @@ public final class EnvironmentRenderer implements Disposable {
         TextureRegion wallB = region("environment/prop/wall_b");
         TextureRegion crate = region("environment/prop/crate_a");
         TextureRegion beacon = region("environment/prop/beacon_a");
+
+        drawAmbientDetails(batch, crack, blood, scorch, debrisA, debrisB);
 
         if (foundry()) {
             drawFoundryDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);
@@ -186,6 +195,33 @@ public final class EnvironmentRenderer implements Disposable {
         draw(batch, crate, -16f, 14.2f, 2.7f);
         draw(batch, crate, 17.5f, -12.8f, 2.5f);
         drawArenaEdge(batch, wallA, wallB, beacon);
+    }
+
+    private void drawAmbientDetails(SpriteBatch batch, TextureRegion crack, TextureRegion blood,
+                                    TextureRegion scorch, TextureRegion debrisA, TextureRegion debrisB) {
+        for (int gy = -2; gy <= 2; gy++) {
+            for (int gx = -4; gx <= 4; gx++) {
+                int variant = detailVariant(gx, gy);
+                if (variant > 2) continue;
+                float x = gx * 6.1f + ((variant & 1) == 0 ? -.55f : .48f);
+                float y = gy * 6.0f + ((gx & 1) == 0 ? .42f : -.38f);
+                if (Math.abs(x) < 5f && Math.abs(y) < 4f) continue;
+                if (variant == 0) {
+                    batch.setColor(1f, 1f, 1f, foundry() ? .34f : .40f);
+                    draw(batch, crack, x, y, 1.45f);
+                } else if (variant == 1) {
+                    TextureRegion stain = foundry() ? scorch : blood;
+                    batch.setColor(1f, foundry() ? .45f : 1f, foundry() ? .20f : 1f, .28f);
+                    draw(batch, stain, x, y, 1.35f);
+                } else {
+                    TextureRegion debris = ((gx + gy) & 1) == 0 ? debrisA : debrisB;
+                    drawPropShadow(batch, debris, x, y, 1.25f);
+                    batch.setColor(foundry() ? 1f : .78f, foundry() ? .64f : .82f, foundry() ? .38f : .86f, .72f);
+                    draw(batch, debris, x, y, 1.20f);
+                }
+            }
+        }
+        batch.setColor(Color.WHITE);
     }
 
     private void drawFoundryDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,
@@ -228,7 +264,7 @@ public final class EnvironmentRenderer implements Disposable {
     }
 
     private void drawArenaEdge(SpriteBatch batch, TextureRegion wallA, TextureRegion wallB, TextureRegion beacon) {
-        batch.setColor(foundry() ? new Color(1f, .58f, .32f, 1f) : Color.WHITE);
+        batch.setColor(foundry() ? FOUNDRY_WALL_TINT : Color.WHITE);
         for (int x = -30; x <= 30; x += 10) {
             draw(batch, ((x / 10) & 1) == 0 ? wallA : wallB, x, 17.9f, 4.2f);
             draw(batch, ((x / 10) & 1) == 0 ? wallB : wallA, x, -17.9f, 4.2f);
