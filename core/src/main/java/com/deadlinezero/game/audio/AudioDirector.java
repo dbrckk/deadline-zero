@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 /** Resilient production audio gateway. Missing files degrade to silence instead of breaking the game. */
 public final class AudioDirector {
-    public enum Cue { SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK }
+    public enum Cue { SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_PHASE, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK }
 
     private static AudioDirector active;
     private final ObjectMap<Cue, Sound> sounds = new ObjectMap<>();
@@ -26,6 +26,7 @@ public final class AudioDirector {
         load(Cue.HIT, "audio/sfx/hit.ogg");
         load(Cue.KILL, "audio/sfx/kill.ogg");
         load(Cue.BOSS_HIT, "audio/sfx/boss_hit.ogg");
+        load(Cue.BOSS_PHASE, "audio/sfx/boss_phase.ogg");
         load(Cue.BOSS_KILL, "audio/sfx/boss_kill.ogg");
         load(Cue.DASH, "audio/sfx/dash.ogg");
         load(Cue.LEVEL_UP, "audio/sfx/level_up.ogg");
