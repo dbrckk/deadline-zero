@@ -55,4 +55,36 @@ final class PlayerProfileSafetyTest {
         assertEquals(Integer.MAX_VALUE, progress.level());
         assertEquals(ProfileCounterMath.xpForLevel(Integer.MAX_VALUE) - 1L, progress.xp());
     }
+
+    @Test void restoredProfileIsCanonicalizedBeforeUse() {
+        PlayerProfile profile = new PlayerProfile();
+        profile.accountLevel = 2;
+        profile.accountXp = 360L;
+        profile.highestStage = -7;
+        profile.selectedStage = 99;
+        profile.totalRuns = -4;
+        profile.totalKills = -8L;
+
+        profile.normalizeLoadedState();
+
+        assertEquals(3, profile.accountLevel);
+        assertEquals(0L, profile.accountXp);
+        assertEquals(1, profile.highestStage);
+        assertEquals(1, profile.selectedStage);
+        assertEquals(0, profile.totalRuns);
+        assertEquals(0L, profile.totalKills);
+    }
+
+    @Test void nonFiniteEquipmentPowerCannotPoisonAggregateStats() {
+        PlayerProfile profile = new PlayerProfile();
+        EquipmentItem item = new EquipmentItem("bad", "Bad Save", PlayerProfile.EquipmentSlot.ARMOR,
+            EquipmentItem.Rarity.EPIC, 2, Float.NaN);
+        profile.equip(item);
+        assertEquals(0f, item.powerBonus);
+        assertEquals(1f, profile.aggregatePowerMultiplier());
+
+        EquipmentItem infinite = new EquipmentItem("inf", "Infinite Save", PlayerProfile.EquipmentSlot.CORE,
+            EquipmentItem.Rarity.LEGENDARY, 2, Float.POSITIVE_INFINITY);
+        assertEquals(0f, infinite.powerBonus);
+    }
 }
