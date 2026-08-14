@@ -17,6 +17,11 @@ public final class ThreatProgressionService {
         int unlockedTier = profile.highestThreatTier;
         int milestoneGems = ThreatTierRules.milestoneGemReward(unlockedTier);
         if (milestoneGems > 0) profile.addCurrency(PlayerProfile.Currency.GEMS, milestoneGems);
+
+        EquipmentItem milestoneGear = ThreatMilestoneRewardCatalog.forTier(unlockedTier);
+        if (milestoneGear != null && profile.inventory.find(milestoneGear.id) == null) {
+            profile.inventory.addExclusive(milestoneGear);
+        }
         return new UnlockResult(true, unlockedTier, milestoneGems);
     }
 }
