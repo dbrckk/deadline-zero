@@ -22,6 +22,7 @@ public final class AuthoredVfxRenderer {
         drawMuzzle(batch, player, enemies);
         drawDash(batch, player);
         drawLevelUp(batch, player);
+        drawLegendary(batch, player);
         drawImpacts(batch, pools);
         drawBossDeath(batch, pools);
         batch.end();
@@ -61,6 +62,25 @@ public final class AuthoredVfxRenderer {
         if (region == null) return;
         float size = 2.8f + age * 1.1f;
         batch.draw(region, player.position.x - size * .5f, player.position.y - size * .5f, size, size);
+    }
+
+    private void drawLegendary(SpriteBatch batch, Player player) {
+        if (!player.alive || !player.legendary.hasAny()) return;
+        float stateTime = CombatVisualEvents.levelUpAgeSeconds();
+        if (!Float.isFinite(stateTime)) stateTime = 0f;
+        if (player.legendary.hasOverdrive()) drawLegendaryLayer(batch, player, "legendary_overdrive", stateTime, 3.35f, .72f);
+        if (player.legendary.hasSingularity()) drawLegendaryLayer(batch, player, "legendary_singularity", stateTime, 3.75f, .64f);
+        if (player.legendary.hasApex()) drawLegendaryLayer(batch, player, "legendary_apex", stateTime, 4.15f, .58f);
+        batch.setColor(Color.WHITE);
+    }
+
+    private void drawLegendaryLayer(SpriteBatch batch, Player player, String effect, float stateTime, float size, float alpha) {
+        TextureRegion region = art.effectOrNull(effect, stateTime, .075f);
+        if (region == null) return;
+        float pulse = 1f + MathUtils.sin(stateTime * 4.6f) * .045f;
+        float drawSize = size * pulse;
+        batch.setColor(1f, 1f, 1f, alpha);
+        batch.draw(region, player.position.x - drawSize * .5f, player.position.y - drawSize * .5f, drawSize, drawSize);
     }
 
     private void drawImpacts(SpriteBatch batch, Pools pools) {
