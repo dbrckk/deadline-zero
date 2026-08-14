@@ -6,6 +6,14 @@ public interface BillingService {
     String GEMS_SMALL = "gems_250";
     String GEMS_LARGE = "gems_1200";
 
+    enum State {
+        UNAVAILABLE,
+        CONNECTING,
+        READY,
+        PURCHASE_IN_PROGRESS,
+        PURCHASE_PENDING
+    }
+
     record PurchaseReceipt(String productId, String receiptId) {}
 
     @FunctionalInterface
@@ -17,6 +25,12 @@ public interface BillingService {
     boolean owns(String productId);
     void purchase(String productId, Runnable onSuccess, Runnable onFailure);
     void restore();
+
+    /** Current store lifecycle state. Implementations without a platform store remain READY/no-op. */
+    default State state() { return State.READY; }
+
+    /** Product associated with an active or pending purchase, or an empty string when none exists. */
+    default String activeProductId() { return ""; }
 
     /**
      * Receipt-aware purchase path used by consumables so the profile can persist an idempotency key
