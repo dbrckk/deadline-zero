@@ -13,6 +13,7 @@ import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
+import com.deadlinezero.game.meta.ThreatTierRules;
 import com.deadlinezero.game.visual.VisualTheme;
 
 /** Three-card pre-run risk/reward selection. No persistent state is mutated until combat settles. */
@@ -62,9 +63,12 @@ public final class RunContractScreen extends ScreenAdapter {
         font.getData().setScale(.92f);
         font.setColor(VisualTheme.TEXT);
         font.draw(batch, "SELECT RUN CONTRACT", 0f, h - 50f, w, Align.center, false);
-        font.getData().setScale(.47f);
-        font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "STAGE " + RunStageContext.stage() + "  •  HIGHER RISK PAYS MORE", 0f, h - 76f, w, Align.center, false);
+        font.getData().setScale(.43f);
+        font.setColor(RunStageContext.threatTier() > 0 ? VisualTheme.GOLD : VisualTheme.MUTED);
+        font.draw(batch, "STAGE " + RunStageContext.stage()
+            + "  •  THREAT " + RunStageContext.threatTier()
+            + "  •  +" + ThreatTierRules.rewardBonusPercent(RunStageContext.threatTier())
+            + "% ASCENSION REWARDS", 0f, h - 76f, w, Align.center, false);
 
         for (int i = 0; i < offers.length; i++) {
             RunModifierContext.Modifier m = offers[i];
