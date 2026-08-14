@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Disposable;
  */
 public final class DirectionalBootstrapArt implements Disposable {
     static final int TILE = 32;
-    static final int COLUMNS = 16;
+    static final int COLUMNS = 20;
     static final int FRAMES_PER_DIRECTION = 10;
     static final int ACTOR_BLOCK = FRAMES_PER_DIRECTION * 8;
     static final int ACTOR_COUNT = 14;
@@ -256,20 +256,20 @@ public final class DirectionalBootstrapArt implements Disposable {
                 setSecondary(p, actor);
                 p.fillCircle(cx + sx * 2, cy + sy * 2, 6);
             }
-            case 10 -> { // NYX: twin antenna blades
+            case 10 -> {
                 p.drawLine(cx - perpX * 4, cy - 6 - perpY * 4, cx - perpX * 6 - sx * 2, cy - 12 - perpY * 6 - sy * 2);
                 p.drawLine(cx + perpX * 4, cy - 6 + perpY * 4, cx + perpX * 6 - sx * 2, cy - 12 + perpY * 6 - sy * 2);
             }
-            case 11 -> { // BASTION: heavy shoulder plate
+            case 11 -> {
                 p.drawRectangle(cx - 8, cy - 2, 16, 7);
                 p.drawLine(cx - perpX * 8, cy + 5, cx + perpX * 8, cy + 5);
             }
-            case 12 -> { // VOLT: capacitor arcs
+            case 12 -> {
                 p.drawCircle(cx, cy + 1, 9);
                 p.drawLine(cx - 6, cy - 8, cx - 2, cy - 12);
                 p.drawLine(cx + 2, cy - 12, cx + 6, cy - 8);
             }
-            case 13 -> { // WRAITH: spectral hood
+            case 13 -> {
                 p.drawCircle(cx + sx, cy - 6 + sy, 7);
                 p.drawLine(cx - perpX * 6, cy + 5 - perpY * 6, cx + sx * 2, cy + 9 + sy * 2);
                 p.drawLine(cx + perpX * 6, cy + 5 + perpY * 6, cx + sx * 2, cy + 9 + sy * 2);
