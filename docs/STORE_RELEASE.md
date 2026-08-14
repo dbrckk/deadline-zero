@@ -6,11 +6,15 @@ This document defines the source-of-truth requirements for the Deadline: Zero Pl
 
 Store final, authored exports outside runtime assets under `play/store/` before publication:
 
-- `icon.png`: 512 x 512, 32-bit PNG, alpha allowed, <= 1024 KB.
-- `feature-graphic.png`: 1024 x 500, JPEG or 24-bit PNG without alpha.
-- phone screenshots: at least two representative gameplay screenshots. Prefer a coherent landscape set showing combat, progression and a boss encounter rather than menus only.
+- `icon.png`: 512 x 512 PNG, <= 1 MiB.
+- `feature-graphic.png`: 1024 x 500 PNG without alpha.
+- `phone-screenshots/`: at least three final gameplay screenshots, each PNG/JPEG without alpha, <= 8 MiB, exact 16:9 landscape, at least 1920 x 1080, with no dimension above 3840 px.
 
-Do not use ranking claims, price claims, fake awards, download-count claims or misleading UI in store graphics.
+The screenshot threshold is intentionally stricter than Google Play's bare publication minimum. It targets the current recommendation-grade guidance for games, where at least three 16:9 landscape screenshots at 1920 x 1080 or higher are recommended for large-format discovery surfaces.
+
+Run `gradle :android:verifyPlayStoreAssets` to validate the graphics contract without building an AAB. `bundlePlayRelease` runs this task automatically and fails if the final Store exports are absent, unreadable or malformed.
+
+Do not use ranking claims, price claims, fake awards, download-count claims or misleading UI in store graphics. Screenshots must show the real shipped game experience.
 
 The Android launcher icon is a separate asset contract and lives in `android/src/main/res/`. It must remain visually consistent with the high-resolution Play icon.
 
