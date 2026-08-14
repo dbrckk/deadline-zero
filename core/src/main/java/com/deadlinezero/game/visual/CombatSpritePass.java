@@ -29,6 +29,7 @@ public final class CombatSpritePass {
     public void update(float dt) {
         float safeDt = Math.max(0f, dt);
         stateTime += safeDt;
+        environment.update(safeDt);
         characters.update(safeDt);
     }
 
