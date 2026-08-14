@@ -23,7 +23,7 @@ import com.deadlinezero.game.world.DeathBurstRules;
 /**
  * Centralized presentation-only combat feedback: micro hit-stop, recoil, local lighting,
  * persistent death marks, corpses, resilient event-driven audio and accessible haptics.
- * Endgame arena hazards are also rendered here, while damage still flows through pooled hostile projectiles.
+ * Arena hazards are rendered here, while damage still flows through pooled hostile projectiles.
  */
 public final class CombatPolishController {
     private static Pools currentPools;
@@ -208,6 +208,16 @@ public final class CombatPolishController {
                 drawFoundryHazard(shapes, hazard, profile, warning, time, flashScale);
                 continue;
             }
+            if (NullHazardPresentation.isNull(hazard.type())) {
+                NullHazardPresentation.Profile profile = NullHazardPresentation.forType(hazard.type());
+                if (hazard.consumeActivationCue()) {
+                    float pitch = hazard.type() == ArenaHazardRuntime.Type.STATIC_BURST ? 1.16f
+                        : hazard.type() == ArenaHazardRuntime.Type.NULL_BEAM ? .94f : .82f;
+                    AudioDirector.playGlobal(profile.cue, pitch, 0f);
+                }
+                drawNullHazard(shapes, hazard, profile, warning, time, flashScale);
+                continue;
+            }
 
             float pulse = .5f + .5f * MathUtils.sin(time * (hazard.type() == ArenaHazardRuntime.Type.DEATH_BURST ? 18f : 12f));
             if (warning) {
@@ -288,6 +298,74 @@ public final class CombatPolishController {
                 shapes.setColor(1f, .32f, .04f, (warning ? .12f : .34f) * flashScale);
                 shapes.rectLine(hazard.x(), hazard.y() - hazard.radius() * .78f,
                     hazard.x(), hazard.y() + hazard.radius() * .78f, band * .58f);
+            }
+            default -> { }
+        }
+    }
+
+    private void drawNullHazard(ShapeRenderer shapes, ArenaHazardRuntime.Hazard hazard,
+                                NullHazardPresentation.Profile profile, boolean warning,
+                                float time, float flashScale) {
+        float pulse = .5f + .5f * MathUtils.sin(time * profile.pulseSpeed);
+        float urgency = warning ? 1f - hazard.warningFraction() : 1f;
+        int segments = fxBudget.geometrySegments(42, 22);
+        float r = warning ? profile.warningR : profile.activeR;
+        float g = warning ? profile.warningG : profile.activeG;
+        float b = warning ? profile.warningB : profile.activeB;
+        float alpha = (warning ? .09f + urgency * .17f + pulse * .035f : .30f + pulse * .13f) * flashScale;
+        float radius = hazard.radius() * (warning ? 1f + pulse * .045f : 1f);
+
+        shapes.setColor(r, g, b, alpha);
+        shapes.circle(hazard.x(), hazard.y(), radius, segments);
+
+        switch (hazard.type()) {
+            case VOID_RIFT -> {
+                float core = hazard.radius() * (warning ? .20f + urgency * .08f : .34f - pulse * .08f);
+                shapes.setColor(.04f, .01f, .12f, (warning ? .28f : .70f) * flashScale);
+                shapes.circle(hazard.x(), hazard.y(), Math.max(.08f, core), segments / 2);
+                int spokes = fxBudget.allowHeavyFx() ? profile.spokes : 5;
+                for (int i = 0; i < spokes; i++) {
+                    float angle = i * (360f / spokes) - time * 70f;
+                    float outer = hazard.radius() * (.86f + pulse * .08f);
+                    float inner = hazard.radius() * .30f;
+                    shapes.setColor(.58f, .30f, 1f, (warning ? .16f : .38f) * flashScale);
+                    shapes.rectLine(
+                        hazard.x() + MathUtils.cosDeg(angle) * outer,
+                        hazard.y() + MathUtils.sinDeg(angle) * outer,
+                        hazard.x() + MathUtils.cosDeg(angle + 18f) * inner,
+                        hazard.y() + MathUtils.sinDeg(angle + 18f) * inner,
+                        warning ? .028f : .055f);
+                }
+            }
+            case STATIC_BURST -> {
+                int spokes = fxBudget.allowHeavyFx() ? profile.spokes : 4;
+                shapes.setColor(.86f, .98f, 1f, (warning ? .24f + urgency * .20f : .62f) * flashScale);
+                shapes.circle(hazard.x(), hazard.y(), hazard.radius() * (.16f + pulse * .07f), segments / 2);
+                for (int i = 0; i < spokes; i++) {
+                    float angle = i * (360f / spokes) + time * 95f;
+                    float inner = hazard.radius() * .18f;
+                    float outer = hazard.radius() * (.72f + pulse * .18f);
+                    shapes.setColor(.20f, .78f, 1f, (warning ? .20f : .54f) * flashScale);
+                    shapes.rectLine(
+                        hazard.x() + MathUtils.cosDeg(angle) * inner,
+                        hazard.y() + MathUtils.sinDeg(angle) * inner,
+                        hazard.x() + MathUtils.cosDeg(angle + (i % 2 == 0 ? 8f : -8f)) * outer,
+                        hazard.y() + MathUtils.sinDeg(angle + (i % 2 == 0 ? 8f : -8f)) * outer,
+                        warning ? .03f : .065f);
+                }
+            }
+            case NULL_BEAM -> {
+                float band = hazard.radius() * (warning ? .10f + urgency * .05f : .20f);
+                shapes.setColor(.80f, .62f, 1f, (warning ? .20f + urgency * .22f : .52f) * flashScale);
+                shapes.rectLine(hazard.x() - hazard.radius() * .84f, hazard.y(),
+                    hazard.x() + hazard.radius() * .84f, hazard.y(), band);
+                shapes.setColor(.34f, .84f, 1f, (warning ? .12f : .38f) * flashScale);
+                shapes.rectLine(hazard.x(), hazard.y() - hazard.radius() * .84f,
+                    hazard.x(), hazard.y() + hazard.radius() * .84f, band * .52f);
+                if (fxBudget.allowHeavyFx()) {
+                    shapes.setColor(.94f, .86f, 1f, (warning ? .14f : .34f) * flashScale);
+                    shapes.circle(hazard.x(), hazard.y(), hazard.radius() * (.28f + pulse * .05f), segments / 2);
+                }
             }
             default -> { }
         }
