@@ -12,7 +12,8 @@ public final class AudioDirector {
     public enum Cue {
         SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_PHASE, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK,
         SINGULARITY, ION_OVERCHARGE, CINDER_OVERHEAT,
-        FOUNDRY_LAVA, FOUNDRY_STEAM, FOUNDRY_HEAT
+        FOUNDRY_LAVA, FOUNDRY_STEAM, FOUNDRY_HEAT,
+        NULL_RIFT, NULL_STATIC, NULL_BEAM
     }
 
     private static AudioDirector active;
@@ -45,6 +46,9 @@ public final class AudioDirector {
         load(Cue.FOUNDRY_LAVA, "audio/sfx/foundry_lava.ogg");
         load(Cue.FOUNDRY_STEAM, "audio/sfx/foundry_steam.ogg");
         load(Cue.FOUNDRY_HEAT, "audio/sfx/foundry_heat.ogg");
+        load(Cue.NULL_RIFT, "audio/sfx/null_rift.ogg");
+        load(Cue.NULL_STATIC, "audio/sfx/null_static.ogg");
+        load(Cue.NULL_BEAM, "audio/sfx/null_beam.ogg");
         for (MusicProfileSelector.Profile profile : MusicProfileSelector.Profile.values()) loadMusic(profile, MusicProfileSelector.assetPath(profile));
     }
 
@@ -69,6 +73,9 @@ public final class AudioDirector {
             case CINDER_OVERHEAT, FOUNDRY_LAVA -> Cue.BOSS_HIT;
             case FOUNDRY_STEAM -> Cue.DASH;
             case FOUNDRY_HEAT -> Cue.CRIT;
+            case NULL_RIFT -> Cue.SINGULARITY;
+            case NULL_STATIC -> Cue.CRIT;
+            case NULL_BEAM -> Cue.BOSS_PHASE;
             default -> null;
         };
     }
@@ -77,7 +84,11 @@ public final class AudioDirector {
         Sound sound = sounds.get(cue);
         if (sound != null) return sound;
         Cue fallback = fallbackCue(cue);
-        return fallback == null ? null : sounds.get(fallback);
+        if (fallback == null) return null;
+        Sound fallbackSound = sounds.get(fallback);
+        if (fallbackSound != null) return fallbackSound;
+        Cue secondFallback = fallbackCue(fallback);
+        return secondFallback == null ? null : sounds.get(secondFallback);
     }
 
     private Music resolveMusic(MusicProfileSelector.Profile profile) {
