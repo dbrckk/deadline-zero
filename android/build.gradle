@@ -46,6 +46,18 @@ def productionAssetPaths = [
 def missingProductionAssets = {
     productionAssetPaths.findAll { !file("../assets/${it}").isFile() }
 }
+def playStoreDir = file('../play/store')
+def readStoreImage = { File source ->
+    if (!source.isFile()) throw new GradleException("Play Store asset missing: ${source}")
+    def image = javax.imageio.ImageIO.read(source)
+    if (image == null) throw new GradleException("Play Store asset is not a readable PNG/JPEG image: ${source}")
+    image
+}
+def requireNoAlpha = { File source, image ->
+    if (image.colorModel.hasAlpha()) {
+        throw new GradleException("Play Store asset must not contain an alpha channel: ${source}")
+    }
+}
 
 android {
     namespace 'com.deadlinezero.game.android'
@@ -130,10 +142,56 @@ tasks.register('verifyProductionAssets') {
     }
 }
 
+tasks.register('verifyPlayStoreAssets') {
+    group = 'verification'
+    description = 'Validates the final Google Play icon, feature graphic and recommendation-grade phone screenshots.'
+    doLast {
+        File icon = new File(playStoreDir, 'icon.png')
+        def iconImage = readStoreImage(icon)
+        if (icon.length() > 1024L * 1024L) {
+            throw new GradleException('Play Store icon must be <= 1 MiB: ' + icon)
+        }
+        if (iconImage.width != 512 || iconImage.height != 512) {
+            throw new GradleException("Play Store icon must be exactly 512x512: ${iconImage.width}x${iconImage.height}")
+        }
+
+        File feature = new File(playStoreDir, 'feature-graphic.png')
+        def featureImage = readStoreImage(feature)
+        if (featureImage.width != 1024 || featureImage.height != 500) {
+            throw new GradleException("Play feature graphic must be exactly 1024x500: ${featureImage.width}x${featureImage.height}")
+        }
+        requireNoAlpha(feature, featureImage)
+
+        File screenshotsDir = new File(playStoreDir, 'phone-screenshots')
+        if (!screenshotsDir.isDirectory()) {
+            throw new GradleException('Play release blocked: play/store/phone-screenshots/ is missing.')
+        }
+        def screenshots = screenshotsDir.listFiles()?.findAll {
+            it.isFile() && it.name.toLowerCase(Locale.ROOT) ==~ /.+\.(png|jpe?g)/
+        }?.sort { it.name } ?: []
+        if (screenshots.size() < 3) {
+            throw new GradleException('Play release blocked: at least 3 recommendation-grade gameplay screenshots are required.')
+        }
+        screenshots.each { File screenshot ->
+            if (screenshot.length() > 8L * 1024L * 1024L) {
+                throw new GradleException('Play screenshot must be <= 8 MiB: ' + screenshot)
+            }
+            def image = readStoreImage(screenshot)
+            requireNoAlpha(screenshot, image)
+            if (image.width < 1920 || image.height < 1080 || image.width > 3840 || image.height > 3840) {
+                throw new GradleException("Play game screenshot must be between 1920x1080 and the Play 3840px maximum dimension: ${screenshot} is ${image.width}x${image.height}")
+            }
+            if ((long) image.width * 9L != (long) image.height * 16L) {
+                throw new GradleException("Play game screenshot must be exact 16:9 landscape: ${screenshot} is ${image.width}x${image.height}")
+            }
+        }
+    }
+}
+
 tasks.register('verifyPlayReleaseConfig') {
     group = 'verification'
     description = 'Fails unless the build is configured as a publishable Google Play release.'
-    dependsOn 'verifyProductionAssets'
+    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets'
     doLast {
         boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
         if (usingTestIds) {
@@ -159,7 +217,7 @@ tasks.register('verifyPlayReleaseConfig') {
 
 tasks.register('bundlePlayRelease') {
     group = 'build'
-    description = 'Runs core tests, release lint, production validation, then builds the signed Google Play AAB.'
+    description = 'Runs core tests, release lint, production and Play Store validation, then builds the signed Google Play AAB.'
     dependsOn ':core:test', 'lintRelease', 'verifyPlayReleaseConfig', 'bundleRelease'
 }
 
