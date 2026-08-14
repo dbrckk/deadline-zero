@@ -41,15 +41,12 @@ public final class PlayerProfile {
         currencies.put(currency, currency(currency) - amount);
         return true;
     }
-    public long xpForNextLevel() { return 250L + (long)(Math.max(1, accountLevel) - 1) * 110L; }
+    public long xpForNextLevel() { return ProfileCounterMath.xpForLevel(accountLevel); }
     public void addAccountXp(long amount) {
         if (amount <= 0) return;
-        accountXp = ProfileCounterMath.addNonNegative(accountXp, amount);
-        while (accountLevel < Integer.MAX_VALUE && accountXp >= xpForNextLevel()) {
-            accountXp -= xpForNextLevel();
-            accountLevel = ProfileCounterMath.incrementNonNegative(accountLevel);
-        }
-        if (accountLevel == Integer.MAX_VALUE) accountXp = Math.min(accountXp, xpForNextLevel() - 1L);
+        ProfileCounterMath.LevelProgress progress = ProfileCounterMath.advanceAccountXp(accountLevel, accountXp, amount);
+        accountLevel = progress.level();
+        accountXp = progress.xp();
         survivors.refreshUnlocks(this);
         validateSelectedWeapon();
     }
