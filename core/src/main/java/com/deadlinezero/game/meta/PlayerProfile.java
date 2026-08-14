@@ -3,14 +3,19 @@ package com.deadlinezero.game.meta;
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.combat.WeaponDefinition;
 import java.util.EnumMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /** Long-term account progression. Storage is intentionally separate from gameplay runtime. */
 public final class PlayerProfile {
+    private static final int MAX_PURCHASE_RECEIPTS = 128;
+
     public enum Currency { CREDITS, GEMS }
     public enum EquipmentSlot { WEAPON, ARMOR, HELMET, GLOVES, BOOTS, CORE }
 
     private final EnumMap<Currency, Long> currencies = new EnumMap<>(Currency.class);
     private final EnumMap<EquipmentSlot, EquipmentItem> equipped = new EnumMap<>(EquipmentSlot.class);
+    private final LinkedHashSet<String> deliveredPurchaseReceipts = new LinkedHashSet<>();
     public final Inventory inventory = new Inventory();
     public final DailyProgress daily = new DailyProgress();
     public final SurvivorProgression survivors = new SurvivorProgression();
@@ -48,4 +53,21 @@ public final class PlayerProfile {
         if (!WeaponProgression.unlocked(this, selected)) selectedWeaponId = WeaponCatalog.AR9.id;
     }
     public float aggregatePowerMultiplier() { float bonus = 0f; for (EquipmentItem item : equipped.values()) if (item != null) bonus += item.powerBonus; return 1f + bonus; }
+
+    public boolean hasDeliveredPurchaseReceipt(String receiptId) {
+        return receiptId != null && !receiptId.isBlank() && deliveredPurchaseReceipts.contains(receiptId);
+    }
+
+    /** Returns true only for the first delivery of this Play receipt. */
+    public boolean recordDeliveredPurchaseReceipt(String receiptId) {
+        if (receiptId == null || receiptId.isBlank() || deliveredPurchaseReceipts.contains(receiptId)) return false;
+        deliveredPurchaseReceipts.add(receiptId);
+        while (deliveredPurchaseReceipts.size() > MAX_PURCHASE_RECEIPTS) {
+            String oldest = deliveredPurchaseReceipts.iterator().next();
+            deliveredPurchaseReceipts.remove(oldest);
+        }
+        return true;
+    }
+
+    public Set<String> deliveredPurchaseReceipts() { return Set.copyOf(deliveredPurchaseReceipts); }
 }
