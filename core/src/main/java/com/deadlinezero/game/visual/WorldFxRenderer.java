@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.abilities.AbilityType;
 import com.deadlinezero.game.combat.DamageElement;
+import com.deadlinezero.game.combat.WeaponSignatureRuntime;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.EnemyProjectile;
 import com.deadlinezero.game.entities.HomingMissile;
@@ -37,6 +38,7 @@ public final class WorldFxRenderer {
                 width, e.radius * .66f);
 
             drawSpecialistTelegraph(shapes, e);
+            drawHarvesterSummonTelegraph(shapes, e);
 
             if (e.tacticalTelegraph()) {
                 float phase = e.tacticalWindup <= 0f ? 0f : MathUtils.clamp(e.tacticalWindup / .34f, 0f, 1f);
@@ -111,6 +113,33 @@ public final class WorldFxRenderer {
                 }
             }
             default -> { }
+        }
+    }
+
+    /** Three collapsing portals warn the player before HARVESTER creates its next minion wave. */
+    private void drawHarvesterSummonTelegraph(ShapeRenderer shapes, Enemy e) {
+        if (budget.quality() < .34f || e.type != Enemy.Type.BOSS || e.bossCombat == null || e.bossPhases == null
+            || !e.bossCombat.harvester()) return;
+        int phase = e.bossPhases.phase();
+        if (!e.bossCombat.summonTelegraphing(phase)) return;
+        float progress = e.bossCombat.summonTelegraphProgress(phase);
+        float pulse = .5f + .5f * MathUtils.sin(e.variantTime * 22f);
+        int portals = phase >= 3 ? 4 : 3;
+        int segments = budget.geometrySegments(30, 16);
+        for (int i = 0; i < portals; i++) {
+            float angle = e.variantTime * 42f + i * (360f / portals);
+            float orbit = e.radius * (2.15f + .22f * pulse);
+            float x = e.position.x + MathUtils.cosDeg(angle) * orbit;
+            float y = e.position.y + MathUtils.sinDeg(angle) * orbit;
+            float radius = e.radius * MathUtils.lerp(.72f, .28f, progress);
+            shapes.setColor(1f, .34f, .06f, .12f + progress * .20f);
+            shapes.circle(x, y, radius * 1.55f, segments);
+            shapes.setColor(.72f, 1f, .24f, .18f + progress * .28f);
+            shapes.circle(x, y, radius, segments);
+            if (budget.allowHeavyFx()) {
+                shapes.setColor(1f, .82f, .24f, .24f + progress * .20f);
+                shapes.circle(x, y, Math.max(.05f, radius * .34f), budget.geometrySegments(14, 8));
+            }
         }
     }
 
@@ -209,11 +238,44 @@ public final class WorldFxRenderer {
                 case SHOCK -> VisualTheme.VIOLET;
                 default -> p.critical ? VisualTheme.GOLD : VisualTheme.CYAN;
             };
-            shapes.setColor(c.r, c.g, c.b, (p.critical ? .72f : .46f) * MathUtils.lerp(.65f, 1f, q));
+
+            float trailLength = p.critical ? .85f : .58f;
+            float trailWidth = p.critical ? .09f : .055f;
+            float alpha = p.critical ? .72f : .46f;
+            if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {
+                c = Color.CYAN;
+                trailLength = 1.28f;
+                trailWidth = .105f;
+                alpha = .90f;
+            } else if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {
+                c = Color.ORANGE;
+                trailLength = 1.12f;
+                trailWidth = .13f;
+                alpha = .88f;
+            }
+
+            shapes.setColor(c.r, c.g, c.b, alpha * MathUtils.lerp(.65f, 1f, q));
             shapes.rectLine(p.position.x, p.position.y,
-                p.position.x - nx * (p.critical ? .85f : .58f),
-                p.position.y - ny * (p.critical ? .85f : .58f),
-                p.critical ? .09f : .055f);
+                p.position.x - nx * trailLength,
+                p.position.y - ny * trailLength,
+                trailWidth);
+
+            if (p.weaponSignature && budget.allowHeavyFx()) {
+                float sideX = -ny;
+                float sideY = nx;
+                if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {
+                    shapes.setColor(.86f, .96f, 1f, .74f);
+                    shapes.rectLine(p.position.x - sideX * .10f, p.position.y - sideY * .10f,
+                        p.position.x - nx * .92f + sideX * .10f, p.position.y - ny * .92f + sideY * .10f, .028f);
+                    shapes.setColor(.55f, .34f, 1f, .58f);
+                    shapes.circle(p.position.x - nx * .28f, p.position.y - ny * .28f, .095f, budget.geometrySegments(12, 7));
+                } else if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {
+                    shapes.setColor(1f, .20f, .02f, .42f);
+                    shapes.circle(p.position.x - nx * .24f, p.position.y - ny * .24f, .18f, budget.geometrySegments(14, 8));
+                    shapes.setColor(1f, .92f, .40f, .76f);
+                    shapes.circle(p.position.x, p.position.y, .085f, budget.geometrySegments(10, 6));
+                }
+            }
 
             if (p.life > 1.41f && budget.allowHeavyFx()) {
                 float bx = p.position.x - nx * .20f;
