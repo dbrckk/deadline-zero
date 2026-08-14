@@ -3,6 +3,7 @@ package com.deadlinezero.game.world;
 import com.badlogic.gdx.math.MathUtils;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.RunMissionRuntime;
+import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageMissionRules;
 
@@ -31,9 +32,10 @@ public final class WaveDirector {
     public boolean shouldSpawn() { return !bossSpawned && spawnTimer <= 0f; }
 
     public void onSpawn() {
+        float runPressure = RunModifierContext.spawnIntervalMultiplier();
         if (squadRemaining > 0) {
             squadRemaining--;
-            spawnTimer = (.085f + MathUtils.random(0f, .035f)) * encounters.spawnIntervalMultiplier();
+            spawnTimer = (.085f + MathUtils.random(0f, .035f)) * encounters.spawnIntervalMultiplier() * runPressure;
             return;
         }
 
@@ -45,7 +47,8 @@ public final class WaveDirector {
         };
         float stageAcceleration = Math.min(.11f, (stage - 1) * .008f);
         float lateAcceleration = Math.min(.10f, elapsed * .00055f);
-        spawnTimer = Math.max(.065f, (base - stageAcceleration - lateAcceleration) * encounters.spawnIntervalMultiplier());
+        spawnTimer = Math.max(.055f, (base - stageAcceleration - lateAcceleration)
+            * encounters.spawnIntervalMultiplier() * runPressure);
 
         float squadChance = switch (pressureBand()) {
             case OPENING -> .025f;
@@ -55,6 +58,7 @@ public final class WaveDirector {
         };
         squadChance = Math.min(.22f, squadChance + (stage - 1) * .008f);
         if (encounters.activeEncounter()) squadChance = Math.min(.32f, squadChance + .08f);
+        if (RunModifierContext.eliteHunt()) squadChance = Math.min(.36f, squadChance + .06f);
         if (!bossPending && MathUtils.random() < squadChance) {
             int min = pressureBand().ordinal() >= PressureBand.ASSAULT.ordinal() ? 2 : 1;
             int max = Math.min(5, min + 1 + stage / 5);
@@ -96,6 +100,15 @@ public final class WaveDirector {
 
     public Enemy.Type chooseType() {
         if (bossPending) return Enemy.Type.BOSS;
+        if (RunModifierContext.eliteHunt()) {
+            float eliteRoll = MathUtils.random();
+            float unlockBias = Math.min(.16f, Math.max(0, stage - 4) * .018f);
+            if (stage >= 8 && eliteRoll < .10f + unlockBias) return Enemy.Type.SHIELDED;
+            if (stage >= 7 && eliteRoll < .22f + unlockBias) return Enemy.Type.REGENERATOR;
+            if (stage >= 5 && eliteRoll < .38f + unlockBias) return Enemy.Type.PHANTOM;
+            if (stage >= 4 && eliteRoll < .56f + unlockBias) return Enemy.Type.ELITE;
+        }
+
         float r = MathUtils.random();
         float stageBias = Math.min(.14f, (stage - 1) * .012f);
         Enemy.Type fallback = switch (pressureBand()) {
