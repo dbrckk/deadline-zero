@@ -20,6 +20,7 @@ public final class RunStageContext {
         activeStage = Math.max(1, selectedStage);
         activeRunOrdinal = Math.max(0, runOrdinal);
         activeThreatTier = ThreatTierRules.sanitizeTier(threatTier);
+        BalanceTelemetryRuntime.begin(activeStage, activeRunOrdinal, activeThreatTier);
     }
 
     public static int stage() { return activeStage; }
