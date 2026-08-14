@@ -7,12 +7,13 @@ import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.util.Pools;
 
-/** Single entry point for authored combat presentation and optional lightweight grading. */
+/** Single entry point for authored combat presentation and optional lightweight grading/audio. */
 public final class CombatSpritePass {
     private final CharacterSpriteRenderer characters;
     private final EnvironmentRenderer environment;
     private final WeaponRenderer weapon;
     private final AuthoredVfxRenderer vfx;
+    private final CombatAudioLayer audio = new CombatAudioLayer();
     private final PostFxShader postFx = new PostFxShader();
     private GraphicsQuality quality;
     private float stateTime;
@@ -40,6 +41,7 @@ public final class CombatSpritePass {
     }
 
     public void render(SpriteBatch batch, Player player, Array<Enemy> enemies, Pools pools) {
+        audio.update(player, enemies);
         if (!characters.authoredAvailable()) return;
         environment.drawAuthored(batch);
         if (postFx.available() && quality.postFxIntensity > 0f) batch.setShader(postFx.shader(quality.postFxIntensity));
@@ -69,5 +71,8 @@ public final class CombatSpritePass {
         return player.velocity.len2() > .01f ? player.velocity.angleDeg() : 0f;
     }
 
-    public void dispose() { postFx.dispose(); }
+    public void dispose() {
+        audio.dispose();
+        postFx.dispose();
+    }
 }
