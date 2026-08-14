@@ -53,7 +53,7 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
     @Override public State state() { return billingState; }
     @Override public boolean authoritativeEntitlements() { return entitlementSnapshotAuthoritative; }
     @Override public String activeProductId() { return pendingProductId == null ? "" : pendingProductId; }
-    @Override public boolean owns(String id) { return owned.contains(id); }
+    @Override public boolean owns(String id) { return BillingService.isKnownProduct(id) && owned.contains(id); }
 
     @Override public void restore() {
         if (client == null || !client.isReady()) return;
@@ -66,8 +66,11 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
                 boolean foundPending = false;
                 for (Purchase purchase : purchases) {
                     if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
-                        foundPending = true;
-                        if (!purchase.getProducts().isEmpty()) pendingProductId = purchase.getProducts().get(0);
+                        String knownPending = firstKnownProduct(purchase);
+                        if (knownPending != null) {
+                            foundPending = true;
+                            pendingProductId = knownPending;
+                        }
                         continue;
                     }
                     if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED) continue;
@@ -92,8 +95,11 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
                 if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) return;
                 for (Purchase purchase : purchases) {
                     if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
-                        billingState = State.PURCHASE_PENDING;
-                        if (!purchase.getProducts().isEmpty()) pendingProductId = purchase.getProducts().get(0);
+                        String knownPending = firstKnownProduct(purchase);
+                        if (knownPending != null) {
+                            billingState = State.PURCHASE_PENDING;
+                            pendingProductId = knownPending;
+                        }
                         continue;
                     }
                     if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED || !containsConsumable(purchase)) continue;
@@ -117,7 +123,7 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
 
     private void beginPurchase(String productId, PurchaseReceiptListener receiptCallback, Runnable legacySuccess,
                                Runnable onFailure, boolean receiptAware) {
-        if (productId == null || productId.isBlank() || client == null || !client.isReady()
+        if (!BillingService.isKnownProduct(productId) || client == null || !client.isReady()
             || billingState == State.PURCHASE_PENDING) {
             if (onFailure != null) onFailure.run();
             return;
@@ -162,7 +168,7 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
             boolean pending = false;
             for (Purchase purchase : purchases) {
                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
-                    if (pendingProductId == null || purchase.getProducts().contains(pendingProductId)) {
+                    if (pendingProductId != null && purchase.getProducts().contains(pendingProductId)) {
                         pending = true;
                         handled = true;
                     }
@@ -203,6 +209,7 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
             return true;
         }
 
+        if (!containsDurable(purchase)) return false;
         if (purchase.isAcknowledged()) {
             grantDurableProducts(purchase);
             if (notifyPending) succeedPending();
@@ -244,9 +251,19 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
         return null;
     }
 
+    private boolean containsDurable(Purchase purchase) {
+        for (String id : purchase.getProducts()) if (BillingService.isDurable(id)) return true;
+        return false;
+    }
+
+    private String firstKnownProduct(Purchase purchase) {
+        for (String id : purchase.getProducts()) if (BillingService.isKnownProduct(id)) return id;
+        return null;
+    }
+
     private void grantDurableProducts(Purchase purchase) {
         for (String id : purchase.getProducts()) {
-            if (!BillingService.isConsumable(id)) owned.add(id);
+            if (BillingService.isDurable(id)) owned.add(id);
         }
     }
 
