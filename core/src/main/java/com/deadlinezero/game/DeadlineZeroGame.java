@@ -119,7 +119,15 @@ public final class DeadlineZeroGame extends Game {
     }
 
     public void saveProfile() { ProfileStore.save(profile); if (accessibility != null) accessibility.save(); }
-    @Override public void pause() { saveProfile(); }
+    @Override public void pause() {
+        if (audio != null) audio.suspend();
+        saveProfile();
+        super.pause();
+    }
+    @Override public void resume() {
+        super.resume();
+        if (audio != null) audio.resume();
+    }
     @Override public void dispose() {
         RunMissionRuntime.end();
         RunEncounterRuntime.end();
