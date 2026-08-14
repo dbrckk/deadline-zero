@@ -32,6 +32,7 @@ public final class CombatPolishController {
     private final LegendaryFxRenderer legendaryFx = new LegendaryFxRenderer();
     private final LeaperRuntime leapers = LeaperSharedRuntime.get();
     private final ArenaHazardRuntime hazards = new ArenaHazardRuntime();
+    private final SingularityImpactTracker singularityImpacts = new SingularityImpactTracker();
     private final DeathFxRenderer deaths;
     private final AccessibilitySettings settings;
     private final AdaptiveFxBudget fxBudget = new AdaptiveFxBudget();
@@ -40,6 +41,7 @@ public final class CombatPolishController {
     private float phaseFxUntil;
     private int phaseFxPhase;
     private float lastHazardVisualTime = Float.NaN;
+    private float lastSingularityVisualTime = Float.NaN;
 
     public CombatPolishController(GameArt art) {
         this(art, AccessibilitySettings.load());
@@ -125,6 +127,7 @@ public final class CombatPolishController {
     public void drawWorldUnderlay(ShapeRenderer shapes, Player player, Array<Enemy> enemies, Pools pools, float time) {
         currentPools = pools;
         updateAndDrawHazards(shapes, player, pools, time);
+        updateAndDrawSingularityImpacts(shapes, pools, time);
         deaths.drawFallback(shapes, pools.deathFx);
         legendaryFx.render(shapes, player, time, fxBudget.quality());
         drawLeaperTelegraphs(shapes, enemies, time);
@@ -132,6 +135,50 @@ public final class CombatPolishController {
         drawRevenantIdentity(shapes, enemies, time);
         drawWardenIdentity(shapes, enemies, time);
         if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
+    }
+
+    private void updateAndDrawSingularityImpacts(ShapeRenderer shapes, Pools pools, float time) {
+        float dt = Float.isNaN(lastSingularityVisualTime) ? 0f : MathUtils.clamp(time - lastSingularityVisualTime, 0f, .05f);
+        lastSingularityVisualTime = time;
+        singularityImpacts.update(pools.projectiles, dt);
+        int triggered = singularityImpacts.consumeTriggeredCount();
+        if (triggered > 0) {
+            AudioDirector.playGlobal(AudioDirector.Cue.SINGULARITY, .82f + Math.min(3, triggered) * .04f, 0f);
+            vibrate(12);
+            if (settings.hitStop) feel.triggerHitStop(.012f);
+        }
+
+        float flashScale = settings.reduceFlashes ? .48f : 1f;
+        int segments = fxBudget.geometrySegments(42, 22);
+        for (SingularityImpactTracker.Impact impact : singularityImpacts.impacts()) {
+            float progress = impact.progress();
+            float fade = 1f - progress;
+            float wave = MathUtils.sin(progress * MathUtils.PI);
+            float outer = MathUtils.lerp(.34f, 2.75f, progress);
+            float inner = MathUtils.lerp(.72f, .08f, progress);
+
+            shapes.setColor(.46f, .20f, 1f, (.18f + wave * .24f) * fade * flashScale);
+            shapes.circle(impact.x, impact.y, outer, segments);
+            shapes.setColor(.08f, .02f, .16f, (.52f + wave * .28f) * fade * flashScale);
+            shapes.circle(impact.x, impact.y, Math.max(.05f, inner), segments);
+            shapes.setColor(.86f, .72f, 1f, .46f * wave * flashScale);
+            shapes.circle(impact.x, impact.y, Math.max(.04f, outer * .16f), segments);
+
+            if (fxBudget.allowHeavyFx()) {
+                int rays = fxBudget.allowExtraFx() ? 10 : 6;
+                for (int i = 0; i < rays; i++) {
+                    float angle = i * (360f / rays) + progress * 115f;
+                    float from = outer * (1.16f + .12f * MathUtils.sinDeg(angle * 2f));
+                    float to = outer * .34f;
+                    float x1 = impact.x + MathUtils.cosDeg(angle) * from;
+                    float y1 = impact.y + MathUtils.sinDeg(angle) * from;
+                    float x2 = impact.x + MathUtils.cosDeg(angle) * to;
+                    float y2 = impact.y + MathUtils.sinDeg(angle) * to;
+                    shapes.setColor(.68f, .46f, 1f, .22f * fade * flashScale);
+                    shapes.rectLine(x1, y1, x2, y2, .035f + wave * .018f);
+                }
+            }
+        }
     }
 
     private void updateAndDrawHazards(ShapeRenderer shapes, Player player, Pools pools, float time) {
