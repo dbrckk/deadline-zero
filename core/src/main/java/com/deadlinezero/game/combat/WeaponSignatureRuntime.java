@@ -5,9 +5,11 @@ package com.deadlinezero.game.combat;
  * Kept data-only so projectile decoration remains testable and independent from screens.
  */
 public final class WeaponSignatureRuntime {
-    public record ShotModifier(boolean active, boolean forceCritical, float damageMultiplier,
+    public enum Kind { NONE, ION_OVERCHARGE, CINDER_OVERHEAT }
+
+    public record ShotModifier(Kind kind, boolean active, boolean forceCritical, float damageMultiplier,
                                int penetrationBonus, float knockbackMultiplier, float radius) {
-        static ShotModifier none() { return new ShotModifier(false, false, 1f, 0, 1f, .11f); }
+        static ShotModifier none() { return new ShotModifier(Kind.NONE, false, false, 1f, 0, 1f, .11f); }
     }
 
     private static String weaponId = "ar9";
@@ -27,13 +29,11 @@ public final class WeaponSignatureRuntime {
     public static ShotModifier consumeShot(boolean alreadyCritical) {
         shotIndex++;
         if ("ion_needle".equals(weaponId) && shotIndex % 5 == 0) {
-            // Capacitor overcharge: every fifth needle is guaranteed to crit and pierces one extra target.
             float critMultiplier = alreadyCritical ? 1.12f : weaponCritMultiplier;
-            return new ShotModifier(true, true, critMultiplier, 1, 1.18f, .135f);
+            return new ShotModifier(Kind.ION_OVERCHARGE, true, true, critMultiplier, 1, 1.18f, .135f);
         }
         if ("cinder_cannon".equals(weaponId) && shotIndex % 4 == 0) {
-            // Thermal cycle: every fourth shell dumps stored heat into a heavier incendiary payload.
-            return new ShotModifier(true, false, 1.55f, 1, 1.28f, .17f);
+            return new ShotModifier(Kind.CINDER_OVERHEAT, true, false, 1.55f, 1, 1.28f, .17f);
         }
         return ShotModifier.none();
     }
