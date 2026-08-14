@@ -4,6 +4,8 @@ import com.deadlinezero.game.meta.RunStageContext;
 
 /** Runtime timers and phase-gated decisions for advanced boss actions. */
 public final class BossCombatRuntime {
+    private static final float SUMMON_TELEGRAPH_SECONDS = .72f;
+
     private final BossIdentity identity;
     private final BossAffixRules.Affix affix;
     private float chargeTimer = 4.5f;
@@ -11,14 +13,8 @@ public final class BossCombatRuntime {
     private float enragePulseTimer = 5.0f;
     private float chargeDuration;
 
-    public BossCombatRuntime() {
-        this(BossIdentity.forStage(RunStageContext.stage()));
-    }
-
-    /** Compatibility constructor retained for existing tests/callers. */
-    public BossCombatRuntime(boolean revenant) {
-        this(revenant ? BossIdentity.REVENANT : BossIdentity.ALPHA);
-    }
+    public BossCombatRuntime() { this(BossIdentity.forStage(RunStageContext.stage())); }
+    public BossCombatRuntime(boolean revenant) { this(revenant ? BossIdentity.REVENANT : BossIdentity.ALPHA); }
 
     public BossCombatRuntime(BossIdentity identity) {
         this.identity = identity == null ? BossIdentity.ALPHA : identity;
@@ -38,22 +34,10 @@ public final class BossCombatRuntime {
         if (phase < 2 || chargeDuration > 0f || chargeTimer > 0f) return false;
         float baseCooldown;
         switch (identity) {
-            case REVENANT -> {
-                baseCooldown = phase >= 3 ? RevenantBossProfile.PHASE3_CHARGE_COOLDOWN : RevenantBossProfile.PHASE2_CHARGE_COOLDOWN;
-                chargeDuration = phase >= 3 ? .66f : .54f;
-            }
-            case WARDEN -> {
-                baseCooldown = phase >= 3 ? WardenBossProfile.PHASE3_CHARGE_COOLDOWN : WardenBossProfile.PHASE2_CHARGE_COOLDOWN;
-                chargeDuration = phase >= 3 ? WardenBossProfile.PHASE3_CHARGE_DURATION : WardenBossProfile.PHASE2_CHARGE_DURATION;
-            }
-            case HARVESTER -> {
-                baseCooldown = phase >= 3 ? HarvesterBossProfile.PHASE3_CHARGE_COOLDOWN : HarvesterBossProfile.PHASE2_CHARGE_COOLDOWN;
-                chargeDuration = phase >= 3 ? HarvesterBossProfile.PHASE3_CHARGE_DURATION : HarvesterBossProfile.PHASE2_CHARGE_DURATION;
-            }
-            default -> {
-                baseCooldown = phase >= 3 ? 3.0f : 4.2f;
-                chargeDuration = phase >= 3 ? .72f : .58f;
-            }
+            case REVENANT -> { baseCooldown = phase >= 3 ? RevenantBossProfile.PHASE3_CHARGE_COOLDOWN : RevenantBossProfile.PHASE2_CHARGE_COOLDOWN; chargeDuration = phase >= 3 ? .66f : .54f; }
+            case WARDEN -> { baseCooldown = phase >= 3 ? WardenBossProfile.PHASE3_CHARGE_COOLDOWN : WardenBossProfile.PHASE2_CHARGE_COOLDOWN; chargeDuration = phase >= 3 ? WardenBossProfile.PHASE3_CHARGE_DURATION : WardenBossProfile.PHASE2_CHARGE_DURATION; }
+            case HARVESTER -> { baseCooldown = phase >= 3 ? HarvesterBossProfile.PHASE3_CHARGE_COOLDOWN : HarvesterBossProfile.PHASE2_CHARGE_COOLDOWN; chargeDuration = phase >= 3 ? HarvesterBossProfile.PHASE3_CHARGE_DURATION : HarvesterBossProfile.PHASE2_CHARGE_DURATION; }
+            default -> { baseCooldown = phase >= 3 ? 3.0f : 4.2f; chargeDuration = phase >= 3 ? .72f : .58f; }
         }
         chargeTimer = baseCooldown * affix.chargeCooldown;
         return true;
@@ -70,6 +54,19 @@ public final class BossCombatRuntime {
         summonTimer = base * affix.summonCooldown;
         return true;
     }
+
+    /** True during the final pre-summon window. HARVESTER uses this for visible portal telegraphs. */
+    public boolean summonTelegraphing(int phase) {
+        return phase >= 2 && summonTimer > 0f && summonTimer <= SUMMON_TELEGRAPH_SECONDS;
+    }
+
+    /** 0 at telegraph start and 1 immediately before the summon fires. */
+    public float summonTelegraphProgress(int phase) {
+        if (!summonTelegraphing(phase)) return 0f;
+        return Math.max(0f, Math.min(1f, 1f - summonTimer / SUMMON_TELEGRAPH_SECONDS));
+    }
+
+    public static float summonTelegraphSeconds() { return SUMMON_TELEGRAPH_SECONDS; }
 
     public boolean consumeEnragePulse(int phase) {
         if (phase < 3 || enragePulseTimer > 0f) return false;
