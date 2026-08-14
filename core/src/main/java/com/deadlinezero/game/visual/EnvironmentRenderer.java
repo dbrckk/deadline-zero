@@ -15,7 +15,7 @@ public final class EnvironmentRenderer implements Disposable {
     private static final float HALF_W = 40f;
     private static final float HALF_H = 24f;
     private static final float TILE_WORLD = 4f;
-    private static final float FLOOR_ALPHA = .62f;
+    private static final float TRANSITION_FLOOR_ALPHA = .62f;
     private final GameArt art;
     private BootstrapEnvironmentArt bootstrap;
 
@@ -52,19 +52,39 @@ public final class EnvironmentRenderer implements Disposable {
         shapes.circle(19f, -10f, 4.1f, 32);
     }
 
-    /** Draws authored/bootstrap floor plus set dressing in the live combat sprite pass. */
+    /**
+     * Transitional compatibility method. New render pipelines should call drawFloor(batch, 1f)
+     * before world FX, then drawSetDressing(batch) above the floor.
+     */
     public void drawAuthored(SpriteBatch batch) {
         if (!hasAnyEnvironmentArt()) return;
-
         batch.begin();
-        drawFloor(batch);
-        drawSetDressing(batch);
+        drawFloorInternal(batch, TRANSITION_FLOOR_ALPHA);
+        drawSetDressingInternal(batch);
         batch.setColor(Color.WHITE);
         batch.end();
     }
 
-    private void drawFloor(SpriteBatch batch) {
-        batch.setColor(1f, 1f, 1f, FLOOR_ALPHA);
+    /** Draws only the tiled floor/hazard layer. Alpha is clamped to [0,1]. */
+    public void drawFloor(SpriteBatch batch, float alpha) {
+        if (!hasFloorArt()) return;
+        batch.begin();
+        drawFloorInternal(batch, MathUtils.clamp(alpha, 0f, 1f));
+        batch.setColor(Color.WHITE);
+        batch.end();
+    }
+
+    /** Draws only decals and props, allowing world effects to be inserted between floor and actors. */
+    public void drawSetDressing(SpriteBatch batch) {
+        if (!hasSetDressingArt()) return;
+        batch.begin();
+        drawSetDressingInternal(batch);
+        batch.setColor(Color.WHITE);
+        batch.end();
+    }
+
+    private void drawFloorInternal(SpriteBatch batch, float alpha) {
+        batch.setColor(1f, 1f, 1f, alpha);
         for (int gy = -6; gy < 6; gy++) {
             for (int gx = -10; gx < 10; gx++) {
                 int variant = floorVariant(gx, gy);
@@ -76,10 +96,8 @@ public final class EnvironmentRenderer implements Disposable {
 
         TextureRegion hazard = region("environment/floor/hazard_a");
         if (hazard != null) {
-            batch.setColor(1f, 1f, 1f, .70f);
-            for (int x = -8; x <= 8; x += 4) {
-                batch.draw(hazard, x, -2f, TILE_WORLD, TILE_WORLD);
-            }
+            batch.setColor(1f, 1f, 1f, Math.min(1f, alpha * 1.13f));
+            for (int x = -8; x <= 8; x += 4) batch.draw(hazard, x, -2f, TILE_WORLD, TILE_WORLD);
         }
     }
 
@@ -87,7 +105,7 @@ public final class EnvironmentRenderer implements Disposable {
         return Math.floorMod(gridX * 31 + gridY * 17, 3);
     }
 
-    private void drawSetDressing(SpriteBatch batch) {
+    private void drawSetDressingInternal(SpriteBatch batch) {
         TextureRegion crack = region("environment/decal/crack_a");
         TextureRegion blood = region("environment/decal/blood_a");
         TextureRegion scorch = region("environment/decal/scorch_a");
@@ -112,12 +130,17 @@ public final class EnvironmentRenderer implements Disposable {
         draw(batch, debrisB, 20f, 10.4f, 3.1f);
     }
 
-    private boolean hasAnyEnvironmentArt() {
+    private boolean hasAnyEnvironmentArt() { return hasFloorArt() || hasSetDressingArt(); }
+
+    private boolean hasFloorArt() {
         return region("environment/floor/concrete_a") != null
             || region("environment/floor/concrete_b") != null
             || region("environment/floor/concrete_c") != null
-            || region("environment/floor/hazard_a") != null
-            || region("environment/decal/crack_a") != null
+            || region("environment/floor/hazard_a") != null;
+    }
+
+    private boolean hasSetDressingArt() {
+        return region("environment/decal/crack_a") != null
             || region("environment/decal/blood_a") != null
             || region("environment/decal/scorch_a") != null
             || region("environment/prop/barrier_a") != null
