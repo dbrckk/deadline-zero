@@ -3,6 +3,7 @@ package com.deadlinezero.game.ai;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.deadlinezero.game.meta.RunStageContext;
 import org.junit.jupiter.api.Test;
 
 final class BossAttackPatternCatalogTest {
@@ -42,5 +43,16 @@ final class BossAttackPatternCatalogTest {
         var phase3 = BossAttackPatternCatalog.forPhase(BossIdentity.WARDEN, 3);
         assertEquals(2, phase2.explosiveEvery());
         assertTrue(phase3.explosionRadius() >= phase2.explosionRadius());
+    }
+
+    @Test void legacyBooleanRoutingStillUsesWardenOnWardenStages() {
+        RunStageContext.begin(7);
+        try {
+            var routed = BossAttackPatternCatalog.forPhase(false, 2);
+            var expected = BossAttackPatternCatalog.forPhase(BossIdentity.WARDEN, 2);
+            assertEquals(expected, routed);
+        } finally {
+            RunStageContext.begin(1);
+        }
     }
 }
