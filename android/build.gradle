@@ -143,8 +143,8 @@ tasks.register('verifyPlayReleaseConfig') {
 
 tasks.register('bundlePlayRelease') {
     group = 'build'
-    description = 'Builds the signed, production-configured Android App Bundle intended for Google Play upload.'
-    dependsOn 'verifyPlayReleaseConfig', 'bundleRelease'
+    description = 'Runs core tests, release lint, production validation, then builds the signed Google Play AAB.'
+    dependsOn ':core:test', 'lintRelease', 'verifyPlayReleaseConfig', 'bundleRelease'
 }
 
 tasks.configureEach { task ->
