@@ -9,7 +9,11 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 /** Resilient production audio gateway. Missing files degrade to safe fallbacks or silence instead of breaking the game. */
 public final class AudioDirector {
-    public enum Cue { SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_PHASE, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK, SINGULARITY, ION_OVERCHARGE, CINDER_OVERHEAT }
+    public enum Cue {
+        SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_PHASE, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK,
+        SINGULARITY, ION_OVERCHARGE, CINDER_OVERHEAT,
+        FOUNDRY_LAVA, FOUNDRY_STEAM, FOUNDRY_HEAT
+    }
 
     private static AudioDirector active;
     private final ObjectMap<Cue, Sound> sounds = new ObjectMap<>();
@@ -38,6 +42,9 @@ public final class AudioDirector {
         load(Cue.SINGULARITY, "audio/sfx/singularity.ogg");
         load(Cue.ION_OVERCHARGE, "audio/sfx/ion_overcharge.ogg");
         load(Cue.CINDER_OVERHEAT, "audio/sfx/cinder_overheat.ogg");
+        load(Cue.FOUNDRY_LAVA, "audio/sfx/foundry_lava.ogg");
+        load(Cue.FOUNDRY_STEAM, "audio/sfx/foundry_steam.ogg");
+        load(Cue.FOUNDRY_HEAT, "audio/sfx/foundry_heat.ogg");
         for (MusicProfileSelector.Profile profile : MusicProfileSelector.Profile.values()) loadMusic(profile, MusicProfileSelector.assetPath(profile));
     }
 
@@ -59,7 +66,9 @@ public final class AudioDirector {
         return switch (cue) {
             case BOSS_PHASE -> Cue.BOSS_HIT;
             case SINGULARITY, ION_OVERCHARGE -> Cue.CRIT;
-            case CINDER_OVERHEAT -> Cue.BOSS_HIT;
+            case CINDER_OVERHEAT, FOUNDRY_LAVA -> Cue.BOSS_HIT;
+            case FOUNDRY_STEAM -> Cue.DASH;
+            case FOUNDRY_HEAT -> Cue.CRIT;
             default -> null;
         };
     }
