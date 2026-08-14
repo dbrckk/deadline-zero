@@ -3,6 +3,7 @@ package com.deadlinezero.game.android;
 import android.app.Activity;
 import com.android.billingclient.api.*;
 import com.deadlinezero.game.services.BillingService;
+import com.deadlinezero.game.services.SingleFlightGate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,9 +12,11 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
     private final Activity activity;
     private BillingClient client;
     private final Set<String> owned = ConcurrentHashMap.newKeySet();
+    private final SingleFlightGate purchaseGate = new SingleFlightGate();
     private Runnable success, failure;
     private PurchaseReceiptListener receiptSuccess;
     private boolean receiptAwarePending;
+    private String pendingProductId;
 
     public AndroidBillingService(Activity activity) { this.activity = activity; }
 
@@ -74,11 +77,20 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
 
     private void beginPurchase(String productId, PurchaseReceiptListener receiptCallback, Runnable legacySuccess,
                                Runnable onFailure, boolean receiptAware) {
-        if (client == null || !client.isReady()) { if (onFailure != null) onFailure.run(); return; }
+        if (productId == null || productId.isBlank() || client == null || !client.isReady()) {
+            if (onFailure != null) onFailure.run();
+            return;
+        }
+        if (!purchaseGate.tryBegin()) {
+            if (onFailure != null) onFailure.run();
+            return;
+        }
+
         this.success = legacySuccess;
         this.receiptSuccess = receiptCallback;
         this.failure = onFailure;
         this.receiptAwarePending = receiptAware;
+        this.pendingProductId = productId;
 
         QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
             .setProductId(productId)
@@ -114,6 +126,7 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
 
     private boolean processPurchase(Purchase purchase, boolean notifyPending) {
         if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED) return false;
+        if (notifyPending && pendingProductId != null && !purchase.getProducts().contains(pendingProductId)) return false;
 
         String consumableId = firstConsumable(purchase);
         if (consumableId != null) {
@@ -192,5 +205,7 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
         receiptSuccess = null;
         failure = null;
         receiptAwarePending = false;
+        pendingProductId = null;
+        purchaseGate.end();
     }
 }
