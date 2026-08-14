@@ -47,6 +47,7 @@ public final class BootstrapArtCatalog {
         if (key.startsWith("boss/revenant/")) return 10;
         if (key.startsWith("boss/warden/")) return 6;
         if (key.startsWith("boss/harvester/")) return 12;
+        if (key.startsWith("boss/null_archon/")) return 14;
 
         if (key.equals("weapon/ar9")) return 11;
         if (key.equals("weapon/scattergun")) return 12;
