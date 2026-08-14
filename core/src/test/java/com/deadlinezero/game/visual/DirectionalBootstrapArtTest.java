@@ -56,6 +56,17 @@ final class DirectionalBootstrapArtTest {
         assertEquals(1120, DirectionalBootstrapArt.TOTAL_TILES);
     }
 
+    @Test void generatedSheetStaysWithinBaselineGlesTextureDimension() {
+        int rows = (DirectionalBootstrapArt.TOTAL_TILES + DirectionalBootstrapArt.COLUMNS - 1)
+            / DirectionalBootstrapArt.COLUMNS;
+        int width = DirectionalBootstrapArt.COLUMNS * DirectionalBootstrapArt.TILE;
+        int height = rows * DirectionalBootstrapArt.TILE;
+        assertTrue(width <= 2048, "bootstrap sheet width exceeds baseline GLES texture size");
+        assertTrue(height <= 2048, "bootstrap sheet height exceeds baseline GLES texture size");
+        assertEquals(640, width);
+        assertEquals(1792, height);
+    }
+
     @Test void actorIdentityLookupIsStable() {
         for (int i = 0; i < ROOTS.length; i++) {
             assertEquals(i, DirectionalBootstrapArt.actorIndex(ROOTS[i] + "/e/run"));
