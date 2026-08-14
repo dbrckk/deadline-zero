@@ -10,9 +10,9 @@ public final class RunModifierContext {
         BLOOD_MOON(Rarity.STANDARD, "BLOOD MOON", "Tougher and harder-hitting hostiles", 1.15f, 1.04f, 1.22f, .94f, 1.28f),
         ELITE_HUNT(Rarity.STANDARD, "ELITE HUNT", "Specialists and elites dominate", 1.08f, 1.04f, 1.10f, .92f, 1.24f),
         REDLINE(Rarity.STANDARD, "REDLINE", "Everything accelerates toward the boss", 1.08f, 1.14f, 1.16f, .78f, 1.30f),
-        VOLATILE_DEAD(Rarity.LEGENDARY, "VOLATILE DEAD", "Killed hostiles detonate in lethal chain reactions", 1.10f, 1.06f, 1.16f, .86f, 1.48f),
+        PHANTOM_ECLIPSE(Rarity.LEGENDARY, "PHANTOM ECLIPSE", "Phantoms overrun every pressure band", 1.10f, 1.10f, 1.15f, .82f, 1.48f),
         TWIN_APEX(Rarity.LEGENDARY, "TWIN APEX", "Two apex signals enter the arena together", 1.06f, 1.04f, 1.12f, .92f, 1.55f),
-        VOID_STORM(Rarity.LEGENDARY, "VOID STORM", "Tracking anomaly zones repeatedly threaten your position", 1.08f, 1.08f, 1.14f, .84f, 1.52f);
+        SPECIALIST_SIEGE(Rarity.LEGENDARY, "SPECIALIST SIEGE", "Shielded, regenerators and elites dominate", 1.14f, 1.04f, 1.16f, .80f, 1.52f);
 
         public final Rarity rarity;
         public final String title;
@@ -52,7 +52,7 @@ public final class RunModifierContext {
         Modifier.OVERCLOCKED, Modifier.GLASS_HORDE, Modifier.BLOOD_MOON, Modifier.ELITE_HUNT, Modifier.REDLINE
     };
     private static final Modifier[] LEGENDARY = {
-        Modifier.VOLATILE_DEAD, Modifier.TWIN_APEX, Modifier.VOID_STORM
+        Modifier.PHANTOM_ECLIPSE, Modifier.TWIN_APEX, Modifier.SPECIALIST_SIEGE
     };
     private static Modifier active;
 
@@ -111,8 +111,8 @@ public final class RunModifierContext {
     public static float rewardMultiplier() { return active == null ? 1f : active.reward; }
     public static int rewardBonusPercent() { return Math.round((rewardMultiplier() - 1f) * 100f); }
     public static boolean eliteHunt() { return active == Modifier.ELITE_HUNT; }
-    public static boolean volatileDead() { return active == Modifier.VOLATILE_DEAD; }
+    public static boolean phantomEclipse() { return active == Modifier.PHANTOM_ECLIPSE; }
     public static boolean twinApex() { return active == Modifier.TWIN_APEX; }
-    public static boolean voidStorm() { return active == Modifier.VOID_STORM; }
+    public static boolean specialistSiege() { return active == Modifier.SPECIALIST_SIEGE; }
     public static int requiredBossKills() { return twinApex() ? 2 : 1; }
 }
