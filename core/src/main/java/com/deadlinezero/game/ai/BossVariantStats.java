@@ -1,17 +1,25 @@
 package com.deadlinezero.game.ai;
 
-/** Applies deterministic stat selection for ALPHA and REVENANT boss spawns. */
+/** Applies deterministic stat selection for all boss identities. */
 public final class BossVariantStats {
     private BossVariantStats() { }
 
     public record Stats(float hp, float speed, float damage) { }
 
     public static Stats forStage(int stage, float baseHp, float baseSpeed, float baseDamage) {
-        boolean revenant = RevenantBossProfile.useForStage(stage);
-        return revenant
-            ? new Stats(baseHp * RevenantBossProfile.HP_MULTIPLIER,
-                        baseSpeed * RevenantBossProfile.SPEED_MULTIPLIER,
-                        baseDamage * RevenantBossProfile.DAMAGE_MULTIPLIER)
-            : new Stats(baseHp, baseSpeed, baseDamage);
+        return forIdentity(BossIdentity.forStage(stage), baseHp, baseSpeed, baseDamage);
+    }
+
+    public static Stats forIdentity(BossIdentity identity, float baseHp, float baseSpeed, float baseDamage) {
+        BossIdentity safeIdentity = identity == null ? BossIdentity.ALPHA : identity;
+        return switch (safeIdentity) {
+            case REVENANT -> new Stats(baseHp * RevenantBossProfile.HP_MULTIPLIER,
+                baseSpeed * RevenantBossProfile.SPEED_MULTIPLIER,
+                baseDamage * RevenantBossProfile.DAMAGE_MULTIPLIER);
+            case WARDEN -> new Stats(baseHp * WardenBossProfile.HP_MULTIPLIER,
+                baseSpeed * WardenBossProfile.SPEED_MULTIPLIER,
+                baseDamage * WardenBossProfile.DAMAGE_MULTIPLIER);
+            default -> new Stats(baseHp, baseSpeed, baseDamage);
+        };
     }
 }
