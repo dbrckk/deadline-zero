@@ -30,11 +30,48 @@ public final class LegendaryEffects {
 
     public static boolean applyApex(Player player) {
         if (!player.legendary.grantApex()) return false;
-        for (AbilityType type : AbilityType.values()) {
-            while (player.abilities.level(type) < 3) player.abilities.upgrade(type);
-        }
+        for (AbilityType type : AbilityType.values()) while (player.abilities.level(type) < 3) player.abilities.upgrade(type);
         player.weapon.damage *= .90f;
         player.weapon.fireInterval *= 1.06f;
+        return true;
+    }
+
+    public static boolean applyVanguardProtocol(Player player) {
+        if (!player.legendary.grantVanguardProtocol()) return false;
+        player.weapon.damage *= 1.16f;
+        player.weapon.fireInterval = Math.max(.055f, player.weapon.fireInterval * .90f);
+        player.weapon.penetration += 1;
+        player.weapon.projectileSpeed *= 1.10f;
+        player.weapon.spreadDegrees *= .55f;
+        return true;
+    }
+
+    public static boolean applyScatterMaelstrom(Player player) {
+        if (!player.legendary.grantScatterMaelstrom()) return false;
+        player.weapon.projectileCount += 2;
+        player.weapon.damage *= .82f;
+        player.weapon.spreadDegrees += 2.2f;
+        player.weapon.knockback *= 1.18f;
+        return true;
+    }
+
+    public static boolean applyInfernoPyroclasm(Player player) {
+        if (!player.legendary.grantInfernoPyroclasm()) return false;
+        player.weapon.projectileCount += 1;
+        player.weapon.damage *= .62f;
+        player.weapon.fireInterval = Math.max(.055f, player.weapon.fireInterval * .94f);
+        player.weapon.spreadDegrees += 2.4f;
+        player.weapon.penetration += 1;
+        return true;
+    }
+
+    public static boolean applyBreacherRupture(Player player) {
+        if (!player.legendary.grantBreacherRupture()) return false;
+        player.weapon.projectileCount += 3;
+        player.weapon.damage *= .82f;
+        player.weapon.penetration += 1;
+        player.weapon.knockback *= 1.22f;
+        player.weapon.spreadDegrees += 1.5f;
         return true;
     }
 
