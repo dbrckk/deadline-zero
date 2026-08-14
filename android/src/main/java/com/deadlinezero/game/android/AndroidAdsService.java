@@ -16,6 +16,7 @@ public final class AndroidAdsService implements AdsService {
     private final AndroidConsentManager consent;
     private volatile RewardedAd ad;
     private volatile boolean loading;
+    private volatile FullscreenListener fullscreenListener;
 
     public AndroidAdsService(Activity activity) {
         this(activity, null);
@@ -28,6 +29,10 @@ public final class AndroidAdsService implements AdsService {
 
     @Override public void preload() {
         load();
+    }
+
+    @Override public void setFullscreenListener(FullscreenListener listener) {
+        fullscreenListener = listener;
     }
 
     private boolean canRequestAds() {
@@ -70,15 +75,19 @@ public final class AndroidAdsService implements AdsService {
             RewardedAd showing = ad;
             ad = null;
             AtomicBoolean completed = new AtomicBoolean(false);
+            AtomicBoolean presentationClosed = new AtomicBoolean(false);
+            dispatchFullscreenOpening();
 
             showing.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override public void onAdDismissedFullScreenContent() {
                     load();
+                    dispatchFullscreenClosedOnce(presentationClosed);
                     if (completed.compareAndSet(false, true)) dispatchToGameThread(unavailable);
                 }
 
                 @Override public void onAdFailedToShowFullScreenContent(AdError error) {
                     load();
+                    dispatchFullscreenClosedOnce(presentationClosed);
                     if (completed.compareAndSet(false, true)) dispatchToGameThread(unavailable);
                 }
             });
@@ -87,6 +96,17 @@ public final class AndroidAdsService implements AdsService {
                 if (completed.compareAndSet(false, true)) dispatchToGameThread(earned);
             });
         });
+    }
+
+    private void dispatchFullscreenOpening() {
+        FullscreenListener listener = fullscreenListener;
+        if (listener != null) dispatchToGameThread(listener::onOpening);
+    }
+
+    private void dispatchFullscreenClosedOnce(AtomicBoolean closed) {
+        if (!closed.compareAndSet(false, true)) return;
+        FullscreenListener listener = fullscreenListener;
+        if (listener != null) dispatchToGameThread(listener::onClosed);
     }
 
     private void dispatchToGameThread(Runnable callback) {
