@@ -36,6 +36,7 @@ public final class AudioCueLimiter {
             case LEVEL_UP -> 180L;
             case UI_SELECT -> 75L;
             case UI_BACK -> 90L;
+            case SINGULARITY -> 220L;
         };
         return millis * 1_000_000L;
     }
