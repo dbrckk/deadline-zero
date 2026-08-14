@@ -1,6 +1,7 @@
 package com.deadlinezero.game.entities;
 
 import com.badlogic.gdx.math.Vector2;
+import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.combat.WeaponSignatureRuntime;
 import com.deadlinezero.game.meta.SingularityCoreRuntime;
@@ -17,6 +18,7 @@ public final class Projectile {
     public boolean critical;
     public boolean singularity;
     public boolean weaponSignature;
+    public WeaponSignatureRuntime.Kind weaponSignatureKind = WeaponSignatureRuntime.Kind.NONE;
     public long generation;
     public DamageElement element = DamageElement.KINETIC;
     public Enemy lastHit;
@@ -29,6 +31,7 @@ public final class Projectile {
         WeaponSignatureRuntime.ShotModifier signature = WeaponSignatureRuntime.consumeShot(critical);
         singularity = SingularityCoreRuntime.consumeShotMark();
         weaponSignature = signature.active();
+        weaponSignatureKind = signature.kind();
         float signatureDamage = damage * signature.damageMultiplier();
         this.damage = singularity ? signatureDamage * 1.35f : signatureDamage;
         this.life = 1.5f;
@@ -40,6 +43,12 @@ public final class Projectile {
         this.element = singularity ? DamageElement.SHOCK : element;
         this.radius = singularity ? Math.max(.16f, signature.radius()) : signature.radius();
         this.lastHit = null;
+
+        if (weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {
+            AudioDirector.playGlobal(AudioDirector.Cue.ION_OVERCHARGE, 1.08f, 0f);
+        } else if (weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {
+            AudioDirector.playGlobal(AudioDirector.Cue.CINDER_OVERHEAT, .82f, 0f);
+        }
         return this;
     }
 }
