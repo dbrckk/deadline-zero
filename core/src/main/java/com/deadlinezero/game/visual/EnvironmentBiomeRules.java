@@ -4,23 +4,30 @@ package com.deadlinezero.game.visual;
 public final class EnvironmentBiomeRules {
     public enum Biome {
         QUARANTINE_YARD("QUARANTINE YARD"),
-        CINDER_FOUNDRY("CINDER FOUNDRY");
+        CINDER_FOUNDRY("CINDER FOUNDRY"),
+        NULL_SECTOR("NULL SECTOR");
 
         public final String label;
         Biome(String label) { this.label = label; }
     }
 
     public static final int CINDER_FOUNDRY_STAGE = 10;
+    public static final int NULL_SECTOR_STAGE = 20;
 
     private EnvironmentBiomeRules() { }
 
     public static Biome forStage(int stage) {
-        return Math.max(1, stage) >= CINDER_FOUNDRY_STAGE
-            ? Biome.CINDER_FOUNDRY
-            : Biome.QUARANTINE_YARD;
+        int safe = Math.max(1, stage);
+        if (safe >= NULL_SECTOR_STAGE) return Biome.NULL_SECTOR;
+        if (safe >= CINDER_FOUNDRY_STAGE) return Biome.CINDER_FOUNDRY;
+        return Biome.QUARANTINE_YARD;
     }
 
     public static boolean isFoundry(int stage) {
         return forStage(stage) == Biome.CINDER_FOUNDRY;
+    }
+
+    public static boolean isNullSector(int stage) {
+        return forStage(stage) == Biome.NULL_SECTOR;
     }
 }
