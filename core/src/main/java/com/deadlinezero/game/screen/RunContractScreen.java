@@ -24,9 +24,7 @@ public final class RunContractScreen extends ScreenAdapter {
     private final RunModifierContext.Modifier[] offers = RunModifierContext.offers();
     private float time;
 
-    public RunContractScreen(DeadlineZeroGame game) {
-        this.game = game;
-    }
+    public RunContractScreen(DeadlineZeroGame game) { this.game = game; }
 
     @Override public void render(float delta) {
         time += Math.min(.05f, Math.max(0f, delta));
@@ -45,15 +43,16 @@ public final class RunContractScreen extends ScreenAdapter {
         shapes.rect(18f, h - 94f, w - 36f, 64f);
         for (int i = 0; i < offers.length; i++) {
             float x = margin + i * (cardW + gap);
-            float pulse = .50f + .50f * (float)Math.sin(time * 2.5f + i * .8f);
+            float pulse = .50f + .50f * (float)Math.sin(time * (offers[i].legendary() ? 4.2f : 2.5f) + i * .8f);
             shapes.setColor(VisualTheme.PANEL_ALT);
             shapes.rect(x, cardY, cardW, cardH);
             Color accent = accent(offers[i]);
-            shapes.setColor(accent.r, accent.g, accent.b, .16f + pulse * .05f);
-            shapes.rect(x, cardY + cardH - 8f, cardW, 8f);
-            shapes.rect(x, cardY, 4f, cardH);
-            shapes.setColor(accent.r, accent.g, accent.b, .07f + pulse * .025f);
-            shapes.circle(x + cardW * .5f, cardY + cardH * .58f, Math.min(cardW, cardH) * .38f, 48);
+            float glow = offers[i].legendary() ? .28f : .16f;
+            shapes.setColor(accent.r, accent.g, accent.b, glow + pulse * .06f);
+            shapes.rect(x, cardY + cardH - (offers[i].legendary() ? 12f : 8f), cardW, offers[i].legendary() ? 12f : 8f);
+            shapes.rect(x, cardY, offers[i].legendary() ? 7f : 4f, cardH);
+            shapes.setColor(accent.r, accent.g, accent.b, (offers[i].legendary() ? .13f : .07f) + pulse * .03f);
+            shapes.circle(x + cardW * .5f, cardY + cardH * .58f, Math.min(cardW, cardH) * (offers[i].legendary() ? .43f : .38f), 48);
             shapes.setColor(accent.r, accent.g, accent.b, .90f);
             shapes.rect(x + cardW * .12f, cardY + 24f, cardW * .76f, 46f);
         }
@@ -73,15 +72,20 @@ public final class RunContractScreen extends ScreenAdapter {
             float center = x + cardW * .5f;
             Color accent = accent(m);
 
-            font.getData().setScale(.66f);
+            font.getData().setScale(.33f);
+            font.setColor(m.legendary() ? VisualTheme.GOLD : VisualTheme.MUTED);
+            font.draw(batch, m.legendary() ? "LEGENDARY CONTRACT" : "STANDARD CONTRACT",
+                x + 8f, cardY + cardH - 24f, cardW - 16f, Align.center, false);
+
+            font.getData().setScale(.64f);
             font.setColor(accent);
-            font.draw(batch, "[" + (i + 1) + "]  " + m.title, x + 8f, cardY + cardH - 42f, cardW - 16f, Align.center, false);
+            font.draw(batch, "[" + (i + 1) + "]  " + m.title, x + 8f, cardY + cardH - 52f, cardW - 16f, Align.center, false);
 
-            font.getData().setScale(.42f);
+            font.getData().setScale(.40f);
             font.setColor(VisualTheme.TEXT);
-            font.draw(batch, m.description, x + cardW * .10f, cardY + cardH - 88f, cardW * .80f, Align.center, true);
+            font.draw(batch, m.description, x + cardW * .10f, cardY + cardH - 95f, cardW * .80f, Align.center, true);
 
-            font.getData().setScale(.39f);
+            font.getData().setScale(.37f);
             font.setColor(VisualTheme.MUTED);
             font.draw(batch,
                 "HP  x" + oneDecimal(m.enemyHp) + "\n" +
@@ -105,10 +109,10 @@ public final class RunContractScreen extends ScreenAdapter {
         font.draw(batch, "TAP A CARD / 1-3 TO DEPLOY   •   ESC TO CANCEL", 0f, 34f, w, Align.center, false);
         batch.end();
 
-        handleInput(w, cardY, cardW, cardH, margin, gap);
+        handleInput(cardY, cardW, cardH, margin, gap);
     }
 
-    private void handleInput(float w, float cardY, float cardW, float cardH, float margin, float gap) {
+    private void handleInput(float cardY, float cardW, float cardH, float margin, float gap) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
             game.showMenu();
@@ -123,10 +127,7 @@ public final class RunContractScreen extends ScreenAdapter {
         if (y < cardY || y > cardY + cardH) return;
         for (int i = 0; i < offers.length; i++) {
             float left = margin + i * (cardW + gap);
-            if (x >= left && x <= left + cardW) {
-                choose(i);
-                return;
-            }
+            if (x >= left && x <= left + cardW) { choose(i); return; }
         }
     }
 
@@ -136,11 +137,10 @@ public final class RunContractScreen extends ScreenAdapter {
         game.startRunWithContract(offers[index]);
     }
 
-    private String oneDecimal(float value) {
-        return String.format(java.util.Locale.ROOT, "%.2f", value);
-    }
+    private String oneDecimal(float value) { return String.format(java.util.Locale.ROOT, "%.2f", value); }
 
     private Color accent(RunModifierContext.Modifier modifier) {
+        if (modifier.legendary()) return VisualTheme.GOLD;
         return switch (modifier) {
             case GLASS_HORDE -> VisualTheme.CYAN;
             case BLOOD_MOON -> VisualTheme.RED;
