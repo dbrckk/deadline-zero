@@ -114,10 +114,9 @@ tasks.register('bundlePlayRelease') {
     dependsOn 'verifyPlayReleaseConfig', 'bundleRelease'
 }
 
-tasks.named('bundleRelease') { mustRunAfter 'verifyPlayReleaseConfig' }
-
 tasks.configureEach { task ->
     if (task.name.contains("merge") && task.name.contains("JniLibFolders")) task.dependsOn copyAndroidNatives
+    if (task.name == 'bundleRelease') task.mustRunAfter 'verifyPlayReleaseConfig'
     if (task.name in ['bundleRelease', 'assembleRelease']) {
         task.doFirst {
             boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
