@@ -2,6 +2,7 @@ package com.deadlinezero.game.meta;
 
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.combat.WeaponDefinition;
+import com.deadlinezero.game.combat.WeaponSignatureRuntime;
 
 /** Immutable snapshot of gear, weapon and survivor bonuses for the active run. */
 public final class RunLoadoutContext {
@@ -26,6 +27,7 @@ public final class RunLoadoutContext {
         float hp = 0f, speed = 0f, dash = 0f, weapon = 0f, crit = 0f, ability = 0f;
         survivor = profile == null ? SurvivorCatalog.Survivor.REX : profile.selectedSurvivor;
         weaponDefinition = profile == null ? WeaponCatalog.AR9 : profile.selectedWeapon();
+        WeaponSignatureRuntime.begin(weaponDefinition);
         float levelPower = profile == null ? 1f : profile.survivors.levelPowerMultiplier(survivor);
         ascensionSetPieces = ThreatSetBonusRules.equippedPieces(profile);
         zeroDayCoreEquipped = SingularityCoreRules.equipped(profile);
