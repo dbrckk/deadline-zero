@@ -58,8 +58,30 @@ public final class CharacterSpriteRenderer {
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
         float facing = player.velocity.x < -.02f ? -1f : 1f;
-        batch.setColor(1f, 1f, 1f, player.invulnerable() ? .78f : 1f);
-        drawFacing(batch, region, player.position.x, player.position.y - profile.footOffset(), w, h, facing);
+
+        int pieces = RunLoadoutContext.ascensionSetPieces();
+        float pulse = .5f + .5f * MathUtils.sin(clock.time * (pieces >= 4 ? 7.5f : 4.5f));
+        float r = 1f, g = 1f, b = 1f;
+        float scale = 1f;
+        if (pieces >= 4) {
+            r = 1f;
+            g = .82f + pulse * .10f;
+            b = 1f;
+            scale = 1.025f + pulse * .018f;
+        } else if (pieces == 3) {
+            r = 1f;
+            g = .92f + pulse * .05f;
+            b = .76f + pulse * .08f;
+            scale = 1.015f;
+        } else if (pieces == 2) {
+            r = .78f + pulse * .06f;
+            g = .94f;
+            b = 1f;
+            scale = 1.008f;
+        }
+        float alpha = player.invulnerable() ? .78f : 1f;
+        batch.setColor(r, g, b, alpha);
+        drawFacing(batch, region, player.position.x, player.position.y - profile.footOffset(), w * scale, h * scale, facing);
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
