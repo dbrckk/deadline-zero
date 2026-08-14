@@ -15,6 +15,36 @@ public enum LegendaryChoice {
     APEX("APEX PROTOCOL", "Instant Tier II ability network", 12) {
         @Override public boolean available(Player p) { return !p.legendary.hasApex(); }
         @Override public boolean apply(Player p) { return LegendaryEffects.applyApex(p); }
+    },
+    ION_CASCADE("ION CASCADE", "IN-11 overcharges every fourth shot with amplified capacitor output", 10) {
+        @Override public boolean available(Player p) {
+            return weapon(p, "ion_needle") && !p.legendary.hasIonCascade();
+        }
+        @Override public boolean apply(Player p) { return LegendaryEffects.applyIonCascade(p); }
+    },
+    CINDER_FURNACE("CINDER FURNACE", "C90 thermal shells cycle faster and detonate with heavier payloads", 10) {
+        @Override public boolean available(Player p) {
+            return weapon(p, "cinder_cannon") && !p.legendary.hasCinderFurnace();
+        }
+        @Override public boolean apply(Player p) { return LegendaryEffects.applyCinderFurnace(p); }
+    },
+    RAIL_PHASE_LANCE("PHASE LANCE", "VX Rail Rifle gains extreme penetration, velocity and precision damage", 10) {
+        @Override public boolean available(Player p) {
+            return weapon(p, "rail_rifle") && !p.legendary.hasRailPhaseLance();
+        }
+        @Override public boolean apply(Player p) { return LegendaryEffects.applyRailPhaseLance(p); }
+    },
+    CRYO_PRISM("CRYO PRISM", "CR-7 splits into a three-lance frost prism with controlled spread", 10) {
+        @Override public boolean available(Player p) {
+            return weapon(p, "cryo_lance") && !p.legendary.hasCryoPrism();
+        }
+        @Override public boolean apply(Player p) { return LegendaryEffects.applyCryoPrism(p); }
+    },
+    ARC_OVERLOAD("ARC OVERLOAD", "A9 doubles its shock vectors to multiply chain-lightning pressure", 10) {
+        @Override public boolean available(Player p) {
+            return weapon(p, "arc_carbine") && !p.legendary.hasArcOverload();
+        }
+        @Override public boolean apply(Player p) { return LegendaryEffects.applyArcOverload(p); }
     };
 
     public final String title;
@@ -28,7 +58,12 @@ public enum LegendaryChoice {
     }
 
     public final boolean eligible(Player player) {
-        return player.level >= minimumLevel && available(player);
+        return player != null && player.level >= minimumLevel && available(player);
+    }
+
+    private static boolean weapon(Player player, String id) {
+        return player != null && player.weapon != null && player.weapon.definition != null
+            && id.equals(player.weapon.definition.id);
     }
 
     public abstract boolean available(Player player);
