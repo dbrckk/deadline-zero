@@ -21,10 +21,12 @@ public final class GameArt implements Disposable {
 
     private static final String ATLAS_PATH = "art/game.atlas";
     private static final String BOOTSTRAP_PATH = "art/game.png.b64";
+    private static final int LEGACY_BOOTSTRAP_TILES = 16;
 
     private TextureAtlas atlas;
     private DirectionalBootstrapArt directionalBootstrap;
     private Texture bootstrapTexture;
+    private TextureRegion[] bootstrapRegions;
     private Texture fallbackTexture;
     private TextureRegion fallbackRegion;
     private boolean authoredAvailable;
@@ -134,7 +136,7 @@ public final class GameArt implements Disposable {
             TextureRegion region = atlas.findRegion(name);
             if (region != null) return region;
         }
-        return BootstrapArtCatalog.region(bootstrapTexture, name);
+        return bootstrapRegion(name);
     }
 
     public boolean hasRegion(String name) { return regionOrNull(name) != null; }
@@ -145,7 +147,7 @@ public final class GameArt implements Disposable {
             if ((frames != null && frames.size > 0) || atlas.findRegion(prefix) != null) return true;
         }
         if (directionalBootstrap != null && directionalBootstrap.supports(prefix)) return true;
-        return bootstrapTexture != null && BootstrapArtCatalog.supports(prefix);
+        return bootstrapRegion(prefix) != null;
     }
 
     private TextureRegion animated(String prefix, float frameDuration, float stateTime, boolean loop) {
@@ -168,7 +170,13 @@ public final class GameArt implements Disposable {
             TextureRegion region = directionalBootstrap.region(prefix, stateTime, frameDuration, loop);
             if (region != null) return region;
         }
-        return BootstrapArtCatalog.region(bootstrapTexture, prefix);
+        return bootstrapRegion(prefix);
+    }
+
+    private TextureRegion bootstrapRegion(String key) {
+        if (bootstrapRegions == null) return null;
+        int tile = BootstrapArtCatalog.tileIndex(key);
+        return tile < 0 || tile >= bootstrapRegions.length ? null : bootstrapRegions[tile];
     }
 
     static String directionalPrefix(String root, Direction8 direction, Motion motion) {
@@ -214,10 +222,21 @@ public final class GameArt implements Disposable {
             pixmap = new Pixmap(png, 0, png.length);
             bootstrapTexture = new Texture(pixmap);
             bootstrapTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            bootstrapRegions = new TextureRegion[LEGACY_BOOTSTRAP_TILES];
+            for (int tile = 0; tile < bootstrapRegions.length; tile++) {
+                int x = (tile % BootstrapArtCatalog.SHEET_COLUMNS) * BootstrapArtCatalog.TILE;
+                int y = (tile / BootstrapArtCatalog.SHEET_COLUMNS) * BootstrapArtCatalog.TILE;
+                if (x + BootstrapArtCatalog.TILE <= bootstrapTexture.getWidth()
+                    && y + BootstrapArtCatalog.TILE <= bootstrapTexture.getHeight()) {
+                    bootstrapRegions[tile] = new TextureRegion(
+                        bootstrapTexture, x, y, BootstrapArtCatalog.TILE, BootstrapArtCatalog.TILE);
+                }
+            }
         } catch (RuntimeException exception) {
             Gdx.app.error("GameArt", "Unable to load bootstrap art source; procedural fallback remains active.", exception);
             if (bootstrapTexture != null) bootstrapTexture.dispose();
             bootstrapTexture = null;
+            bootstrapRegions = null;
         } finally {
             if (pixmap != null) pixmap.dispose();
         }
