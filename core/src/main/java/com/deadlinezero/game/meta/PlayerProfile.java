@@ -23,6 +23,8 @@ public final class PlayerProfile {
     public long accountXp;
     public int highestStage = 1;
     public int selectedStage = 1;
+    public int highestThreatTier;
+    public int selectedThreatTier;
     public int totalRuns;
     public long totalKills;
     public boolean removeAdsPurchased;
@@ -57,6 +59,12 @@ public final class PlayerProfile {
         accountXp = progress.xp();
         highestStage = Math.max(1, highestStage);
         selectedStage = Math.min(highestStage, Math.max(1, selectedStage));
+        highestThreatTier = ThreatTierRules.sanitizeTier(highestThreatTier);
+        selectedThreatTier = Math.min(highestThreatTier, ThreatTierRules.sanitizeTier(selectedThreatTier));
+        if (!ThreatTierRules.unlocked(this)) {
+            highestThreatTier = 0;
+            selectedThreatTier = 0;
+        }
         totalRuns = Math.max(0, totalRuns);
         totalKills = Math.max(0L, totalKills);
         if (selectedSurvivor == null) selectedSurvivor = SurvivorCatalog.Survivor.REX;
@@ -76,6 +84,19 @@ public final class PlayerProfile {
     public void equip(EquipmentItem item) { if (item != null) { equipped.put(item.slot, item); if (inventory.find(item.id) == null) inventory.add(item); } }
     public void unequip(EquipmentSlot slot) { if (slot != null) equipped.remove(slot); }
     public boolean selectStage(int stage) { if (stage < 1 || stage > highestStage) return false; selectedStage = stage; return true; }
+    public boolean selectThreatTier(int tier) {
+        int safe = ThreatTierRules.sanitizeTier(tier);
+        if (!ThreatTierRules.unlocked(this) && safe > 0) return false;
+        if (safe > highestThreatTier) return false;
+        selectedThreatTier = safe;
+        return true;
+    }
+    public boolean unlockNextThreatTier() {
+        if (!ThreatTierRules.unlocked(this) || highestThreatTier >= ThreatTierRules.MAX_TIER) return false;
+        highestThreatTier++;
+        selectedThreatTier = highestThreatTier;
+        return true;
+    }
     public boolean selectSurvivor(SurvivorCatalog.Survivor survivor) { if (survivor == null || !survivors.unlocked(survivor)) return false; selectedSurvivor = survivor; return true; }
     public WeaponDefinition selectedWeapon() { return WeaponCatalog.byId(selectedWeaponId); }
     public boolean selectWeapon(WeaponDefinition weapon) {
