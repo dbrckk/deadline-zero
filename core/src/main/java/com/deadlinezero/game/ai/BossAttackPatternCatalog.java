@@ -1,5 +1,7 @@
 package com.deadlinezero.game.ai;
 
+import com.deadlinezero.game.meta.RunStageContext;
+
 /** Data-only projectile pattern catalog for all boss identities. */
 public final class BossAttackPatternCatalog {
     private BossAttackPatternCatalog() { }
@@ -8,9 +10,14 @@ public final class BossAttackPatternCatalog {
                           float damageMultiplier, int explosiveEvery,
                           float explosionRadius, boolean radial) { }
 
-    /** Compatibility overload retained for existing REVENANT callers/tests. */
+    /**
+     * Compatibility overload retained for existing callers. REVENANT remains explicit while
+     * non-REVENANT calls resolve the active stage so newer boss identities are not downgraded
+     * to ALPHA by legacy boolean call sites.
+     */
     public static Pattern forPhase(boolean revenant, int phase) {
-        return forPhase(revenant ? BossIdentity.REVENANT : BossIdentity.ALPHA, phase);
+        BossIdentity identity = revenant ? BossIdentity.REVENANT : BossIdentity.forStage(RunStageContext.stage());
+        return forPhase(identity, phase);
     }
 
     public static Pattern forPhase(BossIdentity identity, int phase) {
