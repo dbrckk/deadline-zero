@@ -22,7 +22,7 @@ import com.deadlinezero.game.meta.RunSettlement;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageMissionRules;
 import com.deadlinezero.game.meta.StageRules;
-import com.deadlinezero.game.meta.ThreatTierRules;
+import com.deadlinezero.game.meta.ThreatProgressionService;
 import com.deadlinezero.game.screen.ArsenalScreen;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.GearScreen;
@@ -145,12 +145,7 @@ public final class DeadlineZeroGame extends Game {
             profile.survivors.refreshUnlocks(profile);
         }
 
-        if (bossKilled && safeStage >= ThreatTierRules.UNLOCK_STAGE && runThreatTier == profile.highestThreatTier) {
-            if (profile.unlockNextThreatTier()) {
-                int milestoneGems = ThreatTierRules.milestoneGemReward(profile.highestThreatTier);
-                if (milestoneGems > 0) profile.addCurrency(PlayerProfile.Currency.GEMS, milestoneGems);
-            }
-        }
+        if (bossKilled) ThreatProgressionService.applyBossClear(profile, safeStage, runThreatTier);
 
         EquipmentItem drop = null;
         if (!profile.inventory.full() && (bossKilled || MathUtils.randomBoolean(.55f))) {
