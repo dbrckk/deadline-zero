@@ -7,13 +7,15 @@ import org.junit.jupiter.api.Test;
 
 final class DirectionalBootstrapArtTest {
     private static final String[] ROOTS = {
-        "survivor/rex", "enemy/shambler", "enemy/runner"
+        "survivor/rex",
+        "enemy/shambler", "enemy/runner", "enemy/brute", "enemy/ranged", "enemy/elite",
+        "boss/alpha", "boss/revenant", "boss/warden", "boss/harvester"
     };
     private static final String[] DIRECTIONS = {
         "n", "ne", "e", "se", "s", "sw", "w", "nw"
     };
 
-    @Test void verticalSliceCoversEightDirectionsAndAllMotions() {
+    @Test void coreCombatRosterCoversEightDirectionsAndAllMotions() {
         for (String root : ROOTS) {
             for (String direction : DIRECTIONS) {
                 assertMotion(root, direction, "idle", 1);
@@ -25,26 +27,33 @@ final class DirectionalBootstrapArtTest {
         }
     }
 
-    @Test void actorBlocksDoNotOverlapAndStayInsideGeneratedSheet() {
-        int rexLast = DirectionalBootstrapArt.firstTile("survivor/rex/nw/death") + 2;
-        int shamblerFirst = DirectionalBootstrapArt.firstTile("enemy/shambler/n/idle");
-        int shamblerLast = DirectionalBootstrapArt.firstTile("enemy/shambler/nw/death") + 2;
-        int runnerFirst = DirectionalBootstrapArt.firstTile("enemy/runner/n/idle");
-        int runnerLast = DirectionalBootstrapArt.firstTile("enemy/runner/nw/death") + 2;
+    @Test void actorBlocksAreContiguousNonOverlappingAndInsideSheet() {
+        int previousLast = -1;
+        for (String root : ROOTS) {
+            int first = DirectionalBootstrapArt.firstTile(root + "/n/idle");
+            int last = DirectionalBootstrapArt.firstTile(root + "/nw/death") + 2;
+            assertTrue(first > previousLast, root);
+            assertEquals(DirectionalBootstrapArt.ACTOR_BLOCK - 1, last - first, root);
+            previousLast = last;
+        }
+        assertTrue(previousLast < DirectionalBootstrapArt.TOTAL_TILES);
+        assertEquals(DirectionalBootstrapArt.ACTOR_BLOCK * ROOTS.length, DirectionalBootstrapArt.TOTAL_TILES);
+        assertEquals(800, DirectionalBootstrapArt.TOTAL_TILES);
+    }
 
-        assertTrue(rexLast < shamblerFirst);
-        assertTrue(shamblerLast < runnerFirst);
-        assertTrue(runnerLast < DirectionalBootstrapArt.TOTAL_TILES);
-        assertEquals(240, DirectionalBootstrapArt.TOTAL_TILES);
+    @Test void actorIdentityLookupIsStable() {
+        for (int i = 0; i < ROOTS.length; i++) {
+            assertEquals(i, DirectionalBootstrapArt.actorIndex(ROOTS[i] + "/e/run"));
+        }
     }
 
     @Test void malformedOrUnsupportedKeysAreRejected() {
         assertEquals(-1, DirectionalBootstrapArt.firstTile(null));
         assertEquals(-1, DirectionalBootstrapArt.firstTile("survivor/rex/run"));
         assertEquals(-1, DirectionalBootstrapArt.firstTile("survivor/nyx/e/run"));
-        assertEquals(-1, DirectionalBootstrapArt.firstTile("enemy/brute/e/run"));
+        assertEquals(-1, DirectionalBootstrapArt.firstTile("enemy/shielded/e/run"));
         assertEquals(-1, DirectionalBootstrapArt.firstTile("enemy/runner/center/run"));
-        assertEquals(-1, DirectionalBootstrapArt.firstTile("enemy/runner/e/dance"));
+        assertEquals(-1, DirectionalBootstrapArt.firstTile("boss/harvester/e/dance"));
     }
 
     private static void assertMotion(String root, String direction, String motion, int frames) {
