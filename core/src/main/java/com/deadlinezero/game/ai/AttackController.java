@@ -23,11 +23,23 @@ public final class AttackController {
     public float telegraphMultiplier() { return telegraphMultiplier; }
 
     public void setCadence(float cooldownMultiplier, float telegraphMultiplier, float recoveryMultiplier) {
-        boolean revenantBoss = archetype.role == EnemyArchetype.Role.BOSS
-            && RevenantBossProfile.useForStage(RunStageContext.stage());
-        float bossCooldown = revenantBoss ? .78f : 1f;
-        float bossTelegraph = revenantBoss ? .86f : 1f;
-        float bossRecovery = revenantBoss ? .82f : 1f;
+        BossIdentity bossIdentity = archetype.role == EnemyArchetype.Role.BOSS
+            ? BossIdentity.forStage(RunStageContext.stage()) : BossIdentity.ALPHA;
+        float bossCooldown = switch (bossIdentity) {
+            case REVENANT -> .78f;
+            case WARDEN -> 1.18f;
+            default -> 1f;
+        };
+        float bossTelegraph = switch (bossIdentity) {
+            case REVENANT -> .86f;
+            case WARDEN -> 1.32f;
+            default -> 1f;
+        };
+        float bossRecovery = switch (bossIdentity) {
+            case REVENANT -> .82f;
+            case WARDEN -> 1.24f;
+            default -> 1f;
+        };
         this.cooldownMultiplier = clamp(cooldownMultiplier * bossCooldown, .45f, 1.8f);
         this.telegraphMultiplier = clamp(telegraphMultiplier * bossTelegraph, .45f, 1.8f);
         this.recoveryMultiplier = clamp(recoveryMultiplier * bossRecovery, .45f, 1.8f);
