@@ -3,6 +3,7 @@ package com.deadlinezero.game.visual;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.deadlinezero.game.ai.BossIdentity;
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.combat.WeaponDefinition;
 import com.deadlinezero.game.entities.Enemy;
@@ -30,8 +31,8 @@ final class BootstrapArtCatalogTest {
             assertSupported(root + "/corpse");
         }
 
-        for (String boss : new String[] { "alpha", "revenant" }) {
-            String root = "boss/" + boss;
+        for (BossIdentity identity : BossIdentity.values()) {
+            String root = "boss/" + identity.name().toLowerCase();
             for (String motion : MOTIONS) assertSupported(root + "/" + motion);
         }
     }
