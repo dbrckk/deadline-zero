@@ -81,7 +81,10 @@ public final class CharacterSpriteRenderer {
 
         Clock clock = clock(enemy, motion);
         ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.enemy(enemy.type);
-        TextureRegion region = art.enemy(enemy.type, motion, clock.time);
+        boolean revenantBoss = enemy.type == Enemy.Type.BOSS && enemy.bossCombat != null && enemy.bossCombat.revenant();
+        TextureRegion region = enemy.type == Enemy.Type.BOSS
+            ? art.boss(revenantBoss, motion, clock.time)
+            : art.enemy(enemy.type, motion, clock.time);
         float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
@@ -164,14 +167,21 @@ public final class CharacterSpriteRenderer {
                 clock.phasePulse = .42f;
             }
 
+            if (revenantBoss) {
+                r *= 1.00f;
+                g *= .86f;
+                b *= 1.08f;
+                scale *= 1.025f;
+            }
+
             if (phase == 2) {
                 g *= .88f;
                 b *= .82f;
-                scale = 1.025f;
+                scale *= 1.025f;
             } else if (phase >= 3) {
                 g *= .70f;
                 b *= .78f;
-                scale = 1.055f;
+                scale *= 1.055f;
             }
 
             if (clock.phasePulse > 0f) {
