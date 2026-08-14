@@ -14,6 +14,7 @@ import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.config.GameConfig;
 import com.deadlinezero.game.meta.PlayerProfile;
+import com.deadlinezero.game.meta.ThreatTierRules;
 import com.deadlinezero.game.visual.VisualTheme;
 
 /** Production-shaped Base/Home shell with functional navigation. */
@@ -44,6 +45,7 @@ public final class MenuScreen extends ScreenAdapter {
         shapes.setColor(VisualTheme.PANEL_ALT); shapes.rect(w * .18f, h * .40f, w * .64f, h * .16f);
         shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .12f);
         shapes.circle(w * .5f, h * .48f, Math.min(w, h) * .25f, 96);
+        shapes.setColor(VisualTheme.PANEL_ALT); shapes.rect(w * .27f, h * .335f, w * .46f, 38f);
         shapes.setColor(VisualTheme.CYAN); shapes.rect(w * .30f, h * .255f, w * .40f, 64);
         shapes.setColor(VisualTheme.CYAN_SOFT); shapes.rect(w * .30f, h * .255f, w * .40f, 3f);
         shapes.end();
@@ -67,6 +69,18 @@ public final class MenuScreen extends ScreenAdapter {
         font.setColor(VisualTheme.GOLD);
         font.draw(batch, WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase() + "  •  A FOR ARSENAL", 0, h * .438f, w, Align.center, false);
 
+        font.getData().setScale(.42f);
+        if (ThreatTierRules.unlocked(p)) {
+            font.setColor(p.selectedThreatTier > 0 ? VisualTheme.GOLD : VisualTheme.CYAN_SOFT);
+            font.draw(batch, "THREAT " + p.selectedThreatTier + "/" + p.highestThreatTier
+                + "  •  +" + ThreatTierRules.rewardBonusPercent(p.selectedThreatTier)
+                + "% BASE REWARDS  •  TAP L/R OR ↑↓", 0, h * .335f + 25f, w, Align.center, false);
+        } else {
+            font.setColor(VisualTheme.MUTED);
+            font.draw(batch, "THREAT LOCKED  •  REACH STAGE " + ThreatTierRules.UNLOCK_STAGE,
+                0, h * .335f + 25f, w, Align.center, false);
+        }
+
         font.getData().setScale(.82f); font.setColor(Color.WHITE);
         font.draw(batch, "DEPLOY", w * .30f, h * .255f + 42, w * .40f, Align.center, false);
         font.getData().setScale(.43f); font.setColor(new Color(.86f, .95f, 1f, 1f));
@@ -84,6 +98,15 @@ public final class MenuScreen extends ScreenAdapter {
         handleInput(w, h);
     }
 
+    private void changeThreat(int delta) {
+        if (!ThreatTierRules.unlocked(game.profile)) return;
+        int next = Math.max(0, Math.min(game.profile.highestThreatTier, game.profile.selectedThreatTier + delta));
+        if (game.profile.selectThreatTier(next)) {
+            AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+            game.saveProfile();
+        }
+    }
+
     private void handleInput(float w, float h) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showArsenal(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showGear(); return; }
@@ -93,6 +116,8 @@ public final class MenuScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.O)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showSettings(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) { game.profile.selectStage(Math.max(1, game.profile.selectedStage - 1)); game.saveProfile(); }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) { game.profile.selectStage(Math.min(game.profile.highestStage, game.profile.selectedStage + 1)); game.saveProfile(); }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) { changeThreat(-1); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) { changeThreat(1); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.startRun(); return; }
         if (!Gdx.input.justTouched()) return;
         float x = Gdx.input.getX(), y = h - Gdx.input.getY();
@@ -105,6 +130,10 @@ public final class MenuScreen extends ScreenAdapter {
             return;
         }
         if (y >= h * .40f && y <= h * .56f) { game.showSurvivors(); return; }
+        if (y >= h * .335f && y <= h * .335f + 38f && x >= w * .27f && x <= w * .73f) {
+            changeThreat(x < w * .5f ? -1 : 1);
+            return;
+        }
         if (x >= w * .30f && x <= w * .70f && y >= h * .255f && y <= h * .255f + 64f) game.startRun();
     }
 
