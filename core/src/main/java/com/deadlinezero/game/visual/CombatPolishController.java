@@ -12,13 +12,18 @@ import com.deadlinezero.game.ai.LeaperSharedRuntime;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.entities.Enemy;
+import com.deadlinezero.game.entities.EnemyProjectile;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.fx.DeathFx;
+import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.util.Pools;
+import com.deadlinezero.game.world.ArenaHazardRuntime;
+import com.deadlinezero.game.world.DeathBurstRules;
 
 /**
  * Centralized presentation-only combat feedback: micro hit-stop, recoil, local lighting,
  * persistent death marks, corpses, resilient event-driven audio and accessible haptics.
+ * Endgame arena hazards are also rendered here, while damage still flows through pooled hostile projectiles.
  */
 public final class CombatPolishController {
     private static Pools currentPools;
@@ -26,6 +31,7 @@ public final class CombatPolishController {
     private final LocalLightRenderer lights = new LocalLightRenderer();
     private final LegendaryFxRenderer legendaryFx = new LegendaryFxRenderer();
     private final LeaperRuntime leapers = LeaperSharedRuntime.get();
+    private final ArenaHazardRuntime hazards = new ArenaHazardRuntime();
     private final DeathFxRenderer deaths;
     private final AccessibilitySettings settings;
     private final AdaptiveFxBudget fxBudget = new AdaptiveFxBudget();
@@ -33,6 +39,7 @@ public final class CombatPolishController {
     private float phaseFxStarted;
     private float phaseFxUntil;
     private int phaseFxPhase;
+    private float lastHazardVisualTime = Float.NaN;
 
     public CombatPolishController(GameArt art) {
         this(art, AccessibilitySettings.load());
@@ -81,6 +88,13 @@ public final class CombatPolishController {
             float rotation = enemy.velocity.len2() > .001f ? enemy.velocity.angleDeg() - 90f : MathUtils.random(0f, 360f);
             fx.spawn(enemy.type, enemy.position.x, enemy.position.y, rotation, enemy.radius, duration);
         }
+
+        int threatTier = RunStageContext.threatTier();
+        if (DeathBurstRules.enabled(enemy.type, threatTier)) {
+            hazards.scheduleDeathBurst(enemy.position.x, enemy.position.y,
+                DeathBurstRules.radius(enemy.type, threatTier), DeathBurstRules.damage(enemy.type, threatTier));
+        }
+
         AudioDirector.playGlobal(enemy.type == Enemy.Type.BOSS ? AudioDirector.Cue.BOSS_KILL : AudioDirector.Cue.KILL,
             enemy.type == Enemy.Type.BOSS ? .88f : .96f + MathUtils.random(.08f), 0f);
 
@@ -110,6 +124,7 @@ public final class CombatPolishController {
 
     public void drawWorldUnderlay(ShapeRenderer shapes, Player player, Array<Enemy> enemies, Pools pools, float time) {
         currentPools = pools;
+        updateAndDrawHazards(shapes, player, pools, time);
         deaths.drawFallback(shapes, pools.deathFx);
         legendaryFx.render(shapes, player, time, fxBudget.quality());
         drawLeaperTelegraphs(shapes, enemies, time);
@@ -117,6 +132,49 @@ public final class CombatPolishController {
         drawRevenantIdentity(shapes, enemies, time);
         drawWardenIdentity(shapes, enemies, time);
         if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
+    }
+
+    private void updateAndDrawHazards(ShapeRenderer shapes, Player player, Pools pools, float time) {
+        float dt = Float.isNaN(lastHazardVisualTime) ? 0f : MathUtils.clamp(time - lastHazardVisualTime, 0f, .05f);
+        lastHazardVisualTime = time;
+        hazards.update(dt, player.position.x, player.position.y);
+
+        float damage = hazards.consumePlayerDamage(player.position.x, player.position.y, player.radius);
+        if (damage > 0f) {
+            EnemyProjectile hit = pools.hostileProjectile();
+            if (hit != null) {
+                hit.spawn(player.position.x, player.position.y, 0f, 0f, damage,
+                    Math.max(.18f, player.radius * .72f), .14f, false, 0f);
+            }
+        }
+
+        for (ArenaHazardRuntime.Hazard hazard : hazards.hazards()) {
+            boolean warning = hazard.phase() == ArenaHazardRuntime.Phase.WARNING;
+            float pulse = .5f + .5f * MathUtils.sin(time * (hazard.type() == ArenaHazardRuntime.Type.DEATH_BURST ? 18f : 12f));
+            float flashScale = settings.reduceFlashes ? .55f : 1f;
+            if (warning) {
+                float urgency = 1f - hazard.warningFraction();
+                float alpha = (.08f + urgency * .12f + pulse * .04f) * flashScale;
+                if (hazard.type() == ArenaHazardRuntime.Type.DEATH_BURST) {
+                    shapes.setColor(1f, .36f, .08f, alpha);
+                } else {
+                    shapes.setColor(1f, .08f, .05f, alpha);
+                }
+                shapes.circle(hazard.x(), hazard.y(), hazard.radius() * (1f + pulse * .035f), 36);
+                shapes.setColor(1f, .76f, .18f, (.10f + urgency * .18f) * flashScale);
+                shapes.circle(hazard.x(), hazard.y(), Math.max(.12f, hazard.radius() * (.12f + urgency * .08f)), 20);
+            } else {
+                float alpha = (hazard.type() == ArenaHazardRuntime.Type.DEATH_BURST ? .34f : .42f) * flashScale;
+                if (hazard.type() == ArenaHazardRuntime.Type.DEATH_BURST) {
+                    shapes.setColor(1f, .30f, .04f, alpha);
+                } else {
+                    shapes.setColor(1f, .04f, .02f, alpha);
+                }
+                shapes.circle(hazard.x(), hazard.y(), hazard.radius(), 40);
+                shapes.setColor(1f, .82f, .26f, .30f * flashScale);
+                shapes.circle(hazard.x(), hazard.y(), hazard.radius() * .34f, 24);
+            }
+        }
     }
 
     private void drawBossPhaseTransitions(ShapeRenderer shapes, Array<Enemy> enemies, float time) {
