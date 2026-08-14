@@ -1,10 +1,14 @@
 package com.deadlinezero.game.services;
 
+import java.util.Set;
+
 public interface BillingService {
     String REMOVE_ADS = "remove_ads_lifetime";
     String STARTER_PACK = "starter_pack_01";
     String GEMS_SMALL = "gems_250";
     String GEMS_LARGE = "gems_1200";
+
+    Set<String> PRODUCTS = Set.of(REMOVE_ADS, STARTER_PACK, GEMS_SMALL, GEMS_LARGE);
 
     enum State {
         UNAVAILABLE,
@@ -50,7 +54,15 @@ public interface BillingService {
     /** Consumes a previously delivered Play purchase only after the profile grant has been persisted. */
     default void finishConsumable(String receiptId, Runnable onSuccess, Runnable onFailure) { onSuccess.run(); }
 
+    static boolean isKnownProduct(String productId) {
+        return productId != null && PRODUCTS.contains(productId);
+    }
+
     static boolean isConsumable(String productId) {
         return GEMS_SMALL.equals(productId) || GEMS_LARGE.equals(productId);
+    }
+
+    static boolean isDurable(String productId) {
+        return REMOVE_ADS.equals(productId) || STARTER_PACK.equals(productId);
     }
 }
