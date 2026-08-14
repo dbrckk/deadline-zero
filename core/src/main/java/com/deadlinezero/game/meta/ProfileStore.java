@@ -17,6 +17,8 @@ public final class ProfileStore {
         profile.accountXp = Math.max(0L, p.getLong("accountXp", 0L));
         profile.highestStage = Math.max(1, p.getInteger("highestStage", 1));
         profile.selectedStage = Math.min(profile.highestStage, Math.max(1, p.getInteger("selectedStage", 1)));
+        profile.highestThreatTier = ThreatTierRules.sanitizeTier(p.getInteger("threat.highest", 0));
+        profile.selectedThreatTier = ThreatTierRules.sanitizeTier(p.getInteger("threat.selected", 0));
         profile.totalRuns = Math.max(0, p.getInteger("totalRuns", 0));
         profile.totalKills = Math.max(0L, p.getLong("totalKills", 0L));
         profile.removeAdsPurchased = p.getBoolean("purchase.removeAds", false);
@@ -76,6 +78,8 @@ public final class ProfileStore {
         p.putLong("accountXp", profile.accountXp);
         p.putInteger("highestStage", profile.highestStage);
         p.putInteger("selectedStage", profile.selectedStage);
+        p.putInteger("threat.highest", ThreatTierRules.sanitizeTier(profile.highestThreatTier));
+        p.putInteger("threat.selected", ThreatTierRules.sanitizeTier(profile.selectedThreatTier));
         p.putInteger("totalRuns", profile.totalRuns);
         p.putLong("totalKills", profile.totalKills);
         p.putBoolean("purchase.removeAds", profile.removeAdsPurchased);
