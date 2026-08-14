@@ -17,6 +17,7 @@ public final class BossPhaseTransitionProfile {
         float pitch = switch (safeIdentity) {
             case REVENANT -> safePhase == 3 ? .94f : 1.02f;
             case WARDEN -> safePhase == 3 ? .66f : .74f;
+            case HARVESTER -> safePhase == 3 ? 1.18f : 1.10f;
             default -> safePhase == 3 ? .78f : .86f;
         };
         return new Spec(duration, radius, pitch, vibration);
