@@ -50,6 +50,15 @@ public final class GameArt implements Disposable {
         return animated(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
     }
 
+    /** Uses dedicated boss identity art when present, falling back to the generic BOSS authored set. */
+    public TextureRegion boss(boolean revenant, Motion motion, float stateTime) {
+        String identity = revenant ? "revenant" : "alpha";
+        String prefix = "boss/" + identity + "/" + motion.name().toLowerCase();
+        float frameDuration = AnimationProfileCatalog.enemy(Enemy.Type.BOSS).duration(motion);
+        TextureRegion region = animatedOrNull(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
+        return region == null ? enemy(Enemy.Type.BOSS, motion, stateTime) : region;
+    }
+
     public TextureRegion effect(String name, float stateTime, float frameDuration) {
         TextureRegion region = effectOrNull(name, stateTime, frameDuration);
         return region == null ? fallbackRegion : region;
