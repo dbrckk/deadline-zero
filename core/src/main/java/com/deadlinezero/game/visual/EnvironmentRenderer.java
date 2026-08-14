@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Disposable;
+import com.deadlinezero.game.meta.RunStageContext;
 
 /**
  * Deterministic combat environment presentation.
@@ -36,7 +37,16 @@ public final class EnvironmentRenderer implements Disposable {
         if (visualTime > 4096f) visualTime -= 4096f;
     }
 
+    private boolean foundry() {
+        return EnvironmentBiomeRules.isFoundry(RunStageContext.stage());
+    }
+
     public void drawGround(ShapeRenderer shapes, float time) {
+        if (foundry()) drawFoundryGround(shapes, time);
+        else drawQuarantineGround(shapes, time);
+    }
+
+    private void drawQuarantineGround(ShapeRenderer shapes, float time) {
         shapes.setColor(.016f, .025f, .033f, 1f);
         shapes.rect(-HALF_W, -HALF_H, HALF_W * 2f, HALF_H * 2f);
         shapes.setColor(.030f, .055f, .064f, .84f);
@@ -55,6 +65,28 @@ public final class EnvironmentRenderer implements Disposable {
         shapes.setColor(VisualTheme.RED.r, VisualTheme.RED.g, VisualTheme.RED.b, pulse);
         shapes.circle(-17f, 8f, 5.2f, 36);
         shapes.circle(19f, -10f, 4.1f, 32);
+    }
+
+    private void drawFoundryGround(ShapeRenderer shapes, float time) {
+        shapes.setColor(.032f, .019f, .017f, 1f);
+        shapes.rect(-HALF_W, -HALF_H, HALF_W * 2f, HALF_H * 2f);
+        shapes.setColor(.12f, .050f, .025f, .78f);
+        for (int x = -40; x <= 40; x += 4) shapes.rect(x, -24f, .045f, 48f);
+        for (int y = -24; y <= 24; y += 4) shapes.rect(-40f, y, 80f, .045f);
+        shapes.setColor(.20f, .075f, .025f, .35f);
+        for (int x = -36; x < 40; x += 8) {
+            for (int y = -20; y < 24; y += 8) {
+                float skew = MathUtils.sin(x * .37f + y * .61f) * .44f;
+                shapes.rect(x + skew, y, 1.7f, .08f);
+                shapes.rect(x + skew + .55f, y - .40f, .85f, .05f);
+            }
+        }
+        float furnace = .5f + .5f * MathUtils.sin(time * 2.15f);
+        shapes.setColor(1f, .19f, .025f, .035f + furnace * .028f);
+        shapes.circle(-20f, -9f, 6.4f + furnace * .7f, 40);
+        shapes.circle(18f, 9f, 5.2f + furnace * .55f, 36);
+        shapes.setColor(1f, .58f, .08f, .055f + furnace * .03f);
+        shapes.rect(-4.5f, -24f, 9f, 48f);
     }
 
     public void drawAuthored(SpriteBatch batch) {
@@ -83,7 +115,8 @@ public final class EnvironmentRenderer implements Disposable {
     }
 
     private void drawFloorInternal(SpriteBatch batch, float alpha) {
-        batch.setColor(1f, 1f, 1f, alpha);
+        if (foundry()) batch.setColor(1f, .63f, .43f, alpha * .92f);
+        else batch.setColor(1f, 1f, 1f, alpha);
         for (int gy = -6; gy < 6; gy++) {
             for (int gx = -10; gx < 10; gx++) {
                 int variant = floorVariant(gx, gy);
@@ -93,8 +126,15 @@ public final class EnvironmentRenderer implements Disposable {
         }
         TextureRegion hazard = region("environment/floor/hazard_a");
         if (hazard != null) {
-            batch.setColor(1f, 1f, 1f, Math.min(1f, alpha * 1.13f));
-            for (int x = -8; x <= 8; x += 4) batch.draw(hazard, x, -2f, TILE_WORLD, TILE_WORLD);
+            if (foundry()) batch.setColor(1f, .38f, .08f, Math.min(1f, alpha * 1.20f));
+            else batch.setColor(1f, 1f, 1f, Math.min(1f, alpha * 1.13f));
+            if (foundry()) {
+                for (int y = -10; y <= 10; y += 10) {
+                    for (int x = -12; x <= 12; x += 8) batch.draw(hazard, x, y, TILE_WORLD, TILE_WORLD);
+                }
+            } else {
+                for (int x = -8; x <= 8; x += 4) batch.draw(hazard, x, -2f, TILE_WORLD, TILE_WORLD);
+            }
         }
     }
 
@@ -118,6 +158,11 @@ public final class EnvironmentRenderer implements Disposable {
         TextureRegion crate = region("environment/prop/crate_a");
         TextureRegion beacon = region("environment/prop/beacon_a");
 
+        if (foundry()) {
+            drawFoundryDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);
+            return;
+        }
+
         batch.setColor(1f, 1f, 1f, .76f);
         draw(batch, crack, -10.5f, -7.2f, 3.4f);
         draw(batch, crack, 13.4f, 6.1f, 2.8f);
@@ -140,8 +185,35 @@ public final class EnvironmentRenderer implements Disposable {
         draw(batch, debrisB, 20f, 10.4f, 3.1f);
         draw(batch, crate, -16f, 14.2f, 2.7f);
         draw(batch, crate, 17.5f, -12.8f, 2.5f);
-
         drawArenaEdge(batch, wallA, wallB, beacon);
+    }
+
+    private void drawFoundryDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,
+                                     TextureRegion barrier, TextureRegion debrisA, TextureRegion debrisB,
+                                     TextureRegion wallA, TextureRegion wallB, TextureRegion crate,
+                                     TextureRegion beacon) {
+        batch.setColor(1f, .48f, .24f, .70f);
+        draw(batch, scorch, -12f, -7.5f, 4.8f);
+        draw(batch, scorch, 13f, 7f, 4.2f);
+        draw(batch, crack, -3f, 11f, 3.1f);
+        draw(batch, crack, 5f, -12f, 2.7f);
+
+        drawPropShadow(batch, barrier, -18f, -12f, 3.2f);
+        drawPropShadow(batch, barrier, 19f, 12f, 3.2f);
+        drawPropShadow(batch, crate, -22f, 10f, 3.0f);
+        drawPropShadow(batch, crate, 23f, -9f, 3.0f);
+        drawPropShadow(batch, debrisA, -8f, 14f, 3.2f);
+        drawPropShadow(batch, debrisB, 9f, -14f, 3.2f);
+        drawArenaEdgeShadows(batch, wallB, wallA);
+
+        batch.setColor(1f, .66f, .42f, 1f);
+        draw(batch, barrier, -18f, -12f, 3.2f);
+        draw(batch, barrier, 19f, 12f, 3.2f);
+        draw(batch, crate, -22f, 10f, 3.0f);
+        draw(batch, crate, 23f, -9f, 3.0f);
+        draw(batch, debrisA, -8f, 14f, 3.2f);
+        draw(batch, debrisB, 9f, -14f, 3.2f);
+        drawArenaEdge(batch, wallB, wallA, beacon);
     }
 
     private void drawArenaEdgeShadows(SpriteBatch batch, TextureRegion wallA, TextureRegion wallB) {
@@ -156,7 +228,7 @@ public final class EnvironmentRenderer implements Disposable {
     }
 
     private void drawArenaEdge(SpriteBatch batch, TextureRegion wallA, TextureRegion wallB, TextureRegion beacon) {
-        batch.setColor(Color.WHITE);
+        batch.setColor(foundry() ? new Color(1f, .58f, .32f, 1f) : Color.WHITE);
         for (int x = -30; x <= 30; x += 10) {
             draw(batch, ((x / 10) & 1) == 0 ? wallA : wallB, x, 17.9f, 4.2f);
             draw(batch, ((x / 10) & 1) == 0 ? wallB : wallA, x, -17.9f, 4.2f);
@@ -175,9 +247,15 @@ public final class EnvironmentRenderer implements Disposable {
         if (beacon == null) return;
         float pulse = beaconPulse(visualTime);
         float glowSize = 2.7f + pulse * .65f;
-        batch.setColor(.18f, .88f, 1f, .10f + pulse * .10f);
-        draw(batch, beacon, x, y, glowSize);
-        batch.setColor(.62f, .96f, 1f, .88f + pulse * .12f);
+        if (foundry()) {
+            batch.setColor(1f, .18f, .03f, .10f + pulse * .12f);
+            draw(batch, beacon, x, y, glowSize);
+            batch.setColor(1f, .58f, .12f, .88f + pulse * .12f);
+        } else {
+            batch.setColor(.18f, .88f, 1f, .10f + pulse * .10f);
+            draw(batch, beacon, x, y, glowSize);
+            batch.setColor(.62f, .96f, 1f, .88f + pulse * .12f);
+        }
         draw(batch, beacon, x, y, 2.0f);
         batch.setColor(Color.WHITE);
     }
