@@ -57,6 +57,27 @@ final class BootstrapEnvironmentArtTest {
         assertTrue(seen[0] && seen[1] && seen[2]);
     }
 
+    @Test void microDetailDistributionIsStableSparseAndVaried() {
+        boolean[] seen = new boolean[8];
+        int visible = 0;
+        int total = 0;
+        for (int y = -2; y <= 2; y++) {
+            for (int x = -4; x <= 4; x++) {
+                int first = EnvironmentRenderer.detailVariant(x, y);
+                int second = EnvironmentRenderer.detailVariant(x, y);
+                assertEquals(first, second);
+                assertTrue(first >= 0 && first < 8);
+                seen[first] = true;
+                total++;
+                if (first <= 2) visible++;
+            }
+        }
+        int variants = 0;
+        for (boolean value : seen) if (value) variants++;
+        assertTrue(variants >= 6, "variants=" + variants);
+        assertTrue(visible >= 8 && visible <= total / 2, "visible=" + visible + "/" + total);
+    }
+
     @Test void beaconPulseIsDeterministicAndAlwaysNormalized() {
         boolean sawLow = false;
         boolean sawHigh = false;
