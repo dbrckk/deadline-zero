@@ -4,6 +4,8 @@ package com.deadlinezero.game.services;
 public interface PrivacyService {
     boolean optionsRequired();
     void showOptions(Runnable onDismissed);
+    boolean policyAvailable();
+    void openPolicy();
 
     static PrivacyService noOp() {
         return new PrivacyService() {
@@ -11,6 +13,8 @@ public interface PrivacyService {
             @Override public void showOptions(Runnable onDismissed) {
                 if (onDismissed != null) onDismissed.run();
             }
+            @Override public boolean policyAvailable() { return false; }
+            @Override public void openPolicy() { }
         };
     }
 }
