@@ -13,6 +13,8 @@ import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.config.GameConfig;
+import com.deadlinezero.game.meta.BalanceTelemetryStore;
+import com.deadlinezero.game.meta.BalanceTelemetrySummary;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.meta.ThreatTierRules;
 import com.deadlinezero.game.visual.VisualTheme;
@@ -24,6 +26,8 @@ public final class MenuScreen extends ScreenAdapter {
     private final BitmapFont font = new BitmapFont();
     private final ShapeRenderer shapes = new ShapeRenderer();
     private float t;
+    private boolean showBalance;
+    private BalanceTelemetrySummary.Summary balanceSummary = BalanceTelemetrySummary.summarize(null);
 
     public MenuScreen(DeadlineZeroGame game) { this.game = game; font.getData().setScale(2.2f); }
 
@@ -86,6 +90,15 @@ public final class MenuScreen extends ScreenAdapter {
         font.getData().setScale(.43f); font.setColor(new Color(.86f, .95f, 1f, 1f));
         font.draw(batch, "STAGE " + p.selectedStage + "  •  TAP / SPACE / ENTER", w * .30f, h * .255f + 17, w * .40f, Align.center, false);
 
+        if (showBalance) {
+            font.getData().setScale(.34f);
+            font.setColor(VisualTheme.GOLD);
+            String line = String.format("BALANCE %d RUNS • WIN %.0f%% • AVG %.0fs • DPS %.1f • DMG/M %.1f • KILLS/M %.1f",
+                balanceSummary.runs(), balanceSummary.winRate() * 100f, balanceSummary.averageSeconds(),
+                balanceSummary.averageDps(), balanceSummary.averageDamageTakenPerMinute(), balanceSummary.averageKillsPerMinute());
+            font.draw(batch, line, 0, h * .205f, w, Align.center, false);
+        }
+
         font.getData().setScale(.36f); font.setColor(VisualTheme.MUTED);
         font.draw(batch, "BASE", 22, 59);
         font.draw(batch, "ARSENAL [A]", w * .12f, 59);
@@ -108,6 +121,11 @@ public final class MenuScreen extends ScreenAdapter {
     }
 
     private void handleInput(float w, float h) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            showBalance = !showBalance;
+            if (showBalance) balanceSummary = BalanceTelemetrySummary.summarize(BalanceTelemetryStore.loadRecent());
+            return;
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showArsenal(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.G)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showGear(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showMissions(); return; }
