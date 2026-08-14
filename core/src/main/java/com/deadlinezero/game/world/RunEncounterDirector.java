@@ -104,7 +104,7 @@ public final class RunEncounterDirector {
 
     public Enemy.Type overrideType(float roll, Enemy.Type fallback) {
         roll = MathUtils.clamp(roll, 0f, 1f);
-        return switch (active) {
+        Enemy.Type encounterType = switch (active) {
             case SWARM_SURGE -> roll < .68f ? Enemy.Type.RUNNER : Enemy.Type.SHAMBLER;
             case HUNTER_PACK -> roll < .48f ? Enemy.Type.RANGED : (roll < .78f ? Enemy.Type.RUNNER : Enemy.Type.ELITE);
             case JUGGERNAUT_PUSH -> roll < .58f ? Enemy.Type.BRUTE : (roll < .82f ? Enemy.Type.ELITE : Enemy.Type.RANGED);
@@ -113,6 +113,7 @@ public final class RunEncounterDirector {
             case BULWARK_LINE -> roll < .56f ? Enemy.Type.SHIELDED : (roll < .80f ? Enemy.Type.BRUTE : Enemy.Type.ELITE);
             default -> fallback;
         };
+        return BiomeEnemyRoster.remap(stage, roll, encounterType);
     }
 
     public Type active() { return active; }
