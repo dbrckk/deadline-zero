@@ -15,7 +15,7 @@ public final class DirectionalBootstrapArt implements Disposable {
     static final int COLUMNS = 16;
     static final int FRAMES_PER_DIRECTION = 10;
     static final int ACTOR_BLOCK = FRAMES_PER_DIRECTION * 8;
-    static final int ACTOR_COUNT = 10;
+    static final int ACTOR_COUNT = 14;
     static final int TOTAL_TILES = ACTOR_BLOCK * ACTOR_COUNT;
 
     private static final String[] ROOTS = {
@@ -28,7 +28,11 @@ public final class DirectionalBootstrapArt implements Disposable {
         "boss/alpha/",
         "boss/revenant/",
         "boss/warden/",
-        "boss/harvester/"
+        "boss/harvester/",
+        "survivor/nyx/",
+        "survivor/bastion/",
+        "survivor/volt/",
+        "survivor/wraith/"
     };
 
     private final Texture texture;
@@ -192,7 +196,7 @@ public final class DirectionalBootstrapArt implements Disposable {
         int faceX = cx + sx * 5;
         int faceY = cy - 7 + sy * 5;
         setAccent(p, actor);
-        if (actor == 0 || actor == 4) {
+        if (isSurvivor(actor) || actor == 4) {
             p.drawLine(faceX - perpX * 3, faceY - perpY * 3, faceX + perpX * 3, faceY + perpY * 3);
         } else {
             p.fillCircle(faceX - perpX * 2, faceY - perpY * 2, 1);
@@ -204,7 +208,7 @@ public final class DirectionalBootstrapArt implements Disposable {
         int handY = cy + 2 + sy * (7 + attackReach);
         p.drawLine(cx, cy + 2, handX, handY);
 
-        if (actor == 0 || actor == 4) {
+        if (isSurvivor(actor) || actor == 4) {
             setAccent(p, actor);
             int muzzleX = cx + sx * (12 + attackReach);
             int muzzleY = cy + 2 + sy * (12 + attackReach);
@@ -229,49 +233,66 @@ public final class DirectionalBootstrapArt implements Disposable {
     private static void drawIdentitySilhouette(Pixmap p, int actor, int cx, int cy, int sx, int sy, int perpX, int perpY) {
         setAccent(p, actor);
         switch (actor) {
-            case 3 -> { // brute: broad shoulders
+            case 3 -> {
                 p.drawLine(cx - perpX * 8, cy, cx + perpX * 8, cy);
                 p.drawLine(cx - perpX * 7, cy + 1, cx + perpX * 7, cy + 1);
             }
-            case 4 -> { // ranged: long barrel
-                p.drawLine(cx + sx * 4, cy + sy * 4, cx + sx * 13, cy + sy * 13);
-            }
-            case 5 -> { // elite: crown/spines
+            case 4 -> p.drawLine(cx + sx * 4, cy + sy * 4, cx + sx * 13, cy + sy * 13);
+            case 5 -> {
                 p.drawLine(cx - perpX * 5, cy - 7 - perpY * 5, cx - perpX * 7 + sx * 2, cy - 12 - perpY * 7 + sy * 2);
                 p.drawLine(cx + perpX * 5, cy - 7 + perpY * 5, cx + perpX * 7 + sx * 2, cy - 12 + perpY * 7 + sy * 2);
             }
-            case 6 -> { // alpha: horns
+            case 6 -> {
                 p.drawLine(cx - perpX * 5, cy - 7, cx - perpX * 8 - sx * 2, cy - 11 - sy * 2);
                 p.drawLine(cx + perpX * 5, cy - 7, cx + perpX * 8 - sx * 2, cy - 11 - sy * 2);
             }
-            case 7 -> { // revenant: halo slash
+            case 7 -> {
                 p.drawCircle(cx, cy - 7, 8);
                 p.drawLine(cx - perpX * 7, cy - 7 - perpY * 7, cx + perpX * 7, cy - 7 + perpY * 7);
             }
-            case 8 -> { // warden: shield plate
-                p.drawRectangle(cx - 7, cy - 3, 14, 10);
-            }
-            case 9 -> { // harvester: scythe arc approximation
+            case 8 -> p.drawRectangle(cx - 7, cy - 3, 14, 10);
+            case 9 -> {
                 p.drawCircle(cx + sx * 5, cy + sy * 5, 9);
                 setSecondary(p, actor);
                 p.fillCircle(cx + sx * 2, cy + sy * 2, 6);
+            }
+            case 10 -> { // NYX: twin antenna blades
+                p.drawLine(cx - perpX * 4, cy - 6 - perpY * 4, cx - perpX * 6 - sx * 2, cy - 12 - perpY * 6 - sy * 2);
+                p.drawLine(cx + perpX * 4, cy - 6 + perpY * 4, cx + perpX * 6 - sx * 2, cy - 12 + perpY * 6 - sy * 2);
+            }
+            case 11 -> { // BASTION: heavy shoulder plate
+                p.drawRectangle(cx - 8, cy - 2, 16, 7);
+                p.drawLine(cx - perpX * 8, cy + 5, cx + perpX * 8, cy + 5);
+            }
+            case 12 -> { // VOLT: capacitor arcs
+                p.drawCircle(cx, cy + 1, 9);
+                p.drawLine(cx - 6, cy - 8, cx - 2, cy - 12);
+                p.drawLine(cx + 2, cy - 12, cx + 6, cy - 8);
+            }
+            case 13 -> { // WRAITH: spectral hood
+                p.drawCircle(cx + sx, cy - 6 + sy, 7);
+                p.drawLine(cx - perpX * 6, cy + 5 - perpY * 6, cx + sx * 2, cy + 9 + sy * 2);
+                p.drawLine(cx + perpX * 6, cy + 5 + perpY * 6, cx + sx * 2, cy + 9 + sy * 2);
             }
             default -> { }
         }
     }
 
     private static int bodyRadius(int actor) {
-        if (actor == 3) return 9;
-        if (actor >= 6) return 10;
-        return actor == 0 ? 7 : 8;
+        if (actor == 3 || actor == 11) return 9;
+        if (isBoss(actor)) return 10;
+        return isSurvivor(actor) ? 7 : 8;
     }
 
-    private static boolean isBoss(int actor) { return actor >= 6; }
+    private static boolean isBoss(int actor) { return actor >= 6 && actor <= 9; }
+
+    private static boolean isSurvivor(int actor) { return actor == 0 || actor >= 10; }
 
     private static void setPrimary(Pixmap p, int actor) {
         float[][] colors = {
             {.18f,.72f,.94f}, {.42f,.64f,.36f}, {.72f,.47f,.28f}, {.55f,.34f,.32f}, {.30f,.52f,.72f},
-            {.64f,.28f,.70f}, {.72f,.18f,.23f}, {.34f,.31f,.68f}, {.30f,.46f,.64f}, {.56f,.24f,.16f}
+            {.64f,.28f,.70f}, {.72f,.18f,.23f}, {.34f,.31f,.68f}, {.30f,.46f,.64f}, {.56f,.24f,.16f},
+            {.68f,.30f,.88f}, {.82f,.62f,.22f}, {.24f,.82f,.66f}, {.72f,.78f,.90f}
         };
         set(p, colors[actor][0], colors[actor][1], colors[actor][2], 1f);
     }
@@ -279,7 +300,8 @@ public final class DirectionalBootstrapArt implements Disposable {
     private static void setSecondary(Pixmap p, int actor) {
         float[][] colors = {
             {.08f,.28f,.44f}, {.19f,.31f,.17f}, {.31f,.19f,.13f}, {.25f,.14f,.14f}, {.12f,.23f,.35f},
-            {.26f,.10f,.30f}, {.29f,.07f,.10f}, {.13f,.11f,.31f}, {.12f,.20f,.30f}, {.25f,.09f,.06f}
+            {.26f,.10f,.30f}, {.29f,.07f,.10f}, {.13f,.11f,.31f}, {.12f,.20f,.30f}, {.25f,.09f,.06f},
+            {.25f,.10f,.38f}, {.38f,.28f,.10f}, {.08f,.34f,.28f}, {.20f,.23f,.34f}
         };
         set(p, colors[actor][0], colors[actor][1], colors[actor][2], 1f);
     }
@@ -287,7 +309,8 @@ public final class DirectionalBootstrapArt implements Disposable {
     private static void setAccent(Pixmap p, int actor) {
         float[][] colors = {
             {.76f,.96f,1f}, {.94f,.30f,.25f}, {1f,.61f,.30f}, {1f,.32f,.26f}, {.40f,.90f,1f},
-            {1f,.38f,.92f}, {1f,.48f,.28f}, {.48f,.92f,1f}, {.50f,.82f,1f}, {1f,.74f,.28f}
+            {1f,.38f,.92f}, {1f,.48f,.28f}, {.48f,.92f,1f}, {.50f,.82f,1f}, {1f,.74f,.28f},
+            {1f,.42f,1f}, {1f,.90f,.52f}, {.62f,1f,.86f}, {.52f,.90f,1f}
         };
         set(p, colors[actor][0], colors[actor][1], colors[actor][2], 1f);
     }
