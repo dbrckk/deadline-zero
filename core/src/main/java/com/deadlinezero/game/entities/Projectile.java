@@ -2,6 +2,7 @@ package com.deadlinezero.game.entities;
 
 import com.badlogic.gdx.math.Vector2;
 import com.deadlinezero.game.combat.DamageElement;
+import com.deadlinezero.game.meta.SingularityCoreRuntime;
 
 public final class Projectile {
     public final Vector2 position = new Vector2();
@@ -21,14 +22,15 @@ public final class Projectile {
                             int penetration, float knockback, DamageElement element) {
         position.set(x, y);
         velocity.set(vx, vy);
-        this.damage = damage;
+        singularity = SingularityCoreRuntime.consumeShotMark();
+        this.damage = singularity ? damage * 1.35f : damage;
         this.life = 1.5f;
         this.active = true;
         this.critical = critical;
-        this.singularity = false;
-        this.penetrationRemaining = penetration;
-        this.knockback = knockback;
-        this.element = element;
+        this.penetrationRemaining = penetration + (singularity ? 2 : 0);
+        this.knockback = singularity ? knockback * 1.8f : knockback;
+        this.element = singularity ? DamageElement.SHOCK : element;
+        this.radius = singularity ? .16f : .11f;
         this.lastHit = null;
         return this;
     }
