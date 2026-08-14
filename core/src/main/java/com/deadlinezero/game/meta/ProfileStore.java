@@ -20,7 +20,6 @@ public final class ProfileStore {
         profile.totalKills = Math.max(0L, p.getLong("totalKills", 0L));
         profile.removeAdsPurchased = p.getBoolean("purchase.removeAds", false);
         profile.starterPackGranted = p.getBoolean("purchase.starterPackGranted", false);
-        profile.onboardingCompleted = p.getBoolean("onboarding.completed", false);
         profile.selectedSurvivor = SurvivorCatalog.byName(p.getString("survivor.selected", SurvivorCatalog.Survivor.REX.name()));
         profile.selectedWeaponId = WeaponCatalog.byId(p.getString("weapon.selected", WeaponCatalog.AR9.id)).id;
         profile.addCurrency(PlayerProfile.Currency.CREDITS, Math.max(0L, p.getLong("credits", 0L)));
@@ -80,7 +79,6 @@ public final class ProfileStore {
         p.putLong("totalKills", profile.totalKills);
         p.putBoolean("purchase.removeAds", profile.removeAdsPurchased);
         p.putBoolean("purchase.starterPackGranted", profile.starterPackGranted);
-        p.putBoolean("onboarding.completed", profile.onboardingCompleted);
         p.putString("survivor.selected", profile.selectedSurvivor.name());
         p.putString("weapon.selected", profile.selectedWeapon().id);
         for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
