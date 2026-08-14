@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.deadlinezero.game.ai.BossIdentity;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.SurvivorCatalog;
 import java.io.ByteArrayOutputStream;
@@ -92,22 +93,35 @@ public final class GameArt implements Disposable {
     }
 
     /** Uses dedicated boss identity art when present, falling back to the generic BOSS authored set. */
-    public TextureRegion boss(boolean revenant, Motion motion, float stateTime) {
-        String identity = revenant ? "revenant" : "alpha";
-        String prefix = "boss/" + identity + "/" + motion.name().toLowerCase();
+    public TextureRegion boss(BossIdentity identity, Motion motion, float stateTime) {
+        String prefix = bossRoot(identity) + "/" + motion.name().toLowerCase();
         float frameDuration = AnimationProfileCatalog.enemy(Enemy.Type.BOSS).duration(motion);
         TextureRegion region = animatedOrNull(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
         return region == null ? enemy(Enemy.Type.BOSS, motion, stateTime) : region;
     }
 
     /** Directional atlas contract: boss/{identity}/{n|ne|e|se|s|sw|w|nw}/{motion}. */
-    public TextureRegion boss(boolean revenant, Motion motion, Direction8 direction, float stateTime) {
-        String identity = revenant ? "revenant" : "alpha";
-        String root = "boss/" + identity;
+    public TextureRegion boss(BossIdentity identity, Motion motion, Direction8 direction, float stateTime) {
+        String root = bossRoot(identity);
         float frameDuration = AnimationProfileCatalog.enemy(Enemy.Type.BOSS).duration(motion);
         TextureRegion region = animatedOrNull(
             directionalPrefix(root, direction, motion), frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
-        return region == null ? boss(revenant, motion, stateTime) : region;
+        return region == null ? boss(identity, motion, stateTime) : region;
+    }
+
+    /** Compatibility overload retained for older callers and tests. */
+    public TextureRegion boss(boolean revenant, Motion motion, float stateTime) {
+        return boss(revenant ? BossIdentity.REVENANT : BossIdentity.ALPHA, motion, stateTime);
+    }
+
+    /** Compatibility overload retained for older callers and tests. */
+    public TextureRegion boss(boolean revenant, Motion motion, Direction8 direction, float stateTime) {
+        return boss(revenant ? BossIdentity.REVENANT : BossIdentity.ALPHA, motion, direction, stateTime);
+    }
+
+    static String bossRoot(BossIdentity identity) {
+        BossIdentity safeIdentity = identity == null ? BossIdentity.ALPHA : identity;
+        return "boss/" + safeIdentity.name().toLowerCase();
     }
 
     public TextureRegion effect(String name, float stateTime, float frameDuration) {
