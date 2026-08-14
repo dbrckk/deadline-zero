@@ -71,7 +71,7 @@ final class ArenaHazardRuntimeTest {
         assertTrue(tier20.hazards().get(0).damage() > 14f);
     }
 
-    @Test void foundryHazardsStartAtStageTenWithoutThreatRequirement() {
+    @Test void foundryHazardsOwnStagesTenThroughNineteen() {
         ArenaHazardRuntime yard = new ArenaHazardRuntime(9, 2, 0);
         assertFalse(yard.foundryHazardsEnabled());
         assertTrue(Float.isInfinite(yard.foundryHazardInterval()));
@@ -80,16 +80,11 @@ final class ArenaHazardRuntimeTest {
         assertTrue(foundry.foundryHazardsEnabled());
         assertTrue(Float.isFinite(foundry.foundryHazardInterval()));
 
-        float untilFirst = foundry.foundryHazardInterval() * .72f + .05f;
-        for (float elapsed = 0f; elapsed < untilFirst; elapsed += .05f) foundry.update(.05f, 2f, -3f);
-        assertTrue(foundry.activeCount() > 0);
-        for (ArenaHazardRuntime.Hazard hazard : foundry.hazards()) {
-            assertEquals(ArenaHazardRuntime.Phase.WARNING, hazard.phase());
-            assertTrue(hazard.type() == ArenaHazardRuntime.Type.LAVA_VENT
-                || hazard.type() == ArenaHazardRuntime.Type.STEAM_JET
-                || hazard.type() == ArenaHazardRuntime.Type.HEAT_LINE);
-            assertEquals(0f, foundry.consumePlayerDamage(hazard.x(), hazard.y(), .4f), .0001f);
-        }
+        ArenaHazardRuntime lastFoundry = new ArenaHazardRuntime(19, 2, 0);
+        assertTrue(lastFoundry.foundryHazardsEnabled());
+        ArenaHazardRuntime nullSector = new ArenaHazardRuntime(20, 2, 0);
+        assertFalse(nullSector.foundryHazardsEnabled());
+        assertTrue(Float.isInfinite(nullSector.foundryHazardInterval()));
     }
 
     @Test void foundryHazardsAreDeterministicForSameRun() {
@@ -115,9 +110,9 @@ final class ArenaHazardRuntimeTest {
 
     @Test void laterFoundryStagesIncreasePressureButStayBounded() {
         ArenaHazardRuntime stage10 = new ArenaHazardRuntime(10, 0, 0);
-        ArenaHazardRuntime stage30 = new ArenaHazardRuntime(30, 0, 0);
-        assertTrue(stage30.foundryHazardInterval() < stage10.foundryHazardInterval());
-        assertTrue(stage30.foundryHazardInterval() >= 9.5f);
+        ArenaHazardRuntime stage19 = new ArenaHazardRuntime(19, 0, 0);
+        assertTrue(stage19.foundryHazardInterval() < stage10.foundryHazardInterval());
+        assertTrue(stage19.foundryHazardInterval() >= 10.2f);
     }
 
     @Test void foundryWarningEventuallyBecomesDamageableAndStillHitsOnce() {
@@ -134,6 +129,56 @@ final class ArenaHazardRuntimeTest {
         }
         assertTrue(damage > 0f);
         assertEquals(0f, runtime.consumePlayerDamage(target.x(), target.y(), .1f), .0001f);
+    }
+
+    @Test void nullSectorHazardsStartAtStageTwentyAndReplaceFoundryPressure() {
+        ArenaHazardRuntime stage19 = new ArenaHazardRuntime(19, 4, 0);
+        assertFalse(stage19.nullSectorHazardsEnabled());
+        assertTrue(Float.isInfinite(stage19.nullSectorHazardInterval()));
+
+        ArenaHazardRuntime stage20 = new ArenaHazardRuntime(20, 4, 0);
+        assertTrue(stage20.nullSectorHazardsEnabled());
+        assertFalse(stage20.foundryHazardsEnabled());
+        assertTrue(Float.isFinite(stage20.nullSectorHazardInterval()));
+
+        float untilFirst = stage20.nullSectorHazardInterval() * .68f + .05f;
+        for (float elapsed = 0f; elapsed < untilFirst; elapsed += .05f) stage20.update(.05f, 1f, 2f);
+        assertTrue(stage20.activeCount() > 0);
+        for (ArenaHazardRuntime.Hazard hazard : stage20.hazards()) {
+            assertTrue(hazard.type() == ArenaHazardRuntime.Type.VOID_RIFT
+                || hazard.type() == ArenaHazardRuntime.Type.STATIC_BURST
+                || hazard.type() == ArenaHazardRuntime.Type.NULL_BEAM);
+            assertEquals(ArenaHazardRuntime.Phase.WARNING, hazard.phase());
+            assertEquals(0f, stage20.consumePlayerDamage(hazard.x(), hazard.y(), .1f), .0001f);
+        }
+    }
+
+    @Test void nullSectorHazardsAreDeterministicForSameRun() {
+        ArenaHazardRuntime first = new ArenaHazardRuntime(24, 19, 0);
+        ArenaHazardRuntime second = new ArenaHazardRuntime(24, 19, 0);
+        float untilFirst = first.nullSectorHazardInterval() * .68f + .05f;
+        for (float elapsed = 0f; elapsed < untilFirst; elapsed += .05f) {
+            first.update(.05f, -3f, 2f);
+            second.update(.05f, -3f, 2f);
+        }
+        assertEquals(first.activeCount(), second.activeCount());
+        assertTrue(first.activeCount() > 0);
+        for (int i = 0; i < first.activeCount(); i++) {
+            ArenaHazardRuntime.Hazard a = first.hazards().get(i);
+            ArenaHazardRuntime.Hazard b = second.hazards().get(i);
+            assertEquals(a.type(), b.type());
+            assertEquals(a.x(), b.x(), .0001f);
+            assertEquals(a.y(), b.y(), .0001f);
+            assertEquals(a.radius(), b.radius(), .0001f);
+            assertEquals(a.damage(), b.damage(), .0001f);
+        }
+    }
+
+    @Test void laterNullSectorStagesIncreasePressureButStayBounded() {
+        ArenaHazardRuntime stage20 = new ArenaHazardRuntime(20, 0, 0);
+        ArenaHazardRuntime stage30 = new ArenaHazardRuntime(30, 0, 0);
+        assertTrue(stage30.nullSectorHazardInterval() < stage20.nullSectorHazardInterval());
+        assertTrue(stage30.nullSectorHazardInterval() >= 8.8f);
     }
 
     @Test void deathBurstRulesEscalateWithThreatAndNeverApplyToBoss() {
