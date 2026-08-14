@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.fx.DeathFx;
@@ -66,8 +67,7 @@ public final class AuthoredVfxRenderer {
 
     private void drawLegendary(SpriteBatch batch, Player player) {
         if (!player.alive || !player.legendary.hasAny()) return;
-        float stateTime = CombatVisualEvents.levelUpAgeSeconds();
-        if (!Float.isFinite(stateTime)) stateTime = 0f;
+        float stateTime = (TimeUtils.millis() % 120_000L) / 1000f;
         if (player.legendary.hasOverdrive()) drawLegendaryLayer(batch, player, "legendary_overdrive", stateTime, 3.35f, .72f);
         if (player.legendary.hasSingularity()) drawLegendaryLayer(batch, player, "legendary_singularity", stateTime, 3.75f, .64f);
         if (player.legendary.hasApex()) drawLegendaryLayer(batch, player, "legendary_apex", stateTime, 4.15f, .58f);
@@ -75,7 +75,7 @@ public final class AuthoredVfxRenderer {
     }
 
     private void drawLegendaryLayer(SpriteBatch batch, Player player, String effect, float stateTime, float size, float alpha) {
-        TextureRegion region = art.effectOrNull(effect, stateTime, .075f);
+        TextureRegion region = art.loopingEffectOrNull(effect, stateTime, .075f);
         if (region == null) return;
         float pulse = 1f + MathUtils.sin(stateTime * 4.6f) * .045f;
         float drawSize = size * pulse;
