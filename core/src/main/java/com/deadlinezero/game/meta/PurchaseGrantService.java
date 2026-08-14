@@ -7,7 +7,21 @@ public final class PurchaseGrantService {
     private PurchaseGrantService() {}
 
     public static boolean grant(PlayerProfile profile, String productId) {
+        return grant(profile, productId, null);
+    }
+
+    public static boolean grant(PlayerProfile profile, String productId, String receiptId) {
         if (profile == null || productId == null) return false;
+        if (BillingService.isConsumable(productId) && receiptId != null && !receiptId.isBlank()) {
+            if (profile.hasDeliveredPurchaseReceipt(receiptId)) return false;
+            boolean granted = grantProduct(profile, productId);
+            if (granted) profile.recordDeliveredPurchaseReceipt(receiptId);
+            return granted;
+        }
+        return grantProduct(profile, productId);
+    }
+
+    private static boolean grantProduct(PlayerProfile profile, String productId) {
         return switch (productId) {
             case BillingService.REMOVE_ADS -> {
                 boolean changed = !profile.removeAdsPurchased;
