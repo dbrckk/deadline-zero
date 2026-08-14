@@ -10,29 +10,28 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.SurvivorCatalog;
+import java.io.ByteArrayOutputStream;
 
 /**
- * Authored-art gateway. The gameplay layer never needs to know whether art comes from an atlas
- * or the deterministic runtime fallback. Atlas convention: assets/art/game.atlas.
+ * Authored-art gateway. Final atlas art takes priority, while a compact bootstrap sheet fills
+ * missing regions so production code never collapses back to one generic placeholder silhouette.
  */
 public final class GameArt implements Disposable {
     public enum Motion { IDLE, RUN, ATTACK, HIT, DEATH }
 
     private static final String ATLAS_PATH = "art/game.atlas";
+    private static final String BOOTSTRAP_PATH = "art/game.png.b64";
+
     private TextureAtlas atlas;
+    private Texture bootstrapTexture;
     private Texture fallbackTexture;
     private TextureRegion fallbackRegion;
     private boolean authoredAvailable;
 
     public GameArt() {
-        if (Gdx.files.internal(ATLAS_PATH).exists()) {
-            try {
-                atlas = new TextureAtlas(Gdx.files.internal(ATLAS_PATH));
-                authoredAvailable = true;
-            } catch (RuntimeException ignored) {
-                authoredAvailable = false;
-            }
-        }
+        loadAtlas();
+        loadBootstrap();
+        authoredAvailable = atlas != null || bootstrapTexture != null;
         createFallback();
     }
 
@@ -94,18 +93,23 @@ public final class GameArt implements Disposable {
         return region == null ? fallbackRegion : region;
     }
 
-    /** Returns null instead of fallback when an authored region is absent. */
+    /** Returns null instead of fallback when neither final nor bootstrap authored art exists. */
     public TextureRegion regionOrNull(String name) {
-        if (atlas == null) return null;
-        return atlas.findRegion(name);
+        if (atlas != null) {
+            TextureRegion region = atlas.findRegion(name);
+            if (region != null) return region;
+        }
+        return BootstrapArtCatalog.region(bootstrapTexture, name);
     }
 
     public boolean hasRegion(String name) { return regionOrNull(name) != null; }
 
     public boolean hasAnimation(String prefix) {
-        if (atlas == null) return false;
-        Array<TextureAtlas.AtlasRegion> frames = atlas.findRegions(prefix);
-        return (frames != null && frames.size > 0) || atlas.findRegion(prefix) != null;
+        if (atlas != null) {
+            Array<TextureAtlas.AtlasRegion> frames = atlas.findRegions(prefix);
+            if ((frames != null && frames.size > 0) || atlas.findRegion(prefix) != null) return true;
+        }
+        return bootstrapTexture != null && BootstrapArtCatalog.supports(prefix);
     }
 
     private TextureRegion animated(String prefix, float frameDuration, float stateTime, boolean loop) {
@@ -114,12 +118,76 @@ public final class GameArt implements Disposable {
     }
 
     private TextureRegion animatedOrNull(String prefix, float frameDuration, float stateTime, boolean loop) {
-        if (atlas == null) return null;
-        Array<TextureAtlas.AtlasRegion> frames = atlas.findRegions(prefix);
-        if (frames == null || frames.size == 0) return atlas.findRegion(prefix);
-        int rawFrame = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
-        int frame = loop ? rawFrame % frames.size : Math.min(frames.size - 1, rawFrame);
-        return frames.get(frame);
+        if (atlas != null) {
+            Array<TextureAtlas.AtlasRegion> frames = atlas.findRegions(prefix);
+            if (frames != null && frames.size > 0) {
+                int rawFrame = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
+                int frame = loop ? rawFrame % frames.size : Math.min(frames.size - 1, rawFrame);
+                return frames.get(frame);
+            }
+            TextureRegion single = atlas.findRegion(prefix);
+            if (single != null) return single;
+        }
+        return BootstrapArtCatalog.region(bootstrapTexture, prefix);
+    }
+
+    private void loadAtlas() {
+        if (!Gdx.files.internal(ATLAS_PATH).exists()) return;
+        try {
+            atlas = new TextureAtlas(Gdx.files.internal(ATLAS_PATH));
+        } catch (RuntimeException exception) {
+            Gdx.app.error("GameArt", "Unable to load production atlas; bootstrap art will be used.", exception);
+            atlas = null;
+        }
+    }
+
+    private void loadBootstrap() {
+        if (!Gdx.files.internal(BOOTSTRAP_PATH).exists()) return;
+        Pixmap pixmap = null;
+        try {
+            byte[] png = decodeBase64(Gdx.files.internal(BOOTSTRAP_PATH).readString("UTF-8"));
+            if (png.length == 0) return;
+            pixmap = new Pixmap(png, 0, png.length);
+            bootstrapTexture = new Texture(pixmap);
+            bootstrapTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        } catch (RuntimeException exception) {
+            Gdx.app.error("GameArt", "Unable to load bootstrap art source; procedural fallback remains active.", exception);
+            if (bootstrapTexture != null) bootstrapTexture.dispose();
+            bootstrapTexture = null;
+        } finally {
+            if (pixmap != null) pixmap.dispose();
+        }
+    }
+
+    /** Small Android-safe Base64 decoder; avoids relying on API-level-specific java.util.Base64. */
+    static byte[] decodeBase64(String input) {
+        if (input == null || input.isBlank()) return new byte[0];
+        ByteArrayOutputStream out = new ByteArrayOutputStream(input.length() * 3 / 4);
+        int value = 0;
+        int bits = -8;
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (Character.isWhitespace(c)) continue;
+            if (c == '=') break;
+            int digit = base64Digit(c);
+            if (digit < 0) throw new IllegalArgumentException("Invalid Base64 character at index " + i);
+            value = (value << 6) | digit;
+            bits += 6;
+            if (bits >= 0) {
+                out.write((value >> bits) & 0xff);
+                bits -= 8;
+            }
+        }
+        return out.toByteArray();
+    }
+
+    private static int base64Digit(char c) {
+        if (c >= 'A' && c <= 'Z') return c - 'A';
+        if (c >= 'a' && c <= 'z') return c - 'a' + 26;
+        if (c >= '0' && c <= '9') return c - '0' + 52;
+        if (c == '+') return 62;
+        if (c == '/') return 63;
+        return -1;
     }
 
     private void createFallback() {
@@ -136,6 +204,7 @@ public final class GameArt implements Disposable {
 
     @Override public void dispose() {
         if (atlas != null) atlas.dispose();
+        if (bootstrapTexture != null) bootstrapTexture.dispose();
         if (fallbackTexture != null) fallbackTexture.dispose();
     }
 }
