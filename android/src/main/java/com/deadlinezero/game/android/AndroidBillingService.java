@@ -34,6 +34,8 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
                 if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     billingState = State.READY;
                     restore();
+                    PurchaseReceiptListener deferred = restoreReceiptListener;
+                    if (deferred != null) restoreConsumables(deferred);
                 } else {
                     billingState = State.UNAVAILABLE;
                 }
@@ -71,8 +73,9 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
     }
 
     @Override public void restoreConsumables(PurchaseReceiptListener listener) {
-        if (listener == null || client == null || !client.isReady()) return;
+        if (listener == null) return;
         restoreReceiptListener = listener;
+        if (client == null || !client.isReady()) return;
         client.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
             (result, purchases) -> {
