@@ -15,6 +15,7 @@ import com.deadlinezero.game.meta.PurchaseGrantService;
 import com.deadlinezero.game.meta.RunEncounterRuntime;
 import com.deadlinezero.game.meta.RunLoadoutContext;
 import com.deadlinezero.game.meta.RunMissionRuntime;
+import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunResult;
 import com.deadlinezero.game.meta.RunRewardCalculator;
 import com.deadlinezero.game.meta.RunSettlement;
@@ -79,7 +80,7 @@ public final class DeadlineZeroGame extends Game {
         super.render();
     }
 
-    public void showMenu() { RunMissionRuntime.end(); RunEncounterRuntime.end(); if (audio != null) audio.stopCombatMusic(); setScreen(new MenuScreen(this)); }
+    public void showMenu() { RunMissionRuntime.end(); RunEncounterRuntime.end(); RunModifierContext.end(); if (audio != null) audio.stopCombatMusic(); setScreen(new MenuScreen(this)); }
     public void showGear() { setScreen(new GearScreen(this)); }
     public void showArsenal() { setScreen(new ArsenalScreen(this)); }
     public void showMissions() { setScreen(new MissionsScreen(this)); }
@@ -91,6 +92,7 @@ public final class DeadlineZeroGame extends Game {
         int selectedStage = profile == null ? 1 : profile.selectedStage;
         int runOrdinal = profile == null ? 0 : Math.max(0, profile.totalRuns);
         RunStageContext.begin(selectedStage, runOrdinal);
+        RunModifierContext.begin();
         RunLoadoutContext.begin(profile);
         RunEncounterRuntime.begin();
         RunMissionRuntime.begin(() -> Gdx.app.postRunnable(() -> finishVictory()));
@@ -136,6 +138,7 @@ public final class DeadlineZeroGame extends Game {
         }
         RunMissionRuntime.end();
         RunEncounterRuntime.end();
+        RunModifierContext.end();
         if (audio != null) audio.stopCombatMusic();
         saveProfile();
         RunResult result = new RunResult(kills, secondsSurvived, bossKilled, safeStage, rewards, drop);
@@ -160,6 +163,7 @@ public final class DeadlineZeroGame extends Game {
     @Override public void dispose() {
         RunMissionRuntime.end();
         RunEncounterRuntime.end();
+        RunModifierContext.end();
         saveProfile();
         super.dispose();
         if (audio != null) audio.dispose();
