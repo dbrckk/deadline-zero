@@ -20,6 +20,7 @@ public final class RunLoadoutContext {
     private static boolean zeroDayCoreEquipped;
     private static SurvivorCatalog.Survivor survivor = SurvivorCatalog.Survivor.REX;
     private static WeaponDefinition weaponDefinition = WeaponCatalog.AR9;
+    private static WeaponSynergyRules.Synergy weaponSynergy = WeaponSynergyRules.Synergy.NONE;
 
     private RunLoadoutContext() {}
 
@@ -27,6 +28,7 @@ public final class RunLoadoutContext {
         float hp = 0f, speed = 0f, dash = 0f, weapon = 0f, crit = 0f, ability = 0f;
         survivor = profile == null ? SurvivorCatalog.Survivor.REX : profile.selectedSurvivor;
         weaponDefinition = profile == null ? WeaponCatalog.AR9 : profile.selectedWeapon();
+        weaponSynergy = WeaponSynergyRules.resolve(survivor, weaponDefinition);
         WeaponSignatureRuntime.begin(weaponDefinition);
         float levelPower = profile == null ? 1f : profile.survivors.levelPowerMultiplier(survivor);
         ascensionSetPieces = ThreatSetBonusRules.equippedPieces(profile);
@@ -61,13 +63,14 @@ public final class RunLoadoutContext {
         dashInvulnerabilitySeconds = (survivor == SurvivorCatalog.Survivor.WRAITH ? .42f : .30f)
             + ThreatSetBonusRules.dashInvulnerabilityBonus(ascensionSetPieces);
         weaponDamageMultiplier = (1f + weapon) * survivor.weaponMultiplier * levelPower * adaptive
-            * ThreatSetBonusRules.weaponMultiplier(ascensionSetPieces);
-        critChanceBonus = Math.min(.25f, crit + survivor.critBonus + (survivor == SurvivorCatalog.Survivor.NYX ? .04f : 0f));
+            * ThreatSetBonusRules.weaponMultiplier(ascensionSetPieces) * weaponSynergy.weaponDamageMultiplier;
+        critChanceBonus = Math.min(.25f, crit + survivor.critBonus + (survivor == SurvivorCatalog.Survivor.NYX ? .04f : 0f)
+            + weaponSynergy.critChanceBonus);
         critDamageBonus = survivor == SurvivorCatalog.Survivor.NYX ? .40f : 0f;
         abilityPowerMultiplier = (1f + ability) * (1f + survivor.abilityBonus) * levelPower * adaptive
-            * ThreatSetBonusRules.abilityMultiplier(ascensionSetPieces);
+            * ThreatSetBonusRules.abilityMultiplier(ascensionSetPieces) * weaponSynergy.abilityPowerMultiplier;
         damageTakenMultiplier = (survivor == SurvivorCatalog.Survivor.BASTION ? .82f : 1f)
-            * ThreatSetBonusRules.damageTakenMultiplier(ascensionSetPieces);
+            * ThreatSetBonusRules.damageTakenMultiplier(ascensionSetPieces) * weaponSynergy.damageTakenMultiplier;
         startingTeslaLevel = survivor == SurvivorCatalog.Survivor.VOLT ? 1 : 0;
     }
 
@@ -85,4 +88,5 @@ public final class RunLoadoutContext {
     public static boolean zeroDayCoreEquipped() { return zeroDayCoreEquipped; }
     public static SurvivorCatalog.Survivor survivor() { return survivor; }
     public static WeaponDefinition weaponDefinition() { return weaponDefinition; }
+    public static WeaponSynergyRules.Synergy weaponSynergy() { return weaponSynergy; }
 }
