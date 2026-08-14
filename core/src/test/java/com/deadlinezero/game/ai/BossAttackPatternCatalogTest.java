@@ -29,4 +29,18 @@ final class BossAttackPatternCatalogTest {
         assertTrue(phase3.shots() > phase2.shots());
         assertTrue(phase3.explosionRadius() >= phase2.explosionRadius());
     }
+
+    @Test void wardenTradesDensityAndSpeedForHeavyAreaDenial() {
+        for (int phase = 1; phase <= 3; phase++) {
+            var alpha = BossAttackPatternCatalog.forPhase(BossIdentity.ALPHA, phase);
+            var warden = BossAttackPatternCatalog.forPhase(BossIdentity.WARDEN, phase);
+            assertTrue(warden.shots() <= alpha.shots());
+            assertTrue(warden.speedMultiplier() < alpha.speedMultiplier());
+            assertTrue(warden.damageMultiplier() > alpha.damageMultiplier());
+        }
+        var phase2 = BossAttackPatternCatalog.forPhase(BossIdentity.WARDEN, 2);
+        var phase3 = BossAttackPatternCatalog.forPhase(BossIdentity.WARDEN, 3);
+        assertEquals(2, phase2.explosiveEvery());
+        assertTrue(phase3.explosionRadius() >= phase2.explosionRadius());
+    }
 }
