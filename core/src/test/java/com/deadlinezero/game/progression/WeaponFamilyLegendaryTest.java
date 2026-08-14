@@ -95,12 +95,18 @@ final class WeaponFamilyLegendaryTest {
         p.level = 20;
         LegendaryChoice[] out = new LegendaryChoice[8];
         int count = LegendarySelector.fillChoices(p, out);
-        assertEquals(3, count);
+        assertEquals(4, count);
+        boolean sawVanguard = false;
         for (int i = 0; i < count; i++) {
-            assertTrue(out[i] == LegendaryChoice.OVERDRIVE
-                || out[i] == LegendaryChoice.SINGULARITY
-                || out[i] == LegendaryChoice.APEX);
+            LegendaryChoice choice = out[i];
+            assertTrue(choice == LegendaryChoice.OVERDRIVE
+                || choice == LegendaryChoice.SINGULARITY
+                || choice == LegendaryChoice.APEX
+                || choice == LegendaryChoice.VANGUARD_PROTOCOL,
+                "Unexpected AR-9 legendary offer: " + choice);
+            sawVanguard |= choice == LegendaryChoice.VANGUARD_PROTOCOL;
         }
+        assertTrue(sawVanguard);
     }
 
     @Test void ownedGeneralLegendariesStillAllowCompatibleFamilyOffer() {
