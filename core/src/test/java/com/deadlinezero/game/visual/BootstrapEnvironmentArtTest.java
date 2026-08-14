@@ -24,16 +24,23 @@ final class BootstrapEnvironmentArtTest {
     }
 
     @Test void requiredSetDressingIsPresent() {
-        assertTrue(BootstrapEnvironmentArt.indexOf("environment/floor/concrete_a") >= 0);
-        assertTrue(BootstrapEnvironmentArt.indexOf("environment/floor/concrete_b") >= 0);
-        assertTrue(BootstrapEnvironmentArt.indexOf("environment/floor/concrete_c") >= 0);
-        assertTrue(BootstrapEnvironmentArt.indexOf("environment/floor/hazard_a") >= 0);
-        assertTrue(BootstrapEnvironmentArt.indexOf("environment/decal/crack_a") >= 0);
-        assertTrue(BootstrapEnvironmentArt.indexOf("environment/decal/blood_a") >= 0);
-        assertTrue(BootstrapEnvironmentArt.indexOf("environment/decal/scorch_a") >= 0);
-        assertTrue(BootstrapEnvironmentArt.indexOf("environment/prop/barrier_a") >= 0);
-        assertTrue(BootstrapEnvironmentArt.indexOf("environment/prop/debris_a") >= 0);
-        assertTrue(BootstrapEnvironmentArt.indexOf("environment/prop/debris_b") >= 0);
+        String[] required = {
+            "environment/floor/concrete_a",
+            "environment/floor/concrete_b",
+            "environment/floor/concrete_c",
+            "environment/floor/hazard_a",
+            "environment/decal/crack_a",
+            "environment/decal/blood_a",
+            "environment/decal/scorch_a",
+            "environment/prop/barrier_a",
+            "environment/prop/debris_a",
+            "environment/prop/debris_b",
+            "environment/prop/wall_a",
+            "environment/prop/wall_b",
+            "environment/prop/crate_a",
+            "environment/prop/beacon_a"
+        };
+        for (String key : required) assertTrue(BootstrapEnvironmentArt.indexOf(key) >= 0, key);
     }
 
     @Test void floorVariationIsStableAndCoversAllConcreteTiles() {
