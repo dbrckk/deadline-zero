@@ -19,6 +19,8 @@ public final class WeaponProgression {
             case "arc_carbine" -> level >= 8 || stage >= 6;
             case "rail_rifle" -> level >= 10 || stage >= 8;
             case "breacher" -> level >= 12 || stage >= 10;
+            case "ion_needle" -> level >= 14 || stage >= 12;
+            case "cinder_cannon" -> level >= 16 || stage >= 14;
             default -> false;
         };
     }
@@ -32,6 +34,8 @@ public final class WeaponProgression {
             case "arc_carbine" -> 8;
             case "rail_rifle" -> 10;
             case "breacher" -> 12;
+            case "ion_needle" -> 14;
+            case "cinder_cannon" -> 16;
             default -> Integer.MAX_VALUE;
         };
     }
