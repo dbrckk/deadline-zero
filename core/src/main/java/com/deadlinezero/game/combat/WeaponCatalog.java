@@ -74,8 +74,29 @@ public final class WeaponCatalog {
         DamageElement.KINETIC
     );
 
+    /** Endgame precision needle: extremely fast, crit-heavy and naturally pierces clustered specialists. */
+    public static final WeaponDefinition ION_NEEDLE = new WeaponDefinition(
+        "ion_needle", "IN-11 Ion Needle",
+        9.2f, 0.095f, 31f,
+        1, .65f,
+        .22f, 2.15f,
+        2, .62f,
+        DamageElement.SHOCK
+    );
+
+    /** Heavy incendiary cannon: deliberately slow cadence, massive impact and persistent burn pressure. */
+    public static final WeaponDefinition CINDER_CANNON = new WeaponDefinition(
+        "cinder_cannon", "C90 Cinder Cannon",
+        86f, 1.08f, 18f,
+        1, 0f,
+        .08f, 2.25f,
+        1, 5.4f,
+        DamageElement.FIRE
+    );
+
     private static final WeaponDefinition[] ALL = {
-        AR9, SCATTERGUN, RAIL_RIFLE, INFERNO_SMG, CRYO_LANCE, ARC_CARBINE, BREACHER
+        AR9, SCATTERGUN, RAIL_RIFLE, INFERNO_SMG, CRYO_LANCE, ARC_CARBINE, BREACHER,
+        ION_NEEDLE, CINDER_CANNON
     };
 
     public static WeaponDefinition[] all() { return ALL.clone(); }
