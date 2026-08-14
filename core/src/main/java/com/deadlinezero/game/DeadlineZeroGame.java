@@ -27,6 +27,7 @@ import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.GearScreen;
 import com.deadlinezero.game.screen.MenuScreen;
 import com.deadlinezero.game.screen.MissionsScreen;
+import com.deadlinezero.game.screen.RunContractScreen;
 import com.deadlinezero.game.screen.RunResultScreen;
 import com.deadlinezero.game.screen.SettingsScreen;
 import com.deadlinezero.game.screen.ShopScreen;
@@ -88,11 +89,18 @@ public final class DeadlineZeroGame extends Game {
     public void showSurvivors() { setScreen(new SurvivorScreen(this)); }
     public void showSettings() { setScreen(new SettingsScreen(this)); }
 
+    /** Prepares a stable run identity, then asks the player to choose one of three risk/reward contracts. */
     public void startRun() {
         int selectedStage = profile == null ? 1 : profile.selectedStage;
         int runOrdinal = profile == null ? 0 : Math.max(0, profile.totalRuns);
         RunStageContext.begin(selectedStage, runOrdinal);
-        RunModifierContext.begin();
+        RunModifierContext.end();
+        setScreen(new RunContractScreen(this));
+    }
+
+    /** Starts combat only after validating that the chosen contract belongs to the current offer set. */
+    public void startRunWithContract(RunModifierContext.Modifier contract) {
+        if (!RunModifierContext.choose(contract)) return;
         RunLoadoutContext.begin(profile);
         RunEncounterRuntime.begin();
         RunMissionRuntime.begin(() -> Gdx.app.postRunnable(() -> finishVictory()));
