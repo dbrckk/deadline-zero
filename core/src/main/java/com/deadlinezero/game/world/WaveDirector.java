@@ -100,29 +100,39 @@ public final class WaveDirector {
         float stageBias = Math.min(.14f, (stage - 1) * .012f);
         Enemy.Type fallback = switch (pressureBand()) {
             case OPENING -> {
+                if (stage >= 5 && r < .018f + stageBias * .08f) yield Enemy.Type.PHANTOM;
                 if (stage >= 4 && r < .04f + stageBias * .20f) yield Enemy.Type.RANGED;
                 if (r < .24f + stageBias) yield Enemy.Type.RUNNER;
                 yield Enemy.Type.SHAMBLER;
             }
             case BUILD -> {
-                if (stage >= 6 && r < .025f + stageBias * .16f) yield Enemy.Type.ELITE;
-                if (r < .12f + stageBias * .35f) yield Enemy.Type.RANGED;
-                if (r < .28f + stageBias * .55f) yield Enemy.Type.BRUTE;
-                if (r < .58f + stageBias) yield Enemy.Type.RUNNER;
+                if (stage >= 8 && r < .026f + stageBias * .05f) yield Enemy.Type.SHIELDED;
+                if (stage >= 7 && r < .052f + stageBias * .08f) yield Enemy.Type.REGENERATOR;
+                if (stage >= 6 && r < .080f + stageBias * .12f) yield Enemy.Type.PHANTOM;
+                if (stage >= 6 && r < .115f + stageBias * .16f) yield Enemy.Type.ELITE;
+                if (r < .20f + stageBias * .35f) yield Enemy.Type.RANGED;
+                if (r < .36f + stageBias * .55f) yield Enemy.Type.BRUTE;
+                if (r < .64f + stageBias) yield Enemy.Type.RUNNER;
                 yield Enemy.Type.SHAMBLER;
             }
             case ASSAULT -> {
-                if (r < .045f + stageBias * .25f) yield Enemy.Type.ELITE;
-                if (r < .20f + stageBias * .42f) yield Enemy.Type.RANGED;
-                if (r < .43f + stageBias * .60f) yield Enemy.Type.BRUTE;
-                if (r < .76f + stageBias) yield Enemy.Type.RUNNER;
+                if (stage >= 6 && r < .045f + stageBias * .10f) yield Enemy.Type.SHIELDED;
+                if (stage >= 5 && r < .085f + stageBias * .14f) yield Enemy.Type.REGENERATOR;
+                if (stage >= 5 && r < .130f + stageBias * .18f) yield Enemy.Type.PHANTOM;
+                if (r < .185f + stageBias * .25f) yield Enemy.Type.ELITE;
+                if (r < .31f + stageBias * .42f) yield Enemy.Type.RANGED;
+                if (r < .50f + stageBias * .60f) yield Enemy.Type.BRUTE;
+                if (r < .79f + stageBias) yield Enemy.Type.RUNNER;
                 yield Enemy.Type.SHAMBLER;
             }
             case CRISIS -> {
-                if (r < .075f + stageBias * .30f) yield Enemy.Type.ELITE;
-                if (r < .27f + stageBias * .45f) yield Enemy.Type.RANGED;
-                if (r < .53f + stageBias * .68f) yield Enemy.Type.BRUTE;
-                if (r < .84f + stageBias) yield Enemy.Type.RUNNER;
+                if (stage >= 5 && r < .065f + stageBias * .12f) yield Enemy.Type.SHIELDED;
+                if (stage >= 5 && r < .125f + stageBias * .18f) yield Enemy.Type.REGENERATOR;
+                if (stage >= 4 && r < .185f + stageBias * .22f) yield Enemy.Type.PHANTOM;
+                if (r < .255f + stageBias * .30f) yield Enemy.Type.ELITE;
+                if (r < .39f + stageBias * .45f) yield Enemy.Type.RANGED;
+                if (r < .59f + stageBias * .68f) yield Enemy.Type.BRUTE;
+                if (r < .86f + stageBias) yield Enemy.Type.RUNNER;
                 yield Enemy.Type.SHAMBLER;
             }
         };
