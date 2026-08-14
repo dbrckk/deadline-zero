@@ -19,11 +19,13 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
     private boolean receiptAwarePending;
     private volatile State billingState = State.UNAVAILABLE;
     private volatile String pendingProductId;
+    private volatile boolean entitlementSnapshotAuthoritative;
 
     public AndroidBillingService(Activity activity) { this.activity = activity; }
 
     @Override public void initialize() {
         billingState = State.CONNECTING;
+        entitlementSnapshotAuthoritative = false;
         client = BillingClient.newBuilder(activity)
             .setListener(this)
             .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
@@ -38,22 +40,29 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
                     if (deferred != null) restoreConsumables(deferred);
                 } else {
                     billingState = State.UNAVAILABLE;
+                    entitlementSnapshotAuthoritative = false;
                 }
             }
-            @Override public void onBillingServiceDisconnected() { billingState = State.CONNECTING; }
+            @Override public void onBillingServiceDisconnected() {
+                billingState = State.CONNECTING;
+                entitlementSnapshotAuthoritative = false;
+            }
         });
     }
 
     @Override public State state() { return billingState; }
+    @Override public boolean authoritativeEntitlements() { return entitlementSnapshotAuthoritative; }
     @Override public String activeProductId() { return pendingProductId == null ? "" : pendingProductId; }
     @Override public boolean owns(String id) { return owned.contains(id); }
 
     @Override public void restore() {
         if (client == null || !client.isReady()) return;
+        entitlementSnapshotAuthoritative = false;
         client.queryPurchasesAsync(
             QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
             (result, purchases) -> {
                 if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) return;
+                owned.clear();
                 boolean foundPending = false;
                 for (Purchase purchase : purchases) {
                     if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
@@ -64,6 +73,7 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
                     if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED) continue;
                     if (!containsConsumable(purchase)) processPurchase(purchase, false);
                 }
+                entitlementSnapshotAuthoritative = true;
                 if (foundPending) billingState = State.PURCHASE_PENDING;
                 else if (!purchaseGate.active()) {
                     billingState = State.READY;
@@ -183,15 +193,11 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
                 clearPending();
                 if (callback != null) callback.onPurchased(receipt);
             } else if (!purchaseGate.active()) {
-                // A PENDING consumable may complete after process death. Never consume it here:
-                // deliver through the restore listener when the shop is active, or leave it owned
-                // so restoreConsumables() can replay it later without losing the paid entitlement.
                 PurchaseReceiptListener callback = restoreReceiptListener;
                 billingState = State.READY;
                 pendingProductId = null;
                 if (callback != null) callback.onPurchased(receipt);
             } else {
-                // Legacy in-process consumable path retained for callers that do not request receipts.
                 finishConsumable(purchase.getPurchaseToken(), this::succeedPending, this::failPending);
             }
             return true;
