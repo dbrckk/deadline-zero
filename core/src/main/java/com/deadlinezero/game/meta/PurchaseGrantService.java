@@ -49,11 +49,16 @@ public final class PurchaseGrantService {
         };
     }
 
-    /** Rehydrates permanent purchases after Play Billing restore finishes. */
+    /** Rehydrates permanent purchases and reconciles revocable ad-free entitlement once the store snapshot is authoritative. */
     public static boolean syncPermanent(PlayerProfile profile, BillingService billing) {
         if (profile == null || billing == null) return false;
         boolean changed = false;
-        if (billing.owns(BillingService.REMOVE_ADS)) changed |= grant(profile, BillingService.REMOVE_ADS);
+        if (billing.owns(BillingService.REMOVE_ADS)) {
+            changed |= grant(profile, BillingService.REMOVE_ADS);
+        } else if (billing.authoritativeEntitlements() && profile.removeAdsPurchased) {
+            profile.removeAdsPurchased = false;
+            changed = true;
+        }
         if (billing.owns(BillingService.STARTER_PACK)) changed |= grant(profile, BillingService.STARTER_PACK);
         return changed;
     }
