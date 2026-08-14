@@ -16,8 +16,11 @@ public final class EnvironmentRenderer implements Disposable {
     private static final float HALF_H = 24f;
     private static final float TILE_WORLD = 4f;
     private static final float TRANSITION_FLOOR_ALPHA = .62f;
+    private static final float SHADOW_OFFSET_X = .22f;
+    private static final float SHADOW_OFFSET_Y = -.28f;
     private final GameArt art;
     private BootstrapEnvironmentArt bootstrap;
+    private float visualTime;
 
     public EnvironmentRenderer(GameArt art) {
         this.art = art;
@@ -26,6 +29,11 @@ public final class EnvironmentRenderer implements Disposable {
         } catch (RuntimeException ignored) {
             bootstrap = null;
         }
+    }
+
+    public void update(float dt) {
+        visualTime += MathUtils.clamp(dt, 0f, .1f);
+        if (visualTime > 4096f) visualTime -= 4096f;
     }
 
     public void drawGround(ShapeRenderer shapes, float time) {
@@ -94,6 +102,10 @@ public final class EnvironmentRenderer implements Disposable {
         return Math.floorMod(gridX * 31 + gridY * 17, 3);
     }
 
+    static float beaconPulse(float time) {
+        return .5f + .5f * MathUtils.sin(time * 2.8f);
+    }
+
     private void drawSetDressingInternal(SpriteBatch batch) {
         TextureRegion crack = region("environment/decal/crack_a");
         TextureRegion blood = region("environment/decal/blood_a");
@@ -115,6 +127,12 @@ public final class EnvironmentRenderer implements Disposable {
         draw(batch, blood, -4.2f, 10.1f, 1.7f);
         draw(batch, scorch, 9.3f, 8.4f, 3.6f);
 
+        drawPropShadow(batch, barrier, -21f, 12f, 2.9f);
+        drawPropShadow(batch, barrier, 22f, -13f, 2.9f);
+        drawPropShadow(batch, crate, -16f, 14.2f, 2.7f);
+        drawPropShadow(batch, crate, 17.5f, -12.8f, 2.5f);
+        drawArenaEdgeShadows(batch, wallA, wallB);
+
         batch.setColor(1f, 1f, 1f, 1f);
         draw(batch, barrier, -21f, 12f, 2.9f);
         draw(batch, barrier, 22f, -13f, 2.9f);
@@ -126,7 +144,19 @@ public final class EnvironmentRenderer implements Disposable {
         drawArenaEdge(batch, wallA, wallB, beacon);
     }
 
+    private void drawArenaEdgeShadows(SpriteBatch batch, TextureRegion wallA, TextureRegion wallB) {
+        for (int x = -30; x <= 30; x += 10) {
+            drawPropShadow(batch, ((x / 10) & 1) == 0 ? wallA : wallB, x, 17.9f, 4.2f);
+            drawPropShadow(batch, ((x / 10) & 1) == 0 ? wallB : wallA, x, -17.9f, 4.2f);
+        }
+        for (int y = -12; y <= 12; y += 8) {
+            drawPropShadow(batch, wallA, -31.4f, y, 3.7f);
+            drawPropShadow(batch, wallB, 31.4f, y, 3.7f);
+        }
+    }
+
     private void drawArenaEdge(SpriteBatch batch, TextureRegion wallA, TextureRegion wallB, TextureRegion beacon) {
+        batch.setColor(Color.WHITE);
         for (int x = -30; x <= 30; x += 10) {
             draw(batch, ((x / 10) & 1) == 0 ? wallA : wallB, x, 17.9f, 4.2f);
             draw(batch, ((x / 10) & 1) == 0 ? wallB : wallA, x, -17.9f, 4.2f);
@@ -135,10 +165,27 @@ public final class EnvironmentRenderer implements Disposable {
             draw(batch, wallA, -31.4f, y, 3.7f);
             draw(batch, wallB, 31.4f, y, 3.7f);
         }
-        draw(batch, beacon, -29.6f, -15.6f, 2.0f);
-        draw(batch, beacon, 29.6f, -15.6f, 2.0f);
-        draw(batch, beacon, -29.6f, 15.6f, 2.0f);
-        draw(batch, beacon, 29.6f, 15.6f, 2.0f);
+        drawBeacon(batch, beacon, -29.6f, -15.6f);
+        drawBeacon(batch, beacon, 29.6f, -15.6f);
+        drawBeacon(batch, beacon, -29.6f, 15.6f);
+        drawBeacon(batch, beacon, 29.6f, 15.6f);
+    }
+
+    private void drawBeacon(SpriteBatch batch, TextureRegion beacon, float x, float y) {
+        if (beacon == null) return;
+        float pulse = beaconPulse(visualTime);
+        float glowSize = 2.7f + pulse * .65f;
+        batch.setColor(.18f, .88f, 1f, .10f + pulse * .10f);
+        draw(batch, beacon, x, y, glowSize);
+        batch.setColor(.62f, .96f, 1f, .88f + pulse * .12f);
+        draw(batch, beacon, x, y, 2.0f);
+        batch.setColor(Color.WHITE);
+    }
+
+    private void drawPropShadow(SpriteBatch batch, TextureRegion region, float x, float y, float width) {
+        if (region == null) return;
+        batch.setColor(.01f, .015f, .02f, .36f);
+        draw(batch, region, x + SHADOW_OFFSET_X, y + SHADOW_OFFSET_Y, width * 1.03f);
     }
 
     private boolean hasAnyEnvironmentArt() { return hasFloorArt() || hasSetDressingArt(); }
