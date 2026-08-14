@@ -13,6 +13,7 @@ import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.EquipmentService;
 import com.deadlinezero.game.meta.EquipmentUpgradeService;
+import com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog;
 
 /** Functional pre-art gear management screen. */
 public final class GearScreen extends ScreenAdapter {
@@ -55,12 +56,17 @@ public final class GearScreen extends ScreenAdapter {
             EquipmentItem item = game.profile.inventory.items().get(index);
             EquipmentItem equipped = game.profile.equipped(item.slot);
             boolean isEquipped = equipped != null && equipped.id.equals(item.id);
+            boolean ascensionExclusive = ThreatMilestoneRewardCatalog.isExclusiveId(item.id);
             float itemScore = EquipmentService.score(item);
             float equippedScore = EquipmentService.score(equipped);
             float scoreDelta = itemScore - equippedScore;
 
             font.getData().setScale(.82f); font.setColor(rarityColor(item.rarity));
             font.draw(batch, item.name, 0, h * .59f, w, Align.center, false);
+            font.getData().setScale(.48f);
+            font.setColor(ascensionExclusive ? Color.GOLD : Color.LIGHT_GRAY);
+            font.draw(batch, ascensionExclusive ? "ASCENSION EXCLUSIVE • MYTHIC MILESTONE REWARD" : item.rarity.name(),
+                0, h * .555f, w, Align.center, false);
             font.getData().setScale(.55f); font.setColor(Color.WHITE);
             font.draw(batch, "Slot " + item.slot + "   Lv." + item.level + "   Bonus +" + Math.round(item.powerBonus * 1000f) / 10f + "%", 0, h * .52f, w, Align.center, false);
             font.setColor(isEquipped ? Color.LIME : Color.LIGHT_GRAY);
