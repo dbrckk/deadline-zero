@@ -31,12 +31,36 @@ public final class PlayerProfile {
     public String selectedWeaponId = WeaponCatalog.AR9.id;
 
     public PlayerProfile() { for (Currency currency : Currency.values()) currencies.put(currency, 0L); }
-    public long currency(Currency currency) { return currencies.getOrDefault(currency, 0L); }
-    public void addCurrency(Currency currency, long amount) { if (amount > 0) currencies.put(currency, currency(currency) + amount); }
-    public boolean spend(Currency currency, long amount) { if (amount <= 0 || currency(currency) < amount) return false; currencies.put(currency, currency(currency) - amount); return true; }
-    public long xpForNextLevel() { return 250L + (long)(accountLevel - 1) * 110L; }
-    public void addAccountXp(long amount) { if (amount <= 0) return; accountXp += amount; while (accountXp >= xpForNextLevel()) { accountXp -= xpForNextLevel(); accountLevel++; } survivors.refreshUnlocks(this); validateSelectedWeapon(); }
-    public void recordRun(int kills, int stage) { totalRuns++; totalKills += Math.max(0, kills); highestStage = Math.max(highestStage, Math.max(1, stage)); selectedStage = Math.min(Math.max(1, selectedStage), highestStage); survivors.refreshUnlocks(this); validateSelectedWeapon(); }
+    public long currency(Currency currency) { return Math.max(0L, currencies.getOrDefault(currency, 0L)); }
+    public void addCurrency(Currency currency, long amount) {
+        if (currency == null || amount <= 0) return;
+        currencies.put(currency, ProfileCounterMath.addNonNegative(currency(currency), amount));
+    }
+    public boolean spend(Currency currency, long amount) {
+        if (currency == null || amount <= 0 || currency(currency) < amount) return false;
+        currencies.put(currency, currency(currency) - amount);
+        return true;
+    }
+    public long xpForNextLevel() { return 250L + (long)(Math.max(1, accountLevel) - 1) * 110L; }
+    public void addAccountXp(long amount) {
+        if (amount <= 0) return;
+        accountXp = ProfileCounterMath.addNonNegative(accountXp, amount);
+        while (accountLevel < Integer.MAX_VALUE && accountXp >= xpForNextLevel()) {
+            accountXp -= xpForNextLevel();
+            accountLevel = ProfileCounterMath.incrementNonNegative(accountLevel);
+        }
+        if (accountLevel == Integer.MAX_VALUE) accountXp = Math.min(accountXp, xpForNextLevel() - 1L);
+        survivors.refreshUnlocks(this);
+        validateSelectedWeapon();
+    }
+    public void recordRun(int kills, int stage) {
+        totalRuns = ProfileCounterMath.incrementNonNegative(totalRuns);
+        totalKills = ProfileCounterMath.addKills(totalKills, kills);
+        highestStage = Math.max(Math.max(1, highestStage), Math.max(1, stage));
+        selectedStage = Math.min(Math.max(1, selectedStage), highestStage);
+        survivors.refreshUnlocks(this);
+        validateSelectedWeapon();
+    }
     public EquipmentItem equipped(EquipmentSlot slot) { return equipped.get(slot); }
     public void equip(EquipmentItem item) { if (item != null) { equipped.put(item.slot, item); if (inventory.find(item.id) == null) inventory.add(item); } }
     public void unequip(EquipmentSlot slot) { if (slot != null) equipped.remove(slot); }
