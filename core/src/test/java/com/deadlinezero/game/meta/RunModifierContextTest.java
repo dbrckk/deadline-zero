@@ -1,6 +1,7 @@
 package com.deadlinezero.game.meta;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,6 +46,37 @@ final class RunModifierContextTest {
             RunModifierContext.end();
         }
         assertEquals(EnumSet.allOf(RunModifierContext.Modifier.class), seen);
+    }
+
+    @Test void offerSetContainsThreeUniqueDeterministicContracts() {
+        RunStageContext.begin(11, 27);
+        RunModifierContext.Modifier[] first = RunModifierContext.offers();
+        RunModifierContext.Modifier[] second = RunModifierContext.offers();
+
+        assertEquals(3, first.length);
+        assertEquals(first[0], second[0]);
+        assertEquals(first[1], second[1]);
+        assertEquals(first[2], second[2]);
+        assertEquals(3, EnumSet.of(first[0], first[1], first[2]).size());
+    }
+
+    @Test void onlyOfferedContractsCanBeActivated() {
+        RunStageContext.begin(4, 2);
+        RunModifierContext.Modifier[] offers = RunModifierContext.offers();
+        assertTrue(RunModifierContext.choose(offers[1]));
+        assertEquals(offers[1], RunModifierContext.modifier());
+
+        RunModifierContext.end();
+        RunModifierContext.Modifier outsider = null;
+        for (RunModifierContext.Modifier candidate : RunModifierContext.Modifier.values()) {
+            if (candidate != offers[0] && candidate != offers[1] && candidate != offers[2]) {
+                outsider = candidate;
+                break;
+            }
+        }
+        assertNotNull(outsider);
+        assertFalse(RunModifierContext.choose(outsider));
+        assertFalse(RunModifierContext.active());
     }
 
     @Test void activeContractAlwaysPaysARewardPremium() {
