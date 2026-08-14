@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.deadlinezero.game.ai.BossIdentity;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
@@ -35,7 +36,7 @@ public final class CombatHudRenderer {
         projection.setToOrtho2D(0, 0, width, height);
         updateOnboarding(player, director);
         drawBars(shapes, player, director, enemies, width, height);
-        drawText(batch, font, player, director, width, height);
+        drawText(batch, font, player, director, enemies, width, height);
         drawDamageVignette(shapes, width, height);
     }
 
@@ -87,8 +88,15 @@ public final class CombatHudRenderer {
             float ratio = MathUtils.clamp(boss.hp / Math.max(1f, boss.maxHp), 0f, 1f);
             shapes.setColor(VisualTheme.PANEL);
             shapes.rect(bossX, bossY, bossW, 19f * s);
-            shapes.setColor(contrast ? Color.WHITE : VisualTheme.RED);
+            Color identityColor = contrast ? Color.WHITE : bossColor(boss);
+            shapes.setColor(identityColor);
             shapes.rect(bossX + 3f * s, bossY + 3f * s, (bossW - 6f * s) * ratio, 13f * s);
+
+            // Phase gates make the three-act boss structure immediately readable.
+            shapes.setColor(VisualTheme.PANEL_ALT);
+            float innerW = bossW - 6f * s;
+            shapes.rect(bossX + 3f * s + innerW * .33f, bossY + 2f * s, 2f * s, 15f * s);
+            shapes.rect(bossX + 3f * s + innerW * .66f, bossY + 2f * s, 2f * s, 15f * s);
         }
 
         drawMobileControls(shapes, player, w, h, s);
@@ -122,7 +130,7 @@ public final class CombatHudRenderer {
     }
 
     private void drawText(SpriteBatch batch, BitmapFont font, Player player,
-                          WaveDirector director, float w, float h) {
+                          WaveDirector director, Array<Enemy> enemies, float w, float h) {
         float s = ui();
         batch.setProjectionMatrix(projection);
         batch.begin();
@@ -134,14 +142,19 @@ public final class CombatHudRenderer {
         font.draw(batch, "STAGE " + RunStageContext.stage(), 28f * s, h - 100f * s);
 
         boolean contrast = AccessibilitySettings.active().highContrastTelegraphs;
+        Enemy boss = findBoss(enemies);
         if (!director.bossSpawned()) {
             int remaining = Math.max(0, Math.round(director.secondsUntilBoss()));
             font.setColor(director.bossWarning() ? (contrast ? Color.WHITE : VisualTheme.RED) : VisualTheme.MUTED);
             font.draw(batch, director.bossWarning() ? "BOSS SIGNAL  " + remaining + "s" : "BOSS ETA  " + remaining + "s",
                 0f, h - 100f * s, w, Align.center, false);
+        } else if (boss != null) {
+            int phase = boss.bossPhases == null ? 1 : boss.bossPhases.phase();
+            font.setColor(contrast ? Color.WHITE : bossColor(boss));
+            font.draw(batch, bossName(boss) + "  //  PHASE " + phase, 0f, h - 100f * s, w, Align.center, false);
         } else {
             font.setColor(contrast ? Color.WHITE : VisualTheme.RED);
-            font.draw(batch, "ELIMINATE THE ALPHA", 0f, h - 100f * s, w, Align.center, false);
+            font.draw(batch, "BOSS SIGNAL LOST", 0f, h - 100f * s, w, Align.center, false);
         }
 
         RunEncounterDirector.Type encounter = director.activeEncounter();
@@ -198,5 +211,25 @@ public final class CombatHudRenderer {
     private Enemy findBoss(Array<Enemy> enemies) {
         for (Enemy e : enemies) if (e.alive && e.type == Enemy.Type.BOSS) return e;
         return null;
+    }
+
+    private BossIdentity bossIdentity(Enemy boss) {
+        return boss != null && boss.bossCombat != null ? boss.bossCombat.identity() : BossIdentity.ALPHA;
+    }
+
+    private String bossName(Enemy boss) {
+        return switch (bossIdentity(boss)) {
+            case REVENANT -> "REVENANT";
+            case WARDEN -> "WARDEN";
+            default -> "ALPHA";
+        };
+    }
+
+    private Color bossColor(Enemy boss) {
+        return switch (bossIdentity(boss)) {
+            case REVENANT -> VisualTheme.VIOLET;
+            case WARDEN -> VisualTheme.GOLD;
+            default -> VisualTheme.RED;
+        };
     }
 }
