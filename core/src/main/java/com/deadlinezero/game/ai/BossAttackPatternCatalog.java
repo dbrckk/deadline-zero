@@ -10,11 +10,7 @@ public final class BossAttackPatternCatalog {
                           float damageMultiplier, int explosiveEvery,
                           float explosionRadius, boolean radial) { }
 
-    /**
-     * Compatibility overload retained for existing callers. REVENANT remains explicit while
-     * non-REVENANT calls resolve the active stage so newer boss identities are not downgraded
-     * to ALPHA by legacy boolean call sites.
-     */
+    /** Compatibility overload retained for existing callers. */
     public static Pattern forPhase(boolean revenant, int phase) {
         BossIdentity identity = revenant ? BossIdentity.REVENANT : BossIdentity.forStage(RunStageContext.stage());
         return forPhase(identity, phase);
@@ -35,6 +31,13 @@ public final class BossAttackPatternCatalog {
                 case 1 -> new Pattern(3, 17f, .82f, .96f, 0, 0f, false);
                 case 2 -> new Pattern(8, 45f, .78f, .82f, 2, 2.45f, true);
                 default -> new Pattern(10, 36f, .76f, .78f, 2, 2.85f, true);
+            };
+        }
+        if (safeIdentity == BossIdentity.HARVESTER) {
+            return switch (safePhase) {
+                case 1 -> new Pattern(9, 7f, 1.18f, .58f, 0, 0f, false);
+                case 2 -> new Pattern(16, 22.5f, 1.12f, .54f, 5, 1.65f, true);
+                default -> new Pattern(24, 15f, 1.20f, .50f, 4, 1.85f, true);
             };
         }
         return switch (safePhase) {
