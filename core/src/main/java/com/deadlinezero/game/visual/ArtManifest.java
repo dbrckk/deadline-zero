@@ -56,6 +56,14 @@ public final class ArtManifest {
             missing += requireMotion(art, root, "death");
             missing += requireRegion(art, root + "/corpse");
         }
+        for (String bossIdentity : new String[] { "alpha", "revenant" }) {
+            String root = "boss/" + bossIdentity;
+            missing += requireMotion(art, root, "idle");
+            missing += requireMotion(art, root, "run");
+            missing += requireMotion(art, root, "attack");
+            missing += requireMotion(art, root, "hit");
+            missing += requireMotion(art, root, "death");
+        }
         if (missing == 0) Gdx.app.log("ArtManifest", "Production atlas validation passed.");
         else Gdx.app.log("ArtManifest", "Production atlas incomplete: " + missing + " required entries missing.");
         return missing;
