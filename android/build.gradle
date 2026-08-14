@@ -8,6 +8,9 @@ def allowTestAds = providers.gradleProperty('allowTestAds').map { it.toBoolean()
 def allowPlaceholderAssets = providers.gradleProperty('allowPlaceholderAssets').map { it.toBoolean() }.orElse(false)
 def appVersion = providers.gradleProperty('appVersion').get()
 def appVersionCode = providers.gradleProperty('appVersionCode').get().toInteger()
+def validAdmobAppId = { String value -> value ==~ /ca-app-pub-\d{16}~\d{10}/ }
+def validRewardedId = { String value -> value ==~ /ca-app-pub-\d{16}\/\d{10}/ }
+def validPlayVersionCode = { int value -> value >= 1 && value <= 2100000000 }
 def releaseValue = { String propertyName, String envName ->
     providers.gradleProperty(propertyName).orElse(providers.environmentVariable(envName)).getOrElse('')
 }
@@ -129,14 +132,17 @@ tasks.register('verifyPlayReleaseConfig') {
         if (usingTestIds) {
             throw new GradleException('Play release blocked: production AdMob app and rewarded IDs are required.')
         }
+        if (!validAdmobAppId(admobAppId) || !validRewardedId(admobRewardedId)) {
+            throw new GradleException('Play release blocked: malformed AdMob IDs. Expected ca-app-pub-################~########## for the app and ca-app-pub-################/########## for rewarded.')
+        }
         if (!releaseStoreExists) {
             throw new GradleException('Play release blocked: upload keystore is missing. Configure -PreleaseStoreFile or DEADLINE_ZERO_KEYSTORE.')
         }
         if (!hasReleaseSigning) {
             throw new GradleException('Play release blocked: upload signing credentials are incomplete. Configure store password, key alias, and key password via Gradle properties or DEADLINE_ZERO_* environment variables.')
         }
-        if (appVersionCode < 1 || appVersion.isBlank()) {
-            throw new GradleException('Play release blocked: appVersionCode must be >= 1 and appVersion must be non-empty.')
+        if (!validPlayVersionCode(appVersionCode) || appVersion.isBlank()) {
+            throw new GradleException('Play release blocked: appVersionCode must be between 1 and 2100000000 and appVersion must be non-empty.')
         }
     }
 }
@@ -156,8 +162,11 @@ tasks.configureEach { task ->
             if (usingTestIds && !allowTestAds.get()) {
                 throw new GradleException('Release build blocked: configure -PadmobAppId and -PadmobRewardedId with production AdMob IDs. Use -PallowTestAds=true only for CI build verification.')
             }
-            if (!admobAppId.startsWith('ca-app-pub-') || !admobRewardedId.startsWith('ca-app-pub-')) {
-                throw new GradleException('Release build blocked: invalid AdMob ID format.')
+            if (!validAdmobAppId(admobAppId) || !validRewardedId(admobRewardedId)) {
+                throw new GradleException('Release build blocked: malformed AdMob ID format.')
+            }
+            if (!validPlayVersionCode(appVersionCode)) {
+                throw new GradleException('Release build blocked: appVersionCode must be between 1 and 2100000000.')
             }
             def missing = missingProductionAssets()
             if (!missing.isEmpty() && !allowPlaceholderAssets.get()) {
