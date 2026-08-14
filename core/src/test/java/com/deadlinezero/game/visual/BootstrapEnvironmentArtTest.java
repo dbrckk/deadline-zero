@@ -56,4 +56,19 @@ final class BootstrapEnvironmentArtTest {
         }
         assertTrue(seen[0] && seen[1] && seen[2]);
     }
+
+    @Test void beaconPulseIsDeterministicAndAlwaysNormalized() {
+        boolean sawLow = false;
+        boolean sawHigh = false;
+        for (int i = 0; i <= 200; i++) {
+            float time = i * .05f;
+            float first = EnvironmentRenderer.beaconPulse(time);
+            float second = EnvironmentRenderer.beaconPulse(time);
+            assertEquals(first, second, 0f);
+            assertTrue(first >= 0f && first <= 1f, "pulse=" + first);
+            sawLow |= first < .1f;
+            sawHigh |= first > .9f;
+        }
+        assertTrue(sawLow && sawHigh);
+    }
 }
