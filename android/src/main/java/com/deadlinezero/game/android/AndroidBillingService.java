@@ -6,12 +6,14 @@ import com.deadlinezero.game.services.BillingService;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Client-side Play Billing bridge. Production purchase verification should move server-side before launch. */
+/** Client-side Play Billing bridge with crash-safe consumable delivery. */
 public final class AndroidBillingService implements BillingService, PurchasesUpdatedListener {
     private final Activity activity;
     private BillingClient client;
     private final Set<String> owned = ConcurrentHashMap.newKeySet();
     private Runnable success, failure;
+    private PurchaseReceiptListener receiptSuccess;
+    private boolean receiptAwarePending;
 
     public AndroidBillingService(Activity activity) { this.activity = activity; }
 
@@ -37,14 +39,46 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
             QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
             (result, purchases) -> {
                 if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) return;
-                for (Purchase purchase : purchases) processPurchase(purchase, false);
+                for (Purchase purchase : purchases) {
+                    if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED) continue;
+                    if (!containsConsumable(purchase)) processPurchase(purchase, false);
+                }
+            });
+    }
+
+    @Override public void restoreConsumables(PurchaseReceiptListener listener) {
+        if (listener == null || client == null || !client.isReady()) return;
+        client.queryPurchasesAsync(
+            QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
+            (result, purchases) -> {
+                if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) return;
+                for (Purchase purchase : purchases) {
+                    if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED || !containsConsumable(purchase)) continue;
+                    for (String id : purchase.getProducts()) {
+                        if (BillingService.isConsumable(id)) {
+                            listener.onPurchased(new PurchaseReceipt(id, purchase.getPurchaseToken()));
+                            break;
+                        }
+                    }
+                }
             });
     }
 
     @Override public void purchase(String productId, Runnable onSuccess, Runnable onFailure) {
-        if (client == null || !client.isReady()) { onFailure.run(); return; }
-        this.success = onSuccess;
+        beginPurchase(productId, null, onSuccess, onFailure, false);
+    }
+
+    @Override public void purchaseWithReceipt(String productId, PurchaseReceiptListener onSuccess, Runnable onFailure) {
+        beginPurchase(productId, onSuccess, null, onFailure, true);
+    }
+
+    private void beginPurchase(String productId, PurchaseReceiptListener receiptCallback, Runnable legacySuccess,
+                               Runnable onFailure, boolean receiptAware) {
+        if (client == null || !client.isReady()) { if (onFailure != null) onFailure.run(); return; }
+        this.success = legacySuccess;
+        this.receiptSuccess = receiptCallback;
         this.failure = onFailure;
+        this.receiptAwarePending = receiptAware;
 
         QueryProductDetailsParams.Product product = QueryProductDetailsParams.Product.newBuilder()
             .setProductId(productId)
@@ -81,21 +115,16 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
     private boolean processPurchase(Purchase purchase, boolean notifyPending) {
         if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED) return false;
 
-        boolean consumable = false;
-        for (String id : purchase.getProducts()) {
-            if (BillingService.isConsumable(id)) {
-                consumable = true;
-                break;
+        String consumableId = firstConsumable(purchase);
+        if (consumableId != null) {
+            if (!notifyPending) return true;
+            if (receiptAwarePending) {
+                PurchaseReceiptListener callback = receiptSuccess;
+                clearPending();
+                if (callback != null) callback.onPurchased(new PurchaseReceipt(consumableId, purchase.getPurchaseToken()));
+            } else {
+                finishConsumable(purchase.getPurchaseToken(), this::succeedPending, this::failPending);
             }
-        }
-
-        if (consumable) {
-            ConsumeParams params = ConsumeParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
-            client.consumeAsync(params, (result, token) -> {
-                if (!notifyPending) return;
-                if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) succeedPending();
-                else failPending();
-            });
             return true;
         }
 
@@ -118,6 +147,28 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
         return true;
     }
 
+    @Override public void finishConsumable(String receiptId, Runnable onSuccess, Runnable onFailure) {
+        if (receiptId == null || receiptId.isBlank() || client == null || !client.isReady()) {
+            if (onFailure != null) onFailure.run();
+            return;
+        }
+        ConsumeParams params = ConsumeParams.newBuilder().setPurchaseToken(receiptId).build();
+        client.consumeAsync(params, (result, token) -> {
+            if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                if (onSuccess != null) onSuccess.run();
+            } else if (onFailure != null) {
+                onFailure.run();
+            }
+        });
+    }
+
+    private boolean containsConsumable(Purchase purchase) { return firstConsumable(purchase) != null; }
+
+    private String firstConsumable(Purchase purchase) {
+        for (String id : purchase.getProducts()) if (BillingService.isConsumable(id)) return id;
+        return null;
+    }
+
     private void grantDurableProducts(Purchase purchase) {
         for (String id : purchase.getProducts()) {
             if (!BillingService.isConsumable(id)) owned.add(id);
@@ -126,15 +177,20 @@ public final class AndroidBillingService implements BillingService, PurchasesUpd
 
     private void succeedPending() {
         Runnable callback = success;
-        success = null;
-        failure = null;
+        clearPending();
         if (callback != null) callback.run();
     }
 
     private void failPending() {
         Runnable callback = failure;
-        success = null;
-        failure = null;
+        clearPending();
         if (callback != null) callback.run();
+    }
+
+    private void clearPending() {
+        success = null;
+        receiptSuccess = null;
+        failure = null;
+        receiptAwarePending = false;
     }
 }
