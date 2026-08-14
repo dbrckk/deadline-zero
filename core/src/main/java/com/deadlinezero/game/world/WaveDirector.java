@@ -15,6 +15,7 @@ public final class WaveDirector {
     private float spawnTimer;
     private int kills;
     private int squadRemaining;
+    private int bossSpawnCount;
     private boolean bossPending;
     private boolean bossSpawned;
     private final int stage = Math.max(1, RunStageContext.stage());
@@ -33,6 +34,11 @@ public final class WaveDirector {
 
     public void onSpawn() {
         float runPressure = RunModifierContext.spawnIntervalMultiplier();
+        if (bossPending && RunModifierContext.twinApex() && bossSpawnCount == 1) {
+            squadRemaining = 0;
+            spawnTimer = .18f;
+            return;
+        }
         if (squadRemaining > 0) {
             squadRemaining--;
             spawnTimer = (.085f + MathUtils.random(0f, .035f)) * encounters.spawnIntervalMultiplier() * runPressure;
@@ -58,7 +64,7 @@ public final class WaveDirector {
         };
         squadChance = Math.min(.22f, squadChance + (stage - 1) * .008f);
         if (encounters.activeEncounter()) squadChance = Math.min(.32f, squadChance + .08f);
-        if (RunModifierContext.eliteHunt()) squadChance = Math.min(.36f, squadChance + .06f);
+        if (RunModifierContext.eliteHunt() || RunModifierContext.specialistSiege()) squadChance = Math.min(.38f, squadChance + .07f);
         if (!bossPending && MathUtils.random() < squadChance) {
             int min = pressureBand().ordinal() >= PressureBand.ASSAULT.ordinal() ? 2 : 1;
             int max = Math.min(5, min + 1 + stage / 5);
@@ -67,6 +73,14 @@ public final class WaveDirector {
     }
 
     public void onBossSpawned() {
+        bossSpawnCount++;
+        int required = RunModifierContext.twinApex() ? 2 : 1;
+        if (bossSpawnCount < required) {
+            bossPending = true;
+            bossSpawned = false;
+            squadRemaining = 0;
+            return;
+        }
         bossSpawned = true;
         bossPending = false;
         squadRemaining = 0;
@@ -82,6 +96,7 @@ public final class WaveDirector {
     public float elapsed() { return elapsed; }
     public boolean bossPending() { return bossPending; }
     public boolean bossSpawned() { return bossSpawned; }
+    public int bossSpawnCount() { return bossSpawnCount; }
     public int squadRemaining() { return squadRemaining; }
     public float bossArrivalSeconds() { return bossArrival; }
     public float secondsUntilBoss() { return Math.max(0f, bossArrival - elapsed); }
@@ -100,6 +115,25 @@ public final class WaveDirector {
 
     public Enemy.Type chooseType() {
         if (bossPending) return Enemy.Type.BOSS;
+
+        if (RunModifierContext.phantomEclipse()) {
+            float r = MathUtils.random();
+            if (r < .56f) return Enemy.Type.PHANTOM;
+            if (r < .72f) return Enemy.Type.RUNNER;
+            if (r < .84f) return Enemy.Type.RANGED;
+            if (r < .93f) return Enemy.Type.REGENERATOR;
+            return Enemy.Type.ELITE;
+        }
+
+        if (RunModifierContext.specialistSiege()) {
+            float r = MathUtils.random();
+            if (r < .30f) return Enemy.Type.SHIELDED;
+            if (r < .56f) return Enemy.Type.REGENERATOR;
+            if (r < .78f) return Enemy.Type.ELITE;
+            if (r < .90f) return Enemy.Type.BRUTE;
+            return Enemy.Type.RANGED;
+        }
+
         if (RunModifierContext.eliteHunt()) {
             float eliteRoll = MathUtils.random();
             float unlockBias = Math.min(.16f, Math.max(0, stage - 4) * .018f);
