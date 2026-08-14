@@ -92,7 +92,6 @@ public final class CombatHudRenderer {
             shapes.setColor(identityColor);
             shapes.rect(bossX + 3f * s, bossY + 3f * s, (bossW - 6f * s) * ratio, 13f * s);
 
-            // Phase gates make the three-act boss structure immediately readable.
             shapes.setColor(VisualTheme.PANEL_ALT);
             float innerW = bossW - 6f * s;
             shapes.rect(bossX + 3f * s + innerW * .33f, bossY + 2f * s, 2f * s, 15f * s);
@@ -163,6 +162,9 @@ public final class CombatHudRenderer {
                 case SWARM_SURGE -> "SWARM SURGE";
                 case HUNTER_PACK -> "HUNTER PACK";
                 case JUGGERNAUT_PUSH -> "JUGGERNAUT PUSH";
+                case PHANTOM_BREACH -> "PHANTOM BREACH";
+                case REGEN_BLOOM -> "REGEN BLOOM";
+                case BULWARK_LINE -> "BULWARK LINE";
                 default -> "";
             };
             int seconds = Math.max(1, Math.round(director.encounterSecondsRemaining()));
