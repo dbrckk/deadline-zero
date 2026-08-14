@@ -67,7 +67,7 @@ public final class EnvironmentRenderer implements Disposable {
         batch.setColor(1f, 1f, 1f, FLOOR_ALPHA);
         for (int gy = -6; gy < 6; gy++) {
             for (int gx = -10; gx < 10; gx++) {
-                int variant = Math.floorMod(gx * 31 + gy * 17, 3);
+                int variant = floorVariant(gx, gy);
                 TextureRegion region = region("environment/floor/concrete_" + (char)('a' + variant));
                 if (region == null) continue;
                 batch.draw(region, gx * TILE_WORLD, gy * TILE_WORLD, TILE_WORLD, TILE_WORLD);
@@ -81,6 +81,10 @@ public final class EnvironmentRenderer implements Disposable {
                 batch.draw(hazard, x, -2f, TILE_WORLD, TILE_WORLD);
             }
         }
+    }
+
+    static int floorVariant(int gridX, int gridY) {
+        return Math.floorMod(gridX * 31 + gridY * 17, 3);
     }
 
     private void drawSetDressing(SpriteBatch batch) {
