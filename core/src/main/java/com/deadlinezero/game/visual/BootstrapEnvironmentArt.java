@@ -19,7 +19,11 @@ public final class BootstrapEnvironmentArt implements Disposable {
         "environment/decal/scorch_a",
         "environment/prop/barrier_a",
         "environment/prop/debris_a",
-        "environment/prop/debris_b"
+        "environment/prop/debris_b",
+        "environment/prop/wall_a",
+        "environment/prop/wall_b",
+        "environment/prop/crate_a",
+        "environment/prop/beacon_a"
     };
 
     private final Texture texture;
@@ -72,6 +76,9 @@ public final class BootstrapEnvironmentArt implements Disposable {
             case 6 -> drawScorch(p, ox, oy);
             case 7 -> drawBarrier(p, ox, oy);
             case 8, 9 -> drawDebris(p, ox, oy, tile - 8);
+            case 10, 11 -> drawWall(p, ox, oy, tile - 10);
+            case 12 -> drawCrate(p, ox, oy);
+            case 13 -> drawBeacon(p, ox, oy);
             default -> { }
         }
     }
@@ -149,6 +156,36 @@ public final class BootstrapEnvironmentArt implements Disposable {
         p.drawLine(ox + 30, oy + 52, ox + 52, oy + 37);
         p.setColor(.74f, .46f, .07f, .78f);
         p.fillRectangle(ox + 20 + variant * 10, oy + 19, 4, 15);
+    }
+
+    private static void drawWall(Pixmap p, int ox, int oy, int variant) {
+        p.setColor(0f, 0f, 0f, 0f); p.fillRectangle(ox, oy, TILE, TILE);
+        p.setColor(.055f, .065f, .078f, .98f); p.fillRectangle(ox + 2, oy + 12, 60, 42);
+        p.setColor(.16f, .19f, .22f, 1f); p.fillRectangle(ox + 5, oy + 15, 54, 34);
+        p.setColor(.08f, .095f, .11f, 1f); p.fillRectangle(ox + 8, oy + 19, 48, 24);
+        p.setColor(.31f, .34f, .36f, .86f);
+        p.drawRectangle(ox + 5, oy + 15, 54, 34);
+        p.drawLine(ox + 32, oy + 16, ox + 32, oy + 48);
+        p.setColor(variant == 0 ? .12f : .72f, variant == 0 ? .62f : .22f, variant == 0 ? .74f : .08f, .88f);
+        p.fillRectangle(ox + 10, oy + 22, 4, 17);
+        p.fillRectangle(ox + 50, oy + 22, 4, 17);
+    }
+
+    private static void drawCrate(Pixmap p, int ox, int oy) {
+        p.setColor(0f, 0f, 0f, 0f); p.fillRectangle(ox, oy, TILE, TILE);
+        p.setColor(.16f, .18f, .19f, .92f); p.fillRectangle(ox + 10, oy + 16, 44, 38);
+        p.setColor(.30f, .33f, .34f, 1f); p.drawRectangle(ox + 10, oy + 16, 44, 38);
+        p.drawLine(ox + 14, oy + 20, ox + 50, oy + 50);
+        p.drawLine(ox + 50, oy + 20, ox + 14, oy + 50);
+        p.setColor(.82f, .50f, .06f, .92f); p.fillRectangle(ox + 27, oy + 31, 10, 5);
+    }
+
+    private static void drawBeacon(Pixmap p, int ox, int oy) {
+        p.setColor(0f, 0f, 0f, 0f); p.fillRectangle(ox, oy, TILE, TILE);
+        p.setColor(.07f, .08f, .09f, .95f); p.fillRectangle(ox + 27, oy + 25, 10, 28);
+        p.setColor(.24f, .28f, .31f, 1f); p.fillRectangle(ox + 22, oy + 49, 20, 6);
+        p.setColor(.10f, .68f, .82f, .90f); p.fillCircle(ox + 32, oy + 20, 8);
+        p.setColor(.68f, .95f, 1f, .72f); p.fillCircle(ox + 32, oy + 20, 3);
     }
 
     @Override public void dispose() { texture.dispose(); }
