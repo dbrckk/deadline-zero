@@ -5,6 +5,17 @@ def testRewardedId = 'ca-app-pub-3940256099942544/5224354917'
 def admobAppId = providers.gradleProperty('admobAppId').orElse(testAdmobAppId).get()
 def admobRewardedId = providers.gradleProperty('admobRewardedId').orElse(testRewardedId).get()
 def allowTestAds = providers.gradleProperty('allowTestAds').map { it.toBoolean() }.orElse(false)
+def appVersion = providers.gradleProperty('appVersion').get()
+def appVersionCode = providers.gradleProperty('appVersionCode').get().toInteger()
+def releaseValue = { String propertyName, String envName ->
+    providers.gradleProperty(propertyName).orElse(providers.environmentVariable(envName)).getOrElse('')
+}
+def releaseStorePath = releaseValue('releaseStoreFile', 'DEADLINE_ZERO_KEYSTORE')
+def releaseStorePassword = releaseValue('releaseStorePassword', 'DEADLINE_ZERO_STORE_PASSWORD')
+def releaseKeyAlias = releaseValue('releaseKeyAlias', 'DEADLINE_ZERO_KEY_ALIAS')
+def releaseKeyPassword = releaseValue('releaseKeyPassword', 'DEADLINE_ZERO_KEY_PASSWORD')
+def releaseStoreExists = !releaseStorePath.isBlank() && file(releaseStorePath).isFile()
+def hasReleaseSigning = releaseStoreExists && !releaseStorePassword.isBlank() && !releaseKeyAlias.isBlank() && !releaseKeyPassword.isBlank()
 
 android {
     namespace 'com.deadlinezero.game.android'
@@ -14,11 +25,28 @@ android {
         applicationId 'com.deadlinezero.game'
         minSdk 26
         targetSdk 36
-        versionCode providers.gradleProperty('appVersionCode').get().toInteger()
-        versionName providers.gradleProperty('appVersion').get()
+        versionCode appVersionCode
+        versionName appVersion
         multiDexEnabled true
         manifestPlaceholders = [admobAppId: admobAppId]
         buildConfigField 'String', 'ADMOB_REWARDED_ID', '"' + admobRewardedId + '"'
+    }
+
+    if (hasReleaseSigning) {
+        signingConfigs {
+            release {
+                storeFile file(releaseStorePath)
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (hasReleaseSigning) signingConfig signingConfigs.release
+        }
     }
 
     compileOptions {
@@ -59,6 +87,34 @@ tasks.register('copyAndroidNatives') {
         }
     }
 }
+
+tasks.register('verifyPlayReleaseConfig') {
+    group = 'verification'
+    description = 'Fails unless the build is configured as a publishable Google Play release.'
+    doLast {
+        boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
+        if (usingTestIds) {
+            throw new GradleException('Play release blocked: production AdMob app and rewarded IDs are required.')
+        }
+        if (!releaseStoreExists) {
+            throw new GradleException('Play release blocked: upload keystore is missing. Configure -PreleaseStoreFile or DEADLINE_ZERO_KEYSTORE.')
+        }
+        if (!hasReleaseSigning) {
+            throw new GradleException('Play release blocked: upload signing credentials are incomplete. Configure store password, key alias, and key password via Gradle properties or DEADLINE_ZERO_* environment variables.')
+        }
+        if (appVersionCode < 1 || appVersion.isBlank()) {
+            throw new GradleException('Play release blocked: appVersionCode must be >= 1 and appVersion must be non-empty.')
+        }
+    }
+}
+
+tasks.register('bundlePlayRelease') {
+    group = 'build'
+    description = 'Builds the signed, production-configured Android App Bundle intended for Google Play upload.'
+    dependsOn 'verifyPlayReleaseConfig', 'bundleRelease'
+}
+
+tasks.named('bundleRelease') { mustRunAfter 'verifyPlayReleaseConfig' }
 
 tasks.configureEach { task ->
     if (task.name.contains("merge") && task.name.contains("JniLibFolders")) task.dependsOn copyAndroidNatives
