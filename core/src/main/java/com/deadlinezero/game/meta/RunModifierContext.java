@@ -1,6 +1,6 @@
 package com.deadlinezero.game.meta;
 
-/** Active run-wide risk/reward contract. Selection is deterministic from stage and run ordinal. */
+/** Active run-wide risk/reward contract plus deterministic pre-run offer generation. */
 public final class RunModifierContext {
     public enum Modifier {
         OVERCLOCKED("OVERCLOCKED", "Faster hostiles, denser pressure", 1.00f, 1.18f, 1.08f, .88f, 1.20f),
@@ -27,17 +27,53 @@ public final class RunModifierContext {
             this.spawnInterval = spawnInterval;
             this.reward = reward;
         }
+
+        public int rewardBonusPercent() { return Math.round((reward - 1f) * 100f); }
+
+        /** Compact relative threat score used only for presentation, not combat math. */
+        public int threatPercent() {
+            float durability = Math.max(.72f, enemyHp);
+            float tempo = enemySpeed / Math.max(.55f, spawnInterval);
+            float pressure = durability * enemyDamage * tempo;
+            return Math.max(100, Math.round(pressure * 100f));
+        }
     }
 
     private static Modifier active;
 
     private RunModifierContext() {}
 
-    public static void begin() {
+    private static int baseIndex() {
         Modifier[] values = Modifier.values();
         int stageOffset = Math.floorMod(RunStageContext.stage() * 2, values.length);
         int ordinalOffset = Math.floorMod(RunStageContext.runOrdinal() * 3, values.length);
-        active = values[(stageOffset + ordinalOffset) % values.length];
+        return (stageOffset + ordinalOffset) % values.length;
+    }
+
+    /** Three unique offers, stable for the same stage/run ordinal. */
+    public static Modifier[] offers() {
+        Modifier[] values = Modifier.values();
+        int base = baseIndex();
+        return new Modifier[] {
+            values[base],
+            values[(base + 2) % values.length],
+            values[(base + 4) % values.length]
+        };
+    }
+
+    /** Legacy/direct-run fallback: activates the first deterministic offer. */
+    public static void begin() { active = offers()[0]; }
+
+    /** Activates only a contract that belongs to the current run's offer set. */
+    public static boolean choose(Modifier selection) {
+        if (selection == null) return false;
+        for (Modifier offered : offers()) {
+            if (offered == selection) {
+                active = selection;
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void end() { active = null; }
