@@ -9,11 +9,13 @@ import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Deterministic combat environment presentation.
- * Procedural geometry is always available; final atlas art takes priority over generated bootstrap set dressing.
+ * Procedural geometry is always available; final atlas art takes priority over generated bootstrap art.
  */
 public final class EnvironmentRenderer implements Disposable {
     private static final float HALF_W = 40f;
     private static final float HALF_H = 24f;
+    private static final float TILE_WORLD = 4f;
+    private static final float FLOOR_ALPHA = .62f;
     private final GameArt art;
     private BootstrapEnvironmentArt bootstrap;
 
@@ -50,17 +52,45 @@ public final class EnvironmentRenderer implements Disposable {
         shapes.circle(19f, -10f, 4.1f, 32);
     }
 
-    /** Draws authored or generated-bootstrap set dressing in the live combat sprite pass. */
+    /** Draws authored/bootstrap floor plus set dressing in the live combat sprite pass. */
     public void drawAuthored(SpriteBatch batch) {
+        if (!hasAnyEnvironmentArt()) return;
+
+        batch.begin();
+        drawFloor(batch);
+        drawSetDressing(batch);
+        batch.setColor(Color.WHITE);
+        batch.end();
+    }
+
+    private void drawFloor(SpriteBatch batch) {
+        batch.setColor(1f, 1f, 1f, FLOOR_ALPHA);
+        for (int gy = -6; gy < 6; gy++) {
+            for (int gx = -10; gx < 10; gx++) {
+                int variant = Math.floorMod(gx * 31 + gy * 17, 3);
+                TextureRegion region = region("environment/floor/concrete_" + (char)('a' + variant));
+                if (region == null) continue;
+                batch.draw(region, gx * TILE_WORLD, gy * TILE_WORLD, TILE_WORLD, TILE_WORLD);
+            }
+        }
+
+        TextureRegion hazard = region("environment/floor/hazard_a");
+        if (hazard != null) {
+            batch.setColor(1f, 1f, 1f, .70f);
+            for (int x = -8; x <= 8; x += 4) {
+                batch.draw(hazard, x, -2f, TILE_WORLD, TILE_WORLD);
+            }
+        }
+    }
+
+    private void drawSetDressing(SpriteBatch batch) {
         TextureRegion crack = region("environment/decal/crack_a");
         TextureRegion blood = region("environment/decal/blood_a");
         TextureRegion scorch = region("environment/decal/scorch_a");
         TextureRegion barrier = region("environment/prop/barrier_a");
         TextureRegion debrisA = region("environment/prop/debris_a");
         TextureRegion debrisB = region("environment/prop/debris_b");
-        if (crack == null && blood == null && scorch == null && barrier == null && debrisA == null && debrisB == null) return;
 
-        batch.begin();
         batch.setColor(1f, 1f, 1f, .76f);
         draw(batch, crack, -10.5f, -7.2f, 3.4f);
         draw(batch, crack, 13.4f, 6.1f, 2.8f);
@@ -76,8 +106,19 @@ public final class EnvironmentRenderer implements Disposable {
         draw(batch, barrier, 22f, -13f, 2.9f);
         draw(batch, debrisA, -24f, -11.5f, 3.4f);
         draw(batch, debrisB, 20f, 10.4f, 3.1f);
-        batch.end();
-        batch.setColor(Color.WHITE);
+    }
+
+    private boolean hasAnyEnvironmentArt() {
+        return region("environment/floor/concrete_a") != null
+            || region("environment/floor/concrete_b") != null
+            || region("environment/floor/concrete_c") != null
+            || region("environment/floor/hazard_a") != null
+            || region("environment/decal/crack_a") != null
+            || region("environment/decal/blood_a") != null
+            || region("environment/decal/scorch_a") != null
+            || region("environment/prop/barrier_a") != null
+            || region("environment/prop/debris_a") != null
+            || region("environment/prop/debris_b") != null;
     }
 
     private TextureRegion region(String key) {
