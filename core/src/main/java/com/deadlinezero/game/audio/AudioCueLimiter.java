@@ -42,6 +42,9 @@ public final class AudioCueLimiter {
             case FOUNDRY_LAVA -> 420L;
             case FOUNDRY_STEAM -> 280L;
             case FOUNDRY_HEAT -> 360L;
+            case NULL_RIFT -> 420L;
+            case NULL_STATIC -> 260L;
+            case NULL_BEAM -> 380L;
         };
         return millis * 1_000_000L;
     }
