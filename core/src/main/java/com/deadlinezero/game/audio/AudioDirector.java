@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 /** Resilient production audio gateway. Missing files degrade to safe fallbacks or silence instead of breaking the game. */
 public final class AudioDirector {
-    public enum Cue { SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_PHASE, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK }
+    public enum Cue { SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_PHASE, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK, SINGULARITY }
 
     private static AudioDirector active;
     private final ObjectMap<Cue, Sound> sounds = new ObjectMap<>();
@@ -35,6 +35,7 @@ public final class AudioDirector {
         load(Cue.LEVEL_UP, "audio/sfx/level_up.ogg");
         load(Cue.UI_SELECT, "audio/sfx/ui_select.ogg");
         load(Cue.UI_BACK, "audio/sfx/ui_back.ogg");
+        load(Cue.SINGULARITY, "audio/sfx/singularity.ogg");
         for (MusicProfileSelector.Profile profile : MusicProfileSelector.Profile.values()) {
             loadMusic(profile, MusicProfileSelector.assetPath(profile));
         }
@@ -55,7 +56,11 @@ public final class AudioDirector {
     }
 
     static Cue fallbackCue(Cue cue) {
-        return cue == Cue.BOSS_PHASE ? Cue.BOSS_HIT : null;
+        return switch (cue) {
+            case BOSS_PHASE -> Cue.BOSS_HIT;
+            case SINGULARITY -> Cue.CRIT;
+            default -> null;
+        };
     }
 
     private Sound resolveSound(Cue cue) {
