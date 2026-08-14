@@ -3,13 +3,15 @@ package com.deadlinezero.game.visual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.deadlinezero.game.meta.SurvivorCatalog;
 import org.junit.jupiter.api.Test;
 
 final class DirectionalBootstrapArtTest {
     private static final String[] ROOTS = {
         "survivor/rex",
         "enemy/shambler", "enemy/runner", "enemy/brute", "enemy/ranged", "enemy/elite",
-        "boss/alpha", "boss/revenant", "boss/warden", "boss/harvester"
+        "boss/alpha", "boss/revenant", "boss/warden", "boss/harvester",
+        "survivor/nyx", "survivor/bastion", "survivor/volt", "survivor/wraith"
     };
     private static final String[] DIRECTIONS = {
         "n", "ne", "e", "se", "s", "sw", "w", "nw"
@@ -17,6 +19,19 @@ final class DirectionalBootstrapArtTest {
 
     @Test void coreCombatRosterCoversEightDirectionsAndAllMotions() {
         for (String root : ROOTS) {
+            for (String direction : DIRECTIONS) {
+                assertMotion(root, direction, "idle", 1);
+                assertMotion(root, direction, "run", 3);
+                assertMotion(root, direction, "attack", 2);
+                assertMotion(root, direction, "hit", 1);
+                assertMotion(root, direction, "death", 3);
+            }
+        }
+    }
+
+    @Test void everyPlayableSurvivorHasFullDirectionalCoverage() {
+        for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
+            String root = "survivor/" + survivor.name().toLowerCase();
             for (String direction : DIRECTIONS) {
                 assertMotion(root, direction, "idle", 1);
                 assertMotion(root, direction, "run", 3);
@@ -38,7 +53,7 @@ final class DirectionalBootstrapArtTest {
         }
         assertTrue(previousLast < DirectionalBootstrapArt.TOTAL_TILES);
         assertEquals(DirectionalBootstrapArt.ACTOR_BLOCK * ROOTS.length, DirectionalBootstrapArt.TOTAL_TILES);
-        assertEquals(800, DirectionalBootstrapArt.TOTAL_TILES);
+        assertEquals(1120, DirectionalBootstrapArt.TOTAL_TILES);
     }
 
     @Test void actorIdentityLookupIsStable() {
@@ -50,7 +65,7 @@ final class DirectionalBootstrapArtTest {
     @Test void malformedOrUnsupportedKeysAreRejected() {
         assertEquals(-1, DirectionalBootstrapArt.firstTile(null));
         assertEquals(-1, DirectionalBootstrapArt.firstTile("survivor/rex/run"));
-        assertEquals(-1, DirectionalBootstrapArt.firstTile("survivor/nyx/e/run"));
+        assertEquals(-1, DirectionalBootstrapArt.firstTile("survivor/unknown/e/run"));
         assertEquals(-1, DirectionalBootstrapArt.firstTile("enemy/shielded/e/run"));
         assertEquals(-1, DirectionalBootstrapArt.firstTile("enemy/runner/center/run"));
         assertEquals(-1, DirectionalBootstrapArt.firstTile("boss/harvester/e/dance"));
