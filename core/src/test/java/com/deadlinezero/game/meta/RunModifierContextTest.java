@@ -26,7 +26,6 @@ final class RunModifierContextTest {
         RunModifierContext.begin();
         RunModifierContext.Modifier first = RunModifierContext.modifier();
         RunModifierContext.end();
-
         RunStageContext.begin(7, 12);
         RunModifierContext.begin();
         assertEquals(first, RunModifierContext.modifier());
@@ -60,7 +59,6 @@ final class RunModifierContextTest {
         RunStageContext.begin(11, 27);
         RunModifierContext.Modifier[] first = RunModifierContext.offers();
         RunModifierContext.Modifier[] second = RunModifierContext.offers();
-
         assertEquals(3, first.length);
         assertEquals(first[0], second[0]);
         assertEquals(first[1], second[1]);
@@ -92,8 +90,8 @@ final class RunModifierContextTest {
                 }
             }
         }
-        assertEquals(EnumSet.of(RunModifierContext.Modifier.VOLATILE_DEAD,
-            RunModifierContext.Modifier.TWIN_APEX, RunModifierContext.Modifier.VOID_STORM), seen);
+        assertEquals(EnumSet.of(RunModifierContext.Modifier.PHANTOM_ECLIPSE,
+            RunModifierContext.Modifier.TWIN_APEX, RunModifierContext.Modifier.SPECIALIST_SIEGE), seen);
     }
 
     @Test void onlyOfferedContractsCanBeActivated() {
@@ -101,14 +99,11 @@ final class RunModifierContextTest {
         RunModifierContext.Modifier[] offers = RunModifierContext.offers();
         assertTrue(RunModifierContext.choose(offers[1]));
         assertEquals(offers[1], RunModifierContext.modifier());
-
         RunModifierContext.end();
+
         RunModifierContext.Modifier outsider = null;
         for (RunModifierContext.Modifier candidate : RunModifierContext.Modifier.values()) {
-            if (candidate != offers[0] && candidate != offers[1] && candidate != offers[2]) {
-                outsider = candidate;
-                break;
-            }
+            if (candidate != offers[0] && candidate != offers[1] && candidate != offers[2]) { outsider = candidate; break; }
         }
         assertNotNull(outsider);
         assertFalse(RunModifierContext.choose(outsider));
@@ -126,36 +121,30 @@ final class RunModifierContextTest {
     @Test void rewardCalculatorIncludesActiveContractPremium() {
         RunModifierContext.end();
         RunRewardCalculator.Rewards baseline = RunRewardCalculator.calculate(120, 240f, true, 6);
-
         RunStageContext.begin(6, 18);
         RunModifierContext.begin();
         RunRewardCalculator.Rewards contracted = RunRewardCalculator.calculate(120, 240f, true, 6);
-
         assertTrue(contracted.credits() > baseline.credits());
         assertTrue(contracted.accountXp() > baseline.accountXp());
         assertEquals(baseline.gems(), contracted.gems());
     }
 
-    @Test void twinApexRequiresTwoBossDefeats() {
-        RunStageContext.begin(3, 1);
-        assertTrue(RunModifierContext.choose(RunModifierContext.Modifier.TWIN_APEX)
-            || !EnumSet.of(RunModifierContext.offers()[0], RunModifierContext.offers()[1], RunModifierContext.offers()[2])
-                .contains(RunModifierContext.Modifier.TWIN_APEX));
-
-        RunModifierContext.end();
-        for (int stage = 3; stage <= 14; stage++) {
-            for (int ordinal = 0; ordinal < 12; ordinal++) {
+    @Test void twinApexRequiresTwoBossDefeatsWhenOffered() {
+        boolean found = false;
+        for (int stage = 3; stage <= 14 && !found; stage++) {
+            for (int ordinal = 0; ordinal < 12 && !found; ordinal++) {
                 RunStageContext.begin(stage, ordinal);
                 for (RunModifierContext.Modifier offer : RunModifierContext.offers()) {
                     if (offer == RunModifierContext.Modifier.TWIN_APEX) {
                         assertTrue(RunModifierContext.choose(offer));
                         assertEquals(2, RunModifierContext.requiredBossKills());
-                        return;
+                        found = true;
+                        RunModifierContext.end();
                     }
                 }
             }
         }
-        throw new AssertionError("TWIN_APEX was never offered");
+        assertTrue(found);
     }
 
     @Test void stageRulesApplyCombatContractMultipliers() {
@@ -163,11 +152,9 @@ final class RunModifierContextTest {
         float hp = StageRules.enemyHpMultiplier(8);
         float speed = StageRules.enemySpeedMultiplier(8);
         float damage = StageRules.enemyDamageMultiplier(8);
-
         RunStageContext.begin(8, 5);
         RunModifierContext.begin();
         RunModifierContext.Modifier modifier = RunModifierContext.modifier();
-
         assertEquals(hp * modifier.enemyHp, StageRules.enemyHpMultiplier(8), .0001f);
         assertEquals(Math.min(1.60f, speed * modifier.enemySpeed), StageRules.enemySpeedMultiplier(8), .0001f);
         assertEquals(damage * modifier.enemyDamage, StageRules.enemyDamageMultiplier(8), .0001f);
