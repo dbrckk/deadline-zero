@@ -26,6 +26,7 @@ public final class ArenaHazardRuntime {
         private float warningRemaining;
         private float activeRemaining;
         private boolean playerDamageConsumed;
+        private boolean activationCueConsumed;
 
         private Hazard(Type type, float x, float y, float radius, float damage,
                        float warningDuration, float activeDuration) {
@@ -52,6 +53,12 @@ public final class ArenaHazardRuntime {
             return warningRemaining > 0f ? 0f : Math.max(0f, activeRemaining);
         }
         public boolean playerDamageConsumed() { return playerDamageConsumed; }
+        /** Presentation-only edge trigger. Returns true exactly once after this hazard becomes ACTIVE. */
+        public boolean consumeActivationCue() {
+            if (phase() != Phase.ACTIVE || activationCueConsumed) return false;
+            activationCueConsumed = true;
+            return true;
+        }
     }
 
     private final List<Hazard> hazards = new ArrayList<>();
