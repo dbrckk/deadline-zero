@@ -1,6 +1,6 @@
 package com.deadlinezero.game.ai;
 
-/** Data-only projectile pattern catalog for ALPHA and REVENANT boss identities. */
+/** Data-only projectile pattern catalog for all boss identities. */
 public final class BossAttackPatternCatalog {
     private BossAttackPatternCatalog() { }
 
@@ -8,13 +8,26 @@ public final class BossAttackPatternCatalog {
                           float damageMultiplier, int explosiveEvery,
                           float explosionRadius, boolean radial) { }
 
+    /** Compatibility overload retained for existing REVENANT callers/tests. */
     public static Pattern forPhase(boolean revenant, int phase) {
+        return forPhase(revenant ? BossIdentity.REVENANT : BossIdentity.ALPHA, phase);
+    }
+
+    public static Pattern forPhase(BossIdentity identity, int phase) {
+        BossIdentity safeIdentity = identity == null ? BossIdentity.ALPHA : identity;
         int safePhase = Math.max(1, Math.min(3, phase));
-        if (revenant) {
+        if (safeIdentity == BossIdentity.REVENANT) {
             return switch (safePhase) {
                 case 1 -> new Pattern(7, 8f, 1.16f, .70f, 0, 0f, false);
                 case 2 -> new Pattern(12, 30f, 1.10f, .64f, 4, 1.7f, true);
                 default -> new Pattern(18, 20f, 1.14f, .60f, 3, 2.0f, true);
+            };
+        }
+        if (safeIdentity == BossIdentity.WARDEN) {
+            return switch (safePhase) {
+                case 1 -> new Pattern(3, 17f, .82f, .96f, 0, 0f, false);
+                case 2 -> new Pattern(8, 45f, .78f, .82f, 2, 2.45f, true);
+                default -> new Pattern(10, 36f, .76f, .78f, 2, 2.85f, true);
             };
         }
         return switch (safePhase) {
