@@ -25,11 +25,16 @@ public final class ShopScreen extends ScreenAdapter {
     private final BitmapFont font = new BitmapFont();
     private final ShapeRenderer shapes = new ShapeRenderer();
     private String status = "Choose a supply crate";
+    private boolean consumableRestoreRequested;
 
     public ShopScreen(DeadlineZeroGame game) { this.game = game; }
 
     @Override public void render(float delta) {
         if (PurchaseGrantService.syncPermanent(game.profile, game.services.billing)) game.saveProfile();
+        if (!consumableRestoreRequested) {
+            consumableRestoreRequested = true;
+            game.services.billing.restoreConsumables(this::deliverConsumable);
+        }
 
         Gdx.gl.glClearColor(.012f, .018f, .027f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -128,6 +133,11 @@ public final class ShopScreen extends ScreenAdapter {
         if (BillingService.REMOVE_ADS.equals(productId) && game.profile.removeAdsPurchased) { status = "Ad-free already owned"; return; }
         if (BillingService.STARTER_PACK.equals(productId) && game.profile.starterPackGranted) { status = "Starter Pack already claimed"; return; }
         status = "Opening Google Play purchase...";
+        if (BillingService.isConsumable(productId)) {
+            game.services.billing.purchaseWithReceipt(productId, this::deliverConsumable,
+                () -> status = "Purchase cancelled or unavailable");
+            return;
+        }
         game.services.billing.purchase(productId, () -> {
             boolean granted = PurchaseGrantService.grant(game.profile, productId);
             if (granted) {
@@ -135,6 +145,15 @@ public final class ShopScreen extends ScreenAdapter {
                 status = "Purchase delivered";
             } else status = "Purchase already delivered";
         }, () -> status = "Purchase cancelled or unavailable");
+    }
+
+    private void deliverConsumable(BillingService.PurchaseReceipt receipt) {
+        if (receipt == null || !BillingService.isConsumable(receipt.productId())) return;
+        boolean granted = PurchaseGrantService.grant(game.profile, receipt.productId(), receipt.receiptId());
+        game.saveProfile();
+        game.services.billing.finishConsumable(receipt.receiptId(),
+            () -> status = granted ? "Purchase delivered" : "Recovered purchase finalized",
+            () -> status = "Purchase saved; Google Play finalization pending");
     }
 
     @Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }
