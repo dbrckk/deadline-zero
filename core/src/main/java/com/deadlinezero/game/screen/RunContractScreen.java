@@ -42,7 +42,7 @@ public final class RunContractScreen extends ScreenAdapter {
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(VisualTheme.PANEL);
-        shapes.rect(18f, h - 104f, w - 36f, 74f);
+        shapes.rect(18f, h - 94f, w - 36f, 64f);
         for (int i = 0; i < offers.length; i++) {
             float x = margin + i * (cardW + gap);
             float pulse = .50f + .50f * (float)Math.sin(time * (offers[i].legendary() ? 4.2f : 2.5f) + i * .8f);
@@ -60,18 +60,29 @@ public final class RunContractScreen extends ScreenAdapter {
         }
         shapes.end();
 
-        BossAffixRules.Affix bossAffix = BossAffixRules.forRun(RunStageContext.stage(), RunStageContext.threatTier());
         batch.begin();
         font.getData().setScale(.92f);
         font.setColor(VisualTheme.TEXT);
         font.draw(batch, "SELECT RUN CONTRACT", 0f, h - 50f, w, Align.center, false);
-        font.getData().setScale(.41f);
+        font.getData().setScale(.43f);
         font.setColor(RunStageContext.threatTier() > 0 ? VisualTheme.GOLD : VisualTheme.MUTED);
-        String threatLine = "STAGE " + RunStageContext.stage()
+        BossAffixRules.Affix bossAffix = BossAffixRules.forRun(RunStageContext.stage(), RunStageContext.threatTier());
+        font.draw(batch, "STAGE " + RunStageContext.stage()
             + "  •  THREAT " + RunStageContext.threatTier()
-            + "  •  +" + ThreatTierRules.rewardBonusPercent(RunStageContext.threatTier()) + "% ASCENSION";
-        if (bossAffix != BossAffixRules.Affix.NONE) threatLine += "  •  BOSS AFFIX " + bossAffix.title;
-        font.draw(batch, threatLine, 0f, h - 76f, w, Align.center, false);
+            + "  •  +" + ThreatTierRules.rewardBonusPercent(RunStageContext.threatTier())
+            + "% ASCENSION"
+            + (bossAffix == BossAffixRules.Affix.NONE ? "" : "  •  BOSS AFFIX " + bossAffix.title),
+            0f, h - 76f, w, Align.center, false);
+
+        int tier = RunStageContext.threatTier();
+        if (tier >= 5) {
+            font.getData().setScale(.34f);
+            font.setColor(tier >= 8 ? VisualTheme.RED : VisualTheme.GOLD);
+            String endgame = tier >= 8
+                ? "ENDGAME HAZARDS  •  TELEGRAPHED ORBITAL STRIKES  •  VOLATILE HEAVIES"
+                : "ENDGAME HAZARDS  •  TELEGRAPHED ORBITAL STRIKES";
+            font.draw(batch, endgame, 0f, h - 104f, w, Align.center, false);
+        }
 
         for (int i = 0; i < offers.length; i++) {
             RunModifierContext.Modifier m = offers[i];
