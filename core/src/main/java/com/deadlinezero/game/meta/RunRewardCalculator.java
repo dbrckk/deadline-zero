@@ -11,12 +11,12 @@ public final class RunRewardCalculator {
         long credits = Math.max(0, kills) * 2L + (long)(Math.max(0f, secondsSurvived) / 6f);
         long xp = Math.max(0, kills) + (long)(Math.max(0f, secondsSurvived) / 4f);
         if (bossKilled) {
-            credits += 180L + safeStage * 25L;
-            xp += 90L + safeStage * 15L;
+            credits = ProfileCounterMath.addNonNegative(credits, 180L + safeStage * 25L);
+            xp = ProfileCounterMath.addNonNegative(xp, 90L + safeStage * 15L);
         }
         float multiplier = StageRules.rewardMultiplier(safeStage);
-        credits = Math.max(0L, Math.round(credits * multiplier));
-        xp = Math.max(0L, Math.round(xp * (1f + (multiplier - 1f) * .65f)));
+        credits = ProfileCounterMath.scaleNonNegative(credits, multiplier);
+        xp = ProfileCounterMath.scaleNonNegative(xp, 1f + (multiplier - 1f) * .65f);
         int gems = bossKilled ? Math.min(12, 1 + safeStage / 3) : 0;
         return new Rewards(credits, xp, gems);
     }
