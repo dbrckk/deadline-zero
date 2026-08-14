@@ -16,6 +16,7 @@ public final class AudioDirector {
     private final ObjectMap<MusicProfileSelector.Profile, Music> combatMusic = new ObjectMap<>();
     private final AudioCueLimiter limiter = new AudioCueLimiter();
     private Music activeCombatMusic;
+    private boolean musicSuspended;
     private float master = 1f;
     private float sfx = .85f;
     private float music = .65f;
@@ -97,6 +98,7 @@ public final class AudioDirector {
         if (next == null) return;
         if (activeCombatMusic != null && activeCombatMusic != next && activeCombatMusic.isPlaying()) activeCombatMusic.stop();
         activeCombatMusic = next;
+        musicSuspended = false;
         activeCombatMusic.setVolume(master * music);
         if (!activeCombatMusic.isPlaying()) activeCombatMusic.play();
     }
@@ -104,6 +106,22 @@ public final class AudioDirector {
     public void stopCombatMusic() {
         if (activeCombatMusic != null) activeCombatMusic.stop();
         activeCombatMusic = null;
+        musicSuspended = false;
+    }
+
+    /** Explicitly suspends active combat music when Android backgrounds the app or an external surface takes focus. */
+    public void suspend() {
+        if (activeCombatMusic == null) return;
+        musicSuspended = activeCombatMusic.isPlaying();
+        if (musicSuspended) activeCombatMusic.pause();
+    }
+
+    /** Resumes only music that was actually playing before suspension; menus remain silent. */
+    public void resume() {
+        if (!musicSuspended || activeCombatMusic == null) return;
+        musicSuspended = false;
+        activeCombatMusic.setVolume(master * music);
+        if (!activeCombatMusic.isPlaying()) activeCombatMusic.play();
     }
 
     public void setVolumes(float master, float sfx, float music) {
@@ -131,5 +149,6 @@ public final class AudioDirector {
         for (Music track : combatMusic.values()) track.dispose();
         combatMusic.clear();
         activeCombatMusic = null;
+        musicSuspended = false;
     }
 }
