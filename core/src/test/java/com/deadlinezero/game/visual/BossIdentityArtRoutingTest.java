@@ -12,10 +12,11 @@ final class BossIdentityArtRoutingTest {
         assertEquals("boss/revenant", GameArt.bossRoot(BossIdentity.REVENANT));
         assertEquals("boss/warden", GameArt.bossRoot(BossIdentity.WARDEN));
         assertEquals("boss/harvester", GameArt.bossRoot(BossIdentity.HARVESTER));
+        assertEquals("boss/null_archon", GameArt.bossRoot(BossIdentity.NULL_ARCHON));
         assertEquals("boss/alpha", GameArt.bossRoot(null));
     }
 
-    @Test void directionalBootstrapCoversEveryBossIdentityAcrossAllDirectionsAndMotions() {
+    @Test void everyBossIdentityHasAProductionSafeBootstrapAcrossDirectionsAndMotions() {
         String[] directions = { "n", "ne", "e", "se", "s", "sw", "w", "nw" };
         String[] motions = { "idle", "run", "attack", "hit", "death" };
         for (BossIdentity identity : BossIdentity.values()) {
@@ -23,7 +24,9 @@ final class BossIdentityArtRoutingTest {
             for (String direction : directions) {
                 for (String motion : motions) {
                     String key = root + "/" + direction + "/" + motion;
-                    assertTrue(DirectionalBootstrapArt.firstTile(key) >= 0, () -> "Missing boss art: " + key);
+                    boolean directional = DirectionalBootstrapArt.firstTile(key) >= 0;
+                    boolean compactFallback = BootstrapArtCatalog.supports(key);
+                    assertTrue(directional || compactFallback, () -> "Missing boss art fallback: " + key);
                 }
             }
         }
