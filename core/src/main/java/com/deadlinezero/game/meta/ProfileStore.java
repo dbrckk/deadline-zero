@@ -35,9 +35,6 @@ public final class ProfileStore {
                 Math.max(0L, p.getLong(key + "xp", 0L)),
                 p.getBoolean(key + "unlocked", survivor == SurvivorCatalog.Survivor.REX));
         }
-        profile.survivors.refreshUnlocks(profile);
-        if (!profile.survivors.unlocked(profile.selectedSurvivor)) profile.selectedSurvivor = SurvivorCatalog.Survivor.REX;
-        profile.validateSelectedWeapon();
 
         profile.daily.epochDay = p.getLong("daily.epochDay", -1L);
         profile.daily.loginStreak = Math.max(0, p.getInteger("daily.loginStreak", 0));
@@ -59,7 +56,7 @@ public final class ProfileStore {
                 EquipmentItem item = new EquipmentItem(id, p.getString(key + "name", "Equipment"),
                     PlayerProfile.EquipmentSlot.valueOf(p.getString(key + "slot", "WEAPON")),
                     EquipmentItem.Rarity.valueOf(p.getString(key + "rarity", "COMMON")),
-                    Math.max(1, p.getInteger(key + "level", 1)), Math.max(0f, p.getFloat(key + "power", 0f)));
+                    Math.max(1, p.getInteger(key + "level", 1)), p.getFloat(key + "power", 0f));
                 profile.inventory.add(item);
             } catch (IllegalArgumentException ignored) { }
         }
@@ -68,6 +65,7 @@ public final class ProfileStore {
             EquipmentItem item = profile.inventory.find(id);
             if (item != null) profile.equip(item);
         }
+        profile.normalizeLoadedState();
         return profile;
     }
 
