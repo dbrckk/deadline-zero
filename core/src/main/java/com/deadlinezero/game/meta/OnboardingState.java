@@ -45,8 +45,11 @@ public final class OnboardingState {
     public void markUpgradeSeen() { if (!upgradeSeen) { upgradeSeen = true; persist(); } }
     public void markBossSeen() { if (!bossSeen) { bossSeen = true; persist(); } }
 
+    /** Called every HUD frame; persistence only occurs on the one transition into completed. */
     public void refreshCompletion() {
-        if (movementSeen && dashSeen && upgradeSeen && bossSeen) completed = true;
+        if (completed) return;
+        if (!OnboardingCompletionPolicy.completed(movementSeen, dashSeen, upgradeSeen, bossSeen)) return;
+        completed = true;
         persist();
     }
 
