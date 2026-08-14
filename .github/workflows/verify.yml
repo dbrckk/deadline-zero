@@ -33,4 +33,4 @@ jobs:
       - name: Install Android SDK 36
         run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
       - name: Verify Android production build
-        run: gradle :android:lintDebug :android:assembleDebug :android:bundleRelease -PallowTestAds=true -PallowPlaceholderAssets=true
+        run: gradle :android:lintDebug :android:lintRelease :android:assembleDebug :android:bundleRelease -PallowTestAds=true -PallowPlaceholderAssets=true
