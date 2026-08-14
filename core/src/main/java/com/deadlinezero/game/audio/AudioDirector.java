@@ -16,7 +16,8 @@ public final class AudioDirector {
     private final ObjectMap<MusicProfileSelector.Profile, Music> combatMusic = new ObjectMap<>();
     private final AudioCueLimiter limiter = new AudioCueLimiter();
     private Music activeCombatMusic;
-    private boolean musicSuspended;
+    private int suspensionDepth;
+    private boolean resumeAfterSuspension;
     private float master = 1f;
     private float sfx = .85f;
     private float music = .65f;
@@ -98,28 +99,40 @@ public final class AudioDirector {
         if (next == null) return;
         if (activeCombatMusic != null && activeCombatMusic != next && activeCombatMusic.isPlaying()) activeCombatMusic.stop();
         activeCombatMusic = next;
-        musicSuspended = false;
         activeCombatMusic.setVolume(master * music);
+        if (suspensionDepth > 0) {
+            resumeAfterSuspension = true;
+            if (activeCombatMusic.isPlaying()) activeCombatMusic.pause();
+            return;
+        }
+        resumeAfterSuspension = false;
         if (!activeCombatMusic.isPlaying()) activeCombatMusic.play();
     }
 
     public void stopCombatMusic() {
         if (activeCombatMusic != null) activeCombatMusic.stop();
         activeCombatMusic = null;
-        musicSuspended = false;
+        resumeAfterSuspension = false;
     }
 
-    /** Explicitly suspends active combat music when Android backgrounds the app or an external surface takes focus. */
+    /**
+     * Suspends active combat music. Calls may be nested (for example Android backgrounding while a
+     * fullscreen ad is already open); playback resumes only after every suspension is released.
+     */
     public void suspend() {
-        if (activeCombatMusic == null) return;
-        musicSuspended = activeCombatMusic.isPlaying();
-        if (musicSuspended) activeCombatMusic.pause();
+        if (suspensionDepth == 0 && activeCombatMusic != null) {
+            resumeAfterSuspension = activeCombatMusic.isPlaying();
+            if (resumeAfterSuspension) activeCombatMusic.pause();
+        }
+        suspensionDepth++;
     }
 
-    /** Resumes only music that was actually playing before suspension; menus remain silent. */
+    /** Releases one suspension and resumes only when the outermost suspension has ended. */
     public void resume() {
-        if (!musicSuspended || activeCombatMusic == null) return;
-        musicSuspended = false;
+        if (suspensionDepth <= 0) return;
+        suspensionDepth--;
+        if (suspensionDepth > 0 || !resumeAfterSuspension || activeCombatMusic == null) return;
+        resumeAfterSuspension = false;
         activeCombatMusic.setVolume(master * music);
         if (!activeCombatMusic.isPlaying()) activeCombatMusic.play();
     }
@@ -149,6 +162,7 @@ public final class AudioDirector {
         for (Music track : combatMusic.values()) track.dispose();
         combatMusic.clear();
         activeCombatMusic = null;
-        musicSuspended = false;
+        suspensionDepth = 0;
+        resumeAfterSuspension = false;
     }
 }
