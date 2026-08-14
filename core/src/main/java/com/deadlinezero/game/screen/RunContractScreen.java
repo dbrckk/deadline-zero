@@ -75,9 +75,16 @@ public final class RunContractScreen extends ScreenAdapter {
             + (bossAffix == BossAffixRules.Affix.NONE ? "" : "  •  BOSS AFFIX " + bossAffix.title),
             0f, h - 76f, w, Align.center, false);
 
+        int stage = RunStageContext.stage();
         int tier = RunStageContext.threatTier();
         float hazardY = h - 104f;
-        if (EnvironmentBiomeRules.isFoundry(RunStageContext.stage())) {
+        if (EnvironmentBiomeRules.isNullSector(stage)) {
+            font.getData().setScale(.34f);
+            font.setColor(VisualTheme.VIOLET);
+            font.draw(batch, "NULL SECTOR  •  VOID RIFTS  •  STATIC BURSTS  •  NULL BEAMS",
+                0f, hazardY, w, Align.center, false);
+            hazardY -= 20f;
+        } else if (EnvironmentBiomeRules.isFoundry(stage)) {
             font.getData().setScale(.34f);
             font.setColor(VisualTheme.GOLD);
             font.draw(batch, "CINDER FOUNDRY  •  LAVA VENTS  •  STEAM JETS  •  HEAT LINES",
