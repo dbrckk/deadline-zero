@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.TimeUtils;
 
 /** Resilient production audio gateway. Missing files degrade to silence instead of breaking the game. */
 public final class AudioDirector {
@@ -12,6 +13,7 @@ public final class AudioDirector {
 
     private static AudioDirector active;
     private final ObjectMap<Cue, Sound> sounds = new ObjectMap<>();
+    private final AudioCueLimiter limiter = new AudioCueLimiter();
     private Music combatMusic;
     private float master = 1f;
     private float sfx = .85f;
@@ -52,13 +54,13 @@ public final class AudioDirector {
 
     public void play(Cue cue) {
         Sound sound = sounds.get(cue);
-        if (sound == null) return;
+        if (sound == null || !limiter.allow(cue, TimeUtils.nanoTime())) return;
         sound.play(master * sfx);
     }
 
     public void play(Cue cue, float pitch, float pan) {
         Sound sound = sounds.get(cue);
-        if (sound == null) return;
+        if (sound == null || !limiter.allow(cue, TimeUtils.nanoTime())) return;
         sound.play(master * sfx, Math.max(.5f, Math.min(2f, pitch)), Math.max(-1f, Math.min(1f, pan)));
     }
 
@@ -85,6 +87,7 @@ public final class AudioDirector {
 
     public void dispose() {
         if (active == this) active = null;
+        limiter.reset();
         for (Sound sound : sounds.values()) sound.dispose();
         sounds.clear();
         if (combatMusic != null) combatMusic.dispose();
