@@ -5,6 +5,7 @@ def testRewardedId = 'ca-app-pub-3940256099942544/5224354917'
 def admobAppId = providers.gradleProperty('admobAppId').orElse(testAdmobAppId).get()
 def admobRewardedId = providers.gradleProperty('admobRewardedId').orElse(testRewardedId).get()
 def allowTestAds = providers.gradleProperty('allowTestAds').map { it.toBoolean() }.orElse(false)
+def allowPlaceholderAssets = providers.gradleProperty('allowPlaceholderAssets').map { it.toBoolean() }.orElse(false)
 def appVersion = providers.gradleProperty('appVersion').get()
 def appVersionCode = providers.gradleProperty('appVersionCode').get().toInteger()
 def releaseValue = { String propertyName, String envName ->
@@ -16,6 +17,26 @@ def releaseKeyAlias = releaseValue('releaseKeyAlias', 'DEADLINE_ZERO_KEY_ALIAS')
 def releaseKeyPassword = releaseValue('releaseKeyPassword', 'DEADLINE_ZERO_KEY_PASSWORD')
 def releaseStoreExists = !releaseStorePath.isBlank() && file(releaseStorePath).isFile()
 def hasReleaseSigning = releaseStoreExists && !releaseStorePassword.isBlank() && !releaseKeyAlias.isBlank() && !releaseKeyPassword.isBlank()
+def productionAssetPaths = [
+    'art/game.atlas',
+    'audio/music/combat.ogg',
+    'audio/music/combat_pressure.ogg',
+    'audio/music/combat_apex.ogg',
+    'audio/sfx/shot.ogg',
+    'audio/sfx/crit.ogg',
+    'audio/sfx/hit.ogg',
+    'audio/sfx/kill.ogg',
+    'audio/sfx/boss_hit.ogg',
+    'audio/sfx/boss_phase.ogg',
+    'audio/sfx/boss_kill.ogg',
+    'audio/sfx/dash.ogg',
+    'audio/sfx/level_up.ogg',
+    'audio/sfx/ui_select.ogg',
+    'audio/sfx/ui_back.ogg'
+]
+def missingProductionAssets = {
+    productionAssetPaths.findAll { !file("../assets/${it}").isFile() }
+}
 
 android {
     namespace 'com.deadlinezero.game.android'
@@ -88,9 +109,21 @@ tasks.register('copyAndroidNatives') {
     }
 }
 
+tasks.register('verifyProductionAssets') {
+    group = 'verification'
+    description = 'Fails unless the authored art and audio required for a production release are present.'
+    doLast {
+        def missing = missingProductionAssets()
+        if (!missing.isEmpty()) {
+            throw new GradleException('Production release blocked: missing authored assets: ' + missing.join(', '))
+        }
+    }
+}
+
 tasks.register('verifyPlayReleaseConfig') {
     group = 'verification'
     description = 'Fails unless the build is configured as a publishable Google Play release.'
+    dependsOn 'verifyProductionAssets'
     doLast {
         boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
         if (usingTestIds) {
@@ -125,6 +158,10 @@ tasks.configureEach { task ->
             }
             if (!admobAppId.startsWith('ca-app-pub-') || !admobRewardedId.startsWith('ca-app-pub-')) {
                 throw new GradleException('Release build blocked: invalid AdMob ID format.')
+            }
+            def missing = missingProductionAssets()
+            if (!missing.isEmpty() && !allowPlaceholderAssets.get()) {
+                throw new GradleException('Release build blocked: authored production assets are missing: ' + missing.join(', ') + '. Use -PallowPlaceholderAssets=true only for CI build verification.')
             }
         }
     }
