@@ -34,6 +34,15 @@ final class AudioCueLimiterTest {
         assertFalse(limiter.allow(AudioDirector.Cue.SHOT, now + 1_000_000L));
     }
 
+    @Test void bossPhaseCueCannotStackDuringTransitionBurst() {
+        AudioCueLimiter limiter = new AudioCueLimiter();
+        long now = 10_000_000L;
+        assertTrue(limiter.allow(AudioDirector.Cue.BOSS_PHASE, now));
+        assertFalse(limiter.allow(AudioDirector.Cue.BOSS_PHASE, now + 300_000_000L));
+        assertTrue(limiter.allow(AudioDirector.Cue.BOSS_PHASE,
+            now + AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.BOSS_PHASE)));
+    }
+
     @Test void resetRestoresImmediatePlayback() {
         AudioCueLimiter limiter = new AudioCueLimiter();
         long now = 10_000_000L;
