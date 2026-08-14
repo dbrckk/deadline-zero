@@ -21,6 +21,9 @@ public final class ArtProfileCatalog {
     private static final CharacterProfile BRUTE = new CharacterProfile(2.08f, .62f, 0f, 0f);
     private static final CharacterProfile RANGED = new CharacterProfile(1.46f, .43f, 0f, 0f);
     private static final CharacterProfile ELITE = new CharacterProfile(2.42f, .72f, 0f, 0f);
+    private static final CharacterProfile SHIELDED = new CharacterProfile(2.18f, .65f, 0f, 0f);
+    private static final CharacterProfile REGENERATOR = new CharacterProfile(1.58f, .45f, 0f, 0f);
+    private static final CharacterProfile PHANTOM = new CharacterProfile(1.38f, .40f, 0f, 0f);
     private static final CharacterProfile BOSS = new CharacterProfile(5.15f, 1.35f, 0f, 0f);
 
     private ArtProfileCatalog() {}
@@ -41,6 +44,9 @@ public final class ArtProfileCatalog {
             case BRUTE -> BRUTE;
             case RANGED -> RANGED;
             case ELITE -> ELITE;
+            case SHIELDED -> SHIELDED;
+            case REGENERATOR -> REGENERATOR;
+            case PHANTOM -> PHANTOM;
             case BOSS -> BOSS;
             default -> SHAMBLER;
         };
