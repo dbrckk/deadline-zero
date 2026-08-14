@@ -46,13 +46,17 @@ public final class RunResultScreen extends ScreenAdapter {
         font.getData().setScale(.78f);
         font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "Stage " + result.stage() + "  •  Kills " + result.kills() + "  •  " + formatTime(result.secondsSurvived()), 0, h * .68f, w, Align.center, false);
+        font.getData().setScale(.58f);
+        font.setColor(Color.ORANGE);
+        font.draw(batch, "CONTRACT  " + result.contractTitle() + "  •  +" + result.contractBonusPercent() + "% REWARD", 0, h * .625f, w, Align.center, false);
+        font.getData().setScale(.78f);
         font.setColor(Color.GOLD);
-        font.draw(batch, "+" + result.rewards().credits() + " Credits", 0, h * .57f, w, Align.center, false);
+        font.draw(batch, "+" + result.rewards().credits() + " Credits", 0, h * .55f, w, Align.center, false);
         font.setColor(Color.CYAN);
-        font.draw(batch, "+" + result.rewards().gems() + " Gems   +" + result.rewards().accountXp() + " Account XP", 0, h * .51f, w, Align.center, false);
+        font.draw(batch, "+" + result.rewards().gems() + " Gems   +" + result.rewards().accountXp() + " Account XP", 0, h * .49f, w, Align.center, false);
         if (result.drop() != null) {
             font.setColor(Color.WHITE);
-            font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + "  Lv." + result.drop().level, 0, h * .43f, w, Align.center, false);
+            font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + "  Lv." + result.drop().level, 0, h * .41f, w, Align.center, false);
         }
         font.setColor(bonusClaimed ? Color.GRAY : Color.LIME);
         font.draw(batch, bonusClaimed ? "2X LOOT CLAIMED" : "[D] WATCH REWARDED AD: +100% CREDITS", 0, h * .29f, w, Align.center, false);
