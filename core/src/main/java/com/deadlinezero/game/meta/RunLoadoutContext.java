@@ -29,6 +29,7 @@ public final class RunLoadoutContext {
         float levelPower = profile == null ? 1f : profile.survivors.levelPowerMultiplier(survivor);
         ascensionSetPieces = ThreatSetBonusRules.equippedPieces(profile);
         zeroDayCoreEquipped = SingularityCoreRules.equipped(profile);
+        SingularityCoreRuntime.begin(zeroDayCoreEquipped);
         if (profile != null) {
             EquipmentItem weaponItem = profile.equipped(PlayerProfile.EquipmentSlot.WEAPON);
             EquipmentItem armor = profile.equipped(PlayerProfile.EquipmentSlot.ARMOR);
