@@ -13,7 +13,11 @@ import com.deadlinezero.game.meta.ThreatTierRules;
  * Gameplay never deals damage during WARNING; each ACTIVE hazard can hit the player at most once.
  */
 public final class ArenaHazardRuntime {
-    public enum Type { ORBITAL_STRIKE, DEATH_BURST, LAVA_VENT, STEAM_JET, HEAT_LINE }
+    public enum Type {
+        ORBITAL_STRIKE, DEATH_BURST,
+        LAVA_VENT, STEAM_JET, HEAT_LINE,
+        VOID_RIFT, STATIC_BURST, NULL_BEAM
+    }
     public enum Phase { WARNING, ACTIVE }
 
     public static final class Hazard {
@@ -67,8 +71,10 @@ public final class ArenaHazardRuntime {
     private final int seed;
     private int periodicIndex;
     private int foundryIndex;
+    private int nullIndex;
     private float periodicTimer;
     private float foundryTimer;
+    private float nullTimer;
 
     public ArenaHazardRuntime() {
         this(RunStageContext.stage(), RunStageContext.runOrdinal(), RunStageContext.threatTier());
@@ -82,6 +88,7 @@ public final class ArenaHazardRuntime {
         this.seed = x;
         this.periodicTimer = periodicInterval();
         this.foundryTimer = foundryHazardInterval() * .72f;
+        this.nullTimer = nullSectorHazardInterval() * .68f;
     }
 
     public boolean periodicHazardsEnabled() { return threatTier >= 5; }
@@ -91,14 +98,24 @@ public final class ArenaHazardRuntime {
         return Math.max(6.2f, 12.5f - threatTier * .30f);
     }
 
-    /** Cinder Foundry starts at stage 10 and always has its own telegraphed environmental pressure. */
-    public boolean foundryHazardsEnabled() { return stage >= 10; }
+    /** Cinder Foundry owns stages 10-19. */
+    public boolean foundryHazardsEnabled() { return stage >= 10 && stage < 20; }
 
     public float foundryHazardInterval() {
         if (!foundryHazardsEnabled()) return Float.POSITIVE_INFINITY;
-        float stagePressure = Math.min(20, Math.max(0, stage - 10)) * .25f;
+        float stagePressure = Math.min(9, Math.max(0, stage - 10)) * .25f;
         float threatPressure = threatTier * .06f;
-        return Math.max(9.5f, 16.5f - stagePressure - threatPressure);
+        return Math.max(10.2f, 16.5f - stagePressure - threatPressure);
+    }
+
+    /** Null Sector owns stage 20+ and uses a separate deterministic pressure clock. */
+    public boolean nullSectorHazardsEnabled() { return stage >= 20; }
+
+    public float nullSectorHazardInterval() {
+        if (!nullSectorHazardsEnabled()) return Float.POSITIVE_INFINITY;
+        float stagePressure = Math.min(20, Math.max(0, stage - 20)) * .18f;
+        float threatPressure = threatTier * .055f;
+        return Math.max(8.8f, 14.2f - stagePressure - threatPressure);
     }
 
     /** Advances timers and deterministically schedules endgame and biome hazards near the player's current region. */
@@ -116,6 +133,13 @@ public final class ArenaHazardRuntime {
             if (foundryTimer <= 0f) {
                 scheduleFoundryHazard(playerX, playerY);
                 foundryTimer += foundryHazardInterval();
+            }
+        }
+        if (nullSectorHazardsEnabled()) {
+            nullTimer -= safeDt;
+            if (nullTimer <= 0f) {
+                scheduleNullSectorHazard(playerX, playerY);
+                nullTimer += nullSectorHazardInterval();
             }
         }
 
@@ -182,7 +206,7 @@ public final class ArenaHazardRuntime {
         float distance = 1.8f + (((n >>> 20) & 0x7f) / 127f) * 3.8f;
         float x = clamp(playerX + (float)Math.cos(angle) * distance, -28.5f, 28.5f);
         float y = clamp(playerY + (float)Math.sin(angle) * distance, -14.5f, 14.5f);
-        float radius = 2.05f + Math.min(20, stage - 10) * .018f;
+        float radius = 2.05f + Math.min(9, stage - 10) * .018f;
         float damage = 15f + (stage - 10) * .55f + threatTier * .45f;
         hazards.add(new Hazard(Type.LAVA_VENT, x, y, radius, damage, 1.18f, .46f));
     }
@@ -207,6 +231,51 @@ public final class ArenaHazardRuntime {
             float x = horizontal ? centerX + i * spacing : centerX;
             float y = horizontal ? centerY : centerY + i * spacing;
             hazards.add(new Hazard(Type.HEAT_LINE, x, y, radius, damage, 1.04f, .28f));
+        }
+    }
+
+    private void scheduleNullSectorHazard(float playerX, float playerY) {
+        int n = mix(seed ^ 0x7f4a7c15 ^ nullIndex * 0x5bd1e995);
+        int type = Math.floorMod(n, 3);
+        nullIndex++;
+        if (type == 0) scheduleVoidRift(n, playerX, playerY);
+        else if (type == 1) scheduleStaticBurst(n, playerX, playerY);
+        else scheduleNullBeam(n, playerX, playerY);
+    }
+
+    private void scheduleVoidRift(int n, float playerX, float playerY) {
+        float angle = ((n >>> 5) & 0xffff) / 65535f * (float)(Math.PI * 2.0);
+        float distance = 1.6f + (((n >>> 21) & 0x7f) / 127f) * 4.4f;
+        float x = clamp(playerX + (float)Math.cos(angle) * distance, -28.5f, 28.5f);
+        float y = clamp(playerY + (float)Math.sin(angle) * distance, -14.5f, 14.5f);
+        float radius = 2.20f + Math.min(20, stage - 20) * .015f;
+        float damage = 17f + (stage - 20) * .46f + threatTier * .48f;
+        hazards.add(new Hazard(Type.VOID_RIFT, x, y, radius, damage, 1.15f, .42f));
+    }
+
+    private void scheduleStaticBurst(int n, float playerX, float playerY) {
+        float baseAngle = ((n >>> 10) & 0xffff) / 65535f * 360f;
+        float distance = 2.15f + (((n >>> 22) & 0x3f) / 63f) * .85f;
+        float damage = 7.5f + (stage - 20) * .24f + threatTier * .24f;
+        for (int i = 0; i < 3; i++) {
+            float angle = baseAngle + i * 120f;
+            float x = clamp(playerX + (float)Math.cos(Math.toRadians(angle)) * distance, -29f, 29f);
+            float y = clamp(playerY + (float)Math.sin(Math.toRadians(angle)) * distance, -15f, 15f);
+            hazards.add(new Hazard(Type.STATIC_BURST, x, y, 1.22f, damage, .76f, .30f));
+        }
+    }
+
+    private void scheduleNullBeam(int n, float playerX, float playerY) {
+        boolean horizontal = ((n >>> 12) & 1) == 0;
+        float damage = 8.5f + (stage - 20) * .28f + threatTier * .27f;
+        float radius = 1.15f;
+        float spacing = 2.05f;
+        float centerX = clamp(playerX + (((n >>> 18) & 0x1f) / 31f - .5f) * 2.8f, -23f, 23f);
+        float centerY = clamp(playerY + (((n >>> 23) & 0x1f) / 31f - .5f) * 2.8f, -10f, 10f);
+        for (int i = -3; i <= 3; i++) {
+            float x = horizontal ? centerX + i * spacing : centerX;
+            float y = horizontal ? centerY : centerY + i * spacing;
+            hazards.add(new Hazard(Type.NULL_BEAM, x, y, radius, damage, .98f, .25f));
         }
     }
 
