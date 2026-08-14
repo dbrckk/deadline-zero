@@ -109,6 +109,7 @@ public final class CombatPolishController {
         legendaryFx.render(shapes, player, time, fxBudget.quality());
         drawLeaperTelegraphs(shapes, enemies, time);
         drawRevenantIdentity(shapes, enemies, time);
+        drawWardenIdentity(shapes, enemies, time);
         if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
     }
 
@@ -139,6 +140,23 @@ public final class CombatPolishController {
             if (fxBudget.allowHeavyFx()) {
                 shapes.setColor(1f, .10f, .22f, .16f + .08f * pulse);
                 shapes.circle(enemy.position.x, enemy.position.y, enemy.radius * (1.28f + pulse * .12f), 26);
+            }
+        }
+    }
+
+    private void drawWardenIdentity(ShapeRenderer shapes, Array<Enemy> enemies, float time) {
+        for (Enemy enemy : enemies) {
+            if (!enemy.alive || enemy.type != Enemy.Type.BOSS || enemy.bossCombat == null || !enemy.bossCombat.warden()) continue;
+            float pulse = .90f + MathUtils.sin(time * (enemy.bossCombat.charging() ? 9f : 4.5f)) * .10f;
+            float outer = enemy.radius * (2.02f + pulse * .18f);
+            shapes.setColor(.10f, .55f, .82f, .12f + .07f * pulse);
+            shapes.circle(enemy.position.x, enemy.position.y, outer, 32);
+            shapes.setColor(.96f, .62f, .12f, .18f + .07f * pulse);
+            shapes.circle(enemy.position.x, enemy.position.y, enemy.radius * (1.46f + pulse * .08f), 28);
+            if (fxBudget.allowHeavyFx()) {
+                float ring = enemy.radius * (2.32f + MathUtils.sin(time * 3.2f) * .08f);
+                shapes.setColor(.75f, .88f, 1f, .07f);
+                shapes.circle(enemy.position.x, enemy.position.y, ring, 34);
             }
         }
     }
