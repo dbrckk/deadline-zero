@@ -30,7 +30,6 @@ public final class BossCombatRuntime {
         summonTimer -= dt;
         enragePulseTimer -= dt;
         chargeDuration = Math.max(0f, chargeDuration - dt);
-
         if (phase >= 2 && chargeTimer < -2f) chargeTimer = -2f;
         if (phase >= 3 && summonTimer < -2f) summonTimer = -2f;
     }
@@ -47,6 +46,10 @@ public final class BossCombatRuntime {
                 baseCooldown = phase >= 3 ? WardenBossProfile.PHASE3_CHARGE_COOLDOWN : WardenBossProfile.PHASE2_CHARGE_COOLDOWN;
                 chargeDuration = phase >= 3 ? WardenBossProfile.PHASE3_CHARGE_DURATION : WardenBossProfile.PHASE2_CHARGE_DURATION;
             }
+            case HARVESTER -> {
+                baseCooldown = phase >= 3 ? HarvesterBossProfile.PHASE3_CHARGE_COOLDOWN : HarvesterBossProfile.PHASE2_CHARGE_COOLDOWN;
+                chargeDuration = phase >= 3 ? HarvesterBossProfile.PHASE3_CHARGE_DURATION : HarvesterBossProfile.PHASE2_CHARGE_DURATION;
+            }
             default -> {
                 baseCooldown = phase >= 3 ? 3.0f : 4.2f;
                 chargeDuration = phase >= 3 ? .72f : .58f;
@@ -61,6 +64,7 @@ public final class BossCombatRuntime {
         float base = switch (identity) {
             case REVENANT -> phase >= 3 ? RevenantBossProfile.PHASE3_SUMMON_COOLDOWN : RevenantBossProfile.PHASE2_SUMMON_COOLDOWN;
             case WARDEN -> phase >= 3 ? WardenBossProfile.PHASE3_SUMMON_COOLDOWN : WardenBossProfile.PHASE2_SUMMON_COOLDOWN;
+            case HARVESTER -> phase >= 3 ? HarvesterBossProfile.PHASE3_SUMMON_COOLDOWN : HarvesterBossProfile.PHASE2_SUMMON_COOLDOWN;
             default -> phase >= 3 ? 5.2f : 8.5f;
         };
         summonTimer = base * affix.summonCooldown;
@@ -72,6 +76,7 @@ public final class BossCombatRuntime {
         float base = switch (identity) {
             case REVENANT -> RevenantBossProfile.PHASE3_PULSE_COOLDOWN;
             case WARDEN -> WardenBossProfile.PHASE3_PULSE_COOLDOWN;
+            case HARVESTER -> HarvesterBossProfile.PHASE3_PULSE_COOLDOWN;
             default -> 3.8f;
         };
         enragePulseTimer = base * affix.pulseCooldown;
@@ -82,6 +87,7 @@ public final class BossCombatRuntime {
         int base = switch (identity) {
             case REVENANT -> phase >= 3 ? RevenantBossProfile.PHASE3_SUMMON_COUNT : RevenantBossProfile.PHASE2_SUMMON_COUNT;
             case WARDEN -> phase >= 3 ? WardenBossProfile.PHASE3_SUMMON_COUNT : WardenBossProfile.PHASE2_SUMMON_COUNT;
+            case HARVESTER -> phase >= 3 ? HarvesterBossProfile.PHASE3_SUMMON_COUNT : HarvesterBossProfile.PHASE2_SUMMON_COUNT;
             default -> phase >= 3 ? 6 : 3;
         };
         return base + affix.summonBonus;
@@ -91,6 +97,7 @@ public final class BossCombatRuntime {
         int base = switch (identity) {
             case REVENANT -> RevenantBossProfile.ENRAGE_SHOTS;
             case WARDEN -> WardenBossProfile.ENRAGE_SHOTS;
+            case HARVESTER -> HarvesterBossProfile.ENRAGE_SHOTS;
             default -> 20;
         };
         return base + affix.enrageShotBonus;
@@ -100,6 +107,7 @@ public final class BossCombatRuntime {
         float base = switch (identity) {
             case REVENANT -> RevenantBossProfile.ENRAGE_PROJECTILE_SPEED;
             case WARDEN -> WardenBossProfile.ENRAGE_PROJECTILE_SPEED;
+            case HARVESTER -> HarvesterBossProfile.ENRAGE_PROJECTILE_SPEED;
             default -> 8.2f;
         };
         return base * (affix == BossAffixRules.Affix.ARTILLERY || affix == BossAffixRules.Affix.APOCALYPSE ? 1.12f : 1f);
@@ -109,6 +117,7 @@ public final class BossCombatRuntime {
         int base = switch (identity) {
             case REVENANT -> RevenantBossProfile.ENRAGE_EXPLOSIVE_EVERY;
             case WARDEN -> WardenBossProfile.ENRAGE_EXPLOSIVE_EVERY;
+            case HARVESTER -> HarvesterBossProfile.ENRAGE_EXPLOSIVE_EVERY;
             default -> 4;
         };
         return Math.max(1, base - affix.explosiveDensityBonus);
@@ -118,6 +127,7 @@ public final class BossCombatRuntime {
         float base = switch (identity) {
             case REVENANT -> RevenantBossProfile.ENRAGE_EXPLOSION_RADIUS;
             case WARDEN -> WardenBossProfile.ENRAGE_EXPLOSION_RADIUS;
+            case HARVESTER -> HarvesterBossProfile.ENRAGE_EXPLOSION_RADIUS;
             default -> 2.0f;
         };
         return base * (affix == BossAffixRules.Affix.ARTILLERY || affix == BossAffixRules.Affix.APOCALYPSE ? 1.18f : 1f);
@@ -129,4 +139,5 @@ public final class BossCombatRuntime {
     public BossAffixRules.Affix affix() { return affix; }
     public boolean revenant() { return identity == BossIdentity.REVENANT; }
     public boolean warden() { return identity == BossIdentity.WARDEN; }
+    public boolean harvester() { return identity == BossIdentity.HARVESTER; }
 }
