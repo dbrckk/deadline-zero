@@ -22,6 +22,7 @@ import com.deadlinezero.game.meta.RunSettlement;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageMissionRules;
 import com.deadlinezero.game.meta.StageRules;
+import com.deadlinezero.game.meta.ThreatTierRules;
 import com.deadlinezero.game.screen.ArsenalScreen;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.GearScreen;
@@ -93,7 +94,8 @@ public final class DeadlineZeroGame extends Game {
     public void startRun() {
         int selectedStage = profile == null ? 1 : profile.selectedStage;
         int runOrdinal = profile == null ? 0 : Math.max(0, profile.totalRuns);
-        RunStageContext.begin(selectedStage, runOrdinal);
+        int threatTier = profile == null ? 0 : profile.selectedThreatTier;
+        RunStageContext.begin(selectedStage, runOrdinal, threatTier);
         RunModifierContext.end();
         setScreen(new RunContractScreen(this));
     }
@@ -120,6 +122,7 @@ public final class DeadlineZeroGame extends Game {
 
     private void finishRunInternal(int kills, float secondsSurvived, boolean bossKilled, boolean victorySignal) {
         int safeStage = RunStageContext.stage();
+        int runThreatTier = RunStageContext.threatTier();
         boolean firstClear = bossKilled && safeStage >= profile.highestStage;
         long firstClearCredits = firstClear ? StageMissionRules.firstClearCredits(safeStage) : 0L;
         int firstClearGems = firstClear ? StageMissionRules.firstClearGems(safeStage) : 0;
@@ -140,6 +143,13 @@ public final class DeadlineZeroGame extends Game {
             profile.highestStage = StageRules.nextStage(safeStage);
             profile.selectedStage = profile.highestStage;
             profile.survivors.refreshUnlocks(profile);
+        }
+
+        if (bossKilled && safeStage >= ThreatTierRules.UNLOCK_STAGE && runThreatTier == profile.highestThreatTier) {
+            if (profile.unlockNextThreatTier()) {
+                int milestoneGems = ThreatTierRules.milestoneGemReward(profile.highestThreatTier);
+                if (milestoneGems > 0) profile.addCurrency(PlayerProfile.Currency.GEMS, milestoneGems);
+            }
         }
 
         EquipmentItem drop = null;
