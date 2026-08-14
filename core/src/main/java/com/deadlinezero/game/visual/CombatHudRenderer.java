@@ -241,6 +241,7 @@ public final class CombatHudRenderer {
             case REVENANT -> "REVENANT";
             case WARDEN -> "WARDEN";
             case HARVESTER -> "HARVESTER";
+            case NULL_ARCHON -> "NULL ARCHON";
             default -> "ALPHA";
         };
     }
@@ -250,6 +251,7 @@ public final class CombatHudRenderer {
             case REVENANT -> VisualTheme.VIOLET;
             case WARDEN -> VisualTheme.GOLD;
             case HARVESTER -> new Color(.96f, .42f, .10f, 1f);
+            case NULL_ARCHON -> new Color(.52f, .42f, 1f, 1f);
             default -> VisualTheme.RED;
         };
     }
