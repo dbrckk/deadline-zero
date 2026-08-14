@@ -85,9 +85,9 @@ public final class AudioDirector {
     }
 
     public void setVolumes(float master, float sfx, float music) {
-        this.master = clamp01(master);
-        this.sfx = clamp01(sfx);
-        this.music = clamp01(music);
+        this.master = normalizeVolume(master);
+        this.sfx = normalizeVolume(sfx);
+        this.music = normalizeVolume(music);
         applyMusicVolume();
     }
 
@@ -95,7 +95,10 @@ public final class AudioDirector {
         if (combatMusic != null) combatMusic.setVolume(master * music);
     }
 
-    private float clamp01(float v) { return Math.max(0f, Math.min(1f, v)); }
+    static float normalizeVolume(float value) {
+        if (!Float.isFinite(value)) return 0f;
+        return Math.max(0f, Math.min(1f, value));
+    }
 
     public void dispose() {
         if (active == this) active = null;
