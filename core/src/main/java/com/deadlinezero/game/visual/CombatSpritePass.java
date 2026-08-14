@@ -72,6 +72,7 @@ public final class CombatSpritePass {
     }
 
     public void dispose() {
+        environment.dispose();
         audio.dispose();
         postFx.dispose();
     }
