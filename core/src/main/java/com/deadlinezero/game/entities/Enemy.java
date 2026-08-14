@@ -13,7 +13,7 @@ import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageRules;
 
 public final class Enemy extends ActorState {
-    public enum Type { SHAMBLER, RUNNER, BRUTE, RANGED, ELITE, BOSS }
+    public enum Type { SHAMBLER, RUNNER, BRUTE, RANGED, ELITE, SHIELDED, REGENERATOR, PHANTOM, BOSS }
     public enum Variant { NORMAL, SWIFT, ARMORED, FERAL }
     public enum Tactic { NONE, STRAFE, CHARGE }
     public enum ElementReaction { NONE, THERMAL_SHOCK, STEAM_BURST, OVERLOAD }
@@ -34,6 +34,8 @@ public final class Enemy extends ActorState {
     public float variantTime;
     public float tacticalCooldown;
     public float tacticalWindup;
+    public float shieldHp;
+    public float shieldMaxHp;
     public final Vector2 impulse = new Vector2();
     public final AttackController attack;
     public final BossPhaseController bossPhases;
@@ -42,6 +44,7 @@ public final class Enemy extends ActorState {
     private float tacticSide = 1f;
     private float chargeImpactWindow;
     private boolean chargeImpactConsumed;
+    private float specialRecoveryDelay;
 
     public Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp) {
         super(x, y, radius, hp * StageRules.enemyHpMultiplier(RunStageContext.stage()));
@@ -50,6 +53,7 @@ public final class Enemy extends ActorState {
         this.speed = speed * StageRules.enemySpeedMultiplier(stage);
         this.contactDamage = damage * StageRules.enemyDamageMultiplier(stage);
         this.xpValue = Math.max(1, Math.round(xp * (1f + (stage - 1) * .035f)));
+        applyTypeProfile();
         EnemyArchetype archetype = switch (type) {
             case RANGED -> EnemyArchetype.RANGED;
             case BOSS -> EnemyArchetype.BOSS;
@@ -66,6 +70,41 @@ public final class Enemy extends ActorState {
                 float roll = MathUtils.random();
                 applyVariant(roll < .36f ? Variant.SWIFT : (roll < .69f ? Variant.ARMORED : Variant.FERAL));
             }
+        }
+        configureSpecialTrait();
+    }
+
+    private void applyTypeProfile() {
+        switch (type) {
+            case SHIELDED -> {
+                maxHp *= 1.72f;
+                hp = maxHp;
+                speed *= .78f;
+                radius *= 1.12f;
+                xpValue = Math.max(1, Math.round(xpValue * 1.65f));
+            }
+            case REGENERATOR -> {
+                maxHp *= 1.34f;
+                hp = maxHp;
+                speed *= .92f;
+                xpValue = Math.max(1, Math.round(xpValue * 1.48f));
+            }
+            case PHANTOM -> {
+                maxHp *= .82f;
+                hp = maxHp;
+                speed *= 1.24f;
+                radius *= .90f;
+                contactDamage *= 1.12f;
+                xpValue = Math.max(1, Math.round(xpValue * 1.58f));
+            }
+            default -> { }
+        }
+    }
+
+    private void configureSpecialTrait() {
+        if (type == Type.SHIELDED) {
+            shieldMaxHp = maxHp * .55f;
+            shieldHp = shieldMaxHp;
         }
     }
 
@@ -101,10 +140,11 @@ public final class Enemy extends ActorState {
     private void configureAttackCadence() {
         float cooldown = 1f, telegraph = 1f, recovery = 1f;
         switch (type) {
-            case RUNNER -> { cooldown = .84f; telegraph = .72f; recovery = .82f; }
-            case BRUTE -> { cooldown = 1.12f; telegraph = 1.34f; recovery = 1.18f; }
+            case RUNNER, PHANTOM -> { cooldown = .84f; telegraph = .72f; recovery = .82f; }
+            case BRUTE, SHIELDED -> { cooldown = 1.12f; telegraph = 1.34f; recovery = 1.18f; }
             case RANGED -> { cooldown = 1f; telegraph = .92f; recovery = .95f; }
             case ELITE -> { cooldown = .82f; telegraph = .78f; recovery = .80f; }
+            case REGENERATOR -> { cooldown = .94f; telegraph = .95f; recovery = .94f; }
             case BOSS -> { cooldown = 1f; telegraph = 1f; recovery = 1f; }
             default -> { }
         }
@@ -118,8 +158,19 @@ public final class Enemy extends ActorState {
     }
 
     @Override public void damage(float amount) {
+        if (!alive || amount <= 0f || !Float.isFinite(amount)) return;
+        specialRecoveryDelay = type == Type.SHIELDED ? 3.5f : (type == Type.REGENERATOR ? 2.6f : specialRecoveryDelay);
+        float remaining = amount;
+        if (type == Type.SHIELDED && shieldHp > 0f) {
+            float absorbed = Math.min(shieldHp, remaining);
+            shieldHp -= absorbed;
+            remaining -= absorbed;
+            hitFlash = Math.max(hitFlash, .45f);
+        }
+        if (type == Type.PHANTOM && phased()) remaining *= .22f;
+        if (remaining <= 0f) return;
         boolean wasAlive = alive;
-        super.damage(amount);
+        super.damage(remaining);
         if (wasAlive && !alive && type == Type.BOSS) RunMissionRuntime.signalBossDefeated();
     }
 
@@ -176,7 +227,7 @@ public final class Enemy extends ActorState {
     }
 
     public void addImpulse(float x, float y) {
-        float resistance = variant == Variant.ARMORED ? .34f : 1f;
+        float resistance = variant == Variant.ARMORED || type == Type.SHIELDED ? .34f : 1f;
         impulse.add(x * resistance, y * resistance);
     }
 
@@ -185,7 +236,14 @@ public final class Enemy extends ActorState {
             attack.markDead();
             return;
         }
-        variantTime += Math.max(0f, dt);
+        float safeDt = Math.max(0f, dt);
+        variantTime += safeDt;
+        specialRecoveryDelay = Math.max(0f, specialRecoveryDelay - safeDt);
+        if (type == Type.SHIELDED && specialRecoveryDelay <= 0f && shieldHp < shieldMaxHp) {
+            shieldHp = Math.min(shieldMaxHp, shieldHp + shieldMaxHp * .18f * safeDt);
+        } else if (type == Type.REGENERATOR && specialRecoveryDelay <= 0f && hp < maxHp) {
+            hp = Math.min(maxHp, hp + maxHp * .035f * safeDt);
+        }
         tacticalCooldown = Math.max(0f, tacticalCooldown - dt);
         tacticalWindup = Math.max(0f, tacticalWindup - dt);
         chargeImpactWindow = Math.max(0f, chargeImpactWindow - dt);
@@ -199,7 +257,7 @@ public final class Enemy extends ActorState {
         if (shockTimer > 0f) shockTimer -= dt;
         attack.updateStun(dt);
         hitFlash = Math.max(0f, hitFlash - dt * 6f);
-        float damping = MathUtils.clamp(1f - dt * (variant == Variant.ARMORED ? 12f : 8f), 0f, 1f);
+        float damping = MathUtils.clamp(1f - dt * (variant == Variant.ARMORED || type == Type.SHIELDED ? 12f : 8f), 0f, 1f);
         impulse.scl(damping);
         if (bossPhases != null) {
             bossPhases.update(maxHp <= 0f ? 0f : hp / maxHp);
@@ -232,7 +290,7 @@ public final class Enemy extends ActorState {
             tacticalWindup = .16f;
             tacticalCooldown = (1.45f + MathUtils.random(.35f)) * cadence;
             tacticSide = MathUtils.randomBoolean() ? 1f : -1f;
-        } else if ((type == Type.BRUTE || type == Type.ELITE) && distanceToPlayer >= 2.4f && distanceToPlayer <= 7.2f) {
+        } else if ((type == Type.BRUTE || type == Type.ELITE || type == Type.SHIELDED) && distanceToPlayer >= 2.4f && distanceToPlayer <= 7.2f) {
             pendingTactic = Tactic.CHARGE;
             tacticalWindup = type == Type.ELITE ? .24f : .34f;
             tacticalCooldown = (type == Type.ELITE ? 2.35f : 3.05f) * cadence;
@@ -248,7 +306,7 @@ public final class Enemy extends ActorState {
             float strength = variant == Variant.SWIFT ? 2.15f : 1.65f;
             impulse.add(-ny * strength * tacticSide, nx * strength * tacticSide);
         } else if (pendingTactic == Tactic.CHARGE) {
-            float strength = type == Type.ELITE ? 3.6f : 2.85f;
+            float strength = type == Type.ELITE ? 3.6f : (type == Type.SHIELDED ? 2.35f : 2.85f);
             if (variant == Variant.FERAL) strength *= 1.18f;
             impulse.add(nx * strength, ny * strength);
             chargeImpactWindow = .26f;
@@ -265,6 +323,16 @@ public final class Enemy extends ActorState {
         return true;
     }
 
+    public boolean phased() {
+        if (type != Type.PHANTOM) return false;
+        float cycle = variantTime % 4.4f;
+        return cycle >= 3.55f && cycle < 4.22f;
+    }
+
+    public float shieldFraction() {
+        return shieldMaxHp <= 0f ? 0f : MathUtils.clamp(shieldHp / shieldMaxHp, 0f, 1f);
+    }
+
     public float effectiveSpeed() {
         if (attack.state() == EnemyState.STUNNED) return 0f;
         float phaseMultiplier = bossPhases == null ? 1f : bossPhases.speedMultiplier();
@@ -276,6 +344,7 @@ public final class Enemy extends ActorState {
         } else if (variant == Variant.FERAL && maxHp > 0f && hp / maxHp < .42f) {
             variantMultiplier = 1.24f;
         }
+        if (phased()) variantMultiplier *= 1.36f;
         return speed * slowMultiplier * phaseMultiplier * chargeMultiplier * variantMultiplier;
     }
 }
