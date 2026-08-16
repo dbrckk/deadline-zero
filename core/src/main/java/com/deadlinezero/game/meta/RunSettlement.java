@@ -11,6 +11,11 @@ public final class RunSettlement {
         profile.addCurrency(PlayerProfile.Currency.GEMS, rewards.gems());
         profile.addAccountXp(rewards.accountXp());
         profile.recordRun(kills, stage);
+        if (bossKilled) {
+            MasteryProgress.Gain mastery = profile.mastery.recordVictory(RunLoadoutContext.weaponDefinition().id, stage);
+            profile.addCurrency(PlayerProfile.Currency.CREDITS, mastery.creditsReward());
+            profile.addCurrency(PlayerProfile.Currency.GEMS, mastery.gemsReward());
+        }
         BalanceRunSample sample = BalanceTelemetryRuntime.settle(bossKilled, secondsSurvived, kills);
         BalanceTelemetryStore.append(sample);
         return rewards;
