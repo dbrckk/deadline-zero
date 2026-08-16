@@ -16,6 +16,7 @@ public final class MasteryProgress {
     }
 
     private static final int[] RANK_THRESHOLDS = {0, 1, 3, 7, 15, 30};
+    private static final String[] RANK_TITLES = {"UNTRAINED", "INITIATE", "SPECIALIST", "VETERAN", "ELITE", "ASCENDANT"};
     public static final int MAX_RANK = RANK_THRESHOLDS.length - 1;
     private final Map<String, Integer> weaponWins = new HashMap<>();
     private final Map<EnvironmentBiomeRules.Biome, Integer> biomeWins = new HashMap<>();
@@ -69,6 +70,11 @@ public final class MasteryProgress {
             rank = i;
         }
         return rank;
+    }
+
+    public static String rankTitle(int rank) {
+        int safe = Math.max(0, Math.min(MAX_RANK, rank));
+        return RANK_TITLES[safe];
     }
 
     public static int winsForNextRank(int wins) {
