@@ -204,6 +204,22 @@ public final class GameScreen extends ScreenAdapter {
         }
     }
 
+    static Enemy.Type bossSummonType(boolean nullArchon, boolean revenant, int phase, int index) {
+        int safeIndex = Math.max(0, index);
+        if (nullArchon) {
+            if (phase >= 3) {
+                return switch (safeIndex % 3) {
+                    case 0 -> Enemy.Type.PHANTOM;
+                    case 1 -> Enemy.Type.RANGED;
+                    default -> Enemy.Type.REGENERATOR;
+                };
+            }
+            return safeIndex % 3 == 1 ? Enemy.Type.RANGED : Enemy.Type.PHANTOM;
+        }
+        boolean rangedSlot = phase >= 3 && (revenant ? safeIndex % 2 == 0 : safeIndex % 3 == 0);
+        return rangedSlot ? Enemy.Type.RANGED : Enemy.Type.RUNNER;
+    }
+
     private void spawnBossMinions(Enemy boss, int phase) {
         int count = boss.bossCombat == null ? (phase >= 3 ? 6 : 3) : boss.bossCombat.summonCount(phase);
         boolean revenant = boss.bossCombat != null && boss.bossCombat.revenant();
@@ -214,22 +230,7 @@ public final class GameScreen extends ScreenAdapter {
             float x = boss.position.x + MathUtils.cos(angle) * dist;
             float y = boss.position.y + MathUtils.sin(angle) * dist;
             float scale = 1f + director.elapsed() / 210f;
-            Enemy.Type type;
-            if (nullArchon) {
-                if (phase >= 3) {
-                    type = switch (i % 3) {
-                        case 0 -> Enemy.Type.PHANTOM;
-                        case 1 -> Enemy.Type.RANGED;
-                        default -> Enemy.Type.REGENERATOR;
-                    };
-                } else {
-                    type = i % 3 == 1 ? Enemy.Type.RANGED : Enemy.Type.PHANTOM;
-                }
-            } else {
-                boolean rangedSlot = phase >= 3 && (revenant ? i % 2 == 0 : i % 3 == 0);
-                type = rangedSlot ? Enemy.Type.RANGED : Enemy.Type.RUNNER;
-            }
-
+            Enemy.Type type = bossSummonType(nullArchon, revenant, phase, i);
             Enemy minion = switch (type) {
                 case RANGED -> new Enemy(type, x, y, 68f * scale, 2.2f, .42f, 12f, 10);
                 case PHANTOM -> new Enemy(type, x, y, 54f * scale, 3.25f, .40f, 11f, 10);
