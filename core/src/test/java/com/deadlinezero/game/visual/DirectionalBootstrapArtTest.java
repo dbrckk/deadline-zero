@@ -42,6 +42,23 @@ final class DirectionalBootstrapArtTest {
         }
     }
 
+    @Test void everyActorDirectionOccupiesExactlyOneTenTileMotionBlock() {
+        for (String root : ROOTS) {
+            for (String direction : DIRECTIONS) {
+                int idle = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/idle");
+                int run = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/run");
+                int attack = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/attack");
+                int hit = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/hit");
+                int death = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/death");
+                assertEquals(idle + 1, run, root + "/" + direction);
+                assertEquals(idle + 4, attack, root + "/" + direction);
+                assertEquals(idle + 6, hit, root + "/" + direction);
+                assertEquals(idle + 7, death, root + "/" + direction);
+                assertTrue(death + 2 < DirectionalBootstrapArt.TOTAL_TILES, root + "/" + direction);
+            }
+        }
+    }
+
     @Test void actorBlocksAreContiguousNonOverlappingAndInsideSheet() {
         int previousLast = -1;
         for (String root : ROOTS) {
@@ -68,6 +85,9 @@ final class DirectionalBootstrapArtTest {
     }
 
     @Test void actorIdentityLookupIsStable() {
+        assertEquals(ROOTS.length, DirectionalBootstrapArt.ACTOR_COUNT);
+        assertEquals(8, DIRECTIONS.length);
+        assertEquals(10, DirectionalBootstrapArt.FRAMES_PER_DIRECTION);
         for (int i = 0; i < ROOTS.length; i++) {
             assertEquals(i, DirectionalBootstrapArt.actorIndex(ROOTS[i] + "/e/run"));
         }
