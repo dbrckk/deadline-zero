@@ -14,13 +14,13 @@ public final class EnemyBiomeElementResistanceTest {
         RunStageContext.begin(1);
     }
 
-    @Test public void forgeHoundAttenuatesFireStatusPower() {
+    @Test public void forgeHoundAttenuatesFireStatusPowerAndDuration() {
         RunStageContext.begin(10);
         Enemy e = enemy(Enemy.Type.RUNNER);
         e.applyElement(DamageElement.FIRE, 100f);
 
         assertEquals(13.64f, e.burnDps, .001f);
-        assertTrue(e.burnTimer > 0f);
+        assertEquals(1.488f, e.burnTimer, .001f);
     }
 
     @Test public void cinderGunnerUsesItsOwnFireResistance() {
@@ -29,6 +29,7 @@ public final class EnemyBiomeElementResistanceTest {
         e.applyElement(DamageElement.FIRE, 100f);
 
         assertEquals(15.84f, e.burnDps, .001f);
+        assertEquals(1.728f, e.burnTimer, .001f);
     }
 
     @Test public void nonResistedElementKeepsFullStatusPower() {
@@ -42,10 +43,11 @@ public final class EnemyBiomeElementResistanceTest {
         baseline.applyElement(DamageElement.FIRE, 100f);
 
         assertEquals(22f, baseline.burnDps, .001f);
+        assertEquals(2.4f, baseline.burnTimer, .001f);
         assertTrue(resisted < baseline.burnDps);
     }
 
-    @Test public void phaseStalkerAttenuatesShockReactionDamage() {
+    @Test public void phaseStalkerAttenuatesShockReactionAndStun() {
         RunStageContext.begin(20);
         Enemy e = enemy(Enemy.Type.PHANTOM);
         e.applyElement(DamageElement.FIRE, 100f);
@@ -54,9 +56,10 @@ public final class EnemyBiomeElementResistanceTest {
 
         assertEquals(Enemy.ElementReaction.OVERLOAD, e.lastReaction);
         assertEquals(13.64f, before - e.hp, .01f);
+        assertEquals(.341f, e.shockTimer, .001f);
     }
 
-    @Test public void nullWardAttenuatesFrostReactionDamage() {
+    @Test public void nullWardAttenuatesFrostReactionAndSlow() {
         RunStageContext.begin(20);
         Enemy e = enemy(Enemy.Type.REGENERATOR);
         e.applyElement(DamageElement.FIRE, 100f);
@@ -65,6 +68,8 @@ public final class EnemyBiomeElementResistanceTest {
 
         assertEquals(Enemy.ElementReaction.STEAM_BURST, e.lastReaction);
         assertEquals(18.48f, before - e.hp, .01f);
+        assertEquals(1.056f, e.slowTimer, .001f);
+        assertEquals(.7492f, e.slowMultiplier, .001f);
     }
 
     private Enemy enemy(Enemy.Type type) {
