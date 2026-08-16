@@ -53,21 +53,27 @@ public final class AccessibilitySettings {
         masterVolume = clampFinite(masterVolume, 0f, 1f, 1f);
         sfxVolume = clampFinite(sfxVolume, 0f, 1f, .85f);
         musicVolume = clampFinite(musicVolume, 0f, 1f, .65f);
+        if (reducedMotion) enforceReducedMotion();
     }
 
-    /** One-switch comfort preset. Individual controls remain editable after applying it. */
+    /** One-switch comfort preset. Audio/UI preferences are intentionally untouched. */
     public void setReducedMotion(boolean enabled) {
         reducedMotion = enabled;
         if (enabled) {
-            screenShake = false;
-            hitStop = false;
-            reduceFlashes = true;
+            enforceReducedMotion();
         } else {
             screenShake = true;
             hitStop = true;
         }
     }
 
+    private void enforceReducedMotion() {
+        screenShake = false;
+        hitStop = false;
+        reduceFlashes = true;
+    }
+
+    public boolean motionControlLocked() { return reducedMotion; }
     public boolean allowsScreenShake() { return !reducedMotion && screenShake && screenShakeStrength > 0f; }
     public boolean allowsHitStop() { return !reducedMotion && hitStop; }
     public boolean minimizesFlashes() { return reducedMotion || reduceFlashes; }
