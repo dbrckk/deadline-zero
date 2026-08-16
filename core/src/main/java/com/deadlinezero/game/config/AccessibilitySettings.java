@@ -14,6 +14,7 @@ public final class AccessibilitySettings {
     public boolean damageFlash = true;
     public boolean highContrastTelegraphs = false;
     public boolean reduceFlashes = false;
+    public boolean reducedMotion = false;
     public boolean haptics = true;
     public float uiScale = 1f;
     public float masterVolume = 1f;
@@ -29,6 +30,7 @@ public final class AccessibilitySettings {
         s.damageFlash = p.getBoolean("damageFlash", true);
         s.highContrastTelegraphs = p.getBoolean("highContrastTelegraphs", false);
         s.reduceFlashes = p.getBoolean("reduceFlashes", false);
+        s.reducedMotion = p.getBoolean("reducedMotion", false);
         s.haptics = p.getBoolean("haptics", true);
         s.uiScale = p.getFloat("uiScale", 1f);
         s.masterVolume = p.getFloat("masterVolume", 1f);
@@ -53,6 +55,23 @@ public final class AccessibilitySettings {
         musicVolume = clampFinite(musicVolume, 0f, 1f, .65f);
     }
 
+    /** One-switch comfort preset. Individual controls remain editable after applying it. */
+    public void setReducedMotion(boolean enabled) {
+        reducedMotion = enabled;
+        if (enabled) {
+            screenShake = false;
+            hitStop = false;
+            reduceFlashes = true;
+        } else {
+            screenShake = true;
+            hitStop = true;
+        }
+    }
+
+    public boolean allowsScreenShake() { return !reducedMotion && screenShake && screenShakeStrength > 0f; }
+    public boolean allowsHitStop() { return !reducedMotion && hitStop; }
+    public boolean minimizesFlashes() { return reducedMotion || reduceFlashes; }
+
     public void save() {
         normalize();
         active = this;
@@ -63,6 +82,7 @@ public final class AccessibilitySettings {
             .putBoolean("damageFlash", damageFlash)
             .putBoolean("highContrastTelegraphs", highContrastTelegraphs)
             .putBoolean("reduceFlashes", reduceFlashes)
+            .putBoolean("reducedMotion", reducedMotion)
             .putBoolean("haptics", haptics)
             .putFloat("uiScale", uiScale)
             .putFloat("masterVolume", masterVolume)
