@@ -8,7 +8,7 @@ import com.deadlinezero.game.world.BiomeEnemyRoster;
 
 /**
  * Dedicated generated directional art for biome-signature enemies and the Null Archon.
- * It also owns the higher-resolution core-actor layer so GameArt can keep one priority gateway.
+ * It also owns shipped/high-resolution core-actor layers so GameArt keeps one priority gateway.
  * Final atlas regions still override this layer through GameArt.
  */
 public final class BiomeDirectionalBootstrapArt implements Disposable {
@@ -30,10 +30,13 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
 
     private final Texture texture;
     private final TextureRegion[] regions = new TextureRegion[TOTAL_TILES];
+    private final AuthoredCoreDirectionalArt authoredCore;
     private final HighResDirectionalBootstrapArt highResCore;
 
-    private BiomeDirectionalBootstrapArt(Texture texture, HighResDirectionalBootstrapArt highResCore) {
+    private BiomeDirectionalBootstrapArt(Texture texture, AuthoredCoreDirectionalArt authoredCore,
+                                         HighResDirectionalBootstrapArt highResCore) {
         this.texture = texture;
+        this.authoredCore = authoredCore;
         this.highResCore = highResCore;
         for (int tile = 0; tile < regions.length; tile++) {
             int x = (tile % COLUMNS) * TILE;
@@ -50,23 +53,37 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
             for (int actor = 0; actor < ROOTS.length; actor++) drawActorSet(p, actor, actor * ACTOR_BLOCK);
             Texture texture = new Texture(p);
             texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+            AuthoredCoreDirectionalArt authored = null;
+            try {
+                authored = AuthoredCoreDirectionalArt.create();
+            } catch (RuntimeException ignored) {
+                // Generated high-resolution/core layers remain available if shipped art is invalid.
+            }
+
             HighResDirectionalBootstrapArt highRes = null;
             try {
                 highRes = HighResDirectionalBootstrapArt.create();
             } catch (RuntimeException ignored) {
                 // The 32px biome/core layers remain fully functional if the optional 48px layer fails.
             }
-            return new BiomeDirectionalBootstrapArt(texture, highRes);
+            return new BiomeDirectionalBootstrapArt(texture, authored, highRes);
         } finally {
             p.dispose();
         }
     }
 
     public boolean supports(String key) {
-        return (highResCore != null && highResCore.supports(key)) || firstTile(key) >= 0;
+        return (authoredCore != null && authoredCore.supports(key))
+            || (highResCore != null && highResCore.supports(key))
+            || firstTile(key) >= 0;
     }
 
     public TextureRegion region(String key, float stateTime, float frameDuration, boolean loop) {
+        if (authoredCore != null) {
+            TextureRegion authored = authoredCore.region(key, stateTime, frameDuration, loop);
+            if (authored != null) return authored;
+        }
         if (highResCore != null) {
             TextureRegion highRes = highResCore.region(key, stateTime, frameDuration, loop);
             if (highRes != null) return highRes;
@@ -243,6 +260,7 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
     private static void setPalette(Pixmap p, float[] c) { p.setColor(c[0], c[1], c[2], 1f); }
 
     @Override public void dispose() {
+        if (authoredCore != null) authoredCore.dispose();
         if (highResCore != null) highResCore.dispose();
         texture.dispose();
     }
