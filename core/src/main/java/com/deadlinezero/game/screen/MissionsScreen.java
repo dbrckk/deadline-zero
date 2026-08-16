@@ -64,12 +64,12 @@ public final class MissionsScreen extends ScreenAdapter {
         font.getData().setScale(.54f);
         font.setColor(Color.WHITE);
         font.draw(batch, weapon.displayName + "   RANK " + weaponRank + "/" + MasteryProgress.MAX_RANK
-            + "   " + nextLabel(weaponNext), 40, h - 470);
+            + "  " + MasteryProgress.rankTitle(weaponRank) + "   " + nextLabel(weaponNext), 40, h - 470);
         font.setColor(new Color(.72f, .58f, 1f, 1f));
         font.draw(batch, biome.label + "   RANK " + biomeRank + "/" + MasteryProgress.MAX_RANK
-            + "   " + nextLabel(biomeNext), 40, h - 510);
+            + "  " + MasteryProgress.rankTitle(biomeRank) + "   " + nextLabel(biomeNext), 40, h - 510);
         font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, "Victories persist forever • rank-ups auto-award Credits + Gems", 40, h - 550);
+        font.draw(batch, "Victories persist forever • rank-ups auto-award Credits + Gems • titles are cosmetic", 40, h - 550);
     }
 
     private static String nextLabel(int winsNeeded) {
