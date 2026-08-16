@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.deadlinezero.game.ai.BossIdentity;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.SurvivorCatalog;
+import com.deadlinezero.game.world.BiomeEnemyRoster;
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -26,6 +27,7 @@ public final class GameArt implements Disposable {
 
     private TextureAtlas atlas;
     private DirectionalBootstrapArt directionalBootstrap;
+    private BiomeDirectionalBootstrapArt biomeDirectionalBootstrap;
     private BootstrapVfxArt vfxBootstrap;
     private Texture bootstrapTexture;
     private TextureRegion[] bootstrapRegions;
@@ -36,9 +38,11 @@ public final class GameArt implements Disposable {
     public GameArt() {
         loadAtlas();
         loadDirectionalBootstrap();
+        loadBiomeDirectionalBootstrap();
         loadVfxBootstrap();
         loadBootstrap();
-        authoredAvailable = atlas != null || directionalBootstrap != null || vfxBootstrap != null || bootstrapTexture != null;
+        authoredAvailable = atlas != null || directionalBootstrap != null || biomeDirectionalBootstrap != null
+            || vfxBootstrap != null || bootstrapTexture != null;
         createFallback();
     }
 
@@ -92,6 +96,22 @@ public final class GameArt implements Disposable {
             if (region != null) return region;
         }
         return enemy(type, motion, stateTime);
+    }
+
+    /**
+     * Dedicated biome identity contract: enemy/biome/{identity}/{direction}/{motion}.
+     * Falls back to the stable low-level archetype when final/generated identity art is unavailable.
+     */
+    public TextureRegion biomeEnemy(BiomeEnemyRoster.Identity identity, Enemy.Type fallbackType,
+                                    Motion motion, Direction8 direction, float stateTime) {
+        String root = BiomeDirectionalBootstrapArt.root(identity);
+        if (root != null) {
+            float frameDuration = AnimationProfileCatalog.enemy(fallbackType).duration(motion);
+            TextureRegion region = animatedOrNull(
+                directionalPrefix(root, direction, motion), frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
+            if (region != null) return region;
+        }
+        return enemy(fallbackType, motion, direction, stateTime);
     }
 
     /** Uses dedicated boss identity art when present, falling back to the generic BOSS authored set. */
@@ -152,6 +172,10 @@ public final class GameArt implements Disposable {
             TextureRegion region = atlas.findRegion(name);
             if (region != null) return region;
         }
+        if (biomeDirectionalBootstrap != null) {
+            TextureRegion region = biomeDirectionalBootstrap.region(name, 0f, 1f, false);
+            if (region != null) return region;
+        }
         if (vfxBootstrap != null) {
             TextureRegion region = vfxBootstrap.region(name, 0f, 1f, false);
             if (region != null) return region;
@@ -167,6 +191,7 @@ public final class GameArt implements Disposable {
             if ((frames != null && frames.size > 0) || atlas.findRegion(prefix) != null) return true;
         }
         if (directionalBootstrap != null && directionalBootstrap.supports(prefix)) return true;
+        if (biomeDirectionalBootstrap != null && biomeDirectionalBootstrap.supports(prefix)) return true;
         if (vfxBootstrap != null && vfxBootstrap.supports(prefix)) return true;
         return bootstrapRegion(prefix) != null;
     }
@@ -186,6 +211,10 @@ public final class GameArt implements Disposable {
             }
             TextureRegion single = atlas.findRegion(prefix);
             if (single != null) return single;
+        }
+        if (biomeDirectionalBootstrap != null) {
+            TextureRegion region = biomeDirectionalBootstrap.region(prefix, stateTime, frameDuration, loop);
+            if (region != null) return region;
         }
         if (directionalBootstrap != null) {
             TextureRegion region = directionalBootstrap.region(prefix, stateTime, frameDuration, loop);
@@ -235,6 +264,16 @@ public final class GameArt implements Disposable {
             Gdx.app.error("GameArt", "Unable to create directional bootstrap art; legacy bootstrap remains active.", exception);
             if (directionalBootstrap != null) directionalBootstrap.dispose();
             directionalBootstrap = null;
+        }
+    }
+
+    private void loadBiomeDirectionalBootstrap() {
+        try {
+            biomeDirectionalBootstrap = BiomeDirectionalBootstrapArt.create();
+        } catch (RuntimeException exception) {
+            Gdx.app.error("GameArt", "Unable to create biome directional art; base enemy art remains active.", exception);
+            if (biomeDirectionalBootstrap != null) biomeDirectionalBootstrap.dispose();
+            biomeDirectionalBootstrap = null;
         }
     }
 
@@ -323,6 +362,7 @@ public final class GameArt implements Disposable {
     @Override public void dispose() {
         if (atlas != null) atlas.dispose();
         if (directionalBootstrap != null) directionalBootstrap.dispose();
+        if (biomeDirectionalBootstrap != null) biomeDirectionalBootstrap.dispose();
         if (vfxBootstrap != null) vfxBootstrap.dispose();
         if (bootstrapTexture != null) bootstrapTexture.dispose();
         if (fallbackTexture != null) fallbackTexture.dispose();
