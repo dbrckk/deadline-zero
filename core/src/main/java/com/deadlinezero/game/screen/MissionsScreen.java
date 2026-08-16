@@ -63,7 +63,7 @@ public final class MissionsScreen extends ScreenAdapter {
         font.draw(batch, "PERMANENT MASTERY", 40, h - 425);
         font.getData().setScale(.54f);
         font.setColor(Color.WHITE);
-        font.draw(batch, weapon.name + "   RANK " + weaponRank + "/" + MasteryProgress.MAX_RANK
+        font.draw(batch, weapon.displayName + "   RANK " + weaponRank + "/" + MasteryProgress.MAX_RANK
             + "   " + nextLabel(weaponNext), 40, h - 470);
         font.setColor(new Color(.72f, .58f, 1f, 1f));
         font.draw(batch, biome.label + "   RANK " + biomeRank + "/" + MasteryProgress.MAX_RANK
