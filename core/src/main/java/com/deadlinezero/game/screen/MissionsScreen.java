@@ -9,10 +9,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.combat.WeaponDefinition;
 import com.deadlinezero.game.meta.DailyService;
+import com.deadlinezero.game.meta.MasteryProgress;
 import com.deadlinezero.game.meta.PlayerProfile;
+import com.deadlinezero.game.visual.EnvironmentBiomeRules;
 
-/** Functional daily login and missions screen. */
+/** Functional daily missions plus permanent non-FOMO mastery progression. */
 public final class MissionsScreen extends ScreenAdapter {
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
@@ -41,8 +44,36 @@ public final class MissionsScreen extends ScreenAdapter {
 
         font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "Rewards: 350 Credits • 450 Credits • 3 Gems", 40, h - 365);
+        drawMastery(p, h);
+        font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "ESC / BACK to return to Base", 40, 48);
         batch.end();
+    }
+
+    private void drawMastery(PlayerProfile p, float h) {
+        WeaponDefinition weapon = p.selectedWeapon();
+        EnvironmentBiomeRules.Biome biome = EnvironmentBiomeRules.forStage(p.selectedStage);
+        int weaponRank = p.mastery.weaponRank(weapon.id);
+        int biomeRank = p.mastery.biomeRank(biome);
+        int weaponNext = p.mastery.winsForNextWeaponRank(weapon.id);
+        int biomeNext = p.mastery.winsForNextBiomeRank(biome);
+
+        font.setColor(Color.CYAN);
+        font.getData().setScale(.62f);
+        font.draw(batch, "PERMANENT MASTERY", 40, h - 425);
+        font.getData().setScale(.54f);
+        font.setColor(Color.WHITE);
+        font.draw(batch, weapon.name + "   RANK " + weaponRank + "/" + MasteryProgress.MAX_RANK
+            + "   " + nextLabel(weaponNext), 40, h - 470);
+        font.setColor(new Color(.72f, .58f, 1f, 1f));
+        font.draw(batch, biome.label + "   RANK " + biomeRank + "/" + MasteryProgress.MAX_RANK
+            + "   " + nextLabel(biomeNext), 40, h - 510);
+        font.setColor(Color.LIGHT_GRAY);
+        font.draw(batch, "Victories persist forever • rank-ups auto-award Credits + Gems", 40, h - 550);
+    }
+
+    private static String nextLabel(int winsNeeded) {
+        return winsNeeded <= 0 ? "MAX" : winsNeeded + (winsNeeded == 1 ? " WIN TO NEXT" : " WINS TO NEXT");
     }
 
     private void drawMission(String title, int progress, int target, boolean claimed, float x, float y) {
