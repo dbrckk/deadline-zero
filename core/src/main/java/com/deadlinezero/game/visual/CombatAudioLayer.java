@@ -41,6 +41,10 @@ public final class CombatAudioLayer implements Disposable {
     private boolean seenSingularity;
     private boolean seenApex;
 
+    public CombatAudioLayer() {
+        AudioManifest.validate();
+    }
+
     public void update(Player player, Array<Enemy> enemies) {
         long shotSerial = CombatVisualEvents.playerShotSerial();
         if (shotSerial != seenShotSerial) {
