@@ -184,6 +184,30 @@ public final class CharacterSpriteRenderer {
             scale *= 1f + wave * .055f;
         }
 
+        if (enemy.supportBuffed()) {
+            float pulse = .5f + .5f * MathUtils.sin(enemy.variantTime * 11f);
+            r = MathUtils.lerp(r, .58f, .18f + pulse * .08f);
+            g = MathUtils.lerp(g, .88f, .22f + pulse * .08f);
+            b = MathUtils.lerp(b, 1f, .30f + pulse * .10f);
+            scale *= 1.01f + pulse * .018f;
+        }
+
+        if (biomeIdentity == BiomeEnemyRoster.Identity.NULL_WARD && enemy.supportPulseFlash() > 0f) {
+            float pulse = MathUtils.clamp(enemy.supportPulseFlash() / .48f, 0f, 1f);
+            float wave = MathUtils.sin(pulse * MathUtils.PI);
+            r = MathUtils.lerp(r, .62f, wave * .42f);
+            g = MathUtils.lerp(g, .86f, wave * .48f);
+            b = MathUtils.lerp(b, 1f, wave * .62f);
+            scale *= 1f + wave * .085f;
+        }
+
+        if (biomeIdentity == BiomeEnemyRoster.Identity.PHASE_STALKER && enemy.phased()) {
+            float fracture = .5f + .5f * MathUtils.sin(enemy.variantTime * 18f);
+            b = MathUtils.clamp(b * (1.08f + fracture * .08f), 0f, 1f);
+            alpha *= .82f + fracture * .12f;
+            scale *= .96f + fracture * .055f;
+        }
+
         if (enemy.tacticalTelegraph()) {
             float pulse = .5f + .5f * MathUtils.sin(enemy.variantTime * 32f);
             if (enemy.pendingTactic() == Enemy.Tactic.STRAFE) {
@@ -192,10 +216,11 @@ public final class CharacterSpriteRenderer {
                 b = MathUtils.lerp(b, 1f, .42f + pulse * .22f);
                 scale *= 1f + pulse * .025f;
             } else if (enemy.pendingTactic() == Enemy.Tactic.CHARGE) {
+                float forgeBoost = biomeIdentity == BiomeEnemyRoster.Identity.FORGE_HOUND ? 1.07f : 1f;
                 r = MathUtils.lerp(r, 1f, .40f + pulse * .22f);
                 g = MathUtils.lerp(g, .48f, .28f + pulse * .16f);
                 b = MathUtils.lerp(b, .22f, .24f + pulse * .14f);
-                scale *= 1.035f + pulse * .045f;
+                scale *= (1.035f + pulse * .045f) * forgeBoost;
             }
         }
 
