@@ -8,6 +8,7 @@ import com.deadlinezero.game.world.BiomeEnemyRoster;
 
 /**
  * Dedicated generated directional art for biome-signature enemies and the Null Archon.
+ * It also owns the higher-resolution core-actor layer so GameArt can keep one priority gateway.
  * Final atlas regions still override this layer through GameArt.
  */
 public final class BiomeDirectionalBootstrapArt implements Disposable {
@@ -29,9 +30,11 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
 
     private final Texture texture;
     private final TextureRegion[] regions = new TextureRegion[TOTAL_TILES];
+    private final HighResDirectionalBootstrapArt highResCore;
 
-    private BiomeDirectionalBootstrapArt(Texture texture) {
+    private BiomeDirectionalBootstrapArt(Texture texture, HighResDirectionalBootstrapArt highResCore) {
         this.texture = texture;
+        this.highResCore = highResCore;
         for (int tile = 0; tile < regions.length; tile++) {
             int x = (tile % COLUMNS) * TILE;
             int y = (tile / COLUMNS) * TILE;
@@ -47,15 +50,27 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
             for (int actor = 0; actor < ROOTS.length; actor++) drawActorSet(p, actor, actor * ACTOR_BLOCK);
             Texture texture = new Texture(p);
             texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-            return new BiomeDirectionalBootstrapArt(texture);
+            HighResDirectionalBootstrapArt highRes = null;
+            try {
+                highRes = HighResDirectionalBootstrapArt.create();
+            } catch (RuntimeException ignored) {
+                // The 32px biome/core layers remain fully functional if the optional 48px layer fails.
+            }
+            return new BiomeDirectionalBootstrapArt(texture, highRes);
         } finally {
             p.dispose();
         }
     }
 
-    public boolean supports(String key) { return firstTile(key) >= 0; }
+    public boolean supports(String key) {
+        return (highResCore != null && highResCore.supports(key)) || firstTile(key) >= 0;
+    }
 
     public TextureRegion region(String key, float stateTime, float frameDuration, boolean loop) {
+        if (highResCore != null) {
+            TextureRegion highRes = highResCore.region(key, stateTime, frameDuration, loop);
+            if (highRes != null) return highRes;
+        }
         int first = firstTile(key);
         if (first < 0) return null;
         int count = frameCount(key);
@@ -169,36 +184,36 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
 
     private static void drawSignature(Pixmap p, int actor, int cx, int cy, int sx, int sy, int px, int py, int motion, int frame) {
         switch (actor) {
-            case 0 -> { // forge hound: low quadruped jaw + furnace spine
+            case 0 -> {
                 p.drawLine(cx - px * 8, cy + 4 - py * 8, cx + px * 8, cy + 4 + py * 8);
                 p.drawLine(cx - sx * 7, cy - sy * 7, cx - sx * 12, cy - sy * 12);
                 p.fillCircle(cx + sx * 7, cy - 5 + sy * 7, 2);
             }
-            case 1 -> { // cinder gunner: shoulder tanks + long barrel
+            case 1 -> {
                 p.fillCircle(cx - px * 8, cy - py * 8, 3);
                 p.fillCircle(cx + px * 8, cy + py * 8, 3);
                 p.drawLine(cx + sx * 5, cy + sy * 5, cx + sx * (13 + (motion == 2 ? frame * 3 : 0)), cy + sy * (13 + (motion == 2 ? frame * 3 : 0)));
             }
-            case 2 -> { // slag guard: slab shield
+            case 2 -> {
                 p.drawRectangle(cx - 8 + sx * 3, cy - 7 + sy * 3, 16, 13);
                 p.drawLine(cx - px * 7, cy - py * 7, cx + px * 7, cy + py * 7);
             }
-            case 3 -> { // phase stalker: split horns and phase tail
+            case 3 -> {
                 p.drawLine(cx - px * 4, cy - 7 - py * 4, cx - px * 8 - sx * 3, cy - 13 - py * 8 - sy * 3);
                 p.drawLine(cx + px * 4, cy - 7 + py * 4, cx + px * 8 - sx * 3, cy - 13 + py * 8 - sy * 3);
                 p.drawLine(cx - sx * 6, cy - sy * 6, cx - sx * 13 + px * 4, cy - sy * 13 + py * 4);
             }
-            case 4 -> { // static seer: cyclops halo + antenna
+            case 4 -> {
                 p.drawCircle(cx + sx * 3, cy - 7 + sy * 3, 7);
                 p.fillCircle(cx + sx * 5, cy - 7 + sy * 5, 2);
                 p.drawLine(cx - px * 8, cy - py * 8, cx + px * 8, cy + py * 8);
             }
-            case 5 -> { // null ward: floating ring cage
+            case 5 -> {
                 p.drawCircle(cx, cy, 10);
                 p.drawCircle(cx, cy, 6);
                 p.drawLine(cx - px * 10, cy - py * 10, cx + px * 10, cy + py * 10);
             }
-            case 6 -> { // null archon: crown, orbit ring, bifurcated mantle
+            case 6 -> {
                 p.drawCircle(cx + sx * 2, cy + sy * 2, 11);
                 p.drawLine(cx - px * 7, cy - 9 - py * 7, cx - px * 10 - sx * 3, cy - 15 - py * 10 - sy * 3);
                 p.drawLine(cx + px * 7, cy - 9 + py * 7, cx + px * 10 - sx * 3, cy - 15 + py * 10 - sy * 3);
@@ -209,29 +224,26 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
         }
     }
 
-    private static void primary(Pixmap p, int actor) {
-        float[][] c = {
-            {.95f,.30f,.10f},{.72f,.18f,.08f},{.42f,.22f,.16f},
-            {.34f,.26f,.78f},{.22f,.56f,.92f},{.30f,.20f,.58f},{.38f,.24f,.78f}
-        };
-        p.setColor(c[actor][0], c[actor][1], c[actor][2], 1f);
-    }
+    private static final float[][] PRIMARY = {
+        {.95f,.30f,.10f},{.72f,.18f,.08f},{.42f,.22f,.16f},
+        {.34f,.26f,.78f},{.22f,.56f,.92f},{.30f,.20f,.58f},{.38f,.24f,.78f}
+    };
+    private static final float[][] SECONDARY = {
+        {.20f,.16f,.14f},{.18f,.15f,.14f},{.25f,.24f,.24f},
+        {.10f,.12f,.24f},{.10f,.18f,.28f},{.13f,.12f,.22f},{.10f,.09f,.20f}
+    };
+    private static final float[][] ACCENT = {
+        {1f,.72f,.18f},{1f,.48f,.12f},{1f,.50f,.18f},
+        {.74f,.58f,1f},{.42f,.92f,1f},{.66f,.48f,1f},{.76f,.62f,1f}
+    };
 
-    private static void secondary(Pixmap p, int actor) {
-        float[][] c = {
-            {.20f,.16f,.14f},{.18f,.15f,.14f},{.25f,.24f,.24f},
-            {.10f,.12f,.24f},{.10f,.18f,.28f},{.13f,.12f,.22f},{.10f,.09f,.20f}
-        };
-        p.setColor(c[actor][0], c[actor][1], c[actor][2], 1f);
-    }
+    private static void primary(Pixmap p, int actor) { setPalette(p, PRIMARY[actor]); }
+    private static void secondary(Pixmap p, int actor) { setPalette(p, SECONDARY[actor]); }
+    private static void accent(Pixmap p, int actor) { setPalette(p, ACCENT[actor]); }
+    private static void setPalette(Pixmap p, float[] c) { p.setColor(c[0], c[1], c[2], 1f); }
 
-    private static void accent(Pixmap p, int actor) {
-        float[][] c = {
-            {1f,.72f,.18f},{1f,.48f,.12f},{1f,.50f,.18f},
-            {.74f,.58f,1f},{.42f,.92f,1f},{.66f,.48f,1f},{.76f,.62f,1f}
-        };
-        p.setColor(c[actor][0], c[actor][1], c[actor][2], 1f);
+    @Override public void dispose() {
+        if (highResCore != null) highResCore.dispose();
+        texture.dispose();
     }
-
-    @Override public void dispose() { texture.dispose(); }
 }
