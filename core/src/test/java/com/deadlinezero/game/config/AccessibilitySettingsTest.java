@@ -11,6 +11,7 @@ final class AccessibilitySettingsTest {
         settings.setReducedMotion(true);
 
         assertTrue(settings.reducedMotion);
+        assertTrue(settings.motionControlLocked());
         assertFalse(settings.screenShake);
         assertFalse(settings.hitStop);
         assertTrue(settings.reduceFlashes);
@@ -19,12 +20,26 @@ final class AccessibilitySettingsTest {
         assertTrue(settings.minimizesFlashes());
     }
 
+    @Test void normalizationRepairsInconsistentReducedMotionPreferences() {
+        AccessibilitySettings settings = new AccessibilitySettings();
+        settings.reducedMotion = true;
+        settings.screenShake = true;
+        settings.hitStop = true;
+        settings.reduceFlashes = false;
+        settings.normalize();
+
+        assertFalse(settings.screenShake);
+        assertFalse(settings.hitStop);
+        assertTrue(settings.reduceFlashes);
+    }
+
     @Test void disablingPresetRestoresMotionFeedbackWithoutTouchingFlashPreference() {
         AccessibilitySettings settings = new AccessibilitySettings();
         settings.setReducedMotion(true);
         settings.setReducedMotion(false);
 
         assertFalse(settings.reducedMotion);
+        assertFalse(settings.motionControlLocked());
         assertTrue(settings.screenShake);
         assertTrue(settings.hitStop);
         assertTrue(settings.reduceFlashes);
