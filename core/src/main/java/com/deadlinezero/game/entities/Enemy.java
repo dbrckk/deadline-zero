@@ -11,6 +11,7 @@ import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.meta.RunMissionRuntime;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageRules;
+import com.deadlinezero.game.world.BiomeEnemyBehaviorRules;
 import com.deadlinezero.game.world.BiomeEnemyRoster;
 
 public final class Enemy extends ActorState {
@@ -241,10 +242,11 @@ public final class Enemy extends ActorState {
         float safeDt = Math.max(0f, dt);
         variantTime += safeDt;
         specialRecoveryDelay = Math.max(0f, specialRecoveryDelay - safeDt);
+        BiomeEnemyBehaviorRules.Profile behavior = biomeBehavior();
         if (type == Type.SHIELDED && specialRecoveryDelay <= 0f && shieldHp < shieldMaxHp) {
             shieldHp = Math.min(shieldMaxHp, shieldHp + shieldMaxHp * .18f * safeDt);
         } else if (type == Type.REGENERATOR && specialRecoveryDelay <= 0f && hp < maxHp) {
-            hp = Math.min(maxHp, hp + maxHp * .035f * safeDt);
+            hp = Math.min(maxHp, hp + maxHp * .035f * behavior.recoveryMultiplier() * safeDt);
         }
         tacticalCooldown = Math.max(0f, tacticalCooldown - dt);
         tacticalWindup = Math.max(0f, tacticalWindup - dt);
@@ -281,20 +283,25 @@ public final class Enemy extends ActorState {
         }
         if (pendingTactic != Tactic.NONE || tacticalCooldown > 0f || attack.state() != EnemyState.CHASING) return;
 
+        BiomeEnemyBehaviorRules.Profile behavior = biomeBehavior();
         float cadence = switch (variant) {
             case SWIFT -> .78f;
             case FERAL -> .82f;
             case ARMORED -> 1.12f;
             default -> 1f;
         };
-        if (type == Type.RANGED && distanceToPlayer >= 3.8f && distanceToPlayer <= 9.5f) {
+        cadence *= behavior.tacticCooldownMultiplier();
+
+        boolean canStrafe = type == Type.RANGED || behavior.evasiveStrafe();
+        if (canStrafe && distanceToPlayer >= 3.2f && distanceToPlayer <= 10.5f) {
             pendingTactic = Tactic.STRAFE;
-            tacticalWindup = .16f;
+            tacticalWindup = type == Type.PHANTOM ? .10f : .16f;
             tacticalCooldown = (1.45f + MathUtils.random(.35f)) * cadence;
             tacticSide = MathUtils.randomBoolean() ? 1f : -1f;
-        } else if ((type == Type.BRUTE || type == Type.ELITE || type == Type.SHIELDED) && distanceToPlayer >= 2.4f && distanceToPlayer <= 7.2f) {
+        } else if ((type == Type.BRUTE || type == Type.ELITE || type == Type.SHIELDED || behavior.aggressiveCharge())
+            && distanceToPlayer >= 2.2f && distanceToPlayer <= 8.4f) {
             pendingTactic = Tactic.CHARGE;
-            tacticalWindup = type == Type.ELITE ? .24f : .34f;
+            tacticalWindup = type == Type.ELITE ? .24f : (type == Type.RUNNER ? .18f : .34f);
             tacticalCooldown = (type == Type.ELITE ? 2.35f : 3.05f) * cadence;
         }
     }
@@ -304,12 +311,14 @@ public final class Enemy extends ActorState {
         if (len < .05f) return;
         float nx = velocity.x / len;
         float ny = velocity.y / len;
+        BiomeEnemyBehaviorRules.Profile behavior = biomeBehavior();
         if (pendingTactic == Tactic.STRAFE) {
-            float strength = variant == Variant.SWIFT ? 2.15f : 1.65f;
+            float strength = (variant == Variant.SWIFT ? 2.15f : 1.65f) * behavior.strafeStrengthMultiplier();
             impulse.add(-ny * strength * tacticSide, nx * strength * tacticSide);
         } else if (pendingTactic == Tactic.CHARGE) {
             float strength = type == Type.ELITE ? 3.6f : (type == Type.SHIELDED ? 2.35f : 2.85f);
             if (variant == Variant.FERAL) strength *= 1.18f;
+            strength *= behavior.chargeStrengthMultiplier();
             impulse.add(nx * strength, ny * strength);
             chargeImpactWindow = .26f;
             chargeImpactConsumed = false;
@@ -335,6 +344,14 @@ public final class Enemy extends ActorState {
         return shieldMaxHp <= 0f ? 0f : MathUtils.clamp(shieldHp / shieldMaxHp, 0f, 1f);
     }
 
+    public BiomeEnemyRoster.Identity biomeIdentity() {
+        return BiomeEnemyRoster.identityFor(RunStageContext.stage(), type);
+    }
+
+    public BiomeEnemyBehaviorRules.Profile biomeBehavior() {
+        return BiomeEnemyBehaviorRules.forIdentity(biomeIdentity());
+    }
+
     public float effectiveSpeed() {
         if (attack.state() == EnemyState.STUNNED) return 0f;
         float phaseMultiplier = bossPhases == null ? 1f : bossPhases.speedMultiplier();
@@ -347,6 +364,10 @@ public final class Enemy extends ActorState {
             variantMultiplier = 1.24f;
         }
         if (phased()) variantMultiplier *= 1.36f;
-        return speed * slowMultiplier * phaseMultiplier * chargeMultiplier * variantMultiplier;
+        BiomeEnemyBehaviorRules.Profile behavior = biomeBehavior();
+        float burst = 1f;
+        if (behavior.burstMultiplier() > 1f && variantTime % 3.6f < .42f) burst = behavior.burstMultiplier();
+        return speed * slowMultiplier * phaseMultiplier * chargeMultiplier * variantMultiplier
+            * behavior.speedMultiplier() * burst;
     }
 }
