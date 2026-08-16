@@ -6,6 +6,7 @@ import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.combat.WeaponDefinition;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.SurvivorCatalog;
+import com.deadlinezero.game.world.BiomeEnemyRoster;
 
 /** Central production-art contract and lightweight runtime atlas validator. */
 public final class ArtManifest {
@@ -56,6 +57,18 @@ public final class ArtManifest {
             missing += requireMotion(art, root, "hit");
             missing += requireMotion(art, root, "death");
             missing += requireRegion(art, root + "/corpse");
+        }
+        for (BiomeEnemyRoster.Identity identity : BiomeEnemyRoster.Identity.values()) {
+            if (identity == BiomeEnemyRoster.Identity.NONE) continue;
+            String root = "enemy/biome/" + identity.name().toLowerCase();
+            for (Direction8 direction : Direction8.values()) {
+                String directionalRoot = root + "/" + direction.atlasToken();
+                missing += requireMotion(art, directionalRoot, "idle");
+                missing += requireMotion(art, directionalRoot, "run");
+                missing += requireMotion(art, directionalRoot, "attack");
+                missing += requireMotion(art, directionalRoot, "hit");
+                missing += requireMotion(art, directionalRoot, "death");
+            }
         }
         for (BossIdentity identity : BossIdentity.values()) {
             String root = "boss/" + identity.name().toLowerCase();
