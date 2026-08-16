@@ -28,6 +28,7 @@ public final class GameArt implements Disposable {
     private TextureAtlas atlas;
     private DirectionalBootstrapArt directionalBootstrap;
     private BiomeDirectionalBootstrapArt biomeDirectionalBootstrap;
+    private NullBootstrapVfxArt nullVfxBootstrap;
     private BootstrapVfxArt vfxBootstrap;
     private Texture bootstrapTexture;
     private TextureRegion[] bootstrapRegions;
@@ -39,10 +40,11 @@ public final class GameArt implements Disposable {
         loadAtlas();
         loadDirectionalBootstrap();
         loadBiomeDirectionalBootstrap();
+        loadNullVfxBootstrap();
         loadVfxBootstrap();
         loadBootstrap();
         authoredAvailable = atlas != null || directionalBootstrap != null || biomeDirectionalBootstrap != null
-            || vfxBootstrap != null || bootstrapTexture != null;
+            || nullVfxBootstrap != null || vfxBootstrap != null || bootstrapTexture != null;
         createFallback();
     }
 
@@ -54,7 +56,6 @@ public final class GameArt implements Disposable {
         return animated(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
     }
 
-    /** Directional atlas contract: survivor/{id}/{n|ne|e|se|s|sw|w|nw}/{motion}. */
     public TextureRegion survivor(SurvivorCatalog.Survivor survivor, Motion motion, Direction8 direction, float stateTime) {
         String root = "survivor/" + survivor.name().toLowerCase();
         float frameDuration = AnimationProfileCatalog.survivor(survivor).duration(motion);
@@ -68,7 +69,6 @@ public final class GameArt implements Disposable {
         float frameDuration = AnimationProfileCatalog.enemy(type).duration(motion);
         TextureRegion region = animatedOrNull(prefix, frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
         if (region != null) return region;
-
         Enemy.Type readableFallback = readableFallback(type);
         if (readableFallback != null) {
             String fallbackPrefix = "enemy/" + readableFallback.name().toLowerCase() + "/" + motion.name().toLowerCase();
@@ -79,14 +79,12 @@ public final class GameArt implements Disposable {
         return fallbackRegion;
     }
 
-    /** Directional atlas contract: enemy/{type}/{n|ne|e|se|s|sw|w|nw}/{motion}. */
     public TextureRegion enemy(Enemy.Type type, Motion motion, Direction8 direction, float stateTime) {
         String root = "enemy/" + type.name().toLowerCase();
         float frameDuration = AnimationProfileCatalog.enemy(type).duration(motion);
         TextureRegion region = animatedOrNull(
             directionalPrefix(root, direction, motion), frameDuration, stateTime, AnimationProfileCatalog.loops(motion));
         if (region != null) return region;
-
         Enemy.Type readableFallback = readableFallback(type);
         if (readableFallback != null) {
             String fallbackRoot = "enemy/" + readableFallback.name().toLowerCase();
@@ -98,10 +96,6 @@ public final class GameArt implements Disposable {
         return enemy(type, motion, stateTime);
     }
 
-    /**
-     * Dedicated biome identity contract: enemy/biome/{identity}/{direction}/{motion}.
-     * Falls back to the stable low-level archetype when final/generated identity art is unavailable.
-     */
     public TextureRegion biomeEnemy(BiomeEnemyRoster.Identity identity, Enemy.Type fallbackType,
                                     Motion motion, Direction8 direction, float stateTime) {
         String root = BiomeDirectionalBootstrapArt.root(identity);
@@ -114,7 +108,6 @@ public final class GameArt implements Disposable {
         return enemy(fallbackType, motion, direction, stateTime);
     }
 
-    /** Uses dedicated boss identity art when present, falling back to the generic BOSS authored set. */
     public TextureRegion boss(BossIdentity identity, Motion motion, float stateTime) {
         String prefix = bossRoot(identity) + "/" + motion.name().toLowerCase();
         float frameDuration = AnimationProfileCatalog.enemy(Enemy.Type.BOSS).duration(motion);
@@ -122,7 +115,6 @@ public final class GameArt implements Disposable {
         return region == null ? enemy(Enemy.Type.BOSS, motion, stateTime) : region;
     }
 
-    /** Directional atlas contract: boss/{identity}/{n|ne|e|se|s|sw|w|nw}/{motion}. */
     public TextureRegion boss(BossIdentity identity, Motion motion, Direction8 direction, float stateTime) {
         String root = bossRoot(identity);
         float frameDuration = AnimationProfileCatalog.enemy(Enemy.Type.BOSS).duration(motion);
@@ -131,12 +123,10 @@ public final class GameArt implements Disposable {
         return region == null ? boss(identity, motion, stateTime) : region;
     }
 
-    /** Compatibility overload retained for older callers and tests. */
     public TextureRegion boss(boolean revenant, Motion motion, float stateTime) {
         return boss(revenant ? BossIdentity.REVENANT : BossIdentity.ALPHA, motion, stateTime);
     }
 
-    /** Compatibility overload retained for older callers and tests. */
     public TextureRegion boss(boolean revenant, Motion motion, Direction8 direction, float stateTime) {
         return boss(revenant ? BossIdentity.REVENANT : BossIdentity.ALPHA, motion, direction, stateTime);
     }
@@ -151,12 +141,10 @@ public final class GameArt implements Disposable {
         return region == null ? fallbackRegion : region;
     }
 
-    /** Returns null when a one-shot authored FX sequence is absent, preserving procedural fallback. */
     public TextureRegion effectOrNull(String name, float stateTime, float frameDuration) {
         return animatedOrNull("fx/" + name, frameDuration, stateTime, false);
     }
 
-    /** Returns null when a looping authored FX sequence is absent. */
     public TextureRegion loopingEffectOrNull(String name, float stateTime, float frameDuration) {
         return animatedOrNull("fx/" + name, frameDuration, stateTime, true);
     }
@@ -166,7 +154,6 @@ public final class GameArt implements Disposable {
         return region == null ? fallbackRegion : region;
     }
 
-    /** Returns null instead of fallback when neither final nor bootstrap authored art exists. */
     public TextureRegion regionOrNull(String name) {
         if (atlas != null) {
             TextureRegion region = atlas.findRegion(name);
@@ -174,6 +161,10 @@ public final class GameArt implements Disposable {
         }
         if (biomeDirectionalBootstrap != null) {
             TextureRegion region = biomeDirectionalBootstrap.region(name, 0f, 1f, false);
+            if (region != null) return region;
+        }
+        if (nullVfxBootstrap != null) {
+            TextureRegion region = nullVfxBootstrap.region(name, 0f, 1f, false);
             if (region != null) return region;
         }
         if (vfxBootstrap != null) {
@@ -192,6 +183,7 @@ public final class GameArt implements Disposable {
         }
         if (directionalBootstrap != null && directionalBootstrap.supports(prefix)) return true;
         if (biomeDirectionalBootstrap != null && biomeDirectionalBootstrap.supports(prefix)) return true;
+        if (nullVfxBootstrap != null && nullVfxBootstrap.supports(prefix)) return true;
         if (vfxBootstrap != null && vfxBootstrap.supports(prefix)) return true;
         return bootstrapRegion(prefix) != null;
     }
@@ -218,6 +210,10 @@ public final class GameArt implements Disposable {
         }
         if (directionalBootstrap != null) {
             TextureRegion region = directionalBootstrap.region(prefix, stateTime, frameDuration, loop);
+            if (region != null) return region;
+        }
+        if (nullVfxBootstrap != null) {
+            TextureRegion region = nullVfxBootstrap.region(prefix, stateTime, frameDuration, loop);
             if (region != null) return region;
         }
         if (vfxBootstrap != null) {
@@ -277,6 +273,16 @@ public final class GameArt implements Disposable {
         }
     }
 
+    private void loadNullVfxBootstrap() {
+        try {
+            nullVfxBootstrap = NullBootstrapVfxArt.create();
+        } catch (RuntimeException exception) {
+            Gdx.app.error("GameArt", "Unable to create Null boss VFX; generic boss VFX remain active.", exception);
+            if (nullVfxBootstrap != null) nullVfxBootstrap.dispose();
+            nullVfxBootstrap = null;
+        }
+    }
+
     private void loadVfxBootstrap() {
         try {
             vfxBootstrap = BootstrapVfxArt.create();
@@ -316,7 +322,6 @@ public final class GameArt implements Disposable {
         }
     }
 
-    /** Small Android-safe Base64 decoder; avoids relying on API-level-specific java.util.Base64. */
     static byte[] decodeBase64(String input) {
         if (input == null || input.isBlank()) return new byte[0];
         ByteArrayOutputStream out = new ByteArrayOutputStream(input.length() * 3 / 4);
@@ -363,6 +368,7 @@ public final class GameArt implements Disposable {
         if (atlas != null) atlas.dispose();
         if (directionalBootstrap != null) directionalBootstrap.dispose();
         if (biomeDirectionalBootstrap != null) biomeDirectionalBootstrap.dispose();
+        if (nullVfxBootstrap != null) nullVfxBootstrap.dispose();
         if (vfxBootstrap != null) vfxBootstrap.dispose();
         if (bootstrapTexture != null) bootstrapTexture.dispose();
         if (fallbackTexture != null) fallbackTexture.dispose();
