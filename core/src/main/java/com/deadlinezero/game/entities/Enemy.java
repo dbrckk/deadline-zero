@@ -1,5 +1,7 @@
 package com.deadlinezero.game.entities;
 
+import java.util.WeakHashMap;
+
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.deadlinezero.game.ai.AttackController;
@@ -19,6 +21,12 @@ public final class Enemy extends ActorState {
     public enum Variant { NORMAL, SWIFT, ARMORED, FERAL }
     public enum Tactic { NONE, STRAFE, CHARGE }
     public enum ElementReaction { NONE, THERMAL_SHOCK, STEAM_BURST, OVERLOAD }
+
+    private static final WeakHashMap<Enemy, Boolean> ACTIVE_ENEMIES = new WeakHashMap<>();
+    private static final float NULL_WARD_PULSE_INTERVAL = 4.6f;
+    private static final float NULL_WARD_PULSE_RADIUS = 5.2f;
+    private static final float NULL_WARD_HEAL_FRACTION = .045f;
+    private static final float NULL_WARD_BUFF_SECONDS = 2.8f;
 
     public Type type;
     public Variant variant = Variant.NORMAL;
@@ -47,6 +55,9 @@ public final class Enemy extends ActorState {
     private float chargeImpactWindow;
     private boolean chargeImpactConsumed;
     private float specialRecoveryDelay;
+    private float supportPulseTimer = NULL_WARD_PULSE_INTERVAL * .72f;
+    private float supportPulseFlash;
+    private float supportBuffTimer;
 
     public Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp) {
         super(x, y, radius, hp * StageRules.enemyHpMultiplier(RunStageContext.stage()));
@@ -74,6 +85,7 @@ public final class Enemy extends ActorState {
             }
         }
         configureSpecialTrait();
+        ACTIVE_ENEMIES.put(this, Boolean.TRUE);
     }
 
     private void applyTypeProfile() {
@@ -242,12 +254,15 @@ public final class Enemy extends ActorState {
         float safeDt = Math.max(0f, dt);
         variantTime += safeDt;
         specialRecoveryDelay = Math.max(0f, specialRecoveryDelay - safeDt);
+        supportBuffTimer = Math.max(0f, supportBuffTimer - safeDt);
+        supportPulseFlash = Math.max(0f, supportPulseFlash - safeDt);
         BiomeEnemyBehaviorRules.Profile behavior = biomeBehavior();
         if (type == Type.SHIELDED && specialRecoveryDelay <= 0f && shieldHp < shieldMaxHp) {
             shieldHp = Math.min(shieldMaxHp, shieldHp + shieldMaxHp * .18f * safeDt);
         } else if (type == Type.REGENERATOR && specialRecoveryDelay <= 0f && hp < maxHp) {
             hp = Math.min(maxHp, hp + maxHp * .035f * behavior.recoveryMultiplier() * safeDt);
         }
+        updateNullWardSupport(safeDt);
         tacticalCooldown = Math.max(0f, tacticalCooldown - dt);
         tacticalWindup = Math.max(0f, tacticalWindup - dt);
         chargeImpactWindow = Math.max(0f, chargeImpactWindow - dt);
@@ -266,6 +281,21 @@ public final class Enemy extends ActorState {
         if (bossPhases != null) {
             bossPhases.update(maxHp <= 0f ? 0f : hp / maxHp);
             bossCombat.update(dt, bossPhases.phase());
+        }
+    }
+
+    private void updateNullWardSupport(float dt) {
+        if (biomeIdentity() != BiomeEnemyRoster.Identity.NULL_WARD) return;
+        supportPulseTimer -= dt;
+        if (supportPulseTimer > 0f) return;
+        supportPulseTimer = NULL_WARD_PULSE_INTERVAL;
+        supportPulseFlash = .48f;
+        float radius2 = NULL_WARD_PULSE_RADIUS * NULL_WARD_PULSE_RADIUS;
+        for (Enemy ally : ACTIVE_ENEMIES.keySet()) {
+            if (ally == null || ally == this || !ally.alive || ally.type == Type.BOSS) continue;
+            if (position.dst2(ally.position) > radius2) continue;
+            ally.hp = Math.min(ally.maxHp, ally.hp + ally.maxHp * NULL_WARD_HEAL_FRACTION);
+            ally.supportBuffTimer = Math.max(ally.supportBuffTimer, NULL_WARD_BUFF_SECONDS);
         }
     }
 
@@ -356,6 +386,11 @@ public final class Enemy extends ActorState {
         return BiomeEnemyBehaviorRules.forIdentity(biomeIdentity());
     }
 
+    public boolean supportBuffed() { return supportBuffTimer > 0f; }
+    public float supportPulseFlash() { return supportPulseFlash; }
+    public static float nullWardPulseInterval() { return NULL_WARD_PULSE_INTERVAL; }
+    public static float nullWardPulseRadius() { return NULL_WARD_PULSE_RADIUS; }
+
     public float effectiveSpeed() {
         if (attack.state() == EnemyState.STUNNED) return 0f;
         float phaseMultiplier = bossPhases == null ? 1f : bossPhases.speedMultiplier();
@@ -371,7 +406,8 @@ public final class Enemy extends ActorState {
         BiomeEnemyBehaviorRules.Profile behavior = biomeBehavior();
         float burst = 1f;
         if (behavior.burstMultiplier() > 1f && variantTime % 3.6f < .42f) burst = behavior.burstMultiplier();
+        float support = supportBuffTimer > 0f ? 1.10f : 1f;
         return speed * slowMultiplier * phaseMultiplier * chargeMultiplier * variantMultiplier
-            * behavior.speedMultiplier() * burst;
+            * behavior.speedMultiplier() * burst * support;
     }
 }
