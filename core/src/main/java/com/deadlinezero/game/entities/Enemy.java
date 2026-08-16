@@ -11,6 +11,7 @@ import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.meta.RunMissionRuntime;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageRules;
+import com.deadlinezero.game.world.BiomeEnemyRoster;
 
 public final class Enemy extends ActorState {
     public enum Type { SHAMBLER, RUNNER, BRUTE, RANGED, ELITE, SHIELDED, REGENERATOR, PHANTOM, BOSS }
@@ -176,12 +177,13 @@ public final class Enemy extends ActorState {
 
     /**
      * Applies elemental status and resolves deterministic cross-element reactions.
-     * Reactions intentionally live on Enemy so every weapon/ability path gets the same rules.
+     * Biome signature enemies attenuate their resisted element here, once, before status/reaction math.
      */
     public void applyElement(DamageElement element, float power) {
         if (!alive || element == null) return;
         lastReaction = ElementReaction.NONE;
-        float safePower = Math.max(0f, power);
+        float safePower = Math.max(0f, power)
+            * BiomeEnemyRoster.elementalDamageMultiplier(RunStageContext.stage(), type, element);
 
         switch (element) {
             case FIRE -> {
