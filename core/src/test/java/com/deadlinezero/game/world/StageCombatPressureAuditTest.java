@@ -35,10 +35,15 @@ final class StageCombatPressureAuditTest {
     }
 
     @Test void biomeHazardPressureIsAbsentThenExplicit() {
-        assertTrue(!Float.isFinite(StageCombatPressureAudit.snapshot(9).hazardInterval()));
-        assertTrue(Float.isFinite(StageCombatPressureAudit.snapshot(10).hazardInterval()));
-        assertTrue(Float.isFinite(StageCombatPressureAudit.snapshot(20).hazardInterval()));
-        assertTrue(StageCombatPressureAudit.snapshot(20).nominalHazardDamage()
-            > StageCombatPressureAudit.snapshot(10).nominalHazardDamage());
+        StageCombatPressureAudit.Snapshot quarantine = StageCombatPressureAudit.snapshot(9);
+        StageCombatPressureAudit.Snapshot foundry = StageCombatPressureAudit.snapshot(10);
+        StageCombatPressureAudit.Snapshot nullSector = StageCombatPressureAudit.snapshot(20);
+        assertTrue(!Float.isFinite(quarantine.hazardInterval()));
+        assertTrue(Float.isFinite(foundry.hazardInterval()));
+        assertTrue(Float.isFinite(nullSector.hazardInterval()));
+        float foundryPressurePerSecond = foundry.nominalHazardDamage() / foundry.hazardInterval();
+        float nullPressurePerSecond = nullSector.nominalHazardDamage() / nullSector.hazardInterval();
+        assertTrue(nullPressurePerSecond > foundryPressurePerSecond,
+            "Null Sector hazard cadence should create more nominal pressure per second");
     }
 }
