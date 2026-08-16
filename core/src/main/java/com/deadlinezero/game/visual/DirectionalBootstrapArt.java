@@ -19,20 +19,28 @@ public final class DirectionalBootstrapArt implements Disposable {
     static final int TOTAL_TILES = ACTOR_BLOCK * ACTOR_COUNT;
 
     private static final String[] ROOTS = {
-        "survivor/rex/",
-        "enemy/shambler/",
-        "enemy/runner/",
-        "enemy/brute/",
-        "enemy/ranged/",
-        "enemy/elite/",
-        "boss/alpha/",
-        "boss/revenant/",
-        "boss/warden/",
-        "boss/harvester/",
-        "survivor/nyx/",
-        "survivor/bastion/",
-        "survivor/volt/",
-        "survivor/wraith/"
+        "survivor/rex/", "enemy/shambler/", "enemy/runner/", "enemy/brute/", "enemy/ranged/", "enemy/elite/",
+        "boss/alpha/", "boss/revenant/", "boss/warden/", "boss/harvester/",
+        "survivor/nyx/", "survivor/bastion/", "survivor/volt/", "survivor/wraith/"
+    };
+
+    private static final float[][] PRIMARY = {
+        {.18f,.72f,.94f}, {.42f,.64f,.36f}, {.72f,.47f,.28f}, {.55f,.34f,.32f}, {.30f,.52f,.72f},
+        {.64f,.28f,.70f}, {.72f,.18f,.23f}, {.34f,.31f,.68f}, {.30f,.46f,.64f}, {.56f,.24f,.16f},
+        {.68f,.30f,.88f}, {.82f,.62f,.22f}, {.24f,.82f,.66f}, {.72f,.78f,.90f}
+    };
+    private static final float[][] SECONDARY = {
+        {.08f,.28f,.44f}, {.19f,.31f,.17f}, {.31f,.19f,.13f}, {.25f,.14f,.14f}, {.12f,.23f,.35f},
+        {.26f,.10f,.30f}, {.29f,.07f,.10f}, {.13f,.11f,.31f}, {.12f,.20f,.30f}, {.25f,.09f,.06f},
+        {.25f,.10f,.38f}, {.38f,.28f,.10f}, {.08f,.34f,.28f}, {.20f,.23f,.34f}
+    };
+    private static final float[][] ACCENT = {
+        {.76f,.96f,1f}, {.94f,.30f,.25f}, {1f,.61f,.30f}, {1f,.32f,.26f}, {.40f,.90f,1f},
+        {1f,.38f,.92f}, {1f,.48f,.28f}, {.48f,.92f,1f}, {.50f,.82f,1f}, {1f,.74f,.28f},
+        {1f,.42f,1f}, {1f,.90f,.52f}, {.62f,1f,.86f}, {.52f,.90f,1f}
+    };
+    private static final int[][] DIRECTIONS = {
+        {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}
     };
 
     private final Texture texture;
@@ -106,37 +114,23 @@ public final class DirectionalBootstrapArt implements Disposable {
 
     private static int directionIndex(String token) {
         return switch (token) {
-            case "n" -> 0;
-            case "ne" -> 1;
-            case "e" -> 2;
-            case "se" -> 3;
-            case "s" -> 4;
-            case "sw" -> 5;
-            case "w" -> 6;
-            case "nw" -> 7;
+            case "n" -> 0; case "ne" -> 1; case "e" -> 2; case "se" -> 3;
+            case "s" -> 4; case "sw" -> 5; case "w" -> 6; case "nw" -> 7;
             default -> -1;
         };
     }
 
     private static int motionOffset(String motion) {
         return switch (motion) {
-            case "idle" -> 0;
-            case "run" -> 1;
-            case "attack" -> 4;
-            case "hit" -> 6;
-            case "death" -> 7;
+            case "idle" -> 0; case "run" -> 1; case "attack" -> 4; case "hit" -> 6; case "death" -> 7;
             default -> -1;
         };
     }
 
     private static void drawActorSet(Pixmap p, int actor, int actorBase) {
-        int[][] directions = {
-            {0, 1}, {1, 1}, {1, 0}, {1, -1},
-            {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}
-        };
-        for (int direction = 0; direction < directions.length; direction++) {
-            int dx = directions[direction][0];
-            int dy = directions[direction][1];
+        for (int direction = 0; direction < DIRECTIONS.length; direction++) {
+            int dx = DIRECTIONS[direction][0];
+            int dy = DIRECTIONS[direction][1];
             int base = actorBase + direction * FRAMES_PER_DIRECTION;
             drawFrame(p, base, actor, dx, dy, 0, 0);
             drawFrame(p, base + 1, actor, dx, dy, 1, 0);
@@ -157,23 +151,14 @@ public final class DirectionalBootstrapArt implements Disposable {
         int oy = (tile / COLUMNS) * TILE;
         int sx = dx;
         int sy = -dy;
-        int bob = motion == 1 && frame == 1 ? -1 : 0;
+        int bob = motion == 1 ? (frame == 1 ? -1 : frame == 2 ? 1 : 0) : 0;
         int stride = motion == 1 ? (frame == 0 ? -2 : frame == 1 ? 2 : 0) : 0;
         int attackReach = motion == 2 && frame == 1 ? (isBoss(actor) ? 5 : 4) : 0;
         int bodyRadius = bodyRadius(actor);
 
-        set(p, 0, 0, 0, isBoss(actor) ? 105 : 80);
-        p.fillCircle(ox + 16, oy + 26, motion == 4 ? bodyRadius - 2 : bodyRadius + 1);
-
+        drawShadow(p, ox, oy, actor, motion, frame, bodyRadius);
         if (motion == 4) {
-            int side = dx < 0 ? -1 : 1;
-            int shift = frame * 3 * side;
-            setSecondary(p, actor);
-            p.fillCircle(ox + 16 + shift, oy + 18 + frame * 3, Math.max(4, bodyRadius - frame));
-            setPrimary(p, actor);
-            p.fillCircle(ox + 13 + shift, oy + 12 + frame * 4, Math.max(3, bodyRadius - 2 - frame));
-            setAccent(p, actor);
-            p.drawLine(ox + 8 + shift, oy + 14 + frame * 3, ox + 23 + shift, oy + 20 + frame * 3);
+            drawDeath(p, ox, oy, actor, dx, bodyRadius, frame);
             return;
         }
 
@@ -182,97 +167,210 @@ public final class DirectionalBootstrapArt implements Disposable {
         int perpX = -sy;
         int perpY = sx;
 
-        setPrimary(p, actor);
-        p.drawLine(cx - perpX * 3, cy + 6 - perpY * 2, cx - perpX * 3 + sx * stride, oy + 29 - perpY * 2);
-        p.drawLine(cx + perpX * 3, cy + 6 + perpY * 2, cx + perpX * 3 - sx * stride, oy + 29 + perpY * 2);
+        drawLegs(p, actor, cx, cy, sx, sy, perpX, perpY, stride);
+        drawTorso(p, actor, cx, cy, sx, sy, bodyRadius);
+        drawIdentitySilhouette(p, actor, cx, cy, sx, sy, perpX, perpY);
+        drawFacingDetail(p, actor, cx, cy, sx, sy, perpX, perpY);
+        drawWeaponOrClaw(p, actor, cx, cy, sx, sy, perpX, perpY, motion, frame, attackReach);
 
+        if (motion == 3) drawHitSpark(p, ox, oy, sx, sy);
+    }
+
+    private static void drawShadow(Pixmap p, int ox, int oy, int actor, int motion, int frame, int bodyRadius) {
+        int alpha = isBoss(actor) ? 105 : 78;
+        set(p, 0, 0, 0, alpha);
+        int radius = motion == 4 ? Math.max(3, bodyRadius - 2) : bodyRadius + 1;
+        int x = ox + 16 + (motion == 4 ? frame : 0);
+        p.fillCircle(x, oy + 26, radius);
+        set(p, 22, 28, 35, alpha / 2);
+        p.drawLine(x - radius, oy + 27, x + radius, oy + 27);
+    }
+
+    private static void drawDeath(Pixmap p, int ox, int oy, int actor, int dx, int bodyRadius, int frame) {
+        int side = dx < 0 ? -1 : 1;
+        int shift = frame * 3 * side;
+        setSecondary(p, actor);
+        p.fillCircle(ox + 16 + shift, oy + 18 + frame * 3, Math.max(4, bodyRadius - frame));
+        setPrimary(p, actor);
+        p.fillCircle(ox + 13 + shift, oy + 12 + frame * 4, Math.max(3, bodyRadius - 2 - frame));
+        setAccent(p, actor);
+        p.drawLine(ox + 8 + shift, oy + 14 + frame * 3, ox + 23 + shift, oy + 20 + frame * 3);
+        if (frame >= 1) {
+            set(p, 0.96f, .18f, .18f, .72f);
+            p.drawLine(ox + 9 + shift, oy + 24, ox + 21 + shift, oy + 25);
+        }
+    }
+
+    private static void drawLegs(Pixmap p, int actor, int cx, int cy, int sx, int sy, int perpX, int perpY, int stride) {
+        setSecondary(p, actor);
+        int hipY = cy + 6;
+        int leftX = cx - perpX * 3;
+        int leftY = hipY - perpY * 2;
+        int rightX = cx + perpX * 3;
+        int rightY = hipY + perpY * 2;
+        p.drawLine(leftX, leftY, leftX + sx * stride - perpX, cy + 13 - perpY * 2);
+        p.drawLine(rightX, rightY, rightX - sx * stride + perpX, cy + 13 + perpY * 2);
+        setPrimary(p, actor);
+        p.fillCircle(leftX + sx * stride - perpX, cy + 13 - perpY * 2, isBoss(actor) ? 2 : 1);
+        p.fillCircle(rightX - sx * stride + perpX, cy + 13 + perpY * 2, isBoss(actor) ? 2 : 1);
+    }
+
+    private static void drawTorso(Pixmap p, int actor, int cx, int cy, int sx, int sy, int bodyRadius) {
         setSecondary(p, actor);
         p.fillCircle(cx, cy + 2, bodyRadius);
         setPrimary(p, actor);
         p.fillCircle(cx + sx * 2, cy - 7 + sy * 2, Math.max(5, bodyRadius - 2));
 
-        drawIdentitySilhouette(p, actor, cx, cy, sx, sy, perpX, perpY);
+        // Directional rim light and chest plate/readability stripe.
+        setAccent(p, actor);
+        p.drawLine(cx - 4, cy - 1, cx + 4, cy - 1);
+        p.drawLine(cx - 3, cy, cx + 3, cy);
+        if (isSurvivor(actor) || isBoss(actor)) {
+            p.drawLine(cx - 4 + sx, cy + 4 + sy, cx + 4 + sx, cy + 4 + sy);
+        }
+    }
 
+    private static void drawFacingDetail(Pixmap p, int actor, int cx, int cy, int sx, int sy, int perpX, int perpY) {
         int faceX = cx + sx * 5;
         int faceY = cy - 7 + sy * 5;
         setAccent(p, actor);
-        if (isSurvivor(actor) || actor == 4) {
+        if (isSurvivor(actor) || actor == 4 || actor == 8) {
             p.drawLine(faceX - perpX * 3, faceY - perpY * 3, faceX + perpX * 3, faceY + perpY * 3);
+            if (isSurvivor(actor)) p.drawLine(faceX - perpX * 2 + sx, faceY - perpY * 2 + sy,
+                faceX + perpX * 2 + sx, faceY + perpY * 2 + sy);
         } else {
             p.fillCircle(faceX - perpX * 2, faceY - perpY * 2, 1);
             p.fillCircle(faceX + perpX * 2, faceY + perpY * 2, 1);
         }
+    }
 
-        setPrimary(p, actor);
+    private static void drawWeaponOrClaw(Pixmap p, int actor, int cx, int cy, int sx, int sy,
+                                         int perpX, int perpY, int motion, int frame, int attackReach) {
         int handX = cx + sx * (7 + attackReach);
         int handY = cy + 2 + sy * (7 + attackReach);
+        setPrimary(p, actor);
         p.drawLine(cx, cy + 2, handX, handY);
 
         if (isSurvivor(actor) || actor == 4) {
-            setAccent(p, actor);
             int muzzleX = cx + sx * (12 + attackReach);
             int muzzleY = cy + 2 + sy * (12 + attackReach);
+            setSecondary(p, actor);
+            p.drawLine(handX - perpX, handY - perpY, muzzleX - perpX, muzzleY - perpY);
+            setAccent(p, actor);
             p.drawLine(handX, handY, muzzleX, muzzleY);
+            drawWeaponIdentity(p, actor, handX, handY, muzzleX, muzzleY, perpX, perpY);
             if (motion == 2 && frame == 1) {
                 set(p, 1f, .83f, .35f, 1f);
                 p.fillCircle(muzzleX + sx * 2, muzzleY + sy * 2, 2);
+                set(p, 1f, .96f, .72f, .85f);
+                p.drawLine(muzzleX + sx, muzzleY + sy, muzzleX + sx * 4, muzzleY + sy * 4);
             }
         } else {
             int clawX = cx + sx * (5 + attackReach) - perpX * 7;
             int clawY = cy + 3 + sy * (5 + attackReach) - perpY * 7;
             p.drawLine(cx - perpX * 2, cy + 3 - perpY * 2, clawX, clawY);
+            setAccent(p, actor);
+            p.drawLine(clawX, clawY, clawX + sx * 2 - perpX, clawY + sy * 2 - perpY);
         }
+    }
 
-        if (motion == 3) {
-            set(p, 1f, .88f, .82f, 1f);
-            p.drawLine(ox + 5, oy + 6, ox + 12, oy + 13);
-            p.drawLine(ox + 5, oy + 12, ox + 13, oy + 6);
+    private static void drawWeaponIdentity(Pixmap p, int actor, int handX, int handY, int muzzleX, int muzzleY,
+                                           int perpX, int perpY) {
+        switch (actor) {
+            case 0 -> { // REX: compact rifle stock
+                p.drawLine(handX - perpX * 2, handY - perpY * 2, handX + perpX * 2, handY + perpY * 2);
+            }
+            case 10 -> { // NYX: paired energy blade silhouette
+                p.drawLine(handX + perpX * 2, handY + perpY * 2, muzzleX + perpX * 3, muzzleY + perpY * 3);
+            }
+            case 11 -> { // BASTION: heavy receiver
+                setSecondary(p, actor);
+                p.fillCircle(handX, handY, 2);
+                setAccent(p, actor);
+                p.drawLine(handX + perpX * 2, handY + perpY * 2, muzzleX + perpX * 2, muzzleY + perpY * 2);
+            }
+            case 12 -> { // VOLT: capacitor prongs
+                p.drawLine(muzzleX - perpX * 2, muzzleY - perpY * 2, muzzleX + perpX * 2, muzzleY + perpY * 2);
+            }
+            case 13 -> { // WRAITH: forked spectral muzzle
+                p.drawLine(muzzleX, muzzleY, muzzleX + perpX * 3, muzzleY + perpY * 3);
+                p.drawLine(muzzleX, muzzleY, muzzleX - perpX * 3, muzzleY - perpY * 3);
+            }
+            default -> { }
         }
+    }
+
+    private static void drawHitSpark(Pixmap p, int ox, int oy, int sx, int sy) {
+        int hx = ox + 7 - sx * 2;
+        int hy = oy + 8 - sy * 2;
+        set(p, 1f, .88f, .82f, 1f);
+        p.drawLine(hx - 4, hy - 4, hx + 4, hy + 4);
+        p.drawLine(hx - 4, hy + 4, hx + 4, hy - 4);
+        set(p, 1f, .42f, .28f, .90f);
+        p.fillCircle(hx, hy, 2);
     }
 
     private static void drawIdentitySilhouette(Pixmap p, int actor, int cx, int cy, int sx, int sy, int perpX, int perpY) {
         setAccent(p, actor);
         switch (actor) {
-            case 3 -> {
+            case 1 -> { // Shambler: torn asymmetrical shoulder
+                p.drawLine(cx - perpX * 5, cy + 1 - perpY * 5, cx - perpX * 8 - sx, cy + 4 - perpY * 8 - sy);
+            }
+            case 2 -> { // Runner: swept back spikes
+                p.drawLine(cx - sx * 2, cy - 5 - sy * 2, cx - sx * 6, cy - 10 - sy * 6);
+                p.drawLine(cx + perpX * 3, cy - 5 + perpY * 3, cx - sx * 4 + perpX * 4, cy - 9 - sy * 4 + perpY * 4);
+            }
+            case 3 -> { // Brute: broad shoulder bar
                 p.drawLine(cx - perpX * 8, cy, cx + perpX * 8, cy);
                 p.drawLine(cx - perpX * 7, cy + 1, cx + perpX * 7, cy + 1);
             }
             case 4 -> p.drawLine(cx + sx * 4, cy + sy * 4, cx + sx * 13, cy + sy * 13);
-            case 5 -> {
+            case 5 -> { // Elite: horns
                 p.drawLine(cx - perpX * 5, cy - 7 - perpY * 5, cx - perpX * 7 + sx * 2, cy - 12 - perpY * 7 + sy * 2);
                 p.drawLine(cx + perpX * 5, cy - 7 + perpY * 5, cx + perpX * 7 + sx * 2, cy - 12 + perpY * 7 + sy * 2);
             }
-            case 6 -> {
+            case 6 -> { // Alpha: crown horns
                 p.drawLine(cx - perpX * 5, cy - 7, cx - perpX * 8 - sx * 2, cy - 11 - sy * 2);
                 p.drawLine(cx + perpX * 5, cy - 7, cx + perpX * 8 - sx * 2, cy - 11 - sy * 2);
+                p.drawLine(cx, cy - 11, cx - sx * 3, cy - 15 - sy * 3);
             }
-            case 7 -> {
+            case 7 -> { // Revenant: halo/ring
                 p.drawCircle(cx, cy - 7, 8);
                 p.drawLine(cx - perpX * 7, cy - 7 - perpY * 7, cx + perpX * 7, cy - 7 + perpY * 7);
             }
-            case 8 -> p.drawRectangle(cx - 7, cy - 3, 14, 10);
-            case 9 -> {
+            case 8 -> { // Warden: shield slab
+                p.drawRectangle(cx - 7, cy - 3, 14, 10);
+                p.drawLine(cx - 6, cy + 1, cx + 6, cy + 1);
+            }
+            case 9 -> { // Harvester: scythe ring
                 p.drawCircle(cx + sx * 5, cy + sy * 5, 9);
                 setSecondary(p, actor);
                 p.fillCircle(cx + sx * 2, cy + sy * 2, 6);
+                setAccent(p, actor);
+                p.drawLine(cx + sx * 5 - perpX * 8, cy + sy * 5 - perpY * 8,
+                    cx + sx * 7 + perpX * 7, cy + sy * 7 + perpY * 7);
             }
-            case 10 -> {
+            case 10 -> { // NYX: antenna/blade fins
                 p.drawLine(cx - perpX * 4, cy - 6 - perpY * 4, cx - perpX * 6 - sx * 2, cy - 12 - perpY * 6 - sy * 2);
                 p.drawLine(cx + perpX * 4, cy - 6 + perpY * 4, cx + perpX * 6 - sx * 2, cy - 12 + perpY * 6 - sy * 2);
             }
-            case 11 -> {
+            case 11 -> { // Bastion: heavy armor block
                 p.drawRectangle(cx - 8, cy - 2, 16, 7);
                 p.drawLine(cx - perpX * 8, cy + 5, cx + perpX * 8, cy + 5);
+                p.drawLine(cx - 6, cy - 4, cx + 6, cy - 4);
             }
-            case 12 -> {
+            case 12 -> { // Volt: capacitor halo
                 p.drawCircle(cx, cy + 1, 9);
                 p.drawLine(cx - 6, cy - 8, cx - 2, cy - 12);
                 p.drawLine(cx + 2, cy - 12, cx + 6, cy - 8);
+                p.drawLine(cx - 8, cy + 3, cx - 5, cy + 7);
+                p.drawLine(cx + 5, cy + 7, cx + 8, cy + 3);
             }
-            case 13 -> {
+            case 13 -> { // Wraith: spectral cloak wings
                 p.drawCircle(cx + sx, cy - 6 + sy, 7);
                 p.drawLine(cx - perpX * 6, cy + 5 - perpY * 6, cx + sx * 2, cy + 9 + sy * 2);
                 p.drawLine(cx + perpX * 6, cy + 5 + perpY * 6, cx + sx * 2, cy + 9 + sy * 2);
+                p.drawLine(cx - perpX * 5, cy + 7 - perpY * 5, cx - perpX * 3 - sx * 3, cy + 12 - perpY * 3 - sy * 3);
             }
             default -> { }
         }
@@ -285,35 +383,12 @@ public final class DirectionalBootstrapArt implements Disposable {
     }
 
     private static boolean isBoss(int actor) { return actor >= 6 && actor <= 9; }
-
     private static boolean isSurvivor(int actor) { return actor == 0 || actor >= 10; }
 
-    private static void setPrimary(Pixmap p, int actor) {
-        float[][] colors = {
-            {.18f,.72f,.94f}, {.42f,.64f,.36f}, {.72f,.47f,.28f}, {.55f,.34f,.32f}, {.30f,.52f,.72f},
-            {.64f,.28f,.70f}, {.72f,.18f,.23f}, {.34f,.31f,.68f}, {.30f,.46f,.64f}, {.56f,.24f,.16f},
-            {.68f,.30f,.88f}, {.82f,.62f,.22f}, {.24f,.82f,.66f}, {.72f,.78f,.90f}
-        };
-        set(p, colors[actor][0], colors[actor][1], colors[actor][2], 1f);
-    }
-
-    private static void setSecondary(Pixmap p, int actor) {
-        float[][] colors = {
-            {.08f,.28f,.44f}, {.19f,.31f,.17f}, {.31f,.19f,.13f}, {.25f,.14f,.14f}, {.12f,.23f,.35f},
-            {.26f,.10f,.30f}, {.29f,.07f,.10f}, {.13f,.11f,.31f}, {.12f,.20f,.30f}, {.25f,.09f,.06f},
-            {.25f,.10f,.38f}, {.38f,.28f,.10f}, {.08f,.34f,.28f}, {.20f,.23f,.34f}
-        };
-        set(p, colors[actor][0], colors[actor][1], colors[actor][2], 1f);
-    }
-
-    private static void setAccent(Pixmap p, int actor) {
-        float[][] colors = {
-            {.76f,.96f,1f}, {.94f,.30f,.25f}, {1f,.61f,.30f}, {1f,.32f,.26f}, {.40f,.90f,1f},
-            {1f,.38f,.92f}, {1f,.48f,.28f}, {.48f,.92f,1f}, {.50f,.82f,1f}, {1f,.74f,.28f},
-            {1f,.42f,1f}, {1f,.90f,.52f}, {.62f,1f,.86f}, {.52f,.90f,1f}
-        };
-        set(p, colors[actor][0], colors[actor][1], colors[actor][2], 1f);
-    }
+    private static void setPrimary(Pixmap p, int actor) { setPalette(p, PRIMARY[actor]); }
+    private static void setSecondary(Pixmap p, int actor) { setPalette(p, SECONDARY[actor]); }
+    private static void setAccent(Pixmap p, int actor) { setPalette(p, ACCENT[actor]); }
+    private static void setPalette(Pixmap p, float[] color) { p.setColor(color[0], color[1], color[2], 1f); }
 
     private static void set(Pixmap p, int r, int g, int b, int a) {
         p.setColor(r / 255f, g / 255f, b / 255f, a / 255f);
