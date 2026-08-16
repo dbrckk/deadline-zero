@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.deadlinezero.game.ai.BossIdentity;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.fx.DeathFx;
@@ -24,6 +25,7 @@ public final class AuthoredVfxRenderer {
         drawDash(batch, player);
         drawLevelUp(batch, player);
         drawLegendary(batch, player);
+        drawNullArchon(batch, enemies);
         drawImpacts(batch, pools);
         drawBossDeath(batch, pools);
         batch.end();
@@ -81,6 +83,44 @@ public final class AuthoredVfxRenderer {
         float drawSize = size * pulse;
         batch.setColor(1f, 1f, 1f, alpha);
         batch.draw(region, player.position.x - drawSize * .5f, player.position.y - drawSize * .5f, drawSize, drawSize);
+    }
+
+    private void drawNullArchon(SpriteBatch batch, Iterable<Enemy> enemies) {
+        float stateTime = (TimeUtils.millis() % 120_000L) / 1000f;
+        for (Enemy enemy : enemies) {
+            if (!enemy.alive || enemy.type != Enemy.Type.BOSS || enemy.bossCombat == null
+                || enemy.bossCombat.identity() != BossIdentity.NULL_ARCHON) continue;
+
+            int phase = enemy.bossPhases == null ? 1 : enemy.bossPhases.phase();
+            TextureRegion aura = art.loopingEffectOrNull("null_archon_aura", stateTime, .075f);
+            if (aura != null) {
+                float pulse = 1f + MathUtils.sin(stateTime * 5.2f) * .055f;
+                float size = (phase >= 3 ? 5.8f : phase == 2 ? 5.15f : 4.65f) * pulse;
+                batch.setColor(.82f, .86f, 1f, phase >= 3 ? .74f : .56f);
+                batch.draw(aura, enemy.position.x - size * .5f, enemy.position.y - size * .5f, size, size);
+            }
+
+            if (enemy.bossCombat.summonTelegraphing(phase)) {
+                float progress = enemy.bossCombat.summonTelegraphProgress(phase);
+                TextureRegion portal = art.loopingEffectOrNull("null_archon_portal", stateTime, .055f);
+                if (portal != null) {
+                    float size = 2.4f + progress * 2.8f;
+                    float y = enemy.position.y + 1.45f + progress * .35f;
+                    batch.setColor(.82f, .72f, 1f, .52f + progress * .42f);
+                    batch.draw(portal, enemy.position.x - size * .5f, y - size * .5f, size, size);
+                }
+            }
+
+            if (phase >= 3) {
+                TextureRegion fracture = art.loopingEffectOrNull("null_archon_fracture", stateTime, .065f);
+                if (fracture != null) {
+                    float size = 6.4f + MathUtils.sin(stateTime * 3.8f) * .35f;
+                    batch.setColor(.74f, .64f, 1f, .44f);
+                    batch.draw(fracture, enemy.position.x - size * .5f, enemy.position.y - size * .5f, size, size);
+                }
+            }
+        }
+        batch.setColor(Color.WHITE);
     }
 
     private void drawImpacts(SpriteBatch batch, Pools pools) {
