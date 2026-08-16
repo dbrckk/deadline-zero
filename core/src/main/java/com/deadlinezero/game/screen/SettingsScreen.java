@@ -15,8 +15,13 @@ import com.deadlinezero.game.visual.VisualTheme;
 
 /** Lightweight production settings screen with persistent accessibility, audio and privacy controls. */
 public final class SettingsScreen extends ScreenAdapter {
-    private static final int PRIVACY_ROW = 11;
-    private static final int POLICY_ROW = 12;
+    private static final int REDUCED_MOTION_ROW = 7;
+    private static final int UI_SCALE_ROW = 8;
+    private static final int MASTER_VOLUME_ROW = 9;
+    private static final int SFX_VOLUME_ROW = 10;
+    private static final int MUSIC_VOLUME_ROW = 11;
+    private static final int PRIVACY_ROW = 12;
+    private static final int POLICY_ROW = 13;
     private static final int LAST_ROW = POLICY_ROW;
 
     private final DeadlineZeroGame game;
@@ -36,22 +41,22 @@ public final class SettingsScreen extends ScreenAdapter {
         boolean policyAvailable = game.services.privacy.policyAvailable();
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(VisualTheme.PANEL); shapes.rect(w * .14f, h * .08f, w * .72f, h * .77f);
+        shapes.setColor(VisualTheme.PANEL); shapes.rect(w * .14f, h * .06f, w * .72f, h * .79f);
         shapes.setColor(VisualTheme.CYAN); shapes.rect(w * .14f, h * .84f, w * .72f, 3f);
-        float startY = h * .72f;
-        float step = h * .052f;
+        float startY = h * .735f;
+        float step = h * .047f;
         shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .13f);
         shapes.rect(w * .18f, startY - row * step - 24f, w * .64f, 36f);
         shapes.end();
 
         String[] labels = {
             "Screen shake", "Shake strength", "Hit stop", "Damage flash", "High contrast telegraphs",
-            "Reduce flashes", "Haptics", "UI scale", "Master volume", "SFX volume", "Music volume",
+            "Reduce flashes", "Haptics", "Reduced motion", "UI scale", "Master volume", "SFX volume", "Music volume",
             "Privacy choices", "Privacy policy"
         };
         String[] values = {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
-            onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), pct(s.uiScale),
+            onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), onOff(s.reducedMotion), pct(s.uiScale),
             pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
             privacyRequired ? "OPEN" : "NOT REQUIRED",
             policyAvailable ? "OPEN" : "UNAVAILABLE"
@@ -60,9 +65,9 @@ public final class SettingsScreen extends ScreenAdapter {
         batch.begin();
         font.getData().setScale(1.45f); font.setColor(VisualTheme.TEXT);
         font.draw(batch, "SETTINGS", 0, h * .91f, w, Align.center, false);
-        font.getData().setScale(.55f);
+        font.getData().setScale(.52f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "TAP TO ADJUST  •  TAP TOP-LEFT TO GO BACK", 0, h * .855f, w, Align.center, false);
+        font.draw(batch, "TAP TO ADJUST  •  REDUCED MOTION IS A ONE-SWITCH COMFORT PRESET", 0, h * .855f, w, Align.center, false);
 
         for (int i = 0; i < labels.length; i++) {
             float y = startY - i * step;
@@ -146,10 +151,10 @@ public final class SettingsScreen extends ScreenAdapter {
         float t = clamp((x - left) / Math.max(1f, right - left), 0f, 1f);
         switch (targetRow) {
             case 1 -> s.screenShakeStrength = t;
-            case 7 -> s.uiScale = .85f + t * .50f;
-            case 8 -> s.masterVolume = t;
-            case 9 -> s.sfxVolume = t;
-            case 10 -> s.musicVolume = t;
+            case UI_SCALE_ROW -> s.uiScale = .85f + t * .50f;
+            case MASTER_VOLUME_ROW -> s.masterVolume = t;
+            case SFX_VOLUME_ROW -> s.sfxVolume = t;
+            case MUSIC_VOLUME_ROW -> s.musicVolume = t;
             default -> { }
         }
     }
@@ -163,10 +168,11 @@ public final class SettingsScreen extends ScreenAdapter {
             case 4 -> s.highContrastTelegraphs = !s.highContrastTelegraphs;
             case 5 -> s.reduceFlashes = !s.reduceFlashes;
             case 6 -> s.haptics = !s.haptics;
-            case 7 -> s.uiScale = clamp(s.uiScale + dir * .05f, .85f, 1.35f);
-            case 8 -> s.masterVolume = clamp(s.masterVolume + dir * .05f, 0f, 1f);
-            case 9 -> s.sfxVolume = clamp(s.sfxVolume + dir * .05f, 0f, 1f);
-            case 10 -> s.musicVolume = clamp(s.musicVolume + dir * .05f, 0f, 1f);
+            case REDUCED_MOTION_ROW -> s.setReducedMotion(!s.reducedMotion);
+            case UI_SCALE_ROW -> s.uiScale = clamp(s.uiScale + dir * .05f, .85f, 1.35f);
+            case MASTER_VOLUME_ROW -> s.masterVolume = clamp(s.masterVolume + dir * .05f, 0f, 1f);
+            case SFX_VOLUME_ROW -> s.sfxVolume = clamp(s.sfxVolume + dir * .05f, 0f, 1f);
+            case MUSIC_VOLUME_ROW -> s.musicVolume = clamp(s.musicVolume + dir * .05f, 0f, 1f);
             default -> { }
         }
     }
@@ -178,7 +184,8 @@ public final class SettingsScreen extends ScreenAdapter {
     }
 
     private static boolean isSliderRow(int value) {
-        return value == 1 || value == 7 || value == 8 || value == 9 || value == 10;
+        return value == 1 || value == UI_SCALE_ROW || value == MASTER_VOLUME_ROW
+            || value == SFX_VOLUME_ROW || value == MUSIC_VOLUME_ROW;
     }
 
     private void saveAndBack() {
