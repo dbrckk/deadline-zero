@@ -3,6 +3,8 @@ package com.deadlinezero.game.meta;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.deadlinezero.game.combat.WeaponCatalog;
+import com.deadlinezero.game.combat.WeaponDefinition;
+import com.deadlinezero.game.visual.EnvironmentBiomeRules;
 
 /** Persistent account storage backed by libGDX Preferences on Android/Desktop. */
 public final class ProfileStore {
@@ -29,6 +31,13 @@ public final class ProfileStore {
         profile.selectedWeaponId = WeaponCatalog.byId(p.getString("weapon.selected", WeaponCatalog.AR9.id)).id;
         profile.addCurrency(PlayerProfile.Currency.CREDITS, Math.max(0L, p.getLong("credits", 0L)));
         profile.addCurrency(PlayerProfile.Currency.GEMS, Math.max(0L, p.getLong("gems", 0L)));
+
+        for (WeaponDefinition weapon : WeaponCatalog.all()) {
+            profile.mastery.setWeaponWins(weapon.id, p.getInteger("mastery.weapon." + weapon.id + ".wins", 0));
+        }
+        for (EnvironmentBiomeRules.Biome biome : EnvironmentBiomeRules.Biome.values()) {
+            profile.mastery.setBiomeWins(biome, p.getInteger("mastery.biome." + biome.name() + ".wins", 0));
+        }
 
         for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
             String key = "survivor." + survivor.name() + ".";
@@ -100,6 +109,13 @@ public final class ProfileStore {
         }
         p.putLong("credits", profile.currency(PlayerProfile.Currency.CREDITS));
         p.putLong("gems", profile.currency(PlayerProfile.Currency.GEMS));
+
+        for (WeaponDefinition weapon : WeaponCatalog.all()) {
+            p.putInteger("mastery.weapon." + weapon.id + ".wins", profile.mastery.weaponWins(weapon.id));
+        }
+        for (EnvironmentBiomeRules.Biome biome : EnvironmentBiomeRules.Biome.values()) {
+            p.putInteger("mastery.biome." + biome.name() + ".wins", profile.mastery.biomeWins(biome));
+        }
 
         p.putLong("daily.epochDay", profile.daily.epochDay);
         p.putInteger("daily.loginStreak", profile.daily.loginStreak);
