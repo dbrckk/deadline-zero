@@ -29,6 +29,16 @@ final class MasteryProgressTest {
         assertEquals(4, mastery.winsForNextWeaponRank(WeaponCatalog.AR9.id));
     }
 
+    @Test void prestigeTitlesAreStableAndClamped() {
+        assertEquals("UNTRAINED", MasteryProgress.rankTitle(-5));
+        assertEquals("INITIATE", MasteryProgress.rankTitle(1));
+        assertEquals("SPECIALIST", MasteryProgress.rankTitle(2));
+        assertEquals("VETERAN", MasteryProgress.rankTitle(3));
+        assertEquals("ELITE", MasteryProgress.rankTitle(4));
+        assertEquals("ASCENDANT", MasteryProgress.rankTitle(5));
+        assertEquals("ASCENDANT", MasteryProgress.rankTitle(99));
+    }
+
     @Test void masterySeparatesWeaponsAndBiomes() {
         MasteryProgress mastery = new MasteryProgress();
         mastery.recordVictory(WeaponCatalog.CINDER_CANNON.id, 12);
