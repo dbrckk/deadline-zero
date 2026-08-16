@@ -207,21 +207,40 @@ public final class GameScreen extends ScreenAdapter {
     private void spawnBossMinions(Enemy boss, int phase) {
         int count = boss.bossCombat == null ? (phase >= 3 ? 6 : 3) : boss.bossCombat.summonCount(phase);
         boolean revenant = boss.bossCombat != null && boss.bossCombat.revenant();
+        boolean nullArchon = boss.bossCombat != null && boss.bossCombat.nullArchon();
         for (int i = 0; i < count && enemies.size < GameConfig.MAX_ENEMIES; i++) {
             float angle = i * (MathUtils.PI2 / count) + MathUtils.random(-.18f, .18f);
             float dist = 2.6f + MathUtils.random(0f, 1.2f);
             float x = boss.position.x + MathUtils.cos(angle) * dist;
             float y = boss.position.y + MathUtils.sin(angle) * dist;
             float scale = 1f + director.elapsed() / 210f;
-            boolean rangedSlot = phase >= 3 && (revenant ? i % 2 == 0 : i % 3 == 0);
-            Enemy.Type type = rangedSlot ? Enemy.Type.RANGED : Enemy.Type.RUNNER;
-            Enemy minion = type == Enemy.Type.RANGED
-                ? new Enemy(type, x, y, 68f * scale, 2.2f, .42f, 12f, 10)
-                : new Enemy(type, x, y, 30f * scale, 4.35f, .34f, 8f, 5);
+            Enemy.Type type;
+            if (nullArchon) {
+                if (phase >= 3) {
+                    type = switch (i % 3) {
+                        case 0 -> Enemy.Type.PHANTOM;
+                        case 1 -> Enemy.Type.RANGED;
+                        default -> Enemy.Type.REGENERATOR;
+                    };
+                } else {
+                    type = i % 3 == 1 ? Enemy.Type.RANGED : Enemy.Type.PHANTOM;
+                }
+            } else {
+                boolean rangedSlot = phase >= 3 && (revenant ? i % 2 == 0 : i % 3 == 0);
+                type = rangedSlot ? Enemy.Type.RANGED : Enemy.Type.RUNNER;
+            }
+
+            Enemy minion = switch (type) {
+                case RANGED -> new Enemy(type, x, y, 68f * scale, 2.2f, .42f, 12f, 10);
+                case PHANTOM -> new Enemy(type, x, y, 54f * scale, 3.25f, .40f, 11f, 10);
+                case REGENERATOR -> new Enemy(type, x, y, 92f * scale, 2.05f, .48f, 11f, 12);
+                default -> new Enemy(type, x, y, 30f * scale, 4.35f, .34f, 8f, 5);
+            };
             enemies.add(minion);
-            impact(x, y, .65f, .18f, revenant ? VisualTheme.RED : VisualTheme.VIOLET);
+            impact(x, y, nullArchon ? .82f : .65f, nullArchon ? .22f : .18f,
+                revenant ? VisualTheme.RED : VisualTheme.VIOLET);
         }
-        cameraShake = Math.max(cameraShake, revenant ? .18f : .12f);
+        cameraShake = Math.max(cameraShake, nullArchon ? .22f : (revenant ? .18f : .12f));
     }
 
     private void bossEnragePulse(Enemy boss) {
