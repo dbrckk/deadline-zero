@@ -281,9 +281,14 @@ public final class Enemy extends ActorState {
             pendingTactic = Tactic.NONE;
             return;
         }
-        if (pendingTactic != Tactic.NONE || tacticalCooldown > 0f || attack.state() != EnemyState.CHASING) return;
+        if (pendingTactic != Tactic.NONE || tacticalCooldown > 0f) return;
 
         BiomeEnemyBehaviorRules.Profile behavior = biomeBehavior();
+        boolean canStrafe = type == Type.RANGED || behavior.evasiveStrafe();
+        boolean tacticalState = attack.state() == EnemyState.CHASING
+            || (canStrafe && attack.state() == EnemyState.HOLDING_RANGE);
+        if (!tacticalState) return;
+
         float cadence = switch (variant) {
             case SWIFT -> .78f;
             case FERAL -> .82f;
@@ -292,7 +297,6 @@ public final class Enemy extends ActorState {
         };
         cadence *= behavior.tacticCooldownMultiplier();
 
-        boolean canStrafe = type == Type.RANGED || behavior.evasiveStrafe();
         if (canStrafe && distanceToPlayer >= 3.2f && distanceToPlayer <= 10.5f) {
             pendingTactic = Tactic.STRAFE;
             tacticalWindup = type == Type.PHANTOM ? .10f : .16f;
