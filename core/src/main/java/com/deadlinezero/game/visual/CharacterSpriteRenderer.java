@@ -45,15 +45,10 @@ public final class CharacterSpriteRenderer {
     private void drawPlayer(SpriteBatch batch, Player player) {
         var survivor = RunLoadoutContext.survivor();
         GameArt.Motion motion;
-        if (!player.alive) {
-            motion = GameArt.Motion.DEATH;
-        } else if (player.visualHitTimer > 0f) {
-            motion = GameArt.Motion.HIT;
-        } else if (playerAttackWindow(survivor)) {
-            motion = GameArt.Motion.ATTACK;
-        } else {
-            motion = player.velocity.len2() > .04f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
-        }
+        if (!player.alive) motion = GameArt.Motion.DEATH;
+        else if (player.visualHitTimer > 0f) motion = GameArt.Motion.HIT;
+        else if (playerAttackWindow(survivor)) motion = GameArt.Motion.ATTACK;
+        else motion = player.velocity.len2() > .04f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
 
         Clock clock = clock(player, motion);
         clock.direction = Direction8.fromVector(player.velocity.x, player.velocity.y, clock.direction);
@@ -65,22 +60,17 @@ public final class CharacterSpriteRenderer {
 
         int pieces = RunLoadoutContext.ascensionSetPieces();
         float pulse = .5f + .5f * MathUtils.sin(clock.time * (pieces >= 4 ? 7.5f : 4.5f));
-        float r = 1f, g = 1f, b = 1f;
-        float scale = 1f;
+        float r = 1f, g = 1f, b = 1f, scale = 1f;
         if (pieces >= 4) {
-            r = 1f;
             g = .82f + pulse * .10f;
-            b = 1f;
             scale = 1.025f + pulse * .018f;
         } else if (pieces == 3) {
-            r = 1f;
             g = .92f + pulse * .05f;
             b = .76f + pulse * .08f;
             scale = 1.015f;
         } else if (pieces == 2) {
             r = .78f + pulse * .06f;
             g = .94f;
-            b = 1f;
             scale = 1.008f;
         }
         float alpha = player.invulnerable() ? .78f : 1f;
@@ -97,22 +87,25 @@ public final class CharacterSpriteRenderer {
 
     private void drawEnemy(SpriteBatch batch, Enemy enemy) {
         GameArt.Motion motion;
-        if (enemy.hitFlash > .22f || enemy.attack.state() == EnemyState.STUNNED) {
-            motion = GameArt.Motion.HIT;
-        } else if (enemy.attack.state() == EnemyState.ATTACKING || enemy.attack.state() == EnemyState.TELEGRAPHING || enemy.tacticalTelegraph()) {
-            motion = GameArt.Motion.ATTACK;
-        } else {
-            motion = enemy.velocity.len2() > .025f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
-        }
+        if (enemy.hitFlash > .22f || enemy.attack.state() == EnemyState.STUNNED) motion = GameArt.Motion.HIT;
+        else if (enemy.attack.state() == EnemyState.ATTACKING || enemy.attack.state() == EnemyState.TELEGRAPHING || enemy.tacticalTelegraph()) motion = GameArt.Motion.ATTACK;
+        else motion = enemy.velocity.len2() > .025f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
 
         Clock clock = clock(enemy, motion);
         clock.direction = Direction8.fromVector(enemy.velocity.x, enemy.velocity.y, clock.direction);
         ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.enemy(enemy.type);
         BossIdentity bossIdentity = enemy.type == Enemy.Type.BOSS && enemy.bossCombat != null
             ? enemy.bossCombat.identity() : BossIdentity.ALPHA;
-        TextureRegion region = enemy.type == Enemy.Type.BOSS
-            ? art.boss(bossIdentity, motion, clock.direction, clock.time)
-            : art.enemy(enemy.type, motion, clock.direction, clock.time);
+        BiomeEnemyRoster.Identity biomeIdentity = enemy.type == Enemy.Type.BOSS
+            ? BiomeEnemyRoster.Identity.NONE : BiomeEnemyRoster.identityFor(RunStageContext.stage(), enemy.type);
+        TextureRegion region;
+        if (enemy.type == Enemy.Type.BOSS) {
+            region = art.boss(bossIdentity, motion, clock.direction, clock.time);
+        } else if (biomeIdentity != BiomeEnemyRoster.Identity.NONE) {
+            region = art.biomeEnemy(biomeIdentity, enemy.type, motion, clock.direction, clock.time);
+        } else {
+            region = art.enemy(enemy.type, motion, clock.direction, clock.time);
+        }
         float h = profile.height();
         float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float w = h * aspect;
@@ -126,24 +119,9 @@ public final class CharacterSpriteRenderer {
 
         if (enemy.type != Enemy.Type.BOSS) {
             switch (enemy.variant) {
-                case SWIFT -> {
-                    r *= .72f;
-                    g *= .92f;
-                    b *= 1.00f;
-                    scale *= .94f;
-                }
-                case ARMORED -> {
-                    r *= .82f;
-                    g *= .86f;
-                    b *= .94f;
-                    scale *= 1.10f;
-                }
-                case FERAL -> {
-                    r *= 1.00f;
-                    g *= .62f;
-                    b *= .56f;
-                    scale *= 1.04f;
-                }
+                case SWIFT -> { r *= .72f; g *= .92f; scale *= .94f; }
+                case ARMORED -> { r *= .82f; g *= .86f; b *= .94f; scale *= 1.10f; }
+                case FERAL -> { g *= .62f; b *= .56f; scale *= 1.04f; }
                 default -> { }
             }
         }
@@ -174,14 +152,12 @@ public final class CharacterSpriteRenderer {
             default -> { }
         }
 
-        if (enemy.type != Enemy.Type.BOSS) {
-            BiomeEnemyRoster.Identity biomeIdentity = BiomeEnemyRoster.identityFor(RunStageContext.stage(), enemy.type);
-            if (biomeIdentity != BiomeEnemyRoster.Identity.NONE) {
-                r *= biomeIdentity.tintR;
-                g *= biomeIdentity.tintG;
-                b *= biomeIdentity.tintB;
-                scale *= biomeIdentity.visualScale;
-            }
+        if (biomeIdentity != BiomeEnemyRoster.Identity.NONE) {
+            // Dedicated sprites carry the palette; keep only subtle material modulation and sizing here.
+            r *= .88f + biomeIdentity.tintR * .12f;
+            g *= .88f + biomeIdentity.tintG * .12f;
+            b *= .88f + biomeIdentity.tintB * .12f;
+            scale *= biomeIdentity.visualScale;
         }
 
         if (enemy.reactionFlash > 0f && enemy.lastReaction != Enemy.ElementReaction.NONE) {
@@ -232,29 +208,10 @@ public final class CharacterSpriteRenderer {
             }
 
             switch (bossIdentity) {
-                case REVENANT -> {
-                    g *= .86f;
-                    b *= 1.08f;
-                    scale *= 1.025f;
-                }
-                case WARDEN -> {
-                    r *= .82f;
-                    g *= .94f;
-                    b *= 1.08f;
-                    scale *= 1.04f;
-                }
-                case HARVESTER -> {
-                    r *= 1.08f;
-                    g *= .82f;
-                    b *= .66f;
-                    scale *= 1.035f;
-                }
-                case NULL_ARCHON -> {
-                    r *= .66f;
-                    g *= .74f;
-                    b *= 1.10f;
-                    scale *= 1.065f;
-                }
+                case REVENANT -> { g *= .86f; b *= 1.08f; scale *= 1.025f; }
+                case WARDEN -> { r *= .82f; g *= .94f; b *= 1.08f; scale *= 1.04f; }
+                case HARVESTER -> { r *= 1.08f; g *= .82f; b *= .66f; scale *= 1.035f; }
+                case NULL_ARCHON -> { r *= .82f; g *= .88f; b *= 1.08f; scale *= 1.065f; }
                 default -> { }
             }
 
