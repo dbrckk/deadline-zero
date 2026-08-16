@@ -20,10 +20,10 @@ final class DirectionalBootstrapArtTest {
     @Test void coreCombatRosterCoversEightDirectionsAndAllMotions() {
         for (String root : ROOTS) {
             for (String direction : DIRECTIONS) {
-                assertMotion(root, direction, "idle", 1);
+                assertMotion(root, direction, "idle", 2);
                 assertMotion(root, direction, "run", 3);
                 assertMotion(root, direction, "attack", 2);
-                assertMotion(root, direction, "hit", 1);
+                assertMotion(root, direction, "hit", 2);
                 assertMotion(root, direction, "death", 3);
             }
         }
@@ -33,16 +33,16 @@ final class DirectionalBootstrapArtTest {
         for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
             String root = "survivor/" + survivor.name().toLowerCase();
             for (String direction : DIRECTIONS) {
-                assertMotion(root, direction, "idle", 1);
+                assertMotion(root, direction, "idle", 2);
                 assertMotion(root, direction, "run", 3);
                 assertMotion(root, direction, "attack", 2);
-                assertMotion(root, direction, "hit", 1);
+                assertMotion(root, direction, "hit", 2);
                 assertMotion(root, direction, "death", 3);
             }
         }
     }
 
-    @Test void everyActorDirectionOccupiesExactlyOneTenTileMotionBlock() {
+    @Test void everyActorDirectionOccupiesExactlyOneTwelveTileMotionBlock() {
         for (String root : ROOTS) {
             for (String direction : DIRECTIONS) {
                 int idle = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/idle");
@@ -50,10 +50,10 @@ final class DirectionalBootstrapArtTest {
                 int attack = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/attack");
                 int hit = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/hit");
                 int death = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/death");
-                assertEquals(idle + 1, run, root + "/" + direction);
-                assertEquals(idle + 4, attack, root + "/" + direction);
-                assertEquals(idle + 6, hit, root + "/" + direction);
-                assertEquals(idle + 7, death, root + "/" + direction);
+                assertEquals(idle + 2, run, root + "/" + direction);
+                assertEquals(idle + 5, attack, root + "/" + direction);
+                assertEquals(idle + 7, hit, root + "/" + direction);
+                assertEquals(idle + 9, death, root + "/" + direction);
                 assertTrue(death + 2 < DirectionalBootstrapArt.TOTAL_TILES, root + "/" + direction);
             }
         }
@@ -70,7 +70,7 @@ final class DirectionalBootstrapArtTest {
         }
         assertTrue(previousLast < DirectionalBootstrapArt.TOTAL_TILES);
         assertEquals(DirectionalBootstrapArt.ACTOR_BLOCK * ROOTS.length, DirectionalBootstrapArt.TOTAL_TILES);
-        assertEquals(1120, DirectionalBootstrapArt.TOTAL_TILES);
+        assertEquals(1344, DirectionalBootstrapArt.TOTAL_TILES);
     }
 
     @Test void generatedSheetStaysWithinBaselineGlesTextureDimension() {
@@ -80,14 +80,14 @@ final class DirectionalBootstrapArtTest {
         int height = rows * DirectionalBootstrapArt.TILE;
         assertTrue(width <= 2048, "bootstrap sheet width exceeds baseline GLES texture size");
         assertTrue(height <= 2048, "bootstrap sheet height exceeds baseline GLES texture size");
-        assertEquals(640, width);
+        assertEquals(768, width);
         assertEquals(1792, height);
     }
 
     @Test void actorIdentityLookupIsStable() {
         assertEquals(ROOTS.length, DirectionalBootstrapArt.ACTOR_COUNT);
         assertEquals(8, DIRECTIONS.length);
-        assertEquals(10, DirectionalBootstrapArt.FRAMES_PER_DIRECTION);
+        assertEquals(12, DirectionalBootstrapArt.FRAMES_PER_DIRECTION);
         for (int i = 0; i < ROOTS.length; i++) {
             assertEquals(i, DirectionalBootstrapArt.actorIndex(ROOTS[i] + "/e/run"));
         }
