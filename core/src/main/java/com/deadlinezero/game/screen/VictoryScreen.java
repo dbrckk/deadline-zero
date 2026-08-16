@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.meta.EquipmentItem;
+import com.deadlinezero.game.meta.MasteryRunNotice;
 import com.deadlinezero.game.meta.RunResult;
 import com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog;
 
@@ -72,10 +73,11 @@ public final class VictoryScreen extends ScreenAdapter {
             font.setColor(Color.LIME);
             font.draw(batch, "FIRST CLEAR  +" + bonusCredits + " Credits  +" + bonusGems + " Gems", 0, h * .40f, w, Align.center, false);
         }
+        drawMasteryNotice(w, h);
         if (result.drop() != null) {
-            font.getData().setScale(.68f);
+            font.getData().setScale(.62f);
             font.setColor(Color.WHITE);
-            font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + " Lv." + result.drop().level, 0, h * .31f, w, Align.center, false);
+            font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + " Lv." + result.drop().level, 0, h * .275f, w, Align.center, false);
         }
         font.setColor(Color.WHITE);
         font.draw(batch, "BASE", w * .24f, h * .18f + 36f, w * .22f, Align.center, false);
@@ -88,6 +90,21 @@ public final class VictoryScreen extends ScreenAdapter {
             float x = Gdx.input.getX();
             if (x < w * .5f) game.showMenu(); else game.startRun();
         }
+    }
+
+    private void drawMasteryNotice(float w, float h) {
+        MasteryRunNotice.Notice notice = MasteryRunNotice.current();
+        if (notice == null || !notice.visible()) return;
+        StringBuilder text = new StringBuilder("MASTERY  •  ");
+        if (notice.weaponRankedUp()) text.append(notice.weaponName().toUpperCase()).append(" RANK ").append(notice.weaponRank());
+        if (notice.biomeRankedUp()) {
+            if (notice.weaponRankedUp()) text.append("  •  ");
+            text.append(notice.biomeName()).append(" RANK ").append(notice.biomeRank());
+        }
+        text.append("  •  +").append(notice.creditsReward()).append(" C  +").append(notice.gemsReward()).append(" G");
+        font.getData().setScale(.50f);
+        font.setColor(new Color(.72f, .58f, 1f, 1f));
+        font.draw(batch, text.toString(), 0, h * .325f, w, Align.center, false);
     }
 
     private static String formatTime(float seconds) {
