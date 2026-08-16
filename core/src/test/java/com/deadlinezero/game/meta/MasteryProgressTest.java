@@ -10,19 +10,23 @@ import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.visual.EnvironmentBiomeRules;
 
 final class MasteryProgressTest {
-    @Test void weaponRanksFollowPermanentVictoryThresholds() {
+    @Test void weaponAndBiomeRanksFollowPermanentVictoryThresholds() {
         MasteryProgress mastery = new MasteryProgress();
         assertEquals(0, mastery.weaponRank(WeaponCatalog.AR9.id));
         MasteryProgress.Gain first = mastery.recordVictory(WeaponCatalog.AR9.id, 1);
         assertEquals(1, first.weaponRankAfter());
+        assertEquals(1, first.biomeRankAfter());
         assertTrue(first.rankedUp());
-        assertEquals(180, first.creditsReward() - 260);
-        assertEquals(2, first.gemsReward() - 3);
+        assertEquals(440, first.creditsReward());
+        assertEquals(5, first.gemsReward());
 
         mastery.recordVictory(WeaponCatalog.AR9.id, 1);
         MasteryProgress.Gain third = mastery.recordVictory(WeaponCatalog.AR9.id, 1);
         assertEquals(2, third.weaponRankAfter());
-        assertEquals(0, mastery.winsForNextWeaponRank(WeaponCatalog.AR9.id) - 4);
+        assertEquals(2, third.biomeRankAfter());
+        assertEquals(440, third.creditsReward());
+        assertEquals(5, third.gemsReward());
+        assertEquals(4, mastery.winsForNextWeaponRank(WeaponCatalog.AR9.id));
     }
 
     @Test void masterySeparatesWeaponsAndBiomes() {
