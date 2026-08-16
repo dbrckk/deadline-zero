@@ -182,8 +182,8 @@ public final class Enemy extends ActorState {
     public void applyElement(DamageElement element, float power) {
         if (!alive || element == null) return;
         lastReaction = ElementReaction.NONE;
-        float safePower = Math.max(0f, power)
-            * BiomeEnemyRoster.elementalDamageMultiplier(RunStageContext.stage(), type, element);
+        float resistance = BiomeEnemyRoster.elementalDamageMultiplier(RunStageContext.stage(), type, element);
+        float safePower = Math.max(0f, power) * resistance;
 
         switch (element) {
             case FIRE -> {
@@ -193,7 +193,7 @@ public final class Enemy extends ActorState {
                     slowMultiplier = 1f;
                     triggerReaction(ElementReaction.THERMAL_SHOCK);
                 }
-                burnTimer = Math.max(burnTimer, 2.4f);
+                burnTimer = Math.max(burnTimer, 2.4f * resistance);
                 burnDps = Math.max(burnDps, safePower * .22f);
             }
             case FROST -> {
@@ -203,16 +203,16 @@ public final class Enemy extends ActorState {
                     burnDps = 0f;
                     triggerReaction(ElementReaction.STEAM_BURST);
                 }
-                slowTimer = Math.max(slowTimer, 1.6f);
-                slowMultiplier = Math.min(slowMultiplier, .62f);
+                slowTimer = Math.max(slowTimer, 1.6f * resistance);
+                slowMultiplier = Math.min(slowMultiplier, MathUtils.lerp(1f, .62f, resistance));
             }
             case SHOCK -> {
                 boolean burning = burnTimer > .05f;
                 boolean frozen = slowTimer > .05f;
-                float stun = .35f;
+                float stun = .35f * resistance;
                 if (burning || frozen) {
                     damage(safePower * (burning && frozen ? .34f : .22f));
-                    stun = .55f;
+                    stun = .55f * resistance;
                     triggerReaction(ElementReaction.OVERLOAD);
                 }
                 shockTimer = Math.max(shockTimer, stun);
