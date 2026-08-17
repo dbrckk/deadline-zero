@@ -8,6 +8,7 @@ public final class BalanceTelemetryRuntime {
     private static int threatTier;
     private static int runOrdinal;
     private static String contract = "STANDARD";
+    private static String mutator = "STANDARD PRESSURE";
     private static float damageDealt;
     private static float damageReceived;
     private static float maxHitDealt;
@@ -22,6 +23,7 @@ public final class BalanceTelemetryRuntime {
         runOrdinal = Math.max(0, nextRunOrdinal);
         threatTier = ThreatTierRules.sanitizeTier(nextThreatTier);
         contract = "STANDARD";
+        mutator = EndgameMutatorRules.label();
         damageDealt = 0f;
         damageReceived = 0f;
         maxHitDealt = 0f;
@@ -61,6 +63,7 @@ public final class BalanceTelemetryRuntime {
             maxHitDealt,
             maxHitReceived,
             contract,
+            mutator,
             RunLoadoutContext.survivor().name(),
             RunLoadoutContext.weaponDefinition().id,
             RunLoadoutContext.ascensionSetPieces(),
