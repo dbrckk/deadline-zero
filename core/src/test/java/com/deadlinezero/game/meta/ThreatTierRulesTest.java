@@ -66,17 +66,21 @@ final class ThreatTierRulesTest {
     @Test void threatTierAlsoAcceleratesSpawnPressure() {
         RunStageContext.begin(10, 0, 0);
         RunModifierContext.begin();
+        RunModifierContext.Modifier baselineContract = RunModifierContext.modifier();
         float standardPressure = RunModifierContext.spawnIntervalMultiplier();
         RunModifierContext.end();
 
         RunStageContext.begin(10, 0, 10);
         RunModifierContext.begin();
+        assertEquals(baselineContract, RunModifierContext.modifier(),
+            "Threat tier must not silently change the deterministic contract offer");
         float ascendedPressure = RunModifierContext.spawnIntervalMultiplier();
+        float expected = baselineContract.spawnInterval
+            * EndgameMutatorRules.spawnIntervalMultiplier()
+            * ThreatTierRules.spawnIntervalMultiplier(10);
+
         assertTrue(ascendedPressure < standardPressure);
-        assertEquals(standardPressure
-                * ThreatTierRules.spawnIntervalMultiplier(10)
-                * EndgameMutatorRules.spawnIntervalMultiplier(),
-            ascendedPressure, .0001f);
+        assertEquals(expected, ascendedPressure, .0001f);
     }
 
     @Test void milestoneGemsAreOnlyPaidEveryFiveTiers() {
