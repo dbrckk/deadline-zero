@@ -28,43 +28,30 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
     };
     static final int TOTAL_TILES = ACTOR_BLOCK * ROOTS.length;
 
-    private final Texture texture;
-    private final TextureRegion[] regions = new TextureRegion[TOTAL_TILES];
+    private Texture texture;
+    private TextureRegion[] regions;
+    private boolean biomeArtAttempted;
     private final AuthoredCoreDirectionalArt authoredCore;
     private HighResDirectionalBootstrapArt highResCore;
     private boolean highResCoreAttempted;
 
-    private BiomeDirectionalBootstrapArt(Texture texture, AuthoredCoreDirectionalArt authoredCore) {
-        this.texture = texture;
+    private BiomeDirectionalBootstrapArt(AuthoredCoreDirectionalArt authoredCore) {
         this.authoredCore = authoredCore;
-        for (int tile = 0; tile < regions.length; tile++) {
-            int x = (tile % COLUMNS) * TILE;
-            int y = (tile / COLUMNS) * TILE;
-            regions[tile] = new TextureRegion(texture, x, y, TILE, TILE);
-        }
     }
 
     public static BiomeDirectionalBootstrapArt create() {
-        int rows = (TOTAL_TILES + COLUMNS - 1) / COLUMNS;
-        Pixmap p = new Pixmap(COLUMNS * TILE, rows * TILE, Pixmap.Format.RGBA8888);
-        p.setBlending(Pixmap.Blending.SourceOver);
+        AuthoredCoreDirectionalArt authored = null;
         try {
-            for (int actor = 0; actor < ROOTS.length; actor++) drawActorSet(p, actor, actor * ACTOR_BLOCK);
-            Texture texture = new Texture(p);
-            texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-
-            AuthoredCoreDirectionalArt authored = null;
-            try {
-                authored = AuthoredCoreDirectionalArt.create();
-            } catch (RuntimeException ignored) {
-                // Generated high-resolution/core layers remain available if shipped art is invalid.
-            }
-
-            return new BiomeDirectionalBootstrapArt(texture, authored);
-        } finally {
-            p.dispose();
+            authored = AuthoredCoreDirectionalArt.create();
+        } catch (RuntimeException ignored) {
+            // Generated high-resolution/core layers remain available if shipped art is invalid.
         }
+        return new BiomeDirectionalBootstrapArt(authored);
     }
+
+    static int rows() { return (TOTAL_TILES + COLUMNS - 1) / COLUMNS; }
+    static int width() { return COLUMNS * TILE; }
+    static int height() { return rows() * TILE; }
 
     public boolean supports(String key) {
         return (authoredCore != null && authoredCore.supports(key))
@@ -88,10 +75,38 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
 
         int first = firstTile(key);
         if (first < 0) return null;
+        TextureRegion[] biomeRegions = ensureBiomeRegions();
+        if (biomeRegions == null) return null;
         int count = frameCount(key);
         int raw = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
         int frame = count <= 1 ? 0 : (loop ? raw % count : Math.min(count - 1, raw));
-        return regions[first + frame];
+        return biomeRegions[first + frame];
+    }
+
+    private TextureRegion[] ensureBiomeRegions() {
+        if (biomeArtAttempted) return regions;
+        biomeArtAttempted = true;
+        Pixmap p = new Pixmap(width(), height(), Pixmap.Format.RGBA8888);
+        p.setBlending(Pixmap.Blending.SourceOver);
+        try {
+            for (int actor = 0; actor < ROOTS.length; actor++) drawActorSet(p, actor, actor * ACTOR_BLOCK);
+            texture = new Texture(p);
+            texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            regions = new TextureRegion[TOTAL_TILES];
+            for (int tile = 0; tile < regions.length; tile++) {
+                int x = (tile % COLUMNS) * TILE;
+                int y = (tile / COLUMNS) * TILE;
+                regions[tile] = new TextureRegion(texture, x, y, TILE, TILE);
+            }
+            return regions;
+        } catch (RuntimeException exception) {
+            if (texture != null) texture.dispose();
+            texture = null;
+            regions = null;
+            return null;
+        } finally {
+            p.dispose();
+        }
     }
 
     private HighResDirectionalBootstrapArt ensureHighResCore() {
@@ -271,6 +286,6 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
     @Override public void dispose() {
         if (authoredCore != null) authoredCore.dispose();
         if (highResCore != null) highResCore.dispose();
-        texture.dispose();
+        if (texture != null) texture.dispose();
     }
 }
