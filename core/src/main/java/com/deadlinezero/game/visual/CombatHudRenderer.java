@@ -22,6 +22,8 @@ import com.deadlinezero.game.world.WaveDirector;
 
 /** Dedicated mobile HUD renderer. Keeps combat presentation separate from simulation. */
 public final class CombatHudRenderer {
+    private static final Color HARVESTER_COLOR = new Color(.96f, .42f, .10f, 1f);
+    private static final Color NULL_ARCHON_COLOR = new Color(.52f, .42f, 1f, 1f);
     private final Matrix4 projection = new Matrix4();
     private float damageFlash;
 
@@ -122,8 +124,8 @@ public final class CombatHudRenderer {
         float dashX = w - 58f * s;
         float dashY = 62f * s;
         float alpha = MobileCombatInput.dashDown() ? .38f : .22f;
-        shapes.setColor(player.canDash() ? new Color(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha)
-                                         : new Color(VisualTheme.PANEL_ALT));
+        if (player.canDash()) shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha);
+        else shapes.setColor(VisualTheme.PANEL_ALT);
         shapes.circle(dashX, dashY, dashRadius, 32);
         shapes.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
         shapes.circle(dashX, dashY, MobileCombatInput.dashDown() ? 7f * s : 4f * s, 16);
@@ -214,10 +216,11 @@ public final class CombatHudRenderer {
     }
 
     private void drawDamageVignette(ShapeRenderer shapes, float w, float h) {
-        if (damageFlash <= 0f || !AccessibilitySettings.active().damageFlash) return;
+        AccessibilitySettings settings = AccessibilitySettings.active();
+        if (damageFlash <= 0f || !settings.damageFlash) return;
         shapes.setProjectionMatrix(projection);
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        float alpha = (AccessibilitySettings.active().reduceFlashes ? .07f : .16f) * damageFlash;
+        float alpha = (settings.minimizesFlashes() ? .07f : .16f) * damageFlash;
         shapes.setColor(1f, .03f, .02f, alpha);
         float edge = Math.min(46f * ui(), Math.min(w, h) * .06f);
         shapes.rect(0f, 0f, w, edge);
@@ -250,8 +253,8 @@ public final class CombatHudRenderer {
         return switch (bossIdentity(boss)) {
             case REVENANT -> VisualTheme.VIOLET;
             case WARDEN -> VisualTheme.GOLD;
-            case HARVESTER -> new Color(.96f, .42f, .10f, 1f);
-            case NULL_ARCHON -> new Color(.52f, .42f, 1f, 1f);
+            case HARVESTER -> HARVESTER_COLOR;
+            case NULL_ARCHON -> NULL_ARCHON_COLOR;
             default -> VisualTheme.RED;
         };
     }
