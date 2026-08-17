@@ -24,11 +24,11 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
 
     private final Texture texture;
     private final TextureRegion[] regions;
-    private final HighResBossDirectionalArt bossArt;
+    private HighResBossDirectionalArt bossArt;
+    private boolean bossArtAttempted;
 
-    private AuthoredCoreDirectionalArt(Texture texture, HighResBossDirectionalArt bossArt) {
+    private AuthoredCoreDirectionalArt(Texture texture) {
         this.texture = texture;
-        this.bossArt = bossArt;
         if (texture == null) {
             regions = null;
             return;
@@ -54,15 +54,9 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
             }
             coreTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         }
-
-        HighResBossDirectionalArt boss = null;
-        try {
-            boss = HighResBossDirectionalArt.create();
-        } catch (RuntimeException exception) {
-            if (coreTexture == null) throw exception;
-            // Core authored sprites stay available if the optional 64px boss layer cannot be allocated.
-        }
-        return coreTexture == null && boss == null ? null : new AuthoredCoreDirectionalArt(coreTexture, boss);
+        // Keep the gateway alive even when the optional core PNG is absent so 64px boss art can
+        // be created lazily only when the first boss frame is actually requested.
+        return new AuthoredCoreDirectionalArt(coreTexture);
     }
 
     static int rows() { return (TOTAL_TILES + COLUMNS - 1) / COLUMNS; }
@@ -70,21 +64,32 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
     static int height() { return rows() * TILE; }
 
     public boolean supports(String key) {
-        return (bossArt != null && bossArt.supports(key)) || firstTile(key) >= 0;
+        return firstTile(key) >= 0 || HighResBossDirectionalArt.firstTile(key) >= 0;
     }
 
     public TextureRegion region(String key, float stateTime, float frameDuration, boolean loop) {
-        if (bossArt != null) {
-            TextureRegion boss = bossArt.region(key, stateTime, frameDuration, loop);
-            if (boss != null) return boss;
-        }
-        if (regions == null) return null;
         int first = firstTile(key);
-        if (first < 0) return null;
-        int count = frameCount(key);
-        int raw = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
-        int frame = count <= 1 ? 0 : (loop ? raw % count : Math.min(count - 1, raw));
-        return regions[first + frame];
+        if (first >= 0 && regions != null) {
+            int count = frameCount(key);
+            int raw = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
+            int frame = count <= 1 ? 0 : (loop ? raw % count : Math.min(count - 1, raw));
+            return regions[first + frame];
+        }
+
+        if (HighResBossDirectionalArt.firstTile(key) < 0) return null;
+        HighResBossDirectionalArt boss = ensureBossArt();
+        return boss == null ? null : boss.region(key, stateTime, frameDuration, loop);
+    }
+
+    private HighResBossDirectionalArt ensureBossArt() {
+        if (bossArtAttempted) return bossArt;
+        bossArtAttempted = true;
+        try {
+            bossArt = HighResBossDirectionalArt.create();
+        } catch (RuntimeException ignored) {
+            bossArt = null;
+        }
+        return bossArt;
     }
 
     static int firstTile(String key) {
@@ -111,6 +116,7 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
     }
 
     private static int actorIndex(String key) {
+        if (key == null) return -1;
         for (int i = 0; i < ROOTS.length; i++) if (key.startsWith(ROOTS[i])) return i;
         return -1;
     }
