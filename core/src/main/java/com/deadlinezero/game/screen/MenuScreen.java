@@ -13,6 +13,7 @@ import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.config.GameConfig;
+import com.deadlinezero.game.meta.BalanceTelemetryReport;
 import com.deadlinezero.game.meta.BalanceTelemetryStore;
 import com.deadlinezero.game.meta.BalanceTelemetrySummary;
 import com.deadlinezero.game.meta.PlayerProfile;
@@ -28,6 +29,7 @@ public final class MenuScreen extends ScreenAdapter {
     private float t;
     private boolean showBalance;
     private BalanceTelemetrySummary.Summary balanceSummary = BalanceTelemetrySummary.summarize(null);
+    private BalanceTelemetryReport.Report balanceReport = BalanceTelemetryReport.analyze(null);
 
     public MenuScreen(DeadlineZeroGame game) { this.game = game; font.getData().setScale(2.2f); }
 
@@ -97,6 +99,15 @@ public final class MenuScreen extends ScreenAdapter {
                 balanceSummary.runs(), balanceSummary.winRate() * 100f, balanceSummary.averageSeconds(),
                 balanceSummary.averageDps(), balanceSummary.averageDamageTakenPerMinute(), balanceSummary.averageKillsPerMinute());
             font.draw(batch, line, 0, h * .205f, w, Align.center, false);
+            BalanceTelemetryReport.Outlier outlier = balanceReport.worstOutlier();
+            if (outlier != null) {
+                font.getData().setScale(.31f);
+                font.setColor(VisualTheme.RED);
+                String diagnostic = String.format("OUTLIER • %s %s • %s • %d RUNS • WIN %.0f%%",
+                    outlier.dimension(), outlier.key(), outlier.assessment().status(), outlier.summary().runs(),
+                    outlier.summary().winRate() * 100f);
+                font.draw(batch, diagnostic, 0, h * .179f, w, Align.center, false);
+            }
         }
 
         font.getData().setScale(.36f); font.setColor(VisualTheme.MUTED);
@@ -123,7 +134,11 @@ public final class MenuScreen extends ScreenAdapter {
     private void handleInput(float w, float h) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             showBalance = !showBalance;
-            if (showBalance) balanceSummary = BalanceTelemetrySummary.summarize(BalanceTelemetryStore.loadRecent());
+            if (showBalance) {
+                var samples = BalanceTelemetryStore.loadRecent();
+                balanceSummary = BalanceTelemetrySummary.summarize(samples);
+                balanceReport = BalanceTelemetryReport.analyze(samples);
+            }
             return;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showArsenal(); return; }
