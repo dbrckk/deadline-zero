@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array;
 
 /** Pure segmentation of local run telemetry for balance analysis. */
 public final class BalanceTelemetrySegments {
-    public enum Dimension { STAGE, THREAT, CONTRACT, SURVIVOR, WEAPON }
+    public enum Dimension { STAGE, THREAT, CONTRACT, MUTATOR, SURVIVOR, WEAPON }
 
     public record Segment(String key, BalanceTelemetrySummary.Summary summary) {}
 
@@ -37,6 +37,7 @@ public final class BalanceTelemetrySegments {
             case STAGE -> Integer.toString(sample.stage());
             case THREAT -> Integer.toString(sample.threatTier());
             case CONTRACT -> sample.contract();
+            case MUTATOR -> sample.mutator();
             case SURVIVOR -> sample.survivor();
             case WEAPON -> sample.weaponId();
         };
