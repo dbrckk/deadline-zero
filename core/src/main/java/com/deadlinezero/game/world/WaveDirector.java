@@ -19,6 +19,8 @@ public final class WaveDirector {
     private int bossSpawnCount;
     private boolean bossPending;
     private boolean bossSpawned;
+    private Enemy.Type lastEndgameType;
+    private int sameEndgameTypeStreak;
     private final int stage = Math.max(1, RunStageContext.stage());
     private final float bossArrival = StageMissionRules.bossArrivalSeconds(stage);
     private final RunEncounterDirector encounters = new RunEncounterDirector(stage);
@@ -188,7 +190,22 @@ public final class WaveDirector {
             }
         };
         Enemy.Type encounter = encounters.overrideType(MathUtils.random(), fallback);
-        return EndgameWaveCompositionRules.override(
+        Enemy.Type selected = EndgameWaveCompositionRules.override(
             RunStageContext.threatTier(), EndgameMutatorRules.current(), pressureBand(), MathUtils.random(), encounter);
+        return enforceEndgameVariety(selected);
+    }
+
+    private Enemy.Type enforceEndgameVariety(Enemy.Type selected) {
+        if (selected == null || RunStageContext.threatTier() < 5 || !EndgameMutatorRules.active()) return selected;
+        if (selected == lastEndgameType) sameEndgameTypeStreak++;
+        else {
+            lastEndgameType = selected;
+            sameEndgameTypeStreak = 1;
+        }
+        if (sameEndgameTypeStreak < 4) return selected;
+        Enemy.Type replacement = EndgameWaveCompositionRules.streakBreaker(EndgameMutatorRules.current(), selected);
+        lastEndgameType = replacement;
+        sameEndgameTypeStreak = 1;
+        return replacement;
     }
 }
