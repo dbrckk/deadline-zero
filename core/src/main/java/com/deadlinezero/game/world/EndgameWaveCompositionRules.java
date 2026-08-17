@@ -33,4 +33,17 @@ public final class EndgameWaveCompositionRules {
         float intensity = threatTier >= 10 ? 1f : .72f;
         return (.24f + band.ordinal() * .035f) * intensity;
     }
+
+    /** Alternate within the same mutator identity when one enemy type has repeated too long. */
+    public static Enemy.Type streakBreaker(EndgameMutatorRules.Mutator mutator, Enemy.Type repeated) {
+        if (mutator == null || mutator == EndgameMutatorRules.Mutator.NONE || repeated == null) return repeated;
+        return switch (mutator) {
+            case FRENZY -> repeated == Enemy.Type.RUNNER ? Enemy.Type.PHANTOM : Enemy.Type.RUNNER;
+            case BULWARK -> repeated == Enemy.Type.SHIELDED ? Enemy.Type.REGENERATOR : Enemy.Type.SHIELDED;
+            case VOLATILE -> repeated == Enemy.Type.BRUTE ? Enemy.Type.ELITE
+                : (repeated == Enemy.Type.ELITE ? Enemy.Type.RANGED : Enemy.Type.BRUTE);
+            case SWARM -> repeated == Enemy.Type.RUNNER ? Enemy.Type.SHAMBLER : Enemy.Type.RUNNER;
+            default -> repeated;
+        };
+    }
 }
