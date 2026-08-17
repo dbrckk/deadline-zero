@@ -2,6 +2,7 @@ package com.deadlinezero.game.world;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.deadlinezero.game.entities.Enemy;
+import com.deadlinezero.game.meta.EndgameMutatorRules;
 import com.deadlinezero.game.meta.RunEncounterRuntime;
 import com.deadlinezero.game.meta.RunStageContext;
 
@@ -44,6 +45,21 @@ public final class RunEncounterDirector {
         for (int i = 0; i < plan.length; i++) {
             plan[i] = CATALOG[Math.floorMod(start + i * direction, CATALOG.length)];
         }
+        anchorMutatorEncounter();
+    }
+
+    private void anchorMutatorEncounter() {
+        if (RunStageContext.threatTier() < 5 || !EndgameMutatorRules.active()) return;
+        Type signature = switch (EndgameMutatorRules.current()) {
+            case FRENZY -> Type.PHANTOM_BREACH;
+            case BULWARK -> Type.BULWARK_LINE;
+            case VOLATILE -> Type.JUGGERNAUT_PUSH;
+            case SWARM -> Type.SWARM_SURGE;
+            default -> Type.NONE;
+        };
+        if (signature == Type.NONE) return;
+        for (Type planned : plan) if (planned == signature) return;
+        plan[1] = signature;
     }
 
     public void update(float dt, float bossProgress) {
