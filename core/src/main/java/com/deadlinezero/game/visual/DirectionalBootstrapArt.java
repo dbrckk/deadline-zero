@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Deterministic eight-way bootstrap sheet for the core combat roster.
- * Generated once during art initialization and served from prebuilt TextureRegions.
+ * Geometry/key lookup is always available, while the GPU texture is generated lazily on first use.
  * Final atlas frames always override this bootstrap layer.
  */
 public final class DirectionalBootstrapArt implements Disposable {
@@ -43,30 +43,14 @@ public final class DirectionalBootstrapArt implements Disposable {
         {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}
     };
 
-    private final Texture texture;
-    private final TextureRegion[] regions = new TextureRegion[TOTAL_TILES];
+    private Texture texture;
+    private TextureRegion[] regions;
+    private boolean textureAttempted;
 
-    private DirectionalBootstrapArt(Texture texture) {
-        this.texture = texture;
-        for (int tile = 0; tile < regions.length; tile++) {
-            int x = (tile % COLUMNS) * TILE;
-            int y = (tile / COLUMNS) * TILE;
-            regions[tile] = new TextureRegion(texture, x, y, TILE, TILE);
-        }
-    }
+    private DirectionalBootstrapArt() { }
 
     public static DirectionalBootstrapArt create() {
-        int rows = (TOTAL_TILES + COLUMNS - 1) / COLUMNS;
-        Pixmap pixmap = new Pixmap(COLUMNS * TILE, rows * TILE, Pixmap.Format.RGBA8888);
-        pixmap.setBlending(Pixmap.Blending.SourceOver);
-        try {
-            for (int actor = 0; actor < ACTOR_COUNT; actor++) drawActorSet(pixmap, actor, actor * ACTOR_BLOCK);
-            Texture texture = new Texture(pixmap);
-            texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-            return new DirectionalBootstrapArt(texture);
-        } finally {
-            pixmap.dispose();
-        }
+        return new DirectionalBootstrapArt();
     }
 
     public boolean supports(String key) { return firstTile(key) >= 0; }
@@ -74,11 +58,40 @@ public final class DirectionalBootstrapArt implements Disposable {
     public TextureRegion region(String key, float stateTime, float frameDuration, boolean loop) {
         int first = firstTile(key);
         if (first < 0) return null;
+        TextureRegion[] loadedRegions = ensureRegions();
+        if (loadedRegions == null) return null;
         int count = frameCount(key);
-        if (count <= 1) return regions[first];
+        if (count <= 1) return loadedRegions[first];
         int rawFrame = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
         int frame = loop ? rawFrame % count : Math.min(count - 1, rawFrame);
-        return regions[first + frame];
+        return loadedRegions[first + frame];
+    }
+
+    private TextureRegion[] ensureRegions() {
+        if (textureAttempted) return regions;
+        textureAttempted = true;
+        int rows = (TOTAL_TILES + COLUMNS - 1) / COLUMNS;
+        Pixmap pixmap = new Pixmap(COLUMNS * TILE, rows * TILE, Pixmap.Format.RGBA8888);
+        pixmap.setBlending(Pixmap.Blending.SourceOver);
+        try {
+            for (int actor = 0; actor < ACTOR_COUNT; actor++) drawActorSet(pixmap, actor, actor * ACTOR_BLOCK);
+            texture = new Texture(pixmap);
+            texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            regions = new TextureRegion[TOTAL_TILES];
+            for (int tile = 0; tile < regions.length; tile++) {
+                int x = (tile % COLUMNS) * TILE;
+                int y = (tile / COLUMNS) * TILE;
+                regions[tile] = new TextureRegion(texture, x, y, TILE, TILE);
+            }
+            return regions;
+        } catch (RuntimeException exception) {
+            if (texture != null) texture.dispose();
+            texture = null;
+            regions = null;
+            return null;
+        } finally {
+            pixmap.dispose();
+        }
     }
 
     static int firstTile(String key) {
@@ -394,5 +407,9 @@ public final class DirectionalBootstrapArt implements Disposable {
 
     private static void set(Pixmap p, float r, float g, float b, float a) { p.setColor(r, g, b, a); }
 
-    @Override public void dispose() { texture.dispose(); }
+    @Override public void dispose() {
+        if (texture != null) texture.dispose();
+        texture = null;
+        regions = null;
+    }
 }
