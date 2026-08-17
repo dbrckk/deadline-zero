@@ -6,11 +6,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * Shipped/file-backed core directional art gateway. It also owns the dedicated 64px boss layer
- * so the existing biome priority gateway can serve both without changing GameArt ordering.
+ * Shipped/file-backed core directional art gateway. A complete seven-actor raster can replace
+ * every high-resolution core bootstrap at once, while smaller authored actor sheets can migrate
+ * incrementally without breaking the generated fallbacks. It also owns lazy 64px boss art.
  */
 public final class AuthoredCoreDirectionalArt implements Disposable {
     static final String PATH = "art/core_authored.png";
+    static final String REX_PATH = "art/rex_authored.png";
     static final int TILE = 48;
     static final int COLUMNS = 16;
     static final int FRAMES_PER_DIRECTION = 12;
@@ -25,42 +27,52 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
 
     private final Texture texture;
     private final TextureRegion[] regions;
+    private final Texture rexTexture;
+    private final TextureRegion[] rexRegions;
     private HighResBossDirectionalArt bossArt;
     private boolean bossArtAttempted;
 
-    private AuthoredCoreDirectionalArt(Texture texture) {
+    private AuthoredCoreDirectionalArt(Texture texture, Texture rexTexture) {
         this.texture = texture;
-        if (texture == null) {
-            regions = null;
-            return;
-        }
-        regions = new TextureRegion[TOTAL_TILES];
-        for (int tile = 0; tile < TOTAL_TILES; tile++) {
-            int x = (tile % COLUMNS) * TILE;
-            int y = (tile / COLUMNS) * TILE;
-            regions[tile] = new TextureRegion(texture, x, y, TILE, TILE);
-        }
+        this.rexTexture = rexTexture;
+        regions = texture == null ? null : split(texture, TOTAL_TILES);
+        rexRegions = rexTexture == null ? null : split(rexTexture, ACTOR_BLOCK);
     }
 
     public static AuthoredCoreDirectionalArt create() {
-        Texture coreTexture = null;
-        if (Gdx.files.internal(PATH).exists()) {
-            coreTexture = new Texture(Gdx.files.internal(PATH));
-            int expectedWidth = width();
-            int expectedHeight = height();
-            if (coreTexture.getWidth() != expectedWidth || coreTexture.getHeight() != expectedHeight) {
-                coreTexture.dispose();
-                throw new IllegalStateException(
-                    "Invalid authored core sheet dimensions: expected " + expectedWidth + "x" + expectedHeight);
-            }
-            coreTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Texture coreTexture = loadValidated(PATH, width(), height(), "authored core");
+        // The complete sheet always wins. Avoid loading the partial REX texture at the same time.
+        Texture rexTexture = coreTexture == null
+            ? loadValidated(REX_PATH, COLUMNS * TILE, rexRows() * TILE, "authored REX")
+            : null;
+        // Keep the gateway alive even when no raster is present so boss art remains lazy.
+        return new AuthoredCoreDirectionalArt(coreTexture, rexTexture);
+    }
+
+    private static Texture loadValidated(String path, int expectedWidth, int expectedHeight, String label) {
+        if (!Gdx.files.internal(path).exists()) return null;
+        Texture loaded = new Texture(Gdx.files.internal(path));
+        if (loaded.getWidth() != expectedWidth || loaded.getHeight() != expectedHeight) {
+            loaded.dispose();
+            throw new IllegalStateException("Invalid " + label + " sheet dimensions: expected "
+                + expectedWidth + "x" + expectedHeight);
         }
-        // Keep the gateway alive even when the optional core PNG is absent so 64px boss art can
-        // be created lazily only when the first boss frame is actually requested.
-        return new AuthoredCoreDirectionalArt(coreTexture);
+        loaded.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        return loaded;
+    }
+
+    private static TextureRegion[] split(Texture source, int tileCount) {
+        TextureRegion[] result = new TextureRegion[tileCount];
+        for (int tile = 0; tile < tileCount; tile++) {
+            int x = (tile % COLUMNS) * TILE;
+            int y = (tile / COLUMNS) * TILE;
+            result[tile] = new TextureRegion(source, x, y, TILE, TILE);
+        }
+        return result;
     }
 
     static int rows() { return (TOTAL_TILES + COLUMNS - 1) / COLUMNS; }
+    static int rexRows() { return (ACTOR_BLOCK + COLUMNS - 1) / COLUMNS; }
     static int width() { return COLUMNS * TILE; }
     static int height() { return rows() * TILE; }
 
@@ -70,11 +82,19 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
 
     public TextureRegion region(String key, float stateTime, float frameDuration, boolean loop) {
         int first = firstTile(key);
-        if (first >= 0 && regions != null) {
-            int count = frameCount(key);
-            int raw = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
-            int frame = count <= 1 ? 0 : (loop ? raw % count : Math.min(count - 1, raw));
-            return regions[first + frame];
+        if (first >= 0) {
+            TextureRegion[] source = regions;
+            int sourceFirst = first;
+            if (source == null && first < ACTOR_BLOCK && rexRegions != null) {
+                source = rexRegions;
+                sourceFirst = first;
+            }
+            if (source != null) {
+                int count = frameCount(key);
+                int raw = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
+                int frame = count <= 1 ? 0 : (loop ? raw % count : Math.min(count - 1, raw));
+                return source[sourceFirst + frame];
+            }
         }
 
         if (HighResBossDirectionalArt.firstTile(key) < 0) return null;
@@ -140,5 +160,6 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
     @Override public void dispose() {
         if (bossArt != null) bossArt.dispose();
         if (texture != null) texture.dispose();
+        if (rexTexture != null) rexTexture.dispose();
     }
 }
