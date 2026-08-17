@@ -29,6 +29,7 @@ public final class BalanceTelemetryStore {
             p.putFloat(key + "maxDealt", sample.maxHitDealt());
             p.putFloat(key + "maxReceived", sample.maxHitReceived());
             p.putString(key + "contract", sample.contract());
+            p.putString(key + "mutator", sample.mutator());
             p.putString(key + "survivor", sample.survivor());
             p.putString(key + "weapon", sample.weaponId());
             p.putInteger(key + "set", sample.ascensionSetPieces());
@@ -64,6 +65,7 @@ public final class BalanceTelemetryStore {
                     p.getFloat(key + "maxDealt", 0f),
                     p.getFloat(key + "maxReceived", 0f),
                     p.getString(key + "contract", "STANDARD"),
+                    p.getString(key + "mutator", "STANDARD PRESSURE"),
                     p.getString(key + "survivor", "REX"),
                     p.getString(key + "weapon", "ar9"),
                     p.getInteger(key + "set", 0),
