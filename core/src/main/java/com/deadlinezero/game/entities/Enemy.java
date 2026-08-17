@@ -26,6 +26,7 @@ public final class Enemy extends ActorState {
     private static final float NULL_WARD_PULSE_INTERVAL = 4.6f;
     private static final float NULL_WARD_PULSE_RADIUS = 5.2f;
     private static final float NULL_WARD_HEAL_FRACTION = .045f;
+    private static final float NULL_WARD_HEAL_LOCKOUT_SECONDS = 1.35f;
     private static final float NULL_WARD_BUFF_SECONDS = 2.8f;
 
     public Type type;
@@ -58,6 +59,7 @@ public final class Enemy extends ActorState {
     private float supportPulseTimer = NULL_WARD_PULSE_INTERVAL * .72f;
     private float supportPulseFlash;
     private float supportBuffTimer;
+    private float supportHealLockout;
 
     public Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp) {
         super(x, y, radius, hp * StageRules.enemyHpMultiplier(RunStageContext.stage()));
@@ -255,6 +257,7 @@ public final class Enemy extends ActorState {
         variantTime += safeDt;
         specialRecoveryDelay = Math.max(0f, specialRecoveryDelay - safeDt);
         supportBuffTimer = Math.max(0f, supportBuffTimer - safeDt);
+        supportHealLockout = Math.max(0f, supportHealLockout - safeDt);
         supportPulseFlash = Math.max(0f, supportPulseFlash - safeDt);
         BiomeEnemyBehaviorRules.Profile behavior = biomeBehavior();
         if (type == Type.SHIELDED && specialRecoveryDelay <= 0f && shieldHp < shieldMaxHp) {
@@ -294,7 +297,10 @@ public final class Enemy extends ActorState {
         for (Enemy ally : ACTIVE_ENEMIES.keySet()) {
             if (ally == null || ally == this || !ally.alive || ally.type == Type.BOSS) continue;
             if (position.dst2(ally.position) > radius2) continue;
-            ally.hp = Math.min(ally.maxHp, ally.hp + ally.maxHp * NULL_WARD_HEAL_FRACTION);
+            if (ally.supportHealLockout <= 0f) {
+                ally.hp = Math.min(ally.maxHp, ally.hp + ally.maxHp * NULL_WARD_HEAL_FRACTION);
+                ally.supportHealLockout = NULL_WARD_HEAL_LOCKOUT_SECONDS;
+            }
             ally.supportBuffTimer = Math.max(ally.supportBuffTimer, NULL_WARD_BUFF_SECONDS);
         }
     }
