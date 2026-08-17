@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.ai.BossAffixRules;
 import com.deadlinezero.game.audio.AudioDirector;
+import com.deadlinezero.game.meta.EndgameMutatorRules;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.ThreatTierRules;
@@ -68,10 +69,12 @@ public final class RunContractScreen extends ScreenAdapter {
         font.getData().setScale(.43f);
         font.setColor(RunStageContext.threatTier() > 0 ? VisualTheme.GOLD : VisualTheme.MUTED);
         BossAffixRules.Affix bossAffix = BossAffixRules.forRun(RunStageContext.stage(), RunStageContext.threatTier());
+        String mutator = EndgameMutatorRules.active() ? "  •  MUTATOR " + EndgameMutatorRules.label() : "";
         font.draw(batch, "STAGE " + RunStageContext.stage()
             + "  •  THREAT " + RunStageContext.threatTier()
             + "  •  +" + ThreatTierRules.rewardBonusPercent(RunStageContext.threatTier())
             + "% ASCENSION"
+            + mutator
             + (bossAffix == BossAffixRules.Affix.NONE ? "" : "  •  BOSS AFFIX " + bossAffix.title),
             0f, h - 76f, w, Align.center, false);
 
@@ -122,10 +125,10 @@ public final class RunContractScreen extends ScreenAdapter {
             font.getData().setScale(.37f);
             font.setColor(VisualTheme.MUTED);
             font.draw(batch,
-                "HP  x" + oneDecimal(m.enemyHp) + "\n" +
-                "SPEED  x" + oneDecimal(m.enemySpeed) + "\n" +
-                "DAMAGE  x" + oneDecimal(m.enemyDamage) + "\n" +
-                "SPAWN  x" + oneDecimal(m.spawnInterval),
+                "HP  x" + oneDecimal(m.enemyHp * EndgameMutatorRules.enemyHpMultiplier()) + "\n" +
+                "SPEED  x" + oneDecimal(m.enemySpeed * EndgameMutatorRules.enemySpeedMultiplier()) + "\n" +
+                "DAMAGE  x" + oneDecimal(m.enemyDamage * EndgameMutatorRules.enemyDamageMultiplier()) + "\n" +
+                "SPAWN  x" + oneDecimal(m.spawnInterval * EndgameMutatorRules.spawnIntervalMultiplier()),
                 x + cardW * .13f, cardY + cardH * .55f, cardW * .74f, Align.center, true);
 
             font.getData().setScale(.43f);
@@ -134,7 +137,8 @@ public final class RunContractScreen extends ScreenAdapter {
 
             font.getData().setScale(.62f);
             font.setColor(Color.WHITE);
-            font.draw(batch, "+" + m.rewardBonusPercent() + "% REWARDS", center - cardW * .38f,
+            int totalRewardBonus = Math.round((m.reward * EndgameMutatorRules.rewardMultiplier() - 1f) * 100f);
+            font.draw(batch, "+" + totalRewardBonus + "% REWARDS", center - cardW * .38f,
                 cardY + 54f, cardW * .76f, Align.center, false);
         }
 
