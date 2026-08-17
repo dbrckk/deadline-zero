@@ -13,6 +13,7 @@ import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.MasteryRunNotice;
 import com.deadlinezero.game.meta.RunResult;
+import com.deadlinezero.game.meta.RunShareText;
 import com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog;
 
 public final class VictoryScreen extends ScreenAdapter {
@@ -37,12 +38,15 @@ public final class VictoryScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(.008f, .026f, .03f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+        boolean canShare = game.services.share.available();
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(.04f, .15f, .16f, 1f); shapes.rect(w * .10f, h * .12f, w * .80f, h * .76f);
         shapes.setColor(.10f, .95f, .68f, .16f); shapes.rect(w * .14f, h * .69f, w * .72f, h * .10f);
-        shapes.setColor(.05f, .42f, .38f, .85f); shapes.rect(w * .24f, h * .18f, w * .22f, 56f);
-        shapes.setColor(.08f, .62f, .82f, .85f); shapes.rect(w * .54f, h * .18f, w * .22f, 56f);
+        shapes.setColor(.05f, .42f, .38f, .85f); shapes.rect(w * .13f, h * .18f, w * .20f, 56f);
+        shapes.setColor(canShare ? new Color(.34f, .20f, .62f, .90f) : new Color(.12f, .14f, .17f, .75f));
+        shapes.rect(w * .40f, h * .18f, w * .20f, 56f);
+        shapes.setColor(.08f, .62f, .82f, .85f); shapes.rect(w * .67f, h * .18f, w * .20f, 56f);
         shapes.end();
 
         batch.begin();
@@ -80,16 +84,30 @@ public final class VictoryScreen extends ScreenAdapter {
             font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + " Lv." + result.drop().level, 0, h * .275f, w, Align.center, false);
         }
         font.setColor(Color.WHITE);
-        font.draw(batch, "BASE", w * .24f, h * .18f + 36f, w * .22f, Align.center, false);
-        font.draw(batch, "NEXT STAGE", w * .54f, h * .18f + 36f, w * .22f, Align.center, false);
+        font.draw(batch, "BASE", w * .13f, h * .18f + 36f, w * .20f, Align.center, false);
+        font.setColor(canShare ? new Color(.86f, .78f, 1f, 1f) : Color.DARK_GRAY);
+        font.draw(batch, canShare ? "SHARE [H]" : "SHARE", w * .40f, h * .18f + 36f, w * .20f, Align.center, false);
+        font.setColor(Color.WHITE);
+        font.draw(batch, "NEXT STAGE", w * .67f, h * .18f + 36f, w * .20f, Align.center, false);
         batch.end();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) game.showMenu();
         if (Gdx.input.isKeyJustPressed(Input.Keys.R) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) game.startRun();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) share();
         if (Gdx.input.justTouched()) {
             float x = Gdx.input.getX();
-            if (x < w * .5f) game.showMenu(); else game.startRun();
+            float y = h - Gdx.input.getY();
+            if (y >= h * .16f && y <= h * .18f + 72f) {
+                if (x >= w * .13f && x <= w * .33f) game.showMenu();
+                else if (x >= w * .40f && x <= w * .60f) share();
+                else if (x >= w * .67f && x <= w * .87f) game.startRun();
+            }
         }
+    }
+
+    private void share() {
+        if (!game.services.share.available()) return;
+        game.services.share.shareText(RunShareText.format(result));
     }
 
     private void drawMasteryNotice(float w, float h) {
