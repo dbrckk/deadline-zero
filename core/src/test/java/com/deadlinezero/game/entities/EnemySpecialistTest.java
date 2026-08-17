@@ -4,9 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.deadlinezero.game.meta.RunStageContext;
+
 final class EnemySpecialistTest {
+    @BeforeEach void resetStage() { RunStageContext.begin(1, 0, 0); }
+    @AfterEach void cleanupStage() { RunStageContext.begin(1, 0, 0); }
+
     @Test void shieldedEnemyAbsorbsDamageBeforeHealth() {
         Enemy enemy = new Enemy(Enemy.Type.SHIELDED, 0f, 0f, 100f, 2f, .5f, 10f, 10);
         float hpBefore = enemy.hp;
