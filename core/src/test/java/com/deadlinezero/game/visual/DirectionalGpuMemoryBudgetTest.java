@@ -12,7 +12,7 @@ final class DirectionalGpuMemoryBudgetTest {
         long baseDirectional = rgbaBytes(768, 1792);
         long highResCore = rgbaBytes(HighResDirectionalBootstrapArt.width(), HighResDirectionalBootstrapArt.height());
         long highResBoss = rgbaBytes(HighResBossDirectionalArt.width(), HighResBossDirectionalArt.height());
-        long biomeDirectional = rgbaBytes(640, 896);
+        long biomeDirectional = rgbaBytes(BiomeDirectionalBootstrapArt.width(), BiomeDirectionalBootstrapArt.height());
 
         assertTrue(baseDirectional <= 6L * MIB, "base directional sheet exceeded 6 MiB");
         assertTrue(highResCore <= 6L * MIB, "48px core sheet exceeded 6 MiB");
