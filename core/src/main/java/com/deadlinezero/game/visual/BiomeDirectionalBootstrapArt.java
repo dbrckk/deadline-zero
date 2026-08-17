@@ -31,13 +31,12 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
     private final Texture texture;
     private final TextureRegion[] regions = new TextureRegion[TOTAL_TILES];
     private final AuthoredCoreDirectionalArt authoredCore;
-    private final HighResDirectionalBootstrapArt highResCore;
+    private HighResDirectionalBootstrapArt highResCore;
+    private boolean highResCoreAttempted;
 
-    private BiomeDirectionalBootstrapArt(Texture texture, AuthoredCoreDirectionalArt authoredCore,
-                                         HighResDirectionalBootstrapArt highResCore) {
+    private BiomeDirectionalBootstrapArt(Texture texture, AuthoredCoreDirectionalArt authoredCore) {
         this.texture = texture;
         this.authoredCore = authoredCore;
-        this.highResCore = highResCore;
         for (int tile = 0; tile < regions.length; tile++) {
             int x = (tile % COLUMNS) * TILE;
             int y = (tile / COLUMNS) * TILE;
@@ -61,13 +60,7 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
                 // Generated high-resolution/core layers remain available if shipped art is invalid.
             }
 
-            HighResDirectionalBootstrapArt highRes = null;
-            try {
-                highRes = HighResDirectionalBootstrapArt.create();
-            } catch (RuntimeException ignored) {
-                // The 32px biome/core layers remain fully functional if the optional 48px layer fails.
-            }
-            return new BiomeDirectionalBootstrapArt(texture, authored, highRes);
+            return new BiomeDirectionalBootstrapArt(texture, authored);
         } finally {
             p.dispose();
         }
@@ -75,7 +68,7 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
 
     public boolean supports(String key) {
         return (authoredCore != null && authoredCore.supports(key))
-            || (highResCore != null && highResCore.supports(key))
+            || HighResDirectionalBootstrapArt.firstTile(key) >= 0
             || firstTile(key) >= 0;
     }
 
@@ -84,16 +77,32 @@ public final class BiomeDirectionalBootstrapArt implements Disposable {
             TextureRegion authored = authoredCore.region(key, stateTime, frameDuration, loop);
             if (authored != null) return authored;
         }
-        if (highResCore != null) {
-            TextureRegion highRes = highResCore.region(key, stateTime, frameDuration, loop);
-            if (highRes != null) return highRes;
+
+        if (HighResDirectionalBootstrapArt.firstTile(key) >= 0) {
+            HighResDirectionalBootstrapArt highRes = ensureHighResCore();
+            if (highRes != null) {
+                TextureRegion region = highRes.region(key, stateTime, frameDuration, loop);
+                if (region != null) return region;
+            }
         }
+
         int first = firstTile(key);
         if (first < 0) return null;
         int count = frameCount(key);
         int raw = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
         int frame = count <= 1 ? 0 : (loop ? raw % count : Math.min(count - 1, raw));
         return regions[first + frame];
+    }
+
+    private HighResDirectionalBootstrapArt ensureHighResCore() {
+        if (highResCoreAttempted) return highResCore;
+        highResCoreAttempted = true;
+        try {
+            highResCore = HighResDirectionalBootstrapArt.create();
+        } catch (RuntimeException ignored) {
+            highResCore = null;
+        }
+        return highResCore;
     }
 
     static int firstTile(String key) {
