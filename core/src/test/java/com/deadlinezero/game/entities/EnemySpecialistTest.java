@@ -53,11 +53,12 @@ final class EnemySpecialistTest {
     @Test void phantomCyclesIntoMitigationAndSpeedWindow() {
         Enemy enemy = new Enemy(Enemy.Type.PHANTOM, 0f, 0f, 100f, 2f, .5f, 10f, 10);
         assertFalse(enemy.phased());
-        float normalSpeed = enemy.effectiveSpeed();
+        float baseConfiguredSpeed = enemy.speed;
 
         for (int i = 0; i < 216; i++) enemy.updateStatus(1f / 60f);
         assertTrue(enemy.phased());
-        assertTrue(enemy.effectiveSpeed() > normalSpeed);
+        assertTrue(enemy.effectiveSpeed() > baseConfiguredSpeed * 1.30f,
+            "phased phantom must gain a material speed multiplier independent of champion burst timing");
 
         float before = enemy.hp;
         enemy.damage(50f);
