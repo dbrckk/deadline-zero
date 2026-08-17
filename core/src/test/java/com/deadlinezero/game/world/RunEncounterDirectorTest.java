@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import com.deadlinezero.game.meta.EndgameMutatorRules;
 import com.deadlinezero.game.meta.RunStageContext;
 
 final class RunEncounterDirectorTest {
@@ -51,5 +52,24 @@ final class RunEncounterDirectorTest {
         assertTrue(seen.contains(RunEncounterDirector.Type.PHANTOM_BREACH));
         assertTrue(seen.contains(RunEncounterDirector.Type.REGEN_BLOOM));
         assertTrue(seen.contains(RunEncounterDirector.Type.BULWARK_LINE));
+    }
+
+    @Test void highThreatMutatorGuaranteesItsSignatureEncounterWithoutDuplicates() {
+        for (int ordinal = 0; ordinal < 8; ordinal++) {
+            RunStageContext.begin(20, ordinal, 6);
+            EndgameMutatorRules.Mutator mutator = EndgameMutatorRules.current();
+            RunEncounterDirector director = new RunEncounterDirector(20);
+            Set<RunEncounterDirector.Type> unique = new HashSet<>();
+            for (int i = 0; i < 3; i++) unique.add(director.planned(i));
+            assertEquals(3, unique.size(), "anchoring must preserve three distinct events");
+            RunEncounterDirector.Type expected = switch (mutator) {
+                case FRENZY -> RunEncounterDirector.Type.PHANTOM_BREACH;
+                case BULWARK -> RunEncounterDirector.Type.BULWARK_LINE;
+                case VOLATILE -> RunEncounterDirector.Type.JUGGERNAUT_PUSH;
+                case SWARM -> RunEncounterDirector.Type.SWARM_SURGE;
+                default -> RunEncounterDirector.Type.NONE;
+            };
+            assertTrue(unique.contains(expected), mutator + " should surface its signature encounter");
+        }
     }
 }
