@@ -15,11 +15,12 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
     static final int COLUMNS = 16;
     static final int FRAMES_PER_DIRECTION = 12;
     static final int ACTOR_BLOCK = FRAMES_PER_DIRECTION * 8;
-    static final int ACTOR_COUNT = 3;
+    static final int ACTOR_COUNT = 7;
     static final int TOTAL_TILES = ACTOR_BLOCK * ACTOR_COUNT;
 
     private static final String[] ROOTS = {
-        "survivor/rex/", "enemy/shambler/", "enemy/runner/"
+        "survivor/rex/", "survivor/nyx/", "survivor/bastion/", "survivor/volt/", "survivor/wraith/",
+        "enemy/shambler/", "enemy/runner/"
     };
 
     private final Texture texture;
