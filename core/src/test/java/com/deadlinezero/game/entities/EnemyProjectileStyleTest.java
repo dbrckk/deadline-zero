@@ -17,10 +17,20 @@ final class EnemyProjectileStyleTest {
         assertEquals(EnemyProjectile.Style.NULL, EnemyProjectile.defaultStyleForActiveBiome());
     }
 
+    @Test void nullSectorThinNonExplosiveVolleyUsesStaticIdentity() {
+        RunStageContext.begin(20, 0, 0);
+        assertEquals(EnemyProjectile.Style.STATIC,
+            EnemyProjectile.defaultStyleForActiveContext(.18f, false));
+        assertEquals(EnemyProjectile.Style.NULL,
+            EnemyProjectile.defaultStyleForActiveContext(.22f, false));
+        assertEquals(EnemyProjectile.Style.NULL,
+            EnemyProjectile.defaultStyleForActiveContext(.18f, true));
+    }
+
     @Test void explicitSourceStyleOverridesBiomeFallback() {
         RunStageContext.begin(20, 0, 0);
         EnemyProjectile projectile = new EnemyProjectile().spawn(
-            0f, 0f, 1f, 0f, 10f, .2f, 2f, false, 0f, EnemyProjectile.Style.STATIC);
-        assertEquals(EnemyProjectile.Style.STATIC, projectile.style);
+            0f, 0f, 1f, 0f, 10f, .2f, 2f, false, 0f, EnemyProjectile.Style.CINDER);
+        assertEquals(EnemyProjectile.Style.CINDER, projectile.style);
     }
 }
