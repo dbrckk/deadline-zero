@@ -14,6 +14,7 @@ public record BalanceRunSample(
     float maxHitDealt,
     float maxHitReceived,
     String contract,
+    String mutator,
     String survivor,
     String weaponId,
     int ascensionSetPieces,
@@ -31,6 +32,7 @@ public record BalanceRunSample(
         maxHitDealt = finiteNonNegative(maxHitDealt);
         maxHitReceived = finiteNonNegative(maxHitReceived);
         contract = safeText(contract, "STANDARD");
+        mutator = safeText(mutator, "STANDARD PRESSURE");
         survivor = safeText(survivor, "REX");
         weaponId = safeText(weaponId, "ar9");
         ascensionSetPieces = Math.max(0, Math.min(4, ascensionSetPieces));
