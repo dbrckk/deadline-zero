@@ -73,7 +73,10 @@ final class ThreatTierRulesTest {
         RunModifierContext.begin();
         float ascendedPressure = RunModifierContext.spawnIntervalMultiplier();
         assertTrue(ascendedPressure < standardPressure);
-        assertEquals(standardPressure * ThreatTierRules.spawnIntervalMultiplier(10), ascendedPressure, .0001f);
+        assertEquals(standardPressure
+                * ThreatTierRules.spawnIntervalMultiplier(10)
+                * EndgameMutatorRules.spawnIntervalMultiplier(),
+            ascendedPressure, .0001f);
     }
 
     @Test void milestoneGemsAreOnlyPaidEveryFiveTiers() {
