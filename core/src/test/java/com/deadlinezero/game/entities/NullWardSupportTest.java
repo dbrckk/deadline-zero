@@ -23,6 +23,23 @@ final class NullWardSupportTest {
         assertTrue(ward.supportPulseFlash() > 0f, "pulse should expose a short visual event window");
     }
 
+    @Test void simultaneousWardsCannotStackBurstHealingOnOneTarget() {
+        RunStageContext.begin(20, 79, 0);
+        Enemy wardA = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8);
+        Enemy wardB = new Enemy(Enemy.Type.REGENERATOR, .5f, 0f, 100f, 2f, .45f, 10f, 8);
+        Enemy ally = new Enemy(Enemy.Type.RUNNER, 1f, 0f, 100f, 3f, .35f, 10f, 8);
+        ally.damage(60f);
+        float before = ally.hp;
+        float expectedSingleHeal = ally.maxHp * .045f;
+
+        wardA.updateStatus(Enemy.nullWardPulseInterval());
+        wardB.updateStatus(Enemy.nullWardPulseInterval());
+
+        assertEquals(before + expectedSingleHeal, ally.hp, .01f,
+            "synchronized Null Wards must not multiply burst healing");
+        assertTrue(ally.supportBuffed(), "the shared target should still receive the support buff");
+    }
+
     @Test void pulseIgnoresBossesAndDistantEnemies() {
         RunStageContext.begin(20, 78, 0);
         Enemy ward = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8);
