@@ -14,7 +14,8 @@ final class RunRecoveryAdviceTest {
     }
 
     @Test void slowMidRunClearRecommendsOffense() {
-        RunResult result = result(10, 0, 80f, 8);
+        // Stage 10 targets 495s; 300s is past the opening gate while 8 kills is clearly below target clear speed.
+        RunResult result = result(10, 0, 300f, 8);
         RunRecoveryAdvice.Advice advice = RunRecoveryAdvice.forResult(result);
         assertEquals(RunRecoveryAdvice.Focus.OFFENSE, advice.focus());
     }
@@ -22,7 +23,8 @@ final class RunRecoveryAdviceTest {
     @Test void lateFailureWithGoodClearSpeedRecommendsFinalDefense() {
         int stage = 12;
         float nearBoss = StageMissionRules.bossArrivalSeconds(stage) * .90f;
-        RunResult result = result(stage, 2, nearBoss, 80);
+        // Keep clear speed above the 14 KPM offense threshold so late-run defense is the deciding branch.
+        RunResult result = result(stage, 2, nearBoss, 150);
         RunRecoveryAdvice.Advice advice = RunRecoveryAdvice.forResult(result);
         assertEquals(RunRecoveryAdvice.Focus.ENDGAME_DEFENSE, advice.focus());
     }
