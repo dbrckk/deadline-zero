@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Compact deterministic multi-frame VFX sheet used when the production atlas has not supplied
- * an effect yet. Generated once at startup and served from cached TextureRegions.
+ * an effect yet. Geometry/key lookup is always available; GPU allocation happens lazily on use.
  */
 public final class BootstrapVfxArt implements Disposable {
     static final int TILE = 48;
@@ -32,34 +32,14 @@ public final class BootstrapVfxArt implements Disposable {
     static final int EFFECT_COUNT = ROOTS.length;
     static final int TOTAL_TILES = EFFECT_COUNT * FRAMES_PER_EFFECT;
 
-    private final Texture texture;
-    private final TextureRegion[] regions = new TextureRegion[TOTAL_TILES];
+    private Texture texture;
+    private TextureRegion[] regions;
+    private boolean textureAttempted;
 
-    private BootstrapVfxArt(Texture texture) {
-        this.texture = texture;
-        for (int tile = 0; tile < regions.length; tile++) {
-            int x = (tile % COLUMNS) * TILE;
-            int y = (tile / COLUMNS) * TILE;
-            regions[tile] = new TextureRegion(texture, x, y, TILE, TILE);
-        }
-    }
+    private BootstrapVfxArt() { }
 
     public static BootstrapVfxArt create() {
-        int rows = rows();
-        Pixmap pixmap = new Pixmap(COLUMNS * TILE, rows * TILE, Pixmap.Format.RGBA8888);
-        pixmap.setBlending(Pixmap.Blending.SourceOver);
-        try {
-            for (int effect = 0; effect < EFFECT_COUNT; effect++) {
-                for (int frame = 0; frame < FRAMES_PER_EFFECT; frame++) {
-                    drawFrame(pixmap, effect, frame, effect * FRAMES_PER_EFFECT + frame);
-                }
-            }
-            Texture texture = new Texture(pixmap);
-            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            return new BootstrapVfxArt(texture);
-        } finally {
-            pixmap.dispose();
-        }
+        return new BootstrapVfxArt();
     }
 
     public boolean supports(String key) { return firstTile(key) >= 0; }
@@ -67,10 +47,42 @@ public final class BootstrapVfxArt implements Disposable {
     public TextureRegion region(String key, float stateTime, float frameDuration, boolean loop) {
         int first = firstTile(key);
         if (first < 0) return null;
+        TextureRegion[] loadedRegions = ensureRegions();
+        if (loadedRegions == null) return null;
         int count = frameCount(key);
         int rawFrame = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
         int frame = loop ? rawFrame % count : Math.min(count - 1, rawFrame);
-        return regions[first + frame];
+        return loadedRegions[first + frame];
+    }
+
+    private TextureRegion[] ensureRegions() {
+        if (textureAttempted) return regions;
+        textureAttempted = true;
+        Pixmap pixmap = new Pixmap(width(), height(), Pixmap.Format.RGBA8888);
+        pixmap.setBlending(Pixmap.Blending.SourceOver);
+        try {
+            for (int effect = 0; effect < EFFECT_COUNT; effect++) {
+                for (int frame = 0; frame < FRAMES_PER_EFFECT; frame++) {
+                    drawFrame(pixmap, effect, frame, effect * FRAMES_PER_EFFECT + frame);
+                }
+            }
+            texture = new Texture(pixmap);
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            regions = new TextureRegion[TOTAL_TILES];
+            for (int tile = 0; tile < regions.length; tile++) {
+                int x = (tile % COLUMNS) * TILE;
+                int y = (tile / COLUMNS) * TILE;
+                regions[tile] = new TextureRegion(texture, x, y, TILE, TILE);
+            }
+            return regions;
+        } catch (RuntimeException exception) {
+            if (texture != null) texture.dispose();
+            texture = null;
+            regions = null;
+            return null;
+        } finally {
+            pixmap.dispose();
+        }
     }
 
     static int firstTile(String key) {
@@ -229,5 +241,9 @@ public final class BootstrapVfxArt implements Disposable {
 
     private static void set(Pixmap p, float r, float g, float b, float a) { p.setColor(r, g, b, a); }
 
-    @Override public void dispose() { texture.dispose(); }
+    @Override public void dispose() {
+        if (texture != null) texture.dispose();
+        texture = null;
+        regions = null;
+    }
 }
