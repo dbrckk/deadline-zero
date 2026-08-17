@@ -297,10 +297,45 @@ public final class WorldFxRenderer {
             if (speed < .001f) continue;
             float nx = p.velocity.x / speed;
             float ny = p.velocity.y / speed;
-            Color c = p.explosive ? VisualTheme.GOLD : VisualTheme.RED;
-            shapes.setColor(c.r, c.g, c.b, .40f * MathUtils.lerp(.7f, 1f, q));
+            Color c = switch (p.style) {
+                case CINDER -> Color.ORANGE;
+                case STATIC -> VisualTheme.CYAN;
+                case NULL -> VisualTheme.VIOLET;
+                default -> p.explosive ? VisualTheme.GOLD : VisualTheme.RED;
+            };
+            float trailLength = switch (p.style) {
+                case CINDER -> .72f;
+                case STATIC -> .92f;
+                case NULL -> .78f;
+                default -> .52f;
+            };
+            float trailWidth = switch (p.style) {
+                case CINDER -> .085f;
+                case STATIC -> .040f;
+                case NULL -> .070f;
+                default -> .065f;
+            };
+            shapes.setColor(c.r, c.g, c.b, .44f * MathUtils.lerp(.7f, 1f, q));
             shapes.rectLine(p.position.x, p.position.y,
-                p.position.x - nx * .52f, p.position.y - ny * .52f, .065f);
+                p.position.x - nx * trailLength, p.position.y - ny * trailLength, trailWidth);
+
+            if (budget.allowHeavyFx()) {
+                if (p.style == EnemyProjectile.Style.CINDER) {
+                    shapes.setColor(1f, .82f, .26f, .36f);
+                    shapes.circle(p.position.x - nx * .24f, p.position.y - ny * .24f,
+                        .10f, budget.geometrySegments(10, 6));
+                } else if (p.style == EnemyProjectile.Style.STATIC) {
+                    float sideX = -ny * .10f;
+                    float sideY = nx * .10f;
+                    shapes.setColor(.82f, 1f, 1f, .48f);
+                    shapes.rectLine(p.position.x + sideX, p.position.y + sideY,
+                        p.position.x - nx * .62f - sideX, p.position.y - ny * .62f - sideY, .020f);
+                } else if (p.style == EnemyProjectile.Style.NULL) {
+                    shapes.setColor(.82f, .62f, 1f, .32f);
+                    shapes.circle(p.position.x - nx * .18f, p.position.y - ny * .18f,
+                        .12f, budget.geometrySegments(12, 7));
+                }
+            }
         }
 
         for (HomingMissile m : missiles) {
