@@ -11,15 +11,18 @@ import javax.imageio.ImageIO;
 import org.junit.jupiter.api.Test;
 
 final class AuthoredCoreDirectionalArtTest {
-    private static final String[] ROOTS = {"survivor/rex", "enemy/shambler", "enemy/runner"};
+    private static final String[] ROOTS = {
+        "survivor/rex", "survivor/nyx", "survivor/bastion", "survivor/volt", "survivor/wraith",
+        "enemy/shambler", "enemy/runner"
+    };
     private static final String[] DIRECTIONS = {"n", "ne", "e", "se", "s", "sw", "w", "nw"};
 
     @Test void optionalShippedPngMustMatchRuntimeGridAndContainVisibleTiles() throws Exception {
         Path asset = locateAsset();
         if (asset == null) {
-            // Absence is supported deliberately: GameArt falls back to the deterministic bootstrap atlas.
+            // Absence is supported deliberately: GameArt falls back to deterministic generated art.
             assertEquals(768, AuthoredCoreDirectionalArt.width());
-            assertEquals(864, AuthoredCoreDirectionalArt.height());
+            assertEquals(2016, AuthoredCoreDirectionalArt.height());
             return;
         }
 
@@ -28,7 +31,7 @@ final class AuthoredCoreDirectionalArtTest {
         assertEquals(AuthoredCoreDirectionalArt.width(), image.getWidth());
         assertEquals(AuthoredCoreDirectionalArt.height(), image.getHeight());
         assertEquals(768, image.getWidth());
-        assertEquals(864, image.getHeight());
+        assertEquals(2016, image.getHeight());
 
         for (int tile = 0; tile < AuthoredCoreDirectionalArt.TOTAL_TILES; tile++) {
             int ox = (tile % AuthoredCoreDirectionalArt.COLUMNS) * AuthoredCoreDirectionalArt.TILE;
@@ -43,7 +46,7 @@ final class AuthoredCoreDirectionalArtTest {
         }
     }
 
-    @Test void allThreeActorsCoverEightDirectionsAndFiveMotions() {
+    @Test void allSevenActorsCoverEightDirectionsAndFiveMotions() {
         for (String root : ROOTS) {
             for (String direction : DIRECTIONS) {
                 assertMotion(root, direction, "idle", 2);
@@ -53,12 +56,13 @@ final class AuthoredCoreDirectionalArtTest {
                 assertMotion(root, direction, "death", 3);
             }
         }
-        assertEquals(288, AuthoredCoreDirectionalArt.TOTAL_TILES);
+        assertEquals(7, AuthoredCoreDirectionalArt.ACTOR_COUNT);
+        assertEquals(672, AuthoredCoreDirectionalArt.TOTAL_TILES);
     }
 
-    @Test void unrelatedActorsAreDeliberatelyRejectedForFallback() {
-        assertEquals(-1, AuthoredCoreDirectionalArt.firstTile("survivor/nyx/e/run"));
+    @Test void unrelatedActorsRemainOnTheirDedicatedFallbackLayers() {
         assertEquals(-1, AuthoredCoreDirectionalArt.firstTile("enemy/brute/e/run"));
+        assertEquals(-1, AuthoredCoreDirectionalArt.firstTile("enemy/ranged/e/run"));
         assertEquals(-1, AuthoredCoreDirectionalArt.firstTile("boss/alpha/e/run"));
     }
 
