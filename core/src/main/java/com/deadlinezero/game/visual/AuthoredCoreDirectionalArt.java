@@ -7,12 +7,10 @@ import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Shipped/file-backed core directional art gateway. A complete seven-actor raster can replace
- * every high-resolution core bootstrap at once, while smaller authored actor sheets can migrate
- * incrementally without breaking the generated fallbacks. It also owns lazy 64px boss art.
+ * every high-resolution core bootstrap at once. It also owns lazy 64px boss art.
  */
 public final class AuthoredCoreDirectionalArt implements Disposable {
     static final String PATH = "art/core_authored.png";
-    static final String REX_PATH = "art/rex_authored.png";
     static final int TILE = 48;
     static final int COLUMNS = 16;
     static final int FRAMES_PER_DIRECTION = 12;
@@ -27,26 +25,18 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
 
     private final Texture texture;
     private final TextureRegion[] regions;
-    private final Texture rexTexture;
-    private final TextureRegion[] rexRegions;
     private HighResBossDirectionalArt bossArt;
     private boolean bossArtAttempted;
 
-    private AuthoredCoreDirectionalArt(Texture texture, Texture rexTexture) {
+    private AuthoredCoreDirectionalArt(Texture texture) {
         this.texture = texture;
-        this.rexTexture = rexTexture;
         regions = texture == null ? null : split(texture, TOTAL_TILES);
-        rexRegions = rexTexture == null ? null : split(rexTexture, ACTOR_BLOCK);
     }
 
     public static AuthoredCoreDirectionalArt create() {
         Texture coreTexture = loadValidated(PATH, width(), height(), "authored core");
-        // The complete sheet always wins. Avoid loading the partial REX texture at the same time.
-        Texture rexTexture = coreTexture == null
-            ? loadValidated(REX_PATH, COLUMNS * TILE, rexRows() * TILE, "authored REX")
-            : null;
         // Keep the gateway alive even when no raster is present so boss art remains lazy.
-        return new AuthoredCoreDirectionalArt(coreTexture, rexTexture);
+        return new AuthoredCoreDirectionalArt(coreTexture);
     }
 
     private static Texture loadValidated(String path, int expectedWidth, int expectedHeight, String label) {
@@ -72,7 +62,6 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
     }
 
     static int rows() { return (TOTAL_TILES + COLUMNS - 1) / COLUMNS; }
-    static int rexRows() { return (ACTOR_BLOCK + COLUMNS - 1) / COLUMNS; }
     static int width() { return COLUMNS * TILE; }
     static int height() { return rows() * TILE; }
 
@@ -82,19 +71,11 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
 
     public TextureRegion region(String key, float stateTime, float frameDuration, boolean loop) {
         int first = firstTile(key);
-        if (first >= 0) {
-            TextureRegion[] source = regions;
-            int sourceFirst = first;
-            if (source == null && first < ACTOR_BLOCK && rexRegions != null) {
-                source = rexRegions;
-                sourceFirst = first;
-            }
-            if (source != null) {
-                int count = frameCount(key);
-                int raw = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
-                int frame = count <= 1 ? 0 : (loop ? raw % count : Math.min(count - 1, raw));
-                return source[sourceFirst + frame];
-            }
+        if (first >= 0 && regions != null) {
+            int count = frameCount(key);
+            int raw = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
+            int frame = count <= 1 ? 0 : (loop ? raw % count : Math.min(count - 1, raw));
+            return regions[first + frame];
         }
 
         if (HighResBossDirectionalArt.firstTile(key) < 0) return null;
@@ -160,6 +141,5 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
     @Override public void dispose() {
         if (bossArt != null) bossArt.dispose();
         if (texture != null) texture.dispose();
-        if (rexTexture != null) rexTexture.dispose();
     }
 }
