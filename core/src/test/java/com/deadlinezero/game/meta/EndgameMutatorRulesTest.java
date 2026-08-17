@@ -52,6 +52,15 @@ final class EndgameMutatorRulesTest {
         }
     }
 
+    @Test void compositeMutatorPressureNeverExceedsTwentyPercentOverlay() {
+        for (EndgameMutatorRules.Mutator mutator : EndgameMutatorRules.Mutator.values()) {
+            float pressure = mutator.enemyHp * mutator.enemyDamage * mutator.enemySpeed
+                / Math.max(.01f, mutator.spawnInterval);
+            assertTrue(pressure >= .95f, mutator + " should remain a meaningful endgame profile");
+            assertTrue(pressure <= 1.20f, mutator + " exceeds the allowed composite pressure overlay: " + pressure);
+        }
+    }
+
     @Test void runModifierScalingIncludesCurrentMutatorWithoutChangingLowThreatRuns() {
         RunStageContext.begin(10, 2, 0);
         RunModifierContext.begin();
