@@ -106,7 +106,10 @@ public final class RunModifierContext {
     public static void end() { active = null; }
     public static boolean active() { return active != null; }
     public static Modifier modifier() { return active; }
-    public static String title() { return active == null ? "STANDARD" : active.title; }
+    public static String title() {
+        String contract = active == null ? "STANDARD" : active.title;
+        return EndgameMutatorRules.active() ? contract + " • " + EndgameMutatorRules.label() : contract;
+    }
     public static String description() {
         String contract = active == null ? "Standard combat parameters" : active.description;
         return EndgameMutatorRules.active() ? contract + " • " + EndgameMutatorRules.label() : contract;
