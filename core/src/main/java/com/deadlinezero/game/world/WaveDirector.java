@@ -2,6 +2,7 @@ package com.deadlinezero.game.world;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.deadlinezero.game.entities.Enemy;
+import com.deadlinezero.game.meta.EndgameMutatorRules;
 import com.deadlinezero.game.meta.RunMissionRuntime;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
@@ -186,6 +187,8 @@ public final class WaveDirector {
                 yield Enemy.Type.SHAMBLER;
             }
         };
-        return encounters.overrideType(MathUtils.random(), fallback);
+        Enemy.Type encounter = encounters.overrideType(MathUtils.random(), fallback);
+        return EndgameWaveCompositionRules.override(
+            RunStageContext.threatTier(), EndgameMutatorRules.current(), pressureBand(), MathUtils.random(), encounter);
     }
 }
