@@ -20,7 +20,8 @@ public final class EnemyProjectile {
 
     public EnemyProjectile spawn(float x, float y, float vx, float vy, float damage,
                                  float radius, float life, boolean explosive, float explosionRadius) {
-        return spawn(x, y, vx, vy, damage, radius, life, explosive, explosionRadius, defaultStyleForActiveBiome());
+        return spawn(x, y, vx, vy, damage, radius, life, explosive, explosionRadius,
+            defaultStyleForActiveContext(radius, explosive));
     }
 
     public EnemyProjectile spawn(float x, float y, float vx, float vy, float damage,
@@ -33,15 +34,23 @@ public final class EnemyProjectile {
         this.life = life;
         this.explosive = explosive;
         this.explosionRadius = explosionRadius;
-        this.style = style == null ? defaultStyleForActiveBiome() : style;
+        this.style = style == null ? defaultStyleForActiveContext(radius, explosive) : style;
         this.active = true;
         return this;
     }
 
     public static Style defaultStyleForActiveBiome() {
+        return defaultStyleForActiveContext(.24f, false);
+    }
+
+    /**
+     * Default presentation when the caller does not provide a source identity. In Null Sector,
+     * thin non-explosive hostile volleys are the Static Seer pattern; boss/large shots remain NULL.
+     */
+    public static Style defaultStyleForActiveContext(float radius, boolean explosive) {
         return switch (EnvironmentBiomeRules.forStage(RunStageContext.stage())) {
             case CINDER_FOUNDRY -> Style.CINDER;
-            case NULL_SECTOR -> Style.NULL;
+            case NULL_SECTOR -> !explosive && radius <= .19f ? Style.STATIC : Style.NULL;
             default -> Style.DEFAULT;
         };
     }
