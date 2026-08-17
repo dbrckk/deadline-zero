@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * Shipped directional sprite sheet for the three most visible core combat identities.
- * This is file-backed production art, not a runtime Pixmap generator.
+ * Shipped/file-backed core directional art gateway. It also owns the dedicated 64px boss layer
+ * so the existing biome priority gateway can serve both without changing GameArt ordering.
  */
 public final class AuthoredCoreDirectionalArt implements Disposable {
     static final String PATH = "art/core_authored.png";
@@ -23,10 +23,17 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
     };
 
     private final Texture texture;
-    private final TextureRegion[] regions = new TextureRegion[TOTAL_TILES];
+    private final TextureRegion[] regions;
+    private final HighResBossDirectionalArt bossArt;
 
-    private AuthoredCoreDirectionalArt(Texture texture) {
+    private AuthoredCoreDirectionalArt(Texture texture, HighResBossDirectionalArt bossArt) {
         this.texture = texture;
+        this.bossArt = bossArt;
+        if (texture == null) {
+            regions = null;
+            return;
+        }
+        regions = new TextureRegion[TOTAL_TILES];
         for (int tile = 0; tile < TOTAL_TILES; tile++) {
             int x = (tile % COLUMNS) * TILE;
             int y = (tile / COLUMNS) * TILE;
@@ -35,26 +42,43 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
     }
 
     public static AuthoredCoreDirectionalArt create() {
-        if (!Gdx.files.internal(PATH).exists()) return null;
-        Texture texture = new Texture(Gdx.files.internal(PATH));
-        int expectedWidth = width();
-        int expectedHeight = height();
-        if (texture.getWidth() != expectedWidth || texture.getHeight() != expectedHeight) {
-            texture.dispose();
-            throw new IllegalStateException(
-                "Invalid authored core sheet dimensions: expected " + expectedWidth + "x" + expectedHeight);
+        Texture coreTexture = null;
+        if (Gdx.files.internal(PATH).exists()) {
+            coreTexture = new Texture(Gdx.files.internal(PATH));
+            int expectedWidth = width();
+            int expectedHeight = height();
+            if (coreTexture.getWidth() != expectedWidth || coreTexture.getHeight() != expectedHeight) {
+                coreTexture.dispose();
+                throw new IllegalStateException(
+                    "Invalid authored core sheet dimensions: expected " + expectedWidth + "x" + expectedHeight);
+            }
+            coreTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         }
-        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        return new AuthoredCoreDirectionalArt(texture);
+
+        HighResBossDirectionalArt boss = null;
+        try {
+            boss = HighResBossDirectionalArt.create();
+        } catch (RuntimeException exception) {
+            if (coreTexture == null) throw exception;
+            // Core authored sprites stay available if the optional 64px boss layer cannot be allocated.
+        }
+        return coreTexture == null && boss == null ? null : new AuthoredCoreDirectionalArt(coreTexture, boss);
     }
 
     static int rows() { return (TOTAL_TILES + COLUMNS - 1) / COLUMNS; }
     static int width() { return COLUMNS * TILE; }
     static int height() { return rows() * TILE; }
 
-    public boolean supports(String key) { return firstTile(key) >= 0; }
+    public boolean supports(String key) {
+        return (bossArt != null && bossArt.supports(key)) || firstTile(key) >= 0;
+    }
 
     public TextureRegion region(String key, float stateTime, float frameDuration, boolean loop) {
+        if (bossArt != null) {
+            TextureRegion boss = bossArt.region(key, stateTime, frameDuration, loop);
+            if (boss != null) return boss;
+        }
+        if (regions == null) return null;
         int first = firstTile(key);
         if (first < 0) return null;
         int count = frameCount(key);
@@ -106,5 +130,8 @@ public final class AuthoredCoreDirectionalArt implements Disposable {
         };
     }
 
-    @Override public void dispose() { texture.dispose(); }
+    @Override public void dispose() {
+        if (bossArt != null) bossArt.dispose();
+        if (texture != null) texture.dispose();
+    }
 }
