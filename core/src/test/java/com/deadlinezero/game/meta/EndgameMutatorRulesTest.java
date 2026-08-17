@@ -68,4 +68,17 @@ final class EndgameMutatorRulesTest {
         assertEquals(RunModifierContext.modifier().reward * EndgameMutatorRules.rewardMultiplier(),
             RunModifierContext.rewardMultiplier(), .0001f);
     }
+
+    @Test void activeRunTitleSurfacesMutatorWithoutChangingContractIdentity() {
+        RunStageContext.begin(20, 9, 6);
+        RunModifierContext.begin();
+        String contract = RunModifierContext.modifier().title;
+        assertTrue(RunModifierContext.title().startsWith(contract + " • "));
+        assertTrue(RunModifierContext.title().endsWith(EndgameMutatorRules.label()));
+
+        BalanceTelemetryRuntime.setContract(contract);
+        BalanceRunSample sample = BalanceTelemetryRuntime.settle(false, 30f, 4);
+        assertEquals(contract, sample.contract());
+        assertEquals(EndgameMutatorRules.label(), sample.mutator());
+    }
 }
