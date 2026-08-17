@@ -41,6 +41,7 @@ import com.deadlinezero.game.util.Pools;
 import com.deadlinezero.game.visual.CombatHudRenderer;
 import com.deadlinezero.game.visual.CombatPolishController;
 import com.deadlinezero.game.visual.CombatSpritePass;
+import com.deadlinezero.game.visual.HostileProjectilePresentation;
 import com.deadlinezero.game.visual.VisualTheme;
 import com.deadlinezero.game.visual.WorldFxRenderer;
 import com.deadlinezero.game.world.SpatialHash;
@@ -76,7 +77,7 @@ public final class GameScreen extends ScreenAdapter {
         this.game = game;
         this.abilitySystem = new AbilitySystem(player, enemies, pools, this::onEnemyKilled);
         this.spritePass = new CombatSpritePass(game.art);
-        this.polish = new CombatPolishController(game.art);
+        this.polish = new CombatPolishController(game.art, game.accessibility);
         float gearPower = game.profile == null ? 1f : game.profile.aggregatePowerMultiplier();
         player.weapon.damage *= gearPower;
         cam.position.set(0, 0, 0);
@@ -110,7 +111,7 @@ public final class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && player.canDash() && move.len2() > .08f) {
             player.position.mulAdd(move, 4.8f);
             player.triggerDash();
-            cameraShake = Math.max(cameraShake, .12f);
+            addCameraShake(.12f);
             impact(player.position.x, player.position.y, .9f, .16f, VisualTheme.CYAN);
         }
         player.position.mulAdd(player.velocity, dt);
@@ -140,9 +141,13 @@ public final class GameScreen extends ScreenAdapter {
         polish.updateSimulation(dt, pools);
         for (int i = enemies.size - 1; i >= 0; i--) if (!enemies.get(i).alive) enemies.removeIndex(i);
 
-        cam.position.x += MathUtils.random(-1f, 1f) * cameraShake;
-        cam.position.y += MathUtils.random(-1f, 1f) * cameraShake;
-        cameraShake = Math.max(0f, cameraShake - dt * 2.7f);
+        if (game.accessibility != null && game.accessibility.allowsScreenShake() && cameraShake > .0001f) {
+            cam.position.x += MathUtils.random(-1f, 1f) * cameraShake;
+            cam.position.y += MathUtils.random(-1f, 1f) * cameraShake;
+            cameraShake = Math.max(0f, cameraShake - dt * 2.7f);
+        } else {
+            cameraShake = 0f;
+        }
         cam.position.x = MathUtils.lerp(cam.position.x, 0f, .08f);
         cam.position.y = MathUtils.lerp(cam.position.y, 0f, .08f);
         polish.applyCameraRecoil(cam);
@@ -161,7 +166,7 @@ public final class GameScreen extends ScreenAdapter {
             if (e.type == Enemy.Type.BOSS && e.bossCombat != null && e.bossPhases != null) {
                 int phase = e.bossPhases.phase();
                 if (e.bossCombat.consumeCharge(phase)) {
-                    cameraShake = Math.max(cameraShake, .16f);
+                    addCameraShake(.16f);
                     impact(e.position.x, e.position.y, 2.8f, .24f, VisualTheme.RED);
                 }
                 if (e.bossCombat.consumeSummon(phase)) spawnBossMinions(e, phase);
@@ -194,7 +199,7 @@ public final class GameScreen extends ScreenAdapter {
                     player.position.x = MathUtils.clamp(player.position.x, -31, 31);
                     player.position.y = MathUtils.clamp(player.position.y, -17, 17);
                     impact(e.position.x, e.position.y, charge.impactRadius(), .26f, VisualTheme.GOLD);
-                    cameraShake = Math.max(cameraShake, e.type == Enemy.Type.ELITE ? .52f : .38f);
+                    addCameraShake(e.type == Enemy.Type.ELITE ? .52f : .38f);
                     contactTimer = Math.max(.30f, .42f * charge.recoveryMultiplier());
                 } else {
                     damagePlayer(e.contactDamage, .35f);
@@ -241,7 +246,7 @@ public final class GameScreen extends ScreenAdapter {
             impact(x, y, nullArchon ? .82f : .65f, nullArchon ? .22f : .18f,
                 revenant ? VisualTheme.RED : VisualTheme.VIOLET);
         }
-        cameraShake = Math.max(cameraShake, nullArchon ? .22f : (revenant ? .18f : .12f));
+        addCameraShake(nullArchon ? .22f : (revenant ? .18f : .12f));
     }
 
     private void bossEnragePulse(Enemy boss) {
@@ -251,13 +256,13 @@ public final class GameScreen extends ScreenAdapter {
         float explosionRadius = boss.bossCombat == null ? 2.0f : boss.bossCombat.enrageExplosionRadius();
         for (int i = 0; i < shots; i++) {
             boolean explosive = explosiveEvery > 0 && i % explosiveEvery == 0;
-            spawnHostileShot(boss.position.x, boss.position.y, i * (360f / shots), speed,
+            spawnHostileShot(boss, boss.position.x, boss.position.y, i * (360f / shots), speed,
                 boss.contactDamage * .65f, explosive ? .26f : .24f, explosive, explosionRadius);
         }
         boolean revenant = boss.bossCombat != null && boss.bossCombat.revenant();
         impact(boss.position.x, boss.position.y, revenant ? 5.8f : 5.1f, .34f,
             revenant ? VisualTheme.RED : VisualTheme.VIOLET);
-        cameraShake = Math.max(cameraShake, revenant ? .46f : .38f);
+        addCameraShake(revenant ? .46f : .38f);
     }
 
     private void updatePlayerProjectiles(float dt) {
@@ -315,7 +320,7 @@ public final class GameScreen extends ScreenAdapter {
             float base = aim.angleDeg();
             for (int i = 0; i < pattern.shots(); i++) {
                 float spread = (i - (pattern.shots() - 1) / 2f) * pattern.spreadDegrees();
-                spawnHostileShot(e.position.x, e.position.y, base + spread,
+                spawnHostileShot(e, e.position.x, e.position.y, base + spread,
                     8.5f * pattern.speedMultiplier(),
                     e.contactDamage * pattern.damageMultiplier(),
                     pattern.explosive() ? .24f : .18f,
@@ -335,7 +340,7 @@ public final class GameScreen extends ScreenAdapter {
                     ? i * pattern.spreadDegrees()
                     : base + (i - (pattern.shots() - 1) / 2f) * pattern.spreadDegrees();
                 boolean explosive = pattern.explosiveEvery() > 0 && i % pattern.explosiveEvery() == 0;
-                spawnHostileShot(e.position.x, e.position.y, angle,
+                spawnHostileShot(e, e.position.x, e.position.y, angle,
                     7.2f * pattern.speedMultiplier(),
                     e.contactDamage * pattern.damageMultiplier(),
                     explosive ? .24f : .22f,
@@ -343,15 +348,17 @@ public final class GameScreen extends ScreenAdapter {
             }
             impact(e.position.x, e.position.y, revenant ? .82f : .64f, .15f,
                 revenant ? VisualTheme.VIOLET : VisualTheme.RED);
-            cameraShake = Math.max(cameraShake, .18f + phase * .05f + (revenant ? .04f : 0f));
+            addCameraShake(.18f + phase * .05f + (revenant ? .04f : 0f));
         }
     }
 
-    private void spawnHostileShot(float x, float y, float angle, float speed, float damage, float radius, boolean explosive, float explosionRadius) {
+    private void spawnHostileShot(Enemy source, float x, float y, float angle, float speed, float damage,
+                                  float radius, boolean explosive, float explosionRadius) {
         EnemyProjectile p = pools.hostileProjectile();
         if (p == null) return;
         shotVelocity.set(speed, 0f).setAngleDeg(angle);
-        p.spawn(x, y, shotVelocity.x, shotVelocity.y, damage, radius, 4.5f, explosive, explosionRadius);
+        p.spawn(x, y, shotVelocity.x, shotVelocity.y, damage, radius, 4.5f, explosive, explosionRadius,
+            HostileProjectilePresentation.styleFor(source));
     }
 
     private void chainShock(Enemy source, float damage, int maxChains) {
@@ -385,7 +392,7 @@ public final class GameScreen extends ScreenAdapter {
         player.damage(damage);
         if (player.hp == hpBefore) return;
         combatHud.triggerDamageFlash();
-        cameraShake = Math.max(cameraShake, shake);
+        addCameraShake(shake);
         impact(player.position.x, player.position.y, 1.1f, .18f, VisualTheme.RED);
         damageNumber(player.position.x, player.position.y + player.radius, damage, false, VisualTheme.RED);
         if (!player.alive) gameOver = true;
@@ -402,8 +409,7 @@ public final class GameScreen extends ScreenAdapter {
         director.onKill();
         if (player.addXp(e.xpValue)) prepareUpgrade();
         impact(e.position.x, e.position.y, e.radius * 2.3f, .28f, VisualTheme.GREEN);
-        if (e.type == Enemy.Type.BOSS) cameraShake = Math.max(cameraShake, .72f);
-        else cameraShake = Math.max(cameraShake, .08f);
+        addCameraShake(e.type == Enemy.Type.BOSS ? .72f : .08f);
     }
 
     private void spawnEnemy() {
@@ -456,7 +462,12 @@ public final class GameScreen extends ScreenAdapter {
                 player.weapon.penetration, player.weapon.knockback, player.weapon.element);
         }
         polish.onShot(base);
-        cameraShake = Math.max(cameraShake, .035f);
+        addCameraShake(.035f);
+    }
+
+    private void addCameraShake(float amount) {
+        if (amount <= 0f || game.accessibility == null || !game.accessibility.allowsScreenShake()) return;
+        cameraShake = Math.max(cameraShake, amount * game.accessibility.screenShakeStrength);
     }
 
     private void impact(float x, float y, float s, float d, Color c) {
@@ -533,8 +544,26 @@ public final class GameScreen extends ScreenAdapter {
             shapes.circle(p.position.x, p.position.y, p.critical ? .16f : .11f, 12);
         }
         for (EnemyProjectile p : pools.hostileProjectiles) if (p.active) {
-            shapes.setColor(p.explosive ? VisualTheme.GOLD : VisualTheme.RED);
-            shapes.circle(p.position.x, p.position.y, p.radius, 14);
+            Color core = switch (p.style) {
+                case CINDER -> Color.ORANGE;
+                case STATIC -> VisualTheme.CYAN;
+                case NULL -> VisualTheme.VIOLET;
+                default -> p.explosive ? VisualTheme.GOLD : VisualTheme.RED;
+            };
+            float visualRadius = p.radius * HostileProjectilePresentation.coreRadiusMultiplier(p.style);
+            if (p.style != EnemyProjectile.Style.DEFAULT) {
+                shapes.setColor(core.r, core.g, core.b, .16f);
+                shapes.circle(p.position.x, p.position.y, visualRadius * 1.65f, 16);
+            }
+            shapes.setColor(core);
+            shapes.circle(p.position.x, p.position.y, visualRadius, 14);
+            if (p.style == EnemyProjectile.Style.STATIC) {
+                shapes.setColor(1f, 1f, 1f, .82f);
+                shapes.circle(p.position.x, p.position.y, visualRadius * .42f, 9);
+            } else if (p.style == EnemyProjectile.Style.NULL) {
+                shapes.setColor(.08f, .04f, .14f, .90f);
+                shapes.circle(p.position.x, p.position.y, visualRadius * .38f, 9);
+            }
         }
         for (HomingMissile m : pools.homingMissiles) if (m.active) {
             shapes.setColor(m.element == DamageElement.FROST ? VisualTheme.CYAN : VisualTheme.GOLD);
@@ -701,7 +730,7 @@ public final class GameScreen extends ScreenAdapter {
             }
             if (idx >= 0 && idx < legendaryChoiceCount && legendaryChoices[idx] != null) {
                 if (legendaryChoices[idx].apply(player)) {
-                    cameraShake = Math.max(cameraShake, .64f);
+                    addCameraShake(.64f);
                     impact(player.position.x, player.position.y, 2.9f, .42f, VisualTheme.GOLD);
                 }
                 choosingLegendary = false;
