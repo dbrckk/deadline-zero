@@ -16,6 +16,8 @@ import com.deadlinezero.game.meta.RunResult;
 import com.deadlinezero.game.services.AdsService;
 
 public final class RunResultScreen extends ScreenAdapter {
+    private static final Color COACHING_ACCENT = new Color(.78f, .64f, 1f, 1f);
+
     private final DeadlineZeroGame game;
     private final RunResult result;
     private final RunRecoveryAdvice.Advice advice;
@@ -68,7 +70,7 @@ public final class RunResultScreen extends ScreenAdapter {
         }
 
         font.getData().setScale(.52f);
-        font.setColor(new Color(.78f, .64f, 1f, 1f));
+        font.setColor(COACHING_ACCENT);
         font.draw(batch, advice.headline(), 0, h * .375f, w, Align.center, false);
         font.getData().setScale(.40f);
         font.setColor(Color.LIGHT_GRAY);
