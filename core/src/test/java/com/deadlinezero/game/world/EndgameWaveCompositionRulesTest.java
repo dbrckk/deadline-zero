@@ -1,6 +1,7 @@
 package com.deadlinezero.game.world;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -42,5 +43,20 @@ final class EndgameWaveCompositionRulesTest {
         Enemy.Type fallback = Enemy.Type.REGENERATOR;
         assertEquals(fallback, EndgameWaveCompositionRules.override(10,
             EndgameMutatorRules.Mutator.FRENZY, WaveDirector.PressureBand.OPENING, .95f, fallback));
+    }
+
+    @Test void everyActiveMutatorCanBreakARepeatedEnemyStreak() {
+        for (EndgameMutatorRules.Mutator mutator : EndgameMutatorRules.Mutator.values()) {
+            if (mutator == EndgameMutatorRules.Mutator.NONE) continue;
+            Enemy.Type repeated = switch (mutator) {
+                case FRENZY, SWARM -> Enemy.Type.RUNNER;
+                case BULWARK -> Enemy.Type.SHIELDED;
+                case VOLATILE -> Enemy.Type.BRUTE;
+                default -> Enemy.Type.SHAMBLER;
+            };
+            Enemy.Type replacement = EndgameWaveCompositionRules.streakBreaker(mutator, repeated);
+            assertNotEquals(repeated, replacement, mutator + " must have a same-theme streak breaker");
+            assertNotEquals(Enemy.Type.BOSS, replacement);
+        }
     }
 }
