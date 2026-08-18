@@ -5,11 +5,33 @@ from __future__ import annotations
 
 import argparse
 import json
+import struct
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "art_sources" / "final-sprite-layout.json"
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+def atlas_pages(path: Path) -> list[str]:
+    pages: list[str] = []
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        stripped = raw.strip()
+        if ":" in stripped:
+            continue
+        lower = stripped.lower()
+        if lower.endswith((".png", ".jpg", ".jpeg", ".webp")):
+            pages.append(stripped.replace("\\", "/"))
+    return pages
+
+
+def png_dimensions(path: Path) -> tuple[int, int]:
+    with path.open("rb") as handle:
+        header = handle.read(24)
+    if len(header) < 24 or header[:8] != PNG_SIGNATURE or header[12:16] != b"IHDR":
+        raise ValueError(f"not a valid PNG with IHDR: {path}")
+    return struct.unpack(">II", header[16:24])
 
 
 def parse_atlas(path: Path) -> dict[str, set[int]]:
@@ -64,6 +86,36 @@ def expected_contract(layout: dict) -> dict[str, set[int]]:
     return expected
 
 
+def validate_pages(atlas: Path, layout: dict) -> list[tuple[str, int, int]]:
+    names = atlas_pages(atlas)
+    if not names:
+        raise ValueError("atlas contains no texture pages")
+    max_width, max_height = layout["packing"]["maxPage"]
+    root = atlas.parent.resolve()
+    seen: set[str] = set()
+    result: list[tuple[str, int, int]] = []
+    for name in names:
+        if name in seen:
+            raise ValueError(f"duplicate atlas texture page declaration: {name}")
+        seen.add(name)
+        if not name.lower().endswith(".png"):
+            raise ValueError(f"final atlas page must be PNG: {name}")
+        page = (atlas.parent / name).resolve()
+        try:
+            page.relative_to(root)
+        except ValueError as exc:
+            raise ValueError(f"atlas page escapes assets directory: {name}") from exc
+        if not page.is_file():
+            raise ValueError(f"atlas page missing: {page}")
+        width, height = png_dimensions(page)
+        if width <= 0 or height <= 0 or width > max_width or height > max_height:
+            raise ValueError(
+                f"atlas page dimensions invalid: {name} is {width}x{height}; max {max_width}x{max_height}"
+            )
+        result.append((name, width, height))
+    return result
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--atlas", type=Path, default=ROOT / "assets" / "art" / "game.atlas")
@@ -79,6 +131,7 @@ def main() -> int:
 
     try:
         layout = json.loads(LAYOUT_PATH.read_text(encoding="utf-8"))
+        pages = validate_pages(atlas, layout)
         actual = parse_atlas(atlas)
         expected = expected_contract(layout)
         missing_keys: list[str] = []
@@ -110,7 +163,10 @@ def main() -> int:
             return 2
 
         expected_frames = sum(len(indices) for indices in expected.values())
-        print(f"final atlas coverage OK: {len(expected)} directional animations, {expected_frames} indexed frames")
+        print(
+            f"final atlas coverage OK: {len(pages)} page(s), {len(expected)} directional animations, "
+            f"{expected_frames} indexed frames"
+        )
         return 0
     except (OSError, json.JSONDecodeError, ValueError, KeyError, TypeError) as exc:
         print(f"ERROR: unable to audit final atlas: {exc}", file=sys.stderr)
