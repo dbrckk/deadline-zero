@@ -24,7 +24,8 @@ CUTTER = ROOT / "tools" / "slice_sprite_sheet.py"
 DEFAULT_OUTPUT = ROOT / "build" / "art_frames"
 
 
-def actor_command(actor: dict, output: Path, padding: int) -> list[str]:
+def actor_command(actor: dict, output: Path, padding: int,
+                  foot_tolerance: float, center_tolerance: float) -> list[str]:
     cell_w, cell_h = actor["cell"]
     cell_arg = str(cell_w) if cell_w == cell_h else f"{cell_w}x{cell_h}"
     command = [
@@ -35,6 +36,8 @@ def actor_command(actor: dict, output: Path, padding: int) -> list[str]:
         "--cell", cell_arg,
         "--output", str(output),
         "--padding", str(padding),
+        "--foot-tolerance", str(foot_tolerance),
+        "--center-tolerance", str(center_tolerance),
     ]
     if actor["profile"] == "boss":
         command.append("--boss")
@@ -51,13 +54,19 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--padding", type=int, default=2)
+    parser.add_argument("--foot-tolerance", type=float, default=3.0,
+                        help="Allowed foot-pivot drift in pixels; attack receives 2x")
+    parser.add_argument("--center-tolerance", type=float, default=6.0,
+                        help="Allowed horizontal alpha-center drift in pixels; attack receives 2x")
     parser.add_argument("--clean", action="store_true", help="Delete the output directory before cutting")
     parser.add_argument("--require-all", action="store_true", help="Fail when any contracted source PNG is missing")
-    parser.add_argument("--strict", action="store_true", help="Fail when cutter QA warnings are emitted")
+    parser.add_argument("--strict", action="store_true", help="Fail on empty cells, padding violations, or pivot drift")
     args = parser.parse_args()
 
     if args.padding < 0:
         parser.error("--padding must be >= 0")
+    if args.foot_tolerance < 0 or args.center_tolerance < 0:
+        parser.error("pivot tolerances must be >= 0")
     if not LAYOUT.is_file() or not CUTTER.is_file():
         parser.error("final sprite layout or cutter is missing")
 
@@ -78,7 +87,10 @@ def main() -> int:
             missing.append(actor["id"])
             continue
         print(f"\n== {actor['id']} (priority {actor['priority']}) ==")
-        completed = subprocess.run(actor_command(actor, output, args.padding), cwd=ROOT)
+        completed = subprocess.run(
+            actor_command(actor, output, args.padding, args.foot_tolerance, args.center_tolerance),
+            cwd=ROOT,
+        )
         if completed.returncode != 0:
             return completed.returncode
         manifest = manifest_path(actor, output)
@@ -94,10 +106,16 @@ def main() -> int:
             "priority": actor["priority"],
             "frames": len(metadata.get("frames", [])),
             "warnings": len(actor_warnings),
+            "pivotSequences": len(metadata.get("qaMetrics", {})),
         })
 
     aggregate = {
         "schema": 1,
+        "qa": {
+            "padding": args.padding,
+            "footTolerance": args.foot_tolerance,
+            "centerTolerance": args.center_tolerance,
+        },
         "builtActors": built,
         "missingActors": missing,
         "totalFrames": sum(item["frames"] for item in built),
@@ -110,6 +128,7 @@ def main() -> int:
     print(f"actors built: {len(built)}/{len(actors)}")
     print(f"frames built: {aggregate['totalFrames']}")
     print(f"QA warnings: {len(warnings)}")
+    print(f"pivot tolerances: foot={args.foot_tolerance}px center={args.center_tolerance}px")
     print(f"manifest: {aggregate_path}")
     if missing:
         print("missing: " + ", ".join(missing))
