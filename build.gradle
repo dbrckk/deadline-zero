@@ -9,12 +9,93 @@ allprojects {
     version = providers.gradleProperty('appVersion').get()
 }
 
+configurations {
+    texturePacker
+}
+
+dependencies {
+    texturePacker "com.badlogicgames.gdx:gdx-tools:${providers.gradleProperty('gdxVersion').get()}"
+}
+
+def finalArtLayoutFile = file('art_sources/final-sprite-layout.json')
+def finalFramesDir = file('build/art_frames')
+def finalFramesManifest = file('build/art_frames/final-sprite-build.json')
+def finalArtOutputDir = file('assets/art')
+def finalAtlasFile = file('assets/art/game.atlas')
+def finalPackerSettings = file('tools/texturepacker-final.json')
+
+def expectedFinalFrameCount = { layout ->
+    long total = 0L
+    layout.actors.each { actor ->
+        Map counts = new LinkedHashMap(actor.profile == 'boss' ? layout.bossFrames : layout.standardFrames)
+        if (actor.containsKey('runFrames')) counts.run = actor.runFrames
+        long perDirection = 0L
+        layout.motionOrder.each { motion -> perDirection += (counts[motion] as Number).longValue() }
+        total += perDirection * layout.directions.size()
+    }
+    total
+}
+
+tasks.register('packFinalAtlas', JavaExec) {
+    group = 'art production'
+    description = 'Packs a complete strict final-sprite frame build into assets/art/game.atlas using libGDX TexturePacker.'
+    classpath = configurations.texturePacker
+    mainClass = 'com.badlogic.gdx.tools.texturepacker.TexturePacker'
+
+    doFirst {
+        if (!finalArtLayoutFile.isFile()) throw new GradleException('Missing final art layout: art_sources/final-sprite-layout.json')
+        if (!finalFramesManifest.isFile()) {
+            throw new GradleException('Missing build/art_frames/final-sprite-build.json. Run tools/build_final_sprite_frames.py --clean --require-all --strict first.')
+        }
+        if (!finalPackerSettings.isFile()) throw new GradleException('Missing TexturePacker settings: tools/texturepacker-final.json')
+
+        def layout = new JsonSlurper().parse(finalArtLayoutFile)
+        def manifest = new JsonSlurper().parse(finalFramesManifest)
+        Set<String> requiredActors = new LinkedHashSet<String>(layout.actors.collect { it.id as String })
+        Set<String> builtActors = new LinkedHashSet<String>((manifest.builtActors ?: []).collect { it.id as String })
+        List missingActors = manifest.missingActors ?: []
+        int qaWarnings = (manifest.qaWarnings ?: 0) as int
+        long requiredFrames = expectedFinalFrameCount(layout)
+        long builtFrames = (manifest.totalFrames ?: 0) as long
+
+        if (!missingActors.isEmpty() || builtActors != requiredActors) {
+            Set<String> absent = new LinkedHashSet<String>(requiredActors)
+            absent.removeAll(builtActors)
+            throw new GradleException('Final atlas packing blocked: incomplete actor frame build. Missing: ' + absent.join(', '))
+        }
+        if (qaWarnings != 0) {
+            throw new GradleException("Final atlas packing blocked: strict frame QA has ${qaWarnings} warning(s).")
+        }
+        if (builtFrames != requiredFrames) {
+            throw new GradleException("Final atlas packing blocked: frame manifest has ${builtFrames} frames; contract requires ${requiredFrames}.")
+        }
+
+        finalArtOutputDir.mkdirs()
+        if (finalAtlasFile.exists() && !finalAtlasFile.delete()) {
+            throw new GradleException('Unable to replace existing assets/art/game.atlas')
+        }
+        finalArtOutputDir.listFiles()?.findAll {
+            it.isFile() && it.name ==~ /game\d*\.png/
+        }?.each { File page ->
+            if (!page.delete()) throw new GradleException("Unable to replace old atlas page: ${page}")
+        }
+
+        args = [
+            finalFramesDir.absolutePath,
+            finalArtOutputDir.absolutePath,
+            'game',
+            finalPackerSettings.absolutePath
+        ]
+        logger.lifecycle("Packing ${builtFrames} final actor frames with libGDX ${providers.gradleProperty('gdxVersion').get()}...")
+    }
+}
+
 tasks.register('verifyFinalAtlasCoverage') {
     group = 'verification'
     description = 'Fails unless assets/art/game.atlas contains every contracted final directional actor frame.'
     doLast {
-        File layoutFile = file('art_sources/final-sprite-layout.json')
-        File atlasFile = file('assets/art/game.atlas')
+        File layoutFile = finalArtLayoutFile
+        File atlasFile = finalAtlasFile
         if (!layoutFile.isFile()) throw new GradleException('Final art layout missing: art_sources/final-sprite-layout.json')
         if (!atlasFile.isFile()) throw new GradleException('Final production atlas missing: assets/art/game.atlas')
 
@@ -100,6 +181,17 @@ tasks.register('verifyFinalAtlasCoverage') {
 
         logger.lifecycle("Final atlas coverage OK: ${layout.actors.size() * layout.directions.size() * layout.motionOrder.size()} directional animations, ${expectedFrameCount} indexed frames")
     }
+}
+
+tasks.register('buildFinalAtlas') {
+    group = 'art production'
+    description = 'Packs the strict final frame build and verifies complete runtime animation coverage.'
+    dependsOn 'packFinalAtlas'
+    finalizedBy 'verifyFinalAtlasCoverage'
+}
+
+tasks.named('verifyFinalAtlasCoverage').configure {
+    mustRunAfter 'packFinalAtlas'
 }
 
 gradle.projectsEvaluated {
