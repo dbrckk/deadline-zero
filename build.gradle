@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 plugins {
     id 'com.android.application' version '8.10.1' apply false
 }
@@ -5,4 +7,100 @@ plugins {
 allprojects {
     group = 'com.deadlinezero'
     version = providers.gradleProperty('appVersion').get()
+}
+
+tasks.register('verifyFinalAtlasCoverage') {
+    group = 'verification'
+    description = 'Fails unless assets/art/game.atlas contains every contracted final directional actor frame.'
+    doLast {
+        File layoutFile = file('art_sources/final-sprite-layout.json')
+        File atlasFile = file('assets/art/game.atlas')
+        if (!layoutFile.isFile()) throw new GradleException('Final art layout missing: art_sources/final-sprite-layout.json')
+        if (!atlasFile.isFile()) throw new GradleException('Final production atlas missing: assets/art/game.atlas')
+
+        def layout = new JsonSlurper().parse(layoutFile)
+        Map<String, Set<Integer>> actual = [:].withDefault { new LinkedHashSet<Integer>() }
+        String current = null
+        int currentIndex = -1
+        def commitRegion = {
+            if (current != null) actual[current].add(currentIndex)
+            current = null
+            currentIndex = -1
+        }
+
+        atlasFile.eachLine('UTF-8') { String raw ->
+            String line = raw.trim()
+            if (line.isEmpty()) {
+                commitRegion()
+            } else if (!line.contains(':')) {
+                String lower = line.toLowerCase(Locale.ROOT)
+                if (lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.endsWith('.webp')) {
+                    commitRegion()
+                } else {
+                    commitRegion()
+                    current = line.replace('\\', '/').replaceAll('^/+|/+$', '')
+                }
+            } else if (current != null) {
+                int split = line.indexOf(':')
+                String key = line.substring(0, split).trim()
+                if (key == 'index') {
+                    try {
+                        currentIndex = Integer.parseInt(line.substring(split + 1).trim())
+                    } catch (NumberFormatException exception) {
+                        throw new GradleException("Invalid atlas index for ${current}: ${line}", exception)
+                    }
+                }
+            }
+        }
+        commitRegion()
+
+        List<String> missingAnimations = []
+        List<String> frameMismatches = []
+        long expectedFrameCount = 0L
+        layout.actors.each { actor ->
+            Map counts = new LinkedHashMap(actor.profile == 'boss' ? layout.bossFrames : layout.standardFrames)
+            if (actor.containsKey('runFrames')) counts.run = actor.runFrames
+            layout.directions.each { direction ->
+                layout.motionOrder.each { motion ->
+                    String key = "${actor.root}/${direction}/${motion}"
+                    int count = (counts[motion] as Number).intValue()
+                    expectedFrameCount += count
+                    Set<Integer> expected = new LinkedHashSet<>((0..<count).collect { it as Integer })
+                    Set<Integer> found = actual[key]
+                    if (found.isEmpty() && !actual.containsKey(key)) {
+                        missingAnimations.add(key)
+                    } else if (found != expected) {
+                        Set<Integer> missing = new LinkedHashSet<>(expected)
+                        missing.removeAll(found)
+                        Set<Integer> extra = new LinkedHashSet<>(found)
+                        extra.removeAll(expected)
+                        frameMismatches.add("${key}: missing=${missing}, extra=${extra}")
+                    }
+                }
+            }
+        }
+
+        if (!missingAnimations.isEmpty() || !frameMismatches.isEmpty()) {
+            StringBuilder message = new StringBuilder('Production release blocked: final atlas coverage is incomplete.')
+            if (!missingAnimations.isEmpty()) {
+                message.append(" Missing animations (${missingAnimations.size()}): ")
+                    .append(missingAnimations.take(20).join(', '))
+                if (missingAnimations.size() > 20) message.append(', ...')
+            }
+            if (!frameMismatches.isEmpty()) {
+                message.append(" Frame mismatches (${frameMismatches.size()}): ")
+                    .append(frameMismatches.take(20).join(' | '))
+                if (frameMismatches.size() > 20) message.append(' | ...')
+            }
+            throw new GradleException(message.toString())
+        }
+
+        logger.lifecycle("Final atlas coverage OK: ${layout.actors.size() * layout.directions.size() * layout.motionOrder.size()} directional animations, ${expectedFrameCount} indexed frames")
+    }
+}
+
+gradle.projectsEvaluated {
+    project(':android').tasks.named('verifyProductionAssets').configure {
+        dependsOn rootProject.tasks.named('verifyFinalAtlasCoverage')
+    }
 }
