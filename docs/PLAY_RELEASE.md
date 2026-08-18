@@ -24,6 +24,26 @@ Set upload signing with either Gradle properties or the equivalent environment v
 
 Never commit keystores, passwords, aliases, production ad IDs, or generated credential files.
 
+## Final runtime art
+
+`assets/art/game.atlas` must be the complete production atlas, not a bootstrap or partial replacement. `verifyProductionAssets` now depends on the root `verifyFinalAtlasCoverage` gate, which reads `art_sources/final-sprite-layout.json` and requires every contracted actor/direction/motion plus every indexed frame.
+
+The current contract contains 24 actors, 8 directions and 5 motion groups per actor: 960 directional animation keys and 5,896 indexed frames in total, including the 10-frame fast-run overrides.
+
+You can audit a packed atlas independently with either:
+
+```bash
+gradle verifyFinalAtlasCoverage
+```
+
+or the artist-side diagnostic:
+
+```bash
+python3 tools/verify_final_atlas.py --atlas assets/art/game.atlas
+```
+
+The source-sheet layout, runtime `FinalArtContract`, batch cutter and TexturePacker profile are also cross-checked in normal core CI. See `art_sources/README.md` for the complete source-sheet workflow.
+
 ## Play Store graphics
 
 Place final authored listing exports under `play/store/` as defined in `docs/STORE_RELEASE.md` and `play/store/README.md`.
@@ -58,14 +78,15 @@ Replace the example privacy URL above with the real production URL. The signing 
 1. `:core:test`
 2. `:android:lintRelease`
 3. authored runtime production-asset validation
-4. Play Store icon / feature graphic / screenshot validation
-5. AdMob production-ID validation
-6. public HTTPS privacy-policy validation
-7. upload-keystore/signing validation
-8. Play version metadata validation
-9. `:android:bundleRelease`
+4. complete final-atlas directional animation/frame validation
+5. Play Store icon / feature graphic / screenshot validation
+6. AdMob production-ID validation
+7. public HTTPS privacy-policy validation
+8. upload-keystore/signing validation
+9. Play version metadata validation
+10. `:android:bundleRelease`
 
-The command refuses to produce a Play bundle when production AdMob IDs, the public privacy-policy URL, authored runtime assets, final Store graphics, upload signing, or valid version metadata are missing.
+The command refuses to produce a Play bundle when production AdMob IDs, the public privacy-policy URL, complete authored runtime assets, final Store graphics, upload signing, or valid version metadata are missing.
 
 The resulting signed Android App Bundle is produced under `android/build/outputs/bundle/release/`.
 
@@ -74,14 +95,15 @@ The resulting signed Android App Bundle is produced under `android/build/outputs
 Before Play Console upload:
 
 1. Build with `gradle :android:bundlePlayRelease`; do not bypass this task with a direct `bundleRelease` for a production upload.
-2. Verify the AAB is signed with the intended upload key.
-3. Confirm consent/privacy flows on a clean install.
-4. Confirm Settings > Privacy policy opens the exact public URL entered in Play Console.
-5. Confirm rewarded ads use production placement IDs on an internal-test build.
-6. Confirm Remove Ads purchase, restore, acknowledgement, and app restart behavior through a Play license-test account.
-7. Confirm Starter Pack and gem consumables deliver exactly once across process death and retry.
-8. Confirm pause/resume, audio focus, background/foreground, rotation lock, fullscreen-ad lifecycle, and process recreation behavior on physical Android hardware.
-9. Confirm the four Play Billing products match the source catalog exactly: `remove_ads_lifetime`, `starter_pack_01`, `gems_250`, `gems_1200`.
-10. Confirm the Play listing privacy-policy URL matches the in-app privacy destination and the Data safety declaration covers production SDK behavior.
-11. Confirm all graphics and listing metadata satisfy `docs/STORE_RELEASE.md`.
-12. Keep the upload keystore backed up securely outside the repository.
+2. Verify `gradle verifyFinalAtlasCoverage` passes on the exact atlas included in the AAB.
+3. Verify the AAB is signed with the intended upload key.
+4. Confirm consent/privacy flows on a clean install.
+5. Confirm Settings > Privacy policy opens the exact public URL entered in Play Console.
+6. Confirm rewarded ads use production placement IDs on an internal-test build.
+7. Confirm Remove Ads purchase, restore, acknowledgement, and app restart behavior through a Play license-test account.
+8. Confirm Starter Pack and gem consumables deliver exactly once across process death and retry.
+9. Confirm pause/resume, audio focus, background/foreground, rotation lock, fullscreen-ad lifecycle, and process recreation behavior on physical Android hardware.
+10. Confirm the four Play Billing products match the source catalog exactly: `remove_ads_lifetime`, `starter_pack_01`, `gems_250`, `gems_1200`.
+11. Confirm the Play listing privacy-policy URL matches the in-app privacy destination and the Data safety declaration covers production SDK behavior.
+12. Confirm all graphics and listing metadata satisfy `docs/STORE_RELEASE.md`.
+13. Keep the upload keystore backed up securely outside the repository.
