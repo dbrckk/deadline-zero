@@ -68,7 +68,7 @@ public final class ProfileStore {
                     PlayerProfile.EquipmentSlot.valueOf(p.getString(key + "slot", "WEAPON")),
                     EquipmentItem.Rarity.valueOf(p.getString(key + "rarity", "COMMON")),
                     Math.max(1, p.getInteger(key + "level", 1)), p.getFloat(key + "power", 0f));
-                profile.inventory.add(item);
+                profile.inventory.restore(item);
             } catch (IllegalArgumentException ignored) { }
         }
         for (PlayerProfile.EquipmentSlot slot : PlayerProfile.EquipmentSlot.values()) {
