@@ -43,9 +43,39 @@ Use `<id>.png`, matching `final-sprite-layout.json`, for example:
 - `null_archon.png`
 - `forge_hound.png`
 
+## Validation
+
+The layout contract is validated on every CI run without external Python packages:
+
+```bash
+python3 tools/validate_final_sprite_layout.py
+```
+
+This always checks the schema, direction/motion ordering, unique actor IDs and atlas roots, logical cell sizes, priorities and packing invariants. Whenever an `<id>.png` source sheet exists, its PNG IHDR dimensions must also match the exact dimensions implied by the contract.
+
 ## Cutting
 
-Example for Rex:
+Install Pillow once for local cutting:
+
+```bash
+python -m pip install pillow
+```
+
+Preferred production command:
+
+```bash
+python tools/build_final_sprite_frames.py --clean --require-all --strict
+```
+
+The batch builder reads `final-sprite-layout.json`, processes actors by production priority, writes every frame under `build/art_frames`, and emits `build/art_frames/final-sprite-build.json`. `--require-all` rejects missing contracted sheets and `--strict` rejects empty cells or insufficient alpha padding.
+
+During incremental art delivery, omit `--require-all` so missing sheets are skipped:
+
+```bash
+python tools/build_final_sprite_frames.py --clean --strict
+```
+
+Single-actor cutting remains available for diagnosis. Example for Rex:
 
 ```bash
 python tools/slice_sprite_sheet.py \
