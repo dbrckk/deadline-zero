@@ -17,8 +17,9 @@ jobs:
           gradle-version: '8.11.1'
       - name: Validate final sprite production layout
         run: |
-          python3 -m py_compile tools/validate_final_sprite_layout.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py
+          python3 -m py_compile tools/validate_final_sprite_layout.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py
           python3 tools/validate_final_sprite_layout.py
+          python3 -m unittest discover -s tools -p 'test_verify_final_atlas.py'
       - name: Compile and test core
         run: gradle :core:compileJava :core:test :desktop:compileJava
 
