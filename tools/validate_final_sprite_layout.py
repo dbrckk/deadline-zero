@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Validate the final production sprite-sheet contract without external dependencies.
 
-The validator always checks layout integrity. If actor PNG files are present in
-art_sources/, it also validates their PNG dimensions directly from the IHDR chunk.
+The validator always checks layout integrity and TexturePacker parity. If actor PNG
+files are present in art_sources/, it also validates their PNG dimensions directly
+from the IHDR chunk.
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "art_sources" / "final-sprite-layout.json"
+PACKER_PATH = ROOT / "tools" / "texturepacker-final.json"
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 EXPECTED_DIRECTIONS = ["n", "ne", "e", "se", "s", "sw", "w", "nw"]
 EXPECTED_MOTIONS = ["idle", "run", "attack", "hit", "death"]
@@ -82,9 +84,46 @@ def validate_actor(actor: dict, standard: dict[str, int], boss: dict[str, int]) 
             fail(f"{actor_id}.runFrames cannot be below the standard minimum")
 
     columns = sum(counts.values())
-    expected_width = columns * cell_w
-    expected_height = len(EXPECTED_DIRECTIONS) * cell_h
-    return actor_id, root, expected_width, expected_height, priority
+    return actor_id, root, columns * cell_w, len(EXPECTED_DIRECTIONS) * cell_h, priority
+
+
+def validate_packing(layout_packing: dict) -> None:
+    if not isinstance(layout_packing, dict):
+        fail("packing must be an object")
+    padding = positive_int(layout_packing.get("padding"), "packing.padding")
+    if padding < 2:
+        fail("packing.padding must be at least 2")
+    if layout_packing.get("edgePadding") is not True or layout_packing.get("duplicatePadding") is not True:
+        fail("edgePadding and duplicatePadding must remain enabled")
+    if layout_packing.get("stripWhitespace") is not False or layout_packing.get("rotation") is not False:
+        fail("stripWhitespace and rotation must remain disabled")
+    max_page = layout_packing.get("maxPage")
+    if max_page != [4096, 4096]:
+        fail("packing.maxPage must remain [4096, 4096]")
+
+    if not PACKER_PATH.is_file():
+        fail(f"missing {PACKER_PATH.relative_to(ROOT)}")
+    packer = json.loads(PACKER_PATH.read_text(encoding="utf-8"))
+    parity = {
+        "paddingX": padding,
+        "paddingY": padding,
+        "edgePadding": layout_packing["edgePadding"],
+        "duplicatePadding": layout_packing["duplicatePadding"],
+        "rotation": layout_packing["rotation"],
+        "stripWhitespaceX": layout_packing["stripWhitespace"],
+        "stripWhitespaceY": layout_packing["stripWhitespace"],
+        "maxWidth": max_page[0],
+        "maxHeight": max_page[1],
+    }
+    for key, expected in parity.items():
+        if packer.get(key) != expected:
+            fail(f"texturepacker-final.json {key}={packer.get(key)!r}; layout contract requires {expected!r}")
+    if packer.get("ignoreBlankImages") is not False:
+        fail("TexturePacker ignoreBlankImages must remain false so empty production frames fail visibly")
+    if packer.get("useIndexes") is not True:
+        fail("TexturePacker useIndexes must remain true for animation frame lookup")
+    if packer.get("filterMin") != "Nearest" or packer.get("filterMag") != "Nearest":
+        fail("final actor atlas filtering must remain Nearest/Nearest")
 
 
 def main() -> int:
@@ -129,20 +168,8 @@ def main() -> int:
                         f"contract requires exactly {expected_w}x{expected_h}"
                     )
 
-        packing = layout.get("packing")
-        if not isinstance(packing, dict):
-            fail("packing must be an object")
-        if positive_int(packing.get("padding"), "packing.padding") < 2:
-            fail("packing.padding must be at least 2")
-        if packing.get("edgePadding") is not True or packing.get("duplicatePadding") is not True:
-            fail("edgePadding and duplicatePadding must remain enabled")
-        if packing.get("stripWhitespace") is not False or packing.get("rotation") is not False:
-            fail("stripWhitespace and rotation must remain disabled")
-        max_page = packing.get("maxPage")
-        if max_page != [4096, 4096]:
-            fail("packing.maxPage must remain [4096, 4096]")
-
-        print(f"final sprite layout OK: {len(actors)} actors, {present} production PNG sheet(s) present")
+        validate_packing(layout.get("packing"))
+        print(f"final sprite layout OK: {len(actors)} actors, {present} production PNG sheet(s) present, packer profile aligned")
         return 0
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         print(f"ERROR: final sprite layout validation failed: {exc}", file=sys.stderr)
