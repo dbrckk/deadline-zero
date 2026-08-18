@@ -1,4 +1,5 @@
 import groovy.json.JsonSlurper
+import javax.imageio.ImageIO
 
 plugins {
     id 'com.android.application' version '8.10.1' apply false
@@ -92,7 +93,7 @@ tasks.register('packFinalAtlas', JavaExec) {
 
 tasks.register('verifyFinalAtlasCoverage') {
     group = 'verification'
-    description = 'Fails unless assets/art/game.atlas contains every contracted final directional actor frame.'
+    description = 'Fails unless assets/art/game.atlas contains every contracted final directional actor frame and valid page image.'
     doLast {
         File layoutFile = finalArtLayoutFile
         File atlasFile = finalAtlasFile
@@ -101,6 +102,7 @@ tasks.register('verifyFinalAtlasCoverage') {
 
         def layout = new JsonSlurper().parse(layoutFile)
         Map<String, Set<Integer>> actual = [:]
+        Set<String> pageImages = new LinkedHashSet<String>()
         String current = null
         int currentIndex = -1
         def commitRegion = {
@@ -120,6 +122,7 @@ tasks.register('verifyFinalAtlasCoverage') {
                 String lower = line.toLowerCase(Locale.ROOT)
                 if (lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.endsWith('.webp')) {
                     commitRegion()
+                    pageImages.add(line.replace('\\', '/'))
                 } else {
                     commitRegion()
                     current = line.replace('\\', '/').replaceAll('^/+|/+$', '')
@@ -137,6 +140,27 @@ tasks.register('verifyFinalAtlasCoverage') {
             }
         }
         commitRegion()
+
+        if (pageImages.isEmpty()) throw new GradleException('Final production atlas contains no texture pages.')
+        File canonicalPageRoot = atlasFile.parentFile.canonicalFile
+        int maxPageWidth = (layout.packing.maxPage[0] as Number).intValue()
+        int maxPageHeight = (layout.packing.maxPage[1] as Number).intValue()
+        pageImages.each { String pageName ->
+            if (!pageName.toLowerCase(Locale.ROOT).endsWith('.png')) {
+                throw new GradleException("Final atlas page must use PNG output: ${pageName}")
+            }
+            File pageFile = new File(atlasFile.parentFile, pageName).canonicalFile
+            String allowedPrefix = canonicalPageRoot.path + File.separator
+            if (!pageFile.path.startsWith(allowedPrefix)) {
+                throw new GradleException("Final atlas page escapes assets/art: ${pageName}")
+            }
+            if (!pageFile.isFile()) throw new GradleException("Final atlas page missing: ${pageFile}")
+            def image = ImageIO.read(pageFile)
+            if (image == null) throw new GradleException("Final atlas page is not a readable PNG: ${pageFile}")
+            if (image.width <= 0 || image.height <= 0 || image.width > maxPageWidth || image.height > maxPageHeight) {
+                throw new GradleException("Final atlas page dimensions invalid: ${pageFile.name} is ${image.width}x${image.height}; max is ${maxPageWidth}x${maxPageHeight}")
+            }
+        }
 
         List<String> missingAnimations = []
         List<String> frameMismatches = []
@@ -179,7 +203,7 @@ tasks.register('verifyFinalAtlasCoverage') {
             throw new GradleException(message.toString())
         }
 
-        logger.lifecycle("Final atlas coverage OK: ${layout.actors.size() * layout.directions.size() * layout.motionOrder.size()} directional animations, ${expectedFrameCount} indexed frames")
+        logger.lifecycle("Final atlas coverage OK: ${pageImages.size()} page(s), ${layout.actors.size() * layout.directions.size() * layout.motionOrder.size()} directional animations, ${expectedFrameCount} indexed frames")
     }
 }
 
