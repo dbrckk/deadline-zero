@@ -1,6 +1,6 @@
 # Final sprite source sheets
 
-This directory is the source-of-truth staging area for production character sheets before they are cut and packed into `core/assets/art/game.atlas`.
+This directory is the source-of-truth staging area for production character sheets before they are cut and packed into `assets/art/game.atlas`.
 
 ## Fixed layout
 
@@ -28,7 +28,7 @@ Fast actors using 10 run frames use 31 columns:
 - source height: `8 × 128 = 1024 px`
 - total minimum frames: `288`
 
-The source sheet may be wider than a final atlas page. TexturePacker is expected to split output across pages when necessary.
+The source sheet may be wider than a final atlas page. TexturePacker splits packed output across pages when necessary.
 
 ## Required filenames
 
@@ -43,7 +43,7 @@ Use `<id>.png`, matching `final-sprite-layout.json`, for example:
 - `null_archon.png`
 - `forge_hound.png`
 
-## Validation
+## 1. Validate sources and contract
 
 The layout contract is validated on every CI run without external Python packages:
 
@@ -51,9 +51,9 @@ The layout contract is validated on every CI run without external Python package
 python3 tools/validate_final_sprite_layout.py
 ```
 
-This always checks the schema, direction/motion ordering, unique actor IDs and atlas roots, logical cell sizes, priorities and packing invariants. Whenever an `<id>.png` source sheet exists, its PNG IHDR dimensions must also match the exact dimensions implied by the contract.
+This checks the schema, direction/motion ordering, unique actor IDs and atlas roots, logical cell sizes, priorities, TexturePacker parity and packing invariants. Whenever an `<id>.png` source sheet exists, its PNG IHDR dimensions must exactly match the dimensions implied by the contract.
 
-## Cutting
+## 2. Cut and QA all frames
 
 Install Pillow once for local cutting:
 
@@ -61,13 +61,15 @@ Install Pillow once for local cutting:
 python -m pip install pillow
 ```
 
-Preferred production command:
+Final production command:
 
 ```bash
 python tools/build_final_sprite_frames.py --clean --require-all --strict
 ```
 
-The batch builder reads `final-sprite-layout.json`, processes actors by production priority, writes every frame under `build/art_frames`, and emits `build/art_frames/final-sprite-build.json`. `--require-all` rejects missing contracted sheets and `--strict` rejects empty cells or insufficient alpha padding.
+The batch builder reads `final-sprite-layout.json`, processes actors by production priority, writes every frame under `build/art_frames`, and emits `build/art_frames/final-sprite-build.json`.
+
+`--require-all` rejects missing contracted sheets. `--strict` rejects any QA warning, including empty cells, insufficient alpha padding, unstable foot pivots or excessive horizontal pivot drift. The defaults permit 3 px of foot drift and 6 px of horizontal alpha-center drift for idle/run/hit; attack receives 2× those tolerances because attack silhouettes legitimately extend farther. Death is measured but excluded from pivot-stability rejection because the actor is expected to fall.
 
 During incremental art delivery, omit `--require-all` so missing sheets are skipped:
 
@@ -85,33 +87,37 @@ python tools/slice_sprite_sheet.py \
   --output build/art_frames
 ```
 
-Example for Alpha:
+## 3. Pack and verify the production atlas
+
+Once the strict batch build is complete:
 
 ```bash
-python tools/slice_sprite_sheet.py \
-  --sheet art_sources/alpha.png \
-  --root boss/alpha \
-  --cell 128 \
-  --boss \
-  --output build/art_frames
+gradle buildFinalAtlas
 ```
 
-Example for Wraith/Forge Hound/Phase Stalker fast-run sheets:
+`packFinalAtlas` resolves the project-matched libGDX TexturePacker, refuses incomplete or warning-bearing frame manifests, removes only previous `game.atlas` / `game*.png` atlas outputs, and writes the final packed files under `assets/art/` using `tools/texturepacker-final.json`.
+
+`buildFinalAtlas` then runs `verifyFinalAtlasCoverage`, which requires all 24 actors, 8 directions and 5 motion groups with the exact indexed frame sets from the contract. It also verifies every atlas page exists, is a readable PNG and fits within the 4096×4096 page ceiling.
+
+You can rerun only the audit with:
 
 ```bash
-python tools/slice_sprite_sheet.py \
-  --sheet art_sources/wraith.png \
-  --root survivor/wraith \
-  --cell 96 \
-  --run 10 \
-  --output build/art_frames
+gradle verifyFinalAtlasCoverage
 ```
+
+or:
+
+```bash
+python3 tools/verify_final_atlas.py --atlas assets/art/game.atlas
+```
+
+The Google Play production asset gate depends on this coverage audit, so a partial atlas cannot be shipped merely because `game.atlas` exists.
 
 ## Non-negotiable QA
 
 - transparent background;
-- fixed logical cell size;
-- stable foot/pivot position across frames;
+- exact logical sheet dimensions;
+- stable foot/pivot position across non-death frames;
 - at least 2 transparent pixels around visible art;
 - no baked UI text or muzzle flash;
 - no independently rescaled frames;
