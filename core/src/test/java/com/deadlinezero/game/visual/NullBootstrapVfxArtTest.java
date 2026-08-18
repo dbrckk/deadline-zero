@@ -16,6 +16,19 @@ final class NullBootstrapVfxArtTest {
             assertEquals(i * NullBootstrapVfxArt.FRAMES_PER_EFFECT, NullBootstrapVfxArt.firstTile(keys[i]));
         }
         assertEquals(24, NullBootstrapVfxArt.TOTAL_TILES);
+        assertEquals(512, NullBootstrapVfxArt.width());
+        assertEquals(192, NullBootstrapVfxArt.height());
+    }
+
+    @Test void createAndLookupDoNotRequireGraphicsContext() {
+        NullBootstrapVfxArt art = NullBootstrapVfxArt.create();
+        try {
+            assertTrue(art.supports("fx/null_archon_aura"));
+            assertTrue(art.supports("fx/null_archon_portal"));
+            assertTrue(art.supports("fx/null_archon_fracture"));
+        } finally {
+            art.dispose();
+        }
     }
 
     @Test void rejectsUnknownEffects() {
