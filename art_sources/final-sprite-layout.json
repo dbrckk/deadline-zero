@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "directions": ["n", "ne", "e", "se", "s", "sw", "w", "nw"],
+  "motionOrder": ["idle", "run", "attack", "hit", "death"],
+  "standardFrames": {"idle": 4, "run": 8, "attack": 6, "hit": 3, "death": 8},
+  "bossFrames": {"idle": 6, "run": 8, "attack": 8, "hit": 4, "death": 10},
+  "actors": [
+    {"id":"rex", "root":"survivor/rex", "cell":[96,96], "profile":"standard", "priority":1},
+    {"id":"nyx", "root":"survivor/nyx", "cell":[96,96], "profile":"standard", "priority":4},
+    {"id":"bastion", "root":"survivor/bastion", "cell":[96,96], "profile":"standard", "priority":4},
+    {"id":"volt", "root":"survivor/volt", "cell":[96,96], "profile":"standard", "priority":4},
+    {"id":"wraith", "root":"survivor/wraith", "cell":[96,96], "profile":"standard", "runFrames":10, "priority":4},
+
+    {"id":"alpha", "root":"boss/alpha", "cell":[128,128], "profile":"boss", "priority":2},
+    {"id":"revenant", "root":"boss/revenant", "cell":[128,128], "profile":"boss", "priority":2},
+    {"id":"warden", "root":"boss/warden", "cell":[128,128], "profile":"boss", "priority":2},
+    {"id":"harvester", "root":"boss/harvester", "cell":[128,128], "profile":"boss", "priority":2},
+    {"id":"null_archon", "root":"boss/null_archon", "cell":[128,128], "profile":"boss", "priority":2},
+
+    {"id":"forge_hound", "root":"enemy/biome/forge_hound", "cell":[96,96], "profile":"standard", "runFrames":10, "priority":3},
+    {"id":"cinder_gunner", "root":"enemy/biome/cinder_gunner", "cell":[96,96], "profile":"standard", "priority":3},
+    {"id":"slag_guard", "root":"enemy/biome/slag_guard", "cell":[96,96], "profile":"standard", "priority":3},
+    {"id":"phase_stalker", "root":"enemy/biome/phase_stalker", "cell":[96,96], "profile":"standard", "runFrames":10, "priority":3},
+    {"id":"static_seer", "root":"enemy/biome/static_seer", "cell":[96,96], "profile":"standard", "priority":3},
+    {"id":"null_ward", "root":"enemy/biome/null_ward", "cell":[96,96], "profile":"standard", "priority":3},
+
+    {"id":"shambler", "root":"enemy/shambler", "cell":[96,96], "profile":"standard", "priority":5},
+    {"id":"runner", "root":"enemy/runner", "cell":[96,96], "profile":"standard", "priority":5},
+    {"id":"brute", "root":"enemy/brute", "cell":[96,96], "profile":"standard", "priority":5},
+    {"id":"ranged", "root":"enemy/ranged", "cell":[96,96], "profile":"standard", "priority":5},
+    {"id":"elite", "root":"enemy/elite", "cell":[96,96], "profile":"standard", "priority":5},
+    {"id":"shielded", "root":"enemy/shielded", "cell":[96,96], "profile":"standard", "priority":5},
+    {"id":"regenerator", "root":"enemy/regenerator", "cell":[96,96], "profile":"standard", "priority":5},
+    {"id":"phantom", "root":"enemy/phantom", "cell":[96,96], "profile":"standard", "priority":5}
+  ],
+  "packing": {
+    "padding": 4,
+    "edgePadding": true,
+    "duplicatePadding": true,
+    "stripWhitespace": false,
+    "rotation": false,
+    "maxPage": [4096,4096]
+  }
+}
