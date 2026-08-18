@@ -17,42 +17,58 @@ public final class NullBootstrapVfxArt implements Disposable {
     };
     static final int TOTAL_TILES = ROOTS.length * FRAMES_PER_EFFECT;
 
-    private final Texture texture;
-    private final TextureRegion[] regions = new TextureRegion[TOTAL_TILES];
+    private Texture texture;
+    private TextureRegion[] regions;
+    private boolean textureAttempted;
 
-    private NullBootstrapVfxArt(Texture texture) {
-        this.texture = texture;
-        for (int tile = 0; tile < regions.length; tile++) {
-            int x = (tile % COLUMNS) * TILE;
-            int y = (tile / COLUMNS) * TILE;
-            regions[tile] = new TextureRegion(texture, x, y, TILE, TILE);
-        }
-    }
+    private NullBootstrapVfxArt() { }
 
     public static NullBootstrapVfxArt create() {
-        int rows = (TOTAL_TILES + COLUMNS - 1) / COLUMNS;
-        Pixmap p = new Pixmap(COLUMNS * TILE, rows * TILE, Pixmap.Format.RGBA8888);
-        p.setBlending(Pixmap.Blending.SourceOver);
-        try {
-            for (int effect = 0; effect < ROOTS.length; effect++) {
-                for (int frame = 0; frame < FRAMES_PER_EFFECT; frame++) drawFrame(p, effect, frame, effect * FRAMES_PER_EFFECT + frame);
-            }
-            Texture texture = new Texture(p);
-            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            return new NullBootstrapVfxArt(texture);
-        } finally {
-            p.dispose();
-        }
+        return new NullBootstrapVfxArt();
     }
 
     public boolean supports(String key) { return firstTile(key) >= 0; }
 
     public TextureRegion region(String key, float stateTime, float frameDuration, boolean loop) {
         int first = firstTile(key);
-        if (first < 0) return null;
+        if (first < 0 || !ensureTexture()) return null;
         int raw = (int)(Math.max(0f, stateTime) / Math.max(.016f, frameDuration));
         int frame = loop ? raw % FRAMES_PER_EFFECT : Math.min(FRAMES_PER_EFFECT - 1, raw);
         return regions[first + frame];
+    }
+
+    private boolean ensureTexture() {
+        if (regions != null) return true;
+        if (textureAttempted) return false;
+        textureAttempted = true;
+        int rows = (TOTAL_TILES + COLUMNS - 1) / COLUMNS;
+        Pixmap p = new Pixmap(COLUMNS * TILE, rows * TILE, Pixmap.Format.RGBA8888);
+        p.setBlending(Pixmap.Blending.SourceOver);
+        try {
+            for (int effect = 0; effect < ROOTS.length; effect++) {
+                for (int frame = 0; frame < FRAMES_PER_EFFECT; frame++) {
+                    drawFrame(p, effect, frame, effect * FRAMES_PER_EFFECT + frame);
+                }
+            }
+            texture = new Texture(p);
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            regions = new TextureRegion[TOTAL_TILES];
+            for (int tile = 0; tile < regions.length; tile++) {
+                int x = (tile % COLUMNS) * TILE;
+                int y = (tile / COLUMNS) * TILE;
+                regions[tile] = new TextureRegion(texture, x, y, TILE, TILE);
+            }
+            return true;
+        } catch (RuntimeException ignored) {
+            if (texture != null) {
+                texture.dispose();
+                texture = null;
+            }
+            regions = null;
+            return false;
+        } finally {
+            p.dispose();
+        }
     }
 
     static int firstTile(String key) {
@@ -60,6 +76,9 @@ public final class NullBootstrapVfxArt implements Disposable {
         for (int i = 0; i < ROOTS.length; i++) if (ROOTS[i].equals(key)) return i * FRAMES_PER_EFFECT;
         return -1;
     }
+
+    static int width() { return COLUMNS * TILE; }
+    static int height() { return ((TOTAL_TILES + COLUMNS - 1) / COLUMNS) * TILE; }
 
     private static void drawFrame(Pixmap p, int effect, int frame, int tile) {
         int ox = (tile % COLUMNS) * TILE;
@@ -129,5 +148,9 @@ public final class NullBootstrapVfxArt implements Disposable {
         p.drawCircle(cx, cy, 5 + frame);
     }
 
-    @Override public void dispose() { texture.dispose(); }
+    @Override public void dispose() {
+        if (texture != null) texture.dispose();
+        texture = null;
+        regions = null;
+    }
 }
