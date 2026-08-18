@@ -19,11 +19,14 @@ tasks.register('verifyFinalAtlasCoverage') {
         if (!atlasFile.isFile()) throw new GradleException('Final production atlas missing: assets/art/game.atlas')
 
         def layout = new JsonSlurper().parse(layoutFile)
-        Map<String, Set<Integer>> actual = [:].withDefault { new LinkedHashSet<Integer>() }
+        Map<String, Set<Integer>> actual = [:]
         String current = null
         int currentIndex = -1
         def commitRegion = {
-            if (current != null) actual[current].add(currentIndex)
+            if (current != null) {
+                if (!actual.containsKey(current)) actual[current] = new LinkedHashSet<Integer>()
+                actual[current].add(currentIndex)
+            }
             current = null
             currentIndex = -1
         }
@@ -65,14 +68,14 @@ tasks.register('verifyFinalAtlasCoverage') {
                     String key = "${actor.root}/${direction}/${motion}"
                     int count = (counts[motion] as Number).intValue()
                     expectedFrameCount += count
-                    Set<Integer> expected = new LinkedHashSet<>((0..<count).collect { it as Integer })
+                    Set<Integer> expected = new LinkedHashSet<Integer>((0..<count).collect { it as Integer })
                     Set<Integer> found = actual[key]
-                    if (found.isEmpty() && !actual.containsKey(key)) {
+                    if (found == null) {
                         missingAnimations.add(key)
                     } else if (found != expected) {
-                        Set<Integer> missing = new LinkedHashSet<>(expected)
+                        Set<Integer> missing = new LinkedHashSet<Integer>(expected)
                         missing.removeAll(found)
-                        Set<Integer> extra = new LinkedHashSet<>(found)
+                        Set<Integer> extra = new LinkedHashSet<Integer>(found)
                         extra.removeAll(expected)
                         frameMismatches.add("${key}: missing=${missing}, extra=${extra}")
                     }
