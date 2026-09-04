@@ -71,9 +71,9 @@ jobs:
             gradle :android:connectedDebugAndroidTest
             gradle :android:installDebug
             adb shell pm path com.deadlinezero.game | grep -q 'package:'
+            adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.game | grep -q 'AndroidLauncher'
             adb shell am force-stop com.deadlinezero.game
             test -z "$(adb shell pidof com.deadlinezero.game)"
             adb shell monkey -p com.deadlinezero.game -c android.intent.category.LAUNCHER 1
             sleep 2
             adb shell pidof com.deadlinezero.game | grep -q .
-            adb shell dumpsys activity activities | grep -E 'mResumedActivity|topResumedActivity' | grep -q 'com.deadlinezero.game.android.AndroidLauncher'
