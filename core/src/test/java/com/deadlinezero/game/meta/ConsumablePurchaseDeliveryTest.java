@@ -14,6 +14,7 @@ final class ConsumablePurchaseDeliveryTest {
         PlayerProfile profile = new PlayerProfile();
         RecordingBilling billing = new RecordingBilling();
         List<String> events = new ArrayList<>();
+        billing.events = events;
         BillingService.PurchaseReceipt receipt = new BillingService.PurchaseReceipt(BillingService.GEMS_SMALL, "token-1");
 
         boolean granted = ConsumablePurchaseDelivery.deliver(profile, billing, receipt,
