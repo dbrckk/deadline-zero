@@ -10,9 +10,9 @@ This matrix defines the minimum evidence required to close the remaining automat
 - [x] Billing grant replay is idempotent.
 - [x] Consumable delivery persists before Play consumption.
 - [x] Ephemeral run loadout state resets to safe defaults.
-- [ ] Representative settlement fixture proves one completed run updates run counters, rewards and progression exactly once.
-- [ ] Representative reload fixture proves the settlement result survives save/load without duplication or loss.
-- [ ] Representative interrupted-run fixture proves no settlement/reward occurs when the active run is abandoned.
+- [x] Representative settlement fixture proves one completed run updates run counters, rewards and progression exactly once (#21).
+- [x] Representative reload fixture proves the settlement result survives save/load without duplication or loss (#21).
+- [x] Representative interrupted-run fixture proves no settlement/reward occurs when the active run is abandoned (#21).
 
 ## Platform proof
 
@@ -23,4 +23,4 @@ This matrix defines the minimum evidence required to close the remaining automat
 
 ## Closure rule
 
-M0 automated regression coverage is complete only when the three missing representative core fixtures pass in CI. Platform rows that intentionally require a real Android/Google Play environment remain explicit device gates rather than being inferred from compilation.
+Automated M0 regression coverage is complete. The remaining rows require end-to-end runtime or real Android/Google Play evidence and remain explicit platform gates rather than being inferred from compilation or headless tests.
