@@ -1,7 +1,8 @@
 package com.deadlinezero.game.meta;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +18,14 @@ final class P0RunRegressionTest {
 
     @BeforeAll
     static void startHeadlessGdx() {
-        app = new HeadlessApplication(new ApplicationAdapter());
+        app = new HeadlessApplication(new ApplicationListener() {
+            @Override public void create() { }
+            @Override public void resize(int width, int height) { }
+            @Override public void render() { }
+            @Override public void pause() { }
+            @Override public void resume() { }
+            @Override public void dispose() { }
+        });
     }
 
     @AfterAll
@@ -27,7 +35,9 @@ final class P0RunRegressionTest {
 
     @BeforeEach
     void resetState() {
-        Gdx.app.getPreferences("deadline-zero-profile-v1").clear().flush();
+        Preferences preferences = Gdx.app.getPreferences("deadline-zero-profile-v1");
+        preferences.clear();
+        preferences.flush();
         RunMissionRuntime.end();
         RunModifierContext.end();
         RunEncounterRuntime.end();
