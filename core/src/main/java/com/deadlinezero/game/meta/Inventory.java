@@ -28,6 +28,12 @@ public final class Inventory {
         return true;
     }
 
+    /** Restores persisted items while preserving the reserved capacity contract for exclusive gear. */
+    boolean restore(EquipmentItem item) {
+        if (item == null) return false;
+        return ThreatMilestoneRewardCatalog.isExclusiveId(item.id) ? addExclusive(item) : add(item);
+    }
+
     private int normalItemCount() {
         int count = 0;
         for (EquipmentItem item : items) {
