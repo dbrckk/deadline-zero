@@ -21,10 +21,11 @@ This matrix defines the minimum evidence required to close the remaining automat
 - [x] Android instrumentation exercises background/foreground and `Activity.recreate()` while keeping the real launcher/libGDX surface alive.
 - [x] Android emulator CI force-stops the installed app, proves the process exits, resolves and invokes the real launcher, and proves a new app process starts (#29).
 - [x] Android emulator CI seeds real profile state through `DeadlineZeroGame.saveProfile()`, force-stops the app process, then verifies a fresh launcher instance reloads runs, kills, stage state and purchase-receipt replay protection from durable storage (#30).
-- [ ] Android debug launch completes one full run to result and returns to menu on representative physical hardware.
+- [x] Android instrumentation drives the real `AndroidLauncher`/`DeadlineZeroGame` through menu -> contract -> `GameScreen` -> settlement/`RunResultScreen` -> durable `ProfileStore` reload -> menu, proving exactly-once run settlement on emulator (#32).
+- [ ] Android debug launch completes one full player-controlled run to result and returns to menu on representative physical hardware.
 - [ ] Android pause/resume, activity recreation and process-death matrix passes on representative physical hardware (#16).
 - [ ] Google Play license-test billing matrix passes (#17).
 
 ## Closure rule
 
-Automated M0 core coverage, desktop end-to-end runtime wiring, Android emulator startup/lifecycle wiring, external process restart and durable profile reload are complete. Remaining rows require representative physical Android or Google Play evidence and remain explicit platform gates rather than being inferred from compilation, desktop execution, emulator execution or headless tests.
+Automated M0 core coverage, desktop and Android-emulator end-to-end runtime wiring, Android lifecycle wiring, external process restart and durable profile reload are complete. Remaining rows require representative physical Android or Google Play evidence and remain explicit platform gates rather than being inferred from compilation, desktop execution, emulator execution or headless tests.
