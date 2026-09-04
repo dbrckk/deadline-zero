@@ -74,6 +74,27 @@ public final class RunLoadoutContext {
         startingTeslaLevel = survivor == SurvivorCatalog.Survivor.VOLT ? 1 : 0;
     }
 
+    /** Clears all ephemeral run-derived state before returning to a durable menu state. */
+    public static void end() {
+        maxHpMultiplier = 1f;
+        moveSpeedMultiplier = 1f;
+        dashCooldownMultiplier = 1f;
+        dashInvulnerabilitySeconds = .30f;
+        weaponDamageMultiplier = 1f;
+        critChanceBonus = 0f;
+        critDamageBonus = 0f;
+        abilityPowerMultiplier = 1f;
+        damageTakenMultiplier = 1f;
+        startingTeslaLevel = 0;
+        ascensionSetPieces = 0;
+        zeroDayCoreEquipped = false;
+        survivor = SurvivorCatalog.Survivor.REX;
+        weaponDefinition = WeaponCatalog.AR9;
+        weaponSynergy = WeaponSynergyRules.Synergy.NONE;
+        WeaponSignatureRuntime.begin(WeaponCatalog.AR9);
+        SingularityCoreRuntime.begin(false);
+    }
+
     public static float maxHpMultiplier() { return maxHpMultiplier; }
     public static float moveSpeedMultiplier() { return moveSpeedMultiplier; }
     public static float dashCooldownMultiplier() { return dashCooldownMultiplier; }
