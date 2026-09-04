@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.meta.ChestService;
+import com.deadlinezero.game.meta.ConsumablePurchaseDelivery;
 import com.deadlinezero.game.meta.EquipmentDropTable;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.PlayerProfile;
@@ -169,11 +170,9 @@ public final class ShopScreen extends ScreenAdapter {
     }
 
     private void deliverConsumable(BillingService.PurchaseReceipt receipt) {
-        if (receipt == null || !BillingService.isConsumable(receipt.productId())) return;
-        boolean granted = PurchaseGrantService.grant(game.profile, receipt.productId(), receipt.receiptId());
-        game.saveProfile();
-        game.services.billing.finishConsumable(receipt.receiptId(),
-            () -> status = granted ? "Purchase delivered" : "Recovered purchase finalized",
+        ConsumablePurchaseDelivery.deliver(game.profile, game.services.billing, receipt,
+            game::saveProfile,
+            granted -> status = granted ? "Purchase delivered" : "Recovered purchase finalized",
             () -> status = "Purchase saved; Google Play finalization pending");
     }
 
