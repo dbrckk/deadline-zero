@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.meta.ProfileStore;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.screen.GameScreen;
@@ -62,6 +63,49 @@ public final class AndroidVerticalSliceTest {
                 game.showMenu();
                 assertTrue("expected menu after leaving result screen", game.getScreen() instanceof MenuScreen);
                 assertEquals("returning to menu must not duplicate settlement", runsBefore.get().intValue() + 1, game.profile.totalRuns);
+            });
+            allowFrames();
+        }
+    }
+
+    @Test
+    public void interruptedAndroidRunReturnsToMenuWithoutSettlementOrRewards() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            AtomicReference<Integer> runsBefore = new AtomicReference<>();
+            AtomicReference<Long> killsBefore = new AtomicReference<>();
+            AtomicReference<Long> creditsBefore = new AtomicReference<>();
+            AtomicReference<Long> gemsBefore = new AtomicReference<>();
+
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                assertTrue("expected menu before interrupted run", game.getScreen() instanceof MenuScreen);
+                runsBefore.set(game.profile.totalRuns);
+                killsBefore.set(game.profile.totalKills);
+                creditsBefore.set(game.profile.currency(PlayerProfile.Currency.CREDITS));
+                gemsBefore.set(game.profile.currency(PlayerProfile.Currency.GEMS));
+
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen before interruption", game.getScreen() instanceof GameScreen);
+            });
+            allowFrames();
+
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.showMenu();
+                assertTrue("interrupted run must return to menu", game.getScreen() instanceof MenuScreen);
+                assertEquals("interrupted run must not increment totalRuns", runsBefore.get().intValue(), game.profile.totalRuns);
+                assertEquals("interrupted run must not add settled kills", killsBefore.get().longValue(), game.profile.totalKills);
+                assertEquals("interrupted run must not grant credits", creditsBefore.get().longValue(), game.profile.currency(PlayerProfile.Currency.CREDITS));
+                assertEquals("interrupted run must not grant gems", gemsBefore.get().longValue(), game.profile.currency(PlayerProfile.Currency.GEMS));
+                game.saveProfile();
+
+                PlayerProfile reloaded = ProfileStore.load();
+                assertEquals("interrupted run count changed after reload", runsBefore.get().intValue(), reloaded.totalRuns);
+                assertEquals("interrupted run kills changed after reload", killsBefore.get().longValue(), reloaded.totalKills);
+                assertEquals("interrupted run credits changed after reload", creditsBefore.get().longValue(), reloaded.currency(PlayerProfile.Currency.CREDITS));
+                assertEquals("interrupted run gems changed after reload", gemsBefore.get().longValue(), reloaded.currency(PlayerProfile.Currency.GEMS));
             });
             allowFrames();
         }
