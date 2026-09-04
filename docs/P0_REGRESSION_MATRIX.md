@@ -16,11 +16,11 @@ This matrix defines the minimum evidence required to close the remaining automat
 
 ## Platform proof
 
-- [ ] Desktop debug launch completes one full run to result and returns to menu.
+- [x] Desktop LWJGL3 runtime smoke completes menu -> contract -> GameScreen -> settlement/RunResult -> menu, renders each state, proves exactly-once run settlement, and reloads the persisted settled profile (#24).
 - [ ] Android debug launch completes one full run to result and returns to menu.
 - [ ] Android pause/resume, activity recreation and process-death matrix passes (#16).
 - [ ] Google Play license-test billing matrix passes (#17).
 
 ## Closure rule
 
-Automated M0 regression coverage is complete. The remaining rows require end-to-end runtime or real Android/Google Play evidence and remain explicit platform gates rather than being inferred from compilation or headless tests.
+Automated M0 core coverage and desktop end-to-end runtime wiring are complete. Remaining rows require real Android/Google Play evidence and remain explicit platform gates rather than being inferred from compilation, desktop execution or headless tests.
