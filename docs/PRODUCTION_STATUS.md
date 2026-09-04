@@ -17,15 +17,15 @@ Goal: make `main` a reliable production baseline before adding more scope.
 - [ ] No known P0 data-loss, economy-corruption, crash-loop, save-migration, billing, or startup blocker remains open.
 - [ ] Desktop and Android debug builds are proven through a complete playable loop.
 - [x] Strict release-bundle path is documented in `docs/PLAY_RELEASE.md` and enforced by `:android:bundlePlayRelease`.
-- [ ] P0 regression suite proves save/load, inventory, upgrades, progression, purchase boundaries and game-loop settlement.
+- [x] Automated P0 regression suite proves save/load, inventory, upgrades, progression, purchase boundaries and game-loop settlement.
 
 ## Active M0 proof tasks
 
 - [x] #15 — explicit profile schema versioning and migration protection merged via #18.
 - [ ] #16 — lifecycle/process recreation: automated hardening and repeatable QA procedure complete; physical-device lifecycle matrix remains.
 - [ ] #17 — Play Billing exactly-once: automated idempotency and `grant -> persist -> consume` proof merged via #19; Play license-test device validation remains.
-- [ ] Vertical-slice proof — code path exists from menu/run contract into combat and settlement, but end-to-end runtime proof is still required.
-- [ ] P0 persistence/regression proof — individual tests are strong, but a representative cross-system save/load + settlement fixture is still required.
+- [ ] Vertical-slice proof — code path exists from menu/run contract into combat and settlement, but end-to-end desktop and Android runtime proof is still required.
+- [x] P0 persistence/regression proof — representative completed-run, reload and interrupted-run fixtures merged via #21 and pass CI.
 
 ## Milestone board
 
@@ -57,6 +57,9 @@ Goal: make `main` a reliable production baseline before adding more scope.
 - Inventory restore preserves exclusive capacity behavior and upgrade costs are overflow-safe.
 - Runtime profile state is saved on settlement, pause and dispose.
 - Lifecycle cleanup clears ephemeral run state before durable menu/shutdown states.
+- Completed-run settlement is covered by an exactly-once regression fixture.
+- Settlement persistence is covered by save/reload regression without duplication or loss.
+- Interrupted runs are covered by a regression proving no settlement rewards are granted.
 - Consumable purchase receipt IDs are persisted with replay protection.
 - Consumable delivery now persists the grant before asking Google Play to consume the token.
 - Durable billing entitlements have authoritative reconciliation plus an offline cache; entitlement prefs are excluded from Android backup/transfer.
@@ -95,6 +98,8 @@ Active combat-run restoration after OS process death is intentionally unsupporte
 - Inventory limits/exclusive capacity survive reload.
 - Currency and upgrade math remain overflow-safe.
 - Settlement cannot grant twice.
+- Completed settlement survives save/reload without duplication or loss.
+- Interrupted runs cannot grant settlement rewards.
 - Purchases cannot duplicate grants on retry/restore.
 - Durable entitlement revocation follows authoritative Play state.
 
@@ -108,12 +113,11 @@ Only `FINAL` counts toward release-art completion.
 
 ## Current next actions
 
-1. Add a representative P0 cross-system regression fixture covering progression/settlement and persistence boundaries.
-2. Prove a complete desktop debug loop and record the result.
-3. Prove a complete Android debug loop on a physical device.
-4. Execute #16 lifecycle matrix on a physical Android device.
-5. Execute #17 Google Play license-testing matrix.
-6. Do not start major M1/M2 scope until remaining M0 proof tasks are resolved or explicitly accepted as physical-device gates.
+1. Prove a complete desktop debug loop and record the result.
+2. Prove a complete Android debug loop on a physical device.
+3. Execute #16 lifecycle matrix on a physical Android device.
+4. Execute #17 Google Play license-testing matrix.
+5. Do not start major M1/M2 scope until remaining M0 proof tasks are resolved or explicitly accepted as physical-device gates.
 
 ## Definition of Done
 
