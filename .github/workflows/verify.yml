@@ -69,9 +69,11 @@ jobs:
           disable-animations: true
           script: |
             gradle :android:connectedDebugAndroidTest
+            gradle :android:installDebug
+            adb shell pm path com.deadlinezero.game | grep -q 'package:'
             adb shell am force-stop com.deadlinezero.game
             test -z "$(adb shell pidof com.deadlinezero.game)"
-            adb shell am start -W -n com.deadlinezero.game/com.deadlinezero.game.android.AndroidLauncher
+            adb shell monkey -p com.deadlinezero.game -c android.intent.category.LAUNCHER 1
             sleep 2
             adb shell pidof com.deadlinezero.game | grep -q .
-            adb shell dumpsys activity activities | grep -E 'mResumedActivity|topResumedActivity' | grep -q 'com.deadlinezero.game/.android.AndroidLauncher'
+            adb shell dumpsys activity activities | grep -E 'mResumedActivity|topResumedActivity' | grep -q 'com.deadlinezero.game.android.AndroidLauncher'
