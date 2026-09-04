@@ -17,10 +17,11 @@ This matrix defines the minimum evidence required to close the remaining automat
 ## Platform proof
 
 - [x] Desktop LWJGL3 runtime smoke completes menu -> contract -> GameScreen -> settlement/RunResult -> menu, renders each state, proves exactly-once run settlement, and reloads the persisted settled profile (#24).
-- [ ] Android debug launch completes one full run to result and returns to menu.
-- [ ] Android pause/resume, activity recreation and process-death matrix passes (#16).
+- [x] Android instrumentation launches the real `AndroidLauncher` successfully on an x86_64 emulator and keeps the Activity alive with attached content (#26).
+- [ ] Android debug launch completes one full run to result and returns to menu on representative physical hardware.
+- [ ] Android pause/resume, activity recreation and process-death matrix passes on physical hardware (#16).
 - [ ] Google Play license-test billing matrix passes (#17).
 
 ## Closure rule
 
-Automated M0 core coverage and desktop end-to-end runtime wiring are complete. Remaining rows require real Android/Google Play evidence and remain explicit platform gates rather than being inferred from compilation, desktop execution or headless tests.
+Automated M0 core coverage, desktop end-to-end runtime wiring and Android emulator startup are complete. Remaining rows require representative physical Android or Google Play evidence and remain explicit platform gates rather than being inferred from compilation, desktop execution, emulator startup or headless tests.
