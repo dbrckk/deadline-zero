@@ -70,6 +70,7 @@ android {
         versionCode appVersionCode
         versionName appVersion
         multiDexEnabled true
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         manifestPlaceholders = [admobAppId: admobAppId]
         buildConfigField 'String', 'ADMOB_REWARDED_ID', '"' + admobRewardedId + '"'
         buildConfigField 'String', 'PRIVACY_POLICY_URL', '"' + privacyPolicyUrl.replace('\\', '\\\\').replace('"', '\\"') + '"'
@@ -113,6 +114,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:25.4.0'
     implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
     implementation 'com.android.billingclient:billing:9.1.0'
+
+    androidTestImplementation 'androidx.test:core:1.6.1'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
 }
 
 
