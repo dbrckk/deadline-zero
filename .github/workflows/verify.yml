@@ -68,13 +68,9 @@ jobs:
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
-            set -eu
             gradle :android:connectedDebugAndroidTest
             adb shell am force-stop com.deadlinezero.game
-            if adb shell pidof com.deadlinezero.game | grep -q .; then
-              echo 'Deadline Zero process survived force-stop unexpectedly'
-              exit 1
-            fi
+            test -z "$(adb shell pidof com.deadlinezero.game)"
             adb shell am start -W -n com.deadlinezero.game/com.deadlinezero.game.android.AndroidLauncher
             sleep 2
             adb shell pidof com.deadlinezero.game | grep -q .
