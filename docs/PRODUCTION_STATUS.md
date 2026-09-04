@@ -22,10 +22,10 @@ Goal: make `main` a reliable production baseline before adding more scope.
 ## Active M0 proof tasks
 
 - [x] #15 — explicit profile schema versioning and migration protection merged via #18.
-- [ ] #16 — lifecycle/process recreation: automated hardening and repeatable QA procedure complete; physical-device lifecycle matrix remains.
+- [ ] #16 — lifecycle/process recreation: automated background/foreground, Activity recreation, external process restart and durable profile reload now pass on emulator; representative physical-device lifecycle/process-death matrix remains.
 - [ ] #17 — Play Billing exactly-once: automated idempotency and `grant -> persist -> consume` proof merged via #19; Play license-test device validation remains.
-- [ ] Vertical-slice proof — desktop runtime path is proven end-to-end via #24 and Android cold startup is proven on a real emulator via #26; a complete Android run on representative physical hardware is still required.
-- [x] P0 persistence/regression proof — representative completed-run, reload and interrupted-run fixtures merged via #21 and pass CI.
+- [ ] Vertical-slice proof — desktop runtime path is proven end-to-end via #24; Android startup/lifecycle/process restart are automated, but a complete Android run on representative physical hardware is still required.
+- [x] P0 persistence/regression proof — representative completed-run, reload and interrupted-run fixtures merged via #21; Android emulator process-death persistence proof merged via #30.
 
 ## Milestone board
 
@@ -61,12 +61,14 @@ Goal: make `main` a reliable production baseline before adding more scope.
 - Settlement persistence is covered by save/reload regression without duplication or loss.
 - Interrupted runs are covered by a regression proving no settlement rewards are granted.
 - Desktop LWJGL3/Xvfb runtime exercises menu -> contract -> GameScreen -> settlement/RunResult -> menu, renders each stage, verifies exactly-once settlement and reloads the persisted result (#24).
-- Android instrumentation now launches the real `AndroidLauncher` on an x86_64 emulator, proving Activity/libGDX startup wiring in CI (#26).
+- Android instrumentation launches the real `AndroidLauncher` on an x86_64 emulator and exercises background/foreground plus Activity recreation with attached libGDX content.
+- Android emulator CI force-stops the installed app and proves the real launcher can create a fresh app process (#29).
+- Android emulator CI writes distinctive state through the real `DeadlineZeroGame.saveProfile()` path, kills the app process, then proves a fresh launcher reloads run counters, kill counters, stage state and purchase-receipt replay protection from durable profile storage (#30).
 - Consumable purchase receipt IDs are persisted with replay protection.
 - Consumable delivery persists the grant before asking Google Play to consume the token.
 - Durable billing entitlements have authoritative reconciliation plus an offline cache; entitlement prefs are excluded from Android backup/transfer.
 - The strict Play release task rejects test AdMob IDs, missing production assets, malformed privacy/signing/version config and inadequate store graphics.
-- CI validates core tests, real desktop LWJGL3 runtime smoke, Android lint/build, Android emulator runtime startup and final-sprite validators.
+- CI validates core tests, real desktop LWJGL3 runtime smoke, Android lint/build, Android emulator startup/lifecycle/process persistence and final-sprite validators.
 
 ## Runtime contract
 
@@ -85,6 +87,7 @@ Active combat-run restoration after OS process death is intentionally unsupporte
 - Android lint debug/release passes.
 - Android debug APK assembles and release AAB bundles in verification mode.
 - Android instrumentation launches the real app successfully on emulator.
+- Android emulator runtime survives Activity recreation, external process restart and durable-profile reload checks.
 - Final sprite layout validators pass.
 
 ### Runtime
@@ -92,6 +95,7 @@ Active combat-run restoration after OS process death is intentionally unsupporte
 - Desktop cold launch and complete automated loop succeed.
 - Android cold launch succeeds on emulator.
 - New and existing profiles load safely.
+- Android durable profile state survives an externally forced process restart on emulator.
 - Android complete run can start, progress, pause/resume, end and persist on representative physical hardware.
 - Background/foreground and activity recreation do not corrupt durable state.
 - Process death returns to a supported safe state.
@@ -105,6 +109,7 @@ Active combat-run restoration after OS process death is intentionally unsupporte
 - Completed settlement survives save/reload without duplication or loss.
 - Interrupted runs cannot grant settlement rewards.
 - Purchases cannot duplicate grants on retry/restore.
+- Profile purchase-receipt replay protection survives Android process restart.
 - Durable entitlement revocation follows authoritative Play state.
 
 ### Art
@@ -117,13 +122,12 @@ Only `FINAL` counts toward release-art completion.
 
 ## Current next actions
 
-1. Extend Android emulator coverage to lifecycle recreation where it provides useful automated evidence, without treating it as a substitute for #16 physical-device QA.
-2. Prove a complete Android debug loop on a physical device.
-3. Execute #16 lifecycle matrix on a physical Android device.
-4. Execute #17 Google Play license-testing matrix.
-5. Re-evaluate the remaining generic P0-blocker criterion after those platform gates.
-6. Do not start major M1/M2 scope until remaining M0 proof tasks are resolved or explicitly accepted as physical-device gates.
+1. Prove a complete Android debug loop on representative physical hardware.
+2. Execute the remaining #16 physical lifecycle/process-death matrix.
+3. Execute #17 Google Play license-testing matrix.
+4. Re-evaluate the remaining generic P0-blocker criterion after those platform gates.
+5. Do not start major M1/M2 scope until remaining M0 proof tasks are resolved or explicitly accepted as physical-device gates.
 
 ## Definition of Done
 
-Compilation is not runtime validation. Generated art is not final production art. Emulator startup proof improves Android confidence but does not substitute for complete physical-device gameplay, lifecycle/process-death validation or Google Play license testing where real platform behavior is the subject of the gate.
+Compilation is not runtime validation. Generated art is not final production art. Emulator lifecycle/process-persistence proof substantially improves Android confidence but does not substitute for complete physical-device gameplay, representative physical lifecycle/process-death validation or Google Play license testing where real platform behavior is the subject of the gate.
