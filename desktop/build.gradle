@@ -12,3 +12,11 @@ run {
     workingDir = rootProject.file('assets')
     ignoreExitValue = true
 }
+
+tasks.register('smokeRun', JavaExec) {
+    group = 'verification'
+    description = 'Boots the real LWJGL3 game, renders menu frames, then exits cleanly.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.deadlinezero.game.desktop.DesktopSmokeLauncher'
+    workingDir = rootProject.file('assets')
+}
