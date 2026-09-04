@@ -170,10 +170,9 @@ public final class ShopScreen extends ScreenAdapter {
     }
 
     private void deliverConsumable(BillingService.PurchaseReceipt receipt) {
-        final boolean[] granted = {false};
-        granted[0] = ConsumablePurchaseDelivery.deliver(game.profile, game.services.billing, receipt,
+        ConsumablePurchaseDelivery.deliver(game.profile, game.services.billing, receipt,
             game::saveProfile,
-            () -> status = granted[0] ? "Purchase delivered" : "Recovered purchase finalized",
+            granted -> status = granted ? "Purchase delivered" : "Recovered purchase finalized",
             () -> status = "Purchase saved; Google Play finalization pending");
     }
 
