@@ -6,6 +6,8 @@ dependencies {
     api "com.badlogicgames.gdx:gdx-ai:1.8.2"
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation "com.badlogicgames.gdx:gdx-backend-headless:${gdxVersion}"
+    testRuntimeOnly "com.badlogicgames.gdx:gdx-platform:${gdxVersion}:natives-desktop"
 }
 
 tasks.withType(Test).configureEach {
