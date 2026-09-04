@@ -10,10 +10,12 @@ import com.deadlinezero.game.visual.EnvironmentBiomeRules;
 public final class ProfileStore {
     private static final String PREFS = "deadline-zero-profile-v1";
     private static final int MAX_PURCHASE_RECEIPTS = 128;
+    private static boolean persistenceWritable = true;
     private ProfileStore() {}
 
     public static PlayerProfile load() {
         Preferences p = Gdx.app.getPreferences(PREFS);
+        persistenceWritable = ProfileSchema.migrate(new ProfileSchema.PreferencesStore(p));
         PlayerProfile profile = new PlayerProfile();
         profile.accountLevel = Math.max(1, p.getInteger("accountLevel", 1));
         profile.accountXp = Math.max(0L, p.getLong("accountXp", 0L));
@@ -81,8 +83,9 @@ public final class ProfileStore {
     }
 
     public static void save(PlayerProfile profile) {
-        if (profile == null) return;
+        if (profile == null || !persistenceWritable) return;
         Preferences p = Gdx.app.getPreferences(PREFS);
+        ProfileSchema.stampCurrent(new ProfileSchema.PreferencesStore(p));
         p.putInteger("accountLevel", profile.accountLevel);
         p.putLong("accountXp", profile.accountXp);
         p.putInteger("highestStage", profile.highestStage);
