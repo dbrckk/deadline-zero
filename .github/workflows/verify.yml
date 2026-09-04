@@ -68,7 +68,7 @@ jobs:
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
-            set -euo pipefail
+            set -eu
             gradle :android:connectedDebugAndroidTest
             adb shell am force-stop com.deadlinezero.game
             if adb shell pidof com.deadlinezero.game | grep -q .; then
