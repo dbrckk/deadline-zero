@@ -23,6 +23,8 @@ jobs:
           python3 -m unittest discover -s tools -p 'test_verify_final_atlas.py'
       - name: Compile and test core
         run: gradle :core:compileJava :core:test :desktop:compileJava
+      - name: Smoke-test desktop runtime
+        run: xvfb-run -a gradle :desktop:smokeRun
 
   android:
     runs-on: ubuntu-latest
