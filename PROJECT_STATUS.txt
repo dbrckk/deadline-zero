@@ -1,0 +1,179 @@
+DEADLINE ZERO — PROJECT STATUS
+==============================
+
+Purpose
+-------
+This file is the living checkpoint for the project. Update it whenever a meaningful milestone, decision, blocker, asset, pipeline change, or next action changes.
+
+Last update: 2026-09-05
+Current phase: Premium art pipeline / Rex master character
+
+CURRENT GOAL
+------------
+Reach a premium stylized 2.5D mobile-shooter visual quality comparable in polish/readability to games such as Zombie Waves, without copying their assets or designs.
+
+Chosen production strategy:
+3D master assets -> rig/animations -> orthographic 8-direction renders -> high-resolution transparent frames -> downsample -> exact game sprite contract -> QA -> final atlas.
+
+This replaces the idea of independently generating hundreds of AI sprite frames, because independent generations do not preserve character identity, proportions, equipment and animation continuity reliably enough.
+
+WHAT IS ALREADY IN PLACE
+------------------------
+[OK] Existing game/project structure in repository.
+[OK] Android project and gameplay foundations already exist.
+[OK] Final sprite-layout contract exists in art_sources/final-sprite-layout.json.
+[OK] Directions contract: n, ne, e, se, s, sw, w, nw.
+[OK] Standard animation contract:
+     idle   = 4 frames/direction
+     run    = 8 frames/direction
+     attack = 6 frames/direction
+     hit    = 3 frames/direction
+     death  = 8 frames/direction
+[OK] Rex target: 96x96 final cells, 232 frames total.
+[OK] Existing source-sheet validation/cutting/atlas pipeline.
+[OK] tools/import_pixellab_idle.py added for importing/normalizing PixelLab-style idle sources.
+[OK] tools/blender/render_actor_8dir.py added as foundation for automated Blender 8-direction rendering.
+[OK] docs/premium-art-pipeline.md added.
+[OK] Rex 3D master brief added to repository.
+
+GRAPHICS DIRECTION
+------------------
+Rex identity:
+- futuristic armored ranger
+- athletic, compact, readable silhouette
+- enclosed helmet
+- cyan visor/energy accents
+- dark navy / near-black armor
+- restrained orange accents
+- tactical cape
+- futuristic assault rifle as major silhouette element
+
+Rendering target:
+- stylized premium rather than retro pixel-art
+- strong silhouette at phone scale
+- clean PBR-like material separation in master renders
+- controlled lighting and shadows
+- high-resolution master renders (target around 512x512) before final reduction
+- transparent background for character frames
+- consistent orthographic/isometric presentation
+
+Rex and enemies alone are not sufficient for the target quality. Final polish must also include environments, shadows, weapon VFX, muzzle flashes, projectiles, impacts, explosions, hit feedback, particles, UI feedback and strong mobile readability.
+
+CURRENT REX WORK
+----------------
+Tool currently being tested: Meshy.
+
+First generated Rex:
+- successfully produced a humanoid armored/caped silhouette
+- reduced/tested around 10K triangles
+- general proportions and silhouette were usable
+- rejected as final master before rigging
+
+Reason for rejection:
+- hands/weapon geometry too approximate
+- hands appeared insufficiently separated from rifle
+- rifle shape lacked enough mechanical definition
+- armor forms lacked enough hard-surface definition for the desired premium quality
+
+IMPORTANT: Do NOT spend time building the complete animation pipeline around that rejected version.
+
+CURRENT ACTION
+--------------
+Generate a better Rex master in Meshy using HIGH DETAIL for the initial generation.
+
+Current compact prompt:
+
+Premium stylized sci-fi ranger, full body, athletic male. Enclosed futuristic helmet with cyan visor. Dark navy/black layered hard-surface armor with subtle orange accents and short tactical cape. Holding ONE detailed futuristic assault rifle with both hands. Correct separated hands and fingers, hands NOT fused with weapon. Clean rifle geometry. No intersecting or melted parts. Strong readable silhouette for isometric mobile shooter. Neutral A-pose, game-ready, PBR, high detail. No environment, floor, text, particles or extra weapons.
+
+Do NOT optimize/retopologize immediately if the initial geometry is visibly wrong. First select a master with good anatomy, weapon, silhouette and armor.
+
+NEXT STEPS — ORDER OF EXECUTION
+-------------------------------
+1. Generate improved Rex master in Meshy with High Detail.
+2. Visually inspect front, 3/4, side and rear views.
+3. Reject if hands/fingers are fused, rifle is malformed, limbs intersect badly, cape is broken, or silhouette is weak.
+4. Once the master is approved, create an optimized animation-ready version (working target about 10K triangles unless tests justify more).
+5. Rig Rex.
+6. Test deformation BEFORE producing all animations: shoulders, elbows, wrists, hands, hips, knees, cape/weapon interactions.
+7. Produce/test idle first.
+8. Produce/test run.
+9. Produce/test attack, with special attention to rifle/hand stability.
+10. Produce/test hit.
+11. Produce/test death.
+12. Export the approved rigged/animated master in a format usable by Blender (prefer GLB/FBX depending on animation preservation).
+13. Use Blender automation to render all animations in 8 directions with transparent background and fixed camera/lighting.
+14. Render high-resolution masters first, not directly at 96x96.
+15. Downsample/normalize frames while keeping a stable foot pivot and character scale.
+16. Assemble exact Rex production sprite sheet: 2784x768 for 96x96 standard cells.
+17. Run strict sprite QA and layout validation.
+18. Build/update final game atlas.
+19. Test Rex on an actual phone-sized gameplay scene.
+20. Iterate lighting/material/VFX based on in-game readability rather than judging only enlarged artwork.
+
+AFTER REX
+---------
+Do not mass-produce all actors until Rex establishes the quality bar and the complete pipeline works end-to-end.
+
+Once Rex is validated in-game:
+- freeze the camera convention
+- freeze master render resolution
+- freeze lighting rig
+- freeze material/style rules
+- freeze animation naming/export conventions
+- freeze downsampling settings
+- freeze QA thresholds
+
+Then industrialize the same pipeline for survivors, normal enemies, elites and bosses.
+
+PREMIUM SCENE WORK AFTER CHARACTER PIPELINE
+-------------------------------------------
+Priority areas:
+A. Character/enemy animation consistency
+B. Environment tiles/props and scene density
+C. Weapon/VFX system (projectiles, muzzle flash, impacts, explosions)
+D. Grounding: contact shadows, lighting and depth
+E. Combat feedback: hit flash, damage feedback, death effects, camera/impact feedback where appropriate
+F. UI/HUD polish
+G. Performance optimization for Android while preserving visual hierarchy
+
+QUALITY GATES
+-------------
+A master character is NOT approved merely because it looks impressive in a large preview.
+
+Rex must pass:
+- recognizable silhouette at gameplay scale
+- same identity from all 8 directions
+- stable proportions
+- clean helmet silhouette
+- readable rifle silhouette
+- acceptable hands and weapon separation
+- no obvious melted/intersecting geometry
+- rig deforms correctly
+- animation loops are stable
+- feet do not visibly slide during stationary animations
+- no large pivot drift between frames
+- cape does not destroy silhouette/readability
+- cyan/orange accents survive final downsampling
+- final 96x96 result remains readable on a phone
+
+RULES / DECISIONS TO PRESERVE
+-----------------------------
+- The original user-created PixelLab GIF is Rex, not another character.
+- PixelLab can remain useful for concepts/experiments/imports, but it is no longer the sole production method for hundreds of final character frames.
+- Do not treat AI-generated labelled presentation boards as production sprite sheets.
+- Do not generate 232 independent Rex images and assume consistency.
+- Build one excellent Rex master first, then derive animation frames from it.
+- Prefer fixing errors at the 3D-master stage instead of repairing hundreds of rendered frames later.
+- Optimize for actual Android gameplay readability, not maximum microscopic detail.
+
+UPDATE POLICY
+-------------
+Whenever possible, update this file after:
+- a major asset is approved/rejected
+- a pipeline step is completed
+- a technical decision changes
+- a blocker appears/disappears
+- the immediate next action changes
+- a milestone is reached
+
+Keep CURRENT ACTION and NEXT STEPS accurate so a future session can resume the project without reconstructing its state from chat history.
