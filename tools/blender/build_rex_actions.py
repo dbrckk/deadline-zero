@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Build deterministic Rex animation actions on a rigged SMPL22 GLB.
 
-This is the automated deformation/animation smoke stage. It is intentionally
-conservative: the actions exercise shoulders, elbows, spine, hips and knees
-without pretending to replace final hand-authored motion. The output .blend is
-then consumed by render_actor_8dir.py.
+These actions are deformation/animation QA motions. They remain intentionally
+conservative so a valid skin is stressed without forcing anatomically absurd
+poses that would make a good rig look broken.
 """
 from __future__ import annotations
 
@@ -138,6 +137,7 @@ def make_action(arm, name: str, frames: int, poses: list[tuple[int, dict, dict]]
 
 
 def build_actions(arm) -> None:
+    # Idle: subtle breathing/weight shift.
     idle_a = {
         "Spine2": (1.0, 0.0, -1.0), "Spine3": (-1.0, 0.0, 1.5),
         "L_Shoulder": (1.5, 0.0, 0.0), "R_Shoulder": (-1.5, 0.0, 0.0),
@@ -148,65 +148,75 @@ def build_actions(arm) -> None:
     }
     make_action(arm, "idle", 24, [(1, idle_a, {}), (12, idle_b, {"Pelvis": (0, 0, 0.012)}), (24, idle_a, {})])
 
+    # Run: moderate arm swing; avoids dragging cape-adjacent shoulder geometry.
     run_a = {
-        "L_Hip": (24, 0, 0), "R_Hip": (-24, 0, 0),
-        "L_Knee": (12, 0, 0), "R_Knee": (42, 0, 0),
-        "L_Shoulder": (-22, 0, 0), "R_Shoulder": (22, 0, 0),
-        "L_Elbow": (28, 0, 0), "R_Elbow": (18, 0, 0),
-        "Spine3": (4, 0, -2),
+        "L_Hip": (22, 0, 0), "R_Hip": (-22, 0, 0),
+        "L_Knee": (14, 0, 0), "R_Knee": (38, 0, 0),
+        "L_Shoulder": (-15, 0, 0), "R_Shoulder": (15, 0, 0),
+        "L_Elbow": (24, 0, 0), "R_Elbow": (18, 0, 0),
+        "Spine3": (3, 0, -1.5),
     }
     run_b = {
-        "L_Hip": (-24, 0, 0), "R_Hip": (24, 0, 0),
-        "L_Knee": (42, 0, 0), "R_Knee": (12, 0, 0),
-        "L_Shoulder": (22, 0, 0), "R_Shoulder": (-22, 0, 0),
-        "L_Elbow": (18, 0, 0), "R_Elbow": (28, 0, 0),
-        "Spine3": (4, 0, 2),
+        "L_Hip": (-22, 0, 0), "R_Hip": (22, 0, 0),
+        "L_Knee": (38, 0, 0), "R_Knee": (14, 0, 0),
+        "L_Shoulder": (15, 0, 0), "R_Shoulder": (-15, 0, 0),
+        "L_Elbow": (18, 0, 0), "R_Elbow": (24, 0, 0),
+        "Spine3": (3, 0, 1.5),
     }
     make_action(arm, "run", 24, [
-        (1, run_a, {"Pelvis": (0, 0, 0.025)}),
-        (7, {}, {"Pelvis": (0, 0, 0.075)}),
-        (13, run_b, {"Pelvis": (0, 0, 0.025)}),
-        (19, {}, {"Pelvis": (0, 0, 0.075)}),
-        (24, run_a, {"Pelvis": (0, 0, 0.025)}),
+        (1, run_a, {"Pelvis": (0, 0, 0.02)}),
+        (7, {}, {"Pelvis": (0, 0, 0.065)}),
+        (13, run_b, {"Pelvis": (0, 0, 0.02)}),
+        (19, {}, {"Pelvis": (0, 0, 0.065)}),
+        (24, run_a, {"Pelvis": (0, 0, 0.02)}),
     ])
 
+    # Attack QA: readable guarded strike without extreme shoulder elevation.
     windup = {
-        "Spine3": (-4, 0, 8),
-        "L_Shoulder": (-18, 0, -12), "R_Shoulder": (-12, 0, 14),
-        "L_Elbow": (36, 0, 0), "R_Elbow": (28, 0, 0),
+        "Spine3": (-3, 0, 6),
+        "L_Shoulder": (-10, 0, -7), "R_Shoulder": (-14, 0, 9),
+        "L_Elbow": (26, 0, 0), "R_Elbow": (34, 0, 0),
     }
     strike = {
-        "Spine3": (8, 0, -8),
-        "L_Shoulder": (42, 0, -6), "R_Shoulder": (38, 0, 8),
-        "L_Elbow": (12, 0, 0), "R_Elbow": (8, 0, 0),
+        "Spine2": (3, 0, -3), "Spine3": (5, 0, -6),
+        "L_Shoulder": (18, 0, -4), "R_Shoulder": (28, 0, 7),
+        "L_Elbow": (18, 0, 0), "R_Elbow": (16, 0, 0),
     }
-    make_action(arm, "attack", 18, [(1, {}, {}), (6, windup, {}), (11, strike, {"Pelvis": (0, -0.035, 0)}), (18, {}, {})])
+    make_action(arm, "attack", 18, [
+        (1, {}, {}),
+        (6, windup, {}),
+        (11, strike, {"Pelvis": (0, -0.025, 0)}),
+        (18, {}, {}),
+    ])
 
+    # Hit: compact recoil.
     hit = {
-        "Spine1": (-5, 0, 0), "Spine2": (-8, 0, 5), "Spine3": (-10, 0, 8),
-        "L_Shoulder": (-16, 0, -8), "R_Shoulder": (-10, 0, 10),
-        "Neck": (8, 0, -5),
+        "Spine1": (-3, 0, 0), "Spine2": (-5, 0, 3), "Spine3": (-7, 0, 5),
+        "L_Shoulder": (-10, 0, -5), "R_Shoulder": (-8, 0, 6),
+        "Neck": (5, 0, -3),
     }
-    make_action(arm, "hit", 10, [(1, {}, {}), (4, hit, {"Pelvis": (0, 0.045, -0.025)}), (10, {}, {})])
+    make_action(arm, "hit", 10, [(1, {}, {}), (4, hit, {"Pelvis": (0, 0.025, -0.015)}), (10, {}, {})])
 
+    # Death QA: controlled knee-collapse rather than stacking huge spine bends.
     fall_mid = {
-        "Spine1": (12, 0, 8), "Spine2": (18, 0, 10), "Spine3": (24, 0, 14),
-        "L_Hip": (-18, 0, 6), "R_Hip": (10, 0, -5),
-        "L_Knee": (34, 0, 0), "R_Knee": (22, 0, 0),
-        "L_Shoulder": (16, 0, -20), "R_Shoulder": (-10, 0, 18),
+        "Spine1": (5, 0, 3), "Spine2": (7, 0, 4), "Spine3": (9, 0, 5),
+        "L_Hip": (-12, 0, 3), "R_Hip": (8, 0, -2),
+        "L_Knee": (30, 0, 0), "R_Knee": (26, 0, 0),
+        "L_Shoulder": (8, 0, -8), "R_Shoulder": (-6, 0, 8),
+        "Neck": (-5, 0, -2),
     }
     fall_end = {
-        "Spine1": (38, 0, 18), "Spine2": (42, 0, 14), "Spine3": (48, 0, 10),
-        "Neck": (-18, 0, -8), "Head": (-12, 0, 0),
-        "L_Hip": (-30, 0, 10), "R_Hip": (18, 0, -8),
-        "L_Knee": (58, 0, 0), "R_Knee": (44, 0, 0),
-        "L_Shoulder": (28, 0, -26), "R_Shoulder": (-18, 0, 24),
-        "L_Elbow": (36, 0, 0), "R_Elbow": (32, 0, 0),
+        "Spine1": (9, 0, 5), "Spine2": (12, 0, 5), "Spine3": (15, 0, 4),
+        "Neck": (-10, 0, -4), "Head": (-6, 0, 0),
+        "L_Hip": (-18, 0, 5), "R_Hip": (12, 0, -4),
+        "L_Knee": (48, 0, 0), "R_Knee": (42, 0, 0),
+        "L_Shoulder": (12, 0, -10), "R_Shoulder": (-8, 0, 10),
+        "L_Elbow": (22, 0, 0), "R_Elbow": (20, 0, 0),
     }
     make_action(arm, "death", 30, [
         (1, {}, {}),
-        (12, fall_mid, {"Pelvis": (0, 0.02, -0.18)}),
-        (30, fall_end, {"Pelvis": (0, 0.08, -0.62)}),
+        (12, fall_mid, {"Pelvis": (0, 0.025, -0.12)}),
+        (30, fall_end, {"Pelvis": (0, 0.08, -0.36)}),
     ])
 
 
