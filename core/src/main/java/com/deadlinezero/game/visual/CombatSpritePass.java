@@ -5,10 +5,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
+import com.deadlinezero.game.meta.RunLoadoutContext;
+import com.deadlinezero.game.meta.SurvivorCatalog;
 import com.deadlinezero.game.util.Pools;
 
 /** Single entry point for authored combat presentation and optional lightweight grading/audio. */
 public final class CombatSpritePass {
+    private final GameArt art;
     private final CharacterSpriteRenderer characters;
     private final EnvironmentRenderer environment;
     private final WeaponRenderer weapon;
@@ -19,6 +22,7 @@ public final class CombatSpritePass {
     private float stateTime;
 
     public CombatSpritePass(GameArt art) {
+        this.art = art;
         characters = new CharacterSpriteRenderer(art);
         environment = new EnvironmentRenderer(art);
         weapon = new WeaponRenderer(art);
@@ -72,8 +76,16 @@ public final class CombatSpritePass {
         float aimAngle = target == null ? fallbackAim(player) :
             MathUtils.atan2(target.position.y - player.position.y, target.position.x - player.position.x) * MathUtils.radiansToDegrees;
         float shotFlash = target == null || !player.alive ? 0f : MathUtils.clamp(1f - CombatVisualEvents.playerShotAgeSeconds() / .075f, 0f, 1f);
-        weapon.draw(batch, player, aimAngle, shotFlash);
+        if (!playerSpriteHasIntegratedWeapon()) weapon.draw(batch, player, aimAngle, shotFlash);
         if (pools != null) vfx.draw(batch, player, enemies, pools);
+    }
+
+    /** Rex's published production atlas already contains the rifle in every directional motion. */
+    boolean playerSpriteHasIntegratedWeapon() {
+        if (RunLoadoutContext.survivor() != SurvivorCatalog.Survivor.REX) return false;
+        return art.hasAnimation("survivor/rex/e/idle")
+            && art.hasAnimation("survivor/rex/e/run")
+            && art.hasAnimation("survivor/rex/e/attack");
     }
 
     /** Compatibility wrapper preserving the historical environment + combat ordering. */
