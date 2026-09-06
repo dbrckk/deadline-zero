@@ -11,14 +11,6 @@ on:
         description: "Optional HTTPS URL used when source_path is absent"
         required: false
         default: ""
-      method:
-        description: "Motius rigging backend"
-        required: false
-        default: "template"
-        type: choice
-        options:
-          - template
-          - make-it-animatable
   push:
     paths:
       - "art_sources/rex/master/rex_source.glb"
@@ -34,13 +26,13 @@ permissions:
 jobs:
   rig:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 25
     env:
       SOURCE_PATH: ${{ github.event.inputs.source_path || 'art_sources/rex/master/rex_source.glb' }}
       SOURCE_URL_INPUT: ${{ github.event.inputs.source_url || '' }}
-      RIG_METHOD: ${{ github.event.inputs.method || 'template' }}
       HD_SHA256: 43c2bffdcbcbacd59327bef34b2a71ef2afbebbe5d032ecfadedbd109f717d17
       PROXY_SHA256: 1672041817d8c85da094436a1b21087adf4f19d12e672f20987fa5a9770695ac
+      MOTIUS_COMMIT: 5d98709adcb02c7f668019f96d89be39b90e4c05
 
     steps:
       - name: Checkout Deadline Zero
@@ -111,33 +103,61 @@ jobs:
           blender --version | head -n 2
           blender -b --factory-startup --python-expr "import numpy as np; print('Blender NumPy', np.__version__)"
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install Motius Auto-Rig
+      - name: Fetch pinned Motius template rigger
         shell: bash
         run: |
           set -euo pipefail
-          GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/ZeyuLing/Motius.git .motius
-          python -m pip install --upgrade pip
-          python -m pip install -e ".motius[auto-rig]"
+          git init .motius
+          git -C .motius remote add origin https://github.com/ZeyuLing/Motius.git
+          git -C .motius sparse-checkout init --cone
+          git -C .motius sparse-checkout set motius/motion/rigging
+          git -C .motius fetch --depth 1 origin "$MOTIUS_COMMIT"
+          git -C .motius checkout --detach FETCH_HEAD
+          test -s .motius/motius/motion/rigging/_blender.py
+          test -s .motius/motius/motion/rigging/template.py
 
-      - name: Auto-rig Rex
+      - name: Auto-rig Rex with deterministic Motius template
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p build/rex-autorig
-          OUT="build/rex-autorig/rex_rigged.glb"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
 
-          python .motius/tools/auto_rig_character.py \
-            "$REX_SOURCE" "$OUT" \
-            --method "$RIG_METHOD" \
-            --blender "$(command -v blender)"
+          root = Path.cwd()
+          output = (root / "build/rex-autorig/rex_rigged.glb").resolve()
+          manifest = Path(f"{output}.json")
+          job = {
+              "schema_version": 1,
+              "method": "template",
+              "character_path": str((root / os.environ["REX_SOURCE"]).resolve()),
+              "output_path": str(output),
+              "manifest_path": str(manifest),
+              "template_module": str((root / ".motius/motius/motion/rigging/template.py").resolve()),
+              "up_axis": "auto",
+              "replace_existing_rig": False,
+              "weight_method": "capsules",
+              "config": {
+                  "top_k": 4,
+                  "weight_falloff": 1.75,
+                  "side_penalty": 0.025,
+                  "chunk_size": 16384,
+              },
+          }
+          Path("build/rex-autorig/template-job.json").write_text(
+              json.dumps(job, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
 
-          test -s "$OUT"
-          sha256sum "$OUT" | tee build/rex-autorig/rex-rigged.sha256
+          blender --background --factory-startup --python-exit-code 1 \
+            --python .motius/motius/motion/rigging/_blender.py -- \
+            --job build/rex-autorig/template-job.json
+
+          test -s build/rex-autorig/rex_rigged.glb
+          test -s build/rex-autorig/rex_rigged.glb.json
+          sha256sum build/rex-autorig/rex_rigged.glb | tee build/rex-autorig/rex-rigged.sha256
 
       - name: Validate rig and render previews
         shell: bash
@@ -153,7 +173,7 @@ jobs:
         run: |
           echo "## Rex auto-rig" >> "$GITHUB_STEP_SUMMARY"
           echo "Source kind: ${REX_SOURCE_KIND:-unresolved}" >> "$GITHUB_STEP_SUMMARY"
-          echo "Method: ${RIG_METHOD:-unknown}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Method: template (Motius $MOTIUS_COMMIT)" >> "$GITHUB_STEP_SUMMARY"
           if [ -f rex-source.sha256 ]; then
             echo '```text' >> "$GITHUB_STEP_SUMMARY"
             cat rex-source.sha256 >> "$GITHUB_STEP_SUMMARY"
