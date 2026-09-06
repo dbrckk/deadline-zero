@@ -121,6 +121,7 @@ def key_pose(arm, frame: int) -> None:
 
 def make_action(arm, name: str, frames: int, poses: list[tuple[int, dict, dict]]) -> None:
     action = bpy.data.actions.new(name=name)
+    action.use_fake_user = True
     arm.animation_data.action = action
     zero_pose(arm)
     for frame, rotations, locations in poses:
@@ -137,7 +138,6 @@ def make_action(arm, name: str, frames: int, poses: list[tuple[int, dict, dict]]
 
 
 def build_actions(arm) -> None:
-    # Idle: restrained breathing and weight shift. Loop closes exactly.
     idle_a = {
         "Spine2": (1.0, 0.0, -1.0), "Spine3": (-1.0, 0.0, 1.5),
         "L_Shoulder": (1.5, 0.0, 0.0), "R_Shoulder": (-1.5, 0.0, 0.0),
@@ -148,7 +148,6 @@ def build_actions(arm) -> None:
     }
     make_action(arm, "idle", 24, [(1, idle_a, {}), (12, idle_b, {"Pelvis": (0, 0, 0.012)}), (24, idle_a, {})])
 
-    # Run: deliberately exercises hips/knees/shoulders and cape-adjacent torso.
     run_a = {
         "L_Hip": (24, 0, 0), "R_Hip": (-24, 0, 0),
         "L_Knee": (12, 0, 0), "R_Knee": (42, 0, 0),
@@ -171,7 +170,6 @@ def build_actions(arm) -> None:
         (24, run_a, {"Pelvis": (0, 0, 0.025)}),
     ])
 
-    # Attack smoke: two-handed forward strike/aim gesture, useful for shoulder/elbow QA.
     windup = {
         "Spine3": (-4, 0, 8),
         "L_Shoulder": (-18, 0, -12), "R_Shoulder": (-12, 0, 14),
@@ -184,7 +182,6 @@ def build_actions(arm) -> None:
     }
     make_action(arm, "attack", 18, [(1, {}, {}), (6, windup, {}), (11, strike, {"Pelvis": (0, -0.035, 0)}), (18, {}, {})])
 
-    # Hit reaction: compact torso recoil and asymmetric shoulder response.
     hit = {
         "Spine1": (-5, 0, 0), "Spine2": (-8, 0, 5), "Spine3": (-10, 0, 8),
         "L_Shoulder": (-16, 0, -8), "R_Shoulder": (-10, 0, 10),
@@ -192,7 +189,6 @@ def build_actions(arm) -> None:
     }
     make_action(arm, "hit", 10, [(1, {}, {}), (4, hit, {"Pelvis": (0, 0.045, -0.025)}), (10, {}, {})])
 
-    # Death smoke: strong whole-body deformation; this is a QA motion, not final choreography.
     fall_mid = {
         "Spine1": (12, 0, 8), "Spine2": (18, 0, 10), "Spine3": (24, 0, 14),
         "L_Hip": (-18, 0, 6), "R_Hip": (10, 0, -5),
