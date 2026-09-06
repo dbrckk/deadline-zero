@@ -1,0 +1,126 @@
+name: Rex Auto-Rig
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_path:
+        description: "Path to Rex GLB in repository"
+        required: false
+        default: "art_sources/rex/master/rex_source.glb"
+      method:
+        description: "Motius rigging backend"
+        required: false
+        default: "make-it-animatable"
+        type: choice
+        options:
+          - make-it-animatable
+          - template
+  push:
+    paths:
+      - "art_sources/rex/master/rex_source.glb"
+      - ".github/workflows/rex-auto-rig.yml"
+      - "tools/blender/validate_rig.py"
+
+permissions:
+  contents: read
+
+jobs:
+  rig:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      SOURCE_PATH: ${{ github.event.inputs.source_path || 'art_sources/rex/master/rex_source.glb' }}
+      RIG_METHOD: ${{ github.event.inputs.method || 'make-it-animatable' }}
+
+    steps:
+      - name: Checkout Deadline Zero
+        uses: actions/checkout@v4
+
+      - name: Verify Rex source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$SOURCE_PATH" || {
+            echo "::error::Missing Rex source: $SOURCE_PATH"
+            exit 2
+          }
+          sha256sum "$SOURCE_PATH" | tee rex-source.sha256
+          file "$SOURCE_PATH"
+
+      - name: Install Blender
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y blender libgl1 libegl1
+          blender --version | head -n 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install Motius Auto-Rig
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/ZeyuLing/Motius.git .motius
+          python -m pip install --upgrade pip
+          python -m pip install -e ".motius[auto-rig]"
+
+      - name: Auto-rig Rex
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/rex-autorig
+          OUT="build/rex-autorig/rex_rigged.glb"
+
+          run_rig() {
+            python .motius/tools/auto_rig_character.py \
+              "$SOURCE_PATH" "$OUT" \
+              --method "$1" \
+              --blender "$(command -v blender)"
+          }
+
+          if ! run_rig "$RIG_METHOD"; then
+            if [ "$RIG_METHOD" = "make-it-animatable" ]; then
+              echo "::warning::Make-It-Animatable backend failed; trying template fallback"
+              run_rig template
+            else
+              exit 1
+            fi
+          fi
+
+          test -s "$OUT"
+          sha256sum "$OUT" | tee build/rex-autorig/rex-rigged.sha256
+
+      - name: Validate rig and render previews
+        shell: bash
+        run: |
+          set -euo pipefail
+          blender -b --python tools/blender/validate_rig.py -- \
+            --input build/rex-autorig/rex_rigged.glb \
+            --output build/rex-autorig/validation
+
+      - name: Add report to job summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f build/rex-autorig/validation/rig-report.json ]; then
+            echo '## Rex auto-rig report' >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat build/rex-autorig/validation/rig-report.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload rig artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rex-auto-rig-${{ github.run_number }}
+          path: |
+            rex-source.sha256
+            build/rex-autorig/
+          if-no-files-found: warn
+          retention-days: 30
