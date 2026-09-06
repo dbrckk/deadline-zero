@@ -18,6 +18,7 @@ on:
       - "tools/blender/repair_rex_weights.py"
       - "tools/blender/style_rex_materials.py"
       - "tools/blender/add_rex_rifle.py"
+      - "tools/blender/validate_rex_weapon_visibility.py"
       - "tools/sprites/normalize_rex_frames.py"
 permissions:
   actions: read
@@ -61,6 +62,8 @@ jobs:
         run: blender -b --factory-startup --python-exit-code 1 --python tools/blender/add_rex_rifle.py -- --input build/rex-animation/rex_styled.glb --output build/rex-animation/rex_armed.glb && test -s build/rex-animation/rex_armed.glb
       - name: Build deterministic Rex actions
         run: blender -b --factory-startup --python-exit-code 1 --python tools/blender/build_rex_actions.py -- --input build/rex-animation/rex_armed.glb --output build/rex-animation/rex_animated.blend
+      - name: Validate weapon visibility
+        run: blender -b build/rex-animation/rex_animated.blend --python-exit-code 1 --python tools/blender/validate_rex_weapon_visibility.py -- --report build/rex-animation/weapon-visibility-report.json --size 512
       - name: Render 8-direction masters
         run: blender -b build/rex-animation/rex_animated.blend --python-exit-code 1 --python tools/blender/render_actor_8dir.py -- --actor rex --output build/rex-animation/rendered --size 512 && test "$(find build/rex-animation/rendered -type f -name '*.png' | wc -l)" -eq 232
       - name: Normalize to 96px and run sprite QA
@@ -70,9 +73,9 @@ jobs:
           python3 - <<'PY'
           import hashlib,json
           from pathlib import Path
-          root=Path('build/rex-animation/normalized96'); files=sorted(root.rglob('*.png')); qa=json.loads(Path('build/rex-animation/sprite-qa-report.json').read_text())
-          p={'actor':'rex','stage':'armed-styled-phone-scale-animation-smoke','production_ready':False,'frame_count':len(files),'expected_frame_count':232,'render_size':[96,96],'qa_pass':qa['pass'],'palette':'navy-black-cyan-orange','weapon':'separate-procedural-rifle-v1','files':[{'path':str(f.relative_to(root)),'sha256':hashlib.sha256(f.read_bytes()).hexdigest()} for f in files]}
-          Path('build/rex-animation/render-manifest.json').write_text(json.dumps(p,indent=2)+'\n'); assert len(files)==232 and qa['pass']
+          root=Path('build/rex-animation/normalized96'); files=sorted(root.rglob('*.png')); qa=json.loads(Path('build/rex-animation/sprite-qa-report.json').read_text()); weapon=json.loads(Path('build/rex-animation/weapon-visibility-report.json').read_text())
+          p={'actor':'rex','stage':'armed-styled-phone-scale-animation-smoke','production_ready':False,'frame_count':len(files),'expected_frame_count':232,'render_size':[96,96],'qa_pass':qa['pass'],'weapon_visibility_pass':weapon['pass'],'palette':'navy-black-cyan-orange','weapon':'separate-procedural-rifle-v2','files':[{'path':str(f.relative_to(root)),'sha256':hashlib.sha256(f.read_bytes()).hexdigest()} for f in files]}
+          Path('build/rex-animation/render-manifest.json').write_text(json.dumps(p,indent=2)+'\n'); assert len(files)==232 and qa['pass'] and weapon['pass']
           PY
       - name: Upload animation smoke artifacts
         uses: actions/upload-artifact@v4
@@ -82,6 +85,7 @@ jobs:
             build/rex-animation/rex_armed.glb
             build/rex-animation/rex_animated.blend
             build/rex-animation/weight-repair-report.json
+            build/rex-animation/weapon-visibility-report.json
             build/rex-animation/sprite-qa-report.json
             build/rex-animation/render-manifest.json
             build/rex-animation/rex-phone-contact-sheet.png
