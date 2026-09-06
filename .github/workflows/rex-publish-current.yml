@@ -1,0 +1,142 @@
+name: Publish Validated Rex
+
+on:
+  workflow_dispatch:
+    inputs:
+      animation_run_id:
+        description: "Successful Rex Animation Smoke run ID (defaults to latest successful)"
+        required: false
+        default: ""
+  push:
+    paths:
+      - ".github/workflows/rex-publish-current.yml"
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Deadline Zero
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve validated animation run
+        id: source
+        shell: bash
+        env:
+          INPUT_RUN_ID: ${{ github.event.inputs.animation_run_id || '' }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          run_id="$INPUT_RUN_ID"
+          if [ -z "$run_id" ]; then
+            response="$(curl --fail --silent --show-error --location \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/rex-animation-smoke.yml/runs?status=success&per_page=1")"
+            run_id="$(printf '%s' "$response" | python3 -c 'import json,sys; r=json.load(sys.stdin).get("workflow_runs",[]); print(r[0]["id"] if r else "")')"
+          fi
+          test -n "$run_id"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+
+      - name: Download validated Rex artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ steps.source.outputs.run_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: rex-artifact
+
+      - name: Locate and verify sprite source
+        id: sprites
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$(find rex-artifact -type d -name normalized96 -print -quit)"
+          manifest="$(find rex-artifact -type f -name render-manifest.json -print -quit)"
+          qa="$(find rex-artifact -type f -name sprite-qa-report.json -print -quit)"
+          test -n "$root" -a -n "$manifest" -a -n "$qa"
+          python3 - "$manifest" "$qa" <<'PY'
+          import json,sys
+          manifest=json.load(open(sys.argv[1])); qa=json.load(open(sys.argv[2]))
+          assert manifest.get('frame_count') == 232
+          assert manifest.get('qa_pass') is True
+          assert manifest.get('weapon_visibility_pass') is True
+          assert qa.get('pass') is True and qa.get('frame_count') == 232
+          PY
+          echo "root=$root" >> "$GITHUB_OUTPUT"
+          echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+
+      - name: Install atlas tooling
+        run: sudo apt-get update && sudo apt-get install -y python3-pil
+
+      - name: Build production Rex atlas
+        env:
+          SPRITE_ROOT: ${{ steps.sprites.outputs.root }}
+          SOURCE_MANIFEST: ${{ steps.sprites.outputs.manifest }}
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          from PIL import Image
+
+          root=Path(os.environ['SPRITE_ROOT'])
+          dirs=['n','ne','e','se','s','sw','w','nw']
+          anims=[('idle',4),('run',8),('attack',6),('hit',3),('death',8)]
+          cell=96; cols=sum(c for _,c in anims)
+          sheet=Image.new('RGBA',(cols*cell,len(dirs)*cell),(0,0,0,0))
+          entries=[]
+          for row,d in enumerate(dirs):
+              col=0
+              for anim,count in anims:
+                  for i in range(count):
+                      p=root/anim/d/f'{anim}_{i:02d}.png'
+                      if not p.exists(): raise RuntimeError(f'missing {p}')
+                      im=Image.open(p).convert('RGBA')
+                      if im.size != (cell,cell): raise RuntimeError(f'bad cell size {p}: {im.size}')
+                      x=col*cell; y=row*cell
+                      sheet.alpha_composite(im,(x,y))
+                      entries.append((f'survivor/rex/{d}/{anim}',i,x,y))
+                      col+=1
+          if len(entries) != 232: raise RuntimeError(f'expected 232 entries, got {len(entries)}')
+
+          out=Path('assets/art'); out.mkdir(parents=True,exist_ok=True)
+          png=out/'rex.png'; sheet.save(png,optimize=True)
+          lines=['rex.png',f'size: {sheet.width}, {sheet.height}','format: RGBA8888','filter: Linear,Linear','repeat: none']
+          for name,index,x,y in entries:
+              lines += [name,'  rotate: false',f'  xy: {x}, {y}',f'  size: {cell}, {cell}',f'  orig: {cell}, {cell}','  offset: 0, 0',f'  index: {index}']
+          (out/'game.atlas').write_text('\n'.join(lines)+'\n')
+
+          source=json.load(open(os.environ['SOURCE_MANIFEST']))
+          meta={
+              'actor':'rex','published_from_run':int(os.environ['SOURCE_RUN_ID']),
+              'frame_count':232,'cell':[96,96],'sheet':[sheet.width,sheet.height],
+              'layout':'8 directions x 29 frames','directions':dirs,
+              'animations':dict(anims),'attack_motion':source.get('attack_motion'),
+              'weapon':source.get('weapon'),'palette':source.get('palette'),
+              'png_sha256':hashlib.sha256(png.read_bytes()).hexdigest(),
+              'source_production_ready':source.get('production_ready',False)
+          }
+          (out/'rex-manifest.json').write_text(json.dumps(meta,indent=2)+'\n')
+          print(json.dumps(meta,indent=2))
+          PY
+
+      - name: Commit Rex atlas to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/art/rex.png assets/art/game.atlas assets/art/rex-manifest.json
+          if git diff --cached --quiet; then
+            echo "Atlas already current"
+            exit 0
+          fi
+          git commit -m "Publish validated Rex production atlas"
+          git push origin HEAD:main
