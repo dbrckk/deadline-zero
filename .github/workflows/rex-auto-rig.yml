@@ -23,6 +23,10 @@ on:
     paths:
       - "art_sources/rex/master/rex_source.glb"
       - "art_sources/rex/master/source-url.txt"
+      - "art_sources/rex/master/proxy_parts/**"
+      - "art_sources/rex/master/proxy-manifest.json"
+      - ".github/workflows/rex-auto-rig.yml"
+      - "tools/blender/validate_rig.py"
 
 permissions:
   contents: read
@@ -35,7 +39,8 @@ jobs:
       SOURCE_PATH: ${{ github.event.inputs.source_path || 'art_sources/rex/master/rex_source.glb' }}
       SOURCE_URL_INPUT: ${{ github.event.inputs.source_url || '' }}
       RIG_METHOD: ${{ github.event.inputs.method || 'make-it-animatable' }}
-      EXPECTED_SHA256: 43c2bffdcbcbacd59327bef34b2a71ef2afbebbe5d032ecfadedbd109f717d17
+      HD_SHA256: 43c2bffdcbcbacd59327bef34b2a71ef2afbebbe5d032ecfadedbd109f717d17
+      PROXY_SHA256: 1672041817d8c85da094436a1b21087adf4f19d12e672f20987fa5a9770695ac
 
     steps:
       - name: Checkout Deadline Zero
@@ -45,43 +50,64 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          resolved="$SOURCE_PATH"
+          resolved=""
+          expected=""
+          kind=""
 
-          if [ ! -s "$resolved" ]; then
+          if [ -s "$SOURCE_PATH" ]; then
+            resolved="$SOURCE_PATH"
+            expected="$HD_SHA256"
+            kind="hd"
+          else
             url="$SOURCE_URL_INPUT"
             if [ -z "$url" ] && [ -s art_sources/rex/master/source-url.txt ]; then
               url="$(tr -d '\r\n' < art_sources/rex/master/source-url.txt)"
             fi
-            if [ -z "$url" ]; then
-              echo "::error::No Rex GLB found and no source URL configured"
+
+            if [ -n "$url" ]; then
+              case "$url" in
+                https://*) ;;
+                *) echo "::error::Rex source URL must use HTTPS"; exit 2 ;;
+              esac
+              mkdir -p build/rex-source
+              resolved="build/rex-source/rex_source.glb"
+              curl --fail --location --retry 3 --retry-delay 2 --max-time 180 \
+                --output "$resolved" "$url"
+              expected="$HD_SHA256"
+              kind="hd-url"
+            elif compgen -G 'art_sources/rex/master/proxy_parts/part*.b64' > /dev/null; then
+              mkdir -p build/rex-source
+              cat art_sources/rex/master/proxy_parts/part*.b64 > build/rex-source/rex_proxy.glb.xz.b64
+              base64 --decode build/rex-source/rex_proxy.glb.xz.b64 > build/rex-source/rex_proxy.glb.xz
+              xz --decompress --stdout build/rex-source/rex_proxy.glb.xz > build/rex-source/rex_proxy.glb
+              resolved="build/rex-source/rex_proxy.glb"
+              expected="$PROXY_SHA256"
+              kind="proxy"
+            else
+              echo "::error::No Rex HD source, URL, or embedded proxy is available"
               exit 2
             fi
-            case "$url" in
-              https://*) ;;
-              *) echo "::error::Rex source URL must use HTTPS"; exit 2 ;;
-            esac
-            mkdir -p build/rex-source
-            resolved="build/rex-source/rex_source.glb"
-            curl --fail --location --retry 3 --retry-delay 2 --max-time 180 \
-              --output "$resolved" "$url"
           fi
 
           test -s "$resolved"
           actual="$(sha256sum "$resolved" | awk '{print $1}')"
-          if [ "$actual" != "$EXPECTED_SHA256" ]; then
-            echo "::error::Rex source SHA-256 mismatch: $actual"
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::Rex source SHA-256 mismatch: expected $expected, got $actual"
             exit 3
           fi
+
           echo "REX_SOURCE=$resolved" >> "$GITHUB_ENV"
+          echo "REX_SOURCE_KIND=$kind" >> "$GITHUB_ENV"
           sha256sum "$resolved" | tee rex-source.sha256
           file "$resolved"
+          echo "Resolved Rex source kind: $kind"
 
       - name: Install Blender
         shell: bash
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y blender libgl1 libegl1
+          sudo apt-get install -y blender libgl1 libegl1 xz-utils
           blender --version | head -n 2
 
       - name: Set up Python
@@ -136,8 +162,15 @@ jobs:
         if: always()
         shell: bash
         run: |
+          echo "## Rex auto-rig" >> "$GITHUB_STEP_SUMMARY"
+          echo "Source kind: ${REX_SOURCE_KIND:-unresolved}" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f rex-source.sha256 ]; then
+            echo '```text' >> "$GITHUB_STEP_SUMMARY"
+            cat rex-source.sha256 >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
           if [ -f build/rex-autorig/validation/rig-report.json ]; then
-            echo '## Rex auto-rig report' >> "$GITHUB_STEP_SUMMARY"
+            echo '### Structural validation' >> "$GITHUB_STEP_SUMMARY"
             echo '```json' >> "$GITHUB_STEP_SUMMARY"
             cat build/rex-autorig/validation/rig-report.json >> "$GITHUB_STEP_SUMMARY"
             echo '```' >> "$GITHUB_STEP_SUMMARY"
@@ -150,6 +183,7 @@ jobs:
           name: rex-auto-rig-${{ github.run_number }}
           path: |
             rex-source.sha256
+            build/rex-source/
             build/rex-autorig/
           if-no-files-found: warn
           retention-days: 30
