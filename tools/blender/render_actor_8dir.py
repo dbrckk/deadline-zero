@@ -45,15 +45,16 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--size", type=int, default=512)
     p.add_argument("--camera-distance", type=float, default=7.0)
-    p.add_argument("--camera-height", type=float, default=4.5)
-    p.add_argument("--ortho-scale", type=float, default=5.0)
+    p.add_argument("--camera-height", type=float, default=4.2)
+    p.add_argument("--ortho-scale", type=float, default=2.8)
+    p.add_argument("--target-height", type=float, default=0.95)
     return p.parse_args(argv)
 
 
 def find_armature():
     arms = [o for o in bpy.context.scene.objects if o.type == "ARMATURE"]
-    if not arms:
-        raise RuntimeError("No armature found in scene")
+    if len(arms) != 1:
+        raise RuntimeError(f"Expected exactly one armature, found {len(arms)}")
     return arms[0]
 
 
@@ -74,9 +75,19 @@ def look_at(obj, point: Vector):
     obj.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
 
 
+def select_eevee(scene) -> str:
+    for engine in ("BLENDER_EEVEE_NEXT", "BLENDER_EEVEE"):
+        try:
+            scene.render.engine = engine
+            return engine
+        except TypeError:
+            continue
+    raise RuntimeError("No supported Eevee render engine found")
+
+
 def configure_scene(args: argparse.Namespace):
     scene = bpy.context.scene
-    scene.render.engine = "BLENDER_EEVEE_NEXT"
+    engine = select_eevee(scene)
     scene.render.resolution_x = args.size
     scene.render.resolution_y = args.size
     scene.render.resolution_percentage = 100
@@ -84,8 +95,37 @@ def configure_scene(args: argparse.Namespace):
     scene.render.image_settings.color_mode = "RGBA"
     scene.render.film_transparent = True
     scene.render.image_settings.color_depth = "8"
-    scene.render.resolution_percentage = 100
-    scene.view_settings.look = "AgX - Medium High Contrast"
+    try:
+        scene.view_settings.look = "AgX - Medium High Contrast"
+    except TypeError:
+        pass
+    return engine
+
+
+def ensure_preview_material_and_lights(armature):
+    meshes = [
+        o for o in bpy.context.scene.objects
+        if o.type == "MESH" and any(m.type == "ARMATURE" and m.object == armature for m in o.modifiers)
+    ]
+    fallback = bpy.data.materials.get("DZ_RexPreview") or bpy.data.materials.new("DZ_RexPreview")
+    fallback.diffuse_color = (0.12, 0.16, 0.22, 1.0)
+    for obj in meshes:
+        if not obj.data.materials:
+            obj.data.materials.append(fallback)
+    if any(o.type == "LIGHT" for o in bpy.context.scene.objects):
+        return
+    for name, location, energy, size in (
+        ("DZ_Key", (3.0, -4.0, 5.5), 950.0, 4.0),
+        ("DZ_Fill", (-4.0, -1.0, 3.2), 500.0, 5.0),
+        ("DZ_Rim", (1.0, 4.0, 4.5), 750.0, 3.0),
+    ):
+        data = bpy.data.lights.new(name, "AREA")
+        data.energy = energy
+        data.size = size
+        obj = bpy.data.objects.new(name, data)
+        bpy.context.collection.objects.link(obj)
+        obj.location = Vector(location)
+        look_at(obj, Vector((0.0, 0.0, 0.95)))
 
 
 def set_action(armature, action_name: str):
@@ -112,14 +152,16 @@ def sample_frames(action, wanted: int) -> list[int]:
 
 def main():
     args = parse_args()
-    configure_scene(args)
+    engine = configure_scene(args)
     armature = find_armature()
+    ensure_preview_material_and_lights(armature)
     cam = ensure_camera(args)
     root = args.output.resolve()
     root.mkdir(parents=True, exist_ok=True)
 
-    target = Vector((0.0, 0.0, 1.25))
+    target = Vector((0.0, 0.0, args.target_height))
     scene = bpy.context.scene
+    rendered = 0
 
     for direction, degrees in DIRECTIONS:
         radians = math.radians(degrees)
@@ -139,8 +181,11 @@ def main():
                 scene.frame_set(frame)
                 scene.render.filepath = str(out_dir / f"{animation}_{index:02d}.png")
                 bpy.ops.render.render(write_still=True)
+                rendered += 1
 
-    print(f"Rendered {args.actor} to {root}")
+    if rendered != 232:
+        raise RuntimeError(f"Sprite contract requires 232 frames, rendered {rendered}")
+    print(f"Rendered {rendered} {args.actor} frames to {root} using {engine}")
 
 
 if __name__ == "__main__":
