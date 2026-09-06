@@ -66,9 +66,20 @@ def add_area(name: str, location: Vector, energy: float, size: float, target: Ve
     look_at(obj, target)
 
 
-def render_previews(meshes, output: Path, size: int) -> list[str]:
+def select_eevee_engine(scene) -> str:
+    """Select the Eevee identifier supported by the installed Blender version."""
+    for engine in ("BLENDER_EEVEE_NEXT", "BLENDER_EEVEE"):
+        try:
+            scene.render.engine = engine
+            return engine
+        except TypeError:
+            continue
+    raise RuntimeError("No supported Eevee render engine found")
+
+
+def render_previews(meshes, output: Path, size: int) -> tuple[list[str], str]:
     scene = bpy.context.scene
-    scene.render.engine = "BLENDER_EEVEE_NEXT"
+    engine = select_eevee_engine(scene)
     scene.render.resolution_x = size
     scene.render.resolution_y = size
     scene.render.resolution_percentage = 100
@@ -103,7 +114,7 @@ def render_previews(meshes, output: Path, size: int) -> list[str]:
         scene.render.filepath = str(path.resolve())
         bpy.ops.render.render(write_still=True)
         results.append(str(path))
-    return results
+    return results, engine
 
 
 def main() -> None:
@@ -141,7 +152,7 @@ def main() -> None:
     ratio = weighted_vertices / total_vertices if total_vertices else 0.0
     mins, maxs = world_bounds(meshes)
     ensure_material(meshes)
-    previews = render_previews(meshes, args.output, args.size)
+    previews, render_engine = render_previews(meshes, args.output, args.size)
 
     report = {
         "input": str(args.input),
@@ -158,6 +169,7 @@ def main() -> None:
         "bounds_min": [round(v, 6) for v in mins],
         "bounds_max": [round(v, 6) for v in maxs],
         "dimensions": [round(maxs[i] - mins[i], 6) for i in range(3)],
+        "render_engine": render_engine,
         "preview_files": previews,
         "pass": len(bones) >= 20 and ratio >= 0.95 and modifier_meshes >= 1,
     }
