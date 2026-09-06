@@ -17,12 +17,11 @@ on:
       - "tools/blender/render_actor_8dir.py"
       - "tools/blender/repair_rex_weights.py"
       - "tools/blender/style_rex_materials.py"
+      - "tools/blender/add_rex_rifle.py"
       - "tools/sprites/normalize_rex_frames.py"
-
 permissions:
   actions: read
   contents: read
-
 jobs:
   animate:
     if: >-
@@ -40,13 +39,9 @@ jobs:
           TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || '' }}
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          set -euo pipefail
-          run_id="$INPUT_RUN_ID"; [ -n "$run_id" ] || run_id="$TRIGGER_RUN_ID"
-          if [ -z "$run_id" ]; then
-            response="$(curl --fail --silent --show-error --location -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/rex-auto-rig.yml/runs?status=success&per_page=1")"
-            run_id="$(printf '%s' "$response" | python3 -c 'import json,sys; r=json.load(sys.stdin).get("workflow_runs",[]); print(r[0]["id"] if r else "")')"
-          fi
-          test -n "$run_id" || exit 2; echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          set -euo pipefail; run_id="$INPUT_RUN_ID"; [ -n "$run_id" ] || run_id="$TRIGGER_RUN_ID"
+          if [ -z "$run_id" ]; then response="$(curl --fail --silent --show-error --location -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/rex-auto-rig.yml/runs?status=success&per_page=1")"; run_id="$(printf '%s' "$response" | python3 -c 'import json,sys; r=json.load(sys.stdin).get("workflow_runs",[]); print(r[0]["id"] if r else "")')"; fi
+          test -n "$run_id"; echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
       - name: Download rig artifact
         uses: actions/download-artifact@v4
         with:
@@ -55,36 +50,28 @@ jobs:
           repository: ${{ github.repository }}
           path: rig-artifact
       - name: Locate rigged Rex
-        shell: bash
-        run: |
-          set -euo pipefail; rig="$(find rig-artifact -type f -name rex_rigged.glb -print -quit)"; test -n "$rig"; echo "REX_RIG=$rig" >> "$GITHUB_ENV"
+        run: rig="$(find rig-artifact -type f -name rex_rigged.glb -print -quit)"; test -n "$rig"; echo "REX_RIG=$rig" >> "$GITHUB_ENV"
       - name: Install Blender runtime
         run: sudo apt-get update && sudo apt-get install -y blender libgl1 libegl1 python3-numpy python3-pil
       - name: Repair Rex skin weights
-        run: |
-          mkdir -p build/rex-animation
-          blender -b --factory-startup --python-exit-code 1 --python tools/blender/repair_rex_weights.py -- --input "$REX_RIG" --output build/rex-animation/rex_repaired.glb --report build/rex-animation/weight-repair-report.json
+        run: mkdir -p build/rex-animation && blender -b --factory-startup --python-exit-code 1 --python tools/blender/repair_rex_weights.py -- --input "$REX_RIG" --output build/rex-animation/rex_repaired.glb --report build/rex-animation/weight-repair-report.json
       - name: Apply Rex premium palette
-        run: |
-          blender -b --factory-startup --python-exit-code 1 --python tools/blender/style_rex_materials.py -- --input build/rex-animation/rex_repaired.glb --output build/rex-animation/rex_styled.glb
-          test -s build/rex-animation/rex_styled.glb
+        run: blender -b --factory-startup --python-exit-code 1 --python tools/blender/style_rex_materials.py -- --input build/rex-animation/rex_repaired.glb --output build/rex-animation/rex_styled.glb
+      - name: Attach separate Rex rifle
+        run: blender -b --factory-startup --python-exit-code 1 --python tools/blender/add_rex_rifle.py -- --input build/rex-animation/rex_styled.glb --output build/rex-animation/rex_armed.glb && test -s build/rex-animation/rex_armed.glb
       - name: Build deterministic Rex actions
-        run: |
-          blender -b --factory-startup --python-exit-code 1 --python tools/blender/build_rex_actions.py -- --input build/rex-animation/rex_styled.glb --output build/rex-animation/rex_animated.blend
+        run: blender -b --factory-startup --python-exit-code 1 --python tools/blender/build_rex_actions.py -- --input build/rex-animation/rex_armed.glb --output build/rex-animation/rex_animated.blend
       - name: Render 8-direction masters
-        run: |
-          blender -b build/rex-animation/rex_animated.blend --python-exit-code 1 --python tools/blender/render_actor_8dir.py -- --actor rex --output build/rex-animation/rendered --size 512
-          test "$(find build/rex-animation/rendered -type f -name '*.png' | wc -l)" -eq 232
+        run: blender -b build/rex-animation/rex_animated.blend --python-exit-code 1 --python tools/blender/render_actor_8dir.py -- --actor rex --output build/rex-animation/rendered --size 512 && test "$(find build/rex-animation/rendered -type f -name '*.png' | wc -l)" -eq 232
       - name: Normalize to 96px and run sprite QA
-        run: |
-          python3 tools/sprites/normalize_rex_frames.py --input build/rex-animation/rendered --output build/rex-animation/normalized96 --report build/rex-animation/sprite-qa-report.json --contact-sheet build/rex-animation/rex-phone-contact-sheet.png
+        run: python3 tools/sprites/normalize_rex_frames.py --input build/rex-animation/rendered --output build/rex-animation/normalized96 --report build/rex-animation/sprite-qa-report.json --contact-sheet build/rex-animation/rex-phone-contact-sheet.png
       - name: Build render manifest
         run: |
           python3 - <<'PY'
           import hashlib,json
           from pathlib import Path
           root=Path('build/rex-animation/normalized96'); files=sorted(root.rglob('*.png')); qa=json.loads(Path('build/rex-animation/sprite-qa-report.json').read_text())
-          p={'actor':'rex','stage':'styled-phone-scale-animation-smoke','production_ready':False,'frame_count':len(files),'expected_frame_count':232,'render_size':[96,96],'qa_pass':qa['pass'],'palette':'navy-black-cyan-orange','files':[{'path':str(f.relative_to(root)),'sha256':hashlib.sha256(f.read_bytes()).hexdigest()} for f in files]}
+          p={'actor':'rex','stage':'armed-styled-phone-scale-animation-smoke','production_ready':False,'frame_count':len(files),'expected_frame_count':232,'render_size':[96,96],'qa_pass':qa['pass'],'palette':'navy-black-cyan-orange','weapon':'separate-procedural-rifle-v1','files':[{'path':str(f.relative_to(root)),'sha256':hashlib.sha256(f.read_bytes()).hexdigest()} for f in files]}
           Path('build/rex-animation/render-manifest.json').write_text(json.dumps(p,indent=2)+'\n'); assert len(files)==232 and qa['pass']
           PY
       - name: Upload animation smoke artifacts
@@ -92,7 +79,7 @@ jobs:
         with:
           name: rex-animation-smoke-${{ github.run_number }}
           path: |
-            build/rex-animation/rex_styled.glb
+            build/rex-animation/rex_armed.glb
             build/rex-animation/rex_animated.blend
             build/rex-animation/weight-repair-report.json
             build/rex-animation/sprite-qa-report.json
