@@ -67,7 +67,6 @@ def add_area(name: str, location: Vector, energy: float, size: float, target: Ve
 
 
 def select_eevee_engine(scene) -> str:
-    """Select the Eevee identifier supported by the installed Blender version."""
     for engine in ("BLENDER_EEVEE_NEXT", "BLENDER_EEVEE"):
         try:
             scene.render.engine = engine
@@ -123,27 +122,34 @@ def main() -> None:
     reset_scene()
     import_asset(args.input)
 
-    meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    all_meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
     armatures = [o for o in bpy.context.scene.objects if o.type == "ARMATURE"]
-    if not meshes:
+    if not all_meshes:
         raise RuntimeError("Rig validation failed: no mesh objects found")
     if len(armatures) != 1:
         raise RuntimeError(f"Rig validation failed: expected 1 armature, found {len(armatures)}")
 
     armature = armatures[0]
+    # GLTF import may create editor-only custom-shape meshes for bones. They are
+    # not Rex geometry. Validate and render only meshes actually deformed by the
+    # single imported armature.
+    meshes = [
+        obj for obj in all_meshes
+        if any(mod.type == "ARMATURE" and mod.object == armature for mod in obj.modifiers)
+    ]
+    if not meshes:
+        raise RuntimeError("Rig validation failed: no mesh is deformed by the armature")
+
     bones = list(armature.data.bones)
     triangles = 0
     total_vertices = 0
     weighted_vertices = 0
-    modifier_meshes = 0
     vertex_groups = 0
 
     for obj in meshes:
         obj.data.calc_loop_triangles()
         triangles += len(obj.data.loop_triangles)
         vertex_groups += len(obj.vertex_groups)
-        if any(m.type == "ARMATURE" and m.object == armature for m in obj.modifiers):
-            modifier_meshes += 1
         for vertex in obj.data.vertices:
             total_vertices += 1
             if any(group.weight > 1e-6 for group in vertex.groups):
@@ -156,14 +162,16 @@ def main() -> None:
 
     report = {
         "input": str(args.input),
-        "mesh_objects": len(meshes),
+        "scene_mesh_objects": len(all_meshes),
+        "deforming_mesh_objects": len(meshes),
+        "ignored_helper_meshes": [obj.name for obj in all_meshes if obj not in meshes],
         "armatures": len(armatures),
         "bones": len(bones),
         "bone_names": [b.name for b in bones],
         "vertices": total_vertices,
         "triangles": triangles,
         "vertex_groups": vertex_groups,
-        "armature_modifier_meshes": modifier_meshes,
+        "armature_modifier_meshes": len(meshes),
         "weighted_vertices": weighted_vertices,
         "weighted_vertex_ratio": round(ratio, 6),
         "bounds_min": [round(v, 6) for v in mins],
@@ -171,7 +179,7 @@ def main() -> None:
         "dimensions": [round(maxs[i] - mins[i], 6) for i in range(3)],
         "render_engine": render_engine,
         "preview_files": previews,
-        "pass": len(bones) >= 20 and ratio >= 0.95 and modifier_meshes >= 1,
+        "pass": len(bones) >= 20 and ratio >= 0.95 and len(meshes) >= 1,
     }
     report_path = args.output / "rig-report.json"
     report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
