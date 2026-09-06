@@ -15,6 +15,7 @@ on:
       - ".github/workflows/rex-animation-smoke.yml"
       - "tools/blender/build_rex_actions.py"
       - "tools/blender/render_actor_8dir.py"
+      - "tools/blender/repair_rex_weights.py"
 
 permissions:
   actions: read
@@ -92,14 +93,27 @@ jobs:
           blender --version | head -n 2
           blender -b --factory-startup --python-expr "import numpy as np; print('Blender NumPy', np.__version__)"
 
-      - name: Build deterministic Rex actions
+      - name: Repair Rex skin weights
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p build/rex-animation
           blender --background --factory-startup --python-exit-code 1 \
-            --python tools/blender/build_rex_actions.py -- \
+            --python tools/blender/repair_rex_weights.py -- \
             --input "$REX_RIG" \
+            --output build/rex-animation/rex_repaired.glb \
+            --report build/rex-animation/weight-repair-report.json
+          test -s build/rex-animation/rex_repaired.glb
+          test -s build/rex-animation/weight-repair-report.json
+          cat build/rex-animation/weight-repair-report.json
+
+      - name: Build deterministic Rex actions
+        shell: bash
+        run: |
+          set -euo pipefail
+          blender --background --factory-startup --python-exit-code 1 \
+            --python tools/blender/build_rex_actions.py -- \
+            --input build/rex-animation/rex_repaired.glb \
             --output build/rex-animation/rex_animated.blend
           test -s build/rex-animation/rex_animated.blend
 
@@ -135,6 +149,7 @@ jobs:
               'frame_count': len(files),
               'expected_frame_count': 232,
               'render_size': [256, 256],
+              'weight_repair': 'weight-repair-report.json',
               'files': [
                   {
                       'path': str(p.relative_to(root)),
@@ -155,7 +170,9 @@ jobs:
         with:
           name: rex-animation-smoke-${{ github.run_number }}
           path: |
+            build/rex-animation/rex_repaired.glb
             build/rex-animation/rex_animated.blend
+            build/rex-animation/weight-repair-report.json
             build/rex-animation/render-manifest.json
             build/rex-animation/rendered/
           if-no-files-found: error
