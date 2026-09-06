@@ -16,6 +16,7 @@ on:
       - "tools/blender/build_rex_actions.py"
       - "tools/blender/render_actor_8dir.py"
       - "tools/blender/repair_rex_weights.py"
+      - "tools/sprites/normalize_rex_frames.py"
 
 permissions:
   actions: read
@@ -45,22 +46,12 @@ jobs:
         run: |
           set -euo pipefail
           run_id="$INPUT_RUN_ID"
+          if [ -z "$run_id" ]; then run_id="$TRIGGER_RUN_ID"; fi
           if [ -z "$run_id" ]; then
-            run_id="$TRIGGER_RUN_ID"
-          fi
-          if [ -z "$run_id" ]; then
-            response="$(curl --fail --silent --show-error --location \
-              -H "Authorization: Bearer $GITHUB_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/rex-auto-rig.yml/runs?status=success&per_page=1")"
+            response="$(curl --fail --silent --show-error --location -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/rex-auto-rig.yml/runs?status=success&per_page=1")"
             run_id="$(printf '%s' "$response" | python3 -c 'import json,sys; runs=json.load(sys.stdin).get("workflow_runs", []); print(runs[0]["id"] if runs else "")')"
           fi
-          if [ -z "$run_id" ]; then
-            echo "::error::No successful Rex Auto-Rig run is available"
-            exit 2
-          fi
-          echo "Resolved Rex Auto-Rig run: $run_id"
+          test -n "$run_id" || { echo "::error::No successful Rex Auto-Rig run is available"; exit 2; }
           echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
 
       - name: Download rig artifact
@@ -76,11 +67,7 @@ jobs:
         run: |
           set -euo pipefail
           rig="$(find rig-artifact -type f -name rex_rigged.glb -print -quit)"
-          if [ -z "$rig" ]; then
-            echo "::error::Downloaded artifact contains no rex_rigged.glb"
-            find rig-artifact -maxdepth 5 -type f -print || true
-            exit 3
-          fi
+          test -n "$rig" || { echo "::error::Downloaded artifact contains no rex_rigged.glb"; exit 3; }
           echo "REX_RIG=$rig" >> "$GITHUB_ENV"
           sha256sum "$rig"
 
@@ -89,80 +76,54 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y blender libgl1 libegl1 python3-numpy
+          sudo apt-get install -y blender libgl1 libegl1 python3-numpy python3-pil
           blender --version | head -n 2
-          blender -b --factory-startup --python-expr "import numpy as np; print('Blender NumPy', np.__version__)"
 
       - name: Repair Rex skin weights
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p build/rex-animation
-          blender --background --factory-startup --python-exit-code 1 \
-            --python tools/blender/repair_rex_weights.py -- \
-            --input "$REX_RIG" \
-            --output build/rex-animation/rex_repaired.glb \
-            --report build/rex-animation/weight-repair-report.json
+          blender --background --factory-startup --python-exit-code 1 --python tools/blender/repair_rex_weights.py -- --input "$REX_RIG" --output build/rex-animation/rex_repaired.glb --report build/rex-animation/weight-repair-report.json
           test -s build/rex-animation/rex_repaired.glb
           test -s build/rex-animation/weight-repair-report.json
-          cat build/rex-animation/weight-repair-report.json
 
       - name: Build deterministic Rex actions
         shell: bash
         run: |
           set -euo pipefail
-          blender --background --factory-startup --python-exit-code 1 \
-            --python tools/blender/build_rex_actions.py -- \
-            --input build/rex-animation/rex_repaired.glb \
-            --output build/rex-animation/rex_animated.blend
+          blender --background --factory-startup --python-exit-code 1 --python tools/blender/build_rex_actions.py -- --input build/rex-animation/rex_repaired.glb --output build/rex-animation/rex_animated.blend
           test -s build/rex-animation/rex_animated.blend
 
-      - name: Render 8-direction animation smoke
+      - name: Render 8-direction masters
         shell: bash
         run: |
           set -euo pipefail
-          blender --background build/rex-animation/rex_animated.blend \
-            --python-exit-code 1 \
-            --python tools/blender/render_actor_8dir.py -- \
-            --actor rex \
-            --output build/rex-animation/rendered \
-            --size 256
+          blender --background build/rex-animation/rex_animated.blend --python-exit-code 1 --python tools/blender/render_actor_8dir.py -- --actor rex --output build/rex-animation/rendered --size 512
           count="$(find build/rex-animation/rendered -type f -name '*.png' | wc -l)"
           echo "Rendered PNG count: $count"
           test "$count" -eq 232
+
+      - name: Normalize to 96px and run sprite QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/sprites/normalize_rex_frames.py --input build/rex-animation/rendered --output build/rex-animation/normalized96 --report build/rex-animation/sprite-qa-report.json --contact-sheet build/rex-animation/rex-phone-contact-sheet.png
+          cat build/rex-animation/sprite-qa-report.json
 
       - name: Build render manifest
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import hashlib
-          import json
+          import hashlib, json
           from pathlib import Path
-
-          root = Path('build/rex-animation/rendered')
-          files = sorted(root.rglob('*.png'))
-          payload = {
-              'actor': 'rex',
-              'stage': 'procedural-animation-smoke',
-              'production_ready': False,
-              'frame_count': len(files),
-              'expected_frame_count': 232,
-              'render_size': [256, 256],
-              'weight_repair': 'weight-repair-report.json',
-              'files': [
-                  {
-                      'path': str(p.relative_to(root)),
-                      'sha256': hashlib.sha256(p.read_bytes()).hexdigest(),
-                  }
-                  for p in files
-              ],
-          }
-          Path('build/rex-animation/render-manifest.json').write_text(
-              json.dumps(payload, indent=2) + '\n', encoding='utf-8'
-          )
-          if len(files) != 232:
-              raise SystemExit('sprite frame contract failed')
+          root=Path('build/rex-animation/normalized96')
+          files=sorted(root.rglob('*.png'))
+          qa=json.loads(Path('build/rex-animation/sprite-qa-report.json').read_text())
+          payload={'actor':'rex','stage':'phone-scale-animation-smoke','production_ready':False,'frame_count':len(files),'expected_frame_count':232,'render_size':[96,96],'qa_pass':qa['pass'],'files':[{'path':str(p.relative_to(root)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in files]}
+          Path('build/rex-animation/render-manifest.json').write_text(json.dumps(payload,indent=2)+'\n')
+          if len(files)!=232 or not qa['pass']: raise SystemExit('sprite QA failed')
           PY
 
       - name: Upload animation smoke artifacts
@@ -173,7 +134,9 @@ jobs:
             build/rex-animation/rex_repaired.glb
             build/rex-animation/rex_animated.blend
             build/rex-animation/weight-repair-report.json
+            build/rex-animation/sprite-qa-report.json
             build/rex-animation/render-manifest.json
-            build/rex-animation/rendered/
+            build/rex-animation/rex-phone-contact-sheet.png
+            build/rex-animation/normalized96/
           if-no-files-found: error
           retention-days: 30
