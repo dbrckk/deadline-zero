@@ -171,22 +171,32 @@ def build_actions(arm) -> None:
         (24, run_a, {"Pelvis": (0, 0, 0.02)}),
     ])
 
-    # Attack QA: readable guarded strike without extreme shoulder elevation.
-    windup = {
-        "Spine3": (-3, 0, 6),
-        "L_Shoulder": (-10, 0, -7), "R_Shoulder": (-14, 0, 9),
-        "L_Elbow": (26, 0, 0), "R_Elbow": (34, 0, 0),
+    # Rifle attack: compact low-ready -> shoulder aim -> recoil -> recovery.
+    # Negative shoulder X raises the firing arm on this SMPL22 rest pose. The
+    # support arm follows without extreme cape-adjacent shoulder deformation.
+    ready = {
+        "Spine2": (1, 0, 0), "Spine3": (-1, 0, 2),
+        "L_Shoulder": (-8, 0, -6), "R_Shoulder": (-12, 0, 6),
+        "L_Elbow": (30, 0, 0), "R_Elbow": (28, 0, 0),
     }
-    strike = {
-        "Spine2": (3, 0, -3), "Spine3": (5, 0, -6),
-        "L_Shoulder": (18, 0, -4), "R_Shoulder": (28, 0, 7),
-        "L_Elbow": (18, 0, 0), "R_Elbow": (16, 0, 0),
+    aim = {
+        "Spine2": (-2, 0, 0), "Spine3": (-3, 0, 1),
+        "Neck": (1.5, 0, 0),
+        "L_Shoulder": (-24, 0, -8), "R_Shoulder": (-32, 0, 5),
+        "L_Elbow": (42, 0, 0), "R_Elbow": (18, 0, 0),
+    }
+    recoil = {
+        "Spine2": (1.5, 0, 0), "Spine3": (2.5, 0, 1),
+        "Neck": (-1.5, 0, 0),
+        "L_Shoulder": (-21, 0, -7), "R_Shoulder": (-27, 0, 5),
+        "L_Elbow": (39, 0, 0), "R_Elbow": (23, 0, 0),
     }
     make_action(arm, "attack", 18, [
-        (1, {}, {}),
-        (6, windup, {}),
-        (11, strike, {"Pelvis": (0, -0.025, 0)}),
-        (18, {}, {}),
+        (1, ready, {}),
+        (5, aim, {"Pelvis": (0, -0.012, 0)}),
+        (9, recoil, {"Pelvis": (0, 0.012, -0.006)}),
+        (12, aim, {"Pelvis": (0, -0.006, 0)}),
+        (18, ready, {}),
     ])
 
     # Hit: compact recoil.
