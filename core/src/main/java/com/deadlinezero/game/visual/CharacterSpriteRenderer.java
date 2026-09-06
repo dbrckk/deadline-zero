@@ -37,12 +37,12 @@ public final class CharacterSpriteRenderer {
     public void draw(SpriteBatch batch, Player player, Array<Enemy> enemies) {
         if (!art.authoredAvailable()) return;
         batch.begin();
-        drawPlayer(batch, player);
+        drawPlayer(batch, player, enemies);
         for (Enemy enemy : enemies) if (enemy.alive) drawEnemy(batch, enemy);
         batch.end();
     }
 
-    private void drawPlayer(SpriteBatch batch, Player player) {
+    private void drawPlayer(SpriteBatch batch, Player player, Array<Enemy> enemies) {
         var survivor = RunLoadoutContext.survivor();
         GameArt.Motion motion;
         if (!player.alive) motion = GameArt.Motion.DEATH;
@@ -51,7 +51,11 @@ public final class CharacterSpriteRenderer {
         else motion = player.velocity.len2() > .04f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;
 
         Clock clock = clock(player, motion);
-        clock.direction = Direction8.fromVector(player.velocity.x, player.velocity.y, clock.direction);
+        Enemy target = motion == GameArt.Motion.ATTACK ? nearestEnemy(player, enemies) : null;
+        float aimX = target == null ? 0f : target.position.x - player.position.x;
+        float aimY = target == null ? 0f : target.position.y - player.position.y;
+        clock.direction = resolvePlayerFacing(
+            player.velocity.x, player.velocity.y, aimX, aimY, motion == GameArt.Motion.ATTACK, clock.direction);
         ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.survivor(survivor);
         TextureRegion region = art.survivor(survivor, motion, clock.direction, clock.time);
         float h = profile.height();
@@ -77,6 +81,28 @@ public final class CharacterSpriteRenderer {
         batch.setColor(r, g, b, alpha);
         drawCentered(batch, region, player.position.x, player.position.y - profile.footOffset(), w * scale, h * scale);
         batch.setColor(1f, 1f, 1f, 1f);
+    }
+
+    static Direction8 resolvePlayerFacing(float moveX, float moveY, float aimX, float aimY,
+                                          boolean attacking, Direction8 fallback) {
+        if (attacking && aimX * aimX + aimY * aimY >= .0004f) {
+            return Direction8.fromVector(aimX, aimY, fallback);
+        }
+        return Direction8.fromVector(moveX, moveY, fallback);
+    }
+
+    private Enemy nearestEnemy(Player player, Array<Enemy> enemies) {
+        Enemy best = null;
+        float bestD2 = Float.MAX_VALUE;
+        for (Enemy enemy : enemies) {
+            if (!enemy.alive) continue;
+            float d2 = player.position.dst2(enemy.position);
+            if (d2 < bestD2) {
+                bestD2 = d2;
+                best = enemy;
+            }
+        }
+        return best;
     }
 
     private boolean playerAttackWindow(com.deadlinezero.game.meta.SurvivorCatalog.Survivor survivor) {
