@@ -59,7 +59,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-      - name: Smoke-test Android runtime on emulator
+      - name: Smoke-test Android runtime and capture gameplay
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
@@ -69,6 +69,13 @@ jobs:
           disable-animations: true
           script: |
             gradle :android:connectedDebugAndroidTest
+            mkdir -p build/android-visual-qa
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-attack.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-gameplay.png build/android-visual-qa/rex-gameplay.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-attack.png build/android-visual-qa/rex-attack.png
+            test -s build/android-visual-qa/rex-gameplay.png
+            test -s build/android-visual-qa/rex-attack.png
             gradle :android:installDebug :android:installDebugAndroidTest
             adb shell pm path com.deadlinezero.game | grep -q 'package:'
             adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.game | grep -q 'AndroidLauncher'
@@ -81,3 +88,10 @@ jobs:
             adb shell am force-stop com.deadlinezero.game
             test -z "$(adb shell pidof com.deadlinezero.game)"
             adb shell am instrument -w -e persistencePhase verify -e class com.deadlinezero.game.android.AndroidProcessPersistenceTest#verifyProfileAfterExternalProcessRestart com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | grep -q 'OK (1 test)'
+      - name: Upload Android gameplay visual QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-gameplay-visual-qa-${{ github.run_number }}
+          path: build/android-visual-qa/
+          if-no-files-found: error
+          retention-days: 14
