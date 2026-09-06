@@ -14,11 +14,11 @@ on:
       method:
         description: "Motius rigging backend"
         required: false
-        default: "make-it-animatable"
+        default: "template"
         type: choice
         options:
-          - make-it-animatable
           - template
+          - make-it-animatable
   push:
     paths:
       - "art_sources/rex/master/rex_source.glb"
@@ -38,7 +38,7 @@ jobs:
     env:
       SOURCE_PATH: ${{ github.event.inputs.source_path || 'art_sources/rex/master/rex_source.glb' }}
       SOURCE_URL_INPUT: ${{ github.event.inputs.source_url || '' }}
-      RIG_METHOD: ${{ github.event.inputs.method || 'make-it-animatable' }}
+      RIG_METHOD: ${{ github.event.inputs.method || 'template' }}
       HD_SHA256: 43c2bffdcbcbacd59327bef34b2a71ef2afbebbe5d032ecfadedbd109f717d17
       PROXY_SHA256: 1672041817d8c85da094436a1b21087adf4f19d12e672f20987fa5a9770695ac
 
@@ -102,13 +102,14 @@ jobs:
           file "$resolved"
           echo "Resolved Rex source kind: $kind"
 
-      - name: Install Blender
+      - name: Install Blender runtime
         shell: bash
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y blender libgl1 libegl1 xz-utils
+          sudo apt-get install -y blender libgl1 libegl1 xz-utils python3-numpy
           blender --version | head -n 2
+          blender -b --factory-startup --python-expr "import numpy as np; print('Blender NumPy', np.__version__)"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -119,7 +120,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git clone --depth 1 https://github.com/ZeyuLing/Motius.git .motius
+          GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/ZeyuLing/Motius.git .motius
           python -m pip install --upgrade pip
           python -m pip install -e ".motius[auto-rig]"
 
@@ -130,21 +131,10 @@ jobs:
           mkdir -p build/rex-autorig
           OUT="build/rex-autorig/rex_rigged.glb"
 
-          run_rig() {
-            python .motius/tools/auto_rig_character.py \
-              "$REX_SOURCE" "$OUT" \
-              --method "$1" \
-              --blender "$(command -v blender)"
-          }
-
-          if ! run_rig "$RIG_METHOD"; then
-            if [ "$RIG_METHOD" = "make-it-animatable" ]; then
-              echo "::warning::Make-It-Animatable backend failed; trying template fallback"
-              run_rig template
-            else
-              exit 1
-            fi
-          fi
+          python .motius/tools/auto_rig_character.py \
+            "$REX_SOURCE" "$OUT" \
+            --method "$RIG_METHOD" \
+            --blender "$(command -v blender)"
 
           test -s "$OUT"
           sha256sum "$OUT" | tee build/rex-autorig/rex-rigged.sha256
@@ -163,6 +153,7 @@ jobs:
         run: |
           echo "## Rex auto-rig" >> "$GITHUB_STEP_SUMMARY"
           echo "Source kind: ${REX_SOURCE_KIND:-unresolved}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Method: ${RIG_METHOD:-unknown}" >> "$GITHUB_STEP_SUMMARY"
           if [ -f rex-source.sha256 ]; then
             echo '```text' >> "$GITHUB_STEP_SUMMARY"
             cat rex-source.sha256 >> "$GITHUB_STEP_SUMMARY"
