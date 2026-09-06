@@ -1,0 +1,149 @@
+name: Rex Animation Smoke
+
+on:
+  workflow_run:
+    workflows: ["Rex Auto-Rig"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      rig_run_id:
+        description: "Successful Rex Auto-Rig run ID"
+        required: false
+        default: ""
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  animate:
+    if: >-
+      ${{
+        github.event_name == 'workflow_dispatch' ||
+        github.event.workflow_run.conclusion == 'success'
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Deadline Zero
+        uses: actions/checkout@v4
+
+      - name: Resolve source rig run
+        id: source
+        shell: bash
+        env:
+          INPUT_RUN_ID: ${{ github.event.inputs.rig_run_id || '' }}
+          TRIGGER_RUN_ID: ${{ github.event.workflow_run.id || '' }}
+          TRIGGER_RUN_NUMBER: ${{ github.event.workflow_run.run_number || '' }}
+        run: |
+          set -euo pipefail
+          run_id="$INPUT_RUN_ID"
+          if [ -z "$run_id" ]; then
+            run_id="$TRIGGER_RUN_ID"
+          fi
+          if [ -z "$run_id" ]; then
+            echo "::error::No Rex Auto-Rig run ID available"
+            exit 2
+          fi
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          if [ -n "$TRIGGER_RUN_NUMBER" ]; then
+            echo "artifact_name=rex-auto-rig-$TRIGGER_RUN_NUMBER" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download rig artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ steps.source.outputs.run_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: rig-artifact
+
+      - name: Locate rigged Rex
+        shell: bash
+        run: |
+          set -euo pipefail
+          rig="$(find rig-artifact -type f -name rex_rigged.glb -print -quit)"
+          if [ -z "$rig" ]; then
+            echo "::error::Downloaded artifact contains no rex_rigged.glb"
+            find rig-artifact -maxdepth 5 -type f -print || true
+            exit 3
+          fi
+          echo "REX_RIG=$rig" >> "$GITHUB_ENV"
+          sha256sum "$rig"
+
+      - name: Install Blender runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y blender libgl1 libegl1
+          blender --version | head -n 2
+
+      - name: Build deterministic Rex actions
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/rex-animation
+          blender --background --factory-startup --python-exit-code 1 \
+            --python tools/blender/build_rex_actions.py -- \
+            --input "$REX_RIG" \
+            --output build/rex-animation/rex_animated.blend
+          test -s build/rex-animation/rex_animated.blend
+
+      - name: Render 8-direction animation smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          blender --background build/rex-animation/rex_animated.blend \
+            --python-exit-code 1 \
+            --python tools/blender/render_actor_8dir.py -- \
+            --actor rex \
+            --output build/rex-animation/rendered \
+            --size 256
+          count="$(find build/rex-animation/rendered -type f -name '*.png' | wc -l)"
+          echo "Rendered PNG count: $count"
+          test "$count" -eq 232
+
+      - name: Build render manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('build/rex-animation/rendered')
+          files = sorted(root.rglob('*.png'))
+          payload = {
+              'actor': 'rex',
+              'stage': 'procedural-animation-smoke',
+              'production_ready': False,
+              'frame_count': len(files),
+              'expected_frame_count': 232,
+              'render_size': [256, 256],
+              'files': [
+                  {
+                      'path': str(p.relative_to(root)),
+                      'sha256': hashlib.sha256(p.read_bytes()).hexdigest(),
+                  }
+                  for p in files
+              ],
+          }
+          Path('build/rex-animation/render-manifest.json').write_text(
+              json.dumps(payload, indent=2) + '\n', encoding='utf-8'
+          )
+          if len(files) != 232:
+              raise SystemExit('sprite frame contract failed')
+          PY
+
+      - name: Upload animation smoke artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rex-animation-smoke-${{ github.run_number }}
+          path: |
+            build/rex-animation/rex_animated.blend
+            build/rex-animation/render-manifest.json
+            build/rex-animation/rendered/
+          if-no-files-found: error
+          retention-days: 30
