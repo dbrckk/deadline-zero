@@ -2,7 +2,7 @@ DEADLINE ZERO — PROJECT STATUS
 ==============================
 
 Last update: 2026-09-06
-Current phase: Premium art pipeline / Rex rig preparation
+Current phase: Premium art pipeline / Rex cloud auto-rig preparation
 
 CURRENT GOAL
 ------------
@@ -13,9 +13,12 @@ CURRENT REX STATUS
 [OK] A new unarmed Rex master was generated with Meshy 6 Lite and exported successfully as GLB.
 [OK] The GLB is an unrigged/unanimated geometry source; weapon will be a separate asset instead of fused into Rex's hands.
 [OK] Keep the original GLB immutable as the HD source.
-[OK] tools/blender/prepare_meshy_actor.py now automates safe Blender preparation: import, grounding, centering, scale normalization, stable transforms, smooth shading, triangle accounting and neutral material fallback.
-[OK] docs/rex-master-workflow.md documents the production gates.
-[OK] tools/blender/render_actor_8dir.py renders the final approved rig/actions in eight directions.
+[OK] Rex source fingerprint recorded in art_sources/rex/master/source-manifest.json: 2,403,436 bytes, SHA-256 43c2bffdcbcbacd59327bef34b2a71ef2afbebbe5d032ecfadedbd109f717d17.
+[OK] tools/blender/prepare_meshy_actor.py automates safe Blender preparation.
+[OK] tools/blender/validate_rig.py now performs headless structural rig QA and renders neutral previews.
+[OK] .github/workflows/rex-auto-rig.yml now provides a cloud Blender + Motius auto-rig pipeline on GitHub Actions.
+[OK] The workflow accepts either a committed Rex GLB or an HTTPS source URL, verifies the exact SHA-256 before rigging, uses Make-It-Animatable first, falls back to the local template backend, validates the result, and uploads the rig/report/previews as workflow artifacts.
+[OK] tools/blender/render_actor_8dir.py remains the production 8-direction renderer after animation actions exist.
 
 IMPORTANT DECISIONS
 -------------------
@@ -23,31 +26,35 @@ IMPORTANT DECISIONS
 - Do not fuse the rifle into Rex. Create/attach the weapon separately after rigging.
 - Do not destructively decimate the only HD master.
 - A lightweight 10K-20K proxy may be useful for rigging tests, but automatic decimation is not equivalent to production retopology.
-- Do not automate an invented skeleton without visual deformation QA. A technically generated rig that bends badly would contaminate every animation and all 232 final frames.
+- Do not accept a generated rig solely because the automation succeeded. Structural QA plus rendered deformation/readability QA is mandatory.
+- Motius Make-It-Animatable uses a third-party Hugging Face Space for the public backend; the deterministic template backend remains the fallback.
 - Validate idle end-to-end at phone scale before authoring every animation.
+
+CURRENT BLOCKER
+---------------
+The Rex GLB exists in the active ChatGPT workspace but the GitHub connector available in this session cannot transmit arbitrary local binary files directly into repository contents. The cloud workflow therefore cannot start until the same verified GLB is reachable through an HTTPS source URL or is committed to the repository. A share-link file-transfer plugin is the preferred zero-touch bridge because it allows ChatGPT to upload the already-received GLB, write art_sources/rex/master/source-url.txt, and let GitHub Actions start automatically.
 
 IMMEDIATE NEXT ACTION
 ---------------------
-Run the exported Rex GLB through tools/blender/prepare_meshy_actor.py in Blender, preserving an HD .blend and optionally generating a ~20K triangle rigging proxy. Then create/obtain a validated humanoid rig and test deformation at shoulders, elbows, wrists, hips, knees, feet and cape.
+Bridge the existing verified Rex GLB to a temporary HTTPS file URL without asking the user to manipulate Blender or GitHub. Then write that URL to art_sources/rex/master/source-url.txt. The push will trigger Rex Auto-Rig automatically. Inspect the resulting GitHub Actions rig-report.json and preview renders before proceeding to animation production.
 
 ORDER OF EXECUTION
 ------------------
-1. Preserve raw Meshy GLB as Rex HD source.
-2. Generate normalized rex_master_hd.blend with prepare_meshy_actor.py.
-3. Optionally generate rex_rigging_proxy.blend around 20K triangles for faster rig iteration.
-4. Inspect geometry; reject only if major anatomy/intersection defects prevent rigging.
-5. Put Rex into a clean rigging rest pose as part of the rig workflow.
-6. Build/apply a standard humanoid rig.
-7. Stress-test deformation before animation production.
-8. Produce/test idle only.
-9. Render idle in all 8 directions at 512x512.
-10. Downsample/normalize idle to 96x96 and test in the actual game at phone scale.
-11. If the visual gate passes, produce run, attack, hit and death.
-12. Render all 232 contracted frames.
-13. Run strict sprite QA and final atlas verification.
-14. Test complete Rex in crowded Android gameplay.
-15. Freeze camera, lighting, material, animation, pivot, downsampling and QA conventions.
-16. Industrialize the same pipeline for enemies/survivors/bosses.
+1. Preserve raw Meshy GLB as Rex HD source and verify SHA-256.
+2. Make the same GLB reachable to GitHub Actions through a verified HTTPS source.
+3. Trigger .github/workflows/rex-auto-rig.yml automatically.
+4. Auto-rig with Make-It-Animatable; use template fallback only if required.
+5. Validate armature, bone count, weights, modifiers, mesh bounds and neutral multi-angle previews.
+6. Reject/rework the rig if deformation or silhouette QA is poor.
+7. Produce/test idle only.
+8. Render idle in all 8 directions at 512x512.
+9. Downsample/normalize idle to 96x96 and test in the actual game at phone scale.
+10. If the visual gate passes, produce run, attack, hit and death.
+11. Render all 232 contracted frames.
+12. Run strict sprite QA and final atlas verification.
+13. Test complete Rex in crowded Android gameplay.
+14. Freeze camera, lighting, material, animation, pivot, downsampling and QA conventions.
+15. Industrialize the same pipeline for enemies/survivors/bosses.
 
 REX CONTRACT
 ------------
