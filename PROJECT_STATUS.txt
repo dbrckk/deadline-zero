@@ -2,59 +2,60 @@ DEADLINE ZERO — PROJECT STATUS
 ==============================
 
 Last update: 2026-09-06
-Current phase: Premium art pipeline / Rex cloud auto-rig preparation
+Current phase: Premium art pipeline / Rex validated rig + deformation QA
 
 CURRENT GOAL
 ------------
-Reach a premium stylized 2.5D mobile-shooter visual quality using one authoritative 3D master per actor, then rig/animate -> orthographic 8-direction 512px renders -> normalized 96x96 frames -> strict QA -> final atlas.
+Reach a premium stylized 2.5D mobile-shooter visual quality using one authoritative 3D master per actor, then rig/animate -> orthographic 8-direction renders -> normalized 96x96 frames -> strict QA -> final atlas.
 
 CURRENT REX STATUS
 ------------------
-[OK] A new unarmed Rex master was generated with Meshy 6 Lite and exported successfully as GLB.
-[OK] The GLB is an unrigged/unanimated geometry source; weapon will be a separate asset instead of fused into Rex's hands.
-[OK] Keep the original GLB immutable as the HD source.
-[OK] Rex source fingerprint recorded in art_sources/rex/master/source-manifest.json: 2,403,436 bytes, SHA-256 43c2bffdcbcbacd59327bef34b2a71ef2afbebbe5d032ecfadedbd109f717d17.
-[OK] tools/blender/prepare_meshy_actor.py automates safe Blender preparation.
-[OK] tools/blender/validate_rig.py now performs headless structural rig QA and renders neutral previews.
-[OK] .github/workflows/rex-auto-rig.yml now provides a cloud Blender + Motius auto-rig pipeline on GitHub Actions.
-[OK] The workflow accepts either a committed Rex GLB or an HTTPS source URL, verifies the exact SHA-256 before rigging, uses Make-It-Animatable first, falls back to the local template backend, validates the result, and uploads the rig/report/previews as workflow artifacts.
-[OK] tools/blender/render_actor_8dir.py remains the production 8-direction renderer after animation actions exist.
+[OK] Unarmed Rex Meshy 6 Lite source preserved and fingerprinted: 2,403,436 bytes, SHA-256 43c2bffdcbcbacd59327bef34b2a71ef2afbebbe5d032ecfadedbd109f717d17.
+[OK] Source binary is reconstructed deterministically inside GitHub Actions; firestorage/manual phone transfer is no longer required.
+[OK] Motius template auto-rig runs headlessly in GitHub Actions.
+[OK] Validated rig: SMPL22, 22 bones, one deforming Rex mesh, 27,192 exported vertices, 9,064 triangles, 100% weighted vertices.
+[OK] Neutral multi-angle previews pass structural/readability QA.
+[OK] tools/blender/repair_rex_weights.py repairs arm-weight leaks and locks the back-central cape region to torso bones before animation QA.
+[OK] Weight repair v2: 170 suspicious arm-influenced vertices repaired; 0 residual suspicious vertices; cape region locked deterministically.
+[OK] tools/blender/build_rex_actions.py creates persistent idle/run/attack/hit/death QA actions.
+[OK] tools/blender/render_actor_8dir.py renders the exact 232-frame / 8-direction contract.
+[OK] Rex Animation Smoke run #6 completed successfully with all 232 PNG frames, render manifest and repaired rig artifact.
+[OK] No rendered frame clips the 256x256 QA canvas; maximum opaque silhouette remains within 101x172 pixels.
+[OK] Refined motion substantially reduces the previous extreme death/cape deformation; attack/run silhouettes are also narrower and more stable.
 
 IMPORTANT DECISIONS
 -------------------
 - Do not spend more generation credits trying to force an exact A-pose through text prompts.
 - Do not fuse the rifle into Rex. Create/attach the weapon separately after rigging.
-- Do not destructively decimate the only HD master.
-- A lightweight 10K-20K proxy may be useful for rigging tests, but automatic decimation is not equivalent to production retopology.
-- Do not accept a generated rig solely because the automation succeeded. Structural QA plus rendered deformation/readability QA is mandatory.
-- Motius Make-It-Animatable uses a third-party Hugging Face Space for the public backend; the deterministic template backend remains the fallback.
-- Validate idle end-to-end at phone scale before authoring every animation.
+- Do not destructively modify the immutable source GLB.
+- The current procedural actions are QA motions, not final authored production animation.
+- Never accept a rig solely because automation is green; rendered deformation/readability QA remains mandatory.
+- Rex's exported rig mesh behaves like triangle-soup geometry, so topology-based cape segmentation is unreliable; spatial weight guards are used instead.
+- Production sprites still require materials/identity restoration, separate weapon integration, 512px master renders, 96x96 normalization and in-game phone-scale validation.
 
 CURRENT BLOCKER
 ---------------
-The Rex GLB exists in the active ChatGPT workspace but the GitHub connector available in this session cannot transmit arbitrary local binary files directly into repository contents. The cloud workflow therefore cannot start until the same verified GLB is reachable through an HTTPS source URL or is committed to the repository. A share-link file-transfer plugin is the preferred zero-touch bridge because it allows ChatGPT to upload the already-received GLB, write art_sources/rex/master/source-url.txt, and let GitHub Actions start automatically.
+The rigging/automation blocker is solved. The next visual-quality blocker is production presentation: Rex currently renders with a neutral fallback material and no rifle. The procedural QA motions prove the rig pipeline but are not the final premium animation set.
 
 IMMEDIATE NEXT ACTION
 ---------------------
-Bridge the existing verified Rex GLB to a temporary HTTPS file URL without asking the user to manipulate Blender or GitHub. Then write that URL to art_sources/rex/master/source-url.txt. The push will trigger Rex Auto-Rig automatically. Inspect the resulting GitHub Actions rig-report.json and preview renders before proceeding to animation production.
+Build Rex's production presentation layer: restore a readable dark navy/near-black armor palette with cyan visor/energy and restrained orange accents, add a separate rifle attachment/weapon asset, then rerun a high-resolution idle-first 8-direction gate before final animation authoring.
 
 ORDER OF EXECUTION
 ------------------
-1. Preserve raw Meshy GLB as Rex HD source and verify SHA-256.
-2. Make the same GLB reachable to GitHub Actions through a verified HTTPS source.
-3. Trigger .github/workflows/rex-auto-rig.yml automatically.
-4. Auto-rig with Make-It-Animatable; use template fallback only if required.
-5. Validate armature, bone count, weights, modifiers, mesh bounds and neutral multi-angle previews.
-6. Reject/rework the rig if deformation or silhouette QA is poor.
-7. Produce/test idle only.
-8. Render idle in all 8 directions at 512x512.
-9. Downsample/normalize idle to 96x96 and test in the actual game at phone scale.
-10. If the visual gate passes, produce run, attack, hit and death.
-11. Render all 232 contracted frames.
-12. Run strict sprite QA and final atlas verification.
-13. Test complete Rex in crowded Android gameplay.
-14. Freeze camera, lighting, material, animation, pivot, downsampling and QA conventions.
-15. Industrialize the same pipeline for enemies/survivors/bosses.
+1. Preserve raw Meshy GLB and deterministic cloud reconstruction.
+2. Auto-rig and structural QA. [DONE]
+3. Repair weight leaks/cape behavior and deformation stress QA. [DONE]
+4. Restore production materials/palette and lighting.
+5. Build/attach separate rifle with stable hand/aim anchors.
+6. Produce final idle motion and render 8 directions at 512x512.
+7. Downsample/normalize idle to 96x96 and test in actual Android gameplay.
+8. If idle passes, author/refine run, attack, hit and death.
+9. Render all 232 production frames.
+10. Run strict sprite QA and final atlas verification.
+11. Test complete Rex in crowded Android gameplay.
+12. Freeze camera, lighting, material, animation, pivot, weapon and QA conventions.
+13. Industrialize the pipeline for enemies/survivors/bosses.
 
 REX CONTRACT
 ------------
@@ -64,4 +65,4 @@ Total: 232 frames. Final standard actor cell: 96x96.
 
 QUALITY GATE
 ------------
-Rex is not production-ready until silhouette and identity remain stable in 8 directions; rig deformation is clean; loops are stable; feet/pivot do not visibly drift; cape remains readable; separate weapon placement is stable; and the final 96x96 result remains immediately readable during real Android gameplay.
+Rex is not production-ready until silhouette and identity remain stable in 8 directions; rig deformation is clean; loops are stable; feet/pivot do not visibly drift; cape remains readable; separate weapon placement is stable; production materials are readable at phone scale; and the final 96x96 result remains immediately readable during real Android gameplay.
