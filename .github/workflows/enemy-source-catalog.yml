@@ -1,0 +1,99 @@
+name: Enemy Source Catalog
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/enemy-source-catalog.yml'
+      - 'config/actor-production-contracts.json'
+
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Resolve official Quaternius CC0 pack folder
+        id: source
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          import re
+
+          page='https://quaternius.com/packs/zombieapocalypsekit.html'
+          html=urlopen(Request(page, headers={'User-Agent':'deadline-zero-enemy-catalog/1.0'}), timeout=30).read().decode('utf-8','replace')
+          urls=list(dict.fromkeys(re.findall(r"https://drive\.google\.com/drive/folders/[A-Za-z0-9_-]+[^'\" )<]*", html)))
+          if not urls:
+              raise SystemExit('Official Quaternius page no longer exposes a public Drive folder')
+          Path('build').mkdir(exist_ok=True)
+          Path('build/source-folder.txt').write_text(urls[0]+'\n', encoding='utf-8')
+          with open('/tmp/source-output','w',encoding='utf-8') as f:
+              f.write('folder='+urls[0]+'\n')
+          print('Official source folder:', urls[0])
+          PY
+          cat /tmp/source-output >> "$GITHUB_OUTPUT"
+
+      - name: Download official pack once
+        env:
+          SOURCE_FOLDER: ${{ steps.source.outputs.folder }}
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check 'gdown>=5.2,<6'
+          mkdir -p build/quaternius-zombie-pack
+          gdown --folder --remaining-ok "$SOURCE_FOLDER" -O build/quaternius-zombie-pack
+
+      - name: Build deterministic source catalog
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+
+          root=Path('build/quaternius-zombie-pack')
+          files=[p for p in root.rglob('*') if p.is_file()]
+          blends=[]
+          textures=[]
+          others=[]
+          for p in sorted(files):
+              rel=p.relative_to(root).as_posix()
+              size=p.stat().st_size
+              row={'path':rel,'bytes':size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+              suffix=p.suffix.lower()
+              if suffix == '.blend': blends.append(row)
+              elif suffix in {'.png','.jpg','.jpeg','.webp'}: textures.append(row)
+              else: others.append(row)
+          if not blends:
+              raise SystemExit('No Blender masters found in official pack')
+          payload={
+              'source_page':'https://quaternius.com/packs/zombieapocalypsekit.html',
+              'source_folder':Path('build/source-folder.txt').read_text(encoding='utf-8').strip(),
+              'provider':'Quaternius',
+              'pack':'Zombie Apocalypse Kit',
+              'license':'CC0 1.0',
+              'blend_count':len(blends),
+              'texture_count':len(textures),
+              'blends':blends,
+              'textures':textures,
+              'other_file_count':len(others),
+          }
+          Path('build/enemy-source-catalog.json').write_text(json.dumps(payload,indent=2)+'\n',encoding='utf-8')
+          print('Blend masters:', len(blends))
+          for row in blends:
+              print(row['path'], row['bytes'], row['sha256'])
+          PY
+
+      - name: Upload catalog evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: enemy-source-catalog-${{ github.run_number }}
+          path: |
+            build/enemy-source-catalog.json
+            build/source-folder.txt
+          if-no-files-found: error
+          retention-days: 14
