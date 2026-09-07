@@ -2,7 +2,7 @@ DEADLINE ZERO — PROJECT STATUS
 ==============================
 
 Last update: 2026-09-07
-Current phase: Premium art pipeline / Rex + Shambler Android vertical slices accepted
+Current phase: Premium art pipeline / Rex + Shambler + Runner Android vertical slices accepted
 
 CURRENT GOAL
 ------------
@@ -15,47 +15,55 @@ CURRENT REX STATUS
 [OK] Motius template auto-rig runs headlessly in GitHub Actions.
 [OK] Validated rig: SMPL22, 22 bones, one deforming Rex mesh, 27,192 exported vertices, 9,064 triangles, 100% weighted vertices.
 [OK] tools/blender/repair_rex_weights.py repairs arm leaks and locks the back-central cape region to torso bones.
-[OK] Weight repair v2: 170 suspicious arm-influenced vertices repaired; 0 residual suspicious vertices.
 [OK] Premium phone-scale palette restored: dark navy/near-black armor, cyan visor/energy, restrained orange accents and dark cape.
 [OK] Separate procedural sci-fi rifle is parented to R_Wrist and remains a distinct rigid prop in the 3D production scene.
-[OK] Weapon visibility gate samples 40 animation/direction poses and rejects off-screen or unreadably small weapon placement.
+[OK] Weapon visibility gate samples animation/direction poses and rejects off-screen or unreadably small weapon placement.
 [OK] tools/blender/render_actor_8dir.py renders the exact 232-frame / 8-direction contract at 512x512 masters.
 [OK] Rex 96px normalization uses stable per-direction transforms so animation/root motion is preserved instead of recentering every frame.
-[OK] Rex Animation Smoke #17 completed successfully: 232/232 frames, sprite QA pass, weapon-visibility pass and rifle-fire-v2 attack motion.
-[OK] Rifle-fire-v2 is visually readable at phone scale: low-ready -> shoulder aim -> recoil -> settle is visible in all eight directions.
 [OK] Rex is published in assets/art/rex.png + assets/art/game.atlas under survivor/rex/...
 [OK] GameArt prioritizes art/game.atlas, so published Rex is on the normal authored-art runtime path.
-[OK] Attack facing resolves from the nearest live target while firing.
-[OK] Legacy runtime weapon overlay is suppressed for authored armed Rex frames, eliminating the double-rifle presentation bug.
-[OK] Android visual-QA capture is automated in Verify and archives real emulator gameplay + attack frames.
-[OK] Real Android screenshots confirm Rex is correctly scaled and readable against enemies/environment.
+[OK] Android visual-QA capture is automated in Verify and real Android screenshots confirm Rex is correctly scaled and readable.
 
 CURRENT SHAMBLER STATUS
 -----------------------
-[OK] Official Quaternius Zombie Apocalypse Kit source is locked to Zombie_Basic.blend + Zombie_Atlas.png under CC0 1.0 with SHA-256 fingerprints.
+[OK] Official Quaternius Zombie Apocalypse Kit source locked to Zombie_Basic.blend + Zombie_Atlas.png under CC0 1.0 with SHA-256 fingerprints.
 [OK] Native action mapping is Idle / Walk / Punch / HitReact / Death.
-[OK] tools/blender/render_actor_8dir.py renders the exact shared 232-frame contract for Shambler.
-[OK] Master 512x512 clipping gate passes all 232 frames; minimum observed outer margin is 17 px.
-[OK] Shambler 96px normalization uses motion-envelope union centering so substantial Death root motion remains intact without clipping.
-[OK] Shambler Animation Smoke passed repeatedly: 232/232 frames, eight directions, all five animation groups and phone-scale QA.
-[OK] Phone-scale contact-sheet inspection confirms distinct orientations, readable hostile silhouette and unclipped Death motion.
+[OK] Exact shared 232-frame contract passes master clipping and phone-scale QA.
+[OK] 96px normalization uses motion-envelope union centering so substantial Death root motion remains intact without clipping.
 [OK] Generic multi-actor atlas publisher upserts actor pages without deleting previously published actors.
 [OK] Shambler is published in assets/art/shambler.png + assets/art/game.atlas under enemy/shambler/...
-[OK] Production atlas verifies Rex 232 + Shambler 232 regions simultaneously.
-[OK] Publisher regression gate passes :core:compileJava + :core:test before committing assets.
-[OK] Runtime routing requires no Shambler-specific hack: Enemy.Type.SHAMBLER naturally resolves enemy/shambler/<direction>/<motion>.
-[OK] Deterministic Android visual QA injects four durable Shamblers around Rex and captures rex-shambler-crowd.png.
-[OK] Post-publish Android acceptance checks the actual published main branch, not a pre-publication workspace.
-[OK] Shambler Android Acceptance #2 passed after asset publication; instrumentation reports OK (1 test), evidence collection succeeds, and the crowded capture is archived.
-[OK] Real crowded Android capture confirms Shambler remains visible, grounded and distinct beside Rex with no atlas corruption or clipping.
+[OK] Runtime routing naturally resolves enemy/shambler/<direction>/<motion> with no actor-specific rendering hack.
+[OK] Deterministic Android visual QA injects durable Shamblers around Rex.
+[OK] Post-publish Android acceptance passed; real crowded capture confirms Shambler remains visible, grounded and distinct with no atlas corruption or clipping.
+
+CURRENT RUNNER STATUS
+---------------------
+[OK] Quaternius Ultimate Animated Character Pack Zombie_Female.blend selected as a deliberately slimmer silhouette than Shambler; license CC0 1.0.
+[OK] Public mirror is pinned to ariesyous/projectbluebean commit 4769997aaea204c66735813e2bf61dc3c94e7631.
+[OK] Source file: 2,415,852 bytes; git blob 2177751d0026f788331001aed4ebbc0ca6bbb545; SHA-256 663dfdf1aedc9e94f94e6a09586c71539fd9502f4f10dc84f03b7001715c3393.
+[OK] Native action mapping is Idle / Run / Punch / RecieveHit / Death; the source's historical RecieveHit spelling is intentionally preserved.
+[OK] Runner candidate validation run 34150615192 passes source fingerprinting, Blender inspection, native action resolution and exact 232/232 render contract.
+[OK] Final master framing uses target_height=1.45 and ortho_scale=7.5 so the large native Death displacement remains intact instead of being clipped or removed.
+[OK] Master clipping QA passes with minimum observed margin 40 px.
+[OK] 96px union-center normalization passes 232/232 with bad_frames=0; phone-scale contact sheet was visually inspected with correct material, readable eight directions and coherent Run/Punch/Hit/Death.
+[OK] Runner production page is published on the validation branch as assets/art/runner.png with SHA-256 729c14d0d98047b8cfc7f2fa83539513fe5f926b3f8dbadf2f6119ccb9daccad.
+[OK] assets/art/runner-manifest.json records immutable source, render and validation provenance.
+[OK] Production atlas simultaneously verifies Rex 232 + Shambler 232 + Runner 232 = 696 directional frames, one page per actor.
+[OK] Runtime required no Runner-specific art code: existing Enemy.Type.RUNNER and GameArt generic routing naturally resolve enemy/runner/<direction>/<motion>.
+[OK] Existing RUNNER gameplay profile already provides faster attack cadence than common melee enemies.
+[OK] Android Verify run 34152199690 / artifact 10029812483 passes instrumentation, application process persistence and real emulator capture with Rex + four Shamblers + two Runners.
+[OK] Real phone-scale crowded capture confirms Runner's slimmer gray/violet silhouette is immediately distinct from green Shambler, grounded, unclipped and free of atlas/material corruption.
+[OK] Runner is ACCEPTED in config/actor-production-contracts.json.
 
 PIPELINE INDUSTRIALIZATION
 --------------------------
 [OK] tools/sprites/upsert_directional_actor_atlas.py is the shared non-destructive multi-actor atlas publisher.
-[OK] config/actor-production-contracts.json is now the authoritative machine-readable actor/frame contract.
-[OK] tools/sprites/validate_actor_production_contracts.py verifies accepted actors, manifests, published PNGs and every atlas animation group.
+[OK] config/actor-production-contracts.json is the authoritative machine-readable actor/frame contract.
+[OK] tools/sprites/validate_actor_production_contracts.py verifies every accepted actor, manifest, published PNG and atlas animation group.
 [OK] Verify CI is gated on the shared actor production contract, preventing accepted actor assets from silently disappearing.
-[OK] Enemy Source Catalog autonomously inventories official Quaternius CC0 Blender masters and fingerprints them for the next enemy selection.
+[OK] Enemy Source Catalog autonomously inventories Quaternius CC0 Blender masters and fingerprints them for future enemy selection.
+[OK] Runner Production Staging proves a validated actor artifact can be transformed into a commit-ready production page without destructive atlas edits.
+[OK] The pipeline has now onboarded two enemy silhouettes with different source packs and materially different animation envelopes without runtime rendering hacks.
 
 IMPORTANT DECISIONS
 -------------------
@@ -65,38 +73,37 @@ IMPORTANT DECISIONS
 - Production atlas publication must be additive/upsert-based; publishing one actor must never erase another actor page.
 - Source assets must be license-identified and fingerprinted before entering production.
 - Prefer native authored actions from source masters; procedural motion remains a fallback, not the quality target.
-- The shared 8-direction/232-frame/96px contract is now configuration-driven and must remain stable unless intentionally versioned.
+- The shared 8-direction/232-frame/96px contract is configuration-driven and must remain stable unless intentionally versioned.
+- Preserve meaningful source root motion. Expand master framing and normalize the full motion envelope rather than recentering every frame or deleting movement.
 
 CURRENT BLOCKER
 ---------------
-Rex and Shambler are no longer blockers. The full source -> render/normalize -> QA -> non-destructive atlas -> runtime -> real Android acceptance path is proven for both a survivor and a common enemy.
-The next blocker is selecting a genuinely distinct RUNNER source with suitable native actions and then proving the generic pipeline can onboard it with minimal actor-specific code.
+Rex, Shambler and Runner are no longer blockers. The next art-production blocker is BRUTE: select a licensed/fingerprinted source with a substantially heavier silhouette and native actions, then prove the same generic pipeline can onboard it with data/config changes rather than actor-specific runtime code.
 
 IMMEDIATE NEXT ACTION
 ---------------------
-Use Enemy Source Catalog to inventory the official CC0 pack, rank candidate Blender masters for RUNNER by silhouette and available actions, lock the best source by SHA-256, then run the same render -> normalization -> QA -> atlas -> Android acceptance chain.
+Merge the fully validated Runner PR after the accepted-actor contract gate is green, then select and validate the best BRUTE source. In parallel, replace duplicated actor-specific production workflows with one config-driven actor production/publish/Android-acceptance workflow so BRUTE, RANGED and ELITE onboarding becomes primarily data entry.
 
 ORDER OF EXECUTION
 ------------------
 1. Preserve raw Rex source and deterministic cloud reconstruction. [DONE]
 2. Auto-rig Rex and structural QA. [DONE]
-3. Repair Rex weight leaks/cape behavior and deformation stress QA. [DONE]
-4. Restore production materials/palette and lighting. [DONE FOR VERTICAL SLICE]
-5. Build/attach Rex rifle with stable hand/aim anchors. [DONE]
-6. Render Rex five animations in eight directions. [DONE]
-7. Normalize Rex to stable 96x96 cells. [DONE]
-8. Run Rex sprite + weapon visibility QA. [DONE]
-9. Pack/publish Rex into production atlas. [DONE]
-10. Verify Rex atlas-loading build/runtime path. [DONE]
-11. Test Rex in crowded Android gameplay. [DONE]
-12. Fix contextual Rex runtime presentation defects. [DONE]
-13. Prove same production contract on SHAMBLER. [DONE]
-14. Make atlas publication multi-actor and non-destructive. [DONE]
-15. Add deterministic post-publish Android acceptance for SHAMBLER. [DONE]
-16. Freeze machine-readable shared actor production contract and CI validation. [DONE]
-17. Catalog and select best CC0 source for RUNNER. [IN PROGRESS]
-18. Produce/publish/accept RUNNER using the generic chain. [NEXT]
-19. Repeat for BRUTE, RANGED, ELITE and biome variants, then remaining survivors and bosses.
+3. Repair Rex deformation and restore production visual treatment. [DONE]
+4. Build/attach Rex rifle and validate visibility. [DONE]
+5. Render/normalize/QA/publish Rex 232-frame production actor. [DONE]
+6. Validate Rex in crowded Android gameplay. [DONE]
+7. Prove same production contract on SHAMBLER. [DONE]
+8. Make atlas publication multi-actor and non-destructive. [DONE]
+9. Add deterministic post-publish Android acceptance for SHAMBLER. [DONE]
+10. Freeze machine-readable shared actor production contract and CI validation. [DONE]
+11. Select/fingerprint/validate distinct RUNNER source. [DONE]
+12. Render and normalize RUNNER with full native Death motion preserved. [DONE]
+13. Publish RUNNER without erasing Rex or Shambler. [DONE]
+14. Validate RUNNER in real crowded Android gameplay and accept it. [DONE]
+15. Merge RUNNER production integration. [NEXT]
+16. Generalize actor production/publish/Android acceptance into one config-driven pipeline. [NEXT]
+17. Select and onboard BRUTE. [NEXT QUALITY GATE]
+18. Repeat for RANGED, ELITE and biome variants, then remaining survivors and bosses.
 
 SHARED ACTOR CONTRACT
 ---------------------
@@ -108,11 +115,12 @@ Authoritative machine-readable definition: config/actor-production-contracts.jso
 
 QUALITY GATES
 -------------
-REX M1 premium vertical slice: ACCEPTED.
+REX premium survivor vertical slice: ACCEPTED.
 SHAMBLER first-enemy vertical slice: ACCEPTED.
+RUNNER fast-enemy vertical slice: ACCEPTED.
 
 Acceptance requires structural QA, correct atlas/runtime lookup, no clipping or motion corruption, successful build/tests and real crowded Android visual evidence at phone scale.
 
 NEXT QUALITY GATE
 -----------------
-RUNNER is not accepted until a distinct licensed/fingerprinted source is selected, its native or production-grade action set satisfies the shared 232-frame contract, phone-scale silhouette remains distinct from SHAMBLER, publication preserves existing atlas actors, and real Android crowded captures pass after publication.
+BRUTE is not accepted until a substantially heavier licensed/fingerprinted source is selected, its action set satisfies the shared 232-frame contract, phone-scale silhouette is immediately distinct from SHAMBLER and RUNNER, publication preserves all existing atlas actors, and real Android crowded evidence passes.
