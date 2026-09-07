@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "frame_contract": {
+    "cell": [96, 96],
+    "directions": ["n", "ne", "e", "se", "s", "sw", "w", "nw"],
+    "animations": {
+      "idle": 4,
+      "run": 8,
+      "attack": 6,
+      "hit": 3,
+      "death": 8
+    },
+    "frames_per_direction": 29,
+    "total_frames": 232
+  },
+  "actors": {
+    "rex": {
+      "kind": "survivor",
+      "atlas_root": "survivor/rex",
+      "published_png": "assets/art/rex.png",
+      "normalization": "fixed-direction",
+      "status": "accepted",
+      "requires_weapon_visibility_gate": true
+    },
+    "shambler": {
+      "kind": "enemy",
+      "atlas_root": "enemy/shambler",
+      "published_png": "assets/art/shambler.png",
+      "published_manifest": "assets/art/shambler-manifest.json",
+      "normalization": "union-center",
+      "status": "accepted",
+      "requires_weapon_visibility_gate": false,
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Zombie Apocalypse Kit",
+        "license": "CC0 1.0",
+        "master": "Zombie_Basic.blend",
+        "sha256": "d13e073d52255d6a8a43160c6452755358c5a6cbbf900f2526359f113d8ed6ce",
+        "texture": "Zombie_Atlas.png",
+        "texture_sha256": "8803e5543d5e6b6f66aa41a5ef93e6c2ffb77b5476d0202296d2f4c8f4eb9e8d"
+      },
+      "actions": {
+        "idle": "Idle",
+        "run": "Walk",
+        "attack": "Punch",
+        "hit": "HitReact",
+        "death": "Death"
+      },
+      "render": {
+        "ortho_scale": 3.25,
+        "target_height": 0.58
+      }
+    }
+  }
+}
