@@ -37,9 +37,13 @@ jobs:
       - name: Install Blender and image tooling
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y blender
+          # Blender's headless Eevee startup still dynamically loads EGL on the
+          # hosted Ubuntu image. Keep this explicit instead of relying on the
+          # runner's changing graphics package set.
+          sudo apt-get install -y blender libegl1 libgl1-mesa-dri
           python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
           blender --version | head -n 1
+          ldconfig -p | grep -F 'libEGL.so.1'
       - name: Render native Shambler actions into exact contract
         run: |
           blender -b build/shambler-source/Zombie_Basic.blend \
