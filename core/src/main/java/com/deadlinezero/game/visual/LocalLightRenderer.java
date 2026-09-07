@@ -1,6 +1,8 @@
 package com.deadlinezero.game.visual;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.deadlinezero.game.entities.Enemy;
@@ -13,6 +15,11 @@ import com.deadlinezero.game.util.Pools;
 /** Cheap additive-looking local light halos implemented with translucent geometry for mobile scalability. */
 public final class LocalLightRenderer {
     public void draw(ShapeRenderer shapes, Player player, Iterable<Enemy> enemies, Pools pools, float time) {
+        // ShapeRenderer does not enable alpha blending by itself. Without this, the tiny alpha values
+        // below are ignored and the player's light becomes a fully opaque cyan disc on Android.
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
         halo(shapes, player.position.x, player.position.y, 1.85f,
             player.invulnerable() ? Color.WHITE : VisualTheme.CYAN, .055f);
 
