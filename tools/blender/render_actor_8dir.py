@@ -87,8 +87,17 @@ def configure_scene(args: argparse.Namespace):
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = "PNG"
     scene.render.image_settings.color_mode = "RGBA"
-    scene.render.film_transparent = True
     scene.render.image_settings.color_depth = "8"
+
+    # Imported .blend files can carry compositing/sequencer settings that replace
+    # Eevee's transparent film with an opaque background. Sprite production must
+    # be source-agnostic, so render the raw transparent RGBA result only.
+    scene.render.film_transparent = True
+    if hasattr(scene.render, "use_compositing"):
+        scene.render.use_compositing = False
+    if hasattr(scene.render, "use_sequencer"):
+        scene.render.use_sequencer = False
+
     try:
         scene.view_settings.look = "AgX - Medium High Contrast"
     except TypeError:
