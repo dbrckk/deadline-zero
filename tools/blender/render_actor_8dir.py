@@ -2,17 +2,12 @@
 """Blender-side renderer for Deadline Zero actor sprites.
 
 Run with Blender, not regular Python:
-  blender -b path/to/rex.blend -P tools/blender/render_actor_8dir.py -- \
+  blender -b actor.blend -P tools/blender/render_actor_8dir.py -- \
     --actor rex --output build/blender_renders/rex
 
-Requirements inside the .blend file:
-- One armature object containing actions named: idle, run, attack, hit, death
-- A camera named DZ_Camera (created automatically if absent)
-- Actor centered near world origin, feet near Z=0
-
-The script renders transparent PNG frames for the eight Deadline Zero directions.
-It renders at 512x512 by default so frames can later be downsampled to the
-contracted 96x96 production cells.
+The renderer produces Deadline Zero's exact 232-frame contract at 512x512 by
+default. Source action names can be remapped per actor while output names remain
+stable: idle, run, attack, hit, death.
 """
 from __future__ import annotations
 
@@ -25,14 +20,8 @@ import bpy
 from mathutils import Vector
 
 DIRECTIONS = [
-    ("n", 180.0),
-    ("ne", 225.0),
-    ("e", 270.0),
-    ("se", 315.0),
-    ("s", 0.0),
-    ("sw", 45.0),
-    ("w", 90.0),
-    ("nw", 135.0),
+    ("n", 180.0), ("ne", 225.0), ("e", 270.0), ("se", 315.0),
+    ("s", 0.0), ("sw", 45.0), ("w", 90.0), ("nw", 135.0),
 ]
 DEFAULT_COUNTS = {"idle": 4, "run": 8, "attack": 6, "hit": 3, "death": 8}
 
@@ -48,6 +37,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--camera-height", type=float, default=4.2)
     p.add_argument("--ortho-scale", type=float, default=2.8)
     p.add_argument("--target-height", type=float, default=0.95)
+    p.add_argument("--idle-action", default="idle")
+    p.add_argument("--run-action", default="run")
+    p.add_argument("--attack-action", default="attack")
+    p.add_argument("--hit-action", default="hit")
+    p.add_argument("--death-action", default="death")
     return p.parse_args(argv)
 
 
@@ -103,11 +97,8 @@ def configure_scene(args: argparse.Namespace):
 
 
 def ensure_preview_material_and_lights(armature):
-    meshes = [
-        o for o in bpy.context.scene.objects
-        if o.type == "MESH" and any(m.type == "ARMATURE" and m.object == armature for m in o.modifiers)
-    ]
-    fallback = bpy.data.materials.get("DZ_RexPreview") or bpy.data.materials.new("DZ_RexPreview")
+    meshes = [o for o in bpy.context.scene.objects if o.type == "MESH" and any(m.type == "ARMATURE" and m.object == armature for m in o.modifiers)]
+    fallback = bpy.data.materials.get("DZ_ActorPreview") or bpy.data.materials.new("DZ_ActorPreview")
     fallback.diffuse_color = (0.12, 0.16, 0.22, 1.0)
     for obj in meshes:
         if not obj.data.materials:
@@ -133,7 +124,8 @@ def set_action(armature, action_name: str):
     if action is None:
         matches = [a for a in bpy.data.actions if a.name.lower() == action_name.lower()]
         if not matches:
-            raise RuntimeError(f"Missing Blender action: {action_name}")
+            available = ", ".join(sorted(a.name for a in bpy.data.actions))
+            raise RuntimeError(f"Missing Blender action: {action_name}. Available: {available}")
         action = matches[0]
     if armature.animation_data is None:
         armature.animation_data_create()
@@ -152,31 +144,31 @@ def sample_frames(action, wanted: int) -> list[int]:
 
 def main():
     args = parse_args()
+    action_map = {
+        "idle": args.idle_action,
+        "run": args.run_action,
+        "attack": args.attack_action,
+        "hit": args.hit_action,
+        "death": args.death_action,
+    }
     engine = configure_scene(args)
     armature = find_armature()
     ensure_preview_material_and_lights(armature)
     cam = ensure_camera(args)
-    root = args.output.resolve()
-    root.mkdir(parents=True, exist_ok=True)
-
+    root = args.output.resolve(); root.mkdir(parents=True, exist_ok=True)
     target = Vector((0.0, 0.0, args.target_height))
     scene = bpy.context.scene
     rendered = 0
 
+    print(f"Action map for {args.actor}: {action_map}")
     for direction, degrees in DIRECTIONS:
         radians = math.radians(degrees)
-        cam.location = Vector((
-            args.camera_distance * math.sin(radians),
-            -args.camera_distance * math.cos(radians),
-            args.camera_height,
-        ))
+        cam.location = Vector((args.camera_distance * math.sin(radians), -args.camera_distance * math.cos(radians), args.camera_height))
         look_at(cam, target)
-
         for animation, wanted in DEFAULT_COUNTS.items():
-            action = set_action(armature, animation)
+            action = set_action(armature, action_map[animation])
             frames = sample_frames(action, wanted)
-            out_dir = root / animation / direction
-            out_dir.mkdir(parents=True, exist_ok=True)
+            out_dir = root / animation / direction; out_dir.mkdir(parents=True, exist_ok=True)
             for index, frame in enumerate(frames):
                 scene.frame_set(frame)
                 scene.render.filepath = str(out_dir / f"{animation}_{index:02d}.png")
