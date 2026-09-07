@@ -113,18 +113,23 @@ jobs:
           PY
       - name: Normalize and validate phone-scale frames
         run: |
+          # Center the complete per-direction motion envelope rather than the raw
+          # source camera center. This keeps asymmetric native root motion (Death)
+          # intact without allowing the 96px output crop to cut it off.
           python3 tools/sprites/normalize_actor_frames.py \
             --actor shambler \
             --input build/shambler/master512 \
             --output build/shambler/normalized96 \
             --report build/shambler/qa.json \
-            --contact-sheet build/shambler/shambler-phone-contact-sheet.png
+            --contact-sheet build/shambler/shambler-phone-contact-sheet.png \
+            --horizontal-anchor union-center
           python3 - <<'PY'
           import json
           from pathlib import Path
           q=json.loads(Path('build/shambler/qa.json').read_text())
           assert q['pass'] is True, q
           assert q['frame_count'] == 232, q
+          assert q['horizontal_anchor'] == 'union-center', q
           print('Shambler sprite QA PASS:', q['frame_count'], 'frames, scale', q['scale'])
           PY
       - name: Write render manifest
@@ -142,6 +147,7 @@ jobs:
             'cell':[96,96],
             'source_render':[512,512],
             'ortho_scale':3.25,
+            'horizontal_anchor':'union-center',
             'directions':['n','ne','e','se','s','sw','w','nw'],
             'animations':{'idle':4,'run':8,'attack':6,'hit':3,'death':8},
             'action_map':{'idle':'Idle','run':'Walk','attack':'Punch','hit':'HitReact','death':'Death'},
