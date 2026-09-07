@@ -73,6 +73,9 @@ jobs:
             adb shell pm path com.deadlinezero.game | grep -q 'package:'
             adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.game | grep -q 'AndroidLauncher'
 
+            # Prevent Android's first-use immersive-mode tutorial from covering visual-QA captures.
+            adb shell settings put secure immersive_mode_confirmations confirmed || true
+
             # Run the visual probe after explicit installation, then pull its files before any later
             # instrumentation lifecycle can remove the target app's external-files directory.
             adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesRexGameplayAndAttackFrames com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/rex-visual-probe.txt
