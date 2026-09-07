@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import shlex
 from pathlib import Path
 from urllib.parse import quote
 
@@ -27,18 +26,26 @@ def main() -> None:
     render = c["render"]
     actions = c["actions"]
     path = source["path"]
-    raw_url = (
-        f"https://raw.githubusercontent.com/{source['repository']}/"
-        f"{source['commit']}/{quote(path, safe='/')}"
-    )
+
+    if source.get("url"):
+        source_url = source["url"]
+    elif source.get("repository") and source.get("commit"):
+        source_url = (
+            f"https://raw.githubusercontent.com/{source['repository']}/"
+            f"{source['commit']}/{quote(path, safe='/')}"
+        )
+    else:
+        raise SystemExit("Candidate source must define either url or repository+commit")
+
     filename = Path(path).name
     payload = {
         "candidate": args.candidate,
         "actor": c["actor"],
         "filename": filename,
-        "raw_url": raw_url,
-        "git_blob_sha": source["git_blob_sha"],
-        "size_bytes": int(source["size_bytes"]),
+        "source_url": source_url,
+        "git_blob_sha": source.get("git_blob_sha", ""),
+        "expected_sha256": source.get("sha256", ""),
+        "size_bytes": int(source.get("size_bytes", 0) or 0),
         "source": source,
         "actions": actions,
         "render": render,
@@ -54,15 +61,17 @@ def main() -> None:
             "ACTOR_CANDIDATE": args.candidate,
             "ACTOR": c["actor"],
             "SOURCE_FILENAME": filename,
-            "SOURCE_URL": raw_url,
-            "SOURCE_GIT_BLOB": source["git_blob_sha"],
-            "SOURCE_SIZE": str(source["size_bytes"]),
+            "SOURCE_URL": source_url,
+            "SOURCE_GIT_BLOB": source.get("git_blob_sha", ""),
+            "SOURCE_EXPECTED_SHA256": source.get("sha256", ""),
+            "SOURCE_SIZE": str(source.get("size_bytes", 0) or 0),
             "TARGET_HEIGHT": str(render["target_height"]),
             "ORTHO_SCALE": str(render["ortho_scale"]),
             "HORIZONTAL_ANCHOR": render["horizontal_anchor"],
         }
         with args.github_env.open("a") as out:
             for key, value in values.items():
+                value = str(value)
                 if "\n" in value:
                     raise SystemExit(f"newline not allowed in env value {key}")
                 out.write(f"{key}={value}\n")
