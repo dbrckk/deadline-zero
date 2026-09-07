@@ -78,11 +78,15 @@ jobs:
             adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesRexGameplayAndAttackFrames com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/shambler-acceptance.txt
             grep -q 'OK (1 test)' /tmp/shambler-acceptance.txt
             mkdir -p build/shambler-android-acceptance
-            for image in rex-gameplay.png rex-shambler-crowd.png rex-attack.png; do
-              adb shell ls -l "/sdcard/Android/data/com.deadlinezero.game/files/qa/$image"
-              adb pull "/sdcard/Android/data/com.deadlinezero.game/files/qa/$image" "build/shambler-android-acceptance/$image"
-              test -s "build/shambler-android-acceptance/$image"
-            done
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-shambler-crowd.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-attack.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-gameplay.png build/shambler-android-acceptance/rex-gameplay.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-shambler-crowd.png build/shambler-android-acceptance/rex-shambler-crowd.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-attack.png build/shambler-android-acceptance/rex-attack.png
+            test -s build/shambler-android-acceptance/rex-gameplay.png
+            test -s build/shambler-android-acceptance/rex-shambler-crowd.png
+            test -s build/shambler-android-acceptance/rex-attack.png
 
       - name: Upload Shambler Android acceptance evidence
         if: always()
