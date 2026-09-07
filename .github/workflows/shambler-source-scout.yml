@@ -1,0 +1,97 @@
+name: Shambler Source Scout
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/shambler-source-scout.yml'
+
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Discover official CC0 source pack
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from urllib.parse import urljoin
+          from urllib.request import Request, urlopen
+          import re
+
+          PAGE = 'https://quaternius.com/packs/zombieapocalypsekit.html'
+          req = Request(PAGE, headers={'User-Agent':'deadline-zero-art-source-scout/1.0'})
+          html = urlopen(req, timeout=30).read().decode('utf-8', 'replace')
+          Path('build').mkdir(exist_ok=True)
+          Path('build/quaternius-zombie-apocalypse.html').write_text(html, encoding='utf-8')
+
+          class Links(HTMLParser):
+              def __init__(self):
+                  super().__init__(); self.hrefs=[]
+              def handle_starttag(self, tag, attrs):
+                  if tag.lower() == 'a':
+                      href = dict(attrs).get('href')
+                      if href: self.hrefs.append(urljoin(PAGE, href))
+
+          parser = Links(); parser.feed(html)
+          candidates = [u for u in parser.hrefs if any(k in u.lower() for k in ('.zip', 'download', 'zombieapocalypse'))]
+          # Keep only external downloadable-looking links and preserve deterministic order.
+          candidates = list(dict.fromkeys(candidates))
+          Path('build/source-candidates.txt').write_text('\n'.join(candidates) + '\n', encoding='utf-8')
+          print('Source page:', PAGE)
+          print('Candidates:')
+          print('\n'.join(candidates) if candidates else '(none)')
+          if not candidates:
+              # The page may move the URL into JS. Archive evidence rather than silently guessing.
+              scripts = sorted(set(re.findall(r'https?://[^\"\'<> ]+', html)))
+              Path('build/page-urls.txt').write_text('\n'.join(scripts) + '\n', encoding='utf-8')
+          PY
+      - name: Probe candidate archives and inventory models
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          from urllib.parse import urlparse
+          import hashlib, zipfile, io, json
+
+          candidates = [x.strip() for x in Path('build/source-candidates.txt').read_text().splitlines() if x.strip()]
+          report = {'source_page':'https://quaternius.com/packs/zombieapocalypsekit.html','license':'CC0','candidates':[], 'selected':None}
+          for url in candidates:
+              item={'url':url}
+              try:
+                  req=Request(url, headers={'User-Agent':'deadline-zero-art-source-scout/1.0'})
+                  data=urlopen(req, timeout=60).read()
+                  item['bytes']=len(data); item['sha256']=hashlib.sha256(data).hexdigest()
+                  if zipfile.is_zipfile(io.BytesIO(data)):
+                      z=zipfile.ZipFile(io.BytesIO(data))
+                      names=z.namelist()
+                      item['zip']=True
+                      item['entries']=len(names)
+                      matches=[n for n in names if any(k in n.lower() for k in ('zombie','enemy')) and n.lower().endswith(('.gltf','.glb','.fbx','.blend'))]
+                      item['model_matches']=matches[:200]
+                      if matches and report['selected'] is None:
+                          report['selected']=item
+                          Path('build/selected-source.zip').write_bytes(data)
+                          Path('build/selected-models.txt').write_text('\n'.join(matches)+'\n', encoding='utf-8')
+                  else:
+                      item['zip']=False
+              except Exception as exc:
+                  item['error']=repr(exc)
+              report['candidates'].append(item)
+          Path('build/shambler-source-scout.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+          print(json.dumps(report, indent=2))
+          PY
+      - name: Upload source audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: shambler-source-scout-${{ github.run_number }}
+          path: |
+            build/shambler-source-scout.json
+            build/source-candidates.txt
+            build/page-urls.txt
+            build/selected-models.txt
+          if-no-files-found: warn
+          retention-days: 14
