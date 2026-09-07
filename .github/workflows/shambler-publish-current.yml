@@ -1,0 +1,147 @@
+name: Publish Validated Shambler
+
+on:
+  workflow_dispatch:
+    inputs:
+      animation_run_id:
+        description: "Successful Shambler Animation Smoke run ID (defaults to latest successful)"
+        required: false
+        default: ""
+  workflow_run:
+    workflows: ["Shambler Animation Smoke"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: publish-shambler-production-art
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout Deadline Zero
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Resolve validated animation run
+        id: source
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_RUN_ID: ${{ github.event.workflow_run.id || '' }}
+          INPUT_RUN_ID: ${{ github.event.inputs.animation_run_id || '' }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_run" ]; then
+            run_id="$EVENT_RUN_ID"
+          else
+            run_id="$INPUT_RUN_ID"
+          fi
+          if [ -z "$run_id" ]; then
+            response="$(curl --fail --silent --show-error --location \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/shambler-animation-smoke.yml/runs?status=success&branch=main&per_page=1")"
+            run_id="$(printf '%s' "$response" | python3 -c 'import json,sys; r=json.load(sys.stdin).get("workflow_runs",[]); print(r[0]["id"] if r else "")')"
+          fi
+          test -n "$run_id"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+
+      - name: Download validated Shambler artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ steps.source.outputs.run_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: shambler-artifact
+
+      - name: Locate and verify sprite source
+        id: sprites
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$(find shambler-artifact -type d -name normalized96 -print -quit)"
+          manifest="$(find shambler-artifact -type f -name render-manifest.json -print -quit)"
+          qa="$(find shambler-artifact -type f -name qa.json -print -quit)"
+          margin="$(find shambler-artifact -type f -name master-margin.json -print -quit)"
+          test -n "$root" -a -n "$manifest" -a -n "$qa" -a -n "$margin"
+          python3 - "$manifest" "$qa" "$margin" <<'PY'
+          import json,sys
+          manifest=json.load(open(sys.argv[1]))
+          qa=json.load(open(sys.argv[2]))
+          margin=json.load(open(sys.argv[3]))
+          assert manifest.get('actor') == 'shambler', manifest
+          assert manifest.get('frame_count') == 232, manifest
+          assert manifest.get('horizontal_anchor') == 'union-center', manifest
+          assert qa.get('pass') is True and qa.get('frame_count') == 232, qa
+          assert qa.get('horizontal_anchor') == 'union-center', qa
+          assert margin.get('pass') is True and margin.get('frame_count') == 232, margin
+          PY
+          echo "root=$root" >> "$GITHUB_OUTPUT"
+          echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
+
+      - name: Install atlas tooling
+        run: sudo apt-get update && sudo apt-get install -y python3-pil
+
+      - name: Upsert production Shambler atlas page
+        env:
+          SPRITE_ROOT: ${{ steps.sprites.outputs.root }}
+          SOURCE_MANIFEST: ${{ steps.sprites.outputs.manifest }}
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          python3 tools/sprites/upsert_directional_actor_atlas.py \
+            --actor shambler \
+            --root enemy/shambler \
+            --input "$SPRITE_ROOT" \
+            --atlas assets/art/game.atlas \
+            --png assets/art/shambler.png \
+            --manifest assets/art/shambler-manifest.json \
+            --source-manifest "$SOURCE_MANIFEST" \
+            --source-run-id "$SOURCE_RUN_ID"
+
+      - name: Verify multi-actor production atlas
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          atlas=Path('assets/art/game.atlas').read_text()
+          dirs=('n','ne','e','se','s','sw','w','nw')
+          anims={'idle':4,'run':8,'attack':6,'hit':3,'death':8}
+          for root in ('survivor/rex','enemy/shambler'):
+              for d in dirs:
+                  for anim,count in anims.items():
+                      got=atlas.count(f'{root}/{d}/{anim}\n')
+                      assert got == count, (root,d,anim,got,count)
+          assert Path('assets/art/rex.png').is_file()
+          assert Path('assets/art/shambler.png').is_file()
+          assert atlas.count('rex.png\n') == 1
+          assert atlas.count('shambler.png\n') == 1
+          print('Multi-actor atlas PASS: Rex 232 + Shambler 232 directional frames')
+          PY
+
+      - name: Run core regression tests
+        run: ./gradlew --no-daemon core:test
+
+      - name: Commit Shambler atlas to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/art/shambler.png assets/art/game.atlas assets/art/shambler-manifest.json
+          if git diff --cached --quiet; then
+            echo "Shambler atlas already current"
+            exit 0
+          fi
+          git commit -m "Publish validated Shambler production atlas"
+          git push origin HEAD:main
