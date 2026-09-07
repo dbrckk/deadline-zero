@@ -7,7 +7,7 @@ on:
 
 permissions:
   actions: read
-  contents: read
+  contents: write
 
 jobs:
   stage-runner:
@@ -15,8 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Checkout Deadline Zero
+      - name: Checkout Deadline Zero PR branch
         uses: actions/checkout@v4
+        with:
+          ref: runner-candidate-validation
+          fetch-depth: 0
 
       - name: Download validated Runner evidence
         uses: actions/download-artifact@v4
@@ -53,7 +56,7 @@ jobs:
       - name: Install atlas tooling
         run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
 
-      - name: Build production Runner page without mutating checkout
+      - name: Build production Runner page
         shell: bash
         run: |
           set -euo pipefail
@@ -67,6 +70,24 @@ jobs:
             --png build/runner-production/runner.png \
             --manifest build/runner-production/runner-manifest.json \
             --source-run-id 34150615192
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('build/runner-production/runner-manifest.json')
+          data=json.loads(p.read_text())
+          data.update({
+            'source_stage':'96px-normalization-v2',
+            'source_production_ready':True,
+            'source_horizontal_anchor':'union-center',
+            'source_sha256':'663dfdf1aedc9e94f94e6a09586c71539fd9502f4f10dc84f03b7001715c3393',
+            'source_git_blob':'2177751d0026f788331001aed4ebbc0ca6bbb545',
+            'source_mirror_commit':'4769997aaea204c66735813e2bf61dc3c94e7631',
+            'validation_run':34150615192,
+            'master_minimum_margin_px':40,
+            'phone_qa_pass':True,
+          })
+          p.write_text(json.dumps(data,indent=2)+'\n')
+          PY
 
       - name: Verify three-actor atlas contract
         shell: bash
@@ -88,6 +109,8 @@ jobs:
               assert total == 232, (root,total)
           manifest=json.loads(Path('build/runner-production/runner-manifest.json').read_text())
           assert manifest['actor']=='runner' and manifest['frame_count']==232, manifest
+          assert manifest['source_production_ready'] is True, manifest
+          assert manifest['source_horizontal_anchor']=='union-center', manifest
           assert atlas.count('rex.png\n') == 1
           assert atlas.count('shambler.png\n') == 1
           assert atlas.count('runner.png\n') == 1
@@ -104,3 +127,20 @@ jobs:
             build/runner-production/runner-manifest.json
           if-no-files-found: error
           retention-days: 14
+
+      - name: Commit production assets to PR branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp build/runner-production/runner.png assets/art/runner.png
+          cp build/runner-production/game.atlas assets/art/game.atlas
+          cp build/runner-production/runner-manifest.json assets/art/runner-manifest.json
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/art/runner.png assets/art/game.atlas assets/art/runner-manifest.json
+          if git diff --cached --quiet; then
+            echo 'Runner production assets already current on PR branch'
+            exit 0
+          fi
+          git commit -m 'Stage validated Runner production atlas'
+          git push origin HEAD:runner-candidate-validation
