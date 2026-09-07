@@ -1,8 +1,8 @@
 DEADLINE ZERO — PROJECT STATUS
 ==============================
 
-Last update: 2026-09-06
-Current phase: Premium art pipeline / Rex published vertical-slice candidate
+Last update: 2026-09-07
+Current phase: Premium art pipeline / Rex Android vertical slice validated
 
 CURRENT GOAL
 ------------
@@ -17,35 +17,41 @@ CURRENT REX STATUS
 [OK] tools/blender/repair_rex_weights.py repairs arm leaks and locks the back-central cape region to torso bones.
 [OK] Weight repair v2: 170 suspicious arm-influenced vertices repaired; 0 residual suspicious vertices.
 [OK] Premium phone-scale palette restored: dark navy/near-black armor, cyan visor/energy, restrained orange accents and dark cape.
-[OK] Separate procedural sci-fi rifle is parented to R_Wrist and remains a distinct rigid prop.
+[OK] Separate procedural sci-fi rifle is parented to R_Wrist and remains a distinct rigid prop in the 3D production scene.
 [OK] Weapon visibility gate samples 40 animation/direction poses and rejects off-screen or unreadably small weapon placement.
 [OK] tools/blender/render_actor_8dir.py renders the exact 232-frame / 8-direction contract at 512x512 masters.
 [OK] 96px normalization v2 uses fixed transforms per direction so animation/root motion is preserved instead of recentering every frame.
-[OK] Rex Animation Smoke #15 validated preserved motion at 96px, including death displacement and stable idle.
 [OK] Rex Animation Smoke #17 completed successfully: 232/232 frames, sprite QA pass, weapon-visibility pass and rifle-fire-v2 attack motion.
 [OK] Rifle-fire-v2 is visually readable at phone scale: low-ready -> shoulder aim -> recoil -> settle is visible in all eight directions.
 [OK] Validated Rex frames were packed into a 2784x768 / 232-region production atlas and published to assets/art/rex.png + assets/art/game.atlas.
-[OK] Atlas metadata is recorded in assets/art/rex-manifest.json; publisher sources the latest successful validated Rex Animation Smoke artifact.
-[OK] GameArt already prioritizes art/game.atlas, so the published Rex atlas is now on the normal authored-art runtime path.
+[OK] GameArt prioritizes art/game.atlas, so the published Rex atlas is on the normal authored-art runtime path.
+[OK] Attack facing now resolves from the nearest live target instead of movement direction while firing.
+[OK] The legacy runtime weapon overlay is suppressed for authored armed Rex frames, eliminating the double-rifle presentation bug.
+[OK] Android visual-QA capture is automated in Verify and archives real emulator gameplay + attack frames.
+[OK] Android immersive-mode tutorial is dismissed in CI so captures are unobstructed.
+[OK] ShapeRenderer alpha blending is enabled; combat light halos now render with intended translucency instead of opaque discs.
+[OK] Authored muzzle flash was rescaled/repositioned for the rifle baked into Rex's rendered actor frames.
+[OK] Verify #1101 passed core, desktop smoke, Android production build and Android runtime/visual capture.
+[OK] Real Android screenshots confirm Rex is loaded, correctly scaled, readable against enemies/environment, and the muzzle flash is now compact and visually attached to the firing presentation.
 
 IMPORTANT DECISIONS
 -------------------
 - Do not spend more generation credits trying to force an exact A-pose through prompts.
-- Do not fuse the rifle into Rex; weapon remains separate from the actor mesh.
 - Do not destructively modify the immutable source GLB.
 - Do not bake muzzle flash into Rex sprites; muzzle flash stays a gameplay VFX layer.
+- Current vertical-slice Rex frames may contain the rifle as part of the rendered actor presentation; the separate runtime weapon renderer remains available for other survivors/fallbacks.
 - Never accept a rig or animation solely because CI is green; rendered phone-scale QA remains mandatory.
 - Rex's exported rig mesh behaves like triangle-soup geometry, so topology-based cape segmentation is unreliable; deterministic spatial guards are used instead.
-- The current full set is a vertical-slice candidate, not a frozen final AAA animation set. Final animation polish can continue after in-game validation.
+- The current full set is accepted for the premium vertical slice, but is not a claim that every procedural animation is final AAA authored motion.
 
 CURRENT BLOCKER
 ---------------
-The source, rigging, deformation repair, palette, separate weapon, 8-direction rendering, 96px normalization and atlas publication blockers are solved.
-The next blocker is contextual validation: prove Rex is correctly loaded, sized, oriented and readable inside the actual Android combat scene under crowding, projectiles, VFX, camera movement and HUD pressure.
+Rex M1 is no longer blocked. The full source -> rig -> repair -> palette -> weapon -> 8-direction render -> 96px normalization -> atlas -> runtime -> real Android visual-QA chain is now proven end to end.
+The next production blocker is industrialization: prove the same conventions can produce a premium enemy quickly and repeatably without Rex-specific manual assumptions.
 
 IMMEDIATE NEXT ACTION
 ---------------------
-Run the repository verification suite on the published atlas state, then validate Rex inside actual gameplay. Fix any atlas-loading/orientation/scale/pivot problems before freezing the Rex conventions or industrializing the pipeline for enemies.
+Freeze the validated Rex camera/lighting/pivot/normalization/QA conventions as the actor-production baseline, then run the pipeline on the first common enemy (SHAMBLER). The first-enemy gate is: recognizable hostile silhouette at phone scale, clean 8-direction motion, stable feet/pivot, no overlap artifacts, correct enemy atlas lookup, and successful crowded Android visual QA beside Rex.
 
 ORDER OF EXECUTION
 ------------------
@@ -58,11 +64,11 @@ ORDER OF EXECUTION
 7. Normalize all 232 frames to stable 96x96 cells while preserving motion. [DONE]
 8. Run sprite + weapon visibility QA. [DONE]
 9. Pack and publish Rex into production atlas. [DONE]
-10. Verify atlas-loading build/runtime path. [IN PROGRESS]
-11. Test complete Rex in crowded Android gameplay. [NEXT]
-12. Refine final animation timing/poses only where real gameplay exposes weaknesses.
-13. Freeze camera, lighting, material, animation, pivot, weapon and QA conventions.
-14. Industrialize the same pipeline for enemies/survivors/bosses.
+10. Verify atlas-loading build/runtime path. [DONE]
+11. Test complete Rex in crowded Android gameplay. [DONE]
+12. Fix contextual runtime presentation defects found by visual QA. [DONE]
+13. Freeze camera, lighting, material, animation, pivot, weapon and QA conventions. [NEXT]
+14. Industrialize the same pipeline for SHAMBLER, then remaining enemies/survivors/bosses.
 
 REX CONTRACT
 ------------
@@ -73,4 +79,8 @@ Published atlas sheet: 2784x768.
 
 QUALITY GATE
 ------------
-Rex is not final-production-ready until the published atlas loads correctly on desktop and Android; direction mapping is correct; silhouette and identity remain stable in 8 directions; feet/pivot do not visibly drift; cape remains readable; rifle placement is stable; materials remain readable at phone scale; and the character remains immediately legible during crowded real gameplay.
+Rex M1 premium vertical slice is ACCEPTED. Acceptance evidence includes successful desktop/Android verification, real emulator gameplay captures, correct attack-facing behavior, no duplicate weapon overlay, restored translucent combat-light blending, stable phone-scale readability, and corrected muzzle-flash presentation.
+
+NEXT QUALITY GATE
+-----------------
+SHAMBLER is not accepted until its production path is generic enough to reuse, all required directions/animations pass structural QA, its atlas lookup is proven in runtime, and crowded Android captures show a clear hostile silhouette without degrading Rex readability.
