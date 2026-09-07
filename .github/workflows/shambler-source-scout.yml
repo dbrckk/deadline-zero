@@ -18,90 +18,60 @@ jobs:
           python3 - <<'PY'
           from html.parser import HTMLParser
           from pathlib import Path
-          from urllib.parse import urljoin
           from urllib.request import Request, urlopen
           import re
 
           PAGE = 'https://quaternius.com/packs/zombieapocalypsekit.html'
-          req = Request(PAGE, headers={'User-Agent':'deadline-zero-art-source-scout/1.1'})
+          req = Request(PAGE, headers={'User-Agent':'deadline-zero-art-source-scout/1.2'})
           html = urlopen(req, timeout=30).read().decode('utf-8', 'replace')
           Path('build').mkdir(exist_ok=True)
           Path('build/quaternius-zombie-apocalypse.html').write_text(html, encoding='utf-8')
 
-          class Attrs(HTMLParser):
-              def __init__(self):
-                  super().__init__(); self.values=[]
-              def handle_starttag(self, tag, attrs):
-                  for key, value in attrs:
-                      if value:
-                          self.values.append((tag.lower(), key.lower(), value))
-
-          parser = Attrs(); parser.feed(html)
-          raw=[]
-          for tag, key, value in parser.values:
-              low=value.lower()
-              if key in ('href','src','data-href','data-url','data-download','onclick') or 'download' in key:
-                  raw.append(value)
-              if any(token in low for token in ('.zip','.glb','.gltf','.fbx','.blend','zombieapocalypse','download')):
-                  raw.append(value)
-
-          # Also inspect quoted strings in inline JavaScript; official download buttons often route through JS.
-          raw += re.findall(r"['\"]([^'\"]+(?:\.zip|\.glb|\.gltf|\.fbx|\.blend)[^'\"]*)['\"]", html, flags=re.I)
-          raw += re.findall(r"['\"]([^'\"]*zombieapocalypse[^'\"]*)['\"]", html, flags=re.I)
-
-          candidates=[]
-          evidence=[]
-          for value in raw:
-              evidence.append(value)
-              # Pull URLs/paths out of onclick snippets as well as ordinary attributes.
-              parts=re.findall(r'https?://[^\"\'<> )]+|(?:\.\.?/|/)?[^\"\'() ]+\.(?:zip|glb|gltf|fbx|blend)(?:\?[^\"\'() ]*)?', value, flags=re.I)
-              if not parts and value.startswith(('http://','https://','/','./','../')):
-                  parts=[value]
-              for part in parts:
-                  url=urljoin(PAGE, part)
-                  if url not in candidates: candidates.append(url)
-
-          Path('build/source-candidates.txt').write_text('\n'.join(candidates) + '\n', encoding='utf-8')
-          Path('build/download-hook-evidence.txt').write_text('\n'.join(dict.fromkeys(evidence)) + '\n', encoding='utf-8')
-          urls=sorted(set(re.findall(r'https?://[^\"\'<> ]+', html)))
-          Path('build/page-urls.txt').write_text('\n'.join(urls) + '\n', encoding='utf-8')
-          print('Source page:', PAGE)
-          print('Candidates:')
-          print('\n'.join(candidates) if candidates else '(none)')
+          drive = re.findall(r"https://drive\.google\.com/drive/folders/[A-Za-z0-9_-]+[^'\" )<]*", html)
+          drive = list(dict.fromkeys(drive))
+          Path('build/official-drive-folders.txt').write_text('\n'.join(drive)+'\n', encoding='utf-8')
+          if not drive:
+              raise SystemExit('Official Quaternius page did not expose its Google Drive folder')
+          print('Official source folder:', drive[0])
           PY
-      - name: Probe candidate archives and inventory models
+      - name: Download official public source folder
+        run: |
+          python3 -m pip install --disable-pip-version-check 'gdown>=5.2,<6'
+          mkdir -p build/quaternius-source
+          DRIVE_URL="$(head -n1 build/official-drive-folders.txt)"
+          gdown --folder "$DRIVE_URL" -O build/quaternius-source --remaining-ok
+      - name: Inventory candidate enemy masters
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          from urllib.request import Request, urlopen
-          import hashlib, zipfile, io, json
+          import hashlib, json
 
-          candidates = [x.strip() for x in Path('build/source-candidates.txt').read_text().splitlines() if x.strip()]
-          report = {'source_page':'https://quaternius.com/packs/zombieapocalypsekit.html','license':'CC0','candidates':[], 'selected':None}
-          for url in candidates:
-              item={'url':url}
-              try:
-                  req=Request(url, headers={'User-Agent':'deadline-zero-art-source-scout/1.1'})
-                  data=urlopen(req, timeout=90).read()
-                  item['bytes']=len(data); item['sha256']=hashlib.sha256(data).hexdigest()
-                  if zipfile.is_zipfile(io.BytesIO(data)):
-                      z=zipfile.ZipFile(io.BytesIO(data))
-                      names=z.namelist()
-                      item['zip']=True
-                      item['entries']=len(names)
-                      matches=[n for n in names if any(k in n.lower() for k in ('zombie','enemy')) and n.lower().endswith(('.gltf','.glb','.fbx','.blend'))]
-                      item['model_matches']=matches[:300]
-                      if matches and report['selected'] is None:
-                          report['selected']={k:v for k,v in item.items() if k != 'model_matches'}
-                          report['selected']['model_matches']=matches[:300]
-                          Path('build/selected-models.txt').write_text('\n'.join(matches)+'\n', encoding='utf-8')
-                  else:
-                      item['zip']=False
-              except Exception as exc:
-                  item['error']=repr(exc)
-              report['candidates'].append(item)
+          root=Path('build/quaternius-source')
+          files=[p for p in root.rglob('*') if p.is_file()]
+          models=[p for p in files if p.suffix.lower() in {'.glb','.gltf','.fbx','.blend'}]
+          enemy=[p for p in models if any(k in p.as_posix().lower() for k in ('zombie','enemy','infected'))]
+          def row(p):
+              data=p.read_bytes()
+              return {
+                  'path':p.relative_to(root).as_posix(),
+                  'bytes':len(data),
+                  'sha256':hashlib.sha256(data).hexdigest(),
+                  'format':p.suffix.lower().lstrip('.'),
+              }
+          report={
+              'source_page':'https://quaternius.com/packs/zombieapocalypsekit.html',
+              'source_folder':Path('build/official-drive-folders.txt').read_text().strip(),
+              'license':'CC0 1.0',
+              'downloaded_files':len(files),
+              'model_files':len(models),
+              'enemy_candidates':[row(p) for p in enemy],
+              'all_models':[row(p) for p in models],
+          }
           Path('build/shambler-source-scout.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+          Path('build/selected-models.txt').write_text('\n'.join(x['path'] for x in report['enemy_candidates'])+'\n', encoding='utf-8')
           print(json.dumps(report, indent=2))
+          if not models:
+              raise SystemExit('Official folder downloaded, but no supported 3D model files were found')
           PY
       - name: Upload source audit
         uses: actions/upload-artifact@v4
@@ -109,10 +79,7 @@ jobs:
           name: shambler-source-scout-${{ github.run_number }}
           path: |
             build/shambler-source-scout.json
-            build/source-candidates.txt
-            build/download-hook-evidence.txt
-            build/page-urls.txt
+            build/official-drive-folders.txt
             build/selected-models.txt
-            build/quaternius-zombie-apocalypse.html
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 14
