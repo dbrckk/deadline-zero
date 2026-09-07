@@ -1,0 +1,104 @@
+name: Shambler Animation Smoke
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/shambler-animation-smoke.yml'
+      - 'tools/blender/render_actor_8dir.py'
+      - 'tools/sprites/normalize_actor_frames.py'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download locked CC0 Shambler source
+        run: |
+          python3 -m pip install --disable-pip-version-check 'gdown>=5.2,<6'
+          mkdir -p build/shambler-source
+          gdown 'https://drive.google.com/uc?id=1MR_TE1FwriGLRKjJYLvsgJNOtYZDs1mu' -O build/shambler-source/Zombie_Basic.blend
+          gdown 'https://drive.google.com/uc?id=1f4CRjRp4V7p7XIRo0X-DXpYc2AoMx7S7' -O build/shambler-source/Zombie_Atlas.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          expected={
+            'Zombie_Basic.blend':'d13e073d52255d6a8a43160c6452755358c5a6cbbf900f2526359f113d8ed6ce',
+            'Zombie_Atlas.png':'8803e5543d5e6b6f66aa41a5ef93e6c2ffb77b5476d0202296d2f4c8f4eb9e8d',
+          }
+          root=Path('build/shambler-source')
+          for name,want in expected.items():
+              got=hashlib.sha256((root/name).read_bytes()).hexdigest()
+              print(name, got)
+              if got != want: raise SystemExit(f'SHA mismatch for {name}')
+          PY
+      - name: Install Blender and image tooling
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y blender
+          python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+          blender --version | head -n 1
+      - name: Render native Shambler actions into exact contract
+        run: |
+          blender -b build/shambler-source/Zombie_Basic.blend \
+            -P tools/blender/render_actor_8dir.py -- \
+            --actor shambler \
+            --output build/shambler/master512 \
+            --target-height 0.58 \
+            --ortho-scale 2.5 \
+            --idle-action Idle \
+            --run-action Walk \
+            --attack-action Punch \
+            --hit-action HitReact \
+            --death-action Death
+          test "$(find build/shambler/master512 -name '*.png' | wc -l)" -eq 232
+      - name: Normalize and validate phone-scale frames
+        run: |
+          python3 tools/sprites/normalize_actor_frames.py \
+            --actor shambler \
+            --input build/shambler/master512 \
+            --output build/shambler/normalized96 \
+            --report build/shambler/qa.json \
+            --contact-sheet build/shambler/shambler-phone-contact-sheet.png
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          q=json.loads(Path('build/shambler/qa.json').read_text())
+          assert q['pass'] is True, q
+          assert q['frame_count'] == 232, q
+          print('Shambler sprite QA PASS:', q['frame_count'], 'frames, scale', q['scale'])
+          PY
+      - name: Write render manifest
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          manifest={
+            'actor':'shambler',
+            'source':'Quaternius Zombie Apocalypse Kit / Zombie_Basic.blend',
+            'license':'CC0 1.0',
+            'source_sha256':'d13e073d52255d6a8a43160c6452755358c5a6cbbf900f2526359f113d8ed6ce',
+            'frame_count':232,
+            'cell':[96,96],
+            'source_render':[512,512],
+            'directions':['n','ne','e','se','s','sw','w','nw'],
+            'animations':{'idle':4,'run':8,'attack':6,'hit':3,'death':8},
+            'action_map':{'idle':'Idle','run':'Walk','attack':'Punch','hit':'HitReact','death':'Death'},
+            'production_ready':False,
+            'stage':'first-native-animation-vertical-slice-candidate',
+          }
+          Path('build/shambler/render-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          PY
+      - name: Upload Shambler animation smoke
+        uses: actions/upload-artifact@v4
+        with:
+          name: shambler-animation-smoke-${{ github.run_number }}
+          path: |
+            build/shambler/normalized96/
+            build/shambler/qa.json
+            build/shambler/shambler-phone-contact-sheet.png
+            build/shambler/render-manifest.json
+          if-no-files-found: error
+          retention-days: 14
