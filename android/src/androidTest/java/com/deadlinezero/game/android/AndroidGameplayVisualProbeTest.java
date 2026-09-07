@@ -7,12 +7,15 @@ import android.graphics.Bitmap;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.visual.CombatVisualEvents;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Field;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -34,14 +37,39 @@ public final class AndroidGameplayVisualProbeTest {
                 assertTrue("expected GameScreen for visual probe", game.getScreen() instanceof GameScreen);
             });
 
-            // Opening pressure spawns enemies immediately and then roughly every 0.58s.
+            // Opening pressure confirms the ordinary gameplay composition first.
             Thread.sleep(2200L);
             capture("rex-gameplay.png");
+
+            // Force a deterministic phone-scale composition containing authored Rex and four
+            // durable Shamblers. Reflection is deliberately confined to instrumentation code so
+            // production GameScreen does not gain QA-only API surface.
+            runOnGameThread(activity, () -> injectShamblerCrowd((GameScreen) game(activity).getScreen()));
+            Thread.sleep(180L);
+            capture("rex-shambler-crowd.png");
 
             // Force the authored attack presentation window without changing gameplay state.
             runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
             Thread.sleep(80L);
             capture("rex-attack.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectShamblerCrowd(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            // Large HP keeps the QA actors alive despite Rex auto-fire. Very low speed keeps the
+            // four cardinal placements readable while still exercising normal enemy rendering.
+            enemies.add(new Enemy(Enemy.Type.SHAMBLER, 5.2f, 0f, 50_000f, .08f, .50f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.SHAMBLER, -5.2f, 0f, 50_000f, .08f, .50f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, 4.2f, 50_000f, .08f, .50f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, -4.2f, 50_000f, .08f, .50f, 0f, 1));
+            assertTrue("visual probe failed to inject Shambler crowd", enemies.size >= 4);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to access GameScreen enemy collection for visual QA", exception);
         }
     }
 
