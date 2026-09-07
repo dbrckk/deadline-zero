@@ -1,0 +1,106 @@
+name: Runner Production Staging
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  stage-runner:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'runner-candidate-validation'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout Deadline Zero
+        uses: actions/checkout@v4
+
+      - name: Download validated Runner evidence
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 34150615192
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          name: runner-candidate-1146
+          path: runner-evidence
+
+      - name: Validate immutable candidate evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$(find runner-evidence -type d -name normalized96 -print -quit)"
+          qa="$(find runner-evidence -type f -name qa.json -print -quit)"
+          margin="$(find runner-evidence -type f -name master-margin.json -print -quit)"
+          sha="$(find runner-evidence -type f -name sha256.txt -print -quit)"
+          test -n "$root" -a -n "$qa" -a -n "$margin" -a -n "$sha"
+          grep -q '^663dfdf1aedc9e94f94e6a09586c71539fd9502f4f10dc84f03b7001715c3393 ' "$sha"
+          python3 - "$qa" "$margin" <<'PY'
+          import json,sys
+          qa=json.load(open(sys.argv[1]))
+          margin=json.load(open(sys.argv[2]))
+          assert qa.get('actor') == 'runner', qa
+          assert qa.get('pass') is True and qa.get('frame_count') == 232, qa
+          assert qa.get('horizontal_anchor') == 'union-center', qa
+          assert margin.get('pass') is True and margin.get('frame_count') == 232, margin
+          assert margin.get('minimum_observed_margin_px', 0) >= 4, margin
+          print('Immutable Runner evidence PASS:', qa['frame_count'], 'frames; min master margin', margin['minimum_observed_margin_px'])
+          PY
+          echo "SPRITE_ROOT=$root" >> "$GITHUB_ENV"
+
+      - name: Install atlas tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+
+      - name: Build production Runner page without mutating checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/runner-production
+          cp assets/art/game.atlas build/runner-production/game.atlas
+          python3 tools/sprites/upsert_directional_actor_atlas.py \
+            --actor runner \
+            --root enemy/runner \
+            --input "$SPRITE_ROOT" \
+            --atlas build/runner-production/game.atlas \
+            --png build/runner-production/runner.png \
+            --manifest build/runner-production/runner-manifest.json \
+            --source-run-id 34150615192
+
+      - name: Verify three-actor atlas contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          atlas=Path('build/runner-production/game.atlas').read_text()
+          dirs=('n','ne','e','se','s','sw','w','nw')
+          anims={'idle':4,'run':8,'attack':6,'hit':3,'death':8}
+          for root in ('survivor/rex','enemy/shambler','enemy/runner'):
+              total=0
+              for d in dirs:
+                  for anim,count in anims.items():
+                      got=atlas.count(f'{root}/{d}/{anim}\n')
+                      assert got == count, (root,d,anim,got,count)
+                      total += got
+              assert total == 232, (root,total)
+          manifest=json.loads(Path('build/runner-production/runner-manifest.json').read_text())
+          assert manifest['actor']=='runner' and manifest['frame_count']==232, manifest
+          assert atlas.count('rex.png\n') == 1
+          assert atlas.count('shambler.png\n') == 1
+          assert atlas.count('runner.png\n') == 1
+          print('Production atlas PASS: Rex 232 + Shambler 232 + Runner 232 = 696 directional frames')
+          PY
+
+      - name: Upload commit-ready Runner production assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: runner-production-staging-${{ github.run_number }}
+          path: |
+            build/runner-production/runner.png
+            build/runner-production/game.atlas
+            build/runner-production/runner-manifest.json
+          if-no-files-found: error
+          retention-days: 14
