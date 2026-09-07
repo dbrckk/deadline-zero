@@ -34,11 +34,28 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --location --retry 3 "$SOURCE_URL" -o "build/actor-candidate/source/$SOURCE_FILENAME"
-          test "$(stat -c%s "build/actor-candidate/source/$SOURCE_FILENAME")" -eq "$SOURCE_SIZE"
-          actual_blob="$(git hash-object "build/actor-candidate/source/$SOURCE_FILENAME")"
-          test "$actual_blob" = "$SOURCE_GIT_BLOB"
-          sha256sum "build/actor-candidate/source/$SOURCE_FILENAME" | tee build/actor-candidate/source/sha256.txt
+          target="build/actor-candidate/source/$SOURCE_FILENAME"
+          if [[ "$SOURCE_URL" == https://drive.google.com/* ]]; then
+            python3 -m pip install --disable-pip-version-check gdown
+            gdown "$SOURCE_URL" -O "$target"
+          else
+            curl --fail --location --retry 3 "$SOURCE_URL" -o "$target"
+          fi
+          test -s "$target"
+          actual_size="$(stat -c%s "$target")"
+          if [[ "$SOURCE_SIZE" != "0" ]]; then
+            test "$actual_size" -eq "$SOURCE_SIZE"
+          fi
+          if [[ -n "$SOURCE_GIT_BLOB" ]]; then
+            actual_blob="$(git hash-object "$target")"
+            test "$actual_blob" = "$SOURCE_GIT_BLOB"
+          fi
+          actual_sha256="$(sha256sum "$target" | awk '{print $1}')"
+          if [[ -n "$SOURCE_EXPECTED_SHA256" ]]; then
+            test "$actual_sha256" = "$SOURCE_EXPECTED_SHA256"
+          fi
+          printf '%s  %s\n' "$actual_sha256" "$SOURCE_FILENAME" | tee build/actor-candidate/source/sha256.txt
+          printf '{"size_bytes":%s,"sha256":"%s"}\n' "$actual_size" "$actual_sha256" > build/actor-candidate/source/fingerprint.json
 
       - name: Install Blender and image tooling
         run: |
@@ -184,6 +201,7 @@ jobs:
           path: |
             build/actor-candidate/resolved.json
             build/actor-candidate/source/sha256.txt
+            build/actor-candidate/source/fingerprint.json
             build/actor-candidate/inspection.json
             build/actor-candidate/action-map.json
             build/actor-candidate/master-margin.json
