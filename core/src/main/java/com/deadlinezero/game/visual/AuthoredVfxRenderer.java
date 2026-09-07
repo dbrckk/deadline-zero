@@ -39,11 +39,14 @@ public final class AuthoredVfxRenderer {
         Enemy target = nearest(player, enemies);
         float angle = target == null ? player.velocity.angleDeg() : MathUtils.atan2(
             target.position.y - player.position.y, target.position.x - player.position.x) * MathUtils.radiansToDegrees;
-        float w = .95f;
+
+        // Rex now carries the rifle inside the authored character frames. Keep the transient flash
+        // tight to that baked weapon silhouette instead of using the older external-weapon reach.
+        float w = .62f;
         float h = w * region.getRegionHeight() / (float)Math.max(1, region.getRegionWidth());
         float r = angle * MathUtils.degreesToRadians;
-        float x = player.position.x + MathUtils.cos(r) * .72f;
-        float y = player.position.y + MathUtils.sin(r) * .72f;
+        float x = player.position.x + MathUtils.cos(r) * .48f;
+        float y = player.position.y + MathUtils.sin(r) * .48f;
         batch.draw(region, x - w * .15f, y - h * .5f, w * .15f, h * .5f, w, h, 1f, 1f, angle);
     }
 
