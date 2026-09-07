@@ -73,12 +73,7 @@ jobs:
             gradle :android:installDebug :android:installDebugAndroidTest
             adb shell pm path com.deadlinezero.game | grep -q 'package:'
             adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.game | grep -q 'AndroidLauncher'
-
-            # Prevent Android's first-use immersive-mode tutorial from covering visual-QA captures.
             adb shell settings put secure immersive_mode_confirmations confirmed || true
-
-            # Run deterministic visual QA after explicit installation, then pull its files before
-            # any later instrumentation lifecycle can remove the target app external-files tree.
             adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesRexGameplayAndAttackFrames com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/rex-visual-probe.txt
             grep -q 'OK (1 test)' /tmp/rex-visual-probe.txt
             mkdir -p build/android-visual-qa
@@ -91,7 +86,6 @@ jobs:
             test -s build/android-visual-qa/rex-gameplay.png
             test -s build/android-visual-qa/rex-shambler-crowd.png
             test -s build/android-visual-qa/rex-attack.png
-
             adb shell am force-stop com.deadlinezero.game
             test -z "$(adb shell pidof com.deadlinezero.game)"
             adb shell monkey -p com.deadlinezero.game -c android.intent.category.LAUNCHER 1
@@ -107,5 +101,112 @@ jobs:
         with:
           name: android-gameplay-visual-qa-${{ github.run_number }}
           path: build/android-visual-qa/
+          if-no-files-found: warn
+          retention-days: 14
+
+  runner-candidate:
+    if: github.event_name == 'pull_request' && github.head_ref == 'runner-candidate-validation'
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download and fingerprint pinned CC0 Runner source
+        run: |
+          set -euo pipefail
+          mkdir -p build/runner-source
+          url='https://raw.githubusercontent.com/ariesyous/projectbluebean/4769997aaea204c66735813e2bf61dc3c94e7631/assets/Ultimate%20Animated%20Character%20Pack%20-%20Nov%202019/Blends/Zombie_Female.blend'
+          curl --fail --location --retry 3 "$url" -o build/runner-source/Zombie_Female.blend
+          test "$(stat -c%s build/runner-source/Zombie_Female.blend)" -eq 2415852
+          test "$(git hash-object build/runner-source/Zombie_Female.blend)" = '2177751d0026f788331001aed4ebbc0ca6bbb545'
+          sha256sum build/runner-source/Zombie_Female.blend | tee build/runner-source/sha256.txt
+      - name: Install Blender and image tooling
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y blender libegl1 libgl1-mesa-dri
+          python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+          blender --version | head -n 1
+      - name: Inspect source and resolve production actions
+        run: |
+          set -euo pipefail
+          blender -b build/runner-source/Zombie_Female.blend -P tools/blender/inspect_actor_source.py -- --json-out build/runner-source/inspection.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          inspection=json.loads(Path('build/runner-source/inspection.json').read_text())
+          names=[row['name'] for row in inspection['actions']]
+          lowered={name.lower():name for name in names}
+          aliases={
+            'idle':['idle'],
+            'run':['run','run_fast','sprint'],
+            'attack':['punch','attack','melee'],
+            'hit':['hitreact','hit_react','hit','hurt','damage','gethit'],
+            'death':['death','die'],
+          }
+          resolved={}
+          for motion, candidates in aliases.items():
+              for candidate in candidates:
+                  if candidate.lower() in lowered:
+                      resolved[motion]=lowered[candidate.lower()]
+                      break
+          payload={'available_actions':names,'resolved':resolved,'missing':[m for m in aliases if m not in resolved]}
+          Path('build/runner-source/action-map.json').write_text(json.dumps(payload,indent=2)+'\n')
+          print(json.dumps(payload,indent=2))
+          if payload['missing']:
+              raise SystemExit('Runner candidate lacks required native actions: '+', '.join(payload['missing']))
+          PY
+      - name: Render exact Runner actor contract
+        run: |
+          set -euo pipefail
+          eval "$(python3 - <<'PY'
+          import json,shlex
+          m=json.load(open('build/runner-source/action-map.json'))['resolved']
+          for k,v in m.items(): print(f'{k.upper()}={shlex.quote(v)}')
+          PY
+          )"
+          blender -b build/runner-source/Zombie_Female.blend -P tools/blender/render_actor_8dir.py -- \
+            --actor runner --output build/runner/master512 --target-height 0.58 --ortho-scale 3.0 \
+            --idle-action "$IDLE" --run-action "$RUN" --attack-action "$ATTACK" --hit-action "$HIT" --death-action "$DEATH"
+          test "$(find build/runner/master512 -name '*.png' | wc -l)" -eq 232
+      - name: Validate master margins and normalize phone-scale frames
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json
+          root=Path('build/runner/master512'); frames=sorted(root.rglob('*.png')); offenders=[]; empty=[]; minimum=10**9
+          for path in frames:
+              im=Image.open(path).convert('RGBA'); bbox=im.getchannel('A').getbbox(); rel=str(path.relative_to(root))
+              if bbox is None: empty.append(rel); continue
+              l,t,r,b=bbox; margins={'left':l,'top':t,'right':im.width-r,'bottom':im.height-b}; minimum=min(minimum,*margins.values())
+              bad={k:v for k,v in margins.items() if v < 4}
+              if bad: offenders.append({'frame':rel,'bbox':[l,t,r,b],'margins':margins,'violations':bad})
+          report={'pass':len(frames)==232 and not empty and not offenders,'frame_count':len(frames),'required_margin_px':4,'minimum_observed_margin_px':None if minimum==10**9 else minimum,'empty_frames':empty,'offenders':offenders}
+          Path('build/runner/master-margin.json').write_text(json.dumps(report,indent=2)+'\n'); print(json.dumps({k:v for k,v in report.items() if k!='offenders'},indent=2))
+          if not report['pass']: raise SystemExit('Runner master-render margin QA failed')
+          PY
+          python3 tools/sprites/normalize_actor_frames.py --actor runner --input build/runner/master512 --output build/runner/normalized96 --report build/runner/qa.json --contact-sheet build/runner/runner-phone-contact-sheet.png --horizontal-anchor union-center
+          python3 - <<'PY'
+          import json
+          q=json.load(open('build/runner/qa.json'))
+          assert q['pass'] is True and q['frame_count']==232, q
+          print('Runner candidate phone QA PASS:', q['frame_count'], 'scale', q['scale'])
+          PY
+      - name: Upload Runner candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runner-candidate-${{ github.run_number }}
+          path: |
+            build/runner-source/sha256.txt
+            build/runner-source/inspection.json
+            build/runner-source/action-map.json
+            build/runner/master-margin.json
+            build/runner/qa.json
+            build/runner/runner-phone-contact-sheet.png
+            build/runner/normalized96/
           if-no-files-found: warn
           retention-days: 14
