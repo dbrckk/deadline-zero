@@ -13,7 +13,7 @@ permissions:
 jobs:
   catalog:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -21,47 +21,38 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Download official Quaternius Ultimate Monsters folder
+      - name: List official Quaternius Ultimate Monsters folder without downloading
         run: |
           python -m pip install --disable-pip-version-check gdown
-          mkdir -p build/ultimate-monsters
-          cd build/ultimate-monsters
-          gdown --folder 'https://drive.google.com/drive/folders/18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C?usp=sharing'
+          mkdir -p build
+          gdown --folder --json 'https://drive.google.com/drive/folders/18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C?usp=sharing' > build/ultimate-monsters-drive-list.json
 
       - name: Build deterministic source catalog
         run: |
           python - <<'PY'
-          import hashlib, json
+          import json
           from pathlib import Path
 
-          root = Path('build/ultimate-monsters')
+          entries = json.loads(Path('build/ultimate-monsters-drive-list.json').read_text(encoding='utf-8'))
           rows = []
-          for p in sorted(root.rglob('*')):
-              if not p.is_file():
-                  continue
-              h = hashlib.sha256()
-              with p.open('rb') as f:
-                  for chunk in iter(lambda: f.read(1024 * 1024), b''):
-                      h.update(chunk)
+          for entry in entries:
+              path = entry.get('path', '')
+              suffix = Path(path).suffix.lower()
               rows.append({
-                  'path': p.relative_to(root).as_posix(),
-                  'size_bytes': p.stat().st_size,
-                  'sha256': h.hexdigest(),
-                  'suffix': p.suffix.lower(),
+                  'path': path,
+                  'url': entry.get('url'),
+                  'suffix': suffix,
               })
-
-          blend = [r for r in rows if r['suffix'] == '.blend']
-          fbx = [r for r in rows if r['suffix'] == '.fbx']
-          gltf = [r for r in rows if r['suffix'] in ('.gltf', '.glb')]
+          rows.sort(key=lambda r: r['path'].lower())
           report = {
               'provider': 'Quaternius',
               'pack': 'Ultimate Monsters',
               'license': 'CC0 1.0',
               'official_drive_folder_id': '18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C',
               'file_count': len(rows),
-              'blend_count': len(blend),
-              'fbx_count': len(fbx),
-              'gltf_count': len(gltf),
+              'blend_count': sum(r['suffix'] == '.blend' for r in rows),
+              'fbx_count': sum(r['suffix'] == '.fbx' for r in rows),
+              'gltf_count': sum(r['suffix'] in ('.gltf', '.glb') for r in rows),
               'files': rows,
           }
           Path('build/ultimate-monsters-catalog.json').write_text(
@@ -72,12 +63,14 @@ jobs:
           for r in rows:
               low = r['path'].lower()
               if any(token in low for token in ('orc', 'yeti', 'demon', 'golem', 'goleling', 'king')) and r['suffix'] in ('.blend','.fbx','.gltf','.glb'):
-                  print(r['path'], r['size_bytes'], r['sha256'])
+                  print(r['path'], r['url'])
           PY
 
       - name: Upload official source catalog
         uses: actions/upload-artifact@v4
         with:
           name: ultimate-monsters-catalog-${{ github.run_number }}
-          path: build/ultimate-monsters-catalog.json
+          path: |
+            build/ultimate-monsters-drive-list.json
+            build/ultimate-monsters-catalog.json
           retention-days: 14
