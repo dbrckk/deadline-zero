@@ -41,11 +41,12 @@ public final class AndroidGameplayVisualProbeTest {
             Thread.sleep(2200L);
             capture("rex-gameplay.png");
 
-            // Force a deterministic phone-scale composition containing authored Rex and four
-            // durable Shamblers. Reflection is deliberately confined to instrumentation code so
-            // production GameScreen does not gain QA-only API surface.
-            runOnGameThread(activity, () -> injectShamblerCrowd((GameScreen) game(activity).getScreen()));
-            Thread.sleep(180L);
+            // Force a deterministic phone-scale composition containing authored Rex, four durable
+            // Shamblers on the cardinals, and two durable Runners on opposite diagonals. Reflection
+            // is deliberately confined to instrumentation code so production GameScreen does not
+            // gain QA-only API surface. Keep the historical filename for artifact compatibility.
+            runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
+            Thread.sleep(220L);
             capture("rex-shambler-crowd.png");
 
             // Force the authored attack presentation window without changing gameplay state.
@@ -56,18 +57,26 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @SuppressWarnings("unchecked")
-    private static void injectShamblerCrowd(GameScreen screen) {
+    private static void injectAuthoredEnemyCrowd(GameScreen screen) {
         try {
             Field field = GameScreen.class.getDeclaredField("enemies");
             field.setAccessible(true);
             Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
-            // Large HP keeps the QA actors alive despite Rex auto-fire. Very low speed keeps the
-            // four cardinal placements readable while still exercising normal enemy rendering.
+            int before = enemies.size;
+
+            // Large HP keeps QA actors alive despite Rex auto-fire. Low speed keeps their placement
+            // readable while still exercising normal enemy state, direction and authored animation.
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, 5.2f, 0f, 50_000f, .08f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, -5.2f, 0f, 50_000f, .08f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, 4.2f, 50_000f, .08f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, -4.2f, 50_000f, .08f, .50f, 0f, 1));
-            assertTrue("visual probe failed to inject Shambler crowd", enemies.size >= 4);
+
+            // Runner uses a slightly smaller collision footprint and higher movement speed so its
+            // authored Run cycle and slimmer silhouette remain visibly distinct from Shambler.
+            enemies.add(new Enemy(Enemy.Type.RUNNER, 3.7f, 3.0f, 50_000f, .22f, .46f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.RUNNER, -3.7f, -3.0f, 50_000f, .22f, .46f, 0f, 1));
+
+            assertTrue("visual probe failed to inject authored Shambler + Runner crowd", enemies.size >= before + 6);
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("unable to access GameScreen enemy collection for visual QA", exception);
         }
