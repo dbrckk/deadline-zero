@@ -167,7 +167,7 @@ jobs:
           PY
           )"
           blender -b build/runner-source/Zombie_Female.blend -P tools/blender/render_actor_8dir.py -- \
-            --actor runner --output build/runner/master512 --target-height 1.45 --ortho-scale 3.6 \
+            --actor runner --output build/runner/master512 --target-height 1.45 --ortho-scale 4.8 \
             --idle-action "$IDLE" --run-action "$RUN" --attack-action "$ATTACK" --hit-action "$HIT" --death-action "$DEATH"
           test "$(find build/runner/master512 -name '*.png' | wc -l)" -eq 232
       - name: Validate master margins and normalize phone-scale frames
