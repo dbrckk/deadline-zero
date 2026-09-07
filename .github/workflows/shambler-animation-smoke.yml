@@ -33,9 +33,6 @@ jobs:
               got=hashlib.sha256((root/name).read_bytes()).hexdigest()
               print(name, got)
               if got != want: raise SystemExit(f'SHA mismatch for {name}')
-          # The official .blend references //Textures/Atlas_Zombie.png while the
-          # public Drive asset is named Zombie_Atlas.png. Recreate the source
-          # package's expected relative layout deterministically.
           shutil.copy2(root/'Zombie_Atlas.png', root/'Textures'/'Atlas_Zombie.png')
           PY
       - name: Install Blender and image tooling
@@ -47,12 +44,15 @@ jobs:
           ldconfig -p | grep -F 'libEGL.so.1'
       - name: Render native Shambler actions into exact contract
         run: |
+          # Native Death contains substantial root motion. Render with a wider
+          # orthographic field so the master frames preserve the entire fall;
+          # the fixed-transform normalizer restores phone-scale occupancy later.
           blender -b build/shambler-source/Zombie_Basic.blend \
             -P tools/blender/render_actor_8dir.py -- \
             --actor shambler \
             --output build/shambler/master512 \
             --target-height 0.58 \
-            --ortho-scale 2.5 \
+            --ortho-scale 3.25 \
             --idle-action Idle \
             --run-action Walk \
             --attack-action Punch \
@@ -93,6 +93,7 @@ jobs:
             'frame_count':232,
             'cell':[96,96],
             'source_render':[512,512],
+            'ortho_scale':3.25,
             'directions':['n','ne','e','se','s','sw','w','nw'],
             'animations':{'idle':4,'run':8,'attack':6,'hit':3,'death':8},
             'action_map':{'idle':'Idle','run':'Walk','attack':'Punch','hit':'HitReact','death':'Death'},
