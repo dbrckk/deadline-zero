@@ -52,6 +52,54 @@
         "horizontal_anchor": "union-center"
       },
       "selection_goal": "Thematic zombie control candidate; reject if silhouette is not materially heavier than Shambler and Runner."
+    },
+    "brute-ultimate-orc": {
+      "actor": "brute",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "official_drive_folder_id": "18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C",
+        "path": "Big/Blends/Orc.blend",
+        "url": "https://drive.google.com/uc?id=1c3MUyIuICUIihEoommpccm4e1BaPSxZ9"
+      },
+      "actions": {
+        "idle": ["Idle", "idle"],
+        "run": ["Walk", "Run", "Walking", "Running"],
+        "attack": ["Attack", "Punch", "MeleeAttack", "Attack1", "Attack_1"],
+        "hit": ["TakeDamage", "Damage", "Hit", "HitReact", "ReceiveHit", "RecieveHit"],
+        "death": ["Death", "Die", "Dying"]
+      },
+      "render": {
+        "target_height": 1.45,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "selection_goal": "Primary BRUTE candidate: visibly broader and heavier than Shambler and Runner while remaining a readable grounded biped."
+    },
+    "brute-ultimate-yeti": {
+      "actor": "brute",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "official_drive_folder_id": "18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C",
+        "path": "Big/Blends/Yeti.blend",
+        "url": "https://drive.google.com/uc?id=174GVv54Yo0q2dNRYVoJifKyepy8K3gO7"
+      },
+      "actions": {
+        "idle": ["Idle", "idle"],
+        "run": ["Walk", "Run", "Walking", "Running"],
+        "attack": ["Attack", "Punch", "MeleeAttack", "Attack1", "Attack_1"],
+        "hit": ["TakeDamage", "Damage", "Hit", "HitReact", "ReceiveHit", "RecieveHit"],
+        "death": ["Death", "Die", "Dying"]
+      },
+      "render": {
+        "target_height": 1.45,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "selection_goal": "Fallback BRUTE candidate: prioritize maximum body mass and grounded readability over thematic similarity."
     }
   }
 }
