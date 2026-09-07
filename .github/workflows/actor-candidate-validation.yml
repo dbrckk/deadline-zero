@@ -3,7 +3,19 @@ name: Actor Candidate Validation
 on:
   pull_request:
     branches: [main]
+    paths:
+      - '.github/workflows/actor-candidate-validation.yml'
+      - 'config/active-actor-candidate.txt'
+      - 'config/actor-candidates.json'
+      - 'tools/sprites/resolve_actor_candidate.py'
+      - 'tools/sprites/normalize_actor_frames.py'
+      - 'tools/blender/inspect_actor_source.py'
+      - 'tools/blender/render_actor_8dir.py'
   workflow_dispatch:
+
+concurrency:
+  group: actor-candidate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
