@@ -10,6 +10,7 @@ on:
   push:
     paths:
       - ".github/workflows/rex-publish-current.yml"
+      - "tools/sprites/upsert_directional_actor_atlas.py"
 
 permissions:
   actions: read
@@ -75,56 +76,36 @@ jobs:
       - name: Install atlas tooling
         run: sudo apt-get update && sudo apt-get install -y python3-pil
 
-      - name: Build production Rex atlas
+      - name: Upsert production Rex atlas page
         env:
           SPRITE_ROOT: ${{ steps.sprites.outputs.root }}
           SOURCE_MANIFEST: ${{ steps.sprites.outputs.manifest }}
           SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
         run: |
+          set -euo pipefail
+          python3 tools/sprites/upsert_directional_actor_atlas.py \
+            --actor rex \
+            --root survivor/rex \
+            --input "$SPRITE_ROOT" \
+            --atlas assets/art/game.atlas \
+            --png assets/art/rex.png \
+            --manifest assets/art/rex-manifest.json \
+            --source-manifest "$SOURCE_MANIFEST" \
+            --source-run-id "$SOURCE_RUN_ID"
+
+      - name: Verify Rex production regions and preserved pages
+        run: |
           python3 - <<'PY'
-          import hashlib,json,os
           from pathlib import Path
-          from PIL import Image
-
-          root=Path(os.environ['SPRITE_ROOT'])
-          dirs=['n','ne','e','se','s','sw','w','nw']
-          anims=[('idle',4),('run',8),('attack',6),('hit',3),('death',8)]
-          cell=96; cols=sum(c for _,c in anims)
-          sheet=Image.new('RGBA',(cols*cell,len(dirs)*cell),(0,0,0,0))
-          entries=[]
-          for row,d in enumerate(dirs):
-              col=0
-              for anim,count in anims:
-                  for i in range(count):
-                      p=root/anim/d/f'{anim}_{i:02d}.png'
-                      if not p.exists(): raise RuntimeError(f'missing {p}')
-                      im=Image.open(p).convert('RGBA')
-                      if im.size != (cell,cell): raise RuntimeError(f'bad cell size {p}: {im.size}')
-                      x=col*cell; y=row*cell
-                      sheet.alpha_composite(im,(x,y))
-                      entries.append((f'survivor/rex/{d}/{anim}',i,x,y))
-                      col+=1
-          if len(entries) != 232: raise RuntimeError(f'expected 232 entries, got {len(entries)}')
-
-          out=Path('assets/art'); out.mkdir(parents=True,exist_ok=True)
-          png=out/'rex.png'; sheet.save(png,optimize=True)
-          lines=['rex.png',f'size: {sheet.width}, {sheet.height}','format: RGBA8888','filter: Linear,Linear','repeat: none']
-          for name,index,x,y in entries:
-              lines += [name,'  rotate: false',f'  xy: {x}, {y}',f'  size: {cell}, {cell}',f'  orig: {cell}, {cell}','  offset: 0, 0',f'  index: {index}']
-          (out/'game.atlas').write_text('\n'.join(lines)+'\n')
-
-          source=json.load(open(os.environ['SOURCE_MANIFEST']))
-          meta={
-              'actor':'rex','published_from_run':int(os.environ['SOURCE_RUN_ID']),
-              'frame_count':232,'cell':[96,96],'sheet':[sheet.width,sheet.height],
-              'layout':'8 directions x 29 frames','directions':dirs,
-              'animations':dict(anims),'attack_motion':source.get('attack_motion'),
-              'weapon':source.get('weapon'),'palette':source.get('palette'),
-              'png_sha256':hashlib.sha256(png.read_bytes()).hexdigest(),
-              'source_production_ready':source.get('production_ready',False)
-          }
-          (out/'rex-manifest.json').write_text(json.dumps(meta,indent=2)+'\n')
-          print(json.dumps(meta,indent=2))
+          atlas=Path('assets/art/game.atlas').read_text()
+          dirs=('n','ne','e','se','s','sw','w','nw')
+          anims={'idle':4,'run':8,'attack':6,'hit':3,'death':8}
+          for d in dirs:
+              for anim,count in anims.items():
+                  got=atlas.count(f'survivor/rex/{d}/{anim}\n')
+                  assert got == count, (d,anim,got,count)
+          assert Path('assets/art/rex.png').is_file()
+          print('Rex atlas contract PASS; existing non-Rex pages preserved by upsert publisher')
           PY
 
       - name: Commit Rex atlas to main
