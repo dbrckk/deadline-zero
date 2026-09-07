@@ -63,6 +63,54 @@ jobs:
           for d in n ne e se s sw w nw; do
             cp "build/shambler/master512/idle/$d/idle_00.png" "build/shambler/debug512/${d}_idle_00.png"
           done
+      - name: Validate master render margins
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json
+
+          root=Path('build/shambler/master512')
+          report=Path('build/shambler/master-margin.json')
+          required=4
+          frames=sorted(root.rglob('*.png'))
+          offenders=[]
+          empty=[]
+          min_margin=10**9
+          for path in frames:
+              img=Image.open(path).convert('RGBA')
+              bbox=img.getchannel('A').getbbox()
+              rel=str(path.relative_to(root))
+              if bbox is None:
+                  empty.append(rel)
+                  continue
+              left, top, right, bottom=bbox
+              margins={
+                  'left':left,
+                  'top':top,
+                  'right':img.width-right,
+                  'bottom':img.height-bottom,
+              }
+              min_margin=min(min_margin,*margins.values())
+              bad={k:v for k,v in margins.items() if v < required}
+              if bad:
+                  offenders.append({'frame':rel,'bbox':[left,top,right,bottom],'margins':margins,'violations':bad})
+          payload={
+              'pass':len(frames)==232 and not empty and not offenders,
+              'frame_count':len(frames),
+              'required_margin_px':required,
+              'minimum_observed_margin_px':None if min_margin==10**9 else min_margin,
+              'empty_frames':empty,
+              'offenders':offenders,
+          }
+          report.write_text(json.dumps(payload,indent=2)+'\n')
+          print(json.dumps({k:v for k,v in payload.items() if k!='offenders'},indent=2))
+          if offenders:
+              print('Master clipping offenders (first 20):')
+              for item in offenders[:20]: print(item)
+          if not payload['pass']:
+              raise SystemExit('Master-render margin QA failed')
+          PY
       - name: Normalize and validate phone-scale frames
         run: |
           python3 tools/sprites/normalize_actor_frames.py \
@@ -110,6 +158,7 @@ jobs:
           path: |
             build/shambler/normalized96/
             build/shambler/qa.json
+            build/shambler/master-margin.json
             build/shambler/shambler-phone-contact-sheet.png
             build/shambler/render-manifest.json
             build/shambler/debug512/
