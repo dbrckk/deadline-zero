@@ -26,6 +26,16 @@ def parse_args():
     p.add_argument("--contact-sheet", type=Path, required=True)
     p.add_argument("--max-width", type=int, default=82)
     p.add_argument("--max-height", type=int, default=88)
+    p.add_argument(
+        "--horizontal-anchor",
+        choices=("source-center", "union-center"),
+        default="source-center",
+        help=(
+            "source-center preserves the original camera pivot; union-center centers "
+            "the complete per-direction motion envelope while still using one fixed "
+            "transform for every frame in that direction"
+        ),
+    )
     return p.parse_args()
 
 
@@ -69,8 +79,22 @@ def main():
     for d,b in unions.items():
         uw,uh=b[2]-b[0],b[3]-b[1]
         nw=max(1,round(uw*scale)); nh=max(1,round(uh*scale))
-        x=round(48-(source_center_x-b[0])*scale); y=92-nh
-        transforms[d]={"union_bbox":list(b),"scaled_size":[nw,nh],"dest":[x,y],"pivot_source_x":source_center_x}
+        if a.horizontal_anchor == "union-center":
+            # Some native actions (notably death animations) contain asymmetric
+            # root motion. Centering the *whole* directional motion envelope keeps
+            # every frame inside the 96px cell without per-frame recentering, so
+            # the actual animation motion remains intact.
+            x=round((96-nw)/2)
+        else:
+            x=round(48-(source_center_x-b[0])*scale)
+        y=92-nh
+        transforms[d]={
+            "union_bbox":list(b),
+            "scaled_size":[nw,nh],
+            "dest":[x,y],
+            "pivot_source_x":source_center_x,
+            "horizontal_anchor":a.horizontal_anchor,
+        }
 
     rows=[]; motion=defaultdict(list)
     for anim,d,i,im,_ in source:
@@ -95,7 +119,20 @@ def main():
             "cy_range":max(v["cy"] for v in values)-min(v["cy"] for v in values),
             "bottom_range":max(v["bottom"] for v in values)-min(v["bottom"] for v in values),
         }
-    report={"actor":a.actor,"stage":"96px-normalization-v1","normalization_mode":"fixed-transform-per-direction","frame_count":len(rows),"expected":232,"source_size":list(source_size),"scale":scale,"direction_transforms":transforms,"motion_ranges":motion_ranges,"bad_frames":bad,"pass":len(rows)==232 and not bad}
+    report={
+        "actor":a.actor,
+        "stage":"96px-normalization-v2",
+        "normalization_mode":"fixed-transform-per-direction",
+        "horizontal_anchor":a.horizontal_anchor,
+        "frame_count":len(rows),
+        "expected":232,
+        "source_size":list(source_size),
+        "scale":scale,
+        "direction_transforms":transforms,
+        "motion_ranges":motion_ranges,
+        "bad_frames":bad,
+        "pass":len(rows)==232 and not bad,
+    }
     a.report.parent.mkdir(parents=True,exist_ok=True); a.report.write_text(json.dumps(report,indent=2)+"\n")
 
     sheet=Image.new("RGBA",(8*96,5*96),(28,28,32,255)); draw=ImageDraw.Draw(sheet)
