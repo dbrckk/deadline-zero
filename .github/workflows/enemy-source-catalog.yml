@@ -6,11 +6,15 @@ on:
     paths:
       - '.github/workflows/enemy-source-catalog.yml'
       - 'config/actor-production-contracts.json'
+      - 'tools/blender/catalog_blend_actions.py'
+
+permissions:
+  contents: read
 
 jobs:
   catalog:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -48,6 +52,33 @@ jobs:
           mkdir -p build/quaternius-zombie-pack
           gdown --folder --remaining-ok "$SOURCE_FOLDER" -O build/quaternius-zombie-pack
 
+      - name: Install Blender for structural source inspection
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y blender
+          blender --version | head -n 1
+
+      - name: Inspect native actions and structures
+        run: |
+          set -euo pipefail
+          mkdir -p build/blend-inspection
+          index=0
+          while IFS= read -r -d '' blend; do
+            out="build/blend-inspection/$(printf '%03d' "$index").json"
+            echo "Inspecting $blend -> $out"
+            blender -b "$blend" -P tools/blender/catalog_blend_actions.py -- --output "$out"
+            python3 - "$out" "$blend" <<'PY'
+          import json,sys
+          from pathlib import Path
+          path=Path(sys.argv[1])
+          payload=json.loads(path.read_text(encoding='utf-8'))
+          payload['relative_path']=Path(sys.argv[2]).relative_to('build/quaternius-zombie-pack').as_posix()
+          path.write_text(json.dumps(payload,indent=2)+'\n',encoding='utf-8')
+          PY
+            index=$((index+1))
+          done < <(find build/quaternius-zombie-pack -type f -name '*.blend' -print0 | sort -z)
+          test "$index" -gt 0
+
       - name: Build deterministic source catalog
         run: |
           set -euo pipefail
@@ -57,6 +88,11 @@ jobs:
 
           root=Path('build/quaternius-zombie-pack')
           files=[p for p in root.rglob('*') if p.is_file()]
+          inspection={}
+          for p in sorted(Path('build/blend-inspection').glob('*.json')):
+              row=json.loads(p.read_text(encoding='utf-8'))
+              inspection[row['relative_path']]=row
+
           blends=[]
           textures=[]
           others=[]
@@ -65,7 +101,18 @@ jobs:
               size=p.stat().st_size
               row={'path':rel,'bytes':size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
               suffix=p.suffix.lower()
-              if suffix == '.blend': blends.append(row)
+              if suffix == '.blend':
+                  structural=inspection.get(rel)
+                  if structural is None:
+                      raise SystemExit(f'Missing Blender inspection for {rel}')
+                  row.update({
+                      'action_names':structural.get('action_names',[]),
+                      'actions':structural.get('actions',[]),
+                      'armatures':structural.get('armatures',[]),
+                      'meshes':structural.get('meshes',[]),
+                      'object_count':structural.get('object_count',0),
+                  })
+                  blends.append(row)
               elif suffix in {'.png','.jpg','.jpeg','.webp'}: textures.append(row)
               else: others.append(row)
           if not blends:
@@ -86,6 +133,7 @@ jobs:
           print('Blend masters:', len(blends))
           for row in blends:
               print(row['path'], row['bytes'], row['sha256'])
+              print('  actions:', ', '.join(row['action_names']) or '(none)')
           PY
 
       - name: Upload catalog evidence
@@ -95,5 +143,6 @@ jobs:
           path: |
             build/enemy-source-catalog.json
             build/source-folder.txt
+            build/blend-inspection/
           if-no-files-found: error
           retention-days: 14
