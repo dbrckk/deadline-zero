@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "phantom-ultimate-ghost": {
+      "actor": "phantom",
+      "role": "phantom",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "repository": "ilrein/warptracker",
+        "commit": "71bbfbdfacd118196994b26da68eec1876d55c6b",
+        "path": "public/models/ghost.glb",
+        "git_blob_sha": "64a689730f9520be17e2628fa861ed9b1930054c",
+        "size_bytes": 288500
+      },
+      "actions": {
+        "idle": ["Flying_Idle", "Idle", "Flying"],
+        "run": ["Fast_Flying", "Flying", "Run", "Move"],
+        "attack": ["Headbutt", "Attack", "Dash"],
+        "hit": ["HitReact", "Hit", "Hurt", "Damage"],
+        "death": ["Death", "Die"]
+      },
+      "render": {
+        "target_height": 1.50,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "enemy/phantom"
+      },
+      "selection_goal": "PHANTOM production candidate: unmistakably ethereal floating silhouette with strong directional readability, visually distinct from all eight accepted actors at 96px and in crowded Android gameplay.",
+      "role_gate": {
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "requires_ethereal_identity": true,
+        "requires_distinct_from_regenerator": true,
+        "requires_distinct_from_humanoids": true
+      },
+      "verdict": {
+        "status": "candidate",
+        "reason": "Immutable CC0 Ghost source is locked by repository commit, Git blob and byte size. Candidate Validation must capture and lock the exact SHA-256, prove native action compatibility, exact 232-frame QA, phone-scale ethereal readability and Android crowd distinction before qualification."
+      }
+    }
+  }
+}
