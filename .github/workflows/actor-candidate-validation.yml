@@ -8,6 +8,7 @@ on:
       - 'config/active-actor-candidate.txt'
       - 'config/actor-candidates.json'
       - 'tools/sprites/resolve_actor_candidate.py'
+      - 'tools/sprites/resolve_actor_actions.py'
       - 'tools/sprites/normalize_actor_frames.py'
       - 'tools/blender/inspect_actor_source.py'
       - 'tools/blender/render_actor_8dir.py'
@@ -108,28 +109,10 @@ jobs:
           blender -b "$BLENDER_SOURCE_FILE" \
             -P tools/blender/inspect_actor_source.py -- \
             --json-out build/actor-candidate/inspection.json
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-
-          resolved_candidate=json.loads(Path('build/actor-candidate/resolved.json').read_text())
-          inspection=json.loads(Path('build/actor-candidate/inspection.json').read_text())
-          available=[row['name'] for row in inspection['actions']]
-          lowered={name.lower():name for name in available}
-          mapped={}
-          for motion, aliases in resolved_candidate['actions'].items():
-              for alias in aliases:
-                  if alias.lower() in lowered:
-                      mapped[motion]=lowered[alias.lower()]
-                      break
-          required=('idle','run','attack','hit','death')
-          missing=[motion for motion in required if motion not in mapped]
-          payload={'available_actions':available,'resolved':mapped,'missing':missing}
-          Path('build/actor-candidate/action-map.json').write_text(json.dumps(payload,indent=2)+'\n')
-          print(json.dumps(payload,indent=2))
-          if missing:
-              raise SystemExit('Candidate lacks required native actions: '+', '.join(missing))
-          PY
+          python3 tools/sprites/resolve_actor_actions.py \
+            --candidate build/actor-candidate/resolved.json \
+            --inspection build/actor-candidate/inspection.json \
+            --out build/actor-candidate/action-map.json
 
       - name: Render exact shared actor contract
         shell: bash
