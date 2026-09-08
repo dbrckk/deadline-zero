@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Resolve required actor motions against imported Blender action names.
 
-Importers commonly append armature/object suffixes (for example
-``Idle_CharacterArmature``). Keep candidate configs semantic by normalizing both
-configured aliases and imported action names in one shared implementation used
-by every CI backend.
+Candidate configs use semantic aliases while Blender importers may append object,
+armature, rig, skeleton, or numeric suffixes. Resolution is deterministic:
+exact names win; canonical matches are accepted only when unique; ambiguous
+canonical matches are reported and never guessed.
 """
 from __future__ import annotations
 
@@ -14,35 +14,56 @@ import re
 from pathlib import Path
 
 REQUIRED = ("idle", "run", "attack", "hit", "death")
+KNOWN_SUFFIXES = ("characterarmature", "armature", "rig", "skeleton")
 
 
 def normalize(name: str) -> str:
-    value = name.strip().lower()
-    # Blender/glTF importer suffixes seen in production sources. Strip these
-    # before punctuation so aliases remain independent of importer internals.
-    value = re.sub(r"_(?:character)?armature(?:\.\d+)?$", "", value)
-    value = re.sub(r"_armature(?:\.\d+)?$", "", value)
-    return re.sub(r"[^a-z0-9]+", "", value)
+    value = re.sub(r"\.\d{3}$", "", name.strip().lower())
+    compact = re.sub(r"[^a-z0-9]+", "", value)
+    changed = True
+    while changed:
+        changed = False
+        for suffix in KNOWN_SUFFIXES:
+            if compact.endswith(suffix) and len(compact) > len(suffix):
+                compact = compact[: -len(suffix)]
+                changed = True
+                break
+    return compact
 
 
 def resolve(actions: dict[str, list[str]], available: list[str]) -> dict:
-    index: dict[str, str] = {}
+    lowered = {name.lower(): name for name in available}
+    canonical_to_names: dict[str, list[str]] = {}
     for name in available:
-        index.setdefault(normalize(name), name)
+        canonical_to_names.setdefault(normalize(name), []).append(name)
 
     mapped: dict[str, str] = {}
+    methods: dict[str, str] = {}
+    ambiguities: dict[str, dict[str, list[str]]] = {}
+
     for motion, aliases in actions.items():
         for alias in aliases:
-            hit = index.get(normalize(alias))
-            if hit is not None:
-                mapped[motion] = hit
+            exact = lowered.get(alias.lower())
+            if exact is not None:
+                mapped[motion] = exact
+                methods[motion] = "exact"
                 break
+
+            matches = canonical_to_names.get(normalize(alias), [])
+            if len(matches) == 1:
+                mapped[motion] = matches[0]
+                methods[motion] = "canonical"
+                break
+            if len(matches) > 1:
+                ambiguities.setdefault(motion, {})[alias] = matches
 
     missing = [motion for motion in REQUIRED if motion not in mapped]
     return {
         "available_actions": available,
         "resolved": mapped,
+        "resolution_method": methods,
         "missing": missing,
+        "ambiguities": ambiguities,
     }
 
 
