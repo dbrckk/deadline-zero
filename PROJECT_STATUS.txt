@@ -2,7 +2,7 @@ DEADLINE ZERO — PROJECT STATUS
 ==============================
 
 Last update: 2026-09-08
-Current phase: Premium art pipeline / Rex + Shambler + Runner + Brute + RANGED + ELITE accepted
+Current phase: Premium art pipeline / Rex + Shambler + Runner + Brute + RANGED + ELITE + SHIELDED accepted
 
 CURRENT GOAL
 ------------
@@ -16,33 +16,34 @@ ACCEPTED PRODUCTION ACTORS
 [OK] BRUTE — Quaternius Ultimate Monsters Demon glTF, 232 directional frames, materially heavier phone-scale silhouette, real crowded Android gameplay accepted.
 [OK] RANGED — Quaternius BlueSoldier_Male + deterministic compact-rifle prop, native Shoot_OneHanded, 232 directional frames, real crowded Android gameplay accepted.
 [OK] ELITE — Quaternius Ultimate Monsters Orc glTF, packed Atlas_Monsters material, native Weapon attack, blue-crested armed silhouette, 232 directional frames, real crowded Android gameplay accepted.
+[OK] SHIELDED — Quaternius BlueSoldier_Male + fingerprinted KayKit shield_badge.fbx on Fist.L, 232 directional frames, defensive silhouette, real crowded Android gameplay accepted.
 
-CURRENT ELITE STATUS
---------------------
-[OK] Source: Quaternius Ultimate Monsters monster_Orc.gltf, CC0 1.0.
-[OK] Immutable mirror: yerdaulet-damir/liminal @ ff9ee5b57e2531b4f8841d6e7564283f943f6d34.
-[OK] Git blob: 750b2401542551ef4fc01e7b5d85b96195119622; size 1,280,189 bytes; SHA-256 e61a37f8d9b2eee28928bdfad2c55e0798cc0a212e925cc5dcc66b243526c1a3.
-[OK] Source contains Orc body mesh + Orc_Weapon mesh + packed Atlas_Monsters texture.
-[OK] Shared suffix-aware action resolver maps Idle / Walk / Weapon / HitReact / Death after glTF import.
-[OK] Candidate validation run 34238028804 / artifact 10062105502 passes exact 232/232, minimum master margin 28 px and phone normalization QA.
-[OK] Median normalized silhouette: width 43 px, height 49 px, area 1982 px2.
-[OK] Contact-sheet inspection confirms clean material, readable weapon attack, coherent 8-direction motion and no clipping.
-[OK] Generic production staging published assets/art/elite.png + elite-manifest.json + enemy/elite/... atlas groups additively.
-[OK] Production atlas now contains six actor pages / 1392 authored frames.
-[OK] Android Verify run 34244152937 / artifact 10063433773 passes real emulator instrumentation and crowded capture.
-[OK] Android screenshot confirms both ELITE Orcs remain visually distinct, correctly textured, armed and unclipped beside Shambler/Runner/Brute/RANGED.
-[OK] ELITE is ACCEPTED in config/actor-production-contracts.json, config/actor-candidates.d/elite.json and elite-manifest.json.
+CURRENT SHIELDED STATUS
+-----------------------
+[OK] Body source: Quaternius Ultimate Animated Character Pack BlueSoldier_Male.blend, CC0 1.0.
+[OK] Defensive prop: KayKit Character Pack: Adventurers shield_badge.fbx, CC0 1.0.
+[OK] Shield source pinned at commit 672074b73ba276876a19e8816ecdc5241817ab47, blob b334acbdead8d7ea6655263080dca3ab3e0be517, SHA-256 8ae485d8451075d19ce504489328e7f3e9dea5cddbddee916508321853795604.
+[OK] Generic defensive_prop pipeline fingerprints, imports, materializes and attaches external props deterministically.
+[OK] Candidate validation run 34251326917 / artifact 10066284057 passes exact 232/232, minimum master margin 37 px and phone normalization QA.
+[OK] Median normalized silhouette: width 36 px, height 61 px, area 2079.5 px2.
+[OK] Contact-sheet inspection confirms shield geometry remains visible across all eight directions with coherent attack/hit/death and intact materials.
+[OK] Generic production staging published assets/art/shielded.png + shielded-manifest.json + enemy/shielded/... atlas groups additively.
+[OK] Production atlas now contains seven actor pages / 1624 authored frames.
+[OK] Android Verify run 34261934514 / artifact 10070394448 passes real emulator instrumentation and crowded capture.
+[OK] Android screenshot confirms both SHIELDED actors remain readable, grounded, shielded and unclipped in the production crowd.
+[OK] SHIELDED is ACCEPTED in config/actor-production-contracts.json, config/actor-candidates.d/shielded.json and shielded-manifest.json.
 
 PIPELINE INDUSTRIALIZATION
 --------------------------
 [OK] config/actor-candidates.json plus config/actor-candidates.d/*.json store immutable provenance, role gates, render parameters and verdicts.
-[OK] tools/sprites/resolve_actor_candidate.py resolves pinned source metadata plus configured weapon metadata.
+[OK] tools/sprites/resolve_actor_candidate.py resolves pinned source metadata plus configured weapon/defensive-prop metadata.
 [OK] tools/sprites/resolve_actor_actions.py provides shared suffix-aware action mapping for GitHub Actions and CircleCI.
 [OK] Generic Actor Candidate Validation validates source fingerprint, Blender import, action resolution, exact 232 frames, margins, 96px normalization and silhouette metrics.
 [OK] Candidate pipeline supports .blend, .fbx, .gltf and .glb.
+[OK] Generic renderer supports deterministic configured weapons and immutable defensive props.
 [OK] tools/sprites/upsert_directional_actor_atlas.py performs additive multi-actor atlas publication.
 [OK] Generic Actor Production Staging publishes one qualified actor without erasing accepted actors.
-[OK] .circleci/config.yml provides a candidate-validation fallback on circleci-fallback-* branches if GitHub Actions cannot schedule jobs.
+[OK] CircleCI fallback connectivity is proven by a green fallback-smoke job; dedicated Android runtime fallback is available on circleci-fallback-* branches when GitHub Actions cannot schedule jobs.
 [OK] config/actor-production-contracts.json is the authoritative accepted-actor contract.
 [OK] Real Android visual acceptance remains mandatory before any actor reaches status=accepted.
 
@@ -55,16 +56,16 @@ IMPORTANT DECISIONS
 - Shared actor contract remains 8 directions / 232 frames / 96x96 unless intentionally versioned.
 - Role identity should be objectively measurable where possible.
 - RANGED requires explicit weapon geometry; silhouette extension alone is insufficient.
-- ELITE requires a distinct premium silhouette plus readable authored combat identity in phone-scale crowd QA.
-- GitHub Actions is primary CI; CircleCI is fallback when Actions cannot create/schedule jobs.
+- SHIELDED requires explicit defensive-prop geometry; width increase alone is insufficient.
+- GitHub Actions is primary CI; CircleCI is verified fallback when Actions cannot create/schedule jobs.
 
 CURRENT BLOCKER
 ---------------
-ELITE is no longer a blocker. SHIELDED is the next authored-enemy quality gate, followed by REGENERATOR and PHANTOM.
+SHIELDED is no longer a blocker. REGENERATOR is the next authored-enemy quality gate, followed by PHANTOM.
 
 IMMEDIATE NEXT ACTION
 ---------------------
-Run the final accepted-contract Verify on PR #41. If green, merge ELITE to main. Then onboard SHIELDED using the same generic candidate -> role gate -> production staging -> real Android acceptance path.
+Run the final accepted-contract Verify on PR #42. If green, merge SHIELDED to main. Then onboard REGENERATOR using the same generic candidate -> role gate -> production staging -> real Android acceptance path.
 
 ORDER OF EXECUTION
 ------------------
@@ -81,9 +82,13 @@ ORDER OF EXECUTION
 11. Merge accepted RANGED integration. [DONE]
 12. ELITE candidate qualification + production staging. [DONE]
 13. ELITE real Android acceptance. [DONE]
-14. Merge accepted ELITE integration. [NOW]
-15. SHIELDED / REGENERATOR / PHANTOM authored production actors. [NEXT]
-16. Remaining survivors and bosses. [LATER]
+14. Merge accepted ELITE integration. [DONE]
+15. SHIELDED candidate qualification + production staging. [DONE]
+16. SHIELDED real Android acceptance. [DONE]
+17. Merge accepted SHIELDED integration. [NOW]
+18. REGENERATOR authored production actor. [NEXT]
+19. PHANTOM authored production actor. [LATER]
+20. Remaining survivors and bosses. [LATER]
 
 SHARED ACTOR CONTRACT
 ---------------------
@@ -101,7 +106,8 @@ RUNNER fast-enemy vertical slice: ACCEPTED.
 BRUTE heavy-enemy vertical slice: ACCEPTED.
 RANGED weaponized enemy vertical slice: ACCEPTED.
 ELITE premium-enemy vertical slice: ACCEPTED.
+SHIELDED defensive-enemy vertical slice: ACCEPTED.
 
 NEXT QUALITY GATE
 -----------------
-SHIELDED must read as a defensive archetype at phone scale, publish additively, preserve the six accepted actors, and pass real Android crowded acceptance before status=accepted.
+REGENERATOR must read as a self-repairing/high-sustain archetype at phone scale, publish additively, preserve the seven accepted actors, and pass real Android crowded acceptance before status=accepted.
