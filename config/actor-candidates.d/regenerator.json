@@ -38,8 +38,8 @@
         "requires_distinct_from_shambler": true
       },
       "verdict": {
-        "status": "qualified",
-        "reason": "Actor Candidate Validation #81 passed the exact 232-frame contract with native Idle, Walk, Bite_Front, HitRecieve and Death actions. Contact-sheet inspection confirms a clean green organic non-humanoid silhouette, readable single-eye identity, no clipping/material corruption, and strong phone-scale distinction from the humanoid Shambler. Actor Production Staging #47 then republished the candidate additively on top of the latest main Shambler atlas and verified all accepted actor roots plus enemy/regenerator. Real Android crowded acceptance is still required before status=accepted.",
+        "status": "accepted",
+        "reason": "Actor Candidate Validation #81 passed the exact 232-frame contract and phone-scale visual QA. Actor Production Staging #47 republished the candidate additively on top of the latest main atlas. Verify #1380 then passed core, Android build and real Android runtime instrumentation; artifact 10076741425 was inspected and confirms both REGENERATOR blobs are distinct from humanoid actors, grounded, materially intact and unclipped in the crowded production scene.",
         "validation_run_id": 34266381609,
         "validation_artifact_id": 10072289773,
         "validation": {
@@ -57,6 +57,12 @@
         "production_staging": {
           "run_id": 34278282930,
           "artifact_id": 10076587123
+        },
+        "android_acceptance": {
+          "run_id": 34278412075,
+          "run_number": 1380,
+          "artifact_id": 10076741425,
+          "visual_qa_pass": true
         }
       }
     }
