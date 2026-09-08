@@ -1,0 +1,76 @@
+name: Ultimate Monsters Catalog
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ultimate-monsters-catalog.yml'
+      - 'config/active-actor-candidate.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: List official Quaternius Ultimate Monsters folder without downloading
+        run: |
+          python -m pip install --disable-pip-version-check gdown
+          mkdir -p build
+          gdown --folder --json 'https://drive.google.com/drive/folders/18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C?usp=sharing' > build/ultimate-monsters-drive-list.json
+
+      - name: Build deterministic source catalog
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          entries = json.loads(Path('build/ultimate-monsters-drive-list.json').read_text(encoding='utf-8'))
+          rows = []
+          for entry in entries:
+              path = entry.get('path', '')
+              suffix = Path(path).suffix.lower()
+              rows.append({
+                  'path': path,
+                  'url': entry.get('url'),
+                  'suffix': suffix,
+              })
+          rows.sort(key=lambda r: r['path'].lower())
+          report = {
+              'provider': 'Quaternius',
+              'pack': 'Ultimate Monsters',
+              'license': 'CC0 1.0',
+              'official_drive_folder_id': '18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C',
+              'file_count': len(rows),
+              'blend_count': sum(r['suffix'] == '.blend' for r in rows),
+              'fbx_count': sum(r['suffix'] == '.fbx' for r in rows),
+              'gltf_count': sum(r['suffix'] in ('.gltf', '.glb') for r in rows),
+              'files': rows,
+          }
+          Path('build/ultimate-monsters-catalog.json').write_text(
+              json.dumps(report, indent=2) + '\n', encoding='utf-8'
+          )
+          print(json.dumps({k: report[k] for k in ('file_count','blend_count','fbx_count','gltf_count')}, indent=2))
+          print('--- likely BRUTE candidates ---')
+          for r in rows:
+              low = r['path'].lower()
+              if any(token in low for token in ('orc', 'yeti', 'demon', 'golem', 'goleling', 'king')) and r['suffix'] in ('.blend','.fbx','.gltf','.glb'):
+                  print(r['path'], r['url'])
+          PY
+
+      - name: Upload official source catalog
+        uses: actions/upload-artifact@v4
+        with:
+          name: ultimate-monsters-catalog-${{ github.run_number }}
+          path: |
+            build/ultimate-monsters-drive-list.json
+            build/ultimate-monsters-catalog.json
+          retention-days: 14

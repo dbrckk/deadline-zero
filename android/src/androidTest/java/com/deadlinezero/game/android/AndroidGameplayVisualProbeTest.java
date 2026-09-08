@@ -42,9 +42,10 @@ public final class AndroidGameplayVisualProbeTest {
             capture("rex-gameplay.png");
 
             // Force a deterministic phone-scale composition containing authored Rex, four durable
-            // Shamblers on the cardinals, and two durable Runners on opposite diagonals. Reflection
-            // is deliberately confined to instrumentation code so production GameScreen does not
-            // gain QA-only API surface. Keep the historical filename for artifact compatibility.
+            // Shamblers on the cardinals, two durable Runners on opposite diagonals, and two durable
+            // Brutes on the remaining diagonals. Reflection is deliberately confined to instrumentation
+            // code so production GameScreen does not gain QA-only API surface. Keep the historical
+            // filename for artifact compatibility with existing CI collection.
             runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
             Thread.sleep(220L);
             capture("rex-shambler-crowd.png");
@@ -76,7 +77,13 @@ public final class AndroidGameplayVisualProbeTest {
             enemies.add(new Enemy(Enemy.Type.RUNNER, 3.7f, 3.0f, 50_000f, .22f, .46f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.RUNNER, -3.7f, -3.0f, 50_000f, .22f, .46f, 0f, 1));
 
-            assertTrue("visual probe failed to inject authored Shambler + Runner crowd", enemies.size >= before + 6);
+            // Brute deliberately occupies the opposite diagonals with a larger collision footprint
+            // and very low speed. The screenshot must prove its production sprite remains visibly
+            // heavier than both Shambler and Runner at real Android phone scale.
+            enemies.add(new Enemy(Enemy.Type.BRUTE, -3.7f, 3.0f, 50_000f, .06f, .62f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.BRUTE, 3.7f, -3.0f, 50_000f, .06f, .62f, 0f, 1));
+
+            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute crowd", enemies.size >= before + 8);
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("unable to access GameScreen enemy collection for visual QA", exception);
         }

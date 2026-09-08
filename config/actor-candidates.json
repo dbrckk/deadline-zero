@@ -3,55 +3,51 @@
   "candidates": {
     "brute-viking-male": {
       "actor": "brute",
-      "source": {
-        "provider": "Quaternius",
-        "pack": "Ultimate Animated Character Pack",
-        "license": "CC0 1.0",
-        "repository": "ariesyous/projectbluebean",
-        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
-        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Viking_Male.blend",
-        "git_blob_sha": "79620718ba895acec12685980391d38c7d2a0e2c",
-        "size_bytes": 2133356
-      },
-      "actions": {
-        "idle": ["Idle"],
-        "run": ["Walk", "Run"],
-        "attack": ["Punch", "SwordSlash", "Attack"],
-        "hit": ["RecieveHit", "ReceiveHit", "HitReact", "Hit"],
-        "death": ["Death"]
-      },
-      "render": {
-        "target_height": 1.45,
-        "ortho_scale": 7.5,
-        "horizontal_anchor": "union-center"
-      },
-      "selection_goal": "Substantially heavier silhouette than Shambler and Runner at 96px phone scale."
+      "source": {"provider":"Quaternius","pack":"Ultimate Animated Character Pack","license":"CC0 1.0","repository":"ariesyous/projectbluebean","commit":"4769997aaea204c66735813e2bf61dc3c94e7631","path":"assets/Ultimate Animated Character Pack - Nov 2019/Blends/Viking_Male.blend","git_blob_sha":"79620718ba895acec12685980391d38c7d2a0e2c","size_bytes":2133356},
+      "actions":{"idle":["Idle"],"run":["Walk","Run"],"attack":["Punch","SwordSlash","Attack"],"hit":["RecieveHit","ReceiveHit","HitReact","Hit"],"death":["Death"]},
+      "render":{"target_height":1.45,"ortho_scale":7.5,"horizontal_anchor":"union-center"},
+      "selection_goal":"Substantially heavier silhouette than Shambler and Runner at 96px phone scale.",
+      "verdict":{"status":"rejected","reason":"Median silhouette area 1708 px2 and width 29 px are materially smaller than Shambler."}
     },
     "brute-zombie-male-control": {
-      "actor": "brute",
-      "source": {
-        "provider": "Quaternius",
-        "pack": "Ultimate Animated Character Pack",
-        "license": "CC0 1.0",
-        "repository": "ariesyous/projectbluebean",
-        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
-        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Zombie_Male.blend",
-        "git_blob_sha": "a53535441c7b83a3d29fed798ce26699529f0bb4",
-        "size_bytes": 2007788
-      },
-      "actions": {
-        "idle": ["Idle"],
-        "run": ["Walk", "Run"],
-        "attack": ["Punch", "Attack"],
-        "hit": ["RecieveHit", "ReceiveHit", "HitReact", "Hit"],
-        "death": ["Death"]
-      },
-      "render": {
-        "target_height": 1.45,
-        "ortho_scale": 7.5,
-        "horizontal_anchor": "union-center"
-      },
-      "selection_goal": "Thematic zombie control candidate; reject if silhouette is not materially heavier than Shambler and Runner."
+      "actor":"brute",
+      "source":{"provider":"Quaternius","pack":"Ultimate Animated Character Pack","license":"CC0 1.0","repository":"ariesyous/projectbluebean","commit":"4769997aaea204c66735813e2bf61dc3c94e7631","path":"assets/Ultimate Animated Character Pack - Nov 2019/Blends/Zombie_Male.blend","git_blob_sha":"a53535441c7b83a3d29fed798ce26699529f0bb4","size_bytes":2007788},
+      "actions":{"idle":["Idle"],"run":["Walk","Run"],"attack":["Punch","Attack"],"hit":["RecieveHit","ReceiveHit","HitReact","Hit"],"death":["Death"]},
+      "render":{"target_height":1.45,"ortho_scale":7.5,"horizontal_anchor":"union-center"},
+      "selection_goal":"Thematic zombie control candidate; reject if silhouette is not materially heavier than Shambler and Runner.",
+      "verdict":{"status":"rejected","reason":"Median silhouette area 1952.5 px2 is smaller than Shambler 2202 px2."}
+    },
+    "brute-ultimate-orc": {
+      "actor":"brute",
+      "source":{"provider":"Quaternius","pack":"Ultimate Monsters","license":"CC0 1.0","official_drive_folder_id":"18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C","path":"Big/Blends/Orc.blend","url":"https://drive.google.com/uc?id=1c3MUyIuICUIihEoommpccm4e1BaPSxZ9","size_bytes":3046180,"sha256":"88a9ec1b17044b254dd715f7068549d1a1a9413d033e0ae0136f5267c00f12de"},
+      "actions":{"idle":["Idle","idle"],"run":["Walk","Run","Walking","Running"],"attack":["Attack","Punch","MeleeAttack","Attack1","Attack_1"],"hit":["TakeDamage","Damage","Hit","HitReact","ReceiveHit","RecieveHit"],"death":["Death","Die","Dying"]},
+      "render":{"target_height":1.45,"ortho_scale":7.5,"horizontal_anchor":"union-center"},
+      "selection_goal":"Primary BRUTE candidate: visibly broader and heavier than Shambler and Runner while remaining a readable grounded biped.",
+      "verdict":{"status":"rejected","validation_run_id":34154620490,"median_bbox_area_px2":2217,"median_bbox_width_px":46,"reason":"Only 0.7% larger median area than Shambler and rendered magenta because external material assets were unresolved."}
+    },
+    "brute-ultimate-yeti": {
+      "actor":"brute",
+      "source":{"provider":"Quaternius","pack":"Ultimate Monsters","license":"CC0 1.0","official_drive_folder_id":"18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C","path":"Big/Blends/Yeti.blend","url":"https://drive.google.com/uc?id=174GVv54Yo0q2dNRYVoJifKyepy8K3gO7","sha256":"c093bb3e81cfdb323465c9c550f1a5cf15d0af8b2bb8072e59cca1b585625f76"},
+      "actions":{"idle":["Idle","idle"],"run":["Walk","Run","Walking","Running"],"attack":["Attack","Punch","MeleeAttack","Attack1","Attack_1"],"hit":["TakeDamage","Damage","Hit","HitReact","ReceiveHit","RecieveHit"],"death":["Death","Die","Dying"]},
+      "render":{"target_height":1.45,"ortho_scale":7.5,"horizontal_anchor":"union-center"},
+      "selection_goal":"Fallback BRUTE candidate: prioritize maximum body mass and grounded readability over thematic similarity.",
+      "verdict":{"status":"rejected","validation_run_id":34155124577,"median_bbox_area_px2":2061,"median_bbox_width_px":45,"master_min_margin_px":48,"reason":"Technically clean 232/232 but median silhouette is smaller than Shambler; contact sheet also renders magenta due to unresolved external material assets."}
+    },
+    "brute-ultimate-blue-demon": {
+      "actor":"brute",
+      "source":{"provider":"Quaternius","pack":"Ultimate Monsters","license":"CC0 1.0","mirror_repository":"yerdaulet-damir/liminal","repository":"yerdaulet-damir/liminal","commit":"ff9ee5b57e2531b4f8841d6e7564283f943f6d34","path":"client/public/models/monster_BlueDemon.gltf","git_blob_sha":"52ec6f7bce0f753f2c6e539b39e52be6931c40cf","size_bytes":1190068,"sha256":"9eb899fc619dff9a973669e0962452990c8ec44d4501dd41fe4f4fe5afd631f4","upstream_path":"Big/glTF/BlueDemon.gltf","upstream_drive_url":"https://drive.google.com/uc?id=1mcxtHj9Aw1uu1FWYhl1rfPenuq3My-Z4"},
+      "actions":{"idle":["Idle_CharacterArmature","Idle","idle"],"run":["Walk_CharacterArmature","Run_CharacterArmature","Walk","Run","Walking","Running"],"attack":["Punch_CharacterArmature","Weapon_CharacterArmature","Attack","Punch","MeleeAttack","Attack1","Attack_1"],"hit":["HitReact_CharacterArmature","TakeDamage","Damage","Hit","HitReact","ReceiveHit","RecieveHit"],"death":["Death_CharacterArmature","Death","Die","Dying"]},
+      "render":{"target_height":1.45,"ortho_scale":7.5,"horizontal_anchor":"union-center"},
+      "selection_goal":"BRUTE mass candidate: require a clearly larger phone-scale silhouette than Shambler and a grounded readable biped profile.",
+      "verdict":{"status":"rejected","validation_run_id":34195721090,"median_bbox_area_px2":2066,"median_bbox_width_px":44,"master_min_margin_px":19,"reason":"Technically clean 232/232 with correct packed material, but median silhouette area 2066 px2 is smaller than accepted Shambler 2202 px2 and far below the BRUTE mass target."}
+    },
+    "brute-ultimate-demon": {
+      "actor":"brute",
+      "source":{"provider":"Quaternius","pack":"Ultimate Monsters","license":"CC0 1.0","mirror_repository":"yerdaulet-damir/liminal","repository":"yerdaulet-damir/liminal","commit":"ff9ee5b57e2531b4f8841d6e7564283f943f6d34","path":"client/public/models/monster_Demon.gltf","git_blob_sha":"77a74a32e368a28e0797a8803b689175dfa00228","size_bytes":1264925,"sha256":"9ce361b41a0e80d42a70f6325169b9c70a6e3304b8d856b8344a2b7f185067af","upstream_path":"Big/glTF/Demon.gltf"},
+      "actions":{"idle":["Idle_CharacterArmature","Idle","idle"],"run":["Walk_CharacterArmature","Run_CharacterArmature","Walk","Run","Walking","Running"],"attack":["Punch_CharacterArmature","Weapon_CharacterArmature","Attack","Punch","MeleeAttack","Attack1","Attack_1"],"hit":["HitReact_CharacterArmature","TakeDamage","Damage","Hit","HitReact","ReceiveHit","RecieveHit"],"death":["Death_CharacterArmature","Death","Die","Dying"]},
+      "render":{"target_height":1.45,"ortho_scale":7.5,"horizontal_anchor":"union-center"},
+      "selection_goal":"BRUTE fallback: require a materially larger silhouette than Shambler, ideally at least 20 percent greater median bbox area, with readable grounded animations and intact packed material.",
+      "verdict":{"status":"accepted","validation_run_id":34196722114,"validation_artifact_id":10044402041,"median_bbox_area_px2":2719.5,"median_bbox_width_px":55,"median_bbox_height_px":53,"master_min_margin_px":32,"shambler_area_ratio":1.235,"phone_qa_pass":true,"android_runtime_run_id":34205861027,"android_visual_artifact_id":10047825813,"android_visual_qa_pass":true,"reason":"232/232 production QA passes with intact packed material; median silhouette area is about 23.5% larger than accepted Shambler, and crowded real-Android QA confirms the authored red demon is materially larger, grounded, readable and unclipped."}
     }
   }
 }

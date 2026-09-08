@@ -1,0 +1,250 @@
+name: Actor Candidate Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/actor-candidate-validation.yml'
+      - 'config/active-actor-candidate.txt'
+      - 'config/actor-candidates.json'
+      - 'tools/sprites/resolve_actor_candidate.py'
+      - 'tools/sprites/normalize_actor_frames.py'
+      - 'tools/blender/inspect_actor_source.py'
+      - 'tools/blender/render_actor_8dir.py'
+  workflow_dispatch:
+
+concurrency:
+  group: actor-candidate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Resolve active candidate from config
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate="$(tr -d '[:space:]' < config/active-actor-candidate.txt)"
+          test -n "$candidate"
+          mkdir -p build/actor-candidate/source
+          python3 tools/sprites/resolve_actor_candidate.py "$candidate" \
+            --github-env "$GITHUB_ENV" \
+            --json-out build/actor-candidate/resolved.json
+
+      - name: Download and fingerprint immutable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="build/actor-candidate/source/$SOURCE_FILENAME"
+          if [[ "$SOURCE_URL" == https://drive.google.com/* ]]; then
+            python3 -m pip install --disable-pip-version-check gdown
+            gdown "$SOURCE_URL" -O "$target"
+          else
+            curl --fail --location --retry 3 "$SOURCE_URL" -o "$target"
+          fi
+          test -s "$target"
+          actual_size="$(stat -c%s "$target")"
+          if [[ "$SOURCE_SIZE" != "0" ]]; then
+            test "$actual_size" -eq "$SOURCE_SIZE"
+          fi
+          if [[ -n "$SOURCE_GIT_BLOB" ]]; then
+            actual_blob="$(git hash-object "$target")"
+            test "$actual_blob" = "$SOURCE_GIT_BLOB"
+          fi
+          actual_sha256="$(sha256sum "$target" | awk '{print $1}')"
+          if [[ -n "$SOURCE_EXPECTED_SHA256" ]]; then
+            test "$actual_sha256" = "$SOURCE_EXPECTED_SHA256"
+          fi
+          printf '%s  %s\n' "$actual_sha256" "$SOURCE_FILENAME" | tee build/actor-candidate/source/sha256.txt
+          printf '{"size_bytes":%s,"sha256":"%s"}\n' "$actual_size" "$actual_sha256" > build/actor-candidate/source/fingerprint.json
+
+      - name: Install Blender and image tooling
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y blender libegl1 libgl1-mesa-dri python3-numpy
+          python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+          blender --version | head -n 1
+
+      - name: Prepare Blender scene
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_path="build/actor-candidate/source/$SOURCE_FILENAME"
+          case "${SOURCE_FILENAME,,}" in
+            *.blend)
+              scene_path="$source_path"
+              ;;
+            *.fbx)
+              scene_path="build/actor-candidate/source/imported-source.blend"
+              SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import bpy, os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])"
+              ;;
+            *.gltf|*.glb)
+              scene_path="build/actor-candidate/source/imported-source.blend"
+              SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import sys; sys.path.append('/usr/lib/python3/dist-packages'); import bpy, os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])"
+              ;;
+            *)
+              echo "Unsupported actor source format: $SOURCE_FILENAME" >&2
+              exit 1
+              ;;
+          esac
+          test -s "$scene_path"
+          echo "BLENDER_SOURCE_FILE=$scene_path" >> "$GITHUB_ENV"
+
+      - name: Inspect source and resolve native actions
+        shell: bash
+        run: |
+          set -euo pipefail
+          blender -b "$BLENDER_SOURCE_FILE" \
+            -P tools/blender/inspect_actor_source.py -- \
+            --json-out build/actor-candidate/inspection.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          resolved_candidate=json.loads(Path('build/actor-candidate/resolved.json').read_text())
+          inspection=json.loads(Path('build/actor-candidate/inspection.json').read_text())
+          available=[row['name'] for row in inspection['actions']]
+          lowered={name.lower():name for name in available}
+          mapped={}
+          for motion, aliases in resolved_candidate['actions'].items():
+              for alias in aliases:
+                  if alias.lower() in lowered:
+                      mapped[motion]=lowered[alias.lower()]
+                      break
+          required=('idle','run','attack','hit','death')
+          missing=[motion for motion in required if motion not in mapped]
+          payload={'available_actions':available,'resolved':mapped,'missing':missing}
+          Path('build/actor-candidate/action-map.json').write_text(json.dumps(payload,indent=2)+'\n')
+          print(json.dumps(payload,indent=2))
+          if missing:
+              raise SystemExit('Candidate lacks required native actions: '+', '.join(missing))
+          PY
+
+      - name: Render exact shared actor contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          eval "$(python3 - <<'PY'
+          import json,shlex
+          m=json.load(open('build/actor-candidate/action-map.json'))['resolved']
+          for key,value in m.items():
+              print(f'{key.upper()}={shlex.quote(value)}')
+          PY
+          )"
+          blender -b "$BLENDER_SOURCE_FILE" \
+            -P tools/blender/render_actor_8dir.py -- \
+            --actor "$ACTOR" \
+            --output build/actor-candidate/master512 \
+            --target-height "$TARGET_HEIGHT" \
+            --ortho-scale "$ORTHO_SCALE" \
+            --idle-action "$IDLE" \
+            --run-action "$RUN" \
+            --attack-action "$ATTACK" \
+            --hit-action "$HIT" \
+            --death-action "$DEATH"
+          test "$(find build/actor-candidate/master512 -name '*.png' | wc -l)" -eq 232
+
+      - name: Validate master frame envelope
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json
+
+          root=Path('build/actor-candidate/master512')
+          frames=sorted(root.rglob('*.png'))
+          offenders=[]; empty=[]; minimum=10**9
+          for path in frames:
+              im=Image.open(path).convert('RGBA')
+              bbox=im.getchannel('A').getbbox()
+              rel=str(path.relative_to(root))
+              if bbox is None:
+                  empty.append(rel); continue
+              l,t,r,b=bbox
+              margins={'left':l,'top':t,'right':im.width-r,'bottom':im.height-b}
+              minimum=min(minimum,*margins.values())
+              bad={k:v for k,v in margins.items() if v < 4}
+              if bad:
+                  offenders.append({'frame':rel,'bbox':[l,t,r,b],'margins':margins,'violations':bad})
+          report={
+              'pass':len(frames)==232 and not empty and not offenders,
+              'frame_count':len(frames),
+              'required_margin_px':4,
+              'minimum_observed_margin_px':None if minimum==10**9 else minimum,
+              'empty_frames':empty,
+              'offenders':offenders,
+          }
+          Path('build/actor-candidate/master-margin.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps({k:v for k,v in report.items() if k!='offenders'},indent=2))
+          if not report['pass']:
+              raise SystemExit('Candidate master-render margin QA failed')
+          PY
+
+      - name: Normalize to phone-scale contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/sprites/normalize_actor_frames.py \
+            --actor "$ACTOR" \
+            --input build/actor-candidate/master512 \
+            --output build/actor-candidate/normalized96 \
+            --report build/actor-candidate/qa.json \
+            --contact-sheet build/actor-candidate/contact-sheet.png \
+            --horizontal-anchor "$HORIZONTAL_ANCHOR"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from PIL import Image
+          import statistics
+
+          qa=json.loads(Path('build/actor-candidate/qa.json').read_text())
+          assert qa['pass'] is True and qa['frame_count']==232, qa
+          widths=[]; heights=[]; areas=[]
+          for path in sorted(Path('build/actor-candidate/normalized96').rglob('*.png')):
+              bbox=Image.open(path).convert('RGBA').getchannel('A').getbbox()
+              if bbox:
+                  l,t,r,b=bbox
+                  widths.append(r-l); heights.append(b-t); areas.append((r-l)*(b-t))
+          metrics={
+              'frame_count':len(widths),
+              'median_bbox_width_px':statistics.median(widths),
+              'median_bbox_height_px':statistics.median(heights),
+              'median_bbox_area_px2':statistics.median(areas),
+              'max_bbox_width_px':max(widths),
+              'max_bbox_height_px':max(heights),
+          }
+          Path('build/actor-candidate/silhouette-metrics.json').write_text(json.dumps(metrics,indent=2)+'\n')
+          print('Phone QA PASS', qa['frame_count'], 'frames', metrics)
+          PY
+
+      - name: Upload candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: actor-candidate-${{ env.ACTOR_CANDIDATE }}-${{ github.run_number }}
+          path: |
+            build/actor-candidate/resolved.json
+            build/actor-candidate/source/sha256.txt
+            build/actor-candidate/source/fingerprint.json
+            build/actor-candidate/inspection.json
+            build/actor-candidate/action-map.json
+            build/actor-candidate/master-margin.json
+            build/actor-candidate/qa.json
+            build/actor-candidate/silhouette-metrics.json
+            build/actor-candidate/contact-sheet.png
+            build/actor-candidate/normalized96/
+          if-no-files-found: warn
+          retention-days: 14

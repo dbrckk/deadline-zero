@@ -1,0 +1,161 @@
+name: Brute Production Staging
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/brute-production-staging.yml'
+      - 'config/actor-candidates.json'
+      - 'config/active-actor-candidate.txt'
+      - 'tools/sprites/upsert_directional_actor_atlas.py'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  stage-brute:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'brute-candidate-validation'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Deadline Zero PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: brute-candidate-validation
+          fetch-depth: 0
+
+      - name: Download validated BRUTE evidence
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 34196722114
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          name: actor-candidate-brute-ultimate-demon-22
+          path: brute-evidence
+
+      - name: Validate immutable BRUTE evidence and role gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$(find brute-evidence -type d -name normalized96 -print -quit)"
+          qa="$(find brute-evidence -type f -name qa.json -print -quit)"
+          margin="$(find brute-evidence -type f -name master-margin.json -print -quit)"
+          metrics="$(find brute-evidence -type f -name silhouette-metrics.json -print -quit)"
+          fingerprint="$(find brute-evidence -type f -name fingerprint.json -print -quit)"
+          test -n "$root" -a -n "$qa" -a -n "$margin" -a -n "$metrics" -a -n "$fingerprint"
+          python3 - "$qa" "$margin" "$metrics" "$fingerprint" <<'PY'
+          import json,sys
+          qa=json.load(open(sys.argv[1]))
+          margin=json.load(open(sys.argv[2]))
+          metrics=json.load(open(sys.argv[3]))
+          fp=json.load(open(sys.argv[4]))
+          assert qa.get('actor') == 'brute', qa
+          assert qa.get('pass') is True and qa.get('frame_count') == 232, qa
+          assert qa.get('horizontal_anchor') == 'union-center', qa
+          assert margin.get('pass') is True and margin.get('frame_count') == 232, margin
+          assert margin.get('minimum_observed_margin_px', 0) >= 4, margin
+          assert fp.get('size_bytes') == 1264925, fp
+          assert fp.get('sha256') == '9ce361b41a0e80d42a70f6325169b9c70a6e3304b8d856b8344a2b7f185067af', fp
+          assert metrics.get('frame_count') == 232, metrics
+          assert metrics.get('median_bbox_area_px2', 0) >= 2642.4, metrics
+          assert metrics.get('median_bbox_width_px', 0) >= 50, metrics
+          print('BRUTE role gate PASS:', metrics)
+          PY
+          echo "SPRITE_ROOT=$root" >> "$GITHUB_ENV"
+
+      - name: Install atlas tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+
+      - name: Build production BRUTE page
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/brute-production
+          cp assets/art/game.atlas build/brute-production/game.atlas
+          python3 tools/sprites/upsert_directional_actor_atlas.py \
+            --actor brute \
+            --root enemy/brute \
+            --input "$SPRITE_ROOT" \
+            --atlas build/brute-production/game.atlas \
+            --png build/brute-production/brute.png \
+            --manifest build/brute-production/brute-manifest.json \
+            --source-run-id 34196722114
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('build/brute-production/brute-manifest.json')
+          data=json.loads(p.read_text())
+          data.update({
+            'source_stage':'96px-normalization-v2',
+            'source_production_ready':False,
+            'source_horizontal_anchor':'union-center',
+            'source_sha256':'9ce361b41a0e80d42a70f6325169b9c70a6e3304b8d856b8344a2b7f185067af',
+            'source_git_blob':'77a74a32e368a28e0797a8803b689175dfa00228',
+            'source_mirror_commit':'ff9ee5b57e2531b4f8841d6e7564283f943f6d34',
+            'validation_run':34196722114,
+            'validation_artifact_id':10044402041,
+            'master_minimum_margin_px':32,
+            'median_bbox_area_px2':2719.5,
+            'median_bbox_width_px':55.0,
+            'shambler_area_ratio':1.235,
+            'phone_qa_pass':True,
+            'android_accepted':False,
+          })
+          p.write_text(json.dumps(data,indent=2)+'\n')
+          PY
+
+      - name: Verify four-actor atlas contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          atlas=Path('build/brute-production/game.atlas').read_text()
+          dirs=('n','ne','e','se','s','sw','w','nw')
+          anims={'idle':4,'run':8,'attack':6,'hit':3,'death':8}
+          for root in ('survivor/rex','enemy/shambler','enemy/runner','enemy/brute'):
+              total=0
+              for d in dirs:
+                  for anim,count in anims.items():
+                      got=atlas.count(f'{root}/{d}/{anim}\n')
+                      assert got == count, (root,d,anim,got,count)
+                      total += got
+              assert total == 232, (root,total)
+          manifest=json.loads(Path('build/brute-production/brute-manifest.json').read_text())
+          assert manifest['actor']=='brute' and manifest['frame_count']==232, manifest
+          assert manifest['source_horizontal_anchor']=='union-center', manifest
+          for page in ('rex.png','shambler.png','runner.png','brute.png'):
+              assert atlas.count(page+'\n') == 1, page
+          print('Production atlas PASS: Rex + Shambler + Runner + Brute = 928 directional frames')
+          PY
+
+      - name: Upload commit-ready BRUTE production assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: brute-production-staging-${{ github.run_number }}
+          path: |
+            build/brute-production/brute.png
+            build/brute-production/game.atlas
+            build/brute-production/brute-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Commit BRUTE production assets to PR branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp build/brute-production/brute.png assets/art/brute.png
+          cp build/brute-production/game.atlas assets/art/game.atlas
+          cp build/brute-production/brute-manifest.json assets/art/brute-manifest.json
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/art/brute.png assets/art/game.atlas assets/art/brute-manifest.json
+          if git diff --cached --quiet; then
+            echo 'BRUTE production assets already current on PR branch'
+            exit 0
+          fi
+          git commit -m 'Stage qualified BRUTE production atlas'
+          git push origin HEAD:brute-candidate-validation
