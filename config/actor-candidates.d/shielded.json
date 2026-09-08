@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "shielded-blue-soldier-kaykit-shield": {
+      "actor": "shielded",
+      "role": "shielded",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/BlueSoldier_Male.blend",
+        "git_blob_sha": "5a9ff78571c9c2bfc5492912ca3dbc6e9ed573d8",
+        "size_bytes": 1869476,
+        "sha256": "ee9c0780a297c333aab1c59694afc4ad1d13fb0374327287c1ec8425be18337f"
+      },
+      "defensive_prop": {
+        "provider": "KayKit Game Assets",
+        "pack": "Character Pack: Adventurers",
+        "license": "CC0 1.0",
+        "repository": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+        "commit": "672074b73ba276876a19e8816ecdc5241817ab47",
+        "path": "addons/kaykit_character_pack_adventures/Assets/fbx/shield_badge.fbx",
+        "git_blob_sha": "b334acbdead8d7ea6655263080dca3ab3e0be517",
+        "size_bytes": 27596,
+        "bone": "Fist.L",
+        "role": "shield"
+      },
+      "actions": {
+        "idle": ["Idle"],
+        "run": ["Walk", "Run"],
+        "attack": ["Punch", "SwordSlash", "Attack"],
+        "hit": ["RecieveHit", "ReceiveHit", "HitReact", "Hit"],
+        "death": ["Death"]
+      },
+      "render": {
+        "target_height": 1.45,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "selection_goal": "SHIELDED production candidate: heavy defensive silhouette with an explicit left-arm shield that remains readable in all eight directions at 96px and matches the runtime shieldHp archetype.",
+      "role_gate": {
+        "requires_explicit_shield_geometry": true,
+        "requires_shield_visible_all_directions": true,
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true
+      },
+      "verdict": {
+        "status": "pipeline_pending",
+        "reason": "Body source and official CC0 KayKit shield source are pinned. Candidate must not run until the generic candidate pipeline fingerprints/imports defensive_prop and attaches it to Fist.L before rendering."
+      }
+    }
+  }
+}
