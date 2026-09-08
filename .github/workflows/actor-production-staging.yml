@@ -6,8 +6,11 @@ on:
     paths:
       - '.github/workflows/actor-production-staging.yml'
       - 'config/actor-candidates.json'
+      - 'config/actor-candidates.d/**'
       - 'config/active-actor-candidate.txt'
       - 'config/actor-production-contracts.json'
+      - 'tools/sprites/resolve_actor_candidate.py'
+      - 'tools/sprites/validate_ranged_attack_readability.py'
       - 'tools/sprites/upsert_directional_actor_atlas.py'
   workflow_dispatch:
 
@@ -36,6 +39,7 @@ jobs:
       max_area: ${{ steps.resolve.outputs.max_area }}
       min_width: ${{ steps.resolve.outputs.min_width }}
       max_width: ${{ steps.resolve.outputs.max_width }}
+      min_attack_extension: ${{ steps.resolve.outputs.min_attack_extension }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,7 +56,16 @@ jobs:
 
           candidate_id = Path('config/active-actor-candidate.txt').read_text().strip()
           registry = json.loads(Path('config/actor-candidates.json').read_text())
-          candidate = registry['candidates'][candidate_id]
+          candidates = dict(registry.get('candidates', {}))
+          fragments = Path('config/actor-candidates.d')
+          if fragments.exists():
+              for path in sorted(fragments.glob('*.json')):
+                  payload = json.loads(path.read_text())
+                  for key, value in payload.get('candidates', {}).items():
+                      if key in candidates:
+                          raise SystemExit(f'duplicate actor candidate {key!r} in {path}')
+                      candidates[key] = value
+          candidate = candidates[candidate_id]
           verdict = candidate.get('verdict', {})
           production = candidate.get('production', {})
           source = candidate.get('source', {})
@@ -72,11 +85,13 @@ jobs:
           print(f'source_sha256={source.get("sha256", "")}')
           print(f'source_git_blob={source.get("git_blob_sha", "")}')
           print(f'source_commit={source.get("commit", "")}')
-          gate = production.get('role_gate', {})
+          gate = dict(production.get('role_gate', {}))
+          gate.update(candidate.get('role_gate', {}))
           print(f'min_area={gate.get("min_median_bbox_area_px2", "")}')
           print(f'max_area={gate.get("max_median_bbox_area_px2", "")}')
           print(f'min_width={gate.get("min_median_bbox_width_px", "")}')
           print(f'max_width={gate.get("max_median_bbox_width_px", "")}')
+          print(f'min_attack_extension={gate.get("minimum_forward_attack_extension_px", "")}')
           print(f'Active candidate {candidate_id}: status={status}, eligible={eligible}')
           PY
 
@@ -98,7 +113,11 @@ jobs:
           artifact-ids: ${{ needs.resolve.outputs.evidence_artifact_id }}
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
+          run-id: ${{ needs.resolve.outputs.validation_run_id }}
           path: actor-evidence
+
+      - name: Install atlas and role-gate tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
 
       - name: Validate evidence and configured role gate
         env:
@@ -108,6 +127,7 @@ jobs:
           MAX_AREA: ${{ needs.resolve.outputs.max_area }}
           MIN_WIDTH: ${{ needs.resolve.outputs.min_width }}
           MAX_WIDTH: ${{ needs.resolve.outputs.max_width }}
+          MIN_ATTACK_EXTENSION: ${{ needs.resolve.outputs.min_attack_extension }}
         shell: bash
         run: |
           set -euo pipefail
@@ -142,16 +162,19 @@ jobs:
               if not raw: continue
               limit=float(raw)
               assert value >= limit if op == 'min' else value <= limit, (key,value,limit)
-          print('Actor role gate PASS:', actor, metrics)
+          print('Actor structural role gate PASS:', actor, metrics)
           PY
+          if [[ "$ACTOR" == "ranged" && -n "${MIN_ATTACK_EXTENSION:-}" ]]; then
+            python3 tools/sprites/validate_ranged_attack_readability.py \
+              --input "$root" \
+              --report build/ranged-readability.json \
+              --minimum-extension-px "$MIN_ATTACK_EXTENSION"
+          fi
           echo "SPRITE_ROOT=$root" >> "$GITHUB_ENV"
           echo "QA_FILE=$qa" >> "$GITHUB_ENV"
           echo "MARGIN_FILE=$margin" >> "$GITHUB_ENV"
           echo "METRICS_FILE=$metrics" >> "$GITHUB_ENV"
           echo "FINGERPRINT_FILE=$fingerprint" >> "$GITHUB_ENV"
-
-      - name: Install atlas tooling
-        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
 
       - name: Build additive production actor page
         env:
@@ -199,6 +222,9 @@ jobs:
             'phone_qa_pass':True,
             'android_accepted':False,
           })
+          readability=Path('build/ranged-readability.json')
+          if readability.exists():
+              data['ranged_attack_readability']=json.loads(readability.read_text())
           p.write_text(json.dumps(data,indent=2)+'\n')
           PY
 
@@ -242,7 +268,8 @@ jobs:
             build/${{ needs.resolve.outputs.actor }}-production/${{ needs.resolve.outputs.actor }}.png
             build/${{ needs.resolve.outputs.actor }}-production/game.atlas
             build/${{ needs.resolve.outputs.actor }}-production/${{ needs.resolve.outputs.actor }}-manifest.json
-          if-no-files-found: error
+            build/ranged-readability.json
+          if-no-files-found: warn
           retention-days: 14
 
       - name: Commit production assets to candidate branch

@@ -8,16 +8,30 @@ from pathlib import Path
 from urllib.parse import quote
 
 
+def load_candidates(config: Path, fragments_dir: Path) -> dict:
+    data = json.loads(config.read_text())
+    candidates = dict(data.get("candidates", {}))
+    if fragments_dir.is_dir():
+        for fragment in sorted(fragments_dir.glob("*.json")):
+            payload = json.loads(fragment.read_text())
+            fragment_candidates = payload.get("candidates", payload)
+            overlap = candidates.keys() & fragment_candidates.keys()
+            if overlap:
+                raise SystemExit(f"Duplicate candidate ids in {fragment}: {', '.join(sorted(overlap))}")
+            candidates.update(fragment_candidates)
+    return candidates
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("candidate")
     parser.add_argument("--config", type=Path, default=Path("config/actor-candidates.json"))
+    parser.add_argument("--fragments-dir", type=Path, default=Path("config/actor-candidates.d"))
     parser.add_argument("--github-env", type=Path)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
-    data = json.loads(args.config.read_text())
-    candidates = data.get("candidates", {})
+    candidates = load_candidates(args.config, args.fragments_dir)
     if args.candidate not in candidates:
         raise SystemExit(f"Unknown candidate {args.candidate!r}; available: {', '.join(sorted(candidates))}")
 
@@ -25,15 +39,13 @@ def main() -> None:
     source = c["source"]
     render = c["render"]
     actions = c["actions"]
+    weapon = c.get("weapon", {})
     path = source["path"]
 
     if source.get("url"):
         source_url = source["url"]
     elif source.get("repository") and source.get("commit"):
-        source_url = (
-            f"https://raw.githubusercontent.com/{source['repository']}/"
-            f"{source['commit']}/{quote(path, safe='/')}"
-        )
+        source_url = f"https://raw.githubusercontent.com/{source['repository']}/{source['commit']}/{quote(path, safe='/')}"
     else:
         raise SystemExit("Candidate source must define either url or repository+commit")
 
@@ -41,6 +53,7 @@ def main() -> None:
     payload = {
         "candidate": args.candidate,
         "actor": c["actor"],
+        "role": c.get("role", c["actor"]),
         "filename": filename,
         "source_url": source_url,
         "git_blob_sha": source.get("git_blob_sha", ""),
@@ -48,8 +61,10 @@ def main() -> None:
         "size_bytes": int(source.get("size_bytes", 0) or 0),
         "source": source,
         "actions": actions,
+        "weapon": weapon,
         "render": render,
         "selection_goal": c.get("selection_goal", ""),
+        "role_gate": c.get("role_gate", {}),
     }
 
     if args.json_out:
@@ -57,9 +72,12 @@ def main() -> None:
         args.json_out.write_text(json.dumps(payload, indent=2) + "\n")
 
     if args.github_env:
+        forward = weapon.get("forward", [])
+        grip_offset = weapon.get("grip_offset", [])
         values = {
             "ACTOR_CANDIDATE": args.candidate,
             "ACTOR": c["actor"],
+            "ACTOR_ROLE": c.get("role", c["actor"]),
             "SOURCE_FILENAME": filename,
             "SOURCE_URL": source_url,
             "SOURCE_GIT_BLOB": source.get("git_blob_sha", ""),
@@ -68,6 +86,10 @@ def main() -> None:
             "TARGET_HEIGHT": str(render["target_height"]),
             "ORTHO_SCALE": str(render["ortho_scale"]),
             "HORIZONTAL_ANCHOR": render["horizontal_anchor"],
+            "DZ_WEAPON_STYLE": weapon.get("style", ""),
+            "DZ_WEAPON_BONE": weapon.get("bone", ""),
+            "DZ_WEAPON_FORWARD": ",".join(str(v) for v in forward),
+            "DZ_WEAPON_GRIP_OFFSET": ",".join(str(v) for v in grip_offset),
         }
         with args.github_env.open("a") as out:
             for key, value in values.items():

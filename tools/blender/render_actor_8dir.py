@@ -1,23 +1,15 @@
 #!/usr/bin/env python3
-"""Blender-side renderer for Deadline Zero actor sprites.
-
-Run with Blender, not regular Python:
-  blender -b actor.blend -P tools/blender/render_actor_8dir.py -- \
-    --actor rex --output build/blender_renders/rex
-
-The renderer produces Deadline Zero's exact 232-frame contract at 512x512 by
-default. Source action names can be remapped per actor while output names remain
-stable: idle, run, attack, hit, death.
-"""
+"""Blender-side renderer for Deadline Zero actor sprites."""
 from __future__ import annotations
 
 import argparse
 import math
+import os
 import sys
 from pathlib import Path
 
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 DIRECTIONS = [
     ("n", 180.0), ("ne", 225.0), ("e", 270.0), ("se", 315.0),
@@ -88,16 +80,11 @@ def configure_scene(args: argparse.Namespace):
     scene.render.image_settings.file_format = "PNG"
     scene.render.image_settings.color_mode = "RGBA"
     scene.render.image_settings.color_depth = "8"
-
-    # Imported .blend files can carry compositing/sequencer settings that replace
-    # Eevee's transparent film with an opaque background. Sprite production must
-    # be source-agnostic, so render the raw transparent RGBA result only.
     scene.render.film_transparent = True
     if hasattr(scene.render, "use_compositing"):
         scene.render.use_compositing = False
     if hasattr(scene.render, "use_sequencer"):
         scene.render.use_sequencer = False
-
     try:
         scene.view_settings.look = "AgX - Medium High Contrast"
     except TypeError:
@@ -128,6 +115,97 @@ def ensure_preview_material_and_lights(armature):
         look_at(obj, Vector((0.0, 0.0, 0.95)))
 
 
+def _parse_vec(name: str, default: tuple[float, float, float]) -> Vector:
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return Vector(default)
+    parts = [float(v) for v in raw.split(",")]
+    if len(parts) != 3:
+        raise RuntimeError(f"{name} must contain exactly three comma-separated numbers")
+    return Vector(parts)
+
+
+def _weapon_material(name, color, metallic, roughness, emission=None):
+    mat = bpy.data.materials.new(name)
+    mat.diffuse_color = (*color, 1.0)
+    mat.use_nodes = True
+    bsdf = mat.node_tree.nodes.get("Principled BSDF")
+    if bsdf:
+        bsdf.inputs["Base Color"].default_value = (*color, 1.0)
+        bsdf.inputs["Metallic"].default_value = metallic
+        bsdf.inputs["Roughness"].default_value = roughness
+        if emission:
+            slot = bsdf.inputs.get("Emission Color") or bsdf.inputs.get("Emission")
+            if slot:
+                slot.default_value = (*emission, 1.0)
+            strength = bsdf.inputs.get("Emission Strength")
+            if strength:
+                strength.default_value = 1.2
+    return mat
+
+
+def _weapon_cube(name, loc, scale, material):
+    bpy.ops.mesh.primitive_cube_add(size=1, location=loc)
+    obj = bpy.context.object
+    obj.name = name
+    obj.scale = scale
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    obj.data.materials.append(material)
+    return obj
+
+
+def attach_configured_weapon(armature):
+    style = os.environ.get("DZ_WEAPON_STYLE", "").strip()
+    if not style:
+        return None
+    if style != "compact-rifle":
+        raise RuntimeError(f"Unsupported configured weapon style: {style}")
+    bone_name = os.environ.get("DZ_WEAPON_BONE", "").strip()
+    if not bone_name or armature.data.bones.get(bone_name) is None:
+        available = ", ".join(b.name for b in armature.data.bones)
+        raise RuntimeError(f"Configured weapon bone {bone_name!r} not found. Available: {available}")
+
+    dark = _weapon_material("DZ_Weapon_Gunmetal", (0.018, 0.024, 0.032), .85, .24)
+    body = _weapon_material("DZ_Weapon_Body", (0.035, 0.08, 0.12), .68, .28)
+    accent = _weapon_material("DZ_Weapon_Accent", (0.02, .42, .58), .32, .20, (0.02, .38, .58))
+    parts = [
+        _weapon_cube("DZ_Rifle_Body", (.18, 0, .025), (.25, .052, .066), body),
+        _weapon_cube("DZ_Rifle_Barrel", (.49, 0, .035), (.18, .024, .024), dark),
+        _weapon_cube("DZ_Rifle_Stock", (-.12, 0, .028), (.13, .058, .072), dark),
+        _weapon_cube("DZ_Rifle_Grip", (0, 0, -.070), (.035, .035, .080), dark),
+        _weapon_cube("DZ_Rifle_Sight", (.20, 0, .095), (.065, .021, .018), accent),
+    ]
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in parts:
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = parts[0]
+    bpy.ops.object.join()
+    weapon = bpy.context.object
+    weapon.name = "DZ_ConfiguredWeapon"
+    weapon["dz_role"] = "weapon"
+    weapon["dz_style"] = style
+    bpy.context.scene.cursor.location = Vector((0, 0, 0))
+    bpy.ops.object.origin_set(type="ORIGIN_CURSOR", center="MEDIAN")
+
+    pose_bone = armature.pose.bones[bone_name]
+    bpy.context.view_layer.update()
+    grip_world = armature.matrix_world @ pose_bone.matrix.translation
+    forward = _parse_vec("DZ_WEAPON_FORWARD", (0.0, -1.0, 0.0)).normalized()
+    offset = _parse_vec("DZ_WEAPON_GRIP_OFFSET", (0.0, 0.0, 0.0))
+    desired = forward.to_track_quat("X", "Z").to_matrix().to_4x4()
+    desired.translation = grip_world + offset
+    weapon.parent = armature
+    weapon.parent_type = "BONE"
+    weapon.parent_bone = bone_name
+    weapon.matrix_parent_inverse = Matrix.Identity(4)
+    weapon.matrix_world = desired
+    bpy.context.view_layer.update()
+    if (weapon.matrix_world.translation - desired.translation).length > 1e-4:
+        raise RuntimeError("Configured weapon grip placement drifted")
+    print(f"Configured weapon attached: style={style} bone={bone_name} object={weapon.name}")
+    return weapon
+
+
 def set_action(armature, action_name: str):
     action = bpy.data.actions.get(action_name)
     if action is None:
@@ -153,22 +231,16 @@ def sample_frames(action, wanted: int) -> list[int]:
 
 def main():
     args = parse_args()
-    action_map = {
-        "idle": args.idle_action,
-        "run": args.run_action,
-        "attack": args.attack_action,
-        "hit": args.hit_action,
-        "death": args.death_action,
-    }
+    action_map = {"idle": args.idle_action, "run": args.run_action, "attack": args.attack_action, "hit": args.hit_action, "death": args.death_action}
     engine = configure_scene(args)
     armature = find_armature()
+    weapon = attach_configured_weapon(armature)
     ensure_preview_material_and_lights(armature)
     cam = ensure_camera(args)
     root = args.output.resolve(); root.mkdir(parents=True, exist_ok=True)
     target = Vector((0.0, 0.0, args.target_height))
     scene = bpy.context.scene
     rendered = 0
-
     print(f"Action map for {args.actor}: {action_map}")
     for direction, degrees in DIRECTIONS:
         radians = math.radians(degrees)
@@ -183,10 +255,9 @@ def main():
                 scene.render.filepath = str(out_dir / f"{animation}_{index:02d}.png")
                 bpy.ops.render.render(write_still=True)
                 rendered += 1
-
     if rendered != 232:
         raise RuntimeError(f"Sprite contract requires 232 frames, rendered {rendered}")
-    print(f"Rendered {rendered} {args.actor} frames to {root} using {engine}")
+    print(f"Rendered {rendered} {args.actor} frames to {root} using {engine}; configured_weapon={weapon.name if weapon else 'none'}")
 
 
 if __name__ == "__main__":

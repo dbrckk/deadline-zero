@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "ranged-blue-soldier-male": {
+      "actor": "ranged",
+      "role": "ranged",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/BlueSoldier_Male.blend",
+        "git_blob_sha": "5a9ff78571c9c2bfc5492912ca3dbc6e9ed573d8",
+        "size_bytes": 1869476,
+        "sha256": "ee9c0780a297c333aab1c59694afc4ad1d13fb0374327287c1ec8425be18337f"
+      },
+      "actions": {
+        "idle": ["Idle"],
+        "run": ["Walk", "Run"],
+        "attack": ["Shoot_OneHanded", "Shoot", "Weapon", "Attack"],
+        "hit": ["RecieveHit", "ReceiveHit", "HitReact", "Hit"],
+        "death": ["Death"]
+      },
+      "render": {"target_height": 1.45, "ortho_scale": 7.5, "horizontal_anchor": "union-center"},
+      "selection_goal": "RANGED production candidate: readable armed humanoid silhouette at phone scale with an explicit weapon or projectile source.",
+      "role_gate": {"requires_native_ranged_attack": true, "requires_visible_weapon_or_projectile_source": true, "requires_phone_scale_distinction": true},
+      "verdict": {
+        "status": "rejected",
+        "validation_run_id": 34218497104,
+        "validation_artifact_id": 10052907674,
+        "frame_count": 232,
+        "master_min_margin_px": 37,
+        "median_bbox_width_px": 31,
+        "median_bbox_height_px": 62,
+        "median_bbox_area_px2": 1850,
+        "phone_qa_pass": true,
+        "reason": "Technical 232/232 QA and native Shoot_OneHanded pass, but human inspection proves the source contains no weapon mesh; the forward extension is only the shooting arm."
+      }
+    },
+    "ranged-blue-soldier-rifle": {
+      "actor": "ranged",
+      "role": "ranged",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/BlueSoldier_Male.blend",
+        "git_blob_sha": "5a9ff78571c9c2bfc5492912ca3dbc6e9ed573d8",
+        "size_bytes": 1869476,
+        "sha256": "ee9c0780a297c333aab1c59694afc4ad1d13fb0374327287c1ec8425be18337f"
+      },
+      "actions": {
+        "idle": ["Idle"],
+        "run": ["Walk", "Run"],
+        "attack": ["Shoot_OneHanded", "Shoot", "Weapon", "Attack"],
+        "hit": ["RecieveHit", "ReceiveHit", "HitReact", "Hit"],
+        "death": ["Death"]
+      },
+      "weapon": {"style": "compact-rifle", "bone": "Fist.R", "forward": [0.0, -1.0, -0.08], "grip_offset": [0.0, -0.01, 0.01]},
+      "render": {"target_height": 1.45, "ortho_scale": 7.5, "horizontal_anchor": "union-center"},
+      "selection_goal": "RANGED production candidate using the same immutable CC0 character plus a deterministic separate rifle prop attached by configuration, not actor-specific runtime code.",
+      "role_gate": {"requires_native_ranged_attack": true, "requires_visible_weapon_or_projectile_source": true, "requires_phone_scale_distinction": true, "requires_explicit_weapon_geometry": true},
+      "verdict": {
+        "status": "accepted",
+        "validation_run_id": 34231682966,
+        "validation_artifact_id": 10058335566,
+        "frame_count": 232,
+        "master_min_margin_px": 37,
+        "median_bbox_width_px": 32,
+        "median_bbox_height_px": 62,
+        "median_bbox_area_px2": 1888.5,
+        "phone_qa_pass": true,
+        "explicit_weapon_geometry_pass": true,
+        "android_runtime_run_id": 34236059385,
+        "android_visual_artifact_id": 10060021215,
+        "android_visual_qa_pass": true,
+        "reason": "Accepted after exact 232/232 validation, explicit rifle visibility across all directions/motions, additive production staging, and real crowded Android QA confirming the armed RANGED actor is distinct, grounded, textured and unclipped at phone scale."
+      }
+    }
+  }
+}
