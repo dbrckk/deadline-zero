@@ -1,111 +1,31 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/reference/configuration-reference/
 version: 2.1
 
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/guides/orchestrate/jobs-steps/#jobs-overview & https://circleci.com/docs/reference/configuration-reference/#jobs
 jobs:
-  actor-candidate-validation:
+  say-hello:
+    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/guides/execution-managed/executor-intro/ & https://circleci.com/docs/reference/configuration-reference/#executor-job
     docker:
-      - image: cimg/base:stable
-    resource_class: medium
+      # Specify the version you desire here
+      # See: https://circleci.com/developer/images/image/cimg/base
+      - image: cimg/base:current
+
+    # Add steps to the job
+    # See: https://circleci.com/docs/guides/orchestrate/jobs-steps/#steps-overview & https://circleci.com/docs/reference/configuration-reference/#steps
     steps:
+      # Checkout the code as the first step.
       - checkout
       - run:
-          name: Install actor pipeline dependencies
-          command: |
-            sudo apt-get update -qq
-            sudo apt-get install -y python3 python3-pip blender libegl1 libgl1-mesa-dri python3-numpy curl git
-            python3 -m pip install --user --disable-pip-version-check 'Pillow>=10,<12'
-            blender --version | head -n 1
-      - run:
-          name: Resolve active candidate
-          command: |
-            set -euo pipefail
-            candidate="$(tr -d '[:space:]' < config/active-actor-candidate.txt)"
-            test -n "$candidate"
-            mkdir -p build/actor-candidate/source
-            python3 tools/sprites/resolve_actor_candidate.py "$candidate" \
-              --github-env build/actor-candidate/candidate.env \
-              --json-out build/actor-candidate/resolved.json
-            sed 's/^/export /' build/actor-candidate/candidate.env >> "$BASH_ENV"
-            source "$BASH_ENV"
-            test "$ACTOR_CANDIDATE" = "$candidate"
-      - run:
-          name: Download and fingerprint immutable source
-          command: |
-            set -euo pipefail
-            source "$BASH_ENV"
-            target="build/actor-candidate/source/$SOURCE_FILENAME"
-            curl --fail --location --retry 3 "$SOURCE_URL" -o "$target"
-            test -s "$target"
-            actual_size="$(stat -c%s "$target")"
-            if [ "$SOURCE_SIZE" != "0" ]; then test "$actual_size" -eq "$SOURCE_SIZE"; fi
-            if [ -n "$SOURCE_GIT_BLOB" ]; then test "$(git hash-object "$target")" = "$SOURCE_GIT_BLOB"; fi
-            actual_sha256="$(sha256sum "$target" | awk '{print $1}')"
-            if [ -n "$SOURCE_EXPECTED_SHA256" ]; then test "$actual_sha256" = "$SOURCE_EXPECTED_SHA256"; fi
-            printf '%s  %s\n' "$actual_sha256" "$SOURCE_FILENAME" | tee build/actor-candidate/source/sha256.txt
-            printf '{"size_bytes":%s,"sha256":"%s"}\n' "$actual_size" "$actual_sha256" > build/actor-candidate/source/fingerprint.json
-      - run:
-          name: Prepare Blender scene
-          command: |
-            set -euo pipefail
-            source "$BASH_ENV"
-            source_path="build/actor-candidate/source/$SOURCE_FILENAME"
-            case "${SOURCE_FILENAME,,}" in
-              *.blend) scene_path="$source_path" ;;
-              *.fbx)
-                scene_path="build/actor-candidate/source/imported-source.blend"
-                SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import bpy,os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])" ;;
-              *.gltf|*.glb)
-                scene_path="build/actor-candidate/source/imported-source.blend"
-                SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import sys; sys.path.append('/usr/lib/python3/dist-packages'); import bpy,os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])" ;;
-              *) echo "Unsupported actor source format: $SOURCE_FILENAME" >&2; exit 1 ;;
-            esac
-            test -s "$scene_path"
-            echo "export BLENDER_SOURCE_FILE='$scene_path'" >> "$BASH_ENV"
-      - run:
-          name: Inspect and resolve native actions
-          command: |
-            set -euo pipefail
-            source "$BASH_ENV"
-            blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/inspect_actor_source.py -- --json-out build/actor-candidate/inspection.json
-            python3 tools/sprites/resolve_actor_actions.py \
-              --candidate build/actor-candidate/resolved.json \
-              --inspection build/actor-candidate/inspection.json \
-              --output build/actor-candidate/action-map.json
-      - run:
-          name: Render and normalize exact 232-frame contract
-          command: |
-            set -euo pipefail
-            source "$BASH_ENV"
-            eval "$(python3 - <<'PY'
-            import json,shlex
-            m=json.load(open('build/actor-candidate/action-map.json'))['resolved']
-            for k,v in m.items(): print(f'{k.upper()}={shlex.quote(v)}')
-            PY
-            )"
-            blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/render_actor_8dir.py -- \
-              --actor "$ACTOR" --output build/actor-candidate/master512 \
-              --target-height "$TARGET_HEIGHT" --ortho-scale "$ORTHO_SCALE" \
-              --idle-action "$IDLE" --run-action "$RUN" --attack-action "$ATTACK" \
-              --hit-action "$HIT" --death-action "$DEATH"
-            test "$(find build/actor-candidate/master512 -name '*.png' | wc -l)" -eq 232
-            python3 tools/sprites/normalize_actor_frames.py \
-              --actor "$ACTOR" --input build/actor-candidate/master512 \
-              --output build/actor-candidate/normalized96 \
-              --report build/actor-candidate/qa.json \
-              --contact-sheet build/actor-candidate/contact-sheet.png \
-              --horizontal-anchor "$HORIZONTAL_ANCHOR"
-            python3 - <<'PY'
-            import json
-            q=json.load(open('build/actor-candidate/qa.json'))
-            assert q['pass'] is True and q['frame_count']==232, q
-            PY
-      - store_artifacts:
-          path: build/actor-candidate
-          destination: actor-candidate
+          name: "Say hello"
+          command: "echo Hello, World!"
 
+# Orchestrate jobs using workflows
+# See: https://circleci.com/docs/guides/orchestrate/workflows/ & https://circleci.com/docs/reference/configuration-reference/#workflows
 workflows:
-  circleci-fallback:
+  say-hello-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
+    # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - actor-candidate-validation:
-          filters:
-            branches:
-              only: /^circleci-fallback-.*/
+      - say-hello
