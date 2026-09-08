@@ -83,8 +83,13 @@ public final class AndroidGameplayVisualProbeTest {
             enemies.add(new Enemy(Enemy.Type.ELITE, 2.1f, 5.0f, 50_000f, .07f, .54f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.ELITE, -2.1f, -5.0f, 50_000f, .07f, .54f, 0f, 1));
 
-            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged + Elite crowd",
-                enemies.size >= before + 12);
+            // SHIELDED uses the production shieldHp archetype and enemy/shielded atlas route.
+            // Opposite near-horizontal views keep the left-arm shield exposed for phone-scale QA.
+            enemies.add(new Enemy(Enemy.Type.SHIELDED, 7.0f, -0.9f, 50_000f, .05f, .56f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.SHIELDED, -7.0f, 0.9f, 50_000f, .05f, .56f, 0f, 1));
+
+            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged + Elite + Shielded crowd",
+                enemies.size >= before + 14);
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("unable to access GameScreen enemy collection for visual QA", exception);
         }
