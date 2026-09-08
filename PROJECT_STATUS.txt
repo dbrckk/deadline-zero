@@ -2,7 +2,7 @@ DEADLINE ZERO — PROJECT STATUS
 ==============================
 
 Last update: 2026-09-08
-Current phase: Premium art pipeline / Rex + Shambler + Runner + Brute + RANGED accepted
+Current phase: Premium art pipeline / Rex + Shambler + Runner + Brute + RANGED + ELITE accepted
 
 CURRENT GOAL
 ------------
@@ -15,29 +15,31 @@ ACCEPTED PRODUCTION ACTORS
 [OK] RUNNER — Quaternius Ultimate Animated Character Pack Zombie_Female, 232 directional frames, slimmer fast-enemy silhouette, real crowded Android gameplay accepted.
 [OK] BRUTE — Quaternius Ultimate Monsters Demon glTF, 232 directional frames, materially heavier phone-scale silhouette, real crowded Android gameplay accepted.
 [OK] RANGED — Quaternius BlueSoldier_Male + deterministic compact-rifle prop, native Shoot_OneHanded, 232 directional frames, real crowded Android gameplay accepted.
+[OK] ELITE — Quaternius Ultimate Monsters Orc glTF, packed Atlas_Monsters material, native Weapon attack, blue-crested armed silhouette, 232 directional frames, real crowded Android gameplay accepted.
 
-CURRENT RANGED STATUS
----------------------
-[OK] Character source: Quaternius Ultimate Animated Character Pack BlueSoldier_Male.blend, CC0 1.0.
-[OK] Immutable source: commit 4769997aaea204c66735813e2bf61dc3c94e7631, git blob 5a9ff78571c9c2bfc5492912ca3dbc6e9ed573d8, SHA-256 ee9c0780a297c333aab1c59694afc4ad1d13fb0374327287c1ec8425be18337f.
-[OK] Original unarmed candidate rejected after human inspection proved the apparent ranged extension was only the arm.
-[OK] Accepted candidate ranged-blue-soldier-rifle uses deterministic compact-rifle geometry attached to Fist.R in the generic Blender renderer.
-[OK] Native actions resolve to Idle / Walk / Shoot_OneHanded / RecieveHit / Death.
-[OK] Candidate validation run 34231682966 / artifact 10058335566 passes exact 232/232, minimum master margin 37 px and normalization QA.
-[OK] Contact-sheet inspection confirms explicit rifle geometry remains visible, attached and unclipped across all eight directions and authored motions.
-[OK] Production staging run 34235826311 published assets/art/ranged.png + ranged-manifest.json + enemy/ranged/... atlas groups additively.
-[OK] Production atlas contains five actor pages. RANGED page SHA-256: 0cd53e4dd8be258da6bf6346a0a2d16c5615d35cd82a17bc8fd269198ca22b9d.
-[OK] Android Verify run 34236059385 / artifact 10060021215 passes real emulator instrumentation and crowded capture.
-[OK] Real Android screenshot confirms both RANGED soldiers are visually distinct, grounded, correctly textured and visibly armed at phone scale.
-[OK] RANGED is ACCEPTED in config/actor-production-contracts.json and ranged-manifest.json.
+CURRENT ELITE STATUS
+--------------------
+[OK] Source: Quaternius Ultimate Monsters monster_Orc.gltf, CC0 1.0.
+[OK] Immutable mirror: yerdaulet-damir/liminal @ ff9ee5b57e2531b4f8841d6e7564283f943f6d34.
+[OK] Git blob: 750b2401542551ef4fc01e7b5d85b96195119622; size 1,280,189 bytes; SHA-256 e61a37f8d9b2eee28928bdfad2c55e0798cc0a212e925cc5dcc66b243526c1a3.
+[OK] Source contains Orc body mesh + Orc_Weapon mesh + packed Atlas_Monsters texture.
+[OK] Shared suffix-aware action resolver maps Idle / Walk / Weapon / HitReact / Death after glTF import.
+[OK] Candidate validation run 34238028804 / artifact 10062105502 passes exact 232/232, minimum master margin 28 px and phone normalization QA.
+[OK] Median normalized silhouette: width 43 px, height 49 px, area 1982 px2.
+[OK] Contact-sheet inspection confirms clean material, readable weapon attack, coherent 8-direction motion and no clipping.
+[OK] Generic production staging published assets/art/elite.png + elite-manifest.json + enemy/elite/... atlas groups additively.
+[OK] Production atlas now contains six actor pages / 1392 authored frames.
+[OK] Android Verify run 34244152937 / artifact 10063433773 passes real emulator instrumentation and crowded capture.
+[OK] Android screenshot confirms both ELITE Orcs remain visually distinct, correctly textured, armed and unclipped beside Shambler/Runner/Brute/RANGED.
+[OK] ELITE is ACCEPTED in config/actor-production-contracts.json, config/actor-candidates.d/elite.json and elite-manifest.json.
 
 PIPELINE INDUSTRIALIZATION
 --------------------------
 [OK] config/actor-candidates.json plus config/actor-candidates.d/*.json store immutable provenance, role gates, render parameters and verdicts.
 [OK] tools/sprites/resolve_actor_candidate.py resolves pinned source metadata plus configured weapon metadata.
+[OK] tools/sprites/resolve_actor_actions.py provides shared suffix-aware action mapping for GitHub Actions and CircleCI.
 [OK] Generic Actor Candidate Validation validates source fingerprint, Blender import, action resolution, exact 232 frames, margins, 96px normalization and silhouette metrics.
 [OK] Candidate pipeline supports .blend, .fbx, .gltf and .glb.
-[OK] Generic action resolution strips common armature suffixes.
 [OK] tools/sprites/upsert_directional_actor_atlas.py performs additive multi-actor atlas publication.
 [OK] Generic Actor Production Staging publishes one qualified actor without erasing accepted actors.
 [OK] .circleci/config.yml provides a candidate-validation fallback on circleci-fallback-* branches if GitHub Actions cannot schedule jobs.
@@ -53,15 +55,16 @@ IMPORTANT DECISIONS
 - Shared actor contract remains 8 directions / 232 frames / 96x96 unless intentionally versioned.
 - Role identity should be objectively measurable where possible.
 - RANGED requires explicit weapon geometry; silhouette extension alone is insufficient.
+- ELITE requires a distinct premium silhouette plus readable authored combat identity in phone-scale crowd QA.
 - GitHub Actions is primary CI; CircleCI is fallback when Actions cannot create/schedule jobs.
 
 CURRENT BLOCKER
 ---------------
-RANGED is no longer a blocker. ELITE is the next actor quality gate.
+ELITE is no longer a blocker. SHIELDED is the next authored-enemy quality gate, followed by REGENERATOR and PHANTOM.
 
 IMMEDIATE NEXT ACTION
 ---------------------
-Run the final accepted-contract Verify on PR #40. If green, merge RANGED to main. Then onboard ELITE using the same generic candidate -> role gate -> production staging -> real Android acceptance path.
+Run the final accepted-contract Verify on PR #41. If green, merge ELITE to main. Then onboard SHIELDED using the same generic candidate -> role gate -> production staging -> real Android acceptance path.
 
 ORDER OF EXECUTION
 ------------------
@@ -75,8 +78,12 @@ ORDER OF EXECUTION
 8. Generic production staging workflow. [DONE]
 9. RANGED candidate qualification + production staging. [DONE]
 10. RANGED real Android acceptance. [DONE]
-11. Merge accepted RANGED integration. [NOW]
-12. ELITE, biome variants, remaining survivors and bosses. [NEXT]
+11. Merge accepted RANGED integration. [DONE]
+12. ELITE candidate qualification + production staging. [DONE]
+13. ELITE real Android acceptance. [DONE]
+14. Merge accepted ELITE integration. [NOW]
+15. SHIELDED / REGENERATOR / PHANTOM authored production actors. [NEXT]
+16. Remaining survivors and bosses. [LATER]
 
 SHARED ACTOR CONTRACT
 ---------------------
@@ -93,7 +100,8 @@ SHAMBLER first-enemy vertical slice: ACCEPTED.
 RUNNER fast-enemy vertical slice: ACCEPTED.
 BRUTE heavy-enemy vertical slice: ACCEPTED.
 RANGED weaponized enemy vertical slice: ACCEPTED.
+ELITE premium-enemy vertical slice: ACCEPTED.
 
 NEXT QUALITY GATE
 -----------------
-ELITE must be materially distinct from the five accepted actors, satisfy a role-specific visual gate, publish additively, and pass real Android crowded acceptance before status=accepted.
+SHIELDED must read as a defensive archetype at phone scale, publish additively, preserve the six accepted actors, and pass real Android crowded acceptance before status=accepted.
