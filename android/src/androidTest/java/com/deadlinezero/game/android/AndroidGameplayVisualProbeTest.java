@@ -78,8 +78,13 @@ public final class AndroidGameplayVisualProbeTest {
             enemies.add(new Enemy(Enemy.Type.RANGED, 6.2f, 2.0f, 50_000f, .05f, .46f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.RANGED, -6.2f, -2.0f, 50_000f, .05f, .46f, 0f, 1));
 
-            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged crowd",
-                enemies.size >= before + 10);
+            // ELITE uses the real production type and atlas route. The asymmetric offsets exercise
+            // diagonal authored views while keeping both Orc silhouettes separated from Brute and Ranged.
+            enemies.add(new Enemy(Enemy.Type.ELITE, 2.1f, 5.0f, 50_000f, .07f, .54f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.ELITE, -2.1f, -5.0f, 50_000f, .07f, .54f, 0f, 1));
+
+            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged + Elite crowd",
+                enemies.size >= before + 12);
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("unable to access GameScreen enemy collection for visual QA", exception);
         }
