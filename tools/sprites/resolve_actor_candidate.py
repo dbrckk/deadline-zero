@@ -22,6 +22,14 @@ def load_candidates(config: Path, fragments_dir: Path) -> dict:
     return candidates
 
 
+def immutable_url(source: dict) -> str:
+    if source.get("url"):
+        return source["url"]
+    if source.get("repository") and source.get("commit") and source.get("path"):
+        return f"https://raw.githubusercontent.com/{source['repository']}/{source['commit']}/{quote(source['path'], safe='/')}"
+    raise SystemExit("Source must define either url or repository+commit+path")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("candidate")
@@ -40,14 +48,13 @@ def main() -> None:
     render = c["render"]
     actions = c["actions"]
     weapon = c.get("weapon", {})
+    defensive_prop = dict(c.get("defensive_prop", {}))
     path = source["path"]
+    source_url = immutable_url(source)
 
-    if source.get("url"):
-        source_url = source["url"]
-    elif source.get("repository") and source.get("commit"):
-        source_url = f"https://raw.githubusercontent.com/{source['repository']}/{source['commit']}/{quote(path, safe='/')}"
-    else:
-        raise SystemExit("Candidate source must define either url or repository+commit")
+    if defensive_prop:
+        defensive_prop["url"] = immutable_url(defensive_prop)
+        defensive_prop["filename"] = Path(defensive_prop["path"]).name
 
     filename = Path(path).name
     payload = {
@@ -62,6 +69,7 @@ def main() -> None:
         "source": source,
         "actions": actions,
         "weapon": weapon,
+        "defensive_prop": defensive_prop,
         "render": render,
         "selection_goal": c.get("selection_goal", ""),
         "role_gate": c.get("role_gate", {}),
@@ -74,6 +82,9 @@ def main() -> None:
     if args.github_env:
         forward = weapon.get("forward", [])
         grip_offset = weapon.get("grip_offset", [])
+        prop_forward = defensive_prop.get("forward", [])
+        prop_offset = defensive_prop.get("grip_offset", [])
+        prop_rotation = defensive_prop.get("rotation", [])
         values = {
             "ACTOR_CANDIDATE": args.candidate,
             "ACTOR": c["actor"],
@@ -86,10 +97,22 @@ def main() -> None:
             "TARGET_HEIGHT": str(render["target_height"]),
             "ORTHO_SCALE": str(render["ortho_scale"]),
             "HORIZONTAL_ANCHOR": render["horizontal_anchor"],
+            "PYTHONPATH": "/usr/lib/python3/dist-packages",
             "DZ_WEAPON_STYLE": weapon.get("style", ""),
             "DZ_WEAPON_BONE": weapon.get("bone", ""),
             "DZ_WEAPON_FORWARD": ",".join(str(v) for v in forward),
             "DZ_WEAPON_GRIP_OFFSET": ",".join(str(v) for v in grip_offset),
+            "DZ_DEFENSIVE_PROP_URL": defensive_prop.get("url", ""),
+            "DZ_DEFENSIVE_PROP_FILENAME": defensive_prop.get("filename", ""),
+            "DZ_DEFENSIVE_PROP_BLOB": defensive_prop.get("git_blob_sha", ""),
+            "DZ_DEFENSIVE_PROP_SHA256": defensive_prop.get("sha256", ""),
+            "DZ_DEFENSIVE_PROP_SIZE": str(defensive_prop.get("size_bytes", 0) or 0),
+            "DZ_DEFENSIVE_PROP_BONE": defensive_prop.get("bone", ""),
+            "DZ_DEFENSIVE_PROP_ROLE": defensive_prop.get("role", ""),
+            "DZ_DEFENSIVE_PROP_FORWARD": ",".join(str(v) for v in prop_forward),
+            "DZ_DEFENSIVE_PROP_GRIP_OFFSET": ",".join(str(v) for v in prop_offset),
+            "DZ_DEFENSIVE_PROP_ROTATION": ",".join(str(v) for v in prop_rotation),
+            "DZ_DEFENSIVE_PROP_SCALE": str(defensive_prop.get("scale", 1.0)),
         }
         with args.github_env.open("a") as out:
             for key, value in values.items():

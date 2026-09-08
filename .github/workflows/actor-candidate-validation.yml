@@ -80,7 +80,7 @@ jobs:
             *.blend) scene_path="$source_path" ;;
             *.fbx)
               scene_path="build/actor-candidate/source/imported-source.blend"
-              SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import bpy, os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])"
+              PYTHONPATH=/usr/lib/python3/dist-packages SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import bpy, os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])"
               ;;
             *.gltf|*.glb)
               scene_path="build/actor-candidate/source/imported-source.blend"
@@ -112,7 +112,7 @@ jobs:
           for key,value in m.items(): print(f'{key.upper()}={shlex.quote(value)}')
           PY
           )"
-          blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/render_actor_8dir.py -- \
+          PYTHONPATH=/usr/lib/python3/dist-packages blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/render_actor_8dir.py -- \
             --actor "$ACTOR" \
             --output build/actor-candidate/master512 \
             --target-height "$TARGET_HEIGHT" \
@@ -182,6 +182,7 @@ jobs:
             build/actor-candidate/resolved.json
             build/actor-candidate/source/sha256.txt
             build/actor-candidate/source/fingerprint.json
+            build/actor-candidate/defensive-prop-fingerprint.json
             build/actor-candidate/inspection.json
             build/actor-candidate/action-map.json
             build/actor-candidate/master-margin.json
