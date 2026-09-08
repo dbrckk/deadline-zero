@@ -88,8 +88,14 @@ public final class AndroidGameplayVisualProbeTest {
             enemies.add(new Enemy(Enemy.Type.SHIELDED, 7.0f, -0.9f, 50_000f, .05f, .56f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHIELDED, -7.0f, 0.9f, 50_000f, .05f, .56f, 0f, 1));
 
-            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged + Elite + Shielded crowd",
-                enemies.size >= before + 14);
+            // REGENERATOR uses the normal production regeneration archetype and enemy/regenerator
+            // atlas route. Opposite diagonals keep both organic silhouettes separated from Shambler
+            // while exercising authored diagonal views in the real crowded Android renderer.
+            enemies.add(new Enemy(Enemy.Type.REGENERATOR, 5.5f, -4.8f, 50_000f, .05f, .54f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.REGENERATOR, -5.5f, 4.8f, 50_000f, .05f, .54f, 0f, 1));
+
+            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged + Elite + Shielded + Regenerator crowd",
+                enemies.size >= before + 16);
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("unable to access GameScreen enemy collection for visual QA", exception);
         }

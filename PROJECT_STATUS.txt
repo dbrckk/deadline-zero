@@ -2,50 +2,50 @@ DEADLINE ZERO — PROJECT STATUS
 ==============================
 
 Last update: 2026-09-08
-Current phase: Premium art pipeline / Rex + Shambler + Runner + Brute + RANGED + ELITE + SHIELDED accepted
+Current phase: Premium art pipeline / Rex + Shambler + Runner + Brute + RANGED + ELITE + SHIELDED + REGENERATOR accepted
 
 CURRENT GOAL
 ------------
-Reach premium stylized 2.5D mobile-shooter quality using one authoritative 3D master per actor, then source/rig/animate -> orthographic 8-direction renders -> normalized 96x96 frames -> strict QA -> multi-actor atlas -> real Android gameplay validation.
+Reach premium stylized 2.5D mobile-shooter quality using one authoritative 3D master per actor, then source/rig/animate -> orthographic 8-direction renders -> normalized 96x96 frames -> strict QA -> additive multi-actor atlas -> real Android gameplay validation.
 
 ACCEPTED PRODUCTION ACTORS
 --------------------------
 [OK] REX — 232 directional frames, authored survivor/rex atlas root, premium rifle/visibility gate, real Android gameplay accepted.
 [OK] SHAMBLER — Quaternius Zombie Apocalypse Kit, 232 directional frames, union-center normalization, real crowded Android gameplay accepted.
-[OK] RUNNER — Quaternius Ultimate Animated Character Pack Zombie_Female, 232 directional frames, slimmer fast-enemy silhouette, real crowded Android gameplay accepted.
-[OK] BRUTE — Quaternius Ultimate Monsters Demon glTF, 232 directional frames, materially heavier phone-scale silhouette, real crowded Android gameplay accepted.
+[OK] RUNNER — Quaternius Ultimate Animated Character Pack Zombie_Female, 232 directional frames, fast-enemy silhouette, real crowded Android gameplay accepted.
+[OK] BRUTE — Quaternius Ultimate Monsters Demon, 232 directional frames, materially heavier phone-scale silhouette, real crowded Android gameplay accepted.
 [OK] RANGED — Quaternius BlueSoldier_Male + deterministic compact-rifle prop, native Shoot_OneHanded, 232 directional frames, real crowded Android gameplay accepted.
-[OK] ELITE — Quaternius Ultimate Monsters Orc glTF, packed Atlas_Monsters material, native Weapon attack, blue-crested armed silhouette, 232 directional frames, real crowded Android gameplay accepted.
-[OK] SHIELDED — Quaternius BlueSoldier_Male + fingerprinted KayKit shield_badge.fbx on Fist.L, 232 directional frames, defensive silhouette, real crowded Android gameplay accepted.
+[OK] ELITE — Quaternius Ultimate Monsters Orc, packed Atlas_Monsters material, native weapon attack, 232 directional frames, real crowded Android gameplay accepted.
+[OK] SHIELDED — Quaternius BlueSoldier_Male + fingerprinted KayKit shield_badge.fbx, 232 directional frames, explicit defensive silhouette, real crowded Android gameplay accepted.
+[OK] REGENERATOR — Quaternius Ultimate Monsters Green Blob, organic non-humanoid silhouette, 232 directional frames, real crowded Android gameplay accepted.
 
-CURRENT SHIELDED STATUS
------------------------
-[OK] Body source: Quaternius Ultimate Animated Character Pack BlueSoldier_Male.blend, CC0 1.0.
-[OK] Defensive prop: KayKit Character Pack: Adventurers shield_badge.fbx, CC0 1.0.
-[OK] Shield source pinned at commit 672074b73ba276876a19e8816ecdc5241817ab47, blob b334acbdead8d7ea6655263080dca3ab3e0be517, SHA-256 8ae485d8451075d19ce504489328e7f3e9dea5cddbddee916508321853795604.
-[OK] Generic defensive_prop pipeline fingerprints, imports, materializes and attaches external props deterministically.
-[OK] Candidate validation run 34251326917 / artifact 10066284057 passes exact 232/232, minimum master margin 37 px and phone normalization QA.
-[OK] Median normalized silhouette: width 36 px, height 61 px, area 2079.5 px2.
-[OK] Contact-sheet inspection confirms shield geometry remains visible across all eight directions with coherent attack/hit/death and intact materials.
-[OK] Generic production staging published assets/art/shielded.png + shielded-manifest.json + enemy/shielded/... atlas groups additively.
-[OK] Production atlas now contains seven actor pages / 1624 authored frames.
-[OK] Android Verify run 34261934514 / artifact 10070394448 passes real emulator instrumentation and crowded capture.
-[OK] Android screenshot confirms both SHIELDED actors remain readable, grounded, shielded and unclipped in the production crowd.
-[OK] SHIELDED is ACCEPTED in config/actor-production-contracts.json, config/actor-candidates.d/shielded.json and shielded-manifest.json.
+CURRENT REGENERATOR STATUS
+--------------------------
+[OK] Immutable CC0 source: Hakhyun-Kim/constellation-defense @ 4431655c1a29638495c6ab3d4543d37c8d6deed6.
+[OK] Source blob: 9e21e57419cdacf349c142eba9e2ee106c8c36bc; SHA-256 fc68353469e3fe36586b7051a39bfdd0a466e48187f57fb39abf3932ca72447d; 87,892 bytes.
+[OK] Native action mapping: Idle / Walk / Bite_Front / HitRecieve / Death after importer suffix normalization.
+[OK] Actor Candidate Validation #81 / run 34266381609 / artifact 10072289773 passed exact 232/232 frames.
+[OK] Master minimum margin 127 px; median normalized silhouette 65x60 px / 3960 px2.
+[OK] Packed Atlas_Monsters material and organic single-eye identity remain readable at 96 px.
+[OK] Actor Production Staging #47 / run 34278282930 / artifact 10076587123 republished additively on top of the latest main Shambler atlas.
+[OK] Production atlas contains eight authored actor pages / 1856 authored frames without erasing accepted roots.
+[OK] Verify #1380 / run 34278412075 passed core, Android build and Android runtime instrumentation.
+[OK] Android visual artifact 10076741425 confirms both REGENERATOR actors are distinct, grounded, materially intact and unclipped in the real crowded scene.
+[OK] REGENERATOR is ACCEPTED in config/actor-production-contracts.json, config/actor-candidates.d/regenerator.json and assets/art/regenerator-manifest.json.
 
 PIPELINE INDUSTRIALIZATION
 --------------------------
 [OK] config/actor-candidates.json plus config/actor-candidates.d/*.json store immutable provenance, role gates, render parameters and verdicts.
 [OK] tools/sprites/resolve_actor_candidate.py resolves pinned source metadata plus configured weapon/defensive-prop metadata.
-[OK] tools/sprites/resolve_actor_actions.py provides shared suffix-aware action mapping for GitHub Actions and CircleCI.
+[OK] tools/sprites/resolve_actor_actions.py provides shared importer-suffix-aware action mapping for CI.
 [OK] Generic Actor Candidate Validation validates source fingerprint, Blender import, action resolution, exact 232 frames, margins, 96px normalization and silhouette metrics.
 [OK] Candidate pipeline supports .blend, .fbx, .gltf and .glb.
 [OK] Generic renderer supports deterministic configured weapons and immutable defensive props.
 [OK] tools/sprites/upsert_directional_actor_atlas.py performs additive multi-actor atlas publication.
 [OK] Generic Actor Production Staging publishes one qualified actor without erasing accepted actors.
-[OK] CircleCI fallback connectivity is proven by a green fallback-smoke job; dedicated Android runtime fallback is available on circleci-fallback-* branches when GitHub Actions cannot schedule jobs.
 [OK] config/actor-production-contracts.json is the authoritative accepted-actor contract.
-[OK] Real Android visual acceptance remains mandatory before any actor reaches status=accepted.
+[OK] Real Android visual acceptance is mandatory before any actor reaches status=accepted.
+[OK] GitHub Actions is primary CI. CircleCI remains fallback only if Actions cannot create/schedule jobs.
 
 IMPORTANT DECISIONS
 -------------------
@@ -57,15 +57,15 @@ IMPORTANT DECISIONS
 - Role identity should be objectively measurable where possible.
 - RANGED requires explicit weapon geometry; silhouette extension alone is insufficient.
 - SHIELDED requires explicit defensive-prop geometry; width increase alone is insufficient.
-- GitHub Actions is primary CI; CircleCI is verified fallback when Actions cannot create/schedule jobs.
+- Accepted actor roots/contracts must survive every later staging operation.
 
 CURRENT BLOCKER
 ---------------
-SHIELDED is no longer a blocker. REGENERATOR is the next authored-enemy quality gate, followed by PHANTOM.
+No REGENERATOR content blocker remains. PR #43 still requires a final Verify on the accepted-contract head before merge.
 
 IMMEDIATE NEXT ACTION
 ---------------------
-Run the final accepted-contract Verify on PR #42. If green, merge SHIELDED to main. Then onboard REGENERATOR using the same generic candidate -> role gate -> production staging -> real Android acceptance path.
+Run the final accepted-contract Verify on PR #43. If core + Android build + Android runtime remain green, squash-merge REGENERATOR to main. Then onboard PHANTOM through the same immutable candidate -> role gate -> additive staging -> real Android acceptance path.
 
 ORDER OF EXECUTION
 ------------------
@@ -74,21 +74,15 @@ ORDER OF EXECUTION
 3. Multi-actor atlas + accepted-actor contract. [DONE]
 4. Runner production vertical slice. [DONE]
 5. Generic candidate validation infrastructure. [DONE]
-6. BRUTE source search and objective silhouette qualification. [DONE]
-7. BRUTE production staging + Android acceptance. [DONE]
-8. Generic production staging workflow. [DONE]
-9. RANGED candidate qualification + production staging. [DONE]
-10. RANGED real Android acceptance. [DONE]
-11. Merge accepted RANGED integration. [DONE]
-12. ELITE candidate qualification + production staging. [DONE]
-13. ELITE real Android acceptance. [DONE]
-14. Merge accepted ELITE integration. [DONE]
-15. SHIELDED candidate qualification + production staging. [DONE]
-16. SHIELDED real Android acceptance. [DONE]
-17. Merge accepted SHIELDED integration. [NOW]
-18. REGENERATOR authored production actor. [NEXT]
-19. PHANTOM authored production actor. [LATER]
-20. Remaining survivors and bosses. [LATER]
+6. BRUTE qualification + staging + Android acceptance. [DONE]
+7. Generic production staging workflow. [DONE]
+8. RANGED qualification + staging + Android acceptance. [DONE]
+9. ELITE qualification + staging + Android acceptance. [DONE]
+10. SHIELDED qualification + staging + Android acceptance. [DONE]
+11. REGENERATOR qualification + staging + Android acceptance. [DONE]
+12. Final REGENERATOR accepted-contract Verify + merge. [NOW]
+13. PHANTOM authored production actor. [NEXT]
+14. Remaining survivors and bosses. [LATER]
 
 SHARED ACTOR CONTRACT
 ---------------------
@@ -107,7 +101,8 @@ BRUTE heavy-enemy vertical slice: ACCEPTED.
 RANGED weaponized enemy vertical slice: ACCEPTED.
 ELITE premium-enemy vertical slice: ACCEPTED.
 SHIELDED defensive-enemy vertical slice: ACCEPTED.
+REGENERATOR sustain-enemy vertical slice: ACCEPTED.
 
 NEXT QUALITY GATE
 -----------------
-REGENERATOR must read as a self-repairing/high-sustain archetype at phone scale, publish additively, preserve the seven accepted actors, and pass real Android crowded acceptance before status=accepted.
+PHANTOM must read as a distinct evasive/ethereal archetype at phone scale, publish additively, preserve all eight accepted actor contracts, and pass real Android crowded acceptance before status=accepted.
