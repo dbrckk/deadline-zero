@@ -37,20 +37,16 @@ public final class AndroidGameplayVisualProbeTest {
                 assertTrue("expected GameScreen for visual probe", game.getScreen() instanceof GameScreen);
             });
 
-            // Opening pressure confirms the ordinary gameplay composition first.
             Thread.sleep(2200L);
             capture("rex-gameplay.png");
 
-            // Force a deterministic phone-scale composition containing authored Rex, four durable
-            // Shamblers on the cardinals, two durable Runners on opposite diagonals, and two durable
-            // Brutes on the remaining diagonals. Reflection is deliberately confined to instrumentation
-            // code so production GameScreen does not gain QA-only API surface. Keep the historical
-            // filename for artifact compatibility with existing CI collection.
+            // Deterministic authored-enemy composition. Reflection stays instrumentation-only so
+            // production GameScreen does not gain QA API surface. Historical filename is retained
+            // for artifact compatibility.
             runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
-            Thread.sleep(220L);
+            Thread.sleep(700L);
             capture("rex-shambler-crowd.png");
 
-            // Force the authored attack presentation window without changing gameplay state.
             runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
             Thread.sleep(80L);
             capture("rex-attack.png");
@@ -65,25 +61,25 @@ public final class AndroidGameplayVisualProbeTest {
             Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
             int before = enemies.size;
 
-            // Large HP keeps QA actors alive despite Rex auto-fire. Low speed keeps their placement
-            // readable while still exercising normal enemy state, direction and authored animation.
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, 5.2f, 0f, 50_000f, .08f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, -5.2f, 0f, 50_000f, .08f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, 4.2f, 50_000f, .08f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, -4.2f, 50_000f, .08f, .50f, 0f, 1));
 
-            // Runner uses a slightly smaller collision footprint and higher movement speed so its
-            // authored Run cycle and slimmer silhouette remain visibly distinct from Shambler.
             enemies.add(new Enemy(Enemy.Type.RUNNER, 3.7f, 3.0f, 50_000f, .22f, .46f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.RUNNER, -3.7f, -3.0f, 50_000f, .22f, .46f, 0f, 1));
 
-            // Brute deliberately occupies the opposite diagonals with a larger collision footprint
-            // and very low speed. The screenshot must prove its production sprite remains visibly
-            // heavier than both Shambler and Runner at real Android phone scale.
             enemies.add(new Enemy(Enemy.Type.BRUTE, -3.7f, 3.0f, 50_000f, .06f, .62f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.BRUTE, 3.7f, -3.0f, 50_000f, .06f, .62f, 0f, 1));
 
-            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute crowd", enemies.size >= before + 8);
+            // RANGED uses the normal production Enemy.Type.RANGED path. Opposite horizontal offsets
+            // exercise east/west authored directions, the same side views used by the automated
+            // phone-scale attack-readability gate.
+            enemies.add(new Enemy(Enemy.Type.RANGED, 6.2f, 2.0f, 50_000f, .05f, .46f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.RANGED, -6.2f, -2.0f, 50_000f, .05f, .46f, 0f, 1));
+
+            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged crowd",
+                enemies.size >= before + 10);
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("unable to access GameScreen enemy collection for visual QA", exception);
         }
