@@ -22,6 +22,14 @@ def load_candidates(config: Path, fragments_dir: Path) -> dict:
     return candidates
 
 
+def source_url(source: dict) -> str:
+    if source.get("url"):
+        return source["url"]
+    if source.get("repository") and source.get("commit") and source.get("path"):
+        return f"https://raw.githubusercontent.com/{source['repository']}/{source['commit']}/{quote(source['path'], safe='/')}"
+    raise SystemExit("Source must define either url or repository+commit+path")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("candidate")
@@ -40,28 +48,30 @@ def main() -> None:
     render = c["render"]
     actions = c["actions"]
     weapon = c.get("weapon", {})
-    path = source["path"]
+    defensive_prop = c.get("defensive_prop", {})
+    source_path = source["path"]
+    resolved_source_url = source_url(source)
+    filename = Path(source_path).name
 
-    if source.get("url"):
-        source_url = source["url"]
-    elif source.get("repository") and source.get("commit"):
-        source_url = f"https://raw.githubusercontent.com/{source['repository']}/{source['commit']}/{quote(path, safe='/')}"
-    else:
-        raise SystemExit("Candidate source must define either url or repository+commit")
+    prop_payload = {}
+    if defensive_prop:
+        prop_payload = dict(defensive_prop)
+        prop_payload["url"] = source_url(defensive_prop)
+        prop_payload["filename"] = Path(defensive_prop["path"]).name
 
-    filename = Path(path).name
     payload = {
         "candidate": args.candidate,
         "actor": c["actor"],
         "role": c.get("role", c["actor"]),
         "filename": filename,
-        "source_url": source_url,
+        "source_url": resolved_source_url,
         "git_blob_sha": source.get("git_blob_sha", ""),
         "expected_sha256": source.get("sha256", ""),
         "size_bytes": int(source.get("size_bytes", 0) or 0),
         "source": source,
         "actions": actions,
         "weapon": weapon,
+        "defensive_prop": prop_payload,
         "render": render,
         "selection_goal": c.get("selection_goal", ""),
         "role_gate": c.get("role_gate", {}),
@@ -74,12 +84,15 @@ def main() -> None:
     if args.github_env:
         forward = weapon.get("forward", [])
         grip_offset = weapon.get("grip_offset", [])
+        prop_forward = defensive_prop.get("forward", [])
+        prop_offset = defensive_prop.get("grip_offset", [])
+        prop_rotation = defensive_prop.get("rotation_degrees", [])
         values = {
             "ACTOR_CANDIDATE": args.candidate,
             "ACTOR": c["actor"],
             "ACTOR_ROLE": c.get("role", c["actor"]),
             "SOURCE_FILENAME": filename,
-            "SOURCE_URL": source_url,
+            "SOURCE_URL": resolved_source_url,
             "SOURCE_GIT_BLOB": source.get("git_blob_sha", ""),
             "SOURCE_EXPECTED_SHA256": source.get("sha256", ""),
             "SOURCE_SIZE": str(source.get("size_bytes", 0) or 0),
@@ -90,6 +103,17 @@ def main() -> None:
             "DZ_WEAPON_BONE": weapon.get("bone", ""),
             "DZ_WEAPON_FORWARD": ",".join(str(v) for v in forward),
             "DZ_WEAPON_GRIP_OFFSET": ",".join(str(v) for v in grip_offset),
+            "DZ_DEFENSIVE_PROP_URL": prop_payload.get("url", ""),
+            "DZ_DEFENSIVE_PROP_FILENAME": prop_payload.get("filename", ""),
+            "DZ_DEFENSIVE_PROP_BLOB": defensive_prop.get("git_blob_sha", ""),
+            "DZ_DEFENSIVE_PROP_SHA256": defensive_prop.get("sha256", ""),
+            "DZ_DEFENSIVE_PROP_SIZE": str(defensive_prop.get("size_bytes", 0) or 0),
+            "DZ_DEFENSIVE_PROP_BONE": defensive_prop.get("bone", ""),
+            "DZ_DEFENSIVE_PROP_ROLE": defensive_prop.get("role", ""),
+            "DZ_DEFENSIVE_PROP_FORWARD": ",".join(str(v) for v in prop_forward),
+            "DZ_DEFENSIVE_PROP_GRIP_OFFSET": ",".join(str(v) for v in prop_offset),
+            "DZ_DEFENSIVE_PROP_ROTATION": ",".join(str(v) for v in prop_rotation),
+            "DZ_DEFENSIVE_PROP_SCALE": str(defensive_prop.get("scale", 1.0)),
         }
         with args.github_env.open("a") as out:
             for key, value in values.items():
