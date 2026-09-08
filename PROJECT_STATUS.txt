@@ -2,7 +2,7 @@ DEADLINE ZERO — PROJECT STATUS
 ==============================
 
 Last update: 2026-09-08
-Current phase: Premium art pipeline / Rex + Shambler + Runner + Brute Android vertical slices accepted
+Current phase: Premium art pipeline / Rex + Shambler + Runner + Brute accepted; RANGED staged for real Android acceptance
 
 CURRENT GOAL
 ------------
@@ -15,6 +15,19 @@ ACCEPTED PRODUCTION ACTORS
 [OK] RUNNER — Quaternius Ultimate Animated Character Pack Zombie_Female, 232 directional frames, slimmer fast-enemy silhouette, real crowded Android gameplay accepted.
 [OK] BRUTE — Quaternius Ultimate Monsters Demon glTF, 232 directional frames, materially heavier phone-scale silhouette, real crowded Android gameplay accepted.
 
+CURRENT RANGED STATUS
+---------------------
+[OK] Character source: Quaternius Ultimate Animated Character Pack BlueSoldier_Male.blend, CC0 1.0.
+[OK] Immutable source: commit 4769997aaea204c66735813e2bf61dc3c94e7631, git blob 5a9ff78571c9c2bfc5492912ca3dbc6e9ed573d8, SHA-256 ee9c0780a297c333aab1c59694afc4ad1d13fb0374327287c1ec8425be18337f.
+[OK] Original unarmed BlueSoldier candidate explicitly rejected after human inspection proved the apparent ranged extension was only the arm.
+[OK] Replacement candidate ranged-blue-soldier-rifle uses deterministic configured compact-rifle geometry attached to Fist.R in the generic Blender renderer.
+[OK] Native actions resolve to Idle / Walk / Shoot_OneHanded / RecieveHit / Death.
+[OK] Candidate validation run 34231682966 / artifact 10058335566 passes exact 232/232, minimum master margin 37 px, normalization QA and role gate.
+[OK] Human contact-sheet inspection confirms explicit rifle geometry is visible, attached and unclipped across all eight directions and authored motions.
+[OK] Production staging run 34235826311 passed and published assets/art/ranged.png + ranged-manifest.json + enemy/ranged/... atlas groups additively.
+[OK] Production atlas now contains five actor pages; ranged manifest records SHA-256 0cd53e4dd8be258da6bf6346a0a2d16c5615d35cd82a17bc8fd269198ca22b9d.
+[PENDING] Real Android crowded acceptance is mandatory before RANGED becomes accepted.
+
 CURRENT BRUTE STATUS
 --------------------
 [OK] Deterministic source: Quaternius Ultimate Monsters Big/glTF/Demon.gltf under CC0 1.0.
@@ -26,21 +39,21 @@ CURRENT BRUTE STATUS
 [OK] Phone-scale median bbox width: 55 px; median bbox area: 2719.5 px2.
 [OK] BRUTE median silhouette area is 1.235x Shambler, clearing the intended >=20% heavy-role target.
 [OK] Production assets published as assets/art/brute.png + assets/art/brute-manifest.json + enemy/brute/... atlas groups.
-[OK] Production atlas now contains Rex + Shambler + Runner + Brute = 928 directional frames across four dedicated pages.
 [OK] Runtime required no BRUTE-specific rendering code: Enemy.Type.BRUTE and generic GameArt routing naturally resolve enemy/brute/<direction>/<motion>.
 [OK] Android Verify run 34205861027 / artifact 10047825813 passes real emulator instrumentation and crowded visual capture.
-[OK] Real Android screenshot confirms two authored red BRUTEs are materially larger than Shamblers and Runners, correctly textured, grounded, readable and unclipped.
 [OK] BRUTE is ACCEPTED in config/actor-production-contracts.json.
 
 PIPELINE INDUSTRIALIZATION
 --------------------------
-[OK] config/actor-candidates.json stores immutable candidate provenance, action aliases, render parameters and verdicts.
-[OK] tools/sprites/resolve_actor_candidate.py resolves pinned source metadata for candidate CI.
+[OK] config/actor-candidates.json plus config/actor-candidates.d/*.json store immutable provenance, action aliases, role gates, render parameters and verdicts.
+[OK] tools/sprites/resolve_actor_candidate.py resolves pinned source metadata plus configured weapon metadata for candidate CI.
 [OK] .github/workflows/actor-candidate-validation.yml validates source fingerprint, Blender import, actions, 232-frame contract, margins, 96px normalization and silhouette metrics.
 [OK] Candidate pipeline supports .blend, .fbx, .gltf and .glb sources.
+[OK] Generic action resolution strips common armature suffixes instead of requiring importer-specific aliases everywhere.
 [OK] tools/sprites/upsert_directional_actor_atlas.py performs non-destructive multi-actor atlas publication.
-[OK] config/actor-production-contracts.json is the authoritative machine-readable accepted-actor contract.
-[OK] tools/sprites/validate_actor_production_contracts.py prevents accepted production pages/groups from silently disappearing.
+[OK] Generic Actor Production Staging consumes qualified evidence and publishes one actor additively without erasing accepted actors.
+[OK] .circleci/config.yml provides a candidate-validation fallback on circleci-fallback-* branches if GitHub Actions cannot schedule jobs.
+[OK] config/actor-production-contracts.json remains the authoritative accepted-actor contract.
 [OK] Real Android visual acceptance remains mandatory before an actor reaches status=accepted.
 
 IMPORTANT DECISIONS
@@ -50,15 +63,16 @@ IMPORTANT DECISIONS
 - Sources must be license-identified and fingerprinted before production.
 - Preserve meaningful native animation/root motion; expand framing and normalize the motion envelope instead of recentering every frame.
 - The shared 8-direction / 232-frame / 96px contract remains stable unless intentionally versioned.
-- Role identity must be objectively measurable where possible. BRUTE required a materially larger normalized silhouette than Shambler.
+- Role identity must be objectively measurable where possible.
+- RANGED requires explicit weapon geometry; silhouette extension alone is not sufficient evidence.
 
 CURRENT BLOCKER
 ---------------
-BRUTE is no longer a blocker. The next art-production blocker is RANGED, followed by ELITE and biome variants.
+RANGED real Android crowded acceptance.
 
 IMMEDIATE NEXT ACTION
 ---------------------
-Merge PR #36 after the accepted-actor Verify gate is green. Then generalize actor production/publish/post-publish Android acceptance into one config-driven workflow and onboard RANGED using the same candidate registry, objective role metrics and real Android acceptance.
+Run Verify/android-runtime against the staged RANGED page. Inspect the resulting crowded phone screenshot. If RANGED is distinct, grounded, textured, unclipped and the rifle remains visibly attached, promote RANGED to accepted in config/actor-production-contracts.json and ranged-manifest.json, then merge PR #40.
 
 ORDER OF EXECUTION
 ------------------
@@ -69,10 +83,10 @@ ORDER OF EXECUTION
 5. Generic candidate validation infrastructure. [DONE]
 6. BRUTE source search and objective silhouette qualification. [DONE]
 7. BRUTE production staging + Android acceptance. [DONE]
-8. Merge BRUTE production integration. [NEXT]
-9. Replace actor-specific staging/acceptance duplication with one config-driven production pipeline. [NEXT]
-10. Select and onboard RANGED. [NEXT QUALITY GATE]
-11. Repeat for ELITE, biome variants, remaining survivors and bosses.
+8. Generic production staging workflow. [DONE]
+9. RANGED candidate qualification + production staging. [DONE]
+10. RANGED real Android acceptance. [NOW]
+11. ELITE, biome variants, remaining survivors and bosses. [NEXT]
 
 SHARED ACTOR CONTRACT
 ---------------------
@@ -88,7 +102,8 @@ REX premium survivor vertical slice: ACCEPTED.
 SHAMBLER first-enemy vertical slice: ACCEPTED.
 RUNNER fast-enemy vertical slice: ACCEPTED.
 BRUTE heavy-enemy vertical slice: ACCEPTED.
+RANGED weaponized enemy vertical slice: STAGED / ANDROID ACCEPTANCE PENDING.
 
 NEXT QUALITY GATE
 -----------------
-RANGED must have a licensed/fingerprinted source, a silhouette readable against the four accepted actors, native actions that map cleanly into the shared contract, additive atlas publication, and successful real Android crowded acceptance before status=accepted.
+RANGED must pass real Android crowded acceptance before status=accepted. After that, ELITE becomes the next actor blocker.
