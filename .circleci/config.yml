@@ -66,27 +66,10 @@ jobs:
             set -euo pipefail
             source "$BASH_ENV"
             blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/inspect_actor_source.py -- --json-out build/actor-candidate/inspection.json
-            python3 - <<'PY'
-            import json,re
-            from pathlib import Path
-            c=json.loads(Path('build/actor-candidate/resolved.json').read_text())
-            i=json.loads(Path('build/actor-candidate/inspection.json').read_text())
-            available=[row['name'] for row in i['actions']]
-            def norm(s):
-                s=s.lower(); s=re.sub(r'_(character)?armature(?:\.\d+)?$','',s)
-                return re.sub(r'[^a-z0-9]+','',s)
-            index={norm(name):name for name in available}
-            mapped={}
-            for motion,aliases in c['actions'].items():
-                for alias in aliases:
-                    hit=index.get(norm(alias))
-                    if hit: mapped[motion]=hit; break
-            required=('idle','run','attack','hit','death')
-            missing=[x for x in required if x not in mapped]
-            payload={'available_actions':available,'resolved':mapped,'missing':missing}
-            Path('build/actor-candidate/action-map.json').write_text(json.dumps(payload,indent=2)+'\n')
-            if missing: raise SystemExit('Missing native actions: '+', '.join(missing))
-            PY
+            python3 tools/sprites/resolve_actor_actions.py \
+              --candidate build/actor-candidate/resolved.json \
+              --inspection build/actor-candidate/inspection.json \
+              --output build/actor-candidate/action-map.json
       - run:
           name: Render and normalize exact 232-frame contract
           command: |
