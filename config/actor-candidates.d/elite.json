@@ -12,12 +12,13 @@
         "commit": "ff9ee5b57e2531b4f8841d6e7564283f943f6d34",
         "path": "client/public/models/monster_Orc.gltf",
         "git_blob_sha": "750b2401542551ef4fc01e7b5d85b96195119622",
-        "size_bytes": 1280189
+        "size_bytes": 1280189,
+        "sha256": "e61a37f8d9b2eee28928bdfad2c55e0798cc0a212e925cc5dcc66b243526c1a3"
       },
       "actions": {
         "idle": ["Idle"],
         "run": ["Walk", "Run"],
-        "attack": ["Punch", "Weapon", "Attack"],
+        "attack": ["Weapon", "Punch", "Attack"],
         "hit": ["HitReact", "RecieveHit", "ReceiveHit", "Hit"],
         "death": ["Death"]
       },
@@ -30,11 +31,12 @@
       "role_gate": {
         "requires_phone_scale_distinction": true,
         "requires_material_integrity": true,
-        "requires_distinct_from_accepted_actors": true
+        "requires_distinct_from_accepted_actors": true,
+        "prefer_native_weapon_attack": true
       },
       "verdict": {
         "status": "candidate",
-        "reason": "Must pass deterministic fingerprinting, exact 232-frame QA, material/contact-sheet inspection and phone-scale distinctness before production staging."
+        "reason": "Source fingerprint locked after run 34237510610. Must rerun with shared suffix-aware action resolution, then pass exact 232-frame QA and visual distinctness inspection before production staging."
       }
     }
   }
