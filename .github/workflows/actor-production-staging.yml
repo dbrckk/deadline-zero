@@ -1,0 +1,293 @@
+name: Actor Production Staging
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/actor-production-staging.yml'
+      - 'config/actor-candidates.json'
+      - 'config/actor-candidates.d/**'
+      - 'config/active-actor-candidate.txt'
+      - 'config/actor-production-contracts.json'
+      - 'tools/sprites/resolve_actor_candidate.py'
+      - 'tools/sprites/validate_ranged_attack_readability.py'
+      - 'tools/sprites/upsert_directional_actor_atlas.py'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: actor-production-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      eligible: ${{ steps.resolve.outputs.eligible }}
+      candidate_id: ${{ steps.resolve.outputs.candidate_id }}
+      actor: ${{ steps.resolve.outputs.actor }}
+      atlas_root: ${{ steps.resolve.outputs.atlas_root }}
+      evidence_artifact_id: ${{ steps.resolve.outputs.evidence_artifact_id }}
+      validation_run_id: ${{ steps.resolve.outputs.validation_run_id }}
+      source_sha256: ${{ steps.resolve.outputs.source_sha256 }}
+      source_git_blob: ${{ steps.resolve.outputs.source_git_blob }}
+      source_commit: ${{ steps.resolve.outputs.source_commit }}
+      min_area: ${{ steps.resolve.outputs.min_area }}
+      max_area: ${{ steps.resolve.outputs.max_area }}
+      min_width: ${{ steps.resolve.outputs.min_width }}
+      max_width: ${{ steps.resolve.outputs.max_width }}
+      min_attack_extension: ${{ steps.resolve.outputs.min_attack_extension }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - id: resolve
+        name: Resolve qualified active actor
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+
+          candidate_id = Path('config/active-actor-candidate.txt').read_text().strip()
+          registry = json.loads(Path('config/actor-candidates.json').read_text())
+          candidates = dict(registry.get('candidates', {}))
+          fragments = Path('config/actor-candidates.d')
+          if fragments.exists():
+              for path in sorted(fragments.glob('*.json')):
+                  payload = json.loads(path.read_text())
+                  for key, value in payload.get('candidates', {}).items():
+                      if key in candidates:
+                          raise SystemExit(f'duplicate actor candidate {key!r} in {path}')
+                      candidates[key] = value
+          candidate = candidates[candidate_id]
+          verdict = candidate.get('verdict', {})
+          production = candidate.get('production', {})
+          source = candidate.get('source', {})
+
+          actor = candidate['actor']
+          status = verdict.get('status', 'candidate')
+          artifact_id = verdict.get('validation_artifact_id')
+          run_id = verdict.get('validation_run_id')
+          eligible = status == 'qualified' and bool(artifact_id) and bool(run_id)
+
+          print(f'eligible={str(eligible).lower()}')
+          print(f'candidate_id={candidate_id}')
+          print(f'actor={actor}')
+          print(f'atlas_root={production.get("atlas_root", f"enemy/{actor}")}')
+          print(f'evidence_artifact_id={artifact_id or ""}')
+          print(f'validation_run_id={run_id or ""}')
+          print(f'source_sha256={source.get("sha256", "")}')
+          print(f'source_git_blob={source.get("git_blob_sha", "")}')
+          print(f'source_commit={source.get("commit", "")}')
+          gate = dict(production.get('role_gate', {}))
+          gate.update(candidate.get('role_gate', {}))
+          print(f'min_area={gate.get("min_median_bbox_area_px2", "")}')
+          print(f'max_area={gate.get("max_median_bbox_area_px2", "")}')
+          print(f'min_width={gate.get("min_median_bbox_width_px", "")}')
+          print(f'max_width={gate.get("max_median_bbox_width_px", "")}')
+          print(f'min_attack_extension={gate.get("minimum_forward_attack_extension_px", "")}')
+          print(f'Active candidate {candidate_id}: status={status}, eligible={eligible}')
+          PY
+
+  stage:
+    needs: resolve
+    if: needs.resolve.outputs.eligible == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout candidate PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Download immutable validation evidence
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.resolve.outputs.evidence_artifact_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: actor-evidence
+
+      - name: Install atlas and role-gate tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+
+      - name: Validate evidence and configured role gate
+        env:
+          ACTOR: ${{ needs.resolve.outputs.actor }}
+          SOURCE_SHA256: ${{ needs.resolve.outputs.source_sha256 }}
+          MIN_AREA: ${{ needs.resolve.outputs.min_area }}
+          MAX_AREA: ${{ needs.resolve.outputs.max_area }}
+          MIN_WIDTH: ${{ needs.resolve.outputs.min_width }}
+          MAX_WIDTH: ${{ needs.resolve.outputs.max_width }}
+          MIN_ATTACK_EXTENSION: ${{ needs.resolve.outputs.min_attack_extension }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$(find actor-evidence -type d -name normalized96 -print -quit)"
+          qa="$(find actor-evidence -type f -name qa.json -print -quit)"
+          margin="$(find actor-evidence -type f -name master-margin.json -print -quit)"
+          metrics="$(find actor-evidence -type f -name silhouette-metrics.json -print -quit)"
+          fingerprint="$(find actor-evidence -type f -name fingerprint.json -print -quit)"
+          test -n "$root" -a -n "$qa" -a -n "$margin" -a -n "$metrics" -a -n "$fingerprint"
+          python3 - "$qa" "$margin" "$metrics" "$fingerprint" <<'PY'
+          import json, os, sys
+          qa=json.load(open(sys.argv[1]))
+          margin=json.load(open(sys.argv[2]))
+          metrics=json.load(open(sys.argv[3]))
+          fp=json.load(open(sys.argv[4]))
+          actor=os.environ['ACTOR']
+          assert qa.get('actor') == actor, qa
+          assert qa.get('pass') is True and qa.get('frame_count') == 232, qa
+          assert qa.get('horizontal_anchor') == 'union-center', qa
+          assert margin.get('pass') is True and margin.get('frame_count') == 232, margin
+          assert margin.get('minimum_observed_margin_px', 0) >= 4, margin
+          expected_sha=os.environ.get('SOURCE_SHA256','').strip()
+          if expected_sha:
+              assert fp.get('sha256') == expected_sha, (fp, expected_sha)
+          assert metrics.get('frame_count') == 232, metrics
+          area=float(metrics.get('median_bbox_area_px2',0))
+          width=float(metrics.get('median_bbox_width_px',0))
+          for key,value,op in (
+              ('MIN_AREA',area,'min'),('MAX_AREA',area,'max'),
+              ('MIN_WIDTH',width,'min'),('MAX_WIDTH',width,'max')):
+              raw=os.environ.get(key,'').strip()
+              if not raw: continue
+              limit=float(raw)
+              assert value >= limit if op == 'min' else value <= limit, (key,value,limit)
+          print('Actor structural role gate PASS:', actor, metrics)
+          PY
+          if [[ "$ACTOR" == "ranged" && -n "${MIN_ATTACK_EXTENSION:-}" ]]; then
+            python3 tools/sprites/validate_ranged_attack_readability.py \
+              --input "$root" \
+              --report build/ranged-readability.json \
+              --minimum-extension-px "$MIN_ATTACK_EXTENSION"
+          fi
+          echo "SPRITE_ROOT=$root" >> "$GITHUB_ENV"
+          echo "QA_FILE=$qa" >> "$GITHUB_ENV"
+          echo "MARGIN_FILE=$margin" >> "$GITHUB_ENV"
+          echo "METRICS_FILE=$metrics" >> "$GITHUB_ENV"
+          echo "FINGERPRINT_FILE=$fingerprint" >> "$GITHUB_ENV"
+
+      - name: Build additive production actor page
+        env:
+          ACTOR: ${{ needs.resolve.outputs.actor }}
+          ATLAS_ROOT: ${{ needs.resolve.outputs.atlas_root }}
+          VALIDATION_RUN_ID: ${{ needs.resolve.outputs.validation_run_id }}
+          VALIDATION_ARTIFACT_ID: ${{ needs.resolve.outputs.evidence_artifact_id }}
+          SOURCE_GIT_BLOB: ${{ needs.resolve.outputs.source_git_blob }}
+          SOURCE_COMMIT: ${{ needs.resolve.outputs.source_commit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="build/${ACTOR}-production"
+          mkdir -p "$out"
+          cp assets/art/game.atlas "$out/game.atlas"
+          python3 tools/sprites/upsert_directional_actor_atlas.py \
+            --actor "$ACTOR" \
+            --root "$ATLAS_ROOT" \
+            --input "$SPRITE_ROOT" \
+            --atlas "$out/game.atlas" \
+            --png "$out/${ACTOR}.png" \
+            --manifest "$out/${ACTOR}-manifest.json" \
+            --source-run-id "$VALIDATION_RUN_ID"
+          python3 - "$out/${ACTOR}-manifest.json" <<'PY'
+          from pathlib import Path
+          import json, os, sys
+          p=Path(sys.argv[1])
+          data=json.loads(p.read_text())
+          qa=json.load(open(os.environ['QA_FILE']))
+          margin=json.load(open(os.environ['MARGIN_FILE']))
+          metrics=json.load(open(os.environ['METRICS_FILE']))
+          fp=json.load(open(os.environ['FINGERPRINT_FILE']))
+          data.update({
+            'source_stage':'96px-normalization-v2',
+            'source_production_ready':False,
+            'source_horizontal_anchor':qa.get('horizontal_anchor'),
+            'source_sha256':fp.get('sha256'),
+            'source_git_blob':os.environ.get('SOURCE_GIT_BLOB') or None,
+            'source_mirror_commit':os.environ.get('SOURCE_COMMIT') or None,
+            'validation_run':int(os.environ['VALIDATION_RUN_ID']),
+            'validation_artifact_id':int(os.environ['VALIDATION_ARTIFACT_ID']),
+            'master_minimum_margin_px':margin.get('minimum_observed_margin_px'),
+            'median_bbox_area_px2':metrics.get('median_bbox_area_px2'),
+            'median_bbox_width_px':metrics.get('median_bbox_width_px'),
+            'phone_qa_pass':True,
+            'android_accepted':False,
+          })
+          readability=Path('build/ranged-readability.json')
+          if readability.exists():
+              data['ranged_attack_readability']=json.loads(readability.read_text())
+          p.write_text(json.dumps(data,indent=2)+'\n')
+          PY
+
+      - name: Verify accepted actors plus staged candidate
+        env:
+          ACTOR: ${{ needs.resolve.outputs.actor }}
+          ATLAS_ROOT: ${{ needs.resolve.outputs.atlas_root }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, os
+          actor=os.environ['ACTOR']
+          candidate_root=os.environ['ATLAS_ROOT']
+          atlas=Path(f'build/{actor}-production/game.atlas').read_text()
+          contract=json.loads(Path('config/actor-production-contracts.json').read_text())
+          dirs=contract['frame_contract']['directions']
+          anims=contract['frame_contract']['animations']
+          roots=[entry['atlas_root'] for entry in contract['actors'].values() if entry.get('status')=='accepted']
+          if candidate_root not in roots: roots.append(candidate_root)
+          for root in roots:
+              total=0
+              for direction in dirs:
+                  for anim,count in anims.items():
+                      got=atlas.count(f'{root}/{direction}/{anim}\n')
+                      assert got == count, (root,direction,anim,got,count)
+                      total += got
+              assert total == contract['frame_contract']['total_frames'], (root,total)
+          for root in roots:
+              page=root.split('/')[-1]+'.png'
+              assert atlas.count(page+'\n') == 1, page
+          print(f'Production atlas PASS: {len(roots)} actors x 232 = {len(roots)*232} frames')
+          PY
+
+      - name: Upload commit-ready production assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: actor-production-${{ needs.resolve.outputs.actor }}-${{ github.run_number }}
+          path: |
+            build/${{ needs.resolve.outputs.actor }}-production/${{ needs.resolve.outputs.actor }}.png
+            build/${{ needs.resolve.outputs.actor }}-production/game.atlas
+            build/${{ needs.resolve.outputs.actor }}-production/${{ needs.resolve.outputs.actor }}-manifest.json
+            build/ranged-readability.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Commit production assets to candidate branch
+        env:
+          ACTOR: ${{ needs.resolve.outputs.actor }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="build/${ACTOR}-production"
+          cp "$out/${ACTOR}.png" "assets/art/${ACTOR}.png"
+          cp "$out/game.atlas" assets/art/game.atlas
+          cp "$out/${ACTOR}-manifest.json" "assets/art/${ACTOR}-manifest.json"
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "assets/art/${ACTOR}.png" assets/art/game.atlas "assets/art/${ACTOR}-manifest.json"
+          if git diff --cached --quiet; then
+            echo "$ACTOR production assets already current"
+            exit 0
+          fi
+          git commit -m "Stage qualified ${ACTOR} production atlas"
+          target="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+          git push origin "HEAD:${target}"
