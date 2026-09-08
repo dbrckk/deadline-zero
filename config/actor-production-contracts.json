@@ -3,13 +3,7 @@
   "frame_contract": {
     "cell": [96, 96],
     "directions": ["n", "ne", "e", "se", "s", "sw", "w", "nw"],
-    "animations": {
-      "idle": 4,
-      "run": 8,
-      "attack": 6,
-      "hit": 3,
-      "death": 8
-    },
+    "animations": {"idle": 4, "run": 8, "attack": 6, "hit": 3, "death": 8},
     "frames_per_direction": 29,
     "total_frames": 232
   },
@@ -39,17 +33,8 @@
         "texture": "Zombie_Atlas.png",
         "texture_sha256": "8803e5543d5e6b6f66aa41a5ef93e6c2ffb77b5476d0202296d2f4c8f4eb9e8d"
       },
-      "actions": {
-        "idle": "Idle",
-        "run": "Walk",
-        "attack": "Punch",
-        "hit": "HitReact",
-        "death": "Death"
-      },
-      "render": {
-        "ortho_scale": 3.25,
-        "target_height": 0.58
-      }
+      "actions": {"idle": "Idle", "run": "Walk", "attack": "Punch", "hit": "HitReact", "death": "Death"},
+      "render": {"ortho_scale": 3.25, "target_height": 0.58}
     },
     "runner": {
       "kind": "enemy",
@@ -70,17 +55,8 @@
         "mirror_commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
         "size_bytes": 2415852
       },
-      "actions": {
-        "idle": "Idle",
-        "run": "Run",
-        "attack": "Punch",
-        "hit": "RecieveHit",
-        "death": "Death"
-      },
-      "render": {
-        "ortho_scale": 7.5,
-        "target_height": 1.45
-      },
+      "actions": {"idle": "Idle", "run": "Run", "attack": "Punch", "hit": "RecieveHit", "death": "Death"},
+      "render": {"ortho_scale": 7.5, "target_height": 1.45},
       "validation": {
         "run_id": 34150615192,
         "frame_count": 232,
@@ -109,17 +85,8 @@
         "mirror_commit": "ff9ee5b57e2531b4f8841d6e7564283f943f6d34",
         "size_bytes": 1264925
       },
-      "actions": {
-        "idle": "Idle_CharacterArmature",
-        "run": "Walk_CharacterArmature",
-        "attack": "Punch_CharacterArmature",
-        "hit": "HitReact_CharacterArmature",
-        "death": "Death_CharacterArmature"
-      },
-      "render": {
-        "ortho_scale": 7.5,
-        "target_height": 1.45
-      },
+      "actions": {"idle": "Idle_CharacterArmature", "run": "Walk_CharacterArmature", "attack": "Punch_CharacterArmature", "hit": "HitReact_CharacterArmature", "death": "Death_CharacterArmature"},
+      "render": {"ortho_scale": 7.5, "target_height": 1.45},
       "validation": {
         "run_id": 34196722114,
         "frame_count": 232,
@@ -130,6 +97,46 @@
         "phone_qa_pass": true,
         "android_runtime_run_id": 34205861027,
         "android_visual_artifact_id": 10047825813,
+        "android_visual_qa_pass": true
+      }
+    },
+    "ranged": {
+      "kind": "enemy",
+      "atlas_root": "enemy/ranged",
+      "published_png": "assets/art/ranged.png",
+      "published_manifest": "assets/art/ranged-manifest.json",
+      "normalization": "union-center",
+      "status": "accepted",
+      "requires_weapon_visibility_gate": true,
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "master": "BlueSoldier_Male.blend",
+        "sha256": "ee9c0780a297c333aab1c59694afc4ad1d13fb0374327287c1ec8425be18337f",
+        "git_blob_sha": "5a9ff78571c9c2bfc5492912ca3dbc6e9ed573d8",
+        "mirror_repository": "ariesyous/projectbluebean",
+        "mirror_commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "size_bytes": 1869476
+      },
+      "weapon": {
+        "style": "compact-rifle",
+        "bone": "Fist.R",
+        "forward": [0.0, -1.0, -0.08],
+        "grip_offset": [0.0, -0.01, 0.01]
+      },
+      "actions": {"idle": "Idle", "run": "Walk", "attack": "Shoot_OneHanded", "hit": "RecieveHit", "death": "Death"},
+      "render": {"ortho_scale": 7.5, "target_height": 1.45},
+      "validation": {
+        "run_id": 34231682966,
+        "frame_count": 232,
+        "master_minimum_margin_px": 37,
+        "median_bbox_area_px2": 1888.5,
+        "median_bbox_width_px": 32.0,
+        "phone_qa_pass": true,
+        "explicit_weapon_geometry_pass": true,
+        "android_runtime_run_id": 34236059385,
+        "android_visual_artifact_id": 10060021215,
         "android_visual_qa_pass": true
       }
     }
