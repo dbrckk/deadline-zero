@@ -7,7 +7,9 @@ on:
       - '.github/workflows/actor-candidate-validation.yml'
       - 'config/active-actor-candidate.txt'
       - 'config/actor-candidates.json'
+      - 'config/actor-candidates.d/**'
       - 'tools/sprites/resolve_actor_candidate.py'
+      - 'tools/sprites/resolve_actor_actions.py'
       - 'tools/sprites/normalize_actor_frames.py'
       - 'tools/blender/inspect_actor_source.py'
       - 'tools/blender/render_actor_8dir.py'
@@ -55,17 +57,10 @@ jobs:
           fi
           test -s "$target"
           actual_size="$(stat -c%s "$target")"
-          if [[ "$SOURCE_SIZE" != "0" ]]; then
-            test "$actual_size" -eq "$SOURCE_SIZE"
-          fi
-          if [[ -n "$SOURCE_GIT_BLOB" ]]; then
-            actual_blob="$(git hash-object "$target")"
-            test "$actual_blob" = "$SOURCE_GIT_BLOB"
-          fi
+          if [[ "$SOURCE_SIZE" != "0" ]]; then test "$actual_size" -eq "$SOURCE_SIZE"; fi
+          if [[ -n "$SOURCE_GIT_BLOB" ]]; then test "$(git hash-object "$target")" = "$SOURCE_GIT_BLOB"; fi
           actual_sha256="$(sha256sum "$target" | awk '{print $1}')"
-          if [[ -n "$SOURCE_EXPECTED_SHA256" ]]; then
-            test "$actual_sha256" = "$SOURCE_EXPECTED_SHA256"
-          fi
+          if [[ -n "$SOURCE_EXPECTED_SHA256" ]]; then test "$actual_sha256" = "$SOURCE_EXPECTED_SHA256"; fi
           printf '%s  %s\n' "$actual_sha256" "$SOURCE_FILENAME" | tee build/actor-candidate/source/sha256.txt
           printf '{"size_bytes":%s,"sha256":"%s"}\n' "$actual_size" "$actual_sha256" > build/actor-candidate/source/fingerprint.json
 
@@ -82,9 +77,7 @@ jobs:
           set -euo pipefail
           source_path="build/actor-candidate/source/$SOURCE_FILENAME"
           case "${SOURCE_FILENAME,,}" in
-            *.blend)
-              scene_path="$source_path"
-              ;;
+            *.blend) scene_path="$source_path" ;;
             *.fbx)
               scene_path="build/actor-candidate/source/imported-source.blend"
               SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import bpy, os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])"
@@ -93,10 +86,7 @@ jobs:
               scene_path="build/actor-candidate/source/imported-source.blend"
               SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import sys; sys.path.append('/usr/lib/python3/dist-packages'); import bpy, os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])"
               ;;
-            *)
-              echo "Unsupported actor source format: $SOURCE_FILENAME" >&2
-              exit 1
-              ;;
+            *) echo "Unsupported actor source format: $SOURCE_FILENAME" >&2; exit 1 ;;
           esac
           test -s "$scene_path"
           echo "BLENDER_SOURCE_FILE=$scene_path" >> "$GITHUB_ENV"
@@ -105,31 +95,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          blender -b "$BLENDER_SOURCE_FILE" \
-            -P tools/blender/inspect_actor_source.py -- \
+          blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/inspect_actor_source.py -- \
             --json-out build/actor-candidate/inspection.json
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-
-          resolved_candidate=json.loads(Path('build/actor-candidate/resolved.json').read_text())
-          inspection=json.loads(Path('build/actor-candidate/inspection.json').read_text())
-          available=[row['name'] for row in inspection['actions']]
-          lowered={name.lower():name for name in available}
-          mapped={}
-          for motion, aliases in resolved_candidate['actions'].items():
-              for alias in aliases:
-                  if alias.lower() in lowered:
-                      mapped[motion]=lowered[alias.lower()]
-                      break
-          required=('idle','run','attack','hit','death')
-          missing=[motion for motion in required if motion not in mapped]
-          payload={'available_actions':available,'resolved':mapped,'missing':missing}
-          Path('build/actor-candidate/action-map.json').write_text(json.dumps(payload,indent=2)+'\n')
-          print(json.dumps(payload,indent=2))
-          if missing:
-              raise SystemExit('Candidate lacks required native actions: '+', '.join(missing))
-          PY
+          python3 tools/sprites/resolve_actor_actions.py \
+            --candidate build/actor-candidate/resolved.json \
+            --inspection build/actor-candidate/inspection.json \
+            --output build/actor-candidate/action-map.json
 
       - name: Render exact shared actor contract
         shell: bash
@@ -138,12 +109,10 @@ jobs:
           eval "$(python3 - <<'PY'
           import json,shlex
           m=json.load(open('build/actor-candidate/action-map.json'))['resolved']
-          for key,value in m.items():
-              print(f'{key.upper()}={shlex.quote(value)}')
+          for key,value in m.items(): print(f'{key.upper()}={shlex.quote(value)}')
           PY
           )"
-          blender -b "$BLENDER_SOURCE_FILE" \
-            -P tools/blender/render_actor_8dir.py -- \
+          blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/render_actor_8dir.py -- \
             --actor "$ACTOR" \
             --output build/actor-candidate/master512 \
             --target-height "$TARGET_HEIGHT" \
@@ -163,34 +132,19 @@ jobs:
           from pathlib import Path
           from PIL import Image
           import json
-
           root=Path('build/actor-candidate/master512')
           frames=sorted(root.rglob('*.png'))
           offenders=[]; empty=[]; minimum=10**9
           for path in frames:
-              im=Image.open(path).convert('RGBA')
-              bbox=im.getchannel('A').getbbox()
-              rel=str(path.relative_to(root))
-              if bbox is None:
-                  empty.append(rel); continue
-              l,t,r,b=bbox
-              margins={'left':l,'top':t,'right':im.width-r,'bottom':im.height-b}
-              minimum=min(minimum,*margins.values())
-              bad={k:v for k,v in margins.items() if v < 4}
-              if bad:
-                  offenders.append({'frame':rel,'bbox':[l,t,r,b],'margins':margins,'violations':bad})
-          report={
-              'pass':len(frames)==232 and not empty and not offenders,
-              'frame_count':len(frames),
-              'required_margin_px':4,
-              'minimum_observed_margin_px':None if minimum==10**9 else minimum,
-              'empty_frames':empty,
-              'offenders':offenders,
-          }
+              im=Image.open(path).convert('RGBA'); bbox=im.getchannel('A').getbbox(); rel=str(path.relative_to(root))
+              if bbox is None: empty.append(rel); continue
+              l,t,r,b=bbox; margins={'left':l,'top':t,'right':im.width-r,'bottom':im.height-b}
+              minimum=min(minimum,*margins.values()); bad={k:v for k,v in margins.items() if v < 4}
+              if bad: offenders.append({'frame':rel,'bbox':[l,t,r,b],'margins':margins,'violations':bad})
+          report={'pass':len(frames)==232 and not empty and not offenders,'frame_count':len(frames),'required_margin_px':4,'minimum_observed_margin_px':None if minimum==10**9 else minimum,'empty_frames':empty,'offenders':offenders}
           Path('build/actor-candidate/master-margin.json').write_text(json.dumps(report,indent=2)+'\n')
           print(json.dumps({k:v for k,v in report.items() if k!='offenders'},indent=2))
-          if not report['pass']:
-              raise SystemExit('Candidate master-render margin QA failed')
+          if not report['pass']: raise SystemExit('Candidate master-render margin QA failed')
           PY
 
       - name: Normalize to phone-scale contract
@@ -198,34 +152,23 @@ jobs:
         run: |
           set -euo pipefail
           python3 tools/sprites/normalize_actor_frames.py \
-            --actor "$ACTOR" \
-            --input build/actor-candidate/master512 \
+            --actor "$ACTOR" --input build/actor-candidate/master512 \
             --output build/actor-candidate/normalized96 \
             --report build/actor-candidate/qa.json \
             --contact-sheet build/actor-candidate/contact-sheet.png \
             --horizontal-anchor "$HORIZONTAL_ANCHOR"
           python3 - <<'PY'
-          import json
+          import json, statistics
           from pathlib import Path
           from PIL import Image
-          import statistics
-
           qa=json.loads(Path('build/actor-candidate/qa.json').read_text())
           assert qa['pass'] is True and qa['frame_count']==232, qa
           widths=[]; heights=[]; areas=[]
           for path in sorted(Path('build/actor-candidate/normalized96').rglob('*.png')):
               bbox=Image.open(path).convert('RGBA').getchannel('A').getbbox()
               if bbox:
-                  l,t,r,b=bbox
-                  widths.append(r-l); heights.append(b-t); areas.append((r-l)*(b-t))
-          metrics={
-              'frame_count':len(widths),
-              'median_bbox_width_px':statistics.median(widths),
-              'median_bbox_height_px':statistics.median(heights),
-              'median_bbox_area_px2':statistics.median(areas),
-              'max_bbox_width_px':max(widths),
-              'max_bbox_height_px':max(heights),
-          }
+                  l,t,r,b=bbox; widths.append(r-l); heights.append(b-t); areas.append((r-l)*(b-t))
+          metrics={'frame_count':len(widths),'median_bbox_width_px':statistics.median(widths),'median_bbox_height_px':statistics.median(heights),'median_bbox_area_px2':statistics.median(areas),'max_bbox_width_px':max(widths),'max_bbox_height_px':max(heights)}
           Path('build/actor-candidate/silhouette-metrics.json').write_text(json.dumps(metrics,indent=2)+'\n')
           print('Phone QA PASS', qa['frame_count'], 'frames', metrics)
           PY
