@@ -1,0 +1,143 @@
+version: 2.1
+
+jobs:
+  actor-candidate-validation:
+    docker:
+      - image: cimg/base:stable
+    resource_class: medium
+    steps:
+      - checkout
+
+      - run:
+          name: Install actor pipeline dependencies
+          command: |
+            sudo apt-get update -qq
+            sudo apt-get install -y python3 python3-pip blender libegl1 libgl1-mesa-dri python3-numpy curl git
+            python3 -m pip install --user --disable-pip-version-check 'Pillow>=10,<12'
+            blender --version | head -n 1
+
+      - run:
+          name: Resolve active candidate
+          command: |
+            set -euo pipefail
+            candidate="$(tr -d '[:space:]' < config/active-actor-candidate.txt)"
+            test -n "$candidate"
+            mkdir -p build/actor-candidate/source
+            python3 tools/sprites/resolve_actor_candidate.py "$candidate" \
+              --github-env "$BASH_ENV" \
+              --json-out build/actor-candidate/resolved.json
+
+      - run:
+          name: Download and fingerprint immutable source
+          command: |
+            set -euo pipefail
+            source "$BASH_ENV"
+            target="build/actor-candidate/source/$SOURCE_FILENAME"
+            curl --fail --location --retry 3 "$SOURCE_URL" -o "$target"
+            test -s "$target"
+            actual_size="$(stat -c%s "$target")"
+            if [ "$SOURCE_SIZE" != "0" ]; then test "$actual_size" -eq "$SOURCE_SIZE"; fi
+            if [ -n "$SOURCE_GIT_BLOB" ]; then test "$(git hash-object "$target")" = "$SOURCE_GIT_BLOB"; fi
+            actual_sha256="$(sha256sum "$target" | awk '{print $1}')"
+            if [ -n "$SOURCE_EXPECTED_SHA256" ]; then test "$actual_sha256" = "$SOURCE_EXPECTED_SHA256"; fi
+            printf '%s  %s\n' "$actual_sha256" "$SOURCE_FILENAME" | tee build/actor-candidate/source/sha256.txt
+            printf '{"size_bytes":%s,"sha256":"%s"}\n' "$actual_size" "$actual_sha256" > build/actor-candidate/source/fingerprint.json
+
+      - run:
+          name: Prepare Blender scene
+          command: |
+            set -euo pipefail
+            source "$BASH_ENV"
+            source_path="build/actor-candidate/source/$SOURCE_FILENAME"
+            case "${SOURCE_FILENAME,,}" in
+              *.blend) scene_path="$source_path" ;;
+              *.fbx)
+                scene_path="build/actor-candidate/source/imported-source.blend"
+                SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import bpy,os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])"
+                ;;
+              *.gltf|*.glb)
+                scene_path="build/actor-candidate/source/imported-source.blend"
+                SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import sys; sys.path.append('/usr/lib/python3/dist-packages'); import bpy,os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])"
+                ;;
+              *) echo "Unsupported actor source format: $SOURCE_FILENAME" >&2; exit 1 ;;
+            esac
+            test -s "$scene_path"
+            echo "export BLENDER_SOURCE_FILE='$scene_path'" >> "$BASH_ENV"
+
+      - run:
+          name: Inspect and resolve native actions
+          command: |
+            set -euo pipefail
+            source "$BASH_ENV"
+            blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/inspect_actor_source.py -- \
+              --json-out build/actor-candidate/inspection.json
+            python3 - <<'PY'
+            import json,re
+            from pathlib import Path
+            c=json.loads(Path('build/actor-candidate/resolved.json').read_text())
+            i=json.loads(Path('build/actor-candidate/inspection.json').read_text())
+            available=[row['name'] for row in i['actions']]
+            def norm(s):
+                s=s.lower()
+                s=re.sub(r'_(character)?armature(?:\.\d+)?$','',s)
+                return re.sub(r'[^a-z0-9]+','',s)
+            index={norm(name):name for name in available}
+            mapped={}
+            for motion,aliases in c['actions'].items():
+                for alias in aliases:
+                    hit=index.get(norm(alias))
+                    if hit:
+                        mapped[motion]=hit; break
+            required=('idle','run','attack','hit','death')
+            missing=[x for x in required if x not in mapped]
+            payload={'available_actions':available,'resolved':mapped,'missing':missing}
+            Path('build/actor-candidate/action-map.json').write_text(json.dumps(payload,indent=2)+'\n')
+            if missing: raise SystemExit('Missing native actions: '+', '.join(missing))
+            PY
+
+      - run:
+          name: Render and normalize exact 232-frame contract
+          command: |
+            set -euo pipefail
+            source "$BASH_ENV"
+            eval "$(python3 - <<'PY'
+            import json,shlex
+            m=json.load(open('build/actor-candidate/action-map.json'))['resolved']
+            for k,v in m.items(): print(f'{k.upper()}={shlex.quote(v)}')
+            PY
+            )"
+            blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/render_actor_8dir.py -- \
+              --actor "$ACTOR" \
+              --output build/actor-candidate/master512 \
+              --target-height "$TARGET_HEIGHT" \
+              --ortho-scale "$ORTHO_SCALE" \
+              --idle-action "$IDLE" \
+              --run-action "$RUN" \
+              --attack-action "$ATTACK" \
+              --hit-action "$HIT" \
+              --death-action "$DEATH"
+            test "$(find build/actor-candidate/master512 -name '*.png' | wc -l)" -eq 232
+            python3 tools/sprites/normalize_actor_frames.py \
+              --actor "$ACTOR" \
+              --input build/actor-candidate/master512 \
+              --output build/actor-candidate/normalized96 \
+              --report build/actor-candidate/qa.json \
+              --contact-sheet build/actor-candidate/contact-sheet.png \
+              --horizontal-anchor "$HORIZONTAL_ANCHOR"
+            python3 - <<'PY'
+            import json
+            q=json.load(open('build/actor-candidate/qa.json'))
+            assert q['pass'] is True and q['frame_count']==232, q
+            PY
+
+      - store_artifacts:
+          path: build/actor-candidate
+          destination: actor-candidate
+
+workflows:
+  circleci-fallback:
+    jobs:
+      - actor-candidate-validation:
+          filters:
+            branches:
+              only: /^circleci-fallback-.*/
