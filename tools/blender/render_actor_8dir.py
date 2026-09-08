@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import math
 import os
 import sys
 from pathlib import Path
+from urllib.request import urlopen
 
 import bpy
-from mathutils import Matrix, Vector
+from mathutils import Euler, Matrix, Vector
 
 DIRECTIONS = [
     ("n", 180.0), ("ne", 225.0), ("e", 270.0), ("se", 315.0),
@@ -125,8 +128,8 @@ def _parse_vec(name: str, default: tuple[float, float, float]) -> Vector:
     return Vector(parts)
 
 
-def _weapon_material(name, color, metallic, roughness, emission=None):
-    mat = bpy.data.materials.new(name)
+def _material(name, color, metallic, roughness, emission=None):
+    mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
     mat.diffuse_color = (*color, 1.0)
     mat.use_nodes = True
     bsdf = mat.node_tree.nodes.get("Principled BSDF")
@@ -165,9 +168,9 @@ def attach_configured_weapon(armature):
         available = ", ".join(b.name for b in armature.data.bones)
         raise RuntimeError(f"Configured weapon bone {bone_name!r} not found. Available: {available}")
 
-    dark = _weapon_material("DZ_Weapon_Gunmetal", (0.018, 0.024, 0.032), .85, .24)
-    body = _weapon_material("DZ_Weapon_Body", (0.035, 0.08, 0.12), .68, .28)
-    accent = _weapon_material("DZ_Weapon_Accent", (0.02, .42, .58), .32, .20, (0.02, .38, .58))
+    dark = _material("DZ_Weapon_Gunmetal", (0.018, 0.024, 0.032), .85, .24)
+    body = _material("DZ_Weapon_Body", (0.035, 0.08, 0.12), .68, .28)
+    accent = _material("DZ_Weapon_Accent", (0.02, .42, .58), .32, .20, (0.02, .38, .58))
     parts = [
         _weapon_cube("DZ_Rifle_Body", (.18, 0, .025), (.25, .052, .066), body),
         _weapon_cube("DZ_Rifle_Barrel", (.49, 0, .035), (.18, .024, .024), dark),
@@ -206,6 +209,122 @@ def attach_configured_weapon(armature):
     return weapon
 
 
+def _git_blob_sha(data: bytes) -> str:
+    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
+
+
+def _download_defensive_prop(work_root: Path) -> Path | None:
+    url = os.environ.get("DZ_DEFENSIVE_PROP_URL", "").strip()
+    if not url:
+        return None
+    filename = os.environ.get("DZ_DEFENSIVE_PROP_FILENAME", "").strip() or "defensive-prop.fbx"
+    out_dir = work_root / "defensive-prop"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / filename
+    with urlopen(url, timeout=60) as response:
+        data = response.read()
+    if not data:
+        raise RuntimeError("Defensive prop download was empty")
+    expected_size = int(os.environ.get("DZ_DEFENSIVE_PROP_SIZE", "0") or 0)
+    if expected_size and len(data) != expected_size:
+        raise RuntimeError(f"Defensive prop size mismatch: {len(data)} != {expected_size}")
+    expected_blob = os.environ.get("DZ_DEFENSIVE_PROP_BLOB", "").strip()
+    actual_blob = _git_blob_sha(data)
+    if expected_blob and actual_blob != expected_blob:
+        raise RuntimeError(f"Defensive prop git blob mismatch: {actual_blob} != {expected_blob}")
+    actual_sha256 = hashlib.sha256(data).hexdigest()
+    expected_sha256 = os.environ.get("DZ_DEFENSIVE_PROP_SHA256", "").strip()
+    if expected_sha256 and actual_sha256 != expected_sha256:
+        raise RuntimeError(f"Defensive prop SHA256 mismatch: {actual_sha256} != {expected_sha256}")
+    path.write_bytes(data)
+    report = {
+        "filename": filename,
+        "size_bytes": len(data),
+        "git_blob_sha": actual_blob,
+        "sha256": actual_sha256,
+        "role": os.environ.get("DZ_DEFENSIVE_PROP_ROLE", "").strip(),
+    }
+    (work_root / "defensive-prop-fingerprint.json").write_text(json.dumps(report, indent=2) + "\n")
+    print("Defensive prop fingerprint:", json.dumps(report, sort_keys=True))
+    return path
+
+
+def _import_prop(path: Path):
+    before = set(bpy.context.scene.objects)
+    suffix = path.suffix.lower()
+    if suffix == ".fbx":
+        bpy.ops.import_scene.fbx(filepath=str(path))
+    elif suffix in {".gltf", ".glb"}:
+        bpy.ops.import_scene.gltf(filepath=str(path))
+    else:
+        raise RuntimeError(f"Unsupported defensive prop format: {suffix}")
+    imported = [o for o in bpy.context.scene.objects if o not in before]
+    meshes = [o for o in imported if o.type == "MESH"]
+    for obj in imported:
+        if obj.type != "MESH":
+            bpy.data.objects.remove(obj, do_unlink=True)
+    if not meshes:
+        raise RuntimeError("Defensive prop import produced no mesh")
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in meshes:
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = meshes[0]
+    if len(meshes) > 1:
+        bpy.ops.object.join()
+    prop = bpy.context.object
+    prop.name = "DZ_DefensiveProp"
+    prop["dz_role"] = os.environ.get("DZ_DEFENSIVE_PROP_ROLE", "shield") or "shield"
+    return prop
+
+
+def attach_configured_defensive_prop(armature, work_root: Path):
+    path = _download_defensive_prop(work_root)
+    if path is None:
+        return None
+    bone_name = os.environ.get("DZ_DEFENSIVE_PROP_BONE", "").strip()
+    if not bone_name or armature.data.bones.get(bone_name) is None:
+        available = ", ".join(b.name for b in armature.data.bones)
+        raise RuntimeError(f"Configured defensive prop bone {bone_name!r} not found. Available: {available}")
+    prop = _import_prop(path)
+
+    # Deterministic readable material. Source geometry remains authoritative while
+    # avoiding broken external texture references in FBX-only CI renders.
+    steel = _material("DZ_Shield_Steel", (0.08, 0.13, 0.20), .72, .24)
+    accent = _material("DZ_Shield_Accent", (0.03, 0.30, 0.48), .45, .22)
+    if len(prop.data.materials) == 0:
+        prop.data.materials.append(steel)
+    else:
+        for i in range(len(prop.data.materials)):
+            prop.data.materials[i] = accent if i % 2 else steel
+
+    scale = float(os.environ.get("DZ_DEFENSIVE_PROP_SCALE", "1") or 1.0)
+    prop.scale = Vector((scale, scale, scale))
+    bpy.context.view_layer.objects.active = prop
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    bpy.context.scene.cursor.location = Vector((0, 0, 0))
+    bpy.ops.object.origin_set(type="ORIGIN_CURSOR", center="MEDIAN")
+
+    pose_bone = armature.pose.bones[bone_name]
+    bpy.context.view_layer.update()
+    grip_world = armature.matrix_world @ pose_bone.matrix.translation
+    forward = _parse_vec("DZ_DEFENSIVE_PROP_FORWARD", (0.0, -1.0, 0.0)).normalized()
+    offset = _parse_vec("DZ_DEFENSIVE_PROP_GRIP_OFFSET", (0.0, 0.0, 0.0))
+    rotation = _parse_vec("DZ_DEFENSIVE_PROP_ROTATION", (0.0, 0.0, 0.0))
+    desired = forward.to_track_quat("Y", "Z").to_matrix().to_4x4()
+    desired = desired @ Euler(tuple(math.radians(v) for v in rotation), "XYZ").to_matrix().to_4x4()
+    desired.translation = grip_world + offset
+    prop.parent = armature
+    prop.parent_type = "BONE"
+    prop.parent_bone = bone_name
+    prop.matrix_parent_inverse = Matrix.Identity(4)
+    prop.matrix_world = desired
+    bpy.context.view_layer.update()
+    if (prop.matrix_world.translation - desired.translation).length > 1e-4:
+        raise RuntimeError("Configured defensive prop placement drifted")
+    print(f"Configured defensive prop attached: role={prop.get('dz_role')} bone={bone_name} object={prop.name}")
+    return prop
+
+
 def set_action(armature, action_name: str):
     action = bpy.data.actions.get(action_name)
     if action is None:
@@ -235,6 +354,7 @@ def main():
     engine = configure_scene(args)
     armature = find_armature()
     weapon = attach_configured_weapon(armature)
+    defensive_prop = attach_configured_defensive_prop(armature, args.output.parent)
     ensure_preview_material_and_lights(armature)
     cam = ensure_camera(args)
     root = args.output.resolve(); root.mkdir(parents=True, exist_ok=True)
@@ -257,7 +377,11 @@ def main():
                 rendered += 1
     if rendered != 232:
         raise RuntimeError(f"Sprite contract requires 232 frames, rendered {rendered}")
-    print(f"Rendered {rendered} {args.actor} frames to {root} using {engine}; configured_weapon={weapon.name if weapon else 'none'}")
+    print(
+        f"Rendered {rendered} {args.actor} frames to {root} using {engine}; "
+        f"configured_weapon={weapon.name if weapon else 'none'}; "
+        f"defensive_prop={defensive_prop.name if defensive_prop else 'none'}"
+    )
 
 
 if __name__ == "__main__":
