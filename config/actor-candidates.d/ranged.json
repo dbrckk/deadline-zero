@@ -63,7 +63,19 @@
       "render": {"target_height": 1.45, "ortho_scale": 7.5, "horizontal_anchor": "union-center"},
       "selection_goal": "RANGED production candidate using the same immutable CC0 character plus a deterministic separate rifle prop attached by configuration, not actor-specific runtime code.",
       "role_gate": {"requires_native_ranged_attack": true, "requires_visible_weapon_or_projectile_source": true, "requires_phone_scale_distinction": true, "requires_explicit_weapon_geometry": true},
-      "verdict": {"status": "candidate", "reason": "Must prove the configured rifle remains attached, visible and unclipped through all eight directions and Shoot_OneHanded before production staging."}
+      "verdict": {
+        "status": "qualified",
+        "validation_run_id": 34231682966,
+        "validation_artifact_id": 10058335566,
+        "frame_count": 232,
+        "master_min_margin_px": 37,
+        "median_bbox_width_px": 32,
+        "median_bbox_height_px": 62,
+        "median_bbox_area_px2": 1888.5,
+        "phone_qa_pass": true,
+        "explicit_weapon_geometry_pass": true,
+        "reason": "Exact 232/232 QA passes. Human inspection of the run #48 contact sheet confirms an explicit compact rifle remains visible, attached to Fist.R and unclipped across all eight directions and authored motions. Requires production staging and real Android crowded acceptance before final acceptance."
+      }
     }
   }
 }
