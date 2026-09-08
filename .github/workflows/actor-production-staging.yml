@@ -113,6 +113,7 @@ jobs:
           artifact-ids: ${{ needs.resolve.outputs.evidence_artifact_id }}
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
+          run-id: ${{ needs.resolve.outputs.validation_run_id }}
           path: actor-evidence
 
       - name: Install atlas and role-gate tooling
