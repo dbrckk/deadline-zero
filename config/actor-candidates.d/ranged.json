@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "ranged-blue-soldier-male": {
+      "actor": "ranged",
+      "role": "ranged",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/BlueSoldier_Male.blend",
+        "git_blob_sha": "5a9ff78571c9c2bfc5492912ca3dbc6e9ed573d8",
+        "size_bytes": 1869476,
+        "sha256": "ee9c0780a297c333aab1c59694afc4ad1d13fb0374327287c1ec8425be18337f"
+      },
+      "actions": {
+        "idle": ["Idle"],
+        "run": ["Walk", "Run"],
+        "attack": ["Shoot_OneHanded", "Shoot", "Weapon", "Attack"],
+        "hit": ["RecieveHit", "ReceiveHit", "HitReact", "Hit"],
+        "death": ["Death"]
+      },
+      "render": {
+        "target_height": 1.45,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "selection_goal": "RANGED production candidate: readable armed humanoid silhouette at phone scale, native one-handed shooting action, visibly distinct from Runner and Shambler, no clipping or material corruption.",
+      "role_gate": {
+        "requires_native_ranged_attack": true,
+        "requires_visible_weapon_or_projectile_source": true,
+        "requires_phone_scale_distinction": true,
+        "minimum_forward_attack_extension_px": 8
+      },
+      "verdict": {
+        "status": "qualified",
+        "validation_run_id": 34218497104,
+        "validation_artifact_id": 10052907674,
+        "frame_count": 232,
+        "master_min_margin_px": 37,
+        "median_bbox_width_px": 31,
+        "median_bbox_height_px": 62,
+        "median_bbox_area_px2": 1850,
+        "east_attack_forward_extension_px": 12,
+        "west_attack_forward_extension_px": 12.5,
+        "phone_qa_pass": true,
+        "reason": "Exact 232/232 QA passes; native Shoot_OneHanded resolves; side-facing attack adds a clearly visible ~12 px forward weapon/source extension at 96 px phone scale. Requires production staging and real Android acceptance before final acceptance."
+      }
+    }
+  }
+}
