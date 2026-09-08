@@ -7,6 +7,7 @@ on:
       - '.github/workflows/actor-candidate-validation.yml'
       - 'config/active-actor-candidate.txt'
       - 'config/actor-candidates.json'
+      - 'config/actor-candidates.d/**'
       - 'tools/sprites/resolve_actor_candidate.py'
       - 'tools/sprites/normalize_actor_frames.py'
       - 'tools/blender/inspect_actor_source.py'
@@ -110,17 +111,30 @@ jobs:
             --json-out build/actor-candidate/inspection.json
           python3 - <<'PY'
           import json
+          import re
           from pathlib import Path
 
           resolved_candidate=json.loads(Path('build/actor-candidate/resolved.json').read_text())
           inspection=json.loads(Path('build/actor-candidate/inspection.json').read_text())
           available=[row['name'] for row in inspection['actions']]
-          lowered={name.lower():name for name in available}
+
+          def normalized(name):
+              value=name.lower().strip()
+              value=re.sub(r'_(character)?armature(?:\.\d+)?$', '', value)
+              value=re.sub(r'[^a-z0-9]+', '', value)
+              return value
+
+          exact={name.lower():name for name in available}
+          canonical={}
+          for name in available:
+              canonical.setdefault(normalized(name), name)
+
           mapped={}
           for motion, aliases in resolved_candidate['actions'].items():
               for alias in aliases:
-                  if alias.lower() in lowered:
-                      mapped[motion]=lowered[alias.lower()]
+                  match=exact.get(alias.lower()) or canonical.get(normalized(alias))
+                  if match:
+                      mapped[motion]=match
                       break
           required=('idle','run','attack','hit','death')
           missing=[motion for motion in required if motion not in mapped]
