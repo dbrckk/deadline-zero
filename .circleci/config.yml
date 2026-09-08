@@ -1,111 +1,79 @@
 version: 2.1
 
 jobs:
-  actor-candidate-validation:
-    docker:
-      - image: cimg/base:stable
+  android-runtime-acceptance:
+    machine:
+      image: android:2026.05.1
     resource_class: medium
     steps:
       - checkout
       - run:
-          name: Install actor pipeline dependencies
+          name: Pin Java 21 and Gradle 8.11.1
           command: |
+            set -euo pipefail
             sudo apt-get update -qq
-            sudo apt-get install -y python3 python3-pip blender libegl1 libgl1-mesa-dri python3-numpy curl git
-            python3 -m pip install --user --disable-pip-version-check 'Pillow>=10,<12'
-            blender --version | head -n 1
-      - run:
-          name: Resolve active candidate
-          command: |
-            set -euo pipefail
-            candidate="$(tr -d '[:space:]' < config/active-actor-candidate.txt)"
-            test -n "$candidate"
-            mkdir -p build/actor-candidate/source
-            python3 tools/sprites/resolve_actor_candidate.py "$candidate" \
-              --github-env build/actor-candidate/candidate.env \
-              --json-out build/actor-candidate/resolved.json
-            sed 's/^/export /' build/actor-candidate/candidate.env >> "$BASH_ENV"
+            sudo apt-get install -y openjdk-21-jdk-headless unzip
+            export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+            echo 'export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64' >> "$BASH_ENV"
+            curl -fsSL https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -o /tmp/gradle.zip
+            unzip -q /tmp/gradle.zip -d /tmp
+            echo 'export PATH=/tmp/gradle-8.11.1/bin:$PATH' >> "$BASH_ENV"
             source "$BASH_ENV"
-            test "$ACTOR_CANDIDATE" = "$candidate"
+            java -version
+            gradle --version
       - run:
-          name: Download and fingerprint immutable source
+          name: Validate staged production actors
           command: |
             set -euo pipefail
             source "$BASH_ENV"
-            target="build/actor-candidate/source/$SOURCE_FILENAME"
-            curl --fail --location --retry 3 "$SOURCE_URL" -o "$target"
-            test -s "$target"
-            actual_size="$(stat -c%s "$target")"
-            if [ "$SOURCE_SIZE" != "0" ]; then test "$actual_size" -eq "$SOURCE_SIZE"; fi
-            if [ -n "$SOURCE_GIT_BLOB" ]; then test "$(git hash-object "$target")" = "$SOURCE_GIT_BLOB"; fi
-            actual_sha256="$(sha256sum "$target" | awk '{print $1}')"
-            if [ -n "$SOURCE_EXPECTED_SHA256" ]; then test "$actual_sha256" = "$SOURCE_EXPECTED_SHA256"; fi
-            printf '%s  %s\n' "$actual_sha256" "$SOURCE_FILENAME" | tee build/actor-candidate/source/sha256.txt
-            printf '{"size_bytes":%s,"sha256":"%s"}\n' "$actual_size" "$actual_sha256" > build/actor-candidate/source/fingerprint.json
+            python3 tools/validate_final_sprite_layout.py
+            python3 tools/sprites/validate_actor_production_contracts.py
+            test -s assets/art/shielded.png
+            test -s assets/art/shielded-manifest.json
       - run:
-          name: Prepare Blender scene
+          name: Prepare Android 35 emulator
           command: |
             set -euo pipefail
             source "$BASH_ENV"
-            source_path="build/actor-candidate/source/$SOURCE_FILENAME"
-            case "${SOURCE_FILENAME,,}" in
-              *.blend) scene_path="$source_path" ;;
-              *.fbx)
-                scene_path="build/actor-candidate/source/imported-source.blend"
-                PYTHONPATH=/usr/lib/python3/dist-packages SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import bpy,os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])" ;;
-              *.gltf|*.glb)
-                scene_path="build/actor-candidate/source/imported-source.blend"
-                SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import sys; sys.path.append('/usr/lib/python3/dist-packages'); import bpy,os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])" ;;
-              *) echo "Unsupported actor source format: $SOURCE_FILENAME" >&2; exit 1 ;;
-            esac
-            test -s "$scene_path"
-            echo "export BLENDER_SOURCE_FILE='$scene_path'" >> "$BASH_ENV"
+            yes | sdkmanager --licenses >/dev/null || true
+            sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'platform-tools' 'emulator' 'system-images;android-35;google_apis;x86_64'
+            echo no | avdmanager create avd --force --name dz_api35 --package 'system-images;android-35;google_apis;x86_64' --device 'pixel_2'
+            nohup emulator -avd dz_api35 -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none > /tmp/dz-emulator.log 2>&1 &
+            adb wait-for-device
+            for i in $(seq 1 120); do
+              if [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = "1" ]; then break; fi
+              sleep 2
+            done
+            test "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1"
+            adb shell settings put global window_animation_scale 0
+            adb shell settings put global transition_animation_scale 0
+            adb shell settings put global animator_duration_scale 0
+            adb devices
       - run:
-          name: Inspect and resolve native actions
+          name: Capture SHIELDED crowded Android acceptance
           command: |
             set -euo pipefail
             source "$BASH_ENV"
-            blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/inspect_actor_source.py -- --json-out build/actor-candidate/inspection.json
-            python3 tools/sprites/resolve_actor_actions.py \
-              --candidate build/actor-candidate/resolved.json \
-              --inspection build/actor-candidate/inspection.json \
-              --output build/actor-candidate/action-map.json
-      - run:
-          name: Render and normalize exact 232-frame contract
-          command: |
-            set -euo pipefail
-            source "$BASH_ENV"
-            eval "$(python3 - <<'PY'
-            import json,shlex
-            m=json.load(open('build/actor-candidate/action-map.json'))['resolved']
-            for k,v in m.items(): print(f'{k.upper()}={shlex.quote(v)}')
-            PY
-            )"
-            PYTHONPATH=/usr/lib/python3/dist-packages blender -b "$BLENDER_SOURCE_FILE" -P tools/blender/render_actor_8dir.py -- \
-              --actor "$ACTOR" --output build/actor-candidate/master512 \
-              --target-height "$TARGET_HEIGHT" --ortho-scale "$ORTHO_SCALE" \
-              --idle-action "$IDLE" --run-action "$RUN" --attack-action "$ATTACK" \
-              --hit-action "$HIT" --death-action "$DEATH"
-            test "$(find build/actor-candidate/master512 -name '*.png' | wc -l)" -eq 232
-            python3 tools/sprites/normalize_actor_frames.py \
-              --actor "$ACTOR" --input build/actor-candidate/master512 \
-              --output build/actor-candidate/normalized96 \
-              --report build/actor-candidate/qa.json \
-              --contact-sheet build/actor-candidate/contact-sheet.png \
-              --horizontal-anchor "$HORIZONTAL_ANCHOR"
-            python3 - <<'PY'
-            import json
-            q=json.load(open('build/actor-candidate/qa.json'))
-            assert q['pass'] is True and q['frame_count']==232, q
-            PY
+            gradle :android:connectedDebugAndroidTest
+            gradle :android:installDebug :android:installDebugAndroidTest
+            adb shell pm path com.deadlinezero.game | grep -q 'package:'
+            adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.game | grep -q 'AndroidLauncher'
+            adb shell settings put secure immersive_mode_confirmations confirmed || true
+            adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesRexGameplayAndAttackFrames com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/dz-visual-probe.txt
+            grep -q 'OK (1 test)' /tmp/dz-visual-probe.txt
+            mkdir -p build/android-visual-qa
+            for image in rex-gameplay.png rex-shambler-crowd.png rex-attack.png; do
+              adb shell ls -l "/sdcard/Android/data/com.deadlinezero.game/files/qa/$image"
+              adb pull "/sdcard/Android/data/com.deadlinezero.game/files/qa/$image" "build/android-visual-qa/$image"
+              test -s "build/android-visual-qa/$image"
+            done
+            cp /tmp/dz-visual-probe.txt build/android-visual-qa/instrumentation.txt
+            cp /tmp/dz-emulator.log build/android-visual-qa/emulator.log
       - store_artifacts:
-          path: build/actor-candidate
-          destination: actor-candidate
+          path: build/android-visual-qa
+          destination: android-visual-qa
 
 workflows:
   circleci-fallback:
     jobs:
-      - actor-candidate-validation:
-          filters:
-            branches:
-              only: /^circleci-fallback-.*/
+      - android-runtime-acceptance
