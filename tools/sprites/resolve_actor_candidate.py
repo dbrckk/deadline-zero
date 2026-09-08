@@ -28,9 +28,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("candidate")
     parser.add_argument("--config", type=Path, default=Path("config/actor-candidates.json"))
-    parser.add_argument(
-        "--fragments-dir", type=Path, default=Path("config/actor-candidates.d")
-    )
+    parser.add_argument("--fragments-dir", type=Path, default=Path("config/actor-candidates.d"))
     parser.add_argument("--github-env", type=Path)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
@@ -43,6 +41,7 @@ def main() -> None:
     source = c["source"]
     render = c["render"]
     actions = c["actions"]
+    weapon = c.get("weapon", {})
     path = source["path"]
 
     if source.get("url"):
@@ -67,6 +66,7 @@ def main() -> None:
         "size_bytes": int(source.get("size_bytes", 0) or 0),
         "source": source,
         "actions": actions,
+        "weapon": weapon,
         "render": render,
         "selection_goal": c.get("selection_goal", ""),
         "role_gate": c.get("role_gate", {}),
@@ -77,6 +77,8 @@ def main() -> None:
         args.json_out.write_text(json.dumps(payload, indent=2) + "\n")
 
     if args.github_env:
+        forward = weapon.get("forward", [])
+        grip_offset = weapon.get("grip_offset", [])
         values = {
             "ACTOR_CANDIDATE": args.candidate,
             "ACTOR": c["actor"],
@@ -89,6 +91,10 @@ def main() -> None:
             "TARGET_HEIGHT": str(render["target_height"]),
             "ORTHO_SCALE": str(render["ortho_scale"]),
             "HORIZONTAL_ANCHOR": render["horizontal_anchor"],
+            "DZ_WEAPON_STYLE": weapon.get("style", ""),
+            "DZ_WEAPON_BONE": weapon.get("bone", ""),
+            "DZ_WEAPON_FORWARD": ",".join(str(v) for v in forward),
+            "DZ_WEAPON_GRIP_OFFSET": ",".join(str(v) for v in grip_offset),
         }
         with args.github_env.open("a") as out:
             for key, value in values.items():
