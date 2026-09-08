@@ -76,11 +76,32 @@ jobs:
           python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
           blender --version | head -n 1
 
+      - name: Prepare Blender scene
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_path="build/actor-candidate/source/$SOURCE_FILENAME"
+          case "${SOURCE_FILENAME,,}" in
+            *.blend)
+              scene_path="$source_path"
+              ;;
+            *.fbx)
+              scene_path="build/actor-candidate/source/imported-source.blend"
+              SOURCE_PATH="$source_path" SCENE_PATH="$scene_path" blender -b --python-expr "import bpy, os; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=os.environ['SOURCE_PATH']); bpy.ops.wm.save_as_mainfile(filepath=os.environ['SCENE_PATH'])"
+              ;;
+            *)
+              echo "Unsupported actor source format: $SOURCE_FILENAME" >&2
+              exit 1
+              ;;
+          esac
+          test -s "$scene_path"
+          echo "BLENDER_SOURCE_FILE=$scene_path" >> "$GITHUB_ENV"
+
       - name: Inspect source and resolve native actions
         shell: bash
         run: |
           set -euo pipefail
-          blender -b "build/actor-candidate/source/$SOURCE_FILENAME" \
+          blender -b "$BLENDER_SOURCE_FILE" \
             -P tools/blender/inspect_actor_source.py -- \
             --json-out build/actor-candidate/inspection.json
           python3 - <<'PY'
@@ -117,7 +138,7 @@ jobs:
               print(f'{key.upper()}={shlex.quote(value)}')
           PY
           )"
-          blender -b "build/actor-candidate/source/$SOURCE_FILENAME" \
+          blender -b "$BLENDER_SOURCE_FILE" \
             -P tools/blender/render_actor_8dir.py -- \
             --actor "$ACTOR" \
             --output build/actor-candidate/master512 \
