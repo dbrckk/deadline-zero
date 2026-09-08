@@ -24,6 +24,7 @@
         "path": "addons/kaykit_character_pack_adventures/Assets/fbx/shield_badge.fbx",
         "git_blob_sha": "b334acbdead8d7ea6655263080dca3ab3e0be517",
         "size_bytes": 27596,
+        "sha256": "8ae485d8451075d19ce504489328e7f3e9dea5cddbddee916508321853795604",
         "bone": "Fist.L",
         "role": "shield"
       },
@@ -47,8 +48,8 @@
         "requires_material_integrity": true
       },
       "verdict": {
-        "status": "pipeline_pending",
-        "reason": "Body source and official CC0 KayKit shield source are pinned. Candidate must not run until the generic candidate pipeline fingerprints/imports defensive_prop and attaches it to Fist.L before rendering."
+        "status": "candidate",
+        "reason": "Body and defensive prop are now both immutable and fingerprint-locked. Candidate must pass exact 232-frame QA and phone-scale shield readability before qualification."
       }
     }
   }
