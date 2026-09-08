@@ -8,16 +8,34 @@ from pathlib import Path
 from urllib.parse import quote
 
 
+def load_candidates(config: Path, fragments_dir: Path) -> dict:
+    data = json.loads(config.read_text())
+    candidates = dict(data.get("candidates", {}))
+    if fragments_dir.is_dir():
+        for fragment in sorted(fragments_dir.glob("*.json")):
+            payload = json.loads(fragment.read_text())
+            fragment_candidates = payload.get("candidates", payload)
+            overlap = candidates.keys() & fragment_candidates.keys()
+            if overlap:
+                raise SystemExit(
+                    f"Duplicate candidate ids in {fragment}: {', '.join(sorted(overlap))}"
+                )
+            candidates.update(fragment_candidates)
+    return candidates
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("candidate")
     parser.add_argument("--config", type=Path, default=Path("config/actor-candidates.json"))
+    parser.add_argument(
+        "--fragments-dir", type=Path, default=Path("config/actor-candidates.d")
+    )
     parser.add_argument("--github-env", type=Path)
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
 
-    data = json.loads(args.config.read_text())
-    candidates = data.get("candidates", {})
+    candidates = load_candidates(args.config, args.fragments_dir)
     if args.candidate not in candidates:
         raise SystemExit(f"Unknown candidate {args.candidate!r}; available: {', '.join(sorted(candidates))}")
 
@@ -41,6 +59,7 @@ def main() -> None:
     payload = {
         "candidate": args.candidate,
         "actor": c["actor"],
+        "role": c.get("role", c["actor"]),
         "filename": filename,
         "source_url": source_url,
         "git_blob_sha": source.get("git_blob_sha", ""),
@@ -50,6 +69,7 @@ def main() -> None:
         "actions": actions,
         "render": render,
         "selection_goal": c.get("selection_goal", ""),
+        "role_gate": c.get("role_gate", {}),
     }
 
     if args.json_out:
@@ -60,6 +80,7 @@ def main() -> None:
         values = {
             "ACTOR_CANDIDATE": args.candidate,
             "ACTOR": c["actor"],
+            "ACTOR_ROLE": c.get("role", c["actor"]),
             "SOURCE_FILENAME": filename,
             "SOURCE_URL": source_url,
             "SOURCE_GIT_BLOB": source.get("git_blob_sha", ""),
