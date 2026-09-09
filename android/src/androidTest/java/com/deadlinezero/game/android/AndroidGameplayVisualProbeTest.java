@@ -100,8 +100,14 @@ public final class AndroidGameplayVisualProbeTest {
             enemies.add(new Enemy(Enemy.Type.PHANTOM, 6.6f, 4.3f, 50_000f, .05f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.PHANTOM, -6.6f, -4.3f, 50_000f, .05f, .50f, 0f, 1));
 
-            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged + Elite + Shielded + Regenerator + Phantom crowd",
-                enemies.size >= before + 18);
+            // BOSS uses the real production Enemy.Type.BOSS path and boss/alpha atlas route.
+            // Two isolated near-vertical placements exercise opposite authored directions while
+            // keeping the Yeti's dominant silhouette separated from BRUTE and REGENERATOR.
+            enemies.add(new Enemy(Enemy.Type.BOSS, 0.9f, 6.7f, 500_000f, .015f, .78f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.BOSS, -0.9f, -6.7f, 500_000f, .015f, .78f, 0f, 1));
+
+            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged + Elite + Shielded + Regenerator + Phantom + Boss crowd",
+                enemies.size >= before + 20);
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("unable to access GameScreen enemy collection for visual QA", exception);
         }
