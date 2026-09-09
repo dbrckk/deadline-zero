@@ -305,6 +305,48 @@
         "android_visual_artifact_id": 10082228087,
         "android_visual_qa_pass": true
       }
+    },
+    "boss": {
+      "kind": "enemy",
+      "atlas_root": "boss/alpha",
+      "published_png": "assets/art/boss.png",
+      "published_manifest": "assets/art/boss-manifest.json",
+      "normalization": "union-center",
+      "status": "accepted",
+      "requires_weapon_visibility_gate": false,
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "master": "quaternius-yeti.glb",
+        "sha256": "68b26d4793cd1567139a72a009845be1c1f3b09e871653fd254d891bcef69ad9",
+        "git_blob_sha": "a497b06d544af508e561decee951fc1f27179e02",
+        "mirror_repository": "Hakhyun-Kim/constellation-defense",
+        "mirror_commit": "4431655c1a29638495c6ab3d4543d37c8d6deed6",
+        "size_bytes": 121520
+      },
+      "actions": {
+        "idle": "Idle_CharacterArmature",
+        "run": "Walk_CharacterArmature",
+        "attack": "Bite_Front_CharacterArmature",
+        "hit": "HitRecieve_CharacterArmature",
+        "death": "Death_CharacterArmature"
+      },
+      "render": {"ortho_scale": 9.5, "target_height": 2.20},
+      "validation": {
+        "run_id": 34390994184,
+        "artifact_id": 10119907335,
+        "frame_count": 232,
+        "master_minimum_margin_px": 100,
+        "median_bbox_area_px2": 3658.0,
+        "median_bbox_width_px": 62.0,
+        "median_bbox_height_px": 60.0,
+        "phone_qa_pass": true,
+        "boss_identity_pass": true,
+        "android_runtime_run_id": 34390994118,
+        "android_visual_artifact_id": 10119773756,
+        "android_visual_qa_pass": true
+      }
     }
   }
 }
