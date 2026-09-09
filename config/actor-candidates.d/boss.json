@@ -12,7 +12,9 @@
         "path": "Big/Blends/MushroomKing.blend",
         "url": "https://drive.google.com/uc?id=1E8k_zVAbeiFhguw09wfeSVqbYmNIaTW6",
         "upstream_catalog_run_id": 34301709719,
-        "upstream_catalog_artifact_id": 10085153058
+        "upstream_catalog_artifact_id": 10085153058,
+        "size_bytes": 2938552,
+        "sha256": "6b100c6e8e70db9a2a2a2f07cf5a6a00ae327cd9258e22fbdc6e57b1876526e6"
       },
       "actions": {
         "idle": ["Idle", "Stand", "Rest"],
@@ -40,9 +42,25 @@
           "min_median_bbox_area_px2": 3000
         }
       },
+      "validation": {
+        "run_id": 34309686034,
+        "artifact_id": 10088005175,
+        "frame_count": 232,
+        "minimum_master_margin_px": 58,
+        "median_bbox_width_px": 47.0,
+        "median_bbox_height_px": 55.0,
+        "median_bbox_area_px2": 2370.5,
+        "resolved_actions": {
+          "idle": "Idle",
+          "run": "Walk",
+          "attack": "Punch",
+          "hit": "HitReact",
+          "death": "Death"
+        }
+      },
       "verdict": {
-        "status": "candidate",
-        "reason": "Official CC0 MushroomKing source selected from deterministic BOSS shortlist after Dragon_Evolved failed unchanged BOSS role metrics. Exact fingerprint, native actions, 232-frame compatibility, material integrity, role metrics and Android evidence remain to be proven."
+        "status": "rejected",
+        "reason": "Rejected without weakening the BOSS contract. Exact 232-frame QA passed, but the 96px median silhouette is only 47x55px / 2370.5px2: width fails the >=50px BOSS gate and area fails the >=3000px2 gate. Human contact-sheet inspection also exposes unresolved external source textures as a flat magenta material, so material integrity is not acceptable for production."
       }
     }
   }
