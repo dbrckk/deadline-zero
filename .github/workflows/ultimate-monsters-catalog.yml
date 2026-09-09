@@ -27,7 +27,7 @@ jobs:
           mkdir -p build
           gdown --folder --json 'https://drive.google.com/drive/folders/18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C?usp=sharing' > build/ultimate-monsters-drive-list.json
 
-      - name: Build deterministic source catalog
+      - name: Build deterministic source catalog and BOSS shortlist
         run: |
           python - <<'PY'
           import json
@@ -58,12 +58,69 @@ jobs:
           Path('build/ultimate-monsters-catalog.json').write_text(
               json.dumps(report, indent=2) + '\n', encoding='utf-8'
           )
+
+          boss_weights = {
+              'dragon': 100,
+              'king': 90,
+              'golem': 80,
+              'yeti': 70,
+              'demon': 60,
+              'orc': 30,
+          }
+          shortlist = []
+          for row in rows:
+              if row['suffix'] not in ('.blend', '.fbx', '.gltf', '.glb'):
+                  continue
+              low = row['path'].lower()
+              matched = [token for token in boss_weights if token in low]
+              if not matched:
+                  continue
+              shortlist.append({
+                  **row,
+                  'boss_score': max(boss_weights[token] for token in matched),
+                  'matched_tokens': matched,
+              })
+          shortlist.sort(key=lambda r: (-r['boss_score'], r['path'].lower()))
+          boss_report = {
+              'provider': report['provider'],
+              'pack': report['pack'],
+              'license': report['license'],
+              'selection_goal': 'BOSS source candidates only; final selection still requires immutable fingerprinting, native-action inspection, role metrics, phone-scale review and Android acceptance.',
+              'candidate_count': len(shortlist),
+              'candidates': shortlist,
+          }
+          Path('build/ultimate-monsters-boss-shortlist.json').write_text(
+              json.dumps(boss_report, indent=2) + '\n', encoding='utf-8'
+          )
+
           print(json.dumps({k: report[k] for k in ('file_count','blend_count','fbx_count','gltf_count')}, indent=2))
-          print('--- likely BRUTE candidates ---')
-          for r in rows:
-              low = r['path'].lower()
-              if any(token in low for token in ('orc', 'yeti', 'demon', 'golem', 'goleling', 'king')) and r['suffix'] in ('.blend','.fbx','.gltf','.glb'):
-                  print(r['path'], r['url'])
+          print('--- deterministic BOSS shortlist ---')
+          for row in shortlist:
+              print(f"score={row['boss_score']:3d} {row['path']} {row['url']}")
+          PY
+
+      - name: Verify BOSS shortlist schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('build/ultimate-monsters-boss-shortlist.json').read_text(encoding='utf-8'))
+          assert data['provider'] == 'Quaternius'
+          assert data['pack'] == 'Ultimate Monsters'
+          assert data['license'] == 'CC0 1.0'
+          assert isinstance(data['candidate_count'], int)
+          assert data['candidate_count'] == len(data['candidates'])
+          previous = None
+          for candidate in data['candidates']:
+              assert candidate['suffix'] in ('.blend', '.fbx', '.gltf', '.glb')
+              assert candidate['url']
+              assert candidate['matched_tokens']
+              assert isinstance(candidate['boss_score'], int) and candidate['boss_score'] > 0
+              ordering = (-candidate['boss_score'], candidate['path'].lower())
+              if previous is not None:
+                  assert previous <= ordering
+              previous = ordering
+          print(f"validated {data['candidate_count']} BOSS source candidates")
           PY
 
       - name: Upload official source catalog
@@ -73,4 +130,5 @@ jobs:
           path: |
             build/ultimate-monsters-drive-list.json
             build/ultimate-monsters-catalog.json
+            build/ultimate-monsters-boss-shortlist.json
           retention-days: 14
