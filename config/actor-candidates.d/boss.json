@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "boss-ultimate-yeti": {
+      "actor": "boss",
+      "role": "boss",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "official_drive_folder_id": "18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C",
+        "path": "Big/Blends/Yeti.blend",
+        "url": "https://drive.google.com/uc?id=174GVv54Yo0q2dNRYVoJifKyepy8K3gO7",
+        "upstream_catalog_run_id": 34301709719,
+        "upstream_catalog_artifact_id": 10085153058
+      },
+      "actions": {
+        "idle": ["Idle", "Stand", "Rest"],
+        "run": ["Walk", "Run", "Move"],
+        "attack": ["Punch", "Attack", "Headbutt", "Bite", "Weapon"],
+        "hit": ["HitReact", "HitRecieve", "HitReceive", "ReceiveHit", "RecieveHit", "Damage"],
+        "death": ["Death", "Die", "Dying"]
+      },
+      "render": {
+        "target_height": 2.2,
+        "ortho_scale": 9.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/alpha"
+      },
+      "selection_goal": "Third deterministic BOSS candidate after Dragon_Evolved and MushroomKing failed unchanged production gates. Big Yeti must prove dominant phone-scale silhouette, intact materials, exact shared animation compatibility and real Android readability before qualification.",
+      "role_gate": {
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "requires_distinct_from_existing_actors": true,
+        "metrics": {
+          "min_median_bbox_width_px": 50,
+          "min_median_bbox_height_px": 52,
+          "min_median_bbox_area_px2": 3000
+        }
+      },
+      "verdict": {
+        "status": "candidate",
+        "reason": "Official CC0 Big Yeti selected from the deterministic BOSS shortlist after the two higher-ranked candidates failed unchanged BOSS production requirements. Exact fingerprint, native actions, 232-frame compatibility, material integrity, role metrics and Android evidence remain to be proven."
+      }
+    }
+  }
+}
