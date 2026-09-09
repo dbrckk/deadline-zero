@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.RunModifierContext;
+import com.deadlinezero.game.meta.SurvivorCatalog;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.visual.CombatVisualEvents;
 import java.io.File;
@@ -32,9 +33,14 @@ public final class AndroidGameplayVisualProbeTest {
 
             runOnGameThread(activity, () -> {
                 DeadlineZeroGame game = game(activity);
+                // Exercise NYX through the real selected-survivor runtime path. Direct assignment is
+                // instrumentation-only so the probe does not depend on account unlock progression.
+                game.profile.selectedSurvivor = SurvivorCatalog.Survivor.NYX;
                 game.startRun();
                 game.startRunWithContract(RunModifierContext.offers()[0]);
                 assertTrue("expected GameScreen for visual probe", game.getScreen() instanceof GameScreen);
+                assertTrue("visual probe must run the production NYX selection",
+                    game.profile.selectedSurvivor == SurvivorCatalog.Survivor.NYX);
             });
 
             Thread.sleep(2200L);
@@ -72,37 +78,21 @@ public final class AndroidGameplayVisualProbeTest {
             enemies.add(new Enemy(Enemy.Type.BRUTE, -3.7f, 3.0f, 50_000f, .06f, .62f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.BRUTE, 3.7f, -3.0f, 50_000f, .06f, .62f, 0f, 1));
 
-            // RANGED uses the normal production Enemy.Type.RANGED path. Opposite horizontal offsets
-            // exercise east/west authored directions, the same side views used by the automated
-            // phone-scale attack-readability gate.
             enemies.add(new Enemy(Enemy.Type.RANGED, 6.2f, 2.0f, 50_000f, .05f, .46f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.RANGED, -6.2f, -2.0f, 50_000f, .05f, .46f, 0f, 1));
 
-            // ELITE uses the real production type and atlas route. The asymmetric offsets exercise
-            // diagonal authored views while keeping both Orc silhouettes separated from Brute and Ranged.
             enemies.add(new Enemy(Enemy.Type.ELITE, 2.1f, 5.0f, 50_000f, .07f, .54f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.ELITE, -2.1f, -5.0f, 50_000f, .07f, .54f, 0f, 1));
 
-            // SHIELDED uses the production shieldHp archetype and enemy/shielded atlas route.
-            // Opposite near-horizontal views keep the left-arm shield exposed for phone-scale QA.
             enemies.add(new Enemy(Enemy.Type.SHIELDED, 7.0f, -0.9f, 50_000f, .05f, .56f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHIELDED, -7.0f, 0.9f, 50_000f, .05f, .56f, 0f, 1));
 
-            // REGENERATOR uses the normal production regeneration archetype and enemy/regenerator
-            // atlas route. Opposite diagonals keep both organic silhouettes separated from Shambler
-            // while exercising authored diagonal views in the real crowded Android renderer.
             enemies.add(new Enemy(Enemy.Type.REGENERATOR, 5.5f, -4.8f, 50_000f, .05f, .54f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.REGENERATOR, -5.5f, 4.8f, 50_000f, .05f, .54f, 0f, 1));
 
-            // PHANTOM uses the real production evasive archetype and enemy/phantom atlas route.
-            // Opposite upper/lower diagonal placements exercise authored flying views and keep the
-            // high-contrast skull mask isolated from the organic Regenerator silhouettes.
             enemies.add(new Enemy(Enemy.Type.PHANTOM, 6.6f, 4.3f, 50_000f, .05f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.PHANTOM, -6.6f, -4.3f, 50_000f, .05f, .50f, 0f, 1));
 
-            // BOSS uses the real production Enemy.Type.BOSS path and boss/alpha atlas route.
-            // Two isolated near-vertical placements exercise opposite authored directions while
-            // keeping the Yeti's dominant silhouette separated from BRUTE and REGENERATOR.
             enemies.add(new Enemy(Enemy.Type.BOSS, 0.9f, 6.7f, 500_000f, .015f, .78f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.BOSS, -0.9f, -6.7f, 500_000f, .015f, .78f, 0f, 1));
 
