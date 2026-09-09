@@ -94,8 +94,14 @@ public final class AndroidGameplayVisualProbeTest {
             enemies.add(new Enemy(Enemy.Type.REGENERATOR, 5.5f, -4.8f, 50_000f, .05f, .54f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.REGENERATOR, -5.5f, 4.8f, 50_000f, .05f, .54f, 0f, 1));
 
-            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged + Elite + Shielded + Regenerator crowd",
-                enemies.size >= before + 16);
+            // PHANTOM uses the real production evasive archetype and enemy/phantom atlas route.
+            // Opposite upper/lower diagonal placements exercise authored flying views and keep the
+            // high-contrast skull mask isolated from the organic Regenerator silhouettes.
+            enemies.add(new Enemy(Enemy.Type.PHANTOM, 6.6f, 4.3f, 50_000f, .05f, .50f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.PHANTOM, -6.6f, -4.3f, 50_000f, .05f, .50f, 0f, 1));
+
+            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged + Elite + Shielded + Regenerator + Phantom crowd",
+                enemies.size >= before + 18);
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("unable to access GameScreen enemy collection for visual QA", exception);
         }
