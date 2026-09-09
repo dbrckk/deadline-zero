@@ -11,6 +11,8 @@ on:
       - 'tools/sprites/resolve_actor_candidate.py'
       - 'tools/sprites/resolve_actor_actions.py'
       - 'tools/sprites/normalize_actor_frames.py'
+      - 'tools/sprites/validate_actor_role_metrics.py'
+      - 'tools/sprites/test_validate_actor_role_metrics.py'
       - 'tools/blender/inspect_actor_source.py'
       - 'tools/blender/render_actor_8dir.py'
   workflow_dispatch:
@@ -32,6 +34,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Validate role-gate implementation
+        run: python3 -m unittest discover -s tools/sprites -p 'test_validate_actor_role_metrics.py'
 
       - name: Resolve active candidate from config
         shell: bash
@@ -173,6 +178,15 @@ jobs:
           print('Phone QA PASS', qa['frame_count'], 'frames', metrics)
           PY
 
+      - name: Enforce config-driven role silhouette gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/sprites/validate_actor_role_metrics.py \
+            --candidate build/actor-candidate/resolved.json \
+            --metrics build/actor-candidate/silhouette-metrics.json \
+            --output build/actor-candidate/role-metric-gate.json
+
       - name: Upload candidate evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -188,6 +202,7 @@ jobs:
             build/actor-candidate/master-margin.json
             build/actor-candidate/qa.json
             build/actor-candidate/silhouette-metrics.json
+            build/actor-candidate/role-metric-gate.json
             build/actor-candidate/contact-sheet.png
             build/actor-candidate/normalized96/
           if-no-files-found: warn

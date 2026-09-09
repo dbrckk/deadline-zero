@@ -17,12 +17,13 @@ jobs:
           gradle-version: '8.11.1'
       - name: Validate final sprite production layout
         run: |
-          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py
+          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py
           python3 tools/validate_final_sprite_layout.py
           python3 tools/validate_rex_reference.py
           python3 tools/sprites/validate_actor_production_contracts.py
           python3 -m unittest discover -s tools -p 'test_verify_final_atlas.py'
           python3 -m unittest discover -s tools/sprites -p 'test_resolve_actor_actions.py'
+          python3 -m unittest discover -s tools/sprites -p 'test_validate_actor_role_metrics.py'
       - name: Compile and test core
         run: gradle :core:compileJava :core:test :desktop:compileJava
       - name: Smoke-test desktop runtime
