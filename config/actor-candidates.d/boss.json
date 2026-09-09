@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "boss-ultimate-dragon-evolved": {
+      "actor": "boss",
+      "role": "boss",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "official_drive_folder_id": "18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C",
+        "path": "Flying/Blends/Dragon_Evolved.blend",
+        "url": "https://drive.google.com/uc?id=11fIW__GYPqvjfBAH9cEJvoSdrDFfDYMz",
+        "upstream_catalog_run_id": 34301709719,
+        "upstream_catalog_artifact_id": 10085153058
+      },
+      "actions": {
+        "idle": ["Flying_Idle", "Fly_Idle", "Idle", "Hover"],
+        "run": ["Fast_Flying", "Flying", "Fly", "Run", "Walk"],
+        "attack": ["Bite_Front", "Bite", "Headbutt", "Attack", "Claw_Attack", "FireBreath"],
+        "hit": ["HitReact", "HitRecieve", "HitReceive", "ReceiveHit", "RecieveHit", "Damage"],
+        "death": ["Death", "Die", "Dying"]
+      },
+      "render": {
+        "target_height": 2.2,
+        "ortho_scale": 9.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/alpha"
+      },
+      "selection_goal": "Primary BOSS candidate: evolved dragon must remain a premium, wide non-humanoid threat at 96px, while the runtime BOSS presentation profile supplies materially larger world-space scale.",
+      "role_gate": {
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "requires_distinct_from_existing_actors": true,
+        "metrics": {
+          "min_median_bbox_width_px": 50,
+          "min_median_bbox_height_px": 52,
+          "min_median_bbox_area_px2": 3000
+        }
+      },
+      "verdict": {
+        "status": "candidate",
+        "reason": "Official CC0 Dragon_Evolved source selected from the deterministic BOSS shortlist. Exact source fingerprint, native actions, 232-frame compatibility, material integrity, role metrics and Android gameplay evidence are not yet proven."
+      }
+    }
+  }
+}
