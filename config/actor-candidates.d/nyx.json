@@ -44,9 +44,9 @@
         "requires_phone_scale_distinction": true
       },
       "verdict": {
-        "status": "qualified",
-        "validation_run_id": 34394099410,
-        "validation_artifact_id": 10120995634,
+        "status": "accepted",
+        "validation_run_id": 34395791964,
+        "validation_artifact_id": 10121633792,
         "frame_count": 232,
         "master_min_margin_px": 40,
         "median_bbox_width_px": 37.0,
@@ -54,7 +54,10 @@
         "median_bbox_area_px2": 2079.0,
         "phone_qa_pass": true,
         "explicit_weapon_geometry_pass": true,
-        "reason": "Exact 232/232 production validation passed with 40 px minimum master margin and exact Idle/Run/Shoot_OneHanded/RecieveHit/Death action resolution. Contact-sheet inspection confirms a clean blonde female sharpshooter silhouette, visible compact rifle, intact materials, readable motion, and no clipping. Real Android crowded acceptance is still required before status=accepted."
+        "android_runtime_run_id": 34395791923,
+        "android_visual_artifact_id": 10121562557,
+        "android_visual_qa_pass": true,
+        "reason": "Exact 232/232 validation passed with native Shoot_OneHanded and explicit compact-rifle geometry. Verify #1487 exercised Survivor.NYX through the real selected-survivor runtime path and passed on Android. Human inspection of the crowded and attack captures confirms NYX is readable at phone scale, materially distinct from Rex, and her authored rifle/attack presentation remains visible under production gameplay composition."
       }
     }
   }
