@@ -11,6 +11,8 @@
         "official_drive_folder_id": "18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C",
         "path": "Flying/Blends/Dragon_Evolved.blend",
         "url": "https://drive.google.com/uc?id=11fIW__GYPqvjfBAH9cEJvoSdrDFfDYMz",
+        "size_bytes": 2621728,
+        "sha256": "12180f770e86b94297472f0c65d79003d1da033a87b99217411dbb445e6bcf15",
         "upstream_catalog_run_id": 34301709719,
         "upstream_catalog_artifact_id": 10085153058
       },
@@ -40,9 +42,20 @@
           "min_median_bbox_area_px2": 3000
         }
       },
+      "validation": {
+        "run_id": 34305810122,
+        "artifact_id": 10086712037,
+        "frame_count": 232,
+        "master_minimum_margin_px": 102,
+        "median_bbox_width_px": 60.0,
+        "median_bbox_height_px": 48.0,
+        "median_bbox_area_px2": 2709.0,
+        "phone_qa_pass": true,
+        "role_metric_gate_pass": false
+      },
       "verdict": {
-        "status": "candidate",
-        "reason": "Official CC0 Dragon_Evolved source selected from the deterministic BOSS shortlist. Exact source fingerprint, native actions, 232-frame compatibility, material integrity, role metrics and Android gameplay evidence are not yet proven."
+        "status": "rejected",
+        "reason": "Rejected after deterministic validation: 232/232 frames and phone QA passed, but the 96px role gate failed (60x48px / 2709px2 median versus required >=50x52px / >=3000px2). Its median area is also slightly below the accepted BRUTE (2719.5px2), so lowering BOSS thresholds would weaken role distinction."
       }
     }
   }
