@@ -244,9 +244,16 @@ jobs:
           contract=json.loads(Path('config/actor-production-contracts.json').read_text())
           dirs=contract['frame_contract']['directions']
           anims=contract['frame_contract']['animations']
-          roots=[entry['atlas_root'] for entry in contract['actors'].values() if entry.get('status')=='accepted']
-          if candidate_root not in roots: roots.append(candidate_root)
-          for root in roots:
+          root_pages=[]
+          for name, entry in contract['actors'].items():
+              if entry.get('status') != 'accepted':
+                  continue
+              published_png=entry.get('published_png')
+              assert published_png, (name, 'missing published_png')
+              root_pages.append((entry['atlas_root'], Path(published_png).name))
+          if candidate_root not in {root for root, _ in root_pages}:
+              root_pages.append((candidate_root, f'{actor}.png'))
+          for root, page in root_pages:
               total=0
               for direction in dirs:
                   for anim,count in anims.items():
@@ -254,10 +261,8 @@ jobs:
                       assert got == count, (root,direction,anim,got,count)
                       total += got
               assert total == contract['frame_contract']['total_frames'], (root,total)
-          for root in roots:
-              page=root.split('/')[-1]+'.png'
-              assert atlas.count(page+'\n') == 1, page
-          print(f'Production atlas PASS: {len(roots)} actors x 232 = {len(roots)*232} frames')
+              assert atlas.count(page+'\n') == 1, (root,page)
+          print(f'Production atlas PASS: {len(root_pages)} actors x 232 = {len(root_pages)*232} frames')
           PY
 
       - name: Upload commit-ready production assets

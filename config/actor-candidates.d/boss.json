@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "boss-ultimate-yeti": {
+      "actor": "boss",
+      "role": "boss",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "repository": "Hakhyun-Kim/constellation-defense",
+        "commit": "4431655c1a29638495c6ab3d4543d37c8d6deed6",
+        "path": "assets/models/quaternius-yeti.glb",
+        "git_blob_sha": "a497b06d544af508e561decee951fc1f27179e02",
+        "size_bytes": 121520,
+        "sha256": "68b26d4793cd1567139a72a009845be1c1f3b09e871653fd254d891bcef69ad9"
+      },
+      "actions": {
+        "idle": ["Idle", "Stand", "Rest"],
+        "run": ["Walk", "Run", "Move"],
+        "attack": ["Bite_Front", "Punch", "Attack", "Headbutt", "Bite", "Weapon"],
+        "hit": ["HitReact", "HitRecieve", "HitReceive", "ReceiveHit", "RecieveHit", "Damage"],
+        "death": ["Death", "Die", "Dying"]
+      },
+      "render": {
+        "target_height": 2.2,
+        "ortho_scale": 9.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/alpha"
+      },
+      "selection_goal": "Third deterministic BOSS candidate after Dragon_Evolved and MushroomKing failed production gates. Big Yeti must prove dominant phone-scale silhouette, intact materials, exact shared animation compatibility and real Android readability before qualification.",
+      "role_gate": {
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "requires_distinct_from_existing_actors": true,
+        "metrics": {
+          "min_median_bbox_width_px": 48,
+          "min_median_bbox_height_px": 52,
+          "min_median_bbox_area_px2": 2850
+        }
+      },
+      "verdict": {
+        "status": "accepted",
+        "validation_run_id": 34390994184,
+        "validation_artifact_id": 10119907335,
+        "source_sha256": "68b26d4793cd1567139a72a009845be1c1f3b09e871653fd254d891bcef69ad9",
+        "frame_count": 232,
+        "minimum_master_margin_px": 100,
+        "median_bbox_width_px": 62.0,
+        "median_bbox_height_px": 60.0,
+        "median_bbox_area_px2": 3658.0,
+        "android_runtime_run_id": 34390994118,
+        "android_visual_artifact_id": 10119773756,
+        "android_visual_qa_pass": true,
+        "reason": "Actor Candidate Validation #117 passed the exact 232-frame contract and BOSS silhouette gates. Verify #1469 passed core, Android build and real Android runtime capture. Crowded phone-scale evidence keeps the broad white/blue Yeti immediately readable and distinct from BRUTE, REGENERATOR and the other accepted actors. BOSS is accepted for production."
+      }
+    }
+  }
+}

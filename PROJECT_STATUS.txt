@@ -2,75 +2,71 @@ DEADLINE ZERO — PROJECT STATUS
 ==============================
 
 Last update: 2026-09-09
-Current phase: Premium art pipeline / Rex + Shambler + Runner + Brute + RANGED + ELITE + SHIELDED + REGENERATOR + PHANTOM accepted
+Current phase: Premium art pipeline / 10 authored production actors accepted; remaining survivor variants and polish next.
 
 CURRENT GOAL
 ------------
-Reach premium stylized 2.5D mobile-shooter quality using one authoritative 3D master per actor, then source/rig/animate -> orthographic 8-direction renders -> normalized 96x96 frames -> strict QA -> additive multi-actor atlas -> real Android gameplay validation.
+Reach premium stylized 2.5D mobile-shooter quality using authoritative 3D masters -> orthographic 8-direction renders -> normalized 96x96 frames -> strict QA -> additive multi-actor atlas -> real Android gameplay validation.
 
 ACCEPTED PRODUCTION ACTORS
 --------------------------
-[OK] REX — 232 directional frames, authored survivor/rex atlas root, premium rifle/visibility gate, real Android gameplay accepted.
-[OK] SHAMBLER — Quaternius Zombie Apocalypse Kit, 232 directional frames, union-center normalization, real crowded Android gameplay accepted.
-[OK] RUNNER — Quaternius Ultimate Animated Character Pack Zombie_Female, 232 directional frames, fast-enemy silhouette, real crowded Android gameplay accepted.
-[OK] BRUTE — Quaternius Ultimate Monsters Demon, 232 directional frames, materially heavier phone-scale silhouette, real crowded Android gameplay accepted.
-[OK] RANGED — Quaternius BlueSoldier_Male + deterministic compact-rifle prop, native Shoot_OneHanded, 232 directional frames, real crowded Android gameplay accepted.
-[OK] ELITE — Quaternius Ultimate Monsters Orc, packed Atlas_Monsters material, native weapon attack, 232 directional frames, real crowded Android gameplay accepted.
-[OK] SHIELDED — Quaternius BlueSoldier_Male + fingerprinted KayKit shield_badge.fbx, 232 directional frames, explicit defensive silhouette, real crowded Android gameplay accepted.
-[OK] REGENERATOR — Quaternius Ultimate Monsters Green Blob, organic non-humanoid silhouette, 232 directional frames, real crowded Android gameplay accepted.
-[OK] PHANTOM — Quaternius Ultimate Monsters Ghost, ethereal floating silhouette, 232 directional frames, real crowded Android gameplay accepted.
+[OK] REX — 232 frames, survivor/rex, rifle visibility gate, Android accepted.
+[OK] SHAMBLER — Quaternius Zombie Apocalypse Kit, 232 frames, Android accepted.
+[OK] RUNNER — Quaternius Zombie_Female, 232 frames, Android accepted.
+[OK] BRUTE — Quaternius Demon, heavy silhouette, 232 frames, Android accepted.
+[OK] RANGED — BlueSoldier_Male + deterministic compact rifle, 232 frames, Android accepted.
+[OK] ELITE — Quaternius Orc, native weapon attack, 232 frames, Android accepted.
+[OK] SHIELDED — BlueSoldier_Male + fingerprinted KayKit shield, 232 frames, Android accepted.
+[OK] REGENERATOR — Quaternius Green Blob, organic silhouette, 232 frames, Android accepted.
+[OK] PHANTOM — Quaternius Ghost, ethereal silhouette, 232 frames, Android accepted.
+[OK] BOSS — Quaternius Big Yeti, boss/alpha, dominant silhouette, 232 frames, Android accepted.
 
-CURRENT PHANTOM STATUS
-----------------------
-[OK] Immutable CC0 source: ilrein/warptracker @ 71bbfbdfacd118196994b26da68eec1876d55c6b.
-[OK] Source blob: 64a689730f9520be17e2628fa861ed9b1930054c; SHA-256 430fb42e7b1c0af455ff89cd5bfdf490d133658e844935d5ffe44e9d9912ffd4; 288,500 bytes.
-[OK] Native action mapping: Flying_Idle / Fast_Flying / Headbutt / HitReact / Death after importer suffix normalization.
-[OK] Actor Candidate Validation #93 / run 34289158328 / artifact 10080877183 passed exact 232/232 frames.
-[OK] Master minimum margin 76 px; median normalized silhouette 58x64 px / 3579.5 px2.
-[OK] Floating purple Ghost silhouette and high-contrast skull mask remain readable at 96 px.
-[OK] Actor Production Staging #57 / run 34293059458 / artifact 10082084606 published additively while preserving the eight prior accepted roots.
-[OK] Production atlas contains nine authored actor pages / 2088 authored frames.
-[OK] Verify #1417 / run 34293226994 passed core, Android build and Android runtime instrumentation.
-[OK] Android visual artifact 10082228087 confirms both PHANTOM actors are floating, distinct, materially intact and unclipped in the real crowded scene.
-[OK] Final accepted-contract Verify #1423 / run 34297496895 passed core, Android build and Android runtime.
-[OK] PR #46 squash-merged to main as fed0b076eac069ee04e039699ed0ffeb2143f69f.
-[OK] PHANTOM is ACCEPTED in config/actor-production-contracts.json, config/actor-candidates.d/phantom.json and assets/art/phantom-manifest.json.
+CURRENT BOSS STATUS
+-------------------
+[OK] Immutable CC0 source: Hakhyun-Kim/constellation-defense @ 4431655c1a29638495c6ab3d4543d37c8d6deed6.
+[OK] Source: assets/models/quaternius-yeti.glb; blob a497b06d544af508e561decee951fc1f27179e02; SHA-256 68b26d4793cd1567139a72a009845be1c1f3b09e871653fd254d891bcef69ad9; 121,520 bytes.
+[OK] Native mapping resolves Idle / Walk / Bite_Front / HitRecieve / Death through importer suffix normalization.
+[OK] Actor Candidate Validation #117 / run 34390994184 / artifact 10119907335 passed exact 232-frame QA.
+[OK] Master minimum margin 100 px; median silhouette 62x60 px / 3658 px2.
+[OK] BOSS role gates passed: width >=48 px, height >=52 px, area >=2850 px2.
+[OK] Atlas root boss/alpha published additively; production atlas contains 10 authored actor pages / 2320 authored frames.
+[OK] Verify #1469 / run 34390994118 passed core, Android build and real Android runtime.
+[OK] Android visual artifact 10119773756 was inspected: Yeti is clearly readable, materially intact, unclipped and distinct in the crowded gameplay scene.
+[OK] config/actor-candidates.d/boss.json status=accepted.
+[OK] assets/art/boss-manifest.json source_production_ready=true and android_accepted=true.
+[OK] config/actor-production-contracts.json now contains BOSS as an accepted production actor.
 
 PIPELINE INDUSTRIALIZATION
 --------------------------
-[OK] config/actor-candidates.json plus config/actor-candidates.d/*.json store immutable provenance, role gates, render parameters and verdicts.
-[OK] tools/sprites/resolve_actor_candidate.py resolves pinned source metadata plus configured weapon/defensive-prop metadata.
-[OK] tools/sprites/resolve_actor_actions.py provides shared importer-suffix-aware action mapping for CI and fails ambiguous canonical matches instead of guessing.
-[OK] Generic Actor Candidate Validation validates source fingerprint, Blender import, action resolution, exact 232 frames, margins, 96px normalization and silhouette metrics.
-[OK] Candidate pipeline supports .blend, .fbx, .gltf and .glb.
-[OK] Generic renderer supports deterministic configured weapons and immutable defensive props.
-[OK] tools/sprites/upsert_directional_actor_atlas.py performs additive multi-actor atlas publication.
-[OK] Generic Actor Production Staging publishes one qualified actor without erasing accepted actors.
-[OK] config/actor-production-contracts.json is the authoritative accepted-actor contract.
-[OK] Real Android visual acceptance is mandatory before any actor reaches status=accepted.
-[OK] Android interruption regression test proves aborted runs do not partially settle durable rewards.
-[OK] GitHub Actions is primary CI. CircleCI remains fallback only if Actions cannot create/schedule jobs.
+[OK] Immutable candidate provenance and verdicts live in config/actor-candidates.json + config/actor-candidates.d/*.json.
+[OK] Shared action resolution handles importer suffixes and rejects ambiguous canonical matches.
+[OK] Candidate validation covers fingerprint, Blender import, actions, exact 232 frames, margins, normalization and role metrics.
+[OK] .blend, .fbx, .gltf and .glb sources supported.
+[OK] Renderer supports deterministic weapons and immutable defensive props.
+[OK] Additive atlas publication preserves previously accepted actor roots.
+[OK] config/actor-production-contracts.json is authoritative.
+[OK] Real Android visual acceptance is mandatory before status=accepted.
+[OK] GitHub Actions is primary CI; CircleCI remains fallback.
 
 IMPORTANT DECISIONS
 -------------------
-- Never accept an actor solely because CI is green; phone-scale render evidence and real Android crowded evidence are mandatory.
-- Production atlas publication is additive/upsert-based.
+- Never accept an actor solely because CI is green; phone-scale and real Android evidence are mandatory.
+- Production atlas publication remains additive/upsert-based.
 - Sources must be license-identified and fingerprinted.
-- Preserve meaningful native animation/root motion; normalize the motion envelope instead of recentering every frame.
-- Shared standard actor contract remains 8 directions / 232 frames / 96x96 unless intentionally versioned.
-- Role identity should be objectively measurable where possible.
-- RANGED requires explicit weapon geometry; silhouette extension alone is insufficient.
-- SHIELDED requires explicit defensive-prop geometry; width increase alone is insufficient.
-- Accepted actor roots/contracts must survive every later staging operation.
-- Boss onboarding must not silently weaken the standard actor contract; any boss-specific scale or action extension must be explicit and backward compatible.
+- Preserve meaningful native animation/root motion; normalize the motion envelope rather than every frame independently.
+- Shared actor contract remains 8 directions / 232 frames / 96x96 unless explicitly versioned.
+- Role identity must be measurable where practical.
+- Explicit weapon/defensive geometry is required for roles that depend on it.
+- Accepted actor roots and contracts must survive later staging.
+- BOSS keeps the shared 232-frame contract; only render scale is role-specific.
 
 CURRENT BLOCKER
 ---------------
-No accepted-actor blocker remains. The next production-art blocker is selecting and fingerprint-locking a BOSS source whose silhouette and animation set can satisfy the existing runtime and Android acceptance path without regressing the nine accepted actors.
+No authored-actor production blocker remains.
 
 IMMEDIATE NEXT ACTION
 ---------------------
-Onboard BOSS through immutable source selection -> native-action inspection -> exact standard actor compatibility or explicit versioned boss extension -> phone-scale boss silhouette gate -> additive staging -> real Android boss/crowd acceptance. Do not accept or merge BOSS until all required evidence is green and inspected.
+Finish PR #51 with final accepted-contract CI, merge BOSS to main, then move to remaining survivor variants and final visual polish without regressing the 10 accepted actor roots.
 
 ORDER OF EXECUTION
 ------------------
@@ -88,29 +84,30 @@ ORDER OF EXECUTION
 12. Final REGENERATOR accepted-contract Verify + merge. [DONE]
 13. PHANTOM qualification + staging + Android acceptance. [DONE]
 14. Final PHANTOM accepted-contract Verify + merge. [DONE]
-15. BOSS authored production actor. [NOW]
-16. Remaining survivor variants / polish. [LATER]
+15. BOSS authored production actor. [DONE]
+16. Remaining survivor variants / polish. [NOW]
 
 SHARED ACTOR CONTRACT
 ---------------------
 Directions: n, ne, e, se, s, sw, w, nw.
 Animations: idle=4, run=8, attack=6, hit=3, death=8 frames per direction.
 Total: 232 frames per actor.
-Final standard actor cell: 96x96.
-Authoritative machine-readable definition: config/actor-production-contracts.json.
+Final cell: 96x96.
+Authoritative definition: config/actor-production-contracts.json.
 
 QUALITY GATES
 -------------
-REX premium survivor vertical slice: ACCEPTED.
-SHAMBLER first-enemy vertical slice: ACCEPTED.
-RUNNER fast-enemy vertical slice: ACCEPTED.
-BRUTE heavy-enemy vertical slice: ACCEPTED.
-RANGED weaponized enemy vertical slice: ACCEPTED.
-ELITE premium-enemy vertical slice: ACCEPTED.
-SHIELDED defensive-enemy vertical slice: ACCEPTED.
-REGENERATOR sustain-enemy vertical slice: ACCEPTED.
-PHANTOM evasive/ethereal enemy vertical slice: ACCEPTED.
+REX: ACCEPTED.
+SHAMBLER: ACCEPTED.
+RUNNER: ACCEPTED.
+BRUTE: ACCEPTED.
+RANGED: ACCEPTED.
+ELITE: ACCEPTED.
+SHIELDED: ACCEPTED.
+REGENERATOR: ACCEPTED.
+PHANTOM: ACCEPTED.
+BOSS: ACCEPTED.
 
 NEXT QUALITY GATE
 -----------------
-BOSS must read as a materially larger, premium threat at phone scale, preserve all nine accepted actor contracts, use an immutable license-identified source, and pass real Android gameplay acceptance before status=accepted.
+Remaining survivor variants / polish must preserve all 10 accepted production actor roots, frame contracts and Android readability.
