@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/ultimate-monsters-catalog.yml'
       - 'config/active-actor-candidate.txt'
+      - 'config/actor-production-contracts.json'
   workflow_dispatch:
 
 permissions:
@@ -59,6 +60,18 @@ jobs:
               json.dumps(report, indent=2) + '\n', encoding='utf-8'
           )
 
+          contracts = json.loads(Path('config/actor-production-contracts.json').read_text(encoding='utf-8'))
+          accepted_masters = {}
+          for actor_name, actor in contracts.get('actors', {}).items():
+              if actor.get('status') != 'accepted':
+                  continue
+              source = actor.get('source') or {}
+              if source.get('pack') != 'Ultimate Monsters':
+                  continue
+              master = source.get('master')
+              if master:
+                  accepted_masters[master.lower()] = actor_name
+
           boss_weights = {
               'dragon': 100,
               'king': 90,
@@ -67,6 +80,7 @@ jobs:
               'demon': 60,
               'orc': 30,
           }
+          reuse_penalty = 1000
           shortlist = []
           for row in rows:
               if row['suffix'] not in ('.blend', '.fbx', '.gltf', '.glb'):
@@ -75,18 +89,27 @@ jobs:
               matched = [token for token in boss_weights if token in low]
               if not matched:
                   continue
+              reused_by = accepted_masters.get(low)
+              base_score = max(boss_weights[token] for token in matched)
               shortlist.append({
                   **row,
-                  'boss_score': max(boss_weights[token] for token in matched),
+                  'boss_score': base_score - (reuse_penalty if reused_by else 0),
+                  'base_boss_score': base_score,
                   'matched_tokens': matched,
+                  'reuses_accepted_master': bool(reused_by),
+                  'reused_by_actor': reused_by,
               })
           shortlist.sort(key=lambda r: (-r['boss_score'], r['path'].lower()))
+          novel_count = sum(not row['reuses_accepted_master'] for row in shortlist)
           boss_report = {
               'provider': report['provider'],
               'pack': report['pack'],
               'license': report['license'],
-              'selection_goal': 'BOSS source candidates only; final selection still requires immutable fingerprinting, native-action inspection, role metrics, phone-scale review and Android acceptance.',
+              'selection_goal': 'BOSS source candidates only; prefer a novel master and require immutable fingerprinting, native-action inspection, role metrics, phone-scale review and Android acceptance.',
+              'accepted_ultimate_monsters_masters': accepted_masters,
+              'reuse_penalty': reuse_penalty,
               'candidate_count': len(shortlist),
+              'novel_candidate_count': novel_count,
               'candidates': shortlist,
           }
           Path('build/ultimate-monsters-boss-shortlist.json').write_text(
@@ -94,9 +117,12 @@ jobs:
           )
 
           print(json.dumps({k: report[k] for k in ('file_count','blend_count','fbx_count','gltf_count')}, indent=2))
+          print(f'accepted Ultimate Monsters masters: {len(accepted_masters)}')
+          print(f'novel BOSS candidates: {novel_count}/{len(shortlist)}')
           print('--- deterministic BOSS shortlist ---')
           for row in shortlist:
-              print(f"score={row['boss_score']:3d} {row['path']} {row['url']}")
+              reuse = f" REUSED_BY={row['reused_by_actor']}" if row['reused_by_actor'] else ''
+              print(f"score={row['boss_score']:4d} base={row['base_boss_score']:3d} {row['path']} {row['url']}{reuse}")
           PY
 
       - name: Verify BOSS shortlist schema
@@ -110,17 +136,32 @@ jobs:
           assert data['license'] == 'CC0 1.0'
           assert isinstance(data['candidate_count'], int)
           assert data['candidate_count'] == len(data['candidates'])
+          assert isinstance(data['novel_candidate_count'], int)
+          assert data['novel_candidate_count'] == sum(not c['reuses_accepted_master'] for c in data['candidates'])
+          assert data['novel_candidate_count'] > 0, 'BOSS shortlist contains no novel source master'
           previous = None
+          seen_paths = set()
           for candidate in data['candidates']:
               assert candidate['suffix'] in ('.blend', '.fbx', '.gltf', '.glb')
               assert candidate['url']
               assert candidate['matched_tokens']
-              assert isinstance(candidate['boss_score'], int) and candidate['boss_score'] > 0
+              assert isinstance(candidate['base_boss_score'], int) and candidate['base_boss_score'] > 0
+              assert isinstance(candidate['boss_score'], int)
+              assert isinstance(candidate['reuses_accepted_master'], bool)
+              if candidate['reuses_accepted_master']:
+                  assert candidate['reused_by_actor']
+                  assert candidate['boss_score'] < candidate['base_boss_score']
+              else:
+                  assert candidate['reused_by_actor'] is None
+                  assert candidate['boss_score'] == candidate['base_boss_score']
+              assert candidate['path'].lower() not in seen_paths
+              seen_paths.add(candidate['path'].lower())
               ordering = (-candidate['boss_score'], candidate['path'].lower())
               if previous is not None:
                   assert previous <= ordering
               previous = ordering
-          print(f"validated {data['candidate_count']} BOSS source candidates")
+          assert not data['candidates'][0]['reuses_accepted_master'], 'Top BOSS candidate must be a novel master'
+          print(f"validated {data['candidate_count']} BOSS source candidates ({data['novel_candidate_count']} novel)")
           PY
 
       - name: Upload official source catalog
