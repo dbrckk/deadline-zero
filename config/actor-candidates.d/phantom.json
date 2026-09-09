@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "phantom-ultimate-ghost": {
+      "actor": "phantom",
+      "role": "phantom",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "repository": "ilrein/warptracker",
+        "commit": "71bbfbdfacd118196994b26da68eec1876d55c6b",
+        "path": "public/models/ghost.glb",
+        "git_blob_sha": "64a689730f9520be17e2628fa861ed9b1930054c",
+        "size_bytes": 288500,
+        "sha256": "430fb42e7b1c0af455ff89cd5bfdf490d133658e844935d5ffe44e9d9912ffd4"
+      },
+      "actions": {
+        "idle": ["Flying_Idle", "Idle", "Flying"],
+        "run": ["Fast_Flying", "Flying", "Run", "Move"],
+        "attack": ["Headbutt", "Attack", "Dash"],
+        "hit": ["HitReact", "Hit", "Hurt", "Damage"],
+        "death": ["Death", "Die"]
+      },
+      "render": {
+        "target_height": 1.50,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "enemy/phantom"
+      },
+      "selection_goal": "PHANTOM production candidate: unmistakably ethereal floating silhouette with strong directional readability, visually distinct from all eight accepted actors at 96px and in crowded Android gameplay.",
+      "role_gate": {
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "requires_ethereal_identity": true,
+        "requires_distinct_from_regenerator": true,
+        "requires_distinct_from_humanoids": true
+      },
+      "verdict": {
+        "status": "accepted",
+        "validation_run_id": 34289158328,
+        "validation_artifact_id": 10080877183,
+        "production_staging_run_id": 34293059458,
+        "production_staging_artifact_id": 10082084606,
+        "android_runtime_run_id": 34293226994,
+        "android_visual_artifact_id": 10082228087,
+        "reason": "Accepted after immutable source fingerprinting, exact 232/232 frame QA, 76px minimum master margin, 96px phone normalization, additive production staging and real Android crowded visual acceptance. Verify #1417 passed core, Android build and Android runtime; human inspection of artifact 10082228087 confirms both PHANTOM actors remain ethereal, distinct, materially intact and unclipped at phone scale."
+      }
+    }
+  }
+}
