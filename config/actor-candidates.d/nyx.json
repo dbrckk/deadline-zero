@@ -12,7 +12,8 @@
         "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
         "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/BlueSoldier_Female.blend",
         "git_blob_sha": "ceaceb30aa5389cea266acf3becdae863c5820d4",
-        "size_bytes": 2197748
+        "size_bytes": 2197748,
+        "sha256": "9f79873e2e3452f4a3ac64ff7ba3388c01d6e62633f3477ab8a27d844c3adfb2"
       },
       "actions": {
         "idle": ["Idle"],
@@ -32,6 +33,9 @@
         "ortho_scale": 7.5,
         "horizontal_anchor": "union-center"
       },
+      "production": {
+        "atlas_root": "survivor/nyx"
+      },
       "selection_goal": "NYX authored survivor: slim readable female sharpshooter silhouette, explicit rifle geometry, native ranged attack and clear phone-scale distinction from Rex.",
       "role_gate": {
         "requires_native_ranged_attack": true,
@@ -40,8 +44,17 @@
         "requires_phone_scale_distinction": true
       },
       "verdict": {
-        "status": "candidate",
-        "reason": "Awaiting exact 232-frame validation, fingerprint capture and phone-scale contact-sheet inspection."
+        "status": "qualified",
+        "validation_run_id": 34394099410,
+        "validation_artifact_id": 10120995634,
+        "frame_count": 232,
+        "master_min_margin_px": 40,
+        "median_bbox_width_px": 37.0,
+        "median_bbox_height_px": 60.5,
+        "median_bbox_area_px2": 2079.0,
+        "phone_qa_pass": true,
+        "explicit_weapon_geometry_pass": true,
+        "reason": "Exact 232/232 production validation passed with 40 px minimum master margin and exact Idle/Run/Shoot_OneHanded/RecieveHit/Death action resolution. Contact-sheet inspection confirms a clean blonde female sharpshooter silhouette, visible compact rifle, intact materials, readable motion, and no clipping. Real Android crowded acceptance is still required before status=accepted."
       }
     }
   }
