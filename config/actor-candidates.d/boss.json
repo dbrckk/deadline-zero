@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "boss-ultimate-mushroom-king": {
+      "actor": "boss",
+      "role": "boss",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "official_drive_folder_id": "18m4KpzpEzhC9wl7jzr6dUc0N8Jozr79C",
+        "path": "Big/Blends/MushroomKing.blend",
+        "url": "https://drive.google.com/uc?id=1E8k_zVAbeiFhguw09wfeSVqbYmNIaTW6",
+        "upstream_catalog_run_id": 34301709719,
+        "upstream_catalog_artifact_id": 10085153058
+      },
+      "actions": {
+        "idle": ["Idle", "Stand", "Rest"],
+        "run": ["Walk", "Run", "Move"],
+        "attack": ["Punch", "Attack", "Headbutt", "Bite", "Weapon"],
+        "hit": ["HitReact", "HitRecieve", "HitReceive", "ReceiveHit", "RecieveHit", "Damage"],
+        "death": ["Death", "Die", "Dying"]
+      },
+      "render": {
+        "target_height": 2.2,
+        "ortho_scale": 9.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/alpha"
+      },
+      "selection_goal": "Secondary BOSS candidate selected after Dragon_Evolved failed objective role dominance. MushroomKing must exceed the same phone-scale BOSS thresholds without weakening accepted actor distinction.",
+      "role_gate": {
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "requires_distinct_from_existing_actors": true,
+        "metrics": {
+          "min_median_bbox_width_px": 50,
+          "min_median_bbox_height_px": 52,
+          "min_median_bbox_area_px2": 3000
+        }
+      },
+      "verdict": {
+        "status": "candidate",
+        "reason": "Official CC0 MushroomKing source selected from deterministic BOSS shortlist after Dragon_Evolved failed unchanged BOSS role metrics. Exact fingerprint, native actions, 232-frame compatibility, material integrity, role metrics and Android evidence remain to be proven."
+      }
+    }
+  }
+}
