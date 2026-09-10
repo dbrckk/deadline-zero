@@ -1,0 +1,98 @@
+name: Deadline Zero Work Watch
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: deadline-zero-work-watch
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check active work and recover stalled CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          active_count="$(
+            gh api --paginate "repos/$GH_REPO/actions/runs?per_page=100"               --jq '[.workflow_runs[] | select(
+                (.status == "queued" or .status == "in_progress" or .status == "pending")
+                and (.name != "Deadline Zero Work Watch")
+              )] | length' | awk '{s+=$1} END{print s+0}'
+          )"
+
+          if [[ "$active_count" -gt 0 ]]; then
+            echo "Creation/development work is active ($active_count workflow run(s)); no duplicate launch."
+            exit 0
+          fi
+
+          open_pr="$(
+            gh api "repos/$GH_REPO/pulls?state=open&sort=updated&direction=desc&per_page=1"               --jq '.[0] // empty'
+          )"
+
+          if [[ -n "$open_pr" ]]; then
+            head_sha="$(jq -r '.head.sha' <<<"$open_pr")"
+            pr_number="$(jq -r '.number' <<<"$open_pr")"
+            echo "No active run; checking latest open PR #$pr_number ($head_sha)."
+
+            failed_run_ids="$(
+              gh api --paginate "repos/$GH_REPO/actions/runs?head_sha=$head_sha&per_page=100"                 --jq '.workflow_runs[]
+                  | select(.name != "Deadline Zero Work Watch")
+                  | select(.status == "completed")
+                  | select(.conclusion == "failure" or .conclusion == "cancelled" or .conclusion == "timed_out")
+                  | .id' | sort -u
+            )"
+
+            if [[ -n "$failed_run_ids" ]]; then
+              while read -r run_id; do
+                [[ -z "$run_id" ]] && continue
+                echo "Re-running failed jobs for workflow run $run_id"
+                gh api --method POST "repos/$GH_REPO/actions/runs/$run_id/rerun-failed-jobs"
+              done <<<"$failed_run_ids"
+              exit 0
+            fi
+
+            echo "Open PR exists but has no failed workflow to recover. Push/PR triggers own the next deterministic step."
+            exit 0
+          fi
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          contract = json.loads(Path("config/actor-production-contracts.json").read_text())
+          layout = json.loads(Path("art_sources/final-sprite-layout.json").read_text())
+
+          accepted = {
+              name for name, entry in contract.get("actors", {}).items()
+              if entry.get("status") == "accepted"
+          }
+          required = {entry["id"] for entry in layout.get("actors", [])}
+          missing = sorted(required - accepted)
+
+          print(f"Accepted final actors: {len(accepted & required)}/{len(required)}")
+          if missing:
+              print("Remaining authored actors:", ", ".join(missing))
+              print(
+                  "No open PR or active deterministic workflow exists. "
+                  "A new authored-source/coding change is required; GitHub Actions cannot invent "
+                  "that change without a configured coding agent."
+              )
+          else:
+              print("Final actor contract is complete. No actor-production work to restart.")
+          PY
