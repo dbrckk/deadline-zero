@@ -27,35 +27,34 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public final class AndroidGameplayVisualProbeTest {
     @Test
-    public void capturesRexGameplayAndAttackFrames() throws Exception {
+    public void capturesBastionGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
 
             runOnGameThread(activity, () -> {
                 DeadlineZeroGame game = game(activity);
-                // Exercise NYX through the real selected-survivor runtime path. Direct assignment is
+                // Exercise BASTION through the real selected-survivor runtime path. Direct assignment is
                 // instrumentation-only so the probe does not depend on account unlock progression.
-                game.profile.selectedSurvivor = SurvivorCatalog.Survivor.NYX;
+                game.profile.selectedSurvivor = SurvivorCatalog.Survivor.BASTION;
                 game.startRun();
                 game.startRunWithContract(RunModifierContext.offers()[0]);
                 assertTrue("expected GameScreen for visual probe", game.getScreen() instanceof GameScreen);
-                assertTrue("visual probe must run the production NYX selection",
-                    game.profile.selectedSurvivor == SurvivorCatalog.Survivor.NYX);
+                assertTrue("visual probe must run the production BASTION selection",
+                    game.profile.selectedSurvivor == SurvivorCatalog.Survivor.BASTION);
             });
 
             Thread.sleep(2200L);
-            capture("rex-gameplay.png");
+            capture("bastion-gameplay.png");
 
             // Deterministic authored-enemy composition. Reflection stays instrumentation-only so
-            // production GameScreen does not gain QA API surface. Historical filename is retained
-            // for artifact compatibility.
+            // production GameScreen does not gain QA API surface.
             runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
             Thread.sleep(700L);
-            capture("rex-shambler-crowd.png");
+            capture("bastion-crowd.png");
 
             runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
             Thread.sleep(80L);
-            capture("rex-attack.png");
+            capture("bastion-attack.png");
         }
     }
 

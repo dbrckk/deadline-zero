@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "bastion-golden-knight-rifle": {
+      "actor": "bastion",
+      "role": "survivor-juggernaut",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Knight_Golden_Male.blend",
+        "git_blob_sha": "9cc053899acbfca453669435ead43a10f633f64b",
+        "sha256": "f81a02ff576815cffc8366c89b57d30888f45f9df3e6865245c81837d52172c9",
+        "size_bytes": 1888072
+      },
+      "actions": {
+        "idle": ["Idle"],
+        "run": ["Run", "Walk"],
+        "attack": ["Shoot_OneHanded", "Shoot", "Weapon", "Attack"],
+        "hit": ["RecieveHit", "ReceiveHit", "HitReact", "Hit"],
+        "death": ["Death"]
+      },
+      "weapon": {
+        "style": "compact-rifle",
+        "bone": "Fist.R",
+        "forward": [0.0, -1.0, -0.08],
+        "grip_offset": [0.0, -0.01, 0.01]
+      },
+      "render": {
+        "target_height": 1.68,
+        "ortho_scale": 8.0,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "survivor/bastion"
+      },
+      "selection_goal": "BASTION authored survivor: heavy armored juggernaut silhouette, explicit rifle geometry, native ranged attack and clear phone-scale distinction from Rex and Nyx.",
+      "role_gate": {
+        "requires_native_ranged_attack": true,
+        "requires_visible_weapon_or_projectile_source": true,
+        "requires_explicit_weapon_geometry": true,
+        "requires_phone_scale_distinction": true,
+        "metrics": {
+          "min_median_bbox_width_px": 38,
+          "min_median_bbox_height_px": 58,
+          "min_median_bbox_area_px2": 2250
+        }
+      },
+      "verdict": {
+        "status": "qualified",
+        "reason": "Exact 232-frame contract, immutable source fingerprint, heavy-silhouette gates and phone-scale visual QA passed; ready for production atlas staging and Android acceptance.",
+        "validation_run_id": 34468282926,
+        "validation_artifact_id": 10148561350
+      }
+    }
+  }
+}
