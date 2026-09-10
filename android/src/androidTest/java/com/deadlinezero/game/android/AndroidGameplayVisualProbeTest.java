@@ -27,34 +27,34 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public final class AndroidGameplayVisualProbeTest {
     @Test
-    public void capturesBastionGameplayAndAttackFrames() throws Exception {
+    public void capturesVoltGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
 
             runOnGameThread(activity, () -> {
                 DeadlineZeroGame game = game(activity);
-                // Exercise BASTION through the real selected-survivor runtime path. Direct assignment is
+                // Exercise VOLT through the real selected-survivor runtime path. Direct assignment is
                 // instrumentation-only so the probe does not depend on account unlock progression.
-                game.profile.selectedSurvivor = SurvivorCatalog.Survivor.BASTION;
+                game.profile.selectedSurvivor = SurvivorCatalog.Survivor.VOLT;
                 game.startRun();
                 game.startRunWithContract(RunModifierContext.offers()[0]);
                 assertTrue("expected GameScreen for visual probe", game.getScreen() instanceof GameScreen);
-                assertTrue("visual probe must run the production BASTION selection",
-                    game.profile.selectedSurvivor == SurvivorCatalog.Survivor.BASTION);
+                assertTrue("visual probe must run the production VOLT selection",
+                    game.profile.selectedSurvivor == SurvivorCatalog.Survivor.VOLT);
             });
 
             Thread.sleep(2200L);
-            capture("bastion-gameplay.png");
+            capture("volt-gameplay.png");
 
             // Deterministic authored-enemy composition. Reflection stays instrumentation-only so
             // production GameScreen does not gain QA API surface.
             runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
             Thread.sleep(700L);
-            capture("bastion-crowd.png");
+            capture("volt-crowd.png");
 
             runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
             Thread.sleep(80L);
-            capture("bastion-attack.png");
+            capture("volt-attack.png");
         }
     }
 
@@ -70,33 +70,24 @@ public final class AndroidGameplayVisualProbeTest {
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, -5.2f, 0f, 50_000f, .08f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, 4.2f, 50_000f, .08f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, -4.2f, 50_000f, .08f, .50f, 0f, 1));
-
             enemies.add(new Enemy(Enemy.Type.RUNNER, 3.7f, 3.0f, 50_000f, .22f, .46f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.RUNNER, -3.7f, -3.0f, 50_000f, .22f, .46f, 0f, 1));
-
             enemies.add(new Enemy(Enemy.Type.BRUTE, -3.7f, 3.0f, 50_000f, .06f, .62f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.BRUTE, 3.7f, -3.0f, 50_000f, .06f, .62f, 0f, 1));
-
             enemies.add(new Enemy(Enemy.Type.RANGED, 6.2f, 2.0f, 50_000f, .05f, .46f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.RANGED, -6.2f, -2.0f, 50_000f, .05f, .46f, 0f, 1));
-
             enemies.add(new Enemy(Enemy.Type.ELITE, 2.1f, 5.0f, 50_000f, .07f, .54f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.ELITE, -2.1f, -5.0f, 50_000f, .07f, .54f, 0f, 1));
-
             enemies.add(new Enemy(Enemy.Type.SHIELDED, 7.0f, -0.9f, 50_000f, .05f, .56f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.SHIELDED, -7.0f, 0.9f, 50_000f, .05f, .56f, 0f, 1));
-
             enemies.add(new Enemy(Enemy.Type.REGENERATOR, 5.5f, -4.8f, 50_000f, .05f, .54f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.REGENERATOR, -5.5f, 4.8f, 50_000f, .05f, .54f, 0f, 1));
-
             enemies.add(new Enemy(Enemy.Type.PHANTOM, 6.6f, 4.3f, 50_000f, .05f, .50f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.PHANTOM, -6.6f, -4.3f, 50_000f, .05f, .50f, 0f, 1));
-
             enemies.add(new Enemy(Enemy.Type.BOSS, 0.9f, 6.7f, 500_000f, .015f, .78f, 0f, 1));
             enemies.add(new Enemy(Enemy.Type.BOSS, -0.9f, -6.7f, 500_000f, .015f, .78f, 0f, 1));
 
-            assertTrue("visual probe failed to inject authored Shambler + Runner + Brute + Ranged + Elite + Shielded + Regenerator + Phantom + Boss crowd",
-                enemies.size >= before + 20);
+            assertTrue("visual probe failed to inject authored enemy crowd", enemies.size >= before + 20);
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("unable to access GameScreen enemy collection for visual QA", exception);
         }
@@ -105,8 +96,7 @@ public final class AndroidGameplayVisualProbeTest {
     private static void capture(String name) throws Exception {
         Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
         assertNotNull("Android UiAutomation did not return a screenshot", bitmap);
-        File root = new File(
-            InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null), "qa");
+        File root = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null), "qa");
         assertTrue("unable to create gameplay QA output directory", root.isDirectory() || root.mkdirs());
         File output = new File(root, name);
         try (FileOutputStream stream = new FileOutputStream(output)) {
@@ -135,13 +125,7 @@ public final class AndroidGameplayVisualProbeTest {
         CountDownLatch done = new CountDownLatch(1);
         AtomicReference<Throwable> failure = new AtomicReference<>();
         activity.postRunnable(() -> {
-            try {
-                action.run();
-            } catch (Throwable throwable) {
-                failure.set(throwable);
-            } finally {
-                done.countDown();
-            }
+            try { action.run(); } catch (Throwable throwable) { failure.set(throwable); } finally { done.countDown(); }
         });
         assertTrue("Timed out waiting for libGDX game thread", done.await(10, TimeUnit.SECONDS));
         if (failure.get() != null) throw new AssertionError("Android visual probe failed on libGDX game thread", failure.get());
