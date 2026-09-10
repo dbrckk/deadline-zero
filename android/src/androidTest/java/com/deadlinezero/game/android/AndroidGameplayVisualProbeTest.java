@@ -27,34 +27,34 @@ import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public final class AndroidGameplayVisualProbeTest {
     @Test
-    public void capturesVoltGameplayAndAttackFrames() throws Exception {
+    public void capturesWraithGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
 
             runOnGameThread(activity, () -> {
                 DeadlineZeroGame game = game(activity);
-                // Exercise VOLT through the real selected-survivor runtime path. Direct assignment is
+                // Exercise WRAITH through the real selected-survivor runtime path. Direct assignment is
                 // instrumentation-only so the probe does not depend on account unlock progression.
-                game.profile.selectedSurvivor = SurvivorCatalog.Survivor.VOLT;
+                game.profile.selectedSurvivor = SurvivorCatalog.Survivor.WRAITH;
                 game.startRun();
                 game.startRunWithContract(RunModifierContext.offers()[0]);
                 assertTrue("expected GameScreen for visual probe", game.getScreen() instanceof GameScreen);
-                assertTrue("visual probe must run the production VOLT selection",
-                    game.profile.selectedSurvivor == SurvivorCatalog.Survivor.VOLT);
+                assertTrue("visual probe must run the production WRAITH selection",
+                    game.profile.selectedSurvivor == SurvivorCatalog.Survivor.WRAITH);
             });
 
             Thread.sleep(2200L);
-            capture("volt-gameplay.png");
+            capture("wraith-gameplay.png");
 
             // Deterministic authored-enemy composition. Reflection stays instrumentation-only so
             // production GameScreen does not gain QA API surface.
             runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
             Thread.sleep(700L);
-            capture("volt-crowd.png");
+            capture("wraith-crowd.png");
 
             runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
             Thread.sleep(80L);
-            capture("volt-attack.png");
+            capture("wraith-attack.png");
         }
     }
 
