@@ -2,7 +2,7 @@ DEADLINE ZERO — PROJECT STATUS
 ==============================
 
 Last update: 2026-09-09
-Current phase: Premium art pipeline / 10 authored production actors accepted; remaining survivor variants and polish next.
+Current phase: Premium art pipeline / 11 authored production actors accepted; remaining survivor variants and polish next.
 
 CURRENT GOAL
 ------------
@@ -11,6 +11,7 @@ Reach premium stylized 2.5D mobile-shooter quality using authoritative 3D master
 ACCEPTED PRODUCTION ACTORS
 --------------------------
 [OK] REX — 232 frames, survivor/rex, rifle visibility gate, Android accepted.
+[OK] NYX — Quaternius BlueSoldier_Female + deterministic compact rifle, survivor/nyx, 232 frames, Android accepted.
 [OK] SHAMBLER — Quaternius Zombie Apocalypse Kit, 232 frames, Android accepted.
 [OK] RUNNER — Quaternius Zombie_Female, 232 frames, Android accepted.
 [OK] BRUTE — Quaternius Demon, heavy silhouette, 232 frames, Android accepted.
@@ -21,20 +22,17 @@ ACCEPTED PRODUCTION ACTORS
 [OK] PHANTOM — Quaternius Ghost, ethereal silhouette, 232 frames, Android accepted.
 [OK] BOSS — Quaternius Big Yeti, boss/alpha, dominant silhouette, 232 frames, Android accepted.
 
-CURRENT BOSS STATUS
--------------------
-[OK] Immutable CC0 source: Hakhyun-Kim/constellation-defense @ 4431655c1a29638495c6ab3d4543d37c8d6deed6.
-[OK] Source: assets/models/quaternius-yeti.glb; blob a497b06d544af508e561decee951fc1f27179e02; SHA-256 68b26d4793cd1567139a72a009845be1c1f3b09e871653fd254d891bcef69ad9; 121,520 bytes.
-[OK] Native mapping resolves Idle / Walk / Bite_Front / HitRecieve / Death through importer suffix normalization.
-[OK] Actor Candidate Validation #117 / run 34390994184 / artifact 10119907335 passed exact 232-frame QA.
-[OK] Master minimum margin 100 px; median silhouette 62x60 px / 3658 px2.
-[OK] BOSS role gates passed: width >=48 px, height >=52 px, area >=2850 px2.
-[OK] Atlas root boss/alpha published additively; production atlas contains 10 authored actor pages / 2320 authored frames.
-[OK] Verify #1469 / run 34390994118 passed core, Android build and real Android runtime.
-[OK] Android visual artifact 10119773756 was inspected: Yeti is clearly readable, materially intact, unclipped and distinct in the crowded gameplay scene.
-[OK] config/actor-candidates.d/boss.json status=accepted.
-[OK] assets/art/boss-manifest.json source_production_ready=true and android_accepted=true.
-[OK] config/actor-production-contracts.json now contains BOSS as an accepted production actor.
+CURRENT NYX STATUS
+------------------
+[OK] Immutable CC0 source: ariesyous/projectbluebean @ 4769997aaea204c66735813e2bf61dc3c94e7631.
+[OK] Source BlueSoldier_Female.blend; blob ceaceb30aa5389cea266acf3becdae863c5820d4; SHA-256 9f79873e2e3452f4a3ac64ff7ba3388c01d6e62633f3477ab8a27d844c3adfb2.
+[OK] Exact 232-frame contract; Idle / Run / Shoot_OneHanded / RecieveHit / Death.
+[OK] Minimum master margin 40 px; median silhouette 37x60.5 px / 2079 px2.
+[OK] Explicit compact-rifle geometry and native ranged attack validated.
+[OK] Atlas root survivor/nyx published additively; production atlas contains 11 authored actor pages / 2552 authored frames.
+[OK] Verify #1487 / run 34395791923 passed core, Android build and real Android runtime with Survivor.NYX selected through the production runtime path.
+[OK] Android visual artifact 10121562557 inspected and accepted for phone-scale crowded gameplay and attack readability.
+[OK] Candidate status=accepted and NYX manifest records Android acceptance.
 
 PIPELINE INDUSTRIALIZATION
 --------------------------
@@ -62,11 +60,11 @@ IMPORTANT DECISIONS
 
 CURRENT BLOCKER
 ---------------
-No authored-actor production blocker remains.
+No authored-actor production blocker remains. NYX contract publication and final accepted-contract CI remain before PR #52 merge.
 
 IMMEDIATE NEXT ACTION
 ---------------------
-Finish PR #51 with final accepted-contract CI, merge BOSS to main, then move to remaining survivor variants and final visual polish without regressing the 10 accepted actor roots.
+Publish NYX in config/actor-production-contracts.json, run final accepted-contract CI, merge PR #52, then proceed to BASTION, VOLT and WRAITH.
 
 ORDER OF EXECUTION
 ------------------
@@ -81,11 +79,13 @@ ORDER OF EXECUTION
 9. ELITE qualification + staging + Android acceptance. [DONE]
 10. SHIELDED qualification + staging + Android acceptance. [DONE]
 11. REGENERATOR qualification + staging + Android acceptance. [DONE]
-12. Final REGENERATOR accepted-contract Verify + merge. [DONE]
-13. PHANTOM qualification + staging + Android acceptance. [DONE]
-14. Final PHANTOM accepted-contract Verify + merge. [DONE]
-15. BOSS authored production actor. [DONE]
-16. Remaining survivor variants / polish. [NOW]
+12. PHANTOM qualification + staging + Android acceptance. [DONE]
+13. BOSS authored production actor. [DONE]
+14. NYX authored survivor. [DONE]
+15. BASTION authored survivor. [NOW]
+16. VOLT authored survivor. [NEXT]
+17. WRAITH authored survivor. [NEXT]
+18. Final visual polish. [NEXT]
 
 SHARED ACTOR CONTRACT
 ---------------------
@@ -98,6 +98,7 @@ Authoritative definition: config/actor-production-contracts.json.
 QUALITY GATES
 -------------
 REX: ACCEPTED.
+NYX: ACCEPTED.
 SHAMBLER: ACCEPTED.
 RUNNER: ACCEPTED.
 BRUTE: ACCEPTED.
@@ -110,4 +111,4 @@ BOSS: ACCEPTED.
 
 NEXT QUALITY GATE
 -----------------
-Remaining survivor variants / polish must preserve all 10 accepted production actor roots, frame contracts and Android readability.
+BASTION must pass immutable-source validation, exact 232-frame QA, phone-scale distinction and real Android visual acceptance without regressing the 11 accepted production actor roots.
