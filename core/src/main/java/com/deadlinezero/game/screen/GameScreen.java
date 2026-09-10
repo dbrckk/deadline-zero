@@ -111,6 +111,7 @@ public final class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && player.canDash() && move.len2() > .08f) {
             player.position.mulAdd(move, 4.8f);
             player.triggerDash();
+            if (game.accessibility != null && game.accessibility.haptics) game.services.haptics.dash();
             addCameraShake(.12f);
             impact(player.position.x, player.position.y, .9f, .16f, VisualTheme.CYAN);
         }
@@ -391,6 +392,7 @@ public final class GameScreen extends ScreenAdapter {
         float hpBefore = player.hp;
         player.damage(damage);
         if (player.hp == hpBefore) return;
+        if (game.accessibility != null && game.accessibility.haptics) game.services.haptics.damage();
         combatHud.triggerDamageFlash();
         addCameraShake(shake);
         impact(player.position.x, player.position.y, 1.1f, .18f, VisualTheme.RED);
@@ -404,7 +406,10 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private void onEnemyKilled(Enemy e) {
-        if (e.type == Enemy.Type.BOSS) bossKilledThisRun = true;
+        if (e.type == Enemy.Type.BOSS) {
+            bossKilledThisRun = true;
+            if (game.accessibility != null && game.accessibility.haptics) game.services.haptics.bossKill();
+        }
         polish.onEnemyKilled(e, pools);
         director.onKill();
         if (player.addXp(e.xpValue)) prepareUpgrade();
