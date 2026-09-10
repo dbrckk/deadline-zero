@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "volt-casual3-male-rifle": {
+      "actor": "volt",
+      "role": "survivor-technician",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Casual3_Male.blend",
+        "git_blob_sha": "b3fd1fad0ff11c7069825fb12467f2aaac7c8cda",
+        "size_bytes": 2029180
+      },
+      "actions": {
+        "idle": ["Idle"],
+        "run": ["Run", "Walk"],
+        "attack": ["Shoot_OneHanded", "Shoot", "Weapon", "Attack"],
+        "hit": ["RecieveHit", "ReceiveHit", "HitReact", "Hit"],
+        "death": ["Death"]
+      },
+      "weapon": {
+        "style": "compact-rifle",
+        "bone": "Fist.R",
+        "forward": [0.0, -1.0, -0.08],
+        "grip_offset": [0.0, -0.01, 0.01]
+      },
+      "render": {
+        "target_height": 1.48,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "survivor/volt"
+      },
+      "selection_goal": "VOLT authored survivor: readable technician identity, explicit rifle geometry, native ranged attack, compact agile silhouette and clear phone-scale distinction from Rex, Nyx and Bastion.",
+      "role_gate": {
+        "requires_native_ranged_attack": true,
+        "requires_visible_weapon_or_projectile_source": true,
+        "requires_explicit_weapon_geometry": true,
+        "requires_phone_scale_distinction": true
+      },
+      "verdict": {
+        "status": "pending",
+        "reason": "Candidate requires immutable SHA256 fingerprint, exact 232-frame validation, visual inspection and Android acceptance before production publication."
+      }
+    }
+  }
+}
