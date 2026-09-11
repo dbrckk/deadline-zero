@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "warden-wizard": {
+      "actor": "warden",
+      "role": "boss-warden",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Wizard.blend",
+        "git_blob_sha": "e5f284892fbd25efd7f88e9c1671de03aef96d14",
+        "size_bytes": 2152312
+      },
+      "actions": {
+        "idle": [
+          "Idle"
+        ],
+        "run": [
+          "Walk",
+          "Run"
+        ],
+        "attack": [
+          "Weapon",
+          "Attack",
+          "Spell",
+          "Punch"
+        ],
+        "hit": [
+          "RecieveHit",
+          "ReceiveHit",
+          "HitReact",
+          "Hit"
+        ],
+        "death": [
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 1.9,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/warden"
+      },
+      "selection_goal": "WARDEN authored boss: arcane controller silhouette clearly distinct from REVENANT/Alpha, readable at phone scale, with native attack animation.",
+      "role_gate": {
+        "requires_native_weapon_attack": false,
+        "requires_phone_scale_distinction": true,
+        "min_median_bbox_area_px2": 1900,
+        "min_median_bbox_width_px": 32
+      }
+    }
+  }
+}
