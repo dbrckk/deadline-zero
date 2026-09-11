@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.RunModifierContext;
+import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.SurvivorCatalog;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.visual.CombatVisualEvents;
@@ -55,6 +56,45 @@ public final class AndroidGameplayVisualProbeTest {
             runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
             Thread.sleep(80L);
             capture("wraith-attack.png");
+        }
+    }
+
+    @Test
+    public void capturesRevenantGameplayAndAttackFrames() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for REVENANT visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(4);
+                injectRevenantBoss((GameScreen) game.getScreen());
+            });
+
+            Thread.sleep(1800L);
+            capture("revenant-gameplay.png");
+
+            runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
+            Thread.sleep(700L);
+            capture("revenant-crowd.png");
+
+            runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
+            Thread.sleep(80L);
+            capture("revenant-attack.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectRevenantBoss(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            enemies.add(new Enemy(Enemy.Type.BOSS, 0f, 3.8f, 500_000f, .015f, .78f, 0f, 2));
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject REVENANT boss for visual QA", exception);
         }
     }
 

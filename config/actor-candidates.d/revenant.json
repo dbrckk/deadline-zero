@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "revenant-golden-knight": {
+      "actor": "revenant",
+      "role": "boss-revenant",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Knight_Golden_Male.blend",
+        "git_blob_sha": "9cc053899acbfca453669435ead43a10f633f64b",
+        "size_bytes": 1888072,
+        "sha256": "f81a02ff576815cffc8366c89b57d30888f45f9df3e6865245c81837d52172c9"
+      },
+      "actions": {
+        "idle": [
+          "Idle"
+        ],
+        "run": [
+          "Walk",
+          "Run"
+        ],
+        "attack": [
+          "Weapon",
+          "Attack",
+          "Punch"
+        ],
+        "hit": [
+          "RecieveHit",
+          "ReceiveHit",
+          "HitReact",
+          "Hit"
+        ],
+        "death": [
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 1.85,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/revenant"
+      },
+      "selection_goal": "REVENANT authored boss: armored resurrected knight identity, imposing readable silhouette, native weapon attack and strong phone-scale distinction from Alpha and standard enemies.",
+      "role_gate": {
+        "requires_native_weapon_attack": true,
+        "requires_phone_scale_distinction": true,
+        "min_median_bbox_area_px2": 2000,
+        "min_median_bbox_width_px": 34
+      },
+      "verdict": {
+        "status": "accepted",
+        "reason": "Exact 232-frame contract, immutable source fingerprint, native weapon attack, phone-scale boss silhouette and real Android gameplay/crowd/attack visual QA passed. REVENANT is production accepted.",
+        "validation_run_id": 34570992444,
+        "validation_artifact_id": 10187885488,
+        "android_runtime_run_id": 34583221325,
+        "android_visual_artifact_id": 10192621684,
+        "android_visual_qa_pass": true
+      },
+      "staging_ack": "production-atlas-staged-71de3f7f",
+      "post_staging_verification": "f8ac735-stable"
+    }
+  }
+}
