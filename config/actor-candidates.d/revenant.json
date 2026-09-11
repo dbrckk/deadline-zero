@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "revenant-golden-knight": {
+      "actor": "revenant",
+      "role": "boss-revenant",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Knight_Golden_Male.blend",
+        "git_blob_sha": "9cc053899acbfca453669435ead43a10f633f64b",
+        "size_bytes": 1888072
+      },
+      "actions": {
+        "idle": [
+          "Idle"
+        ],
+        "run": [
+          "Walk",
+          "Run"
+        ],
+        "attack": [
+          "Weapon",
+          "Attack",
+          "Punch"
+        ],
+        "hit": [
+          "RecieveHit",
+          "ReceiveHit",
+          "HitReact",
+          "Hit"
+        ],
+        "death": [
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 1.85,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/revenant"
+      },
+      "selection_goal": "REVENANT authored boss: armored resurrected knight identity, imposing readable silhouette, native weapon attack and strong phone-scale distinction from Alpha and standard enemies.",
+      "role_gate": {
+        "requires_native_weapon_attack": true,
+        "requires_phone_scale_distinction": true,
+        "min_median_bbox_area_px2": 2600,
+        "min_median_bbox_width_px": 42
+      }
+    }
+  }
+}
