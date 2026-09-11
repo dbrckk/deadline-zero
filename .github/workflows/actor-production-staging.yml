@@ -207,6 +207,13 @@ jobs:
           margin=json.load(open(os.environ['MARGIN_FILE']))
           metrics=json.load(open(os.environ['METRICS_FILE']))
           fp=json.load(open(os.environ['FINGERPRINT_FILE']))
+          existing_manifest=Path(f'assets/art/{os.environ["ACTOR"]}-manifest.json')
+          existing={}
+          if existing_manifest.exists():
+              try:
+                  existing=json.loads(existing_manifest.read_text())
+              except Exception:
+                  existing={}
           data.update({
             'source_stage':'96px-normalization-v2',
             'source_production_ready':False,
@@ -220,8 +227,17 @@ jobs:
             'median_bbox_area_px2':metrics.get('median_bbox_area_px2'),
             'median_bbox_width_px':metrics.get('median_bbox_width_px'),
             'phone_qa_pass':True,
-            'android_accepted':False,
+            'android_accepted':bool(existing.get('android_accepted', False)),
           })
+          # Keep staging idempotent. upsert_directional_actor_atlas reports whether it
+          # replaced a page during generation, but that transient fact must not make
+          # the committed manifest differ on every subsequent workflow run.
+          data['atlas_page_replaced']=False
+          for key in ('source_production_ready','android_runtime_run_id',
+                      'android_visual_artifact_id','android_visual_artifact_digest',
+                      'android_visual_qa_pass'):
+              if key in existing:
+                  data[key]=existing[key]
           readability=Path('build/ranged-readability.json')
           if readability.exists():
               data['ranged_attack_readability']=json.loads(readability.read_text())
