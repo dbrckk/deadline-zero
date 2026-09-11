@@ -34,6 +34,7 @@
           "Hit"
         ],
         "death": [
+          "Defeat",
           "Death"
         ]
       },
@@ -54,9 +55,9 @@
       },
       "verdict": {
         "status": "pending",
-        "reason": "Revalidating against actual production role metrics: >=2000px² median area and >=33px median width."
+        "reason": "Revalidating HARVESTER with native Defeat animation to preserve boss scale while fixing death-pose clipping."
       },
-      "retry_note": "Artifact #10272600977 from validation #196 still measured 1708px² median area and 29px median width. Candidate validation did not enforce nested role_gate constraints; production staging correctly requires >=2000px² and >=33px. Tighten ortho 7.7 -> 6.75; prior master margin was 23px, leaving sufficient room for a larger phone-scale silhouette."
+      "retry_note": "At ortho 6.75, only late east/west Death frames clip horizontally; 226/232 frames are within margin. Prefer the alternative native Defeat animation before changing phone-scale framing or lowering role gates."
     }
   }
 }
