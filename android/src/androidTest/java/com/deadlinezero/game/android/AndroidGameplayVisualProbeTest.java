@@ -141,7 +141,7 @@ public final class AndroidGameplayVisualProbeTest {
                 game.startRun();
                 game.startRunWithContract(RunModifierContext.offers()[0]);
                 assertTrue("expected GameScreen for NULL ARCHON visual probe", game.getScreen() instanceof GameScreen);
-                RunStageContext.begin(8);
+                RunStageContext.begin(20);
                 injectNullArchonBoss((GameScreen) game.getScreen());
             });
             Thread.sleep(1800L);
