@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "warden-wizard": {
+      "actor": "warden",
+      "role": "boss-warden",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Wizard.blend",
+        "git_blob_sha": "e5f284892fbd25efd7f88e9c1671de03aef96d14",
+        "size_bytes": 2152312
+      },
+      "actions": {
+        "idle": [
+          "Idle"
+        ],
+        "run": [
+          "Walk",
+          "Run"
+        ],
+        "attack": [
+          "Weapon",
+          "Attack",
+          "Spell",
+          "Punch"
+        ],
+        "hit": [
+          "RecieveHit",
+          "ReceiveHit",
+          "HitReact",
+          "Hit"
+        ],
+        "death": [
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 1.9,
+        "ortho_scale": 8.2,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/warden"
+      },
+      "selection_goal": "WARDEN authored boss: arcane controller silhouette clearly distinct from REVENANT/Alpha, readable at phone scale, with native attack animation.",
+      "role_gate": {
+        "requires_native_weapon_attack": false,
+        "requires_phone_scale_distinction": true,
+        "min_median_bbox_area_px2": 1900,
+        "min_median_bbox_width_px": 32
+      },
+      "retry_note": "Validation #178 rendered all 232 frames but failed the 4px master margin gate due to framing. Increase ortho scale from 7.5 to 8.2; source/actions remain valid.",
+      "verdict": {
+        "status": "rejected",
+        "reason": "Automated 232-frame and phone-scale metric gates passed, but Android visual QA #1628 fails semantic identity: the rendered boss is a large white cartoon creature rather than a readable arcane WARDEN/wizard. Rejecting candidate rather than accepting a misleading asset.",
+        "validation_run_id": 34586539091,
+        "validation_artifact_id": 10193963831,
+        "android_runtime_run_id": 34587216402,
+        "android_visual_artifact_id": 10194224991,
+        "android_visual_qa_pass": false
+      }
+    },
+    "warden-witch": {
+      "actor": "warden",
+      "role": "boss-warden",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Witch.blend",
+        "git_blob_sha": "ccebbdc5f3b3cbd7b44468af9aa965075978a8ee",
+        "size_bytes": 2188648,
+        "sha256": "92042ee8da70dab6331218290bcfbc616165405757914596e82c6a9c36bce837"
+      },
+      "actions": {
+        "idle": [
+          "Idle"
+        ],
+        "run": [
+          "Walk",
+          "Run"
+        ],
+        "attack": [
+          "Weapon",
+          "Attack",
+          "Spell",
+          "Punch"
+        ],
+        "hit": [
+          "RecieveHit",
+          "ReceiveHit",
+          "HitReact",
+          "Hit"
+        ],
+        "death": [
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 1.9,
+        "ortho_scale": 9.2,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/warden"
+      },
+      "selection_goal": "WARDEN authored boss retry: Witch candidate selected for a stronger unmistakable arcane silhouette after Wizard failed semantic Android visual QA.",
+      "role_gate": {
+        "requires_native_weapon_attack": false,
+        "requires_phone_scale_distinction": true,
+        "min_median_bbox_area_px2": 1900,
+        "min_median_bbox_width_px": 32
+      },
+      "retry_note": "Validation #185 rendered all 232 frames and resolved every action, but Witch geometry touched the master frame edge (0px minimum margin). Increase ortho scale 8.2 -> 9.2 before semantic visual QA.",
+      "verdict": {
+        "status": "accepted",
+        "reason": "Exact 232-frame contract, 28px minimum margin, phone-scale metrics and real Android stage-7 gameplay/crowd/attack QA passed. Witch provides a clear arcane WARDEN identity distinct from Alpha and REVENANT.",
+        "validation_run_id": 34592585776,
+        "validation_artifact_id": 10196349863,
+        "android_runtime_run_id": 34609391605,
+        "android_visual_artifact_id": 10267628115,
+        "android_visual_qa_pass": true
+      }
+    }
+  }
+}
