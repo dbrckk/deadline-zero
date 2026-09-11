@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "harvester-viking": {
+      "actor": "harvester",
+      "role": "boss-harvester",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Viking_Male.blend",
+        "git_blob_sha": "79620718ba895acec12685980391d38c7d2a0e2c",
+        "size_bytes": 2133356
+      },
+      "actions": {
+        "idle": [
+          "Idle"
+        ],
+        "run": [
+          "Walk",
+          "Run"
+        ],
+        "attack": [
+          "Weapon",
+          "Attack",
+          "Punch"
+        ],
+        "hit": [
+          "RecieveHit",
+          "ReceiveHit",
+          "HitReact",
+          "Hit"
+        ],
+        "death": [
+          "Defeat",
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 1.95,
+        "ortho_scale": 6.75,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/harvester"
+      },
+      "selection_goal": "HARVESTER authored boss: heavy brutal melee silhouette distinct from REVENANT and WARDEN, with readable phone-scale mass and native combat animation.",
+      "role_gate": {
+        "requires_native_weapon_attack": false,
+        "requires_phone_scale_distinction": true,
+        "min_median_bbox_area_px2": 2000,
+        "min_median_bbox_width_px": 33
+      },
+      "verdict": {
+        "status": "accepted",
+        "reason": "Exact 232-frame contract, production phone-scale gates and real Android stage-6 gameplay/crowd/attack QA passed. Viking reads as a large horned heavy melee boss and remains distinct/readable in crowd.",
+        "validation_run_id": 34622861724,
+        "validation_artifact_id": 10273348562,
+        "android_runtime_run_id": 34624187689,
+        "android_visual_artifact_id": 10274036186,
+        "android_visual_qa_pass": true
+      },
+      "retry_note": "At ortho 6.75, only late east/west Death frames clip horizontally; 226/232 frames are within margin. Prefer the alternative native Defeat animation before changing phone-scale framing or lowering role gates."
+    }
+  }
+}
