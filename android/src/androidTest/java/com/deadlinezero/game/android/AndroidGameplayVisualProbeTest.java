@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.RunModifierContext;
+import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.SurvivorCatalog;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.visual.CombatVisualEvents;
@@ -68,6 +69,7 @@ public final class AndroidGameplayVisualProbeTest {
                 game.startRun();
                 game.startRunWithContract(RunModifierContext.offers()[0]);
                 assertTrue("expected GameScreen for REVENANT visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(4);
                 injectRevenantBoss((GameScreen) game.getScreen());
             });
 
