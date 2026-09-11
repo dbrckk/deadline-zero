@@ -95,7 +95,7 @@ public final class AndroidGameplayVisualProbeTest {
                 game.startRun();
                 game.startRunWithContract(RunModifierContext.offers()[0]);
                 assertTrue("expected GameScreen for WARDEN visual probe", game.getScreen() instanceof GameScreen);
-                RunStageContext.begin(5);
+                RunStageContext.begin(7);
                 injectWardenBoss((GameScreen) game.getScreen());
             });
             Thread.sleep(1800L);
