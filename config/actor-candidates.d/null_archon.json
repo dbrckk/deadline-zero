@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "null-archon-elf": {
+      "actor": "null_archon",
+      "role": "boss-null-archon",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Elf.blend",
+        "git_blob_sha": "b8c40b71164829e7ffb60cc77dac1e730434f57e",
+        "size_bytes": 1870736
+      },
+      "actions": {
+        "idle": [
+          "Idle"
+        ],
+        "run": [
+          "Walk",
+          "Run"
+        ],
+        "attack": [
+          "Weapon",
+          "Attack",
+          "Punch"
+        ],
+        "hit": [
+          "RecieveHit",
+          "ReceiveHit",
+          "HitReact",
+          "Hit"
+        ],
+        "death": [
+          "Defeat",
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 2,
+        "ortho_scale": 8.2,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/null_archon"
+      },
+      "selection_goal": "NULL ARCHON authored final boss: tall uncanny arcane humanoid silhouette, clearly distinct from WARDEN Witch, HARVESTER Viking and REVENANT Knight.",
+      "role_gate": {
+        "requires_native_weapon_attack": false,
+        "requires_phone_scale_distinction": true,
+        "min_median_bbox_area_px2": 2100,
+        "min_median_bbox_width_px": 34
+      },
+      "verdict": {
+        "status": "rejected",
+        "reason": "Android semantic visual QA #1689 passed technically, but the rendered NULL ARCHON is a giant green wizard/elf with a pointed hat and reads too similarly to the accepted WARDEN arcane silhouette. Final-boss distinctness gate failed.",
+        "validation_run_id": 34632184108,
+        "validation_artifact_id": 10277155584,
+        "android_runtime_run_id": 34639734882,
+        "android_visual_artifact_id": 10279747820,
+        "android_visual_qa_pass": false
+      }
+    },
+    "null-archon-dragon-evolved": {
+      "actor": "null_archon",
+      "role": "boss-null-archon",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "repository": "mlflabs/brain",
+        "commit": "54b3258a7ab6558fee969100aafb24ff285e0f0e",
+        "path": "assets/Ultimate Monsters/Flying/glTF/Dragon_Evolved.gltf",
+        "git_blob_sha": "f70ceaed1f52d26e8b2cd24f8a9bd43cd380ed6a",
+        "size_bytes": 991335,
+        "sha256": "39ba6ea24b5f27acf68bbf4c19fe80ba070dbec167ff14bbe933453303426f5c"
+      },
+      "actions": {
+        "idle": [
+          "Flying_Idle",
+          "Idle"
+        ],
+        "run": [
+          "Fast_Flying",
+          "Flying_Idle"
+        ],
+        "attack": [
+          "Headbutt",
+          "Punch",
+          "Attack"
+        ],
+        "hit": [
+          "HitReact",
+          "HitRecieve",
+          "HitReceive"
+        ],
+        "death": [
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 2.15,
+        "ortho_scale": 10.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "boss/null_archon"
+      },
+      "selection_goal": "NULL ARCHON final-boss retry: evolved dragon selected after Elf failed semantic distinctness. Must read as an unmistakable apex non-humanoid final boss, remain readable at phone scale, and be clearly distinct from WARDEN, HARVESTER and REVENANT.",
+      "role_gate": {
+        "requires_phone_scale_distinction": true,
+        "metrics": {
+          "min_median_bbox_area_px2": 2800,
+          "min_median_bbox_width_px": 48,
+          "min_median_bbox_height_px": 48
+        },
+        "min_median_bbox_area_px2": 2800,
+        "min_median_bbox_width_px": 48
+      },
+      "verdict": {
+        "status": "qualified",
+        "reason": "Validation #214 passed the exact 232-frame contract, immutable source fingerprint, 120px minimum master margin, and all 3 strict phone-scale role constraints. Contact-sheet inspection confirms a clean evolved-dragon silhouette clearly distinct from WARDEN, HARVESTER, REVENANT and ALPHA. Proceed to production staging and real Android semantic QA.",
+        "validation_run_id": 34647430253,
+        "validation_artifact_id": 10283435668,
+        "source_sha256": "39ba6ea24b5f27acf68bbf4c19fe80ba070dbec167ff14bbe933453303426f5c",
+        "frame_count": 232,
+        "minimum_master_margin_px": 120,
+        "median_bbox_width_px": 61,
+        "median_bbox_height_px": 49,
+        "median_bbox_area_px2": 2809
+      }
+    }
+  }
+}
