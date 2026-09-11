@@ -55,10 +55,13 @@
       },
       "retry_note": "Validation #178 rendered all 232 frames but failed the 4px master margin gate due to framing. Increase ortho scale from 7.5 to 8.2; source/actions remain valid.",
       "verdict": {
-        "status": "qualified",
-        "reason": "Exact 232-frame contract passed after framing correction; source/action mapping valid and phone-scale boss gates passed. Proceed to production staging and Android visual QA.",
+        "status": "rejected",
+        "reason": "Automated 232-frame and phone-scale metric gates passed, but Android visual QA #1628 fails semantic identity: the rendered boss is a large white cartoon creature rather than a readable arcane WARDEN/wizard. Rejecting candidate rather than accepting a misleading asset.",
         "validation_run_id": 34586539091,
-        "validation_artifact_id": 10193963831
+        "validation_artifact_id": 10193963831,
+        "android_runtime_run_id": 34587216402,
+        "android_visual_artifact_id": 10194224991,
+        "android_visual_qa_pass": false
       }
     }
   }
