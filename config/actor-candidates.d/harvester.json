@@ -39,7 +39,7 @@
       },
       "render": {
         "target_height": 1.95,
-        "ortho_scale": 8.4,
+        "ortho_scale": 7.7,
         "horizontal_anchor": "union-center"
       },
       "production": {
@@ -53,11 +53,12 @@
         "min_median_bbox_width_px": 33
       },
       "verdict": {
-        "status": "qualified",
-        "reason": "Exact actor candidate validation #194 passed all automated gates. Proceed to production staging and semantic Android visual QA.",
+        "status": "pending",
+        "reason": "Revalidating at tighter framing after production staging area gate.",
         "validation_run_id": 34615669824,
         "validation_artifact_id": 10270805112
-      }
+      },
+      "retry_note": "Staging #157 failed only the HARVESTER role area gate: median bbox area 1708px² < 2000px². Tighten framing from ortho 8.4 to 7.7 while preserving the 4px master-margin gate."
     }
   }
 }
