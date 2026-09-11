@@ -116,7 +116,13 @@
         "min_median_bbox_area_px2": 1900,
         "min_median_bbox_width_px": 32
       },
-      "retry_note": "Validation #185 rendered all 232 frames and resolved every action, but Witch geometry touched the master frame edge (0px minimum margin). Increase ortho scale 8.2 -> 9.2 before semantic visual QA."
+      "retry_note": "Validation #185 rendered all 232 frames and resolved every action, but Witch geometry touched the master frame edge (0px minimum margin). Increase ortho scale 8.2 -> 9.2 before semantic visual QA.",
+      "verdict": {
+        "status": "qualified",
+        "reason": "232-frame contract, framing correction and phone-scale metric gates passed. Witch remains semantically promising for WARDEN and proceeds to production staging plus Android visual QA.",
+        "validation_run_id": 34592585776,
+        "validation_artifact_id": 10196349863
+      }
     }
   }
 }
