@@ -16,17 +16,42 @@
         "sha256": "9f79873e2e3452f4a3ac64ff7ba3388c01d6e62633f3477ab8a27d844c3adfb2"
       },
       "actions": {
-        "idle": ["Idle"],
-        "run": ["Walk", "Run"],
-        "attack": ["Shoot_OneHanded", "Shoot", "Weapon", "Attack"],
-        "hit": ["RecieveHit", "ReceiveHit", "HitReact", "Hit"],
-        "death": ["Death"]
+        "idle": [
+          "Idle"
+        ],
+        "run": [
+          "Walk",
+          "Run"
+        ],
+        "attack": [
+          "Shoot_OneHanded",
+          "Shoot",
+          "Weapon",
+          "Attack"
+        ],
+        "hit": [
+          "RecieveHit",
+          "ReceiveHit",
+          "HitReact",
+          "Hit"
+        ],
+        "death": [
+          "Death"
+        ]
       },
       "weapon": {
         "style": "compact-rifle",
         "bone": "Fist.R",
-        "forward": [0.0, -1.0, -0.08],
-        "grip_offset": [0.0, -0.01, 0.01]
+        "forward": [
+          0,
+          -1,
+          -0.08
+        ],
+        "grip_offset": [
+          0,
+          -0.01,
+          0.01
+        ]
       },
       "render": {
         "target_height": 1.45,
@@ -43,8 +68,10 @@
         "requires_explicit_weapon_geometry": true,
         "requires_phone_scale_distinction": true,
         "requires_material_integrity": true,
-        "min_median_bbox_area_px2": 1850,
-        "min_median_bbox_width_px": 32
+        "metrics": {
+          "min_median_bbox_area_px2": 1850,
+          "min_median_bbox_width_px": 32
+        }
       }
     }
   }
