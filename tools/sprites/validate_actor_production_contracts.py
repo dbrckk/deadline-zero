@@ -102,6 +102,33 @@ def main() -> None:
                     f"{actual_png_sha256} != {expected_png_sha256}"
                 )
 
+            source = spec.get("source") or {}
+            provenance_pairs = (
+                ("source_sha256", "sha256"),
+                ("source_git_blob", "git_blob_sha"),
+                ("source_mirror_commit", "mirror_commit"),
+            )
+            for manifest_key, contract_key in provenance_pairs:
+                if manifest_key in manifest and contract_key in source:
+                    if manifest.get(manifest_key) != source.get(contract_key):
+                        fail(
+                            f"{actor}: provenance mismatch for {manifest_key}: "
+                            f"{manifest.get(manifest_key)!r} != {source.get(contract_key)!r}"
+                        )
+
+            validation = spec.get("validation") or {}
+            validation_pairs = (
+                ("validation_run", "run_id"),
+                ("validation_artifact_id", "artifact_id"),
+            )
+            for manifest_key, contract_key in validation_pairs:
+                if manifest_key in manifest and contract_key in validation:
+                    if manifest.get(manifest_key) != validation.get(contract_key):
+                        fail(
+                            f"{actor}: validation evidence mismatch for {manifest_key}: "
+                            f"{manifest.get(manifest_key)!r} != {validation.get(contract_key)!r}"
+                        )
+
         for direction in directions:
             for animation, count in animations.items():
                 key = f"{root}/{direction}/{animation}\n"
