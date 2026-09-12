@@ -9,12 +9,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.SurvivorCatalog;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.visual.CombatVisualEvents;
+import com.deadlinezero.game.world.BiomeEnemyRoster;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
@@ -129,6 +131,71 @@ public final class AndroidGameplayVisualProbeTest {
             runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
             Thread.sleep(80L);
             capture("harvester-attack.png");
+        }
+    }
+
+    @Test
+    public void capturesForgeHoundGameplayAndAttackFrames() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for FORGE HOUND visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(10);
+                injectForgeHound((GameScreen) game.getScreen());
+            });
+            Thread.sleep(900L);
+            capture("forge-hound-gameplay.png");
+
+            runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
+            Thread.sleep(500L);
+            capture("forge-hound-crowd.png");
+
+            runOnGameThread(activity, () -> forceForgeHoundAttack((GameScreen) game(activity).getScreen()));
+            Thread.sleep(80L);
+            capture("forge-hound-attack.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectForgeHound(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            Enemy hound = new Enemy(Enemy.Type.RUNNER, 0f, 3.2f, 500_000f, .02f, .50f, 0f, 1);
+            assertTrue("stage 10 RUNNER must resolve to FORGE HOUND",
+                hound.biomeIdentity() == BiomeEnemyRoster.Identity.FORGE_HOUND);
+            enemies.add(hound);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject FORGE HOUND for visual QA", exception);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void forceForgeHoundAttack(GameScreen screen) {
+        try {
+            Field enemiesField = GameScreen.class.getDeclaredField("enemies");
+            enemiesField.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
+            Enemy hound = null;
+            for (Enemy enemy : enemies) {
+                if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.FORGE_HOUND) {
+                    hound = enemy;
+                    break;
+                }
+            }
+            assertNotNull("FORGE HOUND missing before attack capture", hound);
+            Field stateField = hound.attack.getClass().getDeclaredField("state");
+            Field timerField = hound.attack.getClass().getDeclaredField("timer");
+            stateField.setAccessible(true);
+            timerField.setAccessible(true);
+            stateField.set(hound.attack, EnemyState.TELEGRAPHING);
+            timerField.setFloat(hound.attack, 10f);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to force FORGE HOUND attack animation for visual QA", exception);
         }
     }
 
