@@ -11,12 +11,11 @@ Production characters, 8-direction animation, enemy animation sets, environment 
 
 ### Roster production status
 
-- 18/24 actors are merged to `main`.
-- Actor 19, `FORGE_HOUND`, is in production QA on PR #65.
-- Source is pinned to Quaternius Ultimate Monsters `Dog.gltf` with immutable blob/SHA-256 fingerprints.
-- Generated contract: 232 frames, 8 directions × 29 frames, 96 px cells.
-- Phone-scale gates remain unchanged: median bbox area ≥2200 px² and width ≥38 px; current candidate measures 3654 px² / 63 px.
-- Merge requires candidate validation, production staging, catalog, full Verify, Android runtime capture and semantic review of FORGE HOUND gameplay/crowd/attack frames.
+- 19/24 actors are merged to `main`; actor 20, `CINDER_GUNNER`, is accepted on PR #66 pending final post-acceptance CI.
+- CINDER GUNNER source is pinned by Git blob and SHA-256, with explicit configured rifle geometry and native `Shoot_OneHanded` semantics.
+- Production contract: 232 frames, 8 directions × 29 frames, 96 px cells.
+- Enforced phone-scale gates: median bbox area ≥1850 px² and width ≥32 px; validated result is 2079 px² / 34.5 px with 40 px minimum master margin.
+- Final Android gameplay/crowd/attack evidence from Verify #1737 passed semantic review; merge remains gated on all final workflows for the accepted head.
 
 ## P3 — Meta game
 Inventory, equipment rarity, character roster, weapon progression, missions, achievements, daily/weekly systems, offline save migration, cloud-save adapter.

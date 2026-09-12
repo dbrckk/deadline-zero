@@ -135,6 +135,71 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesCinderGunnerGameplayAndAttackFrames() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for CINDER GUNNER visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(10);
+                injectCinderGunner((GameScreen) game.getScreen());
+            });
+            Thread.sleep(900L);
+            capture("cinder-gunner-gameplay.png");
+
+            runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
+            Thread.sleep(500L);
+            capture("cinder-gunner-crowd.png");
+
+            runOnGameThread(activity, () -> forceCinderGunnerAttack((GameScreen) game(activity).getScreen()));
+            Thread.sleep(80L);
+            capture("cinder-gunner-attack.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectCinderGunner(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            Enemy gunner = new Enemy(Enemy.Type.RANGED, 0f, 3.2f, 500_000f, .02f, .50f, 0f, 1);
+            assertTrue("stage 10 RANGED must resolve to CINDER GUNNER",
+                gunner.biomeIdentity() == BiomeEnemyRoster.Identity.CINDER_GUNNER);
+            enemies.add(gunner);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject CINDER GUNNER for visual QA", exception);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void forceCinderGunnerAttack(GameScreen screen) {
+        try {
+            Field enemiesField = GameScreen.class.getDeclaredField("enemies");
+            enemiesField.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
+            Enemy gunner = null;
+            for (Enemy enemy : enemies) {
+                if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.CINDER_GUNNER) {
+                    gunner = enemy;
+                    break;
+                }
+            }
+            assertNotNull("CINDER GUNNER missing before attack capture", gunner);
+            Field stateField = gunner.attack.getClass().getDeclaredField("state");
+            Field timerField = gunner.attack.getClass().getDeclaredField("timer");
+            stateField.setAccessible(true);
+            timerField.setAccessible(true);
+            stateField.set(gunner.attack, EnemyState.TELEGRAPHING);
+            timerField.setFloat(gunner.attack, 10f);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to force CINDER GUNNER attack animation for visual QA", exception);
+        }
+    }
+
+    @Test
     public void capturesForgeHoundGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
