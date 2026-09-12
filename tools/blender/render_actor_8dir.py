@@ -256,6 +256,11 @@ def _import_prop(path: Path):
         bpy.ops.import_scene.fbx(filepath=str(path))
     elif suffix in {".gltf", ".glb"}:
         bpy.ops.import_scene.gltf(filepath=str(path))
+    elif suffix == ".obj":
+        if hasattr(bpy.ops.wm, "obj_import"):
+            bpy.ops.wm.obj_import(filepath=str(path))
+        else:
+            bpy.ops.import_scene.obj(filepath=str(path))
     else:
         raise RuntimeError(f"Unsupported defensive prop format: {suffix}")
     imported = [o for o in bpy.context.scene.objects if o not in before]
