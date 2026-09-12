@@ -44,11 +44,7 @@ def main() -> None:
     if not actors:
         fail("no actor production contracts defined")
 
-    accepted_names = {actor for actor, spec in actors.items() if spec.get("status") == "accepted"}
-    if accepted_names != EXPECTED_COMPLETE_ROSTER:
-        missing = sorted(EXPECTED_COMPLETE_ROSTER - accepted_names)
-        unexpected = sorted(accepted_names - EXPECTED_COMPLETE_ROSTER)
-        fail(f"complete roster contract mismatch: missing={missing}, unexpected={unexpected}")
+    validate_complete_roster(actors)
 
     accepted = []
     for actor, spec in sorted(actors.items()):
