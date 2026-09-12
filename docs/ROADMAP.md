@@ -11,13 +11,13 @@ Production characters, 8-direction animation, enemy animation sets, environment 
 
 ### Roster production status
 
-- 21/24 actors are merged to `main`.
-- Actor 22, `PHASE_STALKER`, is in final production QA on PR #68.
-- Source: Quaternius Ultimate Monsters `Flying/glTF/Ghost.gltf`, pinned by immutable commit and Git blob.
-- Native `Flying_Idle`, `Fast_Flying`, `Headbutt`/`Punch`, `HitReact`, and `Death` actions are resolved exactly.
-- Shared production contract remains 232 frames, 8 directions × 29 frames, 96 px cells.
-- Phone gates remain strict: median bbox area ≥2200 px² and width ≥38 px; PHASE STALKER measures 3770 px² / 60 px on the accepted candidate pass.
-- Dedicated Android gameplay/crowd/attack captures now target PHASE STALKER at NULL SECTOR stage 20; semantic review confirms the floating ghost silhouette remains distinct in solo/crowd views and the forced attack telegraph is visible.
+- **24/24 production actors are merged to `main`.**
+- The final actor, `NULL_WARD`, merged through PR #70 after immutable source/action validation, production staging, final CI, dedicated Android gameplay/crowd/attack QA, and semantic visual review.
+- The shared production contract remains 232 frames per actor: 8 directions × 29 frames, 96 px cells.
+- Phone-scale quality gates were preserved through completion; no threshold was lowered to accept an actor.
+- Final NULL WARD candidate measured 3563 px² median bbox area and 58 px median width against required minima of 2200 px² / 38 px.
+- NULL SECTOR Android semantic QA explicitly verifies `REGENERATOR → NULL_WARD` at stage 20 and captures gameplay, crowd readability, and attack telegraph states.
+- Roster production is complete; subsequent visual work should focus on cross-roster polish/regression QA rather than adding unfinished base actors.
 
 ## P3 — Meta game
 Inventory, equipment rarity, character roster, weapon progression, missions, achievements, daily/weekly systems, offline save migration, cloud-save adapter.
