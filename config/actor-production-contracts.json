@@ -846,6 +846,106 @@
         "android_visual_artifact_id": 10282293846,
         "android_visual_qa_pass": true
       }
+    },
+    "forge_hound": {
+      "kind": "enemy",
+      "atlas_root": "enemy/biome/forge_hound",
+      "published_png": "assets/art/forge_hound.png",
+      "published_manifest": "assets/art/forge_hound-manifest.json",
+      "normalization": "union-center",
+      "status": "accepted",
+      "requires_weapon_visibility_gate": false,
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "master": "Blob/glTF/Dog.gltf",
+        "sha256": "21ed475bbf4d5fb7016085290f79663ad7107aedd2a5856318f2716c7ecc6402",
+        "git_blob_sha": "1ed34fa3b17358a766707bc59d3798d3f1304091",
+        "mirror_repository": "mlflabs/brain",
+        "mirror_commit": "54b3258a7ab6558fee969100aafb24ff285e0f0e",
+        "size_bytes": 142124
+      },
+      "actions": {
+        "idle": "Idle",
+        "run": "Run",
+        "attack": "Bite_Front",
+        "hit": "HitRecieve",
+        "death": "Death"
+      },
+      "render": {
+        "ortho_scale": 7.5,
+        "target_height": 1.35
+      },
+      "validation": {
+        "run_id": 34656325603,
+        "artifact_id": 10285836366,
+        "frame_count": 232,
+        "master_minimum_margin_px": 145,
+        "median_bbox_area_px2": 3654,
+        "median_bbox_width_px": 63,
+        "phone_qa_pass": true,
+        "non_humanoid_identity_pass": true,
+        "android_visual_qa_pass": true
+      }
+    },
+    "cinder_gunner": {
+      "kind": "enemy",
+      "atlas_root": "enemy/biome/cinder_gunner",
+      "published_png": "assets/art/cinder_gunner.png",
+      "published_manifest": "assets/art/cinder_gunner-manifest.json",
+      "normalization": "union-center",
+      "status": "accepted",
+      "requires_weapon_visibility_gate": true,
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "master": "BlueSoldier_Female.blend",
+        "sha256": "9f79873e2e3452f4a3ac64ff7ba3388c01d6e62633f3477ab8a27d844c3adfb2",
+        "git_blob_sha": "ceaceb30aa5389cea266acf3becdae863c5820d4",
+        "mirror_repository": "ariesyous/projectbluebean",
+        "mirror_commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "size_bytes": 2197748
+      },
+      "weapon": {
+        "style": "compact-rifle",
+        "bone": "Fist.R",
+        "forward": [
+          0,
+          -1,
+          -0.08
+        ],
+        "grip_offset": [
+          0,
+          -0.01,
+          0.01
+        ]
+      },
+      "actions": {
+        "idle": "Idle",
+        "run": "Walk",
+        "attack": "Shoot_OneHanded",
+        "hit": "RecieveHit",
+        "death": "Death"
+      },
+      "render": {
+        "ortho_scale": 7.5,
+        "target_height": 1.45
+      },
+      "validation": {
+        "run_id": 34676331151,
+        "artifact_id": 10292517429,
+        "frame_count": 232,
+        "master_minimum_margin_px": 40,
+        "median_bbox_area_px2": 2079,
+        "median_bbox_width_px": 34.5,
+        "phone_qa_pass": true,
+        "explicit_weapon_geometry_pass": true,
+        "android_runtime_run_id": 34676647378,
+        "android_visual_artifact_id": 10292557790,
+        "android_visual_qa_pass": true
+      }
     }
   }
 }
