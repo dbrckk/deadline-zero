@@ -9,7 +9,9 @@ public final class CloudSaveConflictResolver {
         if (remote == null) return requireValid(local, Decision.USE_LOCAL);
         requireValid(local, Decision.USE_LOCAL);
         requireValid(remote, Decision.USE_REMOTE);
-        if (local.sha256.equals(remote.sha256)) return Decision.IDENTICAL;
+        if (local.schemaVersion == remote.schemaVersion && local.payload.equals(remote.payload)) {
+            return Decision.IDENTICAL;
+        }
         if (local.revision != remote.revision) return local.revision > remote.revision ? Decision.USE_LOCAL : Decision.USE_REMOTE;
         if (local.updatedAtEpochMillis != remote.updatedAtEpochMillis) {
             return local.updatedAtEpochMillis > remote.updatedAtEpochMillis ? Decision.USE_LOCAL : Decision.USE_REMOTE;
