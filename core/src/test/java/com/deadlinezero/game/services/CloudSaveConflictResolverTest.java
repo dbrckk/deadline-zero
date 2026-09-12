@@ -18,10 +18,24 @@ final class CloudSaveConflictResolverTest {
         assertEquals(CloudSaveConflictResolver.Decision.USE_REMOTE, CloudSaveConflictResolver.resolve(local, remote));
     }
 
-    @Test void samePayloadIsIdentical() {
+    @Test void newerRevisionWinsEvenWhenPayloadMatches() {
         CloudSaveSnapshot local = CloudSaveSnapshot.create(1, 2, 1000L, "a", "same");
         CloudSaveSnapshot remote = CloudSaveSnapshot.create(1, 3, 2000L, "b", "same");
+        assertEquals(CloudSaveConflictResolver.Decision.USE_REMOTE, CloudSaveConflictResolver.resolve(local, remote));
+    }
+
+    @Test void exactSnapshotIsIdentical() {
+        CloudSaveSnapshot local = CloudSaveSnapshot.create(1, 2, 1000L, "a", "same");
+        CloudSaveSnapshot remote = CloudSaveSnapshot.restore(
+            local.schemaVersion, local.revision, local.updatedAtEpochMillis, local.deviceId, local.payload, local.sha256);
         assertEquals(CloudSaveConflictResolver.Decision.IDENTICAL, CloudSaveConflictResolver.resolve(local, remote));
+    }
+
+    @Test void nullSideUsesValidSnapshot() {
+        CloudSaveSnapshot local = CloudSaveSnapshot.create(1, 1, 1000L, "a", "payload");
+        assertEquals(CloudSaveConflictResolver.Decision.USE_LOCAL, CloudSaveConflictResolver.resolve(local, null));
+        assertEquals(CloudSaveConflictResolver.Decision.USE_REMOTE, CloudSaveConflictResolver.resolve(null, local));
+        assertEquals(CloudSaveConflictResolver.Decision.IDENTICAL, CloudSaveConflictResolver.resolve(null, null));
     }
 
     @Test void tamperedRevisionInvalidatesIntegrity() {
@@ -30,9 +44,11 @@ final class CloudSaveConflictResolverTest {
         assertFalse(tampered.integrityValid());
         assertThrows(IllegalArgumentException.class,
             () -> CloudSaveConflictResolver.resolve(original, tampered));
+        assertThrows(IllegalArgumentException.class,
+            () -> CloudSaveConflictResolver.resolve(tampered, original));
     }
 
-    @Test void schemaIsPartOfPayloadIdentity() {
+    @Test void schemaIsPartOfConflictOrdering() {
         CloudSaveSnapshot local = CloudSaveSnapshot.create(1, 2, 1000L, "a", "same");
         CloudSaveSnapshot remote = CloudSaveSnapshot.create(2, 2, 1000L, "a", "same");
         assertEquals(CloudSaveConflictResolver.Decision.USE_REMOTE, CloudSaveConflictResolver.resolve(local, remote));
