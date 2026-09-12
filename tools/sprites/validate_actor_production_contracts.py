@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -79,8 +80,27 @@ def main() -> None:
             manifest = json.loads(path.read_text(encoding="utf-8"))
             if manifest.get("actor") != actor:
                 fail(f"{actor}: manifest actor mismatch: {manifest.get('actor')!r}")
+            if manifest.get("root") != root:
+                fail(f"{actor}: manifest root mismatch: {manifest.get('root')!r} != {root!r}")
             if manifest.get("frame_count") != total:
                 fail(f"{actor}: manifest frame_count mismatch: {manifest.get('frame_count')!r}")
+            if manifest.get("cell") != contract.get("cell"):
+                fail(f"{actor}: manifest cell mismatch: {manifest.get('cell')!r}")
+            if manifest.get("directions") != directions:
+                fail(f"{actor}: manifest directions mismatch: {manifest.get('directions')!r}")
+            if manifest.get("animations") != animations:
+                fail(f"{actor}: manifest animations mismatch: {manifest.get('animations')!r}")
+            if manifest.get("png") != Path(png).name:
+                fail(f"{actor}: manifest PNG name mismatch: {manifest.get('png')!r} != {Path(png).name!r}")
+            expected_png_sha256 = manifest.get("png_sha256")
+            if not isinstance(expected_png_sha256, str) or len(expected_png_sha256) != 64:
+                fail(f"{actor}: manifest missing valid png_sha256")
+            actual_png_sha256 = hashlib.sha256((ROOT / png).read_bytes()).hexdigest()
+            if actual_png_sha256 != expected_png_sha256:
+                fail(
+                    f"{actor}: published PNG sha256 mismatch: "
+                    f"{actual_png_sha256} != {expected_png_sha256}"
+                )
 
         for direction in directions:
             for animation, count in animations.items():
