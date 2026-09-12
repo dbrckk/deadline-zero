@@ -116,18 +116,11 @@ def main() -> None:
                             f"{manifest.get(manifest_key)!r} != {source.get(contract_key)!r}"
                         )
 
-            published_from_run = manifest.get("published_from_run")
-            validation_run = manifest.get("validation_run")
-            if validation_run is not None and published_from_run is not None:
-                if validation_run != published_from_run:
-                    fail(
-                        f"{actor}: manifest publication evidence mismatch: "
-                        f"validation_run={validation_run!r} != published_from_run={published_from_run!r}"
-                    )
-            validation_artifact_id = manifest.get("validation_artifact_id")
-            if validation_artifact_id is not None:
-                if not isinstance(validation_artifact_id, int) or validation_artifact_id <= 0:
-                    fail(f"{actor}: invalid manifest validation_artifact_id: {validation_artifact_id!r}")
+            for evidence_key in ("published_from_run", "validation_run", "validation_artifact_id"):
+                evidence_value = manifest.get(evidence_key)
+                if evidence_value is not None:
+                    if not isinstance(evidence_value, int) or evidence_value <= 0:
+                        fail(f"{actor}: invalid manifest {evidence_key}: {evidence_value!r}")
 
         for direction in directions:
             for animation, count in animations.items():
