@@ -200,6 +200,69 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesPhaseStalkerGameplayAndAttackFrames() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for PHASE STALKER visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(20);
+                injectPhaseStalker((GameScreen) game.getScreen());
+            });
+            Thread.sleep(900L);
+            capture("phase-stalker-gameplay.png");
+            runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
+            Thread.sleep(500L);
+            capture("phase-stalker-crowd.png");
+            runOnGameThread(activity, () -> forcePhaseStalkerAttack((GameScreen) game(activity).getScreen()));
+            Thread.sleep(80L);
+            capture("phase-stalker-attack.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectPhaseStalker(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            Enemy stalker = new Enemy(Enemy.Type.PHANTOM, 0f, 3.2f, 500_000f, .02f, .56f, 0f, 1);
+            assertTrue("stage 20 PHANTOM must resolve to PHASE STALKER",
+                stalker.biomeIdentity() == BiomeEnemyRoster.Identity.PHASE_STALKER);
+            enemies.add(stalker);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject PHASE STALKER for visual QA", exception);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void forcePhaseStalkerAttack(GameScreen screen) {
+        try {
+            Field enemiesField = GameScreen.class.getDeclaredField("enemies");
+            enemiesField.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
+            Enemy stalker = null;
+            for (Enemy enemy : enemies) {
+                if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.PHASE_STALKER) {
+                    stalker = enemy;
+                    break;
+                }
+            }
+            assertNotNull("PHASE STALKER missing before attack capture", stalker);
+            Field stateField = stalker.attack.getClass().getDeclaredField("state");
+            Field timerField = stalker.attack.getClass().getDeclaredField("timer");
+            stateField.setAccessible(true);
+            timerField.setAccessible(true);
+            stateField.set(stalker.attack, EnemyState.TELEGRAPHING);
+            timerField.setFloat(stalker.attack, 10f);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to force PHASE STALKER attack animation for visual QA", exception);
+        }
+    }
+
+    @Test
     public void capturesSlagGuardGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
