@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "slag-guard-golden-knight-shield": {
+      "actor": "slag_guard",
+      "role": "biome-slag-guard",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/Knight_Golden_Male.blend",
+        "git_blob_sha": "9cc053899acbfca453669435ead43a10f633f64b",
+        "size_bytes": 0
+      },
+      "actions": {
+        "idle": [
+          "Idle"
+        ],
+        "run": [
+          "Walk",
+          "Run"
+        ],
+        "attack": [
+          "SwordSlash",
+          "Punch"
+        ],
+        "hit": [
+          "RecieveHit",
+          "ReceiveHit",
+          "HitReact",
+          "Hit"
+        ],
+        "death": [
+          "Death"
+        ]
+      },
+      "defensive_prop": {
+        "provider": "KayKit",
+        "pack": "Skeletons 1.1 FREE",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/KayKit_Skeletons_1.1_FREE/assets/obj/Skeleton_Shield_Large_A.obj",
+        "git_blob_sha": "d4a7c7db6e40b7373c106bfcaa44cdb2eb601304",
+        "size_bytes": 0,
+        "role": "shield",
+        "bone": "Fist.L",
+        "forward": [
+          0,
+          -1,
+          0
+        ],
+        "grip_offset": [
+          0,
+          -0.02,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": 0.8
+      },
+      "render": {
+        "target_height": 1.55,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "enemy/biome/slag_guard"
+      },
+      "selection_goal": "SLAG GUARD authored Cinder Foundry shield enemy: bulky armored humanoid silhouette with native melee attack, explicit large shield geometry, material integrity, and strong phone-scale distinction from generic SHIELDED, CINDER GUNNER and FORGE HOUND.",
+      "role_gate": {
+        "requires_native_melee_attack": true,
+        "requires_explicit_defensive_prop": true,
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "metrics": {
+          "min_median_bbox_area_px2": 2200,
+          "min_median_bbox_width_px": 38
+        }
+      }
+    }
+  }
+}
