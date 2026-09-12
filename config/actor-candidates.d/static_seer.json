@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "static-seer-hywirl": {
+      "actor": "static_seer",
+      "role": "biome-static-seer",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "repository": "mlflabs/brain",
+        "commit": "54b3258a7ab6558fee969100aafb24ff285e0f0e",
+        "path": "assets/Ultimate Monsters/Flying/glTF/Hywirl.gltf",
+        "git_blob_sha": "3de288e2b4b208f9fe019b38ef502f104f88877c"
+      },
+      "actions": {
+        "idle": [
+          "Flying_Idle"
+        ],
+        "run": [
+          "Fast_Flying"
+        ],
+        "attack": [
+          "Punch",
+          "Headbutt"
+        ],
+        "hit": [
+          "HitReact"
+        ],
+        "death": [
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 1.55,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "enemy/biome/static_seer"
+      },
+      "selection_goal": "STATIC SEER Null Sector ranged identity: alien floating caster silhouette, native flying locomotion and native attack motion, material integrity, and strong phone-scale distinction from PHASE STALKER and humanoid ranged enemies.",
+      "role_gate": {
+        "requires_native_flying_locomotion": true,
+        "requires_native_melee_attack": true,
+        "requires_non_humanoid_identity": true,
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "metrics": {
+          "min_median_bbox_area_px2": 2200,
+          "min_median_bbox_width_px": 38
+        }
+      }
+    }
+  }
+}
