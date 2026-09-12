@@ -200,6 +200,69 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesStaticSeerGameplayAndAttackFrames() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for STATIC SEER visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(20);
+                injectStaticSeer((GameScreen) game.getScreen());
+            });
+            Thread.sleep(900L);
+            capture("static-seer-gameplay.png");
+            runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
+            Thread.sleep(500L);
+            capture("static-seer-crowd.png");
+            runOnGameThread(activity, () -> forceStaticSeerAttack((GameScreen) game(activity).getScreen()));
+            Thread.sleep(80L);
+            capture("static-seer-attack.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectStaticSeer(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            Enemy seer = new Enemy(Enemy.Type.RANGED, 0f, 3.2f, 500_000f, .02f, .56f, 0f, 1);
+            assertTrue("stage 20 RANGED must resolve to STATIC SEER",
+                seer.biomeIdentity() == BiomeEnemyRoster.Identity.STATIC_SEER);
+            enemies.add(seer);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject STATIC SEER for visual QA", exception);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void forceStaticSeerAttack(GameScreen screen) {
+        try {
+            Field enemiesField = GameScreen.class.getDeclaredField("enemies");
+            enemiesField.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
+            Enemy seer = null;
+            for (Enemy enemy : enemies) {
+                if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.STATIC_SEER) {
+                    seer = enemy;
+                    break;
+                }
+            }
+            assertNotNull("STATIC SEER missing before attack capture", seer);
+            Field stateField = seer.attack.getClass().getDeclaredField("state");
+            Field timerField = seer.attack.getClass().getDeclaredField("timer");
+            stateField.setAccessible(true);
+            timerField.setAccessible(true);
+            stateField.set(seer.attack, EnemyState.TELEGRAPHING);
+            timerField.setFloat(seer.attack, 10f);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to force STATIC SEER attack animation for visual QA", exception);
+        }
+    }
+
+    @Test
     public void capturesPhaseStalkerGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
