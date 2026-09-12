@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "null-ward-ghost-skull": {
+      "actor": "null_ward",
+      "role": "biome-null-ward",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "repository": "mlflabs/brain",
+        "commit": "54b3258a7ab6558fee969100aafb24ff285e0f0e",
+        "path": "assets/Ultimate Monsters/Flying/glTF/Ghost_Skull.gltf",
+        "git_blob_sha": "8b6af9bca7bc05cc8056695b7ba75a1bf317148d"
+      },
+      "actions": {
+        "idle": [
+          "Flying_Idle"
+        ],
+        "run": [
+          "Fast_Flying"
+        ],
+        "attack": [
+          "Headbutt",
+          "Punch"
+        ],
+        "hit": [
+          "HitReact"
+        ],
+        "death": [
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 1.65,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "enemy/biome/null_ward"
+      },
+      "selection_goal": "NULL WARD Null Sector regenerator identity: spectral skull/ward silhouette with native flying locomotion and attack, strong defensive supernatural read, material integrity, and phone-scale distinction from PHASE STALKER and STATIC SEER.",
+      "role_gate": {
+        "requires_native_flying_locomotion": true,
+        "requires_native_melee_attack": true,
+        "requires_non_humanoid_identity": true,
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "metrics": {
+          "min_median_bbox_area_px2": 2200,
+          "min_median_bbox_width_px": 38
+        }
+      }
+    }
+  }
+}
