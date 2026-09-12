@@ -11,11 +11,13 @@ Production characters, 8-direction animation, enemy animation sets, environment 
 
 ### Roster production status
 
-- 19/24 actors are merged to `main`; actor 20, `CINDER_GUNNER`, is accepted on PR #66 pending final post-acceptance CI.
-- CINDER GUNNER source is pinned by Git blob and SHA-256, with explicit configured rifle geometry and native `Shoot_OneHanded` semantics.
-- Production contract: 232 frames, 8 directions × 29 frames, 96 px cells.
-- Enforced phone-scale gates: median bbox area ≥1850 px² and width ≥32 px; validated result is 2079 px² / 34.5 px with 40 px minimum master margin.
-- Final Android gameplay/crowd/attack evidence from Verify #1737 passed semantic review; merge remains gated on all final workflows for the accepted head.
+- 20/24 actors are merged to `main`.
+- Actor 21, `SLAG_GUARD`, is in candidate validation on branch `roster-actor-21-slag-guard`.
+- Initial source: Quaternius `Knight_Golden_Male.blend`, pinned by immutable commit and Git blob.
+- Defensive identity uses an explicit CC0 KayKit large shield attached to the left-hand bone; the shield source is independently pinned by Git blob.
+- Shared production contract remains 232 frames, 8 directions × 29 frames, 96 px cells.
+- Heavy-role phone gates remain strict: median bbox area ≥2200 px² and width ≥38 px.
+- Merge requires source/action validation, production staging, full final CI, dedicated Android gameplay/crowd/attack capture, and semantic visual review.
 
 ## P3 — Meta game
 Inventory, equipment rarity, character roster, weapon progression, missions, achievements, daily/weekly systems, offline save migration, cloud-save adapter.

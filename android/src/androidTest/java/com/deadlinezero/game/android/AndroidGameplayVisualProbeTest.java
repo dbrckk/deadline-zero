@@ -200,6 +200,69 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesSlagGuardGameplayAndAttackFrames() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for SLAG GUARD visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(10);
+                injectSlagGuard((GameScreen) game.getScreen());
+            });
+            Thread.sleep(900L);
+            capture("slag-guard-gameplay.png");
+            runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
+            Thread.sleep(500L);
+            capture("slag-guard-crowd.png");
+            runOnGameThread(activity, () -> forceSlagGuardAttack((GameScreen) game(activity).getScreen()));
+            Thread.sleep(80L);
+            capture("slag-guard-attack.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectSlagGuard(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            Enemy guard = new Enemy(Enemy.Type.SHIELDED, 0f, 3.2f, 500_000f, .02f, .56f, 0f, 1);
+            assertTrue("stage 10 SHIELDED must resolve to SLAG GUARD",
+                guard.biomeIdentity() == BiomeEnemyRoster.Identity.SLAG_GUARD);
+            enemies.add(guard);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject SLAG GUARD for visual QA", exception);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void forceSlagGuardAttack(GameScreen screen) {
+        try {
+            Field enemiesField = GameScreen.class.getDeclaredField("enemies");
+            enemiesField.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
+            Enemy guard = null;
+            for (Enemy enemy : enemies) {
+                if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.SLAG_GUARD) {
+                    guard = enemy;
+                    break;
+                }
+            }
+            assertNotNull("SLAG GUARD missing before attack capture", guard);
+            Field stateField = guard.attack.getClass().getDeclaredField("state");
+            Field timerField = guard.attack.getClass().getDeclaredField("timer");
+            stateField.setAccessible(true);
+            timerField.setAccessible(true);
+            stateField.set(guard.attack, EnemyState.TELEGRAPHING);
+            timerField.setFloat(guard.attack, 10f);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to force SLAG GUARD attack animation for visual QA", exception);
+        }
+    }
+
+    @Test
     public void capturesForgeHoundGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
