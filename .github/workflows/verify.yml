@@ -79,14 +79,59 @@ jobs:
             adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesForgeHoundGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCinderGunnerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesSlagGuardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesPhaseStalkerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesStaticSeerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesNullWardGameplayAndAttackFrames com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/production-roster-visual-probe.txt
             grep -q 'OK (6 tests)' /tmp/production-roster-visual-probe.txt
             mkdir -p build/android-visual-qa
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/forge-hound-gameplay.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/forge-hound-gameplay.png build/android-visual-qa/forge-hound-gameplay.png
+            test -s build/android-visual-qa/forge-hound-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/forge-hound-crowd.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/forge-hound-crowd.png build/android-visual-qa/forge-hound-crowd.png
+            test -s build/android-visual-qa/forge-hound-crowd.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/forge-hound-attack.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/forge-hound-attack.png build/android-visual-qa/forge-hound-attack.png
+            test -s build/android-visual-qa/forge-hound-attack.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/cinder-gunner-gameplay.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/cinder-gunner-gameplay.png build/android-visual-qa/cinder-gunner-gameplay.png
+            test -s build/android-visual-qa/cinder-gunner-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/cinder-gunner-crowd.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/cinder-gunner-crowd.png build/android-visual-qa/cinder-gunner-crowd.png
+            test -s build/android-visual-qa/cinder-gunner-crowd.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/cinder-gunner-attack.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/cinder-gunner-attack.png build/android-visual-qa/cinder-gunner-attack.png
+            test -s build/android-visual-qa/cinder-gunner-attack.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/slag-guard-gameplay.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/slag-guard-gameplay.png build/android-visual-qa/slag-guard-gameplay.png
+            test -s build/android-visual-qa/slag-guard-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/slag-guard-crowd.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/slag-guard-crowd.png build/android-visual-qa/slag-guard-crowd.png
+            test -s build/android-visual-qa/slag-guard-crowd.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/slag-guard-attack.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/slag-guard-attack.png build/android-visual-qa/slag-guard-attack.png
+            test -s build/android-visual-qa/slag-guard-attack.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/phase-stalker-gameplay.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/phase-stalker-gameplay.png build/android-visual-qa/phase-stalker-gameplay.png
+            test -s build/android-visual-qa/phase-stalker-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/phase-stalker-crowd.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/phase-stalker-crowd.png build/android-visual-qa/phase-stalker-crowd.png
+            test -s build/android-visual-qa/phase-stalker-crowd.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/phase-stalker-attack.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/phase-stalker-attack.png build/android-visual-qa/phase-stalker-attack.png
+            test -s build/android-visual-qa/phase-stalker-attack.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/static-seer-gameplay.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/static-seer-gameplay.png build/android-visual-qa/static-seer-gameplay.png
+            test -s build/android-visual-qa/static-seer-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/static-seer-crowd.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/static-seer-crowd.png build/android-visual-qa/static-seer-crowd.png
+            test -s build/android-visual-qa/static-seer-crowd.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/static-seer-attack.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/static-seer-attack.png build/android-visual-qa/static-seer-attack.png
+            test -s build/android-visual-qa/static-seer-attack.png
             adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/null-ward-gameplay.png
-            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/null-ward-crowd.png
-            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/null-ward-attack.png
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/null-ward-gameplay.png build/android-visual-qa/null-ward-gameplay.png
-            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/null-ward-crowd.png build/android-visual-qa/null-ward-crowd.png
-            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/null-ward-attack.png build/android-visual-qa/null-ward-attack.png
             test -s build/android-visual-qa/null-ward-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/null-ward-crowd.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/null-ward-crowd.png build/android-visual-qa/null-ward-crowd.png
             test -s build/android-visual-qa/null-ward-crowd.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/null-ward-attack.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/null-ward-attack.png build/android-visual-qa/null-ward-attack.png
             test -s build/android-visual-qa/null-ward-attack.png
             adb shell am force-stop com.deadlinezero.game
             test -z "$(adb shell pidof com.deadlinezero.game)"
