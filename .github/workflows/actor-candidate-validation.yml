@@ -25,7 +25,29 @@ permissions:
   contents: read
 
 jobs:
+  candidate-state:
+    runs-on: ubuntu-latest
+    outputs:
+      active: ${{ steps.state.outputs.active }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: state
+        name: Detect active actor candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate="$(tr -d '[:space:]' < config/active-actor-candidate.txt)"
+          if [[ -n "$candidate" && "$candidate" != "none" ]]; then
+            echo "active=true" >> "$GITHUB_OUTPUT"
+            echo "Active actor candidate: $candidate"
+          else
+            echo "active=false" >> "$GITHUB_OUTPUT"
+            echo "Actor production queue complete; no active candidate"
+          fi
+
   validate-candidate:
+    needs: candidate-state
+    if: needs.candidate-state.outputs.active == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

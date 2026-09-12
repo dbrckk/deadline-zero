@@ -55,6 +55,22 @@ jobs:
           from pathlib import Path
 
           candidate_id = Path('config/active-actor-candidate.txt').read_text().strip()
+          if not candidate_id or candidate_id == 'none':
+              print('eligible=false')
+              print('candidate_id=none')
+              print('actor=')
+              print('atlas_root=')
+              print('evidence_artifact_id=')
+              print('validation_run_id=')
+              print('source_sha256=')
+              print('source_git_blob=')
+              print('source_commit=')
+              print('min_area=')
+              print('max_area=')
+              print('min_width=')
+              print('max_width=')
+              print('min_attack_extension=')
+              raise SystemExit(0)
           registry = json.loads(Path('config/actor-candidates.json').read_text())
           candidates = dict(registry.get('candidates', {}))
           fragments = Path('config/actor-candidates.d')
