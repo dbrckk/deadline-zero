@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "cinder-gunner-blue-soldier-female-rifle": {
+      "actor": "cinder_gunner",
+      "role": "biome-cinder-gunner",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Animated Character Pack",
+        "license": "CC0 1.0",
+        "repository": "ariesyous/projectbluebean",
+        "commit": "4769997aaea204c66735813e2bf61dc3c94e7631",
+        "path": "assets/Ultimate Animated Character Pack - Nov 2019/Blends/BlueSoldier_Female.blend",
+        "git_blob_sha": "ceaceb30aa5389cea266acf3becdae863c5820d4",
+        "size_bytes": 0,
+        "sha256": ""
+      },
+      "actions": {
+        "idle": ["Idle"],
+        "run": ["Walk", "Run"],
+        "attack": ["Shoot_OneHanded", "Shoot", "Weapon", "Attack"],
+        "hit": ["RecieveHit", "ReceiveHit", "HitReact", "Hit"],
+        "death": ["Death"]
+      },
+      "weapon": {
+        "style": "compact-rifle",
+        "bone": "Fist.R",
+        "forward": [0.0, -1.0, -0.08],
+        "grip_offset": [0.0, -0.01, 0.01]
+      },
+      "render": {
+        "target_height": 1.45,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "enemy/biome/cinder_gunner"
+      },
+      "selection_goal": "CINDER GUNNER authored Cinder Foundry ranged enemy: clearly armed humanoid silhouette with native ranged attack, explicit rifle geometry, material integrity, and phone-scale distinction from generic RANGED, FORGE HOUND and SLAG GUARD.",
+      "role_gate": {
+        "requires_native_ranged_attack": true,
+        "requires_visible_weapon_or_projectile_source": true,
+        "requires_explicit_weapon_geometry": true,
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "min_median_bbox_area_px2": 1850,
+        "min_median_bbox_width_px": 32
+      }
+    }
+  }
+}
