@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "candidates": {
+    "forge-hound-ultimate-dog": {
+      "actor": "forge_hound",
+      "role": "biome-forge-hound",
+      "source": {
+        "provider": "Quaternius",
+        "pack": "Ultimate Monsters",
+        "license": "CC0 1.0",
+        "repository": "mlflabs/brain",
+        "commit": "54b3258a7ab6558fee969100aafb24ff285e0f0e",
+        "path": "assets/Ultimate Monsters/Blob/glTF/Dog.gltf",
+        "git_blob_sha": "1ed34fa3b17358a766707bc59d3798d3f1304091",
+        "size_bytes": 142124,
+        "sha256": "21ed475bbf4d5fb7016085290f79663ad7107aedd2a5856318f2716c7ecc6402"
+      },
+      "actions": {
+        "idle": [
+          "Idle"
+        ],
+        "run": [
+          "Run",
+          "Walk"
+        ],
+        "attack": [
+          "Bite_Front"
+        ],
+        "hit": [
+          "HitRecieve",
+          "HitReact"
+        ],
+        "death": [
+          "Death"
+        ]
+      },
+      "render": {
+        "target_height": 1.35,
+        "ortho_scale": 7.5,
+        "horizontal_anchor": "union-center"
+      },
+      "production": {
+        "atlas_root": "enemy/biome/forge_hound"
+      },
+      "selection_goal": "FORGE HOUND authored biome enemy: aggressive non-humanoid hound silhouette with native bite combat animation, strong directional readability and clear distinction from humanoid enemies, REGNERATOR and PHANTOM at phone scale.",
+      "role_gate": {
+        "requires_phone_scale_distinction": true,
+        "requires_material_integrity": true,
+        "requires_non_humanoid_identity": true,
+        "requires_native_bite_attack": true,
+        "min_median_bbox_area_px2": 2200,
+        "min_median_bbox_width_px": 38
+      },
+      "verdict": {
+        "status": "qualified",
+        "validation_run_id": 34656325603,
+        "validation_artifact_id": 10285836366
+      }
+    }
+  }
+}
