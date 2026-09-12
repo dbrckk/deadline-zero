@@ -19,6 +19,14 @@ def fail(message: str) -> None:
     raise SystemExit(message)
 
 
+def validate_complete_roster(actors) -> None:
+    accepted_names = {actor for actor, spec in actors.items() if spec.get("status") == "accepted"}
+    if accepted_names != EXPECTED_COMPLETE_ROSTER:
+        missing = sorted(EXPECTED_COMPLETE_ROSTER - accepted_names)
+        unexpected = sorted(accepted_names - EXPECTED_COMPLETE_ROSTER)
+        fail(f"complete roster contract mismatch: missing={missing}, unexpected={unexpected}")
+
+
 def main() -> None:
     data = json.loads(CONFIG.read_text(encoding="utf-8"))
     if data.get("schema_version") != 1:
