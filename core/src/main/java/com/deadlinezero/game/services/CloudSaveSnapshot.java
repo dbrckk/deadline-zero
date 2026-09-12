@@ -15,7 +15,7 @@ public final class CloudSaveSnapshot {
 
     private CloudSaveSnapshot(int schemaVersion, long revision, long updatedAtEpochMillis,
                               String deviceId, String payload, String sha256) {
-        if (schemaVersion < 0) throw new IllegalArgumentException("schemaVersion");
+        if (schemaVersion <= 0) throw new IllegalArgumentException("schemaVersion");
         if (revision < 0L) throw new IllegalArgumentException("revision");
         if (updatedAtEpochMillis < 0L) throw new IllegalArgumentException("updatedAtEpochMillis");
         if (deviceId == null || deviceId.isBlank()) throw new IllegalArgumentException("deviceId");
@@ -32,8 +32,10 @@ public final class CloudSaveSnapshot {
 
     public static CloudSaveSnapshot create(int schemaVersion, long revision, long updatedAtEpochMillis,
                                            String deviceId, String payload) {
+        String normalizedDeviceId = deviceId == null ? null : deviceId.trim();
         return new CloudSaveSnapshot(schemaVersion, revision, updatedAtEpochMillis,
-            deviceId, payload, digest(payload));
+            normalizedDeviceId, payload,
+            digest(schemaVersion, revision, updatedAtEpochMillis, normalizedDeviceId, payload));
     }
 
     public static CloudSaveSnapshot restore(int schemaVersion, long revision, long updatedAtEpochMillis,
@@ -43,13 +45,16 @@ public final class CloudSaveSnapshot {
     }
 
     public boolean integrityValid() {
-        return sha256.equals(digest(payload));
+        return sha256.equals(digest(schemaVersion, revision, updatedAtEpochMillis, deviceId, payload));
     }
 
-    private static String digest(String payload) {
+    private static String digest(int schemaVersion, long revision, long updatedAtEpochMillis,
+                                 String deviceId, String payload) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] bytes = digest.digest(payload.getBytes(StandardCharsets.UTF_8));
+            String canonical = schemaVersion + "\n" + revision + "\n" + updatedAtEpochMillis + "\n"
+                + deviceId.length() + ":" + deviceId + "\n" + payload.length() + ":" + payload;
+            byte[] bytes = digest.digest(canonical.getBytes(StandardCharsets.UTF_8));
             StringBuilder out = new StringBuilder(64);
             for (byte value : bytes) out.append(String.format("%02x", value & 0xff));
             return out.toString();
