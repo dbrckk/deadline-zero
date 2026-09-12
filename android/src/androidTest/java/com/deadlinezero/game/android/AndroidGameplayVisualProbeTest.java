@@ -200,6 +200,69 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesNullWardGameplayAndAttackFrames() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for NULL WARD visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(20);
+                injectNullWard((GameScreen) game.getScreen());
+            });
+            Thread.sleep(900L);
+            capture("null-ward-gameplay.png");
+            runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
+            Thread.sleep(500L);
+            capture("null-ward-crowd.png");
+            runOnGameThread(activity, () -> forceNullWardAttack((GameScreen) game(activity).getScreen()));
+            Thread.sleep(80L);
+            capture("null-ward-attack.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectNullWard(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            Enemy ward = new Enemy(Enemy.Type.REGENERATOR, 0f, 3.2f, 500_000f, .02f, .56f, 0f, 1);
+            assertTrue("stage 20 REGENERATOR must resolve to NULL WARD",
+                ward.biomeIdentity() == BiomeEnemyRoster.Identity.NULL_WARD);
+            enemies.add(ward);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject NULL WARD for visual QA", exception);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void forceNullWardAttack(GameScreen screen) {
+        try {
+            Field enemiesField = GameScreen.class.getDeclaredField("enemies");
+            enemiesField.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
+            Enemy ward = null;
+            for (Enemy enemy : enemies) {
+                if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.NULL_WARD) {
+                    ward = enemy;
+                    break;
+                }
+            }
+            assertNotNull("NULL WARD missing before attack capture", ward);
+            Field stateField = ward.attack.getClass().getDeclaredField("state");
+            Field timerField = ward.attack.getClass().getDeclaredField("timer");
+            stateField.setAccessible(true);
+            timerField.setAccessible(true);
+            stateField.set(ward.attack, EnemyState.TELEGRAPHING);
+            timerField.setFloat(ward.attack, 10f);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to force NULL WARD attack animation for visual QA", exception);
+        }
+    }
+
+    @Test
     public void capturesStaticSeerGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
