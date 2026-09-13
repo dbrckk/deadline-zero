@@ -17,6 +17,7 @@ import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.abilities.AbilitySystem;
 import com.deadlinezero.game.abilities.AbilityType;
 import com.deadlinezero.game.ai.BossAttackPatternCatalog;
+import com.deadlinezero.game.ai.BossIdentity;
 import com.deadlinezero.game.ai.BossVariantStats;
 import com.deadlinezero.game.ai.EnemyPatternCatalog;
 import com.deadlinezero.game.ai.EnemyState;
@@ -211,8 +212,14 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     static Enemy.Type bossSummonType(boolean nullArchon, boolean revenant, int phase, int index) {
+        return bossSummonType(nullArchon ? BossIdentity.NULL_ARCHON
+            : revenant ? BossIdentity.REVENANT : BossIdentity.ALPHA, phase, index);
+    }
+
+    static Enemy.Type bossSummonType(BossIdentity identity, int phase, int index) {
+        BossIdentity safeIdentity = identity == null ? BossIdentity.ALPHA : identity;
         int safeIndex = Math.max(0, index);
-        if (nullArchon) {
+        if (safeIdentity == BossIdentity.NULL_ARCHON) {
             if (phase >= 3) {
                 return switch (safeIndex % 3) {
                     case 0 -> Enemy.Type.PHANTOM;
@@ -222,32 +229,48 @@ public final class GameScreen extends ScreenAdapter {
             }
             return safeIndex % 3 == 1 ? Enemy.Type.RANGED : Enemy.Type.PHANTOM;
         }
+        if (safeIdentity == BossIdentity.FROST_COLOSSUS) {
+            if (phase >= 3) {
+                return switch (safeIndex % 3) {
+                    case 0 -> Enemy.Type.SHIELDED;
+                    case 1 -> Enemy.Type.BRUTE;
+                    default -> Enemy.Type.RANGED;
+                };
+            }
+            return safeIndex % 2 == 0 ? Enemy.Type.SHIELDED : Enemy.Type.BRUTE;
+        }
+        boolean revenant = safeIdentity == BossIdentity.REVENANT;
         boolean rangedSlot = phase >= 3 && (revenant ? safeIndex % 2 == 0 : safeIndex % 3 == 0);
         return rangedSlot ? Enemy.Type.RANGED : Enemy.Type.RUNNER;
     }
 
     private void spawnBossMinions(Enemy boss, int phase) {
         int count = boss.bossCombat == null ? (phase >= 3 ? 6 : 3) : boss.bossCombat.summonCount(phase);
-        boolean revenant = boss.bossCombat != null && boss.bossCombat.revenant();
-        boolean nullArchon = boss.bossCombat != null && boss.bossCombat.nullArchon();
+        BossIdentity identity = boss.bossCombat == null ? BossIdentity.ALPHA : boss.bossCombat.identity();
+        boolean revenant = identity == BossIdentity.REVENANT;
+        boolean nullArchon = identity == BossIdentity.NULL_ARCHON;
+        boolean frostColossus = identity == BossIdentity.FROST_COLOSSUS;
         for (int i = 0; i < count && enemies.size < GameConfig.MAX_ENEMIES; i++) {
             float angle = i * (MathUtils.PI2 / count) + MathUtils.random(-.18f, .18f);
             float dist = 2.6f + MathUtils.random(0f, 1.2f);
             float x = boss.position.x + MathUtils.cos(angle) * dist;
             float y = boss.position.y + MathUtils.sin(angle) * dist;
             float scale = 1f + director.elapsed() / 210f;
-            Enemy.Type type = bossSummonType(nullArchon, revenant, phase, i);
+            Enemy.Type type = bossSummonType(identity, phase, i);
             Enemy minion = switch (type) {
                 case RANGED -> new Enemy(type, x, y, 68f * scale, 2.2f, .42f, 12f, 10);
                 case PHANTOM -> new Enemy(type, x, y, 54f * scale, 3.25f, .40f, 11f, 10);
                 case REGENERATOR -> new Enemy(type, x, y, 92f * scale, 2.05f, .48f, 11f, 12);
+                case SHIELDED -> new Enemy(type, x, y, 125f * scale, 1.72f, .64f, 14f, 16);
+                case BRUTE -> new Enemy(type, x, y, 118f * scale, 1.82f, .68f, 16f, 16);
                 default -> new Enemy(type, x, y, 30f * scale, 4.35f, .34f, 8f, 5);
             };
             enemies.add(minion);
-            impact(x, y, nullArchon ? .82f : .65f, nullArchon ? .22f : .18f,
-                revenant ? VisualTheme.RED : VisualTheme.VIOLET);
+            impact(x, y, nullArchon ? .82f : frostColossus ? .78f : .65f,
+                nullArchon ? .22f : frostColossus ? .20f : .18f,
+                frostColossus ? VisualTheme.CYAN : revenant ? VisualTheme.RED : VisualTheme.VIOLET);
         }
-        addCameraShake(nullArchon ? .22f : (revenant ? .18f : .12f));
+        addCameraShake(nullArchon ? .22f : frostColossus ? .24f : (revenant ? .18f : .12f));
     }
 
     private void bossEnragePulse(Enemy boss) {
@@ -260,10 +283,13 @@ public final class GameScreen extends ScreenAdapter {
             spawnHostileShot(boss, boss.position.x, boss.position.y, i * (360f / shots), speed,
                 boss.contactDamage * .65f, explosive ? .26f : .24f, explosive, explosionRadius);
         }
-        boolean revenant = boss.bossCombat != null && boss.bossCombat.revenant();
-        impact(boss.position.x, boss.position.y, revenant ? 5.8f : 5.1f, .34f,
-            revenant ? VisualTheme.RED : VisualTheme.VIOLET);
-        addCameraShake(revenant ? .46f : .38f);
+        BossIdentity identity = boss.bossCombat == null ? BossIdentity.ALPHA : boss.bossCombat.identity();
+        boolean revenant = identity == BossIdentity.REVENANT;
+        boolean frostColossus = identity == BossIdentity.FROST_COLOSSUS;
+        impact(boss.position.x, boss.position.y,
+            frostColossus ? 6.2f : revenant ? 5.8f : 5.1f, .34f,
+            frostColossus ? VisualTheme.CYAN : revenant ? VisualTheme.RED : VisualTheme.VIOLET);
+        addCameraShake(frostColossus ? .50f : revenant ? .46f : .38f);
     }
 
     private void updatePlayerProjectiles(float dt) {
@@ -333,8 +359,10 @@ public final class GameScreen extends ScreenAdapter {
         }
         if (e.type == Enemy.Type.BOSS) {
             int phase = e.bossPhases == null ? 1 : e.bossPhases.phase();
-            boolean revenant = e.bossCombat != null && e.bossCombat.revenant();
-            BossAttackPatternCatalog.Pattern pattern = BossAttackPatternCatalog.forPhase(revenant, phase);
+            BossIdentity identity = e.bossCombat == null ? BossIdentity.ALPHA : e.bossCombat.identity();
+            boolean revenant = identity == BossIdentity.REVENANT;
+            boolean frostColossus = identity == BossIdentity.FROST_COLOSSUS;
+            BossAttackPatternCatalog.Pattern pattern = BossAttackPatternCatalog.forPhase(identity, phase);
             float base = aim.angleDeg();
             for (int i = 0; i < pattern.shots(); i++) {
                 float angle = pattern.radial()
@@ -347,9 +375,10 @@ public final class GameScreen extends ScreenAdapter {
                     explosive ? .24f : .22f,
                     explosive, explosive ? pattern.explosionRadius() : 0f);
             }
-            impact(e.position.x, e.position.y, revenant ? .82f : .64f, .15f,
-                revenant ? VisualTheme.VIOLET : VisualTheme.RED);
-            addCameraShake(.18f + phase * .05f + (revenant ? .04f : 0f));
+            impact(e.position.x, e.position.y,
+                frostColossus ? .92f : revenant ? .82f : .64f, .15f,
+                frostColossus ? VisualTheme.CYAN : revenant ? VisualTheme.VIOLET : VisualTheme.RED);
+            addCameraShake(.18f + phase * .05f + (revenant ? .04f : 0f) + (frostColossus ? .06f : 0f));
         }
     }
 
