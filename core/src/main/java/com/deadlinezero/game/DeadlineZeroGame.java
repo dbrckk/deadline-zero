@@ -24,6 +24,7 @@ import com.deadlinezero.game.meta.StageMissionRules;
 import com.deadlinezero.game.meta.StageRules;
 import com.deadlinezero.game.meta.ThreatProgressionService;
 import com.deadlinezero.game.meta.ThreatTierRules;
+import com.deadlinezero.game.meta.WeeklyService;
 import com.deadlinezero.game.screen.ArsenalScreen;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.GearScreen;
@@ -69,7 +70,9 @@ public final class DeadlineZeroGame extends Game {
         });
         profile = ProfileStore.load();
         EntitlementStore.loadInto(profile);
-        DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
+        long epochDay = System.currentTimeMillis() / DAY_MS;
+        DailyService.refresh(profile, epochDay);
+        WeeklyService.refresh(profile, epochDay);
         profile.survivors.refreshUnlocks(profile);
         services.billing.initialize();
         services.ads.preload();
@@ -133,8 +136,11 @@ public final class DeadlineZeroGame extends Game {
         RunRewardCalculator.Rewards rewards = RunSettlement.apply(profile, kills, secondsSurvived, bossKilled, safeStage);
         long encounterCredits = RunEncounterRuntime.consumeBonusCredits();
         if (encounterCredits > 0L) profile.addCurrency(PlayerProfile.Currency.CREDITS, encounterCredits);
-        DailyService.refresh(profile, System.currentTimeMillis() / DAY_MS);
+        long epochDay = System.currentTimeMillis() / DAY_MS;
+        DailyService.refresh(profile, epochDay);
+        WeeklyService.refresh(profile, epochDay);
         DailyService.recordRun(profile, kills, bossKilled);
+        WeeklyService.recordRun(profile, kills, bossKilled);
         long survivorXp = 35L + Math.max(0, kills) / 4L + safeStage * 12L + (bossKilled ? 80L : 0L);
         profile.survivors.addXp(profile.selectedSurvivor, survivorXp);
 
