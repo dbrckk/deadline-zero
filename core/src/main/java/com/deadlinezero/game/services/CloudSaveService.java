@@ -57,6 +57,8 @@ public final class CloudSaveService {
     }
 
     public DownloadResult applyRemote(String remoteBackup) {
+        var values = ProfileBackupCodec.decode(remoteBackup);
+        if (!ProfileBackupCodec.supportedByCurrentSchema(values)) return DownloadResult.REJECTED_NEWER_SCHEMA;
         return ProfileStore.importBackup(remoteBackup) ? DownloadResult.APPLIED : DownloadResult.REJECTED_NEWER_SCHEMA;
     }
 }
