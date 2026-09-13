@@ -13,7 +13,7 @@ final class BossIdentityArtRoutingTest {
         assertEquals("boss/warden", GameArt.bossRoot(BossIdentity.WARDEN));
         assertEquals("boss/harvester", GameArt.bossRoot(BossIdentity.HARVESTER));
         assertEquals("boss/null_archon", GameArt.bossRoot(BossIdentity.NULL_ARCHON));
-        assertEquals("enemy/elite", GameArt.bossRoot(BossIdentity.FROST_COLOSSUS));
+        assertEquals("boss/warden", GameArt.bossRoot(BossIdentity.FROST_COLOSSUS));
         assertEquals("boss/alpha", GameArt.bossRoot(null));
     }
 
