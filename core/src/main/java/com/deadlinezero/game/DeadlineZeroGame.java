@@ -27,6 +27,7 @@ import com.deadlinezero.game.meta.ThreatTierRules;
 import com.deadlinezero.game.meta.WeeklyService;
 import com.deadlinezero.game.screen.ArsenalScreen;
 import com.deadlinezero.game.screen.GameScreen;
+import com.deadlinezero.game.screen.CloudSaveScreen;
 import com.deadlinezero.game.screen.GearScreen;
 import com.deadlinezero.game.screen.MenuScreen;
 import com.deadlinezero.game.screen.MissionsScreen;
@@ -94,6 +95,7 @@ public final class DeadlineZeroGame extends Game {
     public void showShop() { setScreen(new ShopScreen(this)); }
     public void showSurvivors() { setScreen(new SurvivorScreen(this)); }
     public void showSettings() { setScreen(new SettingsScreen(this)); }
+    public void showCloudSave() { setScreen(new CloudSaveScreen(this)); }
 
     /** Prepares a stable run identity, then asks the player to choose one of three risk/reward contracts. */
     public void startRun() {
