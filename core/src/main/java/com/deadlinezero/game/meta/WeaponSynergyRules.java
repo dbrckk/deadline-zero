@@ -10,7 +10,10 @@ public final class WeaponSynergyRules {
         ARC_CONDUCTOR("ARC CONDUCTOR", 1.10f, 1.08f, .04f, 1f),
         EXECUTION_PROTOCOL("EXECUTION PROTOCOL", 1.08f, 1f, .06f, 1f),
         SIEGE_FURNACE("SIEGE FURNACE", 1.12f, 1f, 0f, .95f),
-        CRYO_GHOST("CRYO GHOST", 1.06f, 1.10f, .03f, 1f);
+        CRYO_GHOST("CRYO GHOST", 1.06f, 1.10f, .03f, 1f),
+        FROST_PHANTOM("FROST PHANTOM", 1.08f, 1.08f, .02f, .98f),
+        TEMPEST_CIRCUIT("TEMPEST CIRCUIT", 1.11f, 1.10f, .03f, 1f),
+        DEADEYE_MAGNUM("DEADEYE MAGNUM", 1.09f, 1f, .07f, 1f);
 
         public final String displayName;
         public final float weaponDamageMultiplier;
@@ -43,6 +46,15 @@ public final class WeaponSynergyRules {
         }
         if (safeWeapon == WeaponCatalog.CRYO_LANCE && safeSurvivor == SurvivorCatalog.Survivor.WRAITH) {
             return Synergy.CRYO_GHOST;
+        }
+        if (safeWeapon == WeaponCatalog.GLACIER_REPEATER && safeSurvivor == SurvivorCatalog.Survivor.WRAITH) {
+            return Synergy.FROST_PHANTOM;
+        }
+        if (safeWeapon == WeaponCatalog.STORM_COIL && safeSurvivor == SurvivorCatalog.Survivor.VOLT) {
+            return Synergy.TEMPEST_CIRCUIT;
+        }
+        if (safeWeapon == WeaponCatalog.TITAN_REVOLVER && safeSurvivor == SurvivorCatalog.Survivor.NYX) {
+            return Synergy.DEADEYE_MAGNUM;
         }
         return Synergy.NONE;
     }
