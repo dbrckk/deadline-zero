@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.RunModifierContext;
@@ -40,6 +41,7 @@ public final class AndroidGameplayVisualProbeTest {
                 game.profile.accountLevel = 22;
                 game.profile.highestStage = 20;
                 game.profile.selectedStage = 20;
+                game.profile.selectedWeaponId = WeaponCatalog.TITAN_REVOLVER.id;
                 game.showArsenal();
                 assertTrue("expected ArsenalScreen for weapon roster visual probe", game.getScreen() instanceof ArsenalScreen);
             });
