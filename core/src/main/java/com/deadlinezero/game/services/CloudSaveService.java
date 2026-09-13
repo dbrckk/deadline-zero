@@ -19,6 +19,8 @@ public final class CloudSaveService {
         this.adapter = adapter == null ? CloudSaveAdapter.unavailable() : adapter;
     }
 
+    public boolean available() { return adapter.available(); }
+
     public void uploadLocal() throws Exception {
         upload(ProfileStore.exportBackup());
     }
