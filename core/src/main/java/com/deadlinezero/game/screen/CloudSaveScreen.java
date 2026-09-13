@@ -95,7 +95,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
     }
 
     private void handleInput(float w, float h) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             game.showSettings();
             return;
         }
@@ -143,6 +143,8 @@ public final class CloudSaveScreen extends ScreenAdapter {
     }
 
     private void refresh() {
+        conflict = null;
+        resetConfirmations();
         runAsync("CHECKING CLOUD...", () -> {
             CloudSaveService.ConflictState next = cloud.compareRemoteToLocal();
             post(() -> {
@@ -171,12 +173,17 @@ public final class CloudSaveScreen extends ScreenAdapter {
     }
 
     private void requestUpload() {
+        if (conflict == null) {
+            resetConfirmations();
+            status = "REFRESH REQUIRED BEFORE UPLOAD";
+            return;
+        }
         boolean risky = conflict == CloudSaveService.ConflictState.REMOTE_AHEAD
             || conflict == CloudSaveService.ConflictState.DIVERGED;
         if (risky && !confirmUpload) {
             confirmUpload = true;
             confirmDownload = false;
-            status = "UPLOAD WOULD REPLACE CLOUD PROGRESS — PRESS U AGAIN TO CONFIRM";
+            status = "UPLOAD WOULD REPLACE CLOUD PROGRESS — SELECT UPLOAD AGAIN TO CONFIRM";
             return;
         }
         resetConfirmations();
@@ -190,24 +197,39 @@ public final class CloudSaveScreen extends ScreenAdapter {
     }
 
     private void requestDownload() {
+        if (conflict == null) {
+            resetConfirmations();
+            status = "REFRESH REQUIRED BEFORE DOWNLOAD";
+            return;
+        }
         boolean risky = conflict == CloudSaveService.ConflictState.LOCAL_AHEAD
             || conflict == CloudSaveService.ConflictState.DIVERGED;
         if (risky && !confirmDownload) {
             confirmDownload = true;
             confirmUpload = false;
-            status = "DOWNLOAD WOULD REPLACE LOCAL PROGRESS — PRESS D AGAIN TO CONFIRM";
+            status = "DOWNLOAD WOULD REPLACE LOCAL PROGRESS — SELECT DOWNLOAD AGAIN TO CONFIRM";
             return;
         }
         resetConfirmations();
         runAsync("DOWNLOADING CLOUD PROFILE...", () -> {
-            CloudSaveService.RestoreResult result = cloud.downloadRemote();
+            // Network I/O and checksum validation happen on the worker. Persistent Preferences are
+            // not mutated until this screen is still alive and the game thread applies the payload.
+            CloudSaveAdapter.RemoteBackup remote = cloud.inspectRemote();
             post(() -> {
-                if (result.result() == CloudSaveService.DownloadResult.APPLIED) {
-                    if (!game.applyCloudRestore(result)) status = "RESTORE FAILED TO APPLY";
-                } else if (result.result() == CloudSaveService.DownloadResult.EMPTY_REMOTE) {
+                if (remote == null) {
                     status = "NO CLOUD SAVE FOUND";
-                } else {
-                    status = "CLOUD SAVE REQUIRES A NEWER APP VERSION";
+                    return;
+                }
+                try {
+                    CloudSaveService.RestoreResult result = cloud.applyRemote(remote.payload());
+                    if (result.result() == CloudSaveService.DownloadResult.APPLIED) {
+                        if (!game.applyCloudRestore(result)) status = "RESTORE FAILED TO APPLY";
+                    } else {
+                        status = "CLOUD SAVE REQUIRES A NEWER APP VERSION";
+                    }
+                } catch (RuntimeException e) {
+                    conflict = null;
+                    status = "RESTORE ERROR: " + safeMessage(e);
                 }
             });
         });
@@ -227,7 +249,11 @@ public final class CloudSaveScreen extends ScreenAdapter {
                     status = "PLAY GAMES HAS TWO CLOUD VERSIONS — CHOOSE SERVER OR OTHER";
                 });
             } catch (Exception e) {
-                post(() -> status = "CLOUD ERROR: " + safeMessage(e));
+                post(() -> {
+                    conflict = null;
+                    resetConfirmations();
+                    status = "CLOUD ERROR: " + safeMessage(e);
+                });
             } finally {
                 post(() -> busy = false);
             }
@@ -244,6 +270,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
     private String confirmationLine() {
         if (!cloud.available()) return "Configure Play Games Services in the production Android build.";
         if (providerConflict) return "Resolve the provider conflict first; local progress is untouched.";
+        if (conflict == null && !busy) return "Refresh successfully before any upload or download.";
         if (confirmUpload) return "Safety confirmation armed for UPLOAD.";
         if (confirmDownload) return "Safety confirmation armed for DOWNLOAD.";
         return busy ? "Operation in progress..." : "Refresh before choosing a direction when using multiple devices.";
