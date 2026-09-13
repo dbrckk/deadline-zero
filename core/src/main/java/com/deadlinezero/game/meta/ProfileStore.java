@@ -68,6 +68,10 @@ public final class ProfileStore {
         profile.weekly.runMissionClaimed = p.getBoolean("weekly.runClaimed", false);
         profile.weekly.bossMissionClaimed = p.getBoolean("weekly.bossClaimed", false);
 
+        for (AchievementService.Achievement achievement : AchievementService.Achievement.values()) {
+            if (p.getBoolean("achievement." + achievement.name() + ".claimed", false)) profile.achievements.markClaimed(achievement);
+        }
+
         int itemCount = Math.min(Inventory.MAX_ITEMS, Math.max(0, p.getInteger("inventory.count", 0)));
         for (int i = 0; i < itemCount; i++) {
             String key = "inventory." + i + ".";
@@ -146,6 +150,10 @@ public final class ProfileStore {
         p.putBoolean("weekly.killClaimed", profile.weekly.killMissionClaimed);
         p.putBoolean("weekly.runClaimed", profile.weekly.runMissionClaimed);
         p.putBoolean("weekly.bossClaimed", profile.weekly.bossMissionClaimed);
+
+        for (AchievementService.Achievement achievement : AchievementService.Achievement.values()) {
+            p.putBoolean("achievement." + achievement.name() + ".claimed", profile.achievements.claimed(achievement));
+        }
 
         int count = Math.min(profile.inventory.size(), Inventory.MAX_ITEMS);
         p.putInteger("inventory.count", count);
