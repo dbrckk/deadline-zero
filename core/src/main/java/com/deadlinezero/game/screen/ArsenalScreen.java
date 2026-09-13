@@ -150,6 +150,9 @@ public final class ArsenalScreen extends ScreenAdapter {
             case "breacher" -> "HEAVY BREACH";
             case "ion_needle" -> "CAPACITOR PRECISION";
             case "cinder_cannon" -> "THERMAL ARTILLERY";
+            case "glacier_repeater" -> "CRYO BURST";
+            case "storm_coil" -> "DEEP ARC PIERCER";
+            case "titan_revolver" -> "HEAVY SIDEARM";
             default -> "BALANCED RIFLE";
         };
     }
@@ -164,6 +167,9 @@ public final class ArsenalScreen extends ScreenAdapter {
             case "breacher" -> "Nine-projectile blast with brutal knockback, limited by range and reload cadence.";
             case "ion_needle" -> "Every 5th projectile overcharges: guaranteed critical, bonus penetration and impact. VOLT/NYX unlock signature synergies.";
             case "cinder_cannon" -> "Every 4th shell vents stored heat for +55% payload, extra penetration and knockback. BASTION unlocks Siege Furnace.";
+            case "glacier_repeater" -> "Three-projectile FROST burst for safe mid-range control. WRAITH unlocks Frost Phantom.";
+            case "storm_coil" -> "High-voltage precision fire with deep penetration through specialist lines. VOLT unlocks Tempest Circuit.";
+            case "titan_revolver" -> "Slow heavy KINETIC sidearm with high crit pressure and stagger. NYX unlocks Deadeye Magnum.";
             default -> "Reliable all-round rifle with stable damage, cadence and accuracy for every stage.";
         };
     }
