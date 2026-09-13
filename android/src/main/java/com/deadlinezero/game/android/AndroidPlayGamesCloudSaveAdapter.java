@@ -2,6 +2,7 @@ package com.deadlinezero.game.android;
 
 import android.app.Activity;
 import android.os.Looper;
+import com.deadlinezero.game.services.CloudAuthenticationRequiredException;
 import com.deadlinezero.game.services.CloudProviderConflictException;
 import com.deadlinezero.game.services.CloudSaveAdapter;
 import com.google.android.gms.common.api.ApiException;
@@ -29,9 +30,21 @@ public final class AndroidPlayGamesCloudSaveAdapter implements CloudSaveAdapter 
         this.activity = activity;
     }
 
+    @Override public boolean supportsAuthentication() { return true; }
+
+    @Override public void authenticate() throws Exception {
+        requireWorkerThread();
+        var result = Tasks.await(
+            PlayGames.getGamesSignInClient(activity).signIn(),
+            TIMEOUT_SECONDS,
+            TimeUnit.SECONDS
+        );
+        if (result == null || !result.isAuthenticated()) throw new CloudAuthenticationRequiredException();
+    }
+
     @Override public RemoteBackup read() throws Exception {
         requireWorkerThread();
-        if (!authenticated()) return null;
+        ensureAuthenticated();
 
         Snapshot snapshot = open(false);
         if (snapshot == null) return null;
@@ -48,7 +61,7 @@ public final class AndroidPlayGamesCloudSaveAdapter implements CloudSaveAdapter 
     @Override public void write(String payload) throws Exception {
         requireWorkerThread();
         if (payload == null || payload.isBlank()) throw new IllegalArgumentException("payload");
-        if (!authenticated()) throw new IllegalStateException("Play Games authentication required");
+        ensureAuthenticated();
 
         Snapshot snapshot = open(true);
         if (snapshot == null) throw new IllegalStateException("Unable to open Play Games snapshot");
@@ -154,13 +167,13 @@ public final class AndroidPlayGamesCloudSaveAdapter implements CloudSaveAdapter 
         return new RemoteBackup(payload, modifiedAt);
     }
 
-    private boolean authenticated() throws Exception {
+    private void ensureAuthenticated() throws Exception {
         var result = Tasks.await(
             PlayGames.getGamesSignInClient(activity).isAuthenticated(),
             TIMEOUT_SECONDS,
             TimeUnit.SECONDS
         );
-        return result != null && result.isAuthenticated();
+        if (result == null || !result.isAuthenticated()) throw new CloudAuthenticationRequiredException();
     }
 
     private static void requireWorkerThread() {
