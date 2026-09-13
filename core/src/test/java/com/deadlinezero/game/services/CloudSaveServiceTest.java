@@ -1,6 +1,7 @@
 package com.deadlinezero.game.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 final class CloudSaveServiceTest {
     @Test void unavailableAdapterBehavesAsEmptyRemote() throws Exception {
         CloudSaveService service = new CloudSaveService(null);
+        assertFalse(service.available());
         assertNull(service.inspectRemote());
         assertEquals(CloudSaveService.DownloadResult.EMPTY_REMOTE, service.downloadRemote().result());
     }
