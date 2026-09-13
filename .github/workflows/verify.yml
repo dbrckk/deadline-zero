@@ -77,8 +77,8 @@ jobs:
             adb shell pm path com.deadlinezero.game | grep -q 'package:'
             adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.game | grep -q 'AndroidLauncher'
             adb shell settings put secure immersive_mode_confirmations confirmed || true
-            adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesForgeHoundGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCinderGunnerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesSlagGuardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesPhaseStalkerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesStaticSeerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesNullWardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesWeeklyMissionsScreen,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCloudSaveScreen,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCryoVaultGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCryogenicDepthsGameplay com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/production-roster-visual-probe.txt
-            grep -q 'OK (10 tests)' /tmp/production-roster-visual-probe.txt
+            adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesForgeHoundGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCinderGunnerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesSlagGuardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesPhaseStalkerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesStaticSeerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesNullWardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesWeeklyMissionsScreen,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCloudSaveScreen,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCryoVaultGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCryogenicDepthsGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesExpandedUpgradePoolOverlay com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/production-roster-visual-probe.txt
+            grep -q 'OK (11 tests)' /tmp/production-roster-visual-probe.txt
             mkdir -p build/android-visual-qa
             adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/forge-hound-gameplay.png
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/forge-hound-gameplay.png build/android-visual-qa/forge-hound-gameplay.png
@@ -146,6 +146,9 @@ jobs:
             adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/cryogenic-depths-gameplay.png
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/cryogenic-depths-gameplay.png build/android-visual-qa/cryogenic-depths-gameplay.png
             test -s build/android-visual-qa/cryogenic-depths-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/upgrade-pool.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/upgrade-pool.png build/android-visual-qa/upgrade-pool.png
+            test -s build/android-visual-qa/upgrade-pool.png
             adb shell am force-stop com.deadlinezero.game
             test -z "$(adb shell pidof com.deadlinezero.game)"
             adb shell monkey -p com.deadlinezero.game -c android.intent.category.LAUNCHER 1
