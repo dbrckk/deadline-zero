@@ -651,17 +651,33 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     private static void capture(String name) throws Exception {
-        Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
-        assertNotNull("Android UiAutomation did not return a screenshot", bitmap);
         File root = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null), "qa");
         assertTrue("unable to create gameplay QA output directory", root.isDirectory() || root.mkdirs());
         File output = new File(root, name);
-        try (FileOutputStream stream = new FileOutputStream(output)) {
-            assertTrue("unable to encode gameplay QA screenshot", bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream));
-        } finally {
-            bitmap.recycle();
+
+        long size = 0L;
+        int width = 0;
+        int height = 0;
+        for (int attempt = 1; attempt <= 8; attempt++) {
+            Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
+            if (bitmap != null) {
+                width = bitmap.getWidth();
+                height = bitmap.getHeight();
+                try (FileOutputStream stream = new FileOutputStream(output, false)) {
+                    assertTrue("unable to encode gameplay QA screenshot", bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream));
+                } finally {
+                    bitmap.recycle();
+                }
+                size = output.length();
+                if (width >= 1280 && height >= 720 && size > 10_000L) return;
+            }
+            if (attempt < 8) Thread.sleep(500L);
         }
-        assertTrue("gameplay QA screenshot is unexpectedly small", output.length() > 10_000L);
+
+        assertTrue(
+            "gameplay QA screenshot invalid after retries: " + width + "x" + height + ", " + size + " bytes",
+            width >= 1280 && height >= 720 && size > 10_000L
+        );
     }
 
     private static AndroidLauncher activity(ActivityScenario<AndroidLauncher> scenario) {
