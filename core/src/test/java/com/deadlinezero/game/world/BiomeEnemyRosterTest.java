@@ -43,6 +43,16 @@ final class BiomeEnemyRosterTest {
         assertEquals(1f, BiomeEnemyRoster.elementalDamageMultiplier(30, Enemy.Type.SHIELDED, DamageElement.FIRE), .0001f);
     }
 
+    @Test void cryogenicDepthsUsesSustainRangedElitePressure() {
+        assertEquals(BiomeEnemyRoster.Identity.NONE, BiomeEnemyRoster.identityFor(40, Enemy.Type.REGENERATOR));
+        assertEquals(Enemy.Type.REGENERATOR, BiomeEnemyRoster.remap(40, .10f, Enemy.Type.SHAMBLER));
+        assertEquals(Enemy.Type.RANGED, BiomeEnemyRoster.remap(40, .30f, Enemy.Type.SHAMBLER));
+        assertEquals(Enemy.Type.ELITE, BiomeEnemyRoster.remap(40, .52f, Enemy.Type.SHAMBLER));
+        assertEquals(.58f, BiomeEnemyRoster.elementalDamageMultiplier(40, Enemy.Type.REGENERATOR, DamageElement.FROST), .0001f);
+        assertEquals(.70f, BiomeEnemyRoster.elementalDamageMultiplier(40, Enemy.Type.RANGED, DamageElement.SHOCK), .0001f);
+        assertEquals(1.12f, BiomeEnemyRoster.elementalDamageMultiplier(40, Enemy.Type.ELITE, DamageElement.FIRE), .0001f);
+    }
+
     @Test void elementalResistanceProfilesAreBoundedAndSpecific() {
         assertEquals(.62f, BiomeEnemyRoster.elementalDamageMultiplier(10, Enemy.Type.RUNNER, DamageElement.FIRE), .0001f);
         assertEquals(1f, BiomeEnemyRoster.elementalDamageMultiplier(10, Enemy.Type.RUNNER, DamageElement.SHOCK), .0001f);
