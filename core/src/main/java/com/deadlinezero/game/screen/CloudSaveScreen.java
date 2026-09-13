@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.audio.AudioDirector;
+import com.deadlinezero.game.services.CloudProviderConflictException;
+import com.deadlinezero.game.services.CloudSaveAdapter;
 import com.deadlinezero.game.services.CloudSaveService;
 import com.deadlinezero.game.visual.VisualTheme;
 import java.util.concurrent.ExecutorService;
@@ -34,6 +36,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
     private String status;
     private boolean confirmUpload;
     private boolean confirmDownload;
+    private boolean providerConflict;
 
     public CloudSaveScreen(DeadlineZeroGame game) {
         this.game = game;
@@ -76,11 +79,11 @@ public final class CloudSaveScreen extends ScreenAdapter {
 
         font.getData().setScale(.72f);
         font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, "REFRESH", w * .20f, h * .398f, w * .17f, Align.center, false);
+        font.draw(batch, providerConflict ? "RECHECK" : "REFRESH", w * .20f, h * .398f, w * .17f, Align.center, false);
         font.setColor(VisualTheme.GOLD);
-        font.draw(batch, "UPLOAD LOCAL", w * .415f, h * .398f, w * .17f, Align.center, false);
+        font.draw(batch, providerConflict ? "USE SERVER" : "UPLOAD LOCAL", w * .415f, h * .398f, w * .17f, Align.center, false);
         font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "DOWNLOAD CLOUD", w * .63f, h * .398f, w * .17f, Align.center, false);
+        font.draw(batch, providerConflict ? "USE OTHER" : "DOWNLOAD CLOUD", w * .63f, h * .398f, w * .17f, Align.center, false);
 
         font.getData().setScale(.52f);
         font.setColor(VisualTheme.MUTED);
@@ -110,11 +113,17 @@ public final class CloudSaveScreen extends ScreenAdapter {
                     return;
                 }
                 if (x >= w * .415f && x <= w * .585f) {
-                    if (!busy && cloud.available()) requestUpload();
+                    if (!busy && cloud.available()) {
+                        if (providerConflict) resolveProviderConflict(CloudSaveAdapter.ConflictChoice.SERVER);
+                        else requestUpload();
+                    }
                     return;
                 }
                 if (x >= w * .63f && x <= w * .80f) {
-                    if (!busy && cloud.available()) requestDownload();
+                    if (!busy && cloud.available()) {
+                        if (providerConflict) resolveProviderConflict(CloudSaveAdapter.ConflictChoice.CONFLICTING);
+                        else requestDownload();
+                    }
                     return;
                 }
             }
@@ -122,14 +131,22 @@ public final class CloudSaveScreen extends ScreenAdapter {
 
         if (busy || !cloud.available()) return;
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) { resetConfirmations(); refresh(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) { requestUpload(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) { requestDownload(); }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
+            if (providerConflict) resolveProviderConflict(CloudSaveAdapter.ConflictChoice.SERVER);
+            else requestUpload();
+            return;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            if (providerConflict) resolveProviderConflict(CloudSaveAdapter.ConflictChoice.CONFLICTING);
+            else requestDownload();
+        }
     }
 
     private void refresh() {
         runAsync("CHECKING CLOUD...", () -> {
             CloudSaveService.ConflictState next = cloud.compareRemoteToLocal();
             post(() -> {
+                providerConflict = false;
                 conflict = next;
                 status = switch (next) {
                     case EQUAL -> "LOCAL AND CLOUD ARE IDENTICAL";
@@ -137,6 +154,18 @@ public final class CloudSaveScreen extends ScreenAdapter {
                     case REMOTE_AHEAD -> "CLOUD PROGRESS IS AHEAD";
                     case DIVERGED -> "CONFLICT: PROGRESS HAS DIVERGED";
                 };
+            });
+        });
+    }
+
+    private void resolveProviderConflict(CloudSaveAdapter.ConflictChoice choice) {
+        runAsync("RESOLVING PLAY GAMES SNAPSHOT CONFLICT...", () -> {
+            cloud.resolveProviderConflict(choice);
+            post(() -> {
+                providerConflict = false;
+                resetConfirmations();
+                status = "PROVIDER CONFLICT RESOLVED — RECHECKING...";
+                refresh();
             });
         });
     }
@@ -190,6 +219,13 @@ public final class CloudSaveScreen extends ScreenAdapter {
         worker.submit(() -> {
             try {
                 action.run();
+            } catch (CloudProviderConflictException e) {
+                post(() -> {
+                    providerConflict = true;
+                    conflict = CloudSaveService.ConflictState.DIVERGED;
+                    resetConfirmations();
+                    status = "PLAY GAMES HAS TWO CLOUD VERSIONS — CHOOSE SERVER OR OTHER";
+                });
             } catch (Exception e) {
                 post(() -> status = "CLOUD ERROR: " + safeMessage(e));
             } finally {
@@ -207,6 +243,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
 
     private String confirmationLine() {
         if (!cloud.available()) return "Configure Play Games Services in the production Android build.";
+        if (providerConflict) return "Resolve the provider conflict first; local progress is untouched.";
         if (confirmUpload) return "Safety confirmation armed for UPLOAD.";
         if (confirmDownload) return "Safety confirmation armed for DOWNLOAD.";
         return busy ? "Operation in progress..." : "Refresh before choosing a direction when using multiple devices.";
