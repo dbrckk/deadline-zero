@@ -12,7 +12,7 @@ final class WeaponCatalogTest {
     @Test
     void rosterHasDistinctStableIds() {
         WeaponDefinition[] all = WeaponCatalog.all();
-        assertTrue(all.length >= 7);
+        assertTrue(all.length >= 12);
         Set<String> ids = new HashSet<>();
         for (WeaponDefinition weapon : all) {
             assertNotNull(weapon);
