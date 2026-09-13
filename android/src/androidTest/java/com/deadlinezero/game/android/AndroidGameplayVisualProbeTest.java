@@ -651,17 +651,29 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     private static void capture(String name) throws Exception {
-        Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
-        assertNotNull("Android UiAutomation did not return a screenshot", bitmap);
         File root = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null), "qa");
         assertTrue("unable to create gameplay QA output directory", root.isDirectory() || root.mkdirs());
         File output = new File(root, name);
-        try (FileOutputStream stream = new FileOutputStream(output)) {
-            assertTrue("unable to encode gameplay QA screenshot", bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream));
-        } finally {
-            bitmap.recycle();
+
+        long size = 0L;
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
+            assertNotNull("Android UiAutomation did not return a screenshot", bitmap);
+            try (FileOutputStream stream = new FileOutputStream(output, false)) {
+                assertTrue("unable to encode gameplay QA screenshot", bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream));
+            } finally {
+                bitmap.recycle();
+            }
+
+            size = output.length();
+            if (size > 10_000L) return;
+
+            // Android Emulator occasionally exposes a stale/broken color buffer for a single frame.
+            // Retry the capture, but keep the exact same semantic size gate for the final artifact.
+            if (attempt < 3) Thread.sleep(300L);
         }
-        assertTrue("gameplay QA screenshot is unexpectedly small", output.length() > 10_000L);
+
+        assertTrue("gameplay QA screenshot is unexpectedly small after retries: " + size, size > 10_000L);
     }
 
     private static AndroidLauncher activity(ActivityScenario<AndroidLauncher> scenario) {
