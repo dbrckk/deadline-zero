@@ -21,10 +21,18 @@ public final class EnvironmentBiomeRulesTest {
         assertFalse(EnvironmentBiomeRules.isFoundry(20));
     }
 
-    @Test public void nullSectorStartsAtStageTwentyAndPersists() {
+    @Test public void nullSectorOwnsStagesTwentyThroughTwentyNine() {
         assertEquals(EnvironmentBiomeRules.Biome.NULL_SECTOR, EnvironmentBiomeRules.forStage(20));
-        assertEquals(EnvironmentBiomeRules.Biome.NULL_SECTOR, EnvironmentBiomeRules.forStage(30));
+        assertEquals(EnvironmentBiomeRules.Biome.NULL_SECTOR, EnvironmentBiomeRules.forStage(29));
         assertTrue(EnvironmentBiomeRules.isNullSector(20));
+        assertFalse(EnvironmentBiomeRules.isNullSector(30));
+    }
+
+    @Test public void cryoVaultStartsAtStageThirty() {
+        assertEquals(EnvironmentBiomeRules.Biome.CRYO_VAULT, EnvironmentBiomeRules.forStage(30));
+        assertEquals(EnvironmentBiomeRules.Biome.CRYO_VAULT, EnvironmentBiomeRules.forStage(44));
+        assertTrue(EnvironmentBiomeRules.isCryoVault(30));
+        assertFalse(EnvironmentBiomeRules.isCryoVault(29));
     }
 
     @Test public void invalidStagesSanitizeToFirstBiome() {
