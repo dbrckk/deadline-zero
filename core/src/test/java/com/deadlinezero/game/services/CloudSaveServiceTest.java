@@ -35,6 +35,21 @@ final class CloudSaveServiceTest {
         assertEquals(CloudSaveService.ConflictState.REMOTE_AHEAD, service.compareRemoteToLocal(local));
     }
 
+    @Test void sameMonotoneProgressWithDifferentStateIsDiverged() throws Exception {
+        String local = ProfileBackupCodec.encode(Map.of(
+            "highestStage", 6, "accountLevel", 9, "totalRuns", 30, "totalKills", 5000L,
+            "threat.highest", 2, "credits", 100L));
+        String remote = ProfileBackupCodec.encode(Map.of(
+            "highestStage", 6, "accountLevel", 9, "totalRuns", 30, "totalKills", 5000L,
+            "threat.highest", 2, "credits", 900L));
+        CloudSaveService service = new CloudSaveService(new CloudSaveAdapter() {
+            @Override public RemoteBackup read() { return new RemoteBackup(remote, 789L); }
+            @Override public void write(String payload) { }
+        });
+
+        assertEquals(CloudSaveService.ConflictState.DIVERGED, service.compareRemoteToLocal(local));
+    }
+
     @Test void uploadRejectsCorruptLocalPayloadBeforeProviderWrite() {
         CloudSaveService service = new CloudSaveService(new CloudSaveAdapter() {
             @Override public RemoteBackup read() { return null; }
