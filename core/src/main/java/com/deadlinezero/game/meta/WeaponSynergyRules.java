@@ -13,7 +13,7 @@ public final class WeaponSynergyRules {
         CRYO_GHOST("CRYO GHOST", 1.06f, 1.10f, .03f, 1f),
         FROST_PHANTOM("FROST PHANTOM", 1.08f, 1.08f, .02f, .98f),
         TEMPEST_CIRCUIT("TEMPEST CIRCUIT", 1.11f, 1.10f, .03f, 1f),
-        DEADEYE_MAGNUM("DEADEYE MAGNUM", 1.09f, 1f, .07f, 1f);
+        DEADEYE_MAGNUM("DEADEYE MAGNUM", 1.09f, 1f, .06f, 1f);
 
         public final String displayName;
         public final float weaponDamageMultiplier;
