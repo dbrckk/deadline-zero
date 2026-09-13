@@ -6,10 +6,12 @@ public enum BossIdentity {
     REVENANT,
     WARDEN,
     HARVESTER,
-    NULL_ARCHON;
+    NULL_ARCHON,
+    FROST_COLOSSUS;
 
     public static BossIdentity forStage(int stage) {
         int safeStage = Math.max(1, stage);
+        if (safeStage >= 40 && Math.floorMod(safeStage - 40, 10) == 0) return FROST_COLOSSUS;
         if (safeStage >= 20 && Math.floorMod(safeStage - 20, 5) == 0) return NULL_ARCHON;
         if (safeStage >= 12 && safeStage % 5 == 2) return HARVESTER;
         if (safeStage >= 7 && safeStage % 4 == 3) return WARDEN;
