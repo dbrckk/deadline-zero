@@ -16,6 +16,12 @@ final class WeaponSynergyRulesTest {
             WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.CINDER_CANNON));
         assertEquals(WeaponSynergyRules.Synergy.CRYO_GHOST,
             WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.CRYO_LANCE));
+        assertEquals(WeaponSynergyRules.Synergy.FROST_PHANTOM,
+            WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.GLACIER_REPEATER));
+        assertEquals(WeaponSynergyRules.Synergy.TEMPEST_CIRCUIT,
+            WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.STORM_COIL));
+        assertEquals(WeaponSynergyRules.Synergy.DEADEYE_MAGNUM,
+            WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.NYX, WeaponCatalog.TITAN_REVOLVER));
         assertEquals(WeaponSynergyRules.Synergy.NONE,
             WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.REX, WeaponCatalog.ION_NEEDLE));
         assertEquals(WeaponSynergyRules.Synergy.NONE,
