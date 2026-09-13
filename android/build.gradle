@@ -220,6 +220,9 @@ tasks.register('verifyPlayReleaseConfig') {
         if (!hasReleaseSigning) {
             throw new GradleException('Play release blocked: upload signing credentials are incomplete. Configure store password, key alias, and key password via Gradle properties or DEADLINE_ZERO_* environment variables.')
         }
+        if (!validPlayGamesAppId(playGamesAppId)) {
+            throw new GradleException('Play release blocked: configure -PplayGamesAppId with the numeric Google Play Games Services application ID.')
+        }
         if (!validPlayVersionCode(appVersionCode) || appVersion.isBlank()) {
             throw new GradleException('Play release blocked: appVersionCode must be between 1 and 2100000000 and appVersion must be non-empty.')
         }
