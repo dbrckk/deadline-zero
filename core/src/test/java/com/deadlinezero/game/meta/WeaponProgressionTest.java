@@ -41,6 +41,22 @@ final class WeaponProgressionTest {
     }
 
     @Test
+    void endgameWeaponsUnlockByAccountOrStageProgress() {
+        PlayerProfile levelProfile = new PlayerProfile();
+        levelProfile.accountLevel = 22;
+        assertTrue(WeaponProgression.unlocked(levelProfile, WeaponCatalog.GLACIER_REPEATER));
+        assertTrue(WeaponProgression.unlocked(levelProfile, WeaponCatalog.STORM_COIL));
+        assertTrue(WeaponProgression.unlocked(levelProfile, WeaponCatalog.TITAN_REVOLVER));
+
+        PlayerProfile stageProfile = new PlayerProfile();
+        stageProfile.accountLevel = 2;
+        stageProfile.highestStage = 20;
+        assertTrue(WeaponProgression.unlocked(stageProfile, WeaponCatalog.GLACIER_REPEATER));
+        assertTrue(WeaponProgression.unlocked(stageProfile, WeaponCatalog.STORM_COIL));
+        assertTrue(WeaponProgression.unlocked(stageProfile, WeaponCatalog.TITAN_REVOLVER));
+    }
+
+    @Test
     void invalidStoredWeaponFallsBackSafely() {
         PlayerProfile profile = new PlayerProfile();
         profile.selectedWeaponId = "corrupted_weapon_id";
