@@ -133,7 +133,7 @@ public final class GameArt implements Disposable {
 
     static String bossRoot(BossIdentity identity) {
         BossIdentity safeIdentity = identity == null ? BossIdentity.ALPHA : identity;
-        if (safeIdentity == BossIdentity.FROST_COLOSSUS) return "enemy/elite";
+        if (safeIdentity == BossIdentity.FROST_COLOSSUS) return "boss/warden";
         return "boss/" + safeIdentity.name().toLowerCase();
     }
 
