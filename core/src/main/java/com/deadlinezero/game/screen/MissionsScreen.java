@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.combat.WeaponDefinition;
+import com.deadlinezero.game.meta.AchievementService;
 import com.deadlinezero.game.meta.DailyService;
 import com.deadlinezero.game.meta.MasteryProgress;
 import com.deadlinezero.game.meta.PlayerProfile;
@@ -76,6 +77,25 @@ public final class MissionsScreen extends ScreenAdapter {
         drawMastery(p, w, h, margin);
         font.getData().setScale(.96f);
         font.setColor(Color.LIGHT_GRAY);
+        font.setColor(Color.GOLD);
+        font.getData().setScale(.92f);
+        font.draw(batch, "ACHIEVEMENTS", rightX, h - 438f);
+        font.getData().setScale(.66f);
+        int achievementY = (int) (h - 478f);
+        int key = 7;
+        for (AchievementService.Achievement achievement : AchievementService.Achievement.values()) {
+            boolean unlocked = AchievementService.unlocked(p, achievement);
+            boolean claimed = p.achievements.claimed(achievement);
+            font.setColor(claimed ? Color.GRAY : unlocked ? Color.GOLD : Color.LIGHT_GRAY);
+            String state = claimed ? "CLAIMED" : unlocked ? "[" + key + "] CLAIM" : "LOCKED";
+            font.draw(batch, achievement.title + "  •  " + achievement.description + "  •  " + state,
+                rightX, achievementY, columnWidth, Align.left, false);
+            achievementY -= 34;
+            key++;
+        }
+
+        font.getData().setScale(.62f);
+        font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "ESC / BACK  •  RETURN TO BASE", margin, 44f);
         batch.end();
     }
@@ -129,6 +149,12 @@ public final class MissionsScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) changed |= WeeklyService.claimKillMission(game.profile);
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) changed |= WeeklyService.claimRunMission(game.profile);
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) changed |= WeeklyService.claimBossMission(game.profile);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.FIRST_DEPLOYMENT);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.FIELD_VETERAN);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.EXTERMINATOR);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.FIRST_CLEAR);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.DEEP_STRIKE);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.ACCOUNT_TEN);
         if (changed) game.saveProfile();
     }
 
