@@ -65,12 +65,11 @@ public final class CloudSaveService {
     }
 
     public RestoreResult applyRemote(String remoteBackup) {
-        if (!ProfileStore.importBackup(remoteBackup)) {
-            return new RestoreResult(DownloadResult.REJECTED_NEWER_SCHEMA, null);
-        }
-        // Return the freshly reloaded object. Callers must replace their active in-memory profile
-        // before any subsequent save, preventing a stale pre-restore object from overwriting the import.
-        return new RestoreResult(DownloadResult.APPLIED, ProfileStore.load());
+        PlayerProfile restored = ProfileStore.importBackup(remoteBackup);
+        if (restored == null) return new RestoreResult(DownloadResult.REJECTED_NEWER_SCHEMA, null);
+        // The store only returns after a complete typed reload succeeds. Callers must replace their
+        // active in-memory profile before any subsequent save.
+        return new RestoreResult(DownloadResult.APPLIED, restored);
     }
 
     private static Map<String, Object> withoutMonotone(Map<String, Object> source) {
