@@ -30,6 +30,9 @@ public final class BossVariantStats {
             case NULL_ARCHON -> new Stats(baseHp * NullArchonBossProfile.HP_MULTIPLIER,
                 baseSpeed * NullArchonBossProfile.SPEED_MULTIPLIER,
                 baseDamage * NullArchonBossProfile.DAMAGE_MULTIPLIER);
+            case FROST_COLOSSUS -> new Stats(baseHp * FrostColossusBossProfile.HP_MULTIPLIER,
+                baseSpeed * FrostColossusBossProfile.SPEED_MULTIPLIER,
+                baseDamage * FrostColossusBossProfile.DAMAGE_MULTIPLIER);
             default -> new Stats(baseHp, baseSpeed, baseDamage);
         };
     }
