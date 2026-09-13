@@ -3,10 +3,16 @@ package com.deadlinezero.game.services;
 /** Provider-neutral cloud persistence boundary. Platform modules may bind Google Play Games or another backend. */
 public interface CloudSaveAdapter {
     record RemoteBackup(String payload, long modifiedAtEpochMillis) {}
+    record ProviderConflict(RemoteBackup server, RemoteBackup conflicting) {}
+    enum ConflictChoice { SERVER, CONFLICTING }
 
     default boolean available() { return true; }
     RemoteBackup read() throws Exception;
     void write(String payload) throws Exception;
+    default ProviderConflict pendingConflict() { return null; }
+    default void resolvePendingConflict(ConflictChoice choice) throws Exception {
+        throw new IllegalStateException("Cloud provider does not expose a resolvable conflict");
+    }
 
     static CloudSaveAdapter unavailable() {
         return new CloudSaveAdapter() {
