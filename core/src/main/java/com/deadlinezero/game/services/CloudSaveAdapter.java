@@ -11,6 +11,9 @@ public interface CloudSaveAdapter {
     default void authenticate() throws Exception { }
     RemoteBackup read() throws Exception;
     void write(String payload) throws Exception;
+    default void writeIfUnchanged(String payload, RemoteBackup expectedRemote) throws Exception {
+        throw new UnsupportedOperationException("Cloud provider does not support conditional writes");
+    }
     default ProviderConflict pendingConflict() { return null; }
     default void resolvePendingConflict(ConflictChoice choice) throws Exception {
         throw new IllegalStateException("Cloud provider does not expose a resolvable conflict");
