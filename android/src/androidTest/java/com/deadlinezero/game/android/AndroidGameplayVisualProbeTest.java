@@ -43,6 +43,12 @@ public final class AndroidGameplayVisualProbeTest {
                 game.profile.weekly.kills = 760;
                 game.profile.weekly.runs = 11;
                 game.profile.weekly.bosses = 3;
+                game.profile.totalRuns = 25;
+                game.profile.totalKills = 5_000L;
+                game.profile.highestStage = 5;
+                game.profile.selectedStage = 5;
+                game.profile.accountLevel = 10;
+                game.profile.achievements.markClaimed(com.deadlinezero.game.meta.AchievementService.Achievement.FIRST_DEPLOYMENT);
                 game.showMissions();
                 assertTrue("expected MissionsScreen for weekly visual probe", game.getScreen() instanceof MissionsScreen);
             });
