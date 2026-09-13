@@ -9,15 +9,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
-import com.deadlinezero.game.audio.AudioDirector;
+import com.deadlinezero.game.services.CloudAuthenticationRequiredException;
 import com.deadlinezero.game.services.CloudProviderConflictException;
+import com.deadlinezero.game.services.CloudRemoteChangedException;
 import com.deadlinezero.game.services.CloudSaveAdapter;
 import com.deadlinezero.game.services.CloudSaveService;
 import com.deadlinezero.game.visual.VisualTheme;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/** Explicit cloud-save management. Never resolves divergent progress automatically. */
+/** Explicit cloud-save management. Never resolves divergent or stale progress automatically. */
 public final class CloudSaveScreen extends ScreenAdapter {
     private final DeadlineZeroGame game;
     private final CloudSaveService cloud;
@@ -32,11 +33,13 @@ public final class CloudSaveScreen extends ScreenAdapter {
 
     private volatile boolean busy;
     private volatile boolean disposed;
+    private CloudSaveService.Comparison comparison;
     private CloudSaveService.ConflictState conflict;
     private String status;
     private boolean confirmUpload;
     private boolean confirmDownload;
     private boolean providerConflict;
+    private boolean authRequired;
 
     public CloudSaveScreen(DeadlineZeroGame game) {
         this.game = game;
@@ -63,6 +66,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
         shapes.rect(w * .18f, h * .16f, w * .18f, h * .08f);
         shapes.end();
 
+        boolean available = cloud.available();
         batch.begin();
         font.getData().setScale(1.95f);
         font.setColor(VisualTheme.TEXT);
@@ -74,13 +78,12 @@ public final class CloudSaveScreen extends ScreenAdapter {
 
         font.getData().setScale(.82f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "Cloud actions are manual. Divergent progress is never overwritten automatically.",
+        font.draw(batch, "Cloud actions are manual. Divergent or changed progress is never overwritten automatically.",
             w * .20f, h * .55f, w * .60f, Align.center, true);
 
         font.getData().setScale(1.02f);
-        boolean available = cloud.available();
         font.setColor(available ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED);
-        font.draw(batch, providerConflict ? "RECHECK" : "REFRESH", w * .20f, h * .398f, w * .17f, Align.center, false);
+        font.draw(batch, primaryLabel(), w * .20f, h * .398f, w * .17f, Align.center, false);
         font.setColor(available ? VisualTheme.GOLD : VisualTheme.MUTED);
         font.draw(batch, providerConflict ? "USE SERVER" : "UPLOAD LOCAL", w * .415f, h * .398f, w * .17f, Align.center, false);
         font.setColor(available ? VisualTheme.TEXT : VisualTheme.MUTED);
@@ -110,7 +113,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
             }
             if (y >= h * .34f && y <= h * .44f) {
                 if (x >= w * .20f && x <= w * .37f) {
-                    if (!busy && cloud.available()) { resetConfirmations(); refresh(); }
+                    if (!busy && cloud.available()) primaryAction();
                     return;
                 }
                 if (x >= w * .415f && x <= w * .585f) {
@@ -131,7 +134,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
         }
 
         if (busy || !cloud.available()) return;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) { resetConfirmations(); refresh(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) { primaryAction(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
             if (providerConflict) resolveProviderConflict(CloudSaveAdapter.ConflictChoice.SERVER);
             else requestUpload();
@@ -143,44 +146,79 @@ public final class CloudSaveScreen extends ScreenAdapter {
         }
     }
 
-    private void refresh() {
-        conflict = null;
+    private void primaryAction() {
         resetConfirmations();
-        runAsync("CHECKING CLOUD...", () -> {
-            CloudSaveService.ConflictState next = cloud.compareRemoteToLocal();
+        if (authRequired && cloud.supportsAuthentication()) authenticateAndRefresh();
+        else refresh();
+    }
+
+    private void authenticateAndRefresh() {
+        comparison = null;
+        conflict = null;
+        providerConflict = false;
+        runAsync("SIGNING IN TO PLAY GAMES...", () -> {
+            cloud.authenticate();
+            CloudSaveService.Comparison next = inspectComparisonOrConflict();
             post(() -> {
-                providerConflict = false;
-                conflict = next;
-                status = switch (next) {
-                    case EQUAL -> "LOCAL AND CLOUD ARE IDENTICAL";
-                    case LOCAL_AHEAD -> "LOCAL PROGRESS IS AHEAD";
-                    case REMOTE_AHEAD -> "CLOUD PROGRESS IS AHEAD";
-                    case DIVERGED -> "CONFLICT: PROGRESS HAS DIVERGED";
-                };
+                authRequired = false;
+                applyComparison(next);
             });
         });
+    }
+
+    private void refresh() {
+        comparison = null;
+        conflict = null;
+        providerConflict = false;
+        resetConfirmations();
+        runAsync("CHECKING CLOUD...", () -> {
+            CloudSaveService.Comparison next = inspectComparisonOrConflict();
+            post(() -> applyComparison(next));
+        });
+    }
+
+    private CloudSaveService.Comparison inspectComparisonOrConflict() throws Exception {
+        CloudSaveAdapter.ProviderConflict pending = cloud.pendingProviderConflict();
+        if (pending != null) throw new CloudProviderConflictException(pending);
+        CloudSaveService.Comparison next = cloud.inspectAgainstLocal();
+        pending = cloud.pendingProviderConflict();
+        if (pending != null) throw new CloudProviderConflictException(pending);
+        return next;
+    }
+
+    private void applyComparison(CloudSaveService.Comparison next) {
+        comparison = next;
+        providerConflict = false;
+        authRequired = false;
+        conflict = next.state();
+        status = switch (next.state()) {
+            case EQUAL -> "LOCAL AND CLOUD ARE IDENTICAL";
+            case LOCAL_AHEAD -> next.remote() == null ? "NO CLOUD SAVE YET — LOCAL READY TO UPLOAD" : "LOCAL PROGRESS IS AHEAD";
+            case REMOTE_AHEAD -> "CLOUD PROGRESS IS AHEAD";
+            case DIVERGED -> "CONFLICT: PROGRESS HAS DIVERGED";
+        };
     }
 
     private void resolveProviderConflict(CloudSaveAdapter.ConflictChoice choice) {
         runAsync("RESOLVING PLAY GAMES SNAPSHOT CONFLICT...", () -> {
             cloud.resolveProviderConflict(choice);
+            CloudSaveService.Comparison next = inspectComparisonOrConflict();
             post(() -> {
-                providerConflict = false;
                 resetConfirmations();
-                status = "PROVIDER CONFLICT RESOLVED — RECHECKING...";
-                refresh();
+                applyComparison(next);
             });
         });
     }
 
     private void requestUpload() {
-        if (conflict == null) {
+        CloudSaveService.Comparison expected = comparison;
+        if (expected == null) {
             resetConfirmations();
             status = "REFRESH REQUIRED BEFORE UPLOAD";
             return;
         }
-        boolean risky = conflict == CloudSaveService.ConflictState.REMOTE_AHEAD
-            || conflict == CloudSaveService.ConflictState.DIVERGED;
+        boolean risky = expected.state() == CloudSaveService.ConflictState.REMOTE_AHEAD
+            || expected.state() == CloudSaveService.ConflictState.DIVERGED;
         if (risky && !confirmUpload) {
             confirmUpload = true;
             confirmDownload = false;
@@ -188,23 +226,25 @@ public final class CloudSaveScreen extends ScreenAdapter {
             return;
         }
         resetConfirmations();
-        runAsync("UPLOADING LOCAL PROFILE...", () -> {
-            cloud.uploadLocal();
+        runAsync("REVALIDATING CLOUD BEFORE UPLOAD...", () -> {
+            cloud.uploadIfUnchanged(expected);
+            CloudSaveService.Comparison next = inspectComparisonOrConflict();
             post(() -> {
                 status = "UPLOAD COMPLETE";
-                conflict = CloudSaveService.ConflictState.EQUAL;
+                applyComparison(next);
             });
         });
     }
 
     private void requestDownload() {
-        if (conflict == null) {
+        CloudSaveService.Comparison expected = comparison;
+        if (expected == null) {
             resetConfirmations();
             status = "REFRESH REQUIRED BEFORE DOWNLOAD";
             return;
         }
-        boolean risky = conflict == CloudSaveService.ConflictState.LOCAL_AHEAD
-            || conflict == CloudSaveService.ConflictState.DIVERGED;
+        boolean risky = expected.state() == CloudSaveService.ConflictState.LOCAL_AHEAD
+            || expected.state() == CloudSaveService.ConflictState.DIVERGED;
         if (risky && !confirmDownload) {
             confirmDownload = true;
             confirmUpload = false;
@@ -212,13 +252,13 @@ public final class CloudSaveScreen extends ScreenAdapter {
             return;
         }
         resetConfirmations();
-        runAsync("DOWNLOADING CLOUD PROFILE...", () -> {
-            // Network I/O and checksum validation happen on the worker. Persistent Preferences are
-            // not mutated until this screen is still alive and the game thread applies the payload.
-            CloudSaveAdapter.RemoteBackup remote = cloud.inspectRemote();
+        runAsync("REVALIDATING CLOUD BEFORE DOWNLOAD...", () -> {
+            CloudSaveAdapter.RemoteBackup remote = cloud.revalidateRemote(expected);
             post(() -> {
                 if (remote == null) {
-                    status = "NO CLOUD SAVE FOUND";
+                    comparison = null;
+                    conflict = null;
+                    status = "CLOUD CHANGED — REFRESH REQUIRED";
                     return;
                 }
                 try {
@@ -229,6 +269,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
                         status = "CLOUD SAVE REQUIRES A NEWER APP VERSION";
                     }
                 } catch (RuntimeException e) {
+                    comparison = null;
                     conflict = null;
                     status = "RESTORE ERROR: " + safeMessage(e);
                 }
@@ -242,16 +283,37 @@ public final class CloudSaveScreen extends ScreenAdapter {
         worker.submit(() -> {
             try {
                 action.run();
+            } catch (CloudAuthenticationRequiredException e) {
+                post(() -> {
+                    comparison = null;
+                    conflict = null;
+                    providerConflict = false;
+                    authRequired = true;
+                    resetConfirmations();
+                    status = "PLAY GAMES SIGN-IN REQUIRED";
+                });
             } catch (CloudProviderConflictException e) {
                 post(() -> {
+                    comparison = null;
                     providerConflict = true;
+                    authRequired = false;
                     conflict = CloudSaveService.ConflictState.DIVERGED;
                     resetConfirmations();
                     status = "PLAY GAMES HAS TWO CLOUD VERSIONS — CHOOSE SERVER OR OTHER";
                 });
+            } catch (CloudRemoteChangedException e) {
+                post(() -> {
+                    comparison = null;
+                    conflict = null;
+                    providerConflict = false;
+                    resetConfirmations();
+                    status = "CLOUD CHANGED ON ANOTHER DEVICE — REFRESH REQUIRED";
+                });
             } catch (Exception e) {
                 post(() -> {
+                    comparison = null;
                     conflict = null;
+                    providerConflict = false;
                     resetConfirmations();
                     status = "CLOUD ERROR: " + safeMessage(e);
                 });
@@ -268,17 +330,24 @@ public final class CloudSaveScreen extends ScreenAdapter {
         });
     }
 
+    private String primaryLabel() {
+        if (authRequired && cloud.supportsAuthentication()) return "SIGN IN";
+        return providerConflict ? "RECHECK" : "REFRESH";
+    }
+
     private String confirmationLine() {
         if (!cloud.available()) return "Configure Play Games Services in the production Android build.";
+        if (authRequired) return "Sign in to Play Games before reading or writing cloud progress.";
         if (providerConflict) return "Resolve the provider conflict first; local progress is untouched.";
-        if (conflict == null && !busy) return "Refresh successfully before any upload or download.";
+        if (comparison == null && !busy) return "Refresh successfully before any upload or download.";
         if (confirmUpload) return "Safety confirmation armed for UPLOAD.";
         if (confirmDownload) return "Safety confirmation armed for DOWNLOAD.";
-        return busy ? "Operation in progress..." : "Refresh before choosing a direction when using multiple devices.";
+        return busy ? "Operation in progress..." : "Every transfer is bound to the exact cloud version you reviewed.";
     }
 
     private com.badlogic.gdx.graphics.Color colorForState() {
         if (!cloud.available()) return VisualTheme.MUTED;
+        if (authRequired) return VisualTheme.GOLD;
         if (conflict == CloudSaveService.ConflictState.DIVERGED) return VisualTheme.RED;
         if (conflict == CloudSaveService.ConflictState.REMOTE_AHEAD) return VisualTheme.GOLD;
         return VisualTheme.CYAN;
