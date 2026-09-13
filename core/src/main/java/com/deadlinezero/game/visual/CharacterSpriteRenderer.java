@@ -263,6 +263,7 @@ public final class CharacterSpriteRenderer {
                 case WARDEN -> { r *= .82f; g *= .94f; b *= 1.08f; scale *= 1.04f; }
                 case HARVESTER -> { r *= 1.08f; g *= .82f; b *= .66f; scale *= 1.035f; }
                 case NULL_ARCHON -> { r *= .82f; g *= .88f; b *= 1.08f; scale *= 1.065f; }
+                case FROST_COLOSSUS -> { r *= .68f; g *= .92f; b *= 1.12f; scale *= 1.10f; }
                 default -> { }
             }
 
