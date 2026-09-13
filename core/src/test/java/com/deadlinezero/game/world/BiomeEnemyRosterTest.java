@@ -32,6 +32,17 @@ final class BiomeEnemyRosterTest {
         assertEquals(Enemy.Type.REGENERATOR, BiomeEnemyRoster.remap(20, .48f, Enemy.Type.SHAMBLER));
     }
 
+    @Test void cryoVaultUsesHeavyControlPopulationWithoutReusingBiomeIdentityArt() {
+        assertEquals(BiomeEnemyRoster.Identity.NONE, BiomeEnemyRoster.identityFor(30, Enemy.Type.SHIELDED));
+        assertEquals(Enemy.Type.SHIELDED, BiomeEnemyRoster.remap(30, .10f, Enemy.Type.SHAMBLER));
+        assertEquals(Enemy.Type.PHANTOM, BiomeEnemyRoster.remap(30, .30f, Enemy.Type.SHAMBLER));
+        assertEquals(Enemy.Type.BRUTE, BiomeEnemyRoster.remap(30, .48f, Enemy.Type.SHAMBLER));
+        assertEquals(.62f, BiomeEnemyRoster.elementalDamageMultiplier(30, Enemy.Type.SHIELDED, DamageElement.FROST), .0001f);
+        assertEquals(.72f, BiomeEnemyRoster.elementalDamageMultiplier(30, Enemy.Type.BRUTE, DamageElement.FROST), .0001f);
+        assertEquals(.78f, BiomeEnemyRoster.elementalDamageMultiplier(30, Enemy.Type.PHANTOM, DamageElement.FROST), .0001f);
+        assertEquals(1f, BiomeEnemyRoster.elementalDamageMultiplier(30, Enemy.Type.SHIELDED, DamageElement.FIRE), .0001f);
+    }
+
     @Test void elementalResistanceProfilesAreBoundedAndSpecific() {
         assertEquals(.62f, BiomeEnemyRoster.elementalDamageMultiplier(10, Enemy.Type.RUNNER, DamageElement.FIRE), .0001f);
         assertEquals(1f, BiomeEnemyRoster.elementalDamageMultiplier(10, Enemy.Type.RUNNER, DamageElement.SHOCK), .0001f);
