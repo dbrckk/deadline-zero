@@ -12,7 +12,7 @@ final class CloudSaveServiceTest {
     @Test void unavailableAdapterBehavesAsEmptyRemote() throws Exception {
         CloudSaveService service = new CloudSaveService(null);
         assertNull(service.inspectRemote());
-        assertEquals(CloudSaveService.DownloadResult.EMPTY_REMOTE, service.downloadAndReplaceLocal());
+        assertEquals(CloudSaveService.DownloadResult.EMPTY_REMOTE, service.downloadAndReplaceLocal().result());
     }
 
     @Test void unavailableProviderRejectsUploadExplicitly() {
@@ -39,6 +39,21 @@ final class CloudSaveServiceTest {
         });
 
         assertEquals(CloudSaveService.ConflictState.REMOTE_AHEAD, service.compareRemoteToLocal(local));
+    }
+
+    @Test void dominantCountersDoNotOverrideUniqueRemoteState() throws Exception {
+        String local = ProfileBackupCodec.encode(Map.of(
+            "highestStage", 8, "accountLevel", 12, "totalRuns", 50, "totalKills", 9000L,
+            "threat.highest", 3, "credits", 100L));
+        String remote = ProfileBackupCodec.encode(Map.of(
+            "highestStage", 7, "accountLevel", 11, "totalRuns", 40, "totalKills", 8000L,
+            "threat.highest", 2, "credits", 900L));
+        CloudSaveService service = new CloudSaveService(new CloudSaveAdapter() {
+            @Override public RemoteBackup read() { return new RemoteBackup(remote, 789L); }
+            @Override public void write(String payload) { }
+        });
+
+        assertEquals(CloudSaveService.ConflictState.DIVERGED, service.compareRemoteToLocal(local));
     }
 
     @Test void sameMonotoneProgressWithDifferentStateIsDiverged() throws Exception {
