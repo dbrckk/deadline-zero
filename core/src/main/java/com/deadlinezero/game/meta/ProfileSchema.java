@@ -6,7 +6,7 @@ import com.badlogic.gdx.Preferences;
 final class ProfileSchema {
     static final String VERSION_KEY = "schema.version";
     static final int LEGACY_UNVERSIONED = 0;
-    static final int CURRENT_VERSION = 2;
+    static final int CURRENT_VERSION = 3;
 
     private ProfileSchema() {}
 
@@ -69,6 +69,7 @@ final class ProfileSchema {
         return switch (fromVersion) {
             case LEGACY_UNVERSIONED -> migrateLegacyToV1(store);
             case 1 -> migrateV1ToV2(store);
+            case 2 -> migrateV2ToV3(store);
             default -> throw new IllegalStateException("Unsupported profile migration from schema " + fromVersion);
         };
     }
@@ -86,5 +87,11 @@ final class ProfileSchema {
     private static int migrateV1ToV2(Store store) {
         store.putInteger(VERSION_KEY, 2);
         return 2;
+    }
+
+    /** Achievement claims are additive booleans with safe false defaults. */
+    private static int migrateV2ToV3(Store store) {
+        store.putInteger(VERSION_KEY, 3);
+        return 3;
     }
 }
