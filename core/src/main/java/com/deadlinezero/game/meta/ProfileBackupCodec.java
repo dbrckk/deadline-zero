@@ -73,6 +73,10 @@ public final class ProfileBackupCodec {
         return raw instanceof Number n ? ProfileSchema.sanitizedVersion(n.intValue()) : ProfileSchema.LEGACY_UNVERSIONED;
     }
 
+    public static boolean supportedByCurrentSchema(Map<String, ?> values) {
+        return schemaVersion(values) <= ProfileSchema.CURRENT_VERSION;
+    }
+
     private static char typeOf(Object value) {
         if (value instanceof Boolean) return 'b';
         if (value instanceof Integer) return 'i';
