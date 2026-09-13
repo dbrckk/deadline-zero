@@ -27,7 +27,8 @@ public final class AndroidLauncher extends AndroidApplication {
                 new AndroidBillingService(this),
                 new AndroidPrivacyService(this, consent),
                 new AndroidShareService(this),
-                new AndroidHapticsService(this)
+                new AndroidHapticsService(this),
+                new AndroidPlayGamesCloudSaveAdapter(this)
             )),
             config
         );
