@@ -20,6 +20,8 @@ public final class CloudSaveService {
     }
 
     public boolean available() { return adapter.available(); }
+    public boolean supportsAuthentication() { return adapter.supportsAuthentication(); }
+    public void authenticate() throws Exception { adapter.authenticate(); }
     public CloudSaveAdapter.ProviderConflict pendingProviderConflict() { return adapter.pendingConflict(); }
 
     public void resolveProviderConflict(CloudSaveAdapter.ConflictChoice choice) throws Exception {
