@@ -4,11 +4,13 @@ package com.deadlinezero.game.services;
 public interface CloudSaveAdapter {
     record RemoteBackup(String payload, long modifiedAtEpochMillis) {}
 
+    default boolean available() { return true; }
     RemoteBackup read() throws Exception;
     void write(String payload) throws Exception;
 
     static CloudSaveAdapter unavailable() {
         return new CloudSaveAdapter() {
+            @Override public boolean available() { return false; }
             @Override public RemoteBackup read() { return null; }
             @Override public void write(String payload) {
                 throw new IllegalStateException("Cloud save provider is unavailable");
