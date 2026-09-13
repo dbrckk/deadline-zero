@@ -18,14 +18,14 @@ final class MasteryProgressTest {
         assertEquals(1, first.biomeRankAfter());
         assertTrue(first.rankedUp());
         assertEquals(440, first.creditsReward());
-        assertEquals(5, first.gemsReward());
+        assertEquals(4, first.gemsReward());
 
         mastery.recordVictory(WeaponCatalog.AR9.id, 1);
         MasteryProgress.Gain third = mastery.recordVictory(WeaponCatalog.AR9.id, 1);
         assertEquals(2, third.weaponRankAfter());
         assertEquals(2, third.biomeRankAfter());
         assertEquals(440, third.creditsReward());
-        assertEquals(5, third.gemsReward());
+        assertEquals(4, third.gemsReward());
         assertEquals(4, mastery.winsForNextWeaponRank(WeaponCatalog.AR9.id));
     }
 

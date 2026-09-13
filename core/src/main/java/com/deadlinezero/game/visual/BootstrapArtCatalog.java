@@ -58,6 +58,9 @@ public final class BootstrapArtCatalog {
         if (key.equals("weapon/breacher")) return 11;
         if (key.equals("weapon/ion_needle")) return 14;
         if (key.equals("weapon/cinder_cannon")) return 12;
+        if (key.equals("weapon/glacier_repeater")) return 13;
+        if (key.equals("weapon/storm_coil")) return 14;
+        if (key.equals("weapon/titan_revolver")) return 11;
 
         if (key.equals("fx/muzzle_fire") || key.equals("fx/impact_fire") || key.equals("fx/boss_explosion")) return 12;
         if (key.equals("fx/impact_frost") || key.equals("fx/dash") || key.equals("fx/impact_energy")) return 13;

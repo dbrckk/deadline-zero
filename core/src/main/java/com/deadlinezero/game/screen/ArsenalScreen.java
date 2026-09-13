@@ -22,6 +22,7 @@ import com.deadlinezero.game.visual.VisualTheme;
 
 /** Production-shaped weapon selection screen with persistent unlock-aware loadout choice. */
 public final class ArsenalScreen extends ScreenAdapter {
+    private static final int PAGE_SIZE = 6;
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
     private final ShapeRenderer shapes = new ShapeRenderer();
@@ -40,14 +41,19 @@ public final class ArsenalScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
         WeaponDefinition[] all = WeaponCatalog.all();
-        float detailH = 112f;
+        int pageStart = (focus / PAGE_SIZE) * PAGE_SIZE;
+        int pageEnd = Math.min(all.length, pageStart + PAGE_SIZE);
+        int page = pageStart / PAGE_SIZE;
+        int pageCount = Math.max(1, (all.length + PAGE_SIZE - 1) / PAGE_SIZE);
+        float detailH = 160f;
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(VisualTheme.PANEL); shapes.rect(18, h - 88, w - 36, 58);
         float cardW = (w - 56f) / 2f;
-        float cardH = Math.min(102f, (h - 290f) / 4f);
+        float cardH = Math.min(142f, (h - 270f) / 3f);
         float top = h - 126f;
-        for (int i = 0; i < all.length; i++) {
-            int row = i / 2, col = i % 2;
+        for (int i = pageStart; i < pageEnd; i++) {
+            int slot = i - pageStart;
+            int row = slot / 2, col = slot % 2;
             float x = 20f + col * (cardW + 16f);
             float y = top - row * (cardH + 10f) - cardH;
             boolean selected = all[i].id.equals(game.profile.selectedWeaponId);
@@ -59,33 +65,34 @@ public final class ArsenalScreen extends ScreenAdapter {
             if (selected) { shapes.setColor(VisualTheme.CYAN); shapes.rect(x, y, 4f, cardH); }
             if (!unlocked) { shapes.setColor(0f, 0f, 0f, .38f); shapes.rect(x, y, cardW, cardH); }
         }
-        shapes.setColor(VisualTheme.PANEL); shapes.rect(20, 42, w - 40, detailH);
-        drawStatBars(all[MathUtils.clamp(focus, 0, all.length - 1)], WeaponCatalog.byId(game.profile.selectedWeaponId), 34f, 56f, w * .46f, 76f);
+        shapes.setColor(VisualTheme.PANEL); shapes.rect(20, 36, w - 40, detailH);
+        drawStatBars(all[MathUtils.clamp(focus, 0, all.length - 1)], WeaponCatalog.byId(game.profile.selectedWeaponId), 34f, 64f, w * .46f, 100f);
         shapes.end();
 
         batch.begin();
-        font.getData().setScale(1.2f); font.setColor(VisualTheme.TEXT); font.draw(batch, "ARSENAL", 28, h - 48);
-        font.getData().setScale(.48f); font.setColor(VisualTheme.MUTED);
+        font.getData().setScale(1.6f); font.setColor(VisualTheme.TEXT); font.draw(batch, "ARSENAL", 28, h - 48);
+        font.getData().setScale(.72f); font.setColor(VisualTheme.MUTED);
         font.draw(batch, "SELECT YOUR STARTING WEAPON  •  FREE PROGRESSION UNLOCKS", 28, h - 70);
-        for (int i = 0; i < all.length; i++) drawCard(all[i], i, cardW, cardH, top);
+        font.draw(batch, "PAGE " + (page + 1) + "/" + pageCount, w - 180f, h - 70);
+        for (int i = pageStart; i < pageEnd; i++) drawCard(all[i], i, i - pageStart, cardW, cardH, top);
         WeaponDefinition weapon = all[MathUtils.clamp(focus, 0, all.length - 1)];
         WeaponDefinition equipped = WeaponCatalog.byId(game.profile.selectedWeaponId);
         drawDetailText(weapon, equipped, w);
         drawAuthoredPreview(weapon, w, detailH);
         batch.end();
-        handleInput(w, h, all, cardW, cardH, top);
+        handleInput(w, h, all, pageStart, pageEnd, cardW, cardH, top);
     }
 
-    private void drawCard(WeaponDefinition weapon, int i, float cardW, float cardH, float top) {
-        int row = i / 2, col = i % 2;
+    private void drawCard(WeaponDefinition weapon, int i, int slot, float cardW, float cardH, float top) {
+        int row = slot / 2, col = slot % 2;
         float x = 20f + col * (cardW + 16f);
         float y = top - row * (cardH + 10f) - cardH;
         boolean selected = weapon.id.equals(game.profile.selectedWeaponId);
         boolean unlocked = WeaponProgression.unlocked(game.profile, weapon);
         float dps = paperDps(weapon);
-        font.getData().setScale(.56f); font.setColor(unlocked ? VisualTheme.TEXT : VisualTheme.MUTED);
+        font.getData().setScale(.82f); font.setColor(unlocked ? VisualTheme.TEXT : VisualTheme.MUTED);
         font.draw(batch, weapon.displayName.toUpperCase(), x + 14f, y + cardH - 17f);
-        font.getData().setScale(.41f); font.setColor(elementColor(weapon));
+        font.getData().setScale(.61f); font.setColor(elementColor(weapon));
         font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x + 14f, y + cardH - 38f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, Math.round(dps) + " DPS   " + Math.round(weapon.damage) + " DMG   " + weapon.projectileCount + "x", x + 14f, y + cardH - 59f);
@@ -96,17 +103,17 @@ public final class ArsenalScreen extends ScreenAdapter {
 
     private void drawDetailText(WeaponDefinition weapon, WeaponDefinition equipped, float w) {
         float dps = paperDps(weapon), equippedDps = paperDps(equipped), x = w * .50f;
-        font.getData().setScale(.50f); font.setColor(VisualTheme.TEXT); font.draw(batch, weapon.displayName.toUpperCase(), x, 132f);
-        font.getData().setScale(.42f); font.setColor(elementColor(weapon)); font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x, 111f);
+        font.getData().setScale(.72f); font.setColor(VisualTheme.TEXT); font.draw(batch, weapon.displayName.toUpperCase(), x, 174f);
+        font.getData().setScale(.58f); font.setColor(elementColor(weapon)); font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x, 150f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "DPS " + Math.round(dps) + deltaText(dps - equippedDps) + "   FIRE " + String.format(java.util.Locale.US, "%.2fs", weapon.fireInterval) + "   CRIT " + Math.round(weapon.critChance * 100f) + "%", x, 90f);
-        font.draw(batch, "PEN " + weapon.penetration + deltaText(weapon.penetration - equipped.penetration) + "   KB " + oneDecimal(weapon.knockback) + deltaText(weapon.knockback - equipped.knockback) + "   SHOTS " + weapon.projectileCount + deltaText(weapon.projectileCount - equipped.projectileCount), x, 70f);
-        font.setColor(VisualTheme.CYAN_SOFT); font.draw(batch, description(weapon), x, 50f, w * .45f, Align.left, true);
+        font.draw(batch, "DPS " + Math.round(dps) + deltaText(dps - equippedDps) + "   FIRE " + String.format(java.util.Locale.US, "%.2fs", weapon.fireInterval) + "   CRIT " + Math.round(weapon.critChance * 100f) + "%", x, 126f);
+        font.draw(batch, "PEN " + weapon.penetration + deltaText(weapon.penetration - equipped.penetration) + "   KB " + oneDecimal(weapon.knockback) + deltaText(weapon.knockback - equipped.knockback) + "   SHOTS " + weapon.projectileCount + deltaText(weapon.projectileCount - equipped.projectileCount), x, 104f);
+        font.setColor(VisualTheme.CYAN_SOFT); font.draw(batch, description(weapon), x, 80f, w * .45f, Align.left, true);
         WeaponSynergyRules.Synergy synergy = WeaponSynergyRules.resolve(game.profile.selectedSurvivor, weapon);
         if (synergy != WeaponSynergyRules.Synergy.NONE) {
-            font.setColor(VisualTheme.GOLD); font.draw(batch, "SYNERGY • " + synergy.displayName, x, 31f);
+            font.setColor(VisualTheme.GOLD); font.draw(batch, "SYNERGY • " + synergy.displayName, x, 52f);
         }
-        font.setColor(VisualTheme.MUTED); font.draw(batch, "A/D OR ←/→  •  ENTER SELECT  •  ESC/BACK BASE", 24, 25);
+        font.setColor(VisualTheme.MUTED); font.draw(batch, "A/D OR ←/→  •  ENTER SELECT  •  ESC/BACK BASE", 24, 20);
     }
 
     private void drawStatBars(WeaponDefinition weapon, WeaponDefinition equipped, float x, float y, float width, float height) {
@@ -128,7 +135,7 @@ public final class ArsenalScreen extends ScreenAdapter {
         float maxW = w * .16f, maxH = detailH - 28f, aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
         float drawW = maxW, drawH = drawW / Math.max(.01f, aspect);
         if (drawH > maxH) { drawH = maxH; drawW = drawH * aspect; }
-        batch.setColor(Color.WHITE); batch.draw(region, w * .30f - drawW * .5f, 55f, drawW, drawH);
+        batch.setColor(Color.WHITE); batch.draw(region, w * .30f - drawW * .5f, 58f, drawW, drawH);
     }
 
     private float paperDps(WeaponDefinition weapon) { return weapon.damage * weapon.projectileCount / Math.max(.05f, weapon.fireInterval); }
@@ -143,6 +150,9 @@ public final class ArsenalScreen extends ScreenAdapter {
             case "breacher" -> "HEAVY BREACH";
             case "ion_needle" -> "CAPACITOR PRECISION";
             case "cinder_cannon" -> "THERMAL ARTILLERY";
+            case "glacier_repeater" -> "CRYO BURST";
+            case "storm_coil" -> "DEEP ARC PIERCER";
+            case "titan_revolver" -> "HEAVY SIDEARM";
             default -> "BALANCED RIFLE";
         };
     }
@@ -157,6 +167,9 @@ public final class ArsenalScreen extends ScreenAdapter {
             case "breacher" -> "Nine-projectile blast with brutal knockback, limited by range and reload cadence.";
             case "ion_needle" -> "Every 5th projectile overcharges: guaranteed critical, bonus penetration and impact. VOLT/NYX unlock signature synergies.";
             case "cinder_cannon" -> "Every 4th shell vents stored heat for +55% payload, extra penetration and knockback. BASTION unlocks Siege Furnace.";
+            case "glacier_repeater" -> "Three-projectile FROST burst for safe mid-range control. WRAITH unlocks Frost Phantom.";
+            case "storm_coil" -> "High-voltage precision fire with deep penetration through specialist lines. VOLT unlocks Tempest Circuit.";
+            case "titan_revolver" -> "Slow heavy KINETIC sidearm with high crit pressure and stagger. NYX unlocks Deadeye Magnum.";
             default -> "Reliable all-round rifle with stable damage, cadence and accuracy for every stage.";
         };
     }
@@ -166,7 +179,8 @@ public final class ArsenalScreen extends ScreenAdapter {
     private String oneDecimal(float value) { return String.format(java.util.Locale.US, "%.1f", value); }
     private Color elementColor(WeaponDefinition weapon) { return switch (weapon.element) { case FIRE -> Color.ORANGE; case FROST -> VisualTheme.CYAN; case SHOCK -> VisualTheme.VIOLET; default -> VisualTheme.CYAN_SOFT; }; }
 
-    private void handleInput(float w, float h, WeaponDefinition[] all, float cardW, float cardH, float top) {
+    private void handleInput(float w, float h, WeaponDefinition[] all, int pageStart, int pageEnd,
+                             float cardW, float cardH, float top) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK); game.showMenu(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A)) focus = Math.max(0, focus - 1);
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D)) focus = Math.min(all.length - 1, focus + 1);
@@ -175,8 +189,9 @@ public final class ArsenalScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) select(all[focus]);
         if (!Gdx.input.justTouched()) return;
         float tx = Gdx.input.getX(), ty = h - Gdx.input.getY();
-        for (int i = 0; i < all.length; i++) {
-            int row = i / 2, col = i % 2; float x = 20f + col * (cardW + 16f); float y = top - row * (cardH + 10f) - cardH;
+        for (int i = pageStart; i < pageEnd; i++) {
+            int slot = i - pageStart;
+            int row = slot / 2, col = slot % 2; float x = 20f + col * (cardW + 16f); float y = top - row * (cardH + 10f) - cardH;
             if (tx >= x && tx <= x + cardW && ty >= y && ty <= y + cardH) { focus = i; select(all[i]); return; }
         }
     }

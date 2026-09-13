@@ -9,11 +9,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.ai.EnemyState;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.SurvivorCatalog;
+import com.deadlinezero.game.screen.ArsenalScreen;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.visual.CombatVisualEvents;
@@ -30,6 +32,24 @@ import org.junit.runner.RunWith;
 /** Captures deterministic phone-scale gameplay frames for human visual QA in CI artifacts. */
 @RunWith(AndroidJUnit4.class)
 public final class AndroidGameplayVisualProbeTest {
+    @Test
+    public void capturesExpandedArsenalScreen() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.profile.accountLevel = 22;
+                game.profile.highestStage = 20;
+                game.profile.selectedStage = 20;
+                game.profile.selectedWeaponId = WeaponCatalog.TITAN_REVOLVER.id;
+                game.showArsenal();
+                assertTrue("expected ArsenalScreen for weapon roster visual probe", game.getScreen() instanceof ArsenalScreen);
+            });
+            Thread.sleep(700L);
+            capture("expanded-arsenal.png");
+        }
+    }
+
     @Test
     public void capturesWeeklyMissionsScreen() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {

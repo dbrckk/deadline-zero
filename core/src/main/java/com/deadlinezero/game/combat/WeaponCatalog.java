@@ -29,8 +29,21 @@ public final class WeaponCatalog {
     public static final WeaponDefinition CINDER_CANNON = new WeaponDefinition(
         "cinder_cannon", "C90 Cinder Cannon", 86f, 1.08f, 18f, 1, 0f, .08f, 2.25f, 1, 4.8f, DamageElement.FIRE);
 
+    /** Three-round cryo burst: mid-range control with light penetration and reliable chill application. */
+    public static final WeaponDefinition GLACIER_REPEATER = new WeaponDefinition(
+        "glacier_repeater", "GR-3 Glacier Repeater", 16.5f, .34f, 24f, 3, 5f, .10f, 2f, 1, 1.3f, DamageElement.FROST);
+
+    /** High-voltage precision coil: slower than the Arc Carbine but pierces deep specialist lines. */
+    public static final WeaponDefinition STORM_COIL = new WeaponDefinition(
+        "storm_coil", "SC-12 Storm Coil", 28f, .21f, 27f, 1, 1.5f, .14f, 2.1f, 3, .8f, DamageElement.SHOCK);
+
+    /** Heavy precision sidearm: low cadence, high crit pressure and meaningful kinetic stagger. */
+    public static final WeaponDefinition TITAN_REVOLVER = new WeaponDefinition(
+        "titan_revolver", "TR-6 Titan Revolver", 54f, .48f, 26f, 1, 0f, .24f, 2.5f, 2, 2f, DamageElement.KINETIC);
+
     private static final WeaponDefinition[] ALL = {
-        AR9, SCATTERGUN, RAIL_RIFLE, INFERNO_SMG, CRYO_LANCE, ARC_CARBINE, BREACHER, ION_NEEDLE, CINDER_CANNON
+        AR9, SCATTERGUN, RAIL_RIFLE, INFERNO_SMG, CRYO_LANCE, ARC_CARBINE, BREACHER, ION_NEEDLE, CINDER_CANNON,
+        GLACIER_REPEATER, STORM_COIL, TITAN_REVOLVER
     };
 
     public static WeaponDefinition[] all() { return ALL.clone(); }

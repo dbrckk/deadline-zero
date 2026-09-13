@@ -49,7 +49,7 @@ public final class MasteryProgress {
         int weaponRanks = weaponAfter - weaponBefore;
         int biomeRanks = biomeAfter - biomeBefore;
         int credits = weaponRanks * 180 + biomeRanks * 260;
-        int gems = weaponRanks * 2 + biomeRanks * 3;
+        int gems = weaponRanks + biomeRanks * 3;
         return new Gain(weaponBefore, weaponAfter, biomeBefore, biomeAfter, credits, gems);
     }
 

@@ -21,6 +21,9 @@ public final class WeaponProgression {
             case "breacher" -> level >= 12 || stage >= 10;
             case "ion_needle" -> level >= 14 || stage >= 12;
             case "cinder_cannon" -> level >= 16 || stage >= 14;
+            case "glacier_repeater" -> level >= 18 || stage >= 16;
+            case "storm_coil" -> level >= 20 || stage >= 18;
+            case "titan_revolver" -> level >= 22 || stage >= 20;
             default -> false;
         };
     }
@@ -36,6 +39,9 @@ public final class WeaponProgression {
             case "breacher" -> 12;
             case "ion_needle" -> 14;
             case "cinder_cannon" -> 16;
+            case "glacier_repeater" -> 18;
+            case "storm_coil" -> 20;
+            case "titan_revolver" -> 22;
             default -> Integer.MAX_VALUE;
         };
     }
