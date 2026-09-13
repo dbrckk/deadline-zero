@@ -216,6 +216,40 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesFrostColossusGameplay() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for FROST COLOSSUS visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(40);
+                assertTrue("stage 40 must route to FROST COLOSSUS",
+                    com.deadlinezero.game.ai.BossIdentity.forStage(40)
+                        == com.deadlinezero.game.ai.BossIdentity.FROST_COLOSSUS);
+                injectFrostColossusBoss((GameScreen) game.getScreen());
+            });
+            Thread.sleep(1500L);
+            capture("frost-colossus-gameplay.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectFrostColossusBoss(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            enemies.add(new Enemy(Enemy.Type.BOSS, 0f, 3.8f, 500_000f, .015f, 1.05f, 0f, 2));
+            enemies.add(new Enemy(Enemy.Type.SHIELDED, -4.5f, 1.8f, 500_000f, .02f, .58f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.BRUTE, 4.6f, 1.5f, 500_000f, .02f, .62f, 0f, 1));
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject FROST COLOSSUS boss for visual QA", exception);
+        }
+    }
+
+    @Test
     public void capturesCryogenicDepthsGameplay() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
