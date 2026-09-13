@@ -56,7 +56,7 @@ public final class BiomeEnemyRoster {
                 default -> Identity.NONE;
             };
         }
-        if (biome == EnvironmentBiomeRules.Biome.CRYO_VAULT) return Identity.NONE;
+        if (biome == EnvironmentBiomeRules.Biome.CRYO_VAULT || biome == EnvironmentBiomeRules.Biome.CRYOGENIC_DEPTHS) return Identity.NONE;
         if (biome == EnvironmentBiomeRules.Biome.NULL_SECTOR) {
             return switch (type) {
                 case PHANTOM -> Identity.PHASE_STALKER;
@@ -88,6 +88,10 @@ public final class BiomeEnemyRoster {
             if (r < .22f) return Enemy.Type.SHIELDED;
             if (r < .40f) return Enemy.Type.PHANTOM;
             if (r < .56f) return Enemy.Type.BRUTE;
+        } else if (biome == EnvironmentBiomeRules.Biome.CRYOGENIC_DEPTHS) {
+            if (r < .24f) return Enemy.Type.REGENERATOR;
+            if (r < .43f) return Enemy.Type.RANGED;
+            if (r < .60f) return Enemy.Type.ELITE;
         }
         return fallback;
     }
@@ -98,6 +102,11 @@ public final class BiomeEnemyRoster {
             if (type == Enemy.Type.SHIELDED) return .62f;
             if (type == Enemy.Type.BRUTE) return .72f;
             if (type == Enemy.Type.PHANTOM) return .78f;
+        }
+        if (biome == EnvironmentBiomeRules.Biome.CRYOGENIC_DEPTHS) {
+            if (element == DamageElement.FROST && type == Enemy.Type.REGENERATOR) return .58f;
+            if (element == DamageElement.SHOCK && type == Enemy.Type.RANGED) return .70f;
+            if (element == DamageElement.FIRE && type == Enemy.Type.ELITE) return 1.12f;
         }
         Identity identity = identityFor(stage, type);
         return identity.resists(element) ? identity.resistanceMultiplier : 1f;

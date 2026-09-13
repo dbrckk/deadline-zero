@@ -33,8 +33,8 @@ final class MasteryEconomyGuardrailTest {
     @Test void biomeMasteryBudgetIsSmallAndOneTime() {
         int credits = EnvironmentBiomeRules.Biome.values().length * MasteryProgress.MAX_RANK * 260;
         int gems = EnvironmentBiomeRules.Biome.values().length * MasteryProgress.MAX_RANK * 3;
-        assertEquals(5200, credits);
-        assertEquals(60, gems);
+        assertEquals(6500, credits);
+        assertEquals(75, gems);
     }
 
     @Test void persistenceIdentifiersStaySafeAndUnique() {
@@ -44,6 +44,6 @@ final class MasteryEconomyGuardrailTest {
             assertTrue(ids.add(weapon.id), "duplicate weapon mastery id: " + weapon.id);
         }
         assertEquals(12, ids.size());
-        assertEquals(4, EnvironmentBiomeRules.Biome.values().length);
+        assertEquals(5, EnvironmentBiomeRules.Biome.values().length);
     }
 }

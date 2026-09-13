@@ -28,11 +28,18 @@ public final class EnvironmentBiomeRulesTest {
         assertFalse(EnvironmentBiomeRules.isNullSector(30));
     }
 
-    @Test public void cryoVaultStartsAtStageThirty() {
+    @Test public void cryoVaultOwnsStagesThirtyThroughThirtyNine() {
         assertEquals(EnvironmentBiomeRules.Biome.CRYO_VAULT, EnvironmentBiomeRules.forStage(30));
-        assertEquals(EnvironmentBiomeRules.Biome.CRYO_VAULT, EnvironmentBiomeRules.forStage(44));
+        assertEquals(EnvironmentBiomeRules.Biome.CRYO_VAULT, EnvironmentBiomeRules.forStage(39));
         assertTrue(EnvironmentBiomeRules.isCryoVault(30));
-        assertFalse(EnvironmentBiomeRules.isCryoVault(29));
+        assertFalse(EnvironmentBiomeRules.isCryoVault(40));
+    }
+
+    @Test public void cryogenicDepthsStartsAtStageForty() {
+        assertEquals(EnvironmentBiomeRules.Biome.CRYOGENIC_DEPTHS, EnvironmentBiomeRules.forStage(40));
+        assertEquals(EnvironmentBiomeRules.Biome.CRYOGENIC_DEPTHS, EnvironmentBiomeRules.forStage(55));
+        assertTrue(EnvironmentBiomeRules.isCryogenicDepths(40));
+        assertFalse(EnvironmentBiomeRules.isCryogenicDepths(39));
     }
 
     @Test public void invalidStagesSanitizeToFirstBiome() {
