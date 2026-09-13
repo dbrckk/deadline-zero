@@ -6,7 +6,7 @@ import com.badlogic.gdx.Preferences;
 final class ProfileSchema {
     static final String VERSION_KEY = "schema.version";
     static final int LEGACY_UNVERSIONED = 0;
-    static final int CURRENT_VERSION = 1;
+    static final int CURRENT_VERSION = 2;
 
     private ProfileSchema() {}
 
@@ -68,6 +68,7 @@ final class ProfileSchema {
     private static int migrateOne(Store store, int fromVersion) {
         return switch (fromVersion) {
             case LEGACY_UNVERSIONED -> migrateLegacyToV1(store);
+            case 1 -> migrateV1ToV2(store);
             default -> throw new IllegalStateException("Unsupported profile migration from schema " + fromVersion);
         };
     }
@@ -79,5 +80,11 @@ final class ProfileSchema {
     private static int migrateLegacyToV1(Store store) {
         store.putInteger(VERSION_KEY, 1);
         return 1;
+    }
+
+    /** Weekly mission fields are additive and use safe defaults, so v2 only advances the schema marker. */
+    private static int migrateV1ToV2(Store store) {
+        store.putInteger(VERSION_KEY, 2);
+        return 2;
     }
 }
