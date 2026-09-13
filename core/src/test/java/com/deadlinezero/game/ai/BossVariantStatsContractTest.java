@@ -19,4 +19,11 @@ final class BossVariantStatsContractTest {
         assertTrue(s.speed() > 1.35f);
         assertTrue(s.damage() > 24f);
     }
+
+    @Test void frostColossusIsSlowDurableAndHeavy() {
+        var s = BossVariantStats.forIdentity(BossIdentity.FROST_COLOSSUS, 2200f, 1.35f, 24f);
+        assertTrue(s.hp() > 3000f);
+        assertTrue(s.speed() < 1.10f);
+        assertTrue(s.damage() > 27f);
+    }
 }
