@@ -21,6 +21,9 @@ public final class WeaponProgression {
             case "breacher" -> level >= 12 || stage >= 10;
             case "ion_needle" -> level >= 14 || stage >= 12;
             case "cinder_cannon" -> level >= 16 || stage >= 14;
+            case "tempest_burst" -> level >= 18 || stage >= 16;
+            case "whiteout_shard" -> level >= 20 || stage >= 18;
+            case "phoenix_repeater" -> level >= 22 || stage >= 20;
             default -> false;
         };
     }
@@ -36,6 +39,9 @@ public final class WeaponProgression {
             case "breacher" -> 12;
             case "ion_needle" -> 14;
             case "cinder_cannon" -> 16;
+            case "tempest_burst" -> 18;
+            case "whiteout_shard" -> 20;
+            case "phoenix_repeater" -> 22;
             default -> Integer.MAX_VALUE;
         };
     }
