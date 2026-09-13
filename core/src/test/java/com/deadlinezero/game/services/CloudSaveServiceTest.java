@@ -56,6 +56,16 @@ final class CloudSaveServiceTest {
         assertEquals(CloudSaveService.ConflictState.DIVERGED, service.compareRemoteToLocal(local));
     }
 
+    @Test void futureSchemaIsRejectedBeforeLocalStoreAccess() {
+        String future = ProfileBackupCodec.encode(Map.of(
+            "schema.version", Integer.MAX_VALUE,
+            "highestStage", 999
+        ));
+        CloudSaveService service = new CloudSaveService(null);
+
+        assertEquals(CloudSaveService.DownloadResult.REJECTED_NEWER_SCHEMA, service.applyRemote(future));
+    }
+
     @Test void uploadRejectsCorruptLocalPayloadBeforeProviderWrite() {
         CloudSaveService service = new CloudSaveService(new CloudSaveAdapter() {
             @Override public RemoteBackup read() { return null; }
