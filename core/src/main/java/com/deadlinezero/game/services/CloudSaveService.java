@@ -20,6 +20,12 @@ public final class CloudSaveService {
     }
 
     public boolean available() { return adapter.available(); }
+    public CloudSaveAdapter.ProviderConflict pendingProviderConflict() { return adapter.pendingConflict(); }
+
+    public void resolveProviderConflict(CloudSaveAdapter.ConflictChoice choice) throws Exception {
+        if (choice == null) throw new IllegalArgumentException("choice");
+        adapter.resolvePendingConflict(choice);
+    }
 
     public void uploadLocal() throws Exception {
         upload(ProfileStore.exportBackup());
