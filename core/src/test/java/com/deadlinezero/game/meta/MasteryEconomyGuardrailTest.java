@@ -22,7 +22,11 @@ final class MasteryEconomyGuardrailTest {
             }
         }
         assertEquals(WeaponCatalog.all().length * MasteryProgress.MAX_RANK * 180, totalCredits);
-        assertEquals(WeaponCatalog.all().length * MasteryProgress.MAX_RANK * 2, totalGems);
+        int expectedGems = 0;
+        for (WeaponDefinition weapon : WeaponCatalog.all()) {
+            expectedGems += MasteryProgress.MAX_RANK * MasteryProgress.weaponGemsPerRank(weapon);
+        }
+        assertEquals(expectedGems, totalGems);
         assertTrue(totalGems <= 100, "weapon mastery gem budget drifted too high");
     }
 
@@ -39,7 +43,7 @@ final class MasteryEconomyGuardrailTest {
             assertTrue(weapon.id.matches("[a-z0-9_]+"), weapon.id);
             assertTrue(ids.add(weapon.id), "duplicate weapon mastery id: " + weapon.id);
         }
-        assertEquals(9, ids.size());
+        assertEquals(12, ids.size());
         assertEquals(3, EnvironmentBiomeRules.Biome.values().length);
     }
 }

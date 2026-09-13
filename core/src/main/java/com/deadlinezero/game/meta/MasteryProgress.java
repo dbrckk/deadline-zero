@@ -49,7 +49,7 @@ public final class MasteryProgress {
         int weaponRanks = weaponAfter - weaponBefore;
         int biomeRanks = biomeAfter - biomeBefore;
         int credits = weaponRanks * 180 + biomeRanks * 260;
-        int gems = weaponRanks * 2 + biomeRanks * 3;
+        int gems = weaponRanks * weaponGemsPerRank(weapon) + biomeRanks * 3;
         return new Gain(weaponBefore, weaponAfter, biomeBefore, biomeAfter, credits, gems);
     }
 
@@ -75,6 +75,15 @@ public final class MasteryProgress {
     public static String rankTitle(int rank) {
         int safe = Math.max(0, Math.min(MAX_RANK, rank));
         return RANK_TITLES[safe];
+    }
+
+    /**
+     * Endgame arsenal expansion stays non-pay-to-win by making late mastery ranks credit-only.
+     * The original nine weapons retain their established gem rewards.
+     */
+    public static int weaponGemsPerRank(WeaponDefinition weapon) {
+        if (weapon == null) return 0;
+        return WeaponProgression.unlockAccountLevel(weapon) <= 16 ? 2 : 0;
     }
 
     public static int winsForNextRank(int wins) {

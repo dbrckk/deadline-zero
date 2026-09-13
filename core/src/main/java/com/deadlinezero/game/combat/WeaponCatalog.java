@@ -29,8 +29,21 @@ public final class WeaponCatalog {
     public static final WeaponDefinition CINDER_CANNON = new WeaponDefinition(
         "cinder_cannon", "C90 Cinder Cannon", 86f, 1.08f, 18f, 1, 0f, .08f, 2.25f, 1, 4.8f, DamageElement.FIRE);
 
+    /** Endgame shock burst rifle: controlled three-round fan with moderate penetration. */
+    public static final WeaponDefinition TEMPEST_BURST = new WeaponDefinition(
+        "tempest_burst", "T3 Tempest Burst", 14.5f, .32f, 25f, 3, 5.5f, .09f, 1.9f, 1, 1.25f, DamageElement.SHOCK);
+
+    /** Endgame frost scatter rifle: four dense shards trade cadence for control and stagger. */
+    public static final WeaponDefinition WHITEOUT_SHARD = new WeaponDefinition(
+        "whiteout_shard", "W8 Whiteout Shard", 24f, .58f, 20f, 4, 9f, .07f, 1.8f, 0, 2.3f, DamageElement.FROST);
+
+    /** Endgame incendiary repeater: accurate sustained pressure between SMG and cannon extremes. */
+    public static final WeaponDefinition PHOENIX_REPEATER = new WeaponDefinition(
+        "phoenix_repeater", "P12 Phoenix Repeater", 20f, .20f, 27f, 1, 1.5f, .12f, 2f, 1, .9f, DamageElement.FIRE);
+
     private static final WeaponDefinition[] ALL = {
-        AR9, SCATTERGUN, RAIL_RIFLE, INFERNO_SMG, CRYO_LANCE, ARC_CARBINE, BREACHER, ION_NEEDLE, CINDER_CANNON
+        AR9, SCATTERGUN, RAIL_RIFLE, INFERNO_SMG, CRYO_LANCE, ARC_CARBINE, BREACHER, ION_NEEDLE, CINDER_CANNON,
+        TEMPEST_BURST, WHITEOUT_SHARD, PHOENIX_REPEATER
     };
 
     public static WeaponDefinition[] all() { return ALL.clone(); }

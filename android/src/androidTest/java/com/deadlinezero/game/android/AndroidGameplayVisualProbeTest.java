@@ -15,6 +15,7 @@ import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.SurvivorCatalog;
 import com.deadlinezero.game.screen.GameScreen;
+import com.deadlinezero.game.screen.ArsenalScreen;
 import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.visual.CombatVisualEvents;
 import com.deadlinezero.game.world.BiomeEnemyRoster;
@@ -54,6 +55,24 @@ public final class AndroidGameplayVisualProbeTest {
             });
             Thread.sleep(700L);
             capture("weekly-missions.png");
+        }
+    }
+
+    @Test
+    public void capturesEndgameArsenalPage() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.profile.accountLevel = 22;
+                game.profile.highestStage = 20;
+                assertTrue("endgame weapon should unlock for Arsenal QA",
+                    game.profile.selectWeapon(com.deadlinezero.game.combat.WeaponCatalog.PHOENIX_REPEATER));
+                game.showArsenal();
+                assertTrue("expected ArsenalScreen for visual probe", game.getScreen() instanceof ArsenalScreen);
+            });
+            Thread.sleep(500L);
+            capture("arsenal-endgame.png");
         }
     }
 
