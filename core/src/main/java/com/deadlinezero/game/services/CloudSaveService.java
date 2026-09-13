@@ -16,7 +16,12 @@ public final class CloudSaveService {
     }
 
     public void uploadLocal() throws Exception {
-        adapter.write(ProfileStore.exportBackup());
+        upload(ProfileStore.exportBackup());
+    }
+
+    public void upload(String localBackup) throws Exception {
+        ProfileBackupCodec.decode(localBackup);
+        adapter.write(localBackup);
     }
 
     public CloudSaveAdapter.RemoteBackup inspectRemote() throws Exception {
@@ -27,9 +32,13 @@ public final class CloudSaveService {
     }
 
     public ConflictState compareRemoteToLocal() throws Exception {
+        return compareRemoteToLocal(ProfileStore.exportBackup());
+    }
+
+    public ConflictState compareRemoteToLocal(String localBackup) throws Exception {
+        ProfileBackupSummary local = ProfileBackupSummary.from(ProfileBackupCodec.decode(localBackup));
         CloudSaveAdapter.RemoteBackup remote = inspectRemote();
         if (remote == null) return ConflictState.LOCAL_AHEAD;
-        ProfileBackupSummary local = ProfileBackupSummary.from(ProfileBackupCodec.decode(ProfileStore.exportBackup()));
         ProfileBackupSummary cloud = ProfileBackupSummary.from(ProfileBackupCodec.decode(remote.payload()));
         if (local.equals(cloud)) return ConflictState.EQUAL;
         if (local.dominates(cloud)) return ConflictState.LOCAL_AHEAD;
@@ -40,6 +49,10 @@ public final class CloudSaveService {
     public DownloadResult downloadAndReplaceLocal() throws Exception {
         CloudSaveAdapter.RemoteBackup remote = inspectRemote();
         if (remote == null) return DownloadResult.EMPTY_REMOTE;
-        return ProfileStore.importBackup(remote.payload()) ? DownloadResult.APPLIED : DownloadResult.REJECTED_NEWER_SCHEMA;
+        return applyRemote(remote.payload());
+    }
+
+    public DownloadResult applyRemote(String remoteBackup) {
+        return ProfileStore.importBackup(remoteBackup) ? DownloadResult.APPLIED : DownloadResult.REJECTED_NEWER_SCHEMA;
     }
 }
