@@ -21,6 +21,7 @@ public final class EnvironmentRenderer implements Disposable {
     private static final float SHADOW_OFFSET_Y = -.28f;
     private static final Color FOUNDRY_WALL_TINT = new Color(1f, .58f, .32f, 1f);
     private static final Color NULL_WALL_TINT = new Color(.64f, .56f, 1f, 1f);
+    private static final Color CRYO_WALL_TINT = new Color(.58f, .88f, 1f, 1f);
     private final GameArt art;
     private BootstrapEnvironmentArt bootstrap;
     private float visualTime;
@@ -47,8 +48,13 @@ public final class EnvironmentRenderer implements Disposable {
         return EnvironmentBiomeRules.isNullSector(RunStageContext.stage());
     }
 
+    private boolean cryoVault() {
+        return EnvironmentBiomeRules.isCryoVault(RunStageContext.stage());
+    }
+
     public void drawGround(ShapeRenderer shapes, float time) {
-        if (nullSector()) drawNullSectorGround(shapes, time);
+        if (cryoVault()) drawCryoVaultGround(shapes, time);
+        else if (nullSector()) drawNullSectorGround(shapes, time);
         else if (foundry()) drawFoundryGround(shapes, time);
         else drawQuarantineGround(shapes, time);
     }
@@ -115,6 +121,25 @@ public final class EnvironmentRenderer implements Disposable {
         shapes.rect(-3.2f, -24f, 6.4f, 48f);
     }
 
+    private void drawCryoVaultGround(ShapeRenderer shapes, float time) {
+        shapes.setColor(.010f, .024f, .038f, 1f);
+        shapes.rect(-HALF_W, -HALF_H, HALF_W * 2f, HALF_H * 2f);
+        float pulse = .5f + .5f * MathUtils.sin(time * 1.15f);
+        shapes.setColor(.10f, .28f, .38f, .68f);
+        for (int x = -40; x <= 40; x += 4) shapes.rect(x, -24f, .028f, 48f);
+        for (int y = -24; y <= 24; y += 4) shapes.rect(-40f, y, 80f, .028f);
+        shapes.setColor(.44f, .86f, 1f, .08f + pulse * .05f);
+        for (int i = -5; i <= 5; i++) {
+            float x = i * 7.2f;
+            shapes.rectLine(x - 3.2f, -21f, x + 3.8f, 21f, .038f);
+        }
+        shapes.setColor(.64f, .94f, 1f, .055f + pulse * .045f);
+        shapes.circle(-21f, -10f, 5.4f + pulse * .5f, 40);
+        shapes.circle(18f, 9f, 4.7f + pulse * .4f, 36);
+        shapes.setColor(.22f, .70f, 1f, .035f + pulse * .03f);
+        shapes.rect(-6.0f, -24f, 12f, 48f);
+    }
+
     public void drawAuthored(SpriteBatch batch) {
         if (!hasAnyEnvironmentArt()) return;
         batch.begin();
@@ -141,7 +166,8 @@ public final class EnvironmentRenderer implements Disposable {
     }
 
     private void drawFloorInternal(SpriteBatch batch, float alpha) {
-        if (nullSector()) batch.setColor(.66f, .62f, 1f, alpha * .88f);
+        if (cryoVault()) batch.setColor(.72f, .92f, 1f, alpha * .90f);
+        else if (nullSector()) batch.setColor(.66f, .62f, 1f, alpha * .88f);
         else if (foundry()) batch.setColor(1f, .63f, .43f, alpha * .92f);
         else batch.setColor(1f, 1f, 1f, alpha);
         for (int gy = -6; gy < 6; gy++) {
@@ -153,10 +179,16 @@ public final class EnvironmentRenderer implements Disposable {
         }
         TextureRegion hazard = region("environment/floor/hazard_a");
         if (hazard != null) {
-            if (nullSector()) batch.setColor(.48f, .28f, 1f, Math.min(1f, alpha * 1.15f));
+            if (cryoVault()) batch.setColor(.28f, .82f, 1f, Math.min(1f, alpha * 1.15f));
+            else if (nullSector()) batch.setColor(.48f, .28f, 1f, Math.min(1f, alpha * 1.15f));
             else if (foundry()) batch.setColor(1f, .38f, .08f, Math.min(1f, alpha * 1.20f));
             else batch.setColor(1f, 1f, 1f, Math.min(1f, alpha * 1.13f));
-            if (nullSector()) {
+            if (cryoVault()) {
+                for (int x = -16; x <= 16; x += 8) {
+                    batch.draw(hazard, x, -10f, TILE_WORLD, TILE_WORLD);
+                    batch.draw(hazard, -x, 10f, TILE_WORLD, TILE_WORLD);
+                }
+            } else if (nullSector()) {
                 for (int y = -12; y <= 12; y += 8) {
                     int offset = ((y / 4) & 1) == 0 ? -14 : -10;
                     for (int x = offset; x <= 14; x += 8) batch.draw(hazard, x, y, TILE_WORLD, TILE_WORLD);
@@ -199,6 +231,10 @@ public final class EnvironmentRenderer implements Disposable {
 
         drawAmbientDetails(batch, crack, blood, scorch, debrisA, debrisB);
 
+        if (cryoVault()) {
+            drawCryoVaultDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);
+            return;
+        }
         if (nullSector()) {
             drawNullSectorDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);
             return;
@@ -235,6 +271,7 @@ public final class EnvironmentRenderer implements Disposable {
 
     private void drawAmbientDetails(SpriteBatch batch, TextureRegion crack, TextureRegion blood,
                                     TextureRegion scorch, TextureRegion debrisA, TextureRegion debrisB) {
+        boolean cryoBiome = cryoVault();
         boolean nullBiome = nullSector();
         boolean hotBiome = foundry();
         for (int gy = -2; gy <= 2; gy++) {
@@ -245,18 +282,21 @@ public final class EnvironmentRenderer implements Disposable {
                 float y = gy * 6.0f + ((gx & 1) == 0 ? .42f : -.38f);
                 if (Math.abs(x) < 5f && Math.abs(y) < 4f) continue;
                 if (variant == 0) {
-                    if (nullBiome) batch.setColor(.72f, .62f, 1f, .38f);
+                    if (cryoBiome) batch.setColor(.72f, .94f, 1f, .42f);
+                    else if (nullBiome) batch.setColor(.72f, .62f, 1f, .38f);
                     else batch.setColor(1f, 1f, 1f, hotBiome ? .34f : .40f);
                     draw(batch, crack, x, y, 1.45f);
                 } else if (variant == 1) {
-                    TextureRegion stain = hotBiome || nullBiome ? scorch : blood;
-                    if (nullBiome) batch.setColor(.52f, .32f, 1f, .30f);
+                    TextureRegion stain = hotBiome || nullBiome || cryoBiome ? scorch : blood;
+                    if (cryoBiome) batch.setColor(.48f, .86f, 1f, .28f);
+                    else if (nullBiome) batch.setColor(.52f, .32f, 1f, .30f);
                     else batch.setColor(1f, hotBiome ? .45f : 1f, hotBiome ? .20f : 1f, .28f);
                     draw(batch, stain, x, y, 1.35f);
                 } else {
                     TextureRegion debris = ((gx + gy) & 1) == 0 ? debrisA : debrisB;
                     drawPropShadow(batch, debris, x, y, 1.25f);
-                    if (nullBiome) batch.setColor(.72f, .68f, 1f, .74f);
+                    if (cryoBiome) batch.setColor(.74f, .92f, 1f, .78f);
+                    else if (nullBiome) batch.setColor(.72f, .68f, 1f, .74f);
                     else batch.setColor(hotBiome ? 1f : .78f, hotBiome ? .64f : .82f, hotBiome ? .38f : .86f, .72f);
                     draw(batch, debris, x, y, 1.20f);
                 }
@@ -290,6 +330,34 @@ public final class EnvironmentRenderer implements Disposable {
         draw(batch, crate, 23f, -9f, 3.0f);
         draw(batch, debrisA, -8f, 14f, 3.2f);
         draw(batch, debrisB, 9f, -14f, 3.2f);
+        drawArenaEdge(batch, wallB, wallA, beacon);
+    }
+
+    private void drawCryoVaultDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,
+                                      TextureRegion barrier, TextureRegion debrisA, TextureRegion debrisB,
+                                      TextureRegion wallA, TextureRegion wallB, TextureRegion crate,
+                                      TextureRegion beacon) {
+        batch.setColor(.62f, .90f, 1f, .66f);
+        draw(batch, crack, -13f, -8f, 4.4f);
+        draw(batch, crack, 14f, 9f, 3.8f);
+        draw(batch, scorch, -2f, 12f, 3.2f);
+        draw(batch, scorch, 6f, -13f, 3.5f);
+
+        drawPropShadow(batch, barrier, -19f, 11f, 3.1f);
+        drawPropShadow(batch, barrier, 19f, -11f, 3.1f);
+        drawPropShadow(batch, crate, -15f, -14f, 2.8f);
+        drawPropShadow(batch, crate, 15f, 14f, 2.8f);
+        drawPropShadow(batch, debrisA, -24f, 5f, 3.0f);
+        drawPropShadow(batch, debrisB, 24f, -5f, 3.0f);
+        drawArenaEdgeShadows(batch, wallB, wallA);
+
+        batch.setColor(.76f, .92f, 1f, 1f);
+        draw(batch, barrier, -19f, 11f, 3.1f);
+        draw(batch, barrier, 19f, -11f, 3.1f);
+        draw(batch, crate, -15f, -14f, 2.8f);
+        draw(batch, crate, 15f, 14f, 2.8f);
+        draw(batch, debrisA, -24f, 5f, 3.0f);
+        draw(batch, debrisB, 24f, -5f, 3.0f);
         drawArenaEdge(batch, wallB, wallA, beacon);
     }
 
@@ -333,7 +401,7 @@ public final class EnvironmentRenderer implements Disposable {
     }
 
     private void drawArenaEdge(SpriteBatch batch, TextureRegion wallA, TextureRegion wallB, TextureRegion beacon) {
-        batch.setColor(nullSector() ? NULL_WALL_TINT : foundry() ? FOUNDRY_WALL_TINT : Color.WHITE);
+        batch.setColor(cryoVault() ? CRYO_WALL_TINT : nullSector() ? NULL_WALL_TINT : foundry() ? FOUNDRY_WALL_TINT : Color.WHITE);
         for (int x = -30; x <= 30; x += 10) {
             draw(batch, ((x / 10) & 1) == 0 ? wallA : wallB, x, 17.9f, 4.2f);
             draw(batch, ((x / 10) & 1) == 0 ? wallB : wallA, x, -17.9f, 4.2f);
@@ -352,7 +420,11 @@ public final class EnvironmentRenderer implements Disposable {
         if (beacon == null) return;
         float pulse = beaconPulse(visualTime);
         float glowSize = 2.7f + pulse * .65f;
-        if (nullSector()) {
+        if (cryoVault()) {
+            batch.setColor(.20f, .72f, 1f, .12f + pulse * .12f);
+            draw(batch, beacon, x, y, glowSize);
+            batch.setColor(.70f, .96f, 1f, .90f + pulse * .10f);
+        } else if (nullSector()) {
             batch.setColor(.36f, .16f, 1f, .11f + pulse * .12f);
             draw(batch, beacon, x, y, glowSize);
             batch.setColor(.42f, .86f, 1f, .88f + pulse * .12f);
