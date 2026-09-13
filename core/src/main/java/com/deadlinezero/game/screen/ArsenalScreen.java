@@ -22,7 +22,7 @@ import com.deadlinezero.game.visual.VisualTheme;
 
 /** Production-shaped weapon selection screen with persistent unlock-aware loadout choice. */
 public final class ArsenalScreen extends ScreenAdapter {
-    private static final int PAGE_SIZE = 8;
+    private static final int PAGE_SIZE = 6;
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
     private final ShapeRenderer shapes = new ShapeRenderer();
@@ -49,7 +49,7 @@ public final class ArsenalScreen extends ScreenAdapter {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(VisualTheme.PANEL); shapes.rect(18, h - 88, w - 36, 58);
         float cardW = (w - 56f) / 2f;
-        float cardH = Math.min(102f, (h - 290f) / 4f);
+        float cardH = Math.min(142f, (h - 270f) / 3f);
         float top = h - 126f;
         for (int i = pageStart; i < pageEnd; i++) {
             int slot = i - pageStart;
@@ -70,8 +70,8 @@ public final class ArsenalScreen extends ScreenAdapter {
         shapes.end();
 
         batch.begin();
-        font.getData().setScale(1.2f); font.setColor(VisualTheme.TEXT); font.draw(batch, "ARSENAL", 28, h - 48);
-        font.getData().setScale(.48f); font.setColor(VisualTheme.MUTED);
+        font.getData().setScale(1.6f); font.setColor(VisualTheme.TEXT); font.draw(batch, "ARSENAL", 28, h - 48);
+        font.getData().setScale(.72f); font.setColor(VisualTheme.MUTED);
         font.draw(batch, "SELECT YOUR STARTING WEAPON  •  FREE PROGRESSION UNLOCKS", 28, h - 70);
         font.draw(batch, "PAGE " + (page + 1) + "/" + pageCount, w - 180f, h - 70);
         for (int i = pageStart; i < pageEnd; i++) drawCard(all[i], i, i - pageStart, cardW, cardH, top);
@@ -90,9 +90,9 @@ public final class ArsenalScreen extends ScreenAdapter {
         boolean selected = weapon.id.equals(game.profile.selectedWeaponId);
         boolean unlocked = WeaponProgression.unlocked(game.profile, weapon);
         float dps = paperDps(weapon);
-        font.getData().setScale(.56f); font.setColor(unlocked ? VisualTheme.TEXT : VisualTheme.MUTED);
+        font.getData().setScale(.82f); font.setColor(unlocked ? VisualTheme.TEXT : VisualTheme.MUTED);
         font.draw(batch, weapon.displayName.toUpperCase(), x + 14f, y + cardH - 17f);
-        font.getData().setScale(.41f); font.setColor(elementColor(weapon));
+        font.getData().setScale(.61f); font.setColor(elementColor(weapon));
         font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x + 14f, y + cardH - 38f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, Math.round(dps) + " DPS   " + Math.round(weapon.damage) + " DMG   " + weapon.projectileCount + "x", x + 14f, y + cardH - 59f);
@@ -103,8 +103,8 @@ public final class ArsenalScreen extends ScreenAdapter {
 
     private void drawDetailText(WeaponDefinition weapon, WeaponDefinition equipped, float w) {
         float dps = paperDps(weapon), equippedDps = paperDps(equipped), x = w * .50f;
-        font.getData().setScale(.50f); font.setColor(VisualTheme.TEXT); font.draw(batch, weapon.displayName.toUpperCase(), x, 132f);
-        font.getData().setScale(.42f); font.setColor(elementColor(weapon)); font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x, 111f);
+        font.getData().setScale(.72f); font.setColor(VisualTheme.TEXT); font.draw(batch, weapon.displayName.toUpperCase(), x, 132f);
+        font.getData().setScale(.58f); font.setColor(elementColor(weapon)); font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x, 111f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, "DPS " + Math.round(dps) + deltaText(dps - equippedDps) + "   FIRE " + String.format(java.util.Locale.US, "%.2fs", weapon.fireInterval) + "   CRIT " + Math.round(weapon.critChance * 100f) + "%", x, 90f);
         font.draw(batch, "PEN " + weapon.penetration + deltaText(weapon.penetration - equipped.penetration) + "   KB " + oneDecimal(weapon.knockback) + deltaText(weapon.knockback - equipped.knockback) + "   SHOTS " + weapon.projectileCount + deltaText(weapon.projectileCount - equipped.projectileCount), x, 70f);
