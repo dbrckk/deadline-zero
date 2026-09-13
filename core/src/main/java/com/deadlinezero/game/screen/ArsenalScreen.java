@@ -22,6 +22,7 @@ import com.deadlinezero.game.visual.VisualTheme;
 
 /** Production-shaped weapon selection screen with persistent unlock-aware loadout choice. */
 public final class ArsenalScreen extends ScreenAdapter {
+    private static final int PAGE_SIZE = 8;
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
     private final ShapeRenderer shapes = new ShapeRenderer();
@@ -40,14 +41,19 @@ public final class ArsenalScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
         WeaponDefinition[] all = WeaponCatalog.all();
+        int pageStart = (focus / PAGE_SIZE) * PAGE_SIZE;
+        int pageEnd = Math.min(all.length, pageStart + PAGE_SIZE);
+        int pageCount = Math.max(1, (all.length + PAGE_SIZE - 1) / PAGE_SIZE);
+        int page = pageStart / PAGE_SIZE;
         float detailH = 112f;
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         shapes.setColor(VisualTheme.PANEL); shapes.rect(18, h - 88, w - 36, 58);
         float cardW = (w - 56f) / 2f;
         float cardH = Math.min(102f, (h - 290f) / 4f);
         float top = h - 126f;
-        for (int i = 0; i < all.length; i++) {
-            int row = i / 2, col = i % 2;
+        for (int i = pageStart; i < pageEnd; i++) {
+            int local = i - pageStart;
+            int row = local / 2, col = local % 2;
             float x = 20f + col * (cardW + 16f);
             float y = top - row * (cardH + 10f) - cardH;
             boolean selected = all[i].id.equals(game.profile.selectedWeaponId);
@@ -60,6 +66,9 @@ public final class ArsenalScreen extends ScreenAdapter {
             if (!unlocked) { shapes.setColor(0f, 0f, 0f, .38f); shapes.rect(x, y, cardW, cardH); }
         }
         shapes.setColor(VisualTheme.PANEL); shapes.rect(20, 42, w - 40, detailH);
+        shapes.setColor(VisualTheme.PANEL_ALT);
+        shapes.rect(w - 180f, h - 82f, 60f, 42f);
+        shapes.rect(w - 108f, h - 82f, 60f, 42f);
         drawStatBars(all[MathUtils.clamp(focus, 0, all.length - 1)], WeaponCatalog.byId(game.profile.selectedWeaponId), 34f, 56f, w * .46f, 76f);
         shapes.end();
 
@@ -67,7 +76,12 @@ public final class ArsenalScreen extends ScreenAdapter {
         font.getData().setScale(1.2f); font.setColor(VisualTheme.TEXT); font.draw(batch, "ARSENAL", 28, h - 48);
         font.getData().setScale(.48f); font.setColor(VisualTheme.MUTED);
         font.draw(batch, "SELECT YOUR STARTING WEAPON  •  FREE PROGRESSION UNLOCKS", 28, h - 70);
-        for (int i = 0; i < all.length; i++) drawCard(all[i], i, cardW, cardH, top);
+        font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, "‹", w - 158f, h - 52f);
+        font.draw(batch, "›", w - 86f, h - 52f);
+        font.setColor(VisualTheme.MUTED);
+        font.draw(batch, "PAGE " + (page + 1) + "/" + pageCount, w - 282f, h - 58f);
+        for (int i = pageStart; i < pageEnd; i++) drawCard(all[i], i, pageStart, cardW, cardH, top);
         WeaponDefinition weapon = all[MathUtils.clamp(focus, 0, all.length - 1)];
         WeaponDefinition equipped = WeaponCatalog.byId(game.profile.selectedWeaponId);
         drawDetailText(weapon, equipped, w);
@@ -76,8 +90,9 @@ public final class ArsenalScreen extends ScreenAdapter {
         handleInput(w, h, all, cardW, cardH, top);
     }
 
-    private void drawCard(WeaponDefinition weapon, int i, float cardW, float cardH, float top) {
-        int row = i / 2, col = i % 2;
+    private void drawCard(WeaponDefinition weapon, int i, int pageStart, float cardW, float cardH, float top) {
+        int local = i - pageStart;
+        int row = local / 2, col = local % 2;
         float x = 20f + col * (cardW + 16f);
         float y = top - row * (cardH + 10f) - cardH;
         boolean selected = weapon.id.equals(game.profile.selectedWeaponId);
@@ -143,6 +158,9 @@ public final class ArsenalScreen extends ScreenAdapter {
             case "breacher" -> "HEAVY BREACH";
             case "ion_needle" -> "CAPACITOR PRECISION";
             case "cinder_cannon" -> "THERMAL ARTILLERY";
+            case "tempest_burst" -> "SHOCK BURST";
+            case "whiteout_shard" -> "FROST SCATTER";
+            case "phoenix_repeater" -> "FIRE REPEATER";
             default -> "BALANCED RIFLE";
         };
     }
@@ -157,6 +175,9 @@ public final class ArsenalScreen extends ScreenAdapter {
             case "breacher" -> "Nine-projectile blast with brutal knockback, limited by range and reload cadence.";
             case "ion_needle" -> "Every 5th projectile overcharges: guaranteed critical, bonus penetration and impact. VOLT/NYX unlock signature synergies.";
             case "cinder_cannon" -> "Every 4th shell vents stored heat for +55% payload, extra penetration and knockback. BASTION unlocks Siege Furnace.";
+            case "tempest_burst" -> "Three-shot SHOCK fan balancing crowd coverage, penetration and controllable recoil.";
+            case "whiteout_shard" -> "Four heavy FROST shards deliver high stagger and control without Breacher-level spread.";
+            case "phoenix_repeater" -> "Accurate FIRE repeater for sustained endgame pressure between Inferno cadence and Cinder impact.";
             default -> "Reliable all-round rifle with stable damage, cadence and accuracy for every stage.";
         };
     }
@@ -167,7 +188,7 @@ public final class ArsenalScreen extends ScreenAdapter {
     private Color elementColor(WeaponDefinition weapon) { return switch (weapon.element) { case FIRE -> Color.ORANGE; case FROST -> VisualTheme.CYAN; case SHOCK -> VisualTheme.VIOLET; default -> VisualTheme.CYAN_SOFT; }; }
 
     private void handleInput(float w, float h, WeaponDefinition[] all, float cardW, float cardH, float top) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK); game.showMenu(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK); game.showMenu(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A)) focus = Math.max(0, focus - 1);
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D)) focus = Math.min(all.length - 1, focus + 1);
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)) focus = Math.max(0, focus - 2);
@@ -175,8 +196,23 @@ public final class ArsenalScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) select(all[focus]);
         if (!Gdx.input.justTouched()) return;
         float tx = Gdx.input.getX(), ty = h - Gdx.input.getY();
-        for (int i = 0; i < all.length; i++) {
-            int row = i / 2, col = i % 2; float x = 20f + col * (cardW + 16f); float y = top - row * (cardH + 10f) - cardH;
+        int pageStart = (focus / PAGE_SIZE) * PAGE_SIZE;
+        int pageEnd = Math.min(all.length, pageStart + PAGE_SIZE);
+        if (ty >= h - 82f && ty <= h - 40f) {
+            if (tx >= w - 180f && tx <= w - 120f && pageStart > 0) {
+                focus = Math.max(0, pageStart - PAGE_SIZE);
+                return;
+            }
+            if (tx >= w - 108f && tx <= w - 48f && pageEnd < all.length) {
+                focus = pageEnd;
+                return;
+            }
+        }
+        for (int i = pageStart; i < pageEnd; i++) {
+            int local = i - pageStart;
+            int row = local / 2, col = local % 2;
+            float x = 20f + col * (cardW + 16f);
+            float y = top - row * (cardH + 10f) - cardH;
             if (tx >= x && tx <= x + cardW && ty >= y && ty <= y + cardH) { focus = i; select(all[i]); return; }
         }
     }
