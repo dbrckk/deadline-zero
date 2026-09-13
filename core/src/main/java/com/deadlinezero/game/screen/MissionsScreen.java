@@ -38,22 +38,22 @@ public final class MissionsScreen extends ScreenAdapter {
         float rightX = margin + columnWidth + gutter;
 
         batch.begin();
-        font.getData().setScale(1.55f);
+        font.getData().setScale(2.05f);
         font.setColor(Color.WHITE);
         font.draw(batch, "MISSIONS", 0, h - 44f, w, Align.center, false);
 
-        font.getData().setScale(.92f);
+        font.getData().setScale(1.42f);
         font.setColor(Color.GOLD);
         font.draw(batch, "DAILY OPERATIONS", leftX, h - 118f);
         font.setColor(new Color(.72f, .58f, 1f, 1f));
         font.draw(batch, "WEEKLY OPERATIONS", rightX, h - 118f);
 
-        font.getData().setScale(.72f);
+        font.getData().setScale(1.10f);
         font.setColor(Color.GOLD);
         font.draw(batch, "LOGIN  •  STREAK " + p.daily.loginStreak + "  •  "
             + (p.daily.loginClaimed ? "CLAIMED" : "[L] CLAIM"), leftX, h - 158f);
 
-        font.getData().setScale(.74f);
+        font.getData().setScale(1.16f);
         drawMission("[1] Eliminate 100 hostiles", p.daily.killsToday, 100,
             p.daily.killMissionClaimed, leftX, h - 210f);
         drawMission("[2] Complete 3 runs", p.daily.runsToday, 3,
@@ -68,13 +68,13 @@ public final class MissionsScreen extends ScreenAdapter {
         drawMission("[6] Defeat " + WeeklyService.BOSS_TARGET + " bosses",
             p.weekly.bosses, WeeklyService.BOSS_TARGET, p.weekly.bossMissionClaimed, rightX, h - 306f);
 
-        font.getData().setScale(.62f);
+        font.getData().setScale(.96f);
         font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "350 Credits  •  450 Credits  •  3 Gems", leftX, h - 354f, columnWidth, Align.left, false);
         font.draw(batch, "2500 Credits  •  3500 Credits  •  12 Gems", rightX, h - 354f, columnWidth, Align.left, false);
 
         drawMastery(p, w, h, margin);
-        font.getData().setScale(.62f);
+        font.getData().setScale(.96f);
         font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "ESC / BACK  •  RETURN TO BASE", margin, 44f);
         batch.end();
@@ -90,10 +90,10 @@ public final class MissionsScreen extends ScreenAdapter {
 
         float y = h - 438f;
         font.setColor(Color.CYAN);
-        font.getData().setScale(.86f);
+        font.getData().setScale(1.28f);
         font.draw(batch, "PERMANENT MASTERY", margin, y);
 
-        font.getData().setScale(.70f);
+        font.getData().setScale(1.05f);
         font.setColor(Color.WHITE);
         font.draw(batch, weapon.displayName + "  •  RANK " + weaponRank + "/" + MasteryProgress.MAX_RANK
             + "  •  " + MasteryProgress.rankTitle(weaponRank) + "  •  " + nextLabel(weaponNext),
@@ -104,7 +104,7 @@ public final class MissionsScreen extends ScreenAdapter {
             + "  •  " + MasteryProgress.rankTitle(biomeRank) + "  •  " + nextLabel(biomeNext),
             margin, y - 100f, w - margin * 2f, Align.left, false);
 
-        font.getData().setScale(.60f);
+        font.getData().setScale(.90f);
         font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "Victories persist forever  •  rank-ups award Credits + Gems  •  titles are cosmetic",
             margin, y - 146f, w - margin * 2f, Align.left, false);
