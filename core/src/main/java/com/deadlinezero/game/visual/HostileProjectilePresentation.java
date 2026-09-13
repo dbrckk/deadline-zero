@@ -13,7 +13,9 @@ public final class HostileProjectilePresentation {
         if (source == null) return EnemyProjectile.Style.DEFAULT;
         if (source.type == Enemy.Type.BOSS) {
             BossIdentity identity = source.bossCombat == null ? BossIdentity.ALPHA : source.bossCombat.identity();
-            return identity == BossIdentity.NULL_ARCHON ? EnemyProjectile.Style.NULL : EnemyProjectile.Style.DEFAULT;
+            if (identity == BossIdentity.NULL_ARCHON) return EnemyProjectile.Style.NULL;
+            if (identity == BossIdentity.FROST_COLOSSUS) return EnemyProjectile.Style.STATIC;
+            return EnemyProjectile.Style.DEFAULT;
         }
         return switch (source.biomeIdentity()) {
             case CINDER_GUNNER -> EnemyProjectile.Style.CINDER;
