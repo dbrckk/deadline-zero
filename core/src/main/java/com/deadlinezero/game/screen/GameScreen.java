@@ -670,12 +670,28 @@ public final class GameScreen extends ScreenAdapter {
         float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
         combatHud.render(shapes, batch, font, player, director, enemies, w, h);
         if (!choosingUpgrade && !choosingLegendary && !gameOver) return;
+        if (choosingUpgrade) drawUpgradeBackdrop(w, h);
         batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
         batch.begin();
         if (choosingLegendary) drawLegendaryText(w, h);
         else if (choosingUpgrade) drawUpgradeText(w, h);
         if (gameOver) drawGameOverText(w, h);
         batch.end();
+    }
+
+    private void drawUpgradeBackdrop(float w, float h) {
+        shapes.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
+        shapes.begin(ShapeRenderer.ShapeType.Filled);
+        shapes.setColor(.018f, .026f, .032f, 1f);
+        shapes.rect(w * .08f, h * .28f, w * .84f, h * .45f);
+        float cardWidth = w * .27f;
+        float cardHeight = h * .27f;
+        for (int i = 0; i < 3; i++) {
+            float centerX = w * (.17f + i * .33f);
+            shapes.setColor(.035f, .050f, .060f, 1f);
+            shapes.rect(centerX - cardWidth * .5f, h * .35f, cardWidth, cardHeight);
+        }
+        shapes.end();
     }
 
     private void drawLegendaryText(float w, float h) {
@@ -701,16 +717,34 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private void drawUpgradeText(float w, float h) {
-        font.getData().setScale(1.3f); font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "PROTOCOL UPGRADE", 0, h * .76f, w, Align.center, false);
-        font.getData().setScale(.72f);
+        font.getData().setScale(1.65f);
+        font.setColor(VisualTheme.TEXT);
+        font.draw(batch, "PROTOCOL UPGRADE", 0, h * .69f, w, Align.center, false);
+
+        float cardWidth = w * .27f;
         for (int i = 0; i < 3; i++) {
-            float x = w * (.17f + i * .33f);
+            float centerX = w * (.17f + i * .33f);
+            float left = centerX - cardWidth * .5f;
+
+            font.getData().setScale(1.18f);
             font.setColor(VisualTheme.upgradeRarity(choices[i].rarity));
-            font.draw(batch, "[" + (i + 1) + "] " + choices[i].title, x - 120, h * .52f, 240, Align.center, false);
-            font.setColor(VisualTheme.MUTED);
-            font.draw(batch, choices[i].rarity.name() + " • " + choices[i].description, x - 120, h * .45f, 240, Align.center, true);
+            font.draw(batch, "[" + (i + 1) + "] " + choices[i].title,
+                left + 12f, h * .565f, cardWidth - 24f, Align.center, true);
+
+            font.getData().setScale(.92f);
+            font.setColor(VisualTheme.TEXT);
+            font.draw(batch, choices[i].rarity.name(),
+                left + 12f, h * .495f, cardWidth - 24f, Align.center, false);
+
+            font.getData().setScale(.96f);
+            font.setColor(Color.WHITE);
+            font.draw(batch, choices[i].description,
+                left + 18f, h * .435f, cardWidth - 36f, Align.center, true);
         }
+
+        font.getData().setScale(.86f);
+        font.setColor(VisualTheme.MUTED);
+        font.draw(batch, "TAP A CARD  •  KEYS 1–3", 0, h * .305f, w, Align.center, false);
         font.getData().setScale(.75f);
     }
 
