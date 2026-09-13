@@ -80,6 +80,24 @@ final class CloudSaveServiceTest {
         assertEquals(CloudSaveService.ConflictState.EQUAL, service.compareRemoteToLocal(backup));
     }
 
+    @Test void providerConflictChoiceIsDelegatedExplicitly() throws Exception {
+        CloudSaveAdapter.ProviderConflict conflict = new CloudSaveAdapter.ProviderConflict(
+            new CloudSaveAdapter.RemoteBackup("server", 1L),
+            new CloudSaveAdapter.RemoteBackup("other", 2L)
+        );
+        final CloudSaveAdapter.ConflictChoice[] chosen = { null };
+        CloudSaveService service = new CloudSaveService(new CloudSaveAdapter() {
+            @Override public RemoteBackup read() { return null; }
+            @Override public void write(String payload) { }
+            @Override public ProviderConflict pendingConflict() { return conflict; }
+            @Override public void resolvePendingConflict(ConflictChoice choice) { chosen[0] = choice; }
+        });
+
+        assertEquals(conflict, service.pendingProviderConflict());
+        service.resolveProviderConflict(CloudSaveAdapter.ConflictChoice.CONFLICTING);
+        assertEquals(CloudSaveAdapter.ConflictChoice.CONFLICTING, chosen[0]);
+    }
+
     @Test void uploadRejectsCorruptLocalPayloadBeforeProviderWrite() {
         CloudSaveService service = new CloudSaveService(new CloudSaveAdapter() {
             @Override public RemoteBackup read() { return null; }
