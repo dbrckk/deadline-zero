@@ -10,7 +10,9 @@ public interface CloudSaveAdapter {
     static CloudSaveAdapter unavailable() {
         return new CloudSaveAdapter() {
             @Override public RemoteBackup read() { return null; }
-            @Override public void write(String payload) { }
+            @Override public void write(String payload) {
+                throw new IllegalStateException("Cloud save provider is unavailable");
+            }
         };
     }
 }
