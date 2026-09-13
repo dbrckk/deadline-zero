@@ -80,6 +80,20 @@ final class CloudSaveServiceTest {
         assertEquals(CloudSaveService.ConflictState.EQUAL, service.compareRemoteToLocal(backup));
     }
 
+    @Test void authenticationRequestIsDelegatedExplicitly() throws Exception {
+        final boolean[] authenticated = { false };
+        CloudSaveService service = new CloudSaveService(new CloudSaveAdapter() {
+            @Override public boolean supportsAuthentication() { return true; }
+            @Override public void authenticate() { authenticated[0] = true; }
+            @Override public RemoteBackup read() { return null; }
+            @Override public void write(String payload) { }
+        });
+
+        assertTrue(service.supportsAuthentication());
+        service.authenticate();
+        assertTrue(authenticated[0]);
+    }
+
     @Test void providerConflictChoiceIsDelegatedExplicitly() throws Exception {
         CloudSaveAdapter.ProviderConflict conflict = new CloudSaveAdapter.ProviderConflict(
             new CloudSaveAdapter.RemoteBackup("server", 1L),
