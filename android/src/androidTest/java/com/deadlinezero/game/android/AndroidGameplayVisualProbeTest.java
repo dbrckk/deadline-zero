@@ -656,24 +656,32 @@ public final class AndroidGameplayVisualProbeTest {
         File output = new File(root, name);
 
         long size = 0L;
-        for (int attempt = 1; attempt <= 3; attempt++) {
+        int width = 0;
+        int height = 0;
+        for (int attempt = 1; attempt <= 8; attempt++) {
             Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
-            assertNotNull("Android UiAutomation did not return a screenshot", bitmap);
-            try (FileOutputStream stream = new FileOutputStream(output, false)) {
-                assertTrue("unable to encode gameplay QA screenshot", bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream));
-            } finally {
-                bitmap.recycle();
+            if (bitmap != null) {
+                width = bitmap.getWidth();
+                height = bitmap.getHeight();
+                try (FileOutputStream stream = new FileOutputStream(output, false)) {
+                    assertTrue("unable to encode gameplay QA screenshot", bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream));
+                } finally {
+                    bitmap.recycle();
+                }
+
+                size = output.length();
+                if (width >= 1280 && height >= 720 && size > 10_000L) return;
             }
 
-            size = output.length();
-            if (size > 10_000L) return;
-
-            // Android Emulator occasionally exposes a stale/broken color buffer for a single frame.
-            // Retry the capture, but keep the exact same semantic size gate for the final artifact.
-            if (attempt < 3) Thread.sleep(300L);
+            // Android Emulator can expose a transient broken/stale color buffer. Wait for SurfaceFlinger
+            // to publish a healthy frame and retry without weakening dimensions or artifact-size gates.
+            if (attempt < 8) Thread.sleep(500L);
         }
 
-        assertTrue("gameplay QA screenshot is unexpectedly small after retries: " + size, size > 10_000L);
+        assertTrue(
+            "gameplay QA screenshot invalid after retries: " + width + "x" + height + ", " + size + " bytes",
+            width >= 1280 && height >= 720 && size > 10_000L
+        );
     }
 
     private static AndroidLauncher activity(ActivityScenario<AndroidLauncher> scenario) {
