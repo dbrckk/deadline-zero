@@ -83,6 +83,21 @@ final class UpgradePoolTest {
         }
     }
 
+    @Test void everyUpgradeEventuallyStopsBeingUsefulWhenRepeatedAlone() {
+        RunLoadoutContext.end();
+        for (Upgrade upgrade : Upgrade.values()) {
+            Player player = new Player(0f, 0f);
+            int applications = 0;
+            while (UpgradeSelector.isAvailable(player, upgrade) && applications < 240) {
+                upgrade.apply(player);
+                applications++;
+            }
+            assertTrue(applications < 240, "upgrade never saturated: " + upgrade.name());
+            assertFalse(UpgradeSelector.isAvailable(player, upgrade), "upgrade still offered after saturation: " + upgrade.name());
+            assertRuntimeSafe(player, upgrade.name());
+        }
+    }
+
     @Test void hardCappedChoicesDisappearFromEligibility() {
         RunLoadoutContext.end();
         Player player = new Player(0f, 0f);
