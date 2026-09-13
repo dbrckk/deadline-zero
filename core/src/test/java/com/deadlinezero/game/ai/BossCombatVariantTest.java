@@ -29,4 +29,15 @@ final class BossCombatVariantTest {
         assertEquals(20, alpha.enrageShots());
         assertEquals(8.2f, alpha.enrageProjectileSpeed(), .0001f);
     }
+
+    @Test void frostColossusUsesHeavyControlledSecondaryPattern() {
+        var frost = new BossCombatRuntime(BossIdentity.FROST_COLOSSUS);
+        assertEquals(FrostColossusBossProfile.PHASE2_SUMMON_COUNT, frost.summonCount(2));
+        assertEquals(FrostColossusBossProfile.PHASE3_SUMMON_COUNT, frost.summonCount(3));
+        assertEquals(FrostColossusBossProfile.ENRAGE_SHOTS, frost.enrageShots());
+        assertEquals(FrostColossusBossProfile.ENRAGE_PROJECTILE_SPEED, frost.enrageProjectileSpeed(), .0001f);
+        assertEquals(FrostColossusBossProfile.ENRAGE_EXPLOSIVE_EVERY, frost.enrageExplosiveEvery());
+        assertEquals(FrostColossusBossProfile.ENRAGE_EXPLOSION_RADIUS, frost.enrageExplosionRadius(), .0001f);
+        assertTrue(frost.frostColossus());
+    }
 }
