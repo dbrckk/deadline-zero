@@ -283,10 +283,13 @@ public final class GameScreen extends ScreenAdapter {
             spawnHostileShot(boss, boss.position.x, boss.position.y, i * (360f / shots), speed,
                 boss.contactDamage * .65f, explosive ? .26f : .24f, explosive, explosionRadius);
         }
-        boolean revenant = boss.bossCombat != null && boss.bossCombat.revenant();
-        impact(boss.position.x, boss.position.y, revenant ? 5.8f : 5.1f, .34f,
-            revenant ? VisualTheme.RED : VisualTheme.VIOLET);
-        addCameraShake(revenant ? .46f : .38f);
+        BossIdentity identity = boss.bossCombat == null ? BossIdentity.ALPHA : boss.bossCombat.identity();
+        boolean revenant = identity == BossIdentity.REVENANT;
+        boolean frostColossus = identity == BossIdentity.FROST_COLOSSUS;
+        impact(boss.position.x, boss.position.y,
+            frostColossus ? 6.2f : revenant ? 5.8f : 5.1f, .34f,
+            frostColossus ? VisualTheme.CYAN : revenant ? VisualTheme.RED : VisualTheme.VIOLET);
+        addCameraShake(frostColossus ? .50f : revenant ? .46f : .38f);
     }
 
     private void updatePlayerProjectiles(float dt) {
@@ -356,8 +359,10 @@ public final class GameScreen extends ScreenAdapter {
         }
         if (e.type == Enemy.Type.BOSS) {
             int phase = e.bossPhases == null ? 1 : e.bossPhases.phase();
-            boolean revenant = e.bossCombat != null && e.bossCombat.revenant();
-            BossAttackPatternCatalog.Pattern pattern = BossAttackPatternCatalog.forPhase(revenant, phase);
+            BossIdentity identity = e.bossCombat == null ? BossIdentity.ALPHA : e.bossCombat.identity();
+            boolean revenant = identity == BossIdentity.REVENANT;
+            boolean frostColossus = identity == BossIdentity.FROST_COLOSSUS;
+            BossAttackPatternCatalog.Pattern pattern = BossAttackPatternCatalog.forPhase(identity, phase);
             float base = aim.angleDeg();
             for (int i = 0; i < pattern.shots(); i++) {
                 float angle = pattern.radial()
@@ -370,9 +375,10 @@ public final class GameScreen extends ScreenAdapter {
                     explosive ? .24f : .22f,
                     explosive, explosive ? pattern.explosionRadius() : 0f);
             }
-            impact(e.position.x, e.position.y, revenant ? .82f : .64f, .15f,
-                revenant ? VisualTheme.VIOLET : VisualTheme.RED);
-            addCameraShake(.18f + phase * .05f + (revenant ? .04f : 0f));
+            impact(e.position.x, e.position.y,
+                frostColossus ? .92f : revenant ? .82f : .64f, .15f,
+                frostColossus ? VisualTheme.CYAN : revenant ? VisualTheme.VIOLET : VisualTheme.RED);
+            addCameraShake(.18f + phase * .05f + (revenant ? .04f : 0f) + (frostColossus ? .06f : 0f));
         }
     }
 
