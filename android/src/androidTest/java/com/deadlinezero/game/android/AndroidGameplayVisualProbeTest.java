@@ -668,10 +668,22 @@ public final class AndroidGameplayVisualProbeTest {
                 } finally {
                     bitmap.recycle();
                 }
+
                 size = output.length();
                 if (width >= 1280 && height >= 720 && size > 10_000L) return;
             }
-            if (attempt < 8) Thread.sleep(500L);
+
+            // Android Emulator can expose a transient broken/stale color buffer. Force a compositor
+            // transaction before retrying; dimensions and artifact-size quality gates remain unchanged.
+            if (attempt < 8) {
+                try {
+                    InstrumentationRegistry.getInstrumentation().getUiAutomation()
+                        .executeShellCommand("service call SurfaceFlinger 1008").close();
+                } catch (Exception ignored) {
+                    // Best-effort compositor nudge only; the final screenshot gates still fail closed.
+                }
+                Thread.sleep(750L);
+            }
         }
 
         assertTrue(
