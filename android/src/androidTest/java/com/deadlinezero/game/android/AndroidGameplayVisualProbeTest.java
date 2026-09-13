@@ -178,6 +178,40 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesCryoVaultGameplay() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for CRYO VAULT visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(30);
+                assertTrue("stage 30 must route to CRYO VAULT",
+                    com.deadlinezero.game.visual.EnvironmentBiomeRules.forStage(30)
+                        == com.deadlinezero.game.visual.EnvironmentBiomeRules.Biome.CRYO_VAULT);
+                injectCryoVaultCrowd((GameScreen) game.getScreen());
+            });
+            Thread.sleep(1200L);
+            capture("cryo-vault-gameplay.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectCryoVaultCrowd(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            enemies.add(new Enemy(Enemy.Type.SHIELDED, -4.8f, 3.0f, 500_000f, .02f, .58f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.PHANTOM, 0.4f, 4.2f, 500_000f, .02f, .44f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.BRUTE, 5.2f, 2.6f, 500_000f, .02f, .62f, 0f, 1));
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject CRYO VAULT crowd for visual QA", exception);
+        }
+    }
+
+    @Test
     public void capturesCinderGunnerGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);

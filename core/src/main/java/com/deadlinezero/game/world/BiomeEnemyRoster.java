@@ -56,6 +56,7 @@ public final class BiomeEnemyRoster {
                 default -> Identity.NONE;
             };
         }
+        if (biome == EnvironmentBiomeRules.Biome.CRYO_VAULT) return Identity.NONE;
         if (biome == EnvironmentBiomeRules.Biome.NULL_SECTOR) {
             return switch (type) {
                 case PHANTOM -> Identity.PHASE_STALKER;
@@ -83,11 +84,21 @@ public final class BiomeEnemyRoster {
             if (r < .20f) return Enemy.Type.PHANTOM;
             if (r < .38f) return Enemy.Type.RANGED;
             if (r < .54f) return Enemy.Type.REGENERATOR;
+        } else if (biome == EnvironmentBiomeRules.Biome.CRYO_VAULT) {
+            if (r < .22f) return Enemy.Type.SHIELDED;
+            if (r < .40f) return Enemy.Type.PHANTOM;
+            if (r < .56f) return Enemy.Type.BRUTE;
         }
         return fallback;
     }
 
     public static float elementalDamageMultiplier(int stage, Enemy.Type type, DamageElement element) {
+        EnvironmentBiomeRules.Biome biome = EnvironmentBiomeRules.forStage(stage);
+        if (biome == EnvironmentBiomeRules.Biome.CRYO_VAULT && element == DamageElement.FROST) {
+            if (type == Enemy.Type.SHIELDED) return .62f;
+            if (type == Enemy.Type.BRUTE) return .72f;
+            if (type == Enemy.Type.PHANTOM) return .78f;
+        }
         Identity identity = identityFor(stage, type);
         return identity.resists(element) ? identity.resistanceMultiplier : 1f;
     }

@@ -5,7 +5,8 @@ public final class EnvironmentBiomeRules {
     public enum Biome {
         QUARANTINE_YARD("QUARANTINE YARD"),
         CINDER_FOUNDRY("CINDER FOUNDRY"),
-        NULL_SECTOR("NULL SECTOR");
+        NULL_SECTOR("NULL SECTOR"),
+        CRYO_VAULT("CRYO VAULT");
 
         public final String label;
         Biome(String label) { this.label = label; }
@@ -13,11 +14,13 @@ public final class EnvironmentBiomeRules {
 
     public static final int CINDER_FOUNDRY_STAGE = 10;
     public static final int NULL_SECTOR_STAGE = 20;
+    public static final int CRYO_VAULT_STAGE = 30;
 
     private EnvironmentBiomeRules() { }
 
     public static Biome forStage(int stage) {
         int safe = Math.max(1, stage);
+        if (safe >= CRYO_VAULT_STAGE) return Biome.CRYO_VAULT;
         if (safe >= NULL_SECTOR_STAGE) return Biome.NULL_SECTOR;
         if (safe >= CINDER_FOUNDRY_STAGE) return Biome.CINDER_FOUNDRY;
         return Biome.QUARANTINE_YARD;
@@ -29,5 +32,9 @@ public final class EnvironmentBiomeRules {
 
     public static boolean isNullSector(int stage) {
         return forStage(stage) == Biome.NULL_SECTOR;
+    }
+
+    public static boolean isCryoVault(int stage) {
+        return forStage(stage) == Biome.CRYO_VAULT;
     }
 }
