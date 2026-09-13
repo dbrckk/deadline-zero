@@ -5,6 +5,8 @@ import com.badlogic.gdx.Preferences;
 import com.deadlinezero.game.combat.WeaponCatalog;
 import com.deadlinezero.game.combat.WeaponDefinition;
 import com.deadlinezero.game.visual.EnvironmentBiomeRules;
+import java.util.HashMap;
+import java.util.Map;
 
 /** Persistent account storage backed by libGDX Preferences on Android/Desktop. */
 public final class ProfileStore {
@@ -92,6 +94,42 @@ public final class ProfileStore {
         }
         profile.normalizeLoadedState();
         return profile;
+    }
+
+    public static String exportBackup() {
+        Preferences p = Gdx.app.getPreferences(PREFS);
+        return ProfileBackupCodec.encode(p.get());
+    }
+
+    public static boolean importBackup(String backup) {
+        Map<String, Object> values = ProfileBackupCodec.decode(backup);
+        int schemaVersion = ProfileBackupCodec.schemaVersion(values);
+        if (schemaVersion > ProfileSchema.CURRENT_VERSION) return false;
+
+        Preferences p = Gdx.app.getPreferences(PREFS);
+        Map<String, ?> original = new HashMap<>(p.get());
+        boolean originalWritable = persistenceWritable;
+        try {
+            p.clear();
+            p.put(values);
+            p.flush();
+            boolean migrated = ProfileSchema.migrate(new ProfileSchema.PreferencesStore(p));
+            if (!migrated) {
+                p.clear();
+                p.put(original);
+                p.flush();
+                persistenceWritable = originalWritable;
+                return false;
+            }
+            persistenceWritable = true;
+            return true;
+        } catch (RuntimeException e) {
+            p.clear();
+            p.put(original);
+            p.flush();
+            persistenceWritable = originalWritable;
+            throw e;
+        }
     }
 
     public static void save(PlayerProfile profile) {
