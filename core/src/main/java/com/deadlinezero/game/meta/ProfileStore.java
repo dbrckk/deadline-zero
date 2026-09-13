@@ -101,10 +101,10 @@ public final class ProfileStore {
         return ProfileBackupCodec.encode(p.get());
     }
 
-    public static boolean importBackup(String backup) {
+    public static PlayerProfile importBackup(String backup) {
         Map<String, Object> values = ProfileBackupCodec.decode(backup);
         int schemaVersion = ProfileBackupCodec.schemaVersion(values);
-        if (schemaVersion > ProfileSchema.CURRENT_VERSION) return false;
+        if (schemaVersion > ProfileSchema.CURRENT_VERSION) return null;
 
         Preferences p = Gdx.app.getPreferences(PREFS);
         Map<String, ?> original = new HashMap<>(p.get());
@@ -115,21 +115,26 @@ public final class ProfileStore {
             p.flush();
             boolean migrated = ProfileSchema.migrate(new ProfileSchema.PreferencesStore(p));
             if (!migrated) {
-                p.clear();
-                p.put(original);
-                p.flush();
-                persistenceWritable = originalWritable;
-                return false;
+                rollbackImport(p, original, originalWritable);
+                return null;
             }
+
+            // A checksum only proves byte integrity. Reload every typed field before accepting the
+            // transaction so a validly encoded but type-poisoned backup cannot brick future starts.
+            PlayerProfile restored = load();
             persistenceWritable = true;
-            return true;
+            return restored;
         } catch (RuntimeException e) {
-            p.clear();
-            p.put(original);
-            p.flush();
-            persistenceWritable = originalWritable;
+            rollbackImport(p, original, originalWritable);
             throw e;
         }
+    }
+
+    private static void rollbackImport(Preferences p, Map<String, ?> original, boolean writable) {
+        p.clear();
+        p.put(original);
+        p.flush();
+        persistenceWritable = writable;
     }
 
     public static void save(PlayerProfile profile) {
