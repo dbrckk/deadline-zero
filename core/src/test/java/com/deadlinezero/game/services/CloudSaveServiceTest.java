@@ -15,6 +15,12 @@ final class CloudSaveServiceTest {
         assertEquals(CloudSaveService.DownloadResult.EMPTY_REMOTE, service.downloadAndReplaceLocal());
     }
 
+    @Test void unavailableProviderRejectsUploadExplicitly() {
+        CloudSaveService service = new CloudSaveService(null);
+        String backup = ProfileBackupCodec.encode(Map.of("accountLevel", 1));
+        assertThrows(IllegalStateException.class, () -> service.upload(backup));
+    }
+
     @Test void corruptRemotePayloadIsRejectedBeforeImport() {
         CloudSaveService service = new CloudSaveService(new CloudSaveAdapter() {
             @Override public RemoteBackup read() { return new RemoteBackup("not-a-valid-backup", 123L); }
