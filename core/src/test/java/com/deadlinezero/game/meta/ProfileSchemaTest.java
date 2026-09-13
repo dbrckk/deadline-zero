@@ -26,7 +26,7 @@ final class ProfileSchemaTest {
         assertEquals(1, store.flushes);
     }
 
-    @Test void v1ProfileMigratesToV2WithoutLosingProgress() {
+    @Test void v1ProfileMigratesThroughV3WithoutLosingProgress() {
         MemoryStore store = new MemoryStore();
         store.putInteger(ProfileSchema.VERSION_KEY, 1);
         store.putInteger("credits", 4321);
@@ -34,9 +34,23 @@ final class ProfileSchemaTest {
 
         assertTrue(ProfileSchema.migrate(store));
 
-        assertEquals(2, store.getInteger(ProfileSchema.VERSION_KEY, -1));
+        assertEquals(3, store.getInteger(ProfileSchema.VERSION_KEY, -1));
         assertEquals(4321, store.getInteger("credits", -1));
         assertEquals(2, store.getInteger("daily.runs", -1));
+        assertEquals(1, store.flushes);
+    }
+
+    @Test void v2ProfileMigratesToV3WithoutLosingWeeklyProgress() {
+        MemoryStore store = new MemoryStore();
+        store.putInteger(ProfileSchema.VERSION_KEY, 2);
+        store.putInteger("weekly.kills", 760);
+        store.putInteger("weekly.runs", 11);
+
+        assertTrue(ProfileSchema.migrate(store));
+
+        assertEquals(3, store.getInteger(ProfileSchema.VERSION_KEY, -1));
+        assertEquals(760, store.getInteger("weekly.kills", -1));
+        assertEquals(11, store.getInteger("weekly.runs", -1));
         assertEquals(1, store.flushes);
     }
 

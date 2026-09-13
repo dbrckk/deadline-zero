@@ -19,6 +19,7 @@ public final class PlayerProfile {
     public final Inventory inventory = new Inventory();
     public final DailyProgress daily = new DailyProgress();
     public final WeeklyProgress weekly = new WeeklyProgress();
+    public final AchievementProgress achievements = new AchievementProgress();
     public final SurvivorProgression survivors = new SurvivorProgression();
     public final MasteryProgress mastery = new MasteryProgress();
     public int accountLevel = 1;
