@@ -64,28 +64,29 @@ public final class CloudSaveScreen extends ScreenAdapter {
         shapes.end();
 
         batch.begin();
-        font.getData().setScale(1.65f);
+        font.getData().setScale(1.95f);
         font.setColor(VisualTheme.TEXT);
         font.draw(batch, "CLOUD SAVE", 0, h * .76f, w, Align.center, false);
 
-        font.getData().setScale(.78f);
+        font.getData().setScale(1.05f);
         font.setColor(colorForState());
         font.draw(batch, status, w * .20f, h * .64f, w * .60f, Align.center, true);
 
-        font.getData().setScale(.58f);
+        font.getData().setScale(.82f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, "Cloud actions are manual. Divergent progress is never overwritten automatically.",
             w * .20f, h * .55f, w * .60f, Align.center, true);
 
-        font.getData().setScale(.72f);
-        font.setColor(VisualTheme.CYAN_SOFT);
+        font.getData().setScale(1.02f);
+        boolean available = cloud.available();
+        font.setColor(available ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED);
         font.draw(batch, providerConflict ? "RECHECK" : "REFRESH", w * .20f, h * .398f, w * .17f, Align.center, false);
-        font.setColor(VisualTheme.GOLD);
+        font.setColor(available ? VisualTheme.GOLD : VisualTheme.MUTED);
         font.draw(batch, providerConflict ? "USE SERVER" : "UPLOAD LOCAL", w * .415f, h * .398f, w * .17f, Align.center, false);
-        font.setColor(VisualTheme.TEXT);
+        font.setColor(available ? VisualTheme.TEXT : VisualTheme.MUTED);
         font.draw(batch, providerConflict ? "USE OTHER" : "DOWNLOAD CLOUD", w * .63f, h * .398f, w * .17f, Align.center, false);
 
-        font.getData().setScale(.52f);
+        font.getData().setScale(.74f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, confirmationLine(), w * .20f, h * .30f, w * .60f, Align.center, true);
         font.draw(batch, "BACK  •  SETTINGS", w * .18f, h * .205f, w * .18f, Align.center, false);
