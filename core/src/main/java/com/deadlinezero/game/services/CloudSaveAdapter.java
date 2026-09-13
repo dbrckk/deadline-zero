@@ -7,6 +7,8 @@ public interface CloudSaveAdapter {
     enum ConflictChoice { SERVER, CONFLICTING }
 
     default boolean available() { return true; }
+    default boolean supportsAuthentication() { return false; }
+    default void authenticate() throws Exception { }
     RemoteBackup read() throws Exception;
     void write(String payload) throws Exception;
     default ProviderConflict pendingConflict() { return null; }
