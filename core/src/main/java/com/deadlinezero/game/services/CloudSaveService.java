@@ -36,11 +36,15 @@ public final class CloudSaveService {
     }
 
     public ConflictState compareRemoteToLocal(String localBackup) throws Exception {
-        ProfileBackupSummary local = ProfileBackupSummary.from(ProfileBackupCodec.decode(localBackup));
+        var localValues = ProfileBackupCodec.decode(localBackup);
         CloudSaveAdapter.RemoteBackup remote = inspectRemote();
         if (remote == null) return ConflictState.LOCAL_AHEAD;
-        ProfileBackupSummary cloud = ProfileBackupSummary.from(ProfileBackupCodec.decode(remote.payload()));
-        if (local.equals(cloud)) return ConflictState.EQUAL;
+        var remoteValues = ProfileBackupCodec.decode(remote.payload());
+
+        if (localValues.equals(remoteValues)) return ConflictState.EQUAL;
+
+        ProfileBackupSummary local = ProfileBackupSummary.from(localValues);
+        ProfileBackupSummary cloud = ProfileBackupSummary.from(remoteValues);
         if (local.dominates(cloud)) return ConflictState.LOCAL_AHEAD;
         if (cloud.dominates(local)) return ConflictState.REMOTE_AHEAD;
         return ConflictState.DIVERGED;
