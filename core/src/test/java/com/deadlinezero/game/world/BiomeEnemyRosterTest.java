@@ -26,7 +26,7 @@ final class BiomeEnemyRosterTest {
     @Test void nullSectorMapsThreeSignatureEnemies() {
         assertEquals(BiomeEnemyRoster.Identity.PHASE_STALKER, BiomeEnemyRoster.identityFor(20, Enemy.Type.PHANTOM));
         assertEquals(BiomeEnemyRoster.Identity.STATIC_SEER, BiomeEnemyRoster.identityFor(25, Enemy.Type.RANGED));
-        assertEquals(BiomeEnemyRoster.Identity.NULL_WARD, BiomeEnemyRoster.identityFor(30, Enemy.Type.REGENERATOR));
+        assertEquals(BiomeEnemyRoster.Identity.NULL_WARD, BiomeEnemyRoster.identityFor(29, Enemy.Type.REGENERATOR));
         assertEquals(Enemy.Type.PHANTOM, BiomeEnemyRoster.remap(20, .10f, Enemy.Type.SHAMBLER));
         assertEquals(Enemy.Type.RANGED, BiomeEnemyRoster.remap(20, .30f, Enemy.Type.SHAMBLER));
         assertEquals(Enemy.Type.REGENERATOR, BiomeEnemyRoster.remap(20, .48f, Enemy.Type.SHAMBLER));
