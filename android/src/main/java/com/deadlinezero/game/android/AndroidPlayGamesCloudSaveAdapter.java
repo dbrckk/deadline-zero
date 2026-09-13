@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Looper;
 import com.deadlinezero.game.services.CloudAuthenticationRequiredException;
 import com.deadlinezero.game.services.CloudProviderConflictException;
+import com.deadlinezero.game.services.CloudRemoteChangedException;
 import com.deadlinezero.game.services.CloudSaveAdapter;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.games.GamesClientStatusCodes;
@@ -65,6 +66,29 @@ public final class AndroidPlayGamesCloudSaveAdapter implements CloudSaveAdapter 
 
         Snapshot snapshot = open(true);
         if (snapshot == null) throw new IllegalStateException("Unable to open Play Games snapshot");
+        commitPayload(snapshot, payload);
+    }
+
+    @Override public void writeIfUnchanged(String payload, RemoteBackup expectedRemote) throws Exception {
+        requireWorkerThread();
+        if (payload == null || payload.isBlank()) throw new IllegalArgumentException("payload");
+        ensureAuthenticated();
+
+        Snapshot snapshot = open(true);
+        if (snapshot == null) throw new IllegalStateException("Unable to open Play Games snapshot");
+        RemoteBackup current = toRemoteBackup(snapshot);
+        boolean unchanged = expectedRemote == null
+            ? current.payload().isBlank()
+            : current.modifiedAtEpochMillis() == expectedRemote.modifiedAtEpochMillis()
+                && current.payload().equals(expectedRemote.payload());
+        if (!unchanged) {
+            PlayGames.getSnapshotsClient(activity).discardAndClose(snapshot);
+            throw new CloudRemoteChangedException();
+        }
+        commitPayload(snapshot, payload);
+    }
+
+    private void commitPayload(Snapshot snapshot, String payload) throws Exception {
         byte[] bytes = payload.getBytes(StandardCharsets.UTF_8);
         if (!snapshot.getSnapshotContents().writeBytes(bytes)) {
             PlayGames.getSnapshotsClient(activity).discardAndClose(snapshot);
