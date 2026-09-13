@@ -47,18 +47,74 @@ public final class UpgradeSelector {
         return count;
     }
 
-    private static boolean isAvailable(Player p, Upgrade u) {
+    static boolean isAvailable(Player p, Upgrade u) {
+        if (p == null || u == null) return false;
         return switch (u) {
             case TESLA_ORB -> p.abilities.level(AbilityType.TESLA_ORB) < 5;
             case MISSILE_SWARM -> p.abilities.level(AbilityType.MISSILE_SWARM) < 5;
             case CRYO_NOVA -> p.abilities.level(AbilityType.CRYO_NOVA) < 5;
             case DRONE -> p.abilities.level(AbilityType.DRONE) < 5;
             case ORBITAL -> p.abilities.level(AbilityType.ORBITAL_BLADE) < 5;
-            case MULTISHOT -> p.weapon.projectileCount < 7;
-            case PENETRATION -> p.weapon.penetration < 8;
-            case CRIT -> p.weapon.critChance < .60f;
-            case DASH_CORE -> p.dashCooldown > 1.26f;
-            default -> true;
+
+            case RAPID_FIRE -> p.weapon.fireInterval > Upgrade.MIN_FIRE_INTERVAL + .001f;
+            case DAMAGE, FOCUSED_PAYLOAD -> p.weapon.damage < Upgrade.MAX_DAMAGE - .01f;
+            case SPEED, AFTERBURNER -> p.moveSpeed < Upgrade.MAX_MOVE_SPEED - .01f;
+            case VITALITY, BULWARK_FRAME, COMBAT_STIMS, REACTIVE_PLATING, FIELD_REPAIR ->
+                p.maxHp < Upgrade.MAX_HP - .01f || p.hp < p.maxHp - .01f;
+            case MULTISHOT, CROSSFIRE, BARRAGE_MATRIX -> p.weapon.projectileCount < Upgrade.MAX_PROJECTILES;
+            case CRIT -> p.weapon.critChance < Upgrade.MAX_CRIT_CHANCE - .001f;
+            case CRIT_POWER -> p.weapon.critMultiplier < Upgrade.MAX_CRIT_MULTIPLIER - .01f;
+            case BALLISTICS, LIGHTWEIGHT_BOLT, HYPER_VELOCITY ->
+                p.weapon.projectileSpeed < Upgrade.MAX_PROJECTILE_SPEED - .01f;
+            case PENETRATION -> p.weapon.penetration < Upgrade.MAX_PENETRATION;
+            case KNOCKBACK, IMPACT_CORE -> p.weapon.knockback < Upgrade.MAX_KNOCKBACK - .01f;
+            case DASH_CORE, PHASE_CAPACITOR -> p.dashCooldown > Upgrade.MIN_DASH_COOLDOWN + .01f;
+            case TIGHT_CHOKE -> p.weapon.spreadDegrees > .05f;
+
+            case HEAVY_BARREL, ELEMENTAL_HARMONIZER, MOMENTUM_CORE, VETERAN_CORE ->
+                p.weapon.damage < Upgrade.MAX_DAMAGE - .01f
+                    || p.weapon.projectileSpeed < Upgrade.MAX_PROJECTILE_SPEED - .01f
+                    || p.weapon.knockback < Upgrade.MAX_KNOCKBACK - .01f;
+            case SUPPRESSIVE_CYCLE ->
+                p.weapon.fireInterval > Upgrade.MIN_FIRE_INTERVAL + .001f
+                    || p.weapon.knockback < Upgrade.MAX_KNOCKBACK - .01f;
+            case GLASS_CANNON, BERSERKER_CALIBER ->
+                p.weapon.damage < Upgrade.MAX_DAMAGE - .01f && p.maxHp > Upgrade.MIN_HP + .01f;
+            case EXECUTIONER, PRECISION_MATRIX ->
+                p.weapon.critChance < Upgrade.MAX_CRIT_CHANCE - .001f
+                    || p.weapon.critMultiplier < Upgrade.MAX_CRIT_MULTIPLIER - .01f;
+            case SIEGE_ROUNDS, BREACH_MATRIX ->
+                p.weapon.penetration < Upgrade.MAX_PENETRATION
+                    || p.weapon.damage < Upgrade.MAX_DAMAGE - .01f;
+            case ADAPTIVE_TRIGGER ->
+                p.weapon.fireInterval > Upgrade.MIN_FIRE_INTERVAL + .001f
+                    || p.weapon.critChance < Upgrade.MAX_CRIT_CHANCE - .001f;
+            case SCOUT_FRAME ->
+                p.moveSpeed < Upgrade.MAX_MOVE_SPEED - .01f
+                    || p.dashCooldown > Upgrade.MIN_DASH_COOLDOWN + .01f;
+            case LAST_STAND ->
+                p.weapon.damage < Upgrade.MAX_DAMAGE - .01f
+                    || p.weapon.critChance < Upgrade.MAX_CRIT_CHANCE - .001f;
+
+            case INCENDIARY, FIRE_CONTROL ->
+                p.weapon.element != com.deadlinezero.game.combat.DamageElement.FIRE
+                    || p.weapon.damage < Upgrade.MAX_DAMAGE - .01f
+                    || p.weapon.critChance < Upgrade.MAX_CRIT_CHANCE - .001f;
+            case CRYO, FROST_CONTROL, CRYO_HAMMER ->
+                p.weapon.element != com.deadlinezero.game.combat.DamageElement.FROST
+                    || p.weapon.knockback < Upgrade.MAX_KNOCKBACK - .01f;
+            case SHOCK, SHOCK_CONTROL ->
+                p.weapon.element != com.deadlinezero.game.combat.DamageElement.SHOCK
+                    || p.weapon.fireInterval > Upgrade.MIN_FIRE_INTERVAL + .001f
+                    || p.weapon.penetration < Upgrade.MAX_PENETRATION;
+            case THERMAL_LANCE ->
+                p.weapon.element != com.deadlinezero.game.combat.DamageElement.FIRE
+                    || p.weapon.projectileSpeed < Upgrade.MAX_PROJECTILE_SPEED - .01f
+                    || p.weapon.penetration < Upgrade.MAX_PENETRATION;
+            case ARC_LANCER ->
+                p.weapon.element != com.deadlinezero.game.combat.DamageElement.SHOCK
+                    || p.weapon.projectileSpeed < Upgrade.MAX_PROJECTILE_SPEED - .01f
+                    || p.weapon.critChance < Upgrade.MAX_CRIT_CHANCE - .001f;
         };
     }
 
