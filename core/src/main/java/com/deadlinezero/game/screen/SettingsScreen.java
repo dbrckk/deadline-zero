@@ -22,7 +22,8 @@ public final class SettingsScreen extends ScreenAdapter {
     private static final int MUSIC_VOLUME_ROW = 11;
     private static final int PRIVACY_ROW = 12;
     private static final int POLICY_ROW = 13;
-    private static final int LAST_ROW = POLICY_ROW;
+    private static final int CLOUD_ROW = 14;
+    private static final int LAST_ROW = CLOUD_ROW;
 
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
@@ -52,14 +53,15 @@ public final class SettingsScreen extends ScreenAdapter {
         String[] labels = {
             "Screen shake", "Shake strength", "Hit stop", "Damage flash", "High contrast telegraphs",
             "Reduce flashes", "Haptics", "Reduced motion", "UI scale", "Master volume", "SFX volume", "Music volume",
-            "Privacy choices", "Privacy policy"
+            "Privacy choices", "Privacy policy", "Cloud save"
         };
         String[] values = {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
             onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), onOff(s.reducedMotion), pct(s.uiScale),
             pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
             privacyRequired ? "OPEN" : "NOT REQUIRED",
-            policyAvailable ? "OPEN" : "UNAVAILABLE"
+            policyAvailable ? "OPEN" : "UNAVAILABLE",
+            game.services.cloudSave.available() ? "OPEN" : "NOT CONFIGURED"
         };
 
         batch.begin();
@@ -106,6 +108,10 @@ public final class SettingsScreen extends ScreenAdapter {
                     if (policyAvailable) openPolicy();
                     return;
                 }
+                if (row == CLOUD_ROW) {
+                    openCloud();
+                    return;
+                }
                 if (isSliderRow(row)) {
                     setSliderFromTouch(s, row, x, w);
                 } else {
@@ -128,6 +134,10 @@ public final class SettingsScreen extends ScreenAdapter {
             if (right && policyAvailable) openPolicy();
             return;
         }
+        if (row == CLOUD_ROW) {
+            if (right) openCloud();
+            return;
+        }
 
         applyAdjustment(s, right ? 1f : -1f);
         persistSettings(s);
@@ -138,6 +148,11 @@ public final class SettingsScreen extends ScreenAdapter {
         game.services.privacy.showOptions(() -> Gdx.app.postRunnable(
             () -> AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK)
         ));
+    }
+
+    private void openCloud() {
+        AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+        game.showCloudSave();
     }
 
     private void openPolicy() {
