@@ -80,6 +80,35 @@ final class CloudSaveServiceTest {
         assertEquals(CloudSaveService.ConflictState.EQUAL, service.compareRemoteToLocal(backup));
     }
 
+    @Test void observedRemoteIdentityRequiresPayloadAndVersionToMatch() {
+        CloudSaveAdapter.RemoteBackup observed = new CloudSaveAdapter.RemoteBackup("payload-a", 100L);
+        assertTrue(CloudSaveService.sameRemote(observed, new CloudSaveAdapter.RemoteBackup("payload-a", 100L)));
+        assertFalse(CloudSaveService.sameRemote(observed, new CloudSaveAdapter.RemoteBackup("payload-b", 100L)));
+        assertFalse(CloudSaveService.sameRemote(observed, new CloudSaveAdapter.RemoteBackup("payload-a", 101L)));
+        assertFalse(CloudSaveService.sameRemote(observed, null));
+        assertTrue(CloudSaveService.sameRemote(null, null));
+    }
+
+    @Test void classificationCanBeBoundToAnExactAlreadyInspectedRemote() {
+        Map<String, Object> local = new HashMap<>();
+        local.put("highestStage", 4);
+        local.put("accountLevel", 8);
+        local.put("totalRuns", 20);
+        local.put("totalKills", 3000L);
+        local.put("threat.highest", 1);
+        local.put("credits", 100L);
+
+        Map<String, Object> remote = new HashMap<>(local);
+        remote.put("highestStage", 5);
+        remote.put("totalRuns", 25);
+        String localBackup = ProfileBackupCodec.encode(local);
+        String remoteBackup = ProfileBackupCodec.encode(remote);
+
+        CloudSaveService service = serviceReturning("unused");
+        assertEquals(CloudSaveService.ConflictState.REMOTE_AHEAD,
+            service.classify(localBackup, new CloudSaveAdapter.RemoteBackup(remoteBackup, 123L)));
+    }
+
     @Test void authenticationRequestIsDelegatedExplicitly() throws Exception {
         final boolean[] authenticated = { false };
         CloudSaveService service = new CloudSaveService(new CloudSaveAdapter() {
