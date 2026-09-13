@@ -176,6 +176,18 @@ public final class DeadlineZeroGame extends Game {
         else setScreen(new RunResultScreen(this, result));
     }
 
+    /** Atomically adopts a profile reloaded from an external backup and normalizes time-based state. */
+    public void applyRestoredProfile(PlayerProfile restored) {
+        if (restored == null) throw new IllegalArgumentException("restored");
+        profile = restored;
+        long epochDay = System.currentTimeMillis() / DAY_MS;
+        DailyService.refresh(profile, epochDay);
+        WeeklyService.refresh(profile, epochDay);
+        profile.survivors.refreshUnlocks(profile);
+        saveProfile();
+        showMenu();
+    }
+
     public void saveProfile() {
         ProfileStore.save(profile);
         EntitlementStore.save(profile);
