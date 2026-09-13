@@ -37,6 +37,7 @@ import com.deadlinezero.game.screen.ShopScreen;
 import com.deadlinezero.game.screen.SurvivorScreen;
 import com.deadlinezero.game.screen.VictoryScreen;
 import com.deadlinezero.game.services.AdsService;
+import com.deadlinezero.game.services.CloudSaveService;
 import com.deadlinezero.game.services.GameServices;
 import com.deadlinezero.game.visual.GameArt;
 
@@ -174,6 +175,25 @@ public final class DeadlineZeroGame extends Game {
             threatUnlock.milestoneGems());
         if (bossKilled || victorySignal) setScreen(new VictoryScreen(this, result, firstClear, firstClearCredits, firstClearGems));
         else setScreen(new RunResultScreen(this, result));
+    }
+
+    /**
+     * Applies a cloud restore atomically to the running game. The restore service returns a freshly
+     * reloaded profile; replacing the active reference here prevents a later save from resurrecting
+     * the stale pre-restore object. Store-owned entitlements remain device/store authoritative.
+     */
+    public boolean applyCloudRestore(CloudSaveService.RestoreResult restore) {
+        if (restore == null || restore.result() != CloudSaveService.DownloadResult.APPLIED || restore.profile() == null) {
+            return false;
+        }
+        profile = restore.profile();
+        EntitlementStore.loadInto(profile);
+        long epochDay = System.currentTimeMillis() / DAY_MS;
+        DailyService.refresh(profile, epochDay);
+        WeeklyService.refresh(profile, epochDay);
+        profile.survivors.refreshUnlocks(profile);
+        showMenu();
+        return true;
     }
 
     public void saveProfile() {
