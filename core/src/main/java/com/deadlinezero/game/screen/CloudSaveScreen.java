@@ -52,6 +52,12 @@ public final class CloudSaveScreen extends ScreenAdapter {
         shapes.rect(w * .15f, h * .14f, w * .70f, h * .70f);
         shapes.setColor(VisualTheme.CYAN);
         shapes.rect(w * .15f, h * .83f, w * .70f, 3f);
+        shapes.setColor(VisualTheme.PANEL_ALT);
+        shapes.rect(w * .20f, h * .34f, w * .17f, h * .10f);
+        shapes.rect(w * .415f, h * .34f, w * .17f, h * .10f);
+        shapes.rect(w * .63f, h * .34f, w * .17f, h * .10f);
+        shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .12f);
+        shapes.rect(w * .18f, h * .16f, w * .18f, h * .08f);
         shapes.end();
 
         batch.begin();
@@ -70,26 +76,50 @@ public final class CloudSaveScreen extends ScreenAdapter {
 
         font.getData().setScale(.72f);
         font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, "[R] REFRESH", w * .22f, h * .40f);
+        font.draw(batch, "REFRESH", w * .20f, h * .398f, w * .17f, Align.center, false);
         font.setColor(VisualTheme.GOLD);
-        font.draw(batch, "[U] UPLOAD LOCAL", w * .42f, h * .40f);
+        font.draw(batch, "UPLOAD LOCAL", w * .415f, h * .398f, w * .17f, Align.center, false);
         font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "[D] DOWNLOAD CLOUD", w * .64f, h * .40f);
+        font.draw(batch, "DOWNLOAD CLOUD", w * .63f, h * .398f, w * .17f, Align.center, false);
 
         font.getData().setScale(.52f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, confirmationLine(), w * .20f, h * .30f, w * .60f, Align.center, true);
-        font.draw(batch, "ESC / BACK  •  SETTINGS", w * .20f, h * .20f, w * .60f, Align.center, false);
+        font.draw(batch, "BACK  •  SETTINGS", w * .18f, h * .205f, w * .18f, Align.center, false);
         batch.end();
 
-        handleInput();
+        handleInput(w, h);
     }
 
-    private void handleInput() {
+    private void handleInput(float w, float h) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.showSettings();
             return;
         }
+
+        if (Gdx.input.justTouched()) {
+            float x = Gdx.input.getX();
+            float y = h - Gdx.input.getY();
+            if (x >= w * .18f && x <= w * .36f && y >= h * .16f && y <= h * .24f) {
+                game.showSettings();
+                return;
+            }
+            if (y >= h * .34f && y <= h * .44f) {
+                if (x >= w * .20f && x <= w * .37f) {
+                    if (!busy && cloud.available()) { resetConfirmations(); refresh(); }
+                    return;
+                }
+                if (x >= w * .415f && x <= w * .585f) {
+                    if (!busy && cloud.available()) requestUpload();
+                    return;
+                }
+                if (x >= w * .63f && x <= w * .80f) {
+                    if (!busy && cloud.available()) requestDownload();
+                    return;
+                }
+            }
+        }
+
         if (busy || !cloud.available()) return;
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) { resetConfirmations(); refresh(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.U)) { requestUpload(); return; }
