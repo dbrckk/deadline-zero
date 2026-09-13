@@ -80,8 +80,8 @@ public final class MissionsScreen extends ScreenAdapter {
         font.setColor(Color.GOLD);
         font.getData().setScale(.92f);
         font.draw(batch, "ACHIEVEMENTS", rightX, h - 438f);
-        font.getData().setScale(.66f);
-        int achievementY = (int) (h - 478f);
+        font.getData().setScale(.94f);
+        int achievementY = (int) (h - 482f);
         int key = 7;
         for (AchievementService.Achievement achievement : AchievementService.Achievement.values()) {
             boolean unlocked = AchievementService.unlocked(p, achievement);
@@ -90,7 +90,7 @@ public final class MissionsScreen extends ScreenAdapter {
             String state = claimed ? "CLAIMED" : unlocked ? "[" + key + "] CLAIM" : "LOCKED";
             font.draw(batch, achievement.title + "  •  " + achievement.description + "  •  " + state,
                 rightX, achievementY, columnWidth, Align.left, false);
-            achievementY -= 34;
+            achievementY -= 42;
             key++;
         }
 
