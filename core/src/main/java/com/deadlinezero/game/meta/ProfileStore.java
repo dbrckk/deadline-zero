@@ -60,6 +60,14 @@ public final class ProfileStore {
         profile.daily.runMissionClaimed = p.getBoolean("daily.runClaimed", false);
         profile.daily.bossMissionClaimed = p.getBoolean("daily.bossClaimed", false);
 
+        profile.weekly.weekIndex = p.getLong("weekly.weekIndex", Long.MIN_VALUE);
+        profile.weekly.kills = Math.max(0, p.getInteger("weekly.kills", 0));
+        profile.weekly.runs = Math.max(0, p.getInteger("weekly.runs", 0));
+        profile.weekly.bosses = Math.max(0, p.getInteger("weekly.bosses", 0));
+        profile.weekly.killMissionClaimed = p.getBoolean("weekly.killClaimed", false);
+        profile.weekly.runMissionClaimed = p.getBoolean("weekly.runClaimed", false);
+        profile.weekly.bossMissionClaimed = p.getBoolean("weekly.bossClaimed", false);
+
         int itemCount = Math.min(Inventory.MAX_ITEMS, Math.max(0, p.getInteger("inventory.count", 0)));
         for (int i = 0; i < itemCount; i++) {
             String key = "inventory." + i + ".";
@@ -130,6 +138,14 @@ public final class ProfileStore {
         p.putBoolean("daily.killClaimed", profile.daily.killMissionClaimed);
         p.putBoolean("daily.runClaimed", profile.daily.runMissionClaimed);
         p.putBoolean("daily.bossClaimed", profile.daily.bossMissionClaimed);
+
+        p.putLong("weekly.weekIndex", profile.weekly.weekIndex);
+        p.putInteger("weekly.kills", profile.weekly.kills);
+        p.putInteger("weekly.runs", profile.weekly.runs);
+        p.putInteger("weekly.bosses", profile.weekly.bosses);
+        p.putBoolean("weekly.killClaimed", profile.weekly.killMissionClaimed);
+        p.putBoolean("weekly.runClaimed", profile.weekly.runMissionClaimed);
+        p.putBoolean("weekly.bossClaimed", profile.weekly.bossMissionClaimed);
 
         int count = Math.min(profile.inventory.size(), Inventory.MAX_ITEMS);
         p.putInteger("inventory.count", count);

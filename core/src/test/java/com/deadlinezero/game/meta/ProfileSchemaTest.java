@@ -26,6 +26,20 @@ final class ProfileSchemaTest {
         assertEquals(1, store.flushes);
     }
 
+    @Test void v1ProfileMigratesToV2WithoutLosingProgress() {
+        MemoryStore store = new MemoryStore();
+        store.putInteger(ProfileSchema.VERSION_KEY, 1);
+        store.putInteger("credits", 4321);
+        store.putInteger("daily.runs", 2);
+
+        assertTrue(ProfileSchema.migrate(store));
+
+        assertEquals(2, store.getInteger(ProfileSchema.VERSION_KEY, -1));
+        assertEquals(4321, store.getInteger("credits", -1));
+        assertEquals(2, store.getInteger("daily.runs", -1));
+        assertEquals(1, store.flushes);
+    }
+
     @Test void currentSchemaMigrationIsIdempotent() {
         MemoryStore store = new MemoryStore();
         store.putInteger(ProfileSchema.VERSION_KEY, ProfileSchema.CURRENT_VERSION);

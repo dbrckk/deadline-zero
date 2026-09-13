@@ -15,6 +15,7 @@ import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.SurvivorCatalog;
 import com.deadlinezero.game.screen.GameScreen;
+import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.visual.CombatVisualEvents;
 import com.deadlinezero.game.world.BiomeEnemyRoster;
 import java.io.File;
@@ -29,6 +30,27 @@ import org.junit.runner.RunWith;
 /** Captures deterministic phone-scale gameplay frames for human visual QA in CI artifacts. */
 @RunWith(AndroidJUnit4.class)
 public final class AndroidGameplayVisualProbeTest {
+    @Test
+    public void capturesWeeklyMissionsScreen() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.profile.daily.loginStreak = 7;
+                game.profile.daily.killsToday = 72;
+                game.profile.daily.runsToday = 2;
+                game.profile.daily.bossesToday = 0;
+                game.profile.weekly.kills = 760;
+                game.profile.weekly.runs = 11;
+                game.profile.weekly.bosses = 3;
+                game.showMissions();
+                assertTrue("expected MissionsScreen for weekly visual probe", game.getScreen() instanceof MissionsScreen);
+            });
+            Thread.sleep(700L);
+            capture("weekly-missions.png");
+        }
+    }
+
     @Test
     public void capturesWraithGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {

@@ -18,6 +18,7 @@ public final class PlayerProfile {
     private final LinkedHashSet<String> deliveredPurchaseReceipts = new LinkedHashSet<>();
     public final Inventory inventory = new Inventory();
     public final DailyProgress daily = new DailyProgress();
+    public final WeeklyProgress weekly = new WeeklyProgress();
     public final SurvivorProgression survivors = new SurvivorProgression();
     public final MasteryProgress mastery = new MasteryProgress();
     public int accountLevel = 1;
