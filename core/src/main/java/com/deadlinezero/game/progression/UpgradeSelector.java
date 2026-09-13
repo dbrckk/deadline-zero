@@ -54,10 +54,12 @@ public final class UpgradeSelector {
             case CRYO_NOVA -> p.abilities.level(AbilityType.CRYO_NOVA) < 5;
             case DRONE -> p.abilities.level(AbilityType.DRONE) < 5;
             case ORBITAL -> p.abilities.level(AbilityType.ORBITAL_BLADE) < 5;
-            case MULTISHOT -> p.weapon.projectileCount < 7;
-            case PENETRATION -> p.weapon.penetration < 8;
-            case CRIT -> p.weapon.critChance < .60f;
-            case DASH_CORE -> p.dashCooldown > 1.26f;
+            case MULTISHOT, SUPPRESSIVE_PATTERN, CRYO_SHARDS, BULLET_STORM -> p.weapon.projectileCount < 7;
+            case PENETRATION, DEEP_MAGAZINE, SHATTER_ROUNDS, THERMAL_LANCE, ARC_PIERCE, BREACH_PROTOCOL -> p.weapon.penetration < 8;
+            case CRIT, SHARPENED_FEED, DEADLY_CADENCE, VOLTAIC_FEED, SNIPER_LOGIC -> p.weapon.critChance < .60f;
+            case CRIT_DAMAGE, FOCUSED_BURST -> p.weapon.critMultiplier < 4.0f;
+            case DASH_CORE, DASH_CAPACITOR, PHASE_COOLANT -> p.dashCooldown > 1.26f;
+            case FIELD_MEDKIT -> p.hp < p.maxHp * .98f;
             default -> true;
         };
     }
