@@ -38,6 +38,7 @@ public final class BossCombatRuntime {
             case WARDEN -> { baseCooldown = phase >= 3 ? WardenBossProfile.PHASE3_CHARGE_COOLDOWN : WardenBossProfile.PHASE2_CHARGE_COOLDOWN; chargeDuration = phase >= 3 ? WardenBossProfile.PHASE3_CHARGE_DURATION : WardenBossProfile.PHASE2_CHARGE_DURATION; }
             case HARVESTER -> { baseCooldown = phase >= 3 ? HarvesterBossProfile.PHASE3_CHARGE_COOLDOWN : HarvesterBossProfile.PHASE2_CHARGE_COOLDOWN; chargeDuration = phase >= 3 ? HarvesterBossProfile.PHASE3_CHARGE_DURATION : HarvesterBossProfile.PHASE2_CHARGE_DURATION; }
             case NULL_ARCHON -> { baseCooldown = phase >= 3 ? NullArchonBossProfile.PHASE3_CHARGE_COOLDOWN : NullArchonBossProfile.PHASE2_CHARGE_COOLDOWN; chargeDuration = phase >= 3 ? .60f : .48f; }
+            case FROST_COLOSSUS -> { baseCooldown = phase >= 3 ? FrostColossusBossProfile.PHASE3_CHARGE_COOLDOWN : FrostColossusBossProfile.PHASE2_CHARGE_COOLDOWN; chargeDuration = phase >= 3 ? FrostColossusBossProfile.PHASE3_CHARGE_DURATION : FrostColossusBossProfile.PHASE2_CHARGE_DURATION; }
             default -> { baseCooldown = phase >= 3 ? 3.0f : 4.2f; chargeDuration = phase >= 3 ? .72f : .58f; }
         }
         chargeTimer = baseCooldown * affix.chargeCooldown;
@@ -51,6 +52,7 @@ public final class BossCombatRuntime {
             case WARDEN -> phase >= 3 ? WardenBossProfile.PHASE3_SUMMON_COOLDOWN : WardenBossProfile.PHASE2_SUMMON_COOLDOWN;
             case HARVESTER -> phase >= 3 ? HarvesterBossProfile.PHASE3_SUMMON_COOLDOWN : HarvesterBossProfile.PHASE2_SUMMON_COOLDOWN;
             case NULL_ARCHON -> phase >= 3 ? NullArchonBossProfile.PHASE3_SUMMON_COOLDOWN : NullArchonBossProfile.PHASE2_SUMMON_COOLDOWN;
+            case FROST_COLOSSUS -> phase >= 3 ? FrostColossusBossProfile.PHASE3_SUMMON_COOLDOWN : FrostColossusBossProfile.PHASE2_SUMMON_COOLDOWN;
             default -> phase >= 3 ? 5.2f : 8.5f;
         };
         summonTimer = base * affix.summonCooldown;
@@ -77,6 +79,7 @@ public final class BossCombatRuntime {
             case WARDEN -> WardenBossProfile.PHASE3_PULSE_COOLDOWN;
             case HARVESTER -> HarvesterBossProfile.PHASE3_PULSE_COOLDOWN;
             case NULL_ARCHON -> NullArchonBossProfile.PHASE3_PULSE_COOLDOWN;
+            case FROST_COLOSSUS -> FrostColossusBossProfile.PHASE3_PULSE_COOLDOWN;
             default -> 3.8f;
         };
         enragePulseTimer = base * affix.pulseCooldown;
@@ -89,6 +92,7 @@ public final class BossCombatRuntime {
             case WARDEN -> phase >= 3 ? WardenBossProfile.PHASE3_SUMMON_COUNT : WardenBossProfile.PHASE2_SUMMON_COUNT;
             case HARVESTER -> phase >= 3 ? HarvesterBossProfile.PHASE3_SUMMON_COUNT : HarvesterBossProfile.PHASE2_SUMMON_COUNT;
             case NULL_ARCHON -> phase >= 3 ? NullArchonBossProfile.PHASE3_SUMMON_COUNT : NullArchonBossProfile.PHASE2_SUMMON_COUNT;
+            case FROST_COLOSSUS -> phase >= 3 ? FrostColossusBossProfile.PHASE3_SUMMON_COUNT : FrostColossusBossProfile.PHASE2_SUMMON_COUNT;
             default -> phase >= 3 ? 6 : 3;
         };
         return base + affix.summonBonus;
@@ -100,6 +104,7 @@ public final class BossCombatRuntime {
             case WARDEN -> WardenBossProfile.ENRAGE_SHOTS;
             case HARVESTER -> HarvesterBossProfile.ENRAGE_SHOTS;
             case NULL_ARCHON -> NullArchonBossProfile.ENRAGE_SHOTS;
+            case FROST_COLOSSUS -> FrostColossusBossProfile.ENRAGE_SHOTS;
             default -> 20;
         };
         return base + affix.enrageShotBonus;
@@ -111,6 +116,7 @@ public final class BossCombatRuntime {
             case WARDEN -> WardenBossProfile.ENRAGE_PROJECTILE_SPEED;
             case HARVESTER -> HarvesterBossProfile.ENRAGE_PROJECTILE_SPEED;
             case NULL_ARCHON -> NullArchonBossProfile.ENRAGE_PROJECTILE_SPEED;
+            case FROST_COLOSSUS -> FrostColossusBossProfile.ENRAGE_PROJECTILE_SPEED;
             default -> 8.2f;
         };
         return base * (affix == BossAffixRules.Affix.ARTILLERY || affix == BossAffixRules.Affix.APOCALYPSE ? 1.12f : 1f);
@@ -122,6 +128,7 @@ public final class BossCombatRuntime {
             case WARDEN -> WardenBossProfile.ENRAGE_EXPLOSIVE_EVERY;
             case HARVESTER -> HarvesterBossProfile.ENRAGE_EXPLOSIVE_EVERY;
             case NULL_ARCHON -> NullArchonBossProfile.ENRAGE_EXPLOSIVE_EVERY;
+            case FROST_COLOSSUS -> FrostColossusBossProfile.ENRAGE_EXPLOSIVE_EVERY;
             default -> 4;
         };
         return Math.max(1, base - affix.explosiveDensityBonus);
@@ -133,6 +140,7 @@ public final class BossCombatRuntime {
             case WARDEN -> WardenBossProfile.ENRAGE_EXPLOSION_RADIUS;
             case HARVESTER -> HarvesterBossProfile.ENRAGE_EXPLOSION_RADIUS;
             case NULL_ARCHON -> NullArchonBossProfile.ENRAGE_EXPLOSION_RADIUS;
+            case FROST_COLOSSUS -> FrostColossusBossProfile.ENRAGE_EXPLOSION_RADIUS;
             default -> 2.0f;
         };
         return base * (affix == BossAffixRules.Affix.ARTILLERY || affix == BossAffixRules.Affix.APOCALYPSE ? 1.18f : 1f);
@@ -146,4 +154,5 @@ public final class BossCombatRuntime {
     public boolean warden() { return identity == BossIdentity.WARDEN; }
     public boolean harvester() { return identity == BossIdentity.HARVESTER; }
     public boolean nullArchon() { return identity == BossIdentity.NULL_ARCHON; }
+    public boolean frostColossus() { return identity == BossIdentity.FROST_COLOSSUS; }
 }
