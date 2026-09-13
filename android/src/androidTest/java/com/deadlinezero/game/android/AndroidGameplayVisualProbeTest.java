@@ -14,6 +14,7 @@ import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.SurvivorCatalog;
+import com.deadlinezero.game.progression.Upgrade;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.screen.CloudSaveScreen;
@@ -69,6 +70,43 @@ public final class AndroidGameplayVisualProbeTest {
             });
             Thread.sleep(500L);
             capture("cloud-save.png");
+        }
+    }
+
+    @Test
+    public void capturesExpandedUpgradePoolOverlay() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for upgrade visual probe", game.getScreen() instanceof GameScreen);
+                injectUpgradeChoices((GameScreen) game.getScreen());
+            });
+            Thread.sleep(700L);
+            capture("upgrade-pool.png");
+        }
+    }
+
+    private static void injectUpgradeChoices(GameScreen screen) {
+        try {
+            Field choicesField = GameScreen.class.getDeclaredField("choices");
+            choicesField.setAccessible(true);
+            Upgrade[] choices = (Upgrade[]) choicesField.get(screen);
+            choices[0] = Upgrade.GLASS_CANNON;
+            choices[1] = Upgrade.ELEMENTAL_HARMONIZER;
+            choices[2] = Upgrade.BARRAGE_MATRIX;
+
+            Field choosingUpgrade = GameScreen.class.getDeclaredField("choosingUpgrade");
+            choosingUpgrade.setAccessible(true);
+            choosingUpgrade.setBoolean(screen, true);
+
+            Field choosingLegendary = GameScreen.class.getDeclaredField("choosingLegendary");
+            choosingLegendary.setAccessible(true);
+            choosingLegendary.setBoolean(screen, false);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject expanded upgrade choices for visual QA", exception);
         }
     }
 
