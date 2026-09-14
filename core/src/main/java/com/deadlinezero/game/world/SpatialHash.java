@@ -8,6 +8,7 @@ import com.deadlinezero.game.entities.Enemy;
 public final class SpatialHash {
     private final float cellSize;
     private final IntMap<Array<Enemy>> cells = new IntMap<>();
+    private final Array<Array<Enemy>> activeBuckets = new Array<>(false, 64);
     private int activeBucketCount;
     private int maxQueryRing;
 
@@ -16,9 +17,10 @@ public final class SpatialHash {
     }
 
     public void rebuild(Array<Enemy> enemies) {
+        for (Array<Enemy> bucket : activeBuckets) bucket.clear();
+        activeBuckets.clear();
         activeBucketCount = 0;
         maxQueryRing = 0;
-        for (Array<Enemy> bucket : cells.values()) bucket.clear();
         for (Enemy enemy : enemies) {
             if (!enemy.alive) continue;
             int cx = floor(enemy.position.x / cellSize);
@@ -30,7 +32,10 @@ public final class SpatialHash {
                 bucket = new Array<>(false, 16);
                 cells.put(key, bucket);
             }
-            if (bucket.size == 0) activeBucketCount++;
+            if (bucket.size == 0) {
+                activeBuckets.add(bucket);
+                activeBucketCount++;
+            }
             bucket.add(enemy);
         }
     }
