@@ -65,17 +65,14 @@ public final class RunContractScreen extends ScreenAdapter {
         batch.begin();
         font.getData().setScale(.92f);
         font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "SELECT RUN CONTRACT", 0f, h - 50f, w, Align.center, false);
+        font.draw(batch, t("contract.title"), 0f, h - 50f, w, Align.center, false);
         font.getData().setScale(.43f);
         font.setColor(RunStageContext.threatTier() > 0 ? VisualTheme.GOLD : VisualTheme.MUTED);
         BossAffixRules.Affix bossAffix = BossAffixRules.forRun(RunStageContext.stage(), RunStageContext.threatTier());
-        String mutator = EndgameMutatorRules.active() ? "  •  MUTATOR " + EndgameMutatorRules.label() : "";
-        font.draw(batch, "STAGE " + RunStageContext.stage()
-            + "  •  THREAT " + RunStageContext.threatTier()
-            + "  •  +" + ThreatTierRules.rewardBonusPercent(RunStageContext.threatTier())
-            + "% ASCENSION"
-            + mutator
-            + (bossAffix == BossAffixRules.Affix.NONE ? "" : "  •  BOSS AFFIX " + bossAffix.title),
+        String mutator = EndgameMutatorRules.active() ? f("contract.mutator", EndgameMutatorRules.label()) : "";
+        String bossAffixText = bossAffix == BossAffixRules.Affix.NONE ? "" : f("contract.bossAffix", bossAffix.title);
+        font.draw(batch, f("contract.header", RunStageContext.stage(), RunStageContext.threatTier(),
+            ThreatTierRules.rewardBonusPercent(RunStageContext.threatTier()), mutator, bossAffixText),
             0f, h - 76f, w, Align.center, false);
 
         int stage = RunStageContext.stage();
@@ -84,22 +81,20 @@ public final class RunContractScreen extends ScreenAdapter {
         if (EnvironmentBiomeRules.isNullSector(stage)) {
             font.getData().setScale(.34f);
             font.setColor(VisualTheme.VIOLET);
-            font.draw(batch, "NULL SECTOR  •  VOID RIFTS  •  STATIC BURSTS  •  NULL BEAMS",
+            font.draw(batch, t("contract.nullSector"),
                 0f, hazardY, w, Align.center, false);
             hazardY -= 20f;
         } else if (EnvironmentBiomeRules.isFoundry(stage)) {
             font.getData().setScale(.34f);
             font.setColor(VisualTheme.GOLD);
-            font.draw(batch, "CINDER FOUNDRY  •  LAVA VENTS  •  STEAM JETS  •  HEAT LINES",
+            font.draw(batch, t("contract.foundry"),
                 0f, hazardY, w, Align.center, false);
             hazardY -= 20f;
         }
         if (tier >= 5) {
             font.getData().setScale(.34f);
             font.setColor(tier >= 8 ? VisualTheme.RED : VisualTheme.GOLD);
-            String endgame = tier >= 8
-                ? "ENDGAME HAZARDS  •  TELEGRAPHED ORBITAL STRIKES  •  VOLATILE HEAVIES"
-                : "ENDGAME HAZARDS  •  TELEGRAPHED ORBITAL STRIKES";
+            String endgame = tier >= 8 ? t("contract.endgameHeavy") : t("contract.endgame");
             font.draw(batch, endgame, 0f, hazardY, w, Align.center, false);
         }
 
@@ -111,12 +106,12 @@ public final class RunContractScreen extends ScreenAdapter {
 
             font.getData().setScale(.33f);
             font.setColor(m.legendary() ? VisualTheme.GOLD : VisualTheme.MUTED);
-            font.draw(batch, m.legendary() ? "LEGENDARY CONTRACT" : "STANDARD CONTRACT",
+            font.draw(batch, m.legendary() ? t("contract.legendary") : t("contract.standard"),
                 x + 8f, cardY + cardH - 24f, cardW - 16f, Align.center, false);
 
             font.getData().setScale(.64f);
             font.setColor(accent);
-            font.draw(batch, "[" + (i + 1) + "]  " + m.title, x + 8f, cardY + cardH - 52f, cardW - 16f, Align.center, false);
+            font.draw(batch, f("contract.cardTitle", i + 1, m.title), x + 8f, cardY + cardH - 52f, cardW - 16f, Align.center, false);
 
             font.getData().setScale(.40f);
             font.setColor(VisualTheme.TEXT);
@@ -124,27 +119,27 @@ public final class RunContractScreen extends ScreenAdapter {
 
             font.getData().setScale(.37f);
             font.setColor(VisualTheme.MUTED);
-            font.draw(batch,
-                "HP  x" + oneDecimal(m.enemyHp * EndgameMutatorRules.enemyHpMultiplier()) + "\n" +
-                "SPEED  x" + oneDecimal(m.enemySpeed * EndgameMutatorRules.enemySpeedMultiplier()) + "\n" +
-                "DAMAGE  x" + oneDecimal(m.enemyDamage * EndgameMutatorRules.enemyDamageMultiplier()) + "\n" +
-                "SPAWN  x" + oneDecimal(m.spawnInterval * EndgameMutatorRules.spawnIntervalMultiplier()),
+            font.draw(batch, f("contract.stats",
+                oneDecimal(m.enemyHp * EndgameMutatorRules.enemyHpMultiplier()),
+                oneDecimal(m.enemySpeed * EndgameMutatorRules.enemySpeedMultiplier()),
+                oneDecimal(m.enemyDamage * EndgameMutatorRules.enemyDamageMultiplier()),
+                oneDecimal(m.spawnInterval * EndgameMutatorRules.spawnIntervalMultiplier())),
                 x + cardW * .13f, cardY + cardH * .55f, cardW * .74f, Align.center, true);
 
             font.getData().setScale(.43f);
             font.setColor(accent);
-            font.draw(batch, "THREAT  " + m.threatPercent() + "%", x, cardY + 105f, cardW, Align.center, false);
+            font.draw(batch, f("contract.threat", m.threatPercent()), x, cardY + 105f, cardW, Align.center, false);
 
             font.getData().setScale(.62f);
             font.setColor(Color.WHITE);
             int totalRewardBonus = Math.round((m.reward * EndgameMutatorRules.rewardMultiplier() - 1f) * 100f);
-            font.draw(batch, "+" + totalRewardBonus + "% REWARDS", center - cardW * .38f,
+            font.draw(batch, f("contract.rewards", totalRewardBonus), center - cardW * .38f,
                 cardY + 54f, cardW * .76f, Align.center, false);
         }
 
         font.getData().setScale(.36f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "TAP A CARD / 1-3 TO DEPLOY   •   ESC TO CANCEL", 0f, 34f, w, Align.center, false);
+        font.draw(batch, t("contract.footer"), 0f, 34f, w, Align.center, false);
         batch.end();
 
         handleInput(cardY, cardW, cardH, margin, gap);
@@ -187,6 +182,9 @@ public final class RunContractScreen extends ScreenAdapter {
             default -> VisualTheme.CYAN_SOFT;
         };
     }
+
+    private String t(String key) { return game.i18n.text(key); }
+    private String f(String key, Object... args) { return game.i18n.format(key, args); }
 
     @Override public void dispose() {
         batch.dispose();
