@@ -183,8 +183,7 @@ public final class GameScreen extends ScreenAdapter {
             director.onSpawn();
         }
 
-        // Build the broad-phase before target acquisition so firing avoids a full enemy scan.
-        spatial.rebuild(enemies);
+        // Reuse the index produced at the end of the previous simulation tick.
         Enemy target = spatial.nearest(player.position.x, player.position.y);
         if (target != null && fireTimer <= 0f) {
             fire(target);
@@ -327,6 +326,7 @@ public final class GameScreen extends ScreenAdapter {
                 default -> new Enemy(type, x, y, 30f * scale, 4.35f, .34f, 8f, 5);
             };
             enemies.add(minion);
+            spatial.add(minion);
             impact(x, y, nullArchon ? .82f : frostColossus ? .78f : .65f,
                 nullArchon ? .22f : frostColossus ? .20f : .18f,
                 frostColossus ? VisualTheme.CYAN : revenant ? VisualTheme.RED : VisualTheme.VIOLET);
@@ -522,6 +522,7 @@ public final class GameScreen extends ScreenAdapter {
             default -> new Enemy(t, x, y, 52 * scale, 2.55f, .46f, 10, 8);
         };
         enemies.add(e);
+        spatial.add(e);
         if (t == Enemy.Type.BOSS) director.onBossSpawned();
     }
 
