@@ -61,7 +61,7 @@ public final class SettingsScreen extends ScreenAdapter {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
             onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), onOff(s.reducedMotion), pct(s.uiScale),
             pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
-            GraphicsSettings.active().name() + " • " + GraphicsSettings.targetFps() + " FPS",
+            GraphicsSettings.active().name(),
             privacyRequired ? "OPEN" : "NOT REQUIRED",
             policyAvailable ? "OPEN" : "UNAVAILABLE",
             game.services.cloudSave.available() ? "OPEN" : "NOT CONFIGURED"
