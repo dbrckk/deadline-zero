@@ -35,6 +35,7 @@ public final class AbilitySystem {
     private final AbilityRuntime runtime = new AbilityRuntime();
     private final LeaperRuntime leapers = LeaperSharedRuntime.get();
     private final WeakHashMap<Enemy, Boolean> leaperDecisions = new WeakHashMap<>();
+    private final Array<Enemy> spatialCandidates = new Array<>(false, 32);
     private final float abilityPower;
 
     public AbilitySystem(Player player, Array<Enemy> enemies, Pools pools, Listener listener) {
@@ -210,7 +211,8 @@ public final class AbilitySystem {
         }
         impact(player.position.x, player.position.y, radius, .36f, new Color(.25f, .8f, 1f, 1f));
         float r2 = radius * radius;
-        for (Enemy e : enemies) {
+        spatial.query(player.position.x, player.position.y, radius, spatialCandidates);
+        for (Enemy e : spatialCandidates) {
             if (!e.alive || e.position.dst2(player.position) > r2) continue;
             damageEnemy(e, damage, DamageElement.FROST, new Color(.55f, .9f, 1f, 1f), .35f);
         }
@@ -259,7 +261,8 @@ public final class AbilitySystem {
             ? DamageElement.SHOCK
             : (player.abilities.hasPermafrostBladeSynergy() ? DamageElement.FROST : DamageElement.KINETIC);
         Color color = element == DamageElement.SHOCK ? Color.CYAN : (element == DamageElement.FROST ? new Color(.55f, .9f, 1f, 1f) : Color.GOLD);
-        for (Enemy e : enemies) {
+        spatial.query(x, y, radius, spatialCandidates);
+        for (Enemy e : spatialCandidates) {
             if (!e.alive) continue;
             float dx = e.position.x - x;
             float dy = e.position.y - y;
@@ -278,7 +281,8 @@ public final class AbilitySystem {
         };
         impact(x, y, radius, .28f, blast);
         float r2 = radius * radius;
-        for (Enemy e : enemies) {
+        spatial.query(x, y, radius, spatialCandidates);
+        for (Enemy e : spatialCandidates) {
             if (!e.alive) continue;
             float dx = e.position.x - x;
             float dy = e.position.y - y;
