@@ -20,6 +20,7 @@ import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageMissionRules;
 import com.deadlinezero.game.util.Pools;
 import com.deadlinezero.game.world.LeaperSpawnRules;
+import com.deadlinezero.game.world.SpatialHash;
 import com.deadlinezero.game.world.WaveDirector;
 
 /** Executes passive player abilities without allocating during the frame loop. */
@@ -30,15 +31,22 @@ public final class AbilitySystem {
     private final Array<Enemy> enemies;
     private final Pools pools;
     private final Listener listener;
+    private final SpatialHash spatial;
     private final AbilityRuntime runtime = new AbilityRuntime();
     private final LeaperRuntime leapers = LeaperSharedRuntime.get();
     private final WeakHashMap<Enemy, Boolean> leaperDecisions = new WeakHashMap<>();
     private final float abilityPower;
 
     public AbilitySystem(Player player, Array<Enemy> enemies, Pools pools, Listener listener) {
+        this(player, enemies, pools, new SpatialHash(2.2f), listener);
+        this.spatial.rebuild(enemies);
+    }
+
+    public AbilitySystem(Player player, Array<Enemy> enemies, Pools pools, SpatialHash spatial, Listener listener) {
         this.player = player;
         this.enemies = enemies;
         this.pools = pools;
+        this.spatial = spatial;
         this.listener = listener;
         this.abilityPower = RunLoadoutContext.abilityPowerMultiplier();
     }
@@ -280,16 +288,7 @@ public final class AbilitySystem {
     }
 
     private Enemy nearest(float x, float y, float range, Enemy exclude) {
-        Enemy best = null;
-        float bestD2 = range * range;
-        for (Enemy e : enemies) {
-            if (!e.alive || e == exclude) continue;
-            float dx = e.position.x - x;
-            float dy = e.position.y - y;
-            float d2 = dx * dx + dy * dy;
-            if (d2 < bestD2) { bestD2 = d2; best = e; }
-        }
-        return best;
+        return spatial.nearestWithin(x, y, range, exclude, null);
     }
 
     private void damageEnemy(Enemy e, float damage, DamageElement element, Color color, float fxSize) {
