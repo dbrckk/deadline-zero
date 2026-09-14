@@ -74,6 +74,49 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesChampionVariantCrowd() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for champion visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(1);
+                injectChampionVariantCrowd((GameScreen) game.getScreen());
+            });
+            Thread.sleep(900L);
+            capture("champion-variants.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectChampionVariantCrowd(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            Enemy.Variant[] variants = {
+                Enemy.Variant.SWIFT, Enemy.Variant.ARMORED, Enemy.Variant.FERAL, Enemy.Variant.VOLATILE,
+                Enemy.Variant.JUGGERNAUT, Enemy.Variant.RAVAGER, Enemy.Variant.AEGIS, Enemy.Variant.HUNTER
+            };
+            float[][] positions = {
+                {-8.5f, 4.2f}, {-3.0f, 5.2f}, {3.0f, 5.2f}, {8.5f, 4.2f},
+                {-8.5f, -3.5f}, {-3.0f, -4.8f}, {3.0f, -4.8f}, {8.5f, -3.5f}
+            };
+            for (int i = 0; i < variants.length; i++) {
+                Enemy enemy = new Enemy(Enemy.Type.ELITE, positions[i][0], positions[i][1],
+                    500_000f, .01f, .58f, 0f, 1);
+                // Instrumentation-only deterministic visual state; runtime selection is tested separately.
+                enemy.variant = variants[i];
+                enemies.add(enemy);
+            }
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject champion variants for visual QA", exception);
+        }
+    }
+
+    @Test
     public void capturesExpandedUpgradePoolOverlay() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
