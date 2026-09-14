@@ -4,9 +4,9 @@ This file is the operational source of truth for release progress. `docs/ROADMAP
 
 ## Current milestone
 
-**M0 — Repository Green**
+**Parallel closure — M0/M1 physical proof + M2/M7 hardening**
 
-Goal: make `main` a reliable production baseline before adding more scope.
+Goal: preserve a green production baseline while closing the remaining physical-device/platform gates, performance calibration and Play release-readiness work.
 
 ### M0 exit criteria
 
@@ -35,11 +35,11 @@ Goal: make `main` a reliable production baseline before adding more scope.
 | M0 — Repository Green | Stable baseline | IN PROGRESS | Clean CI + no known P0 blockers |
 | M1 — Vertical Slice Complete | Full run from launch to end | NOT STARTED | One complete Android run without critical fallback |
 | M2 — Combat Production | Production-grade combat systems | IN PROGRESS | Systems complete + stress-tested |
-| M3 — Final Art Alpha | Deterministic final-art pipeline | NOT STARTED | Rex bar passed, production atlas expanding |
-| M4 — Meta Complete | Durable progression/meta | NOT STARTED | Save-safe progression loop complete |
-| M5 — Content Complete | Release content target reached | NOT STARTED | Content matrix complete and balanced |
-| M6 — Economy Complete | Monetization + compliance | NOT STARTED | Purchases/ads/consent verified end-to-end |
-| M7 — Release Candidate | Store-ready quality | NOT STARTED | Closed-test RC meets launch gates |
+| M3 — Final Art Alpha | Deterministic final-art pipeline | COMPLETE | 24/24 production actors merged and atlas contract complete |
+| M4 — Meta Complete | Durable progression/meta | IN PROGRESS | Save-safe progression loop complete |
+| M5 — Content Complete | Release content target reached | IN PROGRESS | Count targets reached; balance/pacing regression remains |
+| M6 — Economy Complete | Monetization + compliance | IN PROGRESS | Automated boundaries complete; real Play/ads validation remains |
+| M7 — Release Candidate | Store-ready quality | IN PROGRESS | Automated release contracts/gates complete; manual Play/device gates remain |
 
 ## Execution order
 
@@ -131,6 +131,15 @@ Only `FINAL` counts toward release-art completion.
 - [x] Deterministic Android stress scenario covers a 160-enemy horde plus 180 active projectiles and publishes `performance-stress.json`.
 - [x] Stress telemetry sanity/workload-retention checks pass in CI.
 - [ ] Calibrate absolute low/medium/high device budgets on representative physical Android hardware before declaring M2 complete.
+
+## Cross-milestone progress snapshot
+
+- **M3 art:** 24/24 production actors are merged to `main`; production atlas/layout validation is automated.
+- **M5 content:** 5/5 biomes, 12/12+ weapons, 52/50+ standard upgrades, 6/6 bosses, 22/20+ gameplay enemy profiles and 8/8+ champion profiles are implemented. Final balance/pacing regression remains.
+- **M6 economy/compliance:** billing idempotency/persistence boundaries, entitlement reconciliation, rewarded-ad/consent integration and strict production configuration checks exist; licensed Play purchase/restore/refund/revocation and production ad-consent validation remain manual platform gates.
+- **M7 release:** canonical listing copy, listing validation, Data Safety contract, Play Console contract, versioned release notes, release-readiness matrix, strict Play bundle configuration checks and machine-readable release evidence are implemented.
+- **Performance:** standard Android regression benchmark plus deterministic 160-enemy/180-projectile stress benchmark are automated and archived.
+- **Remaining hard blockers:** representative physical-device gameplay/lifecycle/performance validation, real Play Billing/Play Games/AdMob configuration, final Store graphics, public privacy policy, Play Console declarations/testing and pre-launch/vitals review.
 
 ## Current next actions
 
