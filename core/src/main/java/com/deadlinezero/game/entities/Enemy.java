@@ -62,6 +62,11 @@ public final class Enemy extends ActorState {
     private float supportHealLockout;
 
     public Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp) {
+        this(type, x, y, hp, speed, radius, damage, xp, true);
+    }
+
+    Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp,
+          boolean rollChampionVariant) {
         super(x, y, radius, hp * StageRules.enemyHpMultiplier(RunStageContext.stage()));
         int stage = RunStageContext.stage();
         this.type = type;
@@ -79,10 +84,9 @@ public final class Enemy extends ActorState {
         this.bossCombat = type == Type.BOSS ? new BossCombatRuntime() : null;
         configureAttackCadence();
 
-        if (type != Type.BOSS) {
+        if (rollChampionVariant && type != Type.BOSS) {
             float chance = MathUtils.clamp(.02f + (stage - 1) * .018f, .02f, .20f);
             if (MathUtils.random() < chance) applyVariant(variantForRoll(MathUtils.random()));
-
         }
         configureSpecialTrait();
         ACTIVE_ENEMIES.put(this, Boolean.TRUE);
