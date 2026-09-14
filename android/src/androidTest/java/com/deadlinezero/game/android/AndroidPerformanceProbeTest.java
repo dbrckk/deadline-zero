@@ -42,10 +42,18 @@ public final class AndroidPerformanceProbeTest {
 
             AtomicReference<PerformanceTelemetry.Snapshot> snapshotRef = new AtomicReference<>();
             AtomicReference<Integer> targetRef = new AtomicReference<>();
+            AtomicReference<String> thermalRef = new AtomicReference<>();
+            AtomicReference<Float> fxQualityRef = new AtomicReference<>();
+            AtomicReference<Integer> enemyCountRef = new AtomicReference<>();
+            AtomicReference<Integer> projectileCountRef = new AtomicReference<>();
             runOnGameThread(activity, () -> {
                 GameScreen screen = (GameScreen) game(activity).getScreen();
                 snapshotRef.set(screen.performanceSnapshot());
                 targetRef.set(screen.effectiveFrameRateTarget());
+                thermalRef.set(screen.thermalLevel().name());
+                fxQualityRef.set(screen.effectiveFxQuality());
+                enemyCountRef.set(screen.activeEnemyCount());
+                projectileCountRef.set(screen.activeProjectileCount());
             });
 
             PerformanceTelemetry.Snapshot snapshot = snapshotRef.get();
@@ -59,12 +67,28 @@ public final class AndroidPerformanceProbeTest {
             assertTrue("unexpected effective FPS tier",
                 targetRef.get() == 60 || targetRef.get() == 90 || targetRef.get() == 120);
 
-            writeBenchmarkJson(targetRef.get(), snapshot);
+            writeBenchmarkJson(
+                "loaded-40-enemy-ring",
+                targetRef.get(),
+                snapshot,
+                thermalRef.get(),
+                fxQualityRef.get(),
+                enemyCountRef.get(),
+                projectileCountRef.get()
+            );
         }
     }
 
 
-    private static void writeBenchmarkJson(int target, PerformanceTelemetry.Snapshot snapshot) throws Exception {
+    private static void writeBenchmarkJson(
+        String scenario,
+        int target,
+        PerformanceTelemetry.Snapshot snapshot,
+        String thermalLevel,
+        float fxQuality,
+        int activeEnemies,
+        int activeProjectiles
+    ) throws Exception {
         File root = new File(
             androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
                 .getTargetContext().getExternalFilesDir(null),
@@ -74,12 +98,17 @@ public final class AndroidPerformanceProbeTest {
         File output = new File(root, "performance-probe.json");
         try (FileWriter writer = new FileWriter(output, false)) {
             writer.write("{\n");
+            writer.write("  \"scenario\": \"" + scenario + "\",\n");
             writer.write("  \"targetFps\": " + target + ",\n");
             writer.write("  \"averageFps\": " + snapshot.averageFps() + ",\n");
             writer.write("  \"p95FrameMs\": " + snapshot.p95FrameMs() + ",\n");
             writer.write("  \"p99FrameMs\": " + snapshot.p99FrameMs() + ",\n");
             writer.write("  \"jankRatio\": " + snapshot.jankRatio() + ",\n");
-            writer.write("  \"stable\": " + snapshot.stable() + "\n");
+            writer.write("  \"stable\": " + snapshot.stable() + ",\n");
+            writer.write("  \"thermalLevel\": \"" + thermalLevel + "\",\n");
+            writer.write("  \"effectiveFxQuality\": " + fxQuality + ",\n");
+            writer.write("  \"activeEnemies\": " + activeEnemies + ",\n");
+            writer.write("  \"activeProjectiles\": " + activeProjectiles + "\n");
             writer.write("}\n");
         }
         assertTrue("performance benchmark JSON was not written", output.isFile() && output.length() > 40L);
