@@ -83,20 +83,7 @@ jobs:
             adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/performance-probe.json
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/performance-probe.json build/android-performance/performance-probe.json
             test -s build/android-performance/performance-probe.json
-            python3 - <<'PY'
-            import json
-            from pathlib import Path
-            p = Path("build/android-performance/performance-probe.json")
-            data = json.loads(p.read_text())
-            required = {"targetFps","averageFps","p95FrameMs","p99FrameMs","jankRatio","stable"}
-            assert required <= data.keys(), data
-            assert data["targetFps"] in (60, 90, 120), data
-            assert data["averageFps"] > 5, data
-            assert 0 < data["p95FrameMs"] <= 250, data
-            assert data["p99FrameMs"] >= data["p95FrameMs"], data
-            assert 0 <= data["jankRatio"] <= 1, data
-            print("PERF_PROBE", json.dumps(data, sort_keys=True))
-            PY
+            python3 -c 'import json; from pathlib import Path; p=Path("build/android-performance/performance-probe.json"); data=json.loads(p.read_text()); required={"targetFps","averageFps","p95FrameMs","p99FrameMs","jankRatio","stable"}; assert required <= data.keys(), data; assert data["targetFps"] in (60,90,120), data; assert data["averageFps"] > 5, data; assert 0 < data["p95FrameMs"] <= 250, data; assert data["p99FrameMs"] >= data["p95FrameMs"], data; assert 0 <= data["jankRatio"] <= 1, data; print("PERF_PROBE", json.dumps(data, sort_keys=True))'
             adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesForgeHoundGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCinderGunnerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesSlagGuardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesPhaseStalkerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesStaticSeerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesNullWardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesWeeklyMissionsScreen,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCloudSaveScreen,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesGraphicsQualitySettings,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCryoVaultGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCryogenicDepthsGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesExpandedUpgradePoolOverlay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesFrostColossusGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesChampionVariantCrowd com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/production-roster-visual-probe.txt
             grep -q 'OK (14 tests)' /tmp/production-roster-visual-probe.txt
             mkdir -p build/android-visual-qa
