@@ -778,21 +778,21 @@ public final class GameScreen extends ScreenAdapter {
     private void drawLegendaryText(float w, float h) {
         font.getData().setScale(1.45f);
         font.setColor(VisualTheme.GOLD);
-        font.draw(batch, "LEGENDARY PROTOCOL", 0, h * .79f, w, Align.center, false);
+        font.draw(batch, t("combat.legendaryTitle"), 0, h * .79f, w, Align.center, false);
         font.getData().setScale(.68f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "SELECT ONE • STANDARD LEVEL-UP FOLLOWS", 0, h * .70f, w, Align.center, false);
+        font.draw(batch, t("combat.legendarySubtitle"), 0, h * .70f, w, Align.center, false);
         for (int i = 0; i < legendaryChoiceCount; i++) {
             LegendaryChoice choice = legendaryChoices[i];
             float x = w * ((i + 1f) / (legendaryChoiceCount + 1f));
             font.getData().setScale(.86f);
             font.setColor(VisualTheme.GOLD);
-            font.draw(batch, "[" + (i + 1) + "] " + choice.title, x - 145f, h * .53f, 290f, Align.center, false);
+            font.draw(batch, f("combat.legendaryCard", i + 1, choice.title), x - 145f, h * .53f, 290f, Align.center, false);
             font.getData().setScale(.66f);
             font.setColor(VisualTheme.TEXT);
             font.draw(batch, choice.description, x - 145f, h * .44f, 290f, Align.center, true);
             font.setColor(VisualTheme.MUTED);
-            font.draw(batch, "LEGENDARY • ONE-SHOT", x - 145f, h * .35f, 290f, Align.center, false);
+            font.draw(batch, t("combat.legendaryFooter"), x - 145f, h * .35f, 290f, Align.center, false);
         }
         font.getData().setScale(.75f);
     }
@@ -800,7 +800,7 @@ public final class GameScreen extends ScreenAdapter {
     private void drawUpgradeText(float w, float h) {
         font.getData().setScale(1.65f);
         font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "PROTOCOL UPGRADE", 0, h * .69f, w, Align.center, false);
+        font.draw(batch, t("combat.upgradeTitle"), 0, h * .69f, w, Align.center, false);
 
         float cardWidth = w * .27f;
         for (int i = 0; i < 3; i++) {
@@ -809,7 +809,7 @@ public final class GameScreen extends ScreenAdapter {
 
             font.getData().setScale(1.18f);
             font.setColor(VisualTheme.upgradeRarity(choices[i].rarity));
-            font.draw(batch, "[" + (i + 1) + "] " + choices[i].title,
+            font.draw(batch, f("combat.upgradeCard", i + 1, choices[i].title),
                 left + 12f, h * .565f, cardWidth - 24f, Align.center, true);
 
             font.getData().setScale(.92f);
@@ -825,16 +825,16 @@ public final class GameScreen extends ScreenAdapter {
 
         font.getData().setScale(.86f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "TAP A CARD  •  KEYS 1–3", 0, h * .305f, w, Align.center, false);
+        font.draw(batch, t("combat.upgradeFooter"), 0, h * .305f, w, Align.center, false);
         font.getData().setScale(.75f);
     }
 
     private void drawGameOverText(float w, float h) {
         font.getData().setScale(1.5f); font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "SIGNAL LOST", 0, h * .62f, w, Align.center, false);
+        font.draw(batch, t("combat.gameOver"), 0, h * .62f, w, Align.center, false);
         font.getData().setScale(.72f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, revived ? "TAP / ENTER FOR RESULTS" : "TAP TO REVIVE (rewarded ad)  •  ENTER FOR RESULTS", 0, h * .45f, w, Align.center, false);
+        font.draw(batch, revived ? t("combat.results") : t("combat.revive"), 0, h * .45f, w, Align.center, false);
         font.getData().setScale(.75f);
     }
 
@@ -885,6 +885,9 @@ public final class GameScreen extends ScreenAdapter {
         }
         if (!gameOver && !choosingUpgrade && !choosingLegendary && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) finishRun();
     }
+
+    private String t(String key) { return game.i18n.text(key); }
+    private String f(String key, Object... args) { return game.i18n.format(key, args); }
 
     @Override public void resize(int width, int height) {
         cam.viewportWidth = GameConfig.WORLD_WIDTH;
