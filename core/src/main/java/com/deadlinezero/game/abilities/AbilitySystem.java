@@ -37,6 +37,11 @@ public final class AbilitySystem {
     private final WeakHashMap<Enemy, Boolean> leaperDecisions = new WeakHashMap<>();
     private final float abilityPower;
 
+    public AbilitySystem(Player player, Array<Enemy> enemies, Pools pools, Listener listener) {
+        this(player, enemies, pools, new SpatialHash(2.2f), listener);
+        this.spatial.rebuild(enemies);
+    }
+
     public AbilitySystem(Player player, Array<Enemy> enemies, Pools pools, SpatialHash spatial, Listener listener) {
         this.player = player;
         this.enemies = enemies;
