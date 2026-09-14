@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.config.AccessibilitySettings;
+import com.deadlinezero.game.config.GraphicsSettings;
 import com.deadlinezero.game.visual.VisualTheme;
 
 /** Lightweight production settings screen with persistent accessibility, audio and privacy controls. */
@@ -20,9 +21,10 @@ public final class SettingsScreen extends ScreenAdapter {
     private static final int MASTER_VOLUME_ROW = 9;
     private static final int SFX_VOLUME_ROW = 10;
     private static final int MUSIC_VOLUME_ROW = 11;
-    private static final int PRIVACY_ROW = 12;
-    private static final int POLICY_ROW = 13;
-    private static final int CLOUD_ROW = 14;
+    private static final int GRAPHICS_ROW = 12;
+    private static final int PRIVACY_ROW = 13;
+    private static final int POLICY_ROW = 14;
+    private static final int CLOUD_ROW = 15;
     private static final int LAST_ROW = CLOUD_ROW;
 
     private final DeadlineZeroGame game;
@@ -59,6 +61,7 @@ public final class SettingsScreen extends ScreenAdapter {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
             onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), onOff(s.reducedMotion), pct(s.uiScale),
             pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
+            GraphicsSettings.active().name() + " • " + GraphicsSettings.targetFps() + " FPS",
             privacyRequired ? "OPEN" : "NOT REQUIRED",
             policyAvailable ? "OPEN" : "UNAVAILABLE",
             game.services.cloudSave.available() ? "OPEN" : "NOT CONFIGURED"
@@ -126,6 +129,12 @@ public final class SettingsScreen extends ScreenAdapter {
         boolean right = Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER);
         if (!left && !right) return;
 
+        if (row == GRAPHICS_ROW) {
+            GraphicsSettings.set(GraphicsSettings.active().next(right ? 1 : -1));
+            GraphicsSettings.save();
+            AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+            return;
+        }
         if (row == PRIVACY_ROW) {
             if (right && privacyRequired) openPrivacy();
             return;
@@ -188,6 +197,10 @@ public final class SettingsScreen extends ScreenAdapter {
             case MASTER_VOLUME_ROW -> s.masterVolume = clamp(s.masterVolume + dir * .05f, 0f, 1f);
             case SFX_VOLUME_ROW -> s.sfxVolume = clamp(s.sfxVolume + dir * .05f, 0f, 1f);
             case MUSIC_VOLUME_ROW -> s.musicVolume = clamp(s.musicVolume + dir * .05f, 0f, 1f);
+            case GRAPHICS_ROW -> {
+                GraphicsSettings.set(GraphicsSettings.active().next(dir > 0f ? 1 : -1));
+                GraphicsSettings.save();
+            }
             default -> { }
         }
     }
