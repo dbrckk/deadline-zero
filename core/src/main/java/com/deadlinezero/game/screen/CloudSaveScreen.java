@@ -44,7 +44,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
     public CloudSaveScreen(DeadlineZeroGame game) {
         this.game = game;
         this.cloud = new CloudSaveService(game.services.cloudSave);
-        status = cloud.available() ? "CHECKING CLOUD..." : "CLOUD PROVIDER NOT CONFIGURED";
+        status = cloud.available() ? t("cloud.checking") : t("cloud.notConfigured");
         if (cloud.available()) refresh();
     }
 
@@ -70,7 +70,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
         batch.begin();
         font.getData().setScale(1.95f);
         font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "CLOUD SAVE", 0, h * .76f, w, Align.center, false);
+        font.draw(batch, t("cloud.title"), 0, h * .76f, w, Align.center, false);
 
         font.getData().setScale(1.05f);
         font.setColor(colorForState());
@@ -78,21 +78,21 @@ public final class CloudSaveScreen extends ScreenAdapter {
 
         font.getData().setScale(.82f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "Cloud actions are manual. Divergent or changed progress is never overwritten automatically.",
+        font.draw(batch, t("cloud.manualWarning"),
             w * .20f, h * .55f, w * .60f, Align.center, true);
 
         font.getData().setScale(1.02f);
         font.setColor(available ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED);
         font.draw(batch, primaryLabel(), w * .20f, h * .398f, w * .17f, Align.center, false);
         font.setColor(available ? VisualTheme.GOLD : VisualTheme.MUTED);
-        font.draw(batch, providerConflict ? "USE SERVER" : "UPLOAD LOCAL", w * .415f, h * .398f, w * .17f, Align.center, false);
+        font.draw(batch, providerConflict ? t("cloud.useServer") : t("cloud.uploadLocal"), w * .415f, h * .398f, w * .17f, Align.center, false);
         font.setColor(available ? VisualTheme.TEXT : VisualTheme.MUTED);
-        font.draw(batch, providerConflict ? "USE OTHER" : "DOWNLOAD CLOUD", w * .63f, h * .398f, w * .17f, Align.center, false);
+        font.draw(batch, providerConflict ? t("cloud.useOther") : t("cloud.downloadCloud"), w * .63f, h * .398f, w * .17f, Align.center, false);
 
         font.getData().setScale(.74f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, confirmationLine(), w * .20f, h * .30f, w * .60f, Align.center, true);
-        font.draw(batch, "BACK  •  SETTINGS", w * .18f, h * .205f, w * .18f, Align.center, false);
+        font.draw(batch, t("cloud.back"), w * .18f, h * .205f, w * .18f, Align.center, false);
         batch.end();
 
         handleInput(w, h);
@@ -156,7 +156,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
         comparison = null;
         conflict = null;
         providerConflict = false;
-        runAsync("SIGNING IN TO PLAY GAMES...", () -> {
+        runAsync(t("cloud.signingIn"), () -> {
             cloud.authenticate();
             CloudSaveService.Comparison next = inspectComparisonOrConflict();
             post(() -> {
@@ -171,7 +171,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
         conflict = null;
         providerConflict = false;
         resetConfirmations();
-        runAsync("CHECKING CLOUD...", () -> {
+        runAsync(t("cloud.checking"), () -> {
             CloudSaveService.Comparison next = inspectComparisonOrConflict();
             post(() -> applyComparison(next));
         });
@@ -192,15 +192,15 @@ public final class CloudSaveScreen extends ScreenAdapter {
         authRequired = false;
         conflict = next.state();
         status = switch (next.state()) {
-            case EQUAL -> "LOCAL AND CLOUD ARE IDENTICAL";
-            case LOCAL_AHEAD -> next.remote() == null ? "NO CLOUD SAVE YET — LOCAL READY TO UPLOAD" : "LOCAL PROGRESS IS AHEAD";
-            case REMOTE_AHEAD -> "CLOUD PROGRESS IS AHEAD";
-            case DIVERGED -> "CONFLICT: PROGRESS HAS DIVERGED";
+            case EQUAL -> t("cloud.identical");
+            case LOCAL_AHEAD -> next.remote() == null ? t("cloud.noSave") : t("cloud.localAhead");
+            case REMOTE_AHEAD -> t("cloud.remoteAhead");
+            case DIVERGED -> t("cloud.diverged");
         };
     }
 
     private void resolveProviderConflict(CloudSaveAdapter.ConflictChoice choice) {
-        runAsync("RESOLVING PLAY GAMES SNAPSHOT CONFLICT...", () -> {
+        runAsync(t("cloud.resolving"), () -> {
             cloud.resolveProviderConflict(choice);
             CloudSaveService.Comparison next = inspectComparisonOrConflict();
             post(() -> {
@@ -214,7 +214,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
         CloudSaveService.Comparison expected = comparison;
         if (expected == null) {
             resetConfirmations();
-            status = "REFRESH REQUIRED BEFORE UPLOAD";
+            status = t("cloud.refreshUpload");
             return;
         }
         boolean risky = expected.state() == CloudSaveService.ConflictState.REMOTE_AHEAD
@@ -222,15 +222,15 @@ public final class CloudSaveScreen extends ScreenAdapter {
         if (risky && !confirmUpload) {
             confirmUpload = true;
             confirmDownload = false;
-            status = "UPLOAD WOULD REPLACE CLOUD PROGRESS — SELECT UPLOAD AGAIN TO CONFIRM";
+            status = t("cloud.confirmUpload");
             return;
         }
         resetConfirmations();
-        runAsync("REVALIDATING CLOUD BEFORE UPLOAD...", () -> {
+        runAsync(t("cloud.revalidateUpload"), () -> {
             cloud.uploadIfUnchanged(expected);
             CloudSaveService.Comparison next = inspectComparisonOrConflict();
             post(() -> {
-                status = "UPLOAD COMPLETE";
+                status = t("cloud.uploadComplete");
                 applyComparison(next);
             });
         });
@@ -240,7 +240,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
         CloudSaveService.Comparison expected = comparison;
         if (expected == null) {
             resetConfirmations();
-            status = "REFRESH REQUIRED BEFORE DOWNLOAD";
+            status = t("cloud.refreshDownload");
             return;
         }
         boolean risky = expected.state() == CloudSaveService.ConflictState.LOCAL_AHEAD
@@ -248,30 +248,30 @@ public final class CloudSaveScreen extends ScreenAdapter {
         if (risky && !confirmDownload) {
             confirmDownload = true;
             confirmUpload = false;
-            status = "DOWNLOAD WOULD REPLACE LOCAL PROGRESS — SELECT DOWNLOAD AGAIN TO CONFIRM";
+            status = t("cloud.confirmDownload");
             return;
         }
         resetConfirmations();
-        runAsync("REVALIDATING CLOUD BEFORE DOWNLOAD...", () -> {
+        runAsync(t("cloud.revalidateDownload"), () -> {
             CloudSaveAdapter.RemoteBackup remote = cloud.revalidateRemote(expected);
             post(() -> {
                 if (remote == null) {
                     comparison = null;
                     conflict = null;
-                    status = "CLOUD CHANGED — REFRESH REQUIRED";
+                    status = t("cloud.changed");
                     return;
                 }
                 try {
                     CloudSaveService.RestoreResult result = cloud.applyRemote(remote.payload());
                     if (result.result() == CloudSaveService.DownloadResult.APPLIED) {
-                        if (!game.applyCloudRestore(result)) status = "RESTORE FAILED TO APPLY";
+                        if (!game.applyCloudRestore(result)) status = t("cloud.restoreFailed");
                     } else {
-                        status = "CLOUD SAVE REQUIRES A NEWER APP VERSION";
+                        status = t("cloud.newerVersion");
                     }
                 } catch (RuntimeException e) {
                     comparison = null;
                     conflict = null;
-                    status = "RESTORE ERROR: " + safeMessage(e);
+                    status = f("cloud.restoreError", safeMessage(e));
                 }
             });
         });
@@ -290,7 +290,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
                     providerConflict = false;
                     authRequired = true;
                     resetConfirmations();
-                    status = "PLAY GAMES SIGN-IN REQUIRED";
+                    status = t("cloud.signInRequired");
                 });
             } catch (CloudProviderConflictException e) {
                 post(() -> {
@@ -299,7 +299,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
                     authRequired = false;
                     conflict = CloudSaveService.ConflictState.DIVERGED;
                     resetConfirmations();
-                    status = "PLAY GAMES HAS TWO CLOUD VERSIONS — CHOOSE SERVER OR OTHER";
+                    status = t("cloud.providerConflict");
                 });
             } catch (CloudRemoteChangedException e) {
                 post(() -> {
@@ -307,7 +307,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
                     conflict = null;
                     providerConflict = false;
                     resetConfirmations();
-                    status = "CLOUD CHANGED ON ANOTHER DEVICE — REFRESH REQUIRED";
+                    status = t("cloud.changedOther");
                 });
             } catch (Exception e) {
                 post(() -> {
@@ -315,7 +315,7 @@ public final class CloudSaveScreen extends ScreenAdapter {
                     conflict = null;
                     providerConflict = false;
                     resetConfirmations();
-                    status = "CLOUD ERROR: " + safeMessage(e);
+                    status = f("cloud.error", safeMessage(e));
                 });
             } finally {
                 post(() -> busy = false);
@@ -331,18 +331,18 @@ public final class CloudSaveScreen extends ScreenAdapter {
     }
 
     private String primaryLabel() {
-        if (authRequired && cloud.supportsAuthentication()) return "SIGN IN";
-        return providerConflict ? "RECHECK" : "REFRESH";
+        if (authRequired && cloud.supportsAuthentication()) return t("cloud.signIn");
+        return providerConflict ? t("cloud.recheck") : t("cloud.refresh");
     }
 
     private String confirmationLine() {
-        if (!cloud.available()) return "Configure Play Games Services in the production Android build.";
-        if (authRequired) return "Sign in to Play Games before reading or writing cloud progress.";
-        if (providerConflict) return "Resolve the provider conflict first; local progress is untouched.";
-        if (comparison == null && !busy) return "Refresh successfully before any upload or download.";
-        if (confirmUpload) return "Safety confirmation armed for UPLOAD.";
-        if (confirmDownload) return "Safety confirmation armed for DOWNLOAD.";
-        return busy ? "Operation in progress..." : "Every transfer is bound to the exact cloud version you reviewed.";
+        if (!cloud.available()) return t("cloud.configure");
+        if (authRequired) return t("cloud.authHelp");
+        if (providerConflict) return t("cloud.conflictHelp");
+        if (comparison == null && !busy) return t("cloud.refreshHelp");
+        if (confirmUpload) return t("cloud.uploadArmed");
+        if (confirmDownload) return t("cloud.downloadArmed");
+        return busy ? t("cloud.inProgress") : t("cloud.versionBound");
     }
 
     private com.badlogic.gdx.graphics.Color colorForState() {
@@ -357,6 +357,9 @@ public final class CloudSaveScreen extends ScreenAdapter {
         confirmUpload = false;
         confirmDownload = false;
     }
+
+    private String t(String key) { return game.i18n.text(key); }
+    private String f(String key, Object... args) { return game.i18n.format(key, args); }
 
     private static String safeMessage(Exception e) {
         String message = e.getMessage();
