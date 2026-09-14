@@ -9,6 +9,7 @@ public final class SpatialHash {
     private final float cellSize;
     private final IntMap<Array<Enemy>> cells = new IntMap<>();
     private int activeBucketCount;
+    private int maxQueryRing;
 
     public SpatialHash(float cellSize) {
         this.cellSize = cellSize;
@@ -16,11 +17,13 @@ public final class SpatialHash {
 
     public void rebuild(Array<Enemy> enemies) {
         activeBucketCount = 0;
+        maxQueryRing = 0;
         for (Array<Enemy> bucket : cells.values()) bucket.clear();
         for (Enemy enemy : enemies) {
             if (!enemy.alive) continue;
             int cx = floor(enemy.position.x / cellSize);
             int cy = floor(enemy.position.y / cellSize);
+            maxQueryRing = Math.max(maxQueryRing, Math.max(Math.abs(cx), Math.abs(cy)));
             int key = key(cx, cy);
             Array<Enemy> bucket = cells.get(key);
             if (bucket == null) {
@@ -44,6 +47,39 @@ public final class SpatialHash {
                 if (bucket != null) out.addAll(bucket);
             }
         }
+    }
+
+    /** Finds the nearest alive enemy without allocating a candidate collection. */
+    public Enemy nearest(float x, float y) {
+        if (activeBucketCount == 0) return null;
+        int originX = floor(x / cellSize);
+        int originY = floor(y / cellSize);
+        Enemy best = null;
+        float bestD2 = Float.MAX_VALUE;
+        int limit = maxQueryRing + Math.max(Math.abs(originX), Math.abs(originY)) + 1;
+        for (int ring = 0; ring <= limit; ring++) {
+            int minX = originX - ring, maxX = originX + ring;
+            int minY = originY - ring, maxY = originY + ring;
+            for (int cy = minY; cy <= maxY; cy++) {
+                for (int cx = minX; cx <= maxX; cx++) {
+                    if (ring > 0 && cx != minX && cx != maxX && cy != minY && cy != maxY) continue;
+                    Array<Enemy> bucket = cells.get(key(cx, cy));
+                    if (bucket == null) continue;
+                    for (Enemy enemy : bucket) {
+                        if (!enemy.alive) continue;
+                        float dx = enemy.position.x - x;
+                        float dy = enemy.position.y - y;
+                        float d2 = dx * dx + dy * dy;
+                        if (d2 < bestD2) { bestD2 = d2; best = enemy; }
+                    }
+                }
+            }
+            if (best != null) {
+                float outside = Math.max(0f, ring * cellSize - cellSize);
+                if (outside * outside > bestD2) break;
+            }
+        }
+        return best;
     }
 
     public int activeBucketCount() {
