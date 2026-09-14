@@ -3,6 +3,10 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   core:
     runs-on: ubuntu-latest
@@ -190,5 +194,51 @@ jobs:
         with:
           name: android-performance-${{ github.run_number }}
           path: build/android-performance/performance-probe.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Compare Android performance with main baseline
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          CURRENT="build/android-performance/performance-probe.json"
+          REPORT="build/android-performance/regression-report.json"
+          BASE_DIR="build/android-performance-baseline"
+          mkdir -p "$BASE_DIR"
+          test -s "$CURRENT"
+
+          baseline=""
+          baseline_run=""
+          for run_id in $(gh run list --repo "$GITHUB_REPOSITORY" --branch main --workflow Verify --status success --limit 20 --json databaseId --jq '.[].databaseId'); do
+            rm -rf "$BASE_DIR"/*
+            if ! gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --pattern 'android-performance-*' --dir "$BASE_DIR" >/tmp/perf-baseline-download.log 2>&1; then
+              continue
+            fi
+            while IFS= read -r candidate; do
+              if python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); req={"scenario","targetFps","averageFps","p95FrameMs","p99FrameMs","jankRatio","stable","thermalLevel","effectiveFxQuality","activeEnemies","activeProjectiles"}; sys.exit(0 if req <= d.keys() else 1)' "$candidate"; then
+                baseline="$candidate"
+                baseline_run="$run_id"
+                break 2
+              fi
+            done < <(find "$BASE_DIR" -type f -name performance-probe.json)
+          done
+
+          if [ -z "$baseline" ]; then
+            echo "PERF_BASELINE skipped: no compatible successful main benchmark artifact found"
+            printf '{"comparable":false,"reason":"no compatible successful main benchmark artifact found","regressions":[],"metrics":{}}\n' > "$REPORT"
+            exit 0
+          fi
+
+          echo "PERF_BASELINE run=$baseline_run file=$baseline"
+          python3 tools/perf/compare_android_benchmark.py "$baseline" "$CURRENT" --json-out "$REPORT"
+
+      - name: Upload Android performance regression report
+        uses: actions/upload-artifact@v4
+        if: always() && github.event_name == 'pull_request'
+        with:
+          name: android-performance-regression-${{ github.run_number }}
+          path: build/android-performance/regression-report.json
           if-no-files-found: warn
           retention-days: 30
