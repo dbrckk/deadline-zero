@@ -34,6 +34,8 @@ Complete the Data safety form from the behavior of the exact production build, i
 
 Do not claim that the app collects or shares no data merely because the game code has no account system. Third-party SDK behavior is part of the declaration.
 
+Versioned Google Play release notes live in `play/store/RELEASE_NOTES.md`. The strict release gate requires a non-empty section matching the exact `appVersion` being built.
+
 ## Release evidence
 
 The strict Play bundle task writes `android/build/play-release/release-evidence.json` after validating the release configuration. Archive this file with the exact AAB submitted to Play Console so version, SDK targets, signing/configuration gates and repository-side Store contracts can be traced to the submitted build.
