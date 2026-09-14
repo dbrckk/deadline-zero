@@ -60,37 +60,36 @@ public final class MenuScreen extends ScreenAdapter {
         batch.begin();
         font.setColor(VisualTheme.TEXT); font.draw(batch, GameConfig.TITLE, 0, h * .71f, w, Align.center, false);
         font.getData().setScale(.67f); font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, "SURVIVE THE LAST PROTOCOL", 0, h * .635f, w, Align.center, false);
+        font.draw(batch, t("menu.tagline"), 0, h * .635f, w, Align.center, false);
 
         font.getData().setScale(.55f);
-        font.setColor(VisualTheme.TEXT); font.draw(batch, "LV " + p.accountLevel, 34, h - 53);
-        font.setColor(VisualTheme.GOLD); font.draw(batch, "CREDITS  " + p.currency(PlayerProfile.Currency.CREDITS), w * .27f, h - 53);
-        font.setColor(VisualTheme.CYAN); font.draw(batch, "GEMS  " + p.currency(PlayerProfile.Currency.GEMS), w * .57f, h - 53);
-        font.setColor(VisualTheme.MUTED); font.draw(batch, "STAGE  " + p.selectedStage + "/" + p.highestStage, w - 165, h - 53);
+        font.setColor(VisualTheme.TEXT); font.draw(batch, f("menu.level", p.accountLevel), 34, h - 53);
+        font.setColor(VisualTheme.GOLD); font.draw(batch, f("menu.credits", p.currency(PlayerProfile.Currency.CREDITS)), w * .27f, h - 53);
+        font.setColor(VisualTheme.CYAN); font.draw(batch, f("menu.gems", p.currency(PlayerProfile.Currency.GEMS)), w * .57f, h - 53);
+        font.setColor(VisualTheme.MUTED); font.draw(batch, f("menu.stage", p.selectedStage, p.highestStage), w - 165, h - 53);
 
         font.getData().setScale(.70f); font.setColor(VisualTheme.TEXT);
         font.draw(batch, p.selectedSurvivor.displayName.toUpperCase(), 0, h * .515f, w, Align.center, false);
         font.getData().setScale(.47f); font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, p.selectedSurvivor.role + "  •  TAP / R TO CHANGE", 0, h * .472f, w, Align.center, false);
+        font.draw(batch, f("menu.changeSurvivor", p.selectedSurvivor.role), 0, h * .472f, w, Align.center, false);
         font.setColor(VisualTheme.GOLD);
-        font.draw(batch, WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase() + "  •  A FOR ARSENAL", 0, h * .438f, w, Align.center, false);
+        font.draw(batch, f("menu.openArsenal", WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase()), 0, h * .438f, w, Align.center, false);
 
         font.getData().setScale(.42f);
         if (ThreatTierRules.unlocked(p)) {
             font.setColor(p.selectedThreatTier > 0 ? VisualTheme.GOLD : VisualTheme.CYAN_SOFT);
-            font.draw(batch, "THREAT " + p.selectedThreatTier + "/" + p.highestThreatTier
-                + "  •  +" + ThreatTierRules.rewardBonusPercent(p.selectedThreatTier)
-                + "% BASE REWARDS  •  TAP L/R OR ↑↓", 0, h * .335f + 25f, w, Align.center, false);
+            font.draw(batch, f("menu.threat", p.selectedThreatTier, p.highestThreatTier,
+                ThreatTierRules.rewardBonusPercent(p.selectedThreatTier)), 0, h * .335f + 25f, w, Align.center, false);
         } else {
             font.setColor(VisualTheme.MUTED);
-            font.draw(batch, "THREAT LOCKED  •  REACH STAGE " + ThreatTierRules.UNLOCK_STAGE,
+            font.draw(batch, f("menu.threatLocked", ThreatTierRules.UNLOCK_STAGE),
                 0, h * .335f + 25f, w, Align.center, false);
         }
 
         font.getData().setScale(.82f); font.setColor(Color.WHITE);
-        font.draw(batch, "DEPLOY", w * .30f, h * .255f + 42, w * .40f, Align.center, false);
+        font.draw(batch, t("menu.deploy"), w * .30f, h * .255f + 42, w * .40f, Align.center, false);
         font.getData().setScale(.43f); font.setColor(new Color(.86f, .95f, 1f, 1f));
-        font.draw(batch, "STAGE " + p.selectedStage + "  •  TAP / SPACE / ENTER", w * .30f, h * .255f + 17, w * .40f, Align.center, false);
+        font.draw(batch, f("menu.deployStage", p.selectedStage), w * .30f, h * .255f + 17, w * .40f, Align.center, false);
 
         if (showBalance) {
             font.getData().setScale(.34f);
@@ -111,12 +110,12 @@ public final class MenuScreen extends ScreenAdapter {
         }
 
         font.getData().setScale(.36f); font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "BASE", 22, 59);
-        font.draw(batch, "ARSENAL [A]", w * .12f, 59);
-        font.draw(batch, "GEAR [G]", w * .31f, 59);
-        font.draw(batch, "MISSIONS [M]", w * .45f, 59);
-        font.draw(batch, "SHOP [S]", w * .65f, 59);
-        font.draw(batch, "SETTINGS [O]", w * .81f, 59);
+        font.draw(batch, t("menu.base"), 22, 59);
+        font.draw(batch, t("menu.arsenal"), w * .12f, 59);
+        font.draw(batch, t("menu.gear"), w * .31f, 59);
+        font.draw(batch, t("menu.missions"), w * .45f, 59);
+        font.draw(batch, t("menu.shop"), w * .65f, 59);
+        font.draw(batch, t("menu.settings"), w * .81f, 59);
         font.getData().setScale(2.2f);
         batch.end();
         handleInput(w, h);
@@ -169,6 +168,9 @@ public final class MenuScreen extends ScreenAdapter {
         }
         if (x >= w * .30f && x <= w * .70f && y >= h * .255f && y <= h * .255f + 64f) game.startRun();
     }
+
+    private String t(String key) { return game.i18n.text(key); }
+    private String f(String key, Object... args) { return game.i18n.format(key, args); }
 
     @Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }
 }

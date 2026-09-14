@@ -34,4 +34,13 @@ public final class Localization {
             return key;
         }
     }
+
+    public String format(String key, Object... args) {
+        if (key == null || key.isBlank()) return "";
+        try {
+            return bundle.format(key, args);
+        } catch (MissingResourceException ignored) {
+            return key;
+        }
+    }
 }
