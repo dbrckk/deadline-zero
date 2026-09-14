@@ -25,6 +25,7 @@ jobs:
           python3 -m unittest discover -s tools/sprites -p 'test_resolve_actor_actions.py'
           python3 -m unittest discover -s tools/sprites -p 'test_validate_actor_role_metrics.py'
           python3 -m unittest discover -s tools/sprites -p 'test_validate_actor_production_contracts.py'
+          python3 -m unittest discover -s tools/perf -p 'test_compare_android_benchmark.py'
       - name: Compile and test core
         run: gradle :core:compileJava :core:test :desktop:compileJava
       - name: Smoke-test desktop runtime
