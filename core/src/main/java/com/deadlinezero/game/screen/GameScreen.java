@@ -81,7 +81,7 @@ public final class GameScreen extends ScreenAdapter {
 
     public GameScreen(DeadlineZeroGame game) {
         this.game = game;
-        this.abilitySystem = new AbilitySystem(player, enemies, pools, this::onEnemyKilled);
+        this.abilitySystem = new AbilitySystem(player, enemies, pools, spatial, this::onEnemyKilled);
         this.spritePass = new CombatSpritePass(game.art);
         this.polish = new CombatPolishController(game.art, game.accessibility, game.services.thermal);
         frameRateGovernor.reset(GraphicsSettings.frameRate().target);
