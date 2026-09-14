@@ -8,17 +8,15 @@ public final class GraphicsSettings {
     private static final String PREFS = "deadline-zero-graphics";
 
     public enum Quality {
-        LOW(.50f, 30),
-        MEDIUM(.68f, 60),
-        HIGH(.86f, 60),
-        ULTRA(1.00f, 120);
+        LOW(.50f),
+        MEDIUM(.68f),
+        HIGH(.86f),
+        ULTRA(1.00f);
 
         public final float fxCeiling;
-        public final int targetFps;
 
-        Quality(float fxCeiling, int targetFps) {
+        Quality(float fxCeiling) {
             this.fxCeiling = fxCeiling;
-            this.targetFps = targetFps;
         }
 
         public Quality next(int direction) {
@@ -28,22 +26,22 @@ public final class GraphicsSettings {
         }
     }
 
-    private static Quality active = Quality.HIGH;
+    private static Quality active = Quality.ULTRA;
 
     private GraphicsSettings() {}
 
     public static Quality load() {
         Preferences prefs = Gdx.app.getPreferences(PREFS);
-        String raw = prefs.getString("quality", Quality.HIGH.name());
+        String raw = prefs.getString("quality", Quality.ULTRA.name());
         try { active = Quality.valueOf(raw); }
-        catch (IllegalArgumentException ignored) { active = Quality.HIGH; }
+        catch (IllegalArgumentException ignored) { active = Quality.ULTRA; }
         return active;
     }
 
     public static Quality active() { return active; }
 
     public static void set(Quality quality) {
-        active = quality == null ? Quality.HIGH : quality;
+        active = quality == null ? Quality.ULTRA : quality;
     }
 
     public static void save() {
@@ -51,5 +49,4 @@ public final class GraphicsSettings {
     }
 
     public static float fxCeiling() { return active.fxCeiling; }
-    public static int targetFps() { return active.targetFps; }
 }
