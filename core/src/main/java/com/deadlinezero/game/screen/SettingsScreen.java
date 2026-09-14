@@ -104,13 +104,7 @@ public final class SettingsScreen extends ScreenAdapter {
             if (touchedRow >= 0 && touchedRow <= LAST_ROW
                 && Math.abs(y - (startY - touchedRow * step)) <= Math.max(22f, step * .48f)) {
                 row = touchedRow;
-                if (row == FRAME_RATE_ROW) {
-            GraphicsSettings.setFrameRate(GraphicsSettings.frameRate().next(right ? 1 : -1));
-            GraphicsSettings.save();
-            AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
-            return;
-        }
-        if (row == PRIVACY_ROW) {
+                if (row == PRIVACY_ROW) {
                     if (privacyRequired) openPrivacy();
                     return;
                 }
@@ -138,6 +132,12 @@ public final class SettingsScreen extends ScreenAdapter {
 
         if (row == GRAPHICS_ROW) {
             GraphicsSettings.set(GraphicsSettings.active().next(right ? 1 : -1));
+            GraphicsSettings.save();
+            AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+            return;
+        }
+        if (row == FRAME_RATE_ROW) {
+            GraphicsSettings.setFrameRate(GraphicsSettings.frameRate().next(right ? 1 : -1));
             GraphicsSettings.save();
             AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
             return;
