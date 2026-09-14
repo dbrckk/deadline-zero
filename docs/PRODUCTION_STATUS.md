@@ -34,7 +34,7 @@ Goal: make `main` a reliable production baseline before adding more scope.
 |---|---|---|---|
 | M0 — Repository Green | Stable baseline | IN PROGRESS | Clean CI + no known P0 blockers |
 | M1 — Vertical Slice Complete | Full run from launch to end | NOT STARTED | One complete Android run without critical fallback |
-| M2 — Combat Production | Production-grade combat systems | NOT STARTED | Systems complete + stress-tested |
+| M2 — Combat Production | Production-grade combat systems | IN PROGRESS | Systems complete + stress-tested |
 | M3 — Final Art Alpha | Deterministic final-art pipeline | NOT STARTED | Rex bar passed, production atlas expanding |
 | M4 — Meta Complete | Durable progression/meta | NOT STARTED | Save-safe progression loop complete |
 | M5 — Content Complete | Release content target reached | NOT STARTED | Content matrix complete and balanced |
@@ -122,6 +122,15 @@ Generated/bootstrap art remains fallback/reference only. Per-asset state:
 `NOT_STARTED -> SOURCE_READY -> GENERATED_REFERENCE -> PRODUCTION_SOURCE -> SLICED -> MACHINE_VALIDATED -> IN_GAME_QA -> FINAL`
 
 Only `FINAL` counts toward release-art completion.
+
+## M2 automated performance evidence
+
+- [x] Android telemetry captures average FPS, p95/p99 frame time, jank, thermal state, FX quality, enemy/projectile load and spatial occupancy.
+- [x] Pull requests compare the standard 40-enemy Android benchmark against the current `main` baseline with a regression gate.
+- [x] Spatial broad-phase is shared by targeting, collision and ability queries; rebuild cost and hot-path allocations have been reduced.
+- [x] Deterministic Android stress scenario covers a 160-enemy horde plus 180 active projectiles and publishes `performance-stress.json`.
+- [x] Stress telemetry sanity/workload-retention checks pass in CI.
+- [ ] Calibrate absolute low/medium/high device budgets on representative physical Android hardware before declaring M2 complete.
 
 ## Current next actions
 
