@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.config.GraphicsSettings;
+import com.deadlinezero.game.config.Localization;
 import com.deadlinezero.game.meta.DailyService;
 import com.deadlinezero.game.meta.EntitlementStore;
 import com.deadlinezero.game.meta.EquipmentDropTable;
@@ -50,6 +51,7 @@ public final class DeadlineZeroGame extends Game {
     public GameArt art;
     public AudioDirector audio;
     public AccessibilitySettings accessibility;
+    public Localization i18n;
     private int fullscreenPresentationDepth;
 
     public DeadlineZeroGame(GameServices services) { this.services = services == null ? GameServices.noOp() : services; }
@@ -57,6 +59,7 @@ public final class DeadlineZeroGame extends Game {
     @Override public void create() {
         art = new GameArt();
         accessibility = AccessibilitySettings.load();
+        i18n = Localization.loadEnglish();
         GraphicsSettings.load();
         audio = new AudioDirector();
         audio.setVolumes(accessibility.masterVolume, accessibility.sfxVolume, accessibility.musicVolume);
