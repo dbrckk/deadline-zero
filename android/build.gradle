@@ -152,6 +152,22 @@ tasks.register('verifyProductionAssets') {
     }
 }
 
+tasks.register('verifyAccessibilityReleaseContract') {
+    group = 'verification'
+    description = 'Requires the accessibility/comfort release contract for production.'
+    doLast {
+        File contract = new File(playStoreDir, 'ACCESSIBILITY.md')
+        if (!contract.isFile()) throw new GradleException('Play release blocked: play/store/ACCESSIBILITY.md is missing.')
+        String text = contract.getText('UTF-8')
+        ['Implemented controls', 'Release QA', 'Change-control rule'].each { required ->
+            if (!text.contains('## ' + required)) throw new GradleException('Accessibility contract missing required section: ' + required)
+        }
+        ['screen shake', 'high-contrast telegraphs', 'reduced flashes', 'reduced-motion', 'UI scale', 'haptics'].each { required ->
+            if (!text.toLowerCase().contains(required.toLowerCase())) throw new GradleException('Accessibility contract missing control: ' + required)
+        }
+    }
+}
+
 tasks.register('verifyPlayReleaseReadinessContract') {
     group = 'verification'
     description = 'Requires the final Play release-readiness matrix and key manual gate sections.'
@@ -291,7 +307,7 @@ tasks.register('verifyPlayStoreAssets') {
 tasks.register('verifyPlayReleaseConfig') {
     group = 'verification'
     description = 'Fails unless the build is configured as a publishable Google Play release.'
-    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing', 'verifyPlayDataSafetyContract', 'verifyPlayConsoleContract', 'verifyPlayReleaseNotes', 'verifyPlayReleaseReadinessContract'
+    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing', 'verifyPlayDataSafetyContract', 'verifyPlayConsoleContract', 'verifyPlayReleaseNotes', 'verifyPlayReleaseReadinessContract', 'verifyAccessibilityReleaseContract'
     doLast {
         boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
         if (usingTestIds) {
