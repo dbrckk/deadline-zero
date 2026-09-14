@@ -67,22 +67,22 @@ public final class SurvivorScreen extends ScreenAdapter {
         }
 
         font.getData().setScale(1.18f); font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "SURVIVORS", 0, h * .89f, w, Align.center, false);
+        font.draw(batch, t("survivor.title"), 0, h * .89f, w, Align.center, false);
         font.getData().setScale(.82f); font.setColor(unlocked ? VisualTheme.CYAN : VisualTheme.MUTED);
         font.draw(batch, survivor.displayName.toUpperCase(), 0, h * .70f, w, Align.center, false);
         font.getData().setScale(.52f); font.setColor(VisualTheme.MUTED);
-        font.draw(batch, survivor.role.toUpperCase() + "   •   LV " + level, 0, h * .645f, w, Align.center, false);
+        font.draw(batch, f("survivor.roleLevel", survivor.role.toUpperCase(), level), 0, h * .645f, w, Align.center, false);
 
         font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "HP  x" + fmt(survivor.hpMultiplier) + "     DMG  x" + fmt(survivor.weaponMultiplier) + "     SPD  x" + fmt(survivor.speedMultiplier), 0, h * .56f, w, Align.center, false);
-        font.draw(batch, "CRIT  +" + Math.round(survivor.critBonus * 100f) + "%     ABILITY  +" + Math.round(survivor.abilityBonus * 100f) + "%", 0, h * .505f, w, Align.center, false);
+        font.draw(batch, f("survivor.stats", fmt(survivor.hpMultiplier), fmt(survivor.weaponMultiplier), fmt(survivor.speedMultiplier)), 0, h * .56f, w, Align.center, false);
+        font.draw(batch, f("survivor.combatStats", Math.round(survivor.critBonus * 100f), Math.round(survivor.abilityBonus * 100f)), 0, h * .505f, w, Align.center, false);
         font.setColor(VisualTheme.VIOLET);
-        font.draw(batch, "XP  " + xp + " / " + next, 0, h * .39f, w, Align.center, false);
+        font.draw(batch, f("survivor.xp", xp, next), 0, h * .39f, w, Align.center, false);
 
         font.setColor(unlocked ? Color.WHITE : Color.LIGHT_GRAY);
-        font.draw(batch, unlocked ? (game.profile.selectedSurvivor == survivor ? "SELECTED" : "SELECT [ENTER]") : unlockText(survivor), w * .31f, h * .235f + 37f, w * .38f, Align.center, false);
+        font.draw(batch, unlocked ? (game.profile.selectedSurvivor == survivor ? t("survivor.selected") : t("survivor.select")) : unlockText(survivor), w * .31f, h * .235f + 37f, w * .38f, Align.center, false);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "← / → BROWSE     ESC BACK", 0, h * .125f, w, Align.center, false);
+        font.draw(batch, t("survivor.footer"), 0, h * .125f, w, Align.center, false);
         if (!status.isEmpty()) { font.setColor(VisualTheme.CYAN); font.draw(batch, status, 0, h * .08f, w, Align.center, false); }
         batch.end();
     }
@@ -97,22 +97,25 @@ public final class SurvivorScreen extends ScreenAdapter {
     }
 
     private void select(SurvivorCatalog.Survivor survivor) {
-        if (!game.profile.selectSurvivor(survivor)) { status = "Survivor locked"; return; }
-        status = survivor.displayName + " selected";
+        if (!game.profile.selectSurvivor(survivor)) { status = t("survivor.locked"); return; }
+        status = f("survivor.selectedStatus", survivor.displayName);
         game.saveProfile();
     }
 
     private String unlockText(SurvivorCatalog.Survivor survivor) {
         return switch (survivor) {
-            case REX -> "DEFAULT";
-            case NYX -> "UNLOCK: ACCOUNT LV.3";
-            case BASTION -> "UNLOCK: REACH STAGE 3";
-            case VOLT -> "UNLOCK: REACH STAGE 5";
-            case WRAITH -> "UNLOCK: ACCOUNT LV.8 OR STAGE 7";
+            case REX -> t("survivor.default");
+            case NYX -> t("survivor.unlockNyx");
+            case BASTION -> t("survivor.unlockBastion");
+            case VOLT -> t("survivor.unlockVolt");
+            case WRAITH -> t("survivor.unlockWraith");
         };
     }
 
     private String fmt(float value) { return String.format("%.2f", value); }
+
+    private String t(String key) { return game.i18n.text(key); }
+    private String f(String key, Object... args) { return game.i18n.format(key, args); }
 
     @Override public void dispose() { batch.dispose(); shapes.dispose(); font.dispose(); }
 }
