@@ -27,6 +27,10 @@ import com.deadlinezero.game.world.WaveDirector;
 public final class AbilitySystem {
     public interface Listener { void onKilled(Enemy enemy); }
 
+    private static final Color CRYO_IMPACT = CRYO_IMPACT;
+    private static final Color FROST_DAMAGE = FROST_DAMAGE;
+    private static final Color FROST_BLAST = FROST_BLAST;
+
     private final Player player;
     private final Array<Enemy> enemies;
     private final Pools pools;
@@ -209,12 +213,12 @@ public final class AbilitySystem {
             radius *= 1.08f;
             damage *= 1.35f;
         }
-        impact(player.position.x, player.position.y, radius, .36f, new Color(.25f, .8f, 1f, 1f));
+        impact(player.position.x, player.position.y, radius, .36f, CRYO_IMPACT);
         float r2 = radius * radius;
         spatial.query(player.position.x, player.position.y, radius, spatialCandidates);
         for (Enemy e : spatialCandidates) {
             if (!e.alive || e.position.dst2(player.position) > r2) continue;
-            damageEnemy(e, damage, DamageElement.FROST, new Color(.55f, .9f, 1f, 1f), .35f);
+            damageEnemy(e, damage, DamageElement.FROST, FROST_DAMAGE, .35f);
         }
         runtime.resetCryo(level);
     }
@@ -260,7 +264,7 @@ public final class AbilitySystem {
         DamageElement element = player.abilities.hasStormBladeSynergy()
             ? DamageElement.SHOCK
             : (player.abilities.hasPermafrostBladeSynergy() ? DamageElement.FROST : DamageElement.KINETIC);
-        Color color = element == DamageElement.SHOCK ? Color.CYAN : (element == DamageElement.FROST ? new Color(.55f, .9f, 1f, 1f) : Color.GOLD);
+        Color color = element == DamageElement.SHOCK ? Color.CYAN : (element == DamageElement.FROST ? FROST_DAMAGE : Color.GOLD);
         spatial.query(x, y, radius, spatialCandidates);
         for (Enemy e : spatialCandidates) {
             if (!e.alive) continue;
@@ -274,7 +278,7 @@ public final class AbilitySystem {
 
     private void explode(float x, float y, float radius, float damage, DamageElement element) {
         Color blast = switch (element) {
-            case FROST -> new Color(.35f, .8f, 1f, 1f);
+            case FROST -> FROST_BLAST;
             case FIRE -> Color.ORANGE;
             case SHOCK -> Color.CYAN;
             default -> Color.ORANGE;
