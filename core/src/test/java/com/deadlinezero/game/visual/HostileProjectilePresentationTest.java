@@ -31,6 +31,12 @@ final class HostileProjectilePresentationTest {
         assertEquals(EnemyProjectile.Style.NULL, HostileProjectilePresentation.styleFor(stalker));
     }
 
+    @Test void frostColossusUsesColdEnergyProjectileStyle() {
+        RunStageContext.begin(40, 6, 0);
+        Enemy frost = new Enemy(Enemy.Type.BOSS, 0f, 0f, 5000f, 1f, 1f, 20f, 100);
+        assertEquals(EnemyProjectile.Style.STATIC, HostileProjectilePresentation.styleFor(frost));
+    }
+
     @Test void ordinaryEarlyGameEnemyRemainsDefault() {
         RunStageContext.begin(4, 2, 0);
         Enemy ranged = new Enemy(Enemy.Type.RANGED, 0f, 0f, 50f, 2f, .4f, 10f, 5);

@@ -32,7 +32,7 @@ final class BootstrapArtCatalogTest {
         }
 
         for (BossIdentity identity : BossIdentity.values()) {
-            String root = "boss/" + identity.name().toLowerCase();
+            String root = GameArt.bossRoot(identity);
             for (String motion : MOTIONS) assertSupported(root + "/" + motion);
         }
     }

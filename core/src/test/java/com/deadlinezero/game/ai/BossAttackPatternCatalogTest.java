@@ -55,4 +55,16 @@ final class BossAttackPatternCatalogTest {
             RunStageContext.begin(1);
         }
     }
+
+    @Test void frostColossusEscalatesFromHeavyVolleyToAreaDenial() {
+        var p1 = BossAttackPatternCatalog.forPhase(BossIdentity.FROST_COLOSSUS, 1);
+        var p2 = BossAttackPatternCatalog.forPhase(BossIdentity.FROST_COLOSSUS, 2);
+        var p3 = BossAttackPatternCatalog.forPhase(BossIdentity.FROST_COLOSSUS, 3);
+        assertTrue(p1.damageMultiplier() > p2.damageMultiplier());
+        assertTrue(p2.radial());
+        assertTrue(p3.radial());
+        assertTrue(p3.shots() > p2.shots());
+        assertTrue(p3.explosionRadius() > p2.explosionRadius());
+        assertEquals(2, p3.explosiveEvery());
+    }
 }

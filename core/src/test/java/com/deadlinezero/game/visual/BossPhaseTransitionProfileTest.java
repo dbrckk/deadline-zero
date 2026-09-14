@@ -21,4 +21,10 @@ final class BossPhaseTransitionProfileTest {
         assertTrue(revenant.audioPitch() > alpha.audioPitch());
         assertTrue(alpha.audioPitch() > warden.audioPitch());
     }
+
+    @Test void frostColossusHasDistinctHeavyPhasePitch() {
+        var frost = BossPhaseTransitionProfile.forPhase(BossIdentity.FROST_COLOSSUS, 3);
+        var alpha = BossPhaseTransitionProfile.forPhase(BossIdentity.ALPHA, 3);
+        assertTrue(frost.audioPitch() < alpha.audioPitch());
+    }
 }

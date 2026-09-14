@@ -1,6 +1,7 @@
 package com.deadlinezero.game.ai;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,5 +19,14 @@ final class BossIdentityTest {
         assertEquals(BossIdentity.ALPHA, BossIdentity.forStage(9));
         assertEquals(BossIdentity.REVENANT, BossIdentity.forStage(10));
         assertEquals(BossIdentity.WARDEN, BossIdentity.forStage(11));
+    }
+
+    @Test void introducesFrostColossusAtCryogenicMilestones() {
+        assertEquals(6, BossIdentity.values().length);
+        assertEquals(BossIdentity.NULL_ARCHON, BossIdentity.forStage(35));
+        assertEquals(BossIdentity.FROST_COLOSSUS, BossIdentity.forStage(40));
+        assertEquals(BossIdentity.NULL_ARCHON, BossIdentity.forStage(45));
+        assertEquals(BossIdentity.FROST_COLOSSUS, BossIdentity.forStage(50));
+        assertNotEquals(BossIdentity.FROST_COLOSSUS, BossIdentity.forStage(39));
     }
 }

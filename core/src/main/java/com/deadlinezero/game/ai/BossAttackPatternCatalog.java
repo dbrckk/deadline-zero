@@ -47,6 +47,13 @@ public final class BossAttackPatternCatalog {
                 default -> new Pattern(30, 12f, 1.26f, .46f, 5, 1.75f, true);
             };
         }
+        if (safeIdentity == BossIdentity.FROST_COLOSSUS) {
+            return switch (safePhase) {
+                case 1 -> new Pattern(4, 14f, .80f, 1.02f, 0, 0f, false);
+                case 2 -> new Pattern(9, 40f, .74f, .88f, 3, 2.55f, true);
+                default -> new Pattern(14, 26f, .78f, .82f, 2, 3.05f, true);
+            };
+        }
         return switch (safePhase) {
             case 1 -> new Pattern(5, 11f, 1f, .72f, 0, 0f, false);
             case 2 -> new Pattern(10, 36f, .89f, .62f, 0, 0f, true);
