@@ -60,6 +60,26 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesGraphicsQualitySettings() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                com.deadlinezero.game.config.GraphicsSettings.set(
+                    com.deadlinezero.game.config.GraphicsSettings.Quality.LOW);
+                game.showSettings();
+                assertTrue("expected SettingsScreen for graphics-quality visual probe",
+                    game.getScreen() instanceof com.deadlinezero.game.screen.SettingsScreen);
+            });
+            Thread.sleep(600L);
+            capture("graphics-settings.png");
+        } finally {
+            com.deadlinezero.game.config.GraphicsSettings.set(
+                com.deadlinezero.game.config.GraphicsSettings.Quality.ULTRA);
+        }
+    }
+
+    @Test
     public void capturesCloudSaveScreen() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
