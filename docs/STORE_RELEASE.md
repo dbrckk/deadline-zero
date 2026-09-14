@@ -20,7 +20,7 @@ The Android launcher icon is a separate asset contract and lives in `android/src
 
 ## Listing metadata
 
-Use the exact app name `Deadline: Zero` unless a deliberate product rename is applied in both source and Play Console.
+The canonical Play Console copy is versioned in `play/store/LISTING.md`. Use the exact app name `Deadline: Zero` unless a deliberate product rename is applied in both source and Play Console.
 
 The short description must explain the actual gameplay without ranking claims, calls to action, fake urgency or unverifiable superlatives. Screenshots and descriptions must depict functionality that exists in the uploaded build.
 
