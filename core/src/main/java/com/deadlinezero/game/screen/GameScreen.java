@@ -183,13 +183,16 @@ public final class GameScreen extends ScreenAdapter {
             director.onSpawn();
         }
 
-        Enemy target = nearestEnemy();
+        // Build the broad-phase before target acquisition so firing avoids a full enemy scan.
+        spatial.rebuild(enemies);
+        Enemy target = spatial.nearest(player.position.x, player.position.y);
         if (target != null && fireTimer <= 0f) {
             fire(target);
             fireTimer = player.weapon.fireInterval;
         }
 
         updateEnemies(dt);
+        // Enemy movement invalidates the pre-update index; rebuild for collision/ability queries.
         spatial.rebuild(enemies);
         abilitySystem.update(dt);
         updatePlayerProjectiles(dt);
@@ -525,19 +528,6 @@ public final class GameScreen extends ScreenAdapter {
         };
         enemies.add(e);
         if (t == Enemy.Type.BOSS) director.onBossSpawned();
-    }
-
-    private Enemy nearestEnemy() {
-        Enemy best = null;
-        float bestD = Float.MAX_VALUE;
-        for (Enemy e : enemies) {
-            if (!e.alive) continue;
-            float dx = e.position.x - player.position.x;
-            float dy = e.position.y - player.position.y;
-            float d = dx * dx + dy * dy;
-            if (d < bestD) { bestD = d; best = e; }
-        }
-        return best;
     }
 
     private void fire(Enemy target) {
