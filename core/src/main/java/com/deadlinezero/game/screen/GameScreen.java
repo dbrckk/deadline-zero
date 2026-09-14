@@ -333,6 +333,7 @@ public final class GameScreen extends ScreenAdapter {
             };
             enemies.add(minion);
             spatial.add(minion);
+            abilitySystem.onEnemySpawned(minion);
             impact(x, y, nullArchon ? .82f : frostColossus ? .78f : .65f,
                 nullArchon ? .22f : frostColossus ? .20f : .18f,
                 frostColossus ? VisualTheme.CYAN : revenant ? VisualTheme.RED : VisualTheme.VIOLET);
@@ -529,6 +530,7 @@ public final class GameScreen extends ScreenAdapter {
         };
         enemies.add(e);
         spatial.add(e);
+        abilitySystem.onEnemySpawned(e);
         if (t == Enemy.Type.BOSS) director.onBossSpawned();
     }
 
