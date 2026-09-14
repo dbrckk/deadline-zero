@@ -88,6 +88,28 @@ final class SpatialHashTest {
         assertSame(inside, hash.nearestWithin(0f, 0f, 3.4f, null, null));
     }
 
+    @Test void historicalBucketsDoNotStayActiveAcrossRebuilds() {
+        SpatialHash hash = new SpatialHash(2.2f);
+        Array<Enemy> enemies = new Array<>();
+
+        for (int i = 0; i < 120; i++) {
+            enemies.clear();
+            enemies.add(enemy(i * 2.3f, 0f));
+            hash.rebuild(enemies);
+            assertEquals(1, hash.activeBucketCount());
+        }
+
+        int retained = hash.retainedBucketCount();
+        assertEquals(120, retained);
+
+        enemies.clear();
+        enemies.add(enemy(0f, 0f));
+        hash.rebuild(enemies);
+
+        assertEquals(1, hash.activeBucketCount());
+        assertEquals(retained, hash.retainedBucketCount());
+    }
+
     @Test void retainedBucketsAreReusedWhileActiveCountTracksCurrentPopulation() {
         SpatialHash hash = new SpatialHash(2.2f);
         Array<Enemy> enemies = new Array<>();
