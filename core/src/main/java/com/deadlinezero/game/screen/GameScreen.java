@@ -134,6 +134,24 @@ public final class GameScreen extends ScreenAdapter {
         return game.services.thermal.level();
     }
 
+    public float effectiveFxQuality() {
+        return polish.fxQuality();
+    }
+
+    public int activeEnemyCount() {
+        int count = 0;
+        for (Enemy enemy : enemies) if (enemy.alive) count++;
+        return count;
+    }
+
+    public int activeProjectileCount() {
+        int count = 0;
+        for (Projectile projectile : pools.projectiles) if (projectile.active) count++;
+        for (EnemyProjectile projectile : pools.hostileProjectiles) if (projectile.active) count++;
+        for (HomingMissile missile : pools.homingMissiles) if (missile.active) count++;
+        return count;
+    }
+
     private void update(float dt) {
         director.update(dt);
         player.updateRuntime(dt);
