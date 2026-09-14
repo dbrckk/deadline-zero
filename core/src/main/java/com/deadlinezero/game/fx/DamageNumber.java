@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 /** Allocation-free floating combat text entry. */
 public final class DamageNumber {
     public float x, y, value, life, maxLife;
+    public String text = "0";
     public boolean critical, active;
     public final Color color = new Color(Color.WHITE);
 
@@ -12,6 +13,7 @@ public final class DamageNumber {
         this.x = x;
         this.y = y;
         this.value = value;
+        this.text = Integer.toString(Math.max(1, Math.round(value)));
         this.critical = critical;
         this.maxLife = critical ? 0.72f : 0.52f;
         this.life = maxLife;
