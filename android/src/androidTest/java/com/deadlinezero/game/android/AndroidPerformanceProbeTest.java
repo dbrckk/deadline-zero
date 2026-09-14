@@ -46,6 +46,8 @@ public final class AndroidPerformanceProbeTest {
             AtomicReference<Float> fxQualityRef = new AtomicReference<>();
             AtomicReference<Integer> enemyCountRef = new AtomicReference<>();
             AtomicReference<Integer> projectileCountRef = new AtomicReference<>();
+            AtomicReference<Integer> activeSpatialBucketsRef = new AtomicReference<>();
+            AtomicReference<Integer> retainedSpatialBucketsRef = new AtomicReference<>();
             runOnGameThread(activity, () -> {
                 GameScreen screen = (GameScreen) game(activity).getScreen();
                 snapshotRef.set(screen.performanceSnapshot());
@@ -54,6 +56,8 @@ public final class AndroidPerformanceProbeTest {
                 fxQualityRef.set(screen.effectiveFxQuality());
                 enemyCountRef.set(screen.activeEnemyCount());
                 projectileCountRef.set(screen.activeProjectileCount());
+                activeSpatialBucketsRef.set(screen.activeSpatialBucketCount());
+                retainedSpatialBucketsRef.set(screen.retainedSpatialBucketCount());
             });
 
             PerformanceTelemetry.Snapshot snapshot = snapshotRef.get();
@@ -74,7 +78,9 @@ public final class AndroidPerformanceProbeTest {
                 thermalRef.get(),
                 fxQualityRef.get(),
                 enemyCountRef.get(),
-                projectileCountRef.get()
+                projectileCountRef.get(),
+                activeSpatialBucketsRef.get(),
+                retainedSpatialBucketsRef.get()
             );
         }
     }
@@ -87,7 +93,9 @@ public final class AndroidPerformanceProbeTest {
         String thermalLevel,
         float fxQuality,
         int activeEnemies,
-        int activeProjectiles
+        int activeProjectiles,
+        int activeSpatialBuckets,
+        int retainedSpatialBuckets
     ) throws Exception {
         File root = new File(
             androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
@@ -108,7 +116,9 @@ public final class AndroidPerformanceProbeTest {
             writer.write("  \"thermalLevel\": \"" + thermalLevel + "\",\n");
             writer.write("  \"effectiveFxQuality\": " + fxQuality + ",\n");
             writer.write("  \"activeEnemies\": " + activeEnemies + ",\n");
-            writer.write("  \"activeProjectiles\": " + activeProjectiles + "\n");
+            writer.write("  \"activeProjectiles\": " + activeProjectiles + ",\n");
+            writer.write("  \"activeSpatialBuckets\": " + activeSpatialBuckets + ",\n");
+            writer.write("  \"retainedSpatialBuckets\": " + retainedSpatialBuckets + "\n");
             writer.write("}\n");
         }
         assertTrue("performance benchmark JSON was not written", output.isFile() && output.length() > 40L);
