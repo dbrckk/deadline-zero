@@ -152,6 +152,14 @@ public final class GameScreen extends ScreenAdapter {
         return count;
     }
 
+    public int activeSpatialBucketCount() {
+        return spatial.activeBucketCount();
+    }
+
+    public int retainedSpatialBucketCount() {
+        return spatial.retainedBucketCount();
+    }
+
     private void update(float dt) {
         director.update(dt);
         player.updateRuntime(dt);
