@@ -739,7 +739,7 @@ public final class GameScreen extends ScreenAdapter {
             float alpha = MathUtils.clamp(n.life / n.maxLife, 0f, 1f);
             font.setColor(n.color.r, n.color.g, n.color.b, alpha);
             font.getData().setScale(n.critical ? .050f : .034f);
-            font.draw(batch, Integer.toString(Math.max(1, Math.round(n.value))), n.x - .45f, n.y, .9f, Align.center, false);
+            font.draw(batch, n.text, n.x - .45f, n.y, .9f, Align.center, false);
         }
         batch.end();
         font.getData().setScale(.75f);
