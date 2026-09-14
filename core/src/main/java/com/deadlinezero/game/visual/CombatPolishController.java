@@ -16,6 +16,7 @@ import com.deadlinezero.game.entities.EnemyProjectile;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.fx.DeathFx;
 import com.deadlinezero.game.meta.RunStageContext;
+import com.deadlinezero.game.services.ThermalService;
 import com.deadlinezero.game.util.Pools;
 import com.deadlinezero.game.world.ArenaHazardRuntime;
 import com.deadlinezero.game.world.DeathBurstRules;
@@ -36,6 +37,7 @@ public final class CombatPolishController {
     private final DeathFxRenderer deaths;
     private final AccessibilitySettings settings;
     private final AdaptiveFxBudget fxBudget = new AdaptiveFxBudget();
+    private final ThermalService thermal;
     private Enemy phaseBoss;
     private float phaseFxStarted;
     private float phaseFxUntil;
@@ -44,12 +46,17 @@ public final class CombatPolishController {
     private float lastSingularityVisualTime = Float.NaN;
 
     public CombatPolishController(GameArt art) {
-        this(art, AccessibilitySettings.load());
+        this(art, AccessibilitySettings.load(), ThermalService.noOp());
     }
 
     public CombatPolishController(GameArt art, AccessibilitySettings settings) {
+        this(art, settings, ThermalService.noOp());
+    }
+
+    public CombatPolishController(GameArt art, AccessibilitySettings settings, ThermalService thermal) {
         deaths = new DeathFxRenderer(art);
         this.settings = settings == null ? new AccessibilitySettings() : settings;
+        this.thermal = thermal == null ? ThermalService.noOp() : thermal;
         CombatVisualEvents.reset();
     }
 
@@ -61,6 +68,7 @@ public final class CombatPolishController {
 
     public void updateVisual(float dt) {
         feel.update(dt);
+        fxBudget.setExternalCeiling(thermal.level().fxCeiling);
         fxBudget.update(dt);
     }
 
