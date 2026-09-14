@@ -73,14 +73,14 @@ public final class ArsenalScreen extends ScreenAdapter {
         shapes.end();
 
         batch.begin();
-        font.getData().setScale(1.2f); font.setColor(VisualTheme.TEXT); font.draw(batch, "ARSENAL", 28, h - 48);
+        font.getData().setScale(1.2f); font.setColor(VisualTheme.TEXT); font.draw(batch, t("arsenal.title"), 28, h - 48);
         font.getData().setScale(.48f); font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "SELECT YOUR STARTING WEAPON  •  FREE PROGRESSION UNLOCKS", 28, h - 70);
+        font.draw(batch, t("arsenal.subtitle"), 28, h - 70);
         font.setColor(VisualTheme.CYAN_SOFT);
         font.draw(batch, "‹", w - 158f, h - 52f);
         font.draw(batch, "›", w - 86f, h - 52f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "PAGE " + (page + 1) + "/" + pageCount, w - 282f, h - 58f);
+        font.draw(batch, f("arsenal.page", page + 1, pageCount), w - 282f, h - 58f);
         for (int i = pageStart; i < pageEnd; i++) drawCard(all[i], i, pageStart, cardW, cardH, top);
         WeaponDefinition weapon = all[MathUtils.clamp(focus, 0, all.length - 1)];
         WeaponDefinition equipped = WeaponCatalog.byId(game.profile.selectedWeaponId);
@@ -103,10 +103,10 @@ public final class ArsenalScreen extends ScreenAdapter {
         font.getData().setScale(.41f); font.setColor(elementColor(weapon));
         font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x + 14f, y + cardH - 38f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, Math.round(dps) + " DPS   " + Math.round(weapon.damage) + " DMG   " + weapon.projectileCount + "x", x + 14f, y + cardH - 59f);
-        if (selected) { font.setColor(VisualTheme.CYAN); font.draw(batch, "EQUIPPED", x + 14f, y + 17f); }
-        else if (unlocked) { font.setColor(i == focus ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED); font.draw(batch, i == focus ? "SELECT" : "AVAILABLE", x + 14f, y + 17f); }
-        else { font.setColor(VisualTheme.GOLD); font.draw(batch, "LOCKED  •  ACCOUNT LV " + WeaponProgression.unlockAccountLevel(weapon), x + 14f, y + 17f); }
+        font.draw(batch, f("arsenal.cardStats", Math.round(dps), Math.round(weapon.damage), weapon.projectileCount), x + 14f, y + cardH - 59f);
+        if (selected) { font.setColor(VisualTheme.CYAN); font.draw(batch, t("arsenal.equipped"), x + 14f, y + 17f); }
+        else if (unlocked) { font.setColor(i == focus ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED); font.draw(batch, i == focus ? t("arsenal.select") : t("arsenal.available"), x + 14f, y + 17f); }
+        else { font.setColor(VisualTheme.GOLD); font.draw(batch, f("arsenal.locked", WeaponProgression.unlockAccountLevel(weapon)), x + 14f, y + 17f); }
     }
 
     private void drawDetailText(WeaponDefinition weapon, WeaponDefinition equipped, float w) {
@@ -114,14 +114,14 @@ public final class ArsenalScreen extends ScreenAdapter {
         font.getData().setScale(.50f); font.setColor(VisualTheme.TEXT); font.draw(batch, weapon.displayName.toUpperCase(), x, 132f);
         font.getData().setScale(.42f); font.setColor(elementColor(weapon)); font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x, 111f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "DPS " + Math.round(dps) + deltaText(dps - equippedDps) + "   FIRE " + String.format(java.util.Locale.US, "%.2fs", weapon.fireInterval) + "   CRIT " + Math.round(weapon.critChance * 100f) + "%", x, 90f);
-        font.draw(batch, "PEN " + weapon.penetration + deltaText(weapon.penetration - equipped.penetration) + "   KB " + oneDecimal(weapon.knockback) + deltaText(weapon.knockback - equipped.knockback) + "   SHOTS " + weapon.projectileCount + deltaText(weapon.projectileCount - equipped.projectileCount), x, 70f);
+        font.draw(batch, f("arsenal.detailDps", Math.round(dps), deltaText(dps - equippedDps), String.format(java.util.Locale.US, "%.2f", weapon.fireInterval), Math.round(weapon.critChance * 100f)), x, 90f);
+        font.draw(batch, f("arsenal.detailPen", weapon.penetration, deltaText(weapon.penetration - equipped.penetration), oneDecimal(weapon.knockback), deltaText(weapon.knockback - equipped.knockback), weapon.projectileCount, deltaText(weapon.projectileCount - equipped.projectileCount)), x, 70f);
         font.setColor(VisualTheme.CYAN_SOFT); font.draw(batch, description(weapon), x, 50f, w * .45f, Align.left, true);
         WeaponSynergyRules.Synergy synergy = WeaponSynergyRules.resolve(game.profile.selectedSurvivor, weapon);
         if (synergy != WeaponSynergyRules.Synergy.NONE) {
-            font.setColor(VisualTheme.GOLD); font.draw(batch, "SYNERGY • " + synergy.displayName, x, 31f);
+            font.setColor(VisualTheme.GOLD); font.draw(batch, f("arsenal.synergy", synergy.displayName), x, 31f);
         }
-        font.setColor(VisualTheme.MUTED); font.draw(batch, "A/D OR ←/→  •  ENTER SELECT  •  ESC/BACK BASE", 24, 25);
+        font.setColor(VisualTheme.MUTED); font.draw(batch, t("arsenal.footer"), 24, 25);
     }
 
     private void drawStatBars(WeaponDefinition weapon, WeaponDefinition equipped, float x, float y, float width, float height) {
@@ -221,6 +221,9 @@ public final class ArsenalScreen extends ScreenAdapter {
         if (!WeaponProgression.unlocked(game.profile, weapon)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK); return; }
         if (game.profile.selectWeapon(weapon)) { ProfileStore.save(game.profile); AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); }
     }
+
+    private String t(String key) { return game.i18n.text(key); }
+    private String f(String key, Object... args) { return game.i18n.format(key, args); }
 
     @Override public void dispose() { batch.dispose(); shapes.dispose(); font.dispose(); }
 }
