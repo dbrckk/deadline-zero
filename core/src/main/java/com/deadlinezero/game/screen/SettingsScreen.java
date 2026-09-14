@@ -22,9 +22,10 @@ public final class SettingsScreen extends ScreenAdapter {
     private static final int SFX_VOLUME_ROW = 10;
     private static final int MUSIC_VOLUME_ROW = 11;
     private static final int GRAPHICS_ROW = 12;
-    private static final int PRIVACY_ROW = 13;
-    private static final int POLICY_ROW = 14;
-    private static final int CLOUD_ROW = 15;
+    private static final int FRAME_RATE_ROW = 13;
+    private static final int PRIVACY_ROW = 14;
+    private static final int POLICY_ROW = 15;
+    private static final int CLOUD_ROW = 16;
     private static final int LAST_ROW = CLOUD_ROW;
 
     private final DeadlineZeroGame game;
@@ -55,13 +56,13 @@ public final class SettingsScreen extends ScreenAdapter {
         String[] labels = {
             "Screen shake", "Shake strength", "Hit stop", "Damage flash", "High contrast telegraphs",
             "Reduce flashes", "Haptics", "Reduced motion", "UI scale", "Master volume", "SFX volume", "Music volume",
-            "Graphics quality", "Privacy choices", "Privacy policy", "Cloud save"
+            "Graphics quality", "Frame rate", "Privacy choices", "Privacy policy", "Cloud save"
         };
         String[] values = {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
             onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), onOff(s.reducedMotion), pct(s.uiScale),
             pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
-            GraphicsSettings.active().name(),
+            GraphicsSettings.active().name(), GraphicsSettings.frameRate().label,
             privacyRequired ? "OPEN" : "NOT REQUIRED",
             policyAvailable ? "OPEN" : "UNAVAILABLE",
             game.services.cloudSave.available() ? "OPEN" : "NOT CONFIGURED"
@@ -135,6 +136,12 @@ public final class SettingsScreen extends ScreenAdapter {
             AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
             return;
         }
+        if (row == FRAME_RATE_ROW) {
+            GraphicsSettings.setFrameRate(GraphicsSettings.frameRate().next(right ? 1 : -1));
+            GraphicsSettings.save();
+            AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+            return;
+        }
         if (row == PRIVACY_ROW) {
             if (right && privacyRequired) openPrivacy();
             return;
@@ -199,6 +206,10 @@ public final class SettingsScreen extends ScreenAdapter {
             case MUSIC_VOLUME_ROW -> s.musicVolume = clamp(s.musicVolume + dir * .05f, 0f, 1f);
             case GRAPHICS_ROW -> {
                 GraphicsSettings.set(GraphicsSettings.active().next(dir > 0f ? 1 : -1));
+                GraphicsSettings.save();
+            }
+            case FRAME_RATE_ROW -> {
+                GraphicsSettings.setFrameRate(GraphicsSettings.frameRate().next(dir > 0f ? 1 : -1));
                 GraphicsSettings.save();
             }
             default -> { }
