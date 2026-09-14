@@ -455,13 +455,8 @@ public final class GameScreen extends ScreenAdapter {
     private void chainShock(Enemy source, float damage, int maxChains) {
         Enemy current = source;
         for (int chain = 0; chain < maxChains; chain++) {
-            Enemy nearest = null;
-            float best = 3.4f * 3.4f;
-            for (Enemy candidate : enemies) {
-                if (!candidate.alive || candidate == current || candidate == source) continue;
-                float d2 = current.position.dst2(candidate.position);
-                if (d2 < best) { best = d2; nearest = candidate; }
-            }
+            Enemy nearest = spatial.nearestWithin(
+                current.position.x, current.position.y, 3.4f, current, source);
             if (nearest == null) break;
             float fromX = current.position.x;
             float fromY = current.position.y;
