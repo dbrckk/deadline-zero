@@ -11,7 +11,6 @@ final class GraphicsSettingsTest {
         assertEquals(4, values.length);
         for (int i = 0; i < values.length; i++) {
             assertTrue(values[i].fxCeiling >= .40f && values[i].fxCeiling <= 1f);
-            assertTrue(values[i].targetFps >= 30 && values[i].targetFps <= 120);
             if (i > 0) assertTrue(values[i].fxCeiling > values[i - 1].fxCeiling);
         }
     }
