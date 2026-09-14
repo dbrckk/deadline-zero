@@ -8,12 +8,14 @@ import com.deadlinezero.game.entities.Enemy;
 public final class SpatialHash {
     private final float cellSize;
     private final IntMap<Array<Enemy>> cells = new IntMap<>();
+    private int activeBucketCount;
 
     public SpatialHash(float cellSize) {
         this.cellSize = cellSize;
     }
 
     public void rebuild(Array<Enemy> enemies) {
+        activeBucketCount = 0;
         for (Array<Enemy> bucket : cells.values()) bucket.clear();
         for (Enemy enemy : enemies) {
             if (!enemy.alive) continue;
@@ -25,6 +27,7 @@ public final class SpatialHash {
                 bucket = new Array<>(false, 16);
                 cells.put(key, bucket);
             }
+            if (bucket.size == 0) activeBucketCount++;
             bucket.add(enemy);
         }
     }
@@ -41,6 +44,14 @@ public final class SpatialHash {
                 if (bucket != null) out.addAll(bucket);
             }
         }
+    }
+
+    public int activeBucketCount() {
+        return activeBucketCount;
+    }
+
+    public int retainedBucketCount() {
+        return cells.size;
     }
 
     private static int floor(float value) {
