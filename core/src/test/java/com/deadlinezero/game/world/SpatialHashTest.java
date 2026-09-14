@@ -88,6 +88,31 @@ final class SpatialHashTest {
         assertSame(inside, hash.nearestWithin(0f, 0f, 3.4f, null, null));
     }
 
+    @Test void incrementalAddMakesSpawnImmediatelyQueryable() {
+        SpatialHash hash = new SpatialHash(2.2f);
+        Enemy spawned = enemy(3f, 0f);
+
+        hash.add(spawned);
+
+        assertSame(spawned, hash.nearest(0f, 0f));
+        assertEquals(1, hash.activeBucketCount());
+    }
+
+    @Test void rebuildAfterIncrementalAddDoesNotDuplicateEnemy() {
+        SpatialHash hash = new SpatialHash(2.2f);
+        Array<Enemy> enemies = new Array<>();
+        Enemy spawned = enemy(1f, 0f);
+        enemies.add(spawned);
+
+        hash.add(spawned);
+        hash.rebuild(enemies);
+
+        Array<Enemy> out = new Array<>();
+        hash.query(1f, 0f, .5f, out);
+        assertEquals(1, out.size);
+        assertSame(spawned, out.first());
+    }
+
     @Test void historicalBucketsDoNotStayActiveAcrossRebuilds() {
         SpatialHash hash = new SpatialHash(2.2f);
         Array<Enemy> enemies = new Array<>();
