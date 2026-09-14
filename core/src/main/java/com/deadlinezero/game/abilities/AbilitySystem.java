@@ -27,9 +27,9 @@ import com.deadlinezero.game.world.WaveDirector;
 public final class AbilitySystem {
     public interface Listener { void onKilled(Enemy enemy); }
 
-    private static final Color CRYO_IMPACT = CRYO_IMPACT;
-    private static final Color FROST_DAMAGE = FROST_DAMAGE;
-    private static final Color FROST_BLAST = FROST_BLAST;
+    private static final Color CRYO_IMPACT = new Color(.25f, .8f, 1f, 1f);
+    private static final Color FROST_DAMAGE = new Color(.55f, .9f, 1f, 1f);
+    private static final Color FROST_BLAST = new Color(.35f, .8f, 1f, 1f);
 
     private final Player player;
     private final Array<Enemy> enemies;
