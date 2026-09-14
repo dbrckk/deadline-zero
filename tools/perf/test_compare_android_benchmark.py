@@ -50,5 +50,19 @@ class CompareAndroidBenchmarkTest(unittest.TestCase):
         result = mod.compare(sample(), sample(activeEnemies=30))
         self.assertFalse(result["comparable"])
 
+    def test_legacy_baseline_schema_skips_instead_of_failing(self):
+        baseline = {
+            "targetFps": 60,
+            "averageFps": 58.0,
+            "p95FrameMs": 19.0,
+            "p99FrameMs": 24.0,
+            "jankRatio": 0.08,
+            "stable": False,
+        }
+        result = mod.compare(baseline, sample())
+        self.assertFalse(result["comparable"])
+        self.assertIn("incompatible baseline", result["reason"])
+        self.assertEqual([], result["regressions"])
+
 if __name__ == "__main__":
     unittest.main()
