@@ -51,44 +51,44 @@ public final class VictoryScreen extends ScreenAdapter {
 
         batch.begin();
         font.getData().setScale(1.7f); font.setColor(Color.WHITE);
-        font.draw(batch, "PROTOCOL CLEARED", 0, h * .78f, w, Align.center, false);
+        font.draw(batch, t("victory.title"), 0, h * .78f, w, Align.center, false);
         font.getData().setScale(.72f); font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, "Stage " + result.stage() + "  •  Kills " + result.kills() + "  •  " + formatTime(result.secondsSurvived()), 0, h * .65f, w, Align.center, false);
+        font.draw(batch, f("result.summary", result.stage(), result.kills(), formatTime(result.secondsSurvived())), 0, h * .65f, w, Align.center, false);
         font.getData().setScale(.52f); font.setColor(Color.ORANGE);
-        font.draw(batch, "CONTRACT  " + result.contractTitle() + "  •  +" + result.contractBonusPercent() + "% REWARD", 0, h * .605f, w, Align.center, false);
+        font.draw(batch, f("result.contract", result.contractTitle(), result.contractBonusPercent()), 0, h * .605f, w, Align.center, false);
         font.setColor(result.threatTier() > 0 ? Color.GOLD : Color.LIGHT_GRAY);
-        font.draw(batch, "THREAT " + result.threatTier() + "  •  +" + result.threatBonusPercent() + "% ASCENSION", 0, h * .565f, w, Align.center, false);
+        font.draw(batch, f("result.threat", result.threatTier(), result.threatBonusPercent()), 0, h * .565f, w, Align.center, false);
         font.getData().setScale(.72f); font.setColor(Color.GOLD);
-        font.draw(batch, "+" + result.rewards().credits() + " Credits", 0, h * .51f, w, Align.center, false);
+        font.draw(batch, f("result.credits", result.rewards().credits()), 0, h * .51f, w, Align.center, false);
         font.setColor(Color.CYAN);
-        font.draw(batch, "+" + result.rewards().gems() + " Gems   +" + result.rewards().accountXp() + " Account XP", 0, h * .455f, w, Align.center, false);
+        font.draw(batch, f("result.gemsXp", result.rewards().gems(), result.rewards().accountXp()), 0, h * .455f, w, Align.center, false);
         if (result.unlockedThreatTier() > 0) {
             font.getData().setScale(.60f);
             font.setColor(Color.GOLD);
-            String milestone = result.threatMilestoneGems() > 0 ? "  +" + result.threatMilestoneGems() + " MILESTONE GEMS" : "";
-            font.draw(batch, "THREAT " + result.unlockedThreatTier() + " UNLOCKED" + milestone, 0, h * .405f, w, Align.center, false);
+            String milestone = result.threatMilestoneGems() > 0 ? f("victory.milestone", result.threatMilestoneGems()) : "";
+            font.draw(batch, f("victory.threatUnlocked", result.unlockedThreatTier(), milestone), 0, h * .405f, w, Align.center, false);
             EquipmentItem exclusive = ThreatMilestoneRewardCatalog.forTier(result.unlockedThreatTier());
             if (exclusive != null) {
                 font.getData().setScale(.52f);
                 font.setColor(Color.MAGENTA);
-                font.draw(batch, "MYTHIC UNLOCK  •  " + exclusive.name.toUpperCase(), 0, h * .365f, w, Align.center, false);
+                font.draw(batch, f("victory.mythic", exclusive.name.toUpperCase()), 0, h * .365f, w, Align.center, false);
             }
         } else if (firstClear) {
             font.setColor(Color.LIME);
-            font.draw(batch, "FIRST CLEAR  +" + bonusCredits + " Credits  +" + bonusGems + " Gems", 0, h * .40f, w, Align.center, false);
+            font.draw(batch, f("victory.firstClear", bonusCredits, bonusGems), 0, h * .40f, w, Align.center, false);
         }
         drawMasteryNotice(w, h);
         if (result.drop() != null) {
             font.getData().setScale(.62f);
             font.setColor(Color.WHITE);
-            font.draw(batch, "DROP: " + result.drop().rarity.name() + " " + result.drop().name + " Lv." + result.drop().level, 0, h * .275f, w, Align.center, false);
+            font.draw(batch, f("result.drop", result.drop().rarity.name(), result.drop().name, result.drop().level), 0, h * .275f, w, Align.center, false);
         }
         font.setColor(Color.WHITE);
-        font.draw(batch, "BASE", w * .13f, h * .18f + 36f, w * .20f, Align.center, false);
+        font.draw(batch, t("victory.base"), w * .13f, h * .18f + 36f, w * .20f, Align.center, false);
         font.setColor(canShare ? new Color(.86f, .78f, 1f, 1f) : Color.DARK_GRAY);
-        font.draw(batch, canShare ? "SHARE [H]" : "SHARE", w * .40f, h * .18f + 36f, w * .20f, Align.center, false);
+        font.draw(batch, canShare ? t("victory.share") : t("victory.shareDisabled"), w * .40f, h * .18f + 36f, w * .20f, Align.center, false);
         font.setColor(Color.WHITE);
-        font.draw(batch, "NEXT STAGE", w * .67f, h * .18f + 36f, w * .20f, Align.center, false);
+        font.draw(batch, t("victory.nextStage"), w * .67f, h * .18f + 36f, w * .20f, Align.center, false);
         batch.end();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) game.showMenu();
@@ -113,22 +113,25 @@ public final class VictoryScreen extends ScreenAdapter {
     private void drawMasteryNotice(float w, float h) {
         MasteryRunNotice.Notice notice = MasteryRunNotice.current();
         if (notice == null || !notice.visible()) return;
-        StringBuilder text = new StringBuilder("MASTERY  •  ");
-        if (notice.weaponRankedUp()) text.append(notice.weaponName().toUpperCase()).append(" RANK ").append(notice.weaponRank());
+        StringBuilder detail = new StringBuilder();
+        if (notice.weaponRankedUp()) detail.append(f("victory.masteryWeapon", notice.weaponName().toUpperCase(), notice.weaponRank()));
         if (notice.biomeRankedUp()) {
-            if (notice.weaponRankedUp()) text.append("  •  ");
-            text.append(notice.biomeName()).append(" RANK ").append(notice.biomeRank());
+            if (notice.weaponRankedUp()) detail.append("  •  ");
+            detail.append(f("victory.masteryBiome", notice.biomeName(), notice.biomeRank()));
         }
-        text.append("  •  +").append(notice.creditsReward()).append(" C  +").append(notice.gemsReward()).append(" G");
+        String text = f("victory.mastery", detail.toString(), notice.creditsReward(), notice.gemsReward());
         font.getData().setScale(.50f);
         font.setColor(new Color(.72f, .58f, 1f, 1f));
-        font.draw(batch, text.toString(), 0, h * .325f, w, Align.center, false);
+        font.draw(batch, text, 0, h * .325f, w, Align.center, false);
     }
 
     private static String formatTime(float seconds) {
         int total = Math.max(0, (int)seconds);
         return String.format("%02d:%02d", total / 60, total % 60);
     }
+
+    private String t(String key) { return game.i18n.text(key); }
+    private String f(String key, Object... args) { return game.i18n.format(key, args); }
 
     @Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }
 }
