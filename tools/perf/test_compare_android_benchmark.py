@@ -37,6 +37,13 @@ class CompareAndroidBenchmarkTest(unittest.TestCase):
         self.assertTrue(result["comparable"])
         self.assertGreaterEqual(len(result["regressions"]), 4)
 
+    def test_average_fps_drop_alone_is_advisory(self):
+        current = sample(averageFps=42.0, p95FrameMs=19.0, p99FrameMs=24.0, jankRatio=0.08)
+        result = mod.compare(sample(), current)
+        self.assertTrue(result["comparable"])
+        self.assertEqual([], result["regressions"])
+        self.assertGreater(result["metrics"]["averageFpsDrop"], mod.MAX_AVG_FPS_DROP)
+
     def test_thermal_pressure_skips_comparison(self):
         result = mod.compare(sample(), sample(thermalLevel="SEVERE"))
         self.assertFalse(result["comparable"])
