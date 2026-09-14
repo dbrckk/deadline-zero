@@ -8,7 +8,7 @@ Deadline: Zero
 
 ## Short description
 
-Survive escalating hordes, build powerful weapon synergies, and defeat evolving bosses.
+Survive escalating hordes, forge weapon synergies, and defeat evolving bosses.
 
 ## Full description
 

@@ -152,6 +152,32 @@ tasks.register('verifyProductionAssets') {
     }
 }
 
+tasks.register('verifyPlayStoreListing') {
+    group = 'verification'
+    description = 'Validates canonical Google Play listing metadata limits and required sections.'
+    doLast {
+        File listing = new File(playStoreDir, 'LISTING.md')
+        if (!listing.isFile()) throw new GradleException('Play release blocked: play/store/LISTING.md is missing.')
+        String text = listing.getText('UTF-8')
+        def section = { String heading ->
+            String marker = '## ' + heading
+            int start = text.indexOf(marker)
+            if (start < 0) throw new GradleException('Play listing missing section: ' + heading)
+            start += marker.length()
+            int end = text.indexOf('\n## ', start)
+            if (end < 0) end = text.length()
+            text.substring(start, end).trim()
+        }
+        String appName = section('App name')
+        String shortDescription = section('Short description')
+        String fullDescription = section('Full description')
+        if (appName != 'Deadline: Zero') throw new GradleException("Play listing app name must be exactly 'Deadline: Zero'.")
+        if (appName.codePointCount(0, appName.length()) > 30) throw new GradleException('Play listing app name exceeds 30 characters.')
+        if (shortDescription.isBlank() || shortDescription.codePointCount(0, shortDescription.length()) > 80) throw new GradleException('Play listing short description must contain 1..80 characters.')
+        if (fullDescription.isBlank() || fullDescription.codePointCount(0, fullDescription.length()) > 4000) throw new GradleException('Play listing full description must contain 1..4000 characters.')
+    }
+}
+
 tasks.register('verifyPlayStoreAssets') {
     group = 'verification'
     description = 'Validates the final Google Play icon, feature graphic and recommendation-grade phone screenshots.'
@@ -201,7 +227,7 @@ tasks.register('verifyPlayStoreAssets') {
 tasks.register('verifyPlayReleaseConfig') {
     group = 'verification'
     description = 'Fails unless the build is configured as a publishable Google Play release.'
-    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets'
+    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing'
     doLast {
         boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
         if (usingTestIds) {
