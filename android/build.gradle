@@ -152,6 +152,21 @@ tasks.register('verifyProductionAssets') {
     }
 }
 
+tasks.register('verifyPlayReleaseReadinessContract') {
+    group = 'verification'
+    description = 'Requires the final Play release-readiness matrix and key manual gate sections.'
+    doLast {
+        File matrix = new File(playStoreDir, 'RELEASE_READINESS.md')
+        if (!matrix.isFile()) throw new GradleException('Play release blocked: play/store/RELEASE_READINESS.md is missing.')
+        String text = matrix.getText('UTF-8')
+        ['Automated gates', 'Manual platform gates', 'Release states', 'Production-ready', 'Rule'].each { required ->
+            if (!text.contains('## ' + required) && !text.contains('### ' + required)) {
+                throw new GradleException('Play release readiness matrix missing required section: ' + required)
+            }
+        }
+    }
+}
+
 tasks.register('verifyPlayReleaseNotes') {
     group = 'verification'
     description = 'Requires versioned Google Play release notes for the exact appVersion.'
@@ -276,7 +291,7 @@ tasks.register('verifyPlayStoreAssets') {
 tasks.register('verifyPlayReleaseConfig') {
     group = 'verification'
     description = 'Fails unless the build is configured as a publishable Google Play release.'
-    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing', 'verifyPlayDataSafetyContract', 'verifyPlayConsoleContract', 'verifyPlayReleaseNotes'
+    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing', 'verifyPlayDataSafetyContract', 'verifyPlayConsoleContract', 'verifyPlayReleaseNotes', 'verifyPlayReleaseReadinessContract'
     doLast {
         boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
         if (usingTestIds) {
