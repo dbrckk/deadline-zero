@@ -16,28 +16,30 @@ public final class SpatialHash {
         this.cellSize = cellSize;
     }
 
+    public void add(Enemy enemy) {
+        if (enemy == null || !enemy.alive) return;
+        int cx = floor(enemy.position.x / cellSize);
+        int cy = floor(enemy.position.y / cellSize);
+        maxQueryRing = Math.max(maxQueryRing, Math.max(Math.abs(cx), Math.abs(cy)));
+        int key = key(cx, cy);
+        Array<Enemy> bucket = cells.get(key);
+        if (bucket == null) {
+            bucket = new Array<>(false, 16);
+            cells.put(key, bucket);
+        }
+        if (bucket.size == 0) {
+            activeBuckets.add(bucket);
+            activeBucketCount++;
+        }
+        bucket.add(enemy);
+    }
+
     public void rebuild(Array<Enemy> enemies) {
         for (Array<Enemy> bucket : activeBuckets) bucket.clear();
         activeBuckets.clear();
         activeBucketCount = 0;
         maxQueryRing = 0;
-        for (Enemy enemy : enemies) {
-            if (!enemy.alive) continue;
-            int cx = floor(enemy.position.x / cellSize);
-            int cy = floor(enemy.position.y / cellSize);
-            maxQueryRing = Math.max(maxQueryRing, Math.max(Math.abs(cx), Math.abs(cy)));
-            int key = key(cx, cy);
-            Array<Enemy> bucket = cells.get(key);
-            if (bucket == null) {
-                bucket = new Array<>(false, 16);
-                cells.put(key, bucket);
-            }
-            if (bucket.size == 0) {
-                activeBuckets.add(bucket);
-                activeBucketCount++;
-            }
-            bucket.add(enemy);
-        }
+        for (Enemy enemy : enemies) add(enemy);
     }
 
     public void query(float x, float y, float radius, Array<Enemy> out) {
