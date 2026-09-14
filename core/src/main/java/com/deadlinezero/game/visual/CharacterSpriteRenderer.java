@@ -148,6 +148,11 @@ public final class CharacterSpriteRenderer {
                 case SWIFT -> { r *= .72f; g *= .92f; scale *= .94f; }
                 case ARMORED -> { r *= .82f; g *= .86f; b *= .94f; scale *= 1.10f; }
                 case FERAL -> { g *= .62f; b *= .56f; scale *= 1.04f; }
+                case VOLATILE -> { r *= 1.18f; g *= .72f; b *= .38f; scale *= .96f; }
+                case JUGGERNAUT -> { r *= .72f; g *= .78f; b *= .86f; scale *= 1.16f; }
+                case RAVAGER -> { r *= 1.15f; g *= .52f; b *= .50f; scale *= 1.07f; }
+                case AEGIS -> { r *= .52f; g *= .82f; b *= 1.18f; scale *= 1.08f; }
+                case HUNTER -> { r *= .66f; g *= 1.02f; b *= .72f; scale *= .98f; }
                 default -> { }
             }
         }

@@ -18,7 +18,7 @@ import com.deadlinezero.game.world.BiomeEnemyRoster;
 
 public final class Enemy extends ActorState {
     public enum Type { SHAMBLER, RUNNER, BRUTE, RANGED, ELITE, SHIELDED, REGENERATOR, PHANTOM, BOSS }
-    public enum Variant { NORMAL, SWIFT, ARMORED, FERAL }
+    public enum Variant { NORMAL, SWIFT, ARMORED, FERAL, VOLATILE, JUGGERNAUT, RAVAGER, AEGIS, HUNTER }
     public enum Tactic { NONE, STRAFE, CHARGE }
     public enum ElementReaction { NONE, THERMAL_SHOCK, STEAM_BURST, OVERLOAD }
 
@@ -62,6 +62,11 @@ public final class Enemy extends ActorState {
     private float supportHealLockout;
 
     public Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp) {
+        this(type, x, y, hp, speed, radius, damage, xp, true);
+    }
+
+    Enemy(Type type, float x, float y, float hp, float speed, float radius, float damage, int xp,
+          boolean rollChampionVariant) {
         super(x, y, radius, hp * StageRules.enemyHpMultiplier(RunStageContext.stage()));
         int stage = RunStageContext.stage();
         this.type = type;
@@ -79,12 +84,9 @@ public final class Enemy extends ActorState {
         this.bossCombat = type == Type.BOSS ? new BossCombatRuntime() : null;
         configureAttackCadence();
 
-        if (type != Type.BOSS) {
+        if (rollChampionVariant && type != Type.BOSS) {
             float chance = MathUtils.clamp(.02f + (stage - 1) * .018f, .02f, .20f);
-            if (MathUtils.random() < chance) {
-                float roll = MathUtils.random();
-                applyVariant(roll < .36f ? Variant.SWIFT : (roll < .69f ? Variant.ARMORED : Variant.FERAL));
-            }
+            if (MathUtils.random() < chance) applyVariant(variantForRoll(MathUtils.random()));
         }
         configureSpecialTrait();
         ACTIVE_ENEMIES.put(this, Boolean.TRUE);
@@ -124,6 +126,21 @@ public final class Enemy extends ActorState {
         }
     }
 
+    /** Stable equal-width selector for the eight production champion variants. */
+    public static Variant variantForRoll(float roll) {
+        float safe = MathUtils.clamp(roll, 0f, .999999f);
+        return switch ((int) (safe * 8f)) {
+            case 0 -> Variant.SWIFT;
+            case 1 -> Variant.ARMORED;
+            case 2 -> Variant.FERAL;
+            case 3 -> Variant.VOLATILE;
+            case 4 -> Variant.JUGGERNAUT;
+            case 5 -> Variant.RAVAGER;
+            case 6 -> Variant.AEGIS;
+            default -> Variant.HUNTER;
+        };
+    }
+
     /** Applies a champion variant once, preserving the base archetype while changing combat priorities. */
     public void applyVariant(Variant next) {
         if (next == null || next == Variant.NORMAL || type == Type.BOSS || variant != Variant.NORMAL) return;
@@ -148,6 +165,43 @@ public final class Enemy extends ActorState {
                 hp = maxHp;
                 xpValue = Math.max(1, Math.round(xpValue * 1.45f));
             }
+            case VOLATILE -> {
+                contactDamage *= 1.42f;
+                speed *= 1.08f;
+                maxHp *= .78f;
+                hp = maxHp;
+                xpValue = Math.max(1, Math.round(xpValue * 1.40f));
+            }
+            case JUGGERNAUT -> {
+                maxHp *= 2.05f;
+                hp = maxHp;
+                speed *= .70f;
+                radius *= 1.12f;
+                contactDamage *= 1.20f;
+                xpValue = Math.max(1, Math.round(xpValue * 1.78f));
+            }
+            case RAVAGER -> {
+                contactDamage *= 1.60f;
+                speed *= 1.15f;
+                maxHp *= 1.18f;
+                hp = maxHp;
+                xpValue = Math.max(1, Math.round(xpValue * 1.66f));
+            }
+            case AEGIS -> {
+                maxHp *= 1.36f;
+                hp = maxHp;
+                speed *= .90f;
+                shieldMaxHp = maxHp * .48f;
+                shieldHp = shieldMaxHp;
+                xpValue = Math.max(1, Math.round(xpValue * 1.62f));
+            }
+            case HUNTER -> {
+                contactDamage *= 1.25f;
+                speed *= 1.08f;
+                maxHp *= .95f;
+                hp = maxHp;
+                xpValue = Math.max(1, Math.round(xpValue * 1.50f));
+            }
             default -> { }
         }
         configureAttackCadence();
@@ -168,6 +222,11 @@ public final class Enemy extends ActorState {
             case SWIFT -> { cooldown *= .78f; telegraph *= .80f; recovery *= .82f; }
             case ARMORED -> { cooldown *= 1.12f; telegraph *= 1.12f; recovery *= 1.08f; }
             case FERAL -> { cooldown *= .72f; telegraph *= .74f; recovery *= .76f; }
+            case VOLATILE -> { cooldown *= .82f; telegraph *= .86f; recovery *= .84f; }
+            case JUGGERNAUT -> { cooldown *= 1.18f; telegraph *= 1.22f; recovery *= 1.16f; }
+            case RAVAGER -> { cooldown *= .68f; telegraph *= .70f; recovery *= .72f; }
+            case AEGIS -> { cooldown *= 1.06f; telegraph *= 1.08f; recovery *= 1.02f; }
+            case HUNTER -> { cooldown *= .80f; telegraph *= .74f; recovery *= .80f; }
             default -> { }
         }
         attack.setCadence(cooldown, telegraph, recovery);
@@ -177,7 +236,7 @@ public final class Enemy extends ActorState {
         if (!alive || amount <= 0f || !Float.isFinite(amount)) return;
         specialRecoveryDelay = type == Type.SHIELDED ? 3.5f : (type == Type.REGENERATOR ? 2.6f : specialRecoveryDelay);
         float remaining = amount;
-        if (type == Type.SHIELDED && shieldHp > 0f) {
+        if ((type == Type.SHIELDED || variant == Variant.AEGIS) && shieldHp > 0f) {
             float absorbed = Math.min(shieldHp, remaining);
             shieldHp -= absorbed;
             remaining -= absorbed;
@@ -244,7 +303,9 @@ public final class Enemy extends ActorState {
     }
 
     public void addImpulse(float x, float y) {
-        float resistance = variant == Variant.ARMORED || type == Type.SHIELDED ? .34f : 1f;
+        float resistance = variant == Variant.JUGGERNAUT ? .20f
+            : variant == Variant.AEGIS ? .28f
+            : variant == Variant.ARMORED || type == Type.SHIELDED ? .34f : 1f;
         impulse.add(x * resistance, y * resistance);
     }
 
@@ -279,7 +340,9 @@ public final class Enemy extends ActorState {
         if (shockTimer > 0f) shockTimer -= dt;
         attack.updateStun(dt);
         hitFlash = Math.max(0f, hitFlash - dt * 6f);
-        float damping = MathUtils.clamp(1f - dt * (variant == Variant.ARMORED || type == Type.SHIELDED ? 12f : 8f), 0f, 1f);
+        boolean heavy = variant == Variant.ARMORED || variant == Variant.JUGGERNAUT
+            || variant == Variant.AEGIS || type == Type.SHIELDED;
+        float damping = MathUtils.clamp(1f - dt * (heavy ? 12f : 8f), 0f, 1f);
         impulse.scl(damping);
         if (bossPhases != null) {
             bossPhases.update(maxHp <= 0f ? 0f : hp / maxHp);
@@ -329,6 +392,11 @@ public final class Enemy extends ActorState {
             case SWIFT -> .78f;
             case FERAL -> .82f;
             case ARMORED -> 1.12f;
+            case VOLATILE -> .88f;
+            case JUGGERNAUT -> 1.18f;
+            case RAVAGER -> .72f;
+            case AEGIS -> 1.06f;
+            case HUNTER -> .80f;
             default -> 1f;
         };
         cadence *= behavior.tacticCooldownMultiplier();
@@ -353,11 +421,14 @@ public final class Enemy extends ActorState {
         float ny = velocity.y / len;
         BiomeEnemyBehaviorRules.Profile behavior = biomeBehavior();
         if (pendingTactic == Tactic.STRAFE) {
-            float strength = (variant == Variant.SWIFT ? 2.15f : 1.65f) * behavior.strafeStrengthMultiplier();
+            float variantStrength = variant == Variant.SWIFT ? 2.15f : variant == Variant.HUNTER ? 2.35f : 1.65f;
+            float strength = variantStrength * behavior.strafeStrengthMultiplier();
             impulse.add(-ny * strength * tacticSide, nx * strength * tacticSide);
         } else if (pendingTactic == Tactic.CHARGE) {
             float strength = type == Type.ELITE ? 3.6f : (type == Type.SHIELDED ? 2.35f : 2.85f);
             if (variant == Variant.FERAL) strength *= 1.18f;
+            else if (variant == Variant.RAVAGER) strength *= 1.32f;
+            else if (variant == Variant.JUGGERNAUT) strength *= 1.22f;
             strength *= behavior.chargeStrengthMultiplier();
             impulse.add(nx * strength, ny * strength);
             chargeImpactWindow = .26f;
@@ -407,6 +478,11 @@ public final class Enemy extends ActorState {
             if (cycle < .48f) variantMultiplier = 1.28f;
         } else if (variant == Variant.FERAL && maxHp > 0f && hp / maxHp < .42f) {
             variantMultiplier = 1.24f;
+        } else if (variant == Variant.RAVAGER && maxHp > 0f && hp / maxHp < .55f) {
+            variantMultiplier = 1.34f;
+        } else if (variant == Variant.HUNTER) {
+            float cycle = variantTime % 3.8f;
+            if (cycle < .55f) variantMultiplier = 1.20f;
         }
         if (phased()) variantMultiplier *= 1.36f;
         BiomeEnemyBehaviorRules.Profile behavior = biomeBehavior();

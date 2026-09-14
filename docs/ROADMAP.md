@@ -32,11 +32,14 @@ Rewarded placements, no-ads entitlement, starter pack, premium currency, store c
 
 - **5/5 biomes reached:** Quarantine Yard, Cinder Foundry, Null Sector, Cryo Vault and Cryogenic Depths.
 - **12/12+ weapons reached:** the production Arsenal now contains twelve progression-gated weapons.
-- **52/50+ standard upgrades reached by this milestone:** the level-up pool spans offense, survivability, mobility, elemental specialization and hybrid build matrices, with explicit mobile-safe stacking caps.
+- **52/50+ standard upgrades reached:** the level-up pool spans offense, survivability, mobility, elemental specialization and hybrid build matrices, with explicit mobile-safe stacking caps.
+- **6/6 bosses reached:** Alpha, Revenant, Warden, Harvester, Null Archon and Frost Colossus all route through the shared boss framework with phase-specific runtime behavior.
+- **22/20+ gameplay enemy profiles reached:** 8 base non-boss archetypes + 6 authored biome-signature profiles + 8 champion variants. Counts intentionally describe gameplay profiles, not duplicated art actors.
+- **8/8+ champion/elite profiles reached:** Swift, Armored, Feral, Volatile, Juggernaut, Ravager, Aegis and Hunter each carry distinct stat/cadence/pattern tuning.
 - Ability trees already provide five levelled abilities with Tier II/evolution states and multiple cross-tree synergies.
 - Runs already include six deterministic encounter-event archetypes, five standard contracts, three legendary contracts, four rotating endgame mutators and a persistent 0–20 Threat difficulty ladder.
 - The production actor roster remains 24/24 and is not being expanded merely to inflate content counts.
-- **Remaining P5 closure work:** sixth boss integration/QA, explicit audit and expansion of gameplay enemy/elite profiles against the 20+/8+ targets, then content balance/pacing regression.
+- **Remaining P5 closure work:** complete the champion crowd semantic QA and run final content balance/pacing regression across the now-complete count targets.
 
 ## P6 — Launch quality
 Low/medium/high/ultra profiles, device thermals, 60/90/120 FPS validation, ANR/crash targets, accessibility, localization, store assets, closed/open testing, retention and economy tuning.
