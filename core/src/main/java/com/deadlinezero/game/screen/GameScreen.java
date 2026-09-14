@@ -83,7 +83,7 @@ public final class GameScreen extends ScreenAdapter {
         this.game = game;
         this.abilitySystem = new AbilitySystem(player, enemies, pools, this::onEnemyKilled);
         this.spritePass = new CombatSpritePass(game.art);
-        this.polish = new CombatPolishController(game.art, game.accessibility);
+        this.polish = new CombatPolishController(game.art, game.accessibility, game.services.thermal);
         frameRateGovernor.reset(GraphicsSettings.frameRate().target);
         float gearPower = game.profile == null ? 1f : game.profile.aggregatePowerMultiplier();
         player.weapon.damage *= gearPower;
