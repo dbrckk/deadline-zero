@@ -49,8 +49,16 @@ def comparable(base: dict, current: dict) -> tuple[bool, str]:
     return True, "comparable"
 
 def compare(base: dict, current: dict) -> dict:
-    validate(base)
     validate(current)
+    try:
+        validate(base)
+    except ValueError as exc:
+        return {
+            "comparable": False,
+            "reason": f"incompatible baseline: {exc}",
+            "regressions": [],
+            "metrics": {}
+        }
     ok, reason = comparable(base, current)
     result = {
         "comparable": ok,
