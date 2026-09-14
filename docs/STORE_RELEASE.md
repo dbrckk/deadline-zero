@@ -18,6 +18,8 @@ Do not use ranking claims, price claims, fake awards, download-count claims or m
 
 The Android launcher icon is a separate asset contract and lives in `android/src/main/res/`. It must remain visually consistent with the high-resolution Play icon.
 
+The Play Console declaration/review checklist is versioned in `play/store/PLAY_CONSOLE.md`; use it for app access, ads, target audience, content rating, monetization, store presence, testing-track and final rollout review.
+
 ## Listing metadata
 
 The canonical Play Console copy is versioned in `play/store/LISTING.md`. Use the exact app name `Deadline: Zero` unless a deliberate product rename is applied in both source and Play Console.
