@@ -98,8 +98,11 @@ public final class GameScreen extends ScreenAdapter {
         if (performanceEvaluationTimer >= 2f && performanceTelemetry.sampleCount() >= 60) {
             performanceEvaluationTimer = 0f;
             int before = frameRateGovernor.effectiveTarget();
+            int userTarget = GraphicsSettings.frameRate().target;
+            int thermalTarget = game.services.thermal.level().fpsCeiling;
+            int allowedTarget = Math.min(userTarget, thermalTarget);
             int after = frameRateGovernor.update(
-                GraphicsSettings.frameRate().target,
+                allowedTarget,
                 performanceTelemetry.snapshot(before)
             );
             if (after != before) Gdx.graphics.setForegroundFPS(after);
@@ -125,6 +128,10 @@ public final class GameScreen extends ScreenAdapter {
 
     public int effectiveFrameRateTarget() {
         return frameRateGovernor.effectiveTarget();
+    }
+
+    public com.deadlinezero.game.services.ThermalService.Level thermalLevel() {
+        return game.services.thermal.level();
     }
 
     private void update(float dt) {
