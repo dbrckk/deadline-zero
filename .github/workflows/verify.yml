@@ -199,7 +199,9 @@ jobs:
         if: always()
         with:
           name: android-performance-${{ github.run_number }}
-          path: build/android-performance/performance-probe.json
+          path: |
+            build/android-performance/performance-probe.json
+            build/android-performance/performance-stress.json
           if-no-files-found: warn
           retention-days: 30
 
