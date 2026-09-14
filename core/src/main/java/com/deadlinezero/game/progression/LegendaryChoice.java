@@ -63,6 +63,9 @@ public enum LegendaryChoice {
         this.minimumLevel = minimumLevel;
     }
 
+    public String titleKey() { return "legendary." + name().toLowerCase(java.util.Locale.ROOT) + ".title"; }
+    public String descriptionKey() { return "legendary." + name().toLowerCase(java.util.Locale.ROOT) + ".description"; }
+
     public final boolean eligible(Player player) { return player != null && player.level >= minimumLevel && available(player); }
     private static boolean weapon(Player player, String id) {
         return player != null && player.weapon != null && player.weapon.definition != null && id.equals(player.weapon.definition.id);
