@@ -26,7 +26,7 @@ final class SpatialHashTest {
         hash.rebuild(enemies);
 
         assertSame(fartherSameCell, hash.nearest(0f, 0f));
-        assertSame(closestNextCell, hash.nearest(2.0f, 0f));
+        assertSame(closestNextCell, hash.nearest(2.15f, 0f));
     }
 
     @Test void nearestSkipsDeadEnemies() {
