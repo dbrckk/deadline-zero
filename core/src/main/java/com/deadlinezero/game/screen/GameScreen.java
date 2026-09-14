@@ -787,10 +787,10 @@ public final class GameScreen extends ScreenAdapter {
             float x = w * ((i + 1f) / (legendaryChoiceCount + 1f));
             font.getData().setScale(.86f);
             font.setColor(VisualTheme.GOLD);
-            font.draw(batch, f("combat.legendaryCard", i + 1, choice.title), x - 145f, h * .53f, 290f, Align.center, false);
+            font.draw(batch, f("combat.legendaryCard", i + 1, t(choice.titleKey())), x - 145f, h * .53f, 290f, Align.center, false);
             font.getData().setScale(.66f);
             font.setColor(VisualTheme.TEXT);
-            font.draw(batch, choice.description, x - 145f, h * .44f, 290f, Align.center, true);
+            font.draw(batch, t(choice.descriptionKey()), x - 145f, h * .44f, 290f, Align.center, true);
             font.setColor(VisualTheme.MUTED);
             font.draw(batch, t("combat.legendaryFooter"), x - 145f, h * .35f, 290f, Align.center, false);
         }
@@ -809,7 +809,7 @@ public final class GameScreen extends ScreenAdapter {
 
             font.getData().setScale(1.18f);
             font.setColor(VisualTheme.upgradeRarity(choices[i].rarity));
-            font.draw(batch, f("combat.upgradeCard", i + 1, choices[i].title),
+            font.draw(batch, f("combat.upgradeCard", i + 1, t(choices[i].titleKey())),
                 left + 12f, h * .565f, cardWidth - 24f, Align.center, true);
 
             font.getData().setScale(.92f);
@@ -819,7 +819,7 @@ public final class GameScreen extends ScreenAdapter {
 
             font.getData().setScale(.96f);
             font.setColor(Color.WHITE);
-            font.draw(batch, choices[i].description,
+            font.draw(batch, t(choices[i].descriptionKey()),
                 left + 18f, h * .435f, cardWidth - 36f, Align.center, true);
         }
 
