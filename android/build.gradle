@@ -152,6 +152,25 @@ tasks.register('verifyProductionAssets') {
     }
 }
 
+tasks.register('verifyPlayReleaseNotes') {
+    group = 'verification'
+    description = 'Requires versioned Google Play release notes for the exact appVersion.'
+    doLast {
+        File notes = new File(playStoreDir, 'RELEASE_NOTES.md')
+        if (!notes.isFile()) throw new GradleException('Play release blocked: play/store/RELEASE_NOTES.md is missing.')
+        String text = notes.getText('UTF-8')
+        String marker = '## ' + appVersion
+        int start = text.indexOf(marker)
+        if (start < 0) throw new GradleException('Play release notes missing section for appVersion ' + appVersion)
+        start += marker.length()
+        int end = text.indexOf('\n## ', start)
+        if (end < 0) end = text.length()
+        String body = text.substring(start, end).trim()
+        if (body.isBlank()) throw new GradleException('Play release notes are empty for appVersion ' + appVersion)
+        if (body.codePointCount(0, body.length()) > 500) throw new GradleException('Play release notes exceed 500 characters for appVersion ' + appVersion)
+    }
+}
+
 tasks.register('verifyPlayConsoleContract') {
     group = 'verification'
     description = 'Requires the repository-side Play Console declaration checklist for production release.'
@@ -257,7 +276,7 @@ tasks.register('verifyPlayStoreAssets') {
 tasks.register('verifyPlayReleaseConfig') {
     group = 'verification'
     description = 'Fails unless the build is configured as a publishable Google Play release.'
-    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing', 'verifyPlayDataSafetyContract', 'verifyPlayConsoleContract'
+    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing', 'verifyPlayDataSafetyContract', 'verifyPlayConsoleContract', 'verifyPlayReleaseNotes'
     doLast {
         boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
         if (usingTestIds) {
