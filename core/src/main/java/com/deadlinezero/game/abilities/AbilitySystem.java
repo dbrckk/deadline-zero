@@ -1,7 +1,5 @@
 package com.deadlinezero.game.abilities;
 
-import java.util.WeakHashMap;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -38,7 +36,7 @@ public final class AbilitySystem {
     private final SpatialHash spatial;
     private final AbilityRuntime runtime = new AbilityRuntime();
     private final LeaperRuntime leapers = LeaperSharedRuntime.get();
-    private final WeakHashMap<Enemy, Boolean> leaperDecisions = new WeakHashMap<>();
+    private final Array<Enemy> activeLeapers = new Array<>(false, 32);
     private final Array<Enemy> spatialCandidates = new Array<>(false, 32);
     private final float abilityPower;
 
@@ -54,6 +52,7 @@ public final class AbilitySystem {
         this.spatial = spatial;
         this.listener = listener;
         this.abilityPower = RunLoadoutContext.abilityPowerMultiplier();
+        for (Enemy enemy : enemies) onEnemySpawned(enemy);
     }
 
     public AbilityRuntime runtime() { return runtime; }
@@ -69,7 +68,14 @@ public final class AbilitySystem {
         updateOrbital();
     }
 
-    private void updateLeapers(float dt) {
+    public void onEnemySpawned(Enemy enemy) {
+        if (enemy == null || enemy.type != Enemy.Type.RUNNER) return;
+        if (MathUtils.random() >= currentLeaperChance()) return;
+        leapers.register(enemy);
+        activeLeapers.add(enemy);
+    }
+
+    private float currentLeaperChance() {
         int stage = RunStageContext.stage();
         float arrival = Math.max(1f, StageMissionRules.bossArrivalSeconds(stage));
         float progress = MathUtils.clamp(RunMissionRuntime.elapsed() / arrival, 0f, 1f);
@@ -77,18 +83,16 @@ public final class AbilitySystem {
             : progress < .52f ? WaveDirector.PressureBand.BUILD
             : progress < .80f ? WaveDirector.PressureBand.ASSAULT
             : WaveDirector.PressureBand.CRISIS;
-        float chance = LeaperSpawnRules.share(stage, band);
+        return LeaperSpawnRules.share(stage, band);
+    }
 
-        for (Enemy e : enemies) {
-            if (!e.alive || e.type != Enemy.Type.RUNNER) continue;
-            Boolean selected = leaperDecisions.get(e);
-            if (selected == null) {
-                selected = MathUtils.random() < chance;
-                leaperDecisions.put(e, selected);
-                if (selected) leapers.register(e);
+    private void updateLeapers(float dt) {
+        for (int i = activeLeapers.size - 1; i >= 0; i--) {
+            Enemy e = activeLeapers.get(i);
+            if (!e.alive) {
+                activeLeapers.removeIndex(i);
+                continue;
             }
-            if (!selected) continue;
-
             float dx = player.position.x - e.position.x;
             float dy = player.position.y - e.position.y;
             float distance2 = dx * dx + dy * dy;
