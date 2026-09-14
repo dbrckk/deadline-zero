@@ -152,6 +152,19 @@ tasks.register('verifyProductionAssets') {
     }
 }
 
+tasks.register('verifyPlayConsoleContract') {
+    group = 'verification'
+    description = 'Requires the repository-side Play Console declaration checklist for production release.'
+    doLast {
+        File contract = new File(playStoreDir, 'PLAY_CONSOLE.md')
+        if (!contract.isFile()) throw new GradleException('Play release blocked: play/store/PLAY_CONSOLE.md is missing.')
+        String text = contract.getText('UTF-8')
+        ['App access', 'Ads', 'Target audience and content', 'Content rating', 'Data Safety and privacy', 'Monetization', 'Store presence', 'Release and device coverage', 'Final rollout gate'].each { required ->
+            if (!text.contains('## ' + required)) throw new GradleException('Play Console contract missing required section: ' + required)
+        }
+    }
+}
+
 tasks.register('verifyPlayDataSafetyContract') {
     group = 'verification'
     description = 'Requires the repository-side Play Data Safety review contract for production release.'
@@ -244,7 +257,7 @@ tasks.register('verifyPlayStoreAssets') {
 tasks.register('verifyPlayReleaseConfig') {
     group = 'verification'
     description = 'Fails unless the build is configured as a publishable Google Play release.'
-    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing', 'verifyPlayDataSafetyContract'
+    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing', 'verifyPlayDataSafetyContract', 'verifyPlayConsoleContract'
     doLast {
         boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
         if (usingTestIds) {
