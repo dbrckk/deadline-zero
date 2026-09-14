@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 final class NullWardSupportTest {
     @Test void pulseHealsAndBuffsNearbyNonBossAlly() {
         RunStageContext.begin(20, 77, 0);
-        Enemy ward = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8);
-        Enemy ally = new Enemy(Enemy.Type.RUNNER, 1f, 0f, 100f, 3f, .35f, 10f, 8);
+        Enemy ward = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8, false);
+        Enemy ally = new Enemy(Enemy.Type.RUNNER, 1f, 0f, 100f, 3f, .35f, 10f, 8, false);
         ally.damage(50f);
         float hpBefore = ally.hp;
         float speedBefore = ally.effectiveSpeed();
@@ -25,8 +25,8 @@ final class NullWardSupportTest {
 
     @Test void simultaneousWardsCannotStackBurstHealingOnOneTarget() {
         RunStageContext.begin(20, 79, 0);
-        Enemy wardA = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8);
-        Enemy wardB = new Enemy(Enemy.Type.REGENERATOR, .5f, 0f, 100f, 2f, .45f, 10f, 8);
+        Enemy wardA = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8, false);
+        Enemy wardB = new Enemy(Enemy.Type.REGENERATOR, .5f, 0f, 100f, 2f, .45f, 10f, 8, false);
         Enemy ally = new Enemy(Enemy.Type.RUNNER, 1f, 0f, 100f, 3f, .35f, 10f, 8);
         ally.damage(60f);
         float before = ally.hp;
@@ -43,8 +43,8 @@ final class NullWardSupportTest {
     @Test void pulseIgnoresBossesAndDistantEnemies() {
         RunStageContext.begin(20, 78, 0);
         Enemy ward = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8);
-        Enemy boss = new Enemy(Enemy.Type.BOSS, 1f, 0f, 500f, 1f, 1.2f, 20f, 100);
-        Enemy distant = new Enemy(Enemy.Type.RUNNER, Enemy.nullWardPulseRadius() + 2f, 0f, 100f, 3f, .35f, 10f, 8);
+        Enemy boss = new Enemy(Enemy.Type.BOSS, 1f, 0f, 500f, 1f, 1.2f, 20f, 100, false);
+        Enemy distant = new Enemy(Enemy.Type.RUNNER, Enemy.nullWardPulseRadius() + 2f, 0f, 100f, 3f, .35f, 10f, 8, false);
         boss.damage(100f);
         distant.damage(40f);
         float bossHp = boss.hp;
