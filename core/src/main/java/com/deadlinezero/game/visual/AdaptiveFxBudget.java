@@ -2,6 +2,7 @@ package com.deadlinezero.game.visual;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.deadlinezero.game.config.GraphicsSettings;
 
 /** Smoothly adapts optional visual density to sustained frame rate without changing gameplay. */
 public final class AdaptiveFxBudget {
@@ -33,7 +34,7 @@ public final class AdaptiveFxBudget {
         quality = MathUtils.lerp(quality, target, qualityBlend);
     }
 
-    public float quality() { return MathUtils.clamp(quality, .40f, 1f); }
+    public float quality() { return Math.min(MathUtils.clamp(quality, .40f, 1f), GraphicsSettings.fxCeiling()); }
     public boolean allowHeavyFx() { return quality() >= .72f; }
     public boolean allowExtraFx() { return quality() >= .90f; }
     public int geometrySegments(int high, int low) {
