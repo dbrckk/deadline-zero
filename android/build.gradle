@@ -152,6 +152,22 @@ tasks.register('verifyProductionAssets') {
     }
 }
 
+tasks.register('verifyLocalizationReleaseContract') {
+    group = 'verification'
+    description = 'Requires the localization readiness contract for production release.'
+    doLast {
+        File contract = new File(playStoreDir, 'LOCALIZATION.md')
+        if (!contract.isFile()) throw new GradleException('Play release blocked: play/store/LOCALIZATION.md is missing.')
+        String text = contract.getText('UTF-8')
+        ['Current status', 'Minimum localization architecture', 'Release QA', 'Release rule'].each { required ->
+            if (!text.contains('## ' + required)) throw new GradleException('Localization contract missing required section: ' + required)
+        }
+        if (!text.contains('English-only')) {
+            throw new GradleException('Localization contract must explicitly state the current English-only release rule.')
+        }
+    }
+}
+
 tasks.register('verifyAccessibilityReleaseContract') {
     group = 'verification'
     description = 'Requires the accessibility/comfort release contract for production.'
@@ -307,7 +323,7 @@ tasks.register('verifyPlayStoreAssets') {
 tasks.register('verifyPlayReleaseConfig') {
     group = 'verification'
     description = 'Fails unless the build is configured as a publishable Google Play release.'
-    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing', 'verifyPlayDataSafetyContract', 'verifyPlayConsoleContract', 'verifyPlayReleaseNotes', 'verifyPlayReleaseReadinessContract', 'verifyAccessibilityReleaseContract'
+    dependsOn 'verifyProductionAssets', 'verifyPlayStoreAssets', 'verifyPlayStoreListing', 'verifyPlayDataSafetyContract', 'verifyPlayConsoleContract', 'verifyPlayReleaseNotes', 'verifyPlayReleaseReadinessContract', 'verifyAccessibilityReleaseContract', 'verifyLocalizationReleaseContract'
     doLast {
         boolean usingTestIds = admobAppId == testAdmobAppId || admobRewardedId == testRewardedId
         if (usingTestIds) {
