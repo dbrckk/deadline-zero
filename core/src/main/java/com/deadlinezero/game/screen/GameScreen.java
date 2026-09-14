@@ -33,6 +33,8 @@ import com.deadlinezero.game.fx.DamageNumber;
 import com.deadlinezero.game.fx.ImpactFx;
 import com.deadlinezero.game.input.VirtualStick;
 import com.deadlinezero.game.meta.RunStageContext;
+import com.deadlinezero.game.config.GraphicsSettings;
+import com.deadlinezero.game.perf.PerformanceTelemetry;
 import com.deadlinezero.game.progression.LegendaryChoice;
 import com.deadlinezero.game.progression.LegendarySelector;
 import com.deadlinezero.game.progression.Upgrade;
@@ -66,6 +68,7 @@ public final class GameScreen extends ScreenAdapter {
     private final AbilitySystem abilitySystem;
     private final CombatHudRenderer combatHud = new CombatHudRenderer();
     private final WorldFxRenderer worldFx = new WorldFxRenderer();
+    private final PerformanceTelemetry performanceTelemetry = new PerformanceTelemetry();
     private final CombatSpritePass spritePass;
     private final CombatPolishController polish;
     private float accumulator, fireTimer, contactTimer, cameraShake, visualTime;
@@ -87,6 +90,7 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     @Override public void render(float delta) {
+        performanceTelemetry.record(delta, GraphicsSettings.frameRate().target);
         delta = Math.min(delta, .05f);
         visualTime += delta;
         combatHud.update(delta);
@@ -100,6 +104,10 @@ public final class GameScreen extends ScreenAdapter {
         }
         draw();
         handleOverlayInput();
+    }
+
+    public PerformanceTelemetry.Snapshot performanceSnapshot() {
+        return performanceTelemetry.snapshot(GraphicsSettings.frameRate().target);
     }
 
     private void update(float dt) {
