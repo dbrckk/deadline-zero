@@ -321,6 +321,9 @@ public enum Upgrade {
         this.rarity = rarity;
     }
 
+    public String titleKey() { return "upgrade." + name().toLowerCase(java.util.Locale.ROOT) + ".title"; }
+    public String descriptionKey() { return "upgrade." + name().toLowerCase(java.util.Locale.ROOT) + ".description"; }
+
     public abstract void apply(Player player);
 
     static float damage(float value) { return Math.max(.1f, Math.min(MAX_DAMAGE, value)); }
