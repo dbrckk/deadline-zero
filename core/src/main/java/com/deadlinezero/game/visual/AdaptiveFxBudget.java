@@ -10,9 +10,11 @@ public final class AdaptiveFxBudget {
     private float quality = 1f;
     private float warmup = 1.5f;
     private float externalCeiling = 1f;
+    private float externalCeilingTarget = 1f;
 
     public void update(float dt) {
         dt = Math.max(0f, Math.min(.1f, dt));
+        advanceExternalCeiling(dt);
         if (warmup > 0f) {
             warmup = Math.max(0f, warmup - dt);
             return;
@@ -36,7 +38,16 @@ public final class AdaptiveFxBudget {
     }
 
     public void setExternalCeiling(float ceiling) {
-        externalCeiling = MathUtils.clamp(ceiling, .40f, 1f);
+        externalCeilingTarget = MathUtils.clamp(ceiling, .40f, 1f);
+        if (externalCeilingTarget < externalCeiling) externalCeiling = externalCeilingTarget;
+    }
+
+    void advanceExternalCeiling(float dt) {
+        if (externalCeiling >= externalCeilingTarget) return;
+        float safeDt = MathUtils.clamp(dt, 0f, .1f);
+        float blend = 1f - (float)Math.exp(-safeDt * .45f);
+        externalCeiling = MathUtils.lerp(externalCeiling, externalCeilingTarget, blend);
+        if (Math.abs(externalCeilingTarget - externalCeiling) < .002f) externalCeiling = externalCeilingTarget;
     }
 
     public float quality() {
