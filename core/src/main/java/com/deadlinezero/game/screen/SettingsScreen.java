@@ -54,26 +54,28 @@ public final class SettingsScreen extends ScreenAdapter {
         shapes.end();
 
         String[] labels = {
-            "Screen shake", "Shake strength", "Hit stop", "Damage flash", "High contrast telegraphs",
-            "Reduce flashes", "Haptics", "Reduced motion", "UI scale", "Master volume", "SFX volume", "Music volume",
-            "Graphics quality", "Frame rate", "Privacy choices", "Privacy policy", "Cloud save"
+            t("settings.screenShake"), t("settings.shakeStrength"), t("settings.hitStop"), t("settings.damageFlash"),
+            t("settings.highContrastTelegraphs"), t("settings.reduceFlashes"), t("settings.haptics"),
+            t("settings.reducedMotion"), t("settings.uiScale"), t("settings.masterVolume"), t("settings.sfxVolume"),
+            t("settings.musicVolume"), t("settings.graphicsQuality"), t("settings.frameRate"),
+            t("settings.privacyChoices"), t("settings.privacyPolicy"), t("settings.cloudSave")
         };
         String[] values = {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
             onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), onOff(s.reducedMotion), pct(s.uiScale),
             pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
             GraphicsSettings.active().name(), GraphicsSettings.frameRate().label,
-            privacyRequired ? "OPEN" : "NOT REQUIRED",
-            policyAvailable ? "OPEN" : "UNAVAILABLE",
-            game.services.cloudSave.available() ? "OPEN" : "NOT CONFIGURED"
+            privacyRequired ? t("common.open") : t("common.notRequired"),
+            policyAvailable ? t("common.open") : t("common.unavailable"),
+            game.services.cloudSave.available() ? t("common.open") : t("common.notConfigured")
         };
 
         batch.begin();
         font.getData().setScale(1.45f); font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "SETTINGS", 0, h * .91f, w, Align.center, false);
+        font.draw(batch, t("settings.title"), 0, h * .91f, w, Align.center, false);
         font.getData().setScale(.52f);
         font.setColor(VisualTheme.MUTED);
-        font.draw(batch, "TAP TO ADJUST  •  REDUCED MOTION IS A ONE-SWITCH COMFORT PRESET", 0, h * .855f, w, Align.center, false);
+        font.draw(batch, t("settings.subtitle"), 0, h * .855f, w, Align.center, false);
 
         for (int i = 0; i < labels.length; i++) {
             float y = startY - i * step;
@@ -233,7 +235,8 @@ public final class SettingsScreen extends ScreenAdapter {
         game.showMenu();
     }
 
-    private static String onOff(boolean value) { return value ? "ON" : "OFF"; }
+    private String onOff(boolean value) { return value ? t("common.on") : t("common.off"); }
+    private String t(String key) { return game.i18n.text(key); }
     private static String pct(float value) { return Math.round(value * 100f) + "%"; }
     private static float clamp(float v, float min, float max) { return Math.max(min, Math.min(max, v)); }
 
