@@ -73,6 +73,6 @@ public final class EnemyBiomeElementResistanceTest {
     }
 
     private Enemy enemy(Enemy.Type type) {
-        return new Enemy(type, 0f, 0f, 1000f, 1f, .5f, 10f, 1);
+        return new Enemy(type, 0f, 0f, 1000f, 1f, .5f, 10f, 1, false);
     }
 }
