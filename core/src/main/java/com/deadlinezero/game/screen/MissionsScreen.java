@@ -41,13 +41,13 @@ public final class MissionsScreen extends ScreenAdapter {
         batch.begin();
         font.getData().setScale(2.05f);
         font.setColor(Color.WHITE);
-        font.draw(batch, "MISSIONS", 0, h - 44f, w, Align.center, false);
+        font.draw(batch, t("missions.title"), 0, h - 44f, w, Align.center, false);
 
         font.getData().setScale(1.42f);
         font.setColor(Color.GOLD);
-        font.draw(batch, "DAILY OPERATIONS", leftX, h - 118f);
+        font.draw(batch, t("missions.daily"), leftX, h - 118f);
         font.setColor(new Color(.72f, .58f, 1f, 1f));
-        font.draw(batch, "WEEKLY OPERATIONS", rightX, h - 118f);
+        font.draw(batch, t("missions.weekly"), rightX, h - 118f);
 
         font.getData().setScale(1.10f);
         font.setColor(Color.GOLD);
@@ -55,31 +55,31 @@ public final class MissionsScreen extends ScreenAdapter {
             + (p.daily.loginClaimed ? "CLAIMED" : "[L] CLAIM"), leftX, h - 158f);
 
         font.getData().setScale(1.16f);
-        drawMission("[1] Eliminate 100 hostiles", p.daily.killsToday, 100,
+        drawMission(t("missions.dailyKills"), p.daily.killsToday, 100,
             p.daily.killMissionClaimed, leftX, h - 210f);
-        drawMission("[2] Complete 3 runs", p.daily.runsToday, 3,
+        drawMission(t("missions.dailyRuns"), p.daily.runsToday, 3,
             p.daily.runMissionClaimed, leftX, h - 258f);
-        drawMission("[3] Defeat 1 boss", p.daily.bossesToday, 1,
+        drawMission(t("missions.dailyBoss"), p.daily.bossesToday, 1,
             p.daily.bossMissionClaimed, leftX, h - 306f);
 
-        drawMission("[4] Eliminate " + WeeklyService.KILL_TARGET + " hostiles",
+        drawMission(f("missions.weeklyKills", WeeklyService.KILL_TARGET),
             p.weekly.kills, WeeklyService.KILL_TARGET, p.weekly.killMissionClaimed, rightX, h - 210f);
-        drawMission("[5] Complete " + WeeklyService.RUN_TARGET + " runs",
+        drawMission(f("missions.weeklyRuns", WeeklyService.RUN_TARGET),
             p.weekly.runs, WeeklyService.RUN_TARGET, p.weekly.runMissionClaimed, rightX, h - 258f);
-        drawMission("[6] Defeat " + WeeklyService.BOSS_TARGET + " bosses",
+        drawMission(f("missions.weeklyBoss", WeeklyService.BOSS_TARGET),
             p.weekly.bosses, WeeklyService.BOSS_TARGET, p.weekly.bossMissionClaimed, rightX, h - 306f);
 
         font.getData().setScale(.96f);
         font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, "350 Credits  •  450 Credits  •  3 Gems", leftX, h - 354f, columnWidth, Align.left, false);
-        font.draw(batch, "2500 Credits  •  3500 Credits  •  12 Gems", rightX, h - 354f, columnWidth, Align.left, false);
+        font.draw(batch, t("missions.dailyRewards"), leftX, h - 354f, columnWidth, Align.left, false);
+        font.draw(batch, t("missions.weeklyRewards"), rightX, h - 354f, columnWidth, Align.left, false);
 
         drawMastery(p, w, h, margin);
         font.getData().setScale(.96f);
         font.setColor(Color.LIGHT_GRAY);
         font.setColor(Color.GOLD);
         font.getData().setScale(.92f);
-        font.draw(batch, "ACHIEVEMENTS", rightX, h - 438f);
+        font.draw(batch, t("missions.achievements"), rightX, h - 438f);
         font.getData().setScale(.94f);
         int achievementY = (int) (h - 482f);
         int key = 7;
@@ -87,8 +87,8 @@ public final class MissionsScreen extends ScreenAdapter {
             boolean unlocked = AchievementService.unlocked(p, achievement);
             boolean claimed = p.achievements.claimed(achievement);
             font.setColor(claimed ? Color.GRAY : unlocked ? Color.GOLD : Color.LIGHT_GRAY);
-            String state = claimed ? "CLAIMED" : unlocked ? "[" + key + "] CLAIM" : "LOCKED";
-            font.draw(batch, achievement.title + "  •  " + achievement.description + "  •  " + state,
+            String state = claimed ? t("missions.claimed") : unlocked ? f("missions.achievementClaim", key) : t("missions.locked");
+            font.draw(batch, f("missions.achievementLine", achievement.title, achievement.description, state),
                 rightX, achievementY, columnWidth, Align.left, false);
             achievementY -= 42;
             key++;
@@ -96,7 +96,7 @@ public final class MissionsScreen extends ScreenAdapter {
 
         font.getData().setScale(.62f);
         font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, "ESC / BACK  •  RETURN TO BASE", margin, 44f);
+        font.draw(batch, t("missions.footer"), margin, 44f);
         batch.end();
     }
 
@@ -111,32 +111,34 @@ public final class MissionsScreen extends ScreenAdapter {
         float y = h - 438f;
         font.setColor(Color.CYAN);
         font.getData().setScale(1.28f);
-        font.draw(batch, "PERMANENT MASTERY", margin, y);
+        font.draw(batch, t("missions.mastery"), margin, y);
 
         font.getData().setScale(1.05f);
         font.setColor(Color.WHITE);
-        font.draw(batch, weapon.displayName + "  •  RANK " + weaponRank + "/" + MasteryProgress.MAX_RANK
-            + "  •  " + MasteryProgress.rankTitle(weaponRank) + "  •  " + nextLabel(weaponNext),
+        font.draw(batch, f("missions.masteryLine", weapon.displayName, weaponRank, MasteryProgress.MAX_RANK,
+            MasteryProgress.rankTitle(weaponRank), nextLabel(weaponNext)),
             margin, y - 52f, w - margin * 2f, Align.left, false);
 
         font.setColor(new Color(.72f, .58f, 1f, 1f));
-        font.draw(batch, biome.label + "  •  RANK " + biomeRank + "/" + MasteryProgress.MAX_RANK
-            + "  •  " + MasteryProgress.rankTitle(biomeRank) + "  •  " + nextLabel(biomeNext),
+        font.draw(batch, f("missions.masteryLine", biome.label, biomeRank, MasteryProgress.MAX_RANK,
+            MasteryProgress.rankTitle(biomeRank), nextLabel(biomeNext)),
             margin, y - 100f, w - margin * 2f, Align.left, false);
 
         font.getData().setScale(.90f);
         font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, "Victories persist forever  •  rank-ups award Credits + Gems  •  titles are cosmetic",
+        font.draw(batch, t("missions.masteryInfo"),
             margin, y - 146f, w - margin * 2f, Align.left, false);
     }
 
-    private static String nextLabel(int winsNeeded) {
-        return winsNeeded <= 0 ? "MAX" : winsNeeded + (winsNeeded == 1 ? " WIN TO NEXT" : " WINS TO NEXT");
+    private String nextLabel(int winsNeeded) {
+        if (winsNeeded <= 0) return t("missions.nextMax");
+        return winsNeeded == 1 ? f("missions.nextOne", winsNeeded) : f("missions.nextMany", winsNeeded);
     }
 
     private void drawMission(String title, int progress, int target, boolean claimed, float x, float y) {
         font.setColor(claimed ? Color.LIME : Color.WHITE);
-        font.draw(batch, title + "   " + Math.min(progress, target) + "/" + target + (claimed ? "  CLAIMED" : ""), x, y);
+        font.draw(batch, f("missions.progress", title, Math.min(progress, target), target,
+            claimed ? t("missions.progressClaimed") : ""), x, y);
     }
 
     private void handleInput() {
@@ -157,6 +159,9 @@ public final class MissionsScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.T)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.ACCOUNT_TEN);
         if (changed) game.saveProfile();
     }
+
+    private String t(String key) { return game.i18n.text(key); }
+    private String f(String key, Object... args) { return game.i18n.format(key, args); }
 
     @Override public void dispose() { batch.dispose(); font.dispose(); }
 }
