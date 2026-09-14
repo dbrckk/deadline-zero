@@ -52,6 +52,12 @@ import com.deadlinezero.game.world.SpatialHash;
 import com.deadlinezero.game.world.WaveDirector;
 
 public final class GameScreen extends ScreenAdapter {
+    private static final Color ENEMY_RUNNER = new Color(.95f, .35f, .25f, 1f);
+    private static final Color ENEMY_BRUTE = new Color(.58f, .10f, .15f, 1f);
+    private static final Color ENEMY_RANGED = new Color(.95f, .62f, .16f, 1f);
+    private static final Color ENEMY_ELITE = new Color(.76f, .18f, .86f, 1f);
+    private static final Color ENEMY_DEFAULT = new Color(.30f, .70f, .39f, 1f);
+
     private final DeadlineZeroGame game;
     private final OrthographicCamera cam = new OrthographicCamera(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
     private final ShapeRenderer shapes = new ShapeRenderer();
@@ -669,12 +675,12 @@ public final class GameScreen extends ScreenAdapter {
     private void drawEnemy(Enemy e, boolean drawBody) {
         if (!e.alive) return;
         Color c = switch (e.type) {
-            case RUNNER -> new Color(.95f, .35f, .25f, 1f);
-            case BRUTE -> new Color(.58f, .10f, .15f, 1f);
-            case RANGED -> new Color(.95f, .62f, .16f, 1f);
-            case ELITE -> new Color(.76f, .18f, .86f, 1f);
+            case RUNNER -> ENEMY_RUNNER;
+            case BRUTE -> ENEMY_BRUTE;
+            case RANGED -> ENEMY_RANGED;
+            case ELITE -> ENEMY_ELITE;
             case BOSS -> VisualTheme.RED;
-            default -> new Color(.30f, .70f, .39f, 1f);
+            default -> ENEMY_DEFAULT;
         };
         float speedRatio = MathUtils.clamp(e.velocity.len() / Math.max(.01f, e.speed), 0f, 1.5f);
         float gait = MathUtils.sin(visualTime * (5f + speedRatio * 3f) + e.position.x * .7f) * .06f * speedRatio;
