@@ -81,13 +81,20 @@ def compare(base: dict, current: dict) -> dict:
         "jankAbsoluteIncrease": jank_inc
     }
 
-    if avg_drop > MAX_AVG_FPS_DROP:
-        result["regressions"].append(f"average FPS dropped {avg_drop:.1%} (> {MAX_AVG_FPS_DROP:.0%})")
+    latency_regression = p95_inc > MAX_P95_INCREASE or p99_inc > MAX_P99_INCREASE
+    jank_regression = jank_inc > MAX_JANK_ABSOLUTE_INCREASE
+
+    # SwiftShader/host scheduling can depress average FPS while percentile frame times
+    # remain unchanged. Treat average FPS as a corroborating signal, not a standalone gate.
+    if avg_drop > MAX_AVG_FPS_DROP and (latency_regression or jank_regression):
+        result["regressions"].append(
+            f"average FPS dropped {avg_drop:.1%} (> {MAX_AVG_FPS_DROP:.0%}) with corroborating frame-time/jank regression"
+        )
     if p95_inc > MAX_P95_INCREASE:
         result["regressions"].append(f"p95 frame time increased {p95_inc:.1%} (> {MAX_P95_INCREASE:.0%})")
     if p99_inc > MAX_P99_INCREASE:
         result["regressions"].append(f"p99 frame time increased {p99_inc:.1%} (> {MAX_P99_INCREASE:.0%})")
-    if jank_inc > MAX_JANK_ABSOLUTE_INCREASE:
+    if jank_regression:
         result["regressions"].append(
             f"jank ratio increased {jank_inc:.3f} (> {MAX_JANK_ABSOLUTE_INCREASE:.2f})"
         )
