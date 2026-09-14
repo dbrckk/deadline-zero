@@ -34,6 +34,10 @@ Complete the Data safety form from the behavior of the exact production build, i
 
 Do not claim that the app collects or shares no data merely because the game code has no account system. Third-party SDK behavior is part of the declaration.
 
+## Release evidence
+
+The strict Play bundle task writes `android/build/play-release/release-evidence.json` after validating the release configuration. Archive this file with the exact AAB submitted to Play Console so version, SDK targets, signing/configuration gates and repository-side Store contracts can be traced to the submitted build.
+
 ## Final Play Console checks
 
 Before production rollout, verify the uploaded AAB package name is `com.deadlinezero.game`, version code is strictly newer than every prior Play artifact, the four Billing product IDs match the source catalog, production AdMob IDs are active, the content rating and target audience are accurate, ads are declared, the privacy policy is public without authentication, and the Data safety answers match the shipping SDK configuration.

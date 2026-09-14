@@ -284,10 +284,39 @@ tasks.register('verifyPlayReleaseConfig') {
     }
 }
 
+tasks.register('writePlayReleaseEvidence') {
+    group = 'verification'
+    description = 'Writes a machine-readable manifest describing the exact Play release configuration.'
+    dependsOn 'verifyPlayReleaseConfig'
+    doLast {
+        File outDir = file("$buildDir/play-release")
+        outDir.mkdirs()
+        File evidence = new File(outDir, 'release-evidence.json')
+        def payload = [
+            applicationId: android.defaultConfig.applicationId,
+            versionCode: appVersionCode,
+            versionName: appVersion,
+            minSdk: android.defaultConfig.minSdk.apiLevel,
+            targetSdk: android.defaultConfig.targetSdk.apiLevel,
+            compileSdk: android.compileSdk,
+            playGamesConfigured: validPlayGamesAppId(playGamesAppId),
+            privacyPolicyConfigured: validPrivacyPolicyUrl(privacyPolicyUrl),
+            productionAdsConfigured: admobAppId != testAdmobAppId && admobRewardedId != testRewardedId,
+            releaseSigningConfigured: hasReleaseSigning,
+            listingContract: new File(playStoreDir, 'LISTING.md').isFile(),
+            dataSafetyContract: new File(playStoreDir, 'DATA_SAFETY.md').isFile(),
+            playConsoleContract: new File(playStoreDir, 'PLAY_CONSOLE.md').isFile(),
+            generatedAtUtc: java.time.Instant.now().toString()
+        ]
+        evidence.setText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(payload)) + '\n', 'UTF-8')
+        logger.lifecycle('Play release evidence: ' + evidence)
+    }
+}
+
 tasks.register('bundlePlayRelease') {
     group = 'build'
     description = 'Runs core tests, release lint, production and Play Store validation, then builds the signed Google Play AAB.'
-    dependsOn ':core:test', 'lintRelease', 'verifyPlayReleaseConfig', 'bundleRelease'
+    dependsOn ':core:test', 'lintRelease', 'writePlayReleaseEvidence', 'bundleRelease'
 }
 
 tasks.configureEach { task ->
