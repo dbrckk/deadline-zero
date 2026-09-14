@@ -37,6 +37,8 @@ public final class CombatPolishController {
     private final DeathFxRenderer deaths;
     private final AccessibilitySettings settings;
     private final AdaptiveFxBudget fxBudget = new AdaptiveFxBudget();
+    private final Array<Enemy> leaperRenderEnemies = new Array<>(false, 32);
+    private final Array<Enemy> bossRenderEnemies = new Array<>(false, 8);
     private final ThermalService thermal;
     private Enemy phaseBoss;
     private float phaseFxStarted;
@@ -138,10 +140,11 @@ public final class CombatPolishController {
         updateAndDrawSingularityImpacts(shapes, pools, time);
         deaths.drawFallback(shapes, pools.deathFx);
         legendaryFx.render(shapes, player, time, fxBudget.quality());
-        drawLeaperTelegraphs(shapes, enemies, time);
-        drawBossPhaseTransitions(shapes, enemies, time);
-        drawRevenantIdentity(shapes, enemies, time);
-        drawWardenIdentity(shapes, enemies, time);
+        collectRenderEnemySubsets(enemies);
+        drawLeaperTelegraphs(shapes, leaperRenderEnemies, time);
+        drawBossPhaseTransitions(shapes, bossRenderEnemies, time);
+        drawRevenantIdentity(shapes, bossRenderEnemies, time);
+        drawWardenIdentity(shapes, bossRenderEnemies, time);
         if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
     }
 
@@ -376,6 +379,18 @@ public final class CombatPolishController {
                 }
             }
             default -> { }
+        }
+    }
+
+    private void collectRenderEnemySubsets(Array<Enemy> enemies) {
+        leaperRenderEnemies.clear();
+        bossRenderEnemies.clear();
+        for (Enemy enemy : enemies) {
+            if (!enemy.alive) continue;
+            if (leapers.contains(enemy)) leaperRenderEnemies.add(enemy);
+            if (enemy.type == Enemy.Type.BOSS && enemy.bossPhases != null && enemy.bossCombat != null) {
+                bossRenderEnemies.add(enemy);
+            }
         }
     }
 
