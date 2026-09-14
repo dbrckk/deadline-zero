@@ -82,6 +82,34 @@ public final class SpatialHash {
         return best;
     }
 
+    /** Finds the nearest alive enemy inside radius, excluding up to two identities. */
+    public Enemy nearestWithin(float x, float y, float radius, Enemy excludeA, Enemy excludeB) {
+        if (activeBucketCount == 0 || radius <= 0f) return null;
+        int minX = floor((x - radius) / cellSize);
+        int maxX = floor((x + radius) / cellSize);
+        int minY = floor((y - radius) / cellSize);
+        int maxY = floor((y + radius) / cellSize);
+        float bestD2 = radius * radius;
+        Enemy best = null;
+        for (int cy = minY; cy <= maxY; cy++) {
+            for (int cx = minX; cx <= maxX; cx++) {
+                Array<Enemy> bucket = cells.get(key(cx, cy));
+                if (bucket == null) continue;
+                for (Enemy enemy : bucket) {
+                    if (!enemy.alive || enemy == excludeA || enemy == excludeB) continue;
+                    float dx = enemy.position.x - x;
+                    float dy = enemy.position.y - y;
+                    float d2 = dx * dx + dy * dy;
+                    if (d2 < bestD2) {
+                        bestD2 = d2;
+                        best = enemy;
+                    }
+                }
+            }
+        }
+        return best;
+    }
+
     public int activeBucketCount() {
         return activeBucketCount;
     }
