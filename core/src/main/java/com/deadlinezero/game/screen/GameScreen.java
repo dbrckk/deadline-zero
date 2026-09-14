@@ -35,6 +35,7 @@ import com.deadlinezero.game.input.VirtualStick;
 import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.config.GraphicsSettings;
 import com.deadlinezero.game.perf.PerformanceTelemetry;
+import com.deadlinezero.game.perf.AdaptiveFrameRateGovernor;
 import com.deadlinezero.game.progression.LegendaryChoice;
 import com.deadlinezero.game.progression.LegendarySelector;
 import com.deadlinezero.game.progression.Upgrade;
@@ -69,9 +70,10 @@ public final class GameScreen extends ScreenAdapter {
     private final CombatHudRenderer combatHud = new CombatHudRenderer();
     private final WorldFxRenderer worldFx = new WorldFxRenderer();
     private final PerformanceTelemetry performanceTelemetry = new PerformanceTelemetry();
+    private final AdaptiveFrameRateGovernor frameRateGovernor = new AdaptiveFrameRateGovernor();
     private final CombatSpritePass spritePass;
     private final CombatPolishController polish;
-    private float accumulator, fireTimer, contactTimer, cameraShake, visualTime;
+    private float accumulator, fireTimer, contactTimer, cameraShake, visualTime, performanceEvaluationTimer;
     private boolean choosingUpgrade, choosingLegendary, gameOver, revived, bossKilledThisRun, settling;
     private final Upgrade[] choices = new Upgrade[3];
     private final LegendaryChoice[] legendaryChoices = new LegendaryChoice[3];
@@ -82,6 +84,7 @@ public final class GameScreen extends ScreenAdapter {
         this.abilitySystem = new AbilitySystem(player, enemies, pools, this::onEnemyKilled);
         this.spritePass = new CombatSpritePass(game.art);
         this.polish = new CombatPolishController(game.art, game.accessibility);
+        frameRateGovernor.reset(GraphicsSettings.frameRate().target);
         float gearPower = game.profile == null ? 1f : game.profile.aggregatePowerMultiplier();
         player.weapon.damage *= gearPower;
         cam.position.set(0, 0, 0);
@@ -90,7 +93,17 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     @Override public void render(float delta) {
-        performanceTelemetry.record(delta, GraphicsSettings.frameRate().target);
+        performanceTelemetry.record(delta, frameRateGovernor.effectiveTarget());
+        performanceEvaluationTimer += Math.min(delta, .25f);
+        if (performanceEvaluationTimer >= 2f && performanceTelemetry.sampleCount() >= 60) {
+            performanceEvaluationTimer = 0f;
+            int before = frameRateGovernor.effectiveTarget();
+            int after = frameRateGovernor.update(
+                GraphicsSettings.frameRate().target,
+                performanceTelemetry.snapshot(before)
+            );
+            if (after != before) Gdx.graphics.setForegroundFPS(after);
+        }
         delta = Math.min(delta, .05f);
         visualTime += delta;
         combatHud.update(delta);
@@ -107,7 +120,11 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     public PerformanceTelemetry.Snapshot performanceSnapshot() {
-        return performanceTelemetry.snapshot(GraphicsSettings.frameRate().target);
+        return performanceTelemetry.snapshot(frameRateGovernor.effectiveTarget());
+    }
+
+    public int effectiveFrameRateTarget() {
+        return frameRateGovernor.effectiveTarget();
     }
 
     private void update(float dt) {
