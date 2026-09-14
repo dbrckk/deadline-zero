@@ -36,7 +36,8 @@ public final class AndroidLauncher extends AndroidApplication {
                 new AndroidPrivacyService(this, consent),
                 new AndroidShareService(this),
                 new AndroidHapticsService(this),
-                cloudSave
+                cloudSave,
+                new AndroidThermalService(this)
             )),
             config
         );
