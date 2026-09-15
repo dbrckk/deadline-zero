@@ -51,8 +51,8 @@ public final class MissionsScreen extends ScreenAdapter {
 
         font.getData().setScale(1.10f);
         font.setColor(Color.GOLD);
-        font.draw(batch, "LOGIN  •  STREAK " + p.daily.loginStreak + "  •  "
-            + (p.daily.loginClaimed ? "CLAIMED" : "[L] CLAIM"), leftX, h - 158f);
+        font.draw(batch, f("missions.login", p.daily.loginStreak,
+            p.daily.loginClaimed ? t("missions.loginClaimed") : t("missions.loginClaim")), leftX, h - 158f);
 
         font.getData().setScale(1.16f);
         drawMission(t("missions.dailyKills"), p.daily.killsToday, 100,
@@ -115,7 +115,7 @@ public final class MissionsScreen extends ScreenAdapter {
 
         font.getData().setScale(1.05f);
         font.setColor(Color.WHITE);
-        font.draw(batch, f("missions.masteryLine", weapon.displayName, weaponRank, MasteryProgress.MAX_RANK,
+        font.draw(batch, f("missions.masteryLine", t(weapon.displayNameKey()), weaponRank, MasteryProgress.MAX_RANK,
             t("mastery.rank." + weaponRank), nextLabel(weaponNext)),
             margin, y - 52f, w - margin * 2f, Align.left, false);
 
