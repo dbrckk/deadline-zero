@@ -17,6 +17,9 @@ public final class SurvivorCatalog {
         public final float critBonus;
         public final float abilityBonus;
 
+        public String displayNameKey() { return "survivor." + name().toLowerCase(java.util.Locale.ROOT) + ".name"; }
+        public String roleKey() { return "survivor." + name().toLowerCase(java.util.Locale.ROOT) + ".role"; }
+
         Survivor(String displayName, String role, float hpMultiplier, float weaponMultiplier,
                  float speedMultiplier, float critBonus, float abilityBonus) {
             this.displayName = displayName;
