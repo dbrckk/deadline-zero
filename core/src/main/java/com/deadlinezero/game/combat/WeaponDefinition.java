@@ -14,6 +14,8 @@ public final class WeaponDefinition {
     public final float knockback;
     public final DamageElement element;
 
+    public String displayNameKey() { return "weapon." + id.toLowerCase(java.util.Locale.ROOT) + ".name"; }
+
     public WeaponDefinition(String id, String displayName, float damage, float fireInterval,
                             float projectileSpeed, int projectileCount, float spreadDegrees,
                             float critChance, float critMultiplier, int penetration,
