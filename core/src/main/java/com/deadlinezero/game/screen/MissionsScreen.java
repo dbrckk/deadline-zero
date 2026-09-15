@@ -88,7 +88,7 @@ public final class MissionsScreen extends ScreenAdapter {
             boolean claimed = p.achievements.claimed(achievement);
             font.setColor(claimed ? Color.GRAY : unlocked ? Color.GOLD : Color.LIGHT_GRAY);
             String state = claimed ? t("missions.claimed") : unlocked ? f("missions.achievementClaim", key) : t("missions.locked");
-            font.draw(batch, f("missions.achievementLine", achievement.title, achievement.description, state),
+            font.draw(batch, f("missions.achievementLine", t(achievement.titleKey()), t(achievement.descriptionKey()), state),
                 rightX, achievementY, columnWidth, Align.left, false);
             achievementY -= 42;
             key++;
@@ -116,12 +116,12 @@ public final class MissionsScreen extends ScreenAdapter {
         font.getData().setScale(1.05f);
         font.setColor(Color.WHITE);
         font.draw(batch, f("missions.masteryLine", weapon.displayName, weaponRank, MasteryProgress.MAX_RANK,
-            MasteryProgress.rankTitle(weaponRank), nextLabel(weaponNext)),
+            t("mastery.rank." + weaponRank), nextLabel(weaponNext)),
             margin, y - 52f, w - margin * 2f, Align.left, false);
 
         font.setColor(new Color(.72f, .58f, 1f, 1f));
-        font.draw(batch, f("missions.masteryLine", biome.label, biomeRank, MasteryProgress.MAX_RANK,
-            MasteryProgress.rankTitle(biomeRank), nextLabel(biomeNext)),
+        font.draw(batch, f("missions.masteryLine", t(biome.labelKey()), biomeRank, MasteryProgress.MAX_RANK,
+            t("mastery.rank." + biomeRank), nextLabel(biomeNext)),
             margin, y - 100f, w - margin * 2f, Align.left, false);
 
         font.getData().setScale(.90f);
