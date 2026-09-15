@@ -111,11 +111,11 @@ public final class RunContractScreen extends ScreenAdapter {
 
             font.getData().setScale(.64f);
             font.setColor(accent);
-            font.draw(batch, f("contract.cardTitle", i + 1, m.title), x + 8f, cardY + cardH - 52f, cardW - 16f, Align.center, false);
+            font.draw(batch, f("contract.cardTitle", i + 1, t(m.titleKey())), x + 8f, cardY + cardH - 52f, cardW - 16f, Align.center, false);
 
             font.getData().setScale(.40f);
             font.setColor(VisualTheme.TEXT);
-            font.draw(batch, m.description, x + cardW * .10f, cardY + cardH - 95f, cardW * .80f, Align.center, true);
+            font.draw(batch, t(m.descriptionKey()), x + cardW * .10f, cardY + cardH - 95f, cardW * .80f, Align.center, true);
 
             font.getData().setScale(.37f);
             font.setColor(VisualTheme.MUTED);
