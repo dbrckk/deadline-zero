@@ -7,7 +7,7 @@ public final class BalanceCurveRegressionTest {
         float previous = 0f;
         for (int stage = 1; stage <= 40; stage++) {
             float seconds = StageMissionRules.bossArrivalSeconds(stage);
-            check("boss arrival regressed at stage " + stage, seconds >= previous, "balance invariant failed");
+            check(seconds >= previous, "boss arrival regressed at stage " + stage);
             check(seconds <= 600f, "boss arrival exceeds ten-minute first-playable ceiling");
             previous = seconds;
         }
