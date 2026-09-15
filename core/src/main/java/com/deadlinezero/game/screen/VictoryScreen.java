@@ -114,10 +114,10 @@ public final class VictoryScreen extends ScreenAdapter {
         MasteryRunNotice.Notice notice = MasteryRunNotice.current();
         if (notice == null || !notice.visible()) return;
         StringBuilder detail = new StringBuilder();
-        if (notice.weaponRankedUp()) detail.append(f("victory.masteryWeapon", notice.weaponName().toUpperCase(), notice.weaponRank()));
+        if (notice.weaponRankedUp()) detail.append(f("victory.masteryWeapon", localizedNoticeName(notice.weaponNameKey(), notice.weaponName()).toUpperCase(java.util.Locale.ROOT), notice.weaponRank()));
         if (notice.biomeRankedUp()) {
             if (notice.weaponRankedUp()) detail.append("  •  ");
-            detail.append(f("victory.masteryBiome", notice.biomeName(), notice.biomeRank()));
+            detail.append(f("victory.masteryBiome", localizedNoticeName(notice.biomeNameKey(), notice.biomeName()), notice.biomeRank()));
         }
         String text = f("victory.mastery", detail.toString(), notice.creditsReward(), notice.gemsReward());
         font.getData().setScale(.50f);
@@ -128,6 +128,10 @@ public final class VictoryScreen extends ScreenAdapter {
     private static String formatTime(float seconds) {
         int total = Math.max(0, (int)seconds);
         return String.format("%02d:%02d", total / 60, total % 60);
+    }
+
+    private String localizedNoticeName(String key, String fallback) {
+        return key == null || key.isBlank() ? fallback : t(key);
     }
 
     private String localizedName(com.deadlinezero.game.meta.EquipmentItem item) {
