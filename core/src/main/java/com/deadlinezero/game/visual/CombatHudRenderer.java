@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.ai.BossIdentity;
 import com.deadlinezero.game.config.AccessibilitySettings;
+import com.deadlinezero.game.config.Localization;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.input.MobileCombatInput;
@@ -26,6 +27,10 @@ public final class CombatHudRenderer {
     private static final Color NULL_ARCHON_COLOR = new Color(.52f, .42f, 1f, 1f);
     private final Matrix4 projection = new Matrix4();
     private float damageFlash;
+    private final Localization i18n;
+
+    public CombatHudRenderer() { this(new Localization()); }
+    public CombatHudRenderer(Localization i18n) { this.i18n = i18n == null ? new Localization() : i18n; }
 
     public void triggerDamageFlash() {
         if (AccessibilitySettings.active().damageFlash) damageFlash = 1f;
@@ -138,14 +143,14 @@ public final class CombatHudRenderer {
         batch.begin();
         font.getData().setScale(.68f * s);
         font.setColor(VisualTheme.TEXT);
-        font.draw(batch, "HP  " + (int)player.hp + " / " + (int)player.maxHp, 28f * s, h - 67f * s);
-        font.draw(batch, "LV " + player.level, w * .355f, h - 67f * s);
-        font.draw(batch, "KILLS  " + director.kills(), w - 176f * s, h - 42f * s);
-        font.draw(batch, "STAGE " + RunStageContext.stage(), 28f * s, h - 100f * s);
+        font.draw(batch, f("hud.hp", (int)player.hp, (int)player.maxHp), 28f * s, h - 67f * s);
+        font.draw(batch, f("hud.level", player.level), w * .355f, h - 67f * s);
+        font.draw(batch, f("hud.kills", director.kills()), w - 176f * s, h - 42f * s);
+        font.draw(batch, f("hud.stage", RunStageContext.stage()), 28f * s, h - 100f * s);
         if (RunModifierContext.active()) {
             font.getData().setScale(.48f * s);
             font.setColor(VisualTheme.GOLD);
-            font.draw(batch, "CONTRACT  " + RunModifierContext.title() + "  //  +" + RunModifierContext.rewardBonusPercent() + "%",
+            font.draw(batch, f("hud.contract", RunModifierContext.title(), RunModifierContext.rewardBonusPercent()),
                 28f * s, h - 122f * s, w * .30f, Align.left, false);
             font.getData().setScale(.68f * s);
         }
@@ -154,7 +159,7 @@ public final class CombatHudRenderer {
         if (legendaryStyle != WeaponLegendaryPresentation.Style.NONE) {
             font.getData().setScale(.50f * s);
             font.setColor(legendaryStyle.r, legendaryStyle.g, legendaryStyle.b, 1f);
-            font.draw(batch, "WEAPON LEGENDARY  •  " + legendaryStyle.label,
+            font.draw(batch, f("hud.weaponLegendary", legendaryStyle.label),
                 w * .61f, h - 118f * s, w * .36f, Align.right, false);
             font.getData().setScale(.68f * s);
         }
@@ -164,37 +169,37 @@ public final class CombatHudRenderer {
         if (!director.bossSpawned()) {
             int remaining = Math.max(0, Math.round(director.secondsUntilBoss()));
             font.setColor(director.bossWarning() ? (contrast ? Color.WHITE : VisualTheme.RED) : VisualTheme.MUTED);
-            font.draw(batch, director.bossWarning() ? "BOSS SIGNAL  " + remaining + "s" : "BOSS ETA  " + remaining + "s",
+            font.draw(batch, director.bossWarning() ? f("hud.bossSignal", remaining) : f("hud.bossEta", remaining),
                 0f, h - 100f * s, w, Align.center, false);
         } else if (boss != null) {
             int phase = boss.bossPhases == null ? 1 : boss.bossPhases.phase();
             font.setColor(contrast ? Color.WHITE : bossColor(boss));
-            font.draw(batch, bossName(boss) + "  //  PHASE " + phase, 0f, h - 100f * s, w, Align.center, false);
+            font.draw(batch, f("hud.bossPhase", bossName(boss), phase), 0f, h - 100f * s, w, Align.center, false);
         } else {
             font.setColor(contrast ? Color.WHITE : VisualTheme.RED);
-            font.draw(batch, "BOSS SIGNAL LOST", 0f, h - 100f * s, w, Align.center, false);
+            font.draw(batch, t("hud.bossLost"), 0f, h - 100f * s, w, Align.center, false);
         }
 
         RunEncounterDirector.Type encounter = director.activeEncounter();
         if (encounter != RunEncounterDirector.Type.NONE && !director.bossSpawned()) {
             String name = switch (encounter) {
-                case SWARM_SURGE -> "SWARM SURGE";
-                case HUNTER_PACK -> "HUNTER PACK";
-                case JUGGERNAUT_PUSH -> "JUGGERNAUT PUSH";
-                case PHANTOM_BREACH -> "PHANTOM BREACH";
-                case REGEN_BLOOM -> "REGEN BLOOM";
-                case BULWARK_LINE -> "BULWARK LINE";
+                case SWARM_SURGE -> t("encounter.swarm_surge");
+                case HUNTER_PACK -> t("encounter.hunter_pack");
+                case JUGGERNAUT_PUSH -> t("encounter.juggernaut_push");
+                case PHANTOM_BREACH -> t("encounter.phantom_breach");
+                case REGEN_BLOOM -> t("encounter.regen_bloom");
+                case BULWARK_LINE -> t("encounter.bulwark_line");
                 default -> "";
             };
             int seconds = Math.max(1, Math.round(director.encounterSecondsRemaining()));
             font.getData().setScale(.58f * s);
             font.setColor(contrast ? Color.WHITE : VisualTheme.GOLD);
-            font.draw(batch, name + "  •  HOLD THE LINE  " + seconds + "s", 0f, h - 126f * s, w, Align.center, false);
+            font.draw(batch, f("hud.encounter", name, seconds), 0f, h - 126f * s, w, Align.center, false);
             font.getData().setScale(.68f * s);
         }
 
         font.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
-        font.draw(batch, player.canDash() ? "DASH" : String.format("%.1f", player.dashTimer),
+        font.draw(batch, player.canDash() ? t("hud.dash") : String.format(java.util.Locale.ROOT, "%.1f", player.dashTimer),
             w - 93f * s, 67f * s, 70f * s, Align.center, false);
 
         drawOnboardingHint(batch, font, w, h, s);
@@ -205,10 +210,10 @@ public final class CombatHudRenderer {
         OnboardingState o = OnboardingState.active();
         if (o.completed()) return;
         String hint;
-        if (!o.movementSeen()) hint = "MOVE  •  DRAG LEFT SIDE / WASD";
-        else if (!o.dashSeen()) hint = "DASH  •  BUTTON / SPACE";
-        else if (!o.upgradeSeen()) hint = "ELIMINATE HOSTILES  •  LEVEL UP TO CHOOSE AN UPGRADE";
-        else if (!o.bossSeen()) hint = "SURVIVE UNTIL THE ALPHA SIGNAL";
+        if (!o.movementSeen()) hint = t("hud.onboardingMove");
+        else if (!o.dashSeen()) hint = t("hud.onboardingDash");
+        else if (!o.upgradeSeen()) hint = t("hud.onboardingUpgrade");
+        else if (!o.bossSeen()) hint = t("hud.onboardingBoss");
         else return;
         font.getData().setScale(.52f * s);
         font.setColor(VisualTheme.CYAN_SOFT);
@@ -241,13 +246,16 @@ public final class CombatHudRenderer {
 
     private String bossName(Enemy boss) {
         return switch (bossIdentity(boss)) {
-            case REVENANT -> "REVENANT";
-            case WARDEN -> "WARDEN";
-            case HARVESTER -> "HARVESTER";
-            case NULL_ARCHON -> "NULL ARCHON";
-            default -> "ALPHA";
+            case REVENANT -> t("boss.revenant");
+            case WARDEN -> t("boss.warden");
+            case HARVESTER -> t("boss.harvester");
+            case NULL_ARCHON -> t("boss.null_archon");
+            default -> t("boss.alpha");
         };
     }
+
+    private String t(String key) { return i18n.text(key); }
+    private String f(String key, Object... args) { return i18n.format(key, args); }
 
     private Color bossColor(Enemy boss) {
         return switch (bossIdentity(boss)) {
