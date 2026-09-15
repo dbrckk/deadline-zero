@@ -1,6 +1,6 @@
 # Production roadmap
 
-## P0 — Foundation (current)
+## P0 — Foundation (complete)
 Playable combat loop, Android/desktop targets, pooling, upgrade loop, ads/billing boundary.
 
 ## P1 — Production combat
@@ -39,7 +39,20 @@ Rewarded placements, no-ads entitlement, starter pack, premium currency, store c
 - Ability trees already provide five levelled abilities with Tier II/evolution states and multiple cross-tree synergies.
 - Runs already include six deterministic encounter-event archetypes, five standard contracts, three legendary contracts, four rotating endgame mutators and a persistent 0–20 Threat difficulty ladder.
 - The production actor roster remains 24/24 and is not being expanded merely to inflate content counts.
-- **Remaining P5 closure work:** complete the champion crowd semantic QA and run final content balance/pacing regression across the now-complete count targets.
+- **Remaining P5 closure work:** champion crowd capture is automated in Android runtime CI; complete final semantic review of that artifact and run final content balance/pacing regression across the now-complete count targets.
 
 ## P6 — Launch quality
 Low/medium/high/ultra profiles, device thermals, 60/90/120 FPS validation, ANR/crash targets, accessibility, localization, store assets, closed/open testing, retention and economy tuning.
+
+
+## First-playable release gate
+
+A directly installable test build is considered first-playable-ready when all of the following are true:
+
+- Core, Android production build, desktop smoke runtime, and Android runtime CI are green on the release candidate.
+- The automated Android champion-variant crowd artifact passes semantic readability review.
+- A full run-path regression covers launch/menu, run start, combat, upgrade choice, boss progression, run end, save, process death, and restart.
+- P5 balance/pacing regression has no blocker-severity issue.
+- A debug/test APK is produced from the validated release-candidate commit and smoke-tested on a physical Android device.
+
+Store assets, public testing tracks, retention tuning, and commercial economy tuning remain P6 release work and do not block a private first-playable build.
