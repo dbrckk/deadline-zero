@@ -19,7 +19,7 @@ public final class RunSettlement {
             MasteryProgress.Gain mastery = profile.mastery.recordVictory(weapon.id, stage);
             profile.addCurrency(PlayerProfile.Currency.CREDITS, mastery.creditsReward());
             profile.addCurrency(PlayerProfile.Currency.GEMS, mastery.gemsReward());
-            MasteryRunNotice.capture(mastery, weapon.displayName, EnvironmentBiomeRules.forStage(stage));
+            MasteryRunNotice.capture(mastery, weapon, EnvironmentBiomeRules.forStage(stage));
         }
         BalanceRunSample sample = BalanceTelemetryRuntime.settle(bossKilled, secondsSurvived, kills);
         BalanceTelemetryStore.append(sample);
