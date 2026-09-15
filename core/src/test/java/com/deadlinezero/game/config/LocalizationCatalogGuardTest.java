@@ -62,8 +62,10 @@ final class LocalizationCatalogGuardTest {
         Set<String> referenced = staticReferencedKeys();
         Set<String> missing = new LinkedHashSet<>(referenced);
         missing.removeAll(catalog.values.keySet());
-        assertTrue(missing.isEmpty(), "Missing i18n keys referenced by UI code: " + missing
-            + " | referenced=" + referenced);
+        if (!missing.isEmpty()) {
+            System.err.println("I18N_MISSING_KEYS " + missing);
+        }
+        assertTrue(missing.isEmpty(), "Missing i18n keys referenced by UI code: " + missing);
     }
 
     @Test void screensDoNotReintroduceDirectUserFacingFontLiterals() throws Exception {
