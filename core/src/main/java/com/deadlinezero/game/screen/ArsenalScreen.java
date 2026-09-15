@@ -101,7 +101,7 @@ public final class ArsenalScreen extends ScreenAdapter {
         font.getData().setScale(.56f); font.setColor(unlocked ? VisualTheme.TEXT : VisualTheme.MUTED);
         font.draw(batch, t(weapon.displayNameKey()).toUpperCase(), x + 14f, y + cardH - 17f);
         font.getData().setScale(.41f); font.setColor(elementColor(weapon));
-        font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x + 14f, y + cardH - 38f);
+        font.draw(batch, role(weapon) + "  •  " + elementName(weapon), x + 14f, y + cardH - 38f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, f("arsenal.cardStats", Math.round(dps), Math.round(weapon.damage), weapon.projectileCount), x + 14f, y + cardH - 59f);
         if (selected) { font.setColor(VisualTheme.CYAN); font.draw(batch, t("arsenal.equipped"), x + 14f, y + 17f); }
@@ -112,7 +112,7 @@ public final class ArsenalScreen extends ScreenAdapter {
     private void drawDetailText(WeaponDefinition weapon, WeaponDefinition equipped, float w) {
         float dps = paperDps(weapon), equippedDps = paperDps(equipped), x = w * .50f;
         font.getData().setScale(.50f); font.setColor(VisualTheme.TEXT); font.draw(batch, t(weapon.displayNameKey()).toUpperCase(), x, 132f);
-        font.getData().setScale(.42f); font.setColor(elementColor(weapon)); font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x, 111f);
+        font.getData().setScale(.42f); font.setColor(elementColor(weapon)); font.draw(batch, role(weapon) + "  •  " + elementName(weapon), x, 111f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, f("arsenal.detailDps", Math.round(dps), deltaText(dps - equippedDps), String.format(java.util.Locale.US, "%.2f", weapon.fireInterval), Math.round(weapon.critChance * 100f)), x, 90f);
         font.draw(batch, f("arsenal.detailPen", weapon.penetration, deltaText(weapon.penetration - equipped.penetration), oneDecimal(weapon.knockback), deltaText(weapon.knockback - equipped.knockback), weapon.projectileCount, deltaText(weapon.projectileCount - equipped.projectileCount)), x, 70f);
@@ -149,37 +149,15 @@ public final class ArsenalScreen extends ScreenAdapter {
     private float paperDps(WeaponDefinition weapon) { return weapon.damage * weapon.projectileCount / Math.max(.05f, weapon.fireInterval); }
 
     private String role(WeaponDefinition weapon) {
-        return switch (weapon.id) {
-            case "scattergun" -> "CLOSE BURST";
-            case "rail_rifle" -> "PRECISION PIERCER";
-            case "inferno_smg" -> "RAPID BURN";
-            case "cryo_lance" -> "CONTROL";
-            case "arc_carbine" -> "CHAIN CONTROL";
-            case "breacher" -> "HEAVY BREACH";
-            case "ion_needle" -> "CAPACITOR PRECISION";
-            case "cinder_cannon" -> "THERMAL ARTILLERY";
-            case "tempest_burst" -> "SHOCK BURST";
-            case "whiteout_shard" -> "FROST SCATTER";
-            case "phoenix_repeater" -> "FIRE REPEATER";
-            default -> "BALANCED RIFLE";
-        };
+        return t("weapon.role." + weapon.id);
+    }
+
+    private String elementName(WeaponDefinition weapon) {
+        return t("weapon.element." + weapon.element.name().toLowerCase(java.util.Locale.ROOT));
     }
 
     private String description(WeaponDefinition weapon) {
-        return switch (weapon.id) {
-            case "scattergun" -> "Wide close-range burst with strong stagger. Best when kiting dense packs.";
-            case "rail_rifle" -> "Slow precision rifle with extreme penetration and high critical ceiling.";
-            case "inferno_smg" -> "Very high cadence FIRE weapon built to stack pressure across moving hordes.";
-            case "cryo_lance" -> "FROST-focused rifle trading raw DPS for safer spacing and crowd control.";
-            case "arc_carbine" -> "SHOCK carbine optimized for chained hits and clustered targets.";
-            case "breacher" -> "Nine-projectile blast with brutal knockback, limited by range and reload cadence.";
-            case "ion_needle" -> "Every 5th projectile overcharges: guaranteed critical, bonus penetration and impact. VOLT/NYX unlock signature synergies.";
-            case "cinder_cannon" -> "Every 4th shell vents stored heat for +55% payload, extra penetration and knockback. BASTION unlocks Siege Furnace.";
-            case "tempest_burst" -> "Three-shot SHOCK fan balancing crowd coverage, penetration and controllable recoil.";
-            case "whiteout_shard" -> "Four heavy FROST shards deliver high stagger and control without Breacher-level spread.";
-            case "phoenix_repeater" -> "Accurate FIRE repeater for sustained endgame pressure between Inferno cadence and Cinder impact.";
-            default -> "Reliable all-round rifle with stable damage, cadence and accuracy for every stage.";
-        };
+        return t("weapon.description." + weapon.id);
     }
 
     private String deltaText(float delta) { if (Math.abs(delta) < .05f) return ""; return delta > 0f ? "  +" + Math.round(delta) : "  " + Math.round(delta); }
