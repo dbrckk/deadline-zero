@@ -16,6 +16,7 @@ public final class AccessibilitySettings {
     public boolean reduceFlashes = false;
     public boolean reducedMotion = false;
     public boolean haptics = true;
+    public ColorVisionMode colorVisionMode = ColorVisionMode.STANDARD;
     public float uiScale = 1f;
     public float masterVolume = 1f;
     public float sfxVolume = .85f;
@@ -32,6 +33,7 @@ public final class AccessibilitySettings {
         s.reduceFlashes = p.getBoolean("reduceFlashes", false);
         s.reducedMotion = p.getBoolean("reducedMotion", false);
         s.haptics = p.getBoolean("haptics", true);
+        s.colorVisionMode = ColorVisionMode.fromStored(p.getString("colorVisionMode", ColorVisionMode.STANDARD.name()));
         s.uiScale = p.getFloat("uiScale", 1f);
         s.masterVolume = p.getFloat("masterVolume", 1f);
         s.sfxVolume = p.getFloat("sfxVolume", .85f);
@@ -90,11 +92,33 @@ public final class AccessibilitySettings {
             .putBoolean("reduceFlashes", reduceFlashes)
             .putBoolean("reducedMotion", reducedMotion)
             .putBoolean("haptics", haptics)
+            .putString("colorVisionMode", colorVisionMode.name())
             .putFloat("uiScale", uiScale)
             .putFloat("masterVolume", masterVolume)
             .putFloat("sfxVolume", sfxVolume)
             .putFloat("musicVolume", musicVolume)
             .flush();
+    }
+
+    public enum ColorVisionMode {
+        STANDARD("STANDARD"),
+        DEUTERANOPIA("DEUTERANOPIA"),
+        PROTANOPIA("PROTANOPIA"),
+        TRITANOPIA("TRITANOPIA");
+
+        public final String label;
+        ColorVisionMode(String label) { this.label = label; }
+
+        public ColorVisionMode next(int direction) {
+            ColorVisionMode[] modes = values();
+            int index = (ordinal() + (direction >= 0 ? 1 : -1) + modes.length) % modes.length;
+            return modes[index];
+        }
+
+        static ColorVisionMode fromStored(String value) {
+            try { return value == null ? STANDARD : valueOf(value); }
+            catch (IllegalArgumentException ignored) { return STANDARD; }
+        }
     }
 
     private static float clampFinite(float v, float min, float max, float fallback) {
