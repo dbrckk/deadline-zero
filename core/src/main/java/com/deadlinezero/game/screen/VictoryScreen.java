@@ -107,7 +107,7 @@ public final class VictoryScreen extends ScreenAdapter {
 
     private void share() {
         if (!game.services.share.available()) return;
-        game.services.share.shareText(RunShareText.format(result));
+        game.services.share.shareText(RunShareText.format(result, game.i18n));
     }
 
     private void drawMasteryNotice(float w, float h) {
