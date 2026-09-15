@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
  */
 final class LocalizationCatalogGuardTest {
     private static final Pattern STATIC_LOOKUP = Pattern.compile(
-        "(?:\\bt|\\bf|i18n\\.text|i18n\\.format)\\(\\s*\"([^\"]+)\""
+        "(?:(?<![A-Za-z0-9_.])t|(?<![A-Za-z0-9_.])f|i18n\\.text|i18n\\.format)\\(\\s*\"([^\"]+)\""
     );
     private static final Pattern DIRECT_FONT_LITERAL = Pattern.compile(
         "font\\.draw\\(\\s*batch\\s*,\\s*\"([^\"]*)\""
