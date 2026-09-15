@@ -10,6 +10,7 @@ public final class EnvironmentBiomeRules {
         CRYOGENIC_DEPTHS("CRYOGENIC DEPTHS");
 
         public final String label;
+        public String labelKey() { return "biome." + name().toLowerCase(java.util.Locale.ROOT); }
         Biome(String label) { this.label = label; }
     }
 

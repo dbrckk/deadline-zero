@@ -15,6 +15,9 @@ public final class AchievementService {
         public final long credits;
         public final int gems;
 
+        public String titleKey() { return "achievement." + name().toLowerCase(java.util.Locale.ROOT) + ".title"; }
+        public String descriptionKey() { return "achievement." + name().toLowerCase(java.util.Locale.ROOT) + ".description"; }
+
         Achievement(String title, String description, long credits, int gems) {
             this.title = title;
             this.description = description;
