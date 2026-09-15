@@ -16,16 +16,17 @@ import com.deadlinezero.game.visual.VisualTheme;
 
 /** Lightweight production settings screen with persistent accessibility, audio and privacy controls. */
 public final class SettingsScreen extends ScreenAdapter {
-    private static final int REDUCED_MOTION_ROW = 7;
-    private static final int UI_SCALE_ROW = 8;
-    private static final int MASTER_VOLUME_ROW = 9;
-    private static final int SFX_VOLUME_ROW = 10;
-    private static final int MUSIC_VOLUME_ROW = 11;
-    private static final int GRAPHICS_ROW = 12;
-    private static final int FRAME_RATE_ROW = 13;
-    private static final int PRIVACY_ROW = 14;
-    private static final int POLICY_ROW = 15;
-    private static final int CLOUD_ROW = 16;
+    private static final int COLOR_VISION_ROW = 7;
+    private static final int REDUCED_MOTION_ROW = 8;
+    private static final int UI_SCALE_ROW = 9;
+    private static final int MASTER_VOLUME_ROW = 10;
+    private static final int SFX_VOLUME_ROW = 11;
+    private static final int MUSIC_VOLUME_ROW = 12;
+    private static final int GRAPHICS_ROW = 13;
+    private static final int FRAME_RATE_ROW = 14;
+    private static final int PRIVACY_ROW = 15;
+    private static final int POLICY_ROW = 16;
+    private static final int CLOUD_ROW = 17;
     private static final int LAST_ROW = CLOUD_ROW;
 
     private final DeadlineZeroGame game;
@@ -55,14 +56,14 @@ public final class SettingsScreen extends ScreenAdapter {
 
         String[] labels = {
             t("settings.screenShake"), t("settings.shakeStrength"), t("settings.hitStop"), t("settings.damageFlash"),
-            t("settings.highContrastTelegraphs"), t("settings.reduceFlashes"), t("settings.haptics"),
+            t("settings.highContrastTelegraphs"), t("settings.reduceFlashes"), t("settings.haptics"), t("settings.colorVision"),
             t("settings.reducedMotion"), t("settings.uiScale"), t("settings.masterVolume"), t("settings.sfxVolume"),
             t("settings.musicVolume"), t("settings.graphicsQuality"), t("settings.frameRate"),
             t("settings.privacyChoices"), t("settings.privacyPolicy"), t("settings.cloudSave")
         };
         String[] values = {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
-            onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), onOff(s.reducedMotion), pct(s.uiScale),
+            onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), s.colorVisionMode.label, onOff(s.reducedMotion), pct(s.uiScale),
             pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
             GraphicsSettings.active().name(), GraphicsSettings.frameRate().label,
             privacyRequired ? t("common.open") : t("common.notRequired"),
@@ -201,6 +202,7 @@ public final class SettingsScreen extends ScreenAdapter {
             case 4 -> s.highContrastTelegraphs = !s.highContrastTelegraphs;
             case 5 -> s.reduceFlashes = !s.reduceFlashes;
             case 6 -> s.haptics = !s.haptics;
+            case COLOR_VISION_ROW -> s.colorVisionMode = s.colorVisionMode.next(dir > 0f ? 1 : -1);
             case REDUCED_MOTION_ROW -> s.setReducedMotion(!s.reducedMotion);
             case UI_SCALE_ROW -> s.uiScale = clamp(s.uiScale + dir * .05f, .85f, 1.35f);
             case MASTER_VOLUME_ROW -> s.masterVolume = clamp(s.masterVolume + dir * .05f, 0f, 1f);
