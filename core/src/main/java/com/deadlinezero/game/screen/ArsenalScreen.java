@@ -99,7 +99,7 @@ public final class ArsenalScreen extends ScreenAdapter {
         boolean unlocked = WeaponProgression.unlocked(game.profile, weapon);
         float dps = paperDps(weapon);
         font.getData().setScale(.56f); font.setColor(unlocked ? VisualTheme.TEXT : VisualTheme.MUTED);
-        font.draw(batch, weapon.displayName.toUpperCase(), x + 14f, y + cardH - 17f);
+        font.draw(batch, t(weapon.displayNameKey()).toUpperCase(), x + 14f, y + cardH - 17f);
         font.getData().setScale(.41f); font.setColor(elementColor(weapon));
         font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x + 14f, y + cardH - 38f);
         font.setColor(VisualTheme.MUTED);
@@ -111,7 +111,7 @@ public final class ArsenalScreen extends ScreenAdapter {
 
     private void drawDetailText(WeaponDefinition weapon, WeaponDefinition equipped, float w) {
         float dps = paperDps(weapon), equippedDps = paperDps(equipped), x = w * .50f;
-        font.getData().setScale(.50f); font.setColor(VisualTheme.TEXT); font.draw(batch, weapon.displayName.toUpperCase(), x, 132f);
+        font.getData().setScale(.50f); font.setColor(VisualTheme.TEXT); font.draw(batch, t(weapon.displayNameKey()).toUpperCase(), x, 132f);
         font.getData().setScale(.42f); font.setColor(elementColor(weapon)); font.draw(batch, role(weapon) + "  •  " + weapon.element.name(), x, 111f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, f("arsenal.detailDps", Math.round(dps), deltaText(dps - equippedDps), String.format(java.util.Locale.US, "%.2f", weapon.fireInterval), Math.round(weapon.critChance * 100f)), x, 90f);
