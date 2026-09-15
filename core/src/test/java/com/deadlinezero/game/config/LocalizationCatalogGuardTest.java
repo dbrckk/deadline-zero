@@ -1,6 +1,5 @@
 package com.deadlinezero.game.config;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,12 +8,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -33,7 +32,6 @@ final class LocalizationCatalogGuardTest {
     private static final Pattern STATIC_LOOKUP = Pattern.compile(
         "(?:\\bt|\\bf|i18n\\.text|i18n\\.format)\\(\\s*\"([^\"]+)\""
     );
-    private static final Pattern PLACEHOLDER = Pattern.compile("\\{(\\d+)\\}");
     private static final Pattern DIRECT_FONT_LITERAL = Pattern.compile(
         "font\\.draw\\(\\s*batch\\s*,\\s*\"([^\"]*)\""
     );
@@ -50,19 +48,13 @@ final class LocalizationCatalogGuardTest {
 
         List<String> malformed = new ArrayList<>();
         for (Map.Entry<String, String> entry : catalog.values.entrySet()) {
-            Set<Integer> indexes = new HashSet<>();
-            Matcher matcher = PLACEHOLDER.matcher(entry.getValue());
-            while (matcher.find()) indexes.add(Integer.parseInt(matcher.group(1)));
-            if (indexes.isEmpty()) continue;
-            int max = indexes.stream().mapToInt(Integer::intValue).max().orElse(-1);
-            for (int i = 0; i <= max; i++) {
-                if (!indexes.contains(i)) {
-                    malformed.add(entry.getKey() + " -> missing {" + i + "}");
-                    break;
-                }
+            try {
+                new MessageFormat(entry.getValue());
+            } catch (IllegalArgumentException exception) {
+                malformed.add(entry.getKey() + " -> " + exception.getMessage());
             }
         }
-        assertTrue(malformed.isEmpty(), "Malformed i18n placeholder sequences: " + malformed);
+        assertTrue(malformed.isEmpty(), "Malformed i18n MessageFormat patterns: " + malformed);
     }
 
     @Test void everyStaticLocalizationLookupExistsInCatalog() throws Exception {
