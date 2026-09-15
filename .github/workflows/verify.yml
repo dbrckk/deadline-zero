@@ -53,6 +53,18 @@ jobs:
         run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
       - name: Verify Android production build
         run: gradle :android:lintDebug :android:lintRelease :android:assembleDebug :android:bundleRelease -PallowTestAds=true -PallowPlaceholderAssets=true
+      - name: Stage first-playable APK
+        run: |
+          mkdir -p build/first-playable
+          cp android/build/outputs/apk/debug/android-debug.apk build/first-playable/deadline-zero-first-playable.apk
+          sha256sum build/first-playable/deadline-zero-first-playable.apk > build/first-playable/SHA256SUMS.txt
+      - name: Upload first-playable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: deadline-zero-first-playable-${{ github.sha }}
+          path: build/first-playable/
+          if-no-files-found: error
+          retention-days: 14
 
   android-runtime:
     runs-on: ubuntu-latest
