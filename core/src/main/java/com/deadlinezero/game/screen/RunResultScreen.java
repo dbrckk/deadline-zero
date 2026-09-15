@@ -71,10 +71,10 @@ public final class RunResultScreen extends ScreenAdapter {
 
         font.getData().setScale(.52f);
         font.setColor(COACHING_ACCENT);
-        font.draw(batch, advice.headline(), 0, h * .375f, w, Align.center, false);
+        font.draw(batch, t(advice.headlineKey()), 0, h * .375f, w, Align.center, false);
         font.getData().setScale(.40f);
         font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, advice.detail(), w * .20f, h * .338f, w * .60f, Align.center, true);
+        font.draw(batch, t(advice.detailKey()), w * .20f, h * .338f, w * .60f, Align.center, true);
 
         font.getData().setScale(.54f);
         font.setColor(bonusClaimed ? Color.GRAY : Color.LIME);
