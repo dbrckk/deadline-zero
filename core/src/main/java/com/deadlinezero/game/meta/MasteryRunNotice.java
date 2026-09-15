@@ -19,7 +19,18 @@ public final class MasteryRunNotice {
 
     public static void clear() { current = null; }
 
+    /** Compatibility overload for headless tests and callers that only have the canonical label. */
+    public static void capture(MasteryProgress.Gain gain, String weaponName, EnvironmentBiomeRules.Biome biome) {
+        captureInternal(gain, weaponName, null, biome);
+    }
+
     public static void capture(MasteryProgress.Gain gain, WeaponDefinition weapon, EnvironmentBiomeRules.Biome biome) {
+        captureInternal(gain, weapon == null ? "WEAPON" : weapon.displayName,
+            weapon == null ? null : weapon.displayNameKey(), biome);
+    }
+
+    private static void captureInternal(MasteryProgress.Gain gain, String weaponName, String weaponNameKey,
+                                        EnvironmentBiomeRules.Biome biome) {
         if (gain == null || !gain.rankedUp()) {
             clear();
             return;
@@ -27,8 +38,8 @@ public final class MasteryRunNotice {
         int weaponRank = gain.weaponRankAfter() > gain.weaponRankBefore() ? gain.weaponRankAfter() : 0;
         int biomeRank = gain.biomeRankAfter() > gain.biomeRankBefore() ? gain.biomeRankAfter() : 0;
         current = new Notice(
-            weapon == null ? "WEAPON" : weapon.displayName,
-            weapon == null ? null : weapon.displayNameKey(),
+            weaponName == null ? "WEAPON" : weaponName,
+            weaponNameKey,
             weaponRank,
             biome == null ? "BIOME" : biome.label,
             biome == null ? null : biome.labelKey(),
