@@ -66,7 +66,7 @@ public final class RunResultScreen extends ScreenAdapter {
         if (result.drop() != null) {
             font.getData().setScale(.58f);
             font.setColor(Color.WHITE);
-            font.draw(batch, f("result.drop", result.drop().rarity.name(), result.drop().name, result.drop().level), 0, h * .415f, w, Align.center, false);
+            font.draw(batch, f("result.drop", t(result.drop().rarityKey()), localizedName(result.drop()), result.drop().level), 0, h * .415f, w, Align.center, false);
         }
 
         font.getData().setScale(.52f);
@@ -101,6 +101,13 @@ public final class RunResultScreen extends ScreenAdapter {
     private static String formatTime(float seconds) {
         int total = Math.max(0, (int)seconds);
         return String.format("%02d:%02d", total / 60, total % 60);
+    }
+
+    private String localizedName(com.deadlinezero.game.meta.EquipmentItem item) {
+        if (item == null) return "";
+        String key = item.nameKey();
+        if (key != null) return t(key);
+        return f("equipment.generatedName", t(item.rarityKey()), t(item.slotKey()));
     }
 
     private String t(String key) { return game.i18n.text(key); }

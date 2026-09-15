@@ -70,10 +70,10 @@ public final class GearScreen extends ScreenAdapter {
             font.draw(batch, item.name, 0, h * .59f, w, Align.center, false);
             font.getData().setScale(.48f);
             font.setColor(ascensionExclusive ? Color.GOLD : Color.LIGHT_GRAY);
-            font.draw(batch, ascensionExclusive ? t("gear.ascensionExclusive") : item.rarity.name(),
+            font.draw(batch, ascensionExclusive ? t("gear.ascensionExclusive") : t(item.rarityKey()),
                 0, h * .555f, w, Align.center, false);
             font.getData().setScale(.55f); font.setColor(Color.WHITE);
-            font.draw(batch, f("gear.itemStats", item.slot, item.level, Math.round(item.powerBonus * 1000f) / 10f), 0, h * .52f, w, Align.center, false);
+            font.draw(batch, f("gear.itemStats", t(item.slotKey()), item.level, Math.round(item.powerBonus * 1000f) / 10f), 0, h * .52f, w, Align.center, false);
             font.setColor(isEquipped ? Color.LIME : Color.LIGHT_GRAY);
             font.draw(batch, isEquipped ? t("gear.equipped") : t("gear.unequipped"), 0, h * .465f, w, Align.center, false);
 
@@ -137,7 +137,7 @@ public final class GearScreen extends ScreenAdapter {
         if (second == null || third == null) { status = t("gear.needThree"); return; }
         EquipmentItem merged = EquipmentService.mergeThree(game.profile, selected.id, second.id, third.id);
         if (merged == null) { status = t("gear.fusionFailed"); return; }
-        status = f("gear.created", merged.rarity, merged.name);
+        status = f("gear.created", t(merged.rarityKey()), localizedName(merged));
         index = Math.max(0, game.profile.inventory.size() - 1);
         game.saveProfile();
     }
@@ -150,6 +150,13 @@ public final class GearScreen extends ScreenAdapter {
             case LEGENDARY -> Color.GOLD;
             case MYTHIC -> Color.MAGENTA;
         };
+    }
+
+    private String localizedName(com.deadlinezero.game.meta.EquipmentItem item) {
+        if (item == null) return "";
+        String key = item.nameKey();
+        if (key != null) return t(key);
+        return f("equipment.generatedName", t(item.rarityKey()), t(item.slotKey()));
     }
 
     private String t(String key) { return game.i18n.text(key); }

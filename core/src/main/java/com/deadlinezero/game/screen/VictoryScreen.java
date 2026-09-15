@@ -71,7 +71,7 @@ public final class VictoryScreen extends ScreenAdapter {
             if (exclusive != null) {
                 font.getData().setScale(.52f);
                 font.setColor(Color.MAGENTA);
-                font.draw(batch, f("victory.mythic", exclusive.name.toUpperCase()), 0, h * .365f, w, Align.center, false);
+                font.draw(batch, f("victory.mythic", localizedName(exclusive).toUpperCase(java.util.Locale.ROOT)), 0, h * .365f, w, Align.center, false);
             }
         } else if (firstClear) {
             font.setColor(Color.LIME);
@@ -81,7 +81,7 @@ public final class VictoryScreen extends ScreenAdapter {
         if (result.drop() != null) {
             font.getData().setScale(.62f);
             font.setColor(Color.WHITE);
-            font.draw(batch, f("result.drop", result.drop().rarity.name(), result.drop().name, result.drop().level), 0, h * .275f, w, Align.center, false);
+            font.draw(batch, f("result.drop", t(result.drop().rarityKey()), localizedName(result.drop()), result.drop().level), 0, h * .275f, w, Align.center, false);
         }
         font.setColor(Color.WHITE);
         font.draw(batch, t("victory.base"), w * .13f, h * .18f + 36f, w * .20f, Align.center, false);
@@ -128,6 +128,13 @@ public final class VictoryScreen extends ScreenAdapter {
     private static String formatTime(float seconds) {
         int total = Math.max(0, (int)seconds);
         return String.format("%02d:%02d", total / 60, total % 60);
+    }
+
+    private String localizedName(com.deadlinezero.game.meta.EquipmentItem item) {
+        if (item == null) return "";
+        String key = item.nameKey();
+        if (key != null) return t(key);
+        return f("equipment.generatedName", t(item.rarityKey()), t(item.slotKey()));
     }
 
     private String t(String key) { return game.i18n.text(key); }
