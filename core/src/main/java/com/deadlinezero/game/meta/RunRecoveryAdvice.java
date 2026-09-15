@@ -3,7 +3,7 @@ package com.deadlinezero.game.meta;
 /** Pure post-run coaching. It never changes difficulty or profile state. */
 public final class RunRecoveryAdvice {
     public enum Focus { SURVIVABILITY, OFFENSE, ENDGAME_DEFENSE, BALANCED }
-    public record Advice(Focus focus, String headline, String detail) { }
+    public record Advice(Focus focus, String headline, String detail, String headlineKey, String detailKey) { }
 
     private RunRecoveryAdvice() { }
 
@@ -18,21 +18,26 @@ public final class RunRecoveryAdvice {
             String detail = result.threatTier() >= 3
                 ? "Early pressure broke the run. Add HP/mobility or drop Threat by one tier while refining the build."
                 : "Early pressure broke the run. Prioritize max HP, movement speed and a reliable dash window.";
-            return new Advice(Focus.SURVIVABILITY, "SURVIVE THE OPENING", detail);
+            return new Advice(Focus.SURVIVABILITY, "SURVIVE THE OPENING", detail,
+                "recovery.survivability.title",
+                result.threatTier() >= 3 ? "recovery.survivabilityThreat.detail" : "recovery.survivability.detail");
         }
         if (killsPerMinute < 14f) {
             return new Advice(Focus.OFFENSE, "RAISE CLEAR SPEED",
-                "Hostiles are staying alive too long. Prioritize damage, fire rate, penetration or a stronger weapon synergy.");
+                "Hostiles are staying alive too long. Prioritize damage, fire rate, penetration or a stronger weapon synergy.",
+                "recovery.offense.title", "recovery.offense.detail");
         }
         if (progress >= .84f) {
             return new Advice(Focus.ENDGAME_DEFENSE, "HOLD THE FINAL PRESSURE",
-                "Your clear speed is viable. Preserve dash charges and add mitigation/HP for the last pressure band and boss signal.");
+                "Your clear speed is viable. Preserve dash charges and add mitigation/HP for the last pressure band and boss signal.",
+                "recovery.endgame.title", "recovery.endgame.detail");
         }
         return balanced();
     }
 
     private static Advice balanced() {
         return new Advice(Focus.BALANCED, "REFINE THE BUILD",
-            "The run is close to target pace. Keep offense and survivability balanced, then adapt to the active contract and biome hazards.");
+            "The run is close to target pace. Keep offense and survivability balanced, then adapt to the active contract and biome hazards.",
+            "recovery.balanced.title", "recovery.balanced.detail");
     }
 }
