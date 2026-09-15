@@ -16,6 +16,7 @@ public final class CombatSpritePass {
     private final EnvironmentRenderer environment;
     private final WeaponRenderer weapon;
     private final AuthoredVfxRenderer vfx;
+    private final ChampionBadgeRenderer championBadges = new ChampionBadgeRenderer();
     private final CombatAudioLayer audio = new CombatAudioLayer();
     private final PostFxShader postFx = new PostFxShader();
     private GraphicsQuality quality;
@@ -71,6 +72,7 @@ public final class CombatSpritePass {
         if (postFx.available() && quality.postFxIntensity > 0f) batch.setShader(postFx.shader(quality.postFxIntensity));
         characters.draw(batch, player, enemies);
         batch.setShader(null);
+        championBadges.draw(batch, enemies);
 
         Enemy target = nearestEnemy(player, enemies);
         float aimAngle = target == null ? fallbackAim(player) :
@@ -115,6 +117,7 @@ public final class CombatSpritePass {
     }
 
     public void dispose() {
+        championBadges.dispose();
         environment.dispose();
         audio.dispose();
         postFx.dispose();
