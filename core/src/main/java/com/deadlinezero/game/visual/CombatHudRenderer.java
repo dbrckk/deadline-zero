@@ -29,8 +29,10 @@ public final class CombatHudRenderer {
     private float damageFlash;
     private final Localization i18n;
 
-    public CombatHudRenderer() { this(new Localization()); }
-    public CombatHudRenderer(Localization i18n) { this.i18n = i18n == null ? new Localization() : i18n; }
+    public CombatHudRenderer(Localization i18n) {
+        if (i18n == null) throw new IllegalArgumentException("i18n");
+        this.i18n = i18n;
+    }
 
     public void triggerDamageFlash() {
         if (AccessibilitySettings.active().damageFlash) damageFlash = 1f;
