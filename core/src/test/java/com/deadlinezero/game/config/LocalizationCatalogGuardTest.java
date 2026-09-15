@@ -108,7 +108,11 @@ final class LocalizationCatalogGuardTest {
         for (Path source : presentationSources(root)) {
             String content = Files.readString(source, StandardCharsets.UTF_8);
             Matcher matcher = STATIC_LOOKUP.matcher(content);
-            while (matcher.find()) keys.add(matcher.group(1));
+            while (matcher.find()) {
+                String key = matcher.group(1);
+                if (key.endsWith(".") && DYNAMIC_PREFIXES.stream().anyMatch(key::startsWith)) continue;
+                keys.add(key);
+            }
         }
         return keys;
     }
