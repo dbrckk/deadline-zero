@@ -11,7 +11,6 @@ import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.screen.GameScreen;
 import com.deadlinezero.game.screen.RunContractScreen;
 import com.deadlinezero.game.screen.RunResultScreen;
-import com.deadlinezero.game.screen.VictoryScreen;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -44,11 +43,12 @@ public final class AndroidFirstPlayableJourneyTest {
                 game.startRunWithContract(RunModifierContext.offers()[0]);
                 assertTrue(game.getScreen() instanceof GameScreen);
 
-                // Public settlement boundary: bossKilled=true exercises victory rewards/progression.
-                // Mission-runtime boss objective semantics are covered independently by combat tests.
-                game.finishRun(80, 180f, true, 0);
-                assertTrue("boss clear must open victory result", game.getScreen() instanceof VictoryScreen);
-                assertEquals("victory must settle exactly one additional run", runsBefore + 2, game.profile.totalRuns);
+                // The public finishRun boundary derives victory from RunMissionRuntime boss progress.
+                // This journey deliberately validates a second complete settlement without forging
+                // private mission-runtime state; boss-victory semantics remain covered by runtime tests.
+                game.finishRun(80, 180f, false, 0);
+                assertTrue("second settlement must open run result", game.getScreen() instanceof RunResultScreen);
+                assertEquals("second settlement must count exactly one additional run", runsBefore + 2, game.profile.totalRuns);
 
                 game.saveProfile();
             });
