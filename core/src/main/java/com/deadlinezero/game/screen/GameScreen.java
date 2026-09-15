@@ -73,7 +73,7 @@ public final class GameScreen extends ScreenAdapter {
     private final Vector2 aim = new Vector2();
     private final Vector2 shotVelocity = new Vector2();
     private final AbilitySystem abilitySystem;
-    private final CombatHudRenderer combatHud = new CombatHudRenderer();
+    private final CombatHudRenderer combatHud;
     private final WorldFxRenderer worldFx = new WorldFxRenderer();
     private final PerformanceTelemetry performanceTelemetry = new PerformanceTelemetry();
     private final AdaptiveFrameRateGovernor frameRateGovernor = new AdaptiveFrameRateGovernor();
@@ -86,6 +86,7 @@ public final class GameScreen extends ScreenAdapter {
     private int legendaryChoiceCount;
 
     public GameScreen(DeadlineZeroGame game) {
+        this.combatHud = new CombatHudRenderer(game.i18n);
         this.game = game;
         this.abilitySystem = new AbilitySystem(player, enemies, pools, spatial, this::onEnemyKilled);
         this.spritePass = new CombatSpritePass(game.art);
