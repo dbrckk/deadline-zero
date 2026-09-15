@@ -35,6 +35,9 @@ public final class RunModifierContext {
             this.reward = reward;
         }
 
+        public String titleKey() { return "runModifier." + name().toLowerCase(java.util.Locale.ROOT) + ".title"; }
+        public String descriptionKey() { return "runModifier." + name().toLowerCase(java.util.Locale.ROOT) + ".description"; }
+
         public int rewardBonusPercent() { return Math.round((reward - 1f) * 100f); }
         public boolean legendary() { return rarity == Rarity.LEGENDARY; }
 
