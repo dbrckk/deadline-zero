@@ -69,9 +69,9 @@ public final class SurvivorScreen extends ScreenAdapter {
         font.getData().setScale(1.18f); font.setColor(VisualTheme.TEXT);
         font.draw(batch, t("survivor.title"), 0, h * .89f, w, Align.center, false);
         font.getData().setScale(.82f); font.setColor(unlocked ? VisualTheme.CYAN : VisualTheme.MUTED);
-        font.draw(batch, survivor.displayName.toUpperCase(), 0, h * .70f, w, Align.center, false);
+        font.draw(batch, t(survivor.displayNameKey()).toUpperCase(), 0, h * .70f, w, Align.center, false);
         font.getData().setScale(.52f); font.setColor(VisualTheme.MUTED);
-        font.draw(batch, f("survivor.roleLevel", survivor.role.toUpperCase(), level), 0, h * .645f, w, Align.center, false);
+        font.draw(batch, f("survivor.roleLevel", t(survivor.roleKey()).toUpperCase(java.util.Locale.ROOT), level), 0, h * .645f, w, Align.center, false);
 
         font.setColor(VisualTheme.TEXT);
         font.draw(batch, f("survivor.stats", fmt(survivor.hpMultiplier), fmt(survivor.weaponMultiplier), fmt(survivor.speedMultiplier)), 0, h * .56f, w, Align.center, false);
@@ -98,7 +98,7 @@ public final class SurvivorScreen extends ScreenAdapter {
 
     private void select(SurvivorCatalog.Survivor survivor) {
         if (!game.profile.selectSurvivor(survivor)) { status = t("survivor.locked"); return; }
-        status = f("survivor.selectedStatus", survivor.displayName);
+        status = f("survivor.selectedStatus", t(survivor.displayNameKey()));
         game.saveProfile();
     }
 
