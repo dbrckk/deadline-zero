@@ -1,10 +1,12 @@
 package com.deadlinezero.game.meta;
 
+import com.deadlinezero.game.combat.WeaponDefinition;
 import com.deadlinezero.game.visual.EnvironmentBiomeRules;
 
 /** Run-local presentation snapshot for mastery rank-ups; never persisted. */
 public final class MasteryRunNotice {
-    public record Notice(String weaponName, int weaponRank, String biomeName, int biomeRank,
+    public record Notice(String weaponName, String weaponNameKey, int weaponRank,
+                         String biomeName, String biomeNameKey, int biomeRank,
                          int creditsReward, int gemsReward) {
         public boolean weaponRankedUp() { return weaponRank > 0; }
         public boolean biomeRankedUp() { return biomeRank > 0; }
@@ -17,15 +19,31 @@ public final class MasteryRunNotice {
 
     public static void clear() { current = null; }
 
+    /** Compatibility overload for headless tests and callers that only have the canonical label. */
     public static void capture(MasteryProgress.Gain gain, String weaponName, EnvironmentBiomeRules.Biome biome) {
+        captureInternal(gain, weaponName, null, biome);
+    }
+
+    public static void capture(MasteryProgress.Gain gain, WeaponDefinition weapon, EnvironmentBiomeRules.Biome biome) {
+        captureInternal(gain, weapon == null ? "WEAPON" : weapon.displayName,
+            weapon == null ? null : weapon.displayNameKey(), biome);
+    }
+
+    private static void captureInternal(MasteryProgress.Gain gain, String weaponName, String weaponNameKey,
+                                        EnvironmentBiomeRules.Biome biome) {
         if (gain == null || !gain.rankedUp()) {
             clear();
             return;
         }
         int weaponRank = gain.weaponRankAfter() > gain.weaponRankBefore() ? gain.weaponRankAfter() : 0;
         int biomeRank = gain.biomeRankAfter() > gain.biomeRankBefore() ? gain.biomeRankAfter() : 0;
-        current = new Notice(weaponName == null ? "WEAPON" : weaponName,
-            weaponRank, biome == null ? "BIOME" : biome.label, biomeRank,
+        current = new Notice(
+            weaponName == null ? "WEAPON" : weaponName,
+            weaponNameKey,
+            weaponRank,
+            biome == null ? "BIOME" : biome.label,
+            biome == null ? null : biome.labelKey(),
+            biomeRank,
             Math.max(0, gain.creditsReward()), Math.max(0, gain.gemsReward()));
     }
 
