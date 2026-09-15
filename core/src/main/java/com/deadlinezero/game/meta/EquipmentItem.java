@@ -10,6 +10,12 @@ public final class EquipmentItem {
     public final int level;
     public final float powerBonus;
 
+    public String rarityKey() { return "equipment.rarity." + rarity.name().toLowerCase(java.util.Locale.ROOT); }
+    public String slotKey() { return "equipment.slot." + slot.name().toLowerCase(java.util.Locale.ROOT); }
+    public String nameKey() {
+        return ThreatMilestoneRewardCatalog.isExclusiveId(id) ? "equipment." + id + ".name" : null;
+    }
+
     public EquipmentItem(String id, String name, PlayerProfile.EquipmentSlot slot,
                          Rarity rarity, int level, float powerBonus) {
         this.id = id;
