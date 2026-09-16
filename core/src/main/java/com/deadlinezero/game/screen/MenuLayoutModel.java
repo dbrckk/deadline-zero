@@ -50,7 +50,7 @@ public final class MenuLayoutModel {
         );
 
         Rectangle[] tabs = new Rectangle[6];
-        float tabW = bottomNav.width / tabs.length;
+        float tabW = Math.nextDown(bottomNav.width / tabs.length);
         for (int i = 0; i < tabs.length; i++) {
             tabs[i] = new Rectangle(bottomNav.x + i * tabW, bottomNav.y, tabW, bottomNav.height);
         }
