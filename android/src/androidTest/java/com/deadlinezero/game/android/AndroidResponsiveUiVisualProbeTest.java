@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -27,19 +28,22 @@ import org.junit.runner.RunWith;
 /**
  * Phone-aspect visual gate for the responsive UI system.
  *
- * The dedicated workflow runs this test after forcing the emulator to a 1536x691 display, matching
- * the physical-device aspect ratio that exposed the original mixed pixel/logical-coordinate bug.
- * The ordinary connected-device suite is allowed to skip it when running at a conventional aspect.
+ * The dedicated workflow opts into this probe after forcing the emulator to the physical-device
+ * aspect that exposed the original mixed pixel/logical-coordinate bug. Ordinary connected-device
+ * suites skip it explicitly so a conventional 16:9 emulator cannot fail this dedicated visual gate.
  */
 @RunWith(AndroidJUnit4.class)
 public final class AndroidResponsiveUiVisualProbeTest {
     private static final float MIN_WIDE_ASPECT = 2.05f;
+    private static final String WIDE_PROBE_ARGUMENT = "deadlinezero.wideProbe";
 
     @Test
     public void capturesWidePhoneMetaAndCombatScreens() throws Exception {
-        assumeWidePhoneAspect();
+        assumeTrue("wide-phone visual probe only runs in the dedicated workflow", dedicatedWideProbe());
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
+            Thread.sleep(650L);
+            assertWidePhoneAspect();
 
             runOnGameThread(activity, () -> {
                 DeadlineZeroGame game = game(activity);
@@ -94,12 +98,17 @@ public final class AndroidResponsiveUiVisualProbeTest {
         }
     }
 
-    private static void assumeWidePhoneAspect() {
+    private static boolean dedicatedWideProbe() {
+        Bundle arguments = InstrumentationRegistry.getArguments();
+        return "true".equalsIgnoreCase(arguments.getString(WIDE_PROBE_ARGUMENT, "false"));
+    }
+
+    private static void assertWidePhoneAspect() {
         Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
         assertNotNull("Android UiAutomation did not return an aspect probe screenshot", bitmap);
         try {
             float aspect = bitmap.getWidth() / (float) Math.max(1, bitmap.getHeight());
-            assumeTrue("wide-phone visual probe requires aspect > " + MIN_WIDE_ASPECT + ", was " + aspect,
+            assertTrue("dedicated wide-phone probe did not reach aspect > " + MIN_WIDE_ASPECT + ", was " + aspect,
                 aspect > MIN_WIDE_ASPECT);
         } finally {
             bitmap.recycle();
