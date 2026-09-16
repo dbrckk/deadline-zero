@@ -45,13 +45,12 @@ public final class Localization {
     }
 
     /**
-     * Normalizes punctuation that is not present in libGDX's bundled default BitmapFont.
-     * Screens intentionally keep authored localization copy expressive; this render boundary
-     * guarantees that the runtime never substitutes missing-glyph boxes on the shipping font.
+     * Normalizes punctuation that is not present in libGDX's bundled default BitmapFont and keeps
+     * accidental unresolved MessageFormat tokens from leaking into visible UI copy.
      */
     public static String sanitizeForBitmapFont(String value) {
         if (value == null || value.isEmpty()) return "";
-        return value
+        String sanitized = value
             .replace("•", "|")
             .replace("‹", "<")
             .replace("›", ">")
@@ -62,5 +61,8 @@ public final class Localization {
             .replace("–", "-")
             .replace("—", "-")
             .replace("…", "...");
+        sanitized = sanitized.replaceAll("\\{\\d+\\}\\s*\\|\\s*", "");
+        sanitized = sanitized.replaceAll("\\{\\d+\\}", "");
+        return sanitized.trim();
     }
 }
