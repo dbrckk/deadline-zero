@@ -22,10 +22,12 @@ final class CombatHudLayoutTest {
                     assertTrue(layout.hordeStatus().width >= 220f);
                     assertFalse(layout.survival().overlaps(layout.hordeStatus()));
                     assertFalse(layout.toast().overlaps(playerSafeZone(layout)));
-                    assertTrue(layout.toast().width <= layout.logicalWidth() * .42f);
+                    assertTrue(layout.toast().width <= layout.logicalWidth() * .30f);
+                    assertTrue(layout.toast().height <= 44f * Math.max(1f, scale));
                     if (boss) {
                         assertNotNull(layout.boss());
                         assertFalse(layout.boss().overlaps(layout.toast()));
+                        assertTrue(layout.boss().height <= 18f * Math.max(1f, scale));
                     }
                     assertTrue(layout.dashRadius() >= 32f);
                     assertTrue(layout.logicalWidth() >= 1280f);
