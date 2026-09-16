@@ -47,11 +47,15 @@ public final class CombatSpritePass {
     public GraphicsQuality quality() { return quality; }
     public void setQuality(GraphicsQuality quality) { if (quality != null) this.quality = quality; }
 
-    /** First world pass: authored zombie-wave floor with sparse hazard accents. */
-    public void renderEnvironmentFloor(SpriteBatch batch) {
-        if (!characters.authoredAvailable()) return;
+    /**
+     * First world pass: authored zombie-wave floor with sparse hazard accents.
+     * If the premium floor cannot be produced, keep the cleared background rather than restoring
+     * the deprecated hazard-wallpaper floor.
+     */
+    public boolean renderEnvironmentFloor(SpriteBatch batch) {
+        if (!characters.authoredAvailable()) return false;
         boolean drawn = world.drawFloor(batch, RunStageContext.stage(), RunStageContext.encounterSeed(), stateTime);
-        if (!drawn) environment.drawFloor(batch, 1f);
+        return CombatFloorFallbackPolicy.modeFor(drawn) == CombatFloorFallbackPolicy.Mode.PREMIUM_TEXTURED;
     }
 
     /** Second world pass: decals and props, intended above ground FX but below combatants. */
@@ -60,7 +64,7 @@ public final class CombatSpritePass {
         environment.drawSetDressing(batch);
     }
 
-    /** Transitional environment-only wrapper retaining the historical blended floor. */
+    /** Transitional environment-only wrapper retaining the premium floor + dressing ordering. */
     public void renderEnvironment(SpriteBatch batch) {
         if (!characters.authoredAvailable()) return;
         renderEnvironmentFloor(batch);
@@ -101,12 +105,12 @@ public final class CombatSpritePass {
             && art.hasAnimation("survivor/rex/e/attack");
     }
 
-    /** Compatibility wrapper preserving the historical environment + combat ordering. */
+    /** Compatibility wrapper preserving the environment + combat ordering. */
     public void render(SpriteBatch batch, Player player, Array<Enemy> enemies) {
         render(batch, player, enemies, CombatPolishController.currentPools());
     }
 
-    /** Compatibility wrapper preserving the historical environment + combat ordering. */
+    /** Compatibility wrapper preserving the environment + combat ordering. */
     public void render(SpriteBatch batch, Player player, Array<Enemy> enemies, Pools pools) {
         renderEnvironment(batch);
         renderCombat(batch, player, enemies, pools);
