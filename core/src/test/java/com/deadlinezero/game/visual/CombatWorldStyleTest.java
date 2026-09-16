@@ -13,9 +13,9 @@ final class CombatWorldStyleTest {
         CombatWorldStyle.Profile b = CombatWorldStyle.forStage(1, 42L);
 
         assertEquals(a, b);
-        assertTrue(a.hazardCoverage() <= .025f);
-        assertTrue(a.hazardMarkerSize() <= 1.8f);
-        assertTrue(a.hazardMarkerSize() >= 1.1f);
+        assertTrue(a.hazardCoverage() <= .012f);
+        assertTrue(a.hazardMarkerSize() <= .70f);
+        assertTrue(a.hazardMarkerSize() >= .40f);
         assertTrue(a.largeFeatureCount() >= 4 && a.largeFeatureCount() <= 12);
         assertTrue(a.propCount() >= 6 && a.propCount() <= 24);
         assertTrue(a.decalCount() >= 8 && a.decalCount() <= 36);
@@ -29,7 +29,7 @@ final class CombatWorldStyleTest {
 
         assertNotEquals(a.seed(), b.seed());
         assertNotEquals(a.decalCount(), b.decalCount());
-        assertTrue(b.hazardCoverage() <= .025f);
-        assertTrue(b.hazardMarkerSize() <= 1.8f);
+        assertTrue(b.hazardCoverage() <= .012f);
+        assertTrue(b.hazardMarkerSize() <= .70f);
     }
 }
