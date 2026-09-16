@@ -3,10 +3,12 @@ package com.deadlinezero.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.combat.WeaponDefinition;
@@ -15,92 +17,143 @@ import com.deadlinezero.game.meta.DailyService;
 import com.deadlinezero.game.meta.MasteryProgress;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.meta.WeeklyService;
+import com.deadlinezero.game.ui.MetaLayout;
+import com.deadlinezero.game.ui.UiLayout;
+import com.deadlinezero.game.ui.UiRenderer;
+import com.deadlinezero.game.ui.UiTypography;
+import com.deadlinezero.game.ui.UiViewport;
 import com.deadlinezero.game.visual.EnvironmentBiomeRules;
+import com.deadlinezero.game.visual.VisualTheme;
 
-/** Functional daily/weekly missions plus permanent non-FOMO mastery progression. */
+/** Responsive daily/weekly missions plus permanent non-FOMO mastery progression. */
 public final class MissionsScreen extends ScreenAdapter {
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
     private final BitmapFont font = new BitmapFont();
+    private final ShapeRenderer shapes = new ShapeRenderer();
+    private final UiViewport viewport = new UiViewport();
+    private final Vector2 touch = new Vector2();
+    private final Rectangle[] dailyRows = new Rectangle[4];
+    private final Rectangle[] weeklyRows = new Rectangle[3];
+    private final Rectangle[] achievementRows = new Rectangle[AchievementService.Achievement.values().length];
+    private UiLayout.Metrics metrics;
+    private MetaLayout.Layout layout;
+    private Rectangle dailyPanel;
+    private Rectangle weeklyPanel;
+    private Rectangle progressPanel;
+    private Rectangle masteryPanel;
+    private Rectangle achievementsPanel;
+    private float visualTime;
 
-    public MissionsScreen(DeadlineZeroGame game) { this.game = game; }
+    public MissionsScreen(DeadlineZeroGame game) {
+        this.game = game;
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    @Override public void resize(int width, int height) {
+        viewport.resize(width, height);
+        metrics = UiLayout.compute(width, height);
+        layout = MetaLayout.compute(metrics);
+        Rectangle[] columns = MetaLayout.columns(layout.content(), 3, 18f);
+        dailyPanel = columns[0];
+        weeklyPanel = columns[1];
+        progressPanel = columns[2];
+
+        Rectangle dailyInner = inset(dailyPanel, 16f, 48f, 16f, 14f);
+        Rectangle[] d = MetaLayout.rows(dailyInner, 4, 10f);
+        System.arraycopy(d, 0, dailyRows, 0, dailyRows.length);
+        Rectangle weeklyInner = inset(weeklyPanel, 16f, 48f, 16f, 14f);
+        Rectangle[] w = MetaLayout.rows(weeklyInner, 3, 12f);
+        System.arraycopy(w, 0, weeklyRows, 0, weeklyRows.length);
+
+        float masteryH = Math.min(142f, progressPanel.height * .32f);
+        masteryPanel = new Rectangle(progressPanel.x + 14f, progressPanel.y + progressPanel.height - masteryH - 46f,
+            progressPanel.width - 28f, masteryH);
+        achievementsPanel = new Rectangle(progressPanel.x + 14f, progressPanel.y + 14f,
+            progressPanel.width - 28f, masteryPanel.y - progressPanel.y - 28f);
+        float gap = 8f;
+        int cols = 2;
+        int rows = (achievementRows.length + 1) / 2;
+        float cellW = (achievementsPanel.width - gap) / cols;
+        float cellH = (achievementsPanel.height - gap * Math.max(0, rows - 1)) / rows;
+        for (int i = 0; i < achievementRows.length; i++) {
+            int c = i % cols;
+            int r = i / cols;
+            achievementRows[i] = new Rectangle(achievementsPanel.x + c * (cellW + gap),
+                achievementsPanel.y + achievementsPanel.height - (r + 1) * cellH - r * gap, cellW, cellH);
+        }
+    }
 
     @Override public void render(float delta) {
+        visualTime += Math.max(0f, delta);
         handleInput();
-        Gdx.gl.glClearColor(.012f, .018f, .027f, 1f);
+        Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+        viewport.apply(batch, shapes);
         PlayerProfile p = game.profile;
 
-        float margin = Math.max(44f, w * .045f);
-        float gutter = Math.max(38f, w * .035f);
-        float columnWidth = (w - margin * 2f - gutter) * .5f;
-        float leftX = margin;
-        float rightX = margin + columnWidth + gutter;
+        shapes.begin(ShapeRenderer.ShapeType.Filled);
+        UiRenderer.background(shapes, metrics, visualTime);
+        UiRenderer.topRail(shapes, metrics);
+        UiRenderer.panel(shapes, dailyPanel.x, dailyPanel.y, dailyPanel.width, dailyPanel.height);
+        UiRenderer.panel(shapes, weeklyPanel.x, weeklyPanel.y, weeklyPanel.width, weeklyPanel.height);
+        UiRenderer.panel(shapes, progressPanel.x, progressPanel.y, progressPanel.width, progressPanel.height);
+        for (Rectangle r : dailyRows) UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, false);
+        for (Rectangle r : weeklyRows) UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, false);
+        UiRenderer.card(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height, false, true);
+        for (int i = 0; i < achievementRows.length; i++) {
+            AchievementService.Achievement a = AchievementService.Achievement.values()[i];
+            boolean unlocked = AchievementService.unlocked(p, a);
+            boolean claimed = p.achievements.claimed(a);
+            UiRenderer.card(shapes, achievementRows[i].x, achievementRows[i].y, achievementRows[i].width,
+                achievementRows[i].height, unlocked && !claimed, claimed);
+        }
+        shapes.end();
 
         batch.begin();
-        font.getData().setScale(2.05f);
-        font.setColor(Color.WHITE);
-        font.draw(batch, t("missions.title"), 0, h - 44f, w, Align.center, false);
-
-        font.getData().setScale(1.42f);
-        font.setColor(Color.GOLD);
-        font.draw(batch, t("missions.daily"), leftX, h - 118f);
-        font.setColor(new Color(.72f, .58f, 1f, 1f));
-        font.draw(batch, t("missions.weekly"), rightX, h - 118f);
-
-        font.getData().setScale(1.10f);
-        font.setColor(Color.GOLD);
-        font.draw(batch, f("missions.login", p.daily.loginStreak,
-            p.daily.loginClaimed ? t("missions.loginClaimed") : t("missions.loginClaim")), leftX, h - 158f);
-
-        font.getData().setScale(1.16f);
-        drawMission(t("missions.dailyKills"), p.daily.killsToday, 100,
-            p.daily.killMissionClaimed, leftX, h - 210f);
-        drawMission(t("missions.dailyRuns"), p.daily.runsToday, 3,
-            p.daily.runMissionClaimed, leftX, h - 258f);
-        drawMission(t("missions.dailyBoss"), p.daily.bossesToday, 1,
-            p.daily.bossMissionClaimed, leftX, h - 306f);
-
-        drawMission(f("missions.weeklyKills", WeeklyService.KILL_TARGET),
-            p.weekly.kills, WeeklyService.KILL_TARGET, p.weekly.killMissionClaimed, rightX, h - 210f);
-        drawMission(f("missions.weeklyRuns", WeeklyService.RUN_TARGET),
-            p.weekly.runs, WeeklyService.RUN_TARGET, p.weekly.runMissionClaimed, rightX, h - 258f);
-        drawMission(f("missions.weeklyBoss", WeeklyService.BOSS_TARGET),
-            p.weekly.bosses, WeeklyService.BOSS_TARGET, p.weekly.bossMissionClaimed, rightX, h - 306f);
-
-        font.getData().setScale(.96f);
-        font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, t("missions.dailyRewards"), leftX, h - 354f, columnWidth, Align.left, false);
-        font.draw(batch, t("missions.weeklyRewards"), rightX, h - 354f, columnWidth, Align.left, false);
-
-        drawMastery(p, w, h, margin);
-        font.getData().setScale(.96f);
-        font.setColor(Color.LIGHT_GRAY);
-        font.setColor(Color.GOLD);
-        font.getData().setScale(.92f);
-        font.draw(batch, t("missions.achievements"), rightX, h - 438f);
-        font.getData().setScale(.94f);
-        int achievementY = (int) (h - 482f);
-        int key = 7;
-        for (AchievementService.Achievement achievement : AchievementService.Achievement.values()) {
-            boolean unlocked = AchievementService.unlocked(p, achievement);
-            boolean claimed = p.achievements.claimed(achievement);
-            font.setColor(claimed ? Color.GRAY : unlocked ? Color.GOLD : Color.LIGHT_GRAY);
-            String state = claimed ? t("missions.claimed") : unlocked ? f("missions.achievementClaim", key) : t("missions.locked");
-            font.draw(batch, f("missions.achievementLine", t(achievement.titleKey()), t(achievement.descriptionKey()), state),
-                rightX, achievementY, columnWidth, Align.left, false);
-            achievementY -= 42;
-            key++;
-        }
-
-        font.getData().setScale(.62f);
-        font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, t("missions.footer"), margin, 44f);
+        drawHeader();
+        drawDaily(p);
+        drawWeekly(p);
+        drawProgress(p);
         batch.end();
     }
 
-    private void drawMastery(PlayerProfile p, float w, float h, float margin) {
+    private void drawHeader() {
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, t("shop.back"), layout.back().x + 10f, layout.back().y + layout.back().height * .56f,
+            layout.back().width - 16f, Align.left, false);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE));
+        font.setColor(VisualTheme.TEXT_STRONG);
+        font.draw(batch, t("missions.title"), metrics.safeLeft() + 138f, metrics.headerBottom() + 55f,
+            metrics.contentWidth() - 276f, Align.center, false);
+    }
+
+    private void drawDaily(PlayerProfile p) {
+        heading(t("missions.daily"), dailyPanel, VisualTheme.GOLD);
+        drawClaimRow(dailyRows[0], f("missions.login", p.daily.loginStreak,
+            p.daily.loginClaimed ? t("missions.loginClaimed") : t("missions.loginClaim")),
+            p.daily.loginClaimed, !p.daily.loginClaimed);
+        drawClaimRow(dailyRows[1], progressText(t("missions.dailyKills"), p.daily.killsToday, 100),
+            p.daily.killMissionClaimed, p.daily.killsToday >= 100);
+        drawClaimRow(dailyRows[2], progressText(t("missions.dailyRuns"), p.daily.runsToday, 3),
+            p.daily.runMissionClaimed, p.daily.runsToday >= 3);
+        drawClaimRow(dailyRows[3], progressText(t("missions.dailyBoss"), p.daily.bossesToday, 1),
+            p.daily.bossMissionClaimed, p.daily.bossesToday >= 1);
+    }
+
+    private void drawWeekly(PlayerProfile p) {
+        heading(t("missions.weekly"), weeklyPanel, VisualTheme.VIOLET);
+        drawClaimRow(weeklyRows[0], progressText(f("missions.weeklyKills", WeeklyService.KILL_TARGET), p.weekly.kills, WeeklyService.KILL_TARGET),
+            p.weekly.killMissionClaimed, p.weekly.kills >= WeeklyService.KILL_TARGET);
+        drawClaimRow(weeklyRows[1], progressText(f("missions.weeklyRuns", WeeklyService.RUN_TARGET), p.weekly.runs, WeeklyService.RUN_TARGET),
+            p.weekly.runMissionClaimed, p.weekly.runs >= WeeklyService.RUN_TARGET);
+        drawClaimRow(weeklyRows[2], progressText(f("missions.weeklyBoss", WeeklyService.BOSS_TARGET), p.weekly.bosses, WeeklyService.BOSS_TARGET),
+            p.weekly.bossMissionClaimed, p.weekly.bosses >= WeeklyService.BOSS_TARGET);
+    }
+
+    private void drawProgress(PlayerProfile p) {
+        heading(t("missions.mastery"), progressPanel, VisualTheme.accent());
         WeaponDefinition weapon = p.selectedWeapon();
         EnvironmentBiomeRules.Biome biome = EnvironmentBiomeRules.forStage(p.selectedStage);
         int weaponRank = p.mastery.weaponRank(weapon.id);
@@ -108,37 +161,51 @@ public final class MissionsScreen extends ScreenAdapter {
         int weaponNext = p.mastery.winsForNextWeaponRank(weapon.id);
         int biomeNext = p.mastery.winsForNextBiomeRank(biome);
 
-        float y = h - 438f;
-        font.setColor(Color.CYAN);
-        font.getData().setScale(1.28f);
-        font.draw(batch, t("missions.mastery"), margin, y);
-
-        font.getData().setScale(1.05f);
-        font.setColor(Color.WHITE);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.TEXT_STRONG);
         font.draw(batch, f("missions.masteryLine", t(weapon.displayNameKey()), weaponRank, MasteryProgress.MAX_RANK,
-            t("mastery.rank." + weaponRank), nextLabel(weaponNext)),
-            margin, y - 52f, w - margin * 2f, Align.left, false);
-
-        font.setColor(new Color(.72f, .58f, 1f, 1f));
+            t("mastery.rank." + weaponRank), nextLabel(weaponNext)), masteryPanel.x + 12f,
+            masteryPanel.y + masteryPanel.height - 25f, masteryPanel.width - 24f, Align.left, true);
+        font.setColor(VisualTheme.VIOLET);
         font.draw(batch, f("missions.masteryLine", t(biome.labelKey()), biomeRank, MasteryProgress.MAX_RANK,
-            t("mastery.rank." + biomeRank), nextLabel(biomeNext)),
-            margin, y - 100f, w - margin * 2f, Align.left, false);
+            t("mastery.rank." + biomeRank), nextLabel(biomeNext)), masteryPanel.x + 12f,
+            masteryPanel.y + masteryPanel.height * .48f, masteryPanel.width - 24f, Align.left, true);
 
-        font.getData().setScale(.90f);
-        font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, t("missions.masteryInfo"),
-            margin, y - 146f, w - margin * 2f, Align.left, false);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, t("missions.achievements"), achievementsPanel.x, achievementsPanel.y + achievementsPanel.height + 18f,
+            achievementsPanel.width, Align.left, false);
+        AchievementService.Achievement[] all = AchievementService.Achievement.values();
+        for (int i = 0; i < all.length; i++) {
+            Rectangle r = achievementRows[i];
+            boolean unlocked = AchievementService.unlocked(p, all[i]);
+            boolean claimed = p.achievements.claimed(all[i]);
+            font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .90f);
+            font.setColor(claimed ? VisualTheme.MUTED : unlocked ? VisualTheme.GOLD : VisualTheme.TEXT_DIM);
+            font.draw(batch, t(all[i].titleKey()), r.x + 8f, r.y + r.height * .67f, r.width - 16f, Align.center, true);
+            font.setColor(claimed ? VisualTheme.MUTED : unlocked ? VisualTheme.accent() : VisualTheme.MUTED);
+            font.draw(batch, claimed ? t("missions.claimed") : unlocked ? t("common.open") : t("missions.locked"),
+                r.x + 8f, r.y + 17f, r.width - 16f, Align.center, false);
+        }
     }
 
-    private String nextLabel(int winsNeeded) {
-        if (winsNeeded <= 0) return t("missions.nextMax");
-        return winsNeeded == 1 ? f("missions.nextOne", winsNeeded) : f("missions.nextMany", winsNeeded);
+    private void heading(String text, Rectangle panel, com.badlogic.gdx.graphics.Color color) {
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
+        font.setColor(color);
+        font.draw(batch, text, panel.x + 16f, panel.y + panel.height - 16f, panel.width - 32f, Align.left, false);
     }
 
-    private void drawMission(String title, int progress, int target, boolean claimed, float x, float y) {
-        font.setColor(claimed ? Color.LIME : Color.WHITE);
-        font.draw(batch, f("missions.progress", title, Math.min(progress, target), target,
-            claimed ? t("missions.progressClaimed") : ""), x, y);
+    private void drawClaimRow(Rectangle r, String text, boolean claimed, boolean ready) {
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(claimed ? VisualTheme.MUTED : VisualTheme.TEXT_STRONG);
+        font.draw(batch, text, r.x + 12f, r.y + r.height * .64f, r.width - 24f, Align.left, true);
+        font.setColor(claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : VisualTheme.TEXT_DIM);
+        font.draw(batch, claimed ? t("missions.claimed") : ready ? t("common.open") : "…",
+            r.x + 12f, r.y + 17f, r.width - 24f, Align.right, false);
+    }
+
+    private String progressText(String title, int progress, int target) {
+        return f("missions.progress", title, Math.min(progress, target), target, "");
     }
 
     private void handleInput() {
@@ -151,17 +218,47 @@ public final class MissionsScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) changed |= WeeklyService.claimKillMission(game.profile);
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) changed |= WeeklyService.claimRunMission(game.profile);
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) changed |= WeeklyService.claimBossMission(game.profile);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.FIRST_DEPLOYMENT);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.FIELD_VETERAN);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.EXTERMINATOR);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.FIRST_CLEAR);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.DEEP_STRIKE);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) changed |= AchievementService.claim(game.profile, AchievementService.Achievement.ACCOUNT_TEN);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) changed |= claimAchievement(0);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) changed |= claimAchievement(1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) changed |= claimAchievement(2);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) changed |= claimAchievement(3);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) changed |= claimAchievement(4);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) changed |= claimAchievement(5);
+
+        if (Gdx.input.justTouched()) {
+            viewport.unproject(Gdx.input.getX(), Gdx.input.getY(), touch);
+            if (layout.back().contains(touch)) { game.showMenu(); return; }
+            if (dailyRows[0].contains(touch)) changed |= DailyService.claimLogin(game.profile);
+            else if (dailyRows[1].contains(touch)) changed |= DailyService.claimKillMission(game.profile);
+            else if (dailyRows[2].contains(touch)) changed |= DailyService.claimRunMission(game.profile);
+            else if (dailyRows[3].contains(touch)) changed |= DailyService.claimBossMission(game.profile);
+            else if (weeklyRows[0].contains(touch)) changed |= WeeklyService.claimKillMission(game.profile);
+            else if (weeklyRows[1].contains(touch)) changed |= WeeklyService.claimRunMission(game.profile);
+            else if (weeklyRows[2].contains(touch)) changed |= WeeklyService.claimBossMission(game.profile);
+            else {
+                for (int i = 0; i < achievementRows.length; i++) if (achievementRows[i].contains(touch)) { changed |= claimAchievement(i); break; }
+            }
+        }
         if (changed) game.saveProfile();
+    }
+
+    private boolean claimAchievement(int index) {
+        AchievementService.Achievement[] all = AchievementService.Achievement.values();
+        if (index < 0 || index >= all.length) return false;
+        return AchievementService.claim(game.profile, all[index]);
+    }
+
+    private String nextLabel(int winsNeeded) {
+        if (winsNeeded <= 0) return t("missions.nextMax");
+        return winsNeeded == 1 ? f("missions.nextOne", winsNeeded) : f("missions.nextMany", winsNeeded);
+    }
+
+    private static Rectangle inset(Rectangle r, float left, float top, float right, float bottom) {
+        return new Rectangle(r.x + left, r.y + bottom, Math.max(1f, r.width - left - right), Math.max(1f, r.height - top - bottom));
     }
 
     private String t(String key) { return game.i18n.text(key); }
     private String f(String key, Object... args) { return game.i18n.format(key, args); }
 
-    @Override public void dispose() { batch.dispose(); font.dispose(); }
+    @Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }
 }

@@ -8,122 +8,268 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.EquipmentService;
 import com.deadlinezero.game.meta.EquipmentUpgradeService;
 import com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog;
 import com.deadlinezero.game.meta.ThreatSetBonusRules;
+import com.deadlinezero.game.ui.ResponsiveGrid;
+import com.deadlinezero.game.ui.UiLayout;
+import com.deadlinezero.game.ui.UiRenderer;
+import com.deadlinezero.game.ui.UiTypography;
+import com.deadlinezero.game.ui.UiViewport;
+import com.deadlinezero.game.visual.VisualTheme;
 
-/** Functional pre-art gear management screen. */
+/** Responsive gear inventory with explicit equip/upgrade/fuse actions. */
 public final class GearScreen extends ScreenAdapter {
+    private static final int PAGE_SIZE = 6;
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
     private final ShapeRenderer shapes = new ShapeRenderer();
     private final BitmapFont font = new BitmapFont();
+    private final UiViewport viewport = new UiViewport();
+    private final Vector2 touch = new Vector2();
+    private final Rectangle[] cardBounds = new Rectangle[PAGE_SIZE];
+    private final Rectangle[] actions = new Rectangle[4];
+    private UiLayout.Metrics metrics;
+    private ResponsiveGrid.Spec grid;
+    private Rectangle detail;
+    private float cardHeight;
+    private float visualTime;
     private int index;
     private String status = "";
 
-    public GearScreen(DeadlineZeroGame game) { this.game = game; }
+    public GearScreen(DeadlineZeroGame game) {
+        this.game = game;
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    @Override public void resize(int width, int height) {
+        viewport.resize(width, height);
+        metrics = UiLayout.compute(width, height);
+        grid = ResponsiveGrid.compute(metrics.contentWidth(), 420f, 3, 16f);
+        cardHeight = grid.columns() >= 3 ? 92f : 72f;
+        int rows = (PAGE_SIZE + grid.columns() - 1) / grid.columns();
+        float gridHeight = rows * cardHeight + Math.max(0, rows - 1) * grid.gap();
+        float gridBottom = metrics.contentTop() - gridHeight;
+        detail = new Rectangle(metrics.safeLeft(), metrics.contentBottom(), metrics.contentWidth(),
+            Math.max(130f, gridBottom - metrics.contentBottom() - 20f));
+        for (int i = 0; i < cardBounds.length; i++) {
+            cardBounds[i] = ResponsiveGrid.cardBounds(i, metrics.safeLeft(), metrics.contentTop(), cardHeight, grid);
+        }
+        float actionW = metrics.contentWidth() / actions.length;
+        float actionH = Math.max(metrics.touchTarget(), metrics.footerTop() - metrics.safeBottom() - 12f);
+        for (int i = 0; i < actions.length; i++) {
+            actions[i] = new Rectangle(metrics.safeLeft() + i * actionW + 4f, metrics.safeBottom() + 6f,
+                actionW - 8f, actionH);
+        }
+    }
 
     @Override public void render(float delta) {
+        visualTime += Math.max(0f, delta);
         handleInput();
-        Gdx.gl.glClearColor(.012f, .018f, .027f, 1f);
+        Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+        viewport.apply(batch, shapes);
+
         int size = game.profile.inventory.size();
-        if (size > 0) index = Math.max(0, Math.min(index, size - 1)); else index = 0;
-        int ascensionPieces = ThreatSetBonusRules.equippedPieces(game.profile);
+        if (size > 0) index = Math.max(0, Math.min(index, size - 1));
+        else index = 0;
+        int pageStart = size == 0 ? 0 : (index / PAGE_SIZE) * PAGE_SIZE;
+        int pageEnd = Math.min(size, pageStart + PAGE_SIZE);
 
+        drawShapes(size, pageStart, pageEnd);
+        drawText(size, pageStart, pageEnd);
+    }
+
+    private void drawShapes(int size, int pageStart, int pageEnd) {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(.025f, .04f, .06f, 1f); shapes.rect(20, 95, w - 40, h - 145);
-        shapes.setColor(.04f, .09f, .12f, 1f); shapes.rect(35, h * .31f, w - 70, h * .32f);
-        shapes.setColor(.06f, .55f, .75f, 1f); shapes.rect(35, 32, w * .20f, 48);
-        shapes.setColor(.16f, .42f, .25f, 1f); shapes.rect(w * .30f, 32, w * .20f, 48);
-        shapes.setColor(.45f, .3f, .08f, 1f); shapes.rect(w * .55f, 32, w * .20f, 48);
-        shapes.setColor(.42f, .16f, .52f, 1f); shapes.rect(w * .79f, 32, w * .17f, 48);
-        shapes.end();
+        UiRenderer.background(shapes, metrics, visualTime);
+        UiRenderer.topRail(shapes, metrics);
+        UiRenderer.bottomNav(shapes, metrics);
+        UiRenderer.panel(shapes, detail.x, detail.y, detail.width, detail.height);
 
-        batch.begin();
-        font.getData().setScale(1.15f); font.setColor(Color.WHITE);
-        font.draw(batch, t("gear.title"), 0, h - 38, w, Align.center, false);
-        font.getData().setScale(.58f);
-        font.setColor(Color.LIGHT_GRAY);
-        font.draw(batch, f("gear.power", String.format("%.3f", game.profile.aggregatePowerMultiplier())), 0, h - 72, w, Align.center, false);
-        font.getData().setScale(.40f);
-        font.setColor(ascensionPieces >= 2 ? Color.GOLD : Color.GRAY);
-        font.draw(batch, ThreatSetBonusRules.summary(ascensionPieces), 0, h - 96, w, Align.center, false);
-
-        if (size == 0) {
-            font.draw(batch, t("gear.empty"), 0, h * .52f, w, Align.center, false);
-        } else {
-            EquipmentItem item = game.profile.inventory.items().get(index);
+        for (int i = pageStart; i < pageEnd; i++) {
+            Rectangle r = cardBounds[i - pageStart];
+            EquipmentItem item = game.profile.inventory.items().get(i);
             EquipmentItem equipped = game.profile.equipped(item.slot);
             boolean isEquipped = equipped != null && equipped.id.equals(item.id);
-            boolean ascensionExclusive = ThreatMilestoneRewardCatalog.isExclusiveId(item.id);
-            float itemScore = EquipmentService.score(item);
-            float equippedScore = EquipmentService.score(equipped);
-            float scoreDelta = itemScore - equippedScore;
-
-            font.getData().setScale(.82f); font.setColor(rarityColor(item.rarity));
-            font.draw(batch, item.name, 0, h * .59f, w, Align.center, false);
-            font.getData().setScale(.48f);
-            font.setColor(ascensionExclusive ? Color.GOLD : Color.LIGHT_GRAY);
-            font.draw(batch, ascensionExclusive ? t("gear.ascensionExclusive") : t(item.rarityKey()),
-                0, h * .555f, w, Align.center, false);
-            font.getData().setScale(.55f); font.setColor(Color.WHITE);
-            font.draw(batch, f("gear.itemStats", t(item.slotKey()), item.level, Math.round(item.powerBonus * 1000f) / 10f), 0, h * .52f, w, Align.center, false);
-            font.setColor(isEquipped ? Color.LIME : Color.LIGHT_GRAY);
-            font.draw(batch, isEquipped ? t("gear.equipped") : t("gear.unequipped"), 0, h * .465f, w, Align.center, false);
-
-            if (!isEquipped) {
-                font.setColor(scoreDelta >= 0f ? Color.LIME : Color.SCARLET);
-                String compare = equipped == null ? t("gear.noEquipped") :
-                    f("gear.compare", String.format("%+.1f", equippedScore <= 0f ? 100f : (scoreDelta / equippedScore) * 100f));
-                font.draw(batch, compare, 0, h * .425f, w, Align.center, false);
-            }
-
-            font.setColor(Color.GOLD);
-            font.draw(batch, f("gear.upgrade", EquipmentUpgradeService.cost(item)), 0, h * .375f, w, Align.center, false);
-            font.setColor(Color.GRAY);
-            font.draw(batch, f("gear.index", index + 1, size), 0, h * .25f, w, Align.center, false);
+            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == index, isEquipped);
+            shapes.setColor(rarityColor(item.rarity));
+            shapes.rect(r.x + 6f, r.y + 6f, 3f, Math.max(0f, r.height - 12f));
         }
 
-        if (!status.isEmpty()) {
-            font.getData().setScale(.44f); font.setColor(Color.CYAN);
-            font.draw(batch, status, 0, 105, w, Align.center, false);
-        }
+        UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.NORMAL);
+        UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height,
+            size > 0 ? UiRenderer.ButtonState.SELECTED : UiRenderer.ButtonState.DISABLED);
+        UiRenderer.button(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height,
+            size > 0 ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
+        UiRenderer.button(shapes, actions[3].x, actions[3].y, actions[3].width, actions[3].height,
+            size > 0 ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
+        shapes.end();
+    }
 
-        font.getData().setScale(.44f); font.setColor(Color.WHITE);
-        font.draw(batch, t("gear.back"), 35, 61, w * .20f, Align.center, false);
-        font.draw(batch, t("gear.equip"), w * .30f, 61, w * .20f, Align.center, false);
-        font.draw(batch, t("gear.upgradeButton"), w * .55f, 61, w * .20f, Align.center, false);
-        font.draw(batch, t("gear.fuse"), w * .79f, 61, w * .17f, Align.center, false);
+    private void drawText(int size, int pageStart, int pageEnd) {
+        batch.begin();
+        int ascensionPieces = ThreatSetBonusRules.equippedPieces(game.profile);
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE));
+        font.setColor(VisualTheme.TEXT_STRONG);
+        font.draw(batch, t("gear.title"), metrics.safeLeft() + 18f, metrics.headerBottom() + 56f,
+            metrics.contentWidth() * .38f, Align.left, false);
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, f("gear.power", String.format(java.util.Locale.ROOT, "%.3f", game.profile.aggregatePowerMultiplier())),
+            metrics.safeLeft() + metrics.contentWidth() * .40f, metrics.headerBottom() + 48f,
+            metrics.contentWidth() * .25f, Align.center, false);
+        font.setColor(ascensionPieces >= 2 ? VisualTheme.GOLD : VisualTheme.MUTED);
+        font.draw(batch, ThreatSetBonusRules.summary(ascensionPieces), metrics.safeLeft() + metrics.contentWidth() * .64f,
+            metrics.headerBottom() + 48f, metrics.contentWidth() * .34f, Align.right, false);
+
+        if (size == 0) {
+            font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
+            font.setColor(VisualTheme.TEXT_DIM);
+            font.draw(batch, t("gear.empty"), detail.x + 20f, detail.y + detail.height * .58f,
+                detail.width - 40f, Align.center, false);
+        } else {
+            for (int i = pageStart; i < pageEnd; i++) drawCard(game.profile.inventory.items().get(i), i, pageStart);
+            drawDetail(game.profile.inventory.items().get(index), size);
+        }
+        drawActions(size);
         batch.end();
+    }
+
+    private void drawCard(EquipmentItem item, int absoluteIndex, int pageStart) {
+        Rectangle r = cardBounds[absoluteIndex - pageStart];
+        EquipmentItem equipped = game.profile.equipped(item.slot);
+        boolean isEquipped = equipped != null && equipped.id.equals(item.id);
+        boolean exclusive = ThreatMilestoneRewardCatalog.isExclusiveId(item.id);
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
+        font.setColor(rarityColor(item.rarity));
+        font.draw(batch, localizedName(item), r.x + 16f, r.y + r.height - 15f, r.width - 32f, Align.left, false);
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(exclusive ? VisualTheme.GOLD : VisualTheme.TEXT_DIM);
+        font.draw(batch, t(item.slotKey()) + "  •  " + t(item.rarityKey()) + "  •  Lv " + item.level,
+            r.x + 16f, r.y + r.height - 39f, r.width - 32f, Align.left, false);
+        font.setColor(isEquipped ? VisualTheme.positive() : absoluteIndex == index ? VisualTheme.accent() : VisualTheme.TEXT_DIM);
+        font.draw(batch, isEquipped ? t("gear.equipped") : t("gear.unequipped"),
+            r.x + 16f, r.y + 16f, r.width - 32f, Align.right, false);
+    }
+
+    private void drawDetail(EquipmentItem item, int size) {
+        EquipmentItem equipped = game.profile.equipped(item.slot);
+        boolean isEquipped = equipped != null && equipped.id.equals(item.id);
+        float itemScore = EquipmentService.score(item);
+        float equippedScore = EquipmentService.score(equipped);
+        float scoreDelta = itemScore - equippedScore;
+        float x = detail.x + 24f;
+        float top = detail.y + detail.height - 22f;
+        float width = detail.width - 48f;
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
+        font.setColor(rarityColor(item.rarity));
+        font.draw(batch, localizedName(item), x, top, width * .48f, Align.left, false);
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, f("gear.itemStats", t(item.slotKey()), item.level, Math.round(item.powerBonus * 1000f) / 10f),
+            x, top - 28f, width * .48f, Align.left, false);
+        font.setColor(isEquipped ? VisualTheme.positive() : scoreDelta >= 0f ? VisualTheme.positive() : VisualTheme.danger());
+        String compare = isEquipped ? t("gear.equipped") : equipped == null ? t("gear.noEquipped") :
+            f("gear.compare", String.format(java.util.Locale.ROOT, "%+.1f", equippedScore <= 0f ? 100f : (scoreDelta / equippedScore) * 100f));
+        font.draw(batch, compare, x, top - 54f, width * .48f, Align.left, false);
+
+        float rightX = detail.x + detail.width * .54f;
+        font.setColor(VisualTheme.GOLD);
+        font.draw(batch, f("gear.upgrade", EquipmentUpgradeService.cost(item)), rightX, top, detail.width * .42f, Align.left, false);
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, f("gear.index", index + 1, size), rightX, top - 28f, detail.width * .42f, Align.left, false);
+        if (!status.isEmpty()) {
+            font.setColor(VisualTheme.accent());
+            font.draw(batch, status, rightX, top - 56f, detail.width * .42f, Align.left, true);
+        }
+    }
+
+    private void drawActions(int size) {
+        String[] labels = {t("gear.back"), t("gear.equip"), t("gear.upgradeButton"), t("gear.fuse")};
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
+        for (int i = 0; i < actions.length; i++) {
+            font.setColor(size == 0 && i > 0 ? VisualTheme.MUTED : i == 1 ? VisualTheme.TEXT_STRONG : VisualTheme.TEXT);
+            Rectangle r = actions[i];
+            font.draw(batch, labels[i], r.x + 8f, r.y + r.height * .60f, r.width - 16f, Align.center, false);
+        }
     }
 
     private void handleInput() {
         int size = game.profile.inventory.size();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) { game.showMenu(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+            AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK);
+            game.showMenu();
+            return;
+        }
+        if (size > 0) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) { move(-1, size); return; }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) { move(1, size); return; }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) { toggleEquip(); return; }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.U)) { upgradeSelected(); return; }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F)) { fuseSelected(game.profile.inventory.items().get(index)); return; }
+        }
+        if (!Gdx.input.justTouched()) return;
+
+        viewport.unproject(Gdx.input.getX(), Gdx.input.getY(), touch);
+        if (actions[0].contains(touch)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK); game.showMenu(); return; }
         if (size == 0) return;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) index = (index - 1 + size) % size;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) index = (index + 1) % size;
+        if (actions[1].contains(touch)) { toggleEquip(); return; }
+        if (actions[2].contains(touch)) { upgradeSelected(); return; }
+        if (actions[3].contains(touch)) { fuseSelected(game.profile.inventory.items().get(index)); return; }
+
+        int pageStart = (index / PAGE_SIZE) * PAGE_SIZE;
+        int pageEnd = Math.min(size, pageStart + PAGE_SIZE);
+        for (int i = pageStart; i < pageEnd; i++) {
+            if (!cardBounds[i - pageStart].contains(touch)) continue;
+            index = i;
+            status = "";
+            AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+            return;
+        }
+    }
+
+    private void move(int delta, int size) {
+        index = (index + delta + size) % size;
+        status = "";
+        AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+    }
+
+    private void toggleEquip() {
+        if (game.profile.inventory.size() == 0) return;
         EquipmentItem item = game.profile.inventory.items().get(index);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            EquipmentItem current = game.profile.equipped(item.slot);
-            if (current != null && current.id.equals(item.id)) EquipmentService.unequip(game.profile, item.slot);
-            else EquipmentService.equip(game.profile, item.id);
-            status = t("gear.loadoutUpdated");
+        EquipmentItem current = game.profile.equipped(item.slot);
+        if (current != null && current.id.equals(item.id)) EquipmentService.unequip(game.profile, item.slot);
+        else EquipmentService.equip(game.profile, item.id);
+        status = t("gear.loadoutUpdated");
+        game.saveProfile();
+        AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+    }
+
+    private void upgradeSelected() {
+        if (game.profile.inventory.size() == 0) return;
+        EquipmentItem item = game.profile.inventory.items().get(index);
+        if (EquipmentService.upgrade(game.profile, item.id)) {
+            status = t("gear.upgraded");
             game.saveProfile();
+            AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+        } else {
+            status = t("gear.upgradeUnavailable");
+            AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.U)) {
-            if (EquipmentService.upgrade(game.profile, item.id)) {
-                status = t("gear.upgraded");
-                game.saveProfile();
-            } else status = t("gear.upgradeUnavailable");
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) fuseSelected(item);
     }
 
     private void fuseSelected(EquipmentItem selected) {
@@ -134,25 +280,26 @@ public final class GearScreen extends ScreenAdapter {
             if (second == null) second = candidate;
             else { third = candidate; break; }
         }
-        if (second == null || third == null) { status = t("gear.needThree"); return; }
+        if (second == null || third == null) { status = t("gear.needThree"); AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK); return; }
         EquipmentItem merged = EquipmentService.mergeThree(game.profile, selected.id, second.id, third.id);
-        if (merged == null) { status = t("gear.fusionFailed"); return; }
+        if (merged == null) { status = t("gear.fusionFailed"); AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK); return; }
         status = f("gear.created", t(merged.rarityKey()), localizedName(merged));
         index = Math.max(0, game.profile.inventory.size() - 1);
         game.saveProfile();
+        AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
     }
 
     private Color rarityColor(EquipmentItem.Rarity rarity) {
         return switch (rarity) {
-            case COMMON -> Color.LIGHT_GRAY;
-            case RARE -> Color.CYAN;
-            case EPIC -> Color.VIOLET;
-            case LEGENDARY -> Color.GOLD;
+            case COMMON -> VisualTheme.TEXT_DIM;
+            case RARE -> VisualTheme.CYAN;
+            case EPIC -> VisualTheme.VIOLET;
+            case LEGENDARY -> VisualTheme.GOLD;
             case MYTHIC -> Color.MAGENTA;
         };
     }
 
-    private String localizedName(com.deadlinezero.game.meta.EquipmentItem item) {
+    private String localizedName(EquipmentItem item) {
         if (item == null) return "";
         String key = item.nameKey();
         if (key != null) return t(key);

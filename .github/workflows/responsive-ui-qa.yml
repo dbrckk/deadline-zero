@@ -1,0 +1,74 @@
+name: Responsive UI QA
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  wide-phone-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Capture 1536x691 responsive UI
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_2
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-boot-timeout: 600
+          disable-animations: true
+          script: |
+            set -eu
+            adb wait-for-device
+            timeout 300s bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 2; done'
+            gradle :android:installDebug :android:installDebugAndroidTest
+            adb shell settings put secure immersive_mode_confirmations confirmed || true
+            # Pixel 2 is naturally portrait. Force a 691x1536 physical display then rotate once so
+            # the app receives the same ~1536x691 landscape aspect that failed on the real phone.
+            adb shell wm size 691x1536
+            adb shell settings put system accelerometer_rotation 0 || true
+            adb shell settings put system user_rotation 1 || true
+            sleep 2
+            adb shell am force-stop com.deadlinezero.game || true
+            timeout 5m adb shell am instrument -w -e deadlinezero.wideProbe true -e class com.deadlinezero.game.android.AndroidResponsiveUiVisualProbeTest#capturesWidePhoneMetaAndCombatScreens com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/responsive-ui-qa.txt
+            grep -q 'OK (1 test)' /tmp/responsive-ui-qa.txt
+            mkdir -p build/android-responsive-ui-qa
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-home.png build/android-responsive-ui-qa/responsive-1536x691-home.png
+            test -s build/android-responsive-ui-qa/responsive-1536x691-home.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-survivors.png build/android-responsive-ui-qa/responsive-1536x691-survivors.png
+            test -s build/android-responsive-ui-qa/responsive-1536x691-survivors.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-arsenal.png build/android-responsive-ui-qa/responsive-1536x691-arsenal.png
+            test -s build/android-responsive-ui-qa/responsive-1536x691-arsenal.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-settings.png build/android-responsive-ui-qa/responsive-1536x691-settings.png
+            test -s build/android-responsive-ui-qa/responsive-1536x691-settings.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-contract.png build/android-responsive-ui-qa/responsive-1536x691-contract.png
+            test -s build/android-responsive-ui-qa/responsive-1536x691-contract.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-combat.png build/android-responsive-ui-qa/responsive-1536x691-combat.png
+            test -s build/android-responsive-ui-qa/responsive-1536x691-combat.png
+            adb shell wm size reset || true
+      - name: Upload responsive UI visual QA
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-responsive-ui-qa-${{ github.run_number }}
+          path: build/android-responsive-ui-qa/
+          if-no-files-found: warn
+          retention-days: 14

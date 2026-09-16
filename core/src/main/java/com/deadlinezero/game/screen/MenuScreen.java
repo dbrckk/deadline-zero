@@ -7,7 +7,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.audio.AudioDirector;
@@ -18,119 +21,229 @@ import com.deadlinezero.game.meta.BalanceTelemetryStore;
 import com.deadlinezero.game.meta.BalanceTelemetrySummary;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.meta.ThreatTierRules;
+import com.deadlinezero.game.ui.UiLayout;
+import com.deadlinezero.game.ui.UiRenderer;
+import com.deadlinezero.game.ui.UiTypography;
+import com.deadlinezero.game.ui.UiViewport;
+import com.deadlinezero.game.visual.GameArt;
 import com.deadlinezero.game.visual.VisualTheme;
 
-/** Production-shaped Base/Home shell with functional navigation. */
+/** Responsive premium Base/Home shell with explicit mobile interaction regions. */
 public final class MenuScreen extends ScreenAdapter {
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
     private final BitmapFont font = new BitmapFont();
     private final ShapeRenderer shapes = new ShapeRenderer();
+    private final UiViewport viewport = new UiViewport();
+    private final Vector2 touch = new Vector2();
+    private UiLayout.Metrics metrics;
+    private MenuLayoutModel.Layout layout;
     private float t;
     private boolean showBalance;
     private BalanceTelemetrySummary.Summary balanceSummary = BalanceTelemetrySummary.summarize(null);
     private BalanceTelemetryReport.Report balanceReport = BalanceTelemetryReport.analyze(null);
 
-    public MenuScreen(DeadlineZeroGame game) { this.game = game; font.getData().setScale(2.2f); }
+    public MenuScreen(DeadlineZeroGame game) {
+        this.game = game;
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    @Override public void resize(int width, int height) {
+        viewport.resize(width, height);
+        metrics = UiLayout.compute(width, height);
+        layout = MenuLayoutModel.layout(metrics);
+    }
 
     @Override public void render(float delta) {
-        t += delta;
+        t += Math.max(0f, delta);
         Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-
-        shapes.begin(ShapeRenderer.ShapeType.Filled);
-        for (int i = 0; i < 16; i++) {
-            float y = (i + 1) * h / 17f;
-            float a = .018f + .012f * (float)Math.sin(t * 1.25f + i * .7f);
-            shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, a);
-            shapes.rect(0, y, w, 1.2f);
-        }
-        shapes.setColor(VisualTheme.PANEL); shapes.rect(18, h - 94, w - 36, 64);
-        shapes.setColor(VisualTheme.PANEL); shapes.rect(18, 18, w - 36, 74);
-        shapes.setColor(VisualTheme.PANEL_ALT); shapes.rect(w * .18f, h * .40f, w * .64f, h * .16f);
-        shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .12f);
-        shapes.circle(w * .5f, h * .48f, Math.min(w, h) * .25f, 96);
-        shapes.setColor(VisualTheme.PANEL_ALT); shapes.rect(w * .27f, h * .335f, w * .46f, 38f);
-        shapes.setColor(VisualTheme.CYAN); shapes.rect(w * .30f, h * .255f, w * .40f, 64);
-        shapes.setColor(VisualTheme.CYAN_SOFT); shapes.rect(w * .30f, h * .255f, w * .40f, 3f);
-        shapes.end();
+        viewport.apply(batch, shapes);
 
         PlayerProfile p = game.profile;
+        drawShapes(p);
+        drawContent(p);
+        handleInput();
+    }
+
+    private void drawShapes(PlayerProfile p) {
+        shapes.begin(ShapeRenderer.ShapeType.Filled);
+        UiRenderer.background(shapes, metrics, t);
+        UiRenderer.topRail(shapes, metrics);
+        UiRenderer.bottomNav(shapes, metrics);
+        UiRenderer.card(shapes, layout.survivorCard().x, layout.survivorCard().y,
+            layout.survivorCard().width, layout.survivorCard().height, true, true);
+        UiRenderer.card(shapes, layout.loadoutCard().x, layout.loadoutCard().y,
+            layout.loadoutCard().width, layout.loadoutCard().height, false, false);
+        UiRenderer.card(shapes, layout.threatCard().x, layout.threatCard().y,
+            layout.threatCard().width, layout.threatCard().height, false, p.selectedThreatTier > 0);
+        UiRenderer.button(shapes, layout.deploy().x, layout.deploy().y,
+            layout.deploy().width, layout.deploy().height, UiRenderer.ButtonState.SELECTED);
+
+        Rectangle[] tabs = layout.bottomTabs();
+        for (int i = 0; i < tabs.length; i++) {
+            Rectangle tab = tabs[i];
+            if (i == 0) {
+                shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .14f);
+                shapes.rect(tab.x + 4f, tab.y + 5f, tab.width - 8f, tab.height - 10f);
+                shapes.setColor(VisualTheme.accent());
+                shapes.rect(tab.x + 16f, tab.y + 4f, Math.max(0f, tab.width - 32f), 3f);
+            }
+            if (i > 0) {
+                shapes.setColor(VisualTheme.DIVIDER);
+                shapes.rect(tab.x, tab.y + 18f, 1f, Math.max(0f, tab.height - 36f));
+            }
+        }
+        shapes.end();
+    }
+
+    private void drawContent(PlayerProfile p) {
         batch.begin();
-        font.setColor(VisualTheme.TEXT); font.draw(batch, GameConfig.TITLE, 0, h * .71f, w, Align.center, false);
-        font.getData().setScale(.67f); font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, t("menu.tagline"), 0, h * .635f, w, Align.center, false);
+        drawTopRail(p);
+        drawSurvivorCard(p);
+        drawLoadout(p);
+        drawThreat(p);
+        drawDeploy(p);
+        drawBottomNav();
+        drawBalanceDebug();
+        batch.end();
+    }
 
-        font.getData().setScale(.55f);
-        font.setColor(VisualTheme.TEXT); font.draw(batch, f("menu.level", p.accountLevel), 34, h - 53);
-        font.setColor(VisualTheme.GOLD); font.draw(batch, f("menu.credits", p.currency(PlayerProfile.Currency.CREDITS)), w * .27f, h - 53);
-        font.setColor(VisualTheme.CYAN); font.draw(batch, f("menu.gems", p.currency(PlayerProfile.Currency.GEMS)), w * .57f, h - 53);
-        font.setColor(VisualTheme.MUTED); font.draw(batch, f("menu.stage", p.selectedStage, p.highestStage), w - 165, h - 53);
+    private void drawTopRail(PlayerProfile p) {
+        Rectangle r = layout.topRail();
+        float baseline = r.y + r.height * .58f;
+        float col = r.width / 4f;
 
-        font.getData().setScale(.70f); font.setColor(VisualTheme.TEXT);
-        font.draw(batch, p.selectedSurvivor.displayName.toUpperCase(), 0, h * .515f, w, Align.center, false);
-        font.getData().setScale(.47f); font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, f("menu.changeSurvivor", p.selectedSurvivor.role), 0, h * .472f, w, Align.center, false);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, f("menu.level", p.accountLevel), r.x + 18f, baseline, col - 24f, Align.left, false);
         font.setColor(VisualTheme.GOLD);
-        font.draw(batch, f("menu.openArsenal", WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase()), 0, h * .438f, w, Align.center, false);
+        font.draw(batch, f("menu.credits", p.currency(PlayerProfile.Currency.CREDITS)), r.x + col, baseline, col, Align.center, false);
+        font.setColor(VisualTheme.accent());
+        font.draw(batch, f("menu.gems", p.currency(PlayerProfile.Currency.GEMS)), r.x + col * 2f, baseline, col, Align.center, false);
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, f("menu.stage", p.selectedStage, p.highestStage), r.x + col * 3f, baseline, col - 18f, Align.right, false);
+    }
 
-        font.getData().setScale(.42f);
+    private void drawSurvivorCard(PlayerProfile p) {
+        Rectangle r = layout.survivorCard();
+        float pad = 28f;
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, GameConfig.TITLE, r.x + pad, r.y + r.height - 30f);
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, t("menu.tagline"), r.x + pad, r.y + r.height - 56f);
+
+        if (game.art.authoredAvailable()) {
+            TextureRegion portrait = game.art.survivor(p.selectedSurvivor, GameArt.Motion.IDLE, t);
+            float maxH = Math.min(300f, r.height * .62f);
+            float maxW = r.width * .44f;
+            float aspect = portrait.getRegionWidth() / (float) Math.max(1, portrait.getRegionHeight());
+            float drawH = maxH;
+            float drawW = drawH * aspect;
+            if (drawW > maxW) {
+                drawW = maxW;
+                drawH = drawW / Math.max(.01f, aspect);
+            }
+            float px = r.x + r.width * .25f - drawW * .5f;
+            float py = r.y + Math.max(44f, (r.height - drawH) * .38f);
+            batch.setColor(Color.WHITE);
+            batch.draw(portrait, px, py, drawW, drawH);
+        }
+
+        float tx = r.x + r.width * .49f;
+        float tw = r.width * .46f;
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE));
+        font.setColor(VisualTheme.TEXT_STRONG);
+        font.draw(batch, p.selectedSurvivor.displayName.toUpperCase(), tx, r.y + r.height * .64f, tw, Align.left, false);
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY));
+        font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, p.selectedSurvivor.role.toUpperCase(), tx, r.y + r.height * .54f, tw, Align.left, false);
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, t("menu.changeSurvivor"), tx, r.y + r.height * .43f, tw, Align.left, true);
+        font.setColor(VisualTheme.accent());
+        font.draw(batch, t("survivor.title"), tx, r.y + 34f, tw, Align.left, false);
+    }
+
+    private void drawLoadout(PlayerProfile p) {
+        Rectangle r = layout.loadoutCard();
+        float pad = 24f;
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, t("arsenal.title"), r.x + pad, r.y + r.height - 26f);
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
+        font.setColor(VisualTheme.TEXT_STRONG);
+        font.draw(batch, WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase(),
+            r.x + pad, r.y + r.height - 64f, r.width - pad * 2f, Align.left, false);
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.GOLD);
+        font.draw(batch, t("menu.arsenal"), r.x + pad, r.y + 28f);
+    }
+
+    private void drawThreat(PlayerProfile p) {
+        Rectangle r = layout.threatCard();
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
         if (ThreatTierRules.unlocked(p)) {
             font.setColor(p.selectedThreatTier > 0 ? VisualTheme.GOLD : VisualTheme.CYAN_SOFT);
             font.draw(batch, f("menu.threat", p.selectedThreatTier, p.highestThreatTier,
-                ThreatTierRules.rewardBonusPercent(p.selectedThreatTier)), 0, h * .335f + 25f, w, Align.center, false);
+                ThreatTierRules.rewardBonusPercent(p.selectedThreatTier)),
+                r.x + 18f, r.y + r.height * .60f, r.width - 36f, Align.center, false);
         } else {
             font.setColor(VisualTheme.MUTED);
             font.draw(batch, f("menu.threatLocked", ThreatTierRules.UNLOCK_STAGE),
-                0, h * .335f + 25f, w, Align.center, false);
-        }
-
-        font.getData().setScale(.82f); font.setColor(Color.WHITE);
-        font.draw(batch, t("menu.deploy"), w * .30f, h * .255f + 42, w * .40f, Align.center, false);
-        font.getData().setScale(.43f); font.setColor(new Color(.86f, .95f, 1f, 1f));
-        font.draw(batch, f("menu.deployStage", p.selectedStage), w * .30f, h * .255f + 17, w * .40f, Align.center, false);
-
-        if (showBalance) {
-            font.getData().setScale(.34f);
-            font.setColor(VisualTheme.GOLD);
-            String line = String.format("BALANCE %d RUNS • WIN %.0f%% • AVG %.0fs • DPS %.1f • DMG/M %.1f • KILLS/M %.1f",
-                balanceSummary.runs(), balanceSummary.winRate() * 100f, balanceSummary.averageSeconds(),
-                balanceSummary.averageDps(), balanceSummary.averageDamageTakenPerMinute(), balanceSummary.averageKillsPerMinute());
-            font.draw(batch, line, 0, h * .205f, w, Align.center, false);
-            BalanceTelemetryReport.Outlier outlier = balanceReport.worstOutlier();
-            if (outlier != null) {
-                font.getData().setScale(.31f);
-                font.setColor(VisualTheme.RED);
-                String diagnostic = String.format("OUTLIER • %s %s • %s • %d RUNS • WIN %.0f%%",
-                    outlier.dimension(), outlier.key(), outlier.assessment().status(), outlier.summary().runs(),
-                    outlier.summary().winRate() * 100f);
-                font.draw(batch, diagnostic, 0, h * .179f, w, Align.center, false);
-            }
-        }
-
-        font.getData().setScale(.36f); font.setColor(VisualTheme.MUTED);
-        font.draw(batch, t("menu.base"), 22, 59);
-        font.draw(batch, t("menu.arsenal"), w * .12f, 59);
-        font.draw(batch, t("menu.gear"), w * .31f, 59);
-        font.draw(batch, t("menu.missions"), w * .45f, 59);
-        font.draw(batch, t("menu.shop"), w * .65f, 59);
-        font.draw(batch, t("menu.settings"), w * .81f, 59);
-        font.getData().setScale(2.2f);
-        batch.end();
-        handleInput(w, h);
-    }
-
-    private void changeThreat(int delta) {
-        if (!ThreatTierRules.unlocked(game.profile)) return;
-        int next = Math.max(0, Math.min(game.profile.highestThreatTier, game.profile.selectedThreatTier + delta));
-        if (game.profile.selectThreatTier(next)) {
-            AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
-            game.saveProfile();
+                r.x + 18f, r.y + r.height * .60f, r.width - 36f, Align.center, false);
         }
     }
 
-    private void handleInput(float w, float h) {
+    private void drawDeploy(PlayerProfile p) {
+        Rectangle r = layout.deploy();
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
+        font.setColor(VisualTheme.TEXT_STRONG);
+        font.draw(batch, t("menu.deploy"), r.x, r.y + r.height * .64f, r.width, Align.center, false);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.TEXT);
+        font.draw(batch, f("menu.deployStage", p.selectedStage), r.x, r.y + r.height * .32f, r.width, Align.center, false);
+    }
+
+    private void drawBottomNav() {
+        String[] labels = {
+            t("menu.base"), t("menu.arsenal"), t("menu.gear"),
+            t("menu.missions"), t("menu.shop"), t("menu.settings")
+        };
+        Rectangle[] tabs = layout.bottomTabs();
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        for (int i = 0; i < tabs.length; i++) {
+            Rectangle tab = tabs[i];
+            font.setColor(i == 0 ? VisualTheme.accent() : VisualTheme.TEXT_DIM);
+            font.draw(batch, labels[i], tab.x + 6f, tab.y + tab.height * .55f, tab.width - 12f, Align.center, false);
+        }
+    }
+
+    private void drawBalanceDebug() {
+        if (!showBalance) return;
+        Rectangle r = layout.loadoutCard();
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .78f);
+        font.setColor(VisualTheme.GOLD);
+        String line = String.format(java.util.Locale.ROOT,
+            "BALANCE %d • WIN %.0f%% • AVG %.0fs • DPS %.1f • DMG/M %.1f • K/M %.1f",
+            balanceSummary.runs(), balanceSummary.winRate() * 100f, balanceSummary.averageSeconds(),
+            balanceSummary.averageDps(), balanceSummary.averageDamageTakenPerMinute(), balanceSummary.averageKillsPerMinute());
+        font.draw(batch, line, r.x + 20f, r.y + 54f, r.width - 40f, Align.left, true);
+        BalanceTelemetryReport.Outlier outlier = balanceReport.worstOutlier();
+        if (outlier != null) {
+            font.setColor(VisualTheme.danger());
+            String diagnostic = String.format(java.util.Locale.ROOT, "%s %s", outlier.dimension(), outlier.key());
+            font.draw(batch, diagnostic, r.x + 20f, r.y + 76f, r.width - 40f, Align.left, false);
+        }
+    }
+
+    private void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
             showBalance = !showBalance;
             if (showBalance) {
@@ -140,35 +253,58 @@ public final class MenuScreen extends ScreenAdapter {
             }
             return;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showArsenal(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showGear(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showMissions(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showShop(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showSurvivors(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.O)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.showSettings(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) { selectCue(); game.showArsenal(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.G)) { selectCue(); game.showGear(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) { selectCue(); game.showMissions(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) { selectCue(); game.showShop(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) { selectCue(); game.showSurvivors(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.O)) { selectCue(); game.showSettings(); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) { game.profile.selectStage(Math.max(1, game.profile.selectedStage - 1)); game.saveProfile(); }
         if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) { game.profile.selectStage(Math.min(game.profile.highestStage, game.profile.selectedStage + 1)); game.saveProfile(); }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) { changeThreat(-1); return; }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) { changeThreat(1); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); game.startRun(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            selectCue();
+            game.startRun();
+            return;
+        }
         if (!Gdx.input.justTouched()) return;
-        float x = Gdx.input.getX(), y = h - Gdx.input.getY();
-        if (y <= 95f) {
-            if (x >= w * .08f && x < w * .28f) game.showArsenal();
-            else if (x >= w * .28f && x < w * .42f) game.showGear();
-            else if (x >= w * .42f && x < w * .62f) game.showMissions();
-            else if (x >= w * .62f && x < w * .79f) game.showShop();
-            else if (x >= w * .79f) game.showSettings();
+
+        viewport.unproject(Gdx.input.getX(), Gdx.input.getY(), touch);
+        if (layout.survivorCard().contains(touch)) { selectCue(); game.showSurvivors(); return; }
+        if (layout.loadoutCard().contains(touch)) { selectCue(); game.showArsenal(); return; }
+        if (layout.threatCard().contains(touch)) {
+            changeThreat(touch.x < layout.threatCard().x + layout.threatCard().width * .5f ? -1 : 1);
             return;
         }
-        if (y >= h * .40f && y <= h * .56f) { game.showSurvivors(); return; }
-        if (y >= h * .335f && y <= h * .335f + 38f && x >= w * .27f && x <= w * .73f) {
-            changeThreat(x < w * .5f ? -1 : 1);
+        if (layout.deploy().contains(touch)) { selectCue(); game.startRun(); return; }
+
+        Rectangle[] tabs = layout.bottomTabs();
+        for (int i = 1; i < tabs.length; i++) {
+            if (!tabs[i].contains(touch)) continue;
+            selectCue();
+            switch (i) {
+                case 1 -> game.showArsenal();
+                case 2 -> game.showGear();
+                case 3 -> game.showMissions();
+                case 4 -> game.showShop();
+                case 5 -> game.showSettings();
+                default -> { }
+            }
             return;
         }
-        if (x >= w * .30f && x <= w * .70f && y >= h * .255f && y <= h * .255f + 64f) game.startRun();
     }
 
+    private void changeThreat(int delta) {
+        if (!ThreatTierRules.unlocked(game.profile)) return;
+        int next = Math.max(0, Math.min(game.profile.highestThreatTier, game.profile.selectedThreatTier + delta));
+        if (game.profile.selectThreatTier(next)) {
+            selectCue();
+            game.saveProfile();
+        }
+    }
+
+    private void selectCue() { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); }
     private String t(String key) { return game.i18n.text(key); }
     private String f(String key, Object... args) { return game.i18n.format(key, args); }
 
