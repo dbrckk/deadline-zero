@@ -166,7 +166,7 @@ public final class MenuScreen extends ScreenAdapter {
         font.setColor(VisualTheme.TEXT_DIM);
         font.draw(batch, t("menu.changeSurvivor"), tx, r.y + r.height * .43f, tw, Align.left, true);
         font.setColor(VisualTheme.accent());
-        font.draw(batch, "SELECT SURVIVOR  ›", tx, r.y + 34f, tw, Align.left, false);
+        font.draw(batch, t("survivor.title"), tx, r.y + 34f, tw, Align.left, false);
     }
 
     private void drawLoadout(PlayerProfile p) {
@@ -174,7 +174,7 @@ public final class MenuScreen extends ScreenAdapter {
         float pad = 24f;
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.TEXT_DIM);
-        font.draw(batch, "ACTIVE LOADOUT", r.x + pad, r.y + r.height - 26f);
+        font.draw(batch, t("arsenal.title"), r.x + pad, r.y + r.height - 26f);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
         font.setColor(VisualTheme.TEXT_STRONG);
@@ -183,25 +183,21 @@ public final class MenuScreen extends ScreenAdapter {
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.GOLD);
-        font.draw(batch, t("menu.arsenal") + "  ›", r.x + pad, r.y + 28f);
+        font.draw(batch, t("menu.arsenal"), r.x + pad, r.y + 28f);
     }
 
     private void drawThreat(PlayerProfile p) {
         Rectangle r = layout.threatCard();
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
-        font.setColor(VisualTheme.TEXT_DIM);
-        font.draw(batch, "THREAT", r.x + 20f, r.y + r.height - 18f);
-
         font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
         if (ThreatTierRules.unlocked(p)) {
             font.setColor(p.selectedThreatTier > 0 ? VisualTheme.GOLD : VisualTheme.CYAN_SOFT);
-            font.draw(batch, "‹  " + f("menu.threat", p.selectedThreatTier, p.highestThreatTier,
-                ThreatTierRules.rewardBonusPercent(p.selectedThreatTier)) + "  ›",
-                r.x + 18f, r.y + 24f, r.width - 36f, Align.center, false);
+            font.draw(batch, f("menu.threat", p.selectedThreatTier, p.highestThreatTier,
+                ThreatTierRules.rewardBonusPercent(p.selectedThreatTier)),
+                r.x + 18f, r.y + r.height * .60f, r.width - 36f, Align.center, false);
         } else {
             font.setColor(VisualTheme.MUTED);
             font.draw(batch, f("menu.threatLocked", ThreatTierRules.UNLOCK_STAGE),
-                r.x + 18f, r.y + 24f, r.width - 36f, Align.center, false);
+                r.x + 18f, r.y + r.height * .60f, r.width - 36f, Align.center, false);
         }
     }
 
@@ -242,8 +238,8 @@ public final class MenuScreen extends ScreenAdapter {
         BalanceTelemetryReport.Outlier outlier = balanceReport.worstOutlier();
         if (outlier != null) {
             font.setColor(VisualTheme.danger());
-            font.draw(batch, "OUTLIER • " + outlier.dimension() + " " + outlier.key(),
-                r.x + 20f, r.y + 76f, r.width - 40f, Align.left, false);
+            String diagnostic = String.format(java.util.Locale.ROOT, "%s %s", outlier.dimension(), outlier.key());
+            font.draw(batch, diagnostic, r.x + 20f, r.y + 76f, r.width - 40f, Align.left, false);
         }
     }
 
