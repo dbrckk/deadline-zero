@@ -1,0 +1,26 @@
+package com.deadlinezero.game.config;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import org.junit.jupiter.api.Test;
+
+final class LocalizationGlyphSanitizerTest {
+    @Test
+    void unsupportedUiGlyphsAreNormalizedForDefaultBitmapFont() {
+        String source = "A • B ‹ C › D ← E → F ↑ G ↓ H – I — J … K";
+
+        String sanitized = Localization.sanitizeForBitmapFont(source);
+
+        assertEquals("A | B < C > D <- E -> F ^ G v H - I - J ... K", sanitized);
+        for (char unsupported : new char[] {'•', '‹', '›', '←', '→', '↑', '↓', '–', '—', '…'}) {
+            assertFalse(sanitized.indexOf(unsupported) >= 0, "unsupported glyph survived: " + unsupported);
+        }
+    }
+
+    @Test
+    void nullAndAsciiStringsRemainSafe() {
+        assertEquals("", Localization.sanitizeForBitmapFont(null));
+        assertEquals("DPS 120 | FIRE 0.25s", Localization.sanitizeForBitmapFont("DPS 120 | FIRE 0.25s"));
+    }
+}
