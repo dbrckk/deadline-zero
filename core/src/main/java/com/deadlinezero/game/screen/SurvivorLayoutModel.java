@@ -6,6 +6,7 @@ import com.deadlinezero.game.ui.UiLayout;
 /** Pure responsive layout for survivor browsing and explicit selection actions. */
 public final class SurvivorLayoutModel {
     public record Layout(
+        Rectangle back,
         Rectangle card,
         Rectangle portrait,
         Rectangle stats,
@@ -18,6 +19,7 @@ public final class SurvivorLayoutModel {
     private SurvivorLayoutModel() {}
 
     public static Layout layout(UiLayout.Metrics m) {
+        Rectangle back = new Rectangle(m.safeLeft(), m.headerBottom(), 132f, m.safeTop() - m.headerBottom());
         Rectangle card = new Rectangle(m.safeLeft(), m.contentBottom(), m.contentWidth(), m.contentHeight());
         float navSize = Math.max(m.touchTarget(), 64f);
         Rectangle previous = new Rectangle(card.x + 12f, card.y + (card.height - navSize) * .5f, navSize, navSize);
@@ -39,6 +41,6 @@ public final class SurvivorLayoutModel {
         float statsY = xpBar.y + xpBar.height + 28f;
         Rectangle stats = new Rectangle(rightX, statsY, rightW, Math.max(150f, card.y + card.height - 42f - statsY));
 
-        return new Layout(card, portrait, stats, xpBar, previous, next, cta);
+        return new Layout(back, card, portrait, stats, xpBar, previous, next, cta);
     }
 }
