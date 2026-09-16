@@ -121,10 +121,24 @@ public final class ArsenalScreen extends ScreenAdapter {
                 page > 0 ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
             UiRenderer.button(shapes, nextPage.x, nextPage.y, nextPage.width, nextPage.height,
                 page < pageCount - 1 ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
+            drawChevron(previousPage, false, page > 0);
+            drawChevron(nextPage, true, page < pageCount - 1);
         }
 
         drawStatBars(focusedWeapon, equipped);
         shapes.end();
+    }
+
+    private void drawChevron(Rectangle bounds, boolean right, boolean enabled) {
+        float cx = bounds.x + bounds.width * .5f;
+        float cy = bounds.y + bounds.height * .5f;
+        float half = Math.min(bounds.width, bounds.height) * .15f;
+        float tip = right ? cx + half : cx - half;
+        float tail = right ? cx - half : cx + half;
+        shapes.setColor(enabled ? VisualTheme.TEXT_STRONG : VisualTheme.MUTED);
+        float stroke = Math.max(3f, half * .30f);
+        shapes.rectLine(tail, cy + half, tip, cy, stroke);
+        shapes.rectLine(tip, cy, tail, cy - half, stroke);
     }
 
     private void drawText(WeaponDefinition[] all, int pageStart, int pageEnd, int page, int pageCount,
@@ -154,10 +168,6 @@ public final class ArsenalScreen extends ScreenAdapter {
             font.setColor(VisualTheme.TEXT_DIM);
             font.draw(batch, f("arsenal.page", page + 1, pageCount), previousPage.x - 142f,
                 previousPage.y + 35f, 130f, Align.right, false);
-            font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
-            font.setColor(VisualTheme.TEXT_STRONG);
-            font.draw(batch, "‹", previousPage.x, previousPage.y + 37f, previousPage.width, Align.center, false);
-            font.draw(batch, "›", nextPage.x, nextPage.y + 37f, nextPage.width, Align.center, false);
         }
     }
 
@@ -173,7 +183,7 @@ public final class ArsenalScreen extends ScreenAdapter {
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(unlocked ? elementColor(weapon) : VisualTheme.MUTED);
-        font.draw(batch, role(weapon) + "  •  " + elementName(weapon), r.x + 14f, r.y + r.height - 36f,
+        font.draw(batch, pair(role(weapon), elementName(weapon)), r.x + 14f, r.y + r.height - 36f,
             r.width - 28f, Align.left, false);
 
         String status;
@@ -205,7 +215,7 @@ public final class ArsenalScreen extends ScreenAdapter {
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(elementColor(weapon));
-        font.draw(batch, role(weapon) + "  •  " + elementName(weapon), textX, top - 26f, textW, Align.left, false);
+        font.draw(batch, pair(role(weapon), elementName(weapon)), textX, top - 26f, textW, Align.left, false);
 
         float dps = paperDps(weapon), equippedDps = paperDps(equipped);
         font.setColor(VisualTheme.TEXT_DIM);
@@ -311,6 +321,7 @@ public final class ArsenalScreen extends ScreenAdapter {
     private String role(WeaponDefinition weapon) { return t("weapon.role." + weapon.id); }
     private String elementName(WeaponDefinition weapon) { return t("weapon.element." + weapon.element.name().toLowerCase(java.util.Locale.ROOT)); }
     private String description(WeaponDefinition weapon) { return t("weapon.description." + weapon.id); }
+    private String pair(String left, String right) { return left + "  |  " + right; }
     private String deltaText(float delta) { if (Math.abs(delta) < .05f) return ""; return delta > 0f ? "  +" + Math.round(delta) : "  " + Math.round(delta); }
     private String deltaText(int delta) { if (delta == 0) return ""; return delta > 0 ? "  +" + delta : "  " + delta; }
     private String oneDecimal(float value) { return String.format(java.util.Locale.US, "%.1f", value); }
