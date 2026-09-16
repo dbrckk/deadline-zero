@@ -35,10 +35,10 @@ public final class BossPresenceProfile {
             default -> 0f;
         };
         float intensity = MathUtils.clamp(.58f + (p - 1) * .16f + identityBoost, .55f, 1f);
-        float ringScale = 1.55f + (p - 1) * .18f + identityBoost * .55f;
-        int markers = 4 + (p - 1) * 2 + (safe == BossIdentity.NULL_ARCHON ? 2 : 0);
+        float ringScale = Math.min(1.45f, 1.18f + (p - 1) * .10f + identityBoost * .25f);
+        int markers = 3 + p;
         int segments = 3 + p + (safe == BossIdentity.FROST_COLOSSUS ? 2 : 0);
-        float lineWeight = .045f + p * .012f;
+        float lineWeight = .032f + p * .006f;
         float pulseRate = 4.4f + p * 1.3f;
         return new PhaseProfile(intensity, ringScale, markers, segments, lineWeight, pulseRate);
     }
