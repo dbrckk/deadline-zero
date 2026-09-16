@@ -1,5 +1,7 @@
 package com.deadlinezero.game.visual;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,15 +21,19 @@ import com.deadlinezero.game.input.VirtualStick;
 import com.deadlinezero.game.meta.OnboardingState;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.meta.RunStageContext;
-import com.deadlinezero.game.ui.UiRenderer;
 import com.deadlinezero.game.ui.UiTypography;
 import com.deadlinezero.game.world.RunEncounterDirector;
 import com.deadlinezero.game.world.WaveDirector;
 
 /** Dedicated responsive mobile HUD renderer. Keeps combat presentation separate from simulation/input. */
 public final class CombatHudRenderer {
+    public enum HintMode { NONE, TOAST }
+
     private static final Color HARVESTER_COLOR = new Color(.96f, .42f, .10f, 1f);
     private static final Color NULL_ARCHON_COLOR = new Color(.52f, .42f, 1f, 1f);
+    private static final float CONTROL_IDLE_ALPHA = .15f;
+    private static final float CONTROL_ACTIVE_ALPHA = .36f;
+
     private final Matrix4 projection = new Matrix4();
     private float damageFlash;
     private final Localization i18n;
@@ -36,6 +42,13 @@ public final class CombatHudRenderer {
         if (i18n == null) throw new IllegalArgumentException("i18n");
         this.i18n = i18n;
     }
+
+    public static HintMode hintModeFor(boolean onboardingComplete) {
+        return onboardingComplete ? HintMode.NONE : HintMode.TOAST;
+    }
+
+    public static float controlIdleAlpha() { return CONTROL_IDLE_ALPHA; }
+    public static float controlActiveAlpha() { return CONTROL_ACTIVE_ALPHA; }
 
     public void triggerDamageFlash() {
         if (AccessibilitySettings.active().damageFlash) damageFlash = 1f;
@@ -50,7 +63,7 @@ public final class CombatHudRenderer {
         CombatHudLayout.Layout layout = CombatHudLayout.compute((int) width, (int) height, ui(), boss != null);
         projection.setToOrtho2D(0, 0, layout.logicalWidth(), layout.logicalHeight());
         updateOnboarding(player, director);
-        drawBars(shapes, player, director, boss, layout, width, height);
+        drawHudShapes(shapes, player, director, boss, layout, width, height);
         drawText(batch, font, player, director, boss, layout);
         drawDamageVignette(shapes, layout.logicalWidth(), layout.logicalHeight());
     }
@@ -67,47 +80,76 @@ public final class CombatHudRenderer {
         onboarding.refreshCompletion();
     }
 
-    private void drawBars(ShapeRenderer shapes, Player player, WaveDirector director, Enemy boss,
-                          CombatHudLayout.Layout layout, float physicalW, float physicalH) {
+    private void drawHudShapes(ShapeRenderer shapes, Player player, WaveDirector director, Enemy boss,
+                               CombatHudLayout.Layout layout, float physicalW, float physicalH) {
         shapes.setProjectionMatrix(projection);
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        Rectangle hpRect = layout.hp();
-        Rectangle xpRect = layout.xp();
 
-        UiRenderer.card(shapes, hpRect.x, hpRect.y, hpRect.width, hpRect.height, false, false);
-        UiRenderer.card(shapes, xpRect.x, xpRect.y, xpRect.width, xpRect.height, false, false);
-        float hp = MathUtils.clamp(player.hp / Math.max(1f, player.maxHp), 0f, 1f);
-        float xp = MathUtils.clamp(player.xp / (float) Math.max(1, player.xpNext), 0f, 1f);
-        UiRenderer.progress(shapes, hpRect.x + 5f, hpRect.y + 5f, hpRect.width - 10f, hpRect.height - 10f,
-            hp, hp < .28f ? VisualTheme.danger() : VisualTheme.accent());
-        UiRenderer.progress(shapes, xpRect.x + 5f, xpRect.y + 5f, xpRect.width - 10f, xpRect.height - 10f,
-            xp, VisualTheme.VIOLET);
+        drawSurvivalCluster(shapes, player, layout);
+        drawHordeStatus(shapes, layout);
 
-        Rectangle timeline = layout.timeline();
-        UiRenderer.progress(shapes, timeline.x, timeline.y, timeline.width, timeline.height,
-            director.bossProgress(), director.bossWarning()
-                ? (AccessibilitySettings.active().highContrastTelegraphs ? Color.WHITE : VisualTheme.danger())
-                : (AccessibilitySettings.active().highContrastTelegraphs ? VisualTheme.CYAN : VisualTheme.CYAN_SOFT));
+        if (boss != null && layout.boss() != null) drawBossRail(shapes, boss, layout.boss());
 
-        if (boss != null && layout.boss() != null) {
-            Rectangle b = layout.boss();
-            float ratio = MathUtils.clamp(boss.hp / Math.max(1f, boss.maxHp), 0f, 1f);
-            UiRenderer.card(shapes, b.x, b.y, b.width, b.height, true, false);
-            Color identity = AccessibilitySettings.active().highContrastTelegraphs ? Color.WHITE : bossColor(boss);
-            UiRenderer.progress(shapes, b.x + 4f, b.y + 4f, b.width - 8f, b.height - 8f, ratio, identity);
-            shapes.setColor(VisualTheme.SURFACE_0);
-            shapes.rect(b.x + b.width * .33f, b.y + 3f, 2f, b.height - 6f);
-            shapes.rect(b.x + b.width * .66f, b.y + 3f, 2f, b.height - 6f);
-        }
-
-        OnboardingState onboarding = OnboardingState.active();
-        if (!onboarding.completed()) {
-            Rectangle hint = layout.onboarding();
-            UiRenderer.card(shapes, hint.x, hint.y, hint.width, hint.height, false, false);
+        if (hintModeFor(OnboardingState.active().completed()) == HintMode.TOAST) {
+            Rectangle toast = layout.toast();
+            shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .78f);
+            shapes.rect(toast.x, toast.y, toast.width, toast.height);
+            shapes.setColor(VisualTheme.CYAN_SOFT.r, VisualTheme.CYAN_SOFT.g, VisualTheme.CYAN_SOFT.b, .78f);
+            shapes.rect(toast.x, toast.y, 3f, toast.height);
         }
 
         drawMobileControls(shapes, player, layout, physicalW, physicalH);
         shapes.end();
+    }
+
+    private void drawSurvivalCluster(ShapeRenderer shapes, Player player, CombatHudLayout.Layout layout) {
+        Rectangle survival = layout.survival();
+        Rectangle badge = layout.levelBadge();
+        Rectangle xp = layout.xpRail();
+
+        shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .82f);
+        shapes.rect(survival.x, survival.y, survival.width, survival.height);
+        shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .62f);
+        shapes.rect(survival.x, survival.y, 2f, survival.height);
+        shapes.rect(survival.x, survival.y, survival.width, 1f);
+
+        float hp = MathUtils.clamp(player.hp / Math.max(1f, player.maxHp), 0f, 1f);
+        Color hpColor = hp < .28f ? VisualTheme.danger() : VisualTheme.accent();
+        shapes.setColor(VisualTheme.SURFACE_2.r, VisualTheme.SURFACE_2.g, VisualTheme.SURFACE_2.b, .85f);
+        shapes.rect(survival.x + 10f, survival.y + 8f, survival.width - 20f, 7f);
+        shapes.setColor(hpColor.r, hpColor.g, hpColor.b, .95f);
+        shapes.rect(survival.x + 10f, survival.y + 8f, Math.max(0f, (survival.width - 20f) * hp), 7f);
+
+        shapes.setColor(VisualTheme.SURFACE_1.r, VisualTheme.SURFACE_1.g, VisualTheme.SURFACE_1.b, .78f);
+        shapes.rect(badge.x, badge.y, badge.width, badge.height);
+        shapes.setColor(VisualTheme.VIOLET.r, VisualTheme.VIOLET.g, VisualTheme.VIOLET.b, .68f);
+        shapes.rect(badge.x, badge.y, 3f, badge.height);
+
+        float xpRatio = MathUtils.clamp(player.xp / (float) Math.max(1, player.xpNext), 0f, 1f);
+        shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .88f);
+        shapes.rect(xp.x, xp.y, xp.width, xp.height);
+        shapes.setColor(VisualTheme.VIOLET.r, VisualTheme.VIOLET.g, VisualTheme.VIOLET.b, .92f);
+        shapes.rect(xp.x, xp.y, Math.max(0f, xp.width * xpRatio), xp.height);
+    }
+
+    private void drawHordeStatus(ShapeRenderer shapes, CombatHudLayout.Layout layout) {
+        Rectangle status = layout.hordeStatus();
+        shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .58f);
+        shapes.rect(status.x, status.y, status.width, status.height);
+        shapes.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b, .72f);
+        shapes.rect(status.x + status.width - 3f, status.y, 3f, status.height);
+    }
+
+    private void drawBossRail(ShapeRenderer shapes, Enemy boss, Rectangle rail) {
+        float ratio = MathUtils.clamp(boss.hp / Math.max(1f, boss.maxHp), 0f, 1f);
+        Color identity = AccessibilitySettings.active().highContrastTelegraphs ? Color.WHITE : bossColor(boss);
+        shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .88f);
+        shapes.rect(rail.x, rail.y, rail.width, rail.height);
+        shapes.setColor(identity.r, identity.g, identity.b, .94f);
+        shapes.rect(rail.x + 2f, rail.y + 2f, Math.max(0f, (rail.width - 4f) * ratio), rail.height - 4f);
+        shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .92f);
+        shapes.rect(rail.x + rail.width * .33f, rail.y + 2f, 2f, rail.height - 4f);
+        shapes.rect(rail.x + rail.width * .66f, rail.y + 2f, 2f, rail.height - 4f);
     }
 
     private void drawMobileControls(ShapeRenderer shapes, Player player, CombatHudLayout.Layout layout,
@@ -119,72 +161,87 @@ public final class CombatHudRenderer {
             float oy = layout.toLogicalY(VirtualStick.hudOriginY());
             float vx = VirtualStick.hudValueX();
             float vy = VirtualStick.hudValueY();
-            shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .09f);
+
+            shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, CONTROL_IDLE_ALPHA);
             shapes.circle(ox, oy, max, 40);
-            shapes.setColor(VisualTheme.CYAN_SOFT.r, VisualTheme.CYAN_SOFT.g, VisualTheme.CYAN_SOFT.b, .20f);
-            shapes.circle(ox, oy, max * .62f, 32);
-            shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .50f);
-            shapes.circle(ox + vx * max * .68f, oy + vy * max * .68f, max * .24f, 28);
+            shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .78f);
+            shapes.circle(ox, oy, max * .78f, 40);
+            shapes.setColor(VisualTheme.CYAN_SOFT.r, VisualTheme.CYAN_SOFT.g, VisualTheme.CYAN_SOFT.b, CONTROL_ACTIVE_ALPHA);
+            shapes.circle(ox + vx * max * .68f, oy + vy * max * .68f, max * .22f, 28);
         }
 
-        float radius = layout.dashRadius() * (MobileCombatInput.dashDown() ? 1.12f : 1f);
-        float alpha = MobileCombatInput.dashDown() ? .42f : .24f;
-        if (player.canDash()) shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha);
-        else shapes.setColor(VisualTheme.SURFACE_2);
+        boolean down = MobileCombatInput.dashDown();
+        float radius = layout.dashRadius() * (down ? 1.06f : 1f);
+        float alpha = down ? CONTROL_ACTIVE_ALPHA : CONTROL_IDLE_ALPHA;
+        Color ring = player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED;
+        shapes.setColor(ring.r, ring.g, ring.b, alpha);
         shapes.circle(layout.dashX(), layout.dashY(), radius, 36);
-        shapes.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
-        shapes.circle(layout.dashX(), layout.dashY(), MobileCombatInput.dashDown() ? radius * .22f : radius * .12f, 18);
+        shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .76f);
+        shapes.circle(layout.dashX(), layout.dashY(), radius * .78f, 36);
+        if (player.canDash()) {
+            shapes.setColor(ring.r, ring.g, ring.b, down ? .76f : .38f);
+            shapes.circle(layout.dashX(), layout.dashY(), radius * .12f, 18);
+        }
     }
 
     private void drawText(SpriteBatch batch, BitmapFont font, Player player, WaveDirector director,
                           Enemy boss, CombatHudLayout.Layout layout) {
         float s = MathUtils.clamp(ui(), .85f, 1.35f);
-        float w = layout.logicalWidth();
         batch.setProjectionMatrix(projection);
         batch.begin();
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * s);
         font.setColor(VisualTheme.TEXT_STRONG);
-        font.draw(batch, f("hud.hp", (int) player.hp, (int) player.maxHp), layout.hp().x + 12f,
-            layout.hp().y + layout.hp().height * .70f, layout.hp().width - 24f, Align.left, false);
-        font.draw(batch, f("hud.level", player.level), layout.xp().x + 12f,
-            layout.xp().y + layout.xp().height * .70f, layout.xp().width - 24f, Align.left, false);
+        Rectangle survival = layout.survival();
+        font.draw(batch, f("hud.hp", (int) player.hp, (int) player.maxHp),
+            survival.x + 10f, survival.y + survival.height - 9f * s,
+            survival.width - 20f, Align.left, false);
 
+        Rectangle badge = layout.levelBadge();
+        font.setColor(VisualTheme.TEXT_STRONG);
+        font.draw(batch, f("hud.level", player.level), badge.x + 6f,
+            badge.y + badge.height * .62f, badge.width - 12f, Align.center, false);
+
+        Rectangle status = layout.hordeStatus();
+        font.setColor(VisualTheme.TEXT_STRONG);
+        font.draw(batch, f("hud.kills", director.kills()), status.x + 10f,
+            status.y + status.height * .68f, status.width * .52f, Align.left, false);
         font.setColor(VisualTheme.TEXT_DIM);
-        font.draw(batch, f("hud.stage", RunStageContext.stage()), layout.hp().x,
-            layout.timeline().y + 29f * s, 160f * s, Align.left, false);
-        font.draw(batch, f("hud.kills", director.kills()), w - layout.hp().x - 180f * s,
-            layout.timeline().y + 29f * s, 180f * s, Align.right, false);
+        font.draw(batch, f("hud.stage", RunStageContext.stage()), status.x + status.width * .48f,
+            status.y + status.height * .68f, status.width * .46f, Align.right, false);
 
         boolean contrast = AccessibilitySettings.active().highContrastTelegraphs;
         if (!director.bossSpawned()) {
             int remaining = Math.max(0, Math.round(director.secondsUntilBoss()));
             font.setColor(director.bossWarning() ? (contrast ? Color.WHITE : VisualTheme.danger()) : VisualTheme.TEXT_DIM);
             font.draw(batch, director.bossWarning() ? f("hud.bossSignal", remaining) : f("hud.bossEta", remaining),
-                layout.timeline().x, layout.timeline().y + 29f * s, layout.timeline().width, Align.center, false);
+                layout.logicalWidth() * .36f, survival.y + survival.height * .66f,
+                layout.logicalWidth() * .28f, Align.center, false);
         } else if (boss != null && layout.boss() != null) {
             int phase = boss.bossPhases == null ? 1 : boss.bossPhases.phase();
             font.setColor(contrast ? Color.WHITE : bossColor(boss));
-            font.draw(batch, f("hud.bossPhase", bossName(boss), phase), layout.boss().x,
-                layout.boss().y + layout.boss().height + 21f * s, layout.boss().width, Align.center, false);
+            font.draw(batch, f("hud.bossPhase", bossName(boss), phase),
+                layout.boss().x, layout.boss().y + layout.boss().height + 18f * s,
+                layout.boss().width, Align.center, false);
         } else {
             font.setColor(contrast ? Color.WHITE : VisualTheme.danger());
-            font.draw(batch, t("hud.bossLost"), layout.timeline().x, layout.timeline().y + 29f * s,
-                layout.timeline().width, Align.center, false);
+            font.draw(batch, t("hud.bossLost"), layout.logicalWidth() * .36f,
+                survival.y + survival.height * .66f, layout.logicalWidth() * .28f, Align.center, false);
         }
 
+        float chipY = layout.xpRail().y - 12f * s;
         if (RunModifierContext.active()) {
-            font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .86f * s);
+            font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .82f * s);
             font.setColor(VisualTheme.GOLD);
             font.draw(batch, f("hud.contract", RunModifierContext.title(), RunModifierContext.rewardBonusPercent()),
-                layout.hp().x, layout.timeline().y - 14f * s, Math.min(430f, w * .34f), Align.left, false);
+                survival.x, chipY, Math.min(410f, layout.logicalWidth() * .32f), Align.left, false);
         }
 
         WeaponLegendaryPresentation.Style legendaryStyle = WeaponLegendaryPresentation.style(player);
         if (legendaryStyle != WeaponLegendaryPresentation.Style.NONE) {
             font.setColor(legendaryStyle.r, legendaryStyle.g, legendaryStyle.b, 1f);
-            font.draw(batch, f("hud.weaponLegendary", legendaryStyle.label), w - layout.hp().x - 430f,
-                layout.timeline().y - 14f * s, 430f, Align.right, false);
+            font.draw(batch, f("hud.weaponLegendary", legendaryStyle.label),
+                status.x - 360f, chipY, 350f, Align.right, false);
         }
 
         RunEncounterDirector.Type encounter = director.activeEncounter();
@@ -200,14 +257,15 @@ public final class CombatHudRenderer {
             };
             int seconds = Math.max(1, Math.round(director.encounterSecondsRemaining()));
             font.setColor(contrast ? Color.WHITE : VisualTheme.GOLD);
-            font.draw(batch, f("hud.encounter", name, seconds), layout.timeline().x,
-                layout.timeline().y - 14f * s, layout.timeline().width, Align.center, false);
+            font.draw(batch, f("hud.encounter", name, seconds),
+                layout.logicalWidth() * .34f, chipY, layout.logicalWidth() * .32f, Align.center, false);
         }
 
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * s);
-        font.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .90f * s);
+        font.setColor(player.canDash() ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED);
         font.draw(batch, player.canDash() ? t("hud.dash") : String.format(java.util.Locale.ROOT, "%.1f", player.dashTimer),
-            layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s, layout.dashRadius() * 2f, Align.center, false);
+            layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s,
+            layout.dashRadius() * 2f, Align.center, false);
 
         drawOnboardingHint(batch, font, layout, s);
         batch.end();
@@ -215,17 +273,24 @@ public final class CombatHudRenderer {
 
     private void drawOnboardingHint(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
         OnboardingState o = OnboardingState.active();
-        if (o.completed()) return;
+        if (hintModeFor(o.completed()) == HintMode.NONE) return;
+
         String hint;
-        if (!o.movementSeen()) hint = t("hud.onboardingMove");
-        else if (!o.dashSeen()) hint = t("hud.onboardingDash");
+        boolean mobile = isAndroid();
+        if (!o.movementSeen()) hint = t(mobile ? "hud.onboardingMoveMobile" : "hud.onboardingMove");
+        else if (!o.dashSeen()) hint = t(mobile ? "hud.onboardingDashMobile" : "hud.onboardingDash");
         else if (!o.upgradeSeen()) hint = t("hud.onboardingUpgrade");
         else if (!o.bossSeen()) hint = t("hud.onboardingBoss");
         else return;
-        Rectangle r = layout.onboarding();
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * s);
-        font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, hint, r.x + 14f, r.y + r.height * .62f, r.width - 28f, Align.center, true);
+
+        Rectangle r = layout.toast();
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .88f * s);
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, hint, r.x + 14f, r.y + r.height * .62f, r.width - 28f, Align.left, true);
+    }
+
+    private boolean isAndroid() {
+        return Gdx.app != null && Gdx.app.getType() == Application.ApplicationType.Android;
     }
 
     private void drawDamageVignette(ShapeRenderer shapes, float w, float h) {
@@ -247,7 +312,11 @@ public final class CombatHudRenderer {
         for (Enemy e : enemies) if (e.alive && e.type == Enemy.Type.BOSS) return e;
         return null;
     }
-    private BossIdentity bossIdentity(Enemy boss) { return boss != null && boss.bossCombat != null ? boss.bossCombat.identity() : BossIdentity.ALPHA; }
+
+    private BossIdentity bossIdentity(Enemy boss) {
+        return boss != null && boss.bossCombat != null ? boss.bossCombat.identity() : BossIdentity.ALPHA;
+    }
+
     private String bossName(Enemy boss) {
         return switch (bossIdentity(boss)) {
             case REVENANT -> t("boss.revenant");
@@ -257,8 +326,10 @@ public final class CombatHudRenderer {
             default -> t("boss.alpha");
         };
     }
+
     private String t(String key) { return i18n.text(key); }
     private String f(String key, Object... args) { return i18n.format(key, args); }
+
     private Color bossColor(Enemy boss) {
         return switch (bossIdentity(boss)) {
             case REVENANT -> VisualTheme.VIOLET;
