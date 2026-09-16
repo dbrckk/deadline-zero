@@ -131,6 +131,7 @@ public final class CombatSpritePass {
         bossPresence.dispose();
         readability.dispose();
         championBadges.dispose();
+        world.dispose();
         environment.dispose();
         audio.dispose();
         postFx.dispose();
