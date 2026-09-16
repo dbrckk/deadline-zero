@@ -90,7 +90,7 @@ public final class RunContractScreen extends ScreenAdapter {
     private void drawHeader() {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, "‹  BASE", layout.back().x + 10f, layout.back().y + layout.back().height * .56f,
+        font.draw(batch, t("shop.back"), layout.back().x + 10f, layout.back().y + layout.back().height * .56f,
             layout.back().width - 16f, Align.left, false);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE));
