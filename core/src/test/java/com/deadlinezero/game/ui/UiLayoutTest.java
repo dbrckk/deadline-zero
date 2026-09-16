@@ -29,7 +29,8 @@ final class UiLayoutTest {
 
         for (int[] size : sizes) {
             UiLayout.Metrics m = UiLayout.compute(size[0], size[1]);
-            assertEquals(720f, m.height(), 0.01f);
+            assertTrue(m.width() >= 1280f);
+            assertTrue(m.height() >= 720f);
             assertTrue(m.contentWidth() > 0f);
             assertTrue(m.touchTarget() >= 56f);
             assertTrue(m.safeBottom() < m.safeTop());
@@ -37,6 +38,13 @@ final class UiLayoutTest {
             assertTrue(m.footerTop() >= m.safeBottom());
             assertTrue(m.contentBottom() < m.contentTop());
         }
+    }
+
+    @Test
+    void sixteenByTenExtendsVerticallyWithoutStretching() {
+        UiLayout.Metrics m = UiLayout.compute(2560, 1600);
+        assertEquals(1280f, m.width(), 0.01f);
+        assertEquals(800f, m.height(), 0.01f);
     }
 
     @Test
