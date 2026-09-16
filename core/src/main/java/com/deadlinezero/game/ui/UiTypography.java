@@ -19,11 +19,11 @@ public final class UiTypography {
         return switch (role) {
             case DISPLAY -> 2.60f;
             case TITLE -> 1.80f;
-            case SECTION -> 1.30f;
-            case BODY -> 1.00f;
-            case LABEL -> .86f;
-            case CAPTION -> .72f;
-            case METRIC -> 1.15f;
+            case SECTION -> 1.38f;
+            case BODY -> 1.08f;
+            case LABEL -> 1.00f;
+            case CAPTION -> .90f;
+            case METRIC -> 1.22f;
         };
     }
 }
