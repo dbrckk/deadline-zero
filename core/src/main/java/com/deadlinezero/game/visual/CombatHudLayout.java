@@ -72,21 +72,21 @@ public final class CombatHudLayout {
 
         Rectangle boss = null;
         if (bossActive) {
-            float bossW = Math.min(720f * s, m.contentWidth() * .52f);
-            float bossH = 22f * s;
+            float bossW = Math.min(660f * s, m.contentWidth() * .48f);
+            float bossH = 16f * s;
             boss = new Rectangle(
                 m.centerX() - bossW * .5f,
-                xpRail.y - bossH - 14f * s,
+                xpRail.y - bossH - 12f * s,
                 bossW,
                 bossH
             );
         }
 
-        float toastW = Math.min(430f * s, m.contentWidth() * .36f);
-        float toastH = 48f * s;
+        float toastW = Math.min(330f * s, m.contentWidth() * .28f);
+        float toastH = 40f * s;
         Rectangle toast = new Rectangle(
             m.safeLeft() + 18f,
-            m.safeBottom() + 22f,
+            m.safeBottom() + 20f,
             toastW,
             toastH
         );
