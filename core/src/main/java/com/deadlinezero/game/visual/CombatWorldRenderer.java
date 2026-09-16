@@ -9,32 +9,47 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  * leaving authored set dressing and combatants in their existing passes.
  */
 public final class CombatWorldRenderer {
+    @FunctionalInterface
+    interface RegionSource {
+        TextureRegion region(String key);
+    }
+
     private static final float TILE = 4f;
     private static final int MIN_GX = -10;
     private static final int MAX_GX = 9;
     private static final int MIN_GY = -6;
     private static final int MAX_GY = 5;
 
-    private final GameArt art;
+    private final RegionSource regions;
 
     public CombatWorldRenderer(GameArt art) {
-        if (art == null) throw new IllegalArgumentException("art");
-        this.art = art;
+        this(art == null ? null : art::regionOrNull);
+    }
+
+    CombatWorldRenderer(RegionSource regions) {
+        if (regions == null) throw new IllegalArgumentException("regions");
+        this.regions = regions;
+    }
+
+    boolean hasUsableFloorSource() {
+        return region("environment/floor/concrete_a") != null
+            || region("environment/floor/concrete_b") != null
+            || region("environment/floor/concrete_c") != null;
     }
 
     /** Returns false only when no usable authored floor texture exists. */
     public boolean drawFloor(SpriteBatch batch, int stage, long seed, float time) {
-        TextureRegion concreteA = art.regionOrNull("environment/floor/concrete_a");
-        TextureRegion concreteB = art.regionOrNull("environment/floor/concrete_b");
-        TextureRegion concreteC = art.regionOrNull("environment/floor/concrete_c");
+        TextureRegion concreteA = region("environment/floor/concrete_a");
+        TextureRegion concreteB = region("environment/floor/concrete_b");
+        TextureRegion concreteC = region("environment/floor/concrete_c");
         if (concreteA == null && concreteB == null && concreteC == null) return false;
 
         CombatWorldStyle.Profile profile = CombatWorldStyle.forStage(stage, seed);
         TextureRegion fallback = concreteA != null ? concreteA : concreteB != null ? concreteB : concreteC;
-        TextureRegion hazard = art.regionOrNull("environment/floor/hazard_a");
-        TextureRegion crack = art.regionOrNull("environment/decal/crack_a");
-        TextureRegion blood = art.regionOrNull("environment/decal/blood_a");
-        TextureRegion scorch = art.regionOrNull("environment/decal/scorch_a");
+        TextureRegion hazard = region("environment/floor/hazard_a");
+        TextureRegion crack = region("environment/decal/crack_a");
+        TextureRegion blood = region("environment/decal/blood_a");
+        TextureRegion scorch = region("environment/decal/scorch_a");
 
         batch.begin();
         drawBase(batch, profile, concreteA, concreteB, concreteC, fallback);
@@ -44,6 +59,10 @@ public final class CombatWorldRenderer {
         batch.setColor(Color.WHITE);
         batch.end();
         return true;
+    }
+
+    private TextureRegion region(String key) {
+        return regions.region(key);
     }
 
     private void drawBase(SpriteBatch batch, CombatWorldStyle.Profile profile,
