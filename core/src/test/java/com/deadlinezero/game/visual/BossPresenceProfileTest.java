@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 final class BossPresenceProfileTest {
     @Test
-    void laterBossPhasesIncreasePresentationIntensityWithoutChangingGameplay() {
+    void laterBossPhasesIncreasePresentationIntensityWithoutObscuringTheBoss() {
         BossPresenceProfile.PhaseProfile phase1 = BossPresenceProfile.forPhase(BossIdentity.ALPHA, 1);
         BossPresenceProfile.PhaseProfile phase3 = BossPresenceProfile.forPhase(BossIdentity.ALPHA, 3);
         BossPresenceProfile.PhaseProfile frost = BossPresenceProfile.forPhase(BossIdentity.FROST_COLOSSUS, 2);
@@ -16,7 +16,10 @@ final class BossPresenceProfileTest {
         assertTrue(phase3.intensity() > phase1.intensity());
         assertTrue(frost.telegraphSegments() >= 3);
         assertTrue(phase3.ringScale() >= phase1.ringScale());
+        assertTrue(phase3.ringScale() <= 1.45f);
+        assertTrue(frost.ringScale() <= 1.45f);
         assertTrue(phase3.markerCount() >= phase1.markerCount());
+        assertTrue(phase3.markerCount() <= 6);
     }
 
     @Test
