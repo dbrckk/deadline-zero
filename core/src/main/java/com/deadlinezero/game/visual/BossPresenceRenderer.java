@@ -53,25 +53,26 @@ public final class BossPresenceRenderer {
         BossIdentity identity = boss.bossCombat == null ? BossIdentity.ALPHA : boss.bossCombat.identity();
         BossPresenceProfile.PhaseProfile p = BossPresenceProfile.forPhase(identity, phase);
         boolean reduced = a.reducedMotion || quality == GraphicsQuality.LOW;
-        float pulse = reduced ? 1f : 1f + MathUtils.sin(time * p.pulseRate()) * .055f * p.intensity();
+        float pulse = reduced ? 1f : 1f + MathUtils.sin(time * p.pulseRate()) * .032f * p.intensity();
         float r = boss.radius * p.ringScale() * pulse;
         Color c = a.highContrastTelegraphs ? Color.WHITE : identityColor(identity);
+        int segments = Math.max(16, p.telegraphSegments() * 6);
 
-        shapes.setColor(.005f, .006f, .008f, .52f);
-        shapes.circle(boss.position.x, boss.position.y, r * 1.08f, Math.max(16, p.telegraphSegments() * 6));
-        shapes.setColor(c.r, c.g, c.b, .10f + p.intensity() * .12f);
-        shapes.circle(boss.position.x, boss.position.y, r, Math.max(16, p.telegraphSegments() * 6));
-        shapes.setColor(.01f, .012f, .015f, .88f);
-        shapes.circle(boss.position.x, boss.position.y, r * .84f, Math.max(16, p.telegraphSegments() * 6));
+        shapes.setColor(.005f, .006f, .008f, .28f);
+        shapes.circle(boss.position.x, boss.position.y, r * 1.04f, segments);
+        shapes.setColor(c.r, c.g, c.b, .06f + p.intensity() * .08f);
+        shapes.circle(boss.position.x, boss.position.y, r, segments);
+        shapes.setColor(.01f, .012f, .015f, .72f);
+        shapes.circle(boss.position.x, boss.position.y, r * .91f, segments);
 
-        shapes.setColor(c.r, c.g, c.b, .34f + p.intensity() * .18f);
+        shapes.setColor(c.r, c.g, c.b, .24f + p.intensity() * .13f);
         int markers = quality == GraphicsQuality.LOW ? Math.min(4, p.markerCount()) : p.markerCount();
         for (int i = 0; i < markers; i++) {
-            float angle = i * (360f / markers) + (reduced ? 0f : time * 12f);
+            float angle = i * (360f / markers) + (reduced ? 0f : time * 8f);
             float x1 = boss.position.x + MathUtils.cosDeg(angle) * r;
             float y1 = boss.position.y + MathUtils.sinDeg(angle) * r;
-            float x2 = boss.position.x + MathUtils.cosDeg(angle) * (r + .34f * p.intensity());
-            float y2 = boss.position.y + MathUtils.sinDeg(angle) * (r + .34f * p.intensity());
+            float x2 = boss.position.x + MathUtils.cosDeg(angle) * (r + .22f * p.intensity());
+            float y2 = boss.position.y + MathUtils.sinDeg(angle) * (r + .22f * p.intensity());
             shapes.rectLine(x1, y1, x2, y2, p.lineWeight());
         }
     }
