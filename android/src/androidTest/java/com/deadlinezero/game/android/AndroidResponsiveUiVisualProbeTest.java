@@ -2,6 +2,7 @@ package com.deadlinezero.game.android;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeTrue;
 
 import android.graphics.Bitmap;
 import androidx.test.core.app.ActivityScenario;
@@ -26,8 +27,9 @@ import org.junit.runner.RunWith;
 /**
  * Phone-aspect visual gate for the responsive UI system.
  *
- * The workflow runs this test after forcing the emulator to a 1536x691 display, matching the
- * physical-device aspect ratio that exposed the original mixed pixel/logical-coordinate bug.
+ * The dedicated workflow runs this test after forcing the emulator to a 1536x691 display, matching
+ * the physical-device aspect ratio that exposed the original mixed pixel/logical-coordinate bug.
+ * The ordinary connected-device suite is allowed to skip it when running at a conventional aspect.
  */
 @RunWith(AndroidJUnit4.class)
 public final class AndroidResponsiveUiVisualProbeTest {
@@ -35,6 +37,7 @@ public final class AndroidResponsiveUiVisualProbeTest {
 
     @Test
     public void capturesWidePhoneMetaAndCombatScreens() throws Exception {
+        assumeWidePhoneAspect();
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
 
@@ -88,6 +91,18 @@ public final class AndroidResponsiveUiVisualProbeTest {
                 assertTrue("expected GameScreen for wide-phone visual probe", game.getScreen() instanceof GameScreen);
             });
             settleAndCapture("responsive-1536x691-combat.png");
+        }
+    }
+
+    private static void assumeWidePhoneAspect() {
+        Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
+        assertNotNull("Android UiAutomation did not return an aspect probe screenshot", bitmap);
+        try {
+            float aspect = bitmap.getWidth() / (float) Math.max(1, bitmap.getHeight());
+            assumeTrue("wide-phone visual probe requires aspect > " + MIN_WIDE_ASPECT + ", was " + aspect,
+                aspect > MIN_WIDE_ASPECT);
+        } finally {
+            bitmap.recycle();
         }
     }
 
