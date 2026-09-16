@@ -88,7 +88,7 @@ public final class CombatSpritePass {
             MathUtils.atan2(target.position.y - player.position.y, target.position.x - player.position.x) * MathUtils.radiansToDegrees;
         float shotFlash = target == null || !player.alive ? 0f : MathUtils.clamp(1f - CombatVisualEvents.playerShotAgeSeconds() / .075f, 0f, 1f);
         if (!playerSpriteHasIntegratedWeapon()) weapon.draw(batch, player, aimAngle, shotFlash);
-        if (pools != null) vfx.draw(batch, player, enemies, pools);
+        if (pools != null) vfx.draw(batch, player, enemies, pools, quality);
     }
 
     /** Rex's published production atlas already contains the rifle in every directional motion. */
