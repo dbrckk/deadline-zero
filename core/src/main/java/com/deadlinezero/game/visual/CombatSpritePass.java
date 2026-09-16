@@ -17,6 +17,7 @@ public final class CombatSpritePass {
     private final EnvironmentRenderer environment;
     private final CombatWorldRenderer world;
     private final CombatReadabilityPass readability = new CombatReadabilityPass();
+    private final BossPresenceRenderer bossPresence = new BossPresenceRenderer();
     private final WeaponRenderer weapon;
     private final AuthoredVfxRenderer vfx;
     private final ChampionBadgeRenderer championBadges = new ChampionBadgeRenderer();
@@ -81,6 +82,7 @@ public final class CombatSpritePass {
         characters.draw(batch, player, enemies);
         batch.setShader(null);
         readability.drawOverlay(batch, player, enemies, stateTime, quality);
+        bossPresence.draw(batch, player, enemies, stateTime, quality);
         championBadges.draw(batch, enemies);
 
         Enemy target = nearestEnemy(player, enemies);
@@ -126,6 +128,7 @@ public final class CombatSpritePass {
     }
 
     public void dispose() {
+        bossPresence.dispose();
         readability.dispose();
         championBadges.dispose();
         environment.dispose();
