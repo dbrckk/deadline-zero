@@ -55,16 +55,7 @@ jobs:
             adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/mobile-1536x691.png
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/mobile-1536x691.png build/mobile-presentation/mobile-1536x691.png
             test -s build/mobile-presentation/mobile-1536x691.png
-            python3 - <<'PY'
-            import struct
-            from pathlib import Path
-            path = Path('build/mobile-presentation/mobile-1536x691.png')
-            data = path.read_bytes()
-            assert data[:8] == b'\x89PNG\r\n\x1a\n'
-            width, height = struct.unpack('>II', data[16:24])
-            assert (width, height) == (1536, 691), (width, height)
-            print('MOBILE_PRESENTATION', width, height, path.stat().st_size)
-            PY
+            python3 -c "import struct; from pathlib import Path; p=Path('build/mobile-presentation/mobile-1536x691.png'); d=p.read_bytes(); assert d[:8] == b'\x89PNG\r\n\x1a\n'; w,h=struct.unpack('>II', d[16:24]); assert (w,h) == (1536,691), (w,h); print('MOBILE_PRESENTATION', w, h, p.stat().st_size)"
       - name: Upload 1536x691 visual QA
         uses: actions/upload-artifact@v4
         with:
