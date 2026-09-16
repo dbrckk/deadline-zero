@@ -67,8 +67,10 @@ public final class RunContractScreen extends ScreenAdapter {
             UiRenderer.card(shapes, r.x, r.y, r.width, r.height, offer.legendary(), offer.legendary());
             Color accent = accent(offer);
             float pulse = .80f + .20f * (float) Math.sin(time * (offer.legendary() ? 4.2f : 2.4f) + i * .7f);
-            shapes.setColor(accent.r, accent.g, accent.b, .12f + pulse * .04f);
-            shapes.rect(r.x + 8f, r.y + r.height * .47f, r.width - 16f, r.height * .25f);
+            shapes.setColor(accent.r, accent.g, accent.b, .70f + pulse * .18f);
+            shapes.rect(r.x + 8f, r.y + 12f, 4f, r.height - 24f);
+            shapes.setColor(accent.r, accent.g, accent.b, .26f + pulse * .06f);
+            shapes.rect(r.x + 18f, r.y + r.height - 8f, r.width - 36f, 2f);
             Rectangle cta = cta(r);
             UiRenderer.button(shapes, cta.x, cta.y, cta.width, cta.height,
                 offer.legendary() ? UiRenderer.ButtonState.SELECTED : UiRenderer.ButtonState.NORMAL);
@@ -162,7 +164,7 @@ public final class RunContractScreen extends ScreenAdapter {
         String endgame = tier >= 8 ? t("contract.endgameHeavy") : tier >= 5 ? t("contract.endgame") : "";
         if (biome.isEmpty()) return endgame;
         if (endgame.isEmpty()) return biome;
-        return biome + " • " + endgame;
+        return biome + " | " + endgame;
     }
 
     private Rectangle cta(Rectangle card) {
