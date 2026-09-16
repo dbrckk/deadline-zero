@@ -11,17 +11,24 @@ public final class CombatHudLayout {
         float logicalHeight,
         float scaleX,
         float scaleY,
-        Rectangle hp,
-        Rectangle xp,
-        Rectangle timeline,
+        Rectangle survival,
+        Rectangle levelBadge,
+        Rectangle xpRail,
+        Rectangle hordeStatus,
         Rectangle boss,
-        Rectangle onboarding,
+        Rectangle toast,
         float dashX,
         float dashY,
         float dashRadius
     ) {
         public float toLogicalX(float physicalX) { return physicalX * scaleX; }
         public float toLogicalY(float physicalY) { return physicalY * scaleY; }
+
+        /** Transitional aliases kept while CombatHudRenderer migrates to the v2 regions. */
+        public Rectangle hp() { return survival; }
+        public Rectangle xp() { return levelBadge; }
+        public Rectangle timeline() { return xpRail; }
+        public Rectangle onboarding() { return toast; }
     }
 
     private CombatHudLayout() {}
@@ -34,37 +41,66 @@ public final class CombatHudLayout {
         float sy = m.height() / physicalH;
         float s = MathUtils.clamp(uiScale, .85f, 1.35f);
 
-        float railH = 30f * s;
-        float railW = Math.min(420f * s, m.contentWidth() * .30f);
-        float gap = 16f * s;
-        float top = m.safeTop() - 12f;
-        Rectangle hp = new Rectangle(m.safeLeft() + 12f, top - railH, railW, railH);
-        Rectangle xp = new Rectangle(hp.x + hp.width + gap, hp.y, railW, railH);
+        float left = m.safeLeft() + 14f;
+        float top = m.safeTop() - 14f;
+        float survivalH = 42f * s;
+        float survivalW = Math.min(330f * s, m.contentWidth() * .25f);
+        Rectangle survival = new Rectangle(left, top - survivalH, survivalW, survivalH);
 
-        float timelineW = Math.min(760f, m.contentWidth() * .54f);
-        Rectangle timeline = new Rectangle(m.centerX() - timelineW * .5f,
-            hp.y - 25f * s, timelineW, 9f * s);
+        float badgeW = Math.max(72f, 78f * s);
+        Rectangle levelBadge = new Rectangle(
+            survival.x + survival.width + 10f * s,
+            survival.y,
+            badgeW,
+            survival.height
+        );
+
+        Rectangle xpRail = new Rectangle(
+            survival.x,
+            survival.y - 13f * s,
+            survival.width + levelBadge.width + 10f * s,
+            Math.min(10f, 8f * s)
+        );
+
+        float hordeW = Math.max(220f, Math.min(320f * s, m.contentWidth() * .25f));
+        Rectangle hordeStatus = new Rectangle(
+            m.safeRight() - 14f - hordeW,
+            survival.y,
+            hordeW,
+            survival.height
+        );
 
         Rectangle boss = null;
         if (bossActive) {
-            float bossW = Math.min(860f, m.contentWidth() * .62f);
-            float bossH = 24f * s;
-            boss = new Rectangle(m.centerX() - bossW * .5f,
-                timeline.y - bossH - 13f * s, bossW, bossH);
+            float bossW = Math.min(720f * s, m.contentWidth() * .52f);
+            float bossH = 22f * s;
+            boss = new Rectangle(
+                m.centerX() - bossW * .5f,
+                xpRail.y - bossH - 14f * s,
+                bossW,
+                bossH
+            );
         }
 
-        float hintW = Math.min(560f, m.contentWidth() * .46f);
-        float hintH = 56f * s;
-        Rectangle onboarding = new Rectangle(m.centerX() - hintW * .5f,
-            m.safeBottom() + 78f * s, hintW, hintH);
+        float toastW = Math.min(430f * s, m.contentWidth() * .36f);
+        float toastH = 48f * s;
+        Rectangle toast = new Rectangle(
+            m.safeLeft() + 18f,
+            m.safeBottom() + 22f,
+            toastW,
+            toastH
+        );
 
         float dashPhysicalX = physicalW - 58f * s;
         float dashPhysicalY = 62f * s;
         float dashX = dashPhysicalX * sx;
         float dashY = dashPhysicalY * sy;
-        float dashRadius = Math.max(32f * s, 28f);
+        float dashRadius = Math.max(32f, 32f * s);
 
-        return new Layout(m.width(), m.height(), sx, sy, hp, xp, timeline, boss, onboarding,
-            dashX, dashY, dashRadius);
+        return new Layout(
+            m.width(), m.height(), sx, sy,
+            survival, levelBadge, xpRail, hordeStatus, boss, toast,
+            dashX, dashY, dashRadius
+        );
     }
 }
