@@ -29,18 +29,38 @@ public final class Localization {
     public String text(String key) {
         if (key == null || key.isBlank()) return "";
         try {
-            return bundle.get(key);
+            return sanitizeForBitmapFont(bundle.get(key));
         } catch (MissingResourceException ignored) {
-            return key;
+            return sanitizeForBitmapFont(key);
         }
     }
 
     public String format(String key, Object... args) {
         if (key == null || key.isBlank()) return "";
         try {
-            return bundle.format(key, args);
+            return sanitizeForBitmapFont(bundle.format(key, args));
         } catch (MissingResourceException ignored) {
-            return key;
+            return sanitizeForBitmapFont(key);
         }
+    }
+
+    /**
+     * Normalizes punctuation that is not present in libGDX's bundled default BitmapFont.
+     * Screens intentionally keep authored localization copy expressive; this render boundary
+     * guarantees that the runtime never substitutes missing-glyph boxes on the shipping font.
+     */
+    public static String sanitizeForBitmapFont(String value) {
+        if (value == null || value.isEmpty()) return "";
+        return value
+            .replace("•", "|")
+            .replace("‹", "<")
+            .replace("›", ">")
+            .replace("←", "<-")
+            .replace("→", "->")
+            .replace("↑", "^")
+            .replace("↓", "v")
+            .replace("–", "-")
+            .replace("—", "-")
+            .replace("…", "...");
     }
 }
