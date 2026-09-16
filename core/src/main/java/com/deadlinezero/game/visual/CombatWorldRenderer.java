@@ -106,7 +106,8 @@ public final class CombatWorldRenderer implements Disposable {
 
     private void drawSparseHazards(SpriteBatch batch, CombatWorldStyle.Profile profile, TextureRegion hazard) {
         if (hazard == null) return;
-        int tileBudget = Math.max(4, Math.min(12, Math.round(240f * profile.hazardCoverage())));
+        int tileBudget = Math.max(3, Math.min(5, Math.round(180f * profile.hazardCoverage())));
+        float marker = profile.hazardMarkerSize();
         for (int i = 0; i < tileBudget; i++) {
             long h = hash(profile.seed(), i, 0x77B5L);
             boolean horizontalEdge = (i & 1) == 0;
@@ -114,13 +115,13 @@ public final class CombatWorldRenderer implements Disposable {
             float y;
             if (horizontalEdge) {
                 x = -28f + CombatWorldStyle.unit(h) * 56f;
-                y = ((i & 2) == 0 ? -1f : 1f) * (14f + CombatWorldStyle.unit(h >>> 11) * 3f);
+                y = ((i & 2) == 0 ? -1f : 1f) * (14.8f + CombatWorldStyle.unit(h >>> 11) * 1.7f);
             } else {
-                x = ((i & 2) == 0 ? -1f : 1f) * (26f + CombatWorldStyle.unit(h) * 4f);
+                x = ((i & 2) == 0 ? -1f : 1f) * (27.2f + CombatWorldStyle.unit(h) * 2.1f);
                 y = -12f + CombatWorldStyle.unit(h >>> 11) * 24f;
             }
             setHazardTint(batch, profile.biome());
-            batch.draw(hazard, x - TILE * .5f, y - TILE * .5f, TILE, TILE);
+            batch.draw(hazard, x - marker * .5f, y - marker * .5f, marker, marker);
         }
     }
 
@@ -157,11 +158,11 @@ public final class CombatWorldRenderer implements Disposable {
 
     private static void setHazardTint(SpriteBatch batch, EnvironmentBiomeRules.Biome biome) {
         switch (biome) {
-            case CINDER_FOUNDRY -> batch.setColor(1f, .42f, .10f, .62f);
-            case NULL_SECTOR -> batch.setColor(.54f, .32f, 1f, .52f);
-            case CRYO_VAULT -> batch.setColor(.36f, .82f, 1f, .50f);
-            case CRYOGENIC_DEPTHS -> batch.setColor(.18f, .64f, .76f, .48f);
-            default -> batch.setColor(.92f, .66f, .16f, .54f);
+            case CINDER_FOUNDRY -> batch.setColor(1f, .42f, .10f, .34f);
+            case NULL_SECTOR -> batch.setColor(.54f, .32f, 1f, .30f);
+            case CRYO_VAULT -> batch.setColor(.36f, .82f, 1f, .30f);
+            case CRYOGENIC_DEPTHS -> batch.setColor(.18f, .64f, .76f, .28f);
+            default -> batch.setColor(.92f, .66f, .16f, .30f);
         }
     }
 
