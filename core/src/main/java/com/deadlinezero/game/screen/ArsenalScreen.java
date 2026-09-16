@@ -139,7 +139,7 @@ public final class ArsenalScreen extends ScreenAdapter {
     private void drawHeader(int page, int pageCount) {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, "‹  BASE", back.x + 10f, back.y + back.height * .57f, back.width - 14f, Align.left, false);
+        font.draw(batch, t("shop.back"), back.x + 10f, back.y + back.height * .57f, back.width - 14f, Align.left, false);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE));
         font.setColor(VisualTheme.TEXT_STRONG);
