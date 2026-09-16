@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.deadlinezero.game.ai.BossIdentity;
+import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.fx.DeathFx;
@@ -19,19 +20,28 @@ public final class AuthoredVfxRenderer {
     public AuthoredVfxRenderer(GameArt art) { this.art = art; }
 
     public void draw(SpriteBatch batch, Player player, Iterable<Enemy> enemies, Pools pools) {
+        draw(batch, player, enemies, pools, GraphicsQuality.MEDIUM);
+    }
+
+    public void draw(SpriteBatch batch, Player player, Iterable<Enemy> enemies, Pools pools, GraphicsQuality quality) {
         if (!art.authoredAvailable()) return;
         batch.begin();
-        drawMuzzle(batch, player, enemies);
-        drawDash(batch, player);
+        drawMuzzle(batch, player, enemies, quality);
+        drawDash(batch, player, quality);
         drawLevelUp(batch, player);
         drawLegendary(batch, player);
         drawNullArchon(batch, enemies);
-        drawImpacts(batch, pools);
-        drawBossDeath(batch, pools);
+        drawImpacts(batch, pools, quality);
+        drawBossDeath(batch, pools, quality);
         batch.end();
     }
 
-    private void drawMuzzle(SpriteBatch batch, Player player, Iterable<Enemy> enemies) {
+    private CombatFeedbackProfile.Profile feedback(CombatFeedbackProfile.Event event, GraphicsQuality quality) {
+        AccessibilitySettings a = AccessibilitySettings.active();
+        return CombatFeedbackProfile.forEvent(event, quality, a.reducedMotion, a.minimizesFlashes());
+    }
+
+    private void drawMuzzle(SpriteBatch batch, Player player, Iterable<Enemy> enemies, GraphicsQuality quality) {
         float age = CombatVisualEvents.playerShotAgeSeconds();
         if (age > .10f || !player.alive) return;
         TextureRegion region = art.effectOrNull("muzzle_fire", age, .025f);
@@ -39,24 +49,29 @@ public final class AuthoredVfxRenderer {
         Enemy target = nearest(player, enemies);
         float angle = target == null ? player.velocity.angleDeg() : MathUtils.atan2(
             target.position.y - player.position.y, target.position.x - player.position.x) * MathUtils.radiansToDegrees;
+        CombatFeedbackProfile.Profile profile = feedback(CombatFeedbackProfile.Event.FIRE, quality);
 
-        // Rex now carries the rifle inside the authored character frames. Keep the transient flash
-        // tight to that baked weapon silhouette instead of using the older external-weapon reach.
-        float w = .62f;
+        float w = .56f + profile.glowAlpha() * .32f;
         float h = w * region.getRegionHeight() / (float)Math.max(1, region.getRegionWidth());
         float r = angle * MathUtils.degreesToRadians;
         float x = player.position.x + MathUtils.cos(r) * .48f;
         float y = player.position.y + MathUtils.sin(r) * .48f;
+        float fade = MathUtils.clamp(1f - age / .10f, 0f, 1f);
+        batch.setColor(1f, 1f, 1f, Math.min(1f, (.60f + profile.glowAlpha()) * fade));
         batch.draw(region, x - w * .15f, y - h * .5f, w * .15f, h * .5f, w, h, 1f, 1f, angle);
+        batch.setColor(Color.WHITE);
     }
 
-    private void drawDash(SpriteBatch batch, Player player) {
+    private void drawDash(SpriteBatch batch, Player player, GraphicsQuality quality) {
         float age = CombatVisualEvents.dashAgeSeconds();
         if (age > .24f) return;
+        CombatFeedbackProfile.Profile profile = feedback(CombatFeedbackProfile.Event.DASH, quality);
+        if (profile.afterimageStrength() <= .001f) return;
         TextureRegion region = art.effectOrNull("dash", age, .04f);
         if (region == null) return;
-        float size = 2.1f;
-        batch.setColor(1f, 1f, 1f, MathUtils.clamp(1f - age / .24f, 0f, 1f));
+        float size = 1.9f + profile.afterimageStrength() * .55f;
+        float fade = MathUtils.clamp(1f - age / .24f, 0f, 1f);
+        batch.setColor(1f, 1f, 1f, fade * MathUtils.clamp(.30f + profile.afterimageStrength(), 0f, 1f));
         batch.draw(region, player.position.x - size * .5f, player.position.y - size * .5f, size, size);
         batch.setColor(Color.WHITE);
     }
@@ -126,28 +141,33 @@ public final class AuthoredVfxRenderer {
         batch.setColor(Color.WHITE);
     }
 
-    private void drawImpacts(SpriteBatch batch, Pools pools) {
+    private void drawImpacts(SpriteBatch batch, Pools pools, GraphicsQuality quality) {
+        CombatFeedbackProfile.Profile profile = feedback(CombatFeedbackProfile.Event.HIT, quality);
         for (ImpactFx fx : pools.impacts) {
             if (!fx.active) continue;
             float age = Math.max(0f, fx.maxLife - fx.life);
             String name = classify(fx.color);
             TextureRegion region = art.effectOrNull(name, age, .035f);
             if (region == null) continue;
-            float size = Math.max(.5f, fx.size * 2.15f);
-            batch.setColor(1f, 1f, 1f, MathUtils.clamp(fx.life / Math.max(.001f, fx.maxLife), 0f, 1f));
+            float size = Math.max(.5f, fx.size * (1.75f + profile.glowAlpha()));
+            float fade = MathUtils.clamp(fx.life / Math.max(.001f, fx.maxLife), 0f, 1f);
+            batch.setColor(1f, 1f, 1f, Math.min(1f, fade * (.62f + profile.glowAlpha())));
             batch.draw(region, fx.position.x - size * .5f, fx.position.y - size * .5f, size, size);
         }
         batch.setColor(Color.WHITE);
     }
 
-    private void drawBossDeath(SpriteBatch batch, Pools pools) {
+    private void drawBossDeath(SpriteBatch batch, Pools pools, GraphicsQuality quality) {
+        CombatFeedbackProfile.Profile profile = feedback(CombatFeedbackProfile.Event.BOSS_RELEASE, quality);
         for (DeathFx fx : pools.deathFx) {
             if (!fx.active || fx.type != Enemy.Type.BOSS || fx.age > 1.2f) continue;
             TextureRegion region = art.effectOrNull("boss_explosion", fx.age, .055f);
             if (region == null) continue;
-            float size = 6.2f + fx.age * 1.6f;
+            float size = 5.8f + profile.glowAlpha() * 1.4f + fx.age * 1.4f;
+            batch.setColor(1f, 1f, 1f, Math.min(1f, .55f + profile.glowAlpha()));
             batch.draw(region, fx.x - size * .5f, fx.y - size * .5f, size, size);
         }
+        batch.setColor(Color.WHITE);
     }
 
     private String classify(Color c) {
