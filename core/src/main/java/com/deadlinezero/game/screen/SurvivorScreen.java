@@ -109,7 +109,7 @@ public final class SurvivorScreen extends ScreenAdapter {
         Rectangle back = layout.back();
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, "‹  BASE", back.x + 12f, back.y + back.height * .56f, back.width - 20f, Align.left, false);
+        font.draw(batch, t("shop.back"), back.x + 12f, back.y + back.height * .56f, back.width - 20f, Align.left, false);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE));
         font.setColor(VisualTheme.TEXT_STRONG);
