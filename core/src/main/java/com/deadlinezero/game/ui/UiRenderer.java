@@ -2,6 +2,7 @@ package com.deadlinezero.game.ui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.visual.VisualTheme;
 
 /** Allocation-free shape primitives for the shared production UI language. */
@@ -40,7 +41,8 @@ public final class UiRenderer {
         set(shapes, VisualTheme.SURFACE_2, .25f);
         shapes.rect(0f, 0f, m.width(), m.height() * .16f);
 
-        float pulse = .055f + .025f * (float) Math.sin(time * .9f);
+        boolean reduceMotion = AccessibilitySettings.active().reducedMotion;
+        float pulse = reduceMotion ? .055f : .055f + .025f * (float) Math.sin(time * .9f);
         set(shapes, VisualTheme.accent(), pulse);
         float step = 72f;
         for (float y = 28f; y < m.height(); y += step) shapes.rect(0f, y, m.width(), 1f);
