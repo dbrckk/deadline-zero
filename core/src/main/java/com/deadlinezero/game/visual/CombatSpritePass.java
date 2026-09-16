@@ -16,6 +16,7 @@ public final class CombatSpritePass {
     private final CharacterSpriteRenderer characters;
     private final EnvironmentRenderer environment;
     private final CombatWorldRenderer world;
+    private final CombatReadabilityPass readability = new CombatReadabilityPass();
     private final WeaponRenderer weapon;
     private final AuthoredVfxRenderer vfx;
     private final ChampionBadgeRenderer championBadges = new ChampionBadgeRenderer();
@@ -74,9 +75,12 @@ public final class CombatSpritePass {
     public void renderCombat(SpriteBatch batch, Player player, Array<Enemy> enemies, Pools pools) {
         audio.update(player, enemies);
         if (!characters.authoredAvailable()) return;
+
+        readability.drawUnderlay(batch, player, enemies, stateTime, quality);
         if (postFx.available() && quality.postFxIntensity > 0f) batch.setShader(postFx.shader(quality.postFxIntensity));
         characters.draw(batch, player, enemies);
         batch.setShader(null);
+        readability.drawOverlay(batch, player, enemies, stateTime, quality);
         championBadges.draw(batch, enemies);
 
         Enemy target = nearestEnemy(player, enemies);
@@ -122,6 +126,7 @@ public final class CombatSpritePass {
     }
 
     public void dispose() {
+        readability.dispose();
         championBadges.dispose();
         environment.dispose();
         audio.dispose();
