@@ -80,6 +80,8 @@ public final class SurvivorScreen extends ScreenAdapter {
             UiRenderer.ButtonState.NORMAL);
         UiRenderer.button(shapes, layout.next().x, layout.next().y, layout.next().width, layout.next().height,
             UiRenderer.ButtonState.NORMAL);
+        drawChevron(layout.previous(), false);
+        drawChevron(layout.next(), true);
 
         UiRenderer.ButtonState ctaState;
         if (!unlocked) ctaState = UiRenderer.ButtonState.DISABLED;
@@ -95,12 +97,23 @@ public final class SurvivorScreen extends ScreenAdapter {
         shapes.end();
     }
 
+    private void drawChevron(Rectangle bounds, boolean right) {
+        float cx = bounds.x + bounds.width * .5f;
+        float cy = bounds.y + bounds.height * .5f;
+        float half = Math.min(bounds.width, bounds.height) * .15f;
+        float tip = right ? cx + half : cx - half;
+        float tail = right ? cx - half : cx + half;
+        float stroke = Math.max(3f, half * .30f);
+        shapes.setColor(VisualTheme.TEXT_STRONG);
+        shapes.rectLine(tail, cy + half, tip, cy, stroke);
+        shapes.rectLine(tip, cy, tail, cy - half, stroke);
+    }
+
     private void drawContent(SurvivorCatalog.Survivor survivor, boolean unlocked, int level, long xp, long next) {
         batch.begin();
         drawHeader();
         drawPortrait(survivor, unlocked);
         drawStats(survivor, unlocked, level, xp, next);
-        drawNavigation();
         drawCta(survivor, unlocked);
         batch.end();
     }
@@ -187,15 +200,6 @@ public final class SurvivorScreen extends ScreenAdapter {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.METRIC));
         font.setColor(VisualTheme.TEXT_STRONG);
         font.draw(batch, value, x, y - 25f, width, Align.left, false);
-    }
-
-    private void drawNavigation() {
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
-        font.setColor(VisualTheme.TEXT_STRONG);
-        Rectangle prev = layout.previous();
-        Rectangle next = layout.next();
-        font.draw(batch, "<", prev.x, prev.y + prev.height * .64f, prev.width, Align.center, false);
-        font.draw(batch, ">", next.x, next.y + next.height * .64f, next.width, Align.center, false);
     }
 
     private void drawCta(SurvivorCatalog.Survivor survivor, boolean unlocked) {
