@@ -63,11 +63,11 @@ public final class SurvivorScreen extends ScreenAdapter {
         long next = game.profile.survivors.xpForNext(survivor);
         float progress = next <= 0 ? 1f : Math.min(1f, xp / (float) next);
 
-        drawShapes(unlocked, progress, survivor);
+        drawShapes(unlocked, progress);
         drawContent(survivor, unlocked, level, xp, next);
     }
 
-    private void drawShapes(boolean unlocked, float progress, SurvivorCatalog.Survivor survivor) {
+    private void drawShapes(boolean unlocked, float progress) {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         UiRenderer.background(shapes, metrics, artTime);
         UiRenderer.topRail(shapes, metrics);
@@ -83,7 +83,7 @@ public final class SurvivorScreen extends ScreenAdapter {
 
         UiRenderer.ButtonState ctaState;
         if (!unlocked) ctaState = UiRenderer.ButtonState.DISABLED;
-        else if (game.profile.selectedSurvivor == survivor) ctaState = UiRenderer.ButtonState.SELECTED;
+        else if (game.profile.selectedSurvivor == SurvivorCatalog.Survivor.values()[index]) ctaState = UiRenderer.ButtonState.SELECTED;
         else ctaState = UiRenderer.ButtonState.NORMAL;
         UiRenderer.button(shapes, layout.cta().x, layout.cta().y, layout.cta().width, layout.cta().height, ctaState);
 
@@ -194,8 +194,8 @@ public final class SurvivorScreen extends ScreenAdapter {
         font.setColor(VisualTheme.TEXT_STRONG);
         Rectangle prev = layout.previous();
         Rectangle next = layout.next();
-        font.draw(batch, "‹", prev.x, prev.y + prev.height * .64f, prev.width, Align.center, false);
-        font.draw(batch, "›", next.x, next.y + next.height * .64f, next.width, Align.center, false);
+        font.draw(batch, "<", prev.x, prev.y + prev.height * .64f, prev.width, Align.center, false);
+        font.draw(batch, ">", next.x, next.y + next.height * .64f, next.width, Align.center, false);
     }
 
     private void drawCta(SurvivorCatalog.Survivor survivor, boolean unlocked) {
