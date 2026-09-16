@@ -25,6 +25,13 @@ final class LocalizationGlyphSanitizerTest {
     }
 
     @Test
+    void leadingDesktopEscapeHintDoesNotCrowdMobileBackRail() {
+        assertEquals("BACK TO BASE", Localization.sanitizeForBitmapFont("ESC • BACK TO BASE"));
+        assertEquals("TAP A CARD | ESC TO CANCEL",
+            Localization.sanitizeForBitmapFont("TAP A CARD • ESC TO CANCEL"));
+    }
+
+    @Test
     void nullAndAsciiStringsRemainSafe() {
         assertEquals("", Localization.sanitizeForBitmapFont(null));
         assertEquals("DPS 120 | FIRE 0.25s", Localization.sanitizeForBitmapFont("DPS 120 | FIRE 0.25s"));
