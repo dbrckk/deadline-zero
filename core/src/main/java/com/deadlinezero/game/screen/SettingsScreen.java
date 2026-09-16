@@ -7,14 +7,21 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.config.GraphicsSettings;
+import com.deadlinezero.game.ui.MetaLayout;
+import com.deadlinezero.game.ui.UiLayout;
+import com.deadlinezero.game.ui.UiRenderer;
+import com.deadlinezero.game.ui.UiTypography;
+import com.deadlinezero.game.ui.UiViewport;
 import com.deadlinezero.game.visual.VisualTheme;
 
-/** Lightweight production settings screen with persistent accessibility, audio and privacy controls. */
+/** Responsive production settings with large touch targets and persistent accessibility controls. */
 public final class SettingsScreen extends ScreenAdapter {
     private static final int COLOR_VISION_ROW = 7;
     private static final int REDUCED_MOTION_ROW = 8;
@@ -28,169 +35,192 @@ public final class SettingsScreen extends ScreenAdapter {
     private static final int POLICY_ROW = 16;
     private static final int CLOUD_ROW = 17;
     private static final int LAST_ROW = CLOUD_ROW;
+    private static final int ROWS_PER_COLUMN = 6;
 
     private final DeadlineZeroGame game;
     private final SpriteBatch batch = new SpriteBatch();
     private final BitmapFont font = new BitmapFont();
     private final ShapeRenderer shapes = new ShapeRenderer();
+    private final UiViewport viewport = new UiViewport();
+    private final Vector2 touch = new Vector2();
+    private final Rectangle[] rows = new Rectangle[LAST_ROW + 1];
+    private UiLayout.Metrics metrics;
+    private MetaLayout.Layout layout;
     private int row;
+    private float visualTime;
 
-    public SettingsScreen(DeadlineZeroGame game) { this.game = game; }
+    public SettingsScreen(DeadlineZeroGame game) {
+        this.game = game;
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    @Override public void resize(int width, int height) {
+        viewport.resize(width, height);
+        metrics = UiLayout.compute(width, height);
+        layout = MetaLayout.compute(metrics);
+        Rectangle[] columns = MetaLayout.columns(layout.content(), 3, 18f);
+        for (int c = 0; c < 3; c++) {
+            Rectangle[] columnRows = MetaLayout.rows(columns[c], ROWS_PER_COLUMN, 8f);
+            for (int r = 0; r < ROWS_PER_COLUMN; r++) rows[c * ROWS_PER_COLUMN + r] = columnRows[r];
+        }
+    }
 
     @Override public void render(float delta) {
+        visualTime += Math.max(0f, delta);
         Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+        viewport.apply(batch, shapes);
+
         AccessibilitySettings s = game.accessibility;
         boolean privacyRequired = game.services.privacy.optionsRequired();
         boolean policyAvailable = game.services.privacy.policyAvailable();
+        String[] labels = labels();
+        String[] values = values(s, privacyRequired, policyAvailable);
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(VisualTheme.PANEL); shapes.rect(w * .14f, h * .06f, w * .72f, h * .79f);
-        shapes.setColor(VisualTheme.CYAN); shapes.rect(w * .14f, h * .84f, w * .72f, 3f);
-        float startY = h * .735f;
-        float step = h * .047f;
-        shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .13f);
-        shapes.rect(w * .18f, startY - row * step - 24f, w * .64f, 36f);
+        UiRenderer.background(shapes, metrics, visualTime);
+        UiRenderer.topRail(shapes, metrics);
+        for (int i = 0; i < rows.length; i++) {
+            Rectangle r = rows[i];
+            boolean disabled = isDisabled(i, privacyRequired, policyAvailable);
+            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == row, false);
+            if (disabled) {
+                shapes.setColor(0f, 0f, 0f, .22f);
+                shapes.rect(r.x + 3f, r.y + 3f, r.width - 6f, r.height - 6f);
+            } else if (isSliderRow(i)) {
+                float value = sliderValue(s, i);
+                UiRenderer.progress(shapes, r.x + r.width * .56f, r.y + 10f, r.width * .38f, 7f, value, VisualTheme.accent());
+            }
+        }
         shapes.end();
 
-        String[] labels = {
+        batch.begin();
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, "‹  BASE", layout.back().x + 10f, layout.back().y + layout.back().height * .56f,
+            layout.back().width - 16f, Align.left, false);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE));
+        font.setColor(VisualTheme.TEXT_STRONG);
+        font.draw(batch, t("settings.title"), metrics.safeLeft() + 136f, metrics.headerBottom() + 56f,
+            metrics.contentWidth() - 272f, Align.center, false);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.TEXT_DIM);
+        font.draw(batch, t("settings.subtitle"), metrics.safeLeft() + 136f, metrics.headerBottom() + 28f,
+            metrics.contentWidth() - 272f, Align.center, false);
+
+        for (int i = 0; i < rows.length; i++) drawRow(i, rows[i], labels[i], values[i], isDisabled(i, privacyRequired, policyAvailable));
+        batch.end();
+
+        handleInput(s, privacyRequired, policyAvailable);
+    }
+
+    private void drawRow(int index, Rectangle r, String label, String value, boolean disabled) {
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(disabled ? VisualTheme.MUTED : index == row ? VisualTheme.accent() : VisualTheme.TEXT_DIM);
+        font.draw(batch, label, r.x + 14f, r.y + r.height - 17f, r.width - 28f, Align.left, false);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
+        font.setColor(disabled ? VisualTheme.MUTED : index == row ? VisualTheme.TEXT_STRONG : VisualTheme.TEXT);
+        font.draw(batch, value, r.x + 14f, r.y + 23f, r.width - 28f, Align.right, false);
+    }
+
+    private void handleInput(AccessibilitySettings s, boolean privacyRequired, boolean policyAvailable) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) { saveAndBack(); return; }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) row = Math.max(0, row - 1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) row = Math.min(LAST_ROW, row + 1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && !isSliderRow(row)) { adjustOrOpen(s, privacyRequired, policyAvailable, -1f); return; }
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) && !isSliderRow(row)) {
+            adjustOrOpen(s, privacyRequired, policyAvailable, 1f); return;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && isSliderRow(row)) { applyAdjustment(s, -1f); persistSettings(s); return; }
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) && isSliderRow(row)) {
+            applyAdjustment(s, 1f); persistSettings(s); return;
+        }
+
+        if (!Gdx.input.justTouched()) return;
+        viewport.unproject(Gdx.input.getX(), Gdx.input.getY(), touch);
+        if (layout.back().contains(touch)) { saveAndBack(); return; }
+        for (int i = 0; i < rows.length; i++) {
+            Rectangle r = rows[i];
+            if (!r.contains(touch)) continue;
+            row = i;
+            if (row == PRIVACY_ROW) { if (privacyRequired) openPrivacy(); return; }
+            if (row == POLICY_ROW) { if (policyAvailable) openPolicy(); return; }
+            if (row == CLOUD_ROW) { openCloud(); return; }
+            if (row == GRAPHICS_ROW) { GraphicsSettings.set(GraphicsSettings.active().next(1)); GraphicsSettings.save(); selectCue(); return; }
+            if (row == FRAME_RATE_ROW) { GraphicsSettings.setFrameRate(GraphicsSettings.frameRate().next(1)); GraphicsSettings.save(); selectCue(); return; }
+            if (isSliderRow(row)) setSliderFromTouch(s, row, touch.x, r);
+            else applyAdjustment(s, 1f);
+            persistSettings(s);
+            return;
+        }
+    }
+
+    private void adjustOrOpen(AccessibilitySettings s, boolean privacyRequired, boolean policyAvailable, float dir) {
+        if (row == PRIVACY_ROW) { if (dir > 0f && privacyRequired) openPrivacy(); return; }
+        if (row == POLICY_ROW) { if (dir > 0f && policyAvailable) openPolicy(); return; }
+        if (row == CLOUD_ROW) { if (dir > 0f) openCloud(); return; }
+        if (row == GRAPHICS_ROW) { GraphicsSettings.set(GraphicsSettings.active().next(dir > 0f ? 1 : -1)); GraphicsSettings.save(); selectCue(); return; }
+        if (row == FRAME_RATE_ROW) { GraphicsSettings.setFrameRate(GraphicsSettings.frameRate().next(dir > 0f ? 1 : -1)); GraphicsSettings.save(); selectCue(); return; }
+        applyAdjustment(s, dir);
+        persistSettings(s);
+    }
+
+    private String[] labels() {
+        return new String[] {
             t("settings.screenShake"), t("settings.shakeStrength"), t("settings.hitStop"), t("settings.damageFlash"),
             t("settings.highContrastTelegraphs"), t("settings.reduceFlashes"), t("settings.haptics"), t("settings.colorVision"),
             t("settings.reducedMotion"), t("settings.uiScale"), t("settings.masterVolume"), t("settings.sfxVolume"),
             t("settings.musicVolume"), t("settings.graphicsQuality"), t("settings.frameRate"),
             t("settings.privacyChoices"), t("settings.privacyPolicy"), t("settings.cloudSave")
         };
-        String[] values = {
+    }
+
+    private String[] values(AccessibilitySettings s, boolean privacyRequired, boolean policyAvailable) {
+        return new String[] {
             onOff(s.screenShake), pct(s.screenShakeStrength), onOff(s.hitStop), onOff(s.damageFlash),
-            onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), s.colorVisionMode.label, onOff(s.reducedMotion), pct(s.uiScale),
-            pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
+            onOff(s.highContrastTelegraphs), onOff(s.reduceFlashes), onOff(s.haptics), s.colorVisionMode.label,
+            onOff(s.reducedMotion), pct(s.uiScale), pct(s.masterVolume), pct(s.sfxVolume), pct(s.musicVolume),
             GraphicsSettings.active().name(), GraphicsSettings.frameRate().label,
             privacyRequired ? t("common.open") : t("common.notRequired"),
             policyAvailable ? t("common.open") : t("common.unavailable"),
             game.services.cloudSave.available() ? t("common.open") : t("common.notConfigured")
         };
-
-        batch.begin();
-        font.getData().setScale(1.45f); font.setColor(VisualTheme.TEXT);
-        font.draw(batch, t("settings.title"), 0, h * .91f, w, Align.center, false);
-        font.getData().setScale(.52f);
-        font.setColor(VisualTheme.MUTED);
-        font.draw(batch, t("settings.subtitle"), 0, h * .855f, w, Align.center, false);
-
-        for (int i = 0; i < labels.length; i++) {
-            float y = startY - i * step;
-            boolean disabled = (i == PRIVACY_ROW && !privacyRequired) || (i == POLICY_ROW && !policyAvailable);
-            font.setColor(disabled ? VisualTheme.MUTED : (i == row ? VisualTheme.CYAN : VisualTheme.TEXT));
-            font.draw(batch, labels[i], w * .20f, y);
-            font.setColor(disabled ? VisualTheme.MUTED : (i == row ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED));
-            font.draw(batch, values[i], w * .58f, y, w * .20f, Align.right, false);
-        }
-        batch.end();
-        handleInput(s, privacyRequired, policyAvailable, w, h, startY, step);
     }
 
-    private void handleInput(AccessibilitySettings s, boolean privacyRequired, boolean policyAvailable,
-                             float w, float h, float startY, float step) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) { saveAndBack(); return; }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) row = Math.max(0, row - 1);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) row = Math.min(LAST_ROW, row + 1);
-
-        if (Gdx.input.justTouched()) {
-            float x = Gdx.input.getX();
-            float y = h - Gdx.input.getY();
-            if (x <= w * .24f && y >= h * .86f) {
-                saveAndBack();
-                return;
-            }
-            int touchedRow = Math.round((startY - y) / step);
-            if (touchedRow >= 0 && touchedRow <= LAST_ROW
-                && Math.abs(y - (startY - touchedRow * step)) <= Math.max(22f, step * .48f)) {
-                row = touchedRow;
-                if (row == PRIVACY_ROW) {
-                    if (privacyRequired) openPrivacy();
-                    return;
-                }
-                if (row == POLICY_ROW) {
-                    if (policyAvailable) openPolicy();
-                    return;
-                }
-                if (row == CLOUD_ROW) {
-                    openCloud();
-                    return;
-                }
-                if (isSliderRow(row)) {
-                    setSliderFromTouch(s, row, x, w);
-                } else {
-                    applyAdjustment(s, 1f);
-                }
-                persistSettings(s);
-                return;
-            }
-        }
-
-        boolean left = Gdx.input.isKeyJustPressed(Input.Keys.LEFT);
-        boolean right = Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER);
-        if (!left && !right) return;
-
-        if (row == GRAPHICS_ROW) {
-            GraphicsSettings.set(GraphicsSettings.active().next(right ? 1 : -1));
-            GraphicsSettings.save();
-            AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
-            return;
-        }
-        if (row == FRAME_RATE_ROW) {
-            GraphicsSettings.setFrameRate(GraphicsSettings.frameRate().next(right ? 1 : -1));
-            GraphicsSettings.save();
-            AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
-            return;
-        }
-        if (row == PRIVACY_ROW) {
-            if (right && privacyRequired) openPrivacy();
-            return;
-        }
-        if (row == POLICY_ROW) {
-            if (right && policyAvailable) openPolicy();
-            return;
-        }
-        if (row == CLOUD_ROW) {
-            if (right) openCloud();
-            return;
-        }
-
-        applyAdjustment(s, right ? 1f : -1f);
-        persistSettings(s);
+    private boolean isDisabled(int i, boolean privacyRequired, boolean policyAvailable) {
+        return (i == PRIVACY_ROW && !privacyRequired) || (i == POLICY_ROW && !policyAvailable);
     }
 
     private void openPrivacy() {
-        AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
-        game.services.privacy.showOptions(() -> Gdx.app.postRunnable(
-            () -> AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK)
-        ));
+        selectCue();
+        game.services.privacy.showOptions(() -> Gdx.app.postRunnable(() -> AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK)));
     }
+    private void openCloud() { selectCue(); game.showCloudSave(); }
+    private void openPolicy() { selectCue(); game.services.privacy.openPolicy(); }
 
-    private void openCloud() {
-        AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
-        game.showCloudSave();
-    }
-
-    private void openPolicy() {
-        AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
-        game.services.privacy.openPolicy();
-    }
-
-    private void setSliderFromTouch(AccessibilitySettings s, int targetRow, float x, float w) {
-        float left = w * .55f;
-        float right = w * .80f;
-        float t = clamp((x - left) / Math.max(1f, right - left), 0f, 1f);
+    private void setSliderFromTouch(AccessibilitySettings s, int targetRow, float x, Rectangle r) {
+        float left = r.x + r.width * .56f;
+        float right = r.x + r.width * .94f;
+        float value = clamp((x - left) / Math.max(1f, right - left), 0f, 1f);
         switch (targetRow) {
-            case 1 -> s.screenShakeStrength = t;
-            case UI_SCALE_ROW -> s.uiScale = .85f + t * .50f;
-            case MASTER_VOLUME_ROW -> s.masterVolume = t;
-            case SFX_VOLUME_ROW -> s.sfxVolume = t;
-            case MUSIC_VOLUME_ROW -> s.musicVolume = t;
+            case 1 -> s.screenShakeStrength = value;
+            case UI_SCALE_ROW -> s.uiScale = .85f + value * .50f;
+            case MASTER_VOLUME_ROW -> s.masterVolume = value;
+            case SFX_VOLUME_ROW -> s.sfxVolume = value;
+            case MUSIC_VOLUME_ROW -> s.musicVolume = value;
             default -> { }
         }
+    }
+
+    private float sliderValue(AccessibilitySettings s, int targetRow) {
+        return switch (targetRow) {
+            case 1 -> s.screenShakeStrength;
+            case UI_SCALE_ROW -> (s.uiScale - .85f) / .50f;
+            case MASTER_VOLUME_ROW -> s.masterVolume;
+            case SFX_VOLUME_ROW -> s.sfxVolume;
+            case MUSIC_VOLUME_ROW -> s.musicVolume;
+            default -> 0f;
+        };
     }
 
     private void applyAdjustment(AccessibilitySettings s, float dir) {
@@ -208,14 +238,6 @@ public final class SettingsScreen extends ScreenAdapter {
             case MASTER_VOLUME_ROW -> s.masterVolume = clamp(s.masterVolume + dir * .05f, 0f, 1f);
             case SFX_VOLUME_ROW -> s.sfxVolume = clamp(s.sfxVolume + dir * .05f, 0f, 1f);
             case MUSIC_VOLUME_ROW -> s.musicVolume = clamp(s.musicVolume + dir * .05f, 0f, 1f);
-            case GRAPHICS_ROW -> {
-                GraphicsSettings.set(GraphicsSettings.active().next(dir > 0f ? 1 : -1));
-                GraphicsSettings.save();
-            }
-            case FRAME_RATE_ROW -> {
-                GraphicsSettings.setFrameRate(GraphicsSettings.frameRate().next(dir > 0f ? 1 : -1));
-                GraphicsSettings.save();
-            }
             default -> { }
         }
     }
@@ -223,20 +245,11 @@ public final class SettingsScreen extends ScreenAdapter {
     private void persistSettings(AccessibilitySettings s) {
         s.save();
         game.audio.setVolumes(s.masterVolume, s.sfxVolume, s.musicVolume);
-        AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT);
+        selectCue();
     }
-
-    private static boolean isSliderRow(int value) {
-        return value == 1 || value == UI_SCALE_ROW || value == MASTER_VOLUME_ROW
-            || value == SFX_VOLUME_ROW || value == MUSIC_VOLUME_ROW;
-    }
-
-    private void saveAndBack() {
-        game.accessibility.save();
-        AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK);
-        game.showMenu();
-    }
-
+    private static boolean isSliderRow(int value) { return value == 1 || value == UI_SCALE_ROW || value == MASTER_VOLUME_ROW || value == SFX_VOLUME_ROW || value == MUSIC_VOLUME_ROW; }
+    private void saveAndBack() { game.accessibility.save(); AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK); game.showMenu(); }
+    private void selectCue() { AudioDirector.playGlobal(AudioDirector.Cue.UI_SELECT); }
     private String onOff(boolean value) { return value ? t("common.on") : t("common.off"); }
     private String t(String key) { return game.i18n.text(key); }
     private static String pct(float value) { return Math.round(value * 100f) + "%"; }
