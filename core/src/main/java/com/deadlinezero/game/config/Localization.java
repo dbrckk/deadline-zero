@@ -63,6 +63,7 @@ public final class Localization {
             .replace("…", "...");
         sanitized = sanitized.replaceAll("\\{\\d+\\}\\s*\\|\\s*", "");
         sanitized = sanitized.replaceAll("\\{\\d+\\}", "");
+        sanitized = sanitized.replaceFirst("^ESC\\s*\\|\\s*", "");
         return sanitized.trim();
     }
 }
