@@ -19,6 +19,12 @@ final class LocalizationGlyphSanitizerTest {
     }
 
     @Test
+    void unresolvedFormatTokensDoNotLeakIntoVisibleUi() {
+        assertEquals("TAP / R TO CHANGE",
+            Localization.sanitizeForBitmapFont("{0} • TAP / R TO CHANGE"));
+    }
+
+    @Test
     void nullAndAsciiStringsRemainSafe() {
         assertEquals("", Localization.sanitizeForBitmapFont(null));
         assertEquals("DPS 120 | FIRE 0.25s", Localization.sanitizeForBitmapFont("DPS 120 | FIRE 0.25s"));
