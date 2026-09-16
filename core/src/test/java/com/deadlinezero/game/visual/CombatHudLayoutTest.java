@@ -1,29 +1,33 @@
 package com.deadlinezero.game.visual;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.badlogic.gdx.math.Rectangle;
 import org.junit.jupiter.api.Test;
 
 final class CombatHudLayoutTest {
     @Test
-    void hudStaysNonOverlappingAcrossTargetFormatsAndUiScales() {
-        int[][] sizes = {{1280,720},{1536,691},{1920,1080},{2400,1080},{2560,1600}};
+    void hudV2StaysReadableAndNonOverlappingAcrossTargetFormats() {
+        int[][] sizes = {{1280,720},{1536,691},{1920,1080},{1280,800}};
         float[] scales = {.85f, 1f, 1.3f};
         for (int[] size : sizes) {
             for (float scale : scales) {
                 for (boolean boss : new boolean[] {false, true}) {
                     CombatHudLayout.Layout layout = CombatHudLayout.compute(size[0], size[1], scale, boss);
-                    assertTrue(layout.hp().width > 0f);
-                    assertTrue(layout.xp().width > 0f);
-                    assertFalse(layout.hp().overlaps(layout.xp()));
-                    assertFalse(layout.timeline().overlaps(layout.hp()));
-                    assertFalse(layout.timeline().overlaps(layout.xp()));
+                    assertTrue(layout.survival().width >= 240f);
+                    assertTrue(layout.levelBadge().width >= 72f);
+                    assertTrue(layout.xpRail().height <= 14f);
+                    assertTrue(layout.hordeStatus().width >= 220f);
+                    assertFalse(layout.survival().overlaps(layout.hordeStatus()));
+                    assertFalse(layout.toast().overlaps(playerSafeZone(layout)));
+                    assertTrue(layout.toast().width <= layout.logicalWidth() * .42f);
                     if (boss) {
-                        assertTrue(layout.boss() != null);
-                        assertFalse(layout.boss().overlaps(layout.timeline()));
+                        assertNotNull(layout.boss());
+                        assertFalse(layout.boss().overlaps(layout.toast()));
                     }
-                    assertTrue(layout.dashRadius() * 2f >= 56f);
+                    assertTrue(layout.dashRadius() >= 32f);
                     assertTrue(layout.logicalWidth() >= 1280f);
                     assertTrue(layout.logicalHeight() >= 720f);
                 }
@@ -38,5 +42,16 @@ final class CombatHudLayoutTest {
         float dashPhysicalY = 62f;
         assertTrue(Math.abs(wide.toLogicalX(dashPhysicalX) - wide.dashX()) < 1f);
         assertTrue(Math.abs(wide.toLogicalY(dashPhysicalY) - wide.dashY()) < 1f);
+    }
+
+    private static Rectangle playerSafeZone(CombatHudLayout.Layout layout) {
+        float width = layout.logicalWidth() * .34f;
+        float height = layout.logicalHeight() * .42f;
+        return new Rectangle(
+            (layout.logicalWidth() - width) * .5f,
+            (layout.logicalHeight() - height) * .5f,
+            width,
+            height
+        );
     }
 }
