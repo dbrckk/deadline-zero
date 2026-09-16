@@ -20,8 +20,8 @@ public final class CombatWorldStyle {
         long mixed = mix(seed ^ ((long) safeStage * 0x9E3779B97F4A7C15L));
         EnvironmentBiomeRules.Biome biome = EnvironmentBiomeRules.forStage(safeStage);
 
-        float hazardCoverage = .012f + unit(mixed) * .010f;
-        float hazardMarkerSize = 1.25f + unit(mixed >>> 7) * .35f;
+        float hazardCoverage = .006f + unit(mixed) * .004f;
+        float hazardMarkerSize = .45f + unit(mixed >>> 7) * .20f;
         int largeFeatures = 4 + bounded(mixed >>> 8, 9);
         int props = 6 + bounded(mixed >>> 17, 19);
         int decals = 8 + Math.floorMod((int) seed, 29);
@@ -30,8 +30,8 @@ public final class CombatWorldStyle {
         return new Profile(
             mixed,
             biome,
-            Math.min(.022f, hazardCoverage),
-            Math.min(1.60f, hazardMarkerSize),
+            Math.min(.010f, hazardCoverage),
+            Math.min(.65f, hazardMarkerSize),
             largeFeatures,
             props,
             decals,
