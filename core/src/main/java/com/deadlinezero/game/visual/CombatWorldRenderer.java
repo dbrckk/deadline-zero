@@ -3,12 +3,13 @@ package com.deadlinezero.game.visual;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Deterministic combat-floor renderer. It replaces the prototype hazard-wallpaper floor while
  * leaving authored set dressing and combatants in their existing passes.
  */
-public final class CombatWorldRenderer {
+public final class CombatWorldRenderer implements Disposable {
     @FunctionalInterface
     interface RegionSource {
         TextureRegion region(String key);
@@ -21,9 +22,16 @@ public final class CombatWorldRenderer {
     private static final int MAX_GY = 5;
 
     private final RegionSource regions;
+    private BootstrapEnvironmentArt bootstrap;
 
     public CombatWorldRenderer(GameArt art) {
-        this(art == null ? null : art::regionOrNull);
+        if (art == null) throw new IllegalArgumentException("art");
+        regions = art::regionOrNull;
+        try {
+            bootstrap = BootstrapEnvironmentArt.create();
+        } catch (RuntimeException ignored) {
+            bootstrap = null;
+        }
     }
 
     CombatWorldRenderer(RegionSource regions) {
@@ -37,7 +45,7 @@ public final class CombatWorldRenderer {
             || region("environment/floor/concrete_c") != null;
     }
 
-    /** Returns false only when no usable authored floor texture exists. */
+    /** Returns false only when no usable authored/bootstrap floor texture exists. */
     public boolean drawFloor(SpriteBatch batch, int stage, long seed, float time) {
         TextureRegion concreteA = region("environment/floor/concrete_a");
         TextureRegion concreteB = region("environment/floor/concrete_b");
@@ -62,7 +70,9 @@ public final class CombatWorldRenderer {
     }
 
     private TextureRegion region(String key) {
-        return regions.region(key);
+        TextureRegion region = regions.region(key);
+        if (region != null) return region;
+        return bootstrap == null ? null : bootstrap.region(key);
     }
 
     private void drawBase(SpriteBatch batch, CombatWorldStyle.Profile profile,
@@ -168,5 +178,11 @@ public final class CombatWorldRenderer {
         } else {
             batch.setColor(.34f, .36f, .36f, .42f);
         }
+    }
+
+    @Override
+    public void dispose() {
+        if (bootstrap != null) bootstrap.dispose();
+        bootstrap = null;
     }
 }
