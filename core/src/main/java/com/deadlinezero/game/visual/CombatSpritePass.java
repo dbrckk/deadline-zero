@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.meta.RunLoadoutContext;
+import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.SurvivorCatalog;
 import com.deadlinezero.game.util.Pools;
 
@@ -14,6 +15,7 @@ public final class CombatSpritePass {
     private final GameArt art;
     private final CharacterSpriteRenderer characters;
     private final EnvironmentRenderer environment;
+    private final CombatWorldRenderer world;
     private final WeaponRenderer weapon;
     private final AuthoredVfxRenderer vfx;
     private final ChampionBadgeRenderer championBadges = new ChampionBadgeRenderer();
@@ -26,6 +28,7 @@ public final class CombatSpritePass {
         this.art = art;
         characters = new CharacterSpriteRenderer(art);
         environment = new EnvironmentRenderer(art);
+        world = new CombatWorldRenderer(art);
         weapon = new WeaponRenderer(art);
         vfx = new AuthoredVfxRenderer(art);
         quality = GraphicsQuality.autoDetect();
@@ -42,10 +45,11 @@ public final class CombatSpritePass {
     public GraphicsQuality quality() { return quality; }
     public void setQuality(GraphicsQuality quality) { if (quality != null) this.quality = quality; }
 
-    /** First world pass: opaque authored/bootstrap floor and hazard tiles. */
+    /** First world pass: authored zombie-wave floor with sparse hazard accents. */
     public void renderEnvironmentFloor(SpriteBatch batch) {
         if (!characters.authoredAvailable()) return;
-        environment.drawFloor(batch, 1f);
+        boolean drawn = world.drawFloor(batch, RunStageContext.stage(), RunStageContext.encounterSeed(), stateTime);
+        if (!drawn) environment.drawFloor(batch, 1f);
     }
 
     /** Second world pass: decals and props, intended above ground FX but below combatants. */
@@ -57,7 +61,8 @@ public final class CombatSpritePass {
     /** Transitional environment-only wrapper retaining the historical blended floor. */
     public void renderEnvironment(SpriteBatch batch) {
         if (!characters.authoredAvailable()) return;
-        environment.drawAuthored(batch);
+        renderEnvironmentFloor(batch);
+        renderEnvironmentDressing(batch);
     }
 
     /** Draws characters, weapons and authored combat VFX, but never draws the environment. */
