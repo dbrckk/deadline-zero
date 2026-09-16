@@ -50,9 +50,14 @@ public final class MenuLayoutModel {
         );
 
         Rectangle[] tabs = new Rectangle[6];
-        float tabW = Math.nextDown(bottomNav.width / tabs.length);
+        // Rectangle.contains(Rectangle) is strict on shared edges. Keep touch regions one logical
+        // unit inside the visual rail so containment stays deterministic across aspect ratios.
+        float inset = 1f;
+        float innerWidth = Math.max(0f, bottomNav.width - inset * 2f);
+        float tabW = innerWidth / tabs.length;
+        float tabH = Math.max(0f, bottomNav.height - inset * 2f);
         for (int i = 0; i < tabs.length; i++) {
-            tabs[i] = new Rectangle(bottomNav.x + i * tabW, bottomNav.y, tabW, bottomNav.height);
+            tabs[i] = new Rectangle(bottomNav.x + inset + i * tabW, bottomNav.y + inset, tabW, tabH);
         }
 
         return new Layout(topRail, survivor, loadout, threat, deploy, bottomNav, tabs);
