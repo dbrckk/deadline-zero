@@ -275,13 +275,10 @@ public final class CombatHudRenderer {
         OnboardingState o = OnboardingState.active();
         if (hintModeFor(o.completed()) == HintMode.NONE) return;
 
-        String hint;
-        boolean mobile = isAndroid();
-        if (!o.movementSeen()) hint = t(mobile ? "hud.onboardingMoveMobile" : "hud.onboardingMove");
-        else if (!o.dashSeen()) hint = t(mobile ? "hud.onboardingDashMobile" : "hud.onboardingDash");
-        else if (!o.upgradeSeen()) hint = t("hud.onboardingUpgrade");
-        else if (!o.bossSeen()) hint = t("hud.onboardingBoss");
-        else return;
+        String key = CombatOnboardingHintPresentation.keyFor(
+            o.movementSeen(), o.dashSeen(), o.upgradeSeen(), o.bossSeen());
+        if (key == null) return;
+        String hint = t(key);
 
         Rectangle r = layout.toast();
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .88f * s);
