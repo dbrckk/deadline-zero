@@ -10,6 +10,16 @@ public final class VisualTheme {
     public static final Color BG = new Color(.008f, .013f, .021f, 1f);
     public static final Color PANEL = new Color(.025f, .041f, .060f, .96f);
     public static final Color PANEL_ALT = new Color(.035f, .061f, .082f, .96f);
+
+    /** Premium UI surface tokens. */
+    public static final Color SURFACE_0 = new Color(.010f, .017f, .026f, 1f);
+    public static final Color SURFACE_1 = new Color(.020f, .033f, .048f, .985f);
+    public static final Color SURFACE_2 = new Color(.032f, .051f, .070f, .985f);
+    public static final Color BORDER = new Color(.105f, .205f, .275f, .92f);
+    public static final Color BORDER_FOCUS = new Color(.19f, .72f, .90f, 1f);
+    public static final Color TEXT_STRONG = new Color(.975f, .990f, 1f, 1f);
+    public static final Color TEXT_DIM = new Color(.65f, .73f, .80f, 1f);
+
     public static final Color CYAN = new Color(.08f, .80f, 1f, 1f);
     public static final Color CYAN_SOFT = new Color(.18f, .63f, .78f, 1f);
     public static final Color GOLD = new Color(1f, .72f, .16f, 1f);
@@ -19,6 +29,16 @@ public final class VisualTheme {
     public static final Color TEXT = new Color(.94f, .97f, 1f, 1f);
     public static final Color MUTED = new Color(.53f, .62f, .70f, 1f);
     public static final Color DIVIDER = new Color(.12f, .22f, .29f, .8f);
+
+    private static final Color DANGER_DEUTERANOPIA = new Color(1f, .55f, .08f, 1f);
+    private static final Color DANGER_PROTANOPIA = new Color(1f, .62f, .10f, 1f);
+    private static final Color DANGER_TRITANOPIA = new Color(.92f, .18f, .58f, 1f);
+    private static final Color POSITIVE_DEUTERANOPIA = new Color(.10f, .72f, 1f, 1f);
+    private static final Color POSITIVE_PROTANOPIA = new Color(.08f, .68f, 1f, 1f);
+    private static final Color POSITIVE_TRITANOPIA = new Color(.20f, .88f, .55f, 1f);
+    private static final Color ACCENT_DEUTERANOPIA = new Color(.12f, .78f, 1f, 1f);
+    private static final Color ACCENT_PROTANOPIA = new Color(.14f, .76f, 1f, 1f);
+    private static final Color ACCENT_TRITANOPIA = new Color(.18f, .92f, .62f, 1f);
 
     private VisualTheme() {}
 
@@ -33,15 +53,15 @@ public final class VisualTheme {
     }
 
     public static Color danger() {
-        return semantic(RED, new Color(1f, .55f, .08f, 1f), new Color(1f, .62f, .10f, 1f), new Color(.92f, .18f, .58f, 1f));
+        return semantic(RED, DANGER_DEUTERANOPIA, DANGER_PROTANOPIA, DANGER_TRITANOPIA);
     }
 
     public static Color positive() {
-        return semantic(GREEN, new Color(.10f, .72f, 1f, 1f), new Color(.08f, .68f, 1f, 1f), new Color(.20f, .88f, .55f, 1f));
+        return semantic(GREEN, POSITIVE_DEUTERANOPIA, POSITIVE_PROTANOPIA, POSITIVE_TRITANOPIA);
     }
 
     public static Color accent() {
-        return semantic(CYAN, new Color(.12f, .78f, 1f, 1f), new Color(.14f, .76f, 1f, 1f), new Color(.18f, .92f, .62f, 1f));
+        return semantic(CYAN, ACCENT_DEUTERANOPIA, ACCENT_PROTANOPIA, ACCENT_TRITANOPIA);
     }
 
     public static Color equipmentRarity(EquipmentItem.Rarity rarity) {
