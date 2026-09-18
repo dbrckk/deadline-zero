@@ -22,14 +22,14 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:17:28Z
+Generated: 2026-09-18T19:28:44Z
 
 ### Git
 - Branch: `main`
-- Head: `13bc746569da`
-- Commit date: 2026-09-18T21:16:48+02:00
-- Commit: chore(ai): align config with v6 bounded context
-- Tracked files: 621
+- Head: `c0ce4a0cbbdf`
+- Commit date: 2026-09-18T21:28:34+02:00
+- Commit: chore(ai): enable compact graph routing
+- Tracked files: 626
 
 ### Recently changed files
 - `.repo-standards.yml`
@@ -38,10 +38,6 @@ Generated: 2026-09-18T19:17:28Z
 - `.github/workflows/verify.yml`
 - `tools/perf/compare_android_benchmark.py`
 - `tools/perf/test_compare_android_benchmark.py`
-- `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
-- `core/src/main/java/com/deadlinezero/game/services/GameServices.java`
-- `core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java`
-- `core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java`
 
 ### Project signals
 - `build.gradle`
