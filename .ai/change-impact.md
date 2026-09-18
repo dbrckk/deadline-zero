@@ -1,16 +1,13 @@
 # Change impact
 
-Base: 7c03d5175c19b8d7ec7fd113199696e35e369411
-Head: cd3d01070b6ae4ce5babc10e03fd56450328f233
+Base: d7991aa4b5160590e53588a135cbe37f86b5256e
+Head: 318831781dce3ac538988bbcbf7eb95cbd79fb98
 
 ## Changed files
-- M .github/workflows/verify.yml
-- A tools/android/scan_runtime_log.py
-- A tools/android/test_scan_runtime_log.py
+- A .github/workflows/semantic-refresh.yml
 
 ## Affected areas
 - .github
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

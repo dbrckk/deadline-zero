@@ -22,21 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:53:30Z
+Generated: 2026-09-18T19:59:35Z
 
 ### Git
 - Branch: `main`
-- Head: `cd3d01070b6a`
-- Commit date: 2026-09-18T21:53:18+02:00
-- Commit: Gate Android runtime crashes and ANRs
-- Tracked files: 639
+- Head: `318831781dce`
+- Commit date: 2026-09-18T21:57:28+02:00
+- Commit: chore(ai): add precise semantic refresh
+- Tracked files: 641
 
 ### Recently changed files
+- `.github/workflows/semantic-refresh.yml`
+- `.repo-standards.yml`
 - `.github/workflows/verify.yml`
 - `tools/android/scan_runtime_log.py`
 - `tools/android/test_scan_runtime_log.py`
 - `AGENTS.md`
-- `.repo-standards.yml`
 
 ### Project signals
 - `build.gradle`
