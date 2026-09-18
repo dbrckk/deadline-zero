@@ -293,6 +293,15 @@ public enum Upgrade {
     ORBITAL("Orbital Blade", "Close-range blade • larger Tier II hitbox at Lv3 • evolves at Lv5 • Frost/Storm forms", UpgradeRarity.EPIC) {
         public void apply(Player p) { p.abilities.upgrade(AbilityType.ORBITAL_BLADE); }
     },
+    RHYTHM_DRIVER("Rhythm Driver", "Every 6th volley is empowered and guaranteed critical", UpgradeRarity.EPIC) {
+        public void apply(Player p) { p.protocols.enableRhythm(); }
+    },
+    KILLCHAIN_CAPACITOR("Killchain Capacitor", "Every 8 kills empowers the next volley with damage and penetration", UpgradeRarity.EPIC) {
+        public void apply(Player p) { p.protocols.enableKillchain(); }
+    },
+    REACTION_CORE("Reaction Core", "Elemental reactions deal +35% bonus trigger damage", UpgradeRarity.EPIC) {
+        public void apply(Player p) { p.protocols.enableReactionCore(); }
+    },
     DASH_CORE("Phase Dash", "Dash cooldown -18%", UpgradeRarity.RARE) {
         public void apply(Player p) { p.dashCooldown = dashCooldown(p.dashCooldown * .82f); }
     };
