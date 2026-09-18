@@ -16,6 +16,7 @@ import com.deadlinezero.game.entities.EnemyProjectile;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.fx.DeathFx;
 import com.deadlinezero.game.meta.RunStageContext;
+import com.deadlinezero.game.perf.ThermalBudgetPolicy;
 import com.deadlinezero.game.services.ThermalService;
 import com.deadlinezero.game.util.Pools;
 import com.deadlinezero.game.world.ArenaHazardRuntime;
@@ -70,7 +71,7 @@ public final class CombatPolishController {
 
     public void updateVisual(float dt) {
         feel.update(dt);
-        fxBudget.setExternalCeiling(thermal.level().fxCeiling);
+        fxBudget.setExternalCeiling(ThermalBudgetPolicy.fxCeiling(thermal.level()));
         fxBudget.update(dt);
     }
 
