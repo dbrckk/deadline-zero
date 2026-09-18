@@ -1,16 +1,13 @@
 # Change impact
 
-Base: fc8a3b80ae4cdfec312fe36d6be4b58748ac86e4
-Head: e420cd4643e7242aad8056315d123e90b337c49a
+Base: 49c12f1364ccaf40606101516e8feeffff240784
+Head: 6e83a87e7876999088f108ab0a504d06b2920746
 
 ## Changed files
-- A core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java
-- M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
-- M core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java
-- A core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java
+- M .repo-standards.yml
 
 ## Affected areas
-- core
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -22,26 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T20:07:54Z
+Generated: 2026-09-18T20:11:14Z
 
 ### Git
 - Branch: `main`
-- Head: `e420cd4643e7`
-- Commit date: 2026-09-18T22:07:42+02:00
-- Commit: Centralize thermal performance budgets
+- Head: `6e83a87e7876`
+- Commit date: 2026-09-18T22:09:37+02:00
+- Commit: chore(ai): adopt repo standards v14
 - Tracked files: 645
 
 ### Recently changed files
+- `.repo-standards.yml`
 - `core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
 - `core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java`
 - `.github/workflows/semantic-refresh.yml`
-- `.repo-standards.yml`
 - `.github/workflows/verify.yml`
 - `tools/android/scan_runtime_log.py`
 - `tools/android/test_scan_runtime_log.py`
-- `AGENTS.md`
 
 ### Project signals
 - `build.gradle`
