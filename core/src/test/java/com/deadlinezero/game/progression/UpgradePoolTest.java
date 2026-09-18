@@ -16,7 +16,7 @@ final class UpgradePoolTest {
     @Test void productionPoolMeetsFiftyUpgradeTargetWithUniquePresentation() {
         Upgrade[] upgrades = Upgrade.values();
         assertTrue(upgrades.length >= 50, "P5 requires 50+ standard upgrades");
-        assertEquals(52, upgrades.length);
+        assertEquals(55, upgrades.length);
 
         Set<String> titles = new HashSet<>();
         int common = 0, rare = 0, epic = 0;
@@ -96,6 +96,22 @@ final class UpgradePoolTest {
             assertFalse(UpgradeSelector.isAvailable(player, upgrade), "upgrade still offered after saturation: " + upgrade.name());
             assertRuntimeSafe(player, upgrade.name());
         }
+    }
+
+    @Test void eventProtocolsAreOneTimeRunChoices() {
+        RunLoadoutContext.end();
+        Player player = new Player(0f, 0f);
+        assertTrue(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_DRIVER));
+        assertTrue(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_CAPACITOR));
+        assertTrue(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CORE));
+
+        Upgrade.RHYTHM_DRIVER.apply(player);
+        Upgrade.KILLCHAIN_CAPACITOR.apply(player);
+        Upgrade.REACTION_CORE.apply(player);
+
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_DRIVER));
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_CAPACITOR));
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CORE));
     }
 
     @Test void hardCappedChoicesDisappearFromEligibility() {
