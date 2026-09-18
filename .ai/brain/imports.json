@@ -1,0 +1,2526 @@
+{
+  "imports": {
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java": [
+      "androidx.test.core.app.ActivityScenario",
+      "androidx.test.ext.junit.runners.AndroidJUnit4",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.screen.GameScreen",
+      "com.deadlinezero.game.screen.RunContractScreen",
+      "com.deadlinezero.game.screen.RunResultScreen",
+      "java.util.concurrent.CountDownLatch",
+      "java.util.concurrent.TimeUnit",
+      "java.util.concurrent.atomic.AtomicReference",
+      "org.junit.Assert.assertEquals",
+      "org.junit.Assert.assertNotNull",
+      "org.junit.Assert.assertTrue",
+      "org.junit.Test",
+      "org.junit.runner.RunWith"
+    ],
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": [
+      "android.graphics.Bitmap",
+      "androidx.test.core.app.ActivityScenario",
+      "androidx.test.ext.junit.runners.AndroidJUnit4",
+      "androidx.test.platform.app.InstrumentationRegistry",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.ai.EnemyState",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.meta.SurvivorCatalog",
+      "com.deadlinezero.game.progression.Upgrade",
+      "com.deadlinezero.game.screen.CloudSaveScreen",
+      "com.deadlinezero.game.screen.GameScreen",
+      "com.deadlinezero.game.screen.MissionsScreen",
+      "com.deadlinezero.game.visual.CombatVisualEvents",
+      "com.deadlinezero.game.world.BiomeEnemyRoster",
+      "java.io.File",
+      "java.io.FileOutputStream",
+      "java.lang.reflect.Field",
+      "java.util.concurrent.CountDownLatch",
+      "java.util.concurrent.TimeUnit",
+      "java.util.concurrent.atomic.AtomicReference",
+      "org.junit.Assert.assertNotNull",
+      "org.junit.Assert.assertTrue",
+      "org.junit.Test",
+      "org.junit.runner.RunWith"
+    ],
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java": [
+      "android.view.View",
+      "androidx.lifecycle.Lifecycle",
+      "androidx.test.core.app.ActivityScenario",
+      "androidx.test.ext.junit.runners.AndroidJUnit4",
+      "org.junit.Assert.assertFalse",
+      "org.junit.Assert.assertTrue",
+      "org.junit.Test",
+      "org.junit.runner.RunWith"
+    ],
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java": [
+      "androidx.test.core.app.ActivityScenario",
+      "androidx.test.ext.junit.runners.AndroidJUnit4",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.Projectile",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.perf.PerformanceTelemetry",
+      "com.deadlinezero.game.screen.GameScreen",
+      "com.deadlinezero.game.util.Pools",
+      "java.io.File",
+      "java.io.FileWriter",
+      "java.lang.reflect.Field",
+      "java.util.concurrent.CountDownLatch",
+      "java.util.concurrent.TimeUnit",
+      "java.util.concurrent.atomic.AtomicReference",
+      "org.junit.Assert.assertNotNull",
+      "org.junit.Assert.assertTrue",
+      "org.junit.Test",
+      "org.junit.runner.RunWith"
+    ],
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidProcessPersistenceTest.java": [
+      "androidx.test.core.app.ActivityScenario",
+      "androidx.test.ext.junit.runners.AndroidJUnit4",
+      "androidx.test.platform.app.InstrumentationRegistry",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "java.util.concurrent.CountDownLatch",
+      "java.util.concurrent.TimeUnit",
+      "java.util.concurrent.atomic.AtomicReference",
+      "org.junit.Assert.assertEquals",
+      "org.junit.Assert.assertNotNull",
+      "org.junit.Assert.assertTrue",
+      "org.junit.Assume",
+      "org.junit.Test",
+      "org.junit.runner.RunWith"
+    ],
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java": [
+      "android.graphics.Bitmap",
+      "android.os.Bundle",
+      "androidx.test.core.app.ActivityScenario",
+      "androidx.test.ext.junit.runners.AndroidJUnit4",
+      "androidx.test.platform.app.InstrumentationRegistry",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.screen.ArsenalScreen",
+      "com.deadlinezero.game.screen.GameScreen",
+      "com.deadlinezero.game.screen.MenuScreen",
+      "com.deadlinezero.game.screen.RunContractScreen",
+      "com.deadlinezero.game.screen.SettingsScreen",
+      "com.deadlinezero.game.screen.SurvivorScreen",
+      "java.io.File",
+      "java.io.FileOutputStream",
+      "java.util.concurrent.CountDownLatch",
+      "java.util.concurrent.TimeUnit",
+      "java.util.concurrent.atomic.AtomicReference",
+      "org.junit.Assert.assertNotNull",
+      "org.junit.Assert.assertTrue",
+      "org.junit.Assume.assumeTrue",
+      "org.junit.Test",
+      "org.junit.runner.RunWith"
+    ],
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java": [
+      "androidx.test.core.app.ActivityScenario",
+      "androidx.test.ext.junit.runners.AndroidJUnit4",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.meta.PlayerProfile",
+      "com.deadlinezero.game.meta.ProfileStore",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.screen.GameScreen",
+      "com.deadlinezero.game.screen.MenuScreen",
+      "com.deadlinezero.game.screen.RunContractScreen",
+      "com.deadlinezero.game.screen.RunResultScreen",
+      "java.util.concurrent.CountDownLatch",
+      "java.util.concurrent.TimeUnit",
+      "java.util.concurrent.atomic.AtomicReference",
+      "org.junit.Assert.assertEquals",
+      "org.junit.Assert.assertNotNull",
+      "org.junit.Assert.assertTrue",
+      "org.junit.Test",
+      "org.junit.runner.RunWith"
+    ],
+    "android/src/main/java/com/deadlinezero/game/android/AndroidAdsService.java": [
+      "android.app.Activity",
+      "com.badlogic.gdx.Gdx",
+      "com.deadlinezero.game.services.AdsService",
+      "com.google.android.gms.ads.AdError",
+      "com.google.android.gms.ads.AdRequest",
+      "com.google.android.gms.ads.FullScreenContentCallback",
+      "com.google.android.gms.ads.LoadAdError",
+      "com.google.android.gms.ads.rewarded.RewardedAd",
+      "com.google.android.gms.ads.rewarded.RewardedAdLoadCallback",
+      "java.util.concurrent.atomic.AtomicBoolean"
+    ],
+    "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java": [
+      "android.app.Activity",
+      "com.android.billingclient.api.*",
+      "com.deadlinezero.game.services.BillingService",
+      "com.deadlinezero.game.services.SingleFlightGate",
+      "java.util.*",
+      "java.util.concurrent.ConcurrentHashMap"
+    ],
+    "android/src/main/java/com/deadlinezero/game/android/AndroidConsentManager.java": [
+      "android.app.Activity",
+      "com.google.android.ump.ConsentInformation",
+      "com.google.android.ump.ConsentRequestParameters",
+      "com.google.android.ump.UserMessagingPlatform",
+      "java.util.concurrent.atomic.AtomicBoolean"
+    ],
+    "android/src/main/java/com/deadlinezero/game/android/AndroidHapticsService.java": [
+      "android.app.Activity",
+      "android.content.Context",
+      "android.os.Build",
+      "android.os.VibrationEffect",
+      "android.os.Vibrator",
+      "android.os.VibratorManager",
+      "com.deadlinezero.game.services.HapticsService"
+    ],
+    "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java": [
+      "android.os.Bundle",
+      "com.badlogic.gdx.backends.android.AndroidApplication",
+      "com.badlogic.gdx.backends.android.AndroidApplicationConfiguration",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.services.CloudSaveAdapter",
+      "com.deadlinezero.game.services.GameServices",
+      "com.google.android.gms.ads.MobileAds",
+      "com.google.android.gms.games.PlayGamesSdk"
+    ],
+    "android/src/main/java/com/deadlinezero/game/android/AndroidPlayGamesCloudSaveAdapter.java": [
+      "android.app.Activity",
+      "android.os.Looper",
+      "com.deadlinezero.game.services.CloudAuthenticationRequiredException",
+      "com.deadlinezero.game.services.CloudProviderConflictException",
+      "com.deadlinezero.game.services.CloudRemoteChangedException",
+      "com.deadlinezero.game.services.CloudSaveAdapter",
+      "com.google.android.gms.common.api.ApiException",
+      "com.google.android.gms.games.GamesClientStatusCodes",
+      "com.google.android.gms.games.PlayGames",
+      "com.google.android.gms.games.SnapshotsClient",
+      "com.google.android.gms.games.snapshot.Snapshot",
+      "com.google.android.gms.games.snapshot.SnapshotMetadataChange",
+      "com.google.android.gms.tasks.Tasks",
+      "java.nio.charset.StandardCharsets",
+      "java.util.concurrent.ExecutionException",
+      "java.util.concurrent.TimeUnit"
+    ],
+    "android/src/main/java/com/deadlinezero/game/android/AndroidPrivacyService.java": [
+      "android.app.Activity",
+      "android.content.Intent",
+      "android.net.Uri",
+      "com.deadlinezero.game.services.PrivacyService"
+    ],
+    "android/src/main/java/com/deadlinezero/game/android/AndroidShareService.java": [
+      "android.content.Intent",
+      "com.badlogic.gdx.backends.android.AndroidApplication",
+      "com.deadlinezero.game.services.ShareService"
+    ],
+    "android/src/main/java/com/deadlinezero/game/android/AndroidThermalService.java": [
+      "android.app.Activity",
+      "android.content.Context",
+      "android.os.Build",
+      "android.os.PowerManager",
+      "com.deadlinezero.game.services.ThermalService"
+    ],
+    "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java": [
+      "com.badlogic.gdx.Game",
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.config.AccessibilitySettings",
+      "com.deadlinezero.game.config.GraphicsSettings",
+      "com.deadlinezero.game.config.Localization",
+      "com.deadlinezero.game.meta.DailyService",
+      "com.deadlinezero.game.meta.EntitlementStore",
+      "com.deadlinezero.game.meta.EquipmentDropTable",
+      "com.deadlinezero.game.meta.EquipmentItem",
+      "com.deadlinezero.game.meta.PlayerProfile",
+      "com.deadlinezero.game.meta.ProfileStore",
+      "com.deadlinezero.game.meta.PurchaseGrantService",
+      "com.deadlinezero.game.meta.RunEncounterRuntime",
+      "com.deadlinezero.game.meta.RunLoadoutContext",
+      "com.deadlinezero.game.meta.RunMissionRuntime",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.meta.RunResult",
+      "com.deadlinezero.game.meta.RunRewardCalculator",
+      "com.deadlinezero.game.meta.RunSettlement",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.meta.StageMissionRules",
+      "com.deadlinezero.game.meta.StageRules",
+      "com.deadlinezero.game.meta.ThreatProgressionService",
+      "com.deadlinezero.game.meta.ThreatTierRules",
+      "com.deadlinezero.game.meta.WeeklyService",
+      "com.deadlinezero.game.screen.ArsenalScreen",
+      "com.deadlinezero.game.screen.CloudSaveScreen",
+      "com.deadlinezero.game.screen.GameScreen",
+      "com.deadlinezero.game.screen.GearScreen",
+      "com.deadlinezero.game.screen.MenuScreen",
+      "com.deadlinezero.game.screen.MissionsScreen",
+      "com.deadlinezero.game.screen.RunContractScreen",
+      "com.deadlinezero.game.screen.RunResultScreen",
+      "com.deadlinezero.game.screen.SettingsScreen",
+      "com.deadlinezero.game.screen.ShopScreen",
+      "com.deadlinezero.game.screen.SurvivorScreen",
+      "com.deadlinezero.game.screen.VictoryScreen",
+      "com.deadlinezero.game.services.AdsService",
+      "com.deadlinezero.game.services.CloudSaveService",
+      "com.deadlinezero.game.services.GameServices",
+      "com.deadlinezero.game.visual.GameArt"
+    ],
+    "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java": [
+      "java.util.EnumMap"
+    ],
+    "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java": [
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.ai.LeaperRuntime",
+      "com.deadlinezero.game.ai.LeaperSharedRuntime",
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.HomingMissile",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.fx.ArcFx",
+      "com.deadlinezero.game.fx.DamageNumber",
+      "com.deadlinezero.game.fx.ImpactFx",
+      "com.deadlinezero.game.meta.RunLoadoutContext",
+      "com.deadlinezero.game.meta.RunMissionRuntime",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.meta.StageMissionRules",
+      "com.deadlinezero.game.util.Pools",
+      "com.deadlinezero.game.world.LeaperSpawnRules",
+      "com.deadlinezero.game.world.SpatialHash",
+      "com.deadlinezero.game.world.WaveDirector"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ai/AttackController.java": [
+      "com.deadlinezero.game.meta.RunStageContext"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ai/BossAffixRules.java": [
+      "com.deadlinezero.game.meta.ThreatTierRules"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java": [
+      "com.deadlinezero.game.meta.RunStageContext"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ai/BossCombatRuntime.java": [
+      "com.deadlinezero.game.meta.RunStageContext"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ai/BossVariantStats.java": [
+      "com.deadlinezero.game.meta.RunStageContext"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ai/EnemyPatternCatalog.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.world.BiomeEnemyRoster"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ai/LeaperRegistry.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "java.util.WeakHashMap"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.entities.Enemy",
+      "java.util.WeakHashMap"
+    ],
+    "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.audio.Music",
+      "com.badlogic.gdx.audio.Sound",
+      "com.badlogic.gdx.files.FileHandle",
+      "com.badlogic.gdx.utils.ObjectMap",
+      "com.badlogic.gdx.utils.TimeUtils"
+    ],
+    "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java": [
+      "com.deadlinezero.game.config.GameConfig"
+    ],
+    "core/src/main/java/com/deadlinezero/game/config/AccessibilitySettings.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Preferences"
+    ],
+    "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Preferences"
+    ],
+    "core/src/main/java/com/deadlinezero/game/config/Localization.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.utils.I18NBundle",
+      "java.util.Locale",
+      "java.util.MissingResourceException"
+    ],
+    "core/src/main/java/com/deadlinezero/game/entities/ActorState.java": [
+      "com.badlogic.gdx.math.Vector2",
+      "com.deadlinezero.game.meta.BalanceTelemetryRuntime"
+    ],
+    "core/src/main/java/com/deadlinezero/game/entities/Enemy.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.math.Vector2",
+      "com.deadlinezero.game.ai.AttackController",
+      "com.deadlinezero.game.ai.BossCombatRuntime",
+      "com.deadlinezero.game.ai.BossPhaseController",
+      "com.deadlinezero.game.ai.EnemyArchetype",
+      "com.deadlinezero.game.ai.EnemyState",
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.meta.RunMissionRuntime",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.meta.StageRules",
+      "com.deadlinezero.game.world.BiomeEnemyBehaviorRules",
+      "com.deadlinezero.game.world.BiomeEnemyRoster",
+      "java.util.WeakHashMap"
+    ],
+    "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java": [
+      "com.badlogic.gdx.math.Vector2",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules"
+    ],
+    "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.math.Vector2",
+      "com.deadlinezero.game.combat.DamageElement"
+    ],
+    "core/src/main/java/com/deadlinezero/game/entities/Player.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.math.Vector2",
+      "com.deadlinezero.game.abilities.AbilityLoadout",
+      "com.deadlinezero.game.abilities.AbilityType",
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.combat.WeaponRuntime",
+      "com.deadlinezero.game.config.AccessibilitySettings",
+      "com.deadlinezero.game.config.GameConfig",
+      "com.deadlinezero.game.input.MobileCombatInput",
+      "com.deadlinezero.game.meta.RunLoadoutContext",
+      "com.deadlinezero.game.progression.LegendaryState",
+      "com.deadlinezero.game.visual.CombatVisualEvents"
+    ],
+    "core/src/main/java/com/deadlinezero/game/entities/Projectile.java": [
+      "com.badlogic.gdx.math.Vector2",
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.combat.WeaponSignatureRuntime",
+      "com.deadlinezero.game.meta.SingularityCoreRuntime"
+    ],
+    "core/src/main/java/com/deadlinezero/game/fx/ArcFx.java": [
+      "com.badlogic.gdx.utils.TimeUtils"
+    ],
+    "core/src/main/java/com/deadlinezero/game/fx/DamageNumber.java": [
+      "com.badlogic.gdx.graphics.Color"
+    ],
+    "core/src/main/java/com/deadlinezero/game/fx/DeathFx.java": [
+      "com.deadlinezero.game.entities.Enemy"
+    ],
+    "core/src/main/java/com/deadlinezero/game/fx/ImpactFx.java": [
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.math.Vector2"
+    ],
+    "core/src/main/java/com/deadlinezero/game/input/MobileCombatInput.java": [
+      "com.badlogic.gdx.Gdx"
+    ],
+    "core/src/main/java/com/deadlinezero/game/input/VirtualStick.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.math.Vector2"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/AchievementProgress.java": [
+      "java.util.EnumSet",
+      "java.util.Set"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java": [
+      "com.badlogic.gdx.utils.Array",
+      "java.util.List"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java": [
+      "com.badlogic.gdx.utils.Array",
+      "java.util.ArrayList",
+      "java.util.Comparator",
+      "java.util.LinkedHashMap",
+      "java.util.List",
+      "java.util.Map"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryStore.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Preferences",
+      "com.badlogic.gdx.utils.Array"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java": [
+      "com.badlogic.gdx.utils.Array"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java": [
+      "com.deadlinezero.game.services.BillingService",
+      "java.util.function.Consumer"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/EntitlementStore.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Preferences"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/EquipmentDropTable.java": [
+      "com.badlogic.gdx.math.MathUtils"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/Inventory.java": [
+      "com.badlogic.gdx.utils.Array"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponDefinition",
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules",
+      "java.util.HashMap",
+      "java.util.Map"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/MasteryRunNotice.java": [
+      "com.deadlinezero.game.combat.WeaponDefinition",
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/OnboardingState.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Preferences"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponDefinition",
+      "java.util.EnumMap",
+      "java.util.LinkedHashSet",
+      "java.util.Set"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java": [
+      "java.nio.charset.StandardCharsets",
+      "java.security.MessageDigest",
+      "java.security.NoSuchAlgorithmException",
+      "java.util.ArrayList",
+      "java.util.Base64",
+      "java.util.Comparator",
+      "java.util.LinkedHashMap",
+      "java.util.List",
+      "java.util.Map"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupSummary.java": [
+      "java.util.Map",
+      "java.util.Set"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/ProfileCounterMath.java": [
+      "java.math.BigInteger"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/ProfileSchema.java": [
+      "com.badlogic.gdx.Preferences"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Preferences",
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponDefinition",
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules",
+      "java.util.HashMap",
+      "java.util.Map"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java": [
+      "com.deadlinezero.game.services.BillingService"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponDefinition",
+      "com.deadlinezero.game.combat.WeaponSignatureRuntime"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/RunSettlement.java": [
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/RunShareText.java": [
+      "com.deadlinezero.game.config.Localization"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java": [
+      "java.math.BigInteger",
+      "java.util.EnumMap"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/WeaponProgression.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponDefinition"
+    ],
+    "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponDefinition"
+    ],
+    "core/src/main/java/com/deadlinezero/game/perf/PerformanceTelemetry.java": [
+      "java.util.Arrays"
+    ],
+    "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java": [
+      "com.deadlinezero.game.entities.Player"
+    ],
+    "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java": [
+      "com.deadlinezero.game.abilities.AbilityType",
+      "com.deadlinezero.game.combat.WeaponSignatureRuntime",
+      "com.deadlinezero.game.entities.Player"
+    ],
+    "core/src/main/java/com/deadlinezero/game/progression/LegendarySelector.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.entities.Player"
+    ],
+    "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java": [
+      "com.deadlinezero.game.abilities.AbilityType",
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.entities.Player"
+    ],
+    "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.abilities.AbilityType",
+      "com.deadlinezero.game.entities.Player"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponDefinition",
+      "com.deadlinezero.game.meta.ProfileStore",
+      "com.deadlinezero.game.meta.WeaponProgression",
+      "com.deadlinezero.game.meta.WeaponSynergyRules",
+      "com.deadlinezero.game.ui.ResponsiveGrid",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.services.CloudAuthenticationRequiredException",
+      "com.deadlinezero.game.services.CloudProviderConflictException",
+      "com.deadlinezero.game.services.CloudRemoteChangedException",
+      "com.deadlinezero.game.services.CloudSaveAdapter",
+      "com.deadlinezero.game.services.CloudSaveService",
+      "com.deadlinezero.game.ui.MetaLayout",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.VisualTheme",
+      "java.util.concurrent.ExecutorService",
+      "java.util.concurrent.Executors"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.OrthographicCamera",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.abilities.AbilitySystem",
+      "com.deadlinezero.game.abilities.AbilityType",
+      "com.deadlinezero.game.ai.BossAttackPatternCatalog",
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.ai.BossVariantStats",
+      "com.deadlinezero.game.ai.EnemyPatternCatalog",
+      "com.deadlinezero.game.ai.EnemyState",
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.config.GameConfig",
+      "com.deadlinezero.game.config.GraphicsSettings",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.EnemyProjectile",
+      "com.deadlinezero.game.entities.HomingMissile",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.entities.Projectile",
+      "com.deadlinezero.game.fx.ArcFx",
+      "com.deadlinezero.game.fx.DamageNumber",
+      "com.deadlinezero.game.fx.ImpactFx",
+      "com.deadlinezero.game.input.VirtualStick",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.perf.AdaptiveFrameRateGovernor",
+      "com.deadlinezero.game.perf.PerformanceTelemetry",
+      "com.deadlinezero.game.progression.LegendaryChoice",
+      "com.deadlinezero.game.progression.LegendarySelector",
+      "com.deadlinezero.game.progression.Upgrade",
+      "com.deadlinezero.game.progression.UpgradeSelector",
+      "com.deadlinezero.game.services.AdsService",
+      "com.deadlinezero.game.util.Pools",
+      "com.deadlinezero.game.visual.CombatHudRenderer",
+      "com.deadlinezero.game.visual.CombatPolishController",
+      "com.deadlinezero.game.visual.CombatSpritePass",
+      "com.deadlinezero.game.visual.HostileProjectilePresentation",
+      "com.deadlinezero.game.visual.VisualTheme",
+      "com.deadlinezero.game.visual.WorldFxRenderer",
+      "com.deadlinezero.game.world.SpatialHash",
+      "com.deadlinezero.game.world.WaveDirector"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.meta.EquipmentItem",
+      "com.deadlinezero.game.meta.EquipmentService",
+      "com.deadlinezero.game.meta.EquipmentUpgradeService",
+      "com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog",
+      "com.deadlinezero.game.meta.ThreatSetBonusRules",
+      "com.deadlinezero.game.ui.ResponsiveGrid",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/MenuLayoutModel.java": [
+      "com.badlogic.gdx.math.Rectangle",
+      "com.deadlinezero.game.ui.UiLayout"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.config.GameConfig",
+      "com.deadlinezero.game.meta.BalanceTelemetryReport",
+      "com.deadlinezero.game.meta.BalanceTelemetryStore",
+      "com.deadlinezero.game.meta.BalanceTelemetrySummary",
+      "com.deadlinezero.game.meta.PlayerProfile",
+      "com.deadlinezero.game.meta.ThreatTierRules",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.GameArt",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.combat.WeaponDefinition",
+      "com.deadlinezero.game.meta.AchievementService",
+      "com.deadlinezero.game.meta.DailyService",
+      "com.deadlinezero.game.meta.MasteryProgress",
+      "com.deadlinezero.game.meta.PlayerProfile",
+      "com.deadlinezero.game.meta.WeeklyService",
+      "com.deadlinezero.game.ui.MetaLayout",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.ai.BossAffixRules",
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.meta.EndgameMutatorRules",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.meta.ThreatTierRules",
+      "com.deadlinezero.game.ui.MetaLayout",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.meta.PlayerProfile",
+      "com.deadlinezero.game.meta.RunRecoveryAdvice",
+      "com.deadlinezero.game.meta.RunResult",
+      "com.deadlinezero.game.services.AdsService",
+      "com.deadlinezero.game.ui.MetaLayout",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.config.AccessibilitySettings",
+      "com.deadlinezero.game.config.GraphicsSettings",
+      "com.deadlinezero.game.ui.MetaLayout",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.meta.ChestService",
+      "com.deadlinezero.game.meta.ConsumablePurchaseDelivery",
+      "com.deadlinezero.game.meta.EquipmentDropTable",
+      "com.deadlinezero.game.meta.EquipmentItem",
+      "com.deadlinezero.game.meta.PlayerProfile",
+      "com.deadlinezero.game.meta.PurchaseGrantService",
+      "com.deadlinezero.game.services.AdsService",
+      "com.deadlinezero.game.services.BillingService",
+      "com.deadlinezero.game.ui.MetaLayout",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/SurvivorLayoutModel.java": [
+      "com.badlogic.gdx.math.Rectangle",
+      "com.deadlinezero.game.ui.UiLayout"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.meta.SurvivorCatalog",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.GameArt",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Input",
+      "com.badlogic.gdx.ScreenAdapter",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.Align",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.meta.EquipmentItem",
+      "com.deadlinezero.game.meta.MasteryRunNotice",
+      "com.deadlinezero.game.meta.RunResult",
+      "com.deadlinezero.game.meta.RunShareText",
+      "com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog",
+      "com.deadlinezero.game.ui.MetaLayout",
+      "com.deadlinezero.game.ui.UiLayout",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.ui.UiViewport",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/services/BillingService.java": [
+      "java.util.Set"
+    ],
+    "core/src/main/java/com/deadlinezero/game/services/CloudSaveService.java": [
+      "com.deadlinezero.game.meta.PlayerProfile",
+      "com.deadlinezero.game.meta.ProfileBackupCodec",
+      "com.deadlinezero.game.meta.ProfileBackupSummary",
+      "com.deadlinezero.game.meta.ProfileStore",
+      "java.util.HashMap",
+      "java.util.Map"
+    ],
+    "core/src/main/java/com/deadlinezero/game/services/SingleFlightGate.java": [
+      "java.util.concurrent.atomic.AtomicBoolean"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ui/MetaLayout.java": [
+      "com.badlogic.gdx.math.Rectangle"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ui/ResponsiveGrid.java": [
+      "com.badlogic.gdx.math.Rectangle"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ui/UiMotion.java": [
+      "com.badlogic.gdx.math.MathUtils"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": [
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.deadlinezero.game.config.AccessibilitySettings",
+      "com.deadlinezero.game.visual.VisualTheme"
+    ],
+    "core/src/main/java/com/deadlinezero/game/ui/UiViewport.java": [
+      "com.badlogic.gdx.graphics.OrthographicCamera",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.Vector2",
+      "com.badlogic.gdx.utils.viewport.ExtendViewport"
+    ],
+    "core/src/main/java/com/deadlinezero/game/util/Pools.java": [
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.config.GameConfig",
+      "com.deadlinezero.game.entities.EnemyProjectile",
+      "com.deadlinezero.game.entities.HomingMissile",
+      "com.deadlinezero.game.entities.Projectile",
+      "com.deadlinezero.game.fx.ArcFx",
+      "com.deadlinezero.game.fx.DamageNumber",
+      "com.deadlinezero.game.fx.DeathFx",
+      "com.deadlinezero.game.fx.ImpactFx"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.config.GraphicsSettings"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.SurvivorCatalog"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponDefinition",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.SurvivorCatalog",
+      "com.deadlinezero.game.world.BiomeEnemyRoster"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.SurvivorCatalog"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/AudioManifest.java": [
+      "com.badlogic.gdx.Gdx"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.graphics.Texture",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.utils.Disposable"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java": [
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.utils.TimeUtils",
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.fx.DeathFx",
+      "com.deadlinezero.game.fx.ImpactFx",
+      "com.deadlinezero.game.util.Pools"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java": [
+      "com.badlogic.gdx.graphics.Pixmap",
+      "com.badlogic.gdx.graphics.Texture",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.utils.Disposable",
+      "com.deadlinezero.game.world.BiomeEnemyRoster"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java": [
+      "com.badlogic.gdx.graphics.Texture",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/BootstrapEnvironmentArt.java": [
+      "com.badlogic.gdx.graphics.Pixmap",
+      "com.badlogic.gdx.graphics.Texture",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.utils.Disposable"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/BootstrapVfxArt.java": [
+      "com.badlogic.gdx.graphics.Pixmap",
+      "com.badlogic.gdx.graphics.Texture",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.utils.Disposable"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/BossPhaseTransitionProfile.java": [
+      "com.deadlinezero.game.ai.BossIdentity"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java": [
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.entities.Enemy"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java": [
+      "com.deadlinezero.game.entities.Enemy"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java": [
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.ai.EnemyState",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.meta.RunLoadoutContext",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.world.BiomeEnemyRoster",
+      "java.util.WeakHashMap"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.audio.Sound",
+      "com.badlogic.gdx.utils.Array",
+      "com.badlogic.gdx.utils.Disposable",
+      "com.deadlinezero.game.ai.EnemyState",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.world.BiomeEnemyRoster",
+      "java.util.WeakHashMap"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/CombatFeel.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.math.Vector2"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.deadlinezero.game.ui.UiLayout"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": [
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.g2d.BitmapFont",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.math.Matrix4",
+      "com.badlogic.gdx.math.Rectangle",
+      "com.badlogic.gdx.utils.Align",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.config.AccessibilitySettings",
+      "com.deadlinezero.game.config.Localization",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.input.MobileCombatInput",
+      "com.deadlinezero.game.input.VirtualStick",
+      "com.deadlinezero.game.meta.OnboardingState",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.ui.UiRenderer",
+      "com.deadlinezero.game.ui.UiTypography",
+      "com.deadlinezero.game.world.RunEncounterDirector",
+      "com.deadlinezero.game.world.WaveDirector"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.graphics.OrthographicCamera",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.ai.LeaperRuntime",
+      "com.deadlinezero.game.ai.LeaperSharedRuntime",
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.config.AccessibilitySettings",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.EnemyProjectile",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.fx.DeathFx",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.services.ThermalService",
+      "com.deadlinezero.game.util.Pools",
+      "com.deadlinezero.game.world.ArenaHazardRuntime",
+      "com.deadlinezero.game.world.DeathBurstRules"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": [
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.meta.RunLoadoutContext",
+      "com.deadlinezero.game.meta.SurvivorCatalog",
+      "com.deadlinezero.game.util.Pools"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java": [
+      "com.badlogic.gdx.utils.TimeUtils"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java": [
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.fx.DeathFx"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java": [
+      "com.badlogic.gdx.graphics.Pixmap",
+      "com.badlogic.gdx.graphics.Texture",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.utils.Disposable"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": [
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.utils.Disposable",
+      "com.deadlinezero.game.meta.RunStageContext"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java": [
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.world.ArenaHazardRuntime"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/GameArt.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.Pixmap",
+      "com.badlogic.gdx.graphics.Texture",
+      "com.badlogic.gdx.graphics.g2d.TextureAtlas",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.utils.Array",
+      "com.badlogic.gdx.utils.Disposable",
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.SurvivorCatalog",
+      "com.deadlinezero.game.world.BiomeEnemyRoster",
+      "java.io.ByteArrayOutputStream"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/GraphicsQuality.java": [
+      "com.badlogic.gdx.Gdx"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/HighResBossDirectionalArt.java": [
+      "com.badlogic.gdx.graphics.Pixmap",
+      "com.badlogic.gdx.graphics.Texture",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.utils.Disposable"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java": [
+      "com.badlogic.gdx.graphics.Pixmap",
+      "com.badlogic.gdx.graphics.Texture",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.utils.Disposable"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/HostileProjectilePresentation.java": [
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.EnemyProjectile",
+      "com.deadlinezero.game.world.BiomeEnemyRoster"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/LegendaryFxRenderer.java": [
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.entities.Player"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/LocalLightRenderer.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.GL20",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.EnemyProjectile",
+      "com.deadlinezero.game.entities.HomingMissile",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.fx.ArcFx",
+      "com.deadlinezero.game.util.Pools"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/NullBootstrapVfxArt.java": [
+      "com.badlogic.gdx.graphics.Pixmap",
+      "com.badlogic.gdx.graphics.Texture",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.utils.Disposable"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java": [
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.world.ArenaHazardRuntime"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/PostFxShader.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.graphics.glutils.ShaderProgram",
+      "com.badlogic.gdx.utils.Disposable"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/ProductionAtlasAudit.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.graphics.g2d.TextureAtlas",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.meta.SurvivorCatalog",
+      "com.deadlinezero.game.world.BiomeEnemyRoster"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java": [
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.entities.Projectile",
+      "java.util.IdentityHashMap"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java": [
+      "com.badlogic.gdx.graphics.Color",
+      "com.deadlinezero.game.config.AccessibilitySettings",
+      "com.deadlinezero.game.meta.EquipmentItem",
+      "com.deadlinezero.game.progression.UpgradeRarity"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/WeaponLegendaryPresentation.java": [
+      "com.deadlinezero.game.entities.Player"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java": [
+      "com.badlogic.gdx.graphics.g2d.SpriteBatch",
+      "com.badlogic.gdx.graphics.g2d.TextureRegion",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.meta.RunLoadoutContext"
+    ],
+    "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": [
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.graphics.Color",
+      "com.badlogic.gdx.graphics.glutils.ShapeRenderer",
+      "com.badlogic.gdx.math.MathUtils",
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.abilities.AbilityType",
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.combat.WeaponSignatureRuntime",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.EnemyProjectile",
+      "com.deadlinezero.game.entities.HomingMissile",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.entities.Projectile",
+      "com.deadlinezero.game.fx.ArcFx"
+    ],
+    "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java": [
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.meta.ThreatTierRules",
+      "java.util.ArrayList",
+      "java.util.Collections",
+      "java.util.Iterator",
+      "java.util.List"
+    ],
+    "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules"
+    ],
+    "core/src/main/java/com/deadlinezero/game/world/DeathBurstRules.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.ThreatTierRules"
+    ],
+    "core/src/main/java/com/deadlinezero/game/world/EndgameWaveCompositionRules.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.EndgameMutatorRules"
+    ],
+    "core/src/main/java/com/deadlinezero/game/world/LeaperSpawnRules.java": [
+      "com.badlogic.gdx.math.MathUtils"
+    ],
+    "core/src/main/java/com/deadlinezero/game/world/RunEncounterDirector.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.EndgameMutatorRules",
+      "com.deadlinezero.game.meta.RunEncounterRuntime",
+      "com.deadlinezero.game.meta.RunStageContext"
+    ],
+    "core/src/main/java/com/deadlinezero/game/world/SpatialHash.java": [
+      "com.badlogic.gdx.utils.Array",
+      "com.badlogic.gdx.utils.IntMap",
+      "com.deadlinezero.game.entities.Enemy"
+    ],
+    "core/src/main/java/com/deadlinezero/game/world/WaveDirector.java": [
+      "com.badlogic.gdx.math.MathUtils",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.EndgameMutatorRules",
+      "com.deadlinezero.game.meta.RunMissionRuntime",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.meta.StageMissionRules"
+    ],
+    "core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/AttackControllerCadenceTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/BiomeEnemyAttackPatternTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/BossAffixRulesTest.java": [
+      "com.deadlinezero.game.meta.RunStageContext",
+      "com.deadlinezero.game.meta.ThreatTierRules",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/BossAttackPatternCatalogTest.java": [
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/BossCombatSecondaryTuningTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/BossCombatVariantTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/BossIdentityTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/BossVariantStatsContractTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/EnemyPatternCatalogTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/EnemyVariantBalanceTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/FrostColossusBossProfileTest.java": [
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/HarvesterBossProfileTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/HarvesterSummonTelegraphTest.java": [
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/LeaperProfileTest.java": [
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/LeaperRegistryTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/LeaperRuntimeTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/NullArchonBossProfileTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/RevenantBossProfileTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ai/WardenBossProfileTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java": [
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNull",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorVolumeTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/audio/FoundryHazardAudioContractTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/audio/MusicProfileSelectorTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/audio/NullHazardAudioContractTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/audio/WeaponSignatureAudioContractTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/combat/EndgameWeaponArchetypeTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponCatalogTest.java": [
+      "java.util.HashSet",
+      "java.util.Set",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNotNull",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java": [
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java": [
+      "com.deadlinezero.game.entities.Projectile",
+      "com.deadlinezero.game.meta.SingularityCoreRuntime",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.BeforeEach",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/config/AccessibilityColorVisionTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/config/AccessibilitySettingsTest.java": [
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/config/GraphicsSettingsTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java": [
+      "java.io.IOException",
+      "java.nio.charset.StandardCharsets",
+      "java.nio.file.Files",
+      "java.nio.file.Path",
+      "java.text.MessageFormat",
+      "java.util.ArrayList",
+      "java.util.LinkedHashMap",
+      "java.util.LinkedHashSet",
+      "java.util.List",
+      "java.util.Map",
+      "java.util.Set",
+      "java.util.regex.Matcher",
+      "java.util.regex.Pattern",
+      "java.util.stream.Stream",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/config/LocalizationGlyphSanitizerTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/config/MobileRuntimeBudgetTest.java": [
+      "com.deadlinezero.game.util.Pools",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeElementResistanceTest.java": [
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeTacticsTest.java": [
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/entities/EnemyChargeImpactTest.java": [
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/entities/EnemyContentScaleTest.java": [
+      "com.deadlinezero.game.world.BiomeEnemyRoster",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/entities/EnemyElementReactionTest.java": [
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/entities/EnemyProjectileStyleTest.java": [
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/entities/EnemySpecialistTest.java": [
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.BeforeEach",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/entities/EnemyTacticsTest.java": [
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/entities/EnemyVariantTest.java": [
+      "org.junit.jupiter.api.Assertions.*",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/entities/NullWardSupportTest.java": [
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/fx/DamageNumberTest.java": [
+      "com.badlogic.gdx.graphics.Color",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/AchievementServiceTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/BalanceCoefficientAuditTest.java": [
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/BalanceHealthRulesTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryReportTest.java": [
+      "com.badlogic.gdx.utils.Array",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNotNull",
+      "org.junit.jupiter.api.Assertions.assertNull",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryRuntimeTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySegmentsTest.java": [
+      "com.badlogic.gdx.utils.Array",
+      "java.util.List",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySummaryTest.java": [
+      "com.badlogic.gdx.utils.Array",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/ConsumablePurchaseDeliveryTest.java": [
+      "com.deadlinezero.game.services.BillingService",
+      "java.util.ArrayList",
+      "java.util.List",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/CounterSafetyTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/DailyServiceTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/EndgameMutatorRulesTest.java": [
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/EquipmentUpgradeSafetyTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertSame",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/InventoryRestoreTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertNotNull",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/MasteryEconomyGuardrailTest.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponDefinition",
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/MasteryProgressTest.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/MasteryRunNoticeTest.java": [
+      "com.deadlinezero.game.visual.EnvironmentBiomeRules",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNull",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/OnboardingCompletionPolicyTest.java": [
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/P0RunRegressionTest.java": [
+      "com.badlogic.gdx.ApplicationListener",
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Preferences",
+      "com.badlogic.gdx.backends.headless.HeadlessApplication",
+      "org.junit.jupiter.api.AfterAll",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.BeforeAll",
+      "org.junit.jupiter.api.BeforeEach",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/PlayerProfileSafetyTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/ProfileBackupCodecTest.java": [
+      "java.nio.charset.StandardCharsets",
+      "java.security.MessageDigest",
+      "java.util.LinkedHashMap",
+      "java.util.Map",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertThrows",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/ProfileBackupSummaryTest.java": [
+      "java.util.Map",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/ProfileSchemaTest.java": [
+      "java.util.HashMap",
+      "java.util.Map",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/ProfileStoreBackupTest.java": [
+      "com.badlogic.gdx.ApplicationAdapter",
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.Preferences",
+      "com.badlogic.gdx.backends.headless.HeadlessApplication",
+      "com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration",
+      "java.util.HashMap",
+      "java.util.Map",
+      "org.junit.jupiter.api.AfterAll",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertThrows",
+      "org.junit.jupiter.api.BeforeAll",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java": [
+      "com.deadlinezero.game.services.BillingService",
+      "java.util.HashSet",
+      "java.util.Set",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/RunLoadoutContextResetTest.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/RunMissionRuntimeTest.java": [
+      "java.util.concurrent.atomic.AtomicInteger",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/RunModifierContextTest.java": [
+      "java.util.EnumSet",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Assertions.assertNotNull",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/RunRecoveryAdviceTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/RunRewardCalculatorTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/RunShareTextTest.java": [
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/SingularityCoreRuntimeTest.java": [
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.entities.Projectile",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/StageRulesTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/SurvivorProgressionSafetyTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/ThreatProgressionServiceTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertNotNull",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/ThreatSetBonusRulesTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/ThreatTierRulesTest.java": [
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/WeaponProgressionTest.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/meta/WeeklyServiceTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/perf/AdaptiveFrameRateGovernorTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/perf/PerformanceTelemetryTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/progression/LegendarySelectorTest.java": [
+      "com.deadlinezero.game.entities.Player",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertNotNull",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/progression/LegendaryStateTest.java": [
+      "com.deadlinezero.game.abilities.AbilityType",
+      "com.deadlinezero.game.entities.Player",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/progression/RemainingWeaponFamilyLegendaryBalanceTest.java": [
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java": [
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.meta.RunLoadoutContext",
+      "java.util.HashSet",
+      "java.util.Set",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertNotNull",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryBalanceTest.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.meta.PlayerProfile",
+      "com.deadlinezero.game.meta.RunLoadoutContext",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java": [
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponSignatureRuntime",
+      "com.deadlinezero.game.entities.Player",
+      "com.deadlinezero.game.meta.PlayerProfile",
+      "com.deadlinezero.game.meta.RunLoadoutContext",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/screen/GameScreenBossSummonRosterTest.java": [
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.entities.Enemy",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/screen/MenuLayoutModelTest.java": [
+      "com.badlogic.gdx.math.Rectangle",
+      "com.deadlinezero.game.ui.UiLayout",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/screen/MetaScreenLayoutContractTest.java": [
+      "com.badlogic.gdx.math.Rectangle",
+      "com.deadlinezero.game.ui.MetaLayout",
+      "com.deadlinezero.game.ui.UiLayout",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/screen/SurvivorLayoutModelTest.java": [
+      "com.badlogic.gdx.math.Rectangle",
+      "com.deadlinezero.game.ui.UiLayout",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/services/BillingProductCatalogTest.java": [
+      "java.util.Set",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/services/BillingServiceStateTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/services/CloudSaveServiceTest.java": [
+      "com.deadlinezero.game.meta.ProfileBackupCodec",
+      "java.util.HashMap",
+      "java.util.Map",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertNull",
+      "org.junit.jupiter.api.Assertions.assertThrows",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/services/SingleFlightGateTest.java": [
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/services/ThermalServiceTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ui/ResponsiveGridTest.java": [
+      "com.badlogic.gdx.math.Rectangle",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ui/UiLayoutTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ui/UiMotionTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/ui/UiRendererStateTest.java": [
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/AnimationProfileCatalogTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.SurvivorCatalog",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArtTest.java": [
+      "java.awt.image.BufferedImage",
+      "java.nio.file.Files",
+      "java.nio.file.Path",
+      "javax.imageio.ImageIO",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNotNull",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArtTest.java": [
+      "com.deadlinezero.game.world.BiomeEnemyRoster",
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/BootstrapArtAssetTest.java": [
+      "java.awt.image.BufferedImage",
+      "java.io.ByteArrayInputStream",
+      "java.nio.charset.StandardCharsets",
+      "java.nio.file.Files",
+      "java.nio.file.Path",
+      "java.util.Base64",
+      "javax.imageio.ImageIO",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNotNull",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/BootstrapArtCatalogTest.java": [
+      "com.deadlinezero.game.ai.BossIdentity",
+      "com.deadlinezero.game.combat.WeaponCatalog",
+      "com.deadlinezero.game.combat.WeaponDefinition",
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.SurvivorCatalog",
+      "java.nio.charset.StandardCharsets",
+      "org.junit.jupiter.api.Assertions.assertArrayEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/BootstrapEnvironmentArtTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/BootstrapVfxArtTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/BossIdentityArtRoutingTest.java": [
+      "com.deadlinezero.game.ai.BossIdentity",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/BossPhaseTransitionProfileTest.java": [
+      "com.deadlinezero.game.ai.BossIdentity",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "java.util.HashSet",
+      "java.util.Set",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/CharacterSpriteFacingTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/CombatHudLayoutTest.java": [
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/Direction8Test.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/DirectionalBootstrapArtTest.java": [
+      "com.deadlinezero.game.meta.SurvivorCatalog",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/DirectionalBootstrapLazyLoadTest.java": [
+      "org.junit.jupiter.api.Assertions.assertDoesNotThrow",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/DirectionalGpuMemoryBudgetTest.java": [
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/EnvironmentBiomeRulesTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/FinalArtContractTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/FinalArtLayoutContractTest.java": [
+      "com.badlogic.gdx.utils.JsonReader",
+      "com.badlogic.gdx.utils.JsonValue",
+      "java.io.IOException",
+      "java.nio.file.Files",
+      "java.nio.file.Path",
+      "java.util.ArrayList",
+      "java.util.List",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/FoundryHazardPresentationTest.java": [
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.world.ArenaHazardRuntime",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/HighResBossDirectionalArtTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArtTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/HostileProjectilePresentationTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.entities.EnemyProjectile",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/NullBootstrapVfxArtTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/NullHazardPresentationTest.java": [
+      "com.deadlinezero.game.audio.AudioDirector",
+      "com.deadlinezero.game.world.ArenaHazardRuntime",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java": [
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.entities.Projectile",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/SpecialistPresentationTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java": [
+      "com.deadlinezero.game.entities.Player",
+      "java.util.HashSet",
+      "java.util.Set",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/world/ArenaHazardRuntimeTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/world/BiomeEnemyBehaviorRulesTest.java": [
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/world/BiomeEnemyRosterTest.java": [
+      "com.deadlinezero.game.combat.DamageElement",
+      "com.deadlinezero.game.entities.Enemy",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/world/EndgameWaveCompositionRulesTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.EndgameMutatorRules",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/world/FoundryHazardActivationCueTest.java": [
+      "org.junit.jupiter.api.Assertions.assertFalse",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/world/RunEncounterDirectorTest.java": [
+      "com.deadlinezero.game.meta.EndgameMutatorRules",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "java.util.HashSet",
+      "java.util.Set",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNotEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/world/SpatialHashTest.java": [
+      "com.badlogic.gdx.utils.Array",
+      "com.deadlinezero.game.entities.Enemy",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertNull",
+      "org.junit.jupiter.api.Assertions.assertSame",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/world/StageCombatPressureAuditTest.java": [
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "core/src/test/java/com/deadlinezero/game/world/WaveDirectorTest.java": [
+      "com.deadlinezero.game.entities.Enemy",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.meta.RunStageContext",
+      "org.junit.jupiter.api.AfterEach",
+      "org.junit.jupiter.api.Assertions.assertEquals",
+      "org.junit.jupiter.api.Assertions.assertTrue",
+      "org.junit.jupiter.api.Test"
+    ],
+    "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopLauncher.java": [
+      "com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application",
+      "com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.services.GameServices"
+    ],
+    "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java": [
+      "com.badlogic.gdx.ApplicationListener",
+      "com.badlogic.gdx.Gdx",
+      "com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application",
+      "com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration",
+      "com.deadlinezero.game.DeadlineZeroGame",
+      "com.deadlinezero.game.meta.ProfileStore",
+      "com.deadlinezero.game.meta.RunModifierContext",
+      "com.deadlinezero.game.screen.GameScreen",
+      "com.deadlinezero.game.screen.MenuScreen",
+      "com.deadlinezero.game.screen.RunContractScreen",
+      "com.deadlinezero.game.screen.RunResultScreen",
+      "com.deadlinezero.game.services.GameServices"
+    ],
+    "tools/blender/add_rex_rifle.py": [
+      "argparse",
+      "bpy",
+      "mathutils",
+      "pathlib",
+      "sys"
+    ],
+    "tools/blender/build_rex_actions.py": [
+      "__future__",
+      "argparse",
+      "bpy",
+      "math",
+      "mathutils",
+      "pathlib",
+      "sys"
+    ],
+    "tools/blender/catalog_blend_actions.py": [
+      "__future__",
+      "argparse",
+      "bpy",
+      "json",
+      "pathlib",
+      "sys"
+    ],
+    "tools/blender/inspect_actor_source.py": [
+      "__future__",
+      "argparse",
+      "bpy",
+      "json",
+      "pathlib",
+      "sys"
+    ],
+    "tools/blender/prepare_meshy_actor.py": [
+      "__future__",
+      "argparse",
+      "bpy",
+      "mathutils",
+      "pathlib",
+      "sys"
+    ],
+    "tools/blender/refine_rex_rifle_attack.py": [
+      "__future__",
+      "argparse",
+      "bpy",
+      "math",
+      "pathlib",
+      "sys"
+    ],
+    "tools/blender/render_actor_8dir.py": [
+      "__future__",
+      "argparse",
+      "bpy",
+      "hashlib",
+      "json",
+      "math",
+      "mathutils",
+      "os",
+      "pathlib",
+      "sys",
+      "urllib.request"
+    ],
+    "tools/blender/repair_rex_weights.py": [
+      "__future__",
+      "argparse",
+      "bpy",
+      "json",
+      "math",
+      "mathutils",
+      "pathlib",
+      "sys"
+    ],
+    "tools/blender/style_rex_materials.py": [
+      "__future__",
+      "argparse",
+      "bpy",
+      "mathutils",
+      "pathlib",
+      "sys"
+    ],
+    "tools/blender/validate_rex_weapon_visibility.py": [
+      "__future__",
+      "argparse",
+      "bpy",
+      "bpy_extras.object_utils",
+      "json",
+      "math",
+      "mathutils",
+      "pathlib",
+      "sys"
+    ],
+    "tools/blender/validate_rig.py": [
+      "__future__",
+      "argparse",
+      "bpy",
+      "json",
+      "math",
+      "mathutils",
+      "pathlib",
+      "sys"
+    ],
+    "tools/build_final_sprite_frames.py": [
+      "__future__",
+      "argparse",
+      "json",
+      "pathlib",
+      "shutil",
+      "subprocess",
+      "sys"
+    ],
+    "tools/import_pixellab_idle.py": [
+      "PIL",
+      "__future__",
+      "argparse",
+      "json",
+      "math",
+      "pathlib"
+    ],
+    "tools/perf/compare_android_benchmark.py": [
+      "argparse",
+      "json",
+      "math",
+      "pathlib",
+      "sys"
+    ],
+    "tools/perf/test_compare_android_benchmark.py": [
+      "importlib.util",
+      "pathlib",
+      "unittest"
+    ],
+    "tools/slice_sprite_sheet.py": [
+      "PIL",
+      "__future__",
+      "argparse",
+      "json",
+      "pathlib",
+      "statistics",
+      "typing"
+    ],
+    "tools/sprites/normalize_actor_frames.py": [
+      "PIL",
+      "__future__",
+      "argparse",
+      "collections",
+      "json",
+      "pathlib"
+    ],
+    "tools/sprites/normalize_rex_frames.py": [
+      "PIL",
+      "__future__",
+      "argparse",
+      "collections",
+      "json",
+      "pathlib"
+    ],
+    "tools/sprites/resolve_actor_actions.py": [
+      "__future__",
+      "argparse",
+      "json",
+      "pathlib",
+      "re"
+    ],
+    "tools/sprites/resolve_actor_candidate.py": [
+      "__future__",
+      "argparse",
+      "json",
+      "pathlib",
+      "urllib.parse"
+    ],
+    "tools/sprites/test_resolve_actor_actions.py": [
+      "resolve_actor_actions",
+      "unittest"
+    ],
+    "tools/sprites/test_validate_actor_production_contracts.py": [
+      "importlib.util",
+      "pathlib",
+      "unittest"
+    ],
+    "tools/sprites/test_validate_actor_role_metrics.py": [
+      "unittest",
+      "validate_actor_role_metrics"
+    ],
+    "tools/sprites/upsert_directional_actor_atlas.py": [
+      "PIL",
+      "__future__",
+      "argparse",
+      "hashlib",
+      "json",
+      "pathlib"
+    ],
+    "tools/sprites/validate_actor_production_contracts.py": [
+      "__future__",
+      "hashlib",
+      "json",
+      "pathlib"
+    ],
+    "tools/sprites/validate_actor_role_metrics.py": [
+      "argparse",
+      "json",
+      "math",
+      "pathlib"
+    ],
+    "tools/sprites/validate_ranged_attack_readability.py": [
+      "PIL",
+      "__future__",
+      "argparse",
+      "json",
+      "pathlib",
+      "statistics"
+    ],
+    "tools/test_verify_final_atlas.py": [
+      "__future__",
+      "pathlib",
+      "tempfile",
+      "unittest",
+      "verify_final_atlas"
+    ],
+    "tools/validate_final_sprite_layout.py": [
+      "__future__",
+      "json",
+      "pathlib",
+      "struct",
+      "sys"
+    ],
+    "tools/validate_rex_reference.py": [
+      "__future__",
+      "json",
+      "pathlib",
+      "sys"
+    ],
+    "tools/verify_final_atlas.py": [
+      "__future__",
+      "argparse",
+      "json",
+      "pathlib",
+      "struct",
+      "sys"
+    ]
+  }
+}
