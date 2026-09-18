@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:08:16Z
+Generated: 2026-09-18T19:17:28Z
 
 ### Git
 - Branch: `main`
-- Head: `fc30d6e1018d`
-- Commit date: 2026-09-18T21:07:23+02:00
-- Commit: chore(ai): adopt bounded v6 context routing
+- Head: `13bc746569da`
+- Commit date: 2026-09-18T21:16:48+02:00
+- Commit: chore(ai): align config with v6 bounded context
 - Tracked files: 621
 
 ### Recently changed files
+- `.repo-standards.yml`
+- `.github/workflows/ai-repo-map.yml`
 - `AGENTS.md`
 - `.github/workflows/verify.yml`
 - `tools/perf/compare_android_benchmark.py`
@@ -40,13 +42,6 @@ Generated: 2026-09-18T19:08:16Z
 - `core/src/main/java/com/deadlinezero/game/services/GameServices.java`
 - `core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java`
 - `core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java`
-- `core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java`
-- `core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java`
-- `core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java`
-- `core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java`
-- `core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java`
-- `core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java`
-- `core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java`
 
 ### Project signals
 - `build.gradle`

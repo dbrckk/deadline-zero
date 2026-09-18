@@ -1277,7 +1277,7 @@ concurrency:
 
 jobs:
   repository-standards:
-    uses: dbrckk/repo-standards/.github/workflows/reusable-unified.yml@v10
+    uses: dbrckk/repo-standards/.github/workflows/reusable-unified.yml@main
 ````
 
 ## File: .github/workflows/android-test-release.yml
@@ -27596,11 +27596,11 @@ expected_frames = sum(len(indices) for indices in expected.values())
 ## File: .repo-standards.yml
 ````yaml
 source: dbrckk/repo-standards
-ref: v10
-version: 10
+ref: main
+version: 11
 adopted: true
 workflow_mode: unified-single-commit
-repo_brain: dbrckk/repo-brain@v5
+repo_brain: dbrckk/repo-brain@main
 repo_brain_fallback: portable-full-rebuild
 ai_context:
   index: .ai/index.md
@@ -27625,6 +27625,11 @@ ai_context:
   brain_lookup: .ai/brain/lookup.json
   brain_symbols: .ai/brain/symbols.json
   brain_graph: .ai/brain/code-graph.json
+  brain_hotset: .ai/brain/hotset.json
+  brain_context_manifest: .ai/brain/context-manifest.json
+  brain_context_packets: .ai/brain/context/
+  brain_hash_cache: .ai/brain/hash-cache.json
+  session_state: .ai/session-state.json
   repo_map: .ai/repo-map.md
   segmented_maps: .ai/maps/
 workflow:
