@@ -7,15 +7,23 @@ from pathlib import Path
 
 DEFAULT_PACKAGE = "com.deadlinezero.game"
 
+def _exact_package(pattern_prefix: str, package: str) -> re.Pattern:
+    # Require a delimiter that cannot continue an Android package name. This prevents
+    # com.deadlinezero.game.test from being mistaken for com.deadlinezero.game.
+    return re.compile(
+        rf"{pattern_prefix}{re.escape(package)}(?=$|[\s,():/])",
+        re.IGNORECASE | re.MULTILINE,
+    )
+
 def scan(text: str, package: str = DEFAULT_PACKAGE) -> dict:
     lines = text.splitlines()
     findings = []
 
-    anr = re.compile(rf"\bANR in {re.escape(package)}\b", re.IGNORECASE)
-    process = re.compile(rf"\bProcess:\s*{re.escape(package)}\b", re.IGNORECASE)
+    anr = _exact_package(r"\bANR in\s+", package)
+    process = _exact_package(r"\bProcess:\s*", package)
+    cmdline = _exact_package(r"\bCmdline:\s*", package)
     fatal_exception = re.compile(r"\bFATAL EXCEPTION\b")
     native_fatal = re.compile(r"\bFatal signal\s+(?:6|11)\b", re.IGNORECASE)
-    package_token = re.compile(re.escape(package), re.IGNORECASE)
 
     for i, line in enumerate(lines):
         if anr.search(line):
@@ -30,7 +38,7 @@ def scan(text: str, package: str = DEFAULT_PACKAGE) -> dict:
             start = max(0, i - 3)
             end = min(len(lines), i + 8)
             window = "\n".join(lines[start:end])
-            if package_token.search(window):
+            if cmdline.search(window) or process.search(window):
                 findings.append({"type": "native_crash", "line": i + 1, "text": line.strip()})
 
     return {"package": package, "ok": not findings, "findings": findings}
