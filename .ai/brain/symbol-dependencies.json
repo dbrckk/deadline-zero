@@ -5,42 +5,54 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "WeaponSignatureRuntime": {
+    "ShopScreen": {
       "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 7,
-        "end": 95
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 30,
+        "end": 280
       },
       "symbol_dependencies": [
         {
-          "symbol": "Kind",
+          "symbol": "AdsService",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
+              "file": "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
+              "line": 2,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ButtonState",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java",
+              "line": 10,
               "kind": "enum",
               "language": "java"
             }
           ],
-          "relation": "same_file"
+          "relation": "class_like"
         },
         {
-          "symbol": "ShotModifier",
+          "symbol": "ChestService",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 16,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "WeaponCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "file": "core/src/main/java/com/deadlinezero/game/meta/ChestService.java",
               "line": 4,
               "kind": "class",
               "language": "java"
@@ -49,10 +61,58 @@
           "relation": "class_like"
         },
         {
-          "symbol": "WeaponDefinition",
+          "symbol": "ConsumablePurchaseDelivery",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+              "file": "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java",
+              "line": 7,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Currency",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 12,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "EquipmentDropTable",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/EquipmentDropTable.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "EquipmentItem",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java",
               "line": 2,
               "kind": "class",
               "language": "java"
@@ -61,11 +121,215 @@
           "relation": "class_like"
         },
         {
-          "symbol": "begin",
+          "symbol": "Layout",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 29,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/MenuLayoutModel.java",
+              "line": 8,
+              "kind": "record",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorLayoutModel.java",
+              "line": 8,
+              "kind": "record",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/MetaLayout.java",
+              "line": 7,
+              "kind": "record",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java",
+              "line": 9,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "MetaLayout",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/MetaLayout.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Metrics",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiLayout.java",
+              "line": 13,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PlayerProfile",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PurchaseGrantService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PurchaseReceipt",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 20,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Reward",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Role",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyArchetype.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiTypography.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "State",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 12,
+              "kind": "enum",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+              "line": 23,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "UiLayout",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiLayout.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "UiRenderer",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java",
+              "line": 9,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "UiTypography",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiTypography.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "UiViewport",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiViewport.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "VisualTheme",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
+              "line": 9,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "chestButton",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 174,
               "kind": "symbol",
               "language": "java"
             }
@@ -73,11 +337,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "cinderFurnaceEnabled",
+          "symbol": "deliverConsumable",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 94,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 269,
               "kind": "symbol",
               "language": "java"
             }
@@ -85,11 +349,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "consumeShot",
+          "symbol": "drawChestCards",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 52,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 129,
               "kind": "symbol",
               "language": "java"
             }
@@ -97,11 +361,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "enableCinderFurnace",
+          "symbol": "drawHeader",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 44,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 111,
               "kind": "symbol",
               "language": "java"
             }
@@ -109,11 +373,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "enableIonCascade",
+          "symbol": "drawPurchaseRow",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 38,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 152,
               "kind": "symbol",
               "language": "java"
             }
@@ -121,11 +385,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "ionCascadeEnabled",
+          "symbol": "f",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 93,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 277,
               "kind": "symbol",
               "language": "java"
             }
@@ -133,11 +397,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "none",
+          "symbol": "handleInput",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 19,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 178,
               "kind": "symbol",
               "language": "java"
             }
@@ -145,11 +409,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "shotIndex",
+          "symbol": "open",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 90,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 220,
               "kind": "symbol",
               "language": "java"
             }
@@ -157,11 +421,59 @@
           "relation": "same_file"
         },
         {
-          "symbol": "weaponId",
+          "symbol": "openRewarded",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 227,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "purchase",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 242,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "purchaseProductId",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 259,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "syncBillingStatus",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 210,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "t",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 275,
               "kind": "symbol",
               "language": "java"
             }
@@ -169,199 +481,33 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 13
+      "dependency_count": 36
     },
-    "Kind": {
+    "drawHeader": {
       "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 8,
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 112,
         "end": 128
       },
       "symbol_dependencies": [
         {
-          "symbol": "ShotModifier",
+          "symbol": "Currency",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 16,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "WeaponCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponDefinition",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
-              "line": 2,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "begin",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 29,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "cinderFurnaceEnabled",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 94,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "consumeShot",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 52,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "enableCinderFurnace",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 44,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "enableIonCascade",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 38,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "ionCascadeEnabled",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 93,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "none",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 19,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "shotIndex",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 90,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "weaponId",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 13
-    },
-    "ShotModifier": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 16,
-        "end": 136
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Kind",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 12,
               "kind": "enum",
               "language": "java"
             }
           ],
-          "relation": "same_file"
+          "relation": "class_like"
         },
         {
-          "symbol": "WeaponCatalog",
+          "symbol": "PlayerProfile",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
-              "line": 4,
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 10,
               "kind": "class",
               "language": "java"
             }
@@ -369,186 +515,28 @@
           "relation": "class_like"
         },
         {
-          "symbol": "WeaponDefinition",
+          "symbol": "Role",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
-              "line": 2,
-              "kind": "class",
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyArchetype.java",
+              "line": 5,
+              "kind": "enum",
               "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
+            },
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "begin",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 29,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "cinderFurnaceEnabled",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 94,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "consumeShot",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 52,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "enableCinderFurnace",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 44,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "enableIonCascade",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 38,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "ionCascadeEnabled",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 93,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "none",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 19,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "shotIndex",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 90,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "weaponId",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 13
-    },
-    "none": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 19,
-        "end": 19
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Kind",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiTypography.java",
+              "line": 5,
               "kind": "enum",
               "language": "java"
             }
           ],
-          "relation": "same_file"
+          "relation": "class_like"
         },
         {
-          "symbol": "ShotModifier",
+          "symbol": "UiTypography",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 16,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "begin": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 30,
-        "end": 37
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "WeaponCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiTypography.java",
               "line": 4,
               "kind": "class",
               "language": "java"
@@ -557,11 +545,11 @@
           "relation": "class_like"
         },
         {
-          "symbol": "WeaponDefinition",
+          "symbol": "VisualTheme",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
-              "line": 2,
+              "file": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
+              "line": 9,
               "kind": "class",
               "language": "java"
             }
@@ -569,11 +557,11 @@
           "relation": "class_like"
         },
         {
-          "symbol": "shotIndex",
+          "symbol": "f",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 90,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 277,
               "kind": "symbol",
               "language": "java"
             }
@@ -581,11 +569,290 @@
           "relation": "same_file"
         },
         {
-          "symbol": "weaponId",
+          "symbol": "t",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 275,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "drawChestCards": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 130,
+        "end": 151
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ChestService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/ChestService.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PlayerProfile",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Role",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyArchetype.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiTypography.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "UiTypography",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiTypography.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "VisualTheme",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
+              "line": 9,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "chestButton",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 174,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "f",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 277,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "t",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 275,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "drawPurchaseRow": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 153,
+        "end": 173
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PlayerProfile",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Role",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyArchetype.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiTypography.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "UiTypography",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ui/UiTypography.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "VisualTheme",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
+              "line": 9,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "f",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 277,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "purchaseProductId",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 259,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "t",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 275,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "chestButton": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 175,
+        "end": 177
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "handleInput": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 179,
+        "end": 209
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "open",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 220,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "openRewarded",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 227,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "purchase",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 242,
               "kind": "symbol",
               "language": "java"
             }
@@ -595,584 +862,1779 @@
       ],
       "dependency_count": 4
     },
-    "enableIonCascade": {
+    "syncBillingStatus": {
       "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 39,
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 211,
+        "end": 219
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "State",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 12,
+              "kind": "enum",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+              "line": 23,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "f",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 277,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "t",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 275,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "open": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 221,
+        "end": 226
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ChestService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/ChestService.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "EquipmentItem",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java",
+              "line": 2,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "f",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 277,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "t",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 275,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "openRewarded": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 228,
+        "end": 241
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AdsService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
+              "line": 2,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "EquipmentDropTable",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/EquipmentDropTable.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "EquipmentItem",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java",
+              "line": 2,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Reward",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "f",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 277,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "t",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 275,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "purchase": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 243,
+        "end": 258
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PurchaseGrantService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "State",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 12,
+              "kind": "enum",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+              "line": 23,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "deliverConsumable",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 269,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "t",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 275,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "purchaseProductId": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 260,
+        "end": 268
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "deliverConsumable": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 270,
+        "end": 274
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ConsumablePurchaseDelivery",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java",
+              "line": 7,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PurchaseReceipt",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 20,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "t",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+              "line": 275,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "t": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 276,
+        "end": 276
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "f": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "start": 277,
+        "end": 277
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "GameServices": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+        "start": 3,
+        "end": 68
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AdsService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
+              "line": 2,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "CloudSaveAdapter",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/CloudSaveAdapter.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "HapticsService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/HapticsService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "OfferConfigService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 13,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PrivacyService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Reward",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ShareService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/ShareService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ThermalService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/ThermalService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "initialize",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 62,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "isRewardedReady",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 59,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "noOp",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 56,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "owns",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 63,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "purchase",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 64,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "restore",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 65,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "showRewarded",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 60,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "noOp": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+        "start": 57,
+        "end": 67
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AdsService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
+              "line": 2,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "GameServices",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 2,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "HapticsService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/HapticsService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PrivacyService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Reward",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ShareService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/ShareService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "initialize",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 62,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "isRewardedReady",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 59,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "owns",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 63,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "purchase",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 64,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "restore",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 65,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "showRewarded",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 60,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 13
+    },
+    "isRewardedReady": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+        "start": 59,
+        "end": 179
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "HapticsService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/HapticsService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PrivacyService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Reward",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ShareService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/ShareService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "initialize",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 62,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "noOp",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 56,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "owns",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 63,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "purchase",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 64,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "restore",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 65,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "showRewarded",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 60,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 11
+    },
+    "showRewarded": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+        "start": 60,
+        "end": 180
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "HapticsService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/HapticsService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PrivacyService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Reward",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ShareService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/ShareService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "initialize",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 62,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "noOp",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 56,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "owns",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 63,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "purchase",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 64,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "restore",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 65,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 10
+    },
+    "initialize": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+        "start": 62,
+        "end": 182
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HapticsService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/HapticsService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PrivacyService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ShareService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/ShareService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "noOp",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 56,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "owns",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 63,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "purchase",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 64,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "restore",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 65,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "owns": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+        "start": 63,
+        "end": 183
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HapticsService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/HapticsService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PrivacyService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ShareService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/ShareService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "noOp",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 56,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "purchase",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 64,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "restore",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 65,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "restore": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+        "start": 65,
+        "end": 185
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "HapticsService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/HapticsService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PrivacyService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "ShareService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/ShareService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "noOp",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+              "line": 56,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "OfferConfigService": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+        "start": 13,
+        "end": 64
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Snapshot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 14,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "enabled",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 19,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "featured",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 23,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fixed",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 59,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "safeDefaults",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 32,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "safeLocal",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 54,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "sanitize",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 41,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "Snapshot": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+        "start": 14,
+        "end": 134
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "OfferConfigService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 13,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "enabled",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 19,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "featured",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 23,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "fixed",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 59,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "safeDefaults",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 32,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "safeLocal",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 54,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "sanitize",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 41,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "enabled": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+        "start": 20,
+        "end": 22
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "featured": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+        "start": 24,
+        "end": 26
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "enabled",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 19,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "safeDefaults": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+        "start": 33,
+        "end": 35
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Snapshot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 14,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "sanitize": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+        "start": 41,
+        "end": 53
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Snapshot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 14,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "featured",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 23,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "safeDefaults",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 32,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "safeLocal": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+        "start": 55,
+        "end": 58
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "OfferConfigService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 13,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "Snapshot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 14,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "safeDefaults",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 32,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "fixed": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+        "start": 60,
+        "end": 63
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "OfferConfigService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 13,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "Snapshot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 14,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "safeDefaults",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 32,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "sanitize",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 41,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "OfferConfigServiceTest": {
+      "source": {
+        "file": "core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java",
+        "start": 10,
         "end": 43
       },
       "symbol_dependencies": [
         {
-          "symbol": "shotIndex",
+          "symbol": "BillingService",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 90,
-              "kind": "symbol",
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
               "language": "java"
             }
           ],
-          "relation": "same_file"
+          "relation": "class_like"
         },
         {
-          "symbol": "weaponId",
+          "symbol": "OfferConfigService",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
-              "kind": "symbol",
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 13,
+              "kind": "interface",
               "language": "java"
             }
           ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "enableCinderFurnace": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 45,
-        "end": 49
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "shotIndex",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 90,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
+          "relation": "class_like"
         },
         {
-          "symbol": "weaponId",
+          "symbol": "Snapshot",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
-              "kind": "symbol",
+              "file": "core/src/main/java/com/deadlinezero/game/perf/PerformanceTelemetry.java",
+              "line": 10,
+              "kind": "record",
               "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "consumeShot": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 52,
-        "end": 89
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Kind",
-          "definitions": [
+            },
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
-              "kind": "enum",
+              "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+              "line": 14,
+              "kind": "record",
               "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "ShotModifier",
-          "definitions": [
+            },
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 16,
+              "file": "core/src/main/java/com/deadlinezero/game/world/StageCombatPressureAudit.java",
+              "line": 9,
               "kind": "record",
               "language": "java"
             }
           ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "none",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 19,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "shotIndex",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 90,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "weaponId",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "shotIndex": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 91,
-        "end": 91
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "weaponId": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 92,
-        "end": 92
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "ionCascadeEnabled": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 93,
-        "end": 93
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "cinderFurnaceEnabled": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-        "start": 94,
-        "end": 94
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "WeaponSynergyRules": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
-        "start": 7,
-        "end": 61
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Survivor",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
-              "line": 5,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "SurvivorCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Synergy",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
-              "line": 8,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "WeaponCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponDefinition",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
-              "line": 2,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "resolve",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
-              "line": 35,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "Synergy": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
-        "start": 24,
-        "end": 31
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "resolve": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
-        "start": 36,
-        "end": 60
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Survivor",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
-              "line": 5,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "SurvivorCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Synergy",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
-              "line": 8,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "WeaponCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponDefinition",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
-              "line": 2,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
           "relation": "class_like"
         }
       ],
-      "dependency_count": 5
-    },
-    "WeaponSignatureBalanceTest": {
-      "source": {
-        "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
-        "start": 8,
-        "end": 51
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "WeaponCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponDefinition",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
-              "line": 2,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "assertAverageDamageMultiplier",
-          "definitions": [
-            {
-              "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
-              "line": 42,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "assertAverageDamageMultiplier": {
-      "source": {
-        "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
-        "start": 43,
-        "end": 50
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "WeaponDefinition",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
-              "line": 2,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "WeaponSignatureRuntimeTest": {
-      "source": {
-        "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
-        "start": 12,
-        "end": 138
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DamageElement",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
-              "line": 2,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Kind",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Projectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "SingularityCoreRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SingularityCoreRuntime.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "WeaponSynergyRulesTest": {
-      "source": {
-        "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
-        "start": 9,
-        "end": 45
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Survivor",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
-              "line": 5,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "SurvivorCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Synergy",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
-              "line": 8,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponCatalog",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponSynergyRules",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 5
+      "dependency_count": 3
     }
   }
 }

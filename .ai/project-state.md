@@ -22,16 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T18:06:21Z
+Generated: 2026-09-18T18:21:55Z
 
 ### Git
 - Branch: `main`
-- Head: `7b19bca00e68`
-- Commit date: 2026-09-18T20:05:36+02:00
-- Commit: Give endgame weapons distinct combat identities
-- Tracked files: 619
+- Head: `5125bfcb02c7`
+- Commit date: 2026-09-18T20:21:42+02:00
+- Commit: Add safe remote-configurable store offers
+- Tracked files: 621
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
+- `core/src/main/java/com/deadlinezero/game/services/GameServices.java`
+- `core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java`
+- `core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java`
 - `core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java`
 - `core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java`
 - `core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java`
@@ -41,7 +45,6 @@ Generated: 2026-09-18T18:06:21Z
 - `core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java`
 - `AGENTS.md`
 - `.repo-standards.yml`
-- `.github/workflows/ai-repo-map.yml`
 
 ### Project signals
 - `build.gradle`

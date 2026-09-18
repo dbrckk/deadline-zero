@@ -194,6 +194,7 @@ src/
               CloudSaveService.java
               GameServices.java
               HapticsService.java
+              OfferConfigService.java
               PrivacyService.java
               ShareService.java
               SingleFlightGate.java
@@ -387,6 +388,7 @@ src/
               BillingProductCatalogTest.java
               BillingServiceStateTest.java
               CloudSaveServiceTest.java
+              OfferConfigServiceTest.java
               SingleFlightGateTest.java
               ThermalServiceTest.java
             ui/
@@ -6603,7 +6605,12 @@ UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == 2 && !disabled, false)
 Rectangle button = chestButton(r);
 UiRenderer.button(shapes, button.x, button.y, button.width, button.height,
 ⋮----
+String productId = purchaseProductId(i);
+⋮----
+boolean enabled = game.services.offers.current().enabled(productId);
 UiRenderer.button(shapes, r.x, r.y, r.width, r.height,
+⋮----
+: game.services.offers.current().featured(productId) ? UiRenderer.ButtonState.SELECTED
 ⋮----
 shapes.end();
 ⋮----
@@ -6662,11 +6669,12 @@ t("shop.gemPacks") + " • S",
 t("shop.gemPacks") + " • L",
 f("shop.removeAds", p.removeAdsPurchased ? t("shop.owned") : "")
 ⋮----
-font.setColor(owned ? VisualTheme.MUTED : i == 0 ? VisualTheme.GOLD : i == 3 ? VisualTheme.CYAN_SOFT : VisualTheme.TEXT_STRONG);
+font.setColor(owned || !enabled ? VisualTheme.MUTED : i == 0 ? VisualTheme.GOLD : i == 3 ? VisualTheme.CYAN_SOFT : VisualTheme.TEXT_STRONG);
 font.draw(batch, labels[i], r.x + 10f, r.y + r.height * .63f, r.width - 20f, Align.center, true);
 ⋮----
-font.setColor(owned ? VisualTheme.MUTED : VisualTheme.TEXT_DIM);
-font.draw(batch, owned ? t("shop.owned") : "PLAY BILLING", r.x + 10f, r.y + 22f,
+font.setColor(owned || !enabled ? VisualTheme.MUTED : VisualTheme.TEXT_DIM);
+String sublabel = owned ? t("shop.owned") : !enabled ? t("shop.billingUnavailable") : "PLAY BILLING";
+font.draw(batch, sublabel, r.x + 10f, r.y + 22f, r.width - 20f, Align.center, false);
 ⋮----
 private Rectangle chestButton(Rectangle card) {
 return new Rectangle(card.x + 24f, card.y + 22f, card.width - 48f, Math.max(60f, card.height * .22f));
@@ -6726,6 +6734,7 @@ game.services.ads.preload();
 }, () -> status = t("shop.rewardUnavailable"));
 ⋮----
 private void purchase(String productId) {
+if (!game.services.offers.current().enabled(productId)) { status = t("shop.billingUnavailable"); return; }
 if (BillingService.REMOVE_ADS.equals(productId) && game.profile.removeAdsPurchased) { status = t("shop.adFreeOwned"); return; }
 if (BillingService.STARTER_PACK.equals(productId) && game.profile.starterPackGranted) { status = t("shop.starterClaimed"); return; }
 if (game.services.billing.state() == BillingService.State.PURCHASE_PENDING) { status = t("shop.paymentAlreadyPending"); return; }
@@ -6738,6 +6747,8 @@ boolean granted = PurchaseGrantService.grant(game.profile, productId);
 if (granted) { game.saveProfile(); status = t("shop.purchaseDelivered"); }
 else status = t("shop.purchaseAlreadyDelivered");
 }, () -> status = t("shop.purchaseCancelled"));
+⋮----
+private String purchaseProductId(int index) {
 ⋮----
 private void deliverConsumable(BillingService.PurchaseReceipt receipt) {
 ConsumablePurchaseDelivery.deliver(game.profile, game.services.billing, receipt, game::saveProfile,
@@ -7334,21 +7345,23 @@ return a.modifiedAtEpochMillis() == b.modifiedAtEpochMillis()
 ```java
 public final class GameServices {
 ⋮----
-this(ads, billing, PrivacyService.noOp(), ShareService.noOp(), HapticsService.noOp(), CloudSaveAdapter.unavailable(), ThermalService.noOp());
+this(ads, billing, PrivacyService.noOp(), ShareService.noOp(), HapticsService.noOp(),
+CloudSaveAdapter.unavailable(), ThermalService.noOp(), OfferConfigService.safeLocal());
 ⋮----
-this(ads, billing, privacy, ShareService.noOp(), HapticsService.noOp(), CloudSaveAdapter.unavailable(), ThermalService.noOp());
+this(ads, billing, privacy, ShareService.noOp(), HapticsService.noOp(),
 ⋮----
-this(ads, billing, privacy, share, HapticsService.noOp(), CloudSaveAdapter.unavailable(), ThermalService.noOp());
+this(ads, billing, privacy, share, HapticsService.noOp(),
 ⋮----
-this(ads, billing, privacy, share, haptics, CloudSaveAdapter.unavailable(), ThermalService.noOp());
+this(ads, billing, privacy, share, haptics, cloudSave, ThermalService.noOp(), OfferConfigService.safeLocal());
 ⋮----
-this(ads, billing, privacy, share, haptics, cloudSave, ThermalService.noOp());
+this(ads, billing, privacy, share, haptics, cloudSave, thermal, OfferConfigService.safeLocal());
 ⋮----
 this.privacy = privacy == null ? PrivacyService.noOp() : privacy;
 this.share = share == null ? ShareService.noOp() : share;
 this.haptics = haptics == null ? HapticsService.noOp() : haptics;
 this.cloudSave = cloudSave == null ? CloudSaveAdapter.unavailable() : cloudSave;
 this.thermal = thermal == null ? ThermalService.noOp() : thermal;
+this.offers = offers == null ? OfferConfigService.safeLocal() : offers;
 ⋮----
 public static GameServices noOp() {
 return new GameServices(new AdsService() {
@@ -7375,6 +7388,53 @@ return new HapticsService() {
 @Override public void dash() {}
 @Override public void damage() {}
 @Override public void bossKill() {}
+```
+
+## File: src/main/java/com/deadlinezero/game/services/OfferConfigService.java
+```java
+/**
+ * Store-offer presentation boundary for optional remote configuration.
+ *
+ * Remote data may only control visibility and a featured known Play product. Product IDs, prices and
+ * grant quantities remain owned by BillingService / Play Billing. Invalid or missing remote data
+ * falls back to a complete safe catalog instead of silently hiding monetization.
+ */
+public interface OfferConfigService {
+⋮----
+enabledProducts = Set.copyOf(enabledProducts == null ? Set.of() : enabledProducts);
+⋮----
+public boolean enabled(String productId) {
+return BillingService.isKnownProduct(productId) && enabledProducts.contains(productId);
+⋮----
+public boolean featured(String productId) {
+return enabled(productId) && productId.equals(featuredProductId);
+⋮----
+Snapshot current();
+⋮----
+default void refresh() {}
+⋮----
+static Snapshot safeDefaults() {
+return new Snapshot(BillingService.PRODUCTS, BillingService.STARTER_PACK);
+⋮----
+/**
+     * Sanitizes an optional remote snapshot. Unknown product IDs are dropped. A missing/empty/fully
+     * invalid remote catalog falls back to safe defaults. Featured products must also be enabled.
+     */
+static Snapshot sanitize(Set<String> remoteEnabledProducts, String remoteFeaturedProductId) {
+if (remoteEnabledProducts == null || remoteEnabledProducts.isEmpty()) return safeDefaults();
+⋮----
+if (BillingService.isKnownProduct(productId)) known.add(productId);
+⋮----
+if (known.isEmpty()) return safeDefaults();
+⋮----
+if (!BillingService.isKnownProduct(featured) || !known.contains(featured)) featured = "";
+return new Snapshot(known, featured);
+⋮----
+static OfferConfigService safeLocal() {
+Snapshot defaults = safeDefaults();
+⋮----
+static OfferConfigService fixed(Snapshot snapshot) {
+Snapshot safe = snapshot == null ? safeDefaults() : sanitize(snapshot.enabledProducts(), snapshot.featuredProductId());
 ```
 
 ## File: src/main/java/com/deadlinezero/game/services/PrivacyService.java
@@ -16410,6 +16470,37 @@ private static CloudSaveService serviceReturning(String payload) {
 return new CloudSaveService(new CloudSaveAdapter() {
 @Override public RemoteBackup read() { return new RemoteBackup(payload, 789L); }
 @Override public void write(String ignored) { }
+```
+
+## File: src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java
+```java
+final class OfferConfigServiceTest {
+@Test void defaultsKeepEveryKnownProductAvailable() {
+OfferConfigService.Snapshot snapshot = OfferConfigService.safeDefaults();
+for (String productId : BillingService.PRODUCTS) assertTrue(snapshot.enabled(productId));
+assertTrue(snapshot.featured(BillingService.STARTER_PACK));
+⋮----
+@Test void missingOrFullyInvalidRemoteConfigFallsBackSafely() {
+assertEquals(BillingService.PRODUCTS, OfferConfigService.sanitize(null, null).enabledProducts());
+assertEquals(BillingService.PRODUCTS, OfferConfigService.sanitize(Set.of(), "").enabledProducts());
+assertEquals(BillingService.PRODUCTS,
+OfferConfigService.sanitize(Set.of("unknown_offer"), "unknown_offer").enabledProducts());
+⋮----
+@Test void remoteConfigCanOnlyExposeKnownProducts() {
+OfferConfigService.Snapshot snapshot = OfferConfigService.sanitize(
+Set.of(BillingService.GEMS_SMALL, "not_a_play_product"),
+⋮----
+assertEquals(Set.of(BillingService.GEMS_SMALL), snapshot.enabledProducts());
+assertTrue(snapshot.enabled(BillingService.GEMS_SMALL));
+assertTrue(snapshot.featured(BillingService.GEMS_SMALL));
+assertFalse(snapshot.enabled("not_a_play_product"));
+⋮----
+@Test void featuredOfferMustAlsoBeEnabled() {
+⋮----
+Set.of(BillingService.GEMS_SMALL),
+⋮----
+assertEquals("", snapshot.featuredProductId());
+assertFalse(snapshot.featured(BillingService.STARTER_PACK));
 ```
 
 ## File: src/test/java/com/deadlinezero/game/services/SingleFlightGateTest.java
