@@ -1,228 +1,136 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "7b19bca00e6859b6ebc7b15335e40155de9a2cea",
-  "head": "5125bfcb02c7e9244876991eccd195b06d153cd4",
+  "base": "5125bfcb02c7e9244876991eccd195b06d153cd4",
+  "head": "6224aa88cca6ede7386701ab6e372a4846a45b1c",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+      "path": ".github/workflows/verify.yml",
       "status": "M"
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+      "path": "tools/perf/compare_android_benchmark.py",
       "status": "M"
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-      "status": "A"
-    },
-    {
-      "path": "core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java",
-      "status": "A"
+      "path": "tools/perf/test_compare_android_benchmark.py",
+      "status": "M"
     }
   ],
   "changed_source_files": [
-    "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-    "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-    "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-    "core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java"
+    "tools/perf/compare_android_benchmark.py",
+    "tools/perf/test_compare_android_benchmark.py"
   ],
   "impacted_files": [
-    "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-    "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-    "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-    "core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java"
+    "tools/perf/compare_android_benchmark.py",
+    "tools/perf/test_compare_android_benchmark.py"
   ],
   "impacted_symbols": [
     {
-      "name": "ShopScreen",
-      "kind": "class",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 30
+      "name": "load",
+      "kind": "function",
+      "file": "tools/perf/compare_android_benchmark.py",
+      "line": 15
     },
     {
-      "name": "drawHeader",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 111
+      "name": "finite_positive",
+      "kind": "function",
+      "file": "tools/perf/compare_android_benchmark.py",
+      "line": 18
     },
     {
-      "name": "drawChestCards",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 129
+      "name": "validate",
+      "kind": "function",
+      "file": "tools/perf/compare_android_benchmark.py",
+      "line": 21
     },
     {
-      "name": "drawPurchaseRow",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 152
-    },
-    {
-      "name": "chestButton",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 174
-    },
-    {
-      "name": "handleInput",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 178
-    },
-    {
-      "name": "syncBillingStatus",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 210
-    },
-    {
-      "name": "open",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 220
-    },
-    {
-      "name": "openRewarded",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 227
-    },
-    {
-      "name": "purchase",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 242
-    },
-    {
-      "name": "purchaseProductId",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 259
-    },
-    {
-      "name": "deliverConsumable",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 269
-    },
-    {
-      "name": "t",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 275
-    },
-    {
-      "name": "f",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-      "line": 277
-    },
-    {
-      "name": "GameServices",
-      "kind": "class",
-      "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-      "line": 2
-    },
-    {
-      "name": "noOp",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-      "line": 56
-    },
-    {
-      "name": "isRewardedReady",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-      "line": 59
-    },
-    {
-      "name": "showRewarded",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-      "line": 60
-    },
-    {
-      "name": "initialize",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-      "line": 62
-    },
-    {
-      "name": "owns",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-      "line": 63
-    },
-    {
-      "name": "purchase",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-      "line": 64
-    },
-    {
-      "name": "restore",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-      "line": 65
-    },
-    {
-      "name": "OfferConfigService",
-      "kind": "interface",
-      "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-      "line": 13
-    },
-    {
-      "name": "Snapshot",
-      "kind": "record",
-      "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-      "line": 14
-    },
-    {
-      "name": "enabled",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-      "line": 19
-    },
-    {
-      "name": "featured",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-      "line": 23
-    },
-    {
-      "name": "safeDefaults",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-      "line": 32
-    },
-    {
-      "name": "sanitize",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+      "name": "comparable",
+      "kind": "function",
+      "file": "tools/perf/compare_android_benchmark.py",
       "line": 41
     },
     {
-      "name": "safeLocal",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-      "line": 54
+      "name": "compare",
+      "kind": "function",
+      "file": "tools/perf/compare_android_benchmark.py",
+      "line": 56
     },
     {
-      "name": "fixed",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-      "line": 59
+      "name": "main",
+      "kind": "function",
+      "file": "tools/perf/compare_android_benchmark.py",
+      "line": 108
     },
     {
-      "name": "OfferConfigServiceTest",
+      "name": "sample",
+      "kind": "function",
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 11
+    },
+    {
+      "name": "CompareAndroidBenchmarkTest",
       "kind": "class",
-      "file": "core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java",
-      "line": 9
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 28
+    },
+    {
+      "name": "test_equal_runs_pass",
+      "kind": "function",
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 29
+    },
+    {
+      "name": "test_detects_relative_regressions",
+      "kind": "function",
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 34
+    },
+    {
+      "name": "test_average_fps_drop_alone_is_advisory",
+      "kind": "function",
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 40
+    },
+    {
+      "name": "test_thermal_pressure_skips_comparison",
+      "kind": "function",
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 47
+    },
+    {
+      "name": "test_different_target_skips_comparison",
+      "kind": "function",
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 52
+    },
+    {
+      "name": "test_materially_lighter_enemy_workload_skips_comparison",
+      "kind": "function",
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 56
+    },
+    {
+      "name": "test_materially_lighter_projectile_workload_skips_comparison",
+      "kind": "function",
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 61
+    },
+    {
+      "name": "test_zero_projectile_baseline_remains_comparable",
+      "kind": "function",
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 68
+    },
+    {
+      "name": "test_legacy_baseline_schema_skips_instead_of_failing",
+      "kind": "function",
+      "file": "tools/perf/test_compare_android_benchmark.py",
+      "line": 74
     }
   ],
   "selected_tests": [
-    "core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java"
+    "tools/perf/test_compare_android_benchmark.py"
   ]
 }

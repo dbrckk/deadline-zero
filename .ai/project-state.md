@@ -22,16 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T18:21:55Z
+Generated: 2026-09-18T18:32:31Z
 
 ### Git
 - Branch: `main`
-- Head: `5125bfcb02c7`
-- Commit date: 2026-09-18T20:21:42+02:00
-- Commit: Add safe remote-configurable store offers
+- Head: `6224aa88cca6`
+- Commit date: 2026-09-18T20:32:19+02:00
+- Commit: Gate Android stress performance regressions
 - Tracked files: 621
 
 ### Recently changed files
+- `.github/workflows/verify.yml`
+- `tools/perf/compare_android_benchmark.py`
+- `tools/perf/test_compare_android_benchmark.py`
 - `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
 - `core/src/main/java/com/deadlinezero/game/services/GameServices.java`
 - `core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java`
@@ -44,7 +47,6 @@ Generated: 2026-09-18T18:21:55Z
 - `core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java`
 - `core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java`
 - `AGENTS.md`
-- `.repo-standards.yml`
 
 ### Project signals
 - `build.gradle`

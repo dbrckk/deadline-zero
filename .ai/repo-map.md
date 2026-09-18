@@ -3061,43 +3061,48 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          CURRENT="build/android-performance/performance-probe.json"
-          REPORT="build/android-performance/regression-report.json"
           BASE_DIR="build/android-performance-baseline"
           mkdir -p "$BASE_DIR"
-          test -s "$CURRENT"
+          test -s build/android-performance/performance-probe.json
+          test -s build/android-performance/performance-stress.json
 
-          baseline=""
+          baseline_root=""
           baseline_run=""
           for run_id in $(gh run list --repo "$GITHUB_REPOSITORY" --branch main --workflow Verify --status success --limit 20 --json databaseId --jq '.[].databaseId'); do
             rm -rf "$BASE_DIR"/*
             if ! gh run download "$run_id" --repo "$GITHUB_REPOSITORY" --pattern 'android-performance-*' --dir "$BASE_DIR" >/tmp/perf-baseline-download.log 2>&1; then
               continue
             fi
-            while IFS= read -r candidate; do
-              if python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); req={"scenario","targetFps","averageFps","p95FrameMs","p99FrameMs","jankRatio","stable","thermalLevel","effectiveFxQuality","activeEnemies","activeProjectiles","activeSpatialBuckets","retainedSpatialBuckets"}; sys.exit(0 if req <= d.keys() else 1)' "$candidate"; then
-                baseline="$candidate"
+            probe=$(find "$BASE_DIR" -type f -name performance-probe.json | head -n 1 || true)
+            stress=$(find "$BASE_DIR" -type f -name performance-stress.json | head -n 1 || true)
+            if [ -n "$probe" ] && [ -n "$stress" ]; then
+              baseline_root=$(dirname "$probe")
+              if [ -s "$baseline_root/performance-stress.json" ]; then
                 baseline_run="$run_id"
-                break 2
+                break
               fi
-            done < <(find "$BASE_DIR" -type f -name performance-probe.json)
+            fi
           done
 
-          if [ -z "$baseline" ]; then
-            echo "PERF_BASELINE skipped: no compatible successful main benchmark artifact found"
-            printf '{"comparable":false,"reason":"no compatible successful main benchmark artifact found","regressions":[],"metrics":{}}\n' > "$REPORT"
+          if [ -z "$baseline_root" ]; then
+            echo "PERF_BASELINE skipped: no successful main artifact contains both benchmark scenarios"
+            printf '{"comparable":false,"reason":"no complete successful main benchmark artifact found","regressions":[],"metrics":{}}\n' > build/android-performance/probe-regression-report.json
+            printf '{"comparable":false,"reason":"no complete successful main benchmark artifact found","regressions":[],"metrics":{}}\n' > build/android-performance/stress-regression-report.json
             exit 0
           fi
 
-          echo "PERF_BASELINE run=$baseline_run file=$baseline"
-          python3 tools/perf/compare_android_benchmark.py "$baseline" "$CURRENT" --json-out "$REPORT"
+          echo "PERF_BASELINE run=$baseline_run root=$baseline_root"
+          python3 tools/perf/compare_android_benchmark.py             "$baseline_root/performance-probe.json"             build/android-performance/performance-probe.json             --json-out build/android-performance/probe-regression-report.json
+          python3 tools/perf/compare_android_benchmark.py             "$baseline_root/performance-stress.json"             build/android-performance/performance-stress.json             --json-out build/android-performance/stress-regression-report.json
 
       - name: Upload Android performance regression report
         uses: actions/upload-artifact@v4
         if: always() && github.event_name == 'pull_request'
         with:
           name: android-performance-regression-${{ github.run_number }}
-          path: build/android-performance/regression-report.json
+          path: |
+            build/android-performance/probe-regression-report.json
+            build/android-performance/stress-regression-report.json
           if-no-files-found: warn
           retention-days: 30
 ````
@@ -26579,9 +26584,20 @@ def test_different_target_skips_comparison(self)
 ⋮----
 result = mod.compare(sample(), sample(targetFps=90))
 ⋮----
-def test_materially_lighter_workload_skips_comparison(self)
+def test_materially_lighter_enemy_workload_skips_comparison(self)
 ⋮----
 result = mod.compare(sample(), sample(activeEnemies=30))
+⋮----
+def test_materially_lighter_projectile_workload_skips_comparison(self)
+⋮----
+baseline = sample(scenario="horde-160-projectile-180", activeEnemies=160, activeProjectiles=180)
+current = sample(scenario="horde-160-projectile-180", activeEnemies=160, activeProjectiles=120)
+result = mod.compare(baseline, current)
+⋮----
+def test_zero_projectile_baseline_remains_comparable(self)
+⋮----
+baseline = sample(activeProjectiles=0)
+current = sample(activeProjectiles=0)
 ⋮----
 def test_legacy_baseline_schema_skips_instead_of_failing(self)
 ⋮----
