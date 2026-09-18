@@ -34,6 +34,15 @@ E AndroidRuntime: Process: com.example.other, PID: 99
 """
         self.assertTrue(mod.scan(log)["ok"])
 
+    def test_ignores_instrumentation_process_with_package_prefix(self):
+        log = """E AndroidRuntime: FATAL EXCEPTION: Instr: androidx.test.runner.AndroidJUnitRunner
+E AndroidRuntime: Process: com.deadlinezero.game.test, PID: 2222
+"""
+        self.assertTrue(mod.scan(log)["ok"])
+
+    def test_ignores_instrumentation_process_anr_with_package_prefix(self):
+        self.assertTrue(mod.scan("E ActivityManager: ANR in com.deadlinezero.game.test (com.deadlinezero.game.test)").get("ok"))
+
     def test_detects_native_crash_when_package_is_in_context(self):
         log = """I DEBUG: Cmdline: com.deadlinezero.game
 F libc: Fatal signal 11 (SIGSEGV), code 1, fault addr 0x0 in tid 1234
