@@ -376,7 +376,9 @@ public final class GameScreen extends ScreenAdapter {
                 e.damage(p.damage);
                 e.hitFlash = 1f;
                 e.applyElement(p.element, p.damage);
-                damageNumber(e.position.x, e.position.y + e.radius, p.damage, p.critical,
+                float reactionBonus = player.protocols.reactionBonus(p.damage, e.lastReaction);
+                if (reactionBonus > 0f && e.alive) e.damage(reactionBonus);
+                damageNumber(e.position.x, e.position.y + e.radius, p.damage + reactionBonus, p.critical,
                     p.critical ? VisualTheme.GOLD : VisualTheme.TEXT);
                 float vlen = p.velocity.len();
                 if (vlen > .001f) e.addImpulse(p.velocity.x / vlen * p.knockback, p.velocity.y / vlen * p.knockback);
@@ -504,6 +506,7 @@ public final class GameScreen extends ScreenAdapter {
             if (game.accessibility != null && game.accessibility.haptics) game.services.haptics.bossKill();
         }
         polish.onEnemyKilled(e, pools);
+        player.protocols.onKill();
         director.onKill();
         if (player.addXp(e.xpValue)) prepareUpgrade();
         impact(e.position.x, e.position.y, e.radius * 2.3f, .28f, VisualTheme.GREEN);
@@ -539,14 +542,16 @@ public final class GameScreen extends ScreenAdapter {
         aim.set(target.position).sub(player.position).nor();
         float base = aim.angleDeg();
         int count = player.weapon.projectileCount;
+        com.deadlinezero.game.progression.CombatProtocolState.VolleyModifier protocol = player.protocols.onVolley();
         for (int i = 0; i < count; i++) {
             float spread = (i - (count - 1) / 2f) * player.weapon.spreadDegrees;
             shotVelocity.set(player.weapon.projectileSpeed, 0f).setAngleDeg(base + spread);
-            boolean crit = MathUtils.random() < player.weapon.critChance;
+            boolean crit = protocol.forcedCrit() || MathUtils.random() < player.weapon.critChance;
             Projectile p = pools.projectile();
             if (p != null) p.spawn(player.position.x, player.position.y, shotVelocity.x, shotVelocity.y,
-                player.weapon.damage * (crit ? player.weapon.critMultiplier : 1f), crit,
-                player.weapon.penetration, player.weapon.knockback, player.weapon.element);
+                player.weapon.damage * protocol.damageMultiplier() * (crit ? player.weapon.critMultiplier : 1f), crit,
+                Math.min(Upgrade.MAX_PENETRATION, player.weapon.penetration + protocol.bonusPenetration()),
+                player.weapon.knockback, player.weapon.element);
         }
         polish.onShot(base);
         addCameraShake(.035f);
