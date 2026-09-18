@@ -4,5 +4,317 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "PurchaseGrantService": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+        "start": 6,
+        "end": 66
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Currency",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 12,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "EquipmentDropTable",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/EquipmentDropTable.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PlayerProfile",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "grant",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+              "line": 8,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+              "line": 12,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "grantProduct",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+              "line": 24,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "syncPermanent",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+              "line": 54,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "grant": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+        "start": 9,
+        "end": 11
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "PlayerProfile",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "grantProduct": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+        "start": 25,
+        "end": 51
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Currency",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 12,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "EquipmentDropTable",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/EquipmentDropTable.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PlayerProfile",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "syncPermanent": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+        "start": 54,
+        "end": 65
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PlayerProfile",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "grant",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+              "line": 8,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+              "line": 12,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "PurchaseGrantServiceTest": {
+      "source": {
+        "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+        "start": 12,
+        "end": 123
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BillingService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+              "line": 4,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Currency",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 12,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "FakeBilling",
+          "definitions": [
+            {
+              "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+              "line": 107,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "PlayerProfile",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+              "line": 10,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "PurchaseGrantService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "FakeBilling": {
+      "source": {
+        "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+        "start": 112,
+        "end": 115
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    }
+  }
 }

@@ -10577,7 +10577,8 @@ return grant(profile, productId, null);
 ⋮----
 public static boolean grant(PlayerProfile profile, String productId, String receiptId) {
 ⋮----
-if (BillingService.isConsumable(productId) && receiptId != null && !receiptId.isBlank()) {
+if (BillingService.isConsumable(productId)) {
+if (receiptId == null || receiptId.isBlank()) return false;
 if (profile.hasDeliveredPurchaseReceipt(receiptId)) return false;
 boolean granted = grantProduct(profile, productId);
 if (granted) profile.recordDeliveredPurchaseReceipt(receiptId);
@@ -22236,14 +22237,24 @@ assertEquals(250L, profile.currency(PlayerProfile.Currency.GEMS));
 ⋮----
 assertFalse(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));
 ⋮----
-@Test public void gemProductsRemainConsumable() {
+@Test public void gemProductsRemainConsumableWithDistinctReceipts() {
 ⋮----
-assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL));
-⋮----
+assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "receipt-small-1"));
+assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "receipt-small-2"));
 assertEquals(500L, profile.currency(PlayerProfile.Currency.GEMS));
 ⋮----
-assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_LARGE));
+assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_LARGE, "receipt-large-1"));
 assertEquals(1_700L, profile.currency(PlayerProfile.Currency.GEMS));
+⋮----
+@Test public void consumableWithoutReceiptIsRejected() {
+⋮----
+assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL));
+assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, null));
+assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, ""));
+assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "   "));
+⋮----
+assertEquals(0L, profile.currency(PlayerProfile.Currency.GEMS));
+assertTrue(profile.deliveredPurchaseReceipts().isEmpty());
 ⋮----
 @Test public void sameConsumableReceiptCanOnlyBeGrantedOnce() {
 ⋮----
@@ -22281,7 +22292,6 @@ assertFalse(profile.removeAdsPurchased);
 ⋮----
 assertFalse(PurchaseGrantService.grant(profile, "unknown_product"));
 assertEquals(0L, profile.currency(PlayerProfile.Currency.CREDITS));
-assertEquals(0L, profile.currency(PlayerProfile.Currency.GEMS));
 ⋮----
 private static final class FakeBilling implements BillingService {
 ⋮----

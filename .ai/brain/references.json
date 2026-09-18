@@ -4,5 +4,516 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
-  "symbols": {}
+  "symbols": {
+    "PurchaseGrantService": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+        "line": 6,
+        "kind": "class",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+          "line": 16,
+          "preview": "import com.deadlinezero.game.meta.PurchaseGrantService;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+          "line": 91,
+          "preview": "if (profile != null && PurchaseGrantService.syncPermanent(profile, services.billing)) saveProfile();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java",
+          "line": 20,
+          "preview": "boolean granted = PurchaseGrantService.grant(profile, receipt.productId(), receipt.receiptId());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 6,
+          "preview": "public final class PurchaseGrantService {",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 7,
+          "preview": "private PurchaseGrantService() {}",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 19,
+          "preview": "import com.deadlinezero.game.meta.PurchaseGrantService;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 64,
+          "preview": "if (PurchaseGrantService.syncPermanent(game.profile, game.services.billing)) game.saveProfile();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 247,
+          "preview": "boolean granted = PurchaseGrantService.grant(game.profile, productId);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 15,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.REMOVE_ADS));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 17,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.REMOVE_ADS));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 22,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 26,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 33,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-small-1\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 34,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-small-2\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 37,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_LARGE, \"receipt-large-1\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 44,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 45,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, null));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 46,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 47,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"   \"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 57,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 61,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 67,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-a\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 68,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-b\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 76,
+          "preview": "assertTrue(PurchaseGrantService.syncPermanent(profile, billing));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 81,
+          "preview": "assertFalse(PurchaseGrantService.syncPermanent(profile, billing));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 89,
+          "preview": "assertFalse(PurchaseGrantService.syncPermanent(profile, new FakeBilling(false)));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 97,
+          "preview": "assertTrue(PurchaseGrantService.syncPermanent(profile, new FakeBilling(true)));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 103,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, \"unknown_product\"));",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 28
+    },
+    "grant": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+        "line": 8,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+          "line": 100,
+          "preview": "assertEquals(\"interrupted run must not grant credits\", creditsBefore.get().longValue(), game.profile.currency(PlayerProfile.Currency.CREDITS));",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+          "line": 101,
+          "preview": "assertEquals(\"interrupted run must not grant gems\", gemsBefore.get().longValue(), game.profile.currency(PlayerProfile.Currency.GEMS));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java",
+          "line": 6,
+          "preview": "/** Crash-safe consumable delivery: grant and persist before asking the platform store to consume. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java",
+          "line": 20,
+          "preview": "boolean granted = PurchaseGrantService.grant(profile, receipt.productId(), receipt.receiptId());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 9,
+          "preview": "public static boolean grant(PlayerProfile profile, String productId) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 10,
+          "preview": "return grant(profile, productId, null);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 13,
+          "preview": "public static boolean grant(PlayerProfile profile, String productId, String receiptId) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 58,
+          "preview": "changed |= grant(profile, BillingService.REMOVE_ADS);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 63,
+          "preview": "if (billing.owns(BillingService.STARTER_PACK)) changed |= grant(profile, BillingService.STARTER_PACK);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 247,
+          "preview": "boolean granted = PurchaseGrantService.grant(game.profile, productId);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+          "line": 54,
+          "preview": "/** Consumes a previously delivered Play purchase only after the profile grant has been persisted. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/NullWardSupportTest.java",
+          "line": 21,
+          "preview": "assertTrue(ally.supportBuffed(), \"Null Ward should grant its temporary support buff\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 15,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.REMOVE_ADS));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 17,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.REMOVE_ADS));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 22,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 26,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 33,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-small-1\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 34,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-small-2\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 37,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_LARGE, \"receipt-large-1\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 44,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 45,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, null));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 46,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 47,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"   \"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 57,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 61,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 67,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-a\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 68,
+          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-b\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 103,
+          "preview": "assertFalse(PurchaseGrantService.grant(profile, \"unknown_product\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java",
+          "line": 44,
+          "preview": "private static void assertStyle(WeaponLegendaryPresentation.Style expected, Grant grant) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java",
+          "line": 46,
+          "preview": "grant.apply(p);",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 30
+    },
+    "grantProduct": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+        "line": 24,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 18,
+          "preview": "boolean granted = grantProduct(profile, productId);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 22,
+          "preview": "return grantProduct(profile, productId);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 25,
+          "preview": "private static boolean grantProduct(PlayerProfile profile, String productId) {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "syncPermanent": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+        "line": 54,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+          "line": 91,
+          "preview": "if (profile != null && PurchaseGrantService.syncPermanent(profile, services.billing)) saveProfile();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+          "line": 54,
+          "preview": "public static boolean syncPermanent(PlayerProfile profile, BillingService billing) {",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 64,
+          "preview": "if (PurchaseGrantService.syncPermanent(game.profile, game.services.billing)) game.saveProfile();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 76,
+          "preview": "assertTrue(PurchaseGrantService.syncPermanent(profile, billing));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 81,
+          "preview": "assertFalse(PurchaseGrantService.syncPermanent(profile, billing));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 89,
+          "preview": "assertFalse(PurchaseGrantService.syncPermanent(profile, new FakeBilling(false)));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 97,
+          "preview": "assertTrue(PurchaseGrantService.syncPermanent(profile, new FakeBilling(true)));",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "PurchaseGrantServiceTest": {
+      "definition": {
+        "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+        "line": 11,
+        "kind": "class",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 12,
+          "preview": "public final class PurchaseGrantServiceTest {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "FakeBilling": {
+      "definition": {
+        "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+        "line": 107,
+        "kind": "class",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 74,
+          "preview": "FakeBilling billing = new FakeBilling(true, BillingService.REMOVE_ADS, BillingService.STARTER_PACK, BillingService.GEMS_LARGE);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 89,
+          "preview": "assertFalse(PurchaseGrantService.syncPermanent(profile, new FakeBilling(false)));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 97,
+          "preview": "assertTrue(PurchaseGrantService.syncPermanent(profile, new FakeBilling(true)));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 108,
+          "preview": "private static final class FakeBilling implements BillingService {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "line": 112,
+          "preview": "FakeBilling(boolean authoritative, String... ids) {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    }
+  }
 }

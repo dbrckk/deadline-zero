@@ -1,13 +1,14 @@
 # Change impact
 
-Base: ec55e290fbbd43c68117ef9634719efe6a6de088
-Head: 3a017acc9bbf04a24ee98acdb909a61703a855ee
+Base: 83552254389a3f235c1e89f954def6924192124d
+Head: dae5194e2d50d3cfc90a3f6500c036fbc5d37026
 
 ## Changed files
-- M AGENTS.md
+- M core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java
+- M core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java
 
 ## Affected areas
-- (root)
+- core
 
 ## Related test candidates
 - No direct filename-based test match detected.

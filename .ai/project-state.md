@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T14:52:44Z
+Generated: 2026-09-18T16:45:25Z
 
 ### Git
 - Branch: `main`
-- Head: `3a017acc9bbf`
-- Commit date: 2026-09-18T16:51:22+02:00
-- Commit: chore(ai): adopt v10 reference routing
-- Tracked files: 617
+- Head: `dae5194e2d50`
+- Commit date: 2026-09-18T18:45:11+02:00
+- Commit: Harden consumable grants against missing Play receipts
+- Tracked files: 619
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java`
+- `core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java`
 - `AGENTS.md`
 - `.repo-standards.yml`
 - `.github/workflows/ai-repo-map.yml`
