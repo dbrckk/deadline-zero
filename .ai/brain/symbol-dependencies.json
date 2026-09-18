@@ -5,165 +5,43 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "PurchaseGrantService": {
+    "WeaponSignatureRuntime": {
       "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-        "start": 6,
-        "end": 66
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 7,
+        "end": 95
       },
       "symbol_dependencies": [
         {
-          "symbol": "BillingService",
+          "symbol": "Kind",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
-              "line": 4,
-              "kind": "interface",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Currency",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "EquipmentDropTable",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/EquipmentDropTable.java",
-              "line": 6,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "PlayerProfile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
-              "line": 10,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "grant",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
               "line": 8,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-              "line": 12,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "grantProduct",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-              "line": 24,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "syncPermanent",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-              "line": 54,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "grant": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-        "start": 9,
-        "end": 11
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "PlayerProfile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
-              "line": 10,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "grantProduct": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-        "start": 25,
-        "end": 51
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "BillingService",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
-              "line": 4,
-              "kind": "interface",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Currency",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
-              "line": 12,
               "kind": "enum",
               "language": "java"
             }
           ],
-          "relation": "class_like"
+          "relation": "same_file"
         },
         {
-          "symbol": "EquipmentDropTable",
+          "symbol": "ShotModifier",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/EquipmentDropTable.java",
-              "line": 6,
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 16,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "WeaponCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "line": 4,
               "kind": "class",
               "language": "java"
             }
@@ -171,63 +49,577 @@
           "relation": "class_like"
         },
         {
-          "symbol": "PlayerProfile",
+          "symbol": "WeaponDefinition",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
-              "line": 10,
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+              "line": 2,
               "kind": "class",
               "language": "java"
             }
           ],
           "relation": "class_like"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 29,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "cinderFurnaceEnabled",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 94,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "consumeShot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 52,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "enableCinderFurnace",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 44,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "enableIonCascade",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 38,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ionCascadeEnabled",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 93,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "none",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 19,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "shotIndex",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 90,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "weaponId",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 92,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 13
+    },
+    "Kind": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 8,
+        "end": 128
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ShotModifier",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 16,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "WeaponCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponDefinition",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+              "line": 2,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponSignatureRuntime",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 7,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 29,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "cinderFurnaceEnabled",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 94,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "consumeShot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 52,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "enableCinderFurnace",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 44,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "enableIonCascade",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 38,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ionCascadeEnabled",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 93,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "none",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 19,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "shotIndex",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 90,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "weaponId",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 92,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 13
+    },
+    "ShotModifier": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 16,
+        "end": 136
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Kind",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 8,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "WeaponCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponDefinition",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+              "line": 2,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponSignatureRuntime",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 7,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 29,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "cinderFurnaceEnabled",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 94,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "consumeShot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 52,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "enableCinderFurnace",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 44,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "enableIonCascade",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 38,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ionCascadeEnabled",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 93,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "none",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 19,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "shotIndex",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 90,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "weaponId",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 92,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 13
+    },
+    "none": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 19,
+        "end": 19
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Kind",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 8,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ShotModifier",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 16,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "begin": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 30,
+        "end": 37
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WeaponCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponDefinition",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+              "line": 2,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "shotIndex",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 90,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "weaponId",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 92,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
       "dependency_count": 4
     },
-    "syncPermanent": {
+    "enableIonCascade": {
       "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-        "start": 54,
-        "end": 65
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 39,
+        "end": 43
       },
       "symbol_dependencies": [
         {
-          "symbol": "BillingService",
+          "symbol": "shotIndex",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
-              "line": 4,
-              "kind": "interface",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "PlayerProfile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
-              "line": 10,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "grant",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-              "line": 8,
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 90,
               "kind": "symbol",
               "language": "java"
-            },
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "weaponId",
+          "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-              "line": 12,
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 92,
               "kind": "symbol",
               "language": "java"
             }
@@ -235,33 +627,161 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 3
+      "dependency_count": 2
     },
-    "PurchaseGrantServiceTest": {
+    "enableCinderFurnace": {
       "source": {
-        "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-        "start": 12,
-        "end": 123
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 45,
+        "end": 49
       },
       "symbol_dependencies": [
         {
-          "symbol": "BillingService",
+          "symbol": "shotIndex",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
-              "line": 4,
-              "kind": "interface",
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 90,
+              "kind": "symbol",
               "language": "java"
             }
           ],
-          "relation": "class_like"
+          "relation": "same_file"
         },
         {
-          "symbol": "Currency",
+          "symbol": "weaponId",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
-              "line": 12,
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 92,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "consumeShot": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 52,
+        "end": 89
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Kind",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 8,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ShotModifier",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 16,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "none",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 19,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "shotIndex",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 90,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "weaponId",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 92,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "shotIndex": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 91,
+        "end": 91
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "weaponId": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 92,
+        "end": 92
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "ionCascadeEnabled": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 93,
+        "end": 93
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "cinderFurnaceEnabled": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "start": 94,
+        "end": 94
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "WeaponSynergyRules": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+        "start": 7,
+        "end": 61
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Survivor",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 5,
               "kind": "enum",
               "language": "java"
             }
@@ -269,23 +789,11 @@
           "relation": "class_like"
         },
         {
-          "symbol": "FakeBilling",
+          "symbol": "SurvivorCatalog",
           "definitions": [
             {
-              "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-              "line": 107,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "PlayerProfile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
-              "line": 10,
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 4,
               "kind": "class",
               "language": "java"
             }
@@ -293,11 +801,126 @@
           "relation": "class_like"
         },
         {
-          "symbol": "PurchaseGrantService",
+          "symbol": "Synergy",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-              "line": 6,
+              "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+              "line": 8,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "WeaponCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponDefinition",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+              "line": 2,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "resolve",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+              "line": 35,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "Synergy": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+        "start": 24,
+        "end": 31
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "resolve": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+        "start": 36,
+        "end": 60
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Survivor",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "SurvivorCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Synergy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+              "line": 8,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "WeaponCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponDefinition",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+              "line": 2,
               "kind": "class",
               "language": "java"
             }
@@ -307,14 +930,249 @@
       ],
       "dependency_count": 5
     },
-    "FakeBilling": {
+    "WeaponSignatureBalanceTest": {
       "source": {
-        "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-        "start": 112,
-        "end": 115
+        "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+        "start": 8,
+        "end": 51
       },
-      "symbol_dependencies": [],
-      "dependency_count": 0
+      "symbol_dependencies": [
+        {
+          "symbol": "WeaponCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponDefinition",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+              "line": 2,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponSignatureRuntime",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 7,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "assertAverageDamageMultiplier",
+          "definitions": [
+            {
+              "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+              "line": 42,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "assertAverageDamageMultiplier": {
+      "source": {
+        "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+        "start": 43,
+        "end": 50
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "WeaponDefinition",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+              "line": 2,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponSignatureRuntime",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 7,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "WeaponSignatureRuntimeTest": {
+      "source": {
+        "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+        "start": 12,
+        "end": 138
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DamageElement",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
+              "line": 2,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Kind",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 8,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Projectile",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+              "line": 8,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "SingularityCoreRuntime",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SingularityCoreRuntime.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponSignatureRuntime",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+              "line": 7,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "WeaponSynergyRulesTest": {
+      "source": {
+        "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+        "start": 9,
+        "end": 45
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Survivor",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "SurvivorCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Synergy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+              "line": 8,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "WeaponSynergyRules",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+              "line": 7,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 5
     }
   }
 }

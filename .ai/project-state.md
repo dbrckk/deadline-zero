@@ -22,16 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T16:45:25Z
+Generated: 2026-09-18T18:06:21Z
 
 ### Git
 - Branch: `main`
-- Head: `dae5194e2d50`
-- Commit date: 2026-09-18T18:45:11+02:00
-- Commit: Harden consumable grants against missing Play receipts
+- Head: `7b19bca00e68`
+- Commit date: 2026-09-18T20:05:36+02:00
+- Commit: Give endgame weapons distinct combat identities
 - Tracked files: 619
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java`
+- `core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java`
+- `core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java`
+- `core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java`
+- `core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java`
 - `core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java`
 - `core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java`
 - `AGENTS.md`

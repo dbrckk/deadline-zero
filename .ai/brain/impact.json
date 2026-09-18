@@ -1,72 +1,164 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "3a017acc9bbf04a24ee98acdb909a61703a855ee",
-  "head": "dae5194e2d50d3cfc90a3f6500c036fbc5d37026",
+  "base": "dae5194e2d50d3cfc90a3f6500c036fbc5d37026",
+  "head": "7b19bca00e6859b6ebc7b15335e40155de9a2cea",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+      "path": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
       "status": "M"
     },
     {
-      "path": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+      "path": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-    "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java"
+    "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+    "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+    "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java"
   ],
   "impacted_files": [
-    "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-    "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java"
+    "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+    "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+    "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java"
   ],
   "impacted_symbols": [
     {
-      "name": "PurchaseGrantService",
+      "name": "WeaponSignatureRuntime",
       "kind": "class",
-      "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-      "line": 6
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 7
     },
     {
-      "name": "grant",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+      "name": "Kind",
+      "kind": "enum",
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
       "line": 8
     },
     {
-      "name": "grant",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-      "line": 12
+      "name": "ShotModifier",
+      "kind": "record",
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 16
     },
     {
-      "name": "grantProduct",
+      "name": "none",
       "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-      "line": 24
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 19
     },
     {
-      "name": "syncPermanent",
+      "name": "begin",
       "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-      "line": 54
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 29
     },
     {
-      "name": "PurchaseGrantServiceTest",
+      "name": "enableIonCascade",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 38
+    },
+    {
+      "name": "enableCinderFurnace",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 44
+    },
+    {
+      "name": "consumeShot",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 52
+    },
+    {
+      "name": "shotIndex",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 90
+    },
+    {
+      "name": "weaponId",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 92
+    },
+    {
+      "name": "ionCascadeEnabled",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 93
+    },
+    {
+      "name": "cinderFurnaceEnabled",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+      "line": 94
+    },
+    {
+      "name": "WeaponSynergyRules",
       "kind": "class",
-      "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+      "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+      "line": 7
+    },
+    {
+      "name": "Synergy",
+      "kind": "enum",
+      "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+      "line": 8
+    },
+    {
+      "name": "resolve",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+      "line": 35
+    },
+    {
+      "name": "WeaponSignatureBalanceTest",
+      "kind": "class",
+      "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+      "line": 7
+    },
+    {
+      "name": "assertAverageDamageMultiplier",
+      "kind": "symbol",
+      "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+      "line": 42
+    },
+    {
+      "name": "WeaponSignatureRuntimeTest",
+      "kind": "class",
+      "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
       "line": 11
     },
     {
-      "name": "FakeBilling",
+      "name": "WeaponSynergyRulesTest",
       "kind": "class",
-      "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-      "line": 107
+      "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+      "line": 8
     }
   ],
   "selected_tests": [
-    "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java"
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+    "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java"
   ]
 }

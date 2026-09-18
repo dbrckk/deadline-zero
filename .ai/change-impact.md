@@ -1,11 +1,14 @@
 # Change impact
 
-Base: 83552254389a3f235c1e89f954def6924192124d
-Head: dae5194e2d50d3cfc90a3f6500c036fbc5d37026
+Base: 10c82131c16012cc3b5ce43df200d8ea66c5c3ef
+Head: 7b19bca00e6859b6ebc7b15335e40155de9a2cea
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java
-- M core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java
+- M core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java
+- M core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java
+- M core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java
+- M core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java
+- M core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java
 
 ## Affected areas
 - core

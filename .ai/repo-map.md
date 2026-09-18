@@ -8620,6 +8620,18 @@ return new ShotModifier(Kind.ION_OVERCHARGE, true, true,
 if ("cinder_cannon".equals(weaponId) && shotIndex % cinderCadence == 0) {
 return new ShotModifier(Kind.CINDER_OVERHEAT, true, false,
 ⋮----
+// Tempest fires three-projectile bursts: every second burst ends in a penetrating surge.
+if ("tempest_burst".equals(weaponId) && shotIndex % 6 == 0) {
+return new ShotModifier(Kind.TEMPEST_SURGE, true, false,
+⋮----
+// Whiteout fires four shards: every second volley lands one oversized control shard.
+if ("whiteout_shard".equals(weaponId) && shotIndex % 8 == 0) {
+return new ShotModifier(Kind.WHITEOUT_SHATTER, true, false,
+⋮----
+// Phoenix is a precision repeater: every fifth round becomes a heavier ignition shot.
+if ("phoenix_repeater".equals(weaponId) && shotIndex % 5 == 0) {
+return new ShotModifier(Kind.PHOENIX_IGNITION, true, false,
+⋮----
 return ShotModifier.none();
 ⋮----
 public static int shotIndex() { return shotIndex; }
@@ -20566,24 +20578,31 @@ assertEquals(WeaponCatalog.AR9, WeaponCatalog.byId("missing_weapon"));
 ````java
 final class WeaponSignatureBalanceTest {
 @Test void ionNeedleSignatureStaysInsideControlledAverageDamageBudget() {
-WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);
-⋮----
-for (int i = 0; i < 100; i++) totalMultiplier += WeaponSignatureRuntime.consumeShot(false).damageMultiplier();
-⋮----
-assertTrue(average >= 1.18f && average <= 1.26f, "ion signature average multiplier: " + average);
+assertAverageDamageMultiplier(WeaponCatalog.ION_NEEDLE, 1.18f, 1.26f);
 ⋮----
 @Test void cinderThermalCycleStaysInsideControlledAverageDamageBudget() {
-WeaponSignatureRuntime.begin(WeaponCatalog.CINDER_CANNON);
+assertAverageDamageMultiplier(WeaponCatalog.CINDER_CANNON, 1.12f, 1.16f);
 ⋮----
-assertTrue(average >= 1.12f && average <= 1.16f, "cinder signature average multiplier: " + average);
+@Test void newEndgameSignaturesStayInsideControlledAverageDamageBudget() {
+assertAverageDamageMultiplier(WeaponCatalog.TEMPEST_BURST, 1.02f, 1.05f);
+assertAverageDamageMultiplier(WeaponCatalog.WHITEOUT_SHARD, 1.01f, 1.04f);
+assertAverageDamageMultiplier(WeaponCatalog.PHOENIX_REPEATER, 1.05f, 1.08f);
 ⋮----
-@Test void starterAndMidgameWeaponsNeverReceiveLateGameSignaturePower() {
+@Test void nonSignatureWeaponsNeverReceiveSignaturePower() {
+Set<String> signatureIds = Set.of(
+⋮----
 for (WeaponDefinition weapon : WeaponCatalog.all()) {
-⋮----
+if (signatureIds.contains(weapon.id)) continue;
 WeaponSignatureRuntime.begin(weapon);
 ⋮----
 var modifier = WeaponSignatureRuntime.consumeShot(false);
 assertTrue(!modifier.active() && modifier.damageMultiplier() == 1f,
+⋮----
+private static void assertAverageDamageMultiplier(WeaponDefinition weapon, float min, float max) {
+⋮----
+for (int i = 0; i < 120; i++) totalMultiplier += WeaponSignatureRuntime.consumeShot(false).damageMultiplier();
+⋮----
+assertTrue(average >= min && average <= max,
 ````
 
 ## File: core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java
@@ -20612,6 +20631,30 @@ assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, mark.kind());
 assertFalse(mark.forceCritical());
 assertEquals(1.55f, mark.damageMultiplier(), .0001f);
 assertEquals(.17f, mark.radius(), .0001f);
+⋮----
+@Test void tempestBurstSurgesOnEverySecondThreeShotBurst() {
+WeaponSignatureRuntime.begin(WeaponCatalog.TEMPEST_BURST);
+⋮----
+assertEquals(i % 6 == 0, mark.active());
+⋮----
+assertEquals(WeaponSignatureRuntime.Kind.TEMPEST_SURGE, mark.kind());
+assertEquals(2, mark.penetrationBonus());
+assertEquals(1.20f, mark.damageMultiplier(), .0001f);
+⋮----
+@Test void whiteoutShardAddsControlShardEverySecondVolley() {
+WeaponSignatureRuntime.begin(WeaponCatalog.WHITEOUT_SHARD);
+⋮----
+assertEquals(i % 8 == 0, mark.active());
+⋮----
+assertEquals(WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER, mark.kind());
+⋮----
+assertEquals(1.38f, mark.knockbackMultiplier(), .0001f);
+⋮----
+@Test void phoenixRepeaterIgnitesEveryFifthRound() {
+WeaponSignatureRuntime.begin(WeaponCatalog.PHOENIX_REPEATER);
+⋮----
+assertEquals(WeaponSignatureRuntime.Kind.PHOENIX_IGNITION, mark.kind());
+assertEquals(1.30f, mark.damageMultiplier(), .0001f);
 ⋮----
 @Test void beginningANewRunResetsSignatureCadence() {
 ⋮----
@@ -20642,6 +20685,26 @@ assertEquals(31f, p.damage, .0001f);
 assertEquals(2, p.penetrationRemaining);
 assertEquals(.17f, p.radius, .0001f);
 assertTrue(p.knockback > 4f);
+⋮----
+@Test void newEndgameSignaturesTransformActualProjectiles() {
+⋮----
+for (int i = 0; i < 5; i++) new Projectile().spawn(0, 0, 1, 0, 10f, false, 1, 1f, DamageElement.SHOCK);
+Projectile tempest = new Projectile().spawn(0, 0, 1, 0, 10f, false, 1, 1f, DamageElement.SHOCK);
+assertEquals(WeaponSignatureRuntime.Kind.TEMPEST_SURGE, tempest.weaponSignatureKind);
+assertEquals(3, tempest.penetrationRemaining);
+assertEquals(12f, tempest.damage, .0001f);
+⋮----
+for (int i = 0; i < 7; i++) new Projectile().spawn(0, 0, 1, 0, 20f, false, 0, 2f, DamageElement.FROST);
+Projectile whiteout = new Projectile().spawn(0, 0, 1, 0, 20f, false, 0, 2f, DamageElement.FROST);
+assertEquals(WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER, whiteout.weaponSignatureKind);
+assertEquals(1, whiteout.penetrationRemaining);
+assertTrue(whiteout.knockback > 2.7f);
+⋮----
+for (int i = 0; i < 4; i++) new Projectile().spawn(0, 0, 1, 0, 20f, false, 1, 1f, DamageElement.FIRE);
+Projectile phoenix = new Projectile().spawn(0, 0, 1, 0, 20f, false, 1, 1f, DamageElement.FIRE);
+assertEquals(WeaponSignatureRuntime.Kind.PHOENIX_IGNITION, phoenix.weaponSignatureKind);
+assertEquals(26f, phoenix.damage, .0001f);
+assertEquals(2, phoenix.penetrationRemaining);
 ````
 
 ## File: core/src/test/java/com/deadlinezero/game/config/AccessibilityColorVisionTest.java
@@ -22909,10 +22972,18 @@ assertEquals(WeaponSynergyRules.Synergy.SIEGE_FURNACE,
 WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.CINDER_CANNON));
 assertEquals(WeaponSynergyRules.Synergy.CRYO_GHOST,
 WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.CRYO_LANCE));
+assertEquals(WeaponSynergyRules.Synergy.TEMPEST_CIRCUIT,
+WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.TEMPEST_BURST));
+assertEquals(WeaponSynergyRules.Synergy.WHITEOUT_GHOST,
+WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.WHITEOUT_SHARD));
+assertEquals(WeaponSynergyRules.Synergy.PHOENIX_BULWARK,
+WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.PHOENIX_REPEATER));
 assertEquals(WeaponSynergyRules.Synergy.NONE,
 WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.REX, WeaponCatalog.ION_NEEDLE));
 ⋮----
 WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.AR9));
+⋮----
+WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.NYX, WeaponCatalog.PHOENIX_REPEATER));
 ⋮----
 @Test void synergyBonusesStayInsideSafePowerBudget() {
 for (WeaponSynergyRules.Synergy synergy : WeaponSynergyRules.Synergy.values()) {

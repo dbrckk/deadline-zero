@@ -5,515 +5,2782 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "PurchaseGrantService": {
+    "WeaponSignatureRuntime": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-        "line": 6,
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 7,
         "kind": "class",
         "language": "java"
       },
       "occurrences": [
         {
-          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-          "line": 16,
-          "preview": "import com.deadlinezero.game.meta.PurchaseGrantService;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-          "line": 91,
-          "preview": "if (profile != null && PurchaseGrantService.syncPermanent(profile, services.billing)) saveProfile();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java",
-          "line": 20,
-          "preview": "boolean granted = PurchaseGrantService.grant(profile, receipt.productId(), receipt.receiptId());",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 6,
-          "preview": "public final class PurchaseGrantService {",
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 7,
+          "preview": "public final class WeaponSignatureRuntime {",
           "definition_candidate": true
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 7,
-          "preview": "private PurchaseGrantService() {}",
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 28,
+          "preview": "private WeaponSignatureRuntime() {}",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 19,
-          "preview": "import com.deadlinezero.game.meta.PurchaseGrantService;",
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+          "line": 6,
+          "preview": "import com.deadlinezero.game.combat.WeaponSignatureRuntime;",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 64,
-          "preview": "if (PurchaseGrantService.syncPermanent(game.profile, game.services.billing)) game.saveProfile();",
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+          "line": 21,
+          "preview": "public WeaponSignatureRuntime.Kind weaponSignatureKind = WeaponSignatureRuntime.Kind.NONE;",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 247,
-          "preview": "boolean granted = PurchaseGrantService.grant(game.profile, productId);",
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+          "line": 31,
+          "preview": "WeaponSignatureRuntime.ShotModifier signature = WeaponSignatureRuntime.consumeShot(critical);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 15,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.REMOVE_ADS));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 17,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.REMOVE_ADS));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 22,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 26,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 33,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-small-1\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 34,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-small-2\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 37,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_LARGE, \"receipt-large-1\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 44,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 45,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, null));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 46,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
           "line": 47,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"   \"));",
+          "preview": "if (weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+          "line": 49,
+          "preview": "} else if (weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 5,
+          "preview": "import com.deadlinezero.game.combat.WeaponSignatureRuntime;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 32,
+          "preview": "WeaponSignatureRuntime.begin(weaponDefinition);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 94,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.AR9);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+          "line": 4,
+          "preview": "import com.deadlinezero.game.combat.WeaponSignatureRuntime;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+          "line": 80,
+          "preview": "WeaponSignatureRuntime.enableIonCascade();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+          "line": 88,
+          "preview": "WeaponSignatureRuntime.enableCinderFurnace();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 10,
+          "preview": "import com.deadlinezero.game.combat.WeaponSignatureRuntime;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 245,
+          "preview": "if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 250,
+          "preview": "} else if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 266,
+          "preview": "if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 272,
+          "preview": "} else if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 34,
+          "preview": "WeaponSignatureRuntime.begin(weapon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 36,
+          "preview": "var modifier = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 44,
+          "preview": "WeaponSignatureRuntime.begin(weapon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 46,
+          "preview": "for (int i = 0; i < 120; i++) totalMultiplier += WeaponSignatureRuntime.consumeShot(false).damageMultiplier();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 16,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 18,
+          "preview": "var mark = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 21,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 25,
+          "preview": "} else assertEquals(WeaponSignatureRuntime.Kind.NONE, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 30,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.CINDER_CANNON);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 32,
+          "preview": "var mark = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 35,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 39,
+          "preview": "} else assertEquals(WeaponSignatureRuntime.Kind.NONE, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 44,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.TEMPEST_BURST);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 46,
+          "preview": "var mark = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 49,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.TEMPEST_SURGE, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
           "line": 57,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));",
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.WHITEOUT_SHARD);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 61,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));",
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 59,
+          "preview": "var mark = WeaponSignatureRuntime.consumeShot(false);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 67,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-a\"));",
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 62,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER, mark.kind());",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 68,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-b\"));",
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 71,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.PHOENIX_REPEATER);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 73,
+          "preview": "var mark = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
           "line": 76,
-          "preview": "assertTrue(PurchaseGrantService.syncPermanent(profile, billing));",
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.PHOENIX_IGNITION, mark.kind());",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 81,
-          "preview": "assertFalse(PurchaseGrantService.syncPermanent(profile, billing));",
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 84,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 89,
-          "preview": "assertFalse(PurchaseGrantService.syncPermanent(profile, new FakeBilling(false)));",
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 85,
+          "preview": "for (int i = 0; i < 4; i++) assertFalse(WeaponSignatureRuntime.consumeShot(false).active());",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 97,
-          "preview": "assertTrue(PurchaseGrantService.syncPermanent(profile, new FakeBilling(true)));",
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 86,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 103,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, \"unknown_product\"));",
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 87,
+          "preview": "assertFalse(WeaponSignatureRuntime.consumeShot(false).active());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 88,
+          "preview": "assertEquals(1, WeaponSignatureRuntime.shotIndex());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 92,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 96,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, p.weaponSignatureKind);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 104,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.CINDER_CANNON);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 108,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, p.weaponSignatureKind);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 117,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.TEMPEST_BURST);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 120,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.TEMPEST_SURGE, tempest.weaponSignatureKind);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 124,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.WHITEOUT_SHARD);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 127,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER, whiteout.weaponSignatureKind);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 131,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.PHOENIX_REPEATER);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 134,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.PHOENIX_IGNITION, phoenix.weaponSignatureKind);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 8,
+          "preview": "import com.deadlinezero.game.combat.WeaponSignatureRuntime;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 25,
+          "preview": "assertTrue(WeaponSignatureRuntime.ionCascadeEnabled());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 27,
+          "preview": "var shot = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 30,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, shot.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 42,
+          "preview": "assertTrue(WeaponSignatureRuntime.cinderFurnaceEnabled());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 44,
+          "preview": "var shot = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 47,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, shot.kind());",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 28
+      "occurrence_count": 61
     },
-    "grant": {
+    "Kind": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
         "line": 8,
+        "kind": "enum",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 8,
+          "preview": "public enum Kind {",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 17,
+          "preview": "public record ShotModifier(Kind kind, boolean active, boolean forceCritical, float damageMultiplier,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 19,
+          "preview": "static ShotModifier none() { return new ShotModifier(Kind.NONE, false, false, 1f, 0, 1f, .11f); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 58,
+          "preview": "return new ShotModifier(Kind.ION_OVERCHARGE, true, true,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 65,
+          "preview": "return new ShotModifier(Kind.CINDER_OVERHEAT, true, false,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 72,
+          "preview": "return new ShotModifier(Kind.TEMPEST_SURGE, true, false,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 78,
+          "preview": "return new ShotModifier(Kind.WHITEOUT_SHATTER, true, false,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 84,
+          "preview": "return new ShotModifier(Kind.PHOENIX_IGNITION, true, false,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+          "line": 21,
+          "preview": "public WeaponSignatureRuntime.Kind weaponSignatureKind = WeaponSignatureRuntime.Kind.NONE;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+          "line": 47,
+          "preview": "if (weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+          "line": 49,
+          "preview": "} else if (weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 245,
+          "preview": "if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 250,
+          "preview": "} else if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 266,
+          "preview": "if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 272,
+          "preview": "} else if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 21,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 25,
+          "preview": "} else assertEquals(WeaponSignatureRuntime.Kind.NONE, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 35,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 39,
+          "preview": "} else assertEquals(WeaponSignatureRuntime.Kind.NONE, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 49,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.TEMPEST_SURGE, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 62,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 76,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.PHOENIX_IGNITION, mark.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 96,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, p.weaponSignatureKind);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 108,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, p.weaponSignatureKind);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 120,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.TEMPEST_SURGE, tempest.weaponSignatureKind);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 127,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER, whiteout.weaponSignatureKind);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 134,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.PHOENIX_IGNITION, phoenix.weaponSignatureKind);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 30,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, shot.kind());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 47,
+          "preview": "assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, shot.kind());",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 29
+    },
+    "ShotModifier": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 16,
+        "kind": "record",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 17,
+          "preview": "public record ShotModifier(Kind kind, boolean active, boolean forceCritical, float damageMultiplier,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 19,
+          "preview": "static ShotModifier none() { return new ShotModifier(Kind.NONE, false, false, 1f, 0, 1f, .11f); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 52,
+          "preview": "public static ShotModifier consumeShot(boolean alreadyCritical) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 58,
+          "preview": "return new ShotModifier(Kind.ION_OVERCHARGE, true, true,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 65,
+          "preview": "return new ShotModifier(Kind.CINDER_OVERHEAT, true, false,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 72,
+          "preview": "return new ShotModifier(Kind.TEMPEST_SURGE, true, false,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 78,
+          "preview": "return new ShotModifier(Kind.WHITEOUT_SHATTER, true, false,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 84,
+          "preview": "return new ShotModifier(Kind.PHOENIX_IGNITION, true, false,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 88,
+          "preview": "return ShotModifier.none();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+          "line": 31,
+          "preview": "WeaponSignatureRuntime.ShotModifier signature = WeaponSignatureRuntime.consumeShot(critical);",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "none": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 19,
         "kind": "symbol",
         "language": "java"
       },
       "occurrences": [
         {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 100,
-          "preview": "assertEquals(\"interrupted run must not grant credits\", creditsBefore.get().longValue(), game.profile.currency(PlayerProfile.Currency.CREDITS));",
+          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+          "line": 165,
+          "preview": ": ThreatProgressionService.UnlockResult.none();",
           "definition_candidate": false
         },
         {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 101,
-          "preview": "assertEquals(\"interrupted run must not grant gems\", gemsBefore.get().longValue(), game.profile.currency(PlayerProfile.Currency.GEMS));",
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 19,
+          "preview": "static ShotModifier none() { return new ShotModifier(Kind.NONE, false, false, 1f, 0, 1f, .11f); }",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 88,
+          "preview": "return ShotModifier.none();",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java",
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ThreatProgressionService.java",
           "line": 6,
-          "preview": "/** Crash-safe consumable delivery: grant and persist before asking the platform store to consume. */",
+          "preview": "public static UnlockResult none() { return new UnlockResult(false, 0, 0); }",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java",
-          "line": 20,
-          "preview": "boolean granted = PurchaseGrantService.grant(profile, receipt.productId(), receipt.receiptId());",
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ThreatProgressionService.java",
+          "line": 12,
+          "preview": "if (profile == null || stage < ThreatTierRules.UNLOCK_STAGE) return UnlockResult.none();",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 9,
-          "preview": "public static boolean grant(PlayerProfile profile, String productId) {",
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ThreatProgressionService.java",
+          "line": 14,
+          "preview": "if (safeTier != profile.highestThreatTier) return UnlockResult.none();",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 10,
-          "preview": "return grant(profile, productId, null);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 13,
-          "preview": "public static boolean grant(PlayerProfile profile, String productId, String receiptId) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 58,
-          "preview": "changed |= grant(profile, BillingService.REMOVE_ADS);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 63,
-          "preview": "if (billing.owns(BillingService.STARTER_PACK)) changed |= grant(profile, BillingService.STARTER_PACK);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 247,
-          "preview": "boolean granted = PurchaseGrantService.grant(game.profile, productId);",
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ThreatProgressionService.java",
+          "line": 15,
+          "preview": "if (!profile.unlockNextThreatTier()) return UnlockResult.none();",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
-          "line": 54,
-          "preview": "/** Consumes a previously delivered Play purchase only after the profile grant has been persisted. */",
+          "line": 39,
+          "preview": "/** Product associated with an active or pending purchase, or an empty string when none exists. */",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/entities/NullWardSupportTest.java",
-          "line": 21,
-          "preview": "assertTrue(ally.supportBuffed(), \"Null Ward should grant its temporary support buff\");",
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 387,
+          "preview": "f\"configured_weapon={weapon.name if weapon else 'none'}; \"",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 15,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.REMOVE_ADS));",
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 388,
+          "preview": "f\"defensive_prop={defensive_prop.name if defensive_prop else 'none'}\"",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "file": "tools/sprites/upsert_directional_actor_atlas.py",
+          "line": 99,
+          "preview": "\"repeat: none\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/test_verify_final_atlas.py",
           "line": 17,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.REMOVE_ADS));",
+          "preview": "repeat: none",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 22,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 26,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "file": "tools/test_verify_final_atlas.py",
           "line": 33,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-small-1\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 34,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-small-2\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 37,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_LARGE, \"receipt-large-1\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 44,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 45,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, null));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 46,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 47,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"   \"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 57,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 61,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 67,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-a\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 68,
-          "preview": "assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, \"receipt-b\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 103,
-          "preview": "assertFalse(PurchaseGrantService.grant(profile, \"unknown_product\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java",
-          "line": 44,
-          "preview": "private static void assertStyle(WeaponLegendaryPresentation.Style expected, Grant grant) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java",
-          "line": 46,
-          "preview": "grant.apply(p);",
+          "preview": "repeat: none",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 30
+      "occurrence_count": 13
     },
-    "grantProduct": {
+    "begin": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-        "line": 24,
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 29,
         "kind": "symbol",
         "language": "java"
       },
       "occurrences": [
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 18,
-          "preview": "boolean granted = grantProduct(profile, productId);",
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 105,
+          "preview": "RunStageContext.begin(1);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 22,
-          "preview": "return grantProduct(profile, productId);",
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 218,
+          "preview": "RunStageContext.begin(4);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 25,
-          "preview": "private static boolean grantProduct(PlayerProfile profile, String productId) {",
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 244,
+          "preview": "RunStageContext.begin(7);",
           "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "syncPermanent": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-        "line": 54,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 267,
+          "preview": "RunStageContext.begin(6);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 290,
+          "preview": "RunStageContext.begin(40);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 324,
+          "preview": "RunStageContext.begin(40);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 358,
+          "preview": "RunStageContext.begin(30);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 392,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 457,
+          "preview": "RunStageContext.begin(20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 520,
+          "preview": "RunStageContext.begin(20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 583,
+          "preview": "RunStageContext.begin(20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 646,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 709,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 774,
+          "preview": "RunStageContext.begin(20);",
+          "definition_candidate": false
+        },
         {
           "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-          "line": 91,
-          "preview": "if (profile != null && PurchaseGrantService.syncPermanent(profile, services.billing)) saveProfile();",
+          "line": 110,
+          "preview": "RunStageContext.begin(selectedStage, runOrdinal, threatTier);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-          "line": 54,
-          "preview": "public static boolean syncPermanent(PlayerProfile profile, BillingService billing) {",
-          "definition_candidate": true
+          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+          "line": 118,
+          "preview": "RunLoadoutContext.begin(profile);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+          "line": 119,
+          "preview": "RunEncounterRuntime.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+          "line": 120,
+          "preview": "RunMissionRuntime.begin(() -> Gdx.app.postRunnable(() -> finishVictory()), RunModifierContext.requiredBossKills());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 30,
+          "preview": "public static void begin(WeaponDefinition definition) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceCoefficientAudit.java",
+          "line": 20,
+          "preview": "RunStageContext.begin(stage - 1, 0, 0);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceCoefficientAudit.java",
+          "line": 24,
+          "preview": "RunStageContext.begin(stage, 0, 0);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java",
+          "line": 19,
+          "preview": "public static void begin(int nextStage, int nextRunOrdinal, int nextThreatTier) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java",
+          "line": 52,
+          "preview": "if (!active) begin(RunStageContext.stage(), RunStageContext.runOrdinal(), RunStageContext.threatTier());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/EndgameMutatorRules.java",
+          "line": 40,
+          "preview": "/** Mutators begin at Threat 3 and are stable for the same run identity. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunEncounterRuntime.java",
+          "line": 10,
+          "preview": "public static void begin() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 27,
+          "preview": "public static void begin(PlayerProfile profile) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 32,
+          "preview": "WeaponSignatureRuntime.begin(weaponDefinition);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 36,
+          "preview": "SingularityCoreRuntime.begin(zeroDayCoreEquipped);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 94,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.AR9);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 95,
+          "preview": "SingularityCoreRuntime.begin(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunMissionRuntime.java",
+          "line": 14,
+          "preview": "public static void begin(Runnable callback) { begin(callback, 1); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunMissionRuntime.java",
+          "line": 16,
+          "preview": "public static void begin(Runnable callback, int requiredBossDefeats) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+          "line": 91,
+          "preview": "public static void begin() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+          "line": 11,
+          "preview": "public static void begin(int selectedStage) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+          "line": 12,
+          "preview": "begin(selectedStage, 0, 0);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+          "line": 15,
+          "preview": "public static void begin(int selectedStage, int runOrdinal) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+          "line": 16,
+          "preview": "begin(selectedStage, runOrdinal, 0);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+          "line": 19,
+          "preview": "public static void begin(int selectedStage, int runOrdinal, int threatTier) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+          "line": 23,
+          "preview": "BalanceTelemetryRuntime.begin(activeStage, activeRunOrdinal, activeThreatTier);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SingularityCoreRuntime.java",
+          "line": 10,
+          "preview": "public static void begin(boolean enabled) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 99,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 146,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 85,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 98,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 596,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 610,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 738,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 757,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 766,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 91,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 118,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 70,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 101,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 95,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 113,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+          "line": 61,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+          "line": 80,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+          "line": 71,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+          "line": 85,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 80,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 97,
+          "preview": "batch.begin();",
+          "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 64,
-          "preview": "if (PurchaseGrantService.syncPermanent(game.profile, game.services.billing)) game.saveProfile();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
           "line": 76,
-          "preview": "assertTrue(PurchaseGrantService.syncPermanent(profile, billing));",
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 81,
-          "preview": "assertFalse(PurchaseGrantService.syncPermanent(profile, billing));",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 95,
+          "preview": "batch.begin();",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 89,
-          "preview": "assertFalse(PurchaseGrantService.syncPermanent(profile, new FakeBilling(false)));",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 71,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 97,
-          "preview": "assertTrue(PurchaseGrantService.syncPermanent(profile, new FakeBilling(true)));",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 113,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 74,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 88,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 23,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
+          "line": 19,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 39,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 73,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 144,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 235,
+          "preview": "shapes.begin(ShapeRenderer.ShapeType.Filled);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
+          "line": 33,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 169,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 178,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 186,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
+          "line": 34,
+          "preview": "batch.begin();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BiomeEnemyAttackPatternTest.java",
+          "line": 14,
+          "preview": "@AfterEach void resetStage() { RunStageContext.begin(1); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BiomeEnemyAttackPatternTest.java",
+          "line": 17,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BiomeEnemyAttackPatternTest.java",
+          "line": 27,
+          "preview": "RunStageContext.begin(20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BiomeEnemyAttackPatternTest.java",
+          "line": 37,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BiomeEnemyAttackPatternTest.java",
+          "line": 45,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BiomeEnemyAttackPatternTest.java",
+          "line": 54,
+          "preview": "RunStageContext.begin(1);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossAffixRulesTest.java",
+          "line": 13,
+          "preview": "@AfterEach void cleanup() { RunStageContext.begin(1, 0, 0); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossAffixRulesTest.java",
+          "line": 32,
+          "preview": "RunStageContext.begin(12, 4, 0);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossAffixRulesTest.java",
+          "line": 34,
+          "preview": "RunStageContext.begin(12, 4, 20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossAffixRulesTest.java",
+          "line": 42,
+          "preview": "RunStageContext.begin(20, 0, 20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossAttackPatternCatalogTest.java",
+          "line": 49,
+          "preview": "RunStageContext.begin(7);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossAttackPatternCatalogTest.java",
+          "line": 55,
+          "preview": "RunStageContext.begin(1);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 34,
+          "preview": "WeaponSignatureRuntime.begin(weapon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 44,
+          "preview": "WeaponSignatureRuntime.begin(weapon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 13,
+          "preview": "@BeforeEach void resetCore() { SingularityCoreRuntime.begin(false); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 16,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 30,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.CINDER_CANNON);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 44,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.TEMPEST_BURST);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 57,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.WHITEOUT_SHARD);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 71,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.PHOENIX_REPEATER);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 84,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 86,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 92,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 104,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.CINDER_CANNON);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 117,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.TEMPEST_BURST);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 124,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.WHITEOUT_SHARD);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 131,
+          "preview": "WeaponSignatureRuntime.begin(WeaponCatalog.PHOENIX_REPEATER);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeElementResistanceTest.java",
+          "line": 14,
+          "preview": "RunStageContext.begin(1);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeElementResistanceTest.java",
+          "line": 18,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeElementResistanceTest.java",
+          "line": 27,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeElementResistanceTest.java",
+          "line": 36,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeElementResistanceTest.java",
+          "line": 41,
+          "preview": "RunStageContext.begin(1);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeElementResistanceTest.java",
+          "line": 51,
+          "preview": "RunStageContext.begin(20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeElementResistanceTest.java",
+          "line": 63,
+          "preview": "RunStageContext.begin(20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeTacticsTest.java",
+          "line": 12,
+          "preview": "@AfterEach void resetStage() { RunStageContext.begin(1); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeTacticsTest.java",
+          "line": 15,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeTacticsTest.java",
+          "line": 23,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeTacticsTest.java",
+          "line": 30,
+          "preview": "RunStageContext.begin(10);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeTacticsTest.java",
+          "line": 37,
+          "preview": "RunStageContext.begin(20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeTacticsTest.java",
+          "line": 44,
+          "preview": "RunStageContext.begin(20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeTacticsTest.java",
+          "line": 51,
+          "preview": "RunStageContext.begin(20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/entities/EnemyChargeImpactTest.java",
+          "line": 12,
+          "preview": "RunStageContext.begin(1);",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 7
+      "occurrence_count": 120
     },
-    "PurchaseGrantServiceTest": {
+    "enableIonCascade": {
       "definition": {
-        "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 38,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 39,
+          "preview": "public static void enableIonCascade() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+          "line": 80,
+          "preview": "WeaponSignatureRuntime.enableIonCascade();",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "enableCinderFurnace": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 44,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 45,
+          "preview": "public static void enableCinderFurnace() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+          "line": 88,
+          "preview": "WeaponSignatureRuntime.enableCinderFurnace();",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "consumeShot": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 52,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 52,
+          "preview": "public static ShotModifier consumeShot(boolean alreadyCritical) {",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+          "line": 31,
+          "preview": "WeaponSignatureRuntime.ShotModifier signature = WeaponSignatureRuntime.consumeShot(critical);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 36,
+          "preview": "var modifier = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 46,
+          "preview": "for (int i = 0; i < 120; i++) totalMultiplier += WeaponSignatureRuntime.consumeShot(false).damageMultiplier();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 18,
+          "preview": "var mark = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 32,
+          "preview": "var mark = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 46,
+          "preview": "var mark = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 59,
+          "preview": "var mark = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 73,
+          "preview": "var mark = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 85,
+          "preview": "for (int i = 0; i < 4; i++) assertFalse(WeaponSignatureRuntime.consumeShot(false).active());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 87,
+          "preview": "assertFalse(WeaponSignatureRuntime.consumeShot(false).active());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 27,
+          "preview": "var shot = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 44,
+          "preview": "var shot = WeaponSignatureRuntime.consumeShot(false);",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 13
+    },
+    "shotIndex": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 90,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 24,
+          "preview": "private static int shotIndex;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 34,
+          "preview": "shotIndex = 0;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 42,
+          "preview": "shotIndex = 0;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 48,
+          "preview": "shotIndex = 0;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 53,
+          "preview": "shotIndex++;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 55,
+          "preview": "if (\"ion_needle\".equals(weaponId) && shotIndex % ionCadence == 0) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 64,
+          "preview": "if (\"cinder_cannon\".equals(weaponId) && shotIndex % cinderCadence == 0) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 71,
+          "preview": "if (\"tempest_burst\".equals(weaponId) && shotIndex % 6 == 0) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 77,
+          "preview": "if (\"whiteout_shard\".equals(weaponId) && shotIndex % 8 == 0) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 83,
+          "preview": "if (\"phoenix_repeater\".equals(weaponId) && shotIndex % 5 == 0) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 91,
+          "preview": "public static int shotIndex() { return shotIndex; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+          "line": 88,
+          "preview": "assertEquals(1, WeaponSignatureRuntime.shotIndex());",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 12
+    },
+    "weaponId": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 92,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 22,
+          "preview": "private static String weaponId = \"ar9\";",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 32,
+          "preview": "weaponId = safe.id;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 40,
+          "preview": "if (!\"ion_needle\".equals(weaponId)) return;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 46,
+          "preview": "if (!\"cinder_cannon\".equals(weaponId)) return;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 55,
+          "preview": "if (\"ion_needle\".equals(weaponId) && shotIndex % ionCadence == 0) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 64,
+          "preview": "if (\"cinder_cannon\".equals(weaponId) && shotIndex % cinderCadence == 0) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 71,
+          "preview": "if (\"tempest_burst\".equals(weaponId) && shotIndex % 6 == 0) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 77,
+          "preview": "if (\"whiteout_shard\".equals(weaponId) && shotIndex % 8 == 0) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 83,
+          "preview": "if (\"phoenix_repeater\".equals(weaponId) && shotIndex % 5 == 0) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 92,
+          "preview": "public static String weaponId() { return weaponId; }",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
+          "line": 19,
+          "preview": "String weaponId,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
+          "line": 37,
+          "preview": "weaponId = safeText(weaponId, \"ar9\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
+          "line": 42,
+          "preview": "case WEAPON -> sample.weaponId();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryStore.java",
+          "line": 34,
+          "preview": "p.putString(key + \"weapon\", sample.weaponId());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
+          "line": 24,
+          "preview": "public int weaponWins(String weaponId) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
+          "line": 25,
+          "preview": "WeaponDefinition weapon = WeaponCatalog.byId(weaponId);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
+          "line": 34,
+          "preview": "public int weaponRank(String weaponId) { return rankForWins(weaponWins(weaponId)); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
+          "line": 37,
+          "preview": "public int winsForNextWeaponRank(String weaponId) { return winsForNextRank(weaponWins(weaponId)); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
+          "line": 40,
+          "preview": "public Gain recordVictory(String weaponId, int stage) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
+          "line": 41,
+          "preview": "WeaponDefinition weapon = WeaponCatalog.byId(weaponId);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
+          "line": 56,
+          "preview": "public void setWeaponWins(String weaponId, int wins) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
+          "line": 57,
+          "preview": "WeaponDefinition weapon = WeaponCatalog.byId(weaponId);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryBalanceTest.java",
+          "line": 36,
+          "preview": "private static void assertVolleyBand(String weaponId, LegendaryChoice choice, float min, float max) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryBalanceTest.java",
+          "line": 37,
+          "preview": "Player p = playerWith(weaponId);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryBalanceTest.java",
+          "line": 42,
+          "preview": "assertTrue(ratio >= min && ratio <= max, weaponId + \" volley ratio out of band: \" + ratio);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryBalanceTest.java",
+          "line": 45,
+          "preview": "private static Player playerWith(String weaponId) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryBalanceTest.java",
+          "line": 47,
+          "preview": "profile.selectedWeaponId = weaponId;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 124,
+          "preview": "private static Player playerWith(String weaponId) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 126,
+          "preview": "profile.selectedWeaponId = weaponId;",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 29
+    },
+    "ionCascadeEnabled": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 93,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 93,
+          "preview": "public static boolean ionCascadeEnabled() { return ionCascade; }",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 25,
+          "preview": "assertTrue(WeaponSignatureRuntime.ionCascadeEnabled());",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "cinderFurnaceEnabled": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "line": 94,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+          "line": 94,
+          "preview": "public static boolean cinderFurnaceEnabled() { return cinderFurnace; }",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+          "line": 42,
+          "preview": "assertTrue(WeaponSignatureRuntime.cinderFurnaceEnabled());",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "WeaponSynergyRules": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+        "line": 7,
+        "kind": "class",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 23,
+          "preview": "private static WeaponSynergyRules.Synergy weaponSynergy = WeaponSynergyRules.Synergy.NONE;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 31,
+          "preview": "weaponSynergy = WeaponSynergyRules.resolve(survivor, weaponDefinition);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 93,
+          "preview": "weaponSynergy = WeaponSynergyRules.Synergy.NONE;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 112,
+          "preview": "public static WeaponSynergyRules.Synergy weaponSynergy() { return weaponSynergy; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 7,
+          "preview": "public final class WeaponSynergyRules {",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 34,
+          "preview": "private WeaponSynergyRules() {}",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 22,
+          "preview": "import com.deadlinezero.game.meta.WeaponSynergyRules;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 231,
+          "preview": "WeaponSynergyRules.Synergy synergy = WeaponSynergyRules.resolve(game.profile.selectedSurvivor, weapon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 232,
+          "preview": "if (synergy != WeaponSynergyRules.Synergy.NONE) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/RunLoadoutContextResetTest.java",
+          "line": 32,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE, RunLoadoutContext.weaponSynergy());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 11,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.ARC_CONDUCTOR,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 12,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.ION_NEEDLE));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 13,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.EXECUTION_PROTOCOL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 14,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.NYX, WeaponCatalog.ION_NEEDLE));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 15,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.SIEGE_FURNACE,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 16,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.CINDER_CANNON));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 17,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.CRYO_GHOST,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 18,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.CRYO_LANCE));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 19,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.TEMPEST_CIRCUIT,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 20,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.TEMPEST_BURST));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 21,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.WHITEOUT_GHOST,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 22,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.WHITEOUT_SHARD));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 23,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.PHOENIX_BULWARK,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 24,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.PHOENIX_REPEATER));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 25,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 26,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.REX, WeaponCatalog.ION_NEEDLE));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 27,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 28,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.AR9));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 29,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 30,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.NYX, WeaponCatalog.PHOENIX_REPEATER));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 34,
+          "preview": "for (WeaponSynergyRules.Synergy synergy : WeaponSynergyRules.Synergy.values()) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 43,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE, WeaponSynergyRules.resolve(null, null));",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 32
+    },
+    "Synergy": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+        "line": 8,
+        "kind": "enum",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 23,
+          "preview": "private static WeaponSynergyRules.Synergy weaponSynergy = WeaponSynergyRules.Synergy.NONE;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 93,
+          "preview": "weaponSynergy = WeaponSynergyRules.Synergy.NONE;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 112,
+          "preview": "public static WeaponSynergyRules.Synergy weaponSynergy() { return weaponSynergy; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 8,
+          "preview": "public enum Synergy {",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 24,
+          "preview": "Synergy(String displayName, float weaponDamageMultiplier, float abilityPowerMultiplier,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 36,
+          "preview": "public static Synergy resolve(SurvivorCatalog.Survivor survivor, WeaponDefinition weapon) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 41,
+          "preview": "if (safeSurvivor == SurvivorCatalog.Survivor.VOLT) return Synergy.ARC_CONDUCTOR;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 42,
+          "preview": "if (safeSurvivor == SurvivorCatalog.Survivor.NYX) return Synergy.EXECUTION_PROTOCOL;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 45,
+          "preview": "return Synergy.SIEGE_FURNACE;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 48,
+          "preview": "return Synergy.CRYO_GHOST;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 51,
+          "preview": "return Synergy.TEMPEST_CIRCUIT;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 54,
+          "preview": "return Synergy.WHITEOUT_GHOST;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 57,
+          "preview": "return Synergy.PHOENIX_BULWARK;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 59,
+          "preview": "return Synergy.NONE;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 231,
+          "preview": "WeaponSynergyRules.Synergy synergy = WeaponSynergyRules.resolve(game.profile.selectedSurvivor, weapon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 232,
+          "preview": "if (synergy != WeaponSynergyRules.Synergy.NONE) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/RunLoadoutContextResetTest.java",
+          "line": 32,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE, RunLoadoutContext.weaponSynergy());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 11,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.ARC_CONDUCTOR,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 13,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.EXECUTION_PROTOCOL,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 15,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.SIEGE_FURNACE,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 17,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.CRYO_GHOST,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 19,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.TEMPEST_CIRCUIT,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 21,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.WHITEOUT_GHOST,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 23,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.PHOENIX_BULWARK,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 25,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 27,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 29,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 34,
+          "preview": "for (WeaponSynergyRules.Synergy synergy : WeaponSynergyRules.Synergy.values()) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 43,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE, WeaponSynergyRules.resolve(null, null));",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 29
+    },
+    "resolve": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+        "line": 35,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 415,
+          "preview": "assertTrue(\"stage 10 RANGED must resolve to CINDER GUNNER\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 478,
+          "preview": "assertTrue(\"stage 20 REGENERATOR must resolve to NULL WARD\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 541,
+          "preview": "assertTrue(\"stage 20 RANGED must resolve to STATIC SEER\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 604,
+          "preview": "assertTrue(\"stage 20 PHANTOM must resolve to PHASE STALKER\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 667,
+          "preview": "assertTrue(\"stage 10 SHIELDED must resolve to SLAG GUARD\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 732,
+          "preview": "assertTrue(\"stage 10 RUNNER must resolve to FORGE HOUND\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 31,
+          "preview": "weaponSynergy = WeaponSynergyRules.resolve(survivor, weaponDefinition);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 36,
+          "preview": "public static Synergy resolve(SurvivorCatalog.Survivor survivor, WeaponDefinition weapon) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 231,
+          "preview": "WeaponSynergyRules.Synergy synergy = WeaponSynergyRules.resolve(game.profile.selectedSurvivor, weapon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 122,
+          "preview": "Path screens = root.resolve(\"core/src/main/java/com/deadlinezero/game/screen\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 126,
+          "preview": "result.add(root.resolve(\"core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 127,
+          "preview": "result.add(root.resolve(\"core/src/main/java/com/deadlinezero/game/meta/RunShareText.java\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 132,
+          "preview": "Path file = repositoryRoot().resolve(\"assets/i18n/messages.properties\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 161,
+          "preview": "if (Files.isRegularFile(candidate.resolve(\"assets/i18n/messages.properties\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 162,
+          "preview": "&& Files.isDirectory(candidate.resolve(\"core/src/main/java\"))) return candidate;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 12,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.ION_NEEDLE));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 14,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.NYX, WeaponCatalog.ION_NEEDLE));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 16,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.CINDER_CANNON));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 18,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.CRYO_LANCE));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 20,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.TEMPEST_BURST));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 22,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.WHITEOUT_SHARD));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 24,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.PHOENIX_REPEATER));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 26,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.REX, WeaponCatalog.ION_NEEDLE));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 28,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.AR9));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 30,
+          "preview": "WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.NYX, WeaponCatalog.PHOENIX_REPEATER));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 43,
+          "preview": "assertEquals(WeaponSynergyRules.Synergy.NONE, WeaponSynergyRules.resolve(null, null));",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/add_rex_rifle.py",
+          "line": 58,
+          "preview": "bpy.ops.import_scene.gltf(filepath=str(a.input.resolve()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/add_rex_rifle.py",
+          "line": 119,
+          "preview": "filepath=str(a.output.resolve()),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 42,
+          "preview": "bpy.ops.import_scene.gltf(filepath=str(path.resolve()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 44,
+          "preview": "bpy.ops.import_scene.fbx(filepath=str(path.resolve()), use_anim=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 246,
+          "preview": "bpy.ops.wm.save_as_mainfile(filepath=str(args.output.resolve()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 248,
+          "preview": "print(\"Saved:\", args.output.resolve())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/prepare_meshy_actor.py",
+          "line": 55,
+          "preview": "bpy.ops.import_scene.gltf(filepath=str(a.input.resolve()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/prepare_meshy_actor.py",
+          "line": 100,
+          "preview": "bpy.ops.wm.save_as_mainfile(filepath=str(a.output.resolve()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/refine_rex_rifle_attack.py",
+          "line": 129,
+          "preview": "bpy.ops.wm.save_as_mainfile(filepath=str(args.output.resolve()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/refine_rex_rifle_attack.py",
+          "line": 131,
+          "preview": "print(\"Saved:\", args.output.resolve())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 365,
+          "preview": "root = args.output.resolve(); root.mkdir(parents=True, exist_ok=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/repair_rex_weights.py",
+          "line": 52,
+          "preview": "bpy.ops.import_scene.gltf(filepath=str(path.resolve()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/repair_rex_weights.py",
+          "line": 54,
+          "preview": "bpy.ops.import_scene.fbx(filepath=str(path.resolve()), use_anim=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/repair_rex_weights.py",
+          "line": 253,
+          "preview": "filepath=str(path.resolve()),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/style_rex_materials.py",
+          "line": 46,
+          "preview": "bpy.ops.import_scene.gltf(filepath=str(a.input.resolve()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/style_rex_materials.py",
+          "line": 96,
+          "preview": "bpy.ops.export_scene.gltf(filepath=str(a.output.resolve()),export_format='GLB',export_apply=False,export_animations=False)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/validate_rig.py",
+          "line": 33,
+          "preview": "bpy.ops.import_scene.gltf(filepath=str(path.resolve()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/validate_rig.py",
+          "line": 35,
+          "preview": "bpy.ops.import_scene.fbx(filepath=str(path.resolve()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/validate_rig.py",
+          "line": 113,
+          "preview": "scene.render.filepath = str(path.resolve())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/build_final_sprite_frames.py",
+          "line": 21,
+          "preview": "ROOT = Path(__file__).resolve().parents[1]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/build_final_sprite_frames.py",
+          "line": 75,
+          "preview": "output = args.output.resolve()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/import_pixellab_idle.py",
+          "line": 30,
+          "preview": "ROOT = Path(__file__).resolve().parents[1]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/import_pixellab_idle.py",
+          "line": 134,
+          "preview": "out = args.output.resolve()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/perf/test_compare_android_benchmark.py",
+          "line": 5,
+          "preview": "ROOT = pathlib.Path(__file__).resolve().parents[2]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/resolve_actor_actions.py",
+          "line": 34,
+          "preview": "def resolve(actions: dict[str, list[str]], available: list[str]) -> dict:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/resolve_actor_actions.py",
+          "line": 80,
+          "preview": "payload = resolve(candidate[\"actions\"], available)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_resolve_actor_actions.py",
+          "line": 3,
+          "preview": "from resolve_actor_actions import normalize, resolve",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_resolve_actor_actions.py",
+          "line": 8,
+          "preview": "result = resolve(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_resolve_actor_actions.py",
+          "line": 22,
+          "preview": "result = resolve(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_resolve_actor_actions.py",
+          "line": 42,
+          "preview": "result = resolve(",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_actor_production_contracts.py",
+          "line": 8,
+          "preview": "ROOT = Path(__file__).resolve().parents[2]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_final_sprite_layout.py",
+          "line": 16,
+          "preview": "ROOT = Path(__file__).resolve().parents[1]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_rex_reference.py",
+          "line": 10,
+          "preview": "ROOT = Path(__file__).resolve().parents[1]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/verify_final_atlas.py",
+          "line": 12,
+          "preview": "ROOT = Path(__file__).resolve().parents[1]",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/verify_final_atlas.py",
+          "line": 94,
+          "preview": "root = atlas.parent.resolve()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/verify_final_atlas.py",
+          "line": 103,
+          "preview": "page = (atlas.parent / name).resolve()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/verify_final_atlas.py",
+          "line": 123,
+          "preview": "atlas = args.atlas.resolve()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 63
+    },
+    "WeaponSignatureBalanceTest": {
+      "definition": {
+        "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+        "line": 7,
+        "kind": "class",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 8,
+          "preview": "final class WeaponSignatureBalanceTest {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "assertAverageDamageMultiplier": {
+      "definition": {
+        "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+        "line": 42,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 10,
+          "preview": "assertAverageDamageMultiplier(WeaponCatalog.ION_NEEDLE, 1.18f, 1.26f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 14,
+          "preview": "assertAverageDamageMultiplier(WeaponCatalog.CINDER_CANNON, 1.12f, 1.16f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 18,
+          "preview": "assertAverageDamageMultiplier(WeaponCatalog.TEMPEST_BURST, 1.02f, 1.05f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 19,
+          "preview": "assertAverageDamageMultiplier(WeaponCatalog.WHITEOUT_SHARD, 1.01f, 1.04f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 20,
+          "preview": "assertAverageDamageMultiplier(WeaponCatalog.PHOENIX_REPEATER, 1.05f, 1.08f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+          "line": 43,
+          "preview": "private static void assertAverageDamageMultiplier(WeaponDefinition weapon, float min, float max) {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "WeaponSignatureRuntimeTest": {
+      "definition": {
+        "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
         "line": 11,
         "kind": "class",
         "language": "java"
       },
       "occurrences": [
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
           "line": 12,
-          "preview": "public final class PurchaseGrantServiceTest {",
+          "preview": "final class WeaponSignatureRuntimeTest {",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 1
     },
-    "FakeBilling": {
+    "WeaponSynergyRulesTest": {
       "definition": {
-        "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-        "line": 107,
+        "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+        "line": 8,
         "kind": "class",
         "language": "java"
       },
       "occurrences": [
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 74,
-          "preview": "FakeBilling billing = new FakeBilling(true, BillingService.REMOVE_ADS, BillingService.STARTER_PACK, BillingService.GEMS_LARGE);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 89,
-          "preview": "assertFalse(PurchaseGrantService.syncPermanent(profile, new FakeBilling(false)));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 97,
-          "preview": "assertTrue(PurchaseGrantService.syncPermanent(profile, new FakeBilling(true)));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 108,
-          "preview": "private static final class FakeBilling implements BillingService {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-          "line": 112,
-          "preview": "FakeBilling(boolean authoritative, String... ids) {",
+          "file": "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java",
+          "line": 9,
+          "preview": "final class WeaponSynergyRulesTest {",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 5
+      "occurrence_count": 1
     }
   }
 }

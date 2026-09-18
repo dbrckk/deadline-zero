@@ -1,15 +1,15 @@
 # CI status
 
-Summary: 5 success / 1 failure / 2 active
+Summary: 4 success / 2 failure / 2 active
 
-- Responsive UI QA: in_progress / pending (dae5194e)
-- Verify: in_progress / pending (dae5194e)
-- Verify: completed / success (be2bdd72)
-- Responsive UI QA: completed / success (be2bdd72)
-- Verify: completed / success (be2bdd72)
-- Verify: completed / failure (74b02068)
-- Verify: completed / success (83552254)
-- Deadline Zero Work Watch: completed / success (83552254)
+- Responsive UI QA: in_progress / pending (7b19bca0)
+- Verify: in_progress / pending (7b19bca0)
+- Verify: completed / success (d5c7cf1e)
+- Responsive UI QA: completed / success (d5c7cf1e)
+- Verify: completed / success (d5c7cf1e)
+- Responsive UI QA: completed / success (057df277)
+- Verify: completed / failure (057df277)
+- Verify: completed / failure (057df277)
 
 ## Latest failed run structure
 - Job: core
