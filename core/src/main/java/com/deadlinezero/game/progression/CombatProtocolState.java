@@ -43,13 +43,14 @@ public final class CombatProtocolState {
         return new VolleyModifier(damage, rhythmProc, killProc ? 1 : 0);
     }
 
-    public void onKill() {
-        if (!killchainEnabled) return;
+    public boolean onKill() {
+        if (!killchainEnabled) return false;
         killCounter++;
-        if (killCounter >= KILLCHAIN_KILLS) {
-            killCounter = 0;
-            killchainArmed = true;
-        }
+        if (killCounter < KILLCHAIN_KILLS) return false;
+        killCounter = 0;
+        boolean newlyArmed = !killchainArmed;
+        killchainArmed = true;
+        return newlyArmed;
     }
 
     public float reactionBonus(float triggeringDamage, Enemy.ElementReaction reaction) {
