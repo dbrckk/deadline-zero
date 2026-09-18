@@ -12,7 +12,8 @@ public final class PurchaseGrantService {
 
     public static boolean grant(PlayerProfile profile, String productId, String receiptId) {
         if (profile == null || productId == null) return false;
-        if (BillingService.isConsumable(productId) && receiptId != null && !receiptId.isBlank()) {
+        if (BillingService.isConsumable(productId)) {
+            if (receiptId == null || receiptId.isBlank()) return false;
             if (profile.hasDeliveredPurchaseReceipt(receiptId)) return false;
             boolean granted = grantProduct(profile, productId);
             if (granted) profile.recordDeliveredPurchaseReceipt(receiptId);
