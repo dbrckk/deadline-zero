@@ -43,6 +43,10 @@ E AndroidRuntime: Process: com.deadlinezero.game.test, PID: 2222
     def test_ignores_instrumentation_process_anr_with_package_prefix(self):
         self.assertTrue(mod.scan("E ActivityManager: ANR in com.deadlinezero.game.test (com.deadlinezero.game.test)").get("ok"))
 
+    def test_exact_game_package_still_matches_with_activity_suffix(self):
+        result = mod.scan("E ActivityManager: ANR in com.deadlinezero.game (com.deadlinezero.game/.android.AndroidLauncher)")
+        self.assertFalse(result["ok"])
+
     def test_detects_native_crash_when_package_is_in_context(self):
         log = """I DEBUG: Cmdline: com.deadlinezero.game
 F libc: Fatal signal 11 (SIGSEGV), code 1, fault addr 0x0 in tid 1234
