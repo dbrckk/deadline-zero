@@ -22,14 +22,14 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T20:11:14Z
+Generated: 2026-09-18T20:52:04Z
 
 ### Git
 - Branch: `main`
-- Head: `6e83a87e7876`
-- Commit date: 2026-09-18T22:09:37+02:00
-- Commit: chore(ai): adopt repo standards v14
-- Tracked files: 645
+- Head: `756e95929562`
+- Commit date: 2026-09-18T22:50:49+02:00
+- Commit: chore(ai): enable same-package symbol graph enrichment
+- Tracked files: 677
 
 ### Recently changed files
 - `.repo-standards.yml`
@@ -38,9 +38,6 @@ Generated: 2026-09-18T20:11:14Z
 - `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
 - `core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java`
 - `.github/workflows/semantic-refresh.yml`
-- `.github/workflows/verify.yml`
-- `tools/android/scan_runtime_log.py`
-- `tools/android/test_scan_runtime_log.py`
 
 ### Project signals
 - `build.gradle`
