@@ -209,8 +209,28 @@ public final class CombatHudRenderer {
         font.draw(batch, player.canDash() ? t("hud.dash") : String.format(java.util.Locale.ROOT, "%.1f", player.dashTimer),
             layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s, layout.dashRadius() * 2f, Align.center, false);
 
+        drawProtocolCue(batch, font, layout, s);
         drawOnboardingHint(batch, font, layout, s);
         batch.end();
+    }
+
+    private void drawProtocolCue(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
+        float age = CombatVisualEvents.protocolAgeSeconds();
+        if (age > .90f) return;
+        String key = switch (CombatVisualEvents.protocolCue()) {
+            case RHYTHM -> "hud.protocol.rhythm";
+            case KILLCHAIN_ARMED -> "hud.protocol.killchainArmed";
+            case KILLCHAIN -> "hud.protocol.killchain";
+            case COMBINED -> "hud.protocol.combined";
+            case REACTION -> "hud.protocol.reaction";
+            default -> null;
+        };
+        if (key == null) return;
+        float alpha = MathUtils.clamp(1f - age / .90f, 0f, 1f);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY) * 1.08f * s);
+        font.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha);
+        font.draw(batch, t(key), layout.timeline().x, layout.timeline().y + 62f * s,
+            layout.timeline().width, Align.center, false);
     }
 
     private void drawOnboardingHint(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
