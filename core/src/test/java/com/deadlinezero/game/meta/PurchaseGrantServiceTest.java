@@ -28,14 +28,26 @@ public final class PurchaseGrantServiceTest {
         assertEquals(250L, profile.currency(PlayerProfile.Currency.GEMS));
     }
 
-    @Test public void gemProductsRemainConsumable() {
+    @Test public void gemProductsRemainConsumableWithDistinctReceipts() {
         PlayerProfile profile = new PlayerProfile();
-        assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL));
-        assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL));
+        assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "receipt-small-1"));
+        assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "receipt-small-2"));
         assertEquals(500L, profile.currency(PlayerProfile.Currency.GEMS));
 
-        assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_LARGE));
+        assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_LARGE, "receipt-large-1"));
         assertEquals(1_700L, profile.currency(PlayerProfile.Currency.GEMS));
+    }
+
+    @Test public void consumableWithoutReceiptIsRejected() {
+        PlayerProfile profile = new PlayerProfile();
+
+        assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL));
+        assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, null));
+        assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, ""));
+        assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "   "));
+
+        assertEquals(0L, profile.currency(PlayerProfile.Currency.GEMS));
+        assertTrue(profile.deliveredPurchaseReceipts().isEmpty());
     }
 
     @Test public void sameConsumableReceiptCanOnlyBeGrantedOnce() {
