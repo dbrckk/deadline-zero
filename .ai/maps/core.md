@@ -161,6 +161,7 @@ src/
             perf/
               AdaptiveFrameRateGovernor.java
               PerformanceTelemetry.java
+              ThermalBudgetPolicy.java
             progression/
               LegendaryChoice.java
               LegendaryEffects.java
@@ -372,6 +373,7 @@ src/
             perf/
               AdaptiveFrameRateGovernorTest.java
               PerformanceTelemetryTest.java
+              ThermalBudgetPolicyTest.java
             progression/
               LegendarySelectorTest.java
               LegendaryStateTest.java
@@ -4019,6 +4021,20 @@ int index = Math.min(sorted.length - 1,
 Math.max(0, (int)Math.ceil(percentile * sorted.length) - 1));
 ```
 
+## File: src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java
+```java
+/** Single source of truth for thermal performance ceilings used by runtime FPS and FX budgets. */
+public final class ThermalBudgetPolicy {
+⋮----
+public static int allowedFps(int userTarget, ThermalService.Level level) {
+⋮----
+return Math.min(normalizeUserTarget(userTarget), safe.fpsCeiling);
+⋮----
+public static float fxCeiling(ThermalService.Level level) {
+⋮----
+private static int normalizeUserTarget(int target) {
+```
+
 ## File: src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java
 ```java
 /** Standalone run-local legendary choices, intentionally separate from standard Upgrade. */
@@ -4888,8 +4904,7 @@ if (performanceEvaluationTimer >= 2f && performanceTelemetry.sampleCount() >= 60
 ⋮----
 int before = frameRateGovernor.effectiveTarget();
 int userTarget = GraphicsSettings.frameRate().target;
-int thermalTarget = game.services.thermal.level().fpsCeiling;
-int allowedTarget = Math.min(userTarget, thermalTarget);
+int allowedTarget = ThermalBudgetPolicy.allowedFps(userTarget, game.services.thermal.level());
 int after = frameRateGovernor.update(
 ⋮----
 performanceTelemetry.snapshot(before)
@@ -9296,7 +9311,7 @@ return settings.hitStop ? feel.consumeSimulationScale(visualDelta) : 1f;
 ⋮----
 public void updateVisual(float dt) {
 feel.update(dt);
-fxBudget.setExternalCeiling(thermal.level().fxCeiling);
+fxBudget.setExternalCeiling(ThermalBudgetPolicy.fxCeiling(thermal.level()));
 fxBudget.update(dt);
 ⋮----
 public void updateSimulation(float dt, Pools pools) {
@@ -15853,6 +15868,35 @@ assertFalse(telemetry.snapshot(60).stable());
 for (int i = 0; i < 1000; i++) telemetry.record(1f / 120f, 120);
 assertEquals(240, telemetry.sampleCount());
 assertTrue(telemetry.snapshot(120).stable());
+```
+
+## File: src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java
+```java
+final class ThermalBudgetPolicyTest {
+@Test void userTargetWinsWhenBelowThermalCeiling() {
+assertEquals(60, ThermalBudgetPolicy.allowedFps(60, ThermalService.Level.NORMAL));
+assertEquals(90, ThermalBudgetPolicy.allowedFps(90, ThermalService.Level.LIGHT));
+⋮----
+@Test void thermalPressureCapsHighFrameRateTargets() {
+assertEquals(90, ThermalBudgetPolicy.allowedFps(120, ThermalService.Level.MODERATE));
+assertEquals(60, ThermalBudgetPolicy.allowedFps(120, ThermalService.Level.SEVERE));
+assertEquals(60, ThermalBudgetPolicy.allowedFps(120, ThermalService.Level.CRITICAL));
+⋮----
+@Test void unsupportedUserTargetsNormalizeToSupportedTiers() {
+assertEquals(60, ThermalBudgetPolicy.allowedFps(75, ThermalService.Level.NORMAL));
+assertEquals(90, ThermalBudgetPolicy.allowedFps(100, ThermalService.Level.NORMAL));
+assertEquals(120, ThermalBudgetPolicy.allowedFps(144, ThermalService.Level.NORMAL));
+⋮----
+@Test void fxCeilingTracksThermalLevel() {
+assertEquals(1.00f, ThermalBudgetPolicy.fxCeiling(ThermalService.Level.NORMAL), .0001f);
+assertEquals(.92f, ThermalBudgetPolicy.fxCeiling(ThermalService.Level.LIGHT), .0001f);
+assertEquals(.76f, ThermalBudgetPolicy.fxCeiling(ThermalService.Level.MODERATE), .0001f);
+assertEquals(.58f, ThermalBudgetPolicy.fxCeiling(ThermalService.Level.SEVERE), .0001f);
+assertEquals(.46f, ThermalBudgetPolicy.fxCeiling(ThermalService.Level.CRITICAL), .0001f);
+⋮----
+@Test void nullThermalLevelFailsOpenToUnknownPolicy() {
+assertEquals(120, ThermalBudgetPolicy.allowedFps(120, null));
+assertEquals(1.00f, ThermalBudgetPolicy.fxCeiling(null), .0001f);
 ```
 
 ## File: src/test/java/com/deadlinezero/game/progression/LegendarySelectorTest.java

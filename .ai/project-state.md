@@ -22,16 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:59:35Z
+Generated: 2026-09-18T20:07:54Z
 
 ### Git
 - Branch: `main`
-- Head: `318831781dce`
-- Commit date: 2026-09-18T21:57:28+02:00
-- Commit: chore(ai): add precise semantic refresh
-- Tracked files: 641
+- Head: `e420cd4643e7`
+- Commit date: 2026-09-18T22:07:42+02:00
+- Commit: Centralize thermal performance budgets
+- Tracked files: 645
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
+- `core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java`
 - `.github/workflows/semantic-refresh.yml`
 - `.repo-standards.yml`
 - `.github/workflows/verify.yml`

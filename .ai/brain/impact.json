@@ -1,21 +1,457 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "cd3d01070b6ae4ce5babc10e03fd56450328f233",
-  "head": "318831781dce3ac538988bbcbf7eb95cbd79fb98",
+  "base": "318831781dce3ac538988bbcbf7eb95cbd79fb98",
+  "head": "e420cd4643e7242aad8056315d123e90b337c49a",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/semantic-refresh.yml",
+      "path": "core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java",
       "status": "A"
     },
     {
-      "path": ".repo-standards.yml",
+      "path": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
       "status": "M"
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java",
+      "status": "A"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
-  "selected_tests": []
+  "changed_source_files": [
+    "core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java",
+    "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+    "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+    "core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java"
+  ],
+  "impacted_files": [
+    "core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java",
+    "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+    "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+    "core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "ThermalBudgetPolicy",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java",
+      "line": 6
+    },
+    {
+      "name": "allowedFps",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java",
+      "line": 8
+    },
+    {
+      "name": "fxCeiling",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java",
+      "line": 13
+    },
+    {
+      "name": "normalizeUserTarget",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java",
+      "line": 18
+    },
+    {
+      "name": "GameScreen",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 54
+    },
+    {
+      "name": "performanceSnapshot",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 131
+    },
+    {
+      "name": "effectiveFrameRateTarget",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 135
+    },
+    {
+      "name": "thermalLevel",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 139
+    },
+    {
+      "name": "effectiveFxQuality",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 143
+    },
+    {
+      "name": "activeEnemyCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 147
+    },
+    {
+      "name": "activeProjectileCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 153
+    },
+    {
+      "name": "activeSpatialBucketCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 161
+    },
+    {
+      "name": "retainedSpatialBucketCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 165
+    },
+    {
+      "name": "update",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 169
+    },
+    {
+      "name": "updateEnemies",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 225
+    },
+    {
+      "name": "bossSummonType",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 280
+    },
+    {
+      "name": "bossSummonType",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 285
+    },
+    {
+      "name": "spawnBossMinions",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 313
+    },
+    {
+      "name": "bossEnragePulse",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 344
+    },
+    {
+      "name": "updatePlayerProjectiles",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 363
+    },
+    {
+      "name": "updateHostileProjectiles",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 393
+    },
+    {
+      "name": "resolveEnemyAttack",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 410
+    },
+    {
+      "name": "spawnHostileShot",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 453
+    },
+    {
+      "name": "chainShock",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 462
+    },
+    {
+      "name": "damagePlayer",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 483
+    },
+    {
+      "name": "damageNumber",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 495
+    },
+    {
+      "name": "onEnemyKilled",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 500
+    },
+    {
+      "name": "spawnEnemy",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 512
+    },
+    {
+      "name": "fire",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 537
+    },
+    {
+      "name": "addCameraShake",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 554
+    },
+    {
+      "name": "impact",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 559
+    },
+    {
+      "name": "prepareUpgrade",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 564
+    },
+    {
+      "name": "prepareStandardUpgrade",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 575
+    },
+    {
+      "name": "finishRun",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 580
+    },
+    {
+      "name": "draw",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 586
+    },
+    {
+      "name": "drawEnemy",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 677
+    },
+    {
+      "name": "drawAbilityObjects",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 714
+    },
+    {
+      "name": "drawCombatText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 735
+    },
+    {
+      "name": "drawHud",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 750
+    },
+    {
+      "name": "drawUpgradeBackdrop",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 763
+    },
+    {
+      "name": "drawLegendaryText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 778
+    },
+    {
+      "name": "drawUpgradeText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 800
+    },
+    {
+      "name": "drawGameOverText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 832
+    },
+    {
+      "name": "handleOverlayInput",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 841
+    },
+    {
+      "name": "t",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 889
+    },
+    {
+      "name": "f",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 891
+    },
+    {
+      "name": "CombatPolishController",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 30
+    },
+    {
+      "name": "currentPools",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 65
+    },
+    {
+      "name": "simulationScale",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 67
+    },
+    {
+      "name": "updateVisual",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 71
+    },
+    {
+      "name": "updateSimulation",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 77
+    },
+    {
+      "name": "onShot",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 81
+    },
+    {
+      "name": "onProjectileHit",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 89
+    },
+    {
+      "name": "onEnemyKilled",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 96
+    },
+    {
+      "name": "vibrate",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 126
+    },
+    {
+      "name": "applyCameraRecoil",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 131
+    },
+    {
+      "name": "drawWorldUnderlay",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 137
+    },
+    {
+      "name": "updateAndDrawSingularityImpacts",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 151
+    },
+    {
+      "name": "updateAndDrawHazards",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 195
+    },
+    {
+      "name": "drawFoundryHazard",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 259
+    },
+    {
+      "name": "drawNullHazard",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 317
+    },
+    {
+      "name": "collectRenderEnemySubsets",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 385
+    },
+    {
+      "name": "drawBossPhaseTransitions",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 397
+    },
+    {
+      "name": "drawLeaperTelegraphs",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 436
+    },
+    {
+      "name": "drawRevenantIdentity",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 453
+    },
+    {
+      "name": "drawWardenIdentity",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 467
+    },
+    {
+      "name": "drawAuthoredDeaths",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 484
+    },
+    {
+      "name": "fxQuality",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+      "line": 489
+    },
+    {
+      "name": "ThermalBudgetPolicyTest",
+      "kind": "class",
+      "file": "core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java",
+      "line": 7
+    }
+  ],
+  "selected_tests": [
+    "core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java",
+    "core/src/test/java/com/deadlinezero/game/screen/GameScreenBossSummonRosterTest.java"
+  ]
 }
