@@ -36,6 +36,7 @@ import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.config.GraphicsSettings;
 import com.deadlinezero.game.perf.PerformanceTelemetry;
 import com.deadlinezero.game.perf.AdaptiveFrameRateGovernor;
+import com.deadlinezero.game.perf.ThermalBudgetPolicy;
 import com.deadlinezero.game.progression.LegendaryChoice;
 import com.deadlinezero.game.progression.LegendarySelector;
 import com.deadlinezero.game.progression.Upgrade;
@@ -106,8 +107,7 @@ public final class GameScreen extends ScreenAdapter {
             performanceEvaluationTimer = 0f;
             int before = frameRateGovernor.effectiveTarget();
             int userTarget = GraphicsSettings.frameRate().target;
-            int thermalTarget = game.services.thermal.level().fpsCeiling;
-            int allowedTarget = Math.min(userTarget, thermalTarget);
+            int allowedTarget = ThermalBudgetPolicy.allowedFps(userTarget, game.services.thermal.level());
             int after = frameRateGovernor.update(
                 allowedTarget,
                 performanceTelemetry.snapshot(before)
