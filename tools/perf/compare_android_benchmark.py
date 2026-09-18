@@ -34,6 +34,9 @@ def validate(data: dict) -> None:
             raise ValueError(f"invalid {key}: {data[key]}")
     if not 0 <= data["jankRatio"] <= 1:
         raise ValueError(f"invalid jankRatio: {data['jankRatio']}")
+    for key in ("activeEnemies", "activeProjectiles"):
+        if not isinstance(data[key], int) or data[key] < 0:
+            raise ValueError(f"invalid {key}: {data[key]}")
 
 def comparable(base: dict, current: dict) -> tuple[bool, str]:
     if base["scenario"] != current["scenario"]:
@@ -46,6 +49,8 @@ def comparable(base: dict, current: dict) -> tuple[bool, str]:
         return False, "effective FX quality differs materially"
     if current["activeEnemies"] < max(1, int(base["activeEnemies"] * 0.90)):
         return False, "current workload has materially fewer active enemies"
+    if base["activeProjectiles"] > 0 and current["activeProjectiles"] < max(1, int(base["activeProjectiles"] * 0.90)):
+        return False, "current workload has materially fewer active projectiles"
     return True, "comparable"
 
 def compare(base: dict, current: dict) -> dict:

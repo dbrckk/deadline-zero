@@ -53,9 +53,23 @@ class CompareAndroidBenchmarkTest(unittest.TestCase):
         result = mod.compare(sample(), sample(targetFps=90))
         self.assertFalse(result["comparable"])
 
-    def test_materially_lighter_workload_skips_comparison(self):
+    def test_materially_lighter_enemy_workload_skips_comparison(self):
         result = mod.compare(sample(), sample(activeEnemies=30))
         self.assertFalse(result["comparable"])
+        self.assertIn("enemies", result["reason"])
+
+    def test_materially_lighter_projectile_workload_skips_comparison(self):
+        baseline = sample(scenario="horde-160-projectile-180", activeEnemies=160, activeProjectiles=180)
+        current = sample(scenario="horde-160-projectile-180", activeEnemies=160, activeProjectiles=120)
+        result = mod.compare(baseline, current)
+        self.assertFalse(result["comparable"])
+        self.assertIn("projectiles", result["reason"])
+
+    def test_zero_projectile_baseline_remains_comparable(self):
+        baseline = sample(activeProjectiles=0)
+        current = sample(activeProjectiles=0)
+        result = mod.compare(baseline, current)
+        self.assertTrue(result["comparable"])
 
     def test_legacy_baseline_schema_skips_instead_of_failing(self):
         baseline = {
