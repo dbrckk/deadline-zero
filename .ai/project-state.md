@@ -22,22 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T20:52:04Z
+Generated: 2026-09-18T21:00:59Z
 
 ### Git
 - Branch: `main`
-- Head: `756e95929562`
-- Commit date: 2026-09-18T22:50:49+02:00
-- Commit: chore(ai): enable same-package symbol graph enrichment
-- Tracked files: 677
+- Head: `c4bd36034fb9`
+- Commit date: 2026-09-18T22:59:09+02:00
+- Commit: chore(ai): adopt repo standards v15
+- Tracked files: 688
 
 ### Recently changed files
 - `.repo-standards.yml`
-- `core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java`
+- `assets/i18n/messages.properties`
+- `core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java`
+- `core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java`
+- `core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
 - `core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java`
-- `.github/workflows/semantic-refresh.yml`
 
 ### Project signals
 - `build.gradle`

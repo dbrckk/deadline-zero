@@ -2,13 +2,13 @@
 
 Summary: 0 success / 0 failure / 8 active
 
-- Deadline Zero Work Watch: queued / pending (756e9592)
-- Verify: queued / pending (e4a06312)
-- Responsive UI QA: queued / pending (e4a06312)
-- Verify: queued / pending (e4a06312)
-- Verify: queued / pending (8ae98418)
-- Verify: queued / pending (7a44e30e)
-- Verify: queued / pending (f7b0012c)
-- Verify: queued / pending (ba76de8c)
+- Verify: queued / pending (97a7394c)
+- Responsive UI QA: queued / pending (97a7394c)
+- Verify: queued / pending (97a7394c)
+- Responsive UI QA: queued / pending (ba275f51)
+- Verify: queued / pending (ba275f51)
+- Verify: queued / pending (ba275f51)
+- Verify: queued / pending (6b57917f)
+- Verify: queued / pending (6b57917f)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

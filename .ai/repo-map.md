@@ -247,6 +247,7 @@ core/
                 LegendarySelector.java
                 LegendaryState.java
                 Upgrade.java
+                UpgradeDraftPolicy.java
                 UpgradeRarity.java
                 UpgradeSelector.java
               screen/
@@ -457,6 +458,7 @@ core/
                 LegendarySelectorTest.java
                 LegendaryStateTest.java
                 RemainingWeaponFamilyLegendaryBalanceTest.java
+                UpgradeDraftPolicyTest.java
                 UpgradePoolTest.java
                 WeaponFamilyLegendaryBalanceTest.java
                 WeaponFamilyLegendaryTest.java
@@ -11755,6 +11757,54 @@ p.maxHp = Math.max(MIN_HP, Math.min(MAX_HP, p.maxHp * multiplier));
 p.hp = Math.min(p.hp, p.maxHp);
 ````
 
+## File: core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java
+````java
+/**
+ * Build-affinity policy for level-up drafts.
+ *
+ * Once a run has established an elemental or ability identity, one draft slot stays relevant to
+ * that identity while the remaining slots preserve broad roguelite discovery.
+ */
+final class UpgradeDraftPolicy {
+⋮----
+static boolean hasEstablishedBuild(Player player) {
+⋮----
+for (AbilityType type : AbilityType.values()) {
+if (player.abilities.level(type) >= 2) return true;
+⋮----
+static boolean isFocusedCandidate(Player player, Upgrade upgrade) {
+return affinityMultiplier(player, upgrade) >= 1.50f;
+⋮----
+static float affinityMultiplier(Player player, Upgrade upgrade) {
+⋮----
+float multiplier = elementalAffinity(player, upgrade);
+multiplier *= abilityAffinity(player, upgrade);
+return Math.max(.45f, Math.min(3.25f, multiplier));
+⋮----
+private static float elementalAffinity(Player player, Upgrade upgrade) {
+⋮----
+DamageElement family = elementFamily(upgrade);
+⋮----
+private static DamageElement elementFamily(Upgrade upgrade) {
+⋮----
+private static float abilityAffinity(Player player, Upgrade upgrade) {
+AbilityType offered = abilityType(upgrade);
+⋮----
+int ownLevel = player.abilities.level(offered);
+⋮----
+case TESLA_ORB -> partnerBoost(player, AbilityType.CRYO_NOVA, AbilityType.DRONE, AbilityType.ORBITAL_BLADE);
+case MISSILE_SWARM -> partnerBoost(player, AbilityType.CRYO_NOVA, AbilityType.DRONE);
+case CRYO_NOVA -> partnerBoost(player, AbilityType.TESLA_ORB, AbilityType.MISSILE_SWARM, AbilityType.ORBITAL_BLADE);
+case DRONE -> partnerBoost(player, AbilityType.TESLA_ORB, AbilityType.MISSILE_SWARM);
+case ORBITAL_BLADE -> partnerBoost(player, AbilityType.CRYO_NOVA, AbilityType.TESLA_ORB);
+⋮----
+private static float partnerBoost(Player player, AbilityType... partners) {
+⋮----
+for (AbilityType partner : partners) strongest = Math.max(strongest, player.abilities.level(partner));
+⋮----
+private static AbilityType abilityType(Upgrade upgrade) {
+````
+
 ## File: core/src/main/java/com/deadlinezero/game/progression/UpgradeRarity.java
 ````java
 
@@ -11767,16 +11817,23 @@ public final class UpgradeSelector {
 private static final Upgrade[] ALL = Upgrade.values();
 ⋮----
 public static void fillChoices(Player player, Upgrade[] out) {
+boolean focusedDraft = UpgradeDraftPolicy.hasEstablishedBuild(player);
 ⋮----
-int count = collectEligible(player, out, slot);
+int count = collectEligible(player, out, slot, focusedSlot);
+if (count == 0 && focusedSlot) count = collectEligible(player, out, slot, false);
 ⋮----
 float roll = MathUtils.random(total);
 ⋮----
-private static int collectEligible(Player player, Upgrade[] chosen, int chosenCount) {
+private static int collectEligible(Player player, Upgrade[] chosen, int chosenCount, boolean focusedOnly) {
 ⋮----
 if (!isAvailable(player, upgrade)) continue;
+if (focusedOnly && !UpgradeDraftPolicy.isFocusedCandidate(player, upgrade)) continue;
 ⋮----
-WEIGHTS[count] = rarityWeight(upgrade.rarity);
+WEIGHTS[count] = rarityWeight(upgrade.rarity) * UpgradeDraftPolicy.affinityMultiplier(player, upgrade);
+⋮----
+public static boolean isBuildFocusedChoice(Player player, Upgrade upgrade) {
+return UpgradeDraftPolicy.hasEstablishedBuild(player)
+&& UpgradeDraftPolicy.isFocusedCandidate(player, upgrade);
 ⋮----
 static boolean isAvailable(Player p, Upgrade u) {
 ⋮----
@@ -12795,8 +12852,11 @@ font.setColor(VisualTheme.upgradeRarity(choices[i].rarity));
 font.draw(batch, f("combat.upgradeCard", i + 1, t(choices[i].titleKey())),
 ⋮----
 font.getData().setScale(.92f);
-⋮----
-font.draw(batch, choices[i].rarity.name(),
+boolean buildPath = i == 0 && UpgradeSelector.isBuildFocusedChoice(player, choices[i]);
+font.setColor(buildPath ? VisualTheme.CYAN : VisualTheme.TEXT);
+font.draw(batch, buildPath
+? choices[i].rarity.name() + "  |  " + t("combat.upgradeBuildPath")
+: choices[i].rarity.name(),
 ⋮----
 font.getData().setScale(.96f);
 font.setColor(Color.WHITE);
@@ -23377,6 +23437,53 @@ assertTrue(dpsMultiplier >= 1.30f && dpsMultiplier <= 1.33f);
 @Test void breacherRuptureControlsPelletGrowth() {
 ````
 
+## File: core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java
+````java
+final class UpgradeDraftPolicyTest {
+private Player freshPlayer() {
+RunLoadoutContext.end();
+return new Player(0f, 0f);
+⋮----
+@Test void kineticFreshRunKeepsBroadDraftPool() {
+Player player = freshPlayer();
+assertFalse(UpgradeDraftPolicy.hasEstablishedBuild(player));
+assertEquals(1f, UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.FIRE_CONTROL), .0001f);
+assertEquals(1f, UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.TESLA_ORB), .0001f);
+⋮----
+@Test void elementalBuildStronglyPrefersMatchingFamilyAndDeemphasizesConflicts() {
+⋮----
+assertTrue(UpgradeDraftPolicy.hasEstablishedBuild(player));
+assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.FIRE_CONTROL) >= 2f);
+assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.THERMAL_LANCE));
+assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.CRYO_HAMMER) < 1f);
+assertFalse(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.CRYO_HAMMER));
+⋮----
+@Test void investedAbilityPrefersItsOwnTreeAndKnownSynergyPartners() {
+⋮----
+player.abilities.upgrade(AbilityType.TESLA_ORB);
+⋮----
+assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.TESLA_ORB));
+assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.CRYO_NOVA));
+assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.DRONE));
+assertFalse(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.MISSILE_SWARM));
+⋮----
+@Test void maturePartnerRaisesSynergyOfferWeight() {
+⋮----
+player.abilities.upgrade(AbilityType.CRYO_NOVA);
+⋮----
+assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.MISSILE_SWARM) >= 2f);
+assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.ORBITAL) >= 2f);
+⋮----
+@Test void establishedElementAlwaysGetsOneRelevantDraftSlot() {
+⋮----
+UpgradeSelector.fillChoices(player, choices);
+assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, choices[0]), choices[0].name());
+assertTrue(UpgradeSelector.isAvailable(player, choices[0]), choices[0].name());
+assertTrue(choices[0] != choices[1] && choices[0] != choices[2] && choices[1] != choices[2]);
+⋮----
+@Test void establishedAbilityAlwaysGetsOwnOrSynergyRelevantDraftSlot() {
+````
+
 ## File: core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java
 ````java
 final class UpgradePoolTest {
@@ -27770,7 +27877,7 @@ expected_frames = sum(len(indices) for indices in expected.values())
 ````yaml
 source: dbrckk/repo-standards
 ref: main
-version: 14
+version: 15
 adopted: true
 workflow_mode: unified-single-commit
 repo_brain: dbrckk/repo-brain@main
@@ -27779,6 +27886,7 @@ hotset_fallback: recent-project-state
 graph_routing: compact-sharded-reverse-deps
 graph_resolver: java-kotlin-tail-v2
 graph_enrichment: unique-type-symbol-references-v1
+context_budget: confidence-dynamic-3-6-12
 ai_context:
   index: .ai/index.md
   project_state: .ai/project-state.md
