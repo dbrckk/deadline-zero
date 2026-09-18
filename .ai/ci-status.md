@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 5 success / 0 failure / 3 active
+Summary: 2 success / 1 failure / 5 active
 
-- Verify: in_progress / pending (6224aa88)
-- Verify: in_progress / pending (6224aa88)
-- Responsive UI QA: in_progress / pending (6224aa88)
-- Responsive UI QA: completed / success (642ec1c2)
-- Verify: completed / success (642ec1c2)
-- Verify: completed / success (642ec1c2)
-- Verify: completed / success (1a79d82d)
-- Verify: completed / success (ddac5dc9)
+- Responsive UI QA: in_progress / pending (fc30d6e1)
+- Verify: in_progress / pending (fc30d6e1)
+- Responsive UI QA: completed / success (8e886772)
+- Verify: in_progress / pending (8e886772)
+- Verify: in_progress / pending (8e886772)
+- Verify: in_progress / pending (d6f57b0e)
+- Verify: completed / failure (b617741a)
+- Responsive UI QA: completed / success (b617741a)
+
+## Latest failed run structure
+- Job: android-runtime
+  - Failed step: Gate Android runtime crashes and ANRs
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
