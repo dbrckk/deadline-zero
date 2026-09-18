@@ -814,8 +814,11 @@ public final class GameScreen extends ScreenAdapter {
                 left + 12f, h * .565f, cardWidth - 24f, Align.center, true);
 
             font.getData().setScale(.92f);
-            font.setColor(VisualTheme.TEXT);
-            font.draw(batch, choices[i].rarity.name(),
+            boolean buildPath = i == 0 && UpgradeSelector.isBuildFocusedChoice(player, choices[i]);
+            font.setColor(buildPath ? VisualTheme.CYAN : VisualTheme.TEXT);
+            font.draw(batch, buildPath
+                    ? choices[i].rarity.name() + "  |  " + t("combat.upgradeBuildPath")
+                    : choices[i].rarity.name(),
                 left + 12f, h * .495f, cardWidth - 24f, Align.center, false);
 
             font.getData().setScale(.96f);

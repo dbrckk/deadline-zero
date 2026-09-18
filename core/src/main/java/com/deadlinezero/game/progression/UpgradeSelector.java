@@ -13,8 +13,11 @@ public final class UpgradeSelector {
     private UpgradeSelector() {}
 
     public static void fillChoices(Player player, Upgrade[] out) {
+        boolean focusedDraft = UpgradeDraftPolicy.hasEstablishedBuild(player);
         for (int slot = 0; slot < out.length; slot++) {
-            int count = collectEligible(player, out, slot);
+            boolean focusedSlot = focusedDraft && slot == 0;
+            int count = collectEligible(player, out, slot, focusedSlot);
+            if (count == 0 && focusedSlot) count = collectEligible(player, out, slot, false);
             if (count == 0) {
                 out[slot] = Upgrade.DAMAGE;
                 continue;
@@ -31,20 +34,26 @@ public final class UpgradeSelector {
         }
     }
 
-    private static int collectEligible(Player player, Upgrade[] chosen, int chosenCount) {
+    private static int collectEligible(Player player, Upgrade[] chosen, int chosenCount, boolean focusedOnly) {
         int count = 0;
         for (Upgrade upgrade : ALL) {
             if (!isAvailable(player, upgrade)) continue;
+            if (focusedOnly && !UpgradeDraftPolicy.isFocusedCandidate(player, upgrade)) continue;
             boolean duplicate = false;
             for (int i = 0; i < chosenCount; i++) {
                 if (chosen[i] == upgrade) { duplicate = true; break; }
             }
             if (duplicate) continue;
             ELIGIBLE[count] = upgrade;
-            WEIGHTS[count] = rarityWeight(upgrade.rarity);
+            WEIGHTS[count] = rarityWeight(upgrade.rarity) * UpgradeDraftPolicy.affinityMultiplier(player, upgrade);
             count++;
         }
         return count;
+    }
+
+    public static boolean isBuildFocusedChoice(Player player, Upgrade upgrade) {
+        return UpgradeDraftPolicy.hasEstablishedBuild(player)
+            && UpgradeDraftPolicy.isFocusedCandidate(player, upgrade);
     }
 
     static boolean isAvailable(Player p, Upgrade u) {
