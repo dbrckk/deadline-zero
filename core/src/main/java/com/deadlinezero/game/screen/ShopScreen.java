@@ -86,9 +86,13 @@ public final class ShopScreen extends ScreenAdapter {
         }
         for (int i = 0; i < purchaseButtons.length; i++) {
             Rectangle r = purchaseButtons[i];
+            String productId = purchaseProductId(i);
             boolean owned = (i == 0 && p.starterPackGranted) || (i == 3 && p.removeAdsPurchased);
+            boolean enabled = game.services.offers.current().enabled(productId);
             UiRenderer.button(shapes, r.x, r.y, r.width, r.height,
-                owned ? UiRenderer.ButtonState.DISABLED : UiRenderer.ButtonState.NORMAL);
+                owned || !enabled ? UiRenderer.ButtonState.DISABLED
+                    : game.services.offers.current().featured(productId) ? UiRenderer.ButtonState.SELECTED
+                    : UiRenderer.ButtonState.NORMAL);
         }
         shapes.end();
 
@@ -156,13 +160,15 @@ public final class ShopScreen extends ScreenAdapter {
         for (int i = 0; i < purchaseButtons.length; i++) {
             Rectangle r = purchaseButtons[i];
             boolean owned = (i == 0 && p.starterPackGranted) || (i == 3 && p.removeAdsPurchased);
+            String productId = purchaseProductId(i);
+            boolean enabled = game.services.offers.current().enabled(productId);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
-            font.setColor(owned ? VisualTheme.MUTED : i == 0 ? VisualTheme.GOLD : i == 3 ? VisualTheme.CYAN_SOFT : VisualTheme.TEXT_STRONG);
+            font.setColor(owned || !enabled ? VisualTheme.MUTED : i == 0 ? VisualTheme.GOLD : i == 3 ? VisualTheme.CYAN_SOFT : VisualTheme.TEXT_STRONG);
             font.draw(batch, labels[i], r.x + 10f, r.y + r.height * .63f, r.width - 20f, Align.center, true);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
-            font.setColor(owned ? VisualTheme.MUTED : VisualTheme.TEXT_DIM);
-            font.draw(batch, owned ? t("shop.owned") : "PLAY BILLING", r.x + 10f, r.y + 22f,
-                r.width - 20f, Align.center, false);
+            font.setColor(owned || !enabled ? VisualTheme.MUTED : VisualTheme.TEXT_DIM);
+            String sublabel = owned ? t("shop.owned") : !enabled ? t("shop.billingUnavailable") : "PLAY BILLING";
+            font.draw(batch, sublabel, r.x + 10f, r.y + 22f, r.width - 20f, Align.center, false);
         }
     }
 
@@ -235,6 +241,7 @@ public final class ShopScreen extends ScreenAdapter {
     }
 
     private void purchase(String productId) {
+        if (!game.services.offers.current().enabled(productId)) { status = t("shop.billingUnavailable"); return; }
         if (BillingService.REMOVE_ADS.equals(productId) && game.profile.removeAdsPurchased) { status = t("shop.adFreeOwned"); return; }
         if (BillingService.STARTER_PACK.equals(productId) && game.profile.starterPackGranted) { status = t("shop.starterClaimed"); return; }
         if (game.services.billing.state() == BillingService.State.PURCHASE_PENDING) { status = t("shop.paymentAlreadyPending"); return; }
@@ -248,6 +255,16 @@ public final class ShopScreen extends ScreenAdapter {
             if (granted) { game.saveProfile(); status = t("shop.purchaseDelivered"); }
             else status = t("shop.purchaseAlreadyDelivered");
         }, () -> status = t("shop.purchaseCancelled"));
+    }
+
+    private String purchaseProductId(int index) {
+        return switch (index) {
+            case 0 -> BillingService.STARTER_PACK;
+            case 1 -> BillingService.GEMS_SMALL;
+            case 2 -> BillingService.GEMS_LARGE;
+            case 3 -> BillingService.REMOVE_ADS;
+            default -> "";
+        };
     }
 
     private void deliverConsumable(BillingService.PurchaseReceipt receipt) {

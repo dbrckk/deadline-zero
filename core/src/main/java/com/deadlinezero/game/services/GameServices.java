@@ -8,31 +8,42 @@ public final class GameServices {
     public final HapticsService haptics;
     public final CloudSaveAdapter cloudSave;
     public final ThermalService thermal;
+    public final OfferConfigService offers;
 
     public GameServices(AdsService ads, BillingService billing) {
-        this(ads, billing, PrivacyService.noOp(), ShareService.noOp(), HapticsService.noOp(), CloudSaveAdapter.unavailable(), ThermalService.noOp());
+        this(ads, billing, PrivacyService.noOp(), ShareService.noOp(), HapticsService.noOp(),
+            CloudSaveAdapter.unavailable(), ThermalService.noOp(), OfferConfigService.safeLocal());
     }
 
     public GameServices(AdsService ads, BillingService billing, PrivacyService privacy) {
-        this(ads, billing, privacy, ShareService.noOp(), HapticsService.noOp(), CloudSaveAdapter.unavailable(), ThermalService.noOp());
+        this(ads, billing, privacy, ShareService.noOp(), HapticsService.noOp(),
+            CloudSaveAdapter.unavailable(), ThermalService.noOp(), OfferConfigService.safeLocal());
     }
 
     public GameServices(AdsService ads, BillingService billing, PrivacyService privacy, ShareService share) {
-        this(ads, billing, privacy, share, HapticsService.noOp(), CloudSaveAdapter.unavailable(), ThermalService.noOp());
+        this(ads, billing, privacy, share, HapticsService.noOp(),
+            CloudSaveAdapter.unavailable(), ThermalService.noOp(), OfferConfigService.safeLocal());
     }
 
     public GameServices(AdsService ads, BillingService billing, PrivacyService privacy, ShareService share,
                         HapticsService haptics) {
-        this(ads, billing, privacy, share, haptics, CloudSaveAdapter.unavailable(), ThermalService.noOp());
+        this(ads, billing, privacy, share, haptics,
+            CloudSaveAdapter.unavailable(), ThermalService.noOp(), OfferConfigService.safeLocal());
     }
 
     public GameServices(AdsService ads, BillingService billing, PrivacyService privacy, ShareService share,
                         HapticsService haptics, CloudSaveAdapter cloudSave) {
-        this(ads, billing, privacy, share, haptics, cloudSave, ThermalService.noOp());
+        this(ads, billing, privacy, share, haptics, cloudSave, ThermalService.noOp(), OfferConfigService.safeLocal());
     }
 
     public GameServices(AdsService ads, BillingService billing, PrivacyService privacy, ShareService share,
                         HapticsService haptics, CloudSaveAdapter cloudSave, ThermalService thermal) {
+        this(ads, billing, privacy, share, haptics, cloudSave, thermal, OfferConfigService.safeLocal());
+    }
+
+    public GameServices(AdsService ads, BillingService billing, PrivacyService privacy, ShareService share,
+                        HapticsService haptics, CloudSaveAdapter cloudSave, ThermalService thermal,
+                        OfferConfigService offers) {
         this.ads = ads;
         this.billing = billing;
         this.privacy = privacy == null ? PrivacyService.noOp() : privacy;
@@ -40,6 +51,7 @@ public final class GameServices {
         this.haptics = haptics == null ? HapticsService.noOp() : haptics;
         this.cloudSave = cloudSave == null ? CloudSaveAdapter.unavailable() : cloudSave;
         this.thermal = thermal == null ? ThermalService.noOp() : thermal;
+        this.offers = offers == null ? OfferConfigService.safeLocal() : offers;
     }
 
     public static GameServices noOp() {
