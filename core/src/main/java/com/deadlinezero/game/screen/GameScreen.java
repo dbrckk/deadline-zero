@@ -377,7 +377,10 @@ public final class GameScreen extends ScreenAdapter {
                 e.hitFlash = 1f;
                 e.applyElement(p.element, p.damage);
                 float reactionBonus = player.protocols.reactionBonus(p.damage, e.lastReaction);
-                if (reactionBonus > 0f && e.alive) e.damage(reactionBonus);
+                if (reactionBonus > 0f && e.alive) {
+                    e.damage(reactionBonus);
+                    CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.REACTION);
+                }
                 damageNumber(e.position.x, e.position.y + e.radius, p.damage + reactionBonus, p.critical,
                     p.critical ? VisualTheme.GOLD : VisualTheme.TEXT);
                 float vlen = p.velocity.len();
@@ -506,7 +509,9 @@ public final class GameScreen extends ScreenAdapter {
             if (game.accessibility != null && game.accessibility.haptics) game.services.haptics.bossKill();
         }
         polish.onEnemyKilled(e, pools);
-        player.protocols.onKill();
+        if (player.protocols.onKill()) {
+            CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.KILLCHAIN_ARMED);
+        }
         director.onKill();
         if (player.addXp(e.xpValue)) prepareUpgrade();
         impact(e.position.x, e.position.y, e.radius * 2.3f, .28f, VisualTheme.GREEN);
@@ -543,6 +548,14 @@ public final class GameScreen extends ScreenAdapter {
         float base = aim.angleDeg();
         int count = player.weapon.projectileCount;
         com.deadlinezero.game.progression.CombatProtocolState.VolleyModifier protocol = player.protocols.onVolley();
+        if (protocol.damageMultiplier() > 1f) {
+            CombatVisualEvents.ProtocolCue cue = protocol.forcedCrit() && protocol.bonusPenetration() > 0
+                ? CombatVisualEvents.ProtocolCue.COMBINED
+                : protocol.forcedCrit() ? CombatVisualEvents.ProtocolCue.RHYTHM
+                : CombatVisualEvents.ProtocolCue.KILLCHAIN;
+            CombatVisualEvents.markProtocol(cue);
+            AudioDirector.playGlobal(AudioDirector.Cue.PROTOCOL_PROC);
+        }
         for (int i = 0; i < count; i++) {
             float spread = (i - (count - 1) / 2f) * player.weapon.spreadDegrees;
             shotVelocity.set(player.weapon.projectileSpeed, 0f).setAngleDeg(base + spread);
