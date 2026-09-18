@@ -16,10 +16,18 @@ final class WeaponSynergyRulesTest {
             WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.CINDER_CANNON));
         assertEquals(WeaponSynergyRules.Synergy.CRYO_GHOST,
             WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.CRYO_LANCE));
+        assertEquals(WeaponSynergyRules.Synergy.TEMPEST_CIRCUIT,
+            WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.TEMPEST_BURST));
+        assertEquals(WeaponSynergyRules.Synergy.WHITEOUT_GHOST,
+            WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.WHITEOUT_SHARD));
+        assertEquals(WeaponSynergyRules.Synergy.PHOENIX_BULWARK,
+            WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.PHOENIX_REPEATER));
         assertEquals(WeaponSynergyRules.Synergy.NONE,
             WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.REX, WeaponCatalog.ION_NEEDLE));
         assertEquals(WeaponSynergyRules.Synergy.NONE,
             WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.AR9));
+        assertEquals(WeaponSynergyRules.Synergy.NONE,
+            WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.NYX, WeaponCatalog.PHOENIX_REPEATER));
     }
 
     @Test void synergyBonusesStayInsideSafePowerBudget() {

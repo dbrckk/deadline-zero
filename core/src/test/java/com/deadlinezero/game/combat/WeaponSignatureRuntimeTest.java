@@ -40,6 +40,46 @@ final class WeaponSignatureRuntimeTest {
         }
     }
 
+    @Test void tempestBurstSurgesOnEverySecondThreeShotBurst() {
+        WeaponSignatureRuntime.begin(WeaponCatalog.TEMPEST_BURST);
+        for (int i = 1; i <= 12; i++) {
+            var mark = WeaponSignatureRuntime.consumeShot(false);
+            assertEquals(i % 6 == 0, mark.active());
+            if (i % 6 == 0) {
+                assertEquals(WeaponSignatureRuntime.Kind.TEMPEST_SURGE, mark.kind());
+                assertEquals(2, mark.penetrationBonus());
+                assertEquals(1.20f, mark.damageMultiplier(), .0001f);
+            }
+        }
+    }
+
+    @Test void whiteoutShardAddsControlShardEverySecondVolley() {
+        WeaponSignatureRuntime.begin(WeaponCatalog.WHITEOUT_SHARD);
+        for (int i = 1; i <= 16; i++) {
+            var mark = WeaponSignatureRuntime.consumeShot(false);
+            assertEquals(i % 8 == 0, mark.active());
+            if (i % 8 == 0) {
+                assertEquals(WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER, mark.kind());
+                assertEquals(1, mark.penetrationBonus());
+                assertEquals(1.38f, mark.knockbackMultiplier(), .0001f);
+                assertEquals(.17f, mark.radius(), .0001f);
+            }
+        }
+    }
+
+    @Test void phoenixRepeaterIgnitesEveryFifthRound() {
+        WeaponSignatureRuntime.begin(WeaponCatalog.PHOENIX_REPEATER);
+        for (int i = 1; i <= 10; i++) {
+            var mark = WeaponSignatureRuntime.consumeShot(false);
+            assertEquals(i % 5 == 0, mark.active());
+            if (i % 5 == 0) {
+                assertEquals(WeaponSignatureRuntime.Kind.PHOENIX_IGNITION, mark.kind());
+                assertEquals(1.30f, mark.damageMultiplier(), .0001f);
+                assertEquals(1, mark.penetrationBonus());
+            }
+        }
+    }
+
     @Test void beginningANewRunResetsSignatureCadence() {
         WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);
         for (int i = 0; i < 4; i++) assertFalse(WeaponSignatureRuntime.consumeShot(false).active());
@@ -71,5 +111,28 @@ final class WeaponSignatureRuntimeTest {
         assertEquals(2, p.penetrationRemaining);
         assertEquals(.17f, p.radius, .0001f);
         assertTrue(p.knockback > 4f);
+    }
+
+    @Test void newEndgameSignaturesTransformActualProjectiles() {
+        WeaponSignatureRuntime.begin(WeaponCatalog.TEMPEST_BURST);
+        for (int i = 0; i < 5; i++) new Projectile().spawn(0, 0, 1, 0, 10f, false, 1, 1f, DamageElement.SHOCK);
+        Projectile tempest = new Projectile().spawn(0, 0, 1, 0, 10f, false, 1, 1f, DamageElement.SHOCK);
+        assertEquals(WeaponSignatureRuntime.Kind.TEMPEST_SURGE, tempest.weaponSignatureKind);
+        assertEquals(3, tempest.penetrationRemaining);
+        assertEquals(12f, tempest.damage, .0001f);
+
+        WeaponSignatureRuntime.begin(WeaponCatalog.WHITEOUT_SHARD);
+        for (int i = 0; i < 7; i++) new Projectile().spawn(0, 0, 1, 0, 20f, false, 0, 2f, DamageElement.FROST);
+        Projectile whiteout = new Projectile().spawn(0, 0, 1, 0, 20f, false, 0, 2f, DamageElement.FROST);
+        assertEquals(WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER, whiteout.weaponSignatureKind);
+        assertEquals(1, whiteout.penetrationRemaining);
+        assertTrue(whiteout.knockback > 2.7f);
+
+        WeaponSignatureRuntime.begin(WeaponCatalog.PHOENIX_REPEATER);
+        for (int i = 0; i < 4; i++) new Projectile().spawn(0, 0, 1, 0, 20f, false, 1, 1f, DamageElement.FIRE);
+        Projectile phoenix = new Projectile().spawn(0, 0, 1, 0, 20f, false, 1, 1f, DamageElement.FIRE);
+        assertEquals(WeaponSignatureRuntime.Kind.PHOENIX_IGNITION, phoenix.weaponSignatureKind);
+        assertEquals(26f, phoenix.damage, .0001f);
+        assertEquals(2, phoenix.penetrationRemaining);
     }
 }

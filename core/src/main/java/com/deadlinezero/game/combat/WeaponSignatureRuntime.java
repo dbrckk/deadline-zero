@@ -5,7 +5,14 @@ package com.deadlinezero.game.combat;
  * Kept data-only so projectile decoration remains testable and independent from screens.
  */
 public final class WeaponSignatureRuntime {
-    public enum Kind { NONE, ION_OVERCHARGE, CINDER_OVERHEAT }
+    public enum Kind {
+        NONE,
+        ION_OVERCHARGE,
+        CINDER_OVERHEAT,
+        TEMPEST_SURGE,
+        WHITEOUT_SHATTER,
+        PHOENIX_IGNITION
+    }
 
     public record ShotModifier(Kind kind, boolean active, boolean forceCritical, float damageMultiplier,
                                int penetrationBonus, float knockbackMultiplier, float radius) {
@@ -52,12 +59,32 @@ public final class WeaponSignatureRuntime {
                 critMultiplier * legendaryBoost, ionCascade ? 2 : 1,
                 ionCascade ? 1.28f : 1.18f, ionCascade ? .15f : .135f);
         }
+
         int cinderCadence = cinderFurnace ? 3 : 4;
         if ("cinder_cannon".equals(weaponId) && shotIndex % cinderCadence == 0) {
             return new ShotModifier(Kind.CINDER_OVERHEAT, true, false,
                 cinderFurnace ? 1.72f : 1.55f, cinderFurnace ? 2 : 1,
                 cinderFurnace ? 1.42f : 1.28f, cinderFurnace ? .21f : .17f);
         }
+
+        // Tempest fires three-projectile bursts: every second burst ends in a penetrating surge.
+        if ("tempest_burst".equals(weaponId) && shotIndex % 6 == 0) {
+            return new ShotModifier(Kind.TEMPEST_SURGE, true, false,
+                1.20f, 2, 1.10f, .145f);
+        }
+
+        // Whiteout fires four shards: every second volley lands one oversized control shard.
+        if ("whiteout_shard".equals(weaponId) && shotIndex % 8 == 0) {
+            return new ShotModifier(Kind.WHITEOUT_SHATTER, true, false,
+                1.18f, 1, 1.38f, .17f);
+        }
+
+        // Phoenix is a precision repeater: every fifth round becomes a heavier ignition shot.
+        if ("phoenix_repeater".equals(weaponId) && shotIndex % 5 == 0) {
+            return new ShotModifier(Kind.PHOENIX_IGNITION, true, false,
+                1.30f, 1, 1.16f, .15f);
+        }
+
         return ShotModifier.none();
     }
 

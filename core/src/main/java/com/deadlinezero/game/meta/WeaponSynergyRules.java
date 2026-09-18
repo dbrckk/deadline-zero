@@ -10,7 +10,10 @@ public final class WeaponSynergyRules {
         ARC_CONDUCTOR("ARC CONDUCTOR", 1.10f, 1.08f, .04f, 1f),
         EXECUTION_PROTOCOL("EXECUTION PROTOCOL", 1.08f, 1f, .06f, 1f),
         SIEGE_FURNACE("SIEGE FURNACE", 1.12f, 1f, 0f, .95f),
-        CRYO_GHOST("CRYO GHOST", 1.06f, 1.10f, .03f, 1f);
+        CRYO_GHOST("CRYO GHOST", 1.06f, 1.10f, .03f, 1f),
+        TEMPEST_CIRCUIT("TEMPEST CIRCUIT", 1.08f, 1.10f, .03f, 1f),
+        WHITEOUT_GHOST("WHITEOUT GHOST", 1.06f, 1.08f, .03f, .98f),
+        PHOENIX_BULWARK("PHOENIX BULWARK", 1.10f, 1f, 0f, .96f);
 
         public final String displayName;
         public final float weaponDamageMultiplier;
@@ -43,6 +46,15 @@ public final class WeaponSynergyRules {
         }
         if (safeWeapon == WeaponCatalog.CRYO_LANCE && safeSurvivor == SurvivorCatalog.Survivor.WRAITH) {
             return Synergy.CRYO_GHOST;
+        }
+        if (safeWeapon == WeaponCatalog.TEMPEST_BURST && safeSurvivor == SurvivorCatalog.Survivor.VOLT) {
+            return Synergy.TEMPEST_CIRCUIT;
+        }
+        if (safeWeapon == WeaponCatalog.WHITEOUT_SHARD && safeSurvivor == SurvivorCatalog.Survivor.WRAITH) {
+            return Synergy.WHITEOUT_GHOST;
+        }
+        if (safeWeapon == WeaponCatalog.PHOENIX_REPEATER && safeSurvivor == SurvivorCatalog.Survivor.BASTION) {
+            return Synergy.PHOENIX_BULWARK;
         }
         return Synergy.NONE;
     }
