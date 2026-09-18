@@ -55,4 +55,30 @@ final class UpgradeDraftPolicyTest {
         assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.MISSILE_SWARM) >= 2f);
         assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.ORBITAL) >= 2f);
     }
+
+    @Test void establishedElementAlwaysGetsOneRelevantDraftSlot() {
+        Player player = freshPlayer();
+        player.weapon.element = DamageElement.FIRE;
+        Upgrade[] choices = new Upgrade[3];
+
+        for (int sample = 0; sample < 100; sample++) {
+            UpgradeSelector.fillChoices(player, choices);
+            assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, choices[0]), choices[0].name());
+            assertTrue(UpgradeSelector.isAvailable(player, choices[0]), choices[0].name());
+            assertTrue(choices[0] != choices[1] && choices[0] != choices[2] && choices[1] != choices[2]);
+        }
+    }
+
+    @Test void establishedAbilityAlwaysGetsOwnOrSynergyRelevantDraftSlot() {
+        Player player = freshPlayer();
+        player.abilities.upgrade(AbilityType.TESLA_ORB);
+        player.abilities.upgrade(AbilityType.TESLA_ORB);
+        Upgrade[] choices = new Upgrade[3];
+
+        for (int sample = 0; sample < 100; sample++) {
+            UpgradeSelector.fillChoices(player, choices);
+            assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, choices[0]), choices[0].name());
+            assertTrue(UpgradeSelector.isAvailable(player, choices[0]), choices[0].name());
+        }
+    }
 }
