@@ -51,6 +51,11 @@ public final class UpgradeSelector {
         return count;
     }
 
+    public static boolean isBuildFocusedChoice(Player player, Upgrade upgrade) {
+        return UpgradeDraftPolicy.hasEstablishedBuild(player)
+            && UpgradeDraftPolicy.isFocusedCandidate(player, upgrade);
+    }
+
     static boolean isAvailable(Player p, Upgrade u) {
         if (p == null || u == null) return false;
         return switch (u) {
