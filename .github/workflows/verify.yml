@@ -212,6 +212,9 @@ jobs:
             adb shell am force-stop com.deadlinezero.game
             test -z "$(adb shell pidof com.deadlinezero.game)"
             adb shell am instrument -w -e persistencePhase verify -e class com.deadlinezero.game.android.AndroidProcessPersistenceTest#verifyProfileAfterExternalProcessRestart com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | grep -q 'OK (1 test)'
+            adb logcat -d -v threadtime > build/android-runtime/logcat.txt
+            test -s build/android-runtime/logcat.txt
+            trap - EXIT
       - name: Gate Android runtime crashes and ANRs
         if: always()
         run: |
