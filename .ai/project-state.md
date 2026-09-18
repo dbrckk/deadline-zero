@@ -22,19 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T19:35:00Z
+Generated: 2026-09-18T19:53:30Z
 
 ### Git
 - Branch: `main`
-- Head: `125db247f066`
-- Commit date: 2026-09-18T21:32:33+02:00
-- Commit: chore(ai): adopt graph-first agent routing
-- Tracked files: 637
+- Head: `cd3d01070b6a`
+- Commit date: 2026-09-18T21:53:18+02:00
+- Commit: Gate Android runtime crashes and ANRs
+- Tracked files: 639
 
 ### Recently changed files
+- `.github/workflows/verify.yml`
+- `tools/android/scan_runtime_log.py`
+- `tools/android/test_scan_runtime_log.py`
 - `AGENTS.md`
 - `.repo-standards.yml`
-- `.github/workflows/ai-repo-map.yml`
 
 ### Project signals
 - `build.gradle`

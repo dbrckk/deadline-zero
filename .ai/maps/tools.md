@@ -38,6 +38,9 @@ The content is organized as follows:
 
 # Directory Structure
 ```
+android/
+  scan_runtime_log.py
+  test_scan_runtime_log.py
 blender/
   add_rex_rifle.py
   build_rex_actions.py
@@ -76,6 +79,83 @@ verify_final_atlas.py
 ```
 
 # Files
+
+## File: android/scan_runtime_log.py
+```python
+#!/usr/bin/env python3
+⋮----
+DEFAULT_PACKAGE = "com.deadlinezero.game"
+⋮----
+def _exact_package(pattern_prefix: str, package: str) -> re.Pattern
+⋮----
+# Require a delimiter that cannot continue an Android package name. This prevents
+# com.deadlinezero.game.test from being mistaken for com.deadlinezero.game.
+⋮----
+def scan(text: str, package: str = DEFAULT_PACKAGE) -> dict
+⋮----
+lines = text.splitlines()
+findings = []
+⋮----
+anr = _exact_package(r"\bANR in\s+", package)
+process = _exact_package(r"\bProcess:\s*", package)
+cmdline = _exact_package(r"\bCmdline:\s*", package)
+fatal_exception = re.compile(r"\bFATAL EXCEPTION\b")
+native_fatal = re.compile(r"\bFatal signal\s+(?:6|11)\b", re.IGNORECASE)
+⋮----
+window = "\n".join(lines[i:min(len(lines), i + 8)])
+⋮----
+start = max(0, i - 3)
+end = min(len(lines), i + 8)
+window = "\n".join(lines[start:end])
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+⋮----
+result = scan(Path(args.logcat).read_text(errors="replace"), args.package)
+rendered = json.dumps(result, indent=2, sort_keys=True)
+```
+
+## File: android/test_scan_runtime_log.py
+```python
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+MODULE_PATH = ROOT / "tools" / "android" / "scan_runtime_log.py"
+spec = importlib.util.spec_from_file_location("scan_runtime_log", MODULE_PATH)
+mod = importlib.util.module_from_spec(spec)
+⋮----
+class RuntimeLogScannerTest(unittest.TestCase)
+⋮----
+def test_clean_log_passes(self)
+⋮----
+result = mod.scan("I ActivityManager: Start proc com.deadlinezero.game\nI DeadlineZero: running")
+⋮----
+def test_detects_package_anr(self)
+⋮----
+result = mod.scan("E ActivityManager: ANR in com.deadlinezero.game (com.deadlinezero.game/.android.AndroidLauncher)")
+⋮----
+def test_detects_java_crash_only_for_game_process(self)
+⋮----
+log = """E AndroidRuntime: FATAL EXCEPTION: main
+result = mod.scan(log)
+⋮----
+def test_ignores_other_process_java_crash(self)
+⋮----
+def test_ignores_instrumentation_process_with_package_prefix(self)
+⋮----
+log = """E AndroidRuntime: FATAL EXCEPTION: Instr: androidx.test.runner.AndroidJUnitRunner
+⋮----
+def test_ignores_instrumentation_process_anr_with_package_prefix(self)
+⋮----
+def test_exact_game_package_still_matches_with_activity_suffix(self)
+⋮----
+def test_detects_native_crash_when_package_is_in_context(self)
+⋮----
+log = """I DEBUG: Cmdline: com.deadlinezero.game
+⋮----
+def test_ignores_intentional_force_stop(self)
+```
 
 ## File: blender/add_rex_rifle.py
 ```python

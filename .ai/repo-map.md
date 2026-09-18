@@ -527,6 +527,9 @@ desktop/
                 DesktopSmokeLauncher.java
   build.gradle
 tools/
+  android/
+    scan_runtime_log.py
+    test_scan_runtime_log.py
   blender/
     add_rex_rifle.py
     build_rex_actions.py
@@ -2848,7 +2851,7 @@ jobs:
           gradle-version: '8.11.1'
       - name: Validate final sprite production layout
         run: |
-          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py
+          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py
           python3 tools/validate_final_sprite_layout.py
           python3 tools/validate_rex_reference.py
           python3 tools/sprites/validate_actor_production_contracts.py
@@ -2857,6 +2860,7 @@ jobs:
           python3 -m unittest discover -s tools/sprites -p 'test_validate_actor_role_metrics.py'
           python3 -m unittest discover -s tools/sprites -p 'test_validate_actor_production_contracts.py'
           python3 -m unittest discover -s tools/perf -p 'test_compare_android_benchmark.py'
+          python3 -m unittest discover -s tools/android -p 'test_scan_runtime_log.py'
       - name: Compile and test core
         run: gradle :core:compileJava :core:test :desktop:compileJava
       - name: Smoke-test desktop runtime
@@ -2930,6 +2934,9 @@ jobs:
             adb shell pm path com.deadlinezero.game | grep -q 'package:'
             adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.game | grep -q 'AndroidLauncher'
             adb shell settings put secure immersive_mode_confirmations confirmed || true
+            mkdir -p build/android-runtime
+            adb logcat -c
+            trap 'adb logcat -d -v threadtime > build/android-runtime/logcat.txt 2>/dev/null || true' EXIT
             timeout 3m adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidFirstPlayableJourneyTest#traversesContractCombatDefeatAndVictorySettlement com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/first-playable-journey.txt
             grep -q 'OK (1 test)' /tmp/first-playable-journey.txt
             timeout 3m adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidPerformanceProbeTest#recordsLoadedGameplayPerformanceTelemetry com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/android-performance-probe.txt
@@ -3035,6 +3042,27 @@ jobs:
             adb shell am force-stop com.deadlinezero.game
             test -z "$(adb shell pidof com.deadlinezero.game)"
             adb shell am instrument -w -e persistencePhase verify -e class com.deadlinezero.game.android.AndroidProcessPersistenceTest#verifyProfileAfterExternalProcessRestart com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | grep -q 'OK (1 test)'
+            adb logcat -d -v threadtime > build/android-runtime/logcat.txt
+            test -s build/android-runtime/logcat.txt
+            trap - EXIT
+      - name: Gate Android runtime crashes and ANRs
+        if: always()
+        run: |
+          set -euo pipefail
+          test -s build/android-runtime/logcat.txt
+          python3 tools/android/scan_runtime_log.py             build/android-runtime/logcat.txt             --package com.deadlinezero.game             --json-out build/android-runtime/crash-anr-report.json
+
+      - name: Upload Android runtime diagnostics
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android-runtime-diagnostics-${{ github.run_number }}
+          path: |
+            build/android-runtime/logcat.txt
+            build/android-runtime/crash-anr-report.json
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Upload Android gameplay visual QA
         uses: actions/upload-artifact@v4
         if: always()
@@ -25617,6 +25645,83 @@ tasks.register('smokeRun', JavaExec) {
     mainClass = 'com.deadlinezero.game.desktop.DesktopSmokeLauncher'
     workingDir = rootProject.file('assets')
 }
+````
+
+## File: tools/android/scan_runtime_log.py
+````python
+#!/usr/bin/env python3
+⋮----
+DEFAULT_PACKAGE = "com.deadlinezero.game"
+⋮----
+def _exact_package(pattern_prefix: str, package: str) -> re.Pattern
+⋮----
+# Require a delimiter that cannot continue an Android package name. This prevents
+# com.deadlinezero.game.test from being mistaken for com.deadlinezero.game.
+⋮----
+def scan(text: str, package: str = DEFAULT_PACKAGE) -> dict
+⋮----
+lines = text.splitlines()
+findings = []
+⋮----
+anr = _exact_package(r"\bANR in\s+", package)
+process = _exact_package(r"\bProcess:\s*", package)
+cmdline = _exact_package(r"\bCmdline:\s*", package)
+fatal_exception = re.compile(r"\bFATAL EXCEPTION\b")
+native_fatal = re.compile(r"\bFatal signal\s+(?:6|11)\b", re.IGNORECASE)
+⋮----
+window = "\n".join(lines[i:min(len(lines), i + 8)])
+⋮----
+start = max(0, i - 3)
+end = min(len(lines), i + 8)
+window = "\n".join(lines[start:end])
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+⋮----
+result = scan(Path(args.logcat).read_text(errors="replace"), args.package)
+rendered = json.dumps(result, indent=2, sort_keys=True)
+````
+
+## File: tools/android/test_scan_runtime_log.py
+````python
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+MODULE_PATH = ROOT / "tools" / "android" / "scan_runtime_log.py"
+spec = importlib.util.spec_from_file_location("scan_runtime_log", MODULE_PATH)
+mod = importlib.util.module_from_spec(spec)
+⋮----
+class RuntimeLogScannerTest(unittest.TestCase)
+⋮----
+def test_clean_log_passes(self)
+⋮----
+result = mod.scan("I ActivityManager: Start proc com.deadlinezero.game\nI DeadlineZero: running")
+⋮----
+def test_detects_package_anr(self)
+⋮----
+result = mod.scan("E ActivityManager: ANR in com.deadlinezero.game (com.deadlinezero.game/.android.AndroidLauncher)")
+⋮----
+def test_detects_java_crash_only_for_game_process(self)
+⋮----
+log = """E AndroidRuntime: FATAL EXCEPTION: main
+result = mod.scan(log)
+⋮----
+def test_ignores_other_process_java_crash(self)
+⋮----
+def test_ignores_instrumentation_process_with_package_prefix(self)
+⋮----
+log = """E AndroidRuntime: FATAL EXCEPTION: Instr: androidx.test.runner.AndroidJUnitRunner
+⋮----
+def test_ignores_instrumentation_process_anr_with_package_prefix(self)
+⋮----
+def test_exact_game_package_still_matches_with_activity_suffix(self)
+⋮----
+def test_detects_native_crash_when_package_is_in_context(self)
+⋮----
+log = """I DEBUG: Cmdline: com.deadlinezero.game
+⋮----
+def test_ignores_intentional_force_stop(self)
 ````
 
 ## File: tools/blender/add_rex_rifle.py

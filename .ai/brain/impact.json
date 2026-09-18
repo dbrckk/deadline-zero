@@ -1,21 +1,112 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "c0ce4a0cbbdfc92cd7d5108629e528f873d3fe2c",
-  "head": "125db247f066eda271cf69dcc318a2c71b85f534",
+  "base": "125db247f066eda271cf69dcc318a2c71b85f534",
+  "head": "cd3d01070b6ae4ce5babc10e03fd56450328f233",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".repo-standards.yml",
+      "path": ".github/workflows/verify.yml",
       "status": "M"
     },
     {
-      "path": "AGENTS.md",
-      "status": "M"
+      "path": "tools/android/scan_runtime_log.py",
+      "status": "A"
+    },
+    {
+      "path": "tools/android/test_scan_runtime_log.py",
+      "status": "A"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
-  "selected_tests": []
+  "changed_source_files": [
+    "tools/android/scan_runtime_log.py",
+    "tools/android/test_scan_runtime_log.py"
+  ],
+  "impacted_files": [
+    "tools/android/scan_runtime_log.py",
+    "tools/android/test_scan_runtime_log.py"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "_exact_package",
+      "kind": "function",
+      "file": "tools/android/scan_runtime_log.py",
+      "line": 10
+    },
+    {
+      "name": "scan",
+      "kind": "function",
+      "file": "tools/android/scan_runtime_log.py",
+      "line": 18
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/android/scan_runtime_log.py",
+      "line": 46
+    },
+    {
+      "name": "RuntimeLogScannerTest",
+      "kind": "class",
+      "file": "tools/android/test_scan_runtime_log.py",
+      "line": 11
+    },
+    {
+      "name": "test_clean_log_passes",
+      "kind": "function",
+      "file": "tools/android/test_scan_runtime_log.py",
+      "line": 12
+    },
+    {
+      "name": "test_detects_package_anr",
+      "kind": "function",
+      "file": "tools/android/test_scan_runtime_log.py",
+      "line": 17
+    },
+    {
+      "name": "test_detects_java_crash_only_for_game_process",
+      "kind": "function",
+      "file": "tools/android/test_scan_runtime_log.py",
+      "line": 22
+    },
+    {
+      "name": "test_ignores_other_process_java_crash",
+      "kind": "function",
+      "file": "tools/android/test_scan_runtime_log.py",
+      "line": 31
+    },
+    {
+      "name": "test_ignores_instrumentation_process_with_package_prefix",
+      "kind": "function",
+      "file": "tools/android/test_scan_runtime_log.py",
+      "line": 37
+    },
+    {
+      "name": "test_ignores_instrumentation_process_anr_with_package_prefix",
+      "kind": "function",
+      "file": "tools/android/test_scan_runtime_log.py",
+      "line": 43
+    },
+    {
+      "name": "test_exact_game_package_still_matches_with_activity_suffix",
+      "kind": "function",
+      "file": "tools/android/test_scan_runtime_log.py",
+      "line": 46
+    },
+    {
+      "name": "test_detects_native_crash_when_package_is_in_context",
+      "kind": "function",
+      "file": "tools/android/test_scan_runtime_log.py",
+      "line": 50
+    },
+    {
+      "name": "test_ignores_intentional_force_stop",
+      "kind": "function",
+      "file": "tools/android/test_scan_runtime_log.py",
+      "line": 58
+    }
+  ],
+  "selected_tests": [
+    "tools/android/test_scan_runtime_log.py"
+  ]
 }

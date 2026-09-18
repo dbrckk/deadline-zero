@@ -4,5 +4,737 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
-  "symbols": {}
+  "symbols": {
+    "_exact_package": {
+      "definition": {
+        "file": "tools/android/scan_runtime_log.py",
+        "line": 10,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/scan_runtime_log.py",
+          "line": 10,
+          "preview": "def _exact_package(pattern_prefix: str, package: str) -> re.Pattern:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/android/scan_runtime_log.py",
+          "line": 22,
+          "preview": "anr = _exact_package(r\"\\bANR in\\s+\", package)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/scan_runtime_log.py",
+          "line": 23,
+          "preview": "process = _exact_package(r\"\\bProcess:\\s*\", package)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/scan_runtime_log.py",
+          "line": 24,
+          "preview": "cmdline = _exact_package(r\"\\bCmdline:\\s*\", package)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "scan": {
+      "definition": {
+        "file": "tools/android/scan_runtime_log.py",
+        "line": 18,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/scan_runtime_log.py",
+          "line": 18,
+          "preview": "def scan(text: str, package: str = DEFAULT_PACKAGE) -> dict:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/android/scan_runtime_log.py",
+          "line": 53,
+          "preview": "result = scan(Path(args.logcat).read_text(errors=\"replace\"), args.package)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 13,
+          "preview": "result = mod.scan(\"I ActivityManager: Start proc com.deadlinezero.game\\nI DeadlineZero: running\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 18,
+          "preview": "result = mod.scan(\"E ActivityManager: ANR in com.deadlinezero.game (com.deadlinezero.game/.android.AndroidLauncher)\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 27,
+          "preview": "result = mod.scan(log)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 35,
+          "preview": "self.assertTrue(mod.scan(log)[\"ok\"])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 41,
+          "preview": "self.assertTrue(mod.scan(log)[\"ok\"])",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 44,
+          "preview": "self.assertTrue(mod.scan(\"E ActivityManager: ANR in com.deadlinezero.game.test (com.deadlinezero.game.test)\").get(\"ok\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 47,
+          "preview": "result = mod.scan(\"E ActivityManager: ANR in com.deadlinezero.game (com.deadlinezero.game/.android.AndroidLauncher)\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 54,
+          "preview": "result = mod.scan(log)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 59,
+          "preview": "self.assertTrue(mod.scan(\"I ActivityManager: Force stopping com.deadlinezero.game appid=12345 user=0\")[\"ok\"])",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 11
+    },
+    "main": {
+      "definition": {
+        "file": "tools/android/scan_runtime_log.py",
+        "line": 46,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidPlayGamesCloudSaveAdapter.java",
+          "line": 20,
+          "preview": "/** Google Play Games v2 Saved Games backend. Calls must run off the Android main thread. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidPlayGamesCloudSaveAdapter.java",
+          "line": 205,
+          "preview": "throw new IllegalStateException(\"Cloud save must not block the Android main thread\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/PostFxShader.java",
+          "line": 18,
+          "preview": "\"void main(){ v_color=a_color; v_texCoords=a_texCoord0; gl_Position=u_projTrans*a_position; }\\n\";",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/PostFxShader.java",
+          "line": 25,
+          "preview": "\"void main(){\\n\" +",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 122,
+          "preview": "Path screens = root.resolve(\"core/src/main/java/com/deadlinezero/game/screen\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 126,
+          "preview": "result.add(root.resolve(\"core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 127,
+          "preview": "result.add(root.resolve(\"core/src/main/java/com/deadlinezero/game/meta/RunShareText.java\"));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 162,
+          "preview": "&& Files.isDirectory(candidate.resolve(\"core/src/main/java\"))) return candidate;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/BalanceCurveRegressionTest.java",
+          "line": 74,
+          "preview": "public static void main(String[] args) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopLauncher.java",
+          "line": 9,
+          "preview": "public static void main(String[] args) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java",
+          "line": 26,
+          "preview": "public static void main(String[] args) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/scan_runtime_log.py",
+          "line": 46,
+          "preview": "def main() -> int:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/android/scan_runtime_log.py",
+          "line": 61,
+          "preview": "sys.exit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 23,
+          "preview": "log = \"\"\"E AndroidRuntime: FATAL EXCEPTION: main",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 32,
+          "preview": "log = \"\"\"E AndroidRuntime: FATAL EXCEPTION: main",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 62,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/add_rex_rifle.py",
+          "line": 54,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/add_rex_rifle.py",
+          "line": 133,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 233,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 252,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/catalog_blend_actions.py",
+          "line": 17,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/catalog_blend_actions.py",
+          "line": 72,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/inspect_actor_source.py",
+          "line": 30,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/inspect_actor_source.py",
+          "line": 118,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/prepare_meshy_actor.py",
+          "line": 52,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/prepare_meshy_actor.py",
+          "line": 103,
+          "preview": "if __name__ == '__main__': main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/refine_rex_rifle_attack.py",
+          "line": 122,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/refine_rex_rifle_attack.py",
+          "line": 135,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 356,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 393,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/repair_rex_weights.py",
+          "line": 260,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/repair_rex_weights.py",
+          "line": 290,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/style_rex_materials.py",
+          "line": 42,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/style_rex_materials.py",
+          "line": 101,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/validate_rex_weapon_visibility.py",
+          "line": 133,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/validate_rex_weapon_visibility.py",
+          "line": 205,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/validate_rig.py",
+          "line": 119,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/validate_rig.py",
+          "line": 192,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/build_final_sprite_frames.py",
+          "line": 53,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/build_final_sprite_frames.py",
+          "line": 151,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/import_pixellab_idle.py",
+          "line": 102,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/import_pixellab_idle.py",
+          "line": 174,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/perf/compare_android_benchmark.py",
+          "line": 108,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/perf/compare_android_benchmark.py",
+          "line": 127,
+          "preview": "sys.exit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/perf/test_compare_android_benchmark.py",
+          "line": 89,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/slice_sprite_sheet.py",
+          "line": 176,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/slice_sprite_sheet.py",
+          "line": 226,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/normalize_actor_frames.py",
+          "line": 53,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/normalize_actor_frames.py",
+          "line": 150,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/normalize_rex_frames.py",
+          "line": 45,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/normalize_rex_frames.py",
+          "line": 178,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/resolve_actor_actions.py",
+          "line": 70,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/resolve_actor_actions.py",
+          "line": 89,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/resolve_actor_candidate.py",
+          "line": 33,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/resolve_actor_candidate.py",
+          "line": 128,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_resolve_actor_actions.py",
+          "line": 55,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_validate_actor_production_contracts.py",
+          "line": 38,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/test_validate_actor_role_metrics.py",
+          "line": 52,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/upsert_directional_actor_atlas.py",
+          "line": 116,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/upsert_directional_actor_atlas.py",
+          "line": 159,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_actor_production_contracts.py",
+          "line": 31,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_actor_production_contracts.py",
+          "line": 141,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_actor_role_metrics.py",
+          "line": 59,
+          "preview": "def main():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_actor_role_metrics.py",
+          "line": 78,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_ranged_attack_readability.py",
+          "line": 43,
+          "preview": "def main() -> None:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_ranged_attack_readability.py",
+          "line": 66,
+          "preview": "main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/test_verify_final_atlas.py",
+          "line": 73,
+          "preview": "unittest.main()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_final_sprite_layout.py",
+          "line": 129,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_final_sprite_layout.py",
+          "line": 180,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_rex_reference.py",
+          "line": 21,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_rex_reference.py",
+          "line": 64,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/verify_final_atlas.py",
+          "line": 119,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/verify_final_atlas.py",
+          "line": 177,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 73
+    },
+    "RuntimeLogScannerTest": {
+      "definition": {
+        "file": "tools/android/test_scan_runtime_log.py",
+        "line": 11,
+        "kind": "class",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 11,
+          "preview": "class RuntimeLogScannerTest(unittest.TestCase):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_clean_log_passes": {
+      "definition": {
+        "file": "tools/android/test_scan_runtime_log.py",
+        "line": 12,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 12,
+          "preview": "def test_clean_log_passes(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_detects_package_anr": {
+      "definition": {
+        "file": "tools/android/test_scan_runtime_log.py",
+        "line": 17,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 17,
+          "preview": "def test_detects_package_anr(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_detects_java_crash_only_for_game_process": {
+      "definition": {
+        "file": "tools/android/test_scan_runtime_log.py",
+        "line": 22,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 22,
+          "preview": "def test_detects_java_crash_only_for_game_process(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_ignores_other_process_java_crash": {
+      "definition": {
+        "file": "tools/android/test_scan_runtime_log.py",
+        "line": 31,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 31,
+          "preview": "def test_ignores_other_process_java_crash(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_ignores_instrumentation_process_with_package_prefix": {
+      "definition": {
+        "file": "tools/android/test_scan_runtime_log.py",
+        "line": 37,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 37,
+          "preview": "def test_ignores_instrumentation_process_with_package_prefix(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_ignores_instrumentation_process_anr_with_package_prefix": {
+      "definition": {
+        "file": "tools/android/test_scan_runtime_log.py",
+        "line": 43,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 43,
+          "preview": "def test_ignores_instrumentation_process_anr_with_package_prefix(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_exact_game_package_still_matches_with_activity_suffix": {
+      "definition": {
+        "file": "tools/android/test_scan_runtime_log.py",
+        "line": 46,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 46,
+          "preview": "def test_exact_game_package_still_matches_with_activity_suffix(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_detects_native_crash_when_package_is_in_context": {
+      "definition": {
+        "file": "tools/android/test_scan_runtime_log.py",
+        "line": 50,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 50,
+          "preview": "def test_detects_native_crash_when_package_is_in_context(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "test_ignores_intentional_force_stop": {
+      "definition": {
+        "file": "tools/android/test_scan_runtime_log.py",
+        "line": 58,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/android/test_scan_runtime_log.py",
+          "line": 58,
+          "preview": "def test_ignores_intentional_force_stop(self):",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 1
+    }
+  }
 }
