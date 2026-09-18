@@ -10,6 +10,10 @@ final class AudioDirectorFallbackTest {
         assertEquals(AudioDirector.Cue.BOSS_HIT, AudioDirector.fallbackCue(AudioDirector.Cue.BOSS_PHASE));
     }
 
+    @Test void protocolProcFallsBackToCritWithoutDedicatedAsset() {
+        assertEquals(AudioDirector.Cue.CRIT, AudioDirector.fallbackCue(AudioDirector.Cue.PROTOCOL_PROC));
+    }
+
     @Test void ordinaryCuesDoNotUnexpectedlyAlias() {
         assertNull(AudioDirector.fallbackCue(AudioDirector.Cue.SHOT));
         assertNull(AudioDirector.fallbackCue(AudioDirector.Cue.BOSS_KILL));
