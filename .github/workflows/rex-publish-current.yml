@@ -68,6 +68,9 @@ jobs:
           assert manifest.get('frame_count') == 232
           assert manifest.get('qa_pass') is True
           assert manifest.get('weapon_visibility_pass') is True
+          assert manifest.get('production_ready') is True, (
+              "Refusing to publish Rex as production art: source manifest is not production-approved"
+          )
           assert qa.get('pass') is True and qa.get('frame_count') == 232
           PY
           echo "root=$root" >> "$GITHUB_OUTPUT"
