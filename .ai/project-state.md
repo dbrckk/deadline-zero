@@ -22,33 +22,32 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T07:39:54Z
+Generated: 2026-09-19T09:23:50Z
 
 ### Git
 - Branch: `main`
-- Head: `366116c77ca9`
-- Commit date: 2026-09-19T09:37:29+02:00
-- Commit: chore(ai): adopt stable repo standards v20
-- Tracked files: 699
+- Head: `fb67e8453b8d`
+- Commit date: 2026-09-19T11:23:33+02:00
+- Commit: Add Hunter and Sentinel drone doctrines
+- Tracked files: 705
 
 ### Recently changed files
-- `.repo-standards.yml`
-- `.github/workflows/responsive-ui-qa.yml`
-- `.github/workflows/verify.yml`
 - `assets/i18n/messages.properties`
-- `core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java`
-- `core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java`
-- `core/src/main/java/com/deadlinezero/game/entities/Player.java`
-- `core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java`
+- `core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java`
+- `core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java`
+- `core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java`
+- `core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java`
 - `core/src/main/java/com/deadlinezero/game/progression/Upgrade.java`
+- `core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java`
 - `core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java`
-- `core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java`
-- `core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java`
+- `core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java`
+- `core/src/test/java/com/deadlinezero/game/abilities/DroneDoctrineRulesTest.java`
 - `core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java`
-- `core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java`
+- `core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java`
+- `core/src/test/java/com/deadlinezero/game/entities/NullWardSupportTest.java`
+- `.repo-standards.yml`
 
 ### Project signals
 - `build.gradle`

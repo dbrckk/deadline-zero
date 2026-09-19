@@ -49,6 +49,9 @@ src/
               AbilityRuntime.java
               AbilitySystem.java
               AbilityType.java
+              AbilityUpgradeGuidance.java
+              DroneDoctrine.java
+              DroneDoctrineRules.java
             ai/
               AttackController.java
               BossAffixRules.java
@@ -278,6 +281,8 @@ src/
           game/
             abilities/
               AbilityLoadoutTierTest.java
+              AbilityUpgradeGuidanceTest.java
+              DroneDoctrineRulesTest.java
             ai/
               AttackControllerCadenceTest.java
               BiomeEnemyAttackPatternTest.java
@@ -462,6 +467,13 @@ int level = level(type);
 ⋮----
 public boolean evolved(AbilityType type) { return tier(type) >= 3; }
 ⋮----
+public DroneDoctrine droneDoctrine() { return droneDoctrine; }
+public boolean hasDroneDoctrine() { return droneDoctrine != DroneDoctrine.NONE; }
+⋮----
+public boolean chooseDroneDoctrine(DroneDoctrine doctrine) {
+if (doctrine == null || doctrine == DroneDoctrine.NONE || hasDroneDoctrine()) return false;
+if (tier(AbilityType.DRONE) < 2) return false;
+⋮----
 public int upgrade(AbilityType type) {
 int next = Math.min(MAX_LEVEL, level(type) + 1);
 levels.put(type, next);
@@ -633,23 +645,38 @@ private void updateDrone() {
 int level = player.abilities.level(AbilityType.DRONE);
 if (level <= 0 || !runtime.readyDrone()) return;
 int tier = player.abilities.tier(AbilityType.DRONE);
+DroneDoctrine doctrine = player.abilities.droneDoctrine();
 ⋮----
 float x = player.position.x + MathUtils.cosDeg(angle) * 1.8f;
 float y = player.position.y + MathUtils.sinDeg(angle) * 1.8f;
+⋮----
+if (doctrine == DroneDoctrine.SENTINEL) interceptHostileProjectile(x, y);
+⋮----
 Enemy target = nearest(x, y, tier >= 2 ? 12.5f : 11f, null);
+⋮----
+damage *= DroneDoctrineRules.damageMultiplier(doctrine);
 ⋮----
 DamageElement element = player.abilities.hasTeslaEvolution() ? DamageElement.SHOCK : DamageElement.KINETIC;
 if (element == DamageElement.SHOCK) arc(x, y, target.position.x, target.position.y, .10f);
 damageEnemy(target, damage, element, element == DamageElement.SHOCK ? Color.CYAN : Color.LIME, .42f);
 ⋮----
+float secondaryMultiplier = DroneDoctrineRules.secondaryTargetMultiplier(
+doctrine, player.abilities.hasTargetNetworkSynergy());
+⋮----
 Enemy second = nearest(x, y, 10f, target);
 ⋮----
 arc(x, y, second.position.x, second.position.y, .08f);
-damageEnemy(second, damage * .62f, DamageElement.KINETIC, Color.LIME, .30f);
+damageEnemy(second, damage * secondaryMultiplier, DamageElement.KINETIC, Color.LIME, .30f);
 ⋮----
 impact(x, y, .25f, .08f, Color.LIME);
 ⋮----
 runtime.resetDrone(level);
+⋮----
+private boolean interceptHostileProjectile(float droneX, float droneY) {
+float range = DroneDoctrineRules.interceptionRange(player.abilities.droneDoctrine());
+⋮----
+arc(droneX, droneY, best.position.x, best.position.y, .10f);
+impact(best.position.x, best.position.y, .42f, .12f, Color.CYAN);
 ⋮----
 private void updateOrbital() {
 int level = player.abilities.level(AbilityType.ORBITAL_BLADE);
@@ -700,6 +727,64 @@ if (fx != null) fx.spawn(x1, y1, x2, y2, duration);
 ## File: src/main/java/com/deadlinezero/game/abilities/AbilityType.java
 ```java
 
+```
+
+## File: src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java
+```java
+/** Pure presentation policy describing what an ability upgrade choice would unlock next. */
+public final class AbilityUpgradeGuidance {
+⋮----
+public static String key(Player player, Upgrade upgrade) {
+AbilityType type = abilityType(upgrade);
+⋮----
+int current = loadout.level(type);
+⋮----
+String synergy = activatingSynergy(loadout, type, next);
+⋮----
+private static String activatingSynergy(AbilityLoadout a, AbilityType type, int next) {
+⋮----
+if (next >= 5 && a.tier(AbilityType.DRONE) >= 2 && !a.hasTeslaEvolution())
+⋮----
+if (next >= 3 && a.tier(AbilityType.CRYO_NOVA) >= 2 && !a.hasSuperconductorSynergy())
+⋮----
+if (next >= 5 && a.evolved(AbilityType.ORBITAL_BLADE) && !a.hasStormBladeSynergy())
+⋮----
+if (next >= 3 && a.tier(AbilityType.CRYO_NOVA) >= 2 && !a.hasCryoMissileEvolution())
+⋮----
+if (next >= 3 && a.tier(AbilityType.DRONE) >= 2 && !a.hasTargetNetworkSynergy())
+⋮----
+if (next >= 3 && a.tier(AbilityType.MISSILE_SWARM) >= 2 && !a.hasCryoMissileEvolution())
+⋮----
+if (next >= 3 && a.tier(AbilityType.TESLA_ORB) >= 2 && !a.hasSuperconductorSynergy())
+⋮----
+if (next >= 3 && a.tier(AbilityType.ORBITAL_BLADE) >= 2 && !a.hasPermafrostBladeSynergy())
+⋮----
+if (next >= 3 && a.evolved(AbilityType.TESLA_ORB) && !a.hasTeslaEvolution())
+⋮----
+if (next >= 3 && a.tier(AbilityType.MISSILE_SWARM) >= 2 && !a.hasTargetNetworkSynergy())
+⋮----
+if (next >= 3 && a.tier(AbilityType.CRYO_NOVA) >= 2 && !a.hasPermafrostBladeSynergy())
+⋮----
+if (next >= 5 && a.evolved(AbilityType.TESLA_ORB) && !a.hasStormBladeSynergy())
+⋮----
+public static AbilityType abilityType(Upgrade upgrade) {
+```
+
+## File: src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java
+```java
+
+```
+
+## File: src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java
+```java
+/** Pure doctrine tuning shared by runtime and tests. */
+public final class DroneDoctrineRules {
+⋮----
+public static float damageMultiplier(DroneDoctrine doctrine) {
+⋮----
+public static float secondaryTargetMultiplier(DroneDoctrine doctrine, boolean targetNetwork) {
+⋮----
+public static float interceptionRange(DroneDoctrine doctrine) {
 ```
 
 ## File: src/main/java/com/deadlinezero/game/ai/AttackController.java
@@ -4371,6 +4456,10 @@ public void apply(Player p) { p.abilities.upgrade(AbilityType.CRYO_NOVA); }
 ⋮----
 public void apply(Player p) { p.abilities.upgrade(AbilityType.DRONE); }
 ⋮----
+public void apply(Player p) { p.abilities.chooseDroneDoctrine(DroneDoctrine.HUNTER); }
+⋮----
+public void apply(Player p) { p.abilities.chooseDroneDoctrine(DroneDoctrine.SENTINEL); }
+⋮----
 public void apply(Player p) { p.abilities.upgrade(AbilityType.ORBITAL_BLADE); }
 ⋮----
 public void apply(Player p) { p.protocols.enableRhythm(); }
@@ -4489,6 +4578,8 @@ case TESLA_ORB -> p.abilities.level(AbilityType.TESLA_ORB) < 5;
 case MISSILE_SWARM -> p.abilities.level(AbilityType.MISSILE_SWARM) < 5;
 case CRYO_NOVA -> p.abilities.level(AbilityType.CRYO_NOVA) < 5;
 case DRONE -> p.abilities.level(AbilityType.DRONE) < 5;
+⋮----
+p.abilities.tier(AbilityType.DRONE) >= 2 && !p.abilities.hasDroneDoctrine();
 case ORBITAL -> p.abilities.level(AbilityType.ORBITAL_BLADE) < 5;
 case RHYTHM_DRIVER -> !p.protocols.rhythmEnabled();
 case KILLCHAIN_CAPACITOR -> !p.protocols.killchainEnabled();
@@ -5531,6 +5622,12 @@ font.draw(batch, buildPath
 font.getData().setScale(.96f);
 font.setColor(Color.WHITE);
 font.draw(batch, t(choices[i].descriptionKey()),
+⋮----
+String guidanceKey = AbilityUpgradeGuidance.key(player, choices[i]);
+⋮----
+font.getData().setScale(.78f);
+⋮----
+font.draw(batch, t(guidanceKey),
 ⋮----
 font.draw(batch, t("combat.upgradeFooter"), 0, h * .305f, w, Align.center, false);
 ⋮----
@@ -12687,6 +12784,15 @@ assertFalse(loadout.hasSuperconductorSynergy());
 for (int i = 0; i < 3; i++) loadout.upgrade(AbilityType.CRYO_NOVA);
 assertTrue(loadout.hasSuperconductorSynergy());
 ⋮----
+@Test public void droneDoctrineRequiresTierTwoAndIsExclusive() {
+⋮----
+assertFalse(loadout.chooseDroneDoctrine(DroneDoctrine.HUNTER));
+for (int i = 0; i < 3; i++) loadout.upgrade(AbilityType.DRONE);
+assertTrue(loadout.chooseDroneDoctrine(DroneDoctrine.HUNTER));
+assertEquals(DroneDoctrine.HUNTER, loadout.droneDoctrine());
+assertTrue(loadout.hasDroneDoctrine());
+assertFalse(loadout.chooseDroneDoctrine(DroneDoctrine.SENTINEL));
+⋮----
 @Test public void stormBladeRequiresBothEvolutions() {
 ⋮----
 for (int i = 0; i < 5; i++) loadout.upgrade(AbilityType.ORBITAL_BLADE);
@@ -12694,6 +12800,63 @@ for (int i = 0; i < 4; i++) loadout.upgrade(AbilityType.TESLA_ORB);
 assertFalse(loadout.hasStormBladeSynergy());
 ⋮----
 assertTrue(loadout.hasStormBladeSynergy());
+```
+
+## File: src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java
+```java
+final class AbilityUpgradeGuidanceTest {
+private Player fresh() {
+RunLoadoutContext.end();
+return new Player(0f, 0f);
+⋮----
+@Test void freshAbilityShowsUnlockThenTierAndEvolutionMilestones() {
+Player p = fresh();
+assertEquals("combat.abilityGuidance.unlock", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
+p.abilities.upgrade(AbilityType.TESLA_ORB);
+assertEquals("combat.abilityGuidance.level", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
+⋮----
+assertEquals("combat.abilityGuidance.tier2", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
+⋮----
+assertEquals("combat.abilityGuidance.evolution", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
+⋮----
+@Test void choiceThatCompletesSynergyOverridesGenericMilestone() {
+⋮----
+for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.CRYO_NOVA);
+for (int i = 0; i < 2; i++) p.abilities.upgrade(AbilityType.TESLA_ORB);
+assertEquals("combat.synergy.superconductor", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
+⋮----
+@Test void evolvedTeslaMakesDroneTierTwoChoiceExposeArcReactor() {
+⋮----
+for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.TESLA_ORB);
+for (int i = 0; i < 2; i++) p.abilities.upgrade(AbilityType.DRONE);
+assertEquals("combat.synergy.arcReactor", AbilityUpgradeGuidance.key(p, Upgrade.DRONE));
+⋮----
+@Test void nonAbilityAndMaxedAbilityHaveNoGuidance() {
+⋮----
+assertNull(AbilityUpgradeGuidance.key(p, Upgrade.DAMAGE));
+for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.ORBITAL_BLADE);
+assertNull(AbilityUpgradeGuidance.key(p, Upgrade.ORBITAL));
+```
+
+## File: src/test/java/com/deadlinezero/game/abilities/DroneDoctrineRulesTest.java
+```java
+final class DroneDoctrineRulesTest {
+@Test void hunterIsTheOffensiveDoctrine() {
+assertEquals(1.30f, DroneDoctrineRules.damageMultiplier(DroneDoctrine.HUNTER), .0001f);
+assertEquals(.72f, DroneDoctrineRules.secondaryTargetMultiplier(DroneDoctrine.HUNTER, false), .0001f);
+assertEquals(.82f, DroneDoctrineRules.secondaryTargetMultiplier(DroneDoctrine.HUNTER, true), .0001f);
+assertEquals(0f, DroneDoctrineRules.interceptionRange(DroneDoctrine.HUNTER), .0001f);
+⋮----
+@Test void sentinelTradesDamageForProjectileInterception() {
+assertEquals(.88f, DroneDoctrineRules.damageMultiplier(DroneDoctrine.SENTINEL), .0001f);
+assertEquals(0f, DroneDoctrineRules.secondaryTargetMultiplier(DroneDoctrine.SENTINEL, false), .0001f);
+assertEquals(3.4f, DroneDoctrineRules.interceptionRange(DroneDoctrine.SENTINEL), .0001f);
+⋮----
+@Test void noDoctrinePreservesExistingDroneBehavior() {
+assertEquals(1f, DroneDoctrineRules.damageMultiplier(DroneDoctrine.NONE), .0001f);
+assertEquals(0f, DroneDoctrineRules.secondaryTargetMultiplier(DroneDoctrine.NONE, false), .0001f);
+assertEquals(.62f, DroneDoctrineRules.secondaryTargetMultiplier(DroneDoctrine.NONE, true), .0001f);
+assertEquals(0f, DroneDoctrineRules.interceptionRange(DroneDoctrine.NONE), .0001f);
 ```
 
 ## File: src/test/java/com/deadlinezero/game/ai/AttackControllerCadenceTest.java
@@ -14186,7 +14349,7 @@ assertTrue(ward.supportPulseFlash() > 0f, "pulse should expose a short visual ev
 RunStageContext.begin(20, 79, 0);
 Enemy wardA = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8, false);
 Enemy wardB = new Enemy(Enemy.Type.REGENERATOR, .5f, 0f, 100f, 2f, .45f, 10f, 8, false);
-Enemy ally = new Enemy(Enemy.Type.RUNNER, 1f, 0f, 100f, 3f, .35f, 10f, 8);
+⋮----
 ally.damage(60f);
 ⋮----
 wardA.updateStatus(Enemy.nullWardPulseInterval());
@@ -16219,7 +16382,7 @@ final class UpgradePoolTest {
 @Test void productionPoolMeetsFiftyUpgradeTargetWithUniquePresentation() {
 Upgrade[] upgrades = Upgrade.values();
 assertTrue(upgrades.length >= 50, "P5 requires 50+ standard upgrades");
-assertEquals(55, upgrades.length);
+assertEquals(57, upgrades.length);
 ⋮----
 assertTrue(titles.add(upgrade.title), "duplicate upgrade title: " + upgrade.title);
 assertFalse(upgrade.description.isBlank(), upgrade.name());
@@ -16265,6 +16428,17 @@ while (UpgradeSelector.isAvailable(player, upgrade) && applications < 240) {
 ⋮----
 assertTrue(applications < 240, "upgrade never saturated: " + upgrade.name());
 assertFalse(UpgradeSelector.isAvailable(player, upgrade), "upgrade still offered after saturation: " + upgrade.name());
+⋮----
+@Test void droneDoctrinesUnlockAtTierTwoAndBecomeMutuallyExclusive() {
+⋮----
+assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DRONE_HUNTER_DOCTRINE));
+assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DRONE_SENTINEL_DOCTRINE));
+⋮----
+for (int i = 0; i < 3; i++) Upgrade.DRONE.apply(player);
+assertTrue(UpgradeSelector.isAvailable(player, Upgrade.DRONE_HUNTER_DOCTRINE));
+assertTrue(UpgradeSelector.isAvailable(player, Upgrade.DRONE_SENTINEL_DOCTRINE));
+⋮----
+Upgrade.DRONE_HUNTER_DOCTRINE.apply(player);
 ⋮----
 @Test void eventProtocolsAreOneTimeRunChoices() {
 ⋮----

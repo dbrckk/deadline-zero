@@ -6,13 +6,13 @@
     "requested_max_files": 12,
     "score_margin": 0,
     "tier": "bounded",
-    "top_score": 27
+    "top_score": 36
   },
   "cache": {
-    "fingerprint": "ae66a6a259b699dcb1313bd0afedfb064a9e83d6324d79d626da9d1b78834632",
+    "fingerprint": "06bcc8ad3ac449d7c1b905433b8fa2c836211188386c185f0c966c48f2273315",
     "hit": false
   },
-  "candidate_count": 384,
+  "candidate_count": 389,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,131 +20,136 @@
       "matched_terms": [
         "game"
       ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
       "reasons": [
+        "impact",
+        "recently-changed",
         "search-index"
       ],
-      "score": 27,
+      "score": 36,
+      "symbols": [
+        "AbilityLoadout",
+        "chooseDroneDoctrine",
+        "droneDoctrine",
+        "evolved",
+        "hasCryoMissileEvolution",
+        "hasDroneDoctrine",
+        "hasPermafrostBladeSynergy",
+        "hasStormBladeSynergy",
+        "hasSuperconductorSynergy",
+        "hasTargetNetworkSynergy",
+        "hasTeslaEvolution",
+        "level",
+        "tier",
+        "unlocked",
+        "upgrade"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "reasons": [
+        "impact",
+        "recently-changed",
+        "search-index"
+      ],
+      "score": 36,
+      "symbols": [
+        "AbilitySystem",
+        "Listener",
+        "arc",
+        "currentLeaperChance",
+        "damageEnemy",
+        "explode",
+        "impact",
+        "interceptHostileProjectile",
+        "nearest",
+        "onEnemySpawned",
+        "runtime",
+        "update",
+        "updateCryo",
+        "updateDrone",
+        "updateHomingMissiles",
+        "updateLeapers",
+        "updateMissiles",
+        "updateOrbital",
+        "updateTesla"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
+      "reasons": [
+        "impact",
+        "recently-changed",
+        "search-index"
+      ],
+      "score": 36,
+      "symbols": [
+        "AbilityUpgradeGuidance",
+        "abilityType",
+        "activatingSynergy",
+        "key"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java",
+      "reasons": [
+        "impact",
+        "recently-changed",
+        "search-index"
+      ],
+      "score": 36,
+      "symbols": [
+        "DroneDoctrine"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java",
+      "reasons": [
+        "impact",
+        "recently-changed",
+        "search-index"
+      ],
+      "score": 36,
+      "symbols": [
+        "DroneDoctrineRules",
+        "damageMultiplier",
+        "interceptionRange",
+        "secondaryTargetMultiplier"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+      "reasons": [
+        "impact",
+        "search-index"
+      ],
+      "score": 33,
       "symbols": [
         "AndroidFirstPlayableJourneyTest",
         "activity",
         "game",
         "run",
         "traversesContractCombatDefeatAndVictorySettlement"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 27,
-      "symbols": [
-        "AndroidGameplayVisualProbeTest",
-        "activity",
-        "capture",
-        "capturesChampionVariantCrowd",
-        "capturesCinderGunnerGameplayAndAttackFrames",
-        "capturesCloudSaveScreen",
-        "capturesCryoVaultGameplay",
-        "capturesCryogenicDepthsGameplay",
-        "capturesExpandedUpgradePoolOverlay",
-        "capturesForgeHoundGameplayAndAttackFrames",
-        "capturesFrostColossusGameplay",
-        "capturesGraphicsQualitySettings",
-        "capturesHarvesterGameplayAndAttackFrames",
-        "capturesNullArchonGameplayAndAttackFrames",
-        "capturesNullWardGameplayAndAttackFrames",
-        "capturesPhaseStalkerGameplayAndAttackFrames",
-        "capturesRevenantGameplayAndAttackFrames",
-        "capturesSlagGuardGameplayAndAttackFrames",
-        "capturesStaticSeerGameplayAndAttackFrames",
-        "capturesWardenGameplayAndAttackFrames"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 27,
-      "symbols": [
-        "AndroidLauncherSmokeTest",
-        "assertAttachedAndAlive",
-        "launcherCreatesRealLibgdxSurfaceAndStaysAlive",
-        "launcherSurvivesBackgroundForegroundAndActivityRecreation"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 27,
-      "symbols": [
-        "AndroidPerformanceProbeTest",
-        "activity",
-        "game",
-        "injectLoad",
-        "injectStressLoad",
-        "recordsHordeProjectileStressTelemetry",
-        "recordsLoadedGameplayPerformanceTelemetry",
-        "runOnGameThread",
-        "writeBenchmarkJson"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidProcessPersistenceTest.java",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 27,
-      "symbols": [
-        "AndroidProcessPersistenceTest",
-        "activity",
-        "game",
-        "phase",
-        "runOnGameThread",
-        "seedProfileBeforeExternalProcessDeath",
-        "verifyProfileAfterExternalProcessRestart"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 27,
-      "symbols": [
-        "AndroidResponsiveUiVisualProbeTest",
-        "activity",
-        "assertWidePhoneAspect",
-        "captureWide",
-        "capturesWidePhoneMetaAndCombatScreens",
-        "dedicatedWideProbe",
-        "game",
-        "runOnGameThread",
-        "settleAndCapture"
       ]
     }
   ],

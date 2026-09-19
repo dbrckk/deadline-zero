@@ -308,16 +308,18 @@
     "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java": {
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java",
         "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
         "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
         "core/src/main/java/com/deadlinezero/game/services/ThermalService.java"
       ],
       "dependents": [
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
         "core/src/main/java/com/deadlinezero/game/entities/Player.java",
         "core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java"
       ],
-      "in_degree": 2,
-      "out_degree": 4
+      "in_degree": 3,
+      "out_degree": 5
     },
     "core/src/main/java/com/deadlinezero/game/abilities/AbilityRuntime.java": {
       "dependencies": [
@@ -333,12 +335,16 @@
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityRuntime.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java",
         "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
         "core/src/main/java/com/deadlinezero/game/ai/LeaperSharedRuntime.java",
         "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
         "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+        "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
         "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java",
         "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
         "core/src/main/java/com/deadlinezero/game/fx/ArcFx.java",
         "core/src/main/java/com/deadlinezero/game/fx/DamageNumber.java",
         "core/src/main/java/com/deadlinezero/game/fx/ImpactFx.java",
@@ -367,13 +373,14 @@
         "core/src/main/java/com/deadlinezero/game/services/BillingService.java"
       ],
       "in_degree": 11,
-      "out_degree": 21
+      "out_degree": 25
     },
     "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java": {
       "dependencies": [],
       "dependents": [
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
         "core/src/main/java/com/deadlinezero/game/entities/Player.java",
         "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
         "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
@@ -382,11 +389,52 @@
         "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
         "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
         "core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java",
+        "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/LegendaryStateTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java"
       ],
-      "in_degree": 12,
+      "in_degree": 14,
       "out_degree": 0
+    },
+    "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+        "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+        "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+        "core/src/main/java/com/deadlinezero/game/services/ThermalService.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+        "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java"
+      ],
+      "in_degree": 2,
+      "out_degree": 6
+    },
+    "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java": {
+      "dependencies": [],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java",
+        "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+        "core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java",
+        "core/src/test/java/com/deadlinezero/game/abilities/DroneDoctrineRulesTest.java"
+      ],
+      "in_degree": 6,
+      "out_degree": 0
+    },
+    "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+        "core/src/test/java/com/deadlinezero/game/abilities/DroneDoctrineRulesTest.java"
+      ],
+      "in_degree": 2,
+      "out_degree": 1
     },
     "core/src/main/java/com/deadlinezero/game/ai/AttackController.java": {
       "dependencies": [
@@ -1051,6 +1099,7 @@
         "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java"
       ],
       "dependents": [
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
         "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
         "core/src/main/java/com/deadlinezero/game/util/Pools.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
@@ -1060,7 +1109,7 @@
         "core/src/test/java/com/deadlinezero/game/entities/EnemyProjectileStyleTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/HostileProjectilePresentationTest.java"
       ],
-      "in_degree": 8,
+      "in_degree": 9,
       "out_degree": 5
     },
     "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java": {
@@ -1101,6 +1150,7 @@
         "android/src/main/java/com/deadlinezero/game/android/AndroidShareService.java",
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
         "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
         "core/src/main/java/com/deadlinezero/game/entities/ActorState.java",
         "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java",
@@ -1125,6 +1175,7 @@
         "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
         "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+        "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/LegendarySelectorTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/LegendaryStateTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java",
@@ -1133,7 +1184,7 @@
         "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java"
       ],
-      "in_degree": 34,
+      "in_degree": 36,
       "out_degree": 15
     },
     "core/src/main/java/com/deadlinezero/game/entities/Projectile.java": {
@@ -1146,6 +1197,7 @@
       ],
       "dependents": [
         "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
         "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java",
         "core/src/main/java/com/deadlinezero/game/ai/NullArchonBossProfile.java",
         "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
@@ -1165,7 +1217,7 @@
         "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
         "tools/perf/test_compare_android_benchmark.py"
       ],
-      "in_degree": 19,
+      "in_degree": 20,
       "out_degree": 5
     },
     "core/src/main/java/com/deadlinezero/game/fx/ArcFx.java": {
@@ -1889,6 +1941,7 @@
         "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
         "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
+        "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/P0RunRegressionTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/RunLoadoutContextResetTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/ThreatSetBonusRulesTest.java",
@@ -1897,7 +1950,7 @@
         "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryBalanceTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java"
       ],
-      "in_degree": 15,
+      "in_degree": 16,
       "out_degree": 10
     },
     "core/src/main/java/com/deadlinezero/game/meta/RunMissionRuntime.java": {
@@ -2334,13 +2387,15 @@
       ],
       "dependents": [
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java",
         "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+        "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/RunLoadoutContextResetTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java"
       ],
-      "in_degree": 6,
+      "in_degree": 8,
       "out_degree": 3
     },
     "core/src/main/java/com/deadlinezero/game/meta/WeeklyProgress.java": {
@@ -2479,6 +2534,7 @@
     "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java": {
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java",
         "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
         "core/src/main/java/com/deadlinezero/game/entities/Player.java",
         "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
@@ -2491,6 +2547,7 @@
       "dependents": [
         "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
         "core/src/main/java/com/deadlinezero/game/entities/Player.java",
         "core/src/main/java/com/deadlinezero/game/meta/EquipmentService.java",
         "core/src/main/java/com/deadlinezero/game/meta/EquipmentUpgradeService.java",
@@ -2501,13 +2558,14 @@
         "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
         "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
         "core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java",
+        "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
         "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/EquipmentUpgradeSafetyTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java"
       ],
-      "in_degree": 16,
-      "out_degree": 9
+      "in_degree": 18,
+      "out_degree": 10
     },
     "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java": {
       "dependencies": [
@@ -2607,6 +2665,7 @@
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
         "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java",
         "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java",
         "core/src/main/java/com/deadlinezero/game/ai/BossVariantStats.java",
@@ -2663,7 +2722,7 @@
         "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java"
       ],
       "in_degree": 9,
-      "out_degree": 46
+      "out_degree": 47
     },
     "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java": {
       "dependencies": [
@@ -3117,6 +3176,7 @@
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityRuntime.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
         "core/src/main/java/com/deadlinezero/game/entities/Player.java",
         "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
         "core/src/main/java/com/deadlinezero/game/meta/EquipmentDropTable.java",
@@ -3146,6 +3206,7 @@
         "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
         "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
         "core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java",
+        "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
         "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/EquipmentUpgradeSafetyTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/PlayerProfileSafetyTest.java",
@@ -3157,7 +3218,7 @@
         "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
         "core/src/test/java/com/deadlinezero/game/services/ThermalServiceTest.java"
       ],
-      "in_degree": 43,
+      "in_degree": 45,
       "out_degree": 0
     },
     "core/src/main/java/com/deadlinezero/game/ui/MetaLayout.java": {
@@ -4312,12 +4373,36 @@
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java",
         "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
         "core/src/main/java/com/deadlinezero/game/services/ThermalService.java"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 4
+      "out_degree": 5
+    },
+    "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+        "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+        "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+        "core/src/main/java/com/deadlinezero/game/services/ThermalService.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 7
+    },
+    "core/src/test/java/com/deadlinezero/game/abilities/DroneDoctrineRulesTest.java": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
     },
     "core/src/test/java/com/deadlinezero/game/ai/AttackControllerCadenceTest.java": {
       "dependencies": [
