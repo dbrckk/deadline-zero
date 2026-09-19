@@ -6,9 +6,11 @@ The namespace name is historical and is not the schema version. The authoritativ
 
 ## Current schema
 
-- Current version: `1`
+- Current version: `3`
 - Legacy profiles with no `schema.version` key are interpreted as version `0`.
 - Version `0 -> 1` is intentionally lossless: the legacy field layout already matches v1, so migration only stamps the explicit version marker.
+- Version `1 -> 2` adds weekly mission persistence with safe defaults.
+- Version `2 -> 3` adds achievement-claim persistence with safe false defaults.
 
 ## Migration rules
 
