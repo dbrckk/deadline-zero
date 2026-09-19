@@ -8107,6 +8107,8 @@ float range = DroneDoctrineRules.interceptionRange(player.abilities.droneDoctrin
 ⋮----
 arc(droneX, droneY, best.position.x, best.position.y, .10f);
 impact(best.position.x, best.position.y, .42f, .12f, Color.CYAN);
+CombatVisualEvents.markSentinelIntercept();
+AudioDirector.playGlobal(AudioDirector.Cue.SENTINEL_BLOCK);
 ⋮----
 private void updateOrbital() {
 int level = player.abilities.level(AbilityType.ORBITAL_BLADE);
@@ -15477,7 +15479,8 @@ DeathFx oldest = deathFx.get(deathFxCursor);
 /** Builds a compact, allocation-bounded HUD summary of the run's active build identity. */
 public final class ActiveBuildStatus {
 ⋮----
-public static String[] keys(Player player) {
+public static void fill(Player player, String[] out) {
+if (out == null || out.length < 2) throw new IllegalArgumentException("out");
 ⋮----
 DroneDoctrine doctrine = a.droneDoctrine();
 ⋮----
@@ -16915,16 +16918,17 @@ font.draw(batch, player.canDash() ? t("hud.dash") : String.format(java.util.Loca
 layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s, layout.dashRadius() * 2f, Align.center, false);
 ⋮----
 drawSynergyUnlock(batch, font, layout, s);
+drawSentinelIntercept(batch, font, layout, s);
 drawProtocolCue(batch, font, layout, s);
 drawOnboardingHint(batch, font, layout, s);
 batch.end();
 ⋮----
 private void drawBuildStatus(SpriteBatch batch, BitmapFont font, Player player,
 ⋮----
-String[] keys = ActiveBuildStatus.keys(player);
+ActiveBuildStatus.fill(player, activeBuildKeys);
 ⋮----
-? f("hud.build.summaryOne", t(keys[0]))
-: f("hud.build.summaryTwo", t(keys[0]), t(keys[1]));
+? f("hud.build.summaryOne", t(activeBuildKeys[0]))
+: f("hud.build.summaryTwo", t(activeBuildKeys[0]), t(activeBuildKeys[1]));
 font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .82f * s);
 font.setColor(VisualTheme.CYAN_SOFT);
 font.draw(batch, text, layout.timeline().x, layout.timeline().y - 14f * s,
@@ -16939,6 +16943,14 @@ font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY) * 1.12f * s);
 font.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b, alpha);
 font.draw(batch, t(key), layout.timeline().x, layout.timeline().y + 88f * s,
 ⋮----
+private void drawSentinelIntercept(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
+float age = CombatVisualEvents.sentinelInterceptAgeSeconds();
+⋮----
+float alpha = MathUtils.clamp(1f - age / .72f, 0f, 1f);
+font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .94f * s);
+font.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha);
+font.draw(batch, t("hud.sentinelBlock"), layout.timeline().x, layout.timeline().y + 44f * s,
+⋮----
 private void drawProtocolCue(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
 float age = CombatVisualEvents.protocolAgeSeconds();
 ⋮----
@@ -16946,7 +16958,7 @@ String key = switch (CombatVisualEvents.protocolCue()) {
 ⋮----
 float alpha = MathUtils.clamp(1f - age / .90f, 0f, 1f);
 font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY) * 1.08f * s);
-font.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha);
+⋮----
 font.draw(batch, t(key), layout.timeline().x, layout.timeline().y + 62f * s,
 ⋮----
 private void drawOnboardingHint(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
@@ -17458,6 +17470,9 @@ if (key == null || key.isBlank()) return;
 ⋮----
 lastSynergyNanos = TimeUtils.nanoTime();
 ⋮----
+public static void markSentinelIntercept() {
+lastSentinelInterceptNanos = TimeUtils.nanoTime();
+⋮----
 public static float playerShotAgeSeconds() { return age(lastPlayerShotNanos); }
 public static float dashAgeSeconds() { return age(lastDashNanos); }
 public static float levelUpAgeSeconds() { return age(lastLevelUpNanos); }
@@ -17470,6 +17485,8 @@ public static ProtocolCue protocolCue() { return protocolCue; }
 public static float synergyAgeSeconds() { return age(lastSynergyNanos); }
 public static long synergySerial() { return synergySerial; }
 public static String synergyKey() { return synergyKey; }
+public static float sentinelInterceptAgeSeconds() { return age(lastSentinelInterceptNanos); }
+public static long sentinelInterceptSerial() { return sentinelInterceptSerial; }
 ⋮----
 private static float age(long nanos) {
 ⋮----
@@ -21018,6 +21035,13 @@ assertFalse(limiter.allow(AudioDirector.Cue.BOSS_PHASE, now + 300_000_000L));
 assertTrue(limiter.allow(AudioDirector.Cue.BOSS_PHASE,
 now + AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.BOSS_PHASE)));
 ⋮----
+@Test void sentinelBlocksAreRateLimitedDuringProjectileBursts() {
+⋮----
+assertTrue(limiter.allow(AudioDirector.Cue.SENTINEL_BLOCK, now));
+assertFalse(limiter.allow(AudioDirector.Cue.SENTINEL_BLOCK, now + 100_000_000L));
+assertTrue(limiter.allow(AudioDirector.Cue.SENTINEL_BLOCK,
+now + AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.SENTINEL_BLOCK)));
+⋮----
 @Test void resetRestoresImmediatePlayback() {
 ⋮----
 assertTrue(limiter.allow(AudioDirector.Cue.UI_SELECT, now));
@@ -21034,6 +21058,9 @@ assertEquals(AudioDirector.Cue.BOSS_HIT, AudioDirector.fallbackCue(AudioDirector
 ⋮----
 @Test void protocolProcFallsBackToCritWithoutDedicatedAsset() {
 assertEquals(AudioDirector.Cue.CRIT, AudioDirector.fallbackCue(AudioDirector.Cue.PROTOCOL_PROC));
+⋮----
+@Test void sentinelBlockFallsBackToDashWithoutDedicatedAsset() {
+assertEquals(AudioDirector.Cue.DASH, AudioDirector.fallbackCue(AudioDirector.Cue.SENTINEL_BLOCK));
 ⋮----
 @Test void ordinaryCuesDoNotUnexpectedlyAlias() {
 assertNull(AudioDirector.fallbackCue(AudioDirector.Cue.SHOT));
@@ -24680,7 +24707,7 @@ Player p = fresh();
 for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.DRONE);
 p.abilities.chooseDroneDoctrine(DroneDoctrine.HUNTER);
 ⋮----
-String[] keys = ActiveBuildStatus.keys(p);
+ActiveBuildStatus.fill(p, keys);
 assertEquals("hud.build.hunter", keys[0]);
 assertNull(keys[1]);
 ⋮----
@@ -24697,10 +24724,11 @@ assertEquals("hud.build.arcReactor", keys[1]);
 ⋮----
 for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.ORBITAL_BLADE);
 ⋮----
-assertEquals("hud.build.stormBlade", ActiveBuildStatus.keys(p)[0]);
+assertEquals("hud.build.stormBlade", keys[0]);
 ⋮----
 @Test void emptyBuildProducesNoTags() {
-String[] keys = ActiveBuildStatus.keys(fresh());
+⋮----
+ActiveBuildStatus.fill(fresh(), keys);
 assertNull(keys[0]);
 ````
 
@@ -25115,6 +25143,14 @@ assertEquals(0L, CombatVisualEvents.protocolSerial());
 @Test void noneCueDoesNotPublish() {
 ⋮----
 CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.NONE);
+⋮----
+@Test void sentinelInterceptPublishesAndResets() {
+⋮----
+CombatVisualEvents.markSentinelIntercept();
+assertEquals(1L, CombatVisualEvents.sentinelInterceptSerial());
+assertTrue(CombatVisualEvents.sentinelInterceptAgeSeconds() < 1f);
+⋮----
+assertEquals(0L, CombatVisualEvents.sentinelInterceptSerial());
 ⋮----
 @Test void synergyUnlockPublishesAndResets() {
 ⋮----

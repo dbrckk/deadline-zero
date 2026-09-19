@@ -22,36 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T11:41:12Z
+Generated: 2026-09-19T12:47:54Z
 
 ### Git
 - Branch: `main`
-- Head: `75a193f039ae`
-- Commit date: 2026-09-19T13:40:42+02:00
-- Commit: Announce newly activated ability synergies
+- Head: `ef58d5da53db`
+- Commit date: 2026-09-19T14:47:45+02:00
+- Commit: Make Sentinel projectile blocks explicit
 - Tracked files: 711
 
 ### Recently changed files
 - `assets/i18n/messages.properties`
-- `core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java`
+- `core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java`
+- `core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java`
+- `core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java`
-- `core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java`
-- `core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java`
-- `core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java`
+- `core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java`
+- `core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java`
+- `core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java`
+- `core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java`
 - `core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java`
 - `core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java`
-- `core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java`
 - `core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java`
 - `core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java`
-- `core/src/main/java/com/deadlinezero/game/progression/Upgrade.java`
-- `core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java`
-- `core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java`
-- `core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java`
 
 ### Project signals
 - `build.gradle`

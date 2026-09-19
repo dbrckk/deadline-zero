@@ -1,15 +1,19 @@
 # Change impact
 
-Base: 626b14f7f55b76460a95bdc749eb1a3219dae993
-Head: 75a193f039ae455bbe16666c429361bd27f07207
+Base: 10ed778f71a560d87edd208e1812571f04d8c6f8
+Head: ef58d5da53db6d0aa895e94a73d59c68347b4654
 
 ## Changed files
 - M assets/i18n/messages.properties
-- A core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java
-- M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
+- M core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java
+- M core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java
+- M core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java
+- M core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java
 - M core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java
 - M core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java
-- A core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java
+- M core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java
+- M core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java
+- M core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java
 - M core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java
 
 ## Affected areas

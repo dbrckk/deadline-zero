@@ -723,6 +723,7 @@
         "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java",
         "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
         "core/src/main/java/com/deadlinezero/game/ai/LeaperSharedRuntime.java",
+        "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
         "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
         "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
         "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
@@ -738,6 +739,7 @@
         "core/src/main/java/com/deadlinezero/game/meta/StageMissionRules.java",
         "core/src/main/java/com/deadlinezero/game/services/ThermalService.java",
         "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
         "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
         "core/src/main/java/com/deadlinezero/game/world/LeaperSpawnRules.java",
         "core/src/main/java/com/deadlinezero/game/world/SpatialHash.java",
@@ -757,7 +759,7 @@
         "core/src/main/java/com/deadlinezero/game/services/BillingService.java"
       ],
       "in_degree": 11,
-      "out_degree": 25,
+      "out_degree": 27,
       "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java"
     },
     {
@@ -1094,6 +1096,40 @@
     },
     {
       "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
+        "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+        "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+        "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+        "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+        "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
+        "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
+        "core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java",
+        "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java",
+        "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorVolumeTest.java",
+        "core/src/test/java/com/deadlinezero/game/audio/FoundryHazardAudioContractTest.java",
+        "core/src/test/java/com/deadlinezero/game/audio/NullHazardAudioContractTest.java",
+        "core/src/test/java/com/deadlinezero/game/audio/WeaponSignatureAudioContractTest.java",
+        "core/src/test/java/com/deadlinezero/game/visual/FoundryHazardPresentationTest.java",
+        "core/src/test/java/com/deadlinezero/game/visual/NullHazardPresentationTest.java"
+      ],
+      "in_degree": 23,
+      "out_degree": 2,
+      "path": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java"
+    },
+    {
+      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
         "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
         "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
@@ -1125,39 +1161,6 @@
       "in_degree": 20,
       "out_degree": 5,
       "path": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java"
-    },
-    {
-      "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-        "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java"
-      ],
-      "dependents": [
-        "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-        "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-        "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
-        "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
-        "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
-        "core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java",
-        "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java",
-        "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorVolumeTest.java",
-        "core/src/test/java/com/deadlinezero/game/audio/FoundryHazardAudioContractTest.java",
-        "core/src/test/java/com/deadlinezero/game/audio/NullHazardAudioContractTest.java",
-        "core/src/test/java/com/deadlinezero/game/audio/WeaponSignatureAudioContractTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/FoundryHazardPresentationTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/NullHazardPresentationTest.java"
-      ],
-      "in_degree": 22,
-      "out_degree": 2,
-      "path": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java"
     },
     {
       "dependencies": [
@@ -2252,7 +2255,7 @@
       "path": "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java"
     }
   ],
-  "edge_count": 2210,
+  "edge_count": 2214,
   "generated_by": "dbrckk/repo-brain-v7-graph",
   "node_count": 418,
   "schema_version": 1
