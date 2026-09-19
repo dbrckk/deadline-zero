@@ -1,17 +1,15 @@
 # Change impact
 
-Base: 8335101b03f774de0483b839b6600c81fa524bf9
-Head: 443a03da0cacf09125caf9066a5f80770cd712e0
+Base: 0049f7f186c727871318324f550665890aa53d49
+Head: 2ab6293b6680e351ddc97cfb48530a31ed9bad93
 
 ## Changed files
-- M assets/i18n/messages.properties
-- A core/src/main/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidance.java
-- M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
-- A core/src/test/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidanceTest.java
+- A core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java
+- M docs/PROFILE_MIGRATIONS.md
 
 ## Affected areas
-- assets
 - core
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -1510,6 +1510,34 @@
     },
     {
       "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+        "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+        "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java",
+        "core/src/main/java/com/deadlinezero/game/meta/EntitlementStore.java",
+        "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
+        "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+        "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
+        "core/src/main/java/com/deadlinezero/game/meta/ReviewPromptPolicy.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunShareText.java",
+        "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
+        "core/src/main/java/com/deadlinezero/game/services/CloudSaveService.java",
+        "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
+        "core/src/main/java/com/deadlinezero/game/services/ReviewService.java",
+        "core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/ProfileBackupCodecTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/ProfileSchemaTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/ProfileStoreBackupTest.java"
+      ],
+      "in_degree": 17,
+      "out_degree": 2,
+      "path": "core/src/main/java/com/deadlinezero/game/meta/ProfileSchema.java"
+    },
+    {
+      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
         "core/src/main/java/com/deadlinezero/game/services/AdsService.java",
         "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java"
@@ -1674,33 +1702,6 @@
       "in_degree": 17,
       "out_degree": 1,
       "path": "core/src/main/java/com/deadlinezero/game/services/AdsService.java"
-    },
-    {
-      "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-        "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java"
-      ],
-      "dependents": [
-        "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-        "core/src/main/java/com/deadlinezero/game/meta/ConsumablePurchaseDelivery.java",
-        "core/src/main/java/com/deadlinezero/game/meta/EntitlementStore.java",
-        "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
-        "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
-        "core/src/main/java/com/deadlinezero/game/meta/PurchaseGrantService.java",
-        "core/src/main/java/com/deadlinezero/game/meta/ReviewPromptPolicy.java",
-        "core/src/main/java/com/deadlinezero/game/meta/RunShareText.java",
-        "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
-        "core/src/main/java/com/deadlinezero/game/services/CloudSaveService.java",
-        "core/src/main/java/com/deadlinezero/game/services/OfferConfigService.java",
-        "core/src/main/java/com/deadlinezero/game/services/ReviewService.java",
-        "core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/ProfileBackupCodecTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/ProfileSchemaTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/ProfileStoreBackupTest.java"
-      ],
-      "in_degree": 16,
-      "out_degree": 2,
-      "path": "core/src/main/java/com/deadlinezero/game/meta/ProfileSchema.java"
     },
     {
       "dependencies": [
@@ -2270,8 +2271,8 @@
       "path": "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java"
     }
   ],
-  "edge_count": 2240,
+  "edge_count": 2241,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 425,
+  "node_count": 426,
   "schema_version": 1
 }

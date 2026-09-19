@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T19:21:50Z
+Generated: 2026-09-19T20:28:41Z
 
 ### Git
 - Branch: `main`
-- Head: `443a03da0cac`
-- Commit date: 2026-09-19T21:21:39+02:00
-- Commit: Clarify combat protocol evolution choices
-- Tracked files: 719
+- Head: `2ab6293b6680`
+- Commit date: 2026-09-19T22:28:29+02:00
+- Commit: Keep profile migration docs aligned with schema
+- Tracked files: 720
 
 ### Recently changed files
+- `core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java`
+- `docs/PROFILE_MIGRATIONS.md`
 - `assets/i18n/messages.properties`
 - `core/src/main/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidance.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
@@ -50,8 +52,6 @@ Generated: 2026-09-19T19:21:50Z
 - `core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java`
 - `android/build.gradle`
 - `play/store/DATA_SAFETY.md`
-- `play/store/PLAY_CONSOLE.md`
-- `play/store/RELEASE_READINESS.md`
 
 ### Project signals
 - `build.gradle`
