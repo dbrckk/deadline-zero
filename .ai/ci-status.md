@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 5 success / 0 failure / 3 active
+Summary: 2 success / 0 failure / 4 active
 
-- Verify: queued / pending (ae87d0e2)
-- Responsive UI QA: in_progress / pending (ae87d0e2)
-- Responsive UI QA: completed / success (14c8493f)
-- Verify: in_progress / pending (14c8493f)
-- Responsive UI QA: completed / success (4489162c)
-- Verify: completed / success (4489162c)
-- Verify: completed / success (ef58d5da)
-- Responsive UI QA: completed / success (ef58d5da)
+- Responsive UI QA: in_progress / pending (fc889da7)
+- Verify: in_progress / pending (fc889da7)
+- Verify: in_progress / pending (8c7e32a6)
+- Responsive UI QA: in_progress / pending (8c7e32a6)
+- Verify: completed / cancelled (e26f5352)
+- Responsive UI QA: completed / success (e26f5352)
+- Verify: completed / cancelled (ae87d0e2)
+- Responsive UI QA: completed / success (ae87d0e2)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

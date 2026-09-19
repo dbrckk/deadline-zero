@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T12:58:03Z
+Generated: 2026-09-19T13:02:42Z
 
 ### Git
 - Branch: `main`
-- Head: `ae87d0e2309f`
-- Commit date: 2026-09-19T14:57:51+02:00
-- Commit: Add Play in-app review after meaningful victories
-- Tracked files: 715
+- Head: `fc889da716a5`
+- Commit date: 2026-09-19T15:02:31+02:00
+- Commit: Align localization release contract with current implementation
+- Tracked files: 716
 
 ### Recently changed files
+- `core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java`
+- `play/store/LOCALIZATION.md`
 - `android/build.gradle`
 - `android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java`
 - `android/src/main/java/com/deadlinezero/game/android/AndroidReviewService.java`
@@ -50,8 +52,6 @@ Generated: 2026-09-19T12:58:03Z
 - `core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java`
 - `core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java`
-- `core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java`
-- `core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java`
 
 ### Project signals
 - `build.gradle`
