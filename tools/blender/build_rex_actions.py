@@ -148,26 +148,28 @@ def build_actions(arm) -> None:
     }
     make_action(arm, "idle", 24, [(1, idle_a, {}), (12, idle_b, {"Pelvis": (0, 0, 0.012)}), (24, idle_a, {})])
 
-    # Run: moderate arm swing; avoids dragging cape-adjacent shoulder geometry.
+    # Run: keep the rifle-ready upper body stable while the legs drive the gait.
+    # Large opposing shoulder swings move the rifle/cape silhouette enough to
+    # violate the final 6px horizontal-pivot budget in side/diagonal views.
     run_a = {
         "L_Hip": (22, 0, 0), "R_Hip": (-22, 0, 0),
         "L_Knee": (14, 0, 0), "R_Knee": (38, 0, 0),
-        "L_Shoulder": (-15, 0, 0), "R_Shoulder": (15, 0, 0),
-        "L_Elbow": (24, 0, 0), "R_Elbow": (18, 0, 0),
-        "Spine3": (3, 0, -1.5),
+        "L_Shoulder": (-8, 0, -6), "R_Shoulder": (-12, 0, 6),
+        "L_Elbow": (30, 0, 0), "R_Elbow": (28, 0, 0),
+        "Spine3": (3, 0, -0.75),
     }
     run_b = {
         "L_Hip": (-22, 0, 0), "R_Hip": (22, 0, 0),
         "L_Knee": (38, 0, 0), "R_Knee": (14, 0, 0),
-        "L_Shoulder": (15, 0, 0), "R_Shoulder": (-15, 0, 0),
-        "L_Elbow": (18, 0, 0), "R_Elbow": (24, 0, 0),
-        "Spine3": (3, 0, 1.5),
+        "L_Shoulder": (-8, 0, -6), "R_Shoulder": (-12, 0, 6),
+        "L_Elbow": (30, 0, 0), "R_Elbow": (28, 0, 0),
+        "Spine3": (3, 0, 0.75),
     }
     make_action(arm, "run", 24, [
         (1, run_a, {"Pelvis": (0, 0, 0.02)}),
-        (7, {}, {"Pelvis": (0, 0, 0.065)}),
+        (7, {}, {"Pelvis": (0, 0, 0.04)}),
         (13, run_b, {"Pelvis": (0, 0, 0.02)}),
-        (19, {}, {"Pelvis": (0, 0, 0.065)}),
+        (19, {}, {"Pelvis": (0, 0, 0.04)}),
         (24, run_a, {"Pelvis": (0, 0, 0.02)}),
     ])
 
