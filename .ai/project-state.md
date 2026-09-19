@@ -22,16 +22,29 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T13:09:48Z
+Generated: 2026-09-19T17:53:46Z
 
 ### Git
 - Branch: `main`
-- Head: `265784525869`
-- Commit date: 2026-09-19T15:09:38+02:00
-- Commit: Document Play Review release requirements
+- Head: `7151415712df`
+- Commit date: 2026-09-19T19:53:33+02:00
+- Commit: Evolve combat protocols into two-stage build paths
 - Tracked files: 717
 
 ### Recently changed files
+- `assets/i18n/messages.properties`
+- `core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java`
+- `core/src/main/java/com/deadlinezero/game/progression/Upgrade.java`
+- `core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java`
+- `core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java`
+- `core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java`
+- `core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java`
+- `core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java`
+- `core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java`
+- `core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java`
+- `core/src/main/java/com/deadlinezero/game/meta/ReviewPromptPolicy.java`
+- `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
+- `core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java`
 - `android/build.gradle`
 - `play/store/DATA_SAFETY.md`
 - `play/store/PLAY_CONSOLE.md`
@@ -39,19 +52,6 @@ Generated: 2026-09-19T13:09:48Z
 - `core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java`
 - `play/store/LOCALIZATION.md`
 - `android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java`
-- `android/src/main/java/com/deadlinezero/game/android/AndroidReviewService.java`
-- `core/src/main/java/com/deadlinezero/game/meta/ReviewPromptPolicy.java`
-- `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
-- `core/src/main/java/com/deadlinezero/game/services/GameServices.java`
-- `core/src/main/java/com/deadlinezero/game/services/ReviewService.java`
-- `core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java`
-- `assets/i18n/messages.properties`
-- `core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java`
-- `core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java`
-- `core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java`
-- `core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java`
 
 ### Project signals
 - `build.gradle`

@@ -3226,6 +3226,7 @@ profile.totalRuns = Math.max(0, p.getInteger("totalRuns", 0));
 profile.totalKills = Math.max(0L, p.getLong("totalKills", 0L));
 profile.removeAdsPurchased = p.getBoolean("purchase.removeAds", false);
 profile.starterPackGranted = p.getBoolean("purchase.starterPackGranted", false);
+profile.reviewPromptAttempted = p.getBoolean("review.promptAttempted", false);
 int receiptCount = Math.min(MAX_PURCHASE_RECEIPTS, Math.max(0, p.getInteger("purchase.receipt.count", 0)));
 for (int i = 0; i < receiptCount; i++) profile.recordDeliveredPurchaseReceipt(p.getString("purchase.receipt." + i, ""));
 profile.selectedSurvivor = SurvivorCatalog.byName(p.getString("survivor.selected", SurvivorCatalog.Survivor.REX.name()));
@@ -3323,6 +3324,7 @@ p.putInteger("totalRuns", profile.totalRuns);
 p.putLong("totalKills", profile.totalKills);
 p.putBoolean("purchase.removeAds", profile.removeAdsPurchased);
 p.putBoolean("purchase.starterPackGranted", profile.starterPackGranted);
+p.putBoolean("review.promptAttempted", profile.reviewPromptAttempted);
 ⋮----
 for (String receipt : profile.deliveredPurchaseReceipts()) {
 ⋮----
@@ -3421,7 +3423,7 @@ if (billing.owns(BillingService.STARTER_PACK)) changed |= grant(profile, Billing
 /** Conservative eligibility for requesting a store-managed review prompt after a successful run. */
 public final class ReviewPromptPolicy {
 ⋮----
-public static boolean eligible(boolean firstClear, int stage) {
+public static boolean eligible(boolean firstClear, int stage, boolean alreadyAttempted) {
 ```
 
 ## File: src/main/java/com/deadlinezero/game/meta/RunEncounterRuntime.java
@@ -4182,21 +4184,29 @@ static final VolleyModifier NONE = new VolleyModifier(1f, false, 0);
 public void enableRhythm() { rhythmEnabled = true; }
 public void enableKillchain() { killchainEnabled = true; }
 public void enableReactionCore() { reactionEnabled = true; }
+public void evolveRhythm() { if (rhythmEnabled) rhythmEvolved = true; }
+public void evolveKillchain() { if (killchainEnabled) killchainEvolved = true; }
+public void evolveReactionCore() { if (reactionEnabled) reactionEvolved = true; }
 ⋮----
 public boolean rhythmEnabled() { return rhythmEnabled; }
 public boolean killchainEnabled() { return killchainEnabled; }
 public boolean reactionEnabled() { return reactionEnabled; }
+public boolean rhythmEvolved() { return rhythmEvolved; }
+public boolean killchainEvolved() { return killchainEvolved; }
+public boolean reactionEvolved() { return reactionEvolved; }
 public boolean killchainArmed() { return killchainArmed; }
 ⋮----
 public VolleyModifier onVolley() {
 ⋮----
-return new VolleyModifier(damage, rhythmProc, killProc ? 1 : 0);
+? Math.min(2.05f, rhythmDamage + killDamage - 1f)
+⋮----
+return new VolleyModifier(damage, rhythmProc, penetration);
 ⋮----
 public boolean onKill() {
 ⋮----
 public float reactionBonus(float triggeringDamage, Enemy.ElementReaction reaction) {
 ⋮----
-return Math.max(0f, triggeringDamage) * .35f;
+return Math.max(0f, triggeringDamage) * (reactionEvolved ? .55f : .35f);
 ```
 
 ## File: src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java
@@ -4510,9 +4520,15 @@ public void apply(Player p) { p.abilities.upgrade(AbilityType.ORBITAL_BLADE); }
 ⋮----
 public void apply(Player p) { p.protocols.enableRhythm(); }
 ⋮----
+public void apply(Player p) { p.protocols.evolveRhythm(); }
+⋮----
 public void apply(Player p) { p.protocols.enableKillchain(); }
 ⋮----
+public void apply(Player p) { p.protocols.evolveKillchain(); }
+⋮----
 public void apply(Player p) { p.protocols.enableReactionCore(); }
+⋮----
+public void apply(Player p) { p.protocols.evolveReactionCore(); }
 ⋮----
 public void apply(Player p) { p.dashCooldown = dashCooldown(p.dashCooldown * .82f); }
 ⋮----
@@ -4552,6 +4568,7 @@ final class UpgradeDraftPolicy {
 ⋮----
 static boolean hasEstablishedBuild(Player player) {
 ⋮----
+if (player.protocols.rhythmEnabled() || player.protocols.killchainEnabled() || player.protocols.reactionEnabled()) return true;
 for (AbilityType type : AbilityType.values()) {
 if (player.abilities.level(type) >= 2) return true;
 ⋮----
@@ -4562,6 +4579,7 @@ static float affinityMultiplier(Player player, Upgrade upgrade) {
 ⋮----
 float multiplier = elementalAffinity(player, upgrade);
 multiplier *= abilityAffinity(player, upgrade);
+multiplier *= protocolAffinity(player, upgrade);
 return Math.max(.45f, Math.min(3.25f, multiplier));
 ⋮----
 private static float elementalAffinity(Player player, Upgrade upgrade) {
@@ -4569,6 +4587,12 @@ private static float elementalAffinity(Player player, Upgrade upgrade) {
 DamageElement family = elementFamily(upgrade);
 ⋮----
 private static DamageElement elementFamily(Upgrade upgrade) {
+⋮----
+private static float protocolAffinity(Player player, Upgrade upgrade) {
+⋮----
+case RHYTHM_ACCELERATOR -> player.protocols.rhythmEnabled() ? 2.85f : 1f;
+case KILLCHAIN_OVERCHARGE -> player.protocols.killchainEnabled() ? 2.85f : 1f;
+case REACTION_CASCADE -> player.protocols.reactionEnabled() ? 2.85f : 1f;
 ⋮----
 private static float abilityAffinity(Player player, Upgrade upgrade) {
 AbilityType offered = abilityType(upgrade);
@@ -4628,8 +4652,11 @@ case DRONE -> p.abilities.level(AbilityType.DRONE) < 5;
 p.abilities.tier(AbilityType.DRONE) >= 2 && !p.abilities.hasDroneDoctrine();
 case ORBITAL -> p.abilities.level(AbilityType.ORBITAL_BLADE) < 5;
 case RHYTHM_DRIVER -> !p.protocols.rhythmEnabled();
+case RHYTHM_ACCELERATOR -> p.protocols.rhythmEnabled() && !p.protocols.rhythmEvolved();
 case KILLCHAIN_CAPACITOR -> !p.protocols.killchainEnabled();
+case KILLCHAIN_OVERCHARGE -> p.protocols.killchainEnabled() && !p.protocols.killchainEvolved();
 case REACTION_CORE -> !p.protocols.reactionEnabled();
+case REACTION_CASCADE -> p.protocols.reactionEnabled() && !p.protocols.reactionEvolved();
 ⋮----
 private static float rarityWeight(UpgradeRarity rarity) {
 ```
@@ -7289,7 +7316,10 @@ private final UiViewport viewport = new UiViewport();
 private final Vector2 touch = new Vector2();
 ⋮----
 resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-if (ReviewPromptPolicy.eligible(firstClear, result.stage())) {
+⋮----
+if (ReviewPromptPolicy.eligible(firstClear, result.stage(), reviewAttempted)) {
+⋮----
+game.saveProfile();
 game.services.review.requestReview();
 ⋮----
 @Override public void resize(int width, int height) {
@@ -15660,11 +15690,12 @@ for (String id : ids) owned.add(id);
 ```java
 final class ReviewPromptPolicyTest {
 @Test void onlyMeaningfulFirstClearIsEligible() {
-assertFalse(ReviewPromptPolicy.eligible(false, 5));
-assertFalse(ReviewPromptPolicy.eligible(true, 1));
-assertFalse(ReviewPromptPolicy.eligible(true, 2));
-assertTrue(ReviewPromptPolicy.eligible(true, 3));
-assertTrue(ReviewPromptPolicy.eligible(true, 20));
+assertFalse(ReviewPromptPolicy.eligible(false, 5, false));
+assertFalse(ReviewPromptPolicy.eligible(true, 1, false));
+assertFalse(ReviewPromptPolicy.eligible(true, 2, false));
+assertTrue(ReviewPromptPolicy.eligible(true, 3, false));
+assertTrue(ReviewPromptPolicy.eligible(true, 20, false));
+assertFalse(ReviewPromptPolicy.eligible(true, 20, true));
 ```
 
 ## File: src/test/java/com/deadlinezero/game/meta/RunLoadoutContextResetTest.java
@@ -16486,12 +16517,44 @@ for (int i = 0; i < 8; i++) state.onKill();
 ⋮----
 assertEquals(1.75f, proc.damageMultiplier(), .0001f);
 ⋮----
+@Test void evolvedRhythmProcsEveryFourthVolleyAtHigherDamage() {
+⋮----
+state.evolveRhythm();
+for (int i = 0; i < 3; i++) assertEquals(1f, state.onVolley().damageMultiplier(), .0001f);
+⋮----
+@Test void evolvedKillchainArmsAfterFiveKillsWithTwoPenetration() {
+⋮----
+state.evolveKillchain();
+for (int i = 0; i < 4; i++) assertFalse(state.onKill());
+assertTrue(state.onKill());
+⋮----
+assertEquals(1.60f, proc.damageMultiplier(), .0001f);
+assertEquals(2, proc.bonusPenetration());
+⋮----
+@Test void evolvedCombinedProcRemainsCapped() {
+⋮----
+for (int i = 0; i < 3; i++) state.onVolley();
+for (int i = 0; i < 5; i++) state.onKill();
+⋮----
+assertEquals(2.05f, proc.damageMultiplier(), .0001f);
+⋮----
 @Test void reactionCoreOnlyAmplifiesRealElementReactions() {
 ⋮----
 state.enableReactionCore();
 assertEquals(0f, state.reactionBonus(100f, Enemy.ElementReaction.NONE), .0001f);
 assertEquals(35f, state.reactionBonus(100f, Enemy.ElementReaction.OVERLOAD), .0001f);
 assertEquals(0f, state.reactionBonus(-5f, Enemy.ElementReaction.THERMAL_SHOCK), .0001f);
+⋮----
+@Test void evolvedReactionCoreRaisesBonusToFiftyFivePercent() {
+⋮----
+state.evolveReactionCore();
+assertEquals(55f, state.reactionBonus(100f, Enemy.ElementReaction.OVERLOAD), .0001f);
+⋮----
+@Test void evolutionsCannotActivateBeforeTheirBaseProtocol() {
+⋮----
+assertFalse(state.rhythmEvolved());
+assertFalse(state.killchainEvolved());
+assertFalse(state.reactionEvolved());
 ```
 
 ## File: src/test/java/com/deadlinezero/game/progression/LegendarySelectorTest.java
@@ -16620,6 +16683,13 @@ player.abilities.upgrade(AbilityType.CRYO_NOVA);
 assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.MISSILE_SWARM) >= 2f);
 assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.ORBITAL) >= 2f);
 ⋮----
+@Test void protocolEvolutionBecomesFocusedBuildPathChoice() {
+⋮----
+player.protocols.enableRhythm();
+⋮----
+assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.RHYTHM_ACCELERATOR));
+assertTrue(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_ACCELERATOR));
+⋮----
 @Test void establishedElementAlwaysGetsOneRelevantDraftSlot() {
 ⋮----
 UpgradeSelector.fillChoices(player, choices);
@@ -16636,7 +16706,7 @@ final class UpgradePoolTest {
 @Test void productionPoolMeetsFiftyUpgradeTargetWithUniquePresentation() {
 Upgrade[] upgrades = Upgrade.values();
 assertTrue(upgrades.length >= 50, "P5 requires 50+ standard upgrades");
-assertEquals(57, upgrades.length);
+assertEquals(60, upgrades.length);
 ⋮----
 assertTrue(titles.add(upgrade.title), "duplicate upgrade title: " + upgrade.title);
 assertFalse(upgrade.description.isBlank(), upgrade.name());
@@ -16694,15 +16764,29 @@ assertTrue(UpgradeSelector.isAvailable(player, Upgrade.DRONE_SENTINEL_DOCTRINE))
 ⋮----
 Upgrade.DRONE_HUNTER_DOCTRINE.apply(player);
 ⋮----
+@Test void protocolEvolutionsRequireTheirBaseAndThenSaturate() {
+⋮----
+assertFalse(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_ACCELERATOR));
+assertFalse(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_OVERCHARGE));
+assertFalse(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CASCADE));
+⋮----
+Upgrade.RHYTHM_DRIVER.apply(player);
+Upgrade.KILLCHAIN_CAPACITOR.apply(player);
+Upgrade.REACTION_CORE.apply(player);
+⋮----
+assertTrue(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_ACCELERATOR));
+assertTrue(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_OVERCHARGE));
+assertTrue(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CASCADE));
+⋮----
+Upgrade.RHYTHM_ACCELERATOR.apply(player);
+Upgrade.KILLCHAIN_OVERCHARGE.apply(player);
+Upgrade.REACTION_CASCADE.apply(player);
+⋮----
 @Test void eventProtocolsAreOneTimeRunChoices() {
 ⋮----
 assertTrue(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_DRIVER));
 assertTrue(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_CAPACITOR));
 assertTrue(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CORE));
-⋮----
-Upgrade.RHYTHM_DRIVER.apply(player);
-Upgrade.KILLCHAIN_CAPACITOR.apply(player);
-Upgrade.REACTION_CORE.apply(player);
 ⋮----
 assertFalse(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_DRIVER));
 assertFalse(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_CAPACITOR));

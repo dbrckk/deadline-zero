@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 5 success / 0 failure / 2 active
+Summary: 4 success / 0 failure / 3 active
 
-- Verify: in_progress / pending (26578452)
-- Responsive UI QA: in_progress / pending (26578452)
-- Responsive UI QA: completed / success (fc889da7)
-- Verify: completed / success (fc889da7)
-- Verify: completed / success (8c7e32a6)
-- Responsive UI QA: completed / success (8c7e32a6)
-- Verify: completed / cancelled (e26f5352)
-- Responsive UI QA: completed / success (e26f5352)
+- Verify: pending / pending (71514157)
+- Responsive UI QA: in_progress / pending (71514157)
+- Verify: in_progress / pending (981781ae)
+- Responsive UI QA: completed / cancelled (981781ae)
+- Deadline Zero Work Watch: completed / success (8d228cec)
+- Verify: completed / success (cc6952e0)
+- Responsive UI QA: completed / success (cc6952e0)
+- Deadline Zero Work Watch: completed / success (8d228cec)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -1,17 +1,21 @@
 # Change impact
 
-Base: e8e7cb900ddd9163708f13a5cbc4d0d723847a82
-Head: 265784525869367951964de6f97c4d1ab2784455
+Base: 981781ae0656058b41c507ad6cf44d2b4b5c9e1b
+Head: 7151415712df0f802b37eb6baf06dce69d6c8704
 
 ## Changed files
-- M android/build.gradle
-- M play/store/DATA_SAFETY.md
-- M play/store/PLAY_CONSOLE.md
-- M play/store/RELEASE_READINESS.md
+- M assets/i18n/messages.properties
+- M core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java
+- M core/src/main/java/com/deadlinezero/game/progression/Upgrade.java
+- M core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java
+- M core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java
+- M core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java
+- M core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java
+- M core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java
 
 ## Affected areas
-- android
-- play
+- assets
+- core
 
 ## Related test candidates
 - No direct filename-based test match detected.
