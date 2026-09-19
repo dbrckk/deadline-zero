@@ -42,11 +42,14 @@ final class ActiveBuildStatusTest {
         for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.ORBITAL_BLADE);
         for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.DRONE);
 
-        assertEquals("hud.build.stormBlade", ActiveBuildStatus.keys(p)[0]);
+        String[] keys = new String[2];
+        ActiveBuildStatus.fill(p, keys);
+        assertEquals("hud.build.stormBlade", keys[0]);
     }
 
     @Test void emptyBuildProducesNoTags() {
-        String[] keys = ActiveBuildStatus.keys(fresh());
+        String[] keys = new String[2];
+        ActiveBuildStatus.fill(fresh(), keys);
         assertNull(keys[0]);
         assertNull(keys[1]);
     }
