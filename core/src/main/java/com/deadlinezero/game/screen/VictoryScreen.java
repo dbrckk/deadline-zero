@@ -51,7 +51,10 @@ public final class VictoryScreen extends ScreenAdapter {
         this.bonusCredits = bonusCredits;
         this.bonusGems = bonusGems;
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        if (ReviewPromptPolicy.eligible(firstClear, result.stage())) {
+        boolean reviewAttempted = game.profile != null && game.profile.reviewPromptAttempted;
+        if (ReviewPromptPolicy.eligible(firstClear, result.stage(), reviewAttempted)) {
+            game.profile.reviewPromptAttempted = true;
+            game.saveProfile();
             game.services.review.requestReview();
         }
     }
