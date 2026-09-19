@@ -113,6 +113,22 @@ python3 tools/verify_final_atlas.py --atlas assets/art/game.atlas
 
 The Google Play production asset gate depends on this coverage audit, so a partial atlas cannot be shipped merely because `game.atlas` exists.
 
+## Audit current production maturity
+
+Use the published per-actor manifests rather than milestone prose to see the current state:
+
+```bash
+python3 tools/sprites/audit_final_art_status.py
+```
+
+For machine-readable output:
+
+```bash
+python3 tools/sprites/audit_final_art_status.py --json
+```
+
+The audit reports all 24 contracted actors and distinguishes source production approval, phone-scale QA, Android visual QA and Android acceptance. A generated/reference candidate is therefore not counted as final merely because atlas regions exist.
+
 ## Non-negotiable QA
 
 - transparent background;

@@ -21,6 +21,7 @@ on:
       - "tools/blender/add_rex_rifle.py"
       - "tools/blender/validate_rex_weapon_visibility.py"
       - "tools/sprites/normalize_rex_frames.py"
+      - "tools/sprites/assemble_actor_sheet.py"
 permissions:
   actions: read
   contents: read
@@ -71,6 +72,47 @@ jobs:
         run: blender -b build/rex-animation/rex_animated.blend --python-exit-code 1 --python tools/blender/render_actor_8dir.py -- --actor rex --output build/rex-animation/rendered --size 512 && test "$(find build/rex-animation/rendered -type f -name '*.png' | wc -l)" -eq 232
       - name: Normalize to 96px and run sprite QA
         run: python3 tools/sprites/normalize_rex_frames.py --input build/rex-animation/rendered --output build/rex-animation/normalized96 --report build/rex-animation/sprite-qa-report.json --contact-sheet build/rex-animation/rex-phone-contact-sheet.png
+      - name: Assemble canonical Rex source sheet
+        run: |
+          set -euo pipefail
+          python3 tools/sprites/assemble_actor_sheet.py \
+            --input build/rex-animation/normalized96 \
+            --output build/rex-animation/rex.png \
+            --manifest build/rex-animation/rex-sheet-manifest.json
+          cp build/rex-animation/rex.png art_sources/rex.png
+          python3 tools/validate_rex_reference.py
+          python3 tools/validate_final_sprite_layout.py
+          python3 tools/build_final_sprite_frames.py \
+            --output build/rex-animation/roundtrip \
+            --clean \
+            --strict
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageChops
+
+          source = Path("build/rex-animation/normalized96")
+          rebuilt = Path("build/rex-animation/roundtrip/survivor/rex")
+          motions = {"idle": 4, "run": 8, "attack": 6, "hit": 3, "death": 8}
+          directions = ("n", "ne", "e", "se", "s", "sw", "w", "nw")
+
+          checked = 0
+          for direction in directions:
+              for motion, count in motions.items():
+                  for index in range(count):
+                      before = source / motion / direction / f"{motion}_{index:02d}.png"
+                      after = rebuilt / direction / f"{motion}_{index:02d}.png"
+                      assert after.is_file(), after
+                      with Image.open(before) as a, Image.open(after) as b:
+                          a_rgba = a.convert("RGBA")
+                          b_rgba = b.convert("RGBA")
+                          assert a_rgba.size == b_rgba.size, (before, after)
+                          assert ImageChops.difference(a_rgba, b_rgba).getbbox() is None, (before, after)
+                      checked += 1
+          assert checked == 232
+          print(f"Rex canonical sheet round-trip PASS: {checked} pixel-identical frames")
+          PY
+          rm art_sources/rex.png
+
       - name: Build render manifest
         run: |
           python3 - <<'PY'
@@ -92,6 +134,9 @@ jobs:
             build/rex-animation/sprite-qa-report.json
             build/rex-animation/render-manifest.json
             build/rex-animation/rex-phone-contact-sheet.png
+            build/rex-animation/rex.png
+            build/rex-animation/rex-sheet-manifest.json
+            build/rex-animation/roundtrip/final-sprite-build.json
             build/rex-animation/normalized96/
           if-no-files-found: error
           retention-days: 30
