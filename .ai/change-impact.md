@@ -1,14 +1,13 @@
 # Change impact
 
-Base: 4ad8f0ed74246706954e68e303a54bd35ef7a0ba
-Head: aebc32ba13d7ce0bf7e8950f0e6892f554fd4dc8
+Base: f499d20fa98f97df289cc9185a901e7dc45ae9a0
+Head: c12e9894198b4f43add96bce71cd765fef29c0d5
 
 ## Changed files
-- M .github/workflows/responsive-ui-qa.yml
-- M .github/workflows/verify.yml
+- M .repo-standards.yml
 
 ## Affected areas
-- .github
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.

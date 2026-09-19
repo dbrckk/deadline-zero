@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T07:03:04Z
+Generated: 2026-09-19T07:05:56Z
 
 ### Git
 - Branch: `main`
-- Head: `aebc32ba13d7`
-- Commit date: 2026-09-19T09:02:49+02:00
-- Commit: Cancel obsolete CI runs automatically
+- Head: `c12e9894198b`
+- Commit date: 2026-09-19T09:04:26+02:00
+- Commit: chore(ai): adopt repo standards v18
 - Tracked files: 696
 
 ### Recently changed files
+- `.repo-standards.yml`
 - `.github/workflows/responsive-ui-qa.yml`
 - `.github/workflows/verify.yml`
 - `assets/i18n/messages.properties`
@@ -48,7 +49,6 @@ Generated: 2026-09-19T07:03:04Z
 - `core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java`
 - `core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java`
 - `core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java`
-- `.repo-standards.yml`
 
 ### Project signals
 - `build.gradle`

@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 413
-- Files reparsed this run: 13
+- Files reparsed this run: 0
 - Symbols: 2335
 - Internal import edges: 622
-- Impacted files: 52
-- Selected tests: 22
+- Impacted files: 0
+- Selected tests: 0
 
 ## Languages
 - java: 380 files
@@ -43,7 +43,7 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 13
+- AST files reparsed this run: 0
 - outline files retained: 411
 - top-level items retained: 2490
 - direct members retained: 3204
