@@ -17,6 +17,8 @@ public final class CombatVisualEvents {
     private static long lastSynergyNanos = Long.MIN_VALUE;
     private static long synergySerial;
     private static String synergyKey;
+    private static long lastSentinelInterceptNanos = Long.MIN_VALUE;
+    private static long sentinelInterceptSerial;
 
     private CombatVisualEvents() {}
 
@@ -49,6 +51,11 @@ public final class CombatVisualEvents {
         synergySerial++;
     }
 
+    public static void markSentinelIntercept() {
+        lastSentinelInterceptNanos = TimeUtils.nanoTime();
+        sentinelInterceptSerial++;
+    }
+
     public static float playerShotAgeSeconds() { return age(lastPlayerShotNanos); }
     public static float dashAgeSeconds() { return age(lastDashNanos); }
     public static float levelUpAgeSeconds() { return age(lastLevelUpNanos); }
@@ -61,6 +68,8 @@ public final class CombatVisualEvents {
     public static float synergyAgeSeconds() { return age(lastSynergyNanos); }
     public static long synergySerial() { return synergySerial; }
     public static String synergyKey() { return synergyKey; }
+    public static float sentinelInterceptAgeSeconds() { return age(lastSentinelInterceptNanos); }
+    public static long sentinelInterceptSerial() { return sentinelInterceptSerial; }
 
     private static float age(long nanos) {
         if (nanos == Long.MIN_VALUE) return Float.POSITIVE_INFINITY;
@@ -81,5 +90,7 @@ public final class CombatVisualEvents {
         lastSynergyNanos = Long.MIN_VALUE;
         synergySerial = 0L;
         synergyKey = null;
+        lastSentinelInterceptNanos = Long.MIN_VALUE;
+        sentinelInterceptSerial = 0L;
     }
 }
