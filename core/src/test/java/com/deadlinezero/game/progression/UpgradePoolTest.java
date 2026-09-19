@@ -16,7 +16,7 @@ final class UpgradePoolTest {
     @Test void productionPoolMeetsFiftyUpgradeTargetWithUniquePresentation() {
         Upgrade[] upgrades = Upgrade.values();
         assertTrue(upgrades.length >= 50, "P5 requires 50+ standard upgrades");
-        assertEquals(57, upgrades.length);
+        assertEquals(60, upgrades.length);
 
         Set<String> titles = new HashSet<>();
         int common = 0, rare = 0, epic = 0;
@@ -111,6 +111,31 @@ final class UpgradePoolTest {
         Upgrade.DRONE_HUNTER_DOCTRINE.apply(player);
         assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DRONE_HUNTER_DOCTRINE));
         assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DRONE_SENTINEL_DOCTRINE));
+    }
+
+    @Test void protocolEvolutionsRequireTheirBaseAndThenSaturate() {
+        RunLoadoutContext.end();
+        Player player = new Player(0f, 0f);
+
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_ACCELERATOR));
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_OVERCHARGE));
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CASCADE));
+
+        Upgrade.RHYTHM_DRIVER.apply(player);
+        Upgrade.KILLCHAIN_CAPACITOR.apply(player);
+        Upgrade.REACTION_CORE.apply(player);
+
+        assertTrue(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_ACCELERATOR));
+        assertTrue(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_OVERCHARGE));
+        assertTrue(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CASCADE));
+
+        Upgrade.RHYTHM_ACCELERATOR.apply(player);
+        Upgrade.KILLCHAIN_OVERCHARGE.apply(player);
+        Upgrade.REACTION_CASCADE.apply(player);
+
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_ACCELERATOR));
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_OVERCHARGE));
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CASCADE));
     }
 
     @Test void eventProtocolsAreOneTimeRunChoices() {
