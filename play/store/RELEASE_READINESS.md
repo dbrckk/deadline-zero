@@ -33,6 +33,7 @@ These require real account state, licensed Play services, or physical hardware a
 - [ ] Google Play Billing licensed-account purchase/restore/refund/revocation matrix.
 - [ ] Production AdMob/UMP consent behavior on a real Play-delivered build.
 - [ ] Google Play Games production configuration/account validation.
+- [ ] Google Play In-App Review flow validated on a Play-delivered test build after an eligible victory.
 - [ ] Public production privacy-policy URL reviewed in browser and in-app.
 - [ ] Play Data Safety form completed against exact shipping SDK disclosures.
 - [ ] App access, ads, target audience and IARC content-rating declarations completed in Play Console.
