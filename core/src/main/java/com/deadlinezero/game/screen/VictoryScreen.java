@@ -15,6 +15,7 @@ import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.meta.EquipmentItem;
 import com.deadlinezero.game.meta.MasteryRunNotice;
 import com.deadlinezero.game.meta.RunResult;
+import com.deadlinezero.game.meta.ReviewPromptPolicy;
 import com.deadlinezero.game.meta.RunShareText;
 import com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog;
 import com.deadlinezero.game.ui.MetaLayout;
@@ -50,6 +51,9 @@ public final class VictoryScreen extends ScreenAdapter {
         this.bonusCredits = bonusCredits;
         this.bonusGems = bonusGems;
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        if (ReviewPromptPolicy.eligible(firstClear, result.stage())) {
+            game.services.review.requestReview();
+        }
     }
 
     @Override public void resize(int width, int height) {
