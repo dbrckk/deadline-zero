@@ -37,7 +37,9 @@ public final class AndroidLauncher extends AndroidApplication {
                 new AndroidShareService(this),
                 new AndroidHapticsService(this),
                 cloudSave,
-                new AndroidThermalService(this)
+                new AndroidThermalService(this),
+                com.deadlinezero.game.services.OfferConfigService.safeLocal(),
+                new AndroidReviewService(this)
             )),
             config
         );
