@@ -32,6 +32,7 @@ public final class PlayerProfile {
     public long totalKills;
     public boolean removeAdsPurchased;
     public boolean starterPackGranted;
+    public boolean reviewPromptAttempted;
     public SurvivorCatalog.Survivor selectedSurvivor = SurvivorCatalog.Survivor.REX;
     public String selectedWeaponId = WeaponCatalog.AR9.id;
 
