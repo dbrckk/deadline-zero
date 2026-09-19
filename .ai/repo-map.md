@@ -317,6 +317,7 @@ core/
                 CombatPolishController.java
                 CombatSpritePass.java
                 CombatVisualEvents.java
+                CompanionRenderer.java
                 DeathFxRenderer.java
                 Direction8.java
                 DirectionalBootstrapArt.java
@@ -501,6 +502,7 @@ core/
                 CharacterSpriteFacingTest.java
                 CombatHudLayoutTest.java
                 CombatVisualEventsProtocolTest.java
+                CompanionRendererTest.java
                 Direction8Test.java
                 DirectionalBootstrapArtTest.java
                 DirectionalBootstrapLazyLoadTest.java
@@ -17267,6 +17269,7 @@ private final PostFxShader postFx = new PostFxShader();
 characters = new CharacterSpriteRenderer(art);
 environment = new EnvironmentRenderer(art);
 weapon = new WeaponRenderer(art);
+companions = new CompanionRenderer(art);
 vfx = new AuthoredVfxRenderer(art);
 quality = GraphicsQuality.autoDetect();
 ⋮----
@@ -17275,6 +17278,7 @@ float safeDt = Math.max(0f, dt);
 ⋮----
 environment.update(safeDt);
 characters.update(safeDt);
+companions.update(safeDt);
 ⋮----
 public boolean authoredAvailable() { return characters.authoredAvailable(); }
 public GraphicsQuality quality() { return quality; }
@@ -17305,6 +17309,7 @@ audio.update(player, enemies);
 if (postFx.available() && quality.postFxIntensity > 0f) batch.setShader(postFx.shader(quality.postFxIntensity));
 characters.draw(batch, player, enemies);
 batch.setShader(null);
+companions.draw(batch, player);
 championBadges.draw(batch, enemies);
 ⋮----
 Enemy target = nearestEnemy(player, enemies);
@@ -17376,6 +17381,44 @@ private static float age(long nanos) {
 long elapsed = Math.max(0L, TimeUtils.nanoTime() - nanos);
 ⋮----
 public static void reset() {
+````
+
+## File: core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java
+````java
+/** Lightweight authored/fallback companion pass for the Drone ability and its doctrine identity. */
+public final class CompanionRenderer {
+⋮----
+public void update(float dt) { stateTime += Math.max(0f, dt); }
+⋮----
+public void draw(SpriteBatch batch, Player player) {
+if (player == null || !player.alive || player.abilities.level(AbilityType.DRONE) <= 0) return;
+⋮----
+DroneDoctrine doctrine = player.abilities.droneDoctrine();
+float angle = stateTime * orbitSpeedDegrees(doctrine) + 180f;
+float orbit = orbitRadius(doctrine);
+float x = player.position.x + MathUtils.cosDeg(angle) * orbit;
+float y = player.position.y + MathUtils.sinDeg(angle) * orbit;
+float pulse = .5f + .5f * MathUtils.sin(stateTime * pulseSpeed(doctrine));
+float size = baseSize(doctrine) * (1f + pulse * .08f);
+⋮----
+TextureRegion region = art.region("companion/drone");
+batch.begin();
+⋮----
+case HUNTER -> batch.setColor(1f, .58f + pulse * .10f, .20f, 1f);
+case SENTINEL -> batch.setColor(.36f, .88f + pulse * .08f, 1f, 1f);
+default -> batch.setColor(.62f, 1f, .68f, 1f);
+⋮----
+batch.draw(region, x - size * .5f, y - size * .5f, size, size);
+batch.setColor(1f, 1f, 1f, 1f);
+batch.end();
+⋮----
+static float orbitRadius(DroneDoctrine doctrine) {
+⋮----
+static float orbitSpeedDegrees(DroneDoctrine doctrine) {
+⋮----
+static float pulseSpeed(DroneDoctrine doctrine) {
+⋮----
+static float baseSize(DroneDoctrine doctrine) {
 ````
 
 ## File: core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java
@@ -24915,6 +24958,25 @@ assertEquals(0L, CombatVisualEvents.protocolSerial());
 @Test void noneCueDoesNotPublish() {
 ⋮----
 CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.NONE);
+````
+
+## File: core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java
+````java
+final class CompanionRendererTest {
+@Test void hunterUsesAggressiveWideOrbit() {
+assertEquals(2.25f, CompanionRenderer.orbitRadius(DroneDoctrine.HUNTER), .0001f);
+assertEquals(145f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.HUNTER), .0001f);
+assertEquals(.76f, CompanionRenderer.baseSize(DroneDoctrine.HUNTER), .0001f);
+⋮----
+@Test void sentinelUsesDefensiveCompactOrbit() {
+assertEquals(1.55f, CompanionRenderer.orbitRadius(DroneDoctrine.SENTINEL), .0001f);
+assertEquals(95f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.SENTINEL), .0001f);
+assertEquals(.86f, CompanionRenderer.baseSize(DroneDoctrine.SENTINEL), .0001f);
+⋮----
+@Test void baseDroneKeepsNeutralPresentation() {
+assertEquals(1.80f, CompanionRenderer.orbitRadius(DroneDoctrine.NONE), .0001f);
+assertEquals(110f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.NONE), .0001f);
+assertEquals(.80f, CompanionRenderer.baseSize(DroneDoctrine.NONE), .0001f);
 ````
 
 ## File: core/src/test/java/com/deadlinezero/game/visual/Direction8Test.java

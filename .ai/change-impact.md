@@ -1,23 +1,14 @@
 # Change impact
 
-Base: 514ec5ab848fd04e08f050374c1408373416341b
-Head: fb67e8453b8d2bee615966e7d252504d3a8408e4
+Base: 23d9319ee2a63abbe55d1b916b03084b8dcf89c9
+Head: aca4b76b0369de7dcfebb5472ea81e85a4493801
 
 ## Changed files
-- M assets/i18n/messages.properties
-- M core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java
-- M core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java
-- A core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java
-- A core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java
-- M core/src/main/java/com/deadlinezero/game/progression/Upgrade.java
-- M core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java
-- M core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java
-- M core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java
-- A core/src/test/java/com/deadlinezero/game/abilities/DroneDoctrineRulesTest.java
-- M core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java
+- M core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java
+- A core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java
+- A core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java
 
 ## Affected areas
-- assets
 - core
 
 ## Related test candidates
