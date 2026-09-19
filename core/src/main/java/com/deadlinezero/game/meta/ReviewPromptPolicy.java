@@ -4,7 +4,7 @@ package com.deadlinezero.game.meta;
 public final class ReviewPromptPolicy {
     private ReviewPromptPolicy() {}
 
-    public static boolean eligible(boolean firstClear, int stage) {
-        return firstClear && stage >= 3;
+    public static boolean eligible(boolean firstClear, int stage, boolean alreadyAttempted) {
+        return !alreadyAttempted && firstClear && stage >= 3;
     }
 }

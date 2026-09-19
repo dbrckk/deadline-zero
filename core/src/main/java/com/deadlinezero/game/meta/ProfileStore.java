@@ -29,6 +29,7 @@ public final class ProfileStore {
         profile.totalKills = Math.max(0L, p.getLong("totalKills", 0L));
         profile.removeAdsPurchased = p.getBoolean("purchase.removeAds", false);
         profile.starterPackGranted = p.getBoolean("purchase.starterPackGranted", false);
+        profile.reviewPromptAttempted = p.getBoolean("review.promptAttempted", false);
         int receiptCount = Math.min(MAX_PURCHASE_RECEIPTS, Math.max(0, p.getInteger("purchase.receipt.count", 0)));
         for (int i = 0; i < receiptCount; i++) profile.recordDeliveredPurchaseReceipt(p.getString("purchase.receipt." + i, ""));
         profile.selectedSurvivor = SurvivorCatalog.byName(p.getString("survivor.selected", SurvivorCatalog.Survivor.REX.name()));
@@ -151,6 +152,7 @@ public final class ProfileStore {
         p.putLong("totalKills", profile.totalKills);
         p.putBoolean("purchase.removeAds", profile.removeAdsPurchased);
         p.putBoolean("purchase.starterPackGranted", profile.starterPackGranted);
+        p.putBoolean("review.promptAttempted", profile.reviewPromptAttempted);
         int receiptIndex = 0;
         for (String receipt : profile.deliveredPurchaseReceipts()) {
             if (receiptIndex >= MAX_PURCHASE_RECEIPTS) break;
