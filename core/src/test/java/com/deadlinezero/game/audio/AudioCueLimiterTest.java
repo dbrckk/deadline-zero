@@ -43,6 +43,15 @@ final class AudioCueLimiterTest {
             now + AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.BOSS_PHASE)));
     }
 
+    @Test void sentinelBlocksAreRateLimitedDuringProjectileBursts() {
+        AudioCueLimiter limiter = new AudioCueLimiter();
+        long now = 10_000_000L;
+        assertTrue(limiter.allow(AudioDirector.Cue.SENTINEL_BLOCK, now));
+        assertFalse(limiter.allow(AudioDirector.Cue.SENTINEL_BLOCK, now + 100_000_000L));
+        assertTrue(limiter.allow(AudioDirector.Cue.SENTINEL_BLOCK,
+            now + AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.SENTINEL_BLOCK)));
+    }
+
     @Test void resetRestoresImmediatePlayback() {
         AudioCueLimiter limiter = new AudioCueLimiter();
         long now = 10_000_000L;
