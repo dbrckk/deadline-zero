@@ -29,6 +29,7 @@ jobs:
           python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/assemble_actor_sheet.py tools/sprites/audit_final_art_status.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py
           python3 tools/validate_final_sprite_layout.py
           python3 tools/validate_rex_reference.py
+          mkdir -p build
           python3 tools/sprites/audit_final_art_status.py --json > build/final-art-status.json
           python3 tools/sprites/validate_actor_production_contracts.py
           python3 -m unittest discover -s tools -p 'test_verify_final_atlas.py'
