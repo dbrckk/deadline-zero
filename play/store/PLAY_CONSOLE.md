@@ -39,6 +39,8 @@ Repository-side checklist for Play Console declarations that cannot be inferred 
 
 ## Store presence
 
+- [ ] Validate the in-app review flow from a Play-delivered test build; do not assume the review dialog must appear because Play enforces its own quota.
+- [ ] Confirm review prompting occurs only after the intended successful-run milestone and never interrupts active gameplay.
 - [ ] Use `play/store/LISTING.md` as canonical listing copy.
 - [ ] Upload the validated 512 x 512 icon.
 - [ ] Upload the validated 1024 x 500 feature graphic.
