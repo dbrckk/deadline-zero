@@ -15,6 +15,7 @@ public final class CombatSpritePass {
     private final CharacterSpriteRenderer characters;
     private final EnvironmentRenderer environment;
     private final WeaponRenderer weapon;
+    private final CompanionRenderer companions;
     private final AuthoredVfxRenderer vfx;
     private final ChampionBadgeRenderer championBadges = new ChampionBadgeRenderer();
     private final CombatAudioLayer audio = new CombatAudioLayer();
@@ -27,6 +28,7 @@ public final class CombatSpritePass {
         characters = new CharacterSpriteRenderer(art);
         environment = new EnvironmentRenderer(art);
         weapon = new WeaponRenderer(art);
+        companions = new CompanionRenderer(art);
         vfx = new AuthoredVfxRenderer(art);
         quality = GraphicsQuality.autoDetect();
     }
@@ -36,6 +38,7 @@ public final class CombatSpritePass {
         stateTime += safeDt;
         environment.update(safeDt);
         characters.update(safeDt);
+        companions.update(safeDt);
     }
 
     public boolean authoredAvailable() { return characters.authoredAvailable(); }
@@ -72,6 +75,7 @@ public final class CombatSpritePass {
         if (postFx.available() && quality.postFxIntensity > 0f) batch.setShader(postFx.shader(quality.postFxIntensity));
         characters.draw(batch, player, enemies);
         batch.setShader(null);
+        companions.draw(batch, player);
         championBadges.draw(batch, enemies);
 
         Enemy target = nearestEnemy(player, enemies);
