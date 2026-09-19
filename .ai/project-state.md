@@ -22,17 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T17:53:46Z
+Generated: 2026-09-19T19:21:50Z
 
 ### Git
 - Branch: `main`
-- Head: `7151415712df`
-- Commit date: 2026-09-19T19:53:33+02:00
-- Commit: Evolve combat protocols into two-stage build paths
-- Tracked files: 717
+- Head: `443a03da0cac`
+- Commit date: 2026-09-19T21:21:39+02:00
+- Commit: Clarify combat protocol evolution choices
+- Tracked files: 719
 
 ### Recently changed files
 - `assets/i18n/messages.properties`
+- `core/src/main/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidance.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/test/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidanceTest.java`
 - `core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java`
 - `core/src/main/java/com/deadlinezero/game/progression/Upgrade.java`
 - `core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java`
@@ -49,9 +52,6 @@ Generated: 2026-09-19T17:53:46Z
 - `play/store/DATA_SAFETY.md`
 - `play/store/PLAY_CONSOLE.md`
 - `play/store/RELEASE_READINESS.md`
-- `core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java`
-- `play/store/LOCALIZATION.md`
-- `android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java`
 
 ### Project signals
 - `build.gradle`

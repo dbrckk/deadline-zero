@@ -173,6 +173,7 @@ src/
               LegendaryEffects.java
               LegendarySelector.java
               LegendaryState.java
+              ProtocolUpgradeGuidance.java
               Upgrade.java
               UpgradeDraftPolicy.java
               UpgradeRarity.java
@@ -393,6 +394,7 @@ src/
               CombatProtocolStateTest.java
               LegendarySelectorTest.java
               LegendaryStateTest.java
+              ProtocolUpgradeGuidanceTest.java
               RemainingWeaponFamilyLegendaryBalanceTest.java
               UpgradeDraftPolicyTest.java
               UpgradePoolTest.java
@@ -4370,6 +4372,20 @@ public boolean grantInfernoPyroclasm() { if (infernoPyroclasm) return false; inf
 public boolean grantBreacherRupture() { if (breacherRupture) return false; breacherRupture = true; return true; }
 ```
 
+## File: src/main/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidance.java
+```java
+/** Presentation-only guidance for the two-stage combat protocol build paths. */
+public final class ProtocolUpgradeGuidance {
+⋮----
+public static String key(Player player, Upgrade upgrade) {
+⋮----
+player.protocols.rhythmEnabled() && !player.protocols.rhythmEvolved()
+⋮----
+player.protocols.killchainEnabled() && !player.protocols.killchainEvolved()
+⋮----
+player.protocols.reactionEnabled() && !player.protocols.reactionEvolved()
+```
+
 ## File: src/main/java/com/deadlinezero/game/progression/Upgrade.java
 ```java
 /**
@@ -5697,6 +5713,7 @@ font.setColor(Color.WHITE);
 font.draw(batch, t(choices[i].descriptionKey()),
 ⋮----
 String guidanceKey = AbilityUpgradeGuidance.key(player, choices[i]);
+if (guidanceKey == null) guidanceKey = ProtocolUpgradeGuidance.key(player, choices[i]);
 ⋮----
 font.getData().setScale(.78f);
 ⋮----
@@ -16626,6 +16643,38 @@ assertEquals(penetration + 3, player.weapon.penetration);
 assertTrue(LegendaryEffects.applyApex(player));
 assertFalse(LegendaryEffects.applyApex(player));
 for (AbilityType type : AbilityType.values()) assertTrue(player.abilities.tier(type) >= 2);
+```
+
+## File: src/test/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidanceTest.java
+```java
+final class ProtocolUpgradeGuidanceTest {
+private Player fresh() {
+RunLoadoutContext.end();
+return new Player(0f, 0f);
+⋮----
+@Test void baseProtocolChoicesShowUnlockGuidance() {
+Player p = fresh();
+assertEquals("combat.protocolGuidance.unlock",
+ProtocolUpgradeGuidance.key(p, Upgrade.RHYTHM_DRIVER));
+⋮----
+ProtocolUpgradeGuidance.key(p, Upgrade.KILLCHAIN_CAPACITOR));
+⋮----
+ProtocolUpgradeGuidance.key(p, Upgrade.REACTION_CORE));
+⋮----
+@Test void evolutionChoiceShowsEvolutionGuidanceAfterBase() {
+⋮----
+Upgrade.RHYTHM_DRIVER.apply(p);
+assertEquals("combat.protocolGuidance.evolution",
+ProtocolUpgradeGuidance.key(p, Upgrade.RHYTHM_ACCELERATOR));
+⋮----
+@Test void evolutionGuidanceDisappearsAfterEvolution() {
+⋮----
+Upgrade.KILLCHAIN_CAPACITOR.apply(p);
+Upgrade.KILLCHAIN_OVERCHARGE.apply(p);
+assertNull(ProtocolUpgradeGuidance.key(p, Upgrade.KILLCHAIN_OVERCHARGE));
+⋮----
+@Test void nonProtocolUpgradeHasNoProtocolGuidance() {
+assertNull(ProtocolUpgradeGuidance.key(fresh(), Upgrade.DAMAGE));
 ```
 
 ## File: src/test/java/com/deadlinezero/game/progression/RemainingWeaponFamilyLegendaryBalanceTest.java

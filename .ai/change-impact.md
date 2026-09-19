@@ -1,17 +1,13 @@
 # Change impact
 
-Base: 981781ae0656058b41c507ad6cf44d2b4b5c9e1b
-Head: 7151415712df0f802b37eb6baf06dce69d6c8704
+Base: 8335101b03f774de0483b839b6600c81fa524bf9
+Head: 443a03da0cacf09125caf9066a5f80770cd712e0
 
 ## Changed files
 - M assets/i18n/messages.properties
-- M core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java
-- M core/src/main/java/com/deadlinezero/game/progression/Upgrade.java
-- M core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java
-- M core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java
-- M core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java
-- M core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java
-- M core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java
+- A core/src/main/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidance.java
+- M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
+- A core/src/test/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidanceTest.java
 
 ## Affected areas
 - assets
