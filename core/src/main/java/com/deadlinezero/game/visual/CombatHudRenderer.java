@@ -29,6 +29,7 @@ public final class CombatHudRenderer {
     private static final Color HARVESTER_COLOR = new Color(.96f, .42f, .10f, 1f);
     private static final Color NULL_ARCHON_COLOR = new Color(.52f, .42f, 1f, 1f);
     private final Matrix4 projection = new Matrix4();
+    private final String[] activeBuildKeys = new String[2];
     private float damageFlash;
     private final Localization i18n;
 
@@ -222,11 +223,11 @@ public final class CombatHudRenderer {
 
     private void drawBuildStatus(SpriteBatch batch, BitmapFont font, Player player,
                                  CombatHudLayout.Layout layout, float s) {
-        String[] keys = ActiveBuildStatus.keys(player);
-        if (keys[0] == null) return;
-        String text = keys[1] == null
-            ? f("hud.build.summaryOne", t(keys[0]))
-            : f("hud.build.summaryTwo", t(keys[0]), t(keys[1]));
+        ActiveBuildStatus.fill(player, activeBuildKeys);
+        if (activeBuildKeys[0] == null) return;
+        String text = activeBuildKeys[1] == null
+            ? f("hud.build.summaryOne", t(activeBuildKeys[0]))
+            : f("hud.build.summaryTwo", t(activeBuildKeys[0]), t(activeBuildKeys[1]));
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .82f * s);
         font.setColor(VisualTheme.CYAN_SOFT);
         font.draw(batch, text, layout.timeline().x, layout.timeline().y - 14f * s,
