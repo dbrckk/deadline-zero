@@ -57,6 +57,8 @@ perf/
   compare_android_benchmark.py
   test_compare_android_benchmark.py
 sprites/
+  assemble_actor_sheet.py
+  audit_final_art_status.py
   normalize_actor_frames.py
   normalize_rex_frames.py
   resolve_actor_actions.py
@@ -294,7 +296,9 @@ def build_actions(arm) -> None
 idle_a = {
 idle_b = {
 ⋮----
-# Run: moderate arm swing; avoids dragging cape-adjacent shoulder geometry.
+# Run: keep the rifle-ready upper body stable while the legs drive the gait.
+# Large opposing shoulder swings move the rifle/cape silhouette enough to
+# violate the final 6px horizontal-pivot budget in side/diagonal views.
 run_a = {
 run_b = {
 ⋮----
@@ -1141,6 +1145,92 @@ def test_legacy_baseline_schema_skips_instead_of_failing(self)
 ⋮----
 baseline = {
 result = mod.compare(baseline, sample())
+```
+
+## File: sprites/assemble_actor_sheet.py
+```python
+#!/usr/bin/env python3
+"""Assemble normalized directional actor frames into the canonical source-sheet layout.
+
+Input layout:
+  <input>/<motion>/<direction>/<motion>_<index>.png
+
+Output layout:
+  rows: n, ne, e, se, s, sw, w, nw
+  columns: idle, run, attack, hit, death
+
+The resulting sheet is deterministic and is intended to round-trip through
+tools/slice_sprite_sheet.py without changing any pixel.
+"""
+⋮----
+DIRECTIONS = ("n", "ne", "e", "se", "s", "sw", "w", "nw")
+MOTIONS = ("idle", "run", "attack", "hit", "death")
+STANDARD_COUNTS = {"idle": 4, "run": 8, "attack": 6, "hit": 3, "death": 8}
+⋮----
+def parse_args() -> argparse.Namespace
+⋮----
+p = argparse.ArgumentParser(description=__doc__)
+⋮----
+def sha256(path: Path) -> str
+⋮----
+h = hashlib.sha256()
+⋮----
+def main() -> int
+⋮----
+args = parse_args()
+⋮----
+counts = dict(STANDARD_COUNTS)
+⋮----
+columns = sum(counts[m] for m in MOTIONS)
+width = columns * args.cell
+height = len(DIRECTIONS) * args.cell
+sheet = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+⋮----
+inputs: list[dict] = []
+⋮----
+column = 0
+⋮----
+source = args.input / motion / direction / f"{motion}_{index:02d}.png"
+⋮----
+rgba = image.convert("RGBA")
+⋮----
+manifest = {
+```
+
+## File: sprites/audit_final_art_status.py
+```python
+#!/usr/bin/env python3
+"""Report final-art maturity from the machine-readable actor contract and published manifests."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+LAYOUT = ROOT / "art_sources" / "final-sprite-layout.json"
+ART = ROOT / "assets" / "art"
+⋮----
+def parse_args()
+⋮----
+p = argparse.ArgumentParser(description=__doc__)
+⋮----
+def manifest_path(actor_id: str) -> Path
+⋮----
+direct = ART / f"{actor_id}-manifest.json"
+⋮----
+fallback = ART / "boss-manifest.json"
+⋮----
+def main() -> int
+⋮----
+args = parse_args()
+layout = json.loads(LAYOUT.read_text(encoding="utf-8"))
+rows = []
+⋮----
+path = manifest_path(actor["id"])
+data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+production = data.get("source_production_ready") is True
+phone = data.get("phone_qa_pass") is True
+android = data.get("android_visual_qa_pass") is True
+accepted = data.get("android_accepted") is True
+score = sum((production, phone, android, accepted))
+⋮----
+summary = {
 ```
 
 ## File: sprites/normalize_actor_frames.py

@@ -573,6 +573,8 @@ tools/
     compare_android_benchmark.py
     test_compare_android_benchmark.py
   sprites/
+    assemble_actor_sheet.py
+    audit_final_art_status.py
     normalize_actor_frames.py
     normalize_rex_frames.py
     resolve_actor_actions.py
@@ -1746,6 +1748,7 @@ on:
       - "tools/blender/add_rex_rifle.py"
       - "tools/blender/validate_rex_weapon_visibility.py"
       - "tools/sprites/normalize_rex_frames.py"
+      - "tools/sprites/assemble_actor_sheet.py"
 permissions:
   actions: read
   contents: read
@@ -1796,6 +1799,47 @@ jobs:
         run: blender -b build/rex-animation/rex_animated.blend --python-exit-code 1 --python tools/blender/render_actor_8dir.py -- --actor rex --output build/rex-animation/rendered --size 512 && test "$(find build/rex-animation/rendered -type f -name '*.png' | wc -l)" -eq 232
       - name: Normalize to 96px and run sprite QA
         run: python3 tools/sprites/normalize_rex_frames.py --input build/rex-animation/rendered --output build/rex-animation/normalized96 --report build/rex-animation/sprite-qa-report.json --contact-sheet build/rex-animation/rex-phone-contact-sheet.png
+      - name: Assemble canonical Rex source sheet
+        run: |
+          set -euo pipefail
+          python3 tools/sprites/assemble_actor_sheet.py \
+            --input build/rex-animation/normalized96 \
+            --output build/rex-animation/rex.png \
+            --manifest build/rex-animation/rex-sheet-manifest.json
+          cp build/rex-animation/rex.png art_sources/rex.png
+          python3 tools/validate_rex_reference.py
+          python3 tools/validate_final_sprite_layout.py
+          python3 tools/build_final_sprite_frames.py \
+            --output build/rex-animation/roundtrip \
+            --clean \
+            --strict
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageChops
+
+          source = Path("build/rex-animation/normalized96")
+          rebuilt = Path("build/rex-animation/roundtrip/survivor/rex")
+          motions = {"idle": 4, "run": 8, "attack": 6, "hit": 3, "death": 8}
+          directions = ("n", "ne", "e", "se", "s", "sw", "w", "nw")
+
+          checked = 0
+          for direction in directions:
+              for motion, count in motions.items():
+                  for index in range(count):
+                      before = source / motion / direction / f"{motion}_{index:02d}.png"
+                      after = rebuilt / direction / f"{motion}_{index:02d}.png"
+                      assert after.is_file(), after
+                      with Image.open(before) as a, Image.open(after) as b:
+                          a_rgba = a.convert("RGBA")
+                          b_rgba = b.convert("RGBA")
+                          assert a_rgba.size == b_rgba.size, (before, after)
+                          assert ImageChops.difference(a_rgba, b_rgba).getbbox() is None, (before, after)
+                      checked += 1
+          assert checked == 232
+          print(f"Rex canonical sheet round-trip PASS: {checked} pixel-identical frames")
+          PY
+          rm art_sources/rex.png
+
       - name: Build render manifest
         run: |
           python3 - <<'PY'
@@ -1817,6 +1861,9 @@ jobs:
             build/rex-animation/sprite-qa-report.json
             build/rex-animation/render-manifest.json
             build/rex-animation/rex-phone-contact-sheet.png
+            build/rex-animation/rex.png
+            build/rex-animation/rex-sheet-manifest.json
+            build/rex-animation/roundtrip/final-sprite-build.json
             build/rex-animation/normalized96/
           if-no-files-found: error
           retention-days: 30
@@ -2036,11 +2083,6 @@ on:
         description: "Successful Rex Animation Smoke run ID (defaults to latest successful)"
         required: false
         default: ""
-  push:
-    paths:
-      - ".github/workflows/rex-publish-current.yml"
-      - "tools/sprites/upsert_directional_actor_atlas.py"
-
 permissions:
   actions: read
   contents: write
@@ -2082,28 +2124,51 @@ jobs:
           repository: ${{ github.repository }}
           path: rex-artifact
 
+      - name: Install atlas tooling
+        run: sudo apt-get update && sudo apt-get install -y python3-pil
+
       - name: Locate and verify sprite source
         id: sprites
         shell: bash
         run: |
           set -euo pipefail
           root="$(find rex-artifact -type d -name normalized96 -print -quit)"
+          sheet="$(find rex-artifact -type f -name rex.png -print -quit)"
           manifest="$(find rex-artifact -type f -name render-manifest.json -print -quit)"
           qa="$(find rex-artifact -type f -name sprite-qa-report.json -print -quit)"
-          test -n "$root" -a -n "$manifest" -a -n "$qa"
-          python3 - "$manifest" "$qa" <<'PY'
+          test -n "$root" -a -n "$sheet" -a -n "$manifest" -a -n "$qa"
+          python3 - "$manifest" "$qa" "$sheet" <<'PY'
           import json,sys
+          from PIL import Image
           manifest=json.load(open(sys.argv[1])); qa=json.load(open(sys.argv[2]))
           assert manifest.get('frame_count') == 232
           assert manifest.get('qa_pass') is True
           assert manifest.get('weapon_visibility_pass') is True
+          assert manifest.get('production_ready') is True, (
+              "Refusing to publish Rex as production art: source manifest is not production-approved"
+          )
           assert qa.get('pass') is True and qa.get('frame_count') == 232
+          with Image.open(sys.argv[3]) as im:
+              assert im.format == 'PNG'
+              assert im.size == (2784, 768), im.size
+              assert im.mode in ('RGBA', 'LA', 'P')
           PY
           echo "root=$root" >> "$GITHUB_OUTPUT"
+          echo "sheet=$sheet" >> "$GITHUB_OUTPUT"
           echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
 
-      - name: Install atlas tooling
-        run: sudo apt-get update && sudo apt-get install -y python3-pil
+      - name: Stage canonical Rex production source
+        env:
+          CANONICAL_SHEET: ${{ steps.sprites.outputs.sheet }}
+        run: |
+          set -euo pipefail
+          cp "$CANONICAL_SHEET" art_sources/rex.png
+          python3 tools/validate_rex_reference.py
+          python3 tools/validate_final_sprite_layout.py
+          python3 tools/build_final_sprite_frames.py \
+            --output build/rex-publish-roundtrip \
+            --clean \
+            --strict
 
       - name: Upsert production Rex atlas page
         env:
@@ -2143,7 +2208,7 @@ jobs:
           set -euo pipefail
           git config user.name "deadline-zero-art-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add assets/art/rex.png assets/art/game.atlas assets/art/rex-manifest.json
+          git add art_sources/rex.png assets/art/rex.png assets/art/game.atlas assets/art/rex-manifest.json
           if git diff --cached --quiet; then
             echo "Atlas already current"
             exit 0
@@ -2910,9 +2975,11 @@ jobs:
           gradle-version: '8.11.1'
       - name: Validate final sprite production layout
         run: |
-          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py
+          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/assemble_actor_sheet.py tools/sprites/audit_final_art_status.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py
           python3 tools/validate_final_sprite_layout.py
           python3 tools/validate_rex_reference.py
+          mkdir -p build
+          python3 tools/sprites/audit_final_art_status.py --json > build/final-art-status.json
           python3 tools/sprites/validate_actor_production_contracts.py
           python3 -m unittest discover -s tools -p 'test_verify_final_atlas.py'
           python3 -m unittest discover -s tools/sprites -p 'test_resolve_actor_actions.py'
@@ -26873,7 +26940,9 @@ def build_actions(arm) -> None
 idle_a = {
 idle_b = {
 ⋮----
-# Run: moderate arm swing; avoids dragging cape-adjacent shoulder geometry.
+# Run: keep the rifle-ready upper body stable while the legs drive the gait.
+# Large opposing shoulder swings move the rifle/cape silhouette enough to
+# violate the final 6px horizontal-pivot budget in side/diagonal views.
 run_a = {
 run_b = {
 ⋮----
@@ -27720,6 +27789,92 @@ def test_legacy_baseline_schema_skips_instead_of_failing(self)
 ⋮----
 baseline = {
 result = mod.compare(baseline, sample())
+````
+
+## File: tools/sprites/assemble_actor_sheet.py
+````python
+#!/usr/bin/env python3
+"""Assemble normalized directional actor frames into the canonical source-sheet layout.
+
+Input layout:
+  <input>/<motion>/<direction>/<motion>_<index>.png
+
+Output layout:
+  rows: n, ne, e, se, s, sw, w, nw
+  columns: idle, run, attack, hit, death
+
+The resulting sheet is deterministic and is intended to round-trip through
+tools/slice_sprite_sheet.py without changing any pixel.
+"""
+⋮----
+DIRECTIONS = ("n", "ne", "e", "se", "s", "sw", "w", "nw")
+MOTIONS = ("idle", "run", "attack", "hit", "death")
+STANDARD_COUNTS = {"idle": 4, "run": 8, "attack": 6, "hit": 3, "death": 8}
+⋮----
+def parse_args() -> argparse.Namespace
+⋮----
+p = argparse.ArgumentParser(description=__doc__)
+⋮----
+def sha256(path: Path) -> str
+⋮----
+h = hashlib.sha256()
+⋮----
+def main() -> int
+⋮----
+args = parse_args()
+⋮----
+counts = dict(STANDARD_COUNTS)
+⋮----
+columns = sum(counts[m] for m in MOTIONS)
+width = columns * args.cell
+height = len(DIRECTIONS) * args.cell
+sheet = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+⋮----
+inputs: list[dict] = []
+⋮----
+column = 0
+⋮----
+source = args.input / motion / direction / f"{motion}_{index:02d}.png"
+⋮----
+rgba = image.convert("RGBA")
+⋮----
+manifest = {
+````
+
+## File: tools/sprites/audit_final_art_status.py
+````python
+#!/usr/bin/env python3
+"""Report final-art maturity from the machine-readable actor contract and published manifests."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+LAYOUT = ROOT / "art_sources" / "final-sprite-layout.json"
+ART = ROOT / "assets" / "art"
+⋮----
+def parse_args()
+⋮----
+p = argparse.ArgumentParser(description=__doc__)
+⋮----
+def manifest_path(actor_id: str) -> Path
+⋮----
+direct = ART / f"{actor_id}-manifest.json"
+⋮----
+fallback = ART / "boss-manifest.json"
+⋮----
+def main() -> int
+⋮----
+args = parse_args()
+layout = json.loads(LAYOUT.read_text(encoding="utf-8"))
+rows = []
+⋮----
+path = manifest_path(actor["id"])
+data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+production = data.get("source_production_ready") is True
+phone = data.get("phone_qa_pass") is True
+android = data.get("android_visual_qa_pass") is True
+accepted = data.get("android_accepted") is True
+score = sum((production, phone, android, accepted))
+⋮----
+summary = {
 ````
 
 ## File: tools/sprites/normalize_actor_frames.py

@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 4 success / 0 failure / 2 active
+Summary: 5 success / 0 failure / 3 active
 
-- Verify: queued / pending (2ab6293b)
-- Responsive UI QA: in_progress / pending (2ab6293b)
-- Verify: completed / success (ce1809d2)
-- Responsive UI QA: completed / success (ce1809d2)
-- Responsive UI QA: completed / cancelled (5cbc02fb)
-- Verify: completed / cancelled (5cbc02fb)
-- Verify: completed / success (443a03da)
-- Responsive UI QA: completed / success (443a03da)
+- Verify: in_progress / pending (a3d2a637)
+- Rex Animation Smoke: in_progress / pending (a3d2a637)
+- Responsive UI QA: in_progress / pending (a3d2a637)
+- Verify: completed / success (b3f39629)
+- Responsive UI QA: completed / success (b3f39629)
+- Verify: completed / success (61f46a90)
+- Responsive UI QA: completed / success (61f46a90)
+- Responsive UI QA: completed / success (c63577f4)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

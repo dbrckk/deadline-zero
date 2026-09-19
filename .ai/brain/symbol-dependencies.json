@@ -5,45 +5,285 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "ProfileMigrationDocumentationTest": {
+    "parse_args": {
       "source": {
-        "file": "core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java",
-        "start": 10,
-        "end": 32
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 25,
+        "end": 31
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "reset_scene": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 34,
+        "end": 36
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "import_asset": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 39,
+        "end": 46
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "armature_and_meshes": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 49,
+        "end": 63
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "bounds": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 66,
+        "end": 70
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "ground_actor": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 73,
+        "end": 85
       },
       "symbol_dependencies": [
         {
-          "symbol": "ProfileSchema",
+          "symbol": "bounds",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileSchema.java",
-              "line": 6,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "repositoryRoot",
-          "definitions": [
-            {
-              "file": "core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java",
-              "line": 21,
-              "kind": "symbol",
-              "language": "java"
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 66,
+              "kind": "function",
+              "language": "python"
             }
           ],
           "relation": "same_file"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 1
     },
-    "repositoryRoot": {
+    "clear_actions": {
       "source": {
-        "file": "core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java",
-        "start": 22,
-        "end": 31
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 88,
+        "end": 93
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "zero_pose": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 96,
+        "end": 101
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "apply_pose": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 104,
+        "end": 112
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "key_pose": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 115,
+        "end": 118
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "make_action": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 121,
+        "end": 136
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "apply_pose",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 104,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "key_pose",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 115,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "zero_pose",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 96,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "build_actions": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 139,
+        "end": 232
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "make_action",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 121,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "main": {
+      "source": {
+        "file": "tools/blender/build_rex_actions.py",
+        "start": 235,
+        "end": 355
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "armature_and_meshes",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 49,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "build_actions",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 139,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "clear_actions",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 88,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "ground_actor",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 73,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "import_asset",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 39,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "parse_args",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 25,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "reset_scene",
+          "definitions": [
+            {
+              "file": "tools/blender/build_rex_actions.py",
+              "line": 34,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "sha256": {
+      "source": {
+        "file": "tools/sprites/assemble_actor_sheet.py",
+        "start": 38,
+        "end": 43
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "manifest_path": {
+      "source": {
+        "file": "tools/sprites/audit_final_art_status.py",
+        "start": 20,
+        "end": 28
       },
       "symbol_dependencies": [],
       "dependency_count": 0

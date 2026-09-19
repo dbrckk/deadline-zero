@@ -22,16 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T20:28:41Z
+Generated: 2026-09-19T22:01:53Z
 
 ### Git
 - Branch: `main`
-- Head: `2ab6293b6680`
-- Commit date: 2026-09-19T22:28:29+02:00
-- Commit: Keep profile migration docs aligned with schema
-- Tracked files: 720
+- Head: `a3d2a6371fcd`
+- Commit date: 2026-09-20T00:01:41+02:00
+- Commit: Close the Rex canonical source-sheet gap (#218)
+- Tracked files: 723
 
 ### Recently changed files
+- `.github/workflows/rex-animation-smoke.yml`
+- `.github/workflows/rex-publish-current.yml`
+- `.github/workflows/verify.yml`
+- `art_sources/README.md`
+- `docs/final-art-production-spec.md`
+- `tools/blender/build_rex_actions.py`
+- `tools/sprites/assemble_actor_sheet.py`
+- `tools/sprites/audit_final_art_status.py`
 - `core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java`
 - `docs/PROFILE_MIGRATIONS.md`
 - `assets/i18n/messages.properties`
@@ -44,14 +52,6 @@ Generated: 2026-09-19T20:28:41Z
 - `core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java`
 - `core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java`
 - `core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java`
-- `core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java`
-- `core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java`
-- `core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java`
-- `core/src/main/java/com/deadlinezero/game/meta/ReviewPromptPolicy.java`
-- `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
-- `core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java`
-- `android/build.gradle`
-- `play/store/DATA_SAFETY.md`
 
 ### Project signals
 - `build.gradle`

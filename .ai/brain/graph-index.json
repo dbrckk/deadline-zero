@@ -441,6 +441,7 @@
         "tools/blender/refine_rex_rifle_attack.py",
         "tools/blender/repair_rex_weights.py",
         "tools/slice_sprite_sheet.py",
+        "tools/sprites/assemble_actor_sheet.py",
         "tools/sprites/normalize_actor_frames.py",
         "tools/sprites/normalize_rex_frames.py",
         "tools/sprites/resolve_actor_actions.py",
@@ -448,7 +449,7 @@
         "tools/validate_rex_reference.py",
         "tools/verify_final_atlas.py"
       ],
-      "in_degree": 41,
+      "in_degree": 42,
       "out_degree": 12,
       "path": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java"
     },
@@ -1809,6 +1810,32 @@
     },
     {
       "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryReportTest.java",
+        "tools/blender/inspect_actor_source.py",
+        "tools/blender/render_actor_8dir.py",
+        "tools/blender/repair_rex_weights.py",
+        "tools/blender/validate_rex_weapon_visibility.py",
+        "tools/blender/validate_rig.py",
+        "tools/sprites/audit_final_art_status.py",
+        "tools/sprites/normalize_actor_frames.py",
+        "tools/sprites/normalize_rex_frames.py",
+        "tools/sprites/test_validate_actor_role_metrics.py",
+        "tools/sprites/validate_actor_role_metrics.py",
+        "tools/sprites/validate_ranged_attack_readability.py"
+      ],
+      "in_degree": 13,
+      "out_degree": 4,
+      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java"
+    },
+    {
+      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/config/GameConfig.java",
         "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
         "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java",
@@ -1962,31 +1989,6 @@
     },
     {
       "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
-      ],
-      "dependents": [
-        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryReportTest.java",
-        "tools/blender/inspect_actor_source.py",
-        "tools/blender/render_actor_8dir.py",
-        "tools/blender/repair_rex_weights.py",
-        "tools/blender/validate_rex_weapon_visibility.py",
-        "tools/blender/validate_rig.py",
-        "tools/sprites/normalize_actor_frames.py",
-        "tools/sprites/normalize_rex_frames.py",
-        "tools/sprites/test_validate_actor_role_metrics.py",
-        "tools/sprites/validate_actor_role_metrics.py",
-        "tools/sprites/validate_ranged_attack_readability.py"
-      ],
-      "in_degree": 12,
-      "out_degree": 4,
-      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java"
-    },
-    {
-      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java",
         "core/src/main/java/com/deadlinezero/game/config/Localization.java",
         "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
@@ -2059,6 +2061,30 @@
       "in_degree": 2,
       "out_degree": 14,
       "path": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java"
+    },
+    {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
+        "core/src/main/java/com/deadlinezero/game/meta/ThreatSetBonusRules.java",
+        "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+        "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
+        "core/src/test/java/com/deadlinezero/game/meta/BalanceHealthRulesTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySegmentsTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySummaryTest.java",
+        "tools/build_final_sprite_frames.py",
+        "tools/sprites/audit_final_art_status.py"
+      ],
+      "in_degree": 14,
+      "out_degree": 1,
+      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
     },
     {
       "dependencies": [
@@ -2157,29 +2183,6 @@
     },
     {
       "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java"
-      ],
-      "dependents": [
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
-        "core/src/main/java/com/deadlinezero/game/meta/ThreatSetBonusRules.java",
-        "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
-        "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
-        "core/src/test/java/com/deadlinezero/game/meta/BalanceHealthRulesTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySegmentsTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySummaryTest.java",
-        "tools/build_final_sprite_frames.py"
-      ],
-      "in_degree": 13,
-      "out_degree": 1,
-      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
-    },
-    {
-      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/meta/EndgameMutatorRules.java",
         "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
         "core/src/main/java/com/deadlinezero/game/meta/ThreatTierRules.java"
@@ -2271,8 +2274,8 @@
       "path": "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java"
     }
   ],
-  "edge_count": 2241,
+  "edge_count": 2244,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 426,
+  "node_count": 428,
   "schema_version": 1
 }

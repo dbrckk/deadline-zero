@@ -1429,13 +1429,14 @@
         "tools/blender/repair_rex_weights.py",
         "tools/blender/validate_rex_weapon_visibility.py",
         "tools/blender/validate_rig.py",
+        "tools/sprites/audit_final_art_status.py",
         "tools/sprites/normalize_actor_frames.py",
         "tools/sprites/normalize_rex_frames.py",
         "tools/sprites/test_validate_actor_role_metrics.py",
         "tools/sprites/validate_actor_role_metrics.py",
         "tools/sprites/validate_ranged_attack_readability.py"
       ],
-      "in_degree": 12,
+      "in_degree": 13,
       "out_degree": 4
     },
     "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java": {
@@ -1506,9 +1507,10 @@
         "core/src/test/java/com/deadlinezero/game/meta/BalanceHealthRulesTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySegmentsTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySummaryTest.java",
-        "tools/build_final_sprite_frames.py"
+        "tools/build_final_sprite_frames.py",
+        "tools/sprites/audit_final_art_status.py"
       ],
-      "in_degree": 13,
+      "in_degree": 14,
       "out_degree": 1
     },
     "core/src/main/java/com/deadlinezero/game/meta/ChestService.java": {
@@ -4045,6 +4047,7 @@
         "tools/blender/refine_rex_rifle_attack.py",
         "tools/blender/repair_rex_weights.py",
         "tools/slice_sprite_sheet.py",
+        "tools/sprites/assemble_actor_sheet.py",
         "tools/sprites/normalize_actor_frames.py",
         "tools/sprites/normalize_rex_frames.py",
         "tools/sprites/resolve_actor_actions.py",
@@ -4052,7 +4055,7 @@
         "tools/validate_rex_reference.py",
         "tools/verify_final_atlas.py"
       ],
-      "in_degree": 41,
+      "in_degree": 42,
       "out_degree": 12
     },
     "core/src/main/java/com/deadlinezero/game/visual/GraphicsQuality.java": {
@@ -6257,6 +6260,23 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 3
+    },
+    "tools/sprites/assemble_actor_sheet.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/visual/GameArt.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/sprites/audit_final_art_status.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
     },
     "tools/sprites/normalize_actor_frames.py": {
       "dependencies": [

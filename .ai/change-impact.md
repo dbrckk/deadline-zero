@@ -1,15 +1,23 @@
 # Change impact
 
-Base: 0049f7f186c727871318324f550665890aa53d49
-Head: 2ab6293b6680e351ddc97cfb48530a31ed9bad93
+Base: fe66bf52b09488a64651bff2acc1a2c7a4964718
+Head: a3d2a6371fcd33be80067f82c9c65cbb14f3226f
 
 ## Changed files
-- A core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java
-- M docs/PROFILE_MIGRATIONS.md
+- M .github/workflows/rex-animation-smoke.yml
+- M .github/workflows/rex-publish-current.yml
+- M .github/workflows/verify.yml
+- M art_sources/README.md
+- M docs/final-art-production-spec.md
+- M tools/blender/build_rex_actions.py
+- A tools/sprites/assemble_actor_sheet.py
+- A tools/sprites/audit_final_art_status.py
 
 ## Affected areas
-- core
+- .github
+- art_sources
 - docs
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.
