@@ -1,6 +1,7 @@
 package com.deadlinezero.game.progression;
 
 import com.deadlinezero.game.abilities.AbilityType;
+import com.deadlinezero.game.abilities.DroneDoctrine;
 import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.entities.Player;
 
@@ -289,6 +290,12 @@ public enum Upgrade {
     },
     DRONE("Sentinel Drone", "Autonomous fire • improved range at Lv3 • evolved damage at Lv5 • network synergies", UpgradeRarity.EPIC) {
         public void apply(Player p) { p.abilities.upgrade(AbilityType.DRONE); }
+    },
+    DRONE_HUNTER_DOCTRINE("Hunter Doctrine", "Drone specializes in +30% damage and stronger secondary targeting", UpgradeRarity.EPIC) {
+        public void apply(Player p) { p.abilities.chooseDroneDoctrine(DroneDoctrine.HUNTER); }
+    },
+    DRONE_SENTINEL_DOCTRINE("Sentinel Doctrine", "Drone sacrifices some damage to intercept nearby hostile projectiles", UpgradeRarity.EPIC) {
+        public void apply(Player p) { p.abilities.chooseDroneDoctrine(DroneDoctrine.SENTINEL); }
     },
     ORBITAL("Orbital Blade", "Close-range blade • larger Tier II hitbox at Lv3 • evolves at Lv5 • Frost/Storm forms", UpgradeRarity.EPIC) {
         public void apply(Player p) { p.abilities.upgrade(AbilityType.ORBITAL_BLADE); }

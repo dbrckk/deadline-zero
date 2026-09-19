@@ -8,6 +8,7 @@ import com.deadlinezero.game.ai.LeaperSharedRuntime;
 import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.entities.Enemy;
 import com.deadlinezero.game.entities.HomingMissile;
+import com.deadlinezero.game.entities.EnemyProjectile;
 import com.deadlinezero.game.entities.Player;
 import com.deadlinezero.game.fx.ArcFx;
 import com.deadlinezero.game.fx.DamageNumber;
@@ -231,28 +232,57 @@ public final class AbilitySystem {
         int level = player.abilities.level(AbilityType.DRONE);
         if (level <= 0 || !runtime.readyDrone()) return;
         int tier = player.abilities.tier(AbilityType.DRONE);
+        DroneDoctrine doctrine = player.abilities.droneDoctrine();
         float angle = runtime.orbitalAngle + 180f;
         float x = player.position.x + MathUtils.cosDeg(angle) * 1.8f;
         float y = player.position.y + MathUtils.sinDeg(angle) * 1.8f;
+
+        if (doctrine == DroneDoctrine.SENTINEL) interceptHostileProjectile(x, y);
+
         Enemy target = nearest(x, y, tier >= 2 ? 12.5f : 11f, null);
         if (target != null) {
             float damage = (12f + level * 7f) * abilityPower;
             if (tier >= 2) damage *= 1.10f;
             if (tier >= 3) damage *= 1.25f;
+            damage *= DroneDoctrineRules.damageMultiplier(doctrine);
+
             DamageElement element = player.abilities.hasTeslaEvolution() ? DamageElement.SHOCK : DamageElement.KINETIC;
             if (element == DamageElement.SHOCK) arc(x, y, target.position.x, target.position.y, .10f);
             damageEnemy(target, damage, element, element == DamageElement.SHOCK ? Color.CYAN : Color.LIME, .42f);
 
-            if (player.abilities.hasTargetNetworkSynergy()) {
+            float secondaryMultiplier = DroneDoctrineRules.secondaryTargetMultiplier(
+                doctrine, player.abilities.hasTargetNetworkSynergy());
+            if (secondaryMultiplier > 0f) {
                 Enemy second = nearest(x, y, 10f, target);
                 if (second != null) {
                     arc(x, y, second.position.x, second.position.y, .08f);
-                    damageEnemy(second, damage * .62f, DamageElement.KINETIC, Color.LIME, .30f);
+                    damageEnemy(second, damage * secondaryMultiplier, DamageElement.KINETIC, Color.LIME, .30f);
                 }
             }
             impact(x, y, .25f, .08f, Color.LIME);
         }
         runtime.resetDrone(level);
+    }
+
+    private boolean interceptHostileProjectile(float droneX, float droneY) {
+        float range = DroneDoctrineRules.interceptionRange(player.abilities.droneDoctrine());
+        if (range <= 0f) return false;
+        float best2 = range * range;
+        EnemyProjectile best = null;
+        for (EnemyProjectile projectile : pools.hostileProjectiles) {
+            if (!projectile.active) continue;
+            float dx = projectile.position.x - player.position.x;
+            float dy = projectile.position.y - player.position.y;
+            float d2 = dx * dx + dy * dy;
+            if (d2 >= best2) continue;
+            best2 = d2;
+            best = projectile;
+        }
+        if (best == null) return false;
+        best.active = false;
+        arc(droneX, droneY, best.position.x, best.position.y, .10f);
+        impact(best.position.x, best.position.y, .42f, .12f, Color.CYAN);
+        return true;
     }
 
     private void updateOrbital() {

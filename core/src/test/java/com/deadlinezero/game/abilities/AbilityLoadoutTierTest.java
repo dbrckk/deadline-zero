@@ -35,6 +35,17 @@ public final class AbilityLoadoutTierTest {
         assertTrue(loadout.hasSuperconductorSynergy());
     }
 
+    @Test public void droneDoctrineRequiresTierTwoAndIsExclusive() {
+        AbilityLoadout loadout = new AbilityLoadout();
+        assertFalse(loadout.chooseDroneDoctrine(DroneDoctrine.HUNTER));
+        for (int i = 0; i < 3; i++) loadout.upgrade(AbilityType.DRONE);
+        assertTrue(loadout.chooseDroneDoctrine(DroneDoctrine.HUNTER));
+        assertEquals(DroneDoctrine.HUNTER, loadout.droneDoctrine());
+        assertTrue(loadout.hasDroneDoctrine());
+        assertFalse(loadout.chooseDroneDoctrine(DroneDoctrine.SENTINEL));
+        assertEquals(DroneDoctrine.HUNTER, loadout.droneDoctrine());
+    }
+
     @Test public void stormBladeRequiresBothEvolutions() {
         AbilityLoadout loadout = new AbilityLoadout();
         for (int i = 0; i < 5; i++) loadout.upgrade(AbilityType.ORBITAL_BLADE);

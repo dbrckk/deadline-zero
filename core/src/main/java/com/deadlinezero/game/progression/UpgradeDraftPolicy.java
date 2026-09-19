@@ -84,7 +84,7 @@ final class UpgradeDraftPolicy {
             case TESLA_ORB -> AbilityType.TESLA_ORB;
             case MISSILE_SWARM -> AbilityType.MISSILE_SWARM;
             case CRYO_NOVA -> AbilityType.CRYO_NOVA;
-            case DRONE -> AbilityType.DRONE;
+            case DRONE, DRONE_HUNTER_DOCTRINE, DRONE_SENTINEL_DOCTRINE -> AbilityType.DRONE;
             case ORBITAL -> AbilityType.ORBITAL_BLADE;
             default -> null;
         };
