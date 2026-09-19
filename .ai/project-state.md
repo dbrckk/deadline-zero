@@ -22,14 +22,14 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-18T21:00:59Z
+Generated: 2026-09-19T06:34:36Z
 
 ### Git
 - Branch: `main`
-- Head: `c4bd36034fb9`
-- Commit date: 2026-09-18T22:59:09+02:00
-- Commit: chore(ai): adopt repo standards v15
-- Tracked files: 688
+- Head: `faab922eee1e`
+- Commit date: 2026-09-19T08:34:27+02:00
+- Commit: chore(ai): adopt repo standards v16
+- Tracked files: 690
 
 ### Recently changed files
 - `.repo-standards.yml`
@@ -38,9 +38,6 @@ Generated: 2026-09-18T21:00:59Z
 - `core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java`
-- `core/src/main/java/com/deadlinezero/game/perf/ThermalBudgetPolicy.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
-- `core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java`
 
 ### Project signals
 - `build.gradle`
