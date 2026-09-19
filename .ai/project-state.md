@@ -22,20 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T09:36:11Z
+Generated: 2026-09-19T10:56:18Z
 
 ### Git
 - Branch: `main`
-- Head: `aca4b76b0369`
-- Commit date: 2026-09-19T11:36:01+02:00
-- Commit: Give drone doctrines distinct combat visuals
-- Tracked files: 707
+- Head: `707a739d477a`
+- Commit date: 2026-09-19T12:56:06+02:00
+- Commit: Show active build identity in combat HUD
+- Tracked files: 709
 
 ### Recently changed files
+- `assets/i18n/messages.properties`
+- `core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
+- `core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java`
 - `core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java`
-- `assets/i18n/messages.properties`
 - `core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java`
 - `core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java`
 - `core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java`
@@ -49,8 +52,6 @@ Generated: 2026-09-19T09:36:11Z
 - `core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java`
-- `core/src/test/java/com/deadlinezero/game/entities/NullWardSupportTest.java`
-- `.repo-standards.yml`
 
 ### Project signals
 - `build.gradle`

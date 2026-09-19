@@ -295,6 +295,7 @@ core/
               util/
                 Pools.java
               visual/
+                ActiveBuildStatus.java
                 AdaptiveFxBudget.java
                 AnimationProfileCatalog.java
                 ArtManifest.java
@@ -488,6 +489,7 @@ core/
                 UiMotionTest.java
                 UiRendererStateTest.java
               visual/
+                ActiveBuildStatusTest.java
                 AdaptiveFxBudgetTest.java
                 AnimationProfileCatalogTest.java
                 AuthoredCoreDirectionalArtTest.java
@@ -15428,6 +15430,26 @@ DeathFx fx = deathFx.get(deathFxCursor);
 DeathFx oldest = deathFx.get(deathFxCursor);
 ````
 
+## File: core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java
+````java
+/** Builds a compact, allocation-bounded HUD summary of the run's active build identity. */
+public final class ActiveBuildStatus {
+⋮----
+public static String[] keys(Player player) {
+⋮----
+DroneDoctrine doctrine = a.droneDoctrine();
+⋮----
+String synergy = primarySynergy(a);
+⋮----
+static String primarySynergy(AbilityLoadout a) {
+if (a.hasStormBladeSynergy()) return "hud.build.stormBlade";
+if (a.hasTeslaEvolution()) return "hud.build.arcReactor";
+if (a.hasCryoMissileEvolution()) return "hud.build.cryoBarrage";
+if (a.hasSuperconductorSynergy()) return "hud.build.superconductor";
+if (a.hasTargetNetworkSynergy()) return "hud.build.targetNetwork";
+if (a.hasPermafrostBladeSynergy()) return "hud.build.permafrostBlades";
+````
+
 ## File: core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java
 ````java
 /** Smoothly adapts optional visual density to sustained frame rate without changing gameplay. */
@@ -16843,6 +16865,9 @@ font.setColor(contrast ? Color.WHITE : VisualTheme.GOLD);
 font.draw(batch, f("hud.encounter", name, seconds), layout.timeline().x,
 layout.timeline().y - 14f * s, layout.timeline().width, Align.center, false);
 ⋮----
+if (encounter == RunEncounterDirector.Type.NONE && !director.bossSpawned()) {
+drawBuildStatus(batch, font, player, layout, s);
+⋮----
 font.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
 font.draw(batch, player.canDash() ? t("hud.dash") : String.format(java.util.Locale.ROOT, "%.1f", player.dashTimer),
 layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s, layout.dashRadius() * 2f, Align.center, false);
@@ -16850,6 +16875,16 @@ layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s, layout.dashRadius
 drawProtocolCue(batch, font, layout, s);
 drawOnboardingHint(batch, font, layout, s);
 batch.end();
+⋮----
+private void drawBuildStatus(SpriteBatch batch, BitmapFont font, Player player,
+⋮----
+String[] keys = ActiveBuildStatus.keys(player);
+⋮----
+? f("hud.build.summaryOne", t(keys[0]))
+: f("hud.build.summaryTwo", t(keys[0]), t(keys[1]));
+font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .82f * s);
+font.setColor(VisualTheme.CYAN_SOFT);
+font.draw(batch, text, layout.timeline().x, layout.timeline().y - 14f * s,
 ⋮----
 private void drawProtocolCue(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
 float age = CombatVisualEvents.protocolAgeSeconds();
@@ -16872,7 +16907,6 @@ else if (!o.bossSeen()) hint = t("hud.onboardingBoss");
 ⋮----
 Rectangle r = layout.onboarding();
 ⋮----
-font.setColor(VisualTheme.CYAN_SOFT);
 font.draw(batch, hint, r.x + 14f, r.y + r.height * .62f, r.width - 28f, Align.center, true);
 ⋮----
 private void drawDamageVignette(ShapeRenderer shapes, float w, float h) {
@@ -24545,6 +24579,42 @@ void nullStateFallsBackToNormalPresentation() {
 UiRenderer.ButtonStyle fallback = UiRenderer.buttonStyle(null);
 ⋮----
 assertTrue(fallback == normal);
+````
+
+## File: core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java
+````java
+final class ActiveBuildStatusTest {
+private Player fresh() {
+RunLoadoutContext.end();
+return new Player(0f, 0f);
+⋮----
+@Test void doctrineTakesFirstHudSlot() {
+Player p = fresh();
+for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.DRONE);
+p.abilities.chooseDroneDoctrine(DroneDoctrine.HUNTER);
+⋮----
+String[] keys = ActiveBuildStatus.keys(p);
+assertEquals("hud.build.hunter", keys[0]);
+assertNull(keys[1]);
+⋮----
+@Test void secondSlotShowsPrimaryActiveSynergy() {
+⋮----
+for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.TESLA_ORB);
+⋮----
+p.abilities.chooseDroneDoctrine(DroneDoctrine.SENTINEL);
+⋮----
+assertEquals("hud.build.sentinel", keys[0]);
+assertEquals("hud.build.arcReactor", keys[1]);
+⋮----
+@Test void strongestLateSynergyWinsSingleSynergySlot() {
+⋮----
+for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.ORBITAL_BLADE);
+⋮----
+assertEquals("hud.build.stormBlade", ActiveBuildStatus.keys(p)[0]);
+⋮----
+@Test void emptyBuildProducesNoTags() {
+String[] keys = ActiveBuildStatus.keys(fresh());
+assertNull(keys[0]);
 ````
 
 ## File: core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java

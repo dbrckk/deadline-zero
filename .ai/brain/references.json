@@ -5,51 +5,377 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "CombatSpritePass": {
+    "ActiveBuildStatus": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 13,
+        "file": "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
+        "line": 8,
+        "kind": "class",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
+          "line": 8,
+          "preview": "public final class ActiveBuildStatus {",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
+          "line": 9,
+          "preview": "private ActiveBuildStatus() {}",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 223,
+          "preview": "String[] keys = ActiveBuildStatus.keys(player);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 23,
+          "preview": "String[] keys = ActiveBuildStatus.keys(p);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 34,
+          "preview": "String[] keys = ActiveBuildStatus.keys(p);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 45,
+          "preview": "assertEquals(\"hud.build.stormBlade\", ActiveBuildStatus.keys(p)[0]);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 49,
+          "preview": "String[] keys = ActiveBuildStatus.keys(fresh());",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "keys": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
+        "line": 10,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/config/Localization.java",
+          "line": 11,
+          "preview": "* The initial shipping catalog is English-only, but all callers use stable keys so additional",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
+          "line": 11,
+          "preview": "public static String[] keys(Player player) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 223,
+          "preview": "String[] keys = ActiveBuildStatus.keys(player);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 224,
+          "preview": "if (keys[0] == null) return;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 225,
+          "preview": "String text = keys[1] == null",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 226,
+          "preview": "? f(\"hud.build.summaryOne\", t(keys[0]))",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 227,
+          "preview": ": f(\"hud.build.summaryTwo\", t(keys[0]), t(keys[1]));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/Direction8.java",
+          "line": 3,
+          "preview": "/** Stable eight-way facing used by authored top-down character animation keys. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 27,
+          "preview": "* contains duplicate keys, a MessageFormat placeholder sequence is malformed, or a screen",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 29,
+          "preview": "* resolved through stable enum/id-derived keys and are therefore exempt from static orphan checks.",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 47,
+          "preview": "assertTrue(catalog.duplicates.isEmpty(), \"Duplicate i18n keys: \" + catalog.duplicates);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 68,
+          "preview": "assertTrue(missing.isEmpty(), \"Missing i18n keys referenced by UI code: \" + missing);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 85,
+          "preview": "\"User-facing font literals must use localization keys: \" + violations);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 107,
+          "preview": "Set<String> keys = new LinkedHashSet<>();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 114,
+          "preview": "keys.add(key);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 117,
+          "preview": "return keys;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 23,
+          "preview": "String[] keys = ActiveBuildStatus.keys(p);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 24,
+          "preview": "assertEquals(\"hud.build.hunter\", keys[0]);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 25,
+          "preview": "assertNull(keys[1]);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 34,
+          "preview": "String[] keys = ActiveBuildStatus.keys(p);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 35,
+          "preview": "assertEquals(\"hud.build.sentinel\", keys[0]);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 36,
+          "preview": "assertEquals(\"hud.build.arcReactor\", keys[1]);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 45,
+          "preview": "assertEquals(\"hud.build.stormBlade\", ActiveBuildStatus.keys(p)[0]);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 49,
+          "preview": "String[] keys = ActiveBuildStatus.keys(fresh());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 50,
+          "preview": "assertNull(keys[0]);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 51,
+          "preview": "assertNull(keys[1]);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/NullBootstrapVfxArtTest.java",
+          "line": 10,
+          "preview": "String[] keys = {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/NullBootstrapVfxArtTest.java",
+          "line": 15,
+          "preview": "for (int i = 0; i < keys.length; i++) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/NullBootstrapVfxArtTest.java",
+          "line": 16,
+          "preview": "assertEquals(i * NullBootstrapVfxArt.FRAMES_PER_EFFECT, NullBootstrapVfxArt.firstTile(keys[i]));",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 60,
+          "preview": "missing = sorted(REQUIRED_BONES - set(arm.pose.bones.keys()))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 242,
+          "preview": "missing = expected - set(bpy.data.actions.keys())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/perf/compare_android_benchmark.py",
+          "line": 27,
+          "preview": "missing = required - data.keys()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/resolve_actor_candidate.py",
+          "line": 18,
+          "preview": "overlap = candidates.keys() & fragment_candidates.keys()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_final_sprite_layout.py",
+          "line": 35,
+          "preview": "if not isinstance(value, dict) or list(value.keys()) != EXPECTED_MOTIONS:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/verify_final_atlas.py",
+          "line": 152,
+          "preview": "print(f\"missing animation keys: {len(missing_keys)}\", file=sys.stderr)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 35
+    },
+    "primarySynergy": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
+        "line": 25,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
+          "line": 21,
+          "preview": "String synergy = primarySynergy(a);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
+          "line": 26,
+          "preview": "static String primarySynergy(AbilityLoadout a) {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "CombatHudRenderer": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 28,
         "kind": "class",
         "language": "java"
       },
       "occurrences": [
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 50,
-          "preview": "import com.deadlinezero.game.visual.CombatSpritePass;",
+          "line": 48,
+          "preview": "import com.deadlinezero.game.visual.CombatHudRenderer;",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 84,
-          "preview": "private final CombatSpritePass spritePass;",
+          "line": 80,
+          "preview": "private final CombatHudRenderer combatHud;",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 96,
-          "preview": "this.spritePass = new CombatSpritePass(game.art);",
+          "line": 93,
+          "preview": "this.combatHud = new CombatHudRenderer(game.i18n);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 13,
-          "preview": "public final class CombatSpritePass {",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 28,
+          "preview": "public final class CombatHudRenderer {",
           "definition_candidate": true
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 26,
-          "preview": "public CombatSpritePass(GameArt art) {",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 35,
+          "preview": "public CombatHudRenderer(Localization i18n) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 126,
+          "preview": "result.add(root.resolve(\"core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java\"));",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 5
+      "occurrence_count": 6
+    },
+    "triggerDamageFlash": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 39,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 497,
+          "preview": "combatHud.triggerDamageFlash();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 40,
+          "preview": "public void triggerDamageFlash() {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
     },
     "update": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 35,
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 43,
         "kind": "symbol",
         "language": "java"
       },
@@ -777,543 +1103,10 @@
       ],
       "occurrence_count": 120
     },
-    "authoredAvailable": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 43,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 262,
-          "preview": "if (game.art == null || !game.art.authoredAvailable()) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 611,
-          "preview": "boolean authored = spritePass.authoredAvailable();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 138,
-          "preview": "if (game.art.authoredAvailable()) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
-          "line": 92,
-          "preview": "if (!game.art.authoredAvailable()) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
-          "line": 142,
-          "preview": "if (game.art.authoredAvailable()) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
-          "line": 38,
-          "preview": "if (!art.authoredAvailable()) return 0;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
-          "line": 22,
-          "preview": "if (!art.authoredAvailable()) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
-          "line": 35,
-          "preview": "public boolean authoredAvailable() { return art.authoredAvailable(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
-          "line": 38,
-          "preview": "if (!art.authoredAvailable()) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 44,
-          "preview": "public boolean authoredAvailable() { return characters.authoredAvailable(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 50,
-          "preview": "if (!characters.authoredAvailable()) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 56,
-          "preview": "if (!characters.authoredAvailable()) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 62,
-          "preview": "if (!characters.authoredAvailable()) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 74,
-          "preview": "if (!characters.authoredAvailable()) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
-          "line": 32,
-          "preview": "if (!art.authoredAvailable()) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 37,
-          "preview": "private boolean authoredAvailable;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 46,
-          "preview": "authoredAvailable = atlas != null || directionalBootstrap != null || biomeDirectionalBootstrap != null",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 51,
-          "preview": "public boolean authoredAvailable() { return authoredAvailable; }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
-          "line": 16,
-          "preview": "if (!art.authoredAvailable()) return;",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 19
-    },
-    "quality": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 45,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-          "line": 71,
-          "preview": "assertTrue(\"expected SettingsScreen for graphics-quality visual probe\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
-          "line": 56,
-          "preview": "String rawQuality = prefs.getString(\"quality\", Quality.ULTRA.name());",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
-          "line": 69,
-          "preview": "public static void set(Quality quality) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
-          "line": 70,
-          "preview": "active = quality == null ? Quality.ULTRA : quality;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
-          "line": 80,
-          "preview": ".putString(\"quality\", active.name())",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/perf/PerformanceTelemetry.java",
-          "line": 6,
-          "preview": "* Lightweight rolling frame-time telemetry for launch-quality validation.",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
-          "line": 10,
-          "preview": "private float quality = 1f;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
-          "line": 34,
-          "preview": "// Degrade quickly under load, recover slowly to avoid visual quality oscillation.",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
-          "line": 35,
-          "preview": "float response = target < quality ? 2.6f : .65f;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
-          "line": 37,
-          "preview": "quality = MathUtils.lerp(quality, target, qualityBlend);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
-          "line": 53,
-          "preview": "public float quality() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
-          "line": 54,
-          "preview": "return Math.min(Math.min(MathUtils.clamp(quality, .40f, 1f), GraphicsSettings.fxCeiling()), externalCeiling);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
-          "line": 56,
-          "preview": "public boolean allowHeavyFx() { return quality() >= .72f; }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
-          "line": 57,
-          "preview": "public boolean allowExtraFx() { return quality() >= .90f; }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
-          "line": 59,
-          "preview": "return Math.max(low, Math.round(MathUtils.lerp(low, high, quality())));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
-          "line": 143,
-          "preview": "legendaryFx.render(shapes, player, time, fxBudget.quality());",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
-          "line": 490,
-          "preview": "public float fxQuality() { return fxBudget.quality(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 23,
-          "preview": "private GraphicsQuality quality;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 33,
-          "preview": "quality = GraphicsQuality.autoDetect();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 45,
-          "preview": "public GraphicsQuality quality() { return quality; }",
-          "definition_candidate": true
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 46,
-          "preview": "public void setQuality(GraphicsQuality quality) { if (quality != null) this.quality = quality; }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 75,
-          "preview": "if (postFx.available() && quality.postFxIntensity > 0f) batch.setShader(postFx.shader(quality.postFxIntensity));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/FinalArtContract.java",
-          "line": 4,
-          "preview": "* Release-quality animation requirements. Bootstrap/generated art is intentionally excluded:",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GraphicsQuality.java",
-          "line": 5,
-          "preview": "/** Conservative mobile quality tiers. AUTO avoids expensive effects on weaker devices. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/LegendaryFxRenderer.java",
-          "line": 9,
-          "preview": "public void render(ShapeRenderer shapes, Player player, float time, float quality) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/LegendaryFxRenderer.java",
-          "line": 11,
-          "preview": "float q = MathUtils.clamp(quality, .35f, 1f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-          "line": 22,
-          "preview": "public float fxQuality() { return budget.quality(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-          "line": 27,
-          "preview": "shapes.setColor(0f, 0f, 0f, .24f * MathUtils.lerp(.65f, 1f, budget.quality()));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-          "line": 31,
-          "preview": "int stride = budget.quality() < .55f ? 2 : 1;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-          "line": 36,
-          "preview": "shapes.setColor(0f, 0f, 0f, .24f * MathUtils.lerp(.65f, 1f, budget.quality()));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-          "line": 72,
-          "preview": "if (budget.quality() < .34f) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-          "line": 121,
-          "preview": "if (budget.quality() < .34f || e.type != Enemy.Type.BOSS || e.bossCombat == null || e.bossPhases == null",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-          "line": 147,
-          "preview": "if (budget.quality() < .42f) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-          "line": 200,
-          "preview": "if (budget.quality() < .42f) return;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-          "line": 228,
-          "preview": "float q = budget.quality();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-          "line": 367,
-          "preview": "int stride = budget.quality() < .50f ? 2 : 1;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java",
-          "line": 12,
-          "preview": "assertEquals(.58f, budget.quality(), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java",
-          "line": 18,
-          "preview": "assertEquals(.58f, budget.quality(), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java",
-          "line": 20,
-          "preview": "assertEquals(.58f, budget.quality(), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java",
-          "line": 22,
-          "preview": "assertTrue(budget.quality() > .58f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java",
-          "line": 23,
-          "preview": "assertTrue(budget.quality() < 1f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java",
-          "line": 29,
-          "preview": "assertEquals(.40f, budget.quality(), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java",
-          "line": 32,
-          "preview": "assertEquals(1f, budget.quality(), .003f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/blender/validate_rig.py",
-          "line": 188,
-          "preview": "raise RuntimeError(\"Rig structural quality gate failed\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "tools/perf/compare_android_benchmark.py",
-          "line": 49,
-          "preview": "return False, \"effective FX quality differs materially\"",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 45
-    },
-    "setQuality": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 46,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 46,
-          "preview": "public void setQuality(GraphicsQuality quality) { if (quality != null) this.quality = quality; }",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 1
-    },
-    "renderEnvironmentFloor": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 49,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 614,
-          "preview": "if (authored) spritePass.renderEnvironmentFloor(batch);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 49,
-          "preview": "public void renderEnvironmentFloor(SpriteBatch batch) {",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "renderEnvironmentDressing": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 55,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 629,
-          "preview": "if (authored) spritePass.renderEnvironmentDressing(batch);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 55,
-          "preview": "public void renderEnvironmentDressing(SpriteBatch batch) {",
-          "definition_candidate": true
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "renderEnvironment": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 61,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 61,
-          "preview": "public void renderEnvironment(SpriteBatch batch) {",
-          "definition_candidate": true
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 104,
-          "preview": "renderEnvironment(batch);",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "renderCombat": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 67,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 694,
-          "preview": "spritePass.renderCombat(batch, player, enemies, pools);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 67,
-          "preview": "public void renderCombat(SpriteBatch batch, Player player, Array<Enemy> enemies) {",
-          "definition_candidate": true
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 68,
-          "preview": "renderCombat(batch, player, enemies, CombatPolishController.currentPools());",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 72,
-          "preview": "public void renderCombat(SpriteBatch batch, Player player, Array<Enemy> enemies, Pools pools) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 105,
-          "preview": "renderCombat(batch, player, enemies, pools);",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
     "render": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 98,
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 45,
         "kind": "symbol",
         "language": "java"
       },
@@ -1430,7 +1223,7 @@
           "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
           "line": 98,
           "preview": "public void render(SpriteBatch batch, Player player, Array<Enemy> enemies) {",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
@@ -1681,802 +1474,860 @@
       ],
       "occurrence_count": 60
     },
-    "nearestEnemy": {
+    "ui": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 107,
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 57,
         "kind": "symbol",
         "language": "java"
       },
       "occurrences": [
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
-          "line": 54,
-          "preview": "Enemy target = motion == GameArt.Motion.ATTACK ? nearestEnemy(player, enemies) : null;",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 23,
+          "preview": "import com.deadlinezero.game.ui.ResponsiveGrid;",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
-          "line": 94,
-          "preview": "private Enemy nearestEnemy(Player player, Array<Enemy> enemies) {",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 24,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 81,
-          "preview": "Enemy target = nearestEnemy(player, enemies);",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 25,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 108,
-          "preview": "private Enemy nearestEnemy(Player player, Array<Enemy> enemies) {",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 26,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 27,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 19,
+          "preview": "import com.deadlinezero.game.ui.MetaLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 20,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 21,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 22,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 23,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 21,
+          "preview": "import com.deadlinezero.game.ui.ResponsiveGrid;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 22,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 23,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 24,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 25,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuLayoutModel.java",
+          "line": 4,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 24,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 25,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 26,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 27,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 20,
+          "preview": "import com.deadlinezero.game.ui.MetaLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 21,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 22,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 23,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 24,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+          "line": 21,
+          "preview": "import com.deadlinezero.game.ui.MetaLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+          "line": 22,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+          "line": 23,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+          "line": 24,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+          "line": 25,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+          "line": 19,
+          "preview": "import com.deadlinezero.game.ui.MetaLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+          "line": 20,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+          "line": 21,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+          "line": 22,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+          "line": 23,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 17,
+          "preview": "import com.deadlinezero.game.ui.MetaLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 18,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 19,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 20,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 21,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 22,
+          "preview": "import com.deadlinezero.game.ui.MetaLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 23,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 24,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 25,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 26,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorLayoutModel.java",
+          "line": 4,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 18,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 19,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 20,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 21,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 20,
+          "preview": "import com.deadlinezero.game.ui.MetaLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 21,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 22,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 23,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 24,
+          "preview": "import com.deadlinezero.game.ui.UiViewport;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/MetaLayout.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/ResponsiveGrid.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/UiLayout.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/UiMotion.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/UiTypography.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/UiViewport.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java",
+          "line": 5,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 22,
+          "preview": "import com.deadlinezero.game.ui.UiRenderer;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 23,
+          "preview": "import com.deadlinezero.game.ui.UiTypography;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 50,
+          "preview": "CombatHudLayout.Layout layout = CombatHudLayout.compute((int) width, (int) height, ui(), boss != null);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 58,
+          "preview": "private float ui() { return AccessibilitySettings.active().uiScale; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 141,
+          "preview": "float s = MathUtils.clamp(ui(), .85f, 1.35f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 275,
+          "preview": "float edge = Math.min(46f * ui(), Math.min(w, h) * .06f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/screen/MenuLayoutModelTest.java",
+          "line": 8,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/screen/MetaScreenLayoutContractTest.java",
+          "line": 7,
+          "preview": "import com.deadlinezero.game.ui.MetaLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/screen/MetaScreenLayoutContractTest.java",
+          "line": 8,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/screen/SurvivorLayoutModelTest.java",
+          "line": 7,
+          "preview": "import com.deadlinezero.game.ui.UiLayout;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ui/ResponsiveGridTest.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ui/UiLayoutTest.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ui/UiMotionTest.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ui/UiRendererStateTest.java",
+          "line": 1,
+          "preview": "package com.deadlinezero.game.ui;",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 4
+      "occurrence_count": 77
     },
-    "fallbackAim": {
+    "updateOnboarding": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 118,
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 59,
         "kind": "symbol",
         "language": "java"
       },
       "occurrences": [
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 82,
-          "preview": "float aimAngle = target == null ? fallbackAim(player) :",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 52,
+          "preview": "updateOnboarding(player, director);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 119,
-          "preview": "private float fallbackAim(Player player) {",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 60,
+          "preview": "private void updateOnboarding(Player player, WaveDirector director) {",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "dispose": {
+    "drawBars": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "line": 122,
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 69,
         "kind": "symbol",
         "language": "java"
       },
       "occurrences": [
         {
-          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-          "line": 220,
-          "preview": "@Override public void dispose() {",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 53,
+          "preview": "drawBars(shapes, player, director, boss, layout, width, height);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-          "line": 226,
-          "preview": "super.dispose();",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 70,
+          "preview": "private void drawBars(ShapeRenderer shapes, Player player, WaveDirector director, Enemy boss,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "drawMobileControls": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 112,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 109,
+          "preview": "drawMobileControls(shapes, player, layout, physicalW, physicalH);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-          "line": 227,
-          "preview": "if (audio != null) audio.dispose();",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 113,
+          "preview": "private void drawMobileControls(ShapeRenderer shapes, Player player, CombatHudLayout.Layout layout,",
           "definition_candidate": false
-        },
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "drawText": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 138,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
         {
-          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-          "line": 228,
-          "preview": "if (art != null) art.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-          "line": 230,
-          "preview": "@Override public void setScreen(com.badlogic.gdx.Screen screen) { if (getScreen() != null) getScreen().dispose(); super.setScreen(screen); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-          "line": 171,
-          "preview": "public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-          "line": 174,
-          "preview": "for (Sound sound : sounds.values()) sound.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-          "line": 176,
-          "preview": "for (Music track : combatMusic.values()) track.dispose();",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 93,
+          "preview": "drawText(all, pageStart, pageEnd, page, pageCount, focusedWeapon, equipped);",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 332,
-          "preview": "@Override public void dispose() { batch.dispose(); shapes.dispose(); font.dispose(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 320,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 323,
-          "preview": "batch.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 324,
-          "preview": "font.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 325,
-          "preview": "shapes.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 931,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 932,
-          "preview": "spritePass.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 933,
-          "preview": "shapes.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 934,
-          "preview": "batch.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 935,
-          "preview": "font.dispose();",
+          "line": 144,
+          "preview": "private void drawText(WeaponDefinition[] all, int pageStart, int pageEnd, int page, int pageCount,",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-          "line": 312,
-          "preview": "@Override public void dispose() { batch.dispose(); shapes.dispose(); font.dispose(); }",
+          "line": 87,
+          "preview": "drawText(size, pageStart, pageEnd);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 311,
-          "preview": "@Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 117,
+          "preview": "private void drawText(int size, int pageStart, int pageEnd) {",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-          "line": 263,
-          "preview": "@Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 54,
+          "preview": "drawText(batch, font, player, director, boss, layout);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-          "line": 209,
-          "preview": "@Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-          "line": 189,
-          "preview": "@Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
-          "line": 258,
-          "preview": "@Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 279,
-          "preview": "@Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
-          "line": 272,
-          "preview": "@Override public void dispose() { batch.dispose(); shapes.dispose(); font.dispose(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
-          "line": 221,
-          "preview": "@Override public void dispose() { batch.dispose(); font.dispose(); shapes.dispose(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java",
-          "line": 46,
-          "preview": "loaded.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java",
-          "line": 141,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java",
-          "line": 142,
-          "preview": "if (bossArt != null) bossArt.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java",
-          "line": 143,
-          "preview": "if (texture != null) texture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
-          "line": 103,
-          "preview": "if (texture != null) texture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
-          "line": 108,
-          "preview": "p.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
-          "line": 286,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
-          "line": 287,
-          "preview": "if (authoredCore != null) authoredCore.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
-          "line": 288,
-          "preview": "if (highResCore != null) highResCore.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
-          "line": 289,
-          "preview": "if (texture != null) texture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapEnvironmentArt.java",
-          "line": 51,
-          "preview": "p.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapEnvironmentArt.java",
-          "line": 191,
-          "preview": "@Override public void dispose() { texture.dispose(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapVfxArt.java",
-          "line": 79,
-          "preview": "if (texture != null) texture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapVfxArt.java",
-          "line": 84,
-          "preview": "pixmap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapVfxArt.java",
-          "line": 244,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapVfxArt.java",
-          "line": 245,
-          "preview": "if (texture != null) texture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
-          "line": 68,
-          "preview": "public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
-          "line": 69,
-          "preview": "shapes.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 145,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 146,
-          "preview": "dispose(shot);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 147,
-          "preview": "dispose(dash);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 148,
-          "preview": "dispose(levelUp);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 149,
-          "preview": "dispose(legendaryOverdrive);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 150,
-          "preview": "dispose(legendarySingularity);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 151,
-          "preview": "dispose(legendaryApex);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 152,
-          "preview": "dispose(bossAlpha);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 153,
-          "preview": "dispose(bossRevenant);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 154,
-          "preview": "dispose(bossPhase);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 155,
-          "preview": "dispose(forgeHound);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 156,
-          "preview": "dispose(cinderGunner);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 157,
-          "preview": "dispose(slagGuard);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 158,
-          "preview": "dispose(phaseStalker);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 159,
-          "preview": "dispose(staticSeer);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 160,
-          "preview": "dispose(nullWard);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 163,
-          "preview": "private void dispose(Sound sound) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-          "line": 164,
-          "preview": "if (sound != null) sound.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 123,
-          "preview": "public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 124,
-          "preview": "championBadges.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 125,
-          "preview": "environment.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 126,
-          "preview": "audio.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 127,
-          "preview": "postFx.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java",
-          "line": 88,
-          "preview": "if (texture != null) texture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java",
-          "line": 93,
-          "preview": "pixmap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java",
-          "line": 410,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java",
-          "line": 411,
-          "preview": "if (texture != null) texture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
-          "line": 554,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
-          "line": 555,
-          "preview": "if (bootstrap != null) bootstrap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 262,
-          "preview": "if (directionalBootstrap != null) directionalBootstrap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 272,
-          "preview": "if (biomeDirectionalBootstrap != null) biomeDirectionalBootstrap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 282,
-          "preview": "if (nullVfxBootstrap != null) nullVfxBootstrap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 292,
-          "preview": "if (vfxBootstrap != null) vfxBootstrap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 318,
-          "preview": "if (bootstrapTexture != null) bootstrapTexture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 322,
-          "preview": "if (pixmap != null) pixmap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 365,
-          "preview": "pixmap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 368,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 369,
-          "preview": "if (atlas != null) atlas.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 370,
-          "preview": "if (directionalBootstrap != null) directionalBootstrap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 371,
-          "preview": "if (biomeDirectionalBootstrap != null) biomeDirectionalBootstrap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 372,
-          "preview": "if (nullVfxBootstrap != null) nullVfxBootstrap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 373,
-          "preview": "if (vfxBootstrap != null) vfxBootstrap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 374,
-          "preview": "if (bootstrapTexture != null) bootstrapTexture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-          "line": 375,
-          "preview": "if (fallbackTexture != null) fallbackTexture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/HighResBossDirectionalArt.java",
-          "line": 57,
-          "preview": "pixmap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/HighResBossDirectionalArt.java",
-          "line": 232,
-          "preview": "@Override public void dispose() { texture.dispose(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java",
-          "line": 63,
-          "preview": "pixmap.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java",
-          "line": 350,
-          "preview": "@Override public void dispose() { texture.dispose(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/NullBootstrapVfxArt.java",
-          "line": 64,
-          "preview": "texture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/NullBootstrapVfxArt.java",
-          "line": 70,
-          "preview": "p.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/NullBootstrapVfxArt.java",
-          "line": 151,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/NullBootstrapVfxArt.java",
-          "line": 152,
-          "preview": "if (texture != null) texture.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/PostFxShader.java",
-          "line": 56,
-          "preview": "@Override public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/PostFxShader.java",
-          "line": 57,
-          "preview": "if (shader != null) shader.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/ProductionAtlasAudit.java",
-          "line": 48,
-          "preview": "if (atlas != null) atlas.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/P0RunRegressionTest.java",
-          "line": 27,
-          "preview": "@Override public void dispose() { }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/DirectionalBootstrapLazyLoadTest.java",
-          "line": 16,
-          "preview": "assertDoesNotThrow(art::dispose);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/NullBootstrapVfxArtTest.java",
-          "line": 30,
-          "preview": "art.dispose();",
-          "definition_candidate": false
-        },
-        {
-          "file": "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java",
-          "line": 85,
-          "preview": "public void dispose() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java",
-          "line": 86,
-          "preview": "game.dispose();",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 139,
+          "preview": "private void drawText(SpriteBatch batch, BitmapFont font, Player player, WaveDirector director,",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 105
+      "occurrence_count": 6
     },
-    "CompanionRenderer": {
+    "drawBuildStatus": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-        "line": 11,
-        "kind": "class",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 18,
-          "preview": "private final CompanionRenderer companions;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 31,
-          "preview": "companions = new CompanionRenderer(art);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-          "line": 11,
-          "preview": "public final class CompanionRenderer {",
-          "definition_candidate": true
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-          "line": 15,
-          "preview": "public CompanionRenderer(GameArt art) { this.art = art; }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 10,
-          "preview": "assertEquals(2.25f, CompanionRenderer.orbitRadius(DroneDoctrine.HUNTER), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 11,
-          "preview": "assertEquals(145f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.HUNTER), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 12,
-          "preview": "assertEquals(.76f, CompanionRenderer.baseSize(DroneDoctrine.HUNTER), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 16,
-          "preview": "assertEquals(1.55f, CompanionRenderer.orbitRadius(DroneDoctrine.SENTINEL), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 17,
-          "preview": "assertEquals(95f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.SENTINEL), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 18,
-          "preview": "assertEquals(.86f, CompanionRenderer.baseSize(DroneDoctrine.SENTINEL), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 22,
-          "preview": "assertEquals(1.80f, CompanionRenderer.orbitRadius(DroneDoctrine.NONE), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 23,
-          "preview": "assertEquals(110f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.NONE), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 24,
-          "preview": "assertEquals(.80f, CompanionRenderer.baseSize(DroneDoctrine.NONE), .0001f);",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 13
-    },
-    "draw": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-        "line": 18,
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 220,
         "kind": "symbol",
         "language": "java"
       },
       "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 208,
+          "preview": "drawBuildStatus(batch, font, player, layout, s);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 221,
+          "preview": "private void drawBuildStatus(SpriteBatch batch, BitmapFont font, Player player,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "drawProtocolCue": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 233,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 216,
+          "preview": "drawProtocolCue(batch, font, layout, s);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 234,
+          "preview": "private void drawProtocolCue(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "drawOnboardingHint": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 252,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 217,
+          "preview": "drawOnboardingHint(batch, font, layout, s);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 253,
+          "preview": "private void drawOnboardingHint(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "drawDamageVignette": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 267,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 55,
+          "preview": "drawDamageVignette(shapes, layout.logicalWidth(), layout.logicalHeight());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 268,
+          "preview": "private void drawDamageVignette(ShapeRenderer shapes, float w, float h) {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "findBoss": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 282,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 49,
+          "preview": "Enemy boss = findBoss(enemies);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 283,
+          "preview": "private Enemy findBoss(Array<Enemy> enemies) {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "bossIdentity": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 287,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/AttackController.java",
+          "line": 26,
+          "preview": "BossIdentity bossIdentity = archetype.role == EnemyArchetype.Role.BOSS",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/AttackController.java",
+          "line": 28,
+          "preview": "float bossCooldown = switch (bossIdentity) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/AttackController.java",
+          "line": 33,
+          "preview": "float bossTelegraph = switch (bossIdentity) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/AttackController.java",
+          "line": 38,
+          "preview": "float bossRecovery = switch (bossIdentity) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 123,
+          "preview": "BossIdentity bossIdentity = enemy.type == Enemy.Type.BOSS && enemy.bossCombat != null",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 129,
+          "preview": "region = art.boss(bossIdentity, motion, clock.direction, clock.time);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 266,
+          "preview": "switch (bossIdentity) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 287,
+          "preview": "private BossIdentity bossIdentity(Enemy boss) { return boss != null && boss.bossCombat != null ? boss.bossCombat.identity() : BossIdentity.ALPHA; }",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 289,
+          "preview": "return switch (bossIdentity(boss)) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 300,
+          "preview": "return switch (bossIdentity(boss)) {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "bossName": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 288,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 168,
+          "preview": "font.draw(batch, f(\"hud.bossPhase\", bossName(boss), phase), layout.boss().x,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 288,
+          "preview": "private String bossName(Enemy boss) {",
+          "definition_candidate": true
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "t": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 297,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+          "line": 76,
+          "preview": "try { action.run(); } catch (Throwable t) { failure.set(t); } finally { done.countDown(); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
+          "line": 31,
+          "preview": "payload.append(type).append('\\t')",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
+          "line": 32,
+          "preview": ".append(b64(key)).append('\\t')",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
+          "line": 60,
+          "preview": "String[] parts = line.split(\"\\t\", -1);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ThreatTierRules.java",
+          "line": 19,
+          "preview": "int t = sanitizeTier(tier);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ThreatTierRules.java",
+          "line": 20,
+          "preview": "return 1f + t * .10f + t * t * .0025f;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ThreatTierRules.java",
+          "line": 36,
+          "preview": "int t = sanitizeTier(tier);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ThreatTierRules.java",
+          "line": 37,
+          "preview": "return 1f + t * .075f;",
+          "definition_candidate": false
+        },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
           "line": 156,
@@ -2497,32 +2348,26 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 169,
-          "preview": "font.draw(batch, f(\"arsenal.page\", page + 1, pageCount), previousPage.x - 142f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
           "line": 181,
           "preview": "font.draw(batch, t(weapon.displayNameKey()).toUpperCase(), r.x + 14f, r.y + r.height - 14f,",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 186,
-          "preview": "font.draw(batch, pair(role(weapon), elementName(weapon)), r.x + 14f, r.y + r.height - 36f,",
+          "line": 191,
+          "preview": "else if (selected) status = t(\"arsenal.equipped\");",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 195,
-          "preview": "font.draw(batch, status, r.x + 14f, r.y + 15f, r.width - 28f, Align.right, false);",
+          "line": 192,
+          "preview": "else if (absoluteIndex == focus) status = t(\"arsenal.select\");",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 199,
-          "preview": "font.draw(batch, f(\"arsenal.cardStats\", Math.round(paperDps(weapon)), Math.round(weapon.damage), weapon.projectileCount),",
+          "line": 193,
+          "preview": "else status = t(\"arsenal.available\");",
           "definition_candidate": false
         },
         {
@@ -2533,38 +2378,50 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 218,
-          "preview": "font.draw(batch, pair(role(weapon), elementName(weapon)), textX, top - 26f, textW, Align.left, false);",
+          "line": 321,
+          "preview": "private String role(WeaponDefinition weapon) { return t(\"weapon.role.\" + weapon.id); }",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 222,
-          "preview": "font.draw(batch, f(\"arsenal.detailDps\", Math.round(dps), deltaText(dps - equippedDps),",
+          "line": 322,
+          "preview": "private String elementName(WeaponDefinition weapon) { return t(\"weapon.element.\" + weapon.element.name().toLowerCase(java.util.Locale.ROOT)); }",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 225,
-          "preview": "font.draw(batch, f(\"arsenal.detailPen\", weapon.penetration, deltaText(weapon.penetration - equipped.penetration),",
+          "line": 323,
+          "preview": "private String description(WeaponDefinition weapon) { return t(\"weapon.description.\" + weapon.id); }",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 230,
-          "preview": "font.draw(batch, description(weapon), textX, top - 94f, textW, Align.left, true);",
+          "line": 329,
+          "preview": "private String t(String key) { return game.i18n.text(key); }",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 234,
-          "preview": "font.draw(batch, f(\"arsenal.synergy\", synergy.displayName), textX, detail.y + 18f, textW, Align.left, false);",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 38,
+          "preview": "Thread t = new Thread(r, \"deadline-zero-cloud-save\");",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-          "line": 270,
-          "preview": "batch.draw(region, x + (maxW - drawW) * .5f, y + (maxH - drawH) * .5f, drawW, drawH);",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 39,
+          "preview": "t.setDaemon(true);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 40,
+          "preview": "return t;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 62,
+          "preview": "status = cloud.available() ? t(\"cloud.checking\") : t(\"cloud.notConfigured\");",
           "definition_candidate": false
         },
         {
@@ -2581,50 +2438,290 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 110,
-          "preview": "font.draw(batch, status, statusPanel.x + 28f, statusPanel.y + statusPanel.height * .67f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 114,
-          "preview": "font.draw(batch, stateSummary(), statusPanel.x + 28f, statusPanel.y + statusPanel.height * .30f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
           "line": 118,
           "preview": "font.draw(batch, t(\"cloud.manualWarning\"), warningPanel.x + 22f,",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 127,
-          "preview": "font.draw(batch, labels[i], a.x + 10f, a.y + a.height * .60f, a.width - 20f, Align.center, true);",
+          "line": 121,
+          "preview": "String[] labels = {primaryLabel(), providerConflict ? t(\"cloud.useServer\") : t(\"cloud.uploadLocal\"),",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 131,
-          "preview": "font.draw(batch, confirmationLine(), layout.footer().x + 20f, layout.footer().y + layout.footer().height * .56f,",
+          "line": 122,
+          "preview": "providerConflict ? t(\"cloud.useOther\") : t(\"cloud.downloadCloud\")};",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 139,
+          "preview": "if (!cloud.available()) return t(\"cloud.configure\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 140,
+          "preview": "if (authRequired) return t(\"cloud.authHelp\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 141,
+          "preview": "if (providerConflict) return t(\"cloud.conflictHelp\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 142,
+          "preview": "if (comparison == null) return busy ? t(\"cloud.inProgress\") : t(\"cloud.refreshHelp\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 143,
+          "preview": "return t(\"cloud.versionBound\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 183,
+          "preview": "runAsync(t(\"cloud.signingIn\"), () -> {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 195,
+          "preview": "runAsync(t(\"cloud.checking\"), () -> {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 216,
+          "preview": "case EQUAL -> t(\"cloud.identical\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 217,
+          "preview": "case LOCAL_AHEAD -> next.remote() == null ? t(\"cloud.noSave\") : t(\"cloud.localAhead\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 218,
+          "preview": "case REMOTE_AHEAD -> t(\"cloud.remoteAhead\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 219,
+          "preview": "case DIVERGED -> t(\"cloud.diverged\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 224,
+          "preview": "runAsync(t(\"cloud.resolving\"), () -> {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 233,
+          "preview": "if (expected == null) { resetConfirmations(); status = t(\"cloud.refreshUpload\"); return; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 235,
+          "preview": "if (risky && !confirmUpload) { confirmUpload = true; confirmDownload = false; status = t(\"cloud.confirmUpload\"); return; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 237,
+          "preview": "runAsync(t(\"cloud.revalidateUpload\"), () -> {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 240,
+          "preview": "post(() -> { status = t(\"cloud.uploadComplete\"); applyComparison(next); });",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 246,
+          "preview": "if (expected == null) { resetConfirmations(); status = t(\"cloud.refreshDownload\"); return; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 248,
+          "preview": "if (risky && !confirmDownload) { confirmDownload = true; confirmUpload = false; status = t(\"cloud.confirmDownload\"); return; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 250,
+          "preview": "runAsync(t(\"cloud.revalidateDownload\"), () -> {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 253,
+          "preview": "if (remote == null) { comparison = null; conflict = null; status = t(\"cloud.changed\"); return; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 257,
+          "preview": "if (!game.applyCloudRestore(result)) status = t(\"cloud.restoreFailed\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 258,
+          "preview": "} else status = t(\"cloud.newerVersion\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 272,
+          "preview": "post(() -> { comparison = null; conflict = null; providerConflict = false; authRequired = true; resetConfirmations(); status = t(\"cloud.signInRequired\"); });",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 274,
+          "preview": "post(() -> { comparison = null; providerConflict = true; authRequired = false; conflict = CloudSaveService.ConflictState.DIVERGED; resetConfirmations(); status = t(\"cloud.providerC",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 276,
+          "preview": "post(() -> { comparison = null; conflict = null; providerConflict = false; resetConfirmations(); status = t(\"cloud.changedOther\"); });",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 289,
+          "preview": "if (authRequired && cloud.supportsAuthentication()) return t(\"cloud.signIn\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 290,
+          "preview": "return providerConflict ? t(\"cloud.recheck\") : t(\"cloud.refresh\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 294,
+          "preview": "if (!cloud.available()) return t(\"cloud.configure\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 295,
+          "preview": "if (authRequired) return t(\"cloud.authHelp\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 296,
+          "preview": "if (providerConflict) return t(\"cloud.conflictHelp\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 297,
+          "preview": "if (comparison == null && !busy) return t(\"cloud.refreshHelp\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 298,
+          "preview": "if (confirmUpload) return t(\"cloud.uploadArmed\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 299,
+          "preview": "if (confirmDownload) return t(\"cloud.downloadArmed\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 300,
+          "preview": "return busy ? t(\"cloud.inProgress\") : t(\"cloud.versionBound\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 312,
+          "preview": "private String t(String key) { return game.i18n.text(key); }",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 131,
-          "preview": "draw();",
+          "line": 525,
+          "preview": "Enemy.Type t = director.chooseType();",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 608,
-          "preview": "private void draw() {",
+          "line": 527,
+          "preview": "float dist = t == Enemy.Type.BOSS ? 15f : MathUtils.random(13f, 19f);",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 766,
-          "preview": "font.draw(batch, n.text, n.x - .45f, n.y, .9f, Align.center, false);",
+          "line": 531,
+          "preview": "Enemy e = switch (t) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 532,
+          "preview": "case RUNNER -> new Enemy(t, x, y, 28 * scale, 4.2f, .34f, 8, 6);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 533,
+          "preview": "case BRUTE -> new Enemy(t, x, y, 145 * scale, 1.6f, .72f, 18, 15);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 534,
+          "preview": "case RANGED -> new Enemy(t, x, y, 72 * scale, 2.15f, .42f, 13, 12);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 535,
+          "preview": "case ELITE -> new Enemy(t, x, y, 420 * scale, 2.1f, 1.05f, 28, 42);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 539,
+          "preview": "yield new Enemy(t, x, y, stats.hp(), stats.speed(), 1.65f, stats.damage(), 280);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 541,
+          "preview": "default -> new Enemy(t, x, y, 52 * scale, 2.55f, .46f, 10, 8);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 546,
+          "preview": "if (t == Enemy.Type.BOSS) director.onBossSpawned();",
           "definition_candidate": false
         },
         {
@@ -2671,8 +2768,8 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 840,
-          "preview": "font.draw(batch, buildPath",
+          "line": 841,
+          "preview": "? choices[i].rarity.name() + \"  |  \" + t(\"combat.upgradeBuildPath\")",
           "definition_candidate": false
         },
         {
@@ -2706,6 +2803,12 @@
           "definition_candidate": false
         },
         {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 922,
+          "preview": "private String t(String key) { return game.i18n.text(key); }",
+          "definition_candidate": false
+        },
+        {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
           "line": 123,
           "preview": "font.draw(batch, t(\"gear.title\"), metrics.safeLeft() + 18f, metrics.headerBottom() + 56f,",
@@ -2713,26 +2816,8 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-          "line": 128,
-          "preview": "font.draw(batch, f(\"gear.power\", String.format(java.util.Locale.ROOT, \"%.3f\", game.profile.aggregatePowerMultiplier())),",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-          "line": 132,
-          "preview": "font.draw(batch, ThreatSetBonusRules.summary(ascensionPieces), metrics.safeLeft() + metrics.contentWidth() * .64f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
           "line": 138,
           "preview": "font.draw(batch, t(\"gear.empty\"), detail.x + 20f, detail.y + detail.height * .58f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-          "line": 156,
-          "preview": "font.draw(batch, localizedName(item), r.x + 16f, r.y + r.height - 15f, r.width - 32f, Align.left, false);",
           "definition_candidate": false
         },
         {
@@ -2749,8 +2834,337 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-          "line": 179,
-          "preview": "font.draw(batch, localizedName(item), x, top, width * .48f, Align.left, false);",
+          "line": 183,
+          "preview": "font.draw(batch, f(\"gear.itemStats\", t(item.slotKey()), item.level, Math.round(item.powerBonus * 1000f) / 10f),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 186,
+          "preview": "String compare = isEquipped ? t(\"gear.equipped\") : equipped == null ? t(\"gear.noEquipped\") :",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 202,
+          "preview": "String[] labels = {t(\"gear.back\"), t(\"gear.equip\"), t(\"gear.upgradeButton\"), t(\"gear.fuse\")};",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 257,
+          "preview": "status = t(\"gear.loadoutUpdated\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 266,
+          "preview": "status = t(\"gear.upgraded\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 270,
+          "preview": "status = t(\"gear.upgradeUnavailable\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 276,
+          "preview": "if (selected.rarity == EquipmentItem.Rarity.MYTHIC) { status = t(\"gear.mythicNoFuse\"); return; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 283,
+          "preview": "if (second == null || third == null) { status = t(\"gear.needThree\"); AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK); return; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 285,
+          "preview": "if (merged == null) { status = t(\"gear.fusionFailed\"); AudioDirector.playGlobal(AudioDirector.Cue.UI_BACK); return; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 286,
+          "preview": "status = f(\"gear.created\", t(merged.rarityKey()), localizedName(merged));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 305,
+          "preview": "if (key != null) return t(key);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 306,
+          "preview": "return f(\"equipment.generatedName\", t(item.rarityKey()), t(item.slotKey()));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 309,
+          "preview": "private String t(String key) { return game.i18n.text(key); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 41,
+          "preview": "private float t;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 58,
+          "preview": "t += Math.max(0f, delta);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 71,
+          "preview": "UiRenderer.background(shapes, metrics, t);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 136,
+          "preview": "font.draw(batch, t(\"menu.tagline\"), r.x + pad, r.y + r.height - 56f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 139,
+          "preview": "TextureRegion portrait = game.art.survivor(p.selectedSurvivor, GameArt.Motion.IDLE, t);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 167,
+          "preview": "font.draw(batch, t(\"menu.changeSurvivor\"), tx, r.y + r.height * .43f, tw, Align.left, true);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 169,
+          "preview": "font.draw(batch, t(\"survivor.title\"), tx, r.y + 34f, tw, Align.left, false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 177,
+          "preview": "font.draw(batch, t(\"arsenal.title\"), r.x + pad, r.y + r.height - 26f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 186,
+          "preview": "font.draw(batch, t(\"menu.arsenal\"), r.x + pad, r.y + 28f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 208,
+          "preview": "font.draw(batch, t(\"menu.deploy\"), r.x, r.y + r.height * .64f, r.width, Align.center, false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 216,
+          "preview": "t(\"menu.base\"), t(\"menu.arsenal\"), t(\"menu.gear\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 217,
+          "preview": "t(\"menu.missions\"), t(\"menu.shop\"), t(\"menu.settings\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 308,
+          "preview": "private String t(String key) { return game.i18n.text(key); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 124,
+          "preview": "font.draw(batch, t(\"shop.back\"), layout.back().x + 10f, layout.back().y + layout.back().height * .56f,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 128,
+          "preview": "font.draw(batch, t(\"missions.title\"), metrics.safeLeft() + 138f, metrics.headerBottom() + 55f,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 120
+    },
+    "f": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 298,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
+          "line": 80,
+          "preview": "if (value instanceof Float) return 'f';",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
+          "line": 94,
+          "preview": "case 'f' -> {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 169,
+          "preview": "font.draw(batch, f(\"arsenal.page\", page + 1, pageCount), previousPage.x - 142f,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 190,
+          "preview": "if (!unlocked) status = f(\"arsenal.locked\", WeaponProgression.unlockAccountLevel(weapon));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 199,
+          "preview": "font.draw(batch, f(\"arsenal.cardStats\", Math.round(paperDps(weapon)), Math.round(weapon.damage), weapon.projectileCount),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 222,
+          "preview": "font.draw(batch, f(\"arsenal.detailDps\", Math.round(dps), deltaText(dps - equippedDps),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 225,
+          "preview": "font.draw(batch, f(\"arsenal.detailPen\", weapon.penetration, deltaText(weapon.penetration - equipped.penetration),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 234,
+          "preview": "font.draw(batch, f(\"arsenal.synergy\", synergy.displayName), textX, detail.y + 18f, textW, Align.left, false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 330,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 260,
+          "preview": "comparison = null; conflict = null; status = f(\"cloud.restoreError\", safeMessage(e));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 278,
+          "preview": "post(() -> { comparison = null; conflict = null; providerConflict = false; resetConfirmations(); status = f(\"cloud.error\", safeMessage(e)); });",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 313,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 210,
+          "preview": "for (ImpactFx f : pools.impacts) if (f.active) { f.life -= dt; if (f.life <= 0f) f.active = false; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 582,
+          "preview": "ImpactFx f = pools.impact();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 583,
+          "preview": "if (f != null) f.spawn(x, y, s, d, c);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 635,
+          "preview": "for (ImpactFx f : pools.impacts) if (f.active) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 636,
+          "preview": "float a = MathUtils.clamp(f.life / f.maxLife, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 637,
+          "preview": "shapes.setColor(f.color.r, f.color.g, f.color.b, a * .12f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 638,
+          "preview": "shapes.circle(f.position.x, f.position.y, f.size * (1.45f - a * .32f), 24);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 639,
+          "preview": "shapes.setColor(f.color.r, f.color.g, f.color.b, a * .50f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 640,
+          "preview": "shapes.circle(f.position.x, f.position.y, f.size * (1f - a * .42f), 20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 642,
+          "preview": "shapes.circle(f.position.x, f.position.y, Math.max(.06f, f.size * .18f * a), 12);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 812,
+          "preview": "font.draw(batch, f(\"combat.legendaryCard\", i + 1, t(choice.titleKey())), x - 145f, h * .53f, 290f, Align.center, false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 834,
+          "preview": "font.draw(batch, f(\"combat.upgradeCard\", i + 1, t(choices[i].titleKey())),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 923,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 128,
+          "preview": "font.draw(batch, f(\"gear.power\", String.format(java.util.Locale.ROOT, \"%.3f\", game.profile.aggregatePowerMultiplier())),",
           "definition_candidate": false
         },
         {
@@ -2761,8 +3175,8 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-          "line": 188,
-          "preview": "font.draw(batch, compare, x, top - 54f, width * .48f, Align.left, false);",
+          "line": 187,
+          "preview": "f(\"gear.compare\", String.format(java.util.Locale.ROOT, \"%+.1f\", equippedScore <= 0f ? 100f : (scoreDelta / equippedScore) * 100f));",
           "definition_candidate": false
         },
         {
@@ -2779,14 +3193,20 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-          "line": 197,
-          "preview": "font.draw(batch, status, rightX, top - 56f, detail.width * .42f, Align.left, true);",
+          "line": 286,
+          "preview": "status = f(\"gear.created\", t(merged.rarityKey()), localizedName(merged));",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-          "line": 207,
-          "preview": "font.draw(batch, labels[i], r.x + 8f, r.y + r.height * .60f, r.width - 16f, Align.center, false);",
+          "line": 306,
+          "preview": "return f(\"equipment.generatedName\", t(item.rarityKey()), t(item.slotKey()));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 310,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
           "definition_candidate": false
         },
         {
@@ -2815,66 +3235,6 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 134,
-          "preview": "font.draw(batch, GameConfig.TITLE, r.x + pad, r.y + r.height - 30f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 136,
-          "preview": "font.draw(batch, t(\"menu.tagline\"), r.x + pad, r.y + r.height - 56f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 152,
-          "preview": "batch.draw(portrait, px, py, drawW, drawH);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 159,
-          "preview": "font.draw(batch, p.selectedSurvivor.displayName.toUpperCase(), tx, r.y + r.height * .64f, tw, Align.left, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 163,
-          "preview": "font.draw(batch, p.selectedSurvivor.role.toUpperCase(), tx, r.y + r.height * .54f, tw, Align.left, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 167,
-          "preview": "font.draw(batch, t(\"menu.changeSurvivor\"), tx, r.y + r.height * .43f, tw, Align.left, true);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 169,
-          "preview": "font.draw(batch, t(\"survivor.title\"), tx, r.y + 34f, tw, Align.left, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 177,
-          "preview": "font.draw(batch, t(\"arsenal.title\"), r.x + pad, r.y + r.height - 26f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 181,
-          "preview": "font.draw(batch, WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase(),",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 186,
-          "preview": "font.draw(batch, t(\"menu.arsenal\"), r.x + pad, r.y + 28f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
           "line": 194,
           "preview": "font.draw(batch, f(\"menu.threat\", p.selectedThreatTier, p.highestThreatTier,",
           "definition_candidate": false
@@ -2887,44 +3247,38 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 208,
-          "preview": "font.draw(batch, t(\"menu.deploy\"), r.x, r.y + r.height * .64f, r.width, Align.center, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
           "line": 211,
           "preview": "font.draw(batch, f(\"menu.deployStage\", p.selectedStage), r.x, r.y + r.height * .32f, r.width, Align.center, false);",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 224,
-          "preview": "font.draw(batch, labels[i], tab.x + 6f, tab.y + tab.height * .55f, tab.width - 12f, Align.center, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 237,
-          "preview": "font.draw(batch, line, r.x + 20f, r.y + 54f, r.width - 40f, Align.left, true);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-          "line": 242,
-          "preview": "font.draw(batch, diagnostic, r.x + 20f, r.y + 76f, r.width - 40f, Align.left, false);",
+          "line": 309,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-          "line": 124,
-          "preview": "font.draw(batch, t(\"shop.back\"), layout.back().x + 10f, layout.back().y + layout.back().height * .56f,",
+          "line": 134,
+          "preview": "drawClaimRow(dailyRows[0], f(\"missions.login\", p.daily.loginStreak,",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-          "line": 128,
-          "preview": "font.draw(batch, t(\"missions.title\"), metrics.safeLeft() + 138f, metrics.headerBottom() + 55f,",
+          "line": 147,
+          "preview": "drawClaimRow(weeklyRows[0], progressText(f(\"missions.weeklyKills\", WeeklyService.KILL_TARGET), p.weekly.kills, WeeklyService.KILL_TARGET),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 149,
+          "preview": "drawClaimRow(weeklyRows[1], progressText(f(\"missions.weeklyRuns\", WeeklyService.RUN_TARGET), p.weekly.runs, WeeklyService.RUN_TARGET),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 151,
+          "preview": "drawClaimRow(weeklyRows[2], progressText(f(\"missions.weeklyBoss\", WeeklyService.BOSS_TARGET), p.weekly.bosses, WeeklyService.BOSS_TARGET),",
           "definition_candidate": false
         },
         {
@@ -2941,56 +3295,32 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-          "line": 176,
-          "preview": "font.draw(batch, t(\"missions.achievements\"), achievementsPanel.x, achievementsPanel.y + achievementsPanel.height + 18f,",
+          "line": 208,
+          "preview": "return f(\"missions.progress\", title, Math.min(progress, target), target, \"\");",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-          "line": 185,
-          "preview": "font.draw(batch, t(all[i].titleKey()), r.x + 8f, r.y + r.height * .67f, r.width - 16f, Align.center, true);",
+          "line": 253,
+          "preview": "return winsNeeded == 1 ? f(\"missions.nextOne\", winsNeeded) : f(\"missions.nextMany\", winsNeeded);",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-          "line": 187,
-          "preview": "font.draw(batch, claimed ? t(\"missions.claimed\") : unlocked ? t(\"common.open\") : t(\"missions.locked\"),",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-          "line": 195,
-          "preview": "font.draw(batch, text, panel.x + 16f, panel.y + panel.height - 16f, panel.width - 32f, Align.left, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-          "line": 201,
-          "preview": "font.draw(batch, text, r.x + 12f, r.y + r.height * .64f, r.width - 24f, Align.left, true);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-          "line": 203,
-          "preview": "font.draw(batch, claimed ? t(\"missions.claimed\") : ready ? t(\"common.open\") : \"\u2026\",",
+          "line": 261,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-          "line": 85,
-          "preview": "font.draw(batch, t(\"contract.footer\"), layout.footer().x + 16f,",
+          "line": 104,
+          "preview": "String mutator = EndgameMutatorRules.active() ? f(\"contract.mutator\", EndgameMutatorRules.label()) : \"\";",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-          "line": 95,
-          "preview": "font.draw(batch, t(\"shop.back\"), layout.back().x + 10f, layout.back().y + layout.back().height * .56f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-          "line": 100,
-          "preview": "font.draw(batch, t(\"contract.title\"), metrics.safeLeft() + 138f, metrics.headerBottom() + 59f,",
+          "line": 105,
+          "preview": "String bossAffixText = bossAffix == BossAffixRules.Affix.NONE ? \"\" : f(\"contract.bossAffix\", bossAffix.title);",
           "definition_candidate": false
         },
         {
@@ -3001,20 +3331,8 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-          "line": 118,
-          "preview": "font.draw(batch, m.legendary() ? t(\"contract.legendary\") : t(\"contract.standard\"),",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
           "line": 123,
           "preview": "font.draw(batch, f(\"contract.cardTitle\", index + 1, t(m.titleKey())),",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-          "line": 128,
-          "preview": "font.draw(batch, t(m.descriptionKey()), r.x + 28f, r.y + r.height - 112f,",
           "definition_candidate": false
         },
         {
@@ -3037,14 +3355,8 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-          "line": 155,
-          "preview": "font.draw(batch, hazard, r.x + 16f, r.y + 18f, r.width - 32f, Align.center, true);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-          "line": 98,
-          "preview": "font.draw(batch, t(\"result.complete\"), hero.x + 24f, hero.y + hero.height * .73f,",
+          "line": 207,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
           "definition_candidate": false
         },
         {
@@ -3067,86 +3379,20 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-          "line": 122,
-          "preview": "font.draw(batch, label, r.x + 12f, r.y + r.height - 18f, r.width - 24f, Align.center, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-          "line": 125,
-          "preview": "font.draw(batch, value, r.x + 12f, r.y + r.height * .43f, r.width - 24f, Align.center, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-          "line": 132,
-          "preview": "font.draw(batch, t(advice.headlineKey()), coaching.x + 24f, y, coaching.width * .58f, Align.left, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-          "line": 135,
-          "preview": "font.draw(batch, t(advice.detailKey()), coaching.x + 24f, y - 30f, coaching.width * .58f, Align.left, true);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
           "line": 139,
           "preview": "font.draw(batch, f(\"result.drop\", t(result.drop().rarityKey()), localizedName(result.drop()), result.drop().level),",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-          "line": 150,
-          "preview": "font.draw(batch, labels[i], r.x + 8f, r.y + r.height * .60f, r.width - 16f, Align.center, true);",
+          "line": 184,
+          "preview": "return f(\"equipment.generatedName\", t(item.rarityKey()), t(item.slotKey()));",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
-          "line": 100,
-          "preview": "font.draw(batch, t(\"shop.back\"), layout.back().x + 10f, layout.back().y + layout.back().height * .56f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
-          "line": 104,
-          "preview": "font.draw(batch, t(\"settings.title\"), metrics.safeLeft() + 136f, metrics.headerBottom() + 56f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
-          "line": 108,
-          "preview": "font.draw(batch, t(\"settings.subtitle\"), metrics.safeLeft() + 136f, metrics.headerBottom() + 28f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
-          "line": 120,
-          "preview": "font.draw(batch, label, r.x + 14f, r.y + r.height - 17f, r.width - 28f, Align.left, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
-          "line": 123,
-          "preview": "font.draw(batch, value, r.x + 14f, r.y + 23f, r.width - 28f, Align.right, false);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 105,
-          "preview": "font.draw(batch, status, layout.footer().x + 20f, layout.footer().y + layout.footer().height * .56f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 115,
-          "preview": "font.draw(batch, t(\"shop.back\"), layout.back().x + 10f, layout.back().y + layout.back().height * .56f,",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 119,
-          "preview": "font.draw(batch, t(\"shop.title\"), metrics.safeLeft() + 140f, metrics.headerBottom() + 55f,",
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+          "line": 187,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
           "definition_candidate": false
         },
         {
@@ -3163,277 +3409,447 @@
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 142,
-          "preview": "font.draw(batch, titles[i], r.x + 18f, r.y + r.height - 28f, r.width - 36f, Align.center, false);",
+          "line": 133,
+          "preview": "f(\"shop.standardRoll\", ChestService.CREDIT_CHEST_COST),",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 145,
-          "preview": "font.draw(batch, descriptions[i], r.x + 26f, r.y + r.height * .57f, r.width - 52f, Align.center, true);",
+          "line": 134,
+          "preview": "f(\"shop.bestOf3\", ChestService.GEM_CHEST_COST),",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 149,
-          "preview": "font.draw(batch, buttons[i], b.x + 8f, b.y + b.height * .61f, b.width - 16f, Align.center, false);",
+          "line": 158,
+          "preview": "f(\"shop.removeAds\", p.removeAdsPurchased ? t(\"shop.owned\") : \"\")",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 167,
-          "preview": "font.draw(batch, labels[i], r.x + 10f, r.y + r.height * .63f, r.width - 20f, Align.center, true);",
+          "line": 215,
+          "preview": "status = product.isBlank() ? t(\"shop.paymentPending\") : f(\"shop.paymentPendingProduct\", product);",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-          "line": 171,
-          "preview": "font.draw(batch, sublabel, r.x + 10f, r.y + 22f, r.width - 20f, Align.center, false);",
+          "line": 224,
+          "preview": "status = f(\"shop.obtained\", item.name, item.level);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 237,
+          "preview": "status = f(\"shop.freeCrate\", item.name, item.level);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+          "line": 277,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
-          "line": 125,
-          "preview": "font.draw(batch, t(\"shop.back\"), back.x + 12f, back.y + back.height * .56f, back.width - 20f, Align.left, false);",
+          "line": 179,
+          "preview": "font.draw(batch, f(\"survivor.roleLevel\", t(survivor.roleKey()).toUpperCase(java.util.Locale.ROOT), level),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 192,
+          "preview": "font.draw(batch, f(\"survivor.xp\", xp, next), layout.xpBar().x, layout.xpBar().y + 36f,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 251,
+          "preview": "status = f(\"survivor.selectedStatus\", t(survivor.displayNameKey()));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 270,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 106,
+          "preview": "font.draw(batch, f(\"result.summary\", result.stage(), result.kills(), formatTime(result.secondsSurvived())),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 111,
+          "preview": "font.draw(batch, f(\"result.contract\", result.contractTitle(), result.contractBonusPercent()),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 114,
+          "preview": "font.draw(batch, f(\"result.threat\", result.threatTier(), result.threatBonusPercent()),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 141,
+          "preview": "String milestone = result.threatMilestoneGems() > 0 ? f(\"victory.milestone\", result.threatMilestoneGems()) : \"\";",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 142,
+          "preview": "font.draw(batch, f(\"victory.threatUnlocked\", result.unlockedThreatTier(), milestone), left, top, width, Align.center, true);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 147,
+          "preview": "font.draw(batch, f(\"victory.mythic\", localizedName(exclusive).toUpperCase(java.util.Locale.ROOT)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 153,
+          "preview": "font.draw(batch, f(\"victory.firstClear\", bonusCredits, bonusGems), left, top, width, Align.center, false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 160,
+          "preview": "font.draw(batch, f(\"result.drop\", t(result.drop().rarityKey()), localizedName(result.drop()), result.drop().level),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 195,
+          "preview": "if (notice.weaponRankedUp()) detail.append(f(\"victory.masteryWeapon\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 199,
+          "preview": "detail.append(f(\"victory.masteryBiome\", localizedNoticeName(notice.biomeNameKey(), notice.biomeName()), notice.biomeRank()));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 201,
+          "preview": "String text = f(\"victory.mastery\", detail.toString(), notice.creditsReward(), notice.gemsReward());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 216,
+          "preview": "return f(\"equipment.generatedName\", t(item.rarityKey()), t(item.slotKey()));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 219,
+          "preview": "private String f(String key, Object... args) { return game.i18n.format(key, args); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+          "line": 81,
+          "preview": "ImpactFx f = impacts.get(impactCursor);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+          "line": 82,
+          "preview": "if (!f.active) return f;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 148,
+          "preview": "font.draw(batch, f(\"hud.hp\", (int) player.hp, (int) player.maxHp), layout.hp().x + 12f,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 150,
+          "preview": "font.draw(batch, f(\"hud.level\", player.level), layout.xp().x + 12f,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 154,
+          "preview": "font.draw(batch, f(\"hud.stage\", RunStageContext.stage()), layout.hp().x,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 156,
+          "preview": "font.draw(batch, f(\"hud.kills\", director.kills()), w - layout.hp().x - 180f * s,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 163,
+          "preview": "font.draw(batch, director.bossWarning() ? f(\"hud.bossSignal\", remaining) : f(\"hud.bossEta\", remaining),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 168,
+          "preview": "font.draw(batch, f(\"hud.bossPhase\", bossName(boss), phase), layout.boss().x,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 179,
+          "preview": "font.draw(batch, f(\"hud.contract\", RunModifierContext.title(), RunModifierContext.rewardBonusPercent()),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 186,
+          "preview": "font.draw(batch, f(\"hud.weaponLegendary\", legendaryStyle.label), w - layout.hp().x - 430f,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 203,
+          "preview": "font.draw(batch, f(\"hud.encounter\", name, seconds), layout.timeline().x,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 226,
+          "preview": "? f(\"hud.build.summaryOne\", t(keys[0]))",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 227,
+          "preview": ": f(\"hud.build.summaryTwo\", t(keys[0]), t(keys[1]));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 298,
+          "preview": "private String f(String key, Object... args) { return i18n.format(key, args); }",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+          "line": 33,
+          "preview": "\"(?:(?<![A-Za-z0-9_.])t|(?<![A-Za-z0-9_.])f|i18n\\\\.text|i18n\\\\.format)\\\\(\\\\s*\\\"([^\\\"]+)\\\"\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/add_rex_rifle.py",
+          "line": 114,
+          "preview": "assert grip_error < 1e-4, f\"Rifle grip placement drifted by {grip_error:.6f}m\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 46,
+          "preview": "raise RuntimeError(f\"Unsupported input: {suffix}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 52,
+          "preview": "raise RuntimeError(f\"Expected one armature, found {len(arms)}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 62,
+          "preview": "raise RuntimeError(f\"Missing required SMPL22 bones: {missing}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 85,
+          "preview": "raise RuntimeError(f\"Failed to ground Rex; min Z is {mins2.z}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/build_rex_actions.py",
+          "line": 244,
+          "preview": "raise RuntimeError(f\"Failed to create actions: {sorted(missing)}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/inspect_actor_source.py",
+          "line": 112,
+          "preview": "raise RuntimeError(f\"Expected one actor armature, found {len(armatures)}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/prepare_meshy_actor.py",
+          "line": 61,
+          "preview": "o.name = a.actor if len(objs) == 1 else f'{a.actor}_{o.name}'",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/prepare_meshy_actor.py",
+          "line": 101,
+          "preview": "print(f'DZ_PREPARED actor={a.actor} triangles={before}->{after} output={a.output}')",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/refine_rex_rifle_attack.py",
+          "line": 28,
+          "preview": "raise RuntimeError(f\"Expected one armature, found {len(arms)}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 46,
+          "preview": "raise RuntimeError(f\"Expected exactly one armature, found {len(arms)}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 127,
+          "preview": "raise RuntimeError(f\"{name} must contain exactly three comma-separated numbers\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 165,
+          "preview": "raise RuntimeError(f\"Unsupported configured weapon style: {style}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 169,
+          "preview": "raise RuntimeError(f\"Configured weapon bone {bone_name!r} not found. Available: {available}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 208,
+          "preview": "print(f\"Configured weapon attached: style={style} bone={bone_name} object={weapon.name}\")",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 120
     },
-    "orbitRadius": {
+    "bossColor": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-        "line": 41,
+        "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "line": 299,
         "kind": "symbol",
         "language": "java"
       },
       "occurrences": [
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-          "line": 24,
-          "preview": "float orbit = orbitRadius(doctrine);",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 96,
+          "preview": "Color identity = AccessibilitySettings.active().highContrastTelegraphs ? Color.WHITE : bossColor(boss);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-          "line": 42,
-          "preview": "static float orbitRadius(DroneDoctrine doctrine) {",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 167,
+          "preview": "font.setColor(contrast ? Color.WHITE : bossColor(boss));",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 10,
-          "preview": "assertEquals(2.25f, CompanionRenderer.orbitRadius(DroneDoctrine.HUNTER), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 16,
-          "preview": "assertEquals(1.55f, CompanionRenderer.orbitRadius(DroneDoctrine.SENTINEL), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 22,
-          "preview": "assertEquals(1.80f, CompanionRenderer.orbitRadius(DroneDoctrine.NONE), .0001f);",
-          "definition_candidate": false
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 299,
+          "preview": "private Color bossColor(Enemy boss) {",
+          "definition_candidate": true
         }
       ],
-      "occurrence_count": 5
+      "occurrence_count": 3
     },
-    "orbitSpeedDegrees": {
+    "ActiveBuildStatusTest": {
       "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-        "line": 47,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-          "line": 23,
-          "preview": "float angle = stateTime * orbitSpeedDegrees(doctrine) + 180f;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-          "line": 48,
-          "preview": "static float orbitSpeedDegrees(DroneDoctrine doctrine) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 11,
-          "preview": "assertEquals(145f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.HUNTER), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 17,
-          "preview": "assertEquals(95f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.SENTINEL), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 23,
-          "preview": "assertEquals(110f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.NONE), .0001f);",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "pulseSpeed": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-        "line": 53,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
-          "line": 263,
-          "preview": "float pulse = .5f + .5f * MathUtils.sin(time * profile.pulseSpeed);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
-          "line": 321,
-          "preview": "float pulse = .5f + .5f * MathUtils.sin(time * profile.pulseSpeed);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-          "line": 27,
-          "preview": "float pulse = .5f + .5f * MathUtils.sin(stateTime * pulseSpeed(doctrine));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-          "line": 54,
-          "preview": "static float pulseSpeed(DroneDoctrine doctrine) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
-          "line": 11,
-          "preview": "public final float pulseSpeed;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
-          "line": 17,
-          "preview": "float pulseSpeed, int spokes, AudioDirector.Cue cue) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
-          "line": 24,
-          "preview": "this.pulseSpeed = pulseSpeed;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
-          "line": 11,
-          "preview": "public final float pulseSpeed;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
-          "line": 17,
-          "preview": "float pulseSpeed, int spokes, AudioDirector.Cue cue) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
-          "line": 24,
-          "preview": "this.pulseSpeed = pulseSpeed;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/FoundryHazardPresentationTest.java",
-          "line": 22,
-          "preview": "assertNotEquals(lava.pulseSpeed, steam.pulseSpeed);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/FoundryHazardPresentationTest.java",
-          "line": 23,
-          "preview": "assertNotEquals(steam.pulseSpeed, heat.pulseSpeed);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/NullHazardPresentationTest.java",
-          "line": 22,
-          "preview": "assertNotEquals(rift.pulseSpeed, statik.pulseSpeed);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/NullHazardPresentationTest.java",
-          "line": 23,
-          "preview": "assertNotEquals(statik.pulseSpeed, beam.pulseSpeed);",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 14
-    },
-    "baseSize": {
-      "definition": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-        "line": 59,
-        "kind": "symbol",
-        "language": "java"
-      },
-      "occurrences": [
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-          "line": 28,
-          "preview": "float size = baseSize(doctrine) * (1f + pulse * .08f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-          "line": 60,
-          "preview": "static float baseSize(DroneDoctrine doctrine) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 12,
-          "preview": "assertEquals(.76f, CompanionRenderer.baseSize(DroneDoctrine.HUNTER), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 18,
-          "preview": "assertEquals(.86f, CompanionRenderer.baseSize(DroneDoctrine.SENTINEL), .0001f);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 24,
-          "preview": "assertEquals(.80f, CompanionRenderer.baseSize(DroneDoctrine.NONE), .0001f);",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "CompanionRendererTest": {
-      "definition": {
-        "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-        "line": 7,
+        "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+        "line": 11,
         "kind": "class",
         "language": "java"
       },
       "occurrences": [
         {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java",
-          "line": 8,
-          "preview": "final class CompanionRendererTest {",
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 12,
+          "preview": "final class ActiveBuildStatusTest {",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 1
+    },
+    "fresh": {
+      "definition": {
+        "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+        "line": 13,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
+          "line": 12,
+          "preview": "private Player fresh() {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
+          "line": 18,
+          "preview": "Player p = fresh();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
+          "line": 30,
+          "preview": "Player p = fresh();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
+          "line": 37,
+          "preview": "Player p = fresh();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
+          "line": 44,
+          "preview": "Player p = fresh();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 13,
+          "preview": "private Player fresh() {",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 19,
+          "preview": "Player p = fresh();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 29,
+          "preview": "Player p = fresh();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 40,
+          "preview": "Player p = fresh();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+          "line": 49,
+          "preview": "String[] keys = ActiveBuildStatus.keys(fresh());",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
     }
   }
 }
