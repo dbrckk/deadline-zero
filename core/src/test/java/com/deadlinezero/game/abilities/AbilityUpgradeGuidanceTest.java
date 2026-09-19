@@ -28,7 +28,7 @@ final class AbilityUpgradeGuidanceTest {
 
     @Test void choiceThatCompletesSynergyOverridesGenericMilestone() {
         Player p = fresh();
-        for (int i = 0; i < 2; i++) p.abilities.upgrade(AbilityType.CRYO_NOVA);
+        for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.CRYO_NOVA);
         for (int i = 0; i < 2; i++) p.abilities.upgrade(AbilityType.TESLA_ORB);
         assertEquals("combat.synergy.superconductor", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
     }
