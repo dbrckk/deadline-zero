@@ -16,7 +16,7 @@ final class UpgradePoolTest {
     @Test void productionPoolMeetsFiftyUpgradeTargetWithUniquePresentation() {
         Upgrade[] upgrades = Upgrade.values();
         assertTrue(upgrades.length >= 50, "P5 requires 50+ standard upgrades");
-        assertEquals(55, upgrades.length);
+        assertEquals(57, upgrades.length);
 
         Set<String> titles = new HashSet<>();
         int common = 0, rare = 0, epic = 0;
@@ -96,6 +96,21 @@ final class UpgradePoolTest {
             assertFalse(UpgradeSelector.isAvailable(player, upgrade), "upgrade still offered after saturation: " + upgrade.name());
             assertRuntimeSafe(player, upgrade.name());
         }
+    }
+
+    @Test void droneDoctrinesUnlockAtTierTwoAndBecomeMutuallyExclusive() {
+        RunLoadoutContext.end();
+        Player player = new Player(0f, 0f);
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DRONE_HUNTER_DOCTRINE));
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DRONE_SENTINEL_DOCTRINE));
+
+        for (int i = 0; i < 3; i++) Upgrade.DRONE.apply(player);
+        assertTrue(UpgradeSelector.isAvailable(player, Upgrade.DRONE_HUNTER_DOCTRINE));
+        assertTrue(UpgradeSelector.isAvailable(player, Upgrade.DRONE_SENTINEL_DOCTRINE));
+
+        Upgrade.DRONE_HUNTER_DOCTRINE.apply(player);
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DRONE_HUNTER_DOCTRINE));
+        assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DRONE_SENTINEL_DOCTRINE));
     }
 
     @Test void eventProtocolsAreOneTimeRunChoices() {
