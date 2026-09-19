@@ -214,6 +214,7 @@ public final class CombatHudRenderer {
             layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s, layout.dashRadius() * 2f, Align.center, false);
 
         drawSynergyUnlock(batch, font, layout, s);
+        drawSentinelIntercept(batch, font, layout, s);
         drawProtocolCue(batch, font, layout, s);
         drawOnboardingHint(batch, font, layout, s);
         batch.end();
@@ -241,6 +242,16 @@ public final class CombatHudRenderer {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY) * 1.12f * s);
         font.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b, alpha);
         font.draw(batch, t(key), layout.timeline().x, layout.timeline().y + 88f * s,
+            layout.timeline().width, Align.center, false);
+    }
+
+    private void drawSentinelIntercept(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
+        float age = CombatVisualEvents.sentinelInterceptAgeSeconds();
+        if (age > .72f) return;
+        float alpha = MathUtils.clamp(1f - age / .72f, 0f, 1f);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .94f * s);
+        font.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha);
+        font.draw(batch, t("hud.sentinelBlock"), layout.timeline().x, layout.timeline().y + 44f * s,
             layout.timeline().width, Align.center, false);
     }
 
