@@ -7,11 +7,6 @@ on:
         description: "Successful Rex Animation Smoke run ID (defaults to latest successful)"
         required: false
         default: ""
-  push:
-    paths:
-      - ".github/workflows/rex-publish-current.yml"
-      - "tools/sprites/upsert_directional_actor_atlas.py"
-
 permissions:
   actions: read
   contents: write
@@ -53,17 +48,22 @@ jobs:
           repository: ${{ github.repository }}
           path: rex-artifact
 
+      - name: Install atlas tooling
+        run: sudo apt-get update && sudo apt-get install -y python3-pil
+
       - name: Locate and verify sprite source
         id: sprites
         shell: bash
         run: |
           set -euo pipefail
           root="$(find rex-artifact -type d -name normalized96 -print -quit)"
+          sheet="$(find rex-artifact -type f -name rex.png -print -quit)"
           manifest="$(find rex-artifact -type f -name render-manifest.json -print -quit)"
           qa="$(find rex-artifact -type f -name sprite-qa-report.json -print -quit)"
-          test -n "$root" -a -n "$manifest" -a -n "$qa"
-          python3 - "$manifest" "$qa" <<'PY'
+          test -n "$root" -a -n "$sheet" -a -n "$manifest" -a -n "$qa"
+          python3 - "$manifest" "$qa" "$sheet" <<'PY'
           import json,sys
+          from PIL import Image
           manifest=json.load(open(sys.argv[1])); qa=json.load(open(sys.argv[2]))
           assert manifest.get('frame_count') == 232
           assert manifest.get('qa_pass') is True
@@ -72,12 +72,27 @@ jobs:
               "Refusing to publish Rex as production art: source manifest is not production-approved"
           )
           assert qa.get('pass') is True and qa.get('frame_count') == 232
+          with Image.open(sys.argv[3]) as im:
+              assert im.format == 'PNG'
+              assert im.size == (2784, 768), im.size
+              assert im.mode in ('RGBA', 'LA', 'P')
           PY
           echo "root=$root" >> "$GITHUB_OUTPUT"
+          echo "sheet=$sheet" >> "$GITHUB_OUTPUT"
           echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
 
-      - name: Install atlas tooling
-        run: sudo apt-get update && sudo apt-get install -y python3-pil
+      - name: Stage canonical Rex production source
+        env:
+          CANONICAL_SHEET: ${{ steps.sprites.outputs.sheet }}
+        run: |
+          set -euo pipefail
+          cp "$CANONICAL_SHEET" art_sources/rex.png
+          python3 tools/validate_rex_reference.py
+          python3 tools/validate_final_sprite_layout.py
+          python3 tools/build_final_sprite_frames.py \
+            --output build/rex-publish-roundtrip \
+            --clean \
+            --strict
 
       - name: Upsert production Rex atlas page
         env:
@@ -117,7 +132,7 @@ jobs:
           set -euo pipefail
           git config user.name "deadline-zero-art-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add assets/art/rex.png assets/art/game.atlas assets/art/rex-manifest.json
+          git add art_sources/rex.png assets/art/rex.png assets/art/game.atlas assets/art/rex-manifest.json
           if git diff --cached --quiet; then
             echo "Atlas already current"
             exit 0
