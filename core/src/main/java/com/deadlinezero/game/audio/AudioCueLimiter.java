@@ -39,6 +39,7 @@ public final class AudioCueLimiter {
             case SINGULARITY -> 220L;
             case ION_OVERCHARGE -> 120L;
             case CINDER_OVERHEAT -> 260L;
+            case PROTOCOL_PROC -> 90L;
             case FOUNDRY_LAVA -> 420L;
             case FOUNDRY_STEAM -> 280L;
             case FOUNDRY_HEAT -> 360L;

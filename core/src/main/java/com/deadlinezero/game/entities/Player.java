@@ -10,6 +10,7 @@ import com.deadlinezero.game.config.AccessibilitySettings;
 import com.deadlinezero.game.config.GameConfig;
 import com.deadlinezero.game.input.MobileCombatInput;
 import com.deadlinezero.game.meta.RunLoadoutContext;
+import com.deadlinezero.game.progression.CombatProtocolState;
 import com.deadlinezero.game.progression.LegendaryState;
 import com.deadlinezero.game.visual.CombatVisualEvents;
 
@@ -25,6 +26,7 @@ public final class Player extends ActorState {
     public final WeaponRuntime weapon = new WeaponRuntime(RunLoadoutContext.weaponDefinition());
     public final AbilityLoadout abilities = new AbilityLoadout();
     public final LegendaryState legendary = new LegendaryState();
+    public final CombatProtocolState protocols = new CombatProtocolState();
     private final MobileCombatInput mobileCombatInput = new MobileCombatInput();
     private final Vector2 dashDirection = new Vector2();
 

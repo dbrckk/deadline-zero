@@ -64,6 +64,9 @@ public final class UpgradeSelector {
             case CRYO_NOVA -> p.abilities.level(AbilityType.CRYO_NOVA) < 5;
             case DRONE -> p.abilities.level(AbilityType.DRONE) < 5;
             case ORBITAL -> p.abilities.level(AbilityType.ORBITAL_BLADE) < 5;
+            case RHYTHM_DRIVER -> !p.protocols.rhythmEnabled();
+            case KILLCHAIN_CAPACITOR -> !p.protocols.killchainEnabled();
+            case REACTION_CORE -> !p.protocols.reactionEnabled();
 
             case RAPID_FIRE -> p.weapon.fireInterval > Upgrade.MIN_FIRE_INTERVAL + .001f;
             case DAMAGE -> p.weapon.damage < Upgrade.MAX_DAMAGE - .01f;
