@@ -67,8 +67,11 @@ public final class UpgradeSelector {
                 p.abilities.tier(AbilityType.DRONE) >= 2 && !p.abilities.hasDroneDoctrine();
             case ORBITAL -> p.abilities.level(AbilityType.ORBITAL_BLADE) < 5;
             case RHYTHM_DRIVER -> !p.protocols.rhythmEnabled();
+            case RHYTHM_ACCELERATOR -> p.protocols.rhythmEnabled() && !p.protocols.rhythmEvolved();
             case KILLCHAIN_CAPACITOR -> !p.protocols.killchainEnabled();
+            case KILLCHAIN_OVERCHARGE -> p.protocols.killchainEnabled() && !p.protocols.killchainEvolved();
             case REACTION_CORE -> !p.protocols.reactionEnabled();
+            case REACTION_CASCADE -> p.protocols.reactionEnabled() && !p.protocols.reactionEvolved();
 
             case RAPID_FIRE -> p.weapon.fireInterval > Upgrade.MIN_FIRE_INTERVAL + .001f;
             case DAMAGE -> p.weapon.damage < Upgrade.MAX_DAMAGE - .01f;

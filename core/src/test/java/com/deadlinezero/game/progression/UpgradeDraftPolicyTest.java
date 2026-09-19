@@ -56,6 +56,15 @@ final class UpgradeDraftPolicyTest {
         assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.ORBITAL) >= 2f);
     }
 
+    @Test void protocolEvolutionBecomesFocusedBuildPathChoice() {
+        Player player = freshPlayer();
+        player.protocols.enableRhythm();
+
+        assertTrue(UpgradeDraftPolicy.hasEstablishedBuild(player));
+        assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.RHYTHM_ACCELERATOR));
+        assertTrue(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_ACCELERATOR));
+    }
+
     @Test void establishedElementAlwaysGetsOneRelevantDraftSlot() {
         Player player = freshPlayer();
         player.weapon.element = DamageElement.FIRE;

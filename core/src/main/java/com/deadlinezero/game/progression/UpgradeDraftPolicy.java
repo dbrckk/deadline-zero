@@ -16,6 +16,7 @@ final class UpgradeDraftPolicy {
     static boolean hasEstablishedBuild(Player player) {
         if (player == null) return false;
         if (player.weapon.element != DamageElement.KINETIC) return true;
+        if (player.protocols.rhythmEnabled() || player.protocols.killchainEnabled() || player.protocols.reactionEnabled()) return true;
         for (AbilityType type : AbilityType.values()) {
             if (player.abilities.level(type) >= 2) return true;
         }
@@ -31,6 +32,7 @@ final class UpgradeDraftPolicy {
 
         float multiplier = elementalAffinity(player, upgrade);
         multiplier *= abilityAffinity(player, upgrade);
+        multiplier *= protocolAffinity(player, upgrade);
         return Math.max(.45f, Math.min(3.25f, multiplier));
     }
 
@@ -52,6 +54,15 @@ final class UpgradeDraftPolicy {
             case CRYO, FROST_CONTROL, CRYO_HAMMER -> DamageElement.FROST;
             case SHOCK, SHOCK_CONTROL, ARC_LANCER -> DamageElement.SHOCK;
             default -> null;
+        };
+    }
+
+    private static float protocolAffinity(Player player, Upgrade upgrade) {
+        return switch (upgrade) {
+            case RHYTHM_ACCELERATOR -> player.protocols.rhythmEnabled() ? 2.85f : 1f;
+            case KILLCHAIN_OVERCHARGE -> player.protocols.killchainEnabled() ? 2.85f : 1f;
+            case REACTION_CASCADE -> player.protocols.reactionEnabled() ? 2.85f : 1f;
+            default -> 1f;
         };
     }
 
