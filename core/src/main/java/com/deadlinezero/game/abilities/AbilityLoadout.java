@@ -7,6 +7,7 @@ public final class AbilityLoadout {
     public static final int MAX_LEVEL = 5;
 
     private final EnumMap<AbilityType, Integer> levels = new EnumMap<>(AbilityType.class);
+    private DroneDoctrine droneDoctrine = DroneDoctrine.NONE;
 
     public int level(AbilityType type) { return levels.getOrDefault(type, 0); }
     public boolean unlocked(AbilityType type) { return level(type) > 0; }
@@ -21,6 +22,16 @@ public final class AbilityLoadout {
     }
 
     public boolean evolved(AbilityType type) { return tier(type) >= 3; }
+
+    public DroneDoctrine droneDoctrine() { return droneDoctrine; }
+    public boolean hasDroneDoctrine() { return droneDoctrine != DroneDoctrine.NONE; }
+
+    public boolean chooseDroneDoctrine(DroneDoctrine doctrine) {
+        if (doctrine == null || doctrine == DroneDoctrine.NONE || hasDroneDoctrine()) return false;
+        if (tier(AbilityType.DRONE) < 2) return false;
+        droneDoctrine = doctrine;
+        return true;
+    }
 
     public int upgrade(AbilityType type) {
         int next = Math.min(MAX_LEVEL, level(type) + 1);
