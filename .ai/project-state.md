@@ -22,22 +22,33 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T06:40:12Z
+Generated: 2026-09-19T07:03:04Z
 
 ### Git
 - Branch: `main`
-- Head: `25d4e0facdb5`
-- Commit date: 2026-09-19T08:37:34+02:00
-- Commit: chore(ai): adopt repo standards v17
-- Tracked files: 692
+- Head: `aebc32ba13d7`
+- Commit date: 2026-09-19T09:02:49+02:00
+- Commit: Cancel obsolete CI runs automatically
+- Tracked files: 696
 
 ### Recently changed files
-- `.repo-standards.yml`
+- `.github/workflows/responsive-ui-qa.yml`
+- `.github/workflows/verify.yml`
 - `assets/i18n/messages.properties`
-- `core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java`
+- `core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java`
+- `core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java`
+- `core/src/main/java/com/deadlinezero/game/entities/Player.java`
+- `core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java`
+- `core/src/main/java/com/deadlinezero/game/progression/Upgrade.java`
 - `core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java`
+- `core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java`
+- `core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java`
+- `core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java`
+- `core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java`
+- `.repo-standards.yml`
 
 ### Project signals
 - `build.gradle`

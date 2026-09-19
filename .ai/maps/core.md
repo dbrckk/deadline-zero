@@ -163,6 +163,7 @@ src/
               PerformanceTelemetry.java
               ThermalBudgetPolicy.java
             progression/
+              CombatProtocolState.java
               LegendaryChoice.java
               LegendaryEffects.java
               LegendarySelector.java
@@ -376,6 +377,7 @@ src/
               PerformanceTelemetryTest.java
               ThermalBudgetPolicyTest.java
             progression/
+              CombatProtocolStateTest.java
               LegendarySelectorTest.java
               LegendaryStateTest.java
               RemainingWeaponFamilyLegendaryBalanceTest.java
@@ -414,6 +416,7 @@ src/
               ChampionVariantPresentationTest.java
               CharacterSpriteFacingTest.java
               CombatHudLayoutTest.java
+              CombatVisualEventsProtocolTest.java
               Direction8Test.java
               DirectionalBootstrapArtTest.java
               DirectionalBootstrapLazyLoadTest.java
@@ -1788,6 +1791,7 @@ public float dashCooldown = 3.2f * RunLoadoutContext.dashCooldownMultiplier();
 public final WeaponRuntime weapon = new WeaponRuntime(RunLoadoutContext.weaponDefinition());
 public final AbilityLoadout abilities = new AbilityLoadout();
 public final LegendaryState legendary = new LegendaryState();
+public final CombatProtocolState protocols = new CombatProtocolState();
 private final MobileCombatInput mobileCombatInput = new MobileCombatInput();
 private final Vector2 dashDirection = new Vector2();
 ⋮----
@@ -4037,6 +4041,33 @@ public static float fxCeiling(ThermalService.Level level) {
 private static int normalizeUserTarget(int target) {
 ```
 
+## File: src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java
+```java
+/** Allocation-free run-local event protocol state. */
+public final class CombatProtocolState {
+⋮----
+static final VolleyModifier NONE = new VolleyModifier(1f, false, 0);
+⋮----
+public void enableRhythm() { rhythmEnabled = true; }
+public void enableKillchain() { killchainEnabled = true; }
+public void enableReactionCore() { reactionEnabled = true; }
+⋮----
+public boolean rhythmEnabled() { return rhythmEnabled; }
+public boolean killchainEnabled() { return killchainEnabled; }
+public boolean reactionEnabled() { return reactionEnabled; }
+public boolean killchainArmed() { return killchainArmed; }
+⋮----
+public VolleyModifier onVolley() {
+⋮----
+return new VolleyModifier(damage, rhythmProc, killProc ? 1 : 0);
+⋮----
+public boolean onKill() {
+⋮----
+public float reactionBonus(float triggeringDamage, Enemy.ElementReaction reaction) {
+⋮----
+return Math.max(0f, triggeringDamage) * .35f;
+```
+
 ## File: src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java
 ```java
 /** Standalone run-local legendary choices, intentionally separate from standard Upgrade. */
@@ -4342,6 +4373,12 @@ public void apply(Player p) { p.abilities.upgrade(AbilityType.DRONE); }
 ⋮----
 public void apply(Player p) { p.abilities.upgrade(AbilityType.ORBITAL_BLADE); }
 ⋮----
+public void apply(Player p) { p.protocols.enableRhythm(); }
+⋮----
+public void apply(Player p) { p.protocols.enableKillchain(); }
+⋮----
+public void apply(Player p) { p.protocols.enableReactionCore(); }
+⋮----
 public void apply(Player p) { p.dashCooldown = dashCooldown(p.dashCooldown * .82f); }
 ⋮----
 public String titleKey() { return "upgrade." + name().toLowerCase(java.util.Locale.ROOT) + ".title"; }
@@ -4453,6 +4490,9 @@ case MISSILE_SWARM -> p.abilities.level(AbilityType.MISSILE_SWARM) < 5;
 case CRYO_NOVA -> p.abilities.level(AbilityType.CRYO_NOVA) < 5;
 case DRONE -> p.abilities.level(AbilityType.DRONE) < 5;
 case ORBITAL -> p.abilities.level(AbilityType.ORBITAL_BLADE) < 5;
+case RHYTHM_DRIVER -> !p.protocols.rhythmEnabled();
+case KILLCHAIN_CAPACITOR -> !p.protocols.killchainEnabled();
+case REACTION_CORE -> !p.protocols.reactionEnabled();
 ⋮----
 private static float rarityWeight(UpgradeRarity rarity) {
 ```
@@ -5143,7 +5183,12 @@ if (p.position.dst2(e.position) > rr * rr) continue;
 e.damage(p.damage);
 ⋮----
 e.applyElement(p.element, p.damage);
-damageNumber(e.position.x, e.position.y + e.radius, p.damage, p.critical,
+float reactionBonus = player.protocols.reactionBonus(p.damage, e.lastReaction);
+⋮----
+e.damage(reactionBonus);
+CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.REACTION);
+⋮----
+damageNumber(e.position.x, e.position.y + e.radius, p.damage + reactionBonus, p.critical,
 ⋮----
 float vlen = p.velocity.len();
 if (vlen > .001f) e.addImpulse(p.velocity.x / vlen * p.knockback, p.velocity.y / vlen * p.knockback);
@@ -5234,6 +5279,9 @@ private void onEnemyKilled(Enemy e) {
 if (game.accessibility != null && game.accessibility.haptics) game.services.haptics.bossKill();
 ⋮----
 polish.onEnemyKilled(e, pools);
+if (player.protocols.onKill()) {
+CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.KILLCHAIN_ARMED);
+⋮----
 director.onKill();
 if (player.addXp(e.xpValue)) prepareUpgrade();
 impact(e.position.x, e.position.y, e.radius * 2.3f, .28f, VisualTheme.GREEN);
@@ -5266,10 +5314,21 @@ if (t == Enemy.Type.BOSS) director.onBossSpawned();
 private void fire(Enemy target) {
 aim.set(target.position).sub(player.position).nor();
 ⋮----
+com.deadlinezero.game.progression.CombatProtocolState.VolleyModifier protocol = player.protocols.onVolley();
+if (protocol.damageMultiplier() > 1f) {
+CombatVisualEvents.ProtocolCue cue = protocol.forcedCrit() && protocol.bonusPenetration() > 0
+⋮----
+: protocol.forcedCrit() ? CombatVisualEvents.ProtocolCue.RHYTHM
+⋮----
+CombatVisualEvents.markProtocol(cue);
+AudioDirector.playGlobal(AudioDirector.Cue.PROTOCOL_PROC);
+⋮----
 shotVelocity.set(player.weapon.projectileSpeed, 0f).setAngleDeg(base + spread);
-boolean crit = MathUtils.random() < player.weapon.critChance;
+boolean crit = protocol.forcedCrit() || MathUtils.random() < player.weapon.critChance;
 Projectile p = pools.projectile();
 if (p != null) p.spawn(player.position.x, player.position.y, shotVelocity.x, shotVelocity.y,
+player.weapon.damage * protocol.damageMultiplier() * (crit ? player.weapon.critMultiplier : 1f), crit,
+Math.min(Upgrade.MAX_PENETRATION, player.weapon.penetration + protocol.bonusPenetration()),
 ⋮----
 polish.onShot(base);
 addCameraShake(.035f);
@@ -9291,8 +9350,19 @@ font.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
 font.draw(batch, player.canDash() ? t("hud.dash") : String.format(java.util.Locale.ROOT, "%.1f", player.dashTimer),
 layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s, layout.dashRadius() * 2f, Align.center, false);
 ⋮----
+drawProtocolCue(batch, font, layout, s);
 drawOnboardingHint(batch, font, layout, s);
 batch.end();
+⋮----
+private void drawProtocolCue(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
+float age = CombatVisualEvents.protocolAgeSeconds();
+⋮----
+String key = switch (CombatVisualEvents.protocolCue()) {
+⋮----
+float alpha = MathUtils.clamp(1f - age / .90f, 0f, 1f);
+font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY) * 1.08f * s);
+font.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha);
+font.draw(batch, t(key), layout.timeline().x, layout.timeline().y + 62f * s,
 ⋮----
 private void drawOnboardingHint(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
 OnboardingState o = OnboardingState.active();
@@ -9792,12 +9862,19 @@ lastDashNanos = TimeUtils.nanoTime();
 public static void markLevelUp() {
 lastLevelUpNanos = TimeUtils.nanoTime();
 ⋮----
+public static void markProtocol(ProtocolCue cue) {
+⋮----
+lastProtocolNanos = TimeUtils.nanoTime();
+⋮----
 public static float playerShotAgeSeconds() { return age(lastPlayerShotNanos); }
 public static float dashAgeSeconds() { return age(lastDashNanos); }
 public static float levelUpAgeSeconds() { return age(lastLevelUpNanos); }
 public static long playerShotSerial() { return playerShotSerial; }
 public static long dashSerial() { return dashSerial; }
 public static long levelUpSerial() { return levelUpSerial; }
+public static float protocolAgeSeconds() { return age(lastProtocolNanos); }
+public static long protocolSerial() { return protocolSerial; }
+public static ProtocolCue protocolCue() { return protocolCue; }
 ⋮----
 private static float age(long nanos) {
 ⋮----
@@ -13230,6 +13307,9 @@ final class AudioDirectorFallbackTest {
 @Test void bossPhaseFallsBackToBossHitWhenDedicatedAssetIsMissing() {
 assertEquals(AudioDirector.Cue.BOSS_HIT, AudioDirector.fallbackCue(AudioDirector.Cue.BOSS_PHASE));
 ⋮----
+@Test void protocolProcFallsBackToCritWithoutDedicatedAsset() {
+assertEquals(AudioDirector.Cue.CRIT, AudioDirector.fallbackCue(AudioDirector.Cue.PROTOCOL_PROC));
+⋮----
 @Test void ordinaryCuesDoNotUnexpectedlyAlias() {
 assertNull(AudioDirector.fallbackCue(AudioDirector.Cue.SHOT));
 assertNull(AudioDirector.fallbackCue(AudioDirector.Cue.BOSS_KILL));
@@ -15959,6 +16039,44 @@ assertEquals(120, ThermalBudgetPolicy.allowedFps(120, null));
 assertEquals(1.00f, ThermalBudgetPolicy.fxCeiling(null), .0001f);
 ```
 
+## File: src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java
+```java
+final class CombatProtocolStateTest {
+@Test void rhythmEmpowersEverySixthVolley() {
+CombatProtocolState state = new CombatProtocolState();
+state.enableRhythm();
+for (int i = 0; i < 5; i++) assertEquals(1f, state.onVolley().damageMultiplier(), .0001f);
+var proc = state.onVolley();
+assertTrue(proc.forcedCrit());
+assertEquals(1.30f, proc.damageMultiplier(), .0001f);
+assertEquals(1f, state.onVolley().damageMultiplier(), .0001f);
+⋮----
+@Test void killchainArmsAndConsumesNextVolley() {
+⋮----
+state.enableKillchain();
+for (int i = 0; i < 7; i++) state.onKill();
+assertFalse(state.killchainArmed());
+state.onKill();
+assertTrue(state.killchainArmed());
+⋮----
+assertEquals(1.45f, proc.damageMultiplier(), .0001f);
+assertEquals(1, proc.bonusPenetration());
+⋮----
+@Test void simultaneousProcsCombineWithoutUnboundedStacking() {
+⋮----
+for (int i = 0; i < 5; i++) state.onVolley();
+for (int i = 0; i < 8; i++) state.onKill();
+⋮----
+assertEquals(1.75f, proc.damageMultiplier(), .0001f);
+⋮----
+@Test void reactionCoreOnlyAmplifiesRealElementReactions() {
+⋮----
+state.enableReactionCore();
+assertEquals(0f, state.reactionBonus(100f, Enemy.ElementReaction.NONE), .0001f);
+assertEquals(35f, state.reactionBonus(100f, Enemy.ElementReaction.OVERLOAD), .0001f);
+assertEquals(0f, state.reactionBonus(-5f, Enemy.ElementReaction.THERMAL_SHOCK), .0001f);
+```
+
 ## File: src/test/java/com/deadlinezero/game/progression/LegendarySelectorTest.java
 ```java
 public final class LegendarySelectorTest {
@@ -16101,7 +16219,7 @@ final class UpgradePoolTest {
 @Test void productionPoolMeetsFiftyUpgradeTargetWithUniquePresentation() {
 Upgrade[] upgrades = Upgrade.values();
 assertTrue(upgrades.length >= 50, "P5 requires 50+ standard upgrades");
-assertEquals(52, upgrades.length);
+assertEquals(55, upgrades.length);
 ⋮----
 assertTrue(titles.add(upgrade.title), "duplicate upgrade title: " + upgrade.title);
 assertFalse(upgrade.description.isBlank(), upgrade.name());
@@ -16147,6 +16265,20 @@ while (UpgradeSelector.isAvailable(player, upgrade) && applications < 240) {
 ⋮----
 assertTrue(applications < 240, "upgrade never saturated: " + upgrade.name());
 assertFalse(UpgradeSelector.isAvailable(player, upgrade), "upgrade still offered after saturation: " + upgrade.name());
+⋮----
+@Test void eventProtocolsAreOneTimeRunChoices() {
+⋮----
+assertTrue(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_DRIVER));
+assertTrue(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_CAPACITOR));
+assertTrue(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CORE));
+⋮----
+Upgrade.RHYTHM_DRIVER.apply(player);
+Upgrade.KILLCHAIN_CAPACITOR.apply(player);
+Upgrade.REACTION_CORE.apply(player);
+⋮----
+assertFalse(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_DRIVER));
+assertFalse(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_CAPACITOR));
+assertFalse(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CORE));
 ⋮----
 @Test void hardCappedChoicesDisappearFromEligibility() {
 ⋮----
@@ -17191,6 +17323,26 @@ CombatHudLayout.Layout wide = CombatHudLayout.compute(1536, 691, 1f, false);
 ⋮----
 assertTrue(Math.abs(wide.toLogicalX(dashPhysicalX) - wide.dashX()) < 1f);
 assertTrue(Math.abs(wide.toLogicalY(dashPhysicalY) - wide.dashY()) < 1f);
+```
+
+## File: src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java
+```java
+final class CombatVisualEventsProtocolTest {
+@Test void protocolCuePublishesAndResets() {
+CombatVisualEvents.reset();
+assertEquals(CombatVisualEvents.ProtocolCue.NONE, CombatVisualEvents.protocolCue());
+long before = CombatVisualEvents.protocolSerial();
+⋮----
+CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.RHYTHM);
+assertEquals(CombatVisualEvents.ProtocolCue.RHYTHM, CombatVisualEvents.protocolCue());
+assertEquals(before + 1, CombatVisualEvents.protocolSerial());
+assertTrue(CombatVisualEvents.protocolAgeSeconds() < 1f);
+⋮----
+assertEquals(0L, CombatVisualEvents.protocolSerial());
+⋮----
+@Test void noneCueDoesNotPublish() {
+⋮----
+CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.NONE);
 ```
 
 ## File: src/test/java/com/deadlinezero/game/visual/Direction8Test.java

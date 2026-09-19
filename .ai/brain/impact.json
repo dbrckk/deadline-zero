@@ -1,17 +1,1968 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "faab922eee1ee366d7063e3655c456a3c1d35441",
-  "head": "25d4e0facdb50283c6afc1ee881277538edf0c19",
+  "base": "25d4e0facdb50283c6afc1ee881277538edf0c19",
+  "head": "aebc32ba13d7ce0bf7e8950f0e6892f554fd4dc8",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".repo-standards.yml",
+      "path": ".github/workflows/responsive-ui-qa.yml",
       "status": "M"
+    },
+    {
+      "path": ".github/workflows/verify.yml",
+      "status": "M"
+    },
+    {
+      "path": "assets/i18n/messages.properties",
+      "status": "M"
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "status": "A"
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java",
+      "status": "A"
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java",
+      "status": "M"
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java",
+      "status": "A"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
-  "selected_tests": []
+  "changed_source_files": [
+    "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
+    "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+    "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+    "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+    "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+    "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
+    "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+    "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+    "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+    "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java"
+  ],
+  "impacted_files": [
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+    "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+    "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+    "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
+    "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+    "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+    "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+    "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+    "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
+    "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+    "core/src/main/java/com/deadlinezero/game/progression/LegendarySelector.java",
+    "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+    "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+    "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
+    "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+    "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+    "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+    "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+    "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+    "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+    "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+    "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+    "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+    "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
+    "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+    "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+    "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
+    "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+    "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
+    "core/src/main/java/com/deadlinezero/game/visual/LegendaryFxRenderer.java",
+    "core/src/main/java/com/deadlinezero/game/visual/LocalLightRenderer.java",
+    "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
+    "core/src/main/java/com/deadlinezero/game/visual/WeaponLegendaryPresentation.java",
+    "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
+    "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+    "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/LegendarySelectorTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/LegendaryStateTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryBalanceTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/FoundryHazardPresentationTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/NullHazardPresentationTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java",
+    "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "AndroidFirstPlayableJourneyTest",
+      "kind": "class",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+      "line": 21
+    },
+    {
+      "name": "traversesContractCombatDefeatAndVictorySettlement",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+      "line": 23
+    },
+    {
+      "name": "activity",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+      "line": 57
+    },
+    {
+      "name": "game",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+      "line": 64
+    },
+    {
+      "name": "run",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+      "line": 71
+    },
+    {
+      "name": "AndroidGameplayVisualProbeTest",
+      "kind": "class",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 34
+    },
+    {
+      "name": "capturesWeeklyMissionsScreen",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 36
+    },
+    {
+      "name": "capturesGraphicsQualitySettings",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 63
+    },
+    {
+      "name": "capturesCloudSaveScreen",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 83
+    },
+    {
+      "name": "capturesChampionVariantCrowd",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 97
+    },
+    {
+      "name": "injectChampionVariantCrowd",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 114
+    },
+    {
+      "name": "capturesExpandedUpgradePoolOverlay",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 140
+    },
+    {
+      "name": "injectUpgradeChoices",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 154
+    },
+    {
+      "name": "capturesWraithGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 177
+    },
+    {
+      "name": "capturesRevenantGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 209
+    },
+    {
+      "name": "capturesWardenGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 236
+    },
+    {
+      "name": "capturesHarvesterGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 259
+    },
+    {
+      "name": "capturesFrostColossusGameplay",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 282
+    },
+    {
+      "name": "injectFrostColossusBoss",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 302
+    },
+    {
+      "name": "capturesCryogenicDepthsGameplay",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 316
+    },
+    {
+      "name": "injectCryogenicDepthsCrowd",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 336
+    },
+    {
+      "name": "capturesCryoVaultGameplay",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 350
+    },
+    {
+      "name": "injectCryoVaultCrowd",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 370
+    },
+    {
+      "name": "capturesCinderGunnerGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 384
+    },
+    {
+      "name": "injectCinderGunner",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 409
+    },
+    {
+      "name": "forceCinderGunnerAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 424
+    },
+    {
+      "name": "capturesNullWardGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 449
+    },
+    {
+      "name": "injectNullWard",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 472
+    },
+    {
+      "name": "forceNullWardAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 487
+    },
+    {
+      "name": "capturesStaticSeerGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 512
+    },
+    {
+      "name": "injectStaticSeer",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 535
+    },
+    {
+      "name": "forceStaticSeerAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 550
+    },
+    {
+      "name": "capturesPhaseStalkerGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 575
+    },
+    {
+      "name": "injectPhaseStalker",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 598
+    },
+    {
+      "name": "forcePhaseStalkerAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 613
+    },
+    {
+      "name": "capturesSlagGuardGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 638
+    },
+    {
+      "name": "injectSlagGuard",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 661
+    },
+    {
+      "name": "forceSlagGuardAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 676
+    },
+    {
+      "name": "capturesForgeHoundGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 701
+    },
+    {
+      "name": "injectForgeHound",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 726
+    },
+    {
+      "name": "forceForgeHoundAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 741
+    },
+    {
+      "name": "capturesNullArchonGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 766
+    },
+    {
+      "name": "injectNullArchonBoss",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 789
+    },
+    {
+      "name": "injectHarvesterBoss",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 801
+    },
+    {
+      "name": "injectWardenBoss",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 813
+    },
+    {
+      "name": "injectRevenantBoss",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 825
+    },
+    {
+      "name": "injectAuthoredEnemyCrowd",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 837
+    },
+    {
+      "name": "capture",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 870
+    },
+    {
+      "name": "activity",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 896
+    },
+    {
+      "name": "game",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 904
+    },
+    {
+      "name": "runOnGameThread",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 910
+    },
+    {
+      "name": "AndroidPerformanceProbeTest",
+      "kind": "class",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 30
+    },
+    {
+      "name": "recordsLoadedGameplayPerformanceTelemetry",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 32
+    },
+    {
+      "name": "recordsHordeProjectileStressTelemetry",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 92
+    },
+    {
+      "name": "writeBenchmarkJson",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 149
+    },
+    {
+      "name": "injectLoad",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 191
+    },
+    {
+      "name": "injectStressLoad",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 222
+    },
+    {
+      "name": "activity",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 271
+    },
+    {
+      "name": "game",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 279
+    },
+    {
+      "name": "runOnGameThread",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 285
+    },
+    {
+      "name": "AndroidResponsiveUiVisualProbeTest",
+      "kind": "class",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 36
+    },
+    {
+      "name": "capturesWidePhoneMetaAndCombatScreens",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 41
+    },
+    {
+      "name": "dedicatedWideProbe",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 100
+    },
+    {
+      "name": "assertWidePhoneAspect",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 105
+    },
+    {
+      "name": "settleAndCapture",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 117
+    },
+    {
+      "name": "captureWide",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 122
+    },
+    {
+      "name": "activity",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 153
+    },
+    {
+      "name": "game",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 161
+    },
+    {
+      "name": "runOnGameThread",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 167
+    },
+    {
+      "name": "AndroidVerticalSliceTest",
+      "kind": "class",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+      "line": 24
+    },
+    {
+      "name": "realAndroidRuntimeCompletesM0VerticalSliceAndPersistsSettlement",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+      "line": 26
+    },
+    {
+      "name": "interruptedAndroidRunReturnsToMenuWithoutSettlementOrRewards",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+      "line": 72
+    },
+    {
+      "name": "activity",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+      "line": 113
+    },
+    {
+      "name": "game",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+      "line": 121
+    },
+    {
+      "name": "runOnGameThread",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+      "line": 129
+    },
+    {
+      "name": "allowFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+      "line": 145
+    },
+    {
+      "name": "DeadlineZeroGame",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 46
+    },
+    {
+      "name": "showMenu",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 95
+    },
+    {
+      "name": "showGear",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 97
+    },
+    {
+      "name": "showArsenal",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 98
+    },
+    {
+      "name": "showMissions",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 99
+    },
+    {
+      "name": "showShop",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 100
+    },
+    {
+      "name": "showSurvivors",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 101
+    },
+    {
+      "name": "showSettings",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 102
+    },
+    {
+      "name": "showCloudSave",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 103
+    },
+    {
+      "name": "startRun",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 106
+    },
+    {
+      "name": "startRunWithContract",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 116
+    },
+    {
+      "name": "finishVictory",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 124
+    },
+    {
+      "name": "finishRun",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 129
+    },
+    {
+      "name": "finishRunInternal",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 134
+    },
+    {
+      "name": "applyCloudRestore",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 192
+    },
+    {
+      "name": "saveProfile",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 205
+    },
+    {
+      "name": "AbilitySystem",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 25
+    },
+    {
+      "name": "Listener",
+      "kind": "interface",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 26
+    },
+    {
+      "name": "runtime",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 57
+    },
+    {
+      "name": "update",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 59
+    },
+    {
+      "name": "onEnemySpawned",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 70
+    },
+    {
+      "name": "currentLeaperChance",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 77
+    },
+    {
+      "name": "updateLeapers",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 88
+    },
+    {
+      "name": "updateTesla",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 103
+    },
+    {
+      "name": "updateMissiles",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 143
+    },
+    {
+      "name": "updateHomingMissiles",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 182
+    },
+    {
+      "name": "updateCryo",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 208
+    },
+    {
+      "name": "updateDrone",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 229
+    },
+    {
+      "name": "updateOrbital",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 257
+    },
+    {
+      "name": "explode",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 282
+    },
+    {
+      "name": "nearest",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 301
+    },
+    {
+      "name": "damageEnemy",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 305
+    },
+    {
+      "name": "impact",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 317
+    },
+    {
+      "name": "arc",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "line": 322
+    },
+    {
+      "name": "AudioCueLimiter",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
+      "line": 7
+    },
+    {
+      "name": "allow",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
+      "line": 10
+    },
+    {
+      "name": "minIntervalNanos",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
+      "line": 25
+    },
+    {
+      "name": "reset",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
+      "line": 52
+    },
+    {
+      "name": "AudioDirector",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 11
+    },
+    {
+      "name": "Cue",
+      "kind": "enum",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 12
+    },
+    {
+      "name": "load",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 54
+    },
+    {
+      "name": "loadMusic",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 59
+    },
+    {
+      "name": "fallbackCue",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 68
+    },
+    {
+      "name": "resolveSound",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 82
+    },
+    {
+      "name": "resolveMusic",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 93
+    },
+    {
+      "name": "playGlobal",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 99
+    },
+    {
+      "name": "playGlobal",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 101
+    },
+    {
+      "name": "play",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 102
+    },
+    {
+      "name": "play",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 108
+    },
+    {
+      "name": "startCombatMusic",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 114
+    },
+    {
+      "name": "startCombatMusic",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 116
+    },
+    {
+      "name": "stopCombatMusic",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 130
+    },
+    {
+      "name": "suspend",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 136
+    },
+    {
+      "name": "resume",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 144
+    },
+    {
+      "name": "setVolumes",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 153
+    },
+    {
+      "name": "applyMusicVolume",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 160
+    },
+    {
+      "name": "normalizeVolume",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 165
+    },
+    {
+      "name": "dispose",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "line": 170
+    },
+    {
+      "name": "Player",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+      "line": 16
+    },
+    {
+      "name": "canDash",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+      "line": 40
+    },
+    {
+      "name": "triggerDash",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+      "line": 42
+    },
+    {
+      "name": "invulnerable",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+      "line": 47
+    },
+    {
+      "name": "updateRuntime",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+      "line": 49
+    },
+    {
+      "name": "addXp",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+      "line": 74
+    },
+    {
+      "name": "Projectile",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+      "line": 8
+    },
+    {
+      "name": "spawn",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+      "line": 25
+    },
+    {
+      "name": "CombatProtocolState",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 6
+    },
+    {
+      "name": "VolleyModifier",
+      "kind": "record",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 9
+    },
+    {
+      "name": "enableRhythm",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 20
+    },
+    {
+      "name": "enableKillchain",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 22
+    },
+    {
+      "name": "enableReactionCore",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 23
+    },
+    {
+      "name": "rhythmEnabled",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 24
+    },
+    {
+      "name": "killchainEnabled",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 26
+    },
+    {
+      "name": "reactionEnabled",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 27
+    },
+    {
+      "name": "killchainArmed",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 28
+    },
+    {
+      "name": "onVolley",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 29
+    },
+    {
+      "name": "onKill",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 45
+    },
+    {
+      "name": "reactionBonus",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
+      "line": 55
+    },
+    {
+      "name": "LegendaryChoice",
+      "kind": "enum",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
+      "line": 6
+    },
+    {
+      "name": "titleKey",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
+      "line": 65
+    },
+    {
+      "name": "descriptionKey",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
+      "line": 67
+    },
+    {
+      "name": "eligible",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
+      "line": 68
+    },
+    {
+      "name": "weapon",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
+      "line": 70
+    },
+    {
+      "name": "available",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
+      "line": 73
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
+      "line": 74
+    },
+    {
+      "name": "LegendaryEffects",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 8
+    },
+    {
+      "name": "applyOverdrive",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 10
+    },
+    {
+      "name": "applySingularity",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 20
+    },
+    {
+      "name": "applyApex",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 30
+    },
+    {
+      "name": "applyVanguardProtocol",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 38
+    },
+    {
+      "name": "applyScatterMaelstrom",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 48
+    },
+    {
+      "name": "applyInfernoPyroclasm",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 57
+    },
+    {
+      "name": "applyBreacherRupture",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 67
+    },
+    {
+      "name": "applyIonCascade",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 77
+    },
+    {
+      "name": "applyCinderFurnace",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 85
+    },
+    {
+      "name": "applyRailPhaseLance",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 93
+    },
+    {
+      "name": "applyCryoPrism",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 102
+    },
+    {
+      "name": "applyArcOverload",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+      "line": 111
+    },
+    {
+      "name": "LegendarySelector",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendarySelector.java",
+      "line": 7
+    },
+    {
+      "name": "fillChoices",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendarySelector.java",
+      "line": 12
+    },
+    {
+      "name": "shouldOffer",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/LegendarySelector.java",
+      "line": 31
+    },
+    {
+      "name": "Upgrade",
+      "kind": "enum",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 13
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 15
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 18
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 21
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 24
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 27
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 30
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 33
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 36
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 39
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 42
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 49
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 56
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 64
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 67
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 74
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 80
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 86
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 92
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 98
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 104
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 111
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 117
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 123
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 129
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 135
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 141
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 149
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 155
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 161
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 167
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 173
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 179
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 185
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 192
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 196
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 203
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 210
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 217
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 224
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 231
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 238
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 246
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 253
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 260
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 267
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 274
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 282
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 285
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 288
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 291
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 294
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 297
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 300
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 303
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 306
+    },
+    {
+      "name": "titleKey",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 332
+    },
+    {
+      "name": "descriptionKey",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 334
+    },
+    {
+      "name": "apply",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 335
+    },
+    {
+      "name": "damage",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 337
+    },
+    {
+      "name": "fireInterval",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 339
+    },
+    {
+      "name": "moveSpeed",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 340
+    },
+    {
+      "name": "projectileSpeed",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 341
+    },
+    {
+      "name": "spread",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 342
+    },
+    {
+      "name": "critChance",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 343
+    },
+    {
+      "name": "critMultiplier",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 344
+    },
+    {
+      "name": "knockback",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 345
+    },
+    {
+      "name": "dashCooldown",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 346
+    },
+    {
+      "name": "increaseMaxHp",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 347
+    },
+    {
+      "name": "reduceMaxHp",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "line": 352
+    },
+    {
+      "name": "UpgradeDraftPolicy",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+      "line": 13
+    },
+    {
+      "name": "hasEstablishedBuild",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+      "line": 15
+    },
+    {
+      "name": "isFocusedCandidate",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+      "line": 24
+    },
+    {
+      "name": "affinityMultiplier",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+      "line": 28
+    },
+    {
+      "name": "elementalAffinity",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+      "line": 36
+    },
+    {
+      "name": "elementFamily",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+      "line": 48
+    },
+    {
+      "name": "abilityAffinity",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+      "line": 57
+    },
+    {
+      "name": "partnerBoost",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+      "line": 73
+    },
+    {
+      "name": "abilityType",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+      "line": 81
+    },
+    {
+      "name": "UpgradeSelector",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
+      "line": 8
+    },
+    {
+      "name": "fillChoices",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
+      "line": 14
+    },
+    {
+      "name": "collectEligible",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
+      "line": 36
+    },
+    {
+      "name": "isBuildFocusedChoice",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
+      "line": 53
+    },
+    {
+      "name": "isAvailable",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
+      "line": 58
+    },
+    {
+      "name": "rarityWeight",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
+      "line": 191
+    },
+    {
+      "name": "ArsenalScreen",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 31
+    },
+    {
+      "name": "drawShapes",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 96
+    },
+    {
+      "name": "drawChevron",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 131
+    },
+    {
+      "name": "drawText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 143
+    },
+    {
+      "name": "drawHeader",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 152
+    },
+    {
+      "name": "drawCard",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 173
+    },
+    {
+      "name": "drawDetail",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 203
+    },
+    {
+      "name": "drawStatBars",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 237
+    },
+    {
+      "name": "drawStatBar",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 251
+    },
+    {
+      "name": "drawAuthoredPreview",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 260
+    },
+    {
+      "name": "handleInput",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 272
+    },
+    {
+      "name": "select",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 307
+    },
+    {
+      "name": "normalizeDps",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 318
+    },
+    {
+      "name": "paperDps",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 320
+    },
+    {
+      "name": "role",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 321
+    },
+    {
+      "name": "elementName",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 322
+    },
+    {
+      "name": "description",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 323
+    },
+    {
+      "name": "pair",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 324
+    },
+    {
+      "name": "deltaText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 325
+    },
+    {
+      "name": "deltaText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 326
+    },
+    {
+      "name": "oneDecimal",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 327
+    },
+    {
+      "name": "elementColor",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 328
+    },
+    {
+      "name": "t",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 329
+    },
+    {
+      "name": "f",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "line": 330
+    },
+    {
+      "name": "GameScreen",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 56
+    },
+    {
+      "name": "performanceSnapshot",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 133
+    },
+    {
+      "name": "effectiveFrameRateTarget",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 137
+    },
+    {
+      "name": "thermalLevel",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 141
+    },
+    {
+      "name": "effectiveFxQuality",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 145
+    },
+    {
+      "name": "activeEnemyCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 149
+    },
+    {
+      "name": "activeProjectileCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 155
+    },
+    {
+      "name": "activeSpatialBucketCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 163
+    },
+    {
+      "name": "retainedSpatialBucketCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 167
+    },
+    {
+      "name": "update",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 171
+    },
+    {
+      "name": "updateEnemies",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 227
+    },
+    {
+      "name": "bossSummonType",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 282
+    },
+    {
+      "name": "bossSummonType",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 287
+    },
+    {
+      "name": "spawnBossMinions",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 315
+    }
+  ],
+  "selected_tests": [
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+    "core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java",
+    "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java",
+    "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorVolumeTest.java",
+    "core/src/test/java/com/deadlinezero/game/meta/EquipmentUpgradeSafetyTest.java",
+    "core/src/test/java/com/deadlinezero/game/meta/PlayerProfileSafetyTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/LegendarySelectorTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/LegendaryStateTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryBalanceTest.java",
+    "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+    "core/src/test/java/com/deadlinezero/game/screen/GameScreenBossSummonRosterTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/FoundryHazardPresentationTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/NullHazardPresentationTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java"
+  ]
 }
