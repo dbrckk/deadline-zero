@@ -204,6 +204,10 @@ public final class CombatHudRenderer {
                 layout.timeline().y - 14f * s, layout.timeline().width, Align.center, false);
         }
 
+        if (encounter == RunEncounterDirector.Type.NONE && !director.bossSpawned()) {
+            drawBuildStatus(batch, font, player, layout, s);
+        }
+
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * s);
         font.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
         font.draw(batch, player.canDash() ? t("hud.dash") : String.format(java.util.Locale.ROOT, "%.1f", player.dashTimer),
@@ -212,6 +216,19 @@ public final class CombatHudRenderer {
         drawProtocolCue(batch, font, layout, s);
         drawOnboardingHint(batch, font, layout, s);
         batch.end();
+    }
+
+    private void drawBuildStatus(SpriteBatch batch, BitmapFont font, Player player,
+                                 CombatHudLayout.Layout layout, float s) {
+        String[] keys = ActiveBuildStatus.keys(player);
+        if (keys[0] == null) return;
+        String text = keys[1] == null
+            ? f("hud.build.summaryOne", t(keys[0]))
+            : f("hud.build.summaryTwo", t(keys[0]), t(keys[1]));
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .82f * s);
+        font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, text, layout.timeline().x, layout.timeline().y - 14f * s,
+            layout.timeline().width, Align.center, false);
     }
 
     private void drawProtocolCue(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
