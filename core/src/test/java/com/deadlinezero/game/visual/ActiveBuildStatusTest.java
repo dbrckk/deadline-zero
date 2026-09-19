@@ -20,7 +20,8 @@ final class ActiveBuildStatusTest {
         for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.DRONE);
         p.abilities.chooseDroneDoctrine(DroneDoctrine.HUNTER);
 
-        String[] keys = ActiveBuildStatus.keys(p);
+        String[] keys = new String[2];
+        ActiveBuildStatus.fill(p, keys);
         assertEquals("hud.build.hunter", keys[0]);
         assertNull(keys[1]);
     }
@@ -31,7 +32,8 @@ final class ActiveBuildStatusTest {
         for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.DRONE);
         p.abilities.chooseDroneDoctrine(DroneDoctrine.SENTINEL);
 
-        String[] keys = ActiveBuildStatus.keys(p);
+        String[] keys = new String[2];
+        ActiveBuildStatus.fill(p, keys);
         assertEquals("hud.build.sentinel", keys[0]);
         assertEquals("hud.build.arcReactor", keys[1]);
     }
