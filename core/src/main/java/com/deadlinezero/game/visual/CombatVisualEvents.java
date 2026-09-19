@@ -14,6 +14,9 @@ public final class CombatVisualEvents {
     private static long lastProtocolNanos = Long.MIN_VALUE;
     private static long protocolSerial;
     private static ProtocolCue protocolCue = ProtocolCue.NONE;
+    private static long lastSynergyNanos = Long.MIN_VALUE;
+    private static long synergySerial;
+    private static String synergyKey;
 
     private CombatVisualEvents() {}
 
@@ -39,6 +42,13 @@ public final class CombatVisualEvents {
         protocolSerial++;
     }
 
+    public static void markSynergy(String key) {
+        if (key == null || key.isBlank()) return;
+        synergyKey = key;
+        lastSynergyNanos = TimeUtils.nanoTime();
+        synergySerial++;
+    }
+
     public static float playerShotAgeSeconds() { return age(lastPlayerShotNanos); }
     public static float dashAgeSeconds() { return age(lastDashNanos); }
     public static float levelUpAgeSeconds() { return age(lastLevelUpNanos); }
@@ -48,6 +58,9 @@ public final class CombatVisualEvents {
     public static float protocolAgeSeconds() { return age(lastProtocolNanos); }
     public static long protocolSerial() { return protocolSerial; }
     public static ProtocolCue protocolCue() { return protocolCue; }
+    public static float synergyAgeSeconds() { return age(lastSynergyNanos); }
+    public static long synergySerial() { return synergySerial; }
+    public static String synergyKey() { return synergyKey; }
 
     private static float age(long nanos) {
         if (nanos == Long.MIN_VALUE) return Float.POSITIVE_INFINITY;
@@ -65,5 +78,8 @@ public final class CombatVisualEvents {
         lastProtocolNanos = Long.MIN_VALUE;
         protocolSerial = 0L;
         protocolCue = ProtocolCue.NONE;
+        lastSynergyNanos = Long.MIN_VALUE;
+        synergySerial = 0L;
+        synergyKey = null;
     }
 }

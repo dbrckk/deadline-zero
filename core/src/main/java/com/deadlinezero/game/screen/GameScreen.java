@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.abilities.AbilitySystem;
+import com.deadlinezero.game.abilities.AbilitySynergyUnlockDetector;
 import com.deadlinezero.game.abilities.AbilityUpgradeGuidance;
 import com.deadlinezero.game.abilities.AbilityType;
 import com.deadlinezero.game.audio.AudioDirector;
@@ -898,7 +899,10 @@ public final class GameScreen extends ScreenAdapter {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) idx = 1;
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) idx = 2;
             if (Gdx.input.justTouched()) idx = Math.min(2, (int)(Gdx.input.getX() / (float)Gdx.graphics.getWidth() * 3));
-            if (idx >= 0) { choices[idx].apply(player); choosingUpgrade = false; }
+            if (idx >= 0) {
+                applyUpgradeWithSynergyFeedback(choices[idx]);
+                choosingUpgrade = false;
+            }
         }
         if (gameOver) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.R)) {
@@ -917,6 +921,20 @@ public final class GameScreen extends ScreenAdapter {
             }
         }
         if (!gameOver && !choosingUpgrade && !choosingLegendary && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) finishRun();
+    }
+
+    private void applyUpgradeWithSynergyFeedback(Upgrade upgrade) {
+        AbilitySynergyUnlockDetector.Snapshot before =
+            AbilitySynergyUnlockDetector.snapshot(player.abilities);
+        upgrade.apply(player);
+        AbilitySynergyUnlockDetector.Synergy synergy =
+            AbilitySynergyUnlockDetector.newlyActivated(before, player.abilities);
+        String key = AbilitySynergyUnlockDetector.hudKey(synergy);
+        if (key == null) return;
+        CombatVisualEvents.markSynergy(key);
+        AudioDirector.playGlobal(AudioDirector.Cue.LEVEL_UP);
+        addCameraShake(.22f);
+        impact(player.position.x, player.position.y, 1.8f, .26f, VisualTheme.GOLD);
     }
 
     private String t(String key) { return game.i18n.text(key); }

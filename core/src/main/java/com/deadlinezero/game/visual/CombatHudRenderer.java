@@ -213,6 +213,7 @@ public final class CombatHudRenderer {
         font.draw(batch, player.canDash() ? t("hud.dash") : String.format(java.util.Locale.ROOT, "%.1f", player.dashTimer),
             layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s, layout.dashRadius() * 2f, Align.center, false);
 
+        drawSynergyUnlock(batch, font, layout, s);
         drawProtocolCue(batch, font, layout, s);
         drawOnboardingHint(batch, font, layout, s);
         batch.end();
@@ -228,6 +229,18 @@ public final class CombatHudRenderer {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .82f * s);
         font.setColor(VisualTheme.CYAN_SOFT);
         font.draw(batch, text, layout.timeline().x, layout.timeline().y - 14f * s,
+            layout.timeline().width, Align.center, false);
+    }
+
+    private void drawSynergyUnlock(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
+        float age = CombatVisualEvents.synergyAgeSeconds();
+        if (age > 1.65f) return;
+        String key = CombatVisualEvents.synergyKey();
+        if (key == null) return;
+        float alpha = MathUtils.clamp(1f - age / 1.65f, 0f, 1f);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY) * 1.12f * s);
+        font.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b, alpha);
+        font.draw(batch, t(key), layout.timeline().x, layout.timeline().y + 88f * s,
             layout.timeline().width, Align.center, false);
     }
 
