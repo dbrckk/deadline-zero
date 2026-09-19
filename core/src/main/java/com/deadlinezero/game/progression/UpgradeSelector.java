@@ -63,6 +63,8 @@ public final class UpgradeSelector {
             case MISSILE_SWARM -> p.abilities.level(AbilityType.MISSILE_SWARM) < 5;
             case CRYO_NOVA -> p.abilities.level(AbilityType.CRYO_NOVA) < 5;
             case DRONE -> p.abilities.level(AbilityType.DRONE) < 5;
+            case DRONE_HUNTER_DOCTRINE, DRONE_SENTINEL_DOCTRINE ->
+                p.abilities.tier(AbilityType.DRONE) >= 2 && !p.abilities.hasDroneDoctrine();
             case ORBITAL -> p.abilities.level(AbilityType.ORBITAL_BLADE) < 5;
             case RHYTHM_DRIVER -> !p.protocols.rhythmEnabled();
             case KILLCHAIN_CAPACITOR -> !p.protocols.killchainEnabled();
