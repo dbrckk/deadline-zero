@@ -1,0 +1,53 @@
+package com.deadlinezero.game.visual;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import com.deadlinezero.game.abilities.AbilityType;
+import com.deadlinezero.game.abilities.DroneDoctrine;
+import com.deadlinezero.game.entities.Player;
+import com.deadlinezero.game.meta.RunLoadoutContext;
+import org.junit.jupiter.api.Test;
+
+final class ActiveBuildStatusTest {
+    private Player fresh() {
+        RunLoadoutContext.end();
+        return new Player(0f, 0f);
+    }
+
+    @Test void doctrineTakesFirstHudSlot() {
+        Player p = fresh();
+        for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.DRONE);
+        p.abilities.chooseDroneDoctrine(DroneDoctrine.HUNTER);
+
+        String[] keys = ActiveBuildStatus.keys(p);
+        assertEquals("hud.build.hunter", keys[0]);
+        assertNull(keys[1]);
+    }
+
+    @Test void secondSlotShowsPrimaryActiveSynergy() {
+        Player p = fresh();
+        for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.TESLA_ORB);
+        for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.DRONE);
+        p.abilities.chooseDroneDoctrine(DroneDoctrine.SENTINEL);
+
+        String[] keys = ActiveBuildStatus.keys(p);
+        assertEquals("hud.build.sentinel", keys[0]);
+        assertEquals("hud.build.arcReactor", keys[1]);
+    }
+
+    @Test void strongestLateSynergyWinsSingleSynergySlot() {
+        Player p = fresh();
+        for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.TESLA_ORB);
+        for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.ORBITAL_BLADE);
+        for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.DRONE);
+
+        assertEquals("hud.build.stormBlade", ActiveBuildStatus.keys(p)[0]);
+    }
+
+    @Test void emptyBuildProducesNoTags() {
+        String[] keys = ActiveBuildStatus.keys(fresh());
+        assertNull(keys[0]);
+        assertNull(keys[1]);
+    }
+}
