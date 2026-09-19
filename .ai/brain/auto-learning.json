@@ -2,27 +2,29 @@
   "generated_by": "dbrckk/repo-brain-auto-learning-v1",
   "learned": true,
   "learning_result": {
-    "example_count": 4,
+    "example_count": 5,
     "rejected_count": 0,
     "terms": [
-      "active",
-      "build",
-      "combat",
-      "hud",
-      "identity",
-      "show"
+      "ability",
+      "activated",
+      "announce",
+      "newly",
+      "synergies"
     ],
     "test_count": 0,
-    "useful_count": 3
+    "useful_count": 6
   },
   "note": "Selected tests are routing hints; this artifact does not claim they executed successfully.",
   "rejected": [],
   "schema_version": 1,
-  "task": "Show active build identity in combat HUD",
+  "task": "Announce newly activated ability synergies",
   "tests_selected": [],
   "useful": [
-    "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
+    "core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java",
+    "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
     "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
-    "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java"
+    "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+    "core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java"
   ]
 }

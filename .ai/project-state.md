@@ -22,19 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T10:56:18Z
+Generated: 2026-09-19T11:41:12Z
 
 ### Git
 - Branch: `main`
-- Head: `707a739d477a`
-- Commit date: 2026-09-19T12:56:06+02:00
-- Commit: Show active build identity in combat HUD
-- Tracked files: 709
+- Head: `75a193f039ae`
+- Commit date: 2026-09-19T13:40:42+02:00
+- Commit: Announce newly activated ability synergies
+- Tracked files: 711
 
 ### Recently changed files
 - `assets/i18n/messages.properties`
-- `core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java`
+- `core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java`
+- `core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java`
+- `core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java`
+- `core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java`
@@ -47,11 +52,6 @@ Generated: 2026-09-19T10:56:18Z
 - `core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java`
 - `core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java`
 - `core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java`
-- `core/src/test/java/com/deadlinezero/game/abilities/DroneDoctrineRulesTest.java`
-- `core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java`
-- `core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java`
 
 ### Project signals
 - `build.gradle`

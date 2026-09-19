@@ -47,6 +47,7 @@ src/
             abilities/
               AbilityLoadout.java
               AbilityRuntime.java
+              AbilitySynergyUnlockDetector.java
               AbilitySystem.java
               AbilityType.java
               AbilityUpgradeGuidance.java
@@ -283,6 +284,7 @@ src/
           game/
             abilities/
               AbilityLoadoutTierTest.java
+              AbilitySynergyUnlockDetectorTest.java
               AbilityUpgradeGuidanceTest.java
               DroneDoctrineRulesTest.java
             ai/
@@ -529,6 +531,32 @@ public void resetMissile(int level) { missileTimer = Math.max(1.1f, 4.4f - level
 public void resetCryo(int level) { cryoTimer = Math.max(2.2f, 7.2f - level * .55f); }
 public void resetDrone(int level) { droneTimer = Math.max(.35f, 1.1f - level * .10f); }
 public void resetOrbital(int level) { orbitalTimer = Math.max(.18f, .46f - level * .045f); }
+```
+
+## File: src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java
+```java
+/** Detects which ability synergy became active after an upgrade without duplicating synergy rules. */
+public final class AbilitySynergyUnlockDetector {
+⋮----
+public static Snapshot snapshot(AbilityLoadout a) {
+return new Snapshot(
+a.hasTeslaEvolution(),
+a.hasCryoMissileEvolution(),
+a.hasSuperconductorSynergy(),
+a.hasTargetNetworkSynergy(),
+a.hasPermafrostBladeSynergy(),
+a.hasStormBladeSynergy());
+⋮----
+public static Synergy newlyActivated(Snapshot before, AbilityLoadout after) {
+⋮----
+if (!before.stormBlade() && after.hasStormBladeSynergy()) return Synergy.STORM_BLADE;
+if (!before.arcReactor() && after.hasTeslaEvolution()) return Synergy.ARC_REACTOR;
+if (!before.cryoBarrage() && after.hasCryoMissileEvolution()) return Synergy.CRYO_BARRAGE;
+if (!before.superconductor() && after.hasSuperconductorSynergy()) return Synergy.SUPERCONDUCTOR;
+if (!before.targetNetwork() && after.hasTargetNetworkSynergy()) return Synergy.TARGET_NETWORK;
+if (!before.permafrostBlades() && after.hasPermafrostBladeSynergy()) return Synergy.PERMAFROST_BLADES;
+⋮----
+public static String hudKey(Synergy synergy) {
 ```
 
 ## File: src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java
@@ -5656,7 +5684,8 @@ addCameraShake(.64f);
 impact(player.position.x, player.position.y, 2.9f, .42f, VisualTheme.GOLD);
 ⋮----
 if (Gdx.input.justTouched()) idx = Math.min(2, (int)(Gdx.input.getX() / (float)Gdx.graphics.getWidth() * 3));
-if (idx >= 0) { choices[idx].apply(player); choosingUpgrade = false; }
+⋮----
+applyUpgradeWithSynergyFeedback(choices[idx]);
 ⋮----
 if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.R)) {
 finishRun();
@@ -5669,6 +5698,19 @@ game.services.ads.preload();
 else finishRun();
 ⋮----
 if (!gameOver && !choosingUpgrade && !choosingLegendary && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) finishRun();
+⋮----
+private void applyUpgradeWithSynergyFeedback(Upgrade upgrade) {
+⋮----
+AbilitySynergyUnlockDetector.snapshot(player.abilities);
+upgrade.apply(player);
+⋮----
+AbilitySynergyUnlockDetector.newlyActivated(before, player.abilities);
+String key = AbilitySynergyUnlockDetector.hudKey(synergy);
+⋮----
+CombatVisualEvents.markSynergy(key);
+AudioDirector.playGlobal(AudioDirector.Cue.LEVEL_UP);
+addCameraShake(.22f);
+impact(player.position.x, player.position.y, 1.8f, .26f, VisualTheme.GOLD);
 ⋮----
 private String t(String key) { return game.i18n.text(key); }
 private String f(String key, Object... args) { return game.i18n.format(key, args); }
@@ -9474,6 +9516,7 @@ font.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
 font.draw(batch, player.canDash() ? t("hud.dash") : String.format(java.util.Locale.ROOT, "%.1f", player.dashTimer),
 layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s, layout.dashRadius() * 2f, Align.center, false);
 ⋮----
+drawSynergyUnlock(batch, font, layout, s);
 drawProtocolCue(batch, font, layout, s);
 drawOnboardingHint(batch, font, layout, s);
 batch.end();
@@ -9487,6 +9530,16 @@ String[] keys = ActiveBuildStatus.keys(player);
 font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .82f * s);
 font.setColor(VisualTheme.CYAN_SOFT);
 font.draw(batch, text, layout.timeline().x, layout.timeline().y - 14f * s,
+⋮----
+private void drawSynergyUnlock(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
+float age = CombatVisualEvents.synergyAgeSeconds();
+⋮----
+String key = CombatVisualEvents.synergyKey();
+⋮----
+float alpha = MathUtils.clamp(1f - age / 1.65f, 0f, 1f);
+font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY) * 1.12f * s);
+font.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b, alpha);
+font.draw(batch, t(key), layout.timeline().x, layout.timeline().y + 88f * s,
 ⋮----
 private void drawProtocolCue(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
 float age = CombatVisualEvents.protocolAgeSeconds();
@@ -10002,6 +10055,11 @@ public static void markProtocol(ProtocolCue cue) {
 ⋮----
 lastProtocolNanos = TimeUtils.nanoTime();
 ⋮----
+public static void markSynergy(String key) {
+if (key == null || key.isBlank()) return;
+⋮----
+lastSynergyNanos = TimeUtils.nanoTime();
+⋮----
 public static float playerShotAgeSeconds() { return age(lastPlayerShotNanos); }
 public static float dashAgeSeconds() { return age(lastDashNanos); }
 public static float levelUpAgeSeconds() { return age(lastLevelUpNanos); }
@@ -10011,6 +10069,9 @@ public static long levelUpSerial() { return levelUpSerial; }
 public static float protocolAgeSeconds() { return age(lastProtocolNanos); }
 public static long protocolSerial() { return protocolSerial; }
 public static ProtocolCue protocolCue() { return protocolCue; }
+public static float synergyAgeSeconds() { return age(lastSynergyNanos); }
+public static long synergySerial() { return synergySerial; }
+public static String synergyKey() { return synergyKey; }
 ⋮----
 private static float age(long nanos) {
 ⋮----
@@ -12877,6 +12938,32 @@ for (int i = 0; i < 4; i++) loadout.upgrade(AbilityType.TESLA_ORB);
 assertFalse(loadout.hasStormBladeSynergy());
 ⋮----
 assertTrue(loadout.hasStormBladeSynergy());
+```
+
+## File: src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java
+```java
+final class AbilitySynergyUnlockDetectorTest {
+@Test void detectsNewSuperconductorAfterMaturingTesla() {
+AbilityLoadout a = new AbilityLoadout();
+for (int i = 0; i < 3; i++) a.upgrade(AbilityType.CRYO_NOVA);
+for (int i = 0; i < 2; i++) a.upgrade(AbilityType.TESLA_ORB);
+var before = AbilitySynergyUnlockDetector.snapshot(a);
+⋮----
+a.upgrade(AbilityType.TESLA_ORB);
+⋮----
+assertEquals(AbilitySynergyUnlockDetector.Synergy.SUPERCONDUCTOR,
+AbilitySynergyUnlockDetector.newlyActivated(before, a));
+⋮----
+@Test void noEventWhenUpgradeDoesNotCreateSynergy() {
+⋮----
+assertEquals(AbilitySynergyUnlockDetector.Synergy.NONE,
+⋮----
+@Test void stormBladeHasPriorityWhenSeveralSynergiesAppearTogether() {
+⋮----
+for (int i = 0; i < 5; i++) a.upgrade(AbilityType.ORBITAL_BLADE);
+for (int i = 0; i < 4; i++) a.upgrade(AbilityType.TESLA_ORB);
+⋮----
+assertEquals(AbilitySynergyUnlockDetector.Synergy.STORM_BLADE,
 ```
 
 ## File: src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java
@@ -17630,6 +17717,16 @@ assertEquals(0L, CombatVisualEvents.protocolSerial());
 @Test void noneCueDoesNotPublish() {
 ⋮----
 CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.NONE);
+⋮----
+@Test void synergyUnlockPublishesAndResets() {
+⋮----
+CombatVisualEvents.markSynergy("hud.synergyUnlocked.arcReactor");
+assertEquals("hud.synergyUnlocked.arcReactor", CombatVisualEvents.synergyKey());
+assertEquals(1L, CombatVisualEvents.synergySerial());
+assertTrue(CombatVisualEvents.synergyAgeSeconds() < 1f);
+⋮----
+assertEquals(0L, CombatVisualEvents.synergySerial());
+assertEquals(null, CombatVisualEvents.synergyKey());
 ```
 
 ## File: src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java

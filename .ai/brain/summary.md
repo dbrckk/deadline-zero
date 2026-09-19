@@ -1,21 +1,21 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 422
-- Files reparsed this run: 3
-- Symbols: 2367
-- Internal import edges: 641
-- Impacted files: 4
-- Selected tests: 1
+- Files indexed: 424
+- Files reparsed this run: 6
+- Symbols: 2380
+- Internal import edges: 642
+- Impacted files: 14
+- Selected tests: 8
 
 ## Languages
-- java: 389 files
+- java: 391 files
 - python: 33 files
 
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 72 symbols
 - android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 46 symbols
-- core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 42 symbols
+- core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 43 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 34 symbols
 - core/src/main/java/com/deadlinezero/game/visual/GameArt.java: 34 symbols
@@ -32,7 +32,7 @@
 - core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 22 symbols
 - core/src/main/java/com/deadlinezero/game/world/WaveDirector.java: 22 symbols
 - core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java: 21 symbols
-- core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java: 20 symbols
+- core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java: 21 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 3
-- outline files retained: 420
-- top-level items retained: 2531
-- direct members retained: 3247
+- AST files reparsed this run: 6
+- outline files retained: 422
+- top-level items retained: 2536
+- direct members retained: 3261
 - symbol shards: 27
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

@@ -1,13 +1,16 @@
 # Change impact
 
-Base: 0c46b4e5a9889273c9ca8c2b3ad6280f69252641
-Head: 707a739d477a2f8c1b802e2f57b8fe16fe0c3ee3
+Base: 626b14f7f55b76460a95bdc749eb1a3219dae993
+Head: 75a193f039ae455bbe16666c429361bd27f07207
 
 ## Changed files
 - M assets/i18n/messages.properties
-- A core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java
+- A core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java
+- M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
 - M core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java
-- A core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java
+- M core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java
+- A core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java
+- M core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java
 
 ## Affected areas
 - assets
