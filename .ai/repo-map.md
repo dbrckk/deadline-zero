@@ -4954,7 +4954,7 @@ tasks.register('verifyPlayDataSafetyContract') {
         File contract = new File(playStoreDir, 'DATA_SAFETY.md')
         if (!contract.isFile()) throw new GradleException('Play release blocked: play/store/DATA_SAFETY.md is missing.')
         String text = contract.getText('UTF-8')
-        ['Google Mobile Ads SDK', 'Google User Messaging Platform (UMP)', 'Google Play Billing', 'Google Play Games Services', 'Change-control rule'].each { required ->
+        ['Google Mobile Ads SDK', 'Google User Messaging Platform (UMP)', 'Google Play Billing', 'Google Play Games Services', 'Google Play In-App Review', 'Change-control rule'].each { required ->
             if (!text.contains(required)) throw new GradleException('Play Data Safety contract missing required section: ' + required)
         }
     }

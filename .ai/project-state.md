@@ -22,19 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T13:02:42Z
+Generated: 2026-09-19T13:09:48Z
 
 ### Git
 - Branch: `main`
-- Head: `fc889da716a5`
-- Commit date: 2026-09-19T15:02:31+02:00
-- Commit: Align localization release contract with current implementation
-- Tracked files: 716
+- Head: `265784525869`
+- Commit date: 2026-09-19T15:09:38+02:00
+- Commit: Document Play Review release requirements
+- Tracked files: 717
 
 ### Recently changed files
+- `android/build.gradle`
+- `play/store/DATA_SAFETY.md`
+- `play/store/PLAY_CONSOLE.md`
+- `play/store/RELEASE_READINESS.md`
 - `core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java`
 - `play/store/LOCALIZATION.md`
-- `android/build.gradle`
 - `android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java`
 - `android/src/main/java/com/deadlinezero/game/android/AndroidReviewService.java`
 - `core/src/main/java/com/deadlinezero/game/meta/ReviewPromptPolicy.java`
@@ -49,9 +52,6 @@ Generated: 2026-09-19T13:02:42Z
 - `core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java`
-- `core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java`
-- `core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java`
-- `core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java`
 
 ### Project signals
 - `build.gradle`

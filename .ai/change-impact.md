@@ -1,14 +1,16 @@
 # Change impact
 
-Base: 4de17d28c5512013e5f7487c18f0dbf62ac8f7e9
-Head: fc889da716a5a55b913921be8d7cf507e5cb4370
+Base: e8e7cb900ddd9163708f13a5cbc4d0d723847a82
+Head: 265784525869367951964de6f97c4d1ab2784455
 
 ## Changed files
-- A core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java
-- M play/store/LOCALIZATION.md
+- M android/build.gradle
+- M play/store/DATA_SAFETY.md
+- M play/store/PLAY_CONSOLE.md
+- M play/store/RELEASE_READINESS.md
 
 ## Affected areas
-- core
+- android
 - play
 
 ## Related test candidates
