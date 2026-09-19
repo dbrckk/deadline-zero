@@ -174,6 +174,34 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesRexGameplayAndAttackFrames() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.profile.selectedSurvivor = SurvivorCatalog.Survivor.REX;
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for Rex visual probe", game.getScreen() instanceof GameScreen);
+                assertTrue("visual probe must run the production REX selection",
+                    game.profile.selectedSurvivor == SurvivorCatalog.Survivor.REX);
+            });
+
+            Thread.sleep(2200L);
+            capture("rex-gameplay.png");
+
+            runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
+            Thread.sleep(700L);
+            capture("rex-shambler-crowd.png");
+
+            runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
+            Thread.sleep(80L);
+            capture("rex-attack.png");
+        }
+    }
+
+    @Test
     public void capturesWraithGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
