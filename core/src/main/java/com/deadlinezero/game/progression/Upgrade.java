@@ -303,11 +303,20 @@ public enum Upgrade {
     RHYTHM_DRIVER("Rhythm Driver", "Every 6th volley is empowered and guaranteed critical", UpgradeRarity.EPIC) {
         public void apply(Player p) { p.protocols.enableRhythm(); }
     },
+    RHYTHM_ACCELERATOR("Rhythm Accelerator", "Rhythm evolves: proc every 4th volley at +45% damage", UpgradeRarity.EPIC) {
+        public void apply(Player p) { p.protocols.evolveRhythm(); }
+    },
     KILLCHAIN_CAPACITOR("Killchain Capacitor", "Every 8 kills empowers the next volley with damage and penetration", UpgradeRarity.EPIC) {
         public void apply(Player p) { p.protocols.enableKillchain(); }
     },
+    KILLCHAIN_OVERCHARGE("Killchain Overcharge", "Killchain evolves: 5 kills arm +60% damage and +2 penetration", UpgradeRarity.EPIC) {
+        public void apply(Player p) { p.protocols.evolveKillchain(); }
+    },
     REACTION_CORE("Reaction Core", "Elemental reactions deal +35% bonus trigger damage", UpgradeRarity.EPIC) {
         public void apply(Player p) { p.protocols.enableReactionCore(); }
+    },
+    REACTION_CASCADE("Reaction Cascade", "Reaction Core evolves: elemental reactions deal +55% trigger damage", UpgradeRarity.EPIC) {
+        public void apply(Player p) { p.protocols.evolveReactionCore(); }
     },
     DASH_CORE("Phase Dash", "Dash cooldown -18%", UpgradeRarity.RARE) {
         public void apply(Player p) { p.dashCooldown = dashCooldown(p.dashCooldown * .82f); }
