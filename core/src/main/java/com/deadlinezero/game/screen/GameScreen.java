@@ -42,6 +42,7 @@ import com.deadlinezero.game.perf.AdaptiveFrameRateGovernor;
 import com.deadlinezero.game.perf.ThermalBudgetPolicy;
 import com.deadlinezero.game.progression.LegendaryChoice;
 import com.deadlinezero.game.progression.LegendarySelector;
+import com.deadlinezero.game.progression.ProtocolUpgradeGuidance;
 import com.deadlinezero.game.progression.Upgrade;
 import com.deadlinezero.game.progression.UpgradeSelector;
 import com.deadlinezero.game.services.AdsService;
@@ -849,6 +850,7 @@ public final class GameScreen extends ScreenAdapter {
                 left + 18f, h * .435f, cardWidth - 36f, Align.center, true);
 
             String guidanceKey = AbilityUpgradeGuidance.key(player, choices[i]);
+            if (guidanceKey == null) guidanceKey = ProtocolUpgradeGuidance.key(player, choices[i]);
             if (guidanceKey != null) {
                 font.getData().setScale(.78f);
                 font.setColor(VisualTheme.GOLD);
