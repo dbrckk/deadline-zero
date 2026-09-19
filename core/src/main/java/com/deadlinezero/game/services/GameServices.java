@@ -9,6 +9,7 @@ public final class GameServices {
     public final CloudSaveAdapter cloudSave;
     public final ThermalService thermal;
     public final OfferConfigService offers;
+    public final ReviewService review;
 
     public GameServices(AdsService ads, BillingService billing) {
         this(ads, billing, PrivacyService.noOp(), ShareService.noOp(), HapticsService.noOp(),
@@ -44,6 +45,12 @@ public final class GameServices {
     public GameServices(AdsService ads, BillingService billing, PrivacyService privacy, ShareService share,
                         HapticsService haptics, CloudSaveAdapter cloudSave, ThermalService thermal,
                         OfferConfigService offers) {
+        this(ads, billing, privacy, share, haptics, cloudSave, thermal, offers, ReviewService.noOp());
+    }
+
+    public GameServices(AdsService ads, BillingService billing, PrivacyService privacy, ShareService share,
+                        HapticsService haptics, CloudSaveAdapter cloudSave, ThermalService thermal,
+                        OfferConfigService offers, ReviewService review) {
         this.ads = ads;
         this.billing = billing;
         this.privacy = privacy == null ? PrivacyService.noOp() : privacy;
@@ -52,6 +59,7 @@ public final class GameServices {
         this.cloudSave = cloudSave == null ? CloudSaveAdapter.unavailable() : cloudSave;
         this.thermal = thermal == null ? ThermalService.noOp() : thermal;
         this.offers = offers == null ? OfferConfigService.safeLocal() : offers;
+        this.review = review == null ? ReviewService.noOp() : review;
     }
 
     public static GameServices noOp() {
