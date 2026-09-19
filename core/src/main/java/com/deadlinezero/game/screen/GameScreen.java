@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.abilities.AbilitySystem;
+import com.deadlinezero.game.abilities.AbilityUpgradeGuidance;
 import com.deadlinezero.game.abilities.AbilityType;
 import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.ai.BossAttackPatternCatalog;
@@ -845,6 +846,14 @@ public final class GameScreen extends ScreenAdapter {
             font.setColor(Color.WHITE);
             font.draw(batch, t(choices[i].descriptionKey()),
                 left + 18f, h * .435f, cardWidth - 36f, Align.center, true);
+
+            String guidanceKey = AbilityUpgradeGuidance.key(player, choices[i]);
+            if (guidanceKey != null) {
+                font.getData().setScale(.78f);
+                font.setColor(VisualTheme.GOLD);
+                font.draw(batch, t(guidanceKey),
+                    left + 14f, h * .365f, cardWidth - 28f, Align.center, true);
+            }
         }
 
         font.getData().setScale(.86f);

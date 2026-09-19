@@ -27,7 +27,7 @@ final class NullWardSupportTest {
         RunStageContext.begin(20, 79, 0);
         Enemy wardA = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8, false);
         Enemy wardB = new Enemy(Enemy.Type.REGENERATOR, .5f, 0f, 100f, 2f, .45f, 10f, 8, false);
-        Enemy ally = new Enemy(Enemy.Type.RUNNER, 1f, 0f, 100f, 3f, .35f, 10f, 8);
+        Enemy ally = new Enemy(Enemy.Type.RUNNER, 1f, 0f, 100f, 3f, .35f, 10f, 8, false);
         ally.damage(60f);
         float before = ally.hp;
         float expectedSingleHeal = ally.maxHp * .045f;
