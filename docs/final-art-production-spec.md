@@ -80,6 +80,8 @@ Required roots:
 
 - `boss/alpha` — industrial military apex unit, heavy readable armor, controlled cadence.
 - `boss/revenant` — faster predatory silhouette, damaged/unstable energy seams, more aggressive posture.
+- `boss/warden` — defensive control boss, broad fortified silhouette, shield/containment geometry and deliberate attack windups.
+- `boss/harvester` — heavy execution boss, industrial harvesting silhouette, asymmetric threat tools and strong close-range read.
 - `boss/null_archon` — late-game null entity, large occult-tech silhouette, phase fracture motifs.
 
 Bosses must be visually distinguishable in grayscale silhouette before color/VFX are applied.
@@ -149,7 +151,7 @@ An actor is not considered final until all checks pass:
 ## Production priority
 
 1. Rex + core weapon + core VFX (establish final quality bar).
-2. Alpha/Revenant/Null Archon bosses.
+2. Alpha/Revenant/Warden/Harvester/Null Archon bosses.
 3. Six biome-signature enemies.
 4. Nyx/Bastion/Volt/Wraith.
 5. Remaining generic enemy archetypes.
