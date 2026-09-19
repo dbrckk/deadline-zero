@@ -22,16 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T12:47:54Z
+Generated: 2026-09-19T12:58:03Z
 
 ### Git
 - Branch: `main`
-- Head: `ef58d5da53db`
-- Commit date: 2026-09-19T14:47:45+02:00
-- Commit: Make Sentinel projectile blocks explicit
-- Tracked files: 711
+- Head: `ae87d0e2309f`
+- Commit date: 2026-09-19T14:57:51+02:00
+- Commit: Add Play in-app review after meaningful victories
+- Tracked files: 715
 
 ### Recently changed files
+- `android/build.gradle`
+- `android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java`
+- `android/src/main/java/com/deadlinezero/game/android/AndroidReviewService.java`
+- `core/src/main/java/com/deadlinezero/game/meta/ReviewPromptPolicy.java`
+- `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
+- `core/src/main/java/com/deadlinezero/game/services/GameServices.java`
+- `core/src/main/java/com/deadlinezero/game/services/ReviewService.java`
+- `core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java`
 - `assets/i18n/messages.properties`
 - `core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java`
 - `core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java`
@@ -44,14 +52,6 @@ Generated: 2026-09-19T12:47:54Z
 - `core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java`
 - `core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java`
 - `core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java`
-- `core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java`
-- `core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java`
-- `core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java`
-- `core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java`
 
 ### Project signals
 - `build.gradle`

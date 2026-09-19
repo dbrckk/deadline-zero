@@ -89,6 +89,7 @@ android/
                 AndroidLauncher.java
                 AndroidPlayGamesCloudSaveAdapter.java
                 AndroidPrivacyService.java
+                AndroidReviewService.java
                 AndroidShareService.java
                 AndroidThermalService.java
   build.gradle
@@ -216,6 +217,7 @@ core/
                 ProfileSchema.java
                 ProfileStore.java
                 PurchaseGrantService.java
+                ReviewPromptPolicy.java
                 RunEncounterRuntime.java
                 RunLoadoutContext.java
                 RunMissionRuntime.java
@@ -282,6 +284,7 @@ core/
                 HapticsService.java
                 OfferConfigService.java
                 PrivacyService.java
+                ReviewService.java
                 ShareService.java
                 SingleFlightGate.java
                 ThermalService.java
@@ -445,6 +448,7 @@ core/
                 ProfileSchemaTest.java
                 ProfileStoreBackupTest.java
                 PurchaseGrantServiceTest.java
+                ReviewPromptPolicyTest.java
                 RunLoadoutContextResetTest.java
                 RunMissionRuntimeTest.java
                 RunModifierContextTest.java
@@ -4516,7 +4520,9 @@ new AndroidPrivacyService(this, consent),
 new AndroidShareService(this),
 new AndroidHapticsService(this),
 ⋮----
-new AndroidThermalService(this)
+new AndroidThermalService(this),
+com.deadlinezero.game.services.OfferConfigService.safeLocal(),
+new AndroidReviewService(this)
 ⋮----
 consent.gatherConsent(() -> {
 if (!consent.canRequestAds()) return;
@@ -4659,6 +4665,20 @@ return activity != null && url != null && url.startsWith("https://") && url.leng
 if (!policyAvailable()) return;
 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_POLICY_URL));
 activity.startActivity(intent);
+````
+
+## File: android/src/main/java/com/deadlinezero/game/android/AndroidReviewService.java
+````java
+public final class AndroidReviewService implements ReviewService {
+⋮----
+this.manager = ReviewManagerFactory.create(activity);
+⋮----
+@Override public void requestReview() {
+⋮----
+manager.requestReviewFlow().addOnCompleteListener(request -> {
+if (!request.isSuccessful()) {
+⋮----
+manager.launchReviewFlow(activity, request.getResult()).addOnCompleteListener(flow -> {
 ````
 
 ## File: android/src/main/java/com/deadlinezero/game/android/AndroidShareService.java
@@ -4813,6 +4833,7 @@ dependencies {
     implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
     implementation 'com.android.billingclient:billing:9.1.0'
     implementation 'com.google.android.gms:play-services-games-v2:22.0.0'
+    implementation 'com.google.android.play:review:2.0.2'
 
     androidTestImplementation 'androidx.test:core:1.6.1'
     androidTestImplementation 'androidx.test:runner:1.6.2'
@@ -10810,6 +10831,14 @@ changed |= grant(profile, BillingService.REMOVE_ADS);
 if (billing.owns(BillingService.STARTER_PACK)) changed |= grant(profile, BillingService.STARTER_PACK);
 ````
 
+## File: core/src/main/java/com/deadlinezero/game/meta/ReviewPromptPolicy.java
+````java
+/** Conservative eligibility for requesting a store-managed review prompt after a successful run. */
+public final class ReviewPromptPolicy {
+⋮----
+public static boolean eligible(boolean firstClear, int stage) {
+````
+
 ## File: core/src/main/java/com/deadlinezero/game/meta/RunEncounterRuntime.java
 ````java
 /** Tracks deterministic bonus rewards earned from optional run encounters. */
@@ -14675,6 +14704,8 @@ private final UiViewport viewport = new UiViewport();
 private final Vector2 touch = new Vector2();
 ⋮----
 resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+if (ReviewPromptPolicy.eligible(firstClear, result.stage())) {
+game.services.review.requestReview();
 ⋮----
 @Override public void resize(int width, int height) {
 viewport.resize(width, height);
@@ -15033,12 +15064,15 @@ this(ads, billing, privacy, share, haptics, cloudSave, ThermalService.noOp(), Of
 ⋮----
 this(ads, billing, privacy, share, haptics, cloudSave, thermal, OfferConfigService.safeLocal());
 ⋮----
+this(ads, billing, privacy, share, haptics, cloudSave, thermal, offers, ReviewService.noOp());
+⋮----
 this.privacy = privacy == null ? PrivacyService.noOp() : privacy;
 this.share = share == null ? ShareService.noOp() : share;
 this.haptics = haptics == null ? HapticsService.noOp() : haptics;
 this.cloudSave = cloudSave == null ? CloudSaveAdapter.unavailable() : cloudSave;
 this.thermal = thermal == null ? ThermalService.noOp() : thermal;
 this.offers = offers == null ? OfferConfigService.safeLocal() : offers;
+this.review = review == null ? ReviewService.noOp() : review;
 ⋮----
 public static GameServices noOp() {
 return new GameServices(new AdsService() {
@@ -15131,6 +15165,15 @@ if (onDismissed != null) onDismissed.run();
 ⋮----
 @Override public boolean policyAvailable() { return false; }
 @Override public void openPolicy() { }
+````
+
+## File: core/src/main/java/com/deadlinezero/game/services/ReviewService.java
+````java
+/** Platform boundary for optional store-managed in-app review prompts. */
+public interface ReviewService {
+void requestReview();
+⋮----
+static ReviewService noOp() {
 ````
 
 ## File: core/src/main/java/com/deadlinezero/game/services/ShareService.java
@@ -23000,6 +23043,17 @@ for (String id : ids) owned.add(id);
 @Override public boolean authoritativeEntitlements() { return authoritative; }
 @Override public void purchase(String productId, Runnable onSuccess, Runnable onFailure) { onFailure.run(); }
 @Override public void restore() { }
+````
+
+## File: core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java
+````java
+final class ReviewPromptPolicyTest {
+@Test void onlyMeaningfulFirstClearIsEligible() {
+assertFalse(ReviewPromptPolicy.eligible(false, 5));
+assertFalse(ReviewPromptPolicy.eligible(true, 1));
+assertFalse(ReviewPromptPolicy.eligible(true, 2));
+assertTrue(ReviewPromptPolicy.eligible(true, 3));
+assertTrue(ReviewPromptPolicy.eligible(true, 20));
 ````
 
 ## File: core/src/test/java/com/deadlinezero/game/meta/RunLoadoutContextResetTest.java

@@ -9,10 +9,10 @@
     "top_score": 36
   },
   "cache": {
-    "fingerprint": "1e68f985551927cee64d5a14bb330e374b15369d5f3dce2504c8b7ed356ed678",
+    "fingerprint": "691b2de913cd25bc988389b92040d5645f5123c97c3df4593e64a43474450131",
     "hit": false
   },
-  "candidate_count": 395,
+  "candidate_count": 399,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,7 +20,7 @@
       "matched_terms": [
         "game"
       ],
-      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "path": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
       "reasons": [
         "impact",
         "recently-changed",
@@ -28,25 +28,7 @@
       ],
       "score": 36,
       "symbols": [
-        "AbilitySystem",
-        "Listener",
-        "arc",
-        "currentLeaperChance",
-        "damageEnemy",
-        "explode",
-        "impact",
-        "interceptHostileProjectile",
-        "nearest",
-        "onEnemySpawned",
-        "runtime",
-        "update",
-        "updateCryo",
-        "updateDrone",
-        "updateHomingMissiles",
-        "updateLeapers",
-        "updateMissiles",
-        "updateOrbital",
-        "updateTesla"
+        "AndroidLauncher"
       ]
     },
     {
@@ -54,7 +36,7 @@
       "matched_terms": [
         "game"
       ],
-      "path": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
+      "path": "android/src/main/java/com/deadlinezero/game/android/AndroidReviewService.java",
       "reasons": [
         "impact",
         "recently-changed",
@@ -62,76 +44,7 @@
       ],
       "score": 36,
       "symbols": [
-        "AudioCueLimiter",
-        "allow",
-        "minIntervalNanos",
-        "reset"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-      "reasons": [
-        "impact",
-        "recently-changed",
-        "search-index"
-      ],
-      "score": 36,
-      "symbols": [
-        "AudioDirector",
-        "Cue",
-        "applyMusicVolume",
-        "dispose",
-        "fallbackCue",
-        "load",
-        "loadMusic",
-        "normalizeVolume",
-        "play",
-        "playGlobal",
-        "resolveMusic",
-        "resolveSound",
-        "resume",
-        "setVolumes",
-        "startCombatMusic",
-        "stopCombatMusic",
-        "suspend"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-      "reasons": [
-        "impact",
-        "search-index"
-      ],
-      "score": 33,
-      "symbols": [
-        "AndroidGameplayVisualProbeTest",
-        "activity",
-        "capture",
-        "capturesChampionVariantCrowd",
-        "capturesCinderGunnerGameplayAndAttackFrames",
-        "capturesCloudSaveScreen",
-        "capturesCryoVaultGameplay",
-        "capturesCryogenicDepthsGameplay",
-        "capturesExpandedUpgradePoolOverlay",
-        "capturesForgeHoundGameplayAndAttackFrames",
-        "capturesFrostColossusGameplay",
-        "capturesGraphicsQualitySettings",
-        "capturesHarvesterGameplayAndAttackFrames",
-        "capturesNullArchonGameplayAndAttackFrames",
-        "capturesNullWardGameplayAndAttackFrames",
-        "capturesPhaseStalkerGameplayAndAttackFrames",
-        "capturesRevenantGameplayAndAttackFrames",
-        "capturesSlagGuardGameplayAndAttackFrames",
-        "capturesStaticSeerGameplayAndAttackFrames",
-        "capturesWardenGameplayAndAttackFrames"
+        "AndroidReviewService"
       ]
     },
     {
@@ -169,19 +82,67 @@
       "matched_terms": [
         "game"
       ],
-      "path": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 33,
+      "score": 27,
       "symbols": [
-        "Player",
-        "addXp",
-        "canDash",
-        "invulnerable",
-        "triggerDash",
-        "updateRuntime"
+        "AndroidFirstPlayableJourneyTest",
+        "activity",
+        "game",
+        "run",
+        "traversesContractCombatDefeatAndVictorySettlement"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "reasons": [
+        "search-index"
+      ],
+      "score": 27,
+      "symbols": [
+        "AndroidGameplayVisualProbeTest",
+        "activity",
+        "capture",
+        "capturesChampionVariantCrowd",
+        "capturesCinderGunnerGameplayAndAttackFrames",
+        "capturesCloudSaveScreen",
+        "capturesCryoVaultGameplay",
+        "capturesCryogenicDepthsGameplay",
+        "capturesExpandedUpgradePoolOverlay",
+        "capturesForgeHoundGameplayAndAttackFrames",
+        "capturesFrostColossusGameplay",
+        "capturesGraphicsQualitySettings",
+        "capturesHarvesterGameplayAndAttackFrames",
+        "capturesNullArchonGameplayAndAttackFrames",
+        "capturesNullWardGameplayAndAttackFrames",
+        "capturesPhaseStalkerGameplayAndAttackFrames",
+        "capturesRevenantGameplayAndAttackFrames",
+        "capturesSlagGuardGameplayAndAttackFrames",
+        "capturesStaticSeerGameplayAndAttackFrames",
+        "capturesWardenGameplayAndAttackFrames"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java",
+      "reasons": [
+        "search-index"
+      ],
+      "score": 27,
+      "symbols": [
+        "AndroidLauncherSmokeTest",
+        "assertAttachedAndAlive",
+        "launcherCreatesRealLibgdxSurfaceAndStaysAlive",
+        "launcherSurvivesBackgroundForegroundAndActivityRecreation"
       ]
     }
   ],

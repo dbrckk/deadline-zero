@@ -1,23 +1,20 @@
 # Change impact
 
-Base: 10ed778f71a560d87edd208e1812571f04d8c6f8
-Head: ef58d5da53db6d0aa895e94a73d59c68347b4654
+Base: c6148a6b5e3b77c1ec0d25df11d8695587d8859f
+Head: ae87d0e2309f42e8b9ed7277966de00410f7e134
 
 ## Changed files
-- M assets/i18n/messages.properties
-- M core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java
-- M core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java
-- M core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java
-- M core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java
-- M core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java
-- M core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java
-- M core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java
-- M core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java
-- M core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java
-- M core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java
+- M android/build.gradle
+- M android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java
+- A android/src/main/java/com/deadlinezero/game/android/AndroidReviewService.java
+- A core/src/main/java/com/deadlinezero/game/meta/ReviewPromptPolicy.java
+- M core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java
+- M core/src/main/java/com/deadlinezero/game/services/GameServices.java
+- A core/src/main/java/com/deadlinezero/game/services/ReviewService.java
+- A core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java
 
 ## Affected areas
-- assets
+- android
 - core
 
 ## Related test candidates

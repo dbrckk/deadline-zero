@@ -65,6 +65,7 @@ src/
               AndroidLauncher.java
               AndroidPlayGamesCloudSaveAdapter.java
               AndroidPrivacyService.java
+              AndroidReviewService.java
               AndroidShareService.java
               AndroidThermalService.java
 build.gradle
@@ -1380,7 +1381,9 @@ new AndroidPrivacyService(this, consent),
 new AndroidShareService(this),
 new AndroidHapticsService(this),
 ⋮----
-new AndroidThermalService(this)
+new AndroidThermalService(this),
+com.deadlinezero.game.services.OfferConfigService.safeLocal(),
+new AndroidReviewService(this)
 ⋮----
 consent.gatherConsent(() -> {
 if (!consent.canRequestAds()) return;
@@ -1523,6 +1526,20 @@ return activity != null && url != null && url.startsWith("https://") && url.leng
 if (!policyAvailable()) return;
 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_POLICY_URL));
 activity.startActivity(intent);
+```
+
+## File: src/main/java/com/deadlinezero/game/android/AndroidReviewService.java
+```java
+public final class AndroidReviewService implements ReviewService {
+⋮----
+this.manager = ReviewManagerFactory.create(activity);
+⋮----
+@Override public void requestReview() {
+⋮----
+manager.requestReviewFlow().addOnCompleteListener(request -> {
+if (!request.isSuccessful()) {
+⋮----
+manager.launchReviewFlow(activity, request.getResult()).addOnCompleteListener(flow -> {
 ```
 
 ## File: src/main/java/com/deadlinezero/game/android/AndroidShareService.java
@@ -1677,6 +1694,7 @@ dependencies {
     implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
     implementation 'com.android.billingclient:billing:9.1.0'
     implementation 'com.google.android.gms:play-services-games-v2:22.0.0'
+    implementation 'com.google.android.play:review:2.0.2'
 
     androidTestImplementation 'androidx.test:core:1.6.1'
     androidTestImplementation 'androidx.test:runner:1.6.2'
