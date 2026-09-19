@@ -41,11 +41,63 @@ final class CombatProtocolStateTest {
         assertEquals(1, proc.bonusPenetration());
     }
 
+    @Test void evolvedRhythmProcsEveryFourthVolleyAtHigherDamage() {
+        CombatProtocolState state = new CombatProtocolState();
+        state.enableRhythm();
+        state.evolveRhythm();
+        for (int i = 0; i < 3; i++) assertEquals(1f, state.onVolley().damageMultiplier(), .0001f);
+        var proc = state.onVolley();
+        assertTrue(proc.forcedCrit());
+        assertEquals(1.45f, proc.damageMultiplier(), .0001f);
+    }
+
+    @Test void evolvedKillchainArmsAfterFiveKillsWithTwoPenetration() {
+        CombatProtocolState state = new CombatProtocolState();
+        state.enableKillchain();
+        state.evolveKillchain();
+        for (int i = 0; i < 4; i++) assertFalse(state.onKill());
+        assertTrue(state.onKill());
+        var proc = state.onVolley();
+        assertEquals(1.60f, proc.damageMultiplier(), .0001f);
+        assertEquals(2, proc.bonusPenetration());
+    }
+
+    @Test void evolvedCombinedProcRemainsCapped() {
+        CombatProtocolState state = new CombatProtocolState();
+        state.enableRhythm();
+        state.evolveRhythm();
+        state.enableKillchain();
+        state.evolveKillchain();
+        for (int i = 0; i < 3; i++) state.onVolley();
+        for (int i = 0; i < 5; i++) state.onKill();
+        var proc = state.onVolley();
+        assertEquals(2.05f, proc.damageMultiplier(), .0001f);
+        assertTrue(proc.forcedCrit());
+        assertEquals(2, proc.bonusPenetration());
+    }
+
     @Test void reactionCoreOnlyAmplifiesRealElementReactions() {
         CombatProtocolState state = new CombatProtocolState();
         state.enableReactionCore();
         assertEquals(0f, state.reactionBonus(100f, Enemy.ElementReaction.NONE), .0001f);
         assertEquals(35f, state.reactionBonus(100f, Enemy.ElementReaction.OVERLOAD), .0001f);
         assertEquals(0f, state.reactionBonus(-5f, Enemy.ElementReaction.THERMAL_SHOCK), .0001f);
+    }
+
+    @Test void evolvedReactionCoreRaisesBonusToFiftyFivePercent() {
+        CombatProtocolState state = new CombatProtocolState();
+        state.enableReactionCore();
+        state.evolveReactionCore();
+        assertEquals(55f, state.reactionBonus(100f, Enemy.ElementReaction.OVERLOAD), .0001f);
+    }
+
+    @Test void evolutionsCannotActivateBeforeTheirBaseProtocol() {
+        CombatProtocolState state = new CombatProtocolState();
+        state.evolveRhythm();
+        state.evolveKillchain();
+        state.evolveReactionCore();
+        assertFalse(state.rhythmEvolved());
+        assertFalse(state.killchainEvolved());
+        assertFalse(state.reactionEvolved());
     }
 }
