@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T22:01:53Z
+Generated: 2026-09-19T23:03:00Z
 
 ### Git
 - Branch: `main`
-- Head: `a3d2a6371fcd`
-- Commit date: 2026-09-20T00:01:41+02:00
-- Commit: Close the Rex canonical source-sheet gap (#218)
-- Tracked files: 723
+- Head: `0979fc57ff30`
+- Commit date: 2026-09-20T01:02:49+02:00
+- Commit: Restore Rex Android visual probe (#220)
+- Tracked files: 724
 
 ### Recently changed files
+- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
 - `.github/workflows/rex-animation-smoke.yml`
 - `.github/workflows/rex-publish-current.yml`
 - `.github/workflows/verify.yml`
@@ -51,7 +52,6 @@ Generated: 2026-09-19T22:01:53Z
 - `core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java`
 - `core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java`
 - `core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java`
-- `core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java`
 
 ### Project signals
 - `build.gradle`

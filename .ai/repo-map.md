@@ -3423,6 +3423,22 @@ choosingLegendary.setBoolean(screen, false);
 ⋮----
 throw new AssertionError("unable to inject expanded upgrade choices for visual QA", exception);
 ⋮----
+public void capturesRexGameplayAndAttackFrames() throws Exception {
+⋮----
+assertTrue("expected GameScreen for Rex visual probe", game.getScreen() instanceof GameScreen);
+assertTrue("visual probe must run the production REX selection",
+⋮----
+Thread.sleep(2200L);
+capture("rex-gameplay.png");
+⋮----
+runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
+⋮----
+capture("rex-shambler-crowd.png");
+⋮----
+runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
+Thread.sleep(80L);
+capture("rex-attack.png");
+⋮----
 public void capturesWraithGameplayAndAttackFrames() throws Exception {
 ⋮----
 // Exercise WRAITH through the real selected-survivor runtime path. Direct assignment is
@@ -3431,17 +3447,13 @@ public void capturesWraithGameplayAndAttackFrames() throws Exception {
 assertTrue("expected GameScreen for visual probe", game.getScreen() instanceof GameScreen);
 assertTrue("visual probe must run the production WRAITH selection",
 ⋮----
-Thread.sleep(2200L);
 capture("wraith-gameplay.png");
 ⋮----
 // Deterministic authored-enemy composition. Reflection stays instrumentation-only so
 // production GameScreen does not gain QA API surface.
-runOnGameThread(activity, () -> injectAuthoredEnemyCrowd((GameScreen) game(activity).getScreen()));
 ⋮----
 capture("wraith-crowd.png");
 ⋮----
-runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
-Thread.sleep(80L);
 capture("wraith-attack.png");
 ⋮----
 public void capturesRevenantGameplayAndAttackFrames() throws Exception {

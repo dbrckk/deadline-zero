@@ -1,23 +1,13 @@
 # Change impact
 
-Base: fe66bf52b09488a64651bff2acc1a2c7a4964718
-Head: a3d2a6371fcd33be80067f82c9c65cbb14f3226f
+Base: 33e8cdf9f6032efb95ccd2662a7bb4f539c2c58f
+Head: 0979fc57ff3013135b273c5597253afa2ca95cd6
 
 ## Changed files
-- M .github/workflows/rex-animation-smoke.yml
-- M .github/workflows/rex-publish-current.yml
-- M .github/workflows/verify.yml
-- M art_sources/README.md
-- M docs/final-art-production-spec.md
-- M tools/blender/build_rex_actions.py
-- A tools/sprites/assemble_actor_sheet.py
-- A tools/sprites/audit_final_art_status.py
+- M android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java
 
 ## Affected areas
-- .github
-- art_sources
-- docs
-- tools
+- android
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -5,264 +5,3645 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "parse_args": {
+    "AndroidGameplayVisualProbeTest": {
       "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 25,
-        "end": 31
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "reset_scene": {
-      "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 34,
-        "end": 36
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "import_asset": {
-      "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 39,
-        "end": 46
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "armature_and_meshes": {
-      "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 49,
-        "end": 63
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "bounds": {
-      "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 66,
-        "end": 70
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "ground_actor": {
-      "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 73,
-        "end": 85
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 33,
+        "end": 948
       },
       "symbol_dependencies": [
         {
-          "symbol": "bounds",
+          "symbol": "Achievement",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 66,
-              "kind": "function",
-              "language": "python"
+              "file": "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "AchievementService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Biome",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "BossIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "CloudSaveScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+              "line": 29,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "CombatVisualEvents",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EnemyState",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyState.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EnvironmentBiomeRules",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GraphicsSettings",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 7,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MissionsScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+              "line": 29,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Quality",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 9,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "SettingsScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+              "line": 25,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Survivor",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "SurvivorCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Upgrade",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+              "line": 14,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Variant",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 21,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesChampionVariantCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 97,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesCinderGunnerGameplayAndAttackFrames",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 412,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesCloudSaveScreen",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 83,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesCryoVaultGameplay",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 378,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesCryogenicDepthsGameplay",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 344,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesExpandedUpgradePoolOverlay",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 140,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesForgeHoundGameplayAndAttackFrames",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 729,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesFrostColossusGameplay",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 310,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesGraphicsQualitySettings",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 63,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesHarvesterGameplayAndAttackFrames",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 287,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capturesNullArchonGameplayAndAttackFrames",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 794,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 40
     },
-    "clear_actions": {
+    "capturesWeeklyMissionsScreen": {
       "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 88,
-        "end": 93
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "zero_pose": {
-      "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 96,
-        "end": 101
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "apply_pose": {
-      "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 104,
-        "end": 112
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "key_pose": {
-      "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 115,
-        "end": 118
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "make_action": {
-      "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 121,
-        "end": 136
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 35,
+        "end": 60
       },
       "symbol_dependencies": [
         {
-          "symbol": "apply_pose",
+          "symbol": "Achievement",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 104,
-              "kind": "function",
-              "language": "python"
+              "file": "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "AchievementService",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "MissionsScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+              "line": 29,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "key_pose",
+          "symbol": "capture",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 115,
-              "kind": "function",
-              "language": "python"
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "zero_pose",
+          "symbol": "game",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 96,
-              "kind": "function",
-              "language": "python"
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "showMissions",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 99,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 10
+    },
+    "capturesGraphicsQualitySettings": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 62,
+        "end": 80
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GraphicsSettings",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 7,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Quality",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 9,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "SettingsScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+              "line": 25,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "showSettings",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 102,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 10
+    },
+    "capturesCloudSaveScreen": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 82,
+        "end": 94
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "CloudSaveScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+              "line": 29,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "showCloudSave",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 103,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "capturesChampionVariantCrowd": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 96,
+        "end": 111
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectChampionVariantCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 114,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 14
+    },
+    "injectChampionVariantCrowd": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 113,
+        "end": 137
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Variant",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 21,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "capturesExpandedUpgradePoolOverlay": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 139,
+        "end": 153
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectUpgradeChoices",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 154,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 12
+    },
+    "injectUpgradeChoices": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 155,
+        "end": 174
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Upgrade",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+              "line": 14,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "capturesRexGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 176,
+        "end": 202
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "CombatVisualEvents",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Survivor",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "SurvivorCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "markPlayerShot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 24,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "capturesWraithGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 204,
+        "end": 234
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "CombatVisualEvents",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Survivor",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "SurvivorCatalog",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "markPlayerShot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 24,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "capturesRevenantGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 236,
+        "end": 261
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "CombatVisualEvents",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectRevenantBoss",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 853,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "markPlayerShot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 24,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 17
+    },
+    "capturesWardenGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 263,
+        "end": 284
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "CombatVisualEvents",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectWardenBoss",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 841,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "markPlayerShot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 24,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 17
+    },
+    "capturesHarvesterGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 286,
+        "end": 307
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "CombatVisualEvents",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectHarvesterBoss",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 829,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "markPlayerShot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 24,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 17
+    },
+    "capturesFrostColossusGameplay": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 309,
+        "end": 327
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "BossIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectFrostColossusBoss",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 330,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "stage",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 25,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "injectFrostColossusBoss": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 329,
+        "end": 341
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
         }
       ],
       "dependency_count": 3
     },
-    "build_actions": {
+    "capturesCryogenicDepthsGameplay": {
       "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 139,
-        "end": 232
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 343,
+        "end": 361
       },
       "symbol_dependencies": [
         {
-          "symbol": "make_action",
+          "symbol": "AndroidLauncher",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 121,
-              "kind": "function",
-              "language": "python"
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Biome",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EnvironmentBiomeRules",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectCryogenicDepthsCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 364,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "stage",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 25,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 17
     },
-    "main": {
+    "injectCryogenicDepthsCrowd": {
       "source": {
-        "file": "tools/blender/build_rex_actions.py",
-        "start": 235,
-        "end": 355
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 363,
+        "end": 375
       },
       "symbol_dependencies": [
         {
-          "symbol": "armature_and_meshes",
+          "symbol": "Enemy",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 49,
-              "kind": "function",
-              "language": "python"
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "capturesCryoVaultGameplay": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 377,
+        "end": 395
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Biome",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+              "line": 5,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EnvironmentBiomeRules",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "build_actions",
+          "symbol": "begin",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 139,
-              "kind": "function",
-              "language": "python"
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "clear_actions",
+          "symbol": "game",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 88,
-              "kind": "function",
-              "language": "python"
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "ground_actor",
+          "symbol": "injectCryoVaultCrowd",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 73,
-              "kind": "function",
-              "language": "python"
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 398,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "import_asset",
+          "symbol": "offers",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 39,
-              "kind": "function",
-              "language": "python"
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "parse_args",
+          "symbol": "stage",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
               "line": 25,
-              "kind": "function",
-              "language": "python"
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 17
+    },
+    "injectCryoVaultCrowd": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 397,
+        "end": 409
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "capturesCinderGunnerGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 411,
+        "end": 434
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
         },
         {
-          "symbol": "reset_scene",
+          "symbol": "begin",
           "definitions": [
             {
-              "file": "tools/blender/build_rex_actions.py",
-              "line": 34,
-              "kind": "function",
-              "language": "python"
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "forceCinderGunnerAttack",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 452,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectCinderGunner",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 437,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "injectCinderGunner": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 436,
+        "end": 449
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "stage",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 25,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "forceCinderGunnerAttack": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 451,
+        "end": 474
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EnemyState",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyState.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
             }
           ],
           "relation": "same_file"
@@ -270,23 +3651,2630 @@
       ],
       "dependency_count": 7
     },
-    "sha256": {
+    "capturesNullWardGameplayAndAttackFrames": {
       "source": {
-        "file": "tools/sprites/assemble_actor_sheet.py",
-        "start": 38,
-        "end": 43
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 476,
+        "end": 497
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "forceNullWardAttack",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 515,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectNullWard",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 500,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "injectNullWard": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 499,
+        "end": 512
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "stage",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 25,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "forceNullWardAttack": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 514,
+        "end": 537
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EnemyState",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyState.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "capturesStaticSeerGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 539,
+        "end": 560
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "forceStaticSeerAttack",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 578,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectStaticSeer",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 563,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "injectStaticSeer": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 562,
+        "end": 575
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "stage",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 25,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "forceStaticSeerAttack": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 577,
+        "end": 600
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EnemyState",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyState.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "capturesPhaseStalkerGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 602,
+        "end": 623
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "forcePhaseStalkerAttack",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 641,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectPhaseStalker",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 626,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "injectPhaseStalker": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 625,
+        "end": 638
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "stage",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 25,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "forcePhaseStalkerAttack": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 640,
+        "end": 663
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EnemyState",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyState.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "capturesSlagGuardGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 665,
+        "end": 686
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "forceSlagGuardAttack",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 704,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectSlagGuard",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 689,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "injectSlagGuard": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 688,
+        "end": 701
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "stage",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 25,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "forceSlagGuardAttack": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 703,
+        "end": 726
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EnemyState",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyState.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "capturesForgeHoundGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 728,
+        "end": 751
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "forceForgeHoundAttack",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 769,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectForgeHound",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 754,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "injectForgeHound": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 753,
+        "end": 766
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "stage",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 25,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "forceForgeHoundAttack": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 768,
+        "end": 791
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "BiomeEnemyRoster",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 12,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "EnemyState",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyState.java",
+              "line": 4,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Identity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+              "line": 13,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "biomeIdentity",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 457,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "capturesNullArchonGameplayAndAttackFrames": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 793,
+        "end": 814
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "CombatVisualEvents",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunStageContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "begin",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 91,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 10,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 14,
+              "kind": "symbol",
+              "language": "java"
+            },
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+              "line": 18,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "capture",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 898,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectAuthoredEnemyCrowd",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 865,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "injectNullArchonBoss",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 817,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "markPlayerShot",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+              "line": 24,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 938,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 17
+    },
+    "injectNullArchonBoss": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 816,
+        "end": 826
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "injectHarvesterBoss": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 828,
+        "end": 838
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "injectWardenBoss": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 840,
+        "end": 850
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "injectRevenantBoss": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 852,
+        "end": 862
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "injectAuthoredEnemyCrowd": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 864,
+        "end": 897
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 59,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Type",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 20,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "capture": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 899,
+        "end": 923
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "manifest_path": {
+    "activity": {
       "source": {
-        "file": "tools/sprites/audit_final_art_status.py",
-        "start": 20,
-        "end": 28
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 925,
+        "end": 931
       },
-      "symbol_dependencies": [],
-      "dependency_count": 0
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "game": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 933,
+        "end": 937
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "runOnGameThread": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "start": 939,
+        "end": 947
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 924,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+              "line": 932,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
     }
   }
 }
