@@ -8,9 +8,11 @@ import com.deadlinezero.game.entities.Player;
 public final class ActiveBuildStatus {
     private ActiveBuildStatus() {}
 
-    public static String[] keys(Player player) {
-        String[] out = new String[2];
-        if (player == null) return out;
+    public static void fill(Player player, String[] out) {
+        if (out == null || out.length < 2) throw new IllegalArgumentException("out");
+        out[0] = null;
+        out[1] = null;
+        if (player == null) return;
         AbilityLoadout a = player.abilities;
         int index = 0;
 
@@ -20,7 +22,6 @@ public final class ActiveBuildStatus {
 
         String synergy = primarySynergy(a);
         if (synergy != null && index < out.length) out[index] = synergy;
-        return out;
     }
 
     static String primarySynergy(AbilityLoadout a) {
