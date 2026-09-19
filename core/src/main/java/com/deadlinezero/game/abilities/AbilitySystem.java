@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.deadlinezero.game.ai.LeaperRuntime;
+import com.deadlinezero.game.audio.AudioDirector;
 import com.deadlinezero.game.ai.LeaperSharedRuntime;
 import com.deadlinezero.game.combat.DamageElement;
 import com.deadlinezero.game.entities.Enemy;
@@ -19,6 +20,7 @@ import com.deadlinezero.game.meta.RunStageContext;
 import com.deadlinezero.game.meta.StageMissionRules;
 import com.deadlinezero.game.util.Pools;
 import com.deadlinezero.game.world.LeaperSpawnRules;
+import com.deadlinezero.game.visual.CombatVisualEvents;
 import com.deadlinezero.game.world.SpatialHash;
 import com.deadlinezero.game.world.WaveDirector;
 
@@ -282,6 +284,8 @@ public final class AbilitySystem {
         best.active = false;
         arc(droneX, droneY, best.position.x, best.position.y, .10f);
         impact(best.position.x, best.position.y, .42f, .12f, Color.CYAN);
+        CombatVisualEvents.markSentinelIntercept();
+        AudioDirector.playGlobal(AudioDirector.Cue.SENTINEL_BLOCK);
         return true;
     }
 

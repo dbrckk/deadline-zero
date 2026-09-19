@@ -29,6 +29,7 @@ public final class CombatHudRenderer {
     private static final Color HARVESTER_COLOR = new Color(.96f, .42f, .10f, 1f);
     private static final Color NULL_ARCHON_COLOR = new Color(.52f, .42f, 1f, 1f);
     private final Matrix4 projection = new Matrix4();
+    private final String[] activeBuildKeys = new String[2];
     private float damageFlash;
     private final Localization i18n;
 
@@ -214,6 +215,7 @@ public final class CombatHudRenderer {
             layout.dashX() - layout.dashRadius(), layout.dashY() + 4f * s, layout.dashRadius() * 2f, Align.center, false);
 
         drawSynergyUnlock(batch, font, layout, s);
+        drawSentinelIntercept(batch, font, layout, s);
         drawProtocolCue(batch, font, layout, s);
         drawOnboardingHint(batch, font, layout, s);
         batch.end();
@@ -221,11 +223,11 @@ public final class CombatHudRenderer {
 
     private void drawBuildStatus(SpriteBatch batch, BitmapFont font, Player player,
                                  CombatHudLayout.Layout layout, float s) {
-        String[] keys = ActiveBuildStatus.keys(player);
-        if (keys[0] == null) return;
-        String text = keys[1] == null
-            ? f("hud.build.summaryOne", t(keys[0]))
-            : f("hud.build.summaryTwo", t(keys[0]), t(keys[1]));
+        ActiveBuildStatus.fill(player, activeBuildKeys);
+        if (activeBuildKeys[0] == null) return;
+        String text = activeBuildKeys[1] == null
+            ? f("hud.build.summaryOne", t(activeBuildKeys[0]))
+            : f("hud.build.summaryTwo", t(activeBuildKeys[0]), t(activeBuildKeys[1]));
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .82f * s);
         font.setColor(VisualTheme.CYAN_SOFT);
         font.draw(batch, text, layout.timeline().x, layout.timeline().y - 14f * s,
@@ -241,6 +243,16 @@ public final class CombatHudRenderer {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY) * 1.12f * s);
         font.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b, alpha);
         font.draw(batch, t(key), layout.timeline().x, layout.timeline().y + 88f * s,
+            layout.timeline().width, Align.center, false);
+    }
+
+    private void drawSentinelIntercept(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
+        float age = CombatVisualEvents.sentinelInterceptAgeSeconds();
+        if (age > .72f) return;
+        float alpha = MathUtils.clamp(1f - age / .72f, 0f, 1f);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .94f * s);
+        font.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha);
+        font.draw(batch, t("hud.sentinelBlock"), layout.timeline().x, layout.timeline().y + 44f * s,
             layout.timeline().width, Align.center, false);
     }
 

@@ -27,6 +27,16 @@ final class CombatVisualEventsProtocolTest {
         assertEquals(0L, CombatVisualEvents.protocolSerial());
     }
 
+    @Test void sentinelInterceptPublishesAndResets() {
+        CombatVisualEvents.reset();
+        CombatVisualEvents.markSentinelIntercept();
+        assertEquals(1L, CombatVisualEvents.sentinelInterceptSerial());
+        assertTrue(CombatVisualEvents.sentinelInterceptAgeSeconds() < 1f);
+
+        CombatVisualEvents.reset();
+        assertEquals(0L, CombatVisualEvents.sentinelInterceptSerial());
+    }
+
     @Test void synergyUnlockPublishesAndResets() {
         CombatVisualEvents.reset();
         CombatVisualEvents.markSynergy("hud.synergyUnlocked.arcReactor");
