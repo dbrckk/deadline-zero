@@ -12,10 +12,10 @@ final class ProfileMigrationDocumentationTest {
         Path root = repositoryRoot();
         String contract = Files.readString(root.resolve("docs/PROFILE_MIGRATIONS.md"), StandardCharsets.UTF_8);
 
-        assertTrue(contract.contains("- Current version: \`" + ProfileSchema.CURRENT_VERSION + "\`"),
+        assertTrue(contract.contains("- Current version: `" + ProfileSchema.CURRENT_VERSION + "`"),
             "PROFILE_MIGRATIONS.md must track ProfileSchema.CURRENT_VERSION");
-        assertTrue(contract.contains("Version \`1 -> 2\`"));
-        assertTrue(contract.contains("Version \`2 -> 3\`"));
+        assertTrue(contract.contains("Version `1 -> 2`"));
+        assertTrue(contract.contains("Version `2 -> 3`"));
         assertTrue(contract.contains("newer unsupported schema remains untouched"));
     }
 
