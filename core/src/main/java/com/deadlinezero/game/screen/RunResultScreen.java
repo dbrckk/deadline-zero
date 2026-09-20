@@ -124,8 +124,8 @@ public final class RunResultScreen extends ScreenAdapter {
             hero.x + 24f, hero.y + hero.height * .25f, hero.width * .48f, Align.center, false);
         font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
         font.setColor(VisualTheme.accent());
-        font.draw(batch, "+" + result.contractBonusPercent() + "%", hero.x + 24f,
-            hero.y + hero.height * .13f, hero.width * .48f, Align.center, false);
+        font.draw(batch, f("result.contract", result.contractTitle(), result.contractBonusPercent()),
+            hero.x + 24f, hero.y + hero.height * .13f, hero.width * .48f, Align.center, false);
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(result.threatTier() > 0 ? VisualTheme.GOLD : VisualTheme.TEXT_DIM);
         font.draw(batch, f("result.threat", result.threatTier(), result.threatBonusPercent()),
