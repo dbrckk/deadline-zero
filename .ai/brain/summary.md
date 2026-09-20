@@ -5,8 +5,8 @@
 - Files reparsed this run: 1
 - Symbols: 2568
 - Internal import edges: 658
-- Impacted files: 2
-- Selected tests: 0
+- Impacted files: 8
+- Selected tests: 6
 
 ## Languages
 - java: 402 files

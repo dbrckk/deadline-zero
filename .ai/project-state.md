@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T18:33:19Z
+Generated: 2026-09-20T18:42:38Z
 
 ### Git
 - Branch: `main`
-- Head: `361d73fec640`
-- Commit date: 2026-09-20T20:33:05+02:00
-- Commit: ui(combat): add premium HUD rail and dash treatment (#245)
+- Head: `fbc9c5aceff7`
+- Commit date: 2026-09-20T20:42:25+02:00
+- Commit: ui(combat): premiumize upgrade and legendary choice overlays (#246)
 - Tracked files: 834
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
 - `assets/art/environment-cinder_foundry.png`
 - `assets/art/environment-cryo_vault.png`
@@ -51,7 +52,6 @@ Generated: 2026-09-20T18:33:19Z
 - `art_sources/environment/cryogenic_depths/floor/concrete_c.png`
 - `art_sources/environment/cryogenic_depths/floor/hazard_a.png`
 - `art_sources/environment/null_sector/floor/concrete_a.png`
-- `art_sources/environment/null_sector/floor/concrete_b.png`
 
 ### Project signals
 - `build.gradle`

@@ -5671,21 +5671,45 @@ private void drawHud() {
 float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
 combatHud.render(shapes, batch, font, player, director, enemies, w, h);
 ⋮----
-if (choosingUpgrade) drawUpgradeBackdrop(w, h);
+if (choosingUpgrade || choosingLegendary) drawChoiceBackdrop(w, h, choosingLegendary);
 batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 ⋮----
 if (choosingLegendary) drawLegendaryText(w, h);
 else if (choosingUpgrade) drawUpgradeText(w, h);
 if (gameOver) drawGameOverText(w, h);
 ⋮----
-private void drawUpgradeBackdrop(float w, float h) {
+private void drawChoiceBackdrop(float w, float h, boolean legendary) {
 shapes.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 ⋮----
-shapes.setColor(.018f, .026f, .032f, 1f);
-shapes.rect(w * .08f, h * .28f, w * .84f, h * .45f);
+shapes.setColor(.004f, .008f, .013f, .82f);
+shapes.rect(0f, 0f, w, h);
 ⋮----
-shapes.setColor(.035f, .050f, .060f, 1f);
-shapes.rect(centerX - cardWidth * .5f, h * .35f, cardWidth, cardHeight);
+shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .985f);
+shapes.rect(panelX, panelY, panelW, panelH);
+Color panelAccent = legendary ? VisualTheme.GOLD : VisualTheme.accent();
+shapes.setColor(panelAccent.r, panelAccent.g, panelAccent.b, legendary ? .42f : .28f);
+shapes.rect(panelX, panelY + panelH - 3f, panelW, 3f);
+shapes.rect(panelX, panelY, panelW, 2f);
+⋮----
+int count = legendary ? Math.max(1, legendaryChoiceCount) : 3;
+float cardWidth = Math.min(w * .27f, panelW / Math.max(3f, count) - w * .018f);
+⋮----
+Color accent = legendary ? VisualTheme.GOLD : VisualTheme.upgradeRarity(choices[i].rarity);
+⋮----
+shapes.setColor(VisualTheme.SURFACE_1.r, VisualTheme.SURFACE_1.g, VisualTheme.SURFACE_1.b, .99f);
+shapes.rect(left, cardY, cardWidth, cardHeight);
+shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .92f);
+shapes.rect(left, cardY, cardWidth, 2f);
+shapes.rect(left, cardY + cardHeight - 2f, cardWidth, 2f);
+shapes.rect(left, cardY, 2f, cardHeight);
+shapes.rect(left + cardWidth - 2f, cardY, 2f, cardHeight);
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, legendary ? .96f : .82f);
+shapes.rect(left, cardY + cardHeight - 5f, cardWidth, 5f);
+shapes.rect(left, cardY, 4f, cardHeight);
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, legendary ? .10f : .06f);
+shapes.rect(left + 6f, cardY + 6f, Math.max(0f, cardWidth - 12f), Math.max(0f, cardHeight - 12f));
 ⋮----
 private void drawLegendaryText(float w, float h) {
 font.getData().setScale(1.45f);
