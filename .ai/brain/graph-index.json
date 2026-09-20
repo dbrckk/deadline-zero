@@ -1965,6 +1965,31 @@
     },
     {
       "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
+      ],
+      "dependents": [
+        "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+        "android/src/main/java/com/deadlinezero/game/android/AndroidThermalService.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java",
+        "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+        "core/src/test/java/com/deadlinezero/game/meta/BalanceHealthRulesTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryReportTest.java",
+        "tools/sprites/audit_final_art_status.py",
+        "tools/sprites/test_validate_actor_production_contracts.py",
+        "tools/sprites/validate_actor_production_contracts.py",
+        "tools/sprites/validate_final_art_promotion_consistency.py"
+      ],
+      "in_degree": 15,
+      "out_degree": 1,
+      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java"
+    },
+    {
+      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/config/AccessibilitySettings.java",
         "core/src/main/java/com/deadlinezero/game/ui/UiLayout.java",
         "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java"
@@ -2062,30 +2087,6 @@
       "in_degree": 2,
       "out_degree": 14,
       "path": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java"
-    },
-    {
-      "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
-      ],
-      "dependents": [
-        "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
-        "android/src/main/java/com/deadlinezero/game/android/AndroidThermalService.java",
-        "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java",
-        "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
-        "core/src/test/java/com/deadlinezero/game/meta/BalanceHealthRulesTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryReportTest.java",
-        "tools/sprites/audit_final_art_status.py",
-        "tools/sprites/test_validate_actor_production_contracts.py",
-        "tools/sprites/validate_actor_production_contracts.py"
-      ],
-      "in_degree": 14,
-      "out_degree": 1,
-      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java"
     },
     {
       "dependencies": [
@@ -2276,8 +2277,8 @@
       "path": "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java"
     }
   ],
-  "edge_count": 2249,
+  "edge_count": 2250,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 429,
+  "node_count": 430,
   "schema_version": 1
 }

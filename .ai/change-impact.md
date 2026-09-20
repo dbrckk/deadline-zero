@@ -1,18 +1,27 @@
 # Change impact
 
-Base: ead1c70a4f5dc3c7968e7c00bf4f7a0887fa4218
-Head: 8442302e3966e168162d29328da1227e010d9121
+Base: 49d5c66dd48048750be6b9b840582529aafb2a2a
+Head: e12ec17ddf81d2017122df070740510480369639
 
 ## Changed files
-- M .github/workflows/enemy-source-catalog.yml
-- M art_sources/README.md
-- M config/actor-production-contracts.json
-- M tools/sprites/audit_final_art_status.py
+- M .github/workflows/verify.yml
+- M assets/art/bastion-manifest.json
+- M assets/art/brute-manifest.json
+- M assets/art/cinder_gunner-manifest.json
+- M assets/art/forge_hound-manifest.json
+- M assets/art/null_archon-manifest.json
+- M assets/art/null_ward-manifest.json
+- M assets/art/phantom-manifest.json
+- M assets/art/phase_stalker-manifest.json
+- M assets/art/runner-manifest.json
+- M assets/art/shielded-manifest.json
+- M assets/art/slag_guard-manifest.json
+- M assets/art/static_seer-manifest.json
+- A tools/sprites/validate_final_art_promotion_consistency.py
 
 ## Affected areas
 - .github
-- art_sources
-- config
+- assets
 - tools
 
 ## Related test candidates

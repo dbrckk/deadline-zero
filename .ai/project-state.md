@@ -22,29 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T09:29:48Z
+Generated: 2026-09-20T09:45:00Z
 
 ### Git
 - Branch: `main`
-- Head: `8442302e3966`
-- Commit date: 2026-09-20T11:29:38+02:00
-- Commit: Reconcile final-art audit with QA evidence
-- Tracked files: 726
+- Head: `e12ec17ddf81`
+- Commit date: 2026-09-20T11:44:49+02:00
+- Commit: Merge pull request #228 from dbrckk/m3-backfill-production-ready-manifests
+- Tracked files: 728
 
 ### Recently changed files
-- `.github/workflows/enemy-source-catalog.yml`
-- `art_sources/README.md`
-- `config/actor-production-contracts.json`
-- `tools/sprites/audit_final_art_status.py`
-- `.github/workflows/shambler-android-acceptance.yml`
-- `core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java`
-- `core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java`
-- `.github/workflows/rex-android-acceptance.yml`
-- `.github/workflows/rex-animation-smoke.yml`
-- `.github/workflows/shambler-animation-smoke.yml`
-- `.github/workflows/shambler-publish-current.yml`
-- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
-- `tools/sprites/normalize_actor_frames.py`
+- `assets/art/phantom-manifest.json`
+- `assets/art/runner-manifest.json`
+- `.github/workflows/verify.yml`
+- `tools/sprites/validate_final_art_promotion_consistency.py`
+- `assets/art/null_ward-manifest.json`
 
 ### Project signals
 - `build.gradle`

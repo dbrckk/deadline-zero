@@ -587,6 +587,7 @@ tools/
     upsert_directional_actor_atlas.py
     validate_actor_production_contracts.py
     validate_actor_role_metrics.py
+    validate_final_art_promotion_consistency.py
     validate_ranged_attack_readability.py
   build_final_sprite_frames.py
   import_pixellab_idle.py
@@ -3377,11 +3378,12 @@ jobs:
           gradle-version: '8.11.1'
       - name: Validate final sprite production layout
         run: |
-          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/assemble_actor_sheet.py tools/sprites/audit_final_art_status.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py
+          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/assemble_actor_sheet.py tools/sprites/audit_final_art_status.py tools/sprites/validate_final_art_promotion_consistency.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py
           python3 tools/validate_final_sprite_layout.py
           python3 tools/validate_rex_reference.py
           mkdir -p build
           python3 tools/sprites/audit_final_art_status.py --json > build/final-art-status.json
+          python3 tools/sprites/validate_final_art_promotion_consistency.py
           python3 tools/sprites/validate_actor_production_contracts.py
           python3 -m unittest discover -s tools -p 'test_verify_final_atlas.py'
           python3 -m unittest discover -s tools/sprites -p 'test_resolve_actor_actions.py'
@@ -28894,6 +28896,39 @@ candidate = _load(args.candidate)
 metrics = _load(args.metrics)
 report = validate(candidate, metrics)
 rendered = json.dumps(report, indent=2) + "\n"
+````
+
+## File: tools/sprites/validate_final_art_promotion_consistency.py
+````python
+#!/usr/bin/env python3
+"""Fail when accepted actor QA evidence and published manifest state drift apart."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+CONTRACTS = ROOT / "config" / "actor-production-contracts.json"
+ART = ROOT / "assets" / "art"
+⋮----
+def manifest_path(actor: str) -> Path
+⋮----
+def is_explicit_candidate(manifest: dict) -> bool
+⋮----
+stage = str(manifest.get("source_stage") or "").lower()
+⋮----
+def main() -> int
+⋮----
+contracts = json.loads(CONTRACTS.read_text(encoding="utf-8")).get("actors", {})
+failures: list[str] = []
+checked = 0
+skipped_candidates: list[str] = []
+⋮----
+validation = contract.get("validation", {})
+⋮----
+path = manifest_path(actor)
+⋮----
+manifest = json.loads(path.read_text(encoding="utf-8"))
+⋮----
+expected_run = validation.get("android_runtime_run_id")
+⋮----
+expected_artifact = validation.get("android_visual_artifact_id")
 ````
 
 ## File: tools/sprites/validate_ranged_attack_readability.py

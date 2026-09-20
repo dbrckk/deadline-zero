@@ -69,6 +69,7 @@ sprites/
   upsert_directional_actor_atlas.py
   validate_actor_production_contracts.py
   validate_actor_role_metrics.py
+  validate_final_art_promotion_consistency.py
   validate_ranged_attack_readability.py
 build_final_sprite_frames.py
 import_pixellab_idle.py
@@ -1773,6 +1774,39 @@ candidate = _load(args.candidate)
 metrics = _load(args.metrics)
 report = validate(candidate, metrics)
 rendered = json.dumps(report, indent=2) + "\n"
+```
+
+## File: sprites/validate_final_art_promotion_consistency.py
+```python
+#!/usr/bin/env python3
+"""Fail when accepted actor QA evidence and published manifest state drift apart."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+CONTRACTS = ROOT / "config" / "actor-production-contracts.json"
+ART = ROOT / "assets" / "art"
+⋮----
+def manifest_path(actor: str) -> Path
+⋮----
+def is_explicit_candidate(manifest: dict) -> bool
+⋮----
+stage = str(manifest.get("source_stage") or "").lower()
+⋮----
+def main() -> int
+⋮----
+contracts = json.loads(CONTRACTS.read_text(encoding="utf-8")).get("actors", {})
+failures: list[str] = []
+checked = 0
+skipped_candidates: list[str] = []
+⋮----
+validation = contract.get("validation", {})
+⋮----
+path = manifest_path(actor)
+⋮----
+manifest = json.loads(path.read_text(encoding="utf-8"))
+⋮----
+expected_run = validation.get("android_runtime_run_id")
+⋮----
+expected_artifact = validation.get("android_visual_artifact_id")
 ```
 
 ## File: sprites/validate_ranged_attack_readability.py
