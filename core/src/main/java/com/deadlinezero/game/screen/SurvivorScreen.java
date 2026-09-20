@@ -74,6 +74,7 @@ public final class SurvivorScreen extends ScreenAdapter {
         UiRenderer.card(shapes, layout.card().x, layout.card().y, layout.card().width, layout.card().height, true, false);
         UiRenderer.panel(shapes, layout.portrait().x, layout.portrait().y, layout.portrait().width, layout.portrait().height);
         UiRenderer.panel(shapes, layout.stats().x, layout.stats().y, layout.stats().width, layout.stats().height);
+        drawSurvivorChrome(shapes, unlocked);
         UiRenderer.progress(shapes, layout.xpBar().x, layout.xpBar().y, layout.xpBar().width, layout.xpBar().height,
             progress, VisualTheme.VIOLET);
         UiRenderer.button(shapes, layout.previous().x, layout.previous().y, layout.previous().width, layout.previous().height,
@@ -95,6 +96,37 @@ public final class SurvivorScreen extends ScreenAdapter {
             shapes.circle(p.x + p.width * .5f, p.y + p.height * .52f, Math.min(p.width, p.height) * .17f, 36);
         }
         shapes.end();
+    }
+
+    private void drawSurvivorChrome(ShapeRenderer shapes, boolean unlocked) {
+        SurvivorCatalog.Survivor survivor = SurvivorCatalog.Survivor.values()[index];
+        boolean selected = game.profile.selectedSurvivor == survivor;
+        Color accent = unlocked ? VisualTheme.accent() : VisualTheme.MUTED;
+
+        Rectangle card = layout.card();
+        shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .56f : .18f);
+        shapes.rect(card.x + 6f, card.y + card.height - 5f, Math.max(0f, card.width - 12f), 3f);
+
+        Rectangle portrait = layout.portrait();
+        shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .085f : .035f);
+        shapes.rect(portrait.x + 8f, portrait.y + 8f, Math.max(0f, portrait.width - 16f), Math.max(0f, portrait.height - 16f));
+        shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .72f : .24f);
+        shapes.rect(portrait.x + 8f, portrait.y + portrait.height - 5f, Math.max(0f, portrait.width - 16f), 3f);
+
+        Rectangle stats = layout.stats();
+        shapes.setColor(selected ? VisualTheme.positive().r : accent.r,
+            selected ? VisualTheme.positive().g : accent.g,
+            selected ? VisualTheme.positive().b : accent.b,
+            selected ? .86f : unlocked ? .46f : .18f);
+        shapes.rect(stats.x + 7f, stats.y + stats.height - 4f, Math.max(0f, stats.width - 14f), 3f);
+
+        Rectangle cta = layout.cta();
+        if (selected) {
+            shapes.setColor(VisualTheme.positive().r, VisualTheme.positive().g, VisualTheme.positive().b, .10f);
+            shapes.rect(cta.x + 6f, cta.y + 6f, Math.max(0f, cta.width - 12f), Math.max(0f, cta.height - 12f));
+            shapes.setColor(VisualTheme.positive().r, VisualTheme.positive().g, VisualTheme.positive().b, .92f);
+            shapes.rect(cta.x + 10f, cta.y + cta.height - 4f, Math.max(0f, cta.width - 20f), 3f);
+        }
     }
 
     private void drawChevron(Rectangle bounds, boolean right) {
@@ -181,11 +213,16 @@ public final class SurvivorScreen extends ScreenAdapter {
 
         float metricTop = s.y + s.height - 112f;
         float colW = w * .5f;
-        drawMetric("HP", "x" + fmt(survivor.hpMultiplier), x, metricTop, colW);
-        drawMetric("DAMAGE", "x" + fmt(survivor.weaponMultiplier), x + colW, metricTop, colW);
-        drawMetric("SPEED", "x" + fmt(survivor.speedMultiplier), x, metricTop - 58f, colW);
-        drawMetric("CRIT", "+" + Math.round(survivor.critBonus * 100f) + "%", x + colW, metricTop - 58f, colW);
-        drawMetric("ABILITY", "+" + Math.round(survivor.abilityBonus * 100f) + "%", x, metricTop - 116f, colW);
+        drawMetric("HP", "x" + fmt(survivor.hpMultiplier), x, metricTop, colW,
+            survivor.hpMultiplier >= 1f ? VisualTheme.positive() : VisualTheme.TEXT_STRONG);
+        drawMetric("DAMAGE", "x" + fmt(survivor.weaponMultiplier), x + colW, metricTop, colW,
+            survivor.weaponMultiplier >= 1f ? VisualTheme.GOLD : VisualTheme.TEXT_STRONG);
+        drawMetric("SPEED", "x" + fmt(survivor.speedMultiplier), x, metricTop - 58f, colW,
+            survivor.speedMultiplier >= 1f ? VisualTheme.CYAN : VisualTheme.TEXT_STRONG);
+        drawMetric("CRIT", "+" + Math.round(survivor.critBonus * 100f) + "%", x + colW, metricTop - 58f, colW,
+            survivor.critBonus > 0f ? VisualTheme.VIOLET : VisualTheme.TEXT_STRONG);
+        drawMetric("ABILITY", "+" + Math.round(survivor.abilityBonus * 100f) + "%", x, metricTop - 116f, colW,
+            survivor.abilityBonus > 0f ? VisualTheme.accent() : VisualTheme.TEXT_STRONG);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.TEXT_DIM);
@@ -193,12 +230,12 @@ public final class SurvivorScreen extends ScreenAdapter {
             layout.xpBar().width, Align.left, false);
     }
 
-    private void drawMetric(String label, String value, float x, float y, float width) {
+    private void drawMetric(String label, String value, float x, float y, float width, Color valueColor) {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.TEXT_DIM);
         font.draw(batch, label, x, y, width, Align.left, false);
         font.getData().setScale(UiTypography.scale(UiTypography.Role.METRIC));
-        font.setColor(VisualTheme.TEXT_STRONG);
+        font.setColor(valueColor);
         font.draw(batch, value, x, y - 25f, width, Align.left, false);
     }
 
