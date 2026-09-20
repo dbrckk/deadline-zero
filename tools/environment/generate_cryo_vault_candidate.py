@@ -110,3 +110,5 @@ def main():
     m={"schema":1,"biome":"cryo_vault","stage":"procedural-authored-candidate-v1","production_ready":False,"visual_qa_pass":False,"generator":"tools/environment/generate_cryo_vault_candidate.py","master_size":[512,512],"asset_count":14,"assets":assets,"notes":"Cryogenic-facility candidate with frost and restrained white-blue accents. Not FINAL until premium visual QA."}
     a.manifest.write_text(json.dumps(m,indent=2)+"\n",encoding="utf-8"); print("generated 14 Cryo Vault candidate masters"); return 0
 if __name__=="__main__": raise SystemExit(main())
+
+# Regeneration trigger: seam-safe floor masters.
