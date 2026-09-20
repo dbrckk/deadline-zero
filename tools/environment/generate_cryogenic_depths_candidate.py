@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse, json, math, random
 from pathlib import Path
 from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter
+from candidate_utils import make_tileable_edges
 
 SIZE=512
 SLOTS=("floor/concrete_a","floor/concrete_b","floor/concrete_c","floor/hazard_a",
@@ -33,18 +34,19 @@ def seams(im,spacing=128):
         d.line((0,y+5,SIZE,y+5),fill=(*CYAN[:3],28),width=1)
 
 def frost(im,seed,count=30):
-    d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+    overlay=transparent(); d=ImageDraw.Draw(overlay,"RGBA"); rnd=random.Random(seed)
     for _ in range(count):
         x,y=rnd.randrange(SIZE),rnd.randrange(SIZE)
         rx,ry=rnd.randrange(20,72),rnd.randrange(6,20)
-        d.ellipse((x-rx,y-ry,x+rx,y+ry),fill=(*CYAN[:3],rnd.randrange(7,22)))
+        d.ellipse((x-rx,y-ry,x+rx,y+ry),fill=(*CYAN[:3],rnd.randrange(9,26)))
+    im.alpha_composite(overlay)
 
 def finish(im,slot):
     im=im.convert("RGBA")
     if slot.startswith("floor/"):
         im=ImageEnhance.Contrast(im).enhance(1.10)
         im=ImageEnhance.Sharpness(im).enhance(1.18)
-        im.putalpha(Image.new("L",im.size,255)); return im
+        im.putalpha(Image.new("L",im.size,255)); return make_tileable_edges(im)
     a=im.getchannel("A")
     sh=Image.new("RGBA",im.size,(0,0,0,0))
     sm=a.filter(ImageFilter.GaussianBlur(13))
@@ -177,3 +179,7 @@ def main():
 if __name__=="__main__": raise SystemExit(main())
 
 # Deterministic by design: reruns must not mutate approved candidate masters.
+
+# Regeneration trigger: seam-safe floor masters.
+
+# Regeneration trigger: translucent frost correction.

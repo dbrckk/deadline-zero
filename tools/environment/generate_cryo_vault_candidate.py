@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse,json,math,random
 from pathlib import Path
 from PIL import Image,ImageChops,ImageDraw,ImageEnhance,ImageFilter
+from candidate_utils import make_tileable_edges
 
 SIZE=512
 SLOTS=("floor/concrete_a","floor/concrete_b","floor/concrete_c","floor/hazard_a",
@@ -28,14 +29,15 @@ def panels(im,spacing=128):
     for y in range(0,SIZE,spacing):
         d.line((0,y,SIZE,y),fill=(8,14,20,190),width=4); d.line((0,y+4,SIZE,y+4),fill=(*WHITE[:3],36),width=1)
 def frost(im,seed,count=26):
-    d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+    overlay=transparent(); d=ImageDraw.Draw(overlay,"RGBA"); rnd=random.Random(seed)
     for _ in range(count):
         x,y=rnd.randrange(SIZE),rnd.randrange(SIZE); rx,ry=rnd.randrange(18,64),rnd.randrange(5,18)
-        d.ellipse((x-rx,y-ry,x+rx,y+ry),fill=(*ICE[:3],rnd.randrange(8,24)))
+        d.ellipse((x-rx,y-ry,x+rx,y+ry),fill=(*ICE[:3],rnd.randrange(10,28)))
+    im.alpha_composite(overlay)
 def finish(im,slot):
     im=im.convert("RGBA")
     if slot.startswith("floor/"):
-        im=ImageEnhance.Contrast(im).enhance(1.08); im=ImageEnhance.Sharpness(im).enhance(1.18); im.putalpha(Image.new("L",im.size,255)); return im
+        im=ImageEnhance.Contrast(im).enhance(1.08); im=ImageEnhance.Sharpness(im).enhance(1.18); im.putalpha(Image.new("L",im.size,255)); return make_tileable_edges(im)
     a=im.getchannel("A"); shadow=Image.new("RGBA",im.size,(0,0,0,0)); sm=a.filter(ImageFilter.GaussianBlur(12)); shifted=Image.new("L",im.size,0); shifted.paste(sm,(10,14)); shadow.putalpha(shifted.point(lambda p:int(p*.30)))
     out=Image.alpha_composite(shadow,im); inner=ImageChops.subtract(a,a.filter(ImageFilter.MinFilter(7))); hi=Image.new("RGBA",im.size,(220,245,250,0)); hi.putalpha(inner.point(lambda p:int(p*.26))); return ImageEnhance.Sharpness(Image.alpha_composite(out,hi)).enhance(1.24)
 
@@ -109,3 +111,5 @@ def main():
     m={"schema":1,"biome":"cryo_vault","stage":"procedural-authored-candidate-v1","production_ready":False,"visual_qa_pass":False,"generator":"tools/environment/generate_cryo_vault_candidate.py","master_size":[512,512],"asset_count":14,"assets":assets,"notes":"Cryogenic-facility candidate with frost and restrained white-blue accents. Not FINAL until premium visual QA."}
     a.manifest.write_text(json.dumps(m,indent=2)+"\n",encoding="utf-8"); print("generated 14 Cryo Vault candidate masters"); return 0
 if __name__=="__main__": raise SystemExit(main())
+
+# Regeneration trigger: seam-safe floor masters.

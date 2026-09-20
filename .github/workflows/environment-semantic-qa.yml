@@ -1,0 +1,38 @@
+name: Environment Semantic QA
+
+on:
+  push:
+    paths:
+      - '.github/workflows/environment-semantic-qa.yml'
+      - 'tools/environment/qa_environment_candidates.py'
+      - 'config/environment-art-contract.json'
+      - 'art_sources/environment/**'
+  pull_request:
+    paths:
+      - '.github/workflows/environment-semantic-qa.yml'
+      - 'tools/environment/qa_environment_candidates.py'
+      - 'config/environment-art-contract.json'
+      - 'art_sources/environment/**'
+  workflow_dispatch:
+
+jobs:
+  semantic-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+      - name: Run static environment semantic QA
+        run: python3 tools/environment/qa_environment_candidates.py
+      - name: Upload semantic QA review artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: environment-semantic-qa-${{ github.run_number }}
+          path: build/environment_art/semantic_qa/
+          if-no-files-found: error
+          retention-days: 14
