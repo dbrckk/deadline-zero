@@ -310,34 +310,35 @@ public final class EnvironmentRenderer implements Disposable {
         boolean cryoBiome = cryoVault();
         boolean nullBiome = nullSector();
         boolean hotBiome = foundry();
-        for (int gy = -2; gy <= 2; gy++) {
-            for (int gx = -4; gx <= 4; gx++) {
+        for (int gy = -3; gy <= 3; gy++) {
+            for (int gx = -5; gx <= 5; gx++) {
                 int variant = detailVariant(gx, gy);
-                if (variant > 2) continue;
-                float x = gx * 6.1f + ((variant & 1) == 0 ? -.55f : .48f);
-                float y = gy * 6.0f + ((gx & 1) == 0 ? .42f : -.38f);
-                if (Math.abs(x) < 5f && Math.abs(y) < 4f) continue;
-                if (variant == 0) {
-                    if (depthsBiome) batch.setColor(.48f, .82f, .92f, .40f);
-                    else if (cryoBiome) batch.setColor(.72f, .94f, 1f, .42f);
-                    else if (nullBiome) batch.setColor(.72f, .62f, 1f, .38f);
-                    else batch.setColor(1f, 1f, 1f, hotBiome ? .34f : .40f);
-                    draw(batch, crack, x, y, 1.45f);
-                } else if (variant == 1) {
+                if (variant > 4) continue;
+                float x = gx * 5.45f + ((variant & 1) == 0 ? -.55f : .48f);
+                float y = gy * 5.25f + ((gx & 1) == 0 ? .42f : -.38f);
+                if (Math.abs(x) < 4.5f && Math.abs(y) < 3.6f) continue;
+                float scaleJitter = 1f + ((detailVariant(gx + 13, gy - 7) - 3.5f) * .045f);
+                if (variant == 0 || variant == 3) {
+                    if (depthsBiome) batch.setColor(.48f, .82f, .92f, variant == 0 ? .40f : .24f);
+                    else if (cryoBiome) batch.setColor(.72f, .94f, 1f, variant == 0 ? .42f : .25f);
+                    else if (nullBiome) batch.setColor(.72f, .62f, 1f, variant == 0 ? .38f : .23f);
+                    else batch.setColor(1f, 1f, 1f, variant == 0 ? (hotBiome ? .34f : .40f) : .22f);
+                    draw(batch, crack, x, y, (variant == 0 ? 1.45f : 1.05f) * scaleJitter);
+                } else if (variant == 1 || variant == 4) {
                     TextureRegion stain = hotBiome || nullBiome || cryoBiome || depthsBiome ? scorch : blood;
-                    if (depthsBiome) batch.setColor(.24f, .66f, .78f, .30f);
-                    else if (cryoBiome) batch.setColor(.48f, .86f, 1f, .28f);
-                    else if (nullBiome) batch.setColor(.52f, .32f, 1f, .30f);
-                    else batch.setColor(1f, hotBiome ? .45f : 1f, hotBiome ? .20f : 1f, .28f);
-                    draw(batch, stain, x, y, 1.35f);
+                    if (depthsBiome) batch.setColor(.24f, .66f, .78f, variant == 1 ? .30f : .18f);
+                    else if (cryoBiome) batch.setColor(.48f, .86f, 1f, variant == 1 ? .28f : .17f);
+                    else if (nullBiome) batch.setColor(.52f, .32f, 1f, variant == 1 ? .30f : .18f);
+                    else batch.setColor(1f, hotBiome ? .45f : 1f, hotBiome ? .20f : 1f, variant == 1 ? .28f : .17f);
+                    draw(batch, stain, x, y, (variant == 1 ? 1.35f : .98f) * scaleJitter);
                 } else {
                     TextureRegion debris = ((gx + gy) & 1) == 0 ? debrisA : debrisB;
-                    drawPropShadow(batch, debris, x, y, 1.25f);
+                    drawPropShadow(batch, debris, x, y, 1.25f * scaleJitter);
                     if (depthsBiome) batch.setColor(.52f, .82f, .90f, .76f);
                     else if (cryoBiome) batch.setColor(.74f, .92f, 1f, .78f);
                     else if (nullBiome) batch.setColor(.72f, .68f, 1f, .74f);
                     else batch.setColor(hotBiome ? 1f : .78f, hotBiome ? .64f : .82f, hotBiome ? .38f : .86f, .72f);
-                    draw(batch, debris, x, y, 1.20f);
+                    draw(batch, debris, x, y, 1.20f * scaleJitter);
                 }
             }
         }
