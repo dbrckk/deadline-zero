@@ -202,6 +202,66 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesShamblerGameplayAndAttackFrames() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.profile.selectedSurvivor = SurvivorCatalog.Survivor.REX;
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for Shambler visual probe", game.getScreen() instanceof GameScreen);
+                injectShambler((GameScreen) game.getScreen());
+            });
+
+            Thread.sleep(900L);
+            capture("shambler-gameplay.png");
+
+            runOnGameThread(activity, () -> forceShamblerAttack((GameScreen) game(activity).getScreen()));
+            Thread.sleep(80L);
+            capture("shambler-attack.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectShambler(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            enemies.clear();
+            enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, 3.2f, 500_000f, .01f, .58f, 0f, 1));
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject Shambler for visual QA", exception);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void forceShamblerAttack(GameScreen screen) {
+        try {
+            Field enemiesField = GameScreen.class.getDeclaredField("enemies");
+            enemiesField.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
+            Enemy shambler = null;
+            for (Enemy enemy : enemies) {
+                if (enemy.alive && enemy.type == Enemy.Type.SHAMBLER) {
+                    shambler = enemy;
+                    break;
+                }
+            }
+            assertNotNull("Shambler missing before attack capture", shambler);
+            Field stateField = shambler.attack.getClass().getDeclaredField("state");
+            Field timerField = shambler.attack.getClass().getDeclaredField("timer");
+            stateField.setAccessible(true);
+            timerField.setAccessible(true);
+            stateField.set(shambler.attack, EnemyState.TELEGRAPHING);
+            timerField.setFloat(shambler.attack, 10f);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to force Shambler attack animation for visual QA", exception);
+        }
+    }
+
+    @Test
     public void capturesWraithGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);

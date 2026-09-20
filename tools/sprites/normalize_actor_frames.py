@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import statistics
 from collections import defaultdict
 from pathlib import Path
 
@@ -26,6 +27,16 @@ def parse_args():
     p.add_argument("--contact-sheet", type=Path, required=True)
     p.add_argument("--max-width", type=int, default=82)
     p.add_argument("--max-height", type=int, default=88)
+    p.add_argument(
+        "--attack-center-limit",
+        type=float,
+        default=None,
+        help=(
+            "Optional maximum horizontal alpha-center deviation in pixels for attack frames. "
+            "When set, offending attack frames are shifted inside the 96px cell instead of "
+            "loosening downstream production QA tolerances."
+        ),
+    )
     p.add_argument(
         "--horizontal-anchor",
         choices=("source-center", "union-center"),
@@ -96,11 +107,59 @@ def main():
             "horizontal_anchor":a.horizontal_anchor,
         }
 
-    rows=[]; motion=defaultdict(list)
+    cells={}
     for anim,d,i,im,_ in source:
         u=unions[d]; t=transforms[d]
         crop=im.crop(u).resize(tuple(t["scaled_size"]),Image.Resampling.LANCZOS)
         cell=Image.new("RGBA",(96,96),(0,0,0,0)); cell.alpha_composite(crop,tuple(t["dest"]))
+        cells[(anim,d,i)]=cell
+
+    attack_adjustments=[]
+    if a.attack_center_limit is not None:
+        if a.attack_center_limit < 0:
+            raise SystemExit("--attack-center-limit must be >= 0")
+        for d in DIRS:
+            attack_keys=[("attack",d,i) for i in range(EXPECTED["attack"])]
+            centers=[]
+            for key in attack_keys:
+                bb=bbox_alpha(cells[key])
+                if bb is None:
+                    raise SystemExit(f"empty attack frame before stabilization: {key}")
+                centers.append((bb[0]+bb[2])/2.0)
+            median=statistics.median(centers)
+            for key,cx in zip(attack_keys,centers):
+                delta=cx-median
+                if abs(delta) <= a.attack_center_limit:
+                    continue
+                target=median+(a.attack_center_limit if delta>0 else -a.attack_center_limit)
+                shift=round(target-cx)
+                cell=cells[key]
+                bb=bbox_alpha(cell)
+                min_shift=2-bb[0]
+                max_shift=(96-2)-bb[2]
+                shift=max(min_shift,min(max_shift,shift))
+                shifted=Image.new("RGBA",(96,96),(0,0,0,0))
+                shifted.alpha_composite(cell,(shift,0))
+                new_bb=bbox_alpha(shifted)
+                new_cx=(new_bb[0]+new_bb[2])/2.0 if new_bb else None
+                if new_cx is None or abs(new_cx-median) > a.attack_center_limit:
+                    raise SystemExit(
+                        f"unable to stabilize attack center for {key}: "
+                        f"median={median:.2f} center={cx:.2f} shifted={new_cx}"
+                    )
+                cells[key]=shifted
+                attack_adjustments.append({
+                    "direction":d,
+                    "index":key[2],
+                    "center_before":cx,
+                    "center_after":new_cx,
+                    "median_center":median,
+                    "shift_x":shift,
+                })
+
+    rows=[]; motion=defaultdict(list)
+    for anim,d,i,_,_ in source:
+        cell=cells[(anim,d,i)]
         out=a.output/anim/d/f"{anim}_{i:02d}.png"; out.parent.mkdir(parents=True,exist_ok=True); cell.save(out)
         bb=bbox_alpha(cell)
         if not bb:
@@ -124,6 +183,8 @@ def main():
         "stage":"96px-normalization-v2",
         "normalization_mode":"fixed-transform-per-direction",
         "horizontal_anchor":a.horizontal_anchor,
+        "attack_center_limit":a.attack_center_limit,
+        "attack_center_adjustments":attack_adjustments,
         "frame_count":len(rows),
         "expected":232,
         "source_size":list(source_size),

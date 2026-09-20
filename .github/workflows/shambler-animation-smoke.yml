@@ -6,6 +6,7 @@ on:
       - '.github/workflows/shambler-animation-smoke.yml'
       - 'tools/blender/render_actor_8dir.py'
       - 'tools/sprites/normalize_actor_frames.py'
+      - 'tools/sprites/assemble_actor_sheet.py'
 
 jobs:
   render:
@@ -123,7 +124,8 @@ jobs:
             --output build/shambler/normalized96 \
             --report build/shambler/qa.json \
             --contact-sheet build/shambler/shambler-phone-contact-sheet.png \
-            --horizontal-anchor union-center
+            --horizontal-anchor union-center \
+            --attack-center-limit 12
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -133,6 +135,45 @@ jobs:
           assert q['horizontal_anchor'] == 'union-center', q
           print('Shambler sprite QA PASS:', q['frame_count'], 'frames, scale', q['scale'])
           PY
+      - name: Assemble canonical Shambler source sheet
+        run: |
+          set -euo pipefail
+          python3 tools/sprites/assemble_actor_sheet.py \
+            --input build/shambler/normalized96 \
+            --output build/shambler/shambler.png \
+            --manifest build/shambler/shambler-sheet-manifest.json
+          cp build/shambler/shambler.png art_sources/shambler.png
+          python3 tools/validate_final_sprite_layout.py
+          python3 tools/build_final_sprite_frames.py \
+            --output build/shambler/roundtrip \
+            --clean \
+            --strict
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageChops
+
+          source = Path('build/shambler/normalized96')
+          rebuilt = Path('build/shambler/roundtrip/enemy/shambler')
+          motions = {'idle':4,'run':8,'attack':6,'hit':3,'death':8}
+          directions = ('n','ne','e','se','s','sw','w','nw')
+          checked = 0
+          for direction in directions:
+              for motion, count in motions.items():
+                  for index in range(count):
+                      before = source / motion / direction / f'{motion}_{index:02d}.png'
+                      after = rebuilt / direction / f'{motion}_{index:02d}.png'
+                      assert after.is_file(), after
+                      with Image.open(before) as a, Image.open(after) as b:
+                          ar = a.convert('RGBA')
+                          br = b.convert('RGBA')
+                          assert ar.size == br.size == (96, 96), (before, after, ar.size, br.size)
+                          assert ImageChops.difference(ar, br).getbbox() is None, (before, after)
+                      checked += 1
+          assert checked == 232
+          print(f'Shambler canonical sheet round-trip PASS: {checked} pixel-identical RGBA frames')
+          PY
+          rm art_sources/shambler.png
+
       - name: Write render manifest
         run: |
           python3 - <<'PY'
@@ -167,6 +208,9 @@ jobs:
             build/shambler/qa.json
             build/shambler/master-margin.json
             build/shambler/shambler-phone-contact-sheet.png
+            build/shambler/shambler.png
+            build/shambler/shambler-sheet-manifest.json
+            build/shambler/roundtrip/final-sprite-build.json
             build/shambler/render-manifest.json
             build/shambler/debug512/
           if-no-files-found: warn
