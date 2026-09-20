@@ -22,19 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T07:47:33Z
+Generated: 2026-09-20T08:38:29Z
 
 ### Git
 - Branch: `main`
-- Head: `0c2da0218a57`
-- Commit date: 2026-09-20T09:47:23+02:00
-- Commit: Add Rex candidate Android visual QA
-- Tracked files: 725
+- Head: `5897dae9ee43`
+- Commit date: 2026-09-20T10:38:07+02:00
+- Commit: Improve Shambler runtime readability
+- Tracked files: 726
 
 ### Recently changed files
+- `.github/workflows/shambler-android-acceptance.yml`
+- `core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java`
+- `core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java`
 - `.github/workflows/rex-android-acceptance.yml`
 - `.github/workflows/rex-animation-smoke.yml`
-- `.github/workflows/shambler-android-acceptance.yml`
 - `.github/workflows/shambler-animation-smoke.yml`
 - `.github/workflows/shambler-publish-current.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`

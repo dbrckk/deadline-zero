@@ -4,5 +4,1699 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
-  "symbols": {}
+  "symbols": {
+    "ArtProfileCatalog": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+        "line": 10,
+        "kind": "class",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 10,
+          "preview": "public final class ArtProfileCatalog {",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 29,
+          "preview": "private ArtProfileCatalog() {}",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 59,
+          "preview": "ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.survivor(survivor);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 122,
+          "preview": "ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.enemy(enemy.type);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
+          "line": 21,
+          "preview": "ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.survivor(RunLoadoutContext.survivor());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java",
+          "line": 11,
+          "preview": "var shambler = ArtProfileCatalog.enemy(Enemy.Type.SHAMBLER);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java",
+          "line": 12,
+          "preview": "var runner = ArtProfileCatalog.enemy(Enemy.Type.RUNNER);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java",
+          "line": 13,
+          "preview": "var rex = ArtProfileCatalog.survivor(SurvivorCatalog.Survivor.REX);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/SpecialistPresentationTest.java",
+          "line": 12,
+          "preview": "var shambler = ArtProfileCatalog.enemy(Enemy.Type.SHAMBLER);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/SpecialistPresentationTest.java",
+          "line": 13,
+          "preview": "var shielded = ArtProfileCatalog.enemy(Enemy.Type.SHIELDED);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/SpecialistPresentationTest.java",
+          "line": 14,
+          "preview": "var regenerator = ArtProfileCatalog.enemy(Enemy.Type.REGENERATOR);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/SpecialistPresentationTest.java",
+          "line": 15,
+          "preview": "var phantom = ArtProfileCatalog.enemy(Enemy.Type.PHANTOM);",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 12
+    },
+    "CharacterProfile": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+        "line": 11,
+        "kind": "record",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 11,
+          "preview": "public record CharacterProfile(float height, float footOffset, float weaponAnchorX, float weaponAnchorY) {}",
+          "definition_candidate": true
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 13,
+          "preview": "private static final CharacterProfile REX = new CharacterProfile(1.72f, .60f, .29f, .23f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 14,
+          "preview": "private static final CharacterProfile NYX = new CharacterProfile(1.70f, .59f, .31f, .25f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 15,
+          "preview": "private static final CharacterProfile BASTION = new CharacterProfile(1.86f, .65f, .34f, .27f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 16,
+          "preview": "private static final CharacterProfile VOLT = new CharacterProfile(1.73f, .60f, .30f, .24f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 17,
+          "preview": "private static final CharacterProfile WRAITH = new CharacterProfile(1.68f, .58f, .30f, .23f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 19,
+          "preview": "private static final CharacterProfile SHAMBLER = new CharacterProfile(1.52f, .43f, 0f, 0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 20,
+          "preview": "private static final CharacterProfile RUNNER = new CharacterProfile(1.26f, .36f, 0f, 0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 21,
+          "preview": "private static final CharacterProfile BRUTE = new CharacterProfile(2.08f, .62f, 0f, 0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 22,
+          "preview": "private static final CharacterProfile RANGED = new CharacterProfile(1.46f, .43f, 0f, 0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 23,
+          "preview": "private static final CharacterProfile ELITE = new CharacterProfile(2.42f, .72f, 0f, 0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 24,
+          "preview": "private static final CharacterProfile SHIELDED = new CharacterProfile(2.18f, .65f, 0f, 0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 25,
+          "preview": "private static final CharacterProfile REGENERATOR = new CharacterProfile(1.58f, .45f, 0f, 0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 26,
+          "preview": "private static final CharacterProfile PHANTOM = new CharacterProfile(1.38f, .40f, 0f, 0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 27,
+          "preview": "private static final CharacterProfile BOSS = new CharacterProfile(5.15f, 1.35f, 0f, 0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 31,
+          "preview": "public static CharacterProfile survivor(SurvivorCatalog.Survivor survivor) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 41,
+          "preview": "public static CharacterProfile enemy(Enemy.Type type) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 59,
+          "preview": "ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.survivor(survivor);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 122,
+          "preview": "ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.enemy(enemy.type);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
+          "line": 21,
+          "preview": "ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.survivor(RunLoadoutContext.survivor());",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 20
+    },
+    "survivor": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+        "line": 30,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 271,
+          "preview": "// Exercise WRAITH through the real selected-survivor runtime path. Direct assignment is",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
+          "line": 18,
+          "preview": "String survivor,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
+          "line": 36,
+          "preview": "survivor = safeText(survivor, \"REX\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java",
+          "line": 67,
+          "preview": "RunLoadoutContext.survivor().name(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
+          "line": 41,
+          "preview": "case SURVIVOR -> sample.survivor();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryStore.java",
+          "line": 33,
+          "preview": "p.putString(key + \"survivor\", sample.survivor());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryStore.java",
+          "line": 69,
+          "preview": "p.getString(key + \"survivor\", \"REX\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
+          "line": 104,
+          "preview": "public boolean selectSurvivor(SurvivorCatalog.Survivor survivor) { if (survivor == null || !survivors.unlocked(survivor)) return false; selectedSurvivor = survivor; return true; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 35,
+          "preview": "profile.selectedSurvivor = SurvivorCatalog.byName(p.getString(\"survivor.selected\", SurvivorCatalog.Survivor.REX.name()));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 47,
+          "preview": "for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 48,
+          "preview": "String key = \"survivor.\" + survivor.name() + \".\";",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 49,
+          "preview": "profile.survivors.setState(survivor,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 52,
+          "preview": "p.getBoolean(key + \"unlocked\", survivor == SurvivorCatalog.Survivor.REX));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 162,
+          "preview": "p.putString(\"survivor.selected\", profile.selectedSurvivor.name());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 164,
+          "preview": "for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 165,
+          "preview": "String key = \"survivor.\" + survivor.name() + \".\";",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 166,
+          "preview": "p.putInteger(key + \"level\", profile.survivors.level(survivor));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 167,
+          "preview": "p.putLong(key + \"xp\", profile.survivors.xp(survivor));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+          "line": 168,
+          "preview": "p.putBoolean(key + \"unlocked\", profile.survivors.unlocked(survivor));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 7,
+          "preview": "/** Immutable snapshot of gear, weapon and survivor bonuses for the active run. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 21,
+          "preview": "private static SurvivorCatalog.Survivor survivor = SurvivorCatalog.Survivor.REX;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 29,
+          "preview": "survivor = profile == null ? SurvivorCatalog.Survivor.REX : profile.selectedSurvivor;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 31,
+          "preview": "weaponSynergy = WeaponSynergyRules.resolve(survivor, weaponDefinition);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 33,
+          "preview": "float levelPower = profile == null ? 1f : profile.survivors.levelPowerMultiplier(survivor);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 57,
+          "preview": "float adaptive = survivor == SurvivorCatalog.Survivor.REX ? 1.05f : 1f;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 58,
+          "preview": "maxHpMultiplier = (1f + hp) * survivor.hpMultiplier * (1f + (levelPower - 1f) * .55f) * adaptive",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 60,
+          "preview": "moveSpeedMultiplier = (1f + speed) * survivor.speedMultiplier * adaptive",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 62,
+          "preview": "dashCooldownMultiplier = Math.max(.60f, (1f - dash) * (survivor == SurvivorCatalog.Survivor.WRAITH ? .76f : 1f));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 63,
+          "preview": "dashInvulnerabilitySeconds = (survivor == SurvivorCatalog.Survivor.WRAITH ? .42f : .30f)",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 65,
+          "preview": "weaponDamageMultiplier = (1f + weapon) * survivor.weaponMultiplier * levelPower * adaptive",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 67,
+          "preview": "critChanceBonus = Math.min(.25f, crit + survivor.critBonus + (survivor == SurvivorCatalog.Survivor.NYX ? .04f : 0f)",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 69,
+          "preview": "critDamageBonus = survivor == SurvivorCatalog.Survivor.NYX ? .40f : 0f;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 70,
+          "preview": "abilityPowerMultiplier = (1f + ability) * (1f + survivor.abilityBonus) * levelPower * adaptive",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 72,
+          "preview": "damageTakenMultiplier = (survivor == SurvivorCatalog.Survivor.BASTION ? .82f : 1f)",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 74,
+          "preview": "startingTeslaLevel = survivor == SurvivorCatalog.Survivor.VOLT ? 1 : 0;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 91,
+          "preview": "survivor = SurvivorCatalog.Survivor.REX;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "line": 110,
+          "preview": "public static SurvivorCatalog.Survivor survivor() { return survivor; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+          "line": 3,
+          "preview": "/** Static playable survivor definitions. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+          "line": 20,
+          "preview": "public String displayNameKey() { return \"survivor.\" + name().toLowerCase(java.util.Locale.ROOT) + \".name\"; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+          "line": 21,
+          "preview": "public String roleKey() { return \"survivor.\" + name().toLowerCase(java.util.Locale.ROOT) + \".role\"; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 6,
+          "preview": "/** Persistent per-survivor unlock and XP state. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 16,
+          "preview": "for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 17,
+          "preview": "levels.put(survivor, 1);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 18,
+          "preview": "xp.put(survivor, 0L);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 19,
+          "preview": "unlocked.put(survivor, survivor == SurvivorCatalog.Survivor.REX);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 23,
+          "preview": "public int level(SurvivorCatalog.Survivor survivor) { return levels.getOrDefault(survivor, 1); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 24,
+          "preview": "public long xp(SurvivorCatalog.Survivor survivor) { return xp.getOrDefault(survivor, 0L); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 25,
+          "preview": "public boolean unlocked(SurvivorCatalog.Survivor survivor) { return unlocked.getOrDefault(survivor, false); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 26,
+          "preview": "public long xpForNext(SurvivorCatalog.Survivor survivor) { return xpForLevel(level(survivor)); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 28,
+          "preview": "public void setState(SurvivorCatalog.Survivor survivor, int level, long currentXp, boolean isUnlocked) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 29,
+          "preview": "if (survivor == null) return;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 31,
+          "preview": "levels.put(survivor, normalized.level());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 32,
+          "preview": "xp.put(survivor, normalized.xp());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 33,
+          "preview": "unlocked.put(survivor, isUnlocked || survivor == SurvivorCatalog.Survivor.REX);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 36,
+          "preview": "public boolean unlock(SurvivorCatalog.Survivor survivor) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 37,
+          "preview": "if (survivor == null || unlocked(survivor)) return false;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 38,
+          "preview": "unlocked.put(survivor, true);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 51,
+          "preview": "public void addXp(SurvivorCatalog.Survivor survivor, long amount) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 52,
+          "preview": "if (survivor == null || amount <= 0) return;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 53,
+          "preview": "LevelProgress progress = advance(level(survivor), xp(survivor), amount);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 54,
+          "preview": "levels.put(survivor, progress.level());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 55,
+          "preview": "xp.put(survivor, progress.xp());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 58,
+          "preview": "public float levelPowerMultiplier(SurvivorCatalog.Survivor survivor) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+          "line": 59,
+          "preview": "return 1f + Math.min(0.30f, Math.max(0, level(survivor) - 1) * .012f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 6,
+          "preview": "/** Deterministic survivor x weapon build synergies applied once when a run loadout is snapshotted. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 36,
+          "preview": "public static Synergy resolve(SurvivorCatalog.Survivor survivor, WeaponDefinition weapon) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
+          "line": 37,
+          "preview": "SurvivorCatalog.Survivor safeSurvivor = survivor == null ? SurvivorCatalog.Survivor.REX : survivor;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuLayoutModel.java",
+          "line": 31,
+          "preview": "Rectangle survivor = new Rectangle(contentX, contentY, leftW, contentH);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuLayoutModel.java",
+          "line": 63,
+          "preview": "return new Layout(topRail, survivor, loadout, threat, deploy, bottomNav, tabs);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 139,
+          "preview": "TextureRegion portrait = game.art.survivor(p.selectedSurvivor, GameArt.Motion.IDLE, t);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+          "line": 169,
+          "preview": "font.draw(batch, t(\"survivor.title\"), tx, r.y + 34f, tw, Align.left, false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorLayoutModel.java",
+          "line": 6,
+          "preview": "/** Pure responsive layout for survivor browsing and explicit selection actions. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 25,
+          "preview": "/** Responsive survivor roster with authored-art focus and explicit mobile actions. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 59,
+          "preview": "SurvivorCatalog.Survivor survivor = SurvivorCatalog.Survivor.values()[index];",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 60,
+          "preview": "boolean unlocked = game.profile.survivors.unlocked(survivor);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 61,
+          "preview": "int level = game.profile.survivors.level(survivor);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 62,
+          "preview": "long xp = game.profile.survivors.xp(survivor);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 63,
+          "preview": "long next = game.profile.survivors.xpForNext(survivor);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 67,
+          "preview": "drawContent(survivor, unlocked, level, xp, next);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 112,
+          "preview": "private void drawContent(SurvivorCatalog.Survivor survivor, boolean unlocked, int level, long xp, long next) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 115,
+          "preview": "drawPortrait(survivor, unlocked);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 116,
+          "preview": "drawStats(survivor, unlocked, level, xp, next);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 117,
+          "preview": "drawCta(survivor, unlocked);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 129,
+          "preview": "font.draw(batch, t(\"survivor.title\"), metrics.safeLeft(), metrics.headerBottom() + 53f,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 140,
+          "preview": "private void drawPortrait(SurvivorCatalog.Survivor survivor, boolean unlocked) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 143,
+          "preview": "TextureRegion portrait = game.art.survivor(survivor, GameArt.Motion.IDLE, artTime);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 167,
+          "preview": "private void drawStats(SurvivorCatalog.Survivor survivor, boolean unlocked, int level, long xp, long next) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 175,
+          "preview": "font.draw(batch, t(survivor.displayNameKey()).toUpperCase(), x, s.y + s.height - 30f, w, Align.left, false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 179,
+          "preview": "font.draw(batch, f(\"survivor.roleLevel\", t(survivor.roleKey()).toUpperCase(java.util.Locale.ROOT), level),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 184,
+          "preview": "drawMetric(\"HP\", \"x\" + fmt(survivor.hpMultiplier), x, metricTop, colW);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 185,
+          "preview": "drawMetric(\"DAMAGE\", \"x\" + fmt(survivor.weaponMultiplier), x + colW, metricTop, colW);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 186,
+          "preview": "drawMetric(\"SPEED\", \"x\" + fmt(survivor.speedMultiplier), x, metricTop - 58f, colW);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 187,
+          "preview": "drawMetric(\"CRIT\", \"+\" + Math.round(survivor.critBonus * 100f) + \"%\", x + colW, metricTop - 58f, colW);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 188,
+          "preview": "drawMetric(\"ABILITY\", \"+\" + Math.round(survivor.abilityBonus * 100f) + \"%\", x, metricTop - 116f, colW);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 192,
+          "preview": "font.draw(batch, f(\"survivor.xp\", xp, next), layout.xpBar().x, layout.xpBar().y + 36f,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 205,
+          "preview": "private void drawCta(SurvivorCatalog.Survivor survivor, boolean unlocked) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 208,
+          "preview": "if (!unlocked) label = unlockText(survivor);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 209,
+          "preview": "else if (game.profile.selectedSurvivor == survivor) label = t(\"survivor.selected\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 210,
+          "preview": "else label = t(\"survivor.select\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 245,
+          "preview": "private void select(SurvivorCatalog.Survivor survivor) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 246,
+          "preview": "if (!game.profile.selectSurvivor(survivor)) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 247,
+          "preview": "status = t(\"survivor.locked\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 251,
+          "preview": "status = f(\"survivor.selectedStatus\", t(survivor.displayNameKey()));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 258,
+          "preview": "private String unlockText(SurvivorCatalog.Survivor survivor) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 259,
+          "preview": "return switch (survivor) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 260,
+          "preview": "case REX -> t(\"survivor.default\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 261,
+          "preview": "case NYX -> t(\"survivor.unlockNyx\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 262,
+          "preview": "case BASTION -> t(\"survivor.unlockBastion\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 263,
+          "preview": "case VOLT -> t(\"survivor.unlockVolt\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 264,
+          "preview": "case WRAITH -> t(\"survivor.unlockWraith\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
+          "line": 35,
+          "preview": "public static Profile survivor(SurvivorCatalog.Survivor survivor) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
+          "line": 36,
+          "preview": "return switch (survivor) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
+          "line": 44,
+          "preview": "for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
+          "line": 45,
+          "preview": "String root = \"survivor/\" + survivor.name().toLowerCase();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 31,
+          "preview": "public static CharacterProfile survivor(SurvivorCatalog.Survivor survivor) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 32,
+          "preview": "return switch (survivor) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java",
+          "line": 22,
+          "preview": "\"survivor/rex/\", \"survivor/nyx/\", \"survivor/bastion/\", \"survivor/volt/\", \"survivor/wraith/\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 31,
+          "preview": "if (key.startsWith(\"survivor/rex/\")) return 0;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 32,
+          "preview": "if (key.startsWith(\"survivor/nyx/\")) return 1;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 33,
+          "preview": "if (key.startsWith(\"survivor/bastion/\")) return 2;",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 120
+    },
+    "enemy": {
+      "definition": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+        "line": 40,
+        "kind": "symbol",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 128,
+          "preview": "Enemy enemy = new Enemy(Enemy.Type.ELITE, positions[i][0], positions[i][1],",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 131,
+          "preview": "enemy.variant = variants[i];",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 132,
+          "preview": "enemies.add(enemy);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 246,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 247,
+          "preview": "if (enemy.alive && enemy.type == Enemy.Type.SHAMBLER) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 248,
+          "preview": "shambler = enemy;",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 284,
+          "preview": "// Deterministic authored-enemy composition. Reflection stays instrumentation-only so",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 518,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 519,
+          "preview": "if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.CINDER_GUNNER) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 520,
+          "preview": "gunner = enemy;",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 581,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 582,
+          "preview": "if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.NULL_WARD) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 583,
+          "preview": "ward = enemy;",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 644,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 645,
+          "preview": "if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.STATIC_SEER) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 646,
+          "preview": "seer = enemy;",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 707,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 708,
+          "preview": "if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.PHASE_STALKER) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 709,
+          "preview": "stalker = enemy;",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 770,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 771,
+          "preview": "if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.SLAG_GUARD) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 772,
+          "preview": "guard = enemy;",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 835,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 836,
+          "preview": "if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.FORGE_HOUND) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 837,
+          "preview": "hound = enemy;",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 953,
+          "preview": "assertTrue(\"visual probe failed to inject authored enemy crowd\", enemies.size >= before + 20);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 955,
+          "preview": "throw new AssertionError(\"unable to access GameScreen enemy collection for visual QA\", exception);",
+          "definition_candidate": false
+        },
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+          "line": 78,
+          "preview": "\"loaded-40-enemy-ring\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+          "line": 29,
+          "preview": "public interface Listener { void onKilled(Enemy enemy); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+          "line": 58,
+          "preview": "for (Enemy enemy : enemies) onEnemySpawned(enemy);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+          "line": 74,
+          "preview": "public void onEnemySpawned(Enemy enemy) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+          "line": 75,
+          "preview": "if (enemy == null || enemy.type != Enemy.Type.RUNNER) return;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+          "line": 77,
+          "preview": "leapers.register(enemy);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+          "line": 78,
+          "preview": "activeLeapers.add(enemy);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyPatternCatalog.java",
+          "line": 7,
+          "preview": "/** Pure combat pattern tuning kept outside GameScreen so enemy attacks remain testable and data-driven. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/EnemyState.java",
+          "line": 3,
+          "preview": "/** Runtime state used by enemy AI and boss phase controllers. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRegistry.java",
+          "line": 11,
+          "preview": "public void register(Enemy enemy) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRegistry.java",
+          "line": 12,
+          "preview": "if (enemy != null) entries.put(enemy, Boolean.TRUE);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRegistry.java",
+          "line": 15,
+          "preview": "public boolean contains(Enemy enemy) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRegistry.java",
+          "line": 16,
+          "preview": "return enemy != null && entries.containsKey(enemy);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 19,
+          "preview": "public void register(Enemy enemy) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 20,
+          "preview": "if (enemy != null) states.put(enemy, new State());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 23,
+          "preview": "public boolean contains(Enemy enemy) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 24,
+          "preview": "return enemy != null && states.containsKey(enemy);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 27,
+          "preview": "public void update(Enemy enemy, float dt, float distanceToPlayer, float dirX, float dirY) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 28,
+          "preview": "State state = states.get(enemy);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 29,
+          "preview": "if (state == null || enemy == null || !enemy.alive) return;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 35,
+          "preview": "enemy.addImpulse(dirX * LeaperProfile.LEAP_IMPULSE, dirY * LeaperProfile.LEAP_IMPULSE);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 47,
+          "preview": "public boolean telegraphing(Enemy enemy) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 48,
+          "preview": "State state = states.get(enemy);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 52,
+          "preview": "public boolean consumeImpact(Enemy enemy) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
+          "line": 53,
+          "preview": "State state = states.get(enemy);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 155,
+          "preview": "for (Enemy enemy : enemies) if (enemy.alive) count++;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
+          "line": 45,
+          "preview": "public static Profile enemy(Enemy.Type type) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
+          "line": 53,
+          "preview": "String root = \"enemy/\" + type.name().toLowerCase();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
+          "line": 63,
+          "preview": "String root = \"enemy/biome/\" + identity.name().toLowerCase();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+          "line": 41,
+          "preview": "public static CharacterProfile enemy(Enemy.Type type) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java",
+          "line": 23,
+          "preview": "\"enemy/shambler/\", \"enemy/runner/\"",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 93,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 94,
+          "preview": "if (!enemy.alive || enemy.type != Enemy.Type.BOSS || enemy.bossCombat == null",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 95,
+          "preview": "|| enemy.bossCombat.identity() != BossIdentity.NULL_ARCHON) continue;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 97,
+          "preview": "int phase = enemy.bossPhases == null ? 1 : enemy.bossPhases.phase();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 103,
+          "preview": "batch.draw(aura, enemy.position.x - size * .5f, enemy.position.y - size * .5f, size, size);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 106,
+          "preview": "if (enemy.bossCombat.summonTelegraphing(phase)) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 107,
+          "preview": "float progress = enemy.bossCombat.summonTelegraphProgress(phase);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 111,
+          "preview": "float y = enemy.position.y + 1.45f + progress * .35f;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 113,
+          "preview": "batch.draw(portal, enemy.position.x - size * .5f, y - size * .5f, size, size);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 122,
+          "preview": "batch.draw(fracture, enemy.position.x - size * .5f, enemy.position.y - size * .5f, size, size);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 164,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 165,
+          "preview": "if (!enemy.alive) continue;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 166,
+          "preview": "float d2 = player.position.dst2(enemy.position);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 167,
+          "preview": "if (d2 < bestD2) { bestD2 = d2; best = enemy; }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
+          "line": 21,
+          "preview": "\"enemy/biome/forge_hound/\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
+          "line": 22,
+          "preview": "\"enemy/biome/cinder_gunner/\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
+          "line": 23,
+          "preview": "\"enemy/biome/slag_guard/\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
+          "line": 24,
+          "preview": "\"enemy/biome/phase_stalker/\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
+          "line": 25,
+          "preview": "\"enemy/biome/static_seer/\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
+          "line": 26,
+          "preview": "\"enemy/biome/null_ward/\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
+          "line": 148,
+          "preview": "return \"enemy/biome/\" + identity.name().toLowerCase();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 37,
+          "preview": "if (key.startsWith(\"enemy/shambler/\")) return 4;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 38,
+          "preview": "if (key.startsWith(\"enemy/runner/\")) return 5;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 39,
+          "preview": "if (key.startsWith(\"enemy/brute/\")) return 6;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 40,
+          "preview": "if (key.startsWith(\"enemy/ranged/\")) return 7;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 41,
+          "preview": "if (key.startsWith(\"enemy/elite/\")) return 8;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 42,
+          "preview": "if (key.startsWith(\"enemy/shielded/\")) return 6;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 43,
+          "preview": "if (key.startsWith(\"enemy/regenerator/\")) return 4;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 44,
+          "preview": "if (key.startsWith(\"enemy/phantom/\")) return 10;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/BootstrapArtCatalog.java",
+          "line": 45,
+          "preview": "if (key.startsWith(\"enemy/boss/\")) return 9;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
+          "line": 8,
+          "preview": "/** Draws compact non-color champion identifiers above authored enemy sprites. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
+          "line": 20,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
+          "line": 21,
+          "preview": "if (enemy == null || !enemy.alive) continue;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
+          "line": 22,
+          "preview": "String badge = ChampionVariantPresentation.badge(enemy.variant);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
+          "line": 25,
+          "preview": "float left = enemy.position.x - BADGE_WIDTH * .5f;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
+          "line": 26,
+          "preview": "float bottom = enemy.position.y + enemy.radius + .36f;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 41,
+          "preview": "for (Enemy enemy : enemies) if (enemy.alive) drawEnemy(batch, enemy);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 97,
+          "preview": "for (Enemy enemy : enemies) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 98,
+          "preview": "if (!enemy.alive) continue;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 99,
+          "preview": "float d2 = player.position.dst2(enemy.position);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 102,
+          "preview": "best = enemy;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 114,
+          "preview": "private void drawEnemy(SpriteBatch batch, Enemy enemy) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 116,
+          "preview": "if (enemy.hitFlash > .22f || enemy.attack.state() == EnemyState.STUNNED) motion = GameArt.Motion.HIT;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 117,
+          "preview": "else if (enemy.attack.state() == EnemyState.ATTACKING || enemy.attack.state() == EnemyState.TELEGRAPHING || enemy.tacticalTelegraph()) motion = GameArt.Motion.ATTACK;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 118,
+          "preview": "else motion = enemy.velocity.len2() > .025f ? GameArt.Motion.RUN : GameArt.Motion.IDLE;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 120,
+          "preview": "Clock clock = clock(enemy, motion);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 121,
+          "preview": "clock.direction = Direction8.fromVector(enemy.velocity.x, enemy.velocity.y, clock.direction);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 122,
+          "preview": "ArtProfileCatalog.CharacterProfile profile = ArtProfileCatalog.enemy(enemy.type);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 123,
+          "preview": "BossIdentity bossIdentity = enemy.type == Enemy.Type.BOSS && enemy.bossCombat != null",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 124,
+          "preview": "? enemy.bossCombat.identity() : BossIdentity.ALPHA;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 125,
+          "preview": "BiomeEnemyRoster.Identity biomeIdentity = enemy.type == Enemy.Type.BOSS",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 126,
+          "preview": "? BiomeEnemyRoster.Identity.NONE : BiomeEnemyRoster.identityFor(RunStageContext.stage(), enemy.type);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 128,
+          "preview": "if (enemy.type == Enemy.Type.BOSS) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 131,
+          "preview": "region = art.biomeEnemy(biomeIdentity, enemy.type, motion, clock.direction, clock.time);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 133,
+          "preview": "region = art.enemy(enemy.type, motion, clock.direction, clock.time);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 138,
+          "preview": "float flash = Math.min(1f, Math.max(0f, enemy.hitFlash));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 146,
+          "preview": "if (enemy.type != Enemy.Type.BOSS) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 147,
+          "preview": "switch (enemy.variant) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 160,
+          "preview": "switch (enemy.type) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 162,
+          "preview": "float shield = enemy.shieldFraction();",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 169,
+          "preview": "float pulse = .5f + .5f * MathUtils.sin(enemy.variantTime * 4.6f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 176,
+          "preview": "float pulse = .5f + .5f * MathUtils.sin(enemy.variantTime * 10f);",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 120
+    },
+    "ArtProfileCatalogTest": {
+      "definition": {
+        "file": "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java",
+        "line": 8,
+        "kind": "class",
+        "language": "java"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java",
+          "line": 9,
+          "preview": "final class ArtProfileCatalogTest {",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 1
+    }
+  }
 }

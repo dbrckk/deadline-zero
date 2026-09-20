@@ -503,6 +503,7 @@ core/
                 ActiveBuildStatusTest.java
                 AdaptiveFxBudgetTest.java
                 AnimationProfileCatalogTest.java
+                ArtProfileCatalogTest.java
                 AuthoredCoreDirectionalArtTest.java
                 BiomeDirectionalBootstrapArtTest.java
                 BootstrapArtAssetTest.java
@@ -2469,6 +2470,9 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/shambler-android-acceptance.yml'
+      - 'core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java'
+      - 'core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java'
+      - 'android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java'
   workflow_run:
     workflows: ["Shambler Animation Smoke"]
     types: [completed]
@@ -2496,10 +2500,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Checkout current main
+      - name: Checkout candidate runtime
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}
 
       - name: Resolve validated Shambler smoke
         id: source
@@ -16221,7 +16225,7 @@ private static final CharacterProfile BASTION = new CharacterProfile(1.86f, .65f
 private static final CharacterProfile VOLT = new CharacterProfile(1.73f, .60f, .30f, .24f);
 private static final CharacterProfile WRAITH = new CharacterProfile(1.68f, .58f, .30f, .23f);
 ⋮----
-private static final CharacterProfile SHAMBLER = new CharacterProfile(1.34f, .38f, 0f, 0f);
+private static final CharacterProfile SHAMBLER = new CharacterProfile(1.52f, .43f, 0f, 0f);
 private static final CharacterProfile RUNNER = new CharacterProfile(1.26f, .36f, 0f, 0f);
 private static final CharacterProfile BRUTE = new CharacterProfile(2.08f, .62f, 0f, 0f);
 private static final CharacterProfile RANGED = new CharacterProfile(1.46f, .43f, 0f, 0f);
@@ -25528,6 +25532,20 @@ assertRange(profile.death());
 ⋮----
 private static void assertRange(float value) {
 assertTrue(value >= .04f && value <= .20f, "unsafe animation frame duration: " + value);
+````
+
+## File: core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java
+````java
+final class ArtProfileCatalogTest {
+@Test void shamblerKeepsReadableStandardEnemyScale() {
+var shambler = ArtProfileCatalog.enemy(Enemy.Type.SHAMBLER);
+var runner = ArtProfileCatalog.enemy(Enemy.Type.RUNNER);
+var rex = ArtProfileCatalog.survivor(SurvivorCatalog.Survivor.REX);
+⋮----
+assertTrue(shambler.height() >= 1.50f, "Shambler must remain readable at phone gameplay scale");
+assertTrue(shambler.height() > runner.height(), "Runner should remain the smaller/faster silhouette");
+assertTrue(shambler.height() < rex.height(), "Baseline Shambler must remain smaller than Rex");
+assertTrue(shambler.footOffset() >= .40f && shambler.footOffset() <= .48f,
 ````
 
 ## File: core/src/test/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArtTest.java

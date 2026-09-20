@@ -1,14 +1,16 @@
 # Change impact
 
-Base: 771c5b4d7dc995c7d74e1f69326aa06b0813d34f
-Head: 0c2da0218a57fb55e718457dd41f7730f2267959
+Base: 0f7441e31ba84a2f7e138cedc9a270aead5faa63
+Head: 5897dae9ee432478ee8081642302ce0ab6702d2e
 
 ## Changed files
-- A .github/workflows/rex-android-acceptance.yml
-- M .github/workflows/rex-animation-smoke.yml
+- M .github/workflows/shambler-android-acceptance.yml
+- M core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java
+- A core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java
 
 ## Affected areas
 - .github
+- core
 
 ## Related test candidates
 - No direct filename-based test match detected.
