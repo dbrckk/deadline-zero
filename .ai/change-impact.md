@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 30364e5a526a6d28dcabe636b5ea05e443989a7d
-Head: 604b57e0447479d4e568888055b992ddd4e0cb13
+Base: ca2f7ab56f2ab1f5f22a7eed7bb95e2ab2ce9d70
+Head: d3145020279781512225188e32c6b9d882185bdd
 
 ## Changed files
-- M .github/workflows/shambler-android-acceptance.yml
+- A docs/PREMIUM_ENVIRONMENT_ART_CONTRACT.md
 
 ## Affected areas
-- .github
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

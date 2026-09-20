@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T11:33:15Z
+Generated: 2026-09-20T11:34:42Z
 
 ### Git
 - Branch: `main`
-- Head: `604b57e04474`
-- Commit date: 2026-09-20T13:33:03+02:00
-- Commit: Rerun Shambler Android QA on runtime visual changes
-- Tracked files: 728
+- Head: `d31450202797`
+- Commit date: 2026-09-20T13:34:26+02:00
+- Commit: Define premium environment art production contract
+- Tracked files: 729
 
 ### Recently changed files
+- `docs/PREMIUM_ENVIRONMENT_ART_CONTRACT.md`
 - `.github/workflows/shambler-android-acceptance.yml`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java`
 
 ### Project signals
 - `build.gradle`
