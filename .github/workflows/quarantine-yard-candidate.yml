@@ -1,0 +1,110 @@
+name: Quarantine Yard Candidate Pack
+
+on:
+  push:
+    paths:
+      - '.github/workflows/quarantine-yard-candidate.yml'
+      - 'tools/environment/generate_quarantine_yard_candidate.py'
+      - 'tools/environment/pack_environment_art.py'
+      - 'tools/environment/validate_environment_art_contract.py'
+      - 'config/environment-art-contract.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: quarantine-yard-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install image tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+
+      - name: Generate deterministic Quarantine Yard candidates
+        run: |
+          set -euo pipefail
+          python3 tools/environment/generate_quarantine_yard_candidate.py
+          test "$(find art_sources/environment/quarantine_yard -type f -name '*.png' | wc -l)" -eq 14
+
+      - name: Pack and validate candidate biome
+        run: |
+          set -euo pipefail
+          python3 tools/environment/pack_environment_art.py --biome quarantine_yard
+          python3 tools/environment/validate_environment_art_contract.py --json > build/environment_art/coverage-before-publish.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest=json.loads(Path('build/environment_art/environment-quarantine_yard.manifest.json').read_text())
+          candidate=json.loads(Path('art_sources/environment/quarantine_yard/candidate-manifest.json').read_text())
+          assert manifest['biome']=='quarantine_yard'
+          assert manifest['slotCount']==14
+          assert len(manifest['assets'])==14
+          assert candidate['asset_count']==14
+          assert candidate['production_ready'] is False
+          assert candidate['visual_qa_pass'] is False
+          print('Quarantine Yard candidate contract PASS: 14/14 authored masters')
+          PY
+
+      - name: Build review contact sheet
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageDraw
+          slots=[
+            'floor/concrete_a','floor/concrete_b','floor/concrete_c','floor/hazard_a',
+            'decal/crack_a','decal/blood_a','decal/scorch_a','prop/barrier_a',
+            'prop/debris_a','prop/debris_b','prop/wall_a','prop/wall_b',
+            'prop/crate_a','prop/beacon_a'
+          ]
+          cell=256
+          sheet=Image.new('RGBA',(cell*4,cell*4),(11,15,18,255))
+          for i,slot in enumerate(slots):
+              src=Path('art_sources/environment/quarantine_yard')/(slot+'.png')
+              with Image.open(src) as raw:
+                  im=raw.convert('RGBA').resize((cell,cell),Image.Resampling.LANCZOS)
+              x=(i%4)*cell; y=(i//4)*cell
+              sheet.alpha_composite(im,(x,y))
+          out=Path('build/environment_art/quarantine-yard-contact-sheet.png')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          sheet.save(out,'PNG',optimize=True)
+          PY
+
+      - name: Upload candidate review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: quarantine-yard-candidate-${{ github.run_number }}
+          path: |
+            build/environment_art/environment-quarantine_yard.png
+            build/environment_art/environment-quarantine_yard.atlas.txt
+            build/environment_art/environment-quarantine_yard.manifest.json
+            build/environment_art/quarantine-yard-contact-sheet.png
+            art_sources/environment/quarantine_yard/candidate-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Commit generated candidate masters to branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add art_sources/environment/quarantine_yard
+          if git diff --cached --quiet; then
+            echo "Quarantine Yard candidate masters already current"
+            exit 0
+          fi
+          git commit -m "art(environment): add Quarantine Yard candidate masters"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
