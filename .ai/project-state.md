@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-19T23:03:00Z
+Generated: 2026-09-20T02:01:23Z
 
 ### Git
 - Branch: `main`
-- Head: `0979fc57ff30`
-- Commit date: 2026-09-20T01:02:49+02:00
-- Commit: Restore Rex Android visual probe (#220)
+- Head: `a2e0f6d94674`
+- Commit date: 2026-09-20T04:01:13+02:00
+- Commit: Gate Shambler production publication (#221)
 - Tracked files: 724
 
 ### Recently changed files
+- `.github/workflows/shambler-publish-current.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
 - `.github/workflows/rex-animation-smoke.yml`
 - `.github/workflows/rex-publish-current.yml`
@@ -47,11 +48,6 @@ Generated: 2026-09-19T23:03:00Z
 - `core/src/main/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidance.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/test/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidanceTest.java`
-- `core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java`
-- `core/src/main/java/com/deadlinezero/game/progression/Upgrade.java`
-- `core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java`
-- `core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java`
-- `core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java`
 
 ### Project signals
 - `build.gradle`

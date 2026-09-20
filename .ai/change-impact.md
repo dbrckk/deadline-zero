@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 33e8cdf9f6032efb95ccd2662a7bb4f539c2c58f
-Head: 0979fc57ff3013135b273c5597253afa2ca95cd6
+Base: ac6e58992e6c0691f8a09d924136e909394af32c
+Head: a2e0f6d9467483f7cf8cbb4883762de8256b9826
 
 ## Changed files
-- M android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java
+- M .github/workflows/shambler-publish-current.yml
 
 ## Affected areas
-- android
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
