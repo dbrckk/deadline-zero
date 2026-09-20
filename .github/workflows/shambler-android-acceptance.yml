@@ -1,6 +1,10 @@
 name: Shambler Android Acceptance
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/shambler-android-acceptance.yml'
   workflow_run:
     workflows: ["Shambler Animation Smoke"]
     types: [completed]
@@ -22,7 +26,8 @@ concurrency:
 jobs:
   android-visual:
     if: >-
-      ${{ github.event_name == 'workflow_dispatch' ||
+      ${{ github.event_name == 'pull_request' ||
+          github.event_name == 'workflow_dispatch' ||
           github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
