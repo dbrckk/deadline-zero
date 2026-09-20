@@ -2,13 +2,13 @@
 
 Summary: 4 success / 0 failure / 2 active
 
-- Responsive UI QA: in_progress / pending (f5159567)
-- Verify: in_progress / pending (f5159567)
+- Verify: in_progress / pending (28ddc156)
+- Responsive UI QA: queued / pending (28ddc156)
+- Responsive UI QA: completed / success (e545e679)
+- Verify: completed / success (e545e679)
+- Responsive UI QA: completed / success (f5159567)
+- Verify: completed / success (f5159567)
 - Verify: completed / cancelled (9df2678d)
 - Responsive UI QA: completed / cancelled (9df2678d)
-- Verify: completed / success (adcd923f)
-- Responsive UI QA: completed / success (adcd923f)
-- Responsive UI QA: completed / success (3fbeb90a)
-- Verify: completed / success (3fbeb90a)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

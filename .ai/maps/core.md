@@ -5907,13 +5907,13 @@ UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.topRail(shapes, metrics);
 UiRenderer.bottomNav(shapes, metrics);
 UiRenderer.panel(shapes, detail.x, detail.y, detail.width, detail.height);
+if (size > 0) drawDetailChrome(shapes, game.profile.inventory.items().get(index));
 ⋮----
 EquipmentItem item = game.profile.inventory.items().get(i);
 EquipmentItem equipped = game.profile.equipped(item.slot);
 boolean isEquipped = equipped != null && equipped.id.equals(item.id);
 UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == index, isEquipped);
-shapes.setColor(rarityColor(item.rarity));
-shapes.rect(r.x + 6f, r.y + 6f, 3f, Math.max(0f, r.height - 12f));
+drawGearCardChrome(shapes, r, item, i == index, isEquipped);
 ⋮----
 UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.NORMAL);
 UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height,
@@ -5923,6 +5923,42 @@ UiRenderer.button(shapes, actions[2].x, actions[2].y, actions[2].width, actions[
 UiRenderer.button(shapes, actions[3].x, actions[3].y, actions[3].width, actions[3].height,
 ⋮----
 shapes.end();
+⋮----
+private void drawGearCardChrome(ShapeRenderer shapes, Rectangle r, EquipmentItem item,
+⋮----
+Color rarity = rarityColor(item.rarity);
+⋮----
+shapes.setColor(rarity.r, rarity.g, rarity.b, railAlpha);
+shapes.rect(r.x + 6f, r.y + 6f, 4f, Math.max(0f, r.height - 12f));
+shapes.rect(r.x + 10f, r.y + r.height - 5f, Math.max(0f, r.width - 16f), 3f);
+⋮----
+shapes.setColor(rarity.r, rarity.g, rarity.b, equipped ? .10f : .065f);
+shapes.rect(r.x + 10f, r.y + 8f, Math.max(0f, r.width - 18f), Math.max(0f, r.height - 16f));
+⋮----
+float chipW = Math.min(58f, r.width * .18f);
+shapes.setColor(VisualTheme.positive().r, VisualTheme.positive().g, VisualTheme.positive().b, .92f);
+shapes.rect(r.x + r.width - chipW - 8f, r.y + 8f, chipW, 3f);
+⋮----
+private void drawDetailChrome(ShapeRenderer shapes, EquipmentItem item) {
+⋮----
+float itemScore = EquipmentService.score(item);
+float equippedScore = EquipmentService.score(equipped);
+⋮----
+Color compare = equipped != null && equipped.id.equals(item.id)
+? VisualTheme.positive()
+: delta >= 0f ? VisualTheme.positive() : VisualTheme.danger();
+⋮----
+shapes.setColor(rarity.r, rarity.g, rarity.b, .78f);
+shapes.rect(detail.x + 5f, detail.y + detail.height - 5f, Math.max(0f, detail.width - 10f), 3f);
+⋮----
+shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .46f);
+shapes.rect(splitX, detail.y + 12f, 2f, Math.max(0f, detail.height - 24f));
+⋮----
+shapes.setColor(compare.r, compare.g, compare.b, .08f);
+shapes.rect(detail.x + 8f, detail.y + 8f, Math.max(0f, detail.width * .50f - 12f),
+Math.max(0f, detail.height - 16f));
+shapes.setColor(compare.r, compare.g, compare.b, .72f);
+shapes.rect(detail.x + 8f, detail.y + 8f, Math.max(0f, detail.width * .50f - 12f), 3f);
 ⋮----
 private void drawText(int size, int pageStart, int pageEnd) {
 batch.begin();
@@ -5966,10 +6002,9 @@ font.draw(batch, t(item.slotKey()) + "  •  " + t(item.rarityKey()) + "  •  L
 font.setColor(isEquipped ? VisualTheme.positive() : absoluteIndex == index ? VisualTheme.accent() : VisualTheme.TEXT_DIM);
 font.draw(batch, isEquipped ? t("gear.equipped") : t("gear.unequipped"),
 ⋮----
-private void drawDetail(EquipmentItem item, int size) {
+font.draw(batch, t(item.rarityKey()), r.x + 16f, r.y + 16f, r.width * .45f, Align.left, false);
 ⋮----
-float itemScore = EquipmentService.score(item);
-float equippedScore = EquipmentService.score(equipped);
+private void drawDetail(EquipmentItem item, int size) {
 ⋮----
 font.draw(batch, localizedName(item), x, top, width * .48f, Align.left, false);
 ⋮----

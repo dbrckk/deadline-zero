@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 9df2678d454a9b1ea885e7ce50b6723b30420fb6
-Head: f51595674885f8f891b60b406b89536af617f84f
+Base: 318f49553897dfc540287446ec8b175241904836
+Head: 28ddc156fa21f67e613beccb60d315868d474d98
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/GearScreen.java
 
 ## Affected areas
 - core

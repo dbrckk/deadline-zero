@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T19:46:39Z
+Generated: 2026-09-20T20:02:23Z
 
 ### Git
 - Branch: `main`
-- Head: `f51595674885`
-- Commit date: 2026-09-20T21:46:20+02:00
-- Commit: ui(missions): strengthen claimable and completed states (#251)
+- Head: `28ddc156fa21`
+- Commit date: 2026-09-20T22:02:12+02:00
+- Commit: ui(gear): strengthen rarity selection and comparison hierarchy (#252)
 - Tracked files: 834
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/GearScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
