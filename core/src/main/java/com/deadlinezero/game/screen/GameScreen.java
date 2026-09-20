@@ -222,8 +222,11 @@ public final class GameScreen extends ScreenAdapter {
         } else {
             cameraShake = 0f;
         }
-        cam.position.x = MathUtils.lerp(cam.position.x, 0f, .08f);
-        cam.position.y = MathUtils.lerp(cam.position.y, 0f, .08f);
+        // Subtle player follow and velocity look-ahead keep the arena readable while making movement feel less static.
+        float cameraTargetX = player.position.x * .14f + player.velocity.x * .055f;
+        float cameraTargetY = player.position.y * .14f + player.velocity.y * .055f;
+        cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .075f);
+        cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .075f);
         polish.applyCameraRecoil(cam);
         cam.update();
     }
