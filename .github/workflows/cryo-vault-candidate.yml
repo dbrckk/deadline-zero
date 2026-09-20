@@ -1,0 +1,95 @@
+name: Cryo Vault Candidate Pack
+
+on:
+  push:
+    paths:
+      - '.github/workflows/cryo-vault-candidate.yml'
+      - 'tools/environment/generate_cryo_vault_candidate.py'
+      - 'tools/environment/pack_environment_art.py'
+      - 'tools/environment/validate_environment_art_contract.py'
+      - 'config/environment-art-contract.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cryo-vault-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+      - name: Generate deterministic Cryo Vault candidates
+        run: |
+          set -euo pipefail
+          python3 tools/environment/generate_cryo_vault_candidate.py
+          test "$(find art_sources/environment/cryo_vault -type f -name '*.png' | wc -l)" -eq 14
+      - name: Pack and validate candidate biome
+        run: |
+          set -euo pipefail
+          python3 tools/environment/pack_environment_art.py --biome cryo_vault
+          python3 tools/environment/validate_environment_art_contract.py --json > build/environment_art/coverage-before-publish.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          packed=json.loads(Path('build/environment_art/environment-cryo_vault.manifest.json').read_text())
+          candidate=json.loads(Path('art_sources/environment/cryo_vault/candidate-manifest.json').read_text())
+          assert packed['biome']=='cryo_vault'
+          assert packed['slotCount']==14 and len(packed['assets'])==14
+          assert candidate['asset_count']==14
+          assert candidate['production_ready'] is False
+          assert candidate['visual_qa_pass'] is False
+          print('Cryo Vault candidate contract PASS: 14/14 authored masters')
+          PY
+      - name: Build review contact sheet
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          slots=['floor/concrete_a','floor/concrete_b','floor/concrete_c','floor/hazard_a',
+          'decal/crack_a','decal/blood_a','decal/scorch_a','prop/barrier_a',
+          'prop/debris_a','prop/debris_b','prop/wall_a','prop/wall_b','prop/crate_a','prop/beacon_a']
+          cell=256
+          sheet=Image.new('RGBA',(cell*4,cell*4),(10,16,22,255))
+          for i,slot in enumerate(slots):
+              src=Path('art_sources/environment/cryo_vault')/(slot+'.png')
+              with Image.open(src) as raw: im=raw.convert('RGBA').resize((cell,cell),Image.Resampling.LANCZOS)
+              sheet.alpha_composite(im,((i%4)*cell,(i//4)*cell))
+          out=Path('build/environment_art/cryo-vault-contact-sheet.png'); out.parent.mkdir(parents=True,exist_ok=True); sheet.save(out,'PNG',optimize=True)
+          PY
+      - name: Upload candidate review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cryo-vault-candidate-${{ github.run_number }}
+          path: |
+            build/environment_art/environment-cryo_vault.png
+            build/environment_art/environment-cryo_vault.atlas.txt
+            build/environment_art/environment-cryo_vault.manifest.json
+            build/environment_art/cryo-vault-contact-sheet.png
+            art_sources/environment/cryo_vault/candidate-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Commit generated candidate masters to branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add art_sources/environment/cryo_vault
+          if git diff --cached --quiet; then
+            echo "Cryo Vault candidate masters already current"
+            exit 0
+          fi
+          git commit -m "art(environment): add Cryo Vault candidate masters"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
