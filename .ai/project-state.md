@@ -22,22 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T19:23:58Z
+Generated: 2026-09-20T19:46:39Z
 
 ### Git
 - Branch: `main`
-- Head: `cdffa38a1e15`
-- Commit date: 2026-09-20T21:23:46+02:00
-- Commit: ui(boss): strengthen warning and phase HUD presentation (#249)
+- Head: `f51595674885`
+- Commit date: 2026-09-20T21:46:20+02:00
+- Commit: ui(missions): strengthen claimable and completed states (#251)
 - Tracked files: 834
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `assets/art/environment-cinder_foundry.png`
-- `assets/art/environment-cryo_vault.png`
-- `assets/art/environment-cryogenic_depths.png`
-- `assets/art/environment-null_sector.png`
 
 ### Project signals
 - `build.gradle`

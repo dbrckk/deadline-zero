@@ -6382,14 +6382,27 @@ UiRenderer.topRail(shapes, metrics);
 UiRenderer.panel(shapes, dailyPanel.x, dailyPanel.y, dailyPanel.width, dailyPanel.height);
 UiRenderer.panel(shapes, weeklyPanel.x, weeklyPanel.y, weeklyPanel.width, weeklyPanel.height);
 UiRenderer.panel(shapes, progressPanel.x, progressPanel.y, progressPanel.width, progressPanel.height);
-for (Rectangle r : dailyRows) UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, false);
-for (Rectangle r : weeklyRows) UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, false);
+drawMissionStateCard(shapes, dailyRows[0], p.daily.loginClaimed, !p.daily.loginClaimed, VisualTheme.GOLD);
+drawMissionStateCard(shapes, dailyRows[1], p.daily.killMissionClaimed, p.daily.killsToday >= 100, VisualTheme.GOLD);
+drawMissionStateCard(shapes, dailyRows[2], p.daily.runMissionClaimed, p.daily.runsToday >= 3, VisualTheme.GOLD);
+drawMissionStateCard(shapes, dailyRows[3], p.daily.bossMissionClaimed, p.daily.bossesToday >= 1, VisualTheme.GOLD);
+⋮----
+drawMissionStateCard(shapes, weeklyRows[0], p.weekly.killMissionClaimed,
+⋮----
+drawMissionStateCard(shapes, weeklyRows[1], p.weekly.runMissionClaimed,
+⋮----
+drawMissionStateCard(shapes, weeklyRows[2], p.weekly.bossMissionClaimed,
+⋮----
 UiRenderer.card(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height, false, true);
 ⋮----
 AchievementService.Achievement a = AchievementService.Achievement.values()[i];
 boolean unlocked = AchievementService.unlocked(p, a);
 boolean claimed = p.achievements.claimed(a);
-UiRenderer.card(shapes, achievementRows[i].x, achievementRows[i].y, achievementRows[i].width,
+⋮----
+UiRenderer.card(shapes, r.x, r.y, r.width, r.height, unlocked && !claimed, claimed);
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, claimed ? .18f : unlocked ? .78f : .28f);
+shapes.rect(r.x + 5f, r.y + r.height - 4f, Math.max(0f, r.width - 10f), 3f);
 ⋮----
 shapes.end();
 ⋮----
@@ -6399,6 +6412,22 @@ drawDaily(p);
 drawWeekly(p);
 drawProgress(p);
 batch.end();
+⋮----
+private void drawMissionStateCard(ShapeRenderer shapes, Rectangle r, boolean claimed,
+⋮----
+UiRenderer.card(shapes, r.x, r.y, r.width, r.height, ready && !claimed, claimed);
+⋮----
+Color stateAccent = claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : categoryAccent;
+⋮----
+shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, alpha);
+⋮----
+shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, .07f);
+shapes.rect(r.x + 7f, r.y + 7f, Math.max(0f, r.width - 14f), Math.max(0f, r.height - 14f));
+float notch = Math.min(22f, r.width * .08f);
+shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, .92f);
+shapes.rect(r.x + r.width - notch - 8f, r.y + 7f, notch, 3f);
+⋮----
+shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .30f);
 ⋮----
 private void drawHeader() {
 font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
@@ -7010,15 +7039,17 @@ UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.topRail(shapes, metrics);
 ⋮----
 UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == 2 && !disabled, false);
+drawChestChrome(shapes, r, i, disabled);
 Rectangle button = chestButton(r);
 UiRenderer.button(shapes, button.x, button.y, button.width, button.height,
 ⋮----
 String productId = purchaseProductId(i);
 ⋮----
 boolean enabled = game.services.offers.current().enabled(productId);
+boolean featured = game.services.offers.current().featured(productId);
 UiRenderer.button(shapes, r.x, r.y, r.width, r.height,
 ⋮----
-: game.services.offers.current().featured(productId) ? UiRenderer.ButtonState.SELECTED
+drawOfferChrome(shapes, r, i, owned || !enabled, featured);
 ⋮----
 shapes.end();
 ⋮----
@@ -7033,6 +7064,38 @@ layout.footer().width - 40f, Align.center, true);
 batch.end();
 ⋮----
 handleInput();
+⋮----
+private void drawChestChrome(ShapeRenderer shapes, Rectangle r, int index, boolean disabled) {
+⋮----
+case 2 -> VisualTheme.positive();
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, alpha);
+shapes.rect(r.x + 5f, r.y + r.height - 7f, Math.max(0f, r.width - 10f), 4f);
+shapes.setColor(accent.r, accent.g, accent.b, disabled ? .035f : .065f);
+shapes.rect(r.x + 8f, r.y + 8f, Math.max(0f, r.width - 16f), Math.max(0f, r.height - 16f));
+⋮----
+float emblemRadius = Math.min(r.width, r.height) * .07f;
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, disabled ? .10f : .18f);
+shapes.circle(cx, cy, emblemRadius * 1.7f, 28);
+shapes.setColor(accent.r, accent.g, accent.b, disabled ? .26f : .76f);
+shapes.circle(cx, cy, emblemRadius, 24);
+shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .92f);
+shapes.circle(cx, cy, emblemRadius * .48f, 20);
+⋮----
+private void drawOfferChrome(ShapeRenderer shapes, Rectangle r, int index,
+⋮----
+default -> VisualTheme.accent();
+⋮----
+shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .24f);
+shapes.rect(r.x + 6f, r.y + r.height - 5f, Math.max(0f, r.width - 12f), 2f);
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, featured ? .88f : .42f);
+shapes.rect(r.x + 6f, r.y + r.height - (featured ? 6f : 4f),
+Math.max(0f, r.width - 12f), featured ? 4f : 2f);
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, .08f);
+shapes.rect(r.x + 7f, r.y + 7f, Math.max(0f, r.width - 14f), Math.max(0f, r.height - 14f));
 ⋮----
 private void drawHeader(PlayerProfile p) {
 ⋮----
