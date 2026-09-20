@@ -947,10 +947,11 @@
         "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
         "tools/environment/pack_environment_art.py",
+        "tools/environment/qa_environment_candidates.py",
         "tools/environment/test_validate_environment_art_contract.py",
         "tools/environment/validate_environment_art_contract.py"
       ],
-      "in_degree": 10,
+      "in_degree": 11,
       "out_degree": 4
     },
     "core/src/main/java/com/deadlinezero/game/config/AccessibilitySettings.java": {
@@ -1434,6 +1435,7 @@
         "tools/blender/repair_rex_weights.py",
         "tools/blender/validate_rex_weapon_visibility.py",
         "tools/blender/validate_rig.py",
+        "tools/environment/qa_environment_candidates.py",
         "tools/environment/validate_environment_art_contract.py",
         "tools/sprites/audit_final_art_status.py",
         "tools/sprites/normalize_actor_frames.py",
@@ -1442,7 +1444,7 @@
         "tools/sprites/validate_actor_role_metrics.py",
         "tools/sprites/validate_ranged_attack_readability.py"
       ],
-      "in_degree": 14,
+      "in_degree": 15,
       "out_degree": 4
     },
     "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java": {
@@ -3981,9 +3983,10 @@
         "tools/environment/generate_quarantine_yard_candidate.py",
         "tools/environment/install_all_environment_candidates.py",
         "tools/environment/pack_environment_art.py",
+        "tools/environment/qa_environment_candidates.py",
         "tools/environment/validate_environment_art_contract.py"
       ],
-      "in_degree": 36,
+      "in_degree": 37,
       "out_degree": 0
     },
     "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": {
@@ -6277,37 +6280,52 @@
       "in_degree": 0,
       "out_degree": 1
     },
+    "tools/environment/candidate_utils.py": {
+      "dependencies": [],
+      "dependents": [
+        "tools/environment/generate_cinder_foundry_candidate.py",
+        "tools/environment/generate_cryo_vault_candidate.py",
+        "tools/environment/generate_cryogenic_depths_candidate.py",
+        "tools/environment/generate_null_sector_candidate.py"
+      ],
+      "in_degree": 4,
+      "out_degree": 0
+    },
     "tools/environment/generate_cinder_foundry_candidate.py": {
       "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+        "tools/environment/candidate_utils.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 1
+      "out_degree": 2
     },
     "tools/environment/generate_cryo_vault_candidate.py": {
       "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+        "tools/environment/candidate_utils.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 1
+      "out_degree": 2
     },
     "tools/environment/generate_cryogenic_depths_candidate.py": {
       "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+        "tools/environment/candidate_utils.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 1
+      "out_degree": 2
     },
     "tools/environment/generate_null_sector_candidate.py": {
       "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+        "tools/environment/candidate_utils.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 1
+      "out_degree": 2
     },
     "tools/environment/generate_quarantine_yard_candidate.py": {
       "dependencies": [
@@ -6333,6 +6351,16 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 2
+    },
+    "tools/environment/qa_environment_candidates.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 3
     },
     "tools/environment/test_upsert_environment_atlas.py": {
       "dependencies": [

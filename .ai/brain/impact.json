@@ -1,73 +1,641 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "db0532aefb2f1b46ec399dc050e82acdcb77e149",
-  "head": "ee53dbdfb8b0c231cd7ba2a8bd1ea9846786372f",
+  "base": "ee53dbdfb8b0c231cd7ba2a8bd1ea9846786372f",
+  "head": "9d85976123cb668e62bd80b4fa847c8cb578ccee",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/integrate-environment-candidates.yml",
+      "path": ".github/workflows/environment-semantic-qa.yml",
       "status": "A"
     },
     {
-      "path": "assets/art/environment-cinder_foundry.png",
-      "status": "A"
-    },
-    {
-      "path": "assets/art/environment-cryo_vault.png",
-      "status": "A"
-    },
-    {
-      "path": "assets/art/environment-cryogenic_depths.png",
-      "status": "A"
-    },
-    {
-      "path": "assets/art/environment-null_sector.png",
-      "status": "A"
-    },
-    {
-      "path": "assets/art/environment-quarantine_yard.png",
-      "status": "A"
-    },
-    {
-      "path": "assets/art/game.atlas",
+      "path": "art_sources/environment/cinder_foundry/floor/concrete_a.png",
       "status": "M"
     },
     {
-      "path": "tools/environment/install_all_environment_candidates.py",
+      "path": "art_sources/environment/cinder_foundry/floor/concrete_b.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/cinder_foundry/floor/concrete_c.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/cinder_foundry/floor/hazard_a.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/cryo_vault/floor/concrete_a.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/cryo_vault/floor/concrete_b.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/cryo_vault/floor/concrete_c.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/cryo_vault/floor/hazard_a.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/cryogenic_depths/floor/concrete_a.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/cryogenic_depths/floor/concrete_b.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/cryogenic_depths/floor/concrete_c.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/cryogenic_depths/floor/hazard_a.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/null_sector/floor/concrete_a.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/null_sector/floor/concrete_b.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/null_sector/floor/concrete_c.png",
+      "status": "M"
+    },
+    {
+      "path": "art_sources/environment/null_sector/floor/hazard_a.png",
+      "status": "M"
+    },
+    {
+      "path": "tools/environment/candidate_utils.py",
+      "status": "A"
+    },
+    {
+      "path": "tools/environment/generate_cinder_foundry_candidate.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/environment/generate_cryo_vault_candidate.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/environment/generate_null_sector_candidate.py",
+      "status": "M"
+    },
+    {
+      "path": "tools/environment/qa_environment_candidates.py",
       "status": "A"
     }
   ],
   "changed_source_files": [
-    "tools/environment/install_all_environment_candidates.py"
+    "tools/environment/candidate_utils.py",
+    "tools/environment/generate_cinder_foundry_candidate.py",
+    "tools/environment/generate_cryo_vault_candidate.py",
+    "tools/environment/generate_cryogenic_depths_candidate.py",
+    "tools/environment/generate_null_sector_candidate.py",
+    "tools/environment/qa_environment_candidates.py"
   ],
   "impacted_files": [
-    "tools/environment/install_all_environment_candidates.py"
+    "tools/environment/candidate_utils.py",
+    "tools/environment/generate_cinder_foundry_candidate.py",
+    "tools/environment/generate_cryo_vault_candidate.py",
+    "tools/environment/generate_cryogenic_depths_candidate.py",
+    "tools/environment/generate_null_sector_candidate.py",
+    "tools/environment/qa_environment_candidates.py"
   ],
   "impacted_symbols": [
     {
-      "name": "run",
+      "name": "make_tileable_edges",
       "kind": "function",
-      "file": "tools/environment/install_all_environment_candidates.py",
-      "line": 28
+      "file": "tools/environment/candidate_utils.py",
+      "line": 7
     },
     {
-      "name": "load_biomes",
+      "name": "transparent",
       "kind": "function",
-      "file": "tools/environment/install_all_environment_candidates.py",
-      "line": 32
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 24
     },
     {
-      "name": "validate_candidate_manifest",
+      "name": "clamp",
       "kind": "function",
-      "file": "tools/environment/install_all_environment_candidates.py",
-      "line": 40
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 25
+    },
+    {
+      "name": "noise",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 27
+    },
+    {
+      "name": "seams",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 35
+    },
+    {
+      "name": "scuffs",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 46
+    },
+    {
+      "name": "finish",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 52
+    },
+    {
+      "name": "floor_a",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 68
+    },
+    {
+      "name": "floor_b",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 75
+    },
+    {
+      "name": "floor_c",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 83
+    },
+    {
+      "name": "floor_hazard",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 91
+    },
+    {
+      "name": "lava_crack",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 100
+    },
+    {
+      "name": "blood",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 109
+    },
+    {
+      "name": "scorch",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 116
+    },
+    {
+      "name": "shadowed",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 123
+    },
+    {
+      "name": "barrier",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 130
+    },
+    {
+      "name": "debris",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 137
+    },
+    {
+      "name": "wall",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 147
+    },
+    {
+      "name": "crate",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 156
+    },
+    {
+      "name": "beacon",
+      "kind": "function",
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 162
     },
     {
       "name": "main",
       "kind": "function",
-      "file": "tools/environment/install_all_environment_candidates.py",
-      "line": 60
+      "file": "tools/environment/generate_cinder_foundry_candidate.py",
+      "line": 179
+    },
+    {
+      "name": "clamp",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 16
+    },
+    {
+      "name": "transparent",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 17
+    },
+    {
+      "name": "noise",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 18
+    },
+    {
+      "name": "panels",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 25
+    },
+    {
+      "name": "frost",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 31
+    },
+    {
+      "name": "finish",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 37
+    },
+    {
+      "name": "floor_a",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 44
+    },
+    {
+      "name": "floor_b",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 46
+    },
+    {
+      "name": "floor_c",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 50
+    },
+    {
+      "name": "floor_hazard",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 52
+    },
+    {
+      "name": "ice_crack",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 57
+    },
+    {
+      "name": "blood",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 65
+    },
+    {
+      "name": "scorch",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 71
+    },
+    {
+      "name": "framed",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 76
+    },
+    {
+      "name": "barrier",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 78
+    },
+    {
+      "name": "debris",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 82
+    },
+    {
+      "name": "wall",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 89
+    },
+    {
+      "name": "crate",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 95
+    },
+    {
+      "name": "beacon",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 97
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/environment/generate_cryo_vault_candidate.py",
+      "line": 107
+    },
+    {
+      "name": "clamp",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 16
+    },
+    {
+      "name": "transparent",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 17
+    },
+    {
+      "name": "noise",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 18
+    },
+    {
+      "name": "seams",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 27
+    },
+    {
+      "name": "frost",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 36
+    },
+    {
+      "name": "finish",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 44
+    },
+    {
+      "name": "floor_a",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 61
+    },
+    {
+      "name": "floor_b",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 67
+    },
+    {
+      "name": "floor_c",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 74
+    },
+    {
+      "name": "floor_hazard",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 76
+    },
+    {
+      "name": "crack",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 84
+    },
+    {
+      "name": "blood",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 95
+    },
+    {
+      "name": "scorch",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 102
+    },
+    {
+      "name": "framed",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 109
+    },
+    {
+      "name": "barrier",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 117
+    },
+    {
+      "name": "debris",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 123
+    },
+    {
+      "name": "wall",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 132
+    },
+    {
+      "name": "crate",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 140
+    },
+    {
+      "name": "beacon",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 146
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+      "line": 162
+    },
+    {
+      "name": "clamp",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 21
+    },
+    {
+      "name": "transparent",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 22
+    },
+    {
+      "name": "noise",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 23
+    },
+    {
+      "name": "panel",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 32
+    },
+    {
+      "name": "finish",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 44
+    },
+    {
+      "name": "floor_a",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 58
+    },
+    {
+      "name": "floor_b",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 63
+    },
+    {
+      "name": "floor_c",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 68
+    },
+    {
+      "name": "floor_hazard",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 74
+    },
+    {
+      "name": "fracture",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 81
+    },
+    {
+      "name": "blood",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 89
+    },
+    {
+      "name": "scorch",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 95
+    },
+    {
+      "name": "framed",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 101
+    },
+    {
+      "name": "barrier",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 107
+    },
+    {
+      "name": "debris",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 114
+    },
+    {
+      "name": "wall",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 124
+    },
+    {
+      "name": "crate",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 132
+    },
+    {
+      "name": "beacon",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 137
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/environment/generate_null_sector_candidate.py",
+      "line": 150
+    },
+    {
+      "name": "sha256",
+      "kind": "function",
+      "file": "tools/environment/qa_environment_candidates.py",
+      "line": 24
+    },
+    {
+      "name": "luminance",
+      "kind": "function",
+      "file": "tools/environment/qa_environment_candidates.py",
+      "line": 28
+    },
+    {
+      "name": "edge_rgb_mae",
+      "kind": "function",
+      "file": "tools/environment/qa_environment_candidates.py",
+      "line": 33
+    },
+    {
+      "name": "border_alpha_max",
+      "kind": "function",
+      "file": "tools/environment/qa_environment_candidates.py",
+      "line": 47
+    },
+    {
+      "name": "alpha_coverage",
+      "kind": "function",
+      "file": "tools/environment/qa_environment_candidates.py",
+      "line": 58
+    },
+    {
+      "name": "make_review_sheet",
+      "kind": "function",
+      "file": "tools/environment/qa_environment_candidates.py",
+      "line": 65
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/environment/qa_environment_candidates.py",
+      "line": 89
     }
   ],
   "selected_tests": []

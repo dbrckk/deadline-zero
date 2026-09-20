@@ -462,6 +462,29 @@
       "useful": [
         "tools/environment/install_all_environment_candidates.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Add semantic QA gate for 70 environment candidates (#244)",
+      "terms": [
+        "244",
+        "70",
+        "add",
+        "candidates",
+        "environment",
+        "gate",
+        "qa",
+        "semantic"
+      ],
+      "tests": [],
+      "useful": [
+        "tools/environment/candidate_utils.py",
+        "tools/environment/generate_cinder_foundry_candidate.py",
+        "tools/environment/generate_cryo_vault_candidate.py",
+        "tools/environment/generate_cryogenic_depths_candidate.py",
+        "tools/environment/generate_null_sector_candidate.py",
+        "tools/environment/qa_environment_candidates.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -497,12 +520,26 @@
     "243": {
       "tools/environment/install_all_environment_candidates.py": 4
     },
+    "244": {
+      "tools/environment/candidate_utils.py": 4,
+      "tools/environment/generate_cinder_foundry_candidate.py": 4,
+      "tools/environment/generate_cryo_vault_candidate.py": 4,
+      "tools/environment/generate_cryogenic_depths_candidate.py": 4,
+      "tools/environment/generate_null_sector_candidate.py": 4,
+      "tools/environment/qa_environment_candidates.py": 4
+    },
     "70": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java": 4,
+      "tools/environment/candidate_utils.py": 4,
+      "tools/environment/generate_cinder_foundry_candidate.py": 4,
+      "tools/environment/generate_cryo_vault_candidate.py": 4,
+      "tools/environment/generate_cryogenic_depths_candidate.py": 4,
+      "tools/environment/generate_null_sector_candidate.py": 4,
       "tools/environment/install_all_environment_candidates.py": 4,
       "tools/environment/pack_environment_art.py": 4,
+      "tools/environment/qa_environment_candidates.py": 4,
       "tools/environment/test_upsert_environment_atlas.py": 4,
       "tools/environment/test_validate_environment_art_contract.py": 4,
       "tools/environment/upsert_environment_atlas.py": 4,
@@ -558,12 +595,14 @@
       "core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java": 4,
-      "tools/environment/generate_cinder_foundry_candidate.py": 4,
-      "tools/environment/generate_cryo_vault_candidate.py": 4,
-      "tools/environment/generate_cryogenic_depths_candidate.py": 4,
-      "tools/environment/generate_null_sector_candidate.py": 4,
+      "tools/environment/candidate_utils.py": 4,
+      "tools/environment/generate_cinder_foundry_candidate.py": 8,
+      "tools/environment/generate_cryo_vault_candidate.py": 8,
+      "tools/environment/generate_cryogenic_depths_candidate.py": 8,
+      "tools/environment/generate_null_sector_candidate.py": 8,
       "tools/environment/generate_quarantine_yard_candidate.py": 4,
       "tools/environment/pack_environment_art.py": 4,
+      "tools/environment/qa_environment_candidates.py": 4,
       "tools/environment/test_upsert_environment_atlas.py": 4,
       "tools/environment/test_validate_environment_art_contract.py": 4,
       "tools/environment/upsert_environment_atlas.py": 4,
@@ -698,6 +737,14 @@
       "tools/environment/generate_null_sector_candidate.py": 4,
       "tools/environment/generate_quarantine_yard_candidate.py": 4
     },
+    "candidates": {
+      "tools/environment/candidate_utils.py": 4,
+      "tools/environment/generate_cinder_foundry_candidate.py": 4,
+      "tools/environment/generate_cryo_vault_candidate.py": 4,
+      "tools/environment/generate_cryogenic_depths_candidate.py": 4,
+      "tools/environment/generate_null_sector_candidate.py": 4,
+      "tools/environment/qa_environment_candidates.py": 4
+    },
     "canonical": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 4,
       "tools/blender/build_rex_actions.py": 4,
@@ -826,13 +873,15 @@
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java": 4,
-      "tools/environment/generate_cinder_foundry_candidate.py": 4,
-      "tools/environment/generate_cryo_vault_candidate.py": 4,
-      "tools/environment/generate_cryogenic_depths_candidate.py": 4,
-      "tools/environment/generate_null_sector_candidate.py": 4,
+      "tools/environment/candidate_utils.py": 4,
+      "tools/environment/generate_cinder_foundry_candidate.py": 8,
+      "tools/environment/generate_cryo_vault_candidate.py": 8,
+      "tools/environment/generate_cryogenic_depths_candidate.py": 8,
+      "tools/environment/generate_null_sector_candidate.py": 8,
       "tools/environment/generate_quarantine_yard_candidate.py": 4,
       "tools/environment/install_all_environment_candidates.py": 4,
       "tools/environment/pack_environment_art.py": 4,
+      "tools/environment/qa_environment_candidates.py": 4,
       "tools/environment/test_upsert_environment_atlas.py": 4,
       "tools/environment/test_validate_environment_art_contract.py": 4,
       "tools/environment/upsert_environment_atlas.py": 4,
@@ -894,6 +943,14 @@
       "tools/blender/build_rex_actions.py": 4,
       "tools/sprites/assemble_actor_sheet.py": 4,
       "tools/sprites/audit_final_art_status.py": 4
+    },
+    "gate": {
+      "tools/environment/candidate_utils.py": 4,
+      "tools/environment/generate_cinder_foundry_candidate.py": 4,
+      "tools/environment/generate_cryo_vault_candidate.py": 4,
+      "tools/environment/generate_cryogenic_depths_candidate.py": 4,
+      "tools/environment/generate_null_sector_candidate.py": 4,
+      "tools/environment/qa_environment_candidates.py": 4
     },
     "give": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
@@ -1117,6 +1174,12 @@
       "tools/sprites/validate_final_art_promotion_consistency.py": 4
     },
     "qa": {
+      "tools/environment/candidate_utils.py": 4,
+      "tools/environment/generate_cinder_foundry_candidate.py": 4,
+      "tools/environment/generate_cryo_vault_candidate.py": 4,
+      "tools/environment/generate_cryogenic_depths_candidate.py": 4,
+      "tools/environment/generate_null_sector_candidate.py": 4,
+      "tools/environment/qa_environment_candidates.py": 4,
       "tools/sprites/audit_final_art_status.py": 4
     },
     "quarantine": {
@@ -1185,6 +1248,14 @@
     "sector": {
       "tools/environment/generate_cinder_foundry_candidate.py": 4,
       "tools/environment/generate_null_sector_candidate.py": 4
+    },
+    "semantic": {
+      "tools/environment/candidate_utils.py": 4,
+      "tools/environment/generate_cinder_foundry_candidate.py": 4,
+      "tools/environment/generate_cryo_vault_candidate.py": 4,
+      "tools/environment/generate_cryogenic_depths_candidate.py": 4,
+      "tools/environment/generate_null_sector_candidate.py": 4,
+      "tools/environment/qa_environment_candidates.py": 4
     },
     "sentinel": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java": 4,

@@ -1,21 +1,36 @@
 # Change impact
 
-Base: 4ed00e5883018f2d3f58116c95aff9bda2590ceb
-Head: ee53dbdfb8b0c231cd7ba2a8bd1ea9846786372f
+Base: 44edfd4492b9bb589bd14d9267ae62abe5686790
+Head: 9d85976123cb668e62bd80b4fa847c8cb578ccee
 
 ## Changed files
-- A .github/workflows/integrate-environment-candidates.yml
-- A assets/art/environment-cinder_foundry.png
-- A assets/art/environment-cryo_vault.png
-- A assets/art/environment-cryogenic_depths.png
-- A assets/art/environment-null_sector.png
-- A assets/art/environment-quarantine_yard.png
-- M assets/art/game.atlas
-- A tools/environment/install_all_environment_candidates.py
+- A .github/workflows/environment-semantic-qa.yml
+- M art_sources/environment/cinder_foundry/floor/concrete_a.png
+- M art_sources/environment/cinder_foundry/floor/concrete_b.png
+- M art_sources/environment/cinder_foundry/floor/concrete_c.png
+- M art_sources/environment/cinder_foundry/floor/hazard_a.png
+- M art_sources/environment/cryo_vault/floor/concrete_a.png
+- M art_sources/environment/cryo_vault/floor/concrete_b.png
+- M art_sources/environment/cryo_vault/floor/concrete_c.png
+- M art_sources/environment/cryo_vault/floor/hazard_a.png
+- M art_sources/environment/cryogenic_depths/floor/concrete_a.png
+- M art_sources/environment/cryogenic_depths/floor/concrete_b.png
+- M art_sources/environment/cryogenic_depths/floor/concrete_c.png
+- M art_sources/environment/cryogenic_depths/floor/hazard_a.png
+- M art_sources/environment/null_sector/floor/concrete_a.png
+- M art_sources/environment/null_sector/floor/concrete_b.png
+- M art_sources/environment/null_sector/floor/concrete_c.png
+- M art_sources/environment/null_sector/floor/hazard_a.png
+- A tools/environment/candidate_utils.py
+- M tools/environment/generate_cinder_foundry_candidate.py
+- M tools/environment/generate_cryo_vault_candidate.py
+- M tools/environment/generate_cryogenic_depths_candidate.py
+- M tools/environment/generate_null_sector_candidate.py
+- A tools/environment/qa_environment_candidates.py
 
 ## Affected areas
 - .github
-- assets
+- art_sources
 - tools
 
 ## Related test candidates

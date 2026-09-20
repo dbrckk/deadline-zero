@@ -5,787 +5,2858 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "run": {
+    "make_tileable_edges": {
       "definition": {
-        "file": "tools/environment/install_all_environment_candidates.py",
-        "line": 28,
+        "file": "tools/environment/candidate_utils.py",
+        "line": 7,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-          "line": 26,
-          "preview": "run(activity, () -> {",
-          "definition_candidate": false
+          "file": "tools/environment/candidate_utils.py",
+          "line": 7,
+          "preview": "def make_tileable_edges(image: Image.Image, band: int = 24) -> Image.Image:",
+          "definition_candidate": true
         },
         {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-          "line": 38,
-          "preview": "assertTrue(\"defeat settlement must open run result\", game.getScreen() instanceof RunResultScreen);",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-          "line": 39,
-          "preview": "assertEquals(\"defeat must settle exactly one run\", runsBefore + 1, game.profile.totalRuns);",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-          "line": 50,
-          "preview": "assertTrue(\"second settlement must open run result\", game.getScreen() instanceof RunResultScreen);",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-          "line": 51,
-          "preview": "assertEquals(\"second settlement must count exactly one additional run\", runsBefore + 2, game.profile.totalRuns);",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-          "line": 72,
-          "preview": "private static void run(AndroidLauncher activity, Runnable action) throws Exception {",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-          "line": 76,
-          "preview": "try { action.run(); } catch (Throwable t) { failure.set(t); } finally { done.countDown(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-          "line": 187,
-          "preview": "assertTrue(\"visual probe must run the production REX selection\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-          "line": 277,
-          "preview": "assertTrue(\"visual probe must run the production WRAITH selection\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-          "line": 1003,
-          "preview": "try { action.run(); } catch (Throwable throwable) { failure.set(throwable); } finally { done.countDown(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
-          "line": 290,
-          "preview": "try { action.run(); } catch (Throwable throwable) { failure.set(throwable); } finally { done.countDown(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidProcessPersistenceTest.java",
-          "line": 84,
-          "preview": "action.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
-          "line": 137,
-          "preview": "assertTrue(\"responsive visual probe did not run at wide-phone aspect: \" + aspect,",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
-          "line": 173,
-          "preview": "action.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 82,
-          "preview": "assertTrue(\"expected menu before interrupted run\", game.getScreen() instanceof MenuScreen);",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 97,
-          "preview": "assertTrue(\"interrupted run must return to menu\", game.getScreen() instanceof MenuScreen);",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 98,
-          "preview": "assertEquals(\"interrupted run must not increment totalRuns\", runsBefore.get().intValue(), game.profile.totalRuns);",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 99,
-          "preview": "assertEquals(\"interrupted run must not add settled kills\", killsBefore.get().longValue(), game.profile.totalKills);",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 100,
-          "preview": "assertEquals(\"interrupted run must not grant credits\", creditsBefore.get().longValue(), game.profile.currency(PlayerProfile.Currency.CREDITS));",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 101,
-          "preview": "assertEquals(\"interrupted run must not grant gems\", gemsBefore.get().longValue(), game.profile.currency(PlayerProfile.Currency.GEMS));",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 105,
-          "preview": "assertEquals(\"interrupted run count changed after reload\", runsBefore.get().intValue(), reloaded.totalRuns);",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 106,
-          "preview": "assertEquals(\"interrupted run kills changed after reload\", killsBefore.get().longValue(), reloaded.totalKills);",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 107,
-          "preview": "assertEquals(\"interrupted run credits changed after reload\", creditsBefore.get().longValue(), reloaded.currency(PlayerProfile.Currency.CREDITS));",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 108,
-          "preview": "assertEquals(\"interrupted run gems changed after reload\", gemsBefore.get().longValue(), reloaded.currency(PlayerProfile.Currency.GEMS));",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-          "line": 135,
-          "preview": "action.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
-          "line": 128,
-          "preview": "if (onFailure != null) onFailure.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
-          "line": 132,
-          "preview": "if (onFailure != null) onFailure.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
-          "line": 234,
-          "preview": "if (onFailure != null) onFailure.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
-          "line": 240,
-          "preview": "if (onSuccess != null) onSuccess.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
-          "line": 242,
-          "preview": "onFailure.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
-          "line": 273,
-          "preview": "if (callback != null) callback.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
-          "line": 279,
-          "preview": "if (callback != null) callback.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidConsentManager.java",
-          "line": 44,
-          "preview": "if (onDismissed != null) onDismissed.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidConsentManager.java",
-          "line": 49,
-          "preview": "if (onComplete != null && completed.compareAndSet(false, true)) onComplete.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidPlayGamesCloudSaveAdapter.java",
-          "line": 20,
-          "preview": "/** Google Play Games v2 Saved Games backend. Calls must run off the Android main thread. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidPrivacyService.java",
-          "line": 24,
-          "preview": "if (onDismissed != null) onDismissed.run();",
-          "definition_candidate": false
-        },
-        {
-          "file": "android/src/main/java/com/deadlinezero/game/android/AndroidShareService.java",
-          "line": 24,
-          "preview": "Intent chooser = Intent.createChooser(send, \"Share Deadline: Zero run\");",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-          "line": 105,
-          "preview": "/** Prepares a stable run identity, then asks the player to choose one of three risk/reward contracts. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
-          "line": 5,
-          "preview": "/** Persistent-in-run ability levels plus deterministic evolution/synergy contracts. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/ai/LeaperSharedRuntime.java",
-          "line": 3,
-          "preview": "/** Shared run-local LEAPER runtime used by simulation and presentation hooks. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-          "line": 3,
-          "preview": "/** Deterministic combat music profile selection from run stage. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-          "line": 4,
-          "preview": "* Per-run deterministic signature passives for late-game weapons.",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
-          "line": 6,
-          "preview": "FIRST_DEPLOYMENT(\"First Deployment\", \"Complete 1 run\", 500, 0),",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
-          "line": 29,
-          "preview": "return new Assessment(Status.TOO_SHORT, \"Average run below \" + Math.round(MIN_HEALTHY_SECONDS) + \"s\");",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
-          "line": 32,
-          "preview": "return new Assessment(Status.TOO_LONG, \"Average run above \" + Math.round(MAX_HEALTHY_SECONDS) + \"s\");",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
-          "line": 3,
-          "preview": "/** Immutable, non-identifying local run telemetry used only for game balancing. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java",
-          "line": 3,
-          "preview": "/** In-memory accumulator for one run. No network access and no player-identifying data. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
           "line": 11,
-          "preview": "/** Pure segmentation of local run telemetry for balance analysis. */",
+          "preview": "from candidate_utils import make_tileable_edges",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryStore.java",
-          "line": 19,
-          "preview": "String key = \"run.\" + cursor + \".\";",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 58,
+          "preview": "return make_tileable_edges(img)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryStore.java",
-          "line": 54,
-          "preview": "String key = \"run.\" + slot + \".\";",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/EndgameMutatorRules.java",
-          "line": 4,
-          "preview": "* Deterministic high-Threat run mutators. These are intentionally modest overlays on top of",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/EndgameMutatorRules.java",
-          "line": 40,
-          "preview": "/** Mutators begin at Threat 3 and are stable for the same run identity. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/ReviewPromptPolicy.java",
-          "line": 3,
-          "preview": "/** Conservative eligibility for requesting a store-managed review prompt after a successful run. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunEncounterRuntime.java",
-          "line": 3,
-          "preview": "/** Tracks deterministic bonus rewards earned from optional run encounters. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
           "line": 7,
-          "preview": "/** Immutable snapshot of gear, weapon and survivor bonuses for the active run. */",
+          "preview": "from candidate_utils import make_tileable_edges",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
-          "line": 77,
-          "preview": "/** Clears all ephemeral run-derived state before returning to a durable menu state. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunMissionRuntime.java",
-          "line": 3,
-          "preview": "/** Lightweight active-run telemetry and deferred victory signal. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunMissionRuntime.java",
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
           "line": 40,
-          "preview": "if (victoryCallback != null) victoryCallback.run();",
+          "preview": "im=ImageEnhance.Contrast(im).enhance(1.08); im=ImageEnhance.Sharpness(im).enhance(1.18); im.putalpha(Image.new(\"L\",im.size,255)); return make_tileable_edges(im)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
-          "line": 3,
-          "preview": "/** Active run-wide risk/reward contract plus deterministic pre-run offer generation. */",
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 7,
+          "preview": "from candidate_utils import make_tileable_edges",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
-          "line": 70,
-          "preview": "/** Legendary contracts enter one deterministic offer slot roughly every fourth run from stage 3 onward. */",
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 49,
+          "preview": "im.putalpha(Image.new(\"L\",im.size,255)); return make_tileable_edges(im)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
-          "line": 75,
-          "preview": "/** Three unique offers, stable for the same stage/run ordinal. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
-          "line": 90,
-          "preview": "/** Legacy/direct-run fallback: activates the first deterministic offer. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
-          "line": 96,
-          "preview": "/** Activates only a contract that belongs to the current run's offer set. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java",
-          "line": 3,
-          "preview": "/** Pure post-run coaching. It never changes difficulty or profile state. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java",
-          "line": 19,
-          "preview": "? \"Early pressure broke the run. Add HP/mobility or drop Threat by one tier while refining the build.\"",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java",
-          "line": 20,
-          "preview": ": \"Early pressure broke the run. Prioritize max HP, movement speed and a reliable dash window.\";",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java",
-          "line": 40,
-          "preview": "\"The run is close to target pace. Keep offense and survivability balanced, then adapt to the active contract and biome hazards.\",",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunSettlement.java",
-          "line": 5,
-          "preview": "/** Applies one completed run to the persistent account profile. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunShareText.java",
-          "line": 5,
-          "preview": "/** Deterministic, truthful share copy built only from the settled run result. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
-          "line": 3,
-          "preview": "/** Snapshot of the selected stage, run ordinal and endgame threat tier used by the active run. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
-          "line": 30,
-          "preview": "/** Stable per-run seed suitable for deterministic encounter planning, not security. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/SingularityCoreRuntime.java",
-          "line": 3,
-          "preview": "/** Per-run deterministic cadence for the Zero-Day Singularity Core projectile passive. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/meta/WeaponSynergyRules.java",
-          "line": 6,
-          "preview": "/** Deterministic survivor x weapon build synergies applied once when a run loadout is snapshotted. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
-          "line": 5,
-          "preview": "/** Allocation-free run-local event protocol state. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
-          "line": 5,
-          "preview": "/** Standalone run-local legendary choices, intentionally separate from standard Upgrade. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+          "file": "tools/environment/generate_null_sector_candidate.py",
           "line": 10,
-          "preview": "* Once a run has established an elemental or ability identity, one draft slot stays relevant to",
+          "preview": "from candidate_utils import make_tileable_edges",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 270,
-          "preview": "try { action.run(); }",
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 50,
+          "preview": "return make_tileable_edges(img)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 9
+    },
+    "transparent": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 24,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 24,
+          "preview": "def transparent(): return Image.new(\"RGBA\",(SIZE,SIZE),(0,0,0,0))",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 101,
+          "preview": "img=transparent(); d=ImageDraw.Draw(img,\"RGBA\"); rnd=random.Random(141); o=(256,256)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 285,
-          "preview": "Gdx.app.postRunnable(() -> { if (!disposed) action.run(); });",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 110,
+          "preview": "img=transparent(); d=ImageDraw.Draw(img,\"RGBA\"); rnd=random.Random(151)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-          "line": 328,
-          "preview": "@FunctionalInterface private interface ThrowingAction { void run() throws Exception; }",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 117,
+          "preview": "img=transparent(); d=ImageDraw.Draw(img,\"RGBA\")",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-          "line": 29,
-          "preview": "/** Responsive three-card pre-run risk/reward selection. */",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 124,
+          "preview": "img=transparent(); x0,y0,x1,y1=box",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
-          "line": 55,
-          "preview": "default void finishConsumable(String receiptId, Runnable onSuccess, Runnable onFailure) { onSuccess.run(); }",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 125,
+          "preview": "sh=transparent(); sd=ImageDraw.Draw(sh,\"RGBA\"); sd.rounded_rectangle((x0+15,y0+18,x1+18,y1+22),radius=radius,fill=(0,0,0,125))",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
-          "line": 68,
-          "preview": "public void showRewarded(Reward reward, Runnable earned, Runnable unavailable) { unavailable.run(); }",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 138,
+          "preview": "img=transparent(); d=ImageDraw.Draw(img,\"RGBA\"); rnd=random.Random(seed)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/services/GameServices.java",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 163,
+          "preview": "img=transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 164,
+          "preview": "glow=transparent(); gd=ImageDraw.Draw(glow,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 17,
+          "preview": "def transparent(): return Image.new(\"RGBA\",(SIZE,SIZE),(0,0,0,0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 32,
+          "preview": "overlay=transparent(); d=ImageDraw.Draw(overlay,\"RGBA\"); rnd=random.Random(seed)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 58,
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(341); o=(256,256)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 66,
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(351)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
           "line": 72,
-          "preview": "public void purchase(String id, Runnable success, Runnable failure) { failure.run(); }",
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\")",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
-          "line": 14,
-          "preview": "if (onDismissed != null) onDismissed.run();",
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 77,
+          "preview": "im=transparent(); x0,y0,x1,y1=box; sh=transparent(); sd=ImageDraw.Draw(sh,\"RGBA\"); sd.rounded_rectangle((x0+12,y0+16,x1+16,y1+20),radius=radius,fill=(0,0,0,105)); im=Image.alpha_co",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
-          "line": 7,
-          "preview": "/** Builds a compact, allocation-bounded HUD summary of the run's active build identity. */",
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 83,
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(seed)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
-          "line": 8,
-          "preview": "public record Profile(float idle, float run, float attack, float hit, float death) {",
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 98,
+          "preview": "im=transparent(); glow=transparent(); gd=ImageDraw.Draw(glow,\"RGBA\")",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
-          "line": 12,
-          "preview": "case RUN -> run;",
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 17,
+          "preview": "def transparent(): return Image.new(\"RGBA\",(SIZE,SIZE),(0,0,0,0))",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
-          "line": 47,
-          "preview": "missing += requireMotion(art, root, \"run\");",
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 37,
+          "preview": "overlay=transparent(); d=ImageDraw.Draw(overlay,\"RGBA\"); rnd=random.Random(seed)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
-          "line": 55,
-          "preview": "missing += requireMotion(art, root, \"run\");",
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 85,
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(441); o=(256,256)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
-          "line": 67,
-          "preview": "missing += requireMotion(art, directionalRoot, \"run\");",
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 96,
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(451)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
-          "line": 76,
-          "preview": "missing += requireMotion(art, root, \"run\");",
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 103,
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\")",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java",
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 110,
+          "preview": "im=transparent(); x0,y0,x1,y1=box",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 111,
+          "preview": "sh=transparent(); sd=ImageDraw.Draw(sh,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 124,
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(seed)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 147,
+          "preview": "im=transparent(); glow=transparent(); gd=ImageDraw.Draw(glow,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 22,
+          "preview": "def transparent(): return Image.new(\"RGBA\",(SIZE,SIZE),(0,0,0,0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 82,
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(241); o=(256,255)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 90,
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(251)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 96,
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 102,
+          "preview": "im=transparent(); x0,y0,x1,y1=box",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 103,
+          "preview": "sh=transparent(); sd=ImageDraw.Draw(sh,\"RGBA\"); sd.rounded_rectangle((x0+12,y0+16,x1+16,y1+20),radius=radius,fill=(0,0,0,130))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
           "line": 115,
-          "preview": "case \"run\", \"death\" -> 3;",
+          "preview": "im=transparent(); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(seed)",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java",
-          "line": 136,
-          "preview": "case \"idle\" -> 0; case \"run\" -> 2; case \"attack\" -> 5; case \"hit\" -> 7; case \"death\" -> 9;",
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 138,
+          "preview": "im=transparent(); glow=transparent(); gd=ImageDraw.Draw(glow,\"RGBA\")",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
-          "line": 141,
-          "preview": "case \"run\", \"death\" -> 3;",
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 154,
+          "preview": "def transparent() -> Image.Image:",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
-          "line": 167,
-          "preview": "case \"idle\" -> 0; case \"run\" -> 1; case \"attack\" -> 4; case \"hit\" -> 6; case \"death\" -> 7;",
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 159,
+          "preview": "layer = transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 168,
+          "preview": "img = transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 187,
+          "preview": "img = transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 205,
+          "preview": "img = transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 241,
+          "preview": "# Contact/ambient occlusion under transparent objects and decals.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 291,
+          "preview": "shadow = transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 299,
+          "preview": "img = transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 312,
+          "preview": "img = transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 325,
+          "preview": "shadow=transparent(); sd=ImageDraw.Draw(shadow,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 339,
+          "preview": "img=transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 357,
+          "preview": "img=transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 369,
+          "preview": "img=transparent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/pack_environment_art.py",
+          "line": 62,
+          "preview": "raise SystemExit(f\"source is fully transparent: {source}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/pack_environment_art.py",
+          "line": 67,
+          "preview": "raise SystemExit(f\"transparent asset silhouette is too small: {source}\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 163,
+          "preview": "failures.append(f\"{biome}/{slot['path']}: transparent asset has no silhouette\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/import_pixellab_idle.py",
+          "line": 132,
+          "preview": "warnings.append(\"visible art has less than 2 px transparent padding\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/validate_rex_reference.py",
+          "line": 46,
+          "preview": "\"transparent RGBA background\",",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 52
+    },
+    "clamp": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 25,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+          "line": 84,
+          "preview": "float progress = MathUtils.clamp(RunMissionRuntime.elapsed() / arrival, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/AttackController.java",
+          "line": 43,
+          "preview": "this.cooldownMultiplier = clamp(cooldownMultiplier * bossCooldown, .45f, 1.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/AttackController.java",
+          "line": 44,
+          "preview": "this.telegraphMultiplier = clamp(telegraphMultiplier * bossTelegraph, .45f, 1.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/AttackController.java",
+          "line": 45,
+          "preview": "this.recoveryMultiplier = clamp(recoveryMultiplier * bossRecovery, .45f, 1.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ai/AttackController.java",
+          "line": 103,
+          "preview": "private static float clamp(float v, float min, float max) { return Math.max(min, Math.min(max, v)); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+          "line": 88,
+          "preview": "float chance = MathUtils.clamp(.02f + (stage - 1) * .018f, .02f, .20f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+          "line": 131,
+          "preview": "float safe = MathUtils.clamp(roll, 0f, .999999f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+          "line": 345,
+          "preview": "float damping = MathUtils.clamp(1f - dt * (heavy ? 12f : 8f), 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+          "line": 455,
+          "preview": "return shieldMaxHp <= 0f ? 0f : MathUtils.clamp(shieldHp / shieldMaxHp, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java",
+          "line": 47,
+          "preview": "current += MathUtils.clamp(delta, -maxTurn, maxTurn);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/input/VirtualStick.java",
+          "line": 58,
+          "preview": "float normalized = MathUtils.clamp((Math.min(length, max) - deadZone) / (max - deadZone), 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 84,
+          "preview": "focus = MathUtils.clamp(focus, 0, Math.max(0, all.length - 1));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 244,
+          "preview": "drawStatBar(x, baseY + gap, width, MathUtils.clamp((1f / weapon.fireInterval) / 8f, 0f, 1f),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 245,
+          "preview": "MathUtils.clamp((1f / equipped.fireInterval) / 8f, 0f, 1f), VisualTheme.CYAN_SOFT);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 246,
+          "preview": "drawStatBar(x, baseY + gap * 2f, width, MathUtils.clamp(weapon.penetration / 5f, 0f, 1f),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 247,
+          "preview": "MathUtils.clamp(equipped.penetration / 5f, 0f, 1f), VisualTheme.GOLD);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 248,
+          "preview": "drawStatBar(x, baseY + gap * 3f, width, MathUtils.clamp(weapon.knockback / 5f, 0f, 1f),",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 249,
+          "preview": "MathUtils.clamp(equipped.knockback / 5f, 0f, 1f), VisualTheme.VIOLET);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 319,
+          "preview": "private float normalizeDps(WeaponDefinition weapon) { return MathUtils.clamp(paperDps(weapon) / 240f, 0f, 1f); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 190,
+          "preview": "player.position.x = MathUtils.clamp(player.position.x, -31, 31);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 191,
+          "preview": "player.position.y = MathUtils.clamp(player.position.y, -17, 17);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 276,
+          "preview": "player.position.x = MathUtils.clamp(player.position.x, -31, 31);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 277,
+          "preview": "player.position.y = MathUtils.clamp(player.position.y, -17, 17);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 664,
+          "preview": "float a = MathUtils.clamp(f.life / f.maxLife, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 737,
+          "preview": "float speedRatio = MathUtils.clamp(e.velocity.len() / Math.max(.01f, e.speed), 0f, 1.5f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 760,
+          "preview": "e.radius * 2f * MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f), .07f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+          "line": 791,
+          "preview": "float alpha = MathUtils.clamp(n.life / n.maxLife, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 204,
+          "preview": "float value = clamp((x - left) / Math.max(1f, right - left), 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 229,
+          "preview": "case 1 -> s.screenShakeStrength = clamp(s.screenShakeStrength + dir * .1f, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 237,
+          "preview": "case UI_SCALE_ROW -> s.uiScale = clamp(s.uiScale + dir * .05f, .85f, 1.35f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 238,
+          "preview": "case MASTER_VOLUME_ROW -> s.masterVolume = clamp(s.masterVolume + dir * .05f, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 239,
+          "preview": "case SFX_VOLUME_ROW -> s.sfxVolume = clamp(s.sfxVolume + dir * .05f, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 240,
+          "preview": "case MUSIC_VOLUME_ROW -> s.musicVolume = clamp(s.musicVolume + dir * .05f, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+          "line": 256,
+          "preview": "private static float clamp(float v, float min, float max) { return Math.max(min, Math.min(max, v)); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/UiMotion.java",
+          "line": 17,
+          "preview": "float t = MathUtils.clamp(elapsed / duration, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/UiMotion.java",
+          "line": 22,
+          "preview": "float c = MathUtils.clamp(t, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/UiMotion.java",
+          "line": 28,
+          "preview": "float c = MathUtils.clamp(t, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
+          "line": 41,
+          "preview": "externalCeilingTarget = MathUtils.clamp(ceiling, .40f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
+          "line": 47,
+          "preview": "float safeDt = MathUtils.clamp(dt, 0f, .1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
+          "line": 54,
+          "preview": "return Math.min(Math.min(MathUtils.clamp(quality, .40f, 1f), GraphicsSettings.fxCeiling()), externalCeiling);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 59,
+          "preview": "batch.setColor(1f, 1f, 1f, MathUtils.clamp(1f - age / .24f, 0f, 1f));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 137,
+          "preview": "batch.setColor(1f, 1f, 1f, MathUtils.clamp(fx.life / Math.max(.001f, fx.maxLife), 0f, 1f));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 195,
+          "preview": "float reaction = MathUtils.clamp(enemy.reactionFlash / .24f, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 227,
+          "preview": "float pulse = MathUtils.clamp(enemy.supportPulseFlash() / .48f, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 237,
+          "preview": "b = MathUtils.clamp(b * (1.08f + fracture * .08f), 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 286,
+          "preview": "float pulse = MathUtils.clamp(clock.phasePulse / .42f, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 294,
+          "preview": "batch.setColor(MathUtils.clamp(r, 0f, 1f), MathUtils.clamp(g, 0f, 1f), MathUtils.clamp(b, 0f, 1f), alpha);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatFeel.java",
+          "line": 13,
+          "preview": "hitStop = Math.max(hitStop, MathUtils.clamp(seconds, 0f, .08f));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatFeel.java",
+          "line": 17,
+          "preview": "recoil = Math.max(recoil, MathUtils.clamp(amount, 0f, .45f));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java",
+          "line": 35,
+          "preview": "float s = MathUtils.clamp(uiScale, .85f, 1.35f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 80,
+          "preview": "float hp = MathUtils.clamp(player.hp / Math.max(1f, player.maxHp), 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 81,
+          "preview": "float xp = MathUtils.clamp(player.xp / (float) Math.max(1, player.xpNext), 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 95,
+          "preview": "float ratio = MathUtils.clamp(boss.hp / Math.max(1f, boss.maxHp), 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 142,
+          "preview": "float s = MathUtils.clamp(ui(), .85f, 1.35f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 242,
+          "preview": "float alpha = MathUtils.clamp(1f - age / 1.65f, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 252,
+          "preview": "float alpha = MathUtils.clamp(1f - age / .72f, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+          "line": 271,
+          "preview": "float alpha = MathUtils.clamp(1f - age / .90f, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+          "line": 153,
+          "preview": "float dt = Float.isNaN(lastSingularityVisualTime) ? 0f : MathUtils.clamp(time - lastSingularityVisualTime, 0f, .05f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+          "line": 197,
+          "preview": "float dt = Float.isNaN(lastHazardVisualTime) ? 0f : MathUtils.clamp(time - lastHazardVisualTime, 0f, .05f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+          "line": 419,
+          "preview": "float progress = MathUtils.clamp((time - phaseFxStarted) / Math.max(.001f, spec.duration()), 0f, 1f);",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-          "line": 93,
-          "preview": "&& art.hasAnimation(\"survivor/rex/e/run\")",
+          "line": 84,
+          "preview": "float shotFlash = target == null || !player.alive ? 0f : MathUtils.clamp(1f - CombatVisualEvents.playerShotAgeSeconds() / .075f, 0f, 1f);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java",
-          "line": 116,
-          "preview": "case \"run\", \"death\" -> 3;",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
+          "line": 20,
+          "preview": "float alpha = MathUtils.clamp(fx.life / Math.max(.001f, fx.maxLife), 0f, 1f);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java",
-          "line": 137,
-          "preview": "case \"idle\" -> 0; case \"run\" -> 2; case \"attack\" -> 5; case \"hit\" -> 7; case \"death\" -> 9;",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
+          "line": 32,
+          "preview": "float burst = 1f - MathUtils.clamp(fx.age / burstWindow, 0f, 1f);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java",
-          "line": 162,
-          "preview": "/** motion: 0 idle, 1 run, 2 attack, 3 hit, 4 death. */",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
+          "line": 73,
+          "preview": "float deathWindow = MathUtils.clamp(anim.death() * (fx.type == Enemy.Type.BOSS ? 7f : 6f), .55f, 1.15f);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/HighResBossDirectionalArt.java",
-          "line": 94,
-          "preview": "case \"run\", \"death\" -> 3;",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
+          "line": 80,
+          "preview": "float alpha = MathUtils.clamp(fx.life / Math.max(.001f, fx.maxLife), 0f, 1f);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/HighResBossDirectionalArt.java",
-          "line": 114,
-          "preview": "case \"idle\" -> 0; case \"run\" -> 2; case \"attack\" -> 5; case \"hit\" -> 7; case \"death\" -> 9;",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 40,
+          "preview": "visualTime += MathUtils.clamp(dt, 0f, .1f);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/HighResBossDirectionalArt.java",
-          "line": 138,
-          "preview": "/** motion: 0 idle, 1 run, 2 attack, 3 hit, 4 death. */",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 179,
+          "preview": "drawFloorInternal(batch, MathUtils.clamp(alpha, 0f, 1f));",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java",
-          "line": 101,
-          "preview": "case \"run\", \"death\" -> 3;",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/LegendaryFxRenderer.java",
+          "line": 11,
+          "preview": "float q = MathUtils.clamp(quality, .35f, 1f);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java",
-          "line": 122,
-          "preview": "case \"idle\" -> 0; case \"run\" -> 2; case \"attack\" -> 5; case \"hit\" -> 7; case \"death\" -> 9;",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
+          "line": 23,
+          "preview": "float recoil = MathUtils.clamp(shotFlash, 0f, 1f) * .16f;",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java",
-          "line": 147,
-          "preview": "/** motion: 0 idle, 1 run, 2 attack, 3 hit, 4 death. */",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 44,
+          "preview": "float phase = e.tacticalWindup <= 0f ? 0f : MathUtils.clamp(e.tacticalWindup / .34f, 0f, 1f);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/WeaponLegendaryPresentation.java",
-          "line": 5,
-          "preview": "/** Pure presentation routing for the one weapon-family legendary owned by the current run. */",
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 88,
+          "preview": "float wounded = 1f - MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+          "line": 377,
+          "preview": "float alpha = MathUtils.clamp(arc.life / Math.max(.001f, arc.maxLife), 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 187,
+          "preview": "float x = clamp(playerX + (float)Math.cos(angle) * distance, -29f, 29f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 188,
+          "preview": "float y = clamp(playerY + (float)Math.sin(angle) * distance, -15f, 15f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 207,
+          "preview": "float x = clamp(playerX + (float)Math.cos(angle) * distance, -28.5f, 28.5f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 208,
+          "preview": "float y = clamp(playerY + (float)Math.sin(angle) * distance, -14.5f, 14.5f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 216,
+          "preview": "float x = clamp(playerX + side * (2.2f + ((n >>> 16) & 0x3f) / 63f * 2.4f), -29f, 29f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 217,
+          "preview": "float y = clamp(playerY + (((n >>> 23) & 0x7f) / 127f - .5f) * 5f, -15f, 15f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 228,
+          "preview": "float centerX = clamp(playerX + (((n >>> 18) & 0x1f) / 31f - .5f) * 3.2f, -24f, 24f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 229,
+          "preview": "float centerY = clamp(playerY + (((n >>> 23) & 0x1f) / 31f - .5f) * 3.2f, -11f, 11f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 249,
+          "preview": "float x = clamp(playerX + (float)Math.cos(angle) * distance, -28.5f, 28.5f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 250,
+          "preview": "float y = clamp(playerY + (float)Math.sin(angle) * distance, -14.5f, 14.5f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 262,
+          "preview": "float x = clamp(playerX + (float)Math.cos(Math.toRadians(angle)) * distance, -29f, 29f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 263,
+          "preview": "float y = clamp(playerY + (float)Math.sin(Math.toRadians(angle)) * distance, -15f, 15f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 273,
+          "preview": "float centerX = clamp(playerX + (((n >>> 18) & 0x1f) / 31f - .5f) * 2.8f, -23f, 23f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 274,
+          "preview": "float centerY = clamp(playerY + (((n >>> 23) & 0x1f) / 31f - .5f) * 2.8f, -10f, 10f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+          "line": 291,
+          "preview": "private static float clamp(float value, float min, float max) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+          "line": 77,
+          "preview": "float r = MathUtils.clamp(rawRoll, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/EndgameWaveCompositionRules.java",
+          "line": 16,
+          "preview": "float r = MathUtils.clamp(rawRoll, 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/LeaperSpawnRules.java",
+          "line": 25,
+          "preview": "return MathUtils.clamp(base + stageBonus, 0f, MAX_SHARE);",
           "definition_candidate": false
         },
         {
           "file": "core/src/main/java/com/deadlinezero/game/world/RunEncounterDirector.java",
-          "line": 9,
-          "preview": "/** Deterministic, stage-scaled pressure encounters embedded in a run. */",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/ConsumablePurchaseDeliveryTest.java",
-          "line": 78,
-          "preview": "@Override public void purchase(String productId, Runnable onSuccess, Runnable onFailure) { onFailure.run(); }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/ConsumablePurchaseDeliveryTest.java",
           "line": 82,
-          "preview": "onSuccess.run();",
+          "preview": "active = plan[MathUtils.clamp(index, 0, plan.length - 1)];",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/P0RunRegressionTest.java",
-          "line": 15,
-          "preview": "/** Cross-system P0 regressions for run settlement, persistence and interrupted-run safety. */",
+          "file": "core/src/main/java/com/deadlinezero/game/world/RunEncounterDirector.java",
+          "line": 122,
+          "preview": "roll = MathUtils.clamp(roll, 0f, 1f);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+          "file": "core/src/main/java/com/deadlinezero/game/world/WaveDirector.java",
+          "line": 106,
+          "preview": "public float bossProgress() { return MathUtils.clamp(elapsed / Math.max(1f, bossArrival), 0f, 1f); }",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/world/WaveDirector.java",
           "line": 120,
-          "preview": "@Override public void purchase(String productId, Runnable onSuccess, Runnable onFailure) { onFailure.run(); }",
+          "preview": "float r = MathUtils.clamp(rawRoll, 0f, 1f);",
           "definition_candidate": false
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/meta/RunRecoveryAdviceTest.java",
-          "line": 26,
-          "preview": "// Keep clear speed above the 14 KPM offense threshold so late-run defense is the deciding branch.",
-          "definition_candidate": false
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 25,
+          "preview": "def clamp(v): return 0 if v<0 else 255 if v>255 else int(v)",
+          "definition_candidate": true
         },
         {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AnimationProfileCatalogTest.java",
-          "line": 15,
-          "preview": "assertTrue(wraith.run() < bastion.run());",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AnimationProfileCatalogTest.java",
-          "line": 20,
-          "preview": "assertTrue(runner.run() < brute.run());",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AnimationProfileCatalogTest.java",
-          "line": 45,
-          "preview": "assertRange(profile.run());",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArtTest.java",
-          "line": 53,
-          "preview": "assertMotion(root, direction, \"run\", 3);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArtTest.java",
-          "line": 64,
-          "preview": "assertEquals(-1, AuthoredCoreDirectionalArt.firstTile(\"enemy/brute/e/run\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArtTest.java",
-          "line": 65,
-          "preview": "assertEquals(-1, AuthoredCoreDirectionalArt.firstTile(\"enemy/ranged/e/run\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArtTest.java",
-          "line": 66,
-          "preview": "assertEquals(-1, AuthoredCoreDirectionalArt.firstTile(\"boss/alpha/e/run\"));",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/test/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArtTest.java",
-          "line": 11,
-          "preview": "private static final String[] MOTIONS = { \"idle\", \"run\", \"attack\", \"hit\", \"death\" };",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 120
-    },
-    "load_biomes": {
-      "definition": {
-        "file": "tools/environment/install_all_environment_candidates.py",
-        "line": 32,
-        "kind": "function",
-        "language": "python"
-      },
-      "occurrences": [
-        {
-          "file": "tools/environment/install_all_environment_candidates.py",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
           "line": 32,
-          "preview": "def load_biomes() -> list[str]:",
-          "definition_candidate": true
+          "preview": "px[x,y]=(clamp(base[0]+n),clamp(base[1]+n),clamp(base[2]+n),255)",
+          "definition_candidate": false
         },
         {
-          "file": "tools/environment/install_all_environment_candidates.py",
-          "line": 71,
-          "preview": "biomes = load_biomes()",
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 16,
+          "preview": "def clamp(v): return 0 if v<0 else 255 if v>255 else int(v)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 23,
+          "preview": "px[x,y]=(clamp(base[0]+n),clamp(base[1]+n),clamp(base[2]+n),255)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 16,
+          "preview": "def clamp(v): return 0 if v<0 else 255 if v>255 else int(v)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 24,
+          "preview": "px[x,y]=(clamp(base[0]+n),clamp(base[1]+n),clamp(base[2]+n),255)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 21,
+          "preview": "def clamp(v): return 0 if v<0 else 255 if v>255 else int(v)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 29,
+          "preview": "px[x,y]=(clamp(base[0]+n),clamp(base[1]+n),clamp(base[2]+n),255)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 36,
+          "preview": "def clamp(v: int) -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 58,
+          "preview": "clamp(int(base[0] + n)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 59,
+          "preview": "clamp(int(base[1] + n)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 60,
+          "preview": "clamp(int(base[2] + n)),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 236,
+          "preview": "px[x, y] = (clamp(r + delta), clamp(g + delta), clamp(b + delta), a)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 265,
+          "preview": "rp[x, y] = clamp(int(255 - (x + y) * .18))",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 2
+      "occurrence_count": 108
     },
-    "validate_candidate_manifest": {
+    "noise": {
       "definition": {
-        "file": "tools/environment/install_all_environment_candidates.py",
-        "line": 40,
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 27,
         "kind": "function",
         "language": "python"
       },
       "occurrences": [
         {
-          "file": "tools/environment/install_all_environment_candidates.py",
-          "line": 40,
-          "preview": "def validate_candidate_manifest(biome: str) -> None:",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 27,
+          "preview": "def noise(base,seed,strength=12):",
           "definition_candidate": true
         },
         {
-          "file": "tools/environment/install_all_environment_candidates.py",
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 69,
+          "preview": "img=noise((42,43,40,255),101,13); seams(img,128); scuffs(img,102)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 76,
+          "preview": "img=noise((34,35,34,255),111,10); seams(img,96)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 84,
+          "preview": "img=noise((53,49,43,255),121,14); seams(img,160)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 92,
+          "preview": "img=noise((28,29,28,255),131,10); seams(img,128)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 18,
+          "preview": "def noise(base,seed,strength=10):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 45,
+          "preview": "im=noise((43,58,70,255),301,9); panels(im,128); frost(im,302,20); return im",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 47,
+          "preview": "im=noise((35,49,62,255),311,9); panels(im,96); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 51,
+          "preview": "im=noise((50,62,71,255),321,10); panels(im,160); frost(im,322,32); return im",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 53,
+          "preview": "im=noise((30,43,55,255),331,8); panels(im,128); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 18,
+          "preview": "def noise(base,seed,strength=9):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 62,
+          "preview": "im=noise((24,45,54,255),401); seams(im,128); frost(im,402,26)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 68,
+          "preview": "im=noise((17,38,48,255),411); seams(im,96); frost(im,412,20)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
           "line": 75,
-          "preview": "validate_candidate_manifest(biome)",
+          "preview": "im=noise((29,53,62,255),421); seams(im,160); frost(im,422,38); return im",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 77,
+          "preview": "im=noise((13,31,41,255),431); seams(im,128); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 23,
+          "preview": "def noise(base,seed,strength=9):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 59,
+          "preview": "im=noise((24,27,35,255),201); panel(im,128,True); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 64,
+          "preview": "im=noise((19,22,29,255),211); panel(im,96); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 69,
+          "preview": "im=noise((30,31,39,255),221); panel(im,160,True); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(222)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 75,
+          "preview": "im=noise((17,19,27,255),231); panel(im,128); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 20
+    },
+    "seams": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 35,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 35,
+          "preview": "def seams(img,spacing=128,hot=False):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 69,
+          "preview": "img=noise((42,43,40,255),101,13); seams(img,128); scuffs(img,102)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 76,
+          "preview": "img=noise((34,35,34,255),111,10); seams(img,96)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 84,
+          "preview": "img=noise((53,49,43,255),121,14); seams(img,160)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 92,
+          "preview": "img=noise((28,29,28,255),131,10); seams(img,128)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 27,
+          "preview": "def seams(im,spacing=128):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 62,
+          "preview": "im=noise((24,45,54,255),401); seams(im,128); frost(im,402,26)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 68,
+          "preview": "im=noise((17,38,48,255),411); seams(im,96); frost(im,412,20)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 75,
+          "preview": "im=noise((29,53,62,255),421); seams(im,160); frost(im,422,38); return im",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 77,
+          "preview": "im=noise((13,31,41,255),431); seams(im,128); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "scuffs": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 46,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 46,
+          "preview": "def scuffs(img,seed,count=60):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 69,
+          "preview": "img=noise((42,43,40,255),101,13); seams(img,128); scuffs(img,102)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 81,
+          "preview": "scuffs(img,112,45); return img",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "finish": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 52,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 52,
+          "preview": "def finish(img,slot,seed):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 184,
+          "preview": "img=finish(GENERATORS[slot](),slot,2000+i*101); img.save(path,\"PNG\",optimize=True); assets.append(str(path).replace(\"\\\\\",\"/\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 37,
+          "preview": "def finish(im,slot):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 110,
+          "preview": "path=a.output/(slot+\".png\"); path.parent.mkdir(parents=True,exist_ok=True); finish(GEN[slot](),slot).save(path,\"PNG\",optimize=True); assets.append(str(path).replace(\"\\\\\",\"/\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 44,
+          "preview": "def finish(im,slot):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 169,
+          "preview": "finish(GEN[slot](),slot).save(path,\"PNG\",optimize=True)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 44,
+          "preview": "def finish(img,slot):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 154,
+          "preview": "path=a.output/(slot+\".png\"); path.parent.mkdir(parents=True,exist_ok=True); finish(GEN[slot](),slot).save(path,\"PNG\",optimize=True); assets.append(str(path).replace(\"\\\\\",\"/\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "floor_a": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 68,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 68,
+          "preview": "def floor_a():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 173,
+          "preview": "\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 44,
+          "preview": "def floor_a():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 102,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 61,
+          "preview": "def floor_a():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 157,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 58,
+          "preview": "def floor_a():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 145,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "floor_b": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 75,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 75,
+          "preview": "def floor_b():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 173,
+          "preview": "\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 46,
+          "preview": "def floor_b():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 102,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 67,
+          "preview": "def floor_b():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 157,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 63,
+          "preview": "def floor_b():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 145,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "floor_c": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 83,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 83,
+          "preview": "def floor_c():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 173,
+          "preview": "\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 50,
+          "preview": "def floor_c():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 102,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 74,
+          "preview": "def floor_c():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 157,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 68,
+          "preview": "def floor_c():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 145,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "floor_hazard": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 91,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 91,
+          "preview": "def floor_hazard():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 173,
+          "preview": "\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 52,
+          "preview": "def floor_hazard():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 102,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 76,
+          "preview": "def floor_hazard():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 157,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 74,
+          "preview": "def floor_hazard():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 145,
+          "preview": "GEN={\"floor/concrete_a\":floor_a,\"floor/concrete_b\":floor_b,\"floor/concrete_c\":floor_c,\"floor/hazard_a\":floor_hazard,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 139,
+          "preview": "def floor_hazard() -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 387,
+          "preview": "\"floor/hazard_a\": floor_hazard,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 10
+    },
+    "lava_crack": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 100,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 100,
+          "preview": "def lava_crack():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 174,
+          "preview": "\"decal/crack_a\":lava_crack,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
+    },
+    "blood": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 109,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
+          "line": 11,
+          "preview": "/** Renders death animation first, then long-lived corpses/blood stains. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 253,
+          "preview": "TextureRegion blood = region(\"environment/decal/blood_a\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 263,
+          "preview": "drawAmbientDetails(batch, crack, blood, scorch, debrisA, debrisB);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 287,
+          "preview": "draw(batch, blood, 5.8f, -3.2f, 2.2f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 288,
+          "preview": "draw(batch, blood, -4.2f, 10.1f, 1.7f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 307,
+          "preview": "private void drawAmbientDetails(SpriteBatch batch, TextureRegion crack, TextureRegion blood,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 328,
+          "preview": "TextureRegion stain = hotBiome || nullBiome || cryoBiome || depthsBiome ? scorch : blood;",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 109,
+          "preview": "def blood():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 174,
+          "preview": "\"decal/crack_a\":lava_crack,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 65,
+          "preview": "def blood():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 103,
+          "preview": "\"decal/crack_a\":ice_crack,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 95,
+          "preview": "def blood():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 158,
+          "preview": "\"decal/crack_a\":crack,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 89,
+          "preview": "def blood():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 146,
+          "preview": "\"decal/crack_a\":fracture,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 186,
+          "preview": "def blood() -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 389,
+          "preview": "\"decal/blood_a\": blood,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 17
+    },
+    "scorch": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 116,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 254,
+          "preview": "TextureRegion scorch = region(\"environment/decal/scorch_a\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 263,
+          "preview": "drawAmbientDetails(batch, crack, blood, scorch, debrisA, debrisB);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 266,
+          "preview": "drawCryogenicDepthsDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 270,
+          "preview": "drawCryoVaultDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 274,
+          "preview": "drawNullSectorDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 278,
+          "preview": "drawFoundryDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 289,
+          "preview": "draw(batch, scorch, 9.3f, 8.4f, 3.6f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 308,
+          "preview": "TextureRegion scorch, TextureRegion debrisA, TextureRegion debrisB) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 328,
+          "preview": "TextureRegion stain = hotBiome || nullBiome || cryoBiome || depthsBiome ? scorch : blood;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 348,
+          "preview": "private void drawFoundryDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 353,
+          "preview": "draw(batch, scorch, -12f, -7.5f, 4.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 354,
+          "preview": "draw(batch, scorch, 13f, 7f, 4.2f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 376,
+          "preview": "private void drawCryogenicDepthsDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 383,
+          "preview": "draw(batch, scorch, -4f, -14f, 3.6f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 384,
+          "preview": "draw(batch, scorch, 5f, 14f, 3.4f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 402,
+          "preview": "private void drawCryoVaultDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 409,
+          "preview": "draw(batch, scorch, -2f, 12f, 3.2f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 410,
+          "preview": "draw(batch, scorch, 6f, -13f, 3.5f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 430,
+          "preview": "private void drawNullSectorDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 437,
+          "preview": "draw(batch, scorch, -4f, -12f, 3.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 438,
+          "preview": "draw(batch, scorch, 6f, 12f, 3.4f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 116,
+          "preview": "def scorch():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 174,
+          "preview": "\"decal/crack_a\":lava_crack,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 71,
+          "preview": "def scorch():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 103,
+          "preview": "\"decal/crack_a\":ice_crack,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 102,
+          "preview": "def scorch():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 158,
+          "preview": "\"decal/crack_a\":crack,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 95,
+          "preview": "def scorch():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 146,
+          "preview": "\"decal/crack_a\":fracture,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 204,
+          "preview": "def scorch() -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 390,
+          "preview": "\"decal/scorch_a\": scorch,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 31
+    },
+    "shadowed": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 123,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 123,
+          "preview": "def shadowed(box,fill,outline=(150,112,74,255),radius=24):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 131,
+          "preview": "img=shadowed((70,164,442,334),(49,45,40,255)); d=ImageDraw.Draw(img,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 148,
+          "preview": "img=shadowed((56,112,456,378),(49,46,42,255)); d=ImageDraw.Draw(img,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 157,
+          "preview": "img=shadowed((116,110,396,386),(63,58,50,255)); d=ImageDraw.Draw(img,\"RGBA\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "barrier": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 130,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 255,
+          "preview": "TextureRegion barrier = region(\"environment/prop/barrier_a\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 266,
+          "preview": "drawCryogenicDepthsDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 270,
+          "preview": "drawCryoVaultDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 274,
+          "preview": "drawNullSectorDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 278,
+          "preview": "drawFoundryDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 291,
+          "preview": "drawPropShadow(batch, barrier, -21f, 12f, 2.9f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 292,
+          "preview": "drawPropShadow(batch, barrier, 22f, -13f, 2.9f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 298,
+          "preview": "draw(batch, barrier, -21f, 12f, 2.9f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 299,
+          "preview": "draw(batch, barrier, 22f, -13f, 2.9f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 349,
+          "preview": "TextureRegion barrier, TextureRegion debrisA, TextureRegion debrisB,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 358,
+          "preview": "drawPropShadow(batch, barrier, -18f, -12f, 3.2f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 359,
+          "preview": "drawPropShadow(batch, barrier, 19f, 12f, 3.2f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 367,
+          "preview": "draw(batch, barrier, -18f, -12f, 3.2f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 368,
+          "preview": "draw(batch, barrier, 19f, 12f, 3.2f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 377,
+          "preview": "TextureRegion barrier, TextureRegion debrisA, TextureRegion debrisB,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 385,
+          "preview": "drawPropShadow(batch, barrier, -22f, -12f, 3.3f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 386,
+          "preview": "drawPropShadow(batch, barrier, 22f, 12f, 3.3f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 393,
+          "preview": "draw(batch, barrier, -22f, -12f, 3.3f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 394,
+          "preview": "draw(batch, barrier, 22f, 12f, 3.3f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 403,
+          "preview": "TextureRegion barrier, TextureRegion debrisA, TextureRegion debrisB,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 412,
+          "preview": "drawPropShadow(batch, barrier, -19f, 11f, 3.1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 413,
+          "preview": "drawPropShadow(batch, barrier, 19f, -11f, 3.1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 421,
+          "preview": "draw(batch, barrier, -19f, 11f, 3.1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 422,
+          "preview": "draw(batch, barrier, 19f, -11f, 3.1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 431,
+          "preview": "TextureRegion barrier, TextureRegion debrisA, TextureRegion debrisB,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 440,
+          "preview": "drawPropShadow(batch, barrier, -20f, 11f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 441,
+          "preview": "drawPropShadow(batch, barrier, 20f, -11f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 449,
+          "preview": "draw(batch, barrier, -20f, 11f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 450,
+          "preview": "draw(batch, barrier, 20f, -11f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 130,
+          "preview": "def barrier():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 175,
+          "preview": "\"prop/barrier_a\":barrier,\"prop/debris_a\":lambda:debris(161,False),\"prop/debris_b\":lambda:debris(167,True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 78,
+          "preview": "def barrier():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 104,
+          "preview": "\"prop/barrier_a\":barrier,\"prop/debris_a\":lambda:debris(361,False),\"prop/debris_b\":lambda:debris(367,True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 117,
+          "preview": "def barrier():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 159,
+          "preview": "\"prop/barrier_a\":barrier,\"prop/debris_a\":lambda:debris(461,False),\"prop/debris_b\":lambda:debris(467,True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 107,
+          "preview": "def barrier():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 147,
+          "preview": "\"prop/barrier_a\":barrier,\"prop/debris_a\":lambda:debris(261,False),\"prop/debris_b\":lambda:debris(267,True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 298,
+          "preview": "def barrier() -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 391,
+          "preview": "\"prop/barrier_a\": barrier,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 39
+    },
+    "debris": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 137,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 335,
+          "preview": "TextureRegion debris = ((gx + gy) & 1) == 0 ? debrisA : debrisB;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 336,
+          "preview": "drawPropShadow(batch, debris, x, y, 1.25f * scaleJitter);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 341,
+          "preview": "draw(batch, debris, x, y, 1.20f * scaleJitter);",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 137,
+          "preview": "def debris(seed,slag=False):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 175,
+          "preview": "\"prop/barrier_a\":barrier,\"prop/debris_a\":lambda:debris(161,False),\"prop/debris_b\":lambda:debris(167,True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 82,
+          "preview": "def debris(seed,icy=False):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 104,
+          "preview": "\"prop/barrier_a\":barrier,\"prop/debris_a\":lambda:debris(361,False),\"prop/debris_b\":lambda:debris(367,True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 123,
+          "preview": "def debris(seed,crystal=False):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 159,
+          "preview": "\"prop/barrier_a\":barrier,\"prop/debris_a\":lambda:debris(461,False),\"prop/debris_b\":lambda:debris(467,True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 114,
+          "preview": "def debris(seed,void=False):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 147,
+          "preview": "\"prop/barrier_a\":barrier,\"prop/debris_a\":lambda:debris(261,False),\"prop/debris_b\":lambda:debris(267,True),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 311,
+          "preview": "def debris(seed: int, warm=False) -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 392,
+          "preview": "\"prop/debris_a\": lambda: debris(61, False),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 393,
+          "preview": "\"prop/debris_b\": lambda: debris(67, True),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 14
+    },
+    "wall": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 147,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 147,
+          "preview": "def wall(seed,hotpanel=False):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 176,
+          "preview": "\"prop/wall_a\":lambda:wall(171,False),\"prop/wall_b\":lambda:wall(173,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 89,
+          "preview": "def wall(seed,frosted=False):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 105,
+          "preview": "\"prop/wall_a\":lambda:wall(371,False),\"prop/wall_b\":lambda:wall(373,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 132,
+          "preview": "def wall(seed,window=False):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 160,
+          "preview": "\"prop/wall_a\":lambda:wall(471,False),\"prop/wall_b\":lambda:wall(473,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 124,
+          "preview": "def wall(seed,portal=False):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 148,
+          "preview": "\"prop/wall_a\":lambda:wall(271,False),\"prop/wall_b\":lambda:wall(273,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 338,
+          "preview": "def wall(seed: int, red_panel=False) -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 394,
+          "preview": "\"prop/wall_a\": lambda: wall(71, False),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 395,
+          "preview": "\"prop/wall_b\": lambda: wall(73, True),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 11
+    },
+    "crate": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 156,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 260,
+          "preview": "TextureRegion crate = region(\"environment/prop/crate_a\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 266,
+          "preview": "drawCryogenicDepthsDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 270,
+          "preview": "drawCryoVaultDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 274,
+          "preview": "drawNullSectorDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 278,
+          "preview": "drawFoundryDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 293,
+          "preview": "drawPropShadow(batch, crate, -16f, 14.2f, 2.7f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 294,
+          "preview": "drawPropShadow(batch, crate, 17.5f, -12.8f, 2.5f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 302,
+          "preview": "draw(batch, crate, -16f, 14.2f, 2.7f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 303,
+          "preview": "draw(batch, crate, 17.5f, -12.8f, 2.5f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 350,
+          "preview": "TextureRegion wallA, TextureRegion wallB, TextureRegion crate,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 360,
+          "preview": "drawPropShadow(batch, crate, -22f, 10f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 361,
+          "preview": "drawPropShadow(batch, crate, 23f, -9f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 369,
+          "preview": "draw(batch, crate, -22f, 10f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 370,
+          "preview": "draw(batch, crate, 23f, -9f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 378,
+          "preview": "TextureRegion wallA, TextureRegion wallB, TextureRegion crate,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 387,
+          "preview": "drawPropShadow(batch, crate, -12f, 13f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 388,
+          "preview": "drawPropShadow(batch, crate, 12f, -13f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 395,
+          "preview": "draw(batch, crate, -12f, 13f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 396,
+          "preview": "draw(batch, crate, 12f, -13f, 3.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 404,
+          "preview": "TextureRegion wallA, TextureRegion wallB, TextureRegion crate,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 414,
+          "preview": "drawPropShadow(batch, crate, -15f, -14f, 2.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 415,
+          "preview": "drawPropShadow(batch, crate, 15f, 14f, 2.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 423,
+          "preview": "draw(batch, crate, -15f, -14f, 2.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 424,
+          "preview": "draw(batch, crate, 15f, 14f, 2.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 432,
+          "preview": "TextureRegion wallA, TextureRegion wallB, TextureRegion crate,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 442,
+          "preview": "drawPropShadow(batch, crate, -13f, -14f, 2.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 443,
+          "preview": "drawPropShadow(batch, crate, 14f, 14f, 2.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 451,
+          "preview": "draw(batch, crate, -13f, -14f, 2.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 452,
+          "preview": "draw(batch, crate, 14f, 14f, 2.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 156,
+          "preview": "def crate():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 176,
+          "preview": "\"prop/wall_a\":lambda:wall(171,False),\"prop/wall_b\":lambda:wall(173,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 95,
+          "preview": "def crate():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 105,
+          "preview": "\"prop/wall_a\":lambda:wall(371,False),\"prop/wall_b\":lambda:wall(373,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 140,
+          "preview": "def crate():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 160,
+          "preview": "\"prop/wall_a\":lambda:wall(471,False),\"prop/wall_b\":lambda:wall(473,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 132,
+          "preview": "def crate():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 148,
+          "preview": "\"prop/wall_a\":lambda:wall(271,False),\"prop/wall_b\":lambda:wall(273,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 356,
+          "preview": "def crate() -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 396,
+          "preview": "\"prop/crate_a\": crate,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 39
+    },
+    "beacon": {
+      "definition": {
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 162,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 261,
+          "preview": "TextureRegion beacon = region(\"environment/prop/beacon_a\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 266,
+          "preview": "drawCryogenicDepthsDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 270,
+          "preview": "drawCryoVaultDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 274,
+          "preview": "drawNullSectorDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 278,
+          "preview": "drawFoundryDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 304,
+          "preview": "drawArenaEdge(batch, wallA, wallB, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 351,
+          "preview": "TextureRegion beacon) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 373,
+          "preview": "drawArenaEdge(batch, wallB, wallA, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 379,
+          "preview": "TextureRegion beacon) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 399,
+          "preview": "drawArenaEdge(batch, wallA, wallB, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 405,
+          "preview": "TextureRegion beacon) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 427,
+          "preview": "drawArenaEdge(batch, wallB, wallA, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 433,
+          "preview": "TextureRegion beacon) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 455,
+          "preview": "drawArenaEdge(batch, wallA, wallB, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 469,
+          "preview": "private void drawArenaEdge(SpriteBatch batch, TextureRegion wallA, TextureRegion wallB, TextureRegion beacon) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 479,
+          "preview": "drawBeacon(batch, beacon, -29.6f, -15.6f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 480,
+          "preview": "drawBeacon(batch, beacon, 29.6f, -15.6f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 481,
+          "preview": "drawBeacon(batch, beacon, -29.6f, 15.6f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 482,
+          "preview": "drawBeacon(batch, beacon, 29.6f, 15.6f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 485,
+          "preview": "private void drawBeacon(SpriteBatch batch, TextureRegion beacon, float x, float y) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 486,
+          "preview": "if (beacon == null) return;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 491,
+          "preview": "draw(batch, beacon, x, y, glowSize);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 495,
+          "preview": "draw(batch, beacon, x, y, glowSize);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 499,
+          "preview": "draw(batch, beacon, x, y, glowSize);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 503,
+          "preview": "draw(batch, beacon, x, y, glowSize);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 507,
+          "preview": "draw(batch, beacon, x, y, glowSize);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 510,
+          "preview": "draw(batch, beacon, x, y, 2.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 162,
+          "preview": "def beacon():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cinder_foundry_candidate.py",
+          "line": 176,
+          "preview": "\"prop/wall_a\":lambda:wall(171,False),\"prop/wall_b\":lambda:wall(173,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 97,
+          "preview": "def beacon():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 105,
+          "preview": "\"prop/wall_a\":lambda:wall(371,False),\"prop/wall_b\":lambda:wall(373,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 146,
+          "preview": "def beacon():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 160,
+          "preview": "\"prop/wall_a\":lambda:wall(471,False),\"prop/wall_b\":lambda:wall(473,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 137,
+          "preview": "def beacon():",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 148,
+          "preview": "\"prop/wall_a\":lambda:wall(271,False),\"prop/wall_b\":lambda:wall(273,True),\"prop/crate_a\":crate,\"prop/beacon_a\":beacon}",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 368,
+          "preview": "def beacon() -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 397,
+          "preview": "\"prop/beacon_a\": beacon,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 37
     },
     "main": {
       "definition": {
-        "file": "tools/environment/install_all_environment_candidates.py",
-        "line": 60,
+        "file": "tools/environment/generate_cinder_foundry_candidate.py",
+        "line": 179,
         "kind": "function",
         "language": "python"
       },
@@ -1038,49 +3109,49 @@
         },
         {
           "file": "tools/environment/generate_cinder_foundry_candidate.py",
-          "line": 178,
+          "line": 179,
           "preview": "def main():",
-          "definition_candidate": false
+          "definition_candidate": true
         },
         {
           "file": "tools/environment/generate_cinder_foundry_candidate.py",
-          "line": 188,
+          "line": 189,
           "preview": "if __name__==\"__main__\": raise SystemExit(main())",
           "definition_candidate": false
         },
         {
           "file": "tools/environment/generate_cryo_vault_candidate.py",
-          "line": 105,
+          "line": 107,
           "preview": "def main():",
           "definition_candidate": false
         },
         {
           "file": "tools/environment/generate_cryo_vault_candidate.py",
-          "line": 111,
+          "line": 113,
           "preview": "if __name__==\"__main__\": raise SystemExit(main())",
           "definition_candidate": false
         },
         {
           "file": "tools/environment/generate_cryogenic_depths_candidate.py",
-          "line": 160,
+          "line": 162,
           "preview": "def main():",
           "definition_candidate": false
         },
         {
           "file": "tools/environment/generate_cryogenic_depths_candidate.py",
-          "line": 177,
+          "line": 179,
           "preview": "if __name__==\"__main__\": raise SystemExit(main())",
           "definition_candidate": false
         },
         {
           "file": "tools/environment/generate_null_sector_candidate.py",
-          "line": 149,
+          "line": 150,
           "preview": "def main():",
           "definition_candidate": false
         },
         {
           "file": "tools/environment/generate_null_sector_candidate.py",
-          "line": 156,
+          "line": 157,
           "preview": "if __name__==\"__main__\": raise SystemExit(main())",
           "definition_candidate": false
         },
@@ -1100,7 +3171,7 @@
           "file": "tools/environment/install_all_environment_candidates.py",
           "line": 60,
           "preview": "def main() -> int:",
-          "definition_candidate": true
+          "definition_candidate": false
         },
         {
           "file": "tools/environment/install_all_environment_candidates.py",
@@ -1117,6 +3188,18 @@
         {
           "file": "tools/environment/pack_environment_art.py",
           "line": 156,
+          "preview": "raise SystemExit(main())",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 89,
+          "preview": "def main() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 203,
           "preview": "raise SystemExit(main())",
           "definition_candidate": false
         },
@@ -1391,7 +3474,1008 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 100
+      "occurrence_count": 102
+    },
+    "panels": {
+      "definition": {
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "line": 25,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 25,
+          "preview": "def panels(im,spacing=128):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 45,
+          "preview": "im=noise((43,58,70,255),301,9); panels(im,128); frost(im,302,20); return im",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 47,
+          "preview": "im=noise((35,49,62,255),311,9); panels(im,96); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 51,
+          "preview": "im=noise((50,62,71,255),321,10); panels(im,160); frost(im,322,32); return im",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 53,
+          "preview": "im=noise((30,43,55,255),331,8); panels(im,128); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "frost": {
+      "definition": {
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "line": 31,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+          "line": 385,
+          "preview": "capture(\"frost-colossus-gameplay.png\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
+          "line": 47,
+          "preview": "/** Cryo Barrage: mature Cryo + Missile trees convert missiles into enlarged frost payloads. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
+          "line": 62,
+          "preview": "/** Permafrost Blades: mature Orbital + Cryo turns the blade into a close-range frost applicator. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+          "line": 36,
+          "preview": "/** Endgame frost scatter rifle: four dense shards trade cadence for control and stagger. */",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
+          "line": 47,
+          "preview": "CRYO_PRISM(\"CRYO PRISM\", \"CR-7 splits into a three-lance frost prism with controlled spread\", 10) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+          "line": 288,
+          "preview": "CRYO_NOVA(\"Cryo Nova\", \"Freeze pulse \u2022 larger Tier II nova at Lv3 \u2022 evolved damage at Lv5 \u2022 enables frost synergies\", UpgradeRarity.EPIC) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossCombatVariantTest.java",
+          "line": 34,
+          "preview": "var frost = new BossCombatRuntime(BossIdentity.FROST_COLOSSUS);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossCombatVariantTest.java",
+          "line": 35,
+          "preview": "assertEquals(FrostColossusBossProfile.PHASE2_SUMMON_COUNT, frost.summonCount(2));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossCombatVariantTest.java",
+          "line": 36,
+          "preview": "assertEquals(FrostColossusBossProfile.PHASE3_SUMMON_COUNT, frost.summonCount(3));",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossCombatVariantTest.java",
+          "line": 37,
+          "preview": "assertEquals(FrostColossusBossProfile.ENRAGE_SHOTS, frost.enrageShots());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossCombatVariantTest.java",
+          "line": 38,
+          "preview": "assertEquals(FrostColossusBossProfile.ENRAGE_PROJECTILE_SPEED, frost.enrageProjectileSpeed(), .0001f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossCombatVariantTest.java",
+          "line": 39,
+          "preview": "assertEquals(FrostColossusBossProfile.ENRAGE_EXPLOSIVE_EVERY, frost.enrageExplosiveEvery());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossCombatVariantTest.java",
+          "line": 40,
+          "preview": "assertEquals(FrostColossusBossProfile.ENRAGE_EXPLOSION_RADIUS, frost.enrageExplosionRadius(), .0001f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/ai/BossCombatVariantTest.java",
+          "line": 41,
+          "preview": "assertTrue(frost.frostColossus());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponCatalogTest.java",
+          "line": 51,
+          "preview": "boolean fire = false, frost = false, shock = false;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponCatalogTest.java",
+          "line": 54,
+          "preview": "frost |= weapon.element == DamageElement.FROST;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponCatalogTest.java",
+          "line": 57,
+          "preview": "assertTrue(fire && frost && shock);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/BossPhaseTransitionProfileTest.java",
+          "line": 26,
+          "preview": "var frost = BossPhaseTransitionProfile.forPhase(BossIdentity.FROST_COLOSSUS, 3);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/BossPhaseTransitionProfileTest.java",
+          "line": 28,
+          "preview": "assertTrue(frost.audioPitch() < alpha.audioPitch());",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/HostileProjectilePresentationTest.java",
+          "line": 36,
+          "preview": "Enemy frost = new Enemy(Enemy.Type.BOSS, 0f, 0f, 5000f, 1f, 1f, 20f, 100);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/visual/HostileProjectilePresentationTest.java",
+          "line": 37,
+          "preview": "assertEquals(EnemyProjectile.Style.STATIC, HostileProjectilePresentation.styleFor(frost));",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 31,
+          "preview": "def frost(im,seed,count=26):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 45,
+          "preview": "im=noise((43,58,70,255),301,9); panels(im,128); frost(im,302,20); return im",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 49,
+          "preview": "frost(im,312,16); return im",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 51,
+          "preview": "im=noise((50,62,71,255),321,10); panels(im,160); frost(im,322,32); return im",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 111,
+          "preview": "m={\"schema\":1,\"biome\":\"cryo_vault\",\"stage\":\"procedural-authored-candidate-v1\",\"production_ready\":False,\"visual_qa_pass\":False,\"generator\":\"tools/environment/generate_cryo_vault_can",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 36,
+          "preview": "def frost(im,seed,count=30):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 62,
+          "preview": "im=noise((24,45,54,255),401); seams(im,128); frost(im,402,26)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 68,
+          "preview": "im=noise((17,38,48,255),411); seams(im,96); frost(im,412,20)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 75,
+          "preview": "im=noise((29,53,62,255),421); seams(im,160); frost(im,422,38); return im",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 185,
+          "preview": "# Regeneration trigger: translucent frost correction.",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 207,
+          "preview": "# Final retrigger after cryo frost regeneration.",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 32
+    },
+    "ice_crack": {
+      "definition": {
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "line": 57,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 57,
+          "preview": "def ice_crack():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 103,
+          "preview": "\"decal/crack_a\":ice_crack,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "framed": {
+      "definition": {
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "line": 76,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ProductionAtlasAudit.java",
+          "line": 42,
+          "preview": "else Gdx.app.log(\"ProductionAtlasAudit\", \"Final atlas has \" + issues + \" missing/under-framed animation groups.\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/ProductionAtlasAudit.java",
+          "line": 61,
+          "preview": "Gdx.app.log(\"ProductionAtlasAudit\", \"Under-framed \" + key + \": \" + actual + \"/\" + required);",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 76,
+          "preview": "def framed(box,fill,outline=STEEL2,radius=22):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 79,
+          "preview": "im=framed((72,166,440,334),(54,68,79,255)); d=ImageDraw.Draw(im,\"RGBA\"); d.rectangle((108,194,404,302),fill=(31,45,57,255),outline=(90,112,124,255),width=4)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 90,
+          "preview": "im=framed((58,112,454,378),(55,67,77,255)); d=ImageDraw.Draw(im,\"RGBA\"); d.rectangle((90,145,422,342),fill=(28,41,52,255),outline=(94,116,128,255),width=4)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryo_vault_candidate.py",
+          "line": 96,
+          "preview": "im=framed((118,112,394,386),(66,79,87,255)); d=ImageDraw.Draw(im,\"RGBA\"); d.rectangle((146,142,366,354),fill=(36,50,59,255),outline=(102,124,133,255),width=4); d.line((152,148,360,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 109,
+          "preview": "def framed(box,fill,outline=STEEL2,radius=22):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 118,
+          "preview": "im=framed((70,166,442,334),(31,55,63,255)); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 133,
+          "preview": "im=framed((58,112,454,378),(35,58,66,255)); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 141,
+          "preview": "im=framed((118,112,394,386),(45,66,71,255)); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 101,
+          "preview": "def framed(box,fill,outline=(83,93,120,255),radius=22):",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 108,
+          "preview": "im=framed((70,166,442,334),(26,29,38,255)); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 125,
+          "preview": "im=framed((58,112,454,378),(29,31,41,255)); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 133,
+          "preview": "im=framed((118,112,394,386),(38,40,50,255)); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 14
+    },
+    "crack": {
+      "definition": {
+        "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+        "line": 84,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 252,
+          "preview": "TextureRegion crack = region(\"environment/decal/crack_a\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 263,
+          "preview": "drawAmbientDetails(batch, crack, blood, scorch, debrisA, debrisB);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 266,
+          "preview": "drawCryogenicDepthsDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 270,
+          "preview": "drawCryoVaultDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 274,
+          "preview": "drawNullSectorDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 278,
+          "preview": "drawFoundryDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 283,
+          "preview": "draw(batch, crack, -10.5f, -7.2f, 3.4f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 284,
+          "preview": "draw(batch, crack, 13.4f, 6.1f, 2.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 285,
+          "preview": "draw(batch, crack, -18f, 9f, 2.35f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 307,
+          "preview": "private void drawAmbientDetails(SpriteBatch batch, TextureRegion crack, TextureRegion blood,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 326,
+          "preview": "draw(batch, crack, x, y, (variant == 0 ? 1.45f : 1.05f) * scaleJitter);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 348,
+          "preview": "private void drawFoundryDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 355,
+          "preview": "draw(batch, crack, -3f, 11f, 3.1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 356,
+          "preview": "draw(batch, crack, 5f, -12f, 2.7f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 376,
+          "preview": "private void drawCryogenicDepthsDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 381,
+          "preview": "draw(batch, crack, -17f, 7f, 4.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 382,
+          "preview": "draw(batch, crack, 18f, -8f, 4.6f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 402,
+          "preview": "private void drawCryoVaultDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 407,
+          "preview": "draw(batch, crack, -13f, -8f, 4.4f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 408,
+          "preview": "draw(batch, crack, 14f, 9f, 3.8f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 430,
+          "preview": "private void drawNullSectorDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 435,
+          "preview": "draw(batch, crack, -14f, 8f, 4.0f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+          "line": 436,
+          "preview": "draw(batch, crack, 12f, -9f, 3.6f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 84,
+          "preview": "def crack():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+          "line": 158,
+          "preview": "\"decal/crack_a\":crack,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 167,
+          "preview": "def crack() -> Image.Image:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_quarantine_yard_candidate.py",
+          "line": 388,
+          "preview": "\"decal/crack_a\": crack,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 27
+    },
+    "panel": {
+      "definition": {
+        "file": "tools/environment/generate_null_sector_candidate.py",
+        "line": 32,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+          "line": 102,
+          "preview": "UiRenderer.panel(shapes, detail.x, detail.y, detail.width, detail.height);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 90,
+          "preview": "UiRenderer.panel(shapes, warningPanel.x, warningPanel.y, warningPanel.width, warningPanel.height);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+          "line": 95,
+          "preview": "UiRenderer.panel(shapes, detail.x, detail.y, detail.width, detail.height);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 98,
+          "preview": "UiRenderer.panel(shapes, dailyPanel.x, dailyPanel.y, dailyPanel.width, dailyPanel.height);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 99,
+          "preview": "UiRenderer.panel(shapes, weeklyPanel.x, weeklyPanel.y, weeklyPanel.width, weeklyPanel.height);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 100,
+          "preview": "UiRenderer.panel(shapes, progressPanel.x, progressPanel.y, progressPanel.width, progressPanel.height);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 192,
+          "preview": "private void heading(String text, Rectangle panel, com.badlogic.gdx.graphics.Color color) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+          "line": 195,
+          "preview": "font.draw(batch, text, panel.x + 16f, panel.y + panel.height - 16f, panel.width - 32f, Align.left, false);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+          "line": 78,
+          "preview": "UiRenderer.panel(shapes, coaching.x, coaching.y, coaching.width, coaching.height);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 75,
+          "preview": "UiRenderer.panel(shapes, layout.portrait().x, layout.portrait().y, layout.portrait().width, layout.portrait().height);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+          "line": 76,
+          "preview": "UiRenderer.panel(shapes, layout.stats().x, layout.stats().y, layout.stats().width, layout.stats().height);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+          "line": 88,
+          "preview": "UiRenderer.panel(shapes, noticePanel.x, noticePanel.y, noticePanel.width, noticePanel.height);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java",
+          "line": 51,
+          "preview": "public static void panel(ShapeRenderer shapes, float x, float y, float w, float h) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 32,
+          "preview": "def panel(img,spacing=128,diag=False):",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 59,
+          "preview": "im=noise((24,27,35,255),201); panel(im,128,True); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 64,
+          "preview": "im=noise((19,22,29,255),211); panel(im,96); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 69,
+          "preview": "im=noise((30,31,39,255),221); panel(im,160,True); d=ImageDraw.Draw(im,\"RGBA\"); rnd=random.Random(222)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 75,
+          "preview": "im=noise((17,19,27,255),231); panel(im,128); d=ImageDraw.Draw(im,\"RGBA\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 18
+    },
+    "fracture": {
+      "definition": {
+        "file": "tools/environment/generate_null_sector_candidate.py",
+        "line": 81,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 118,
+          "preview": "TextureRegion fracture = art.loopingEffectOrNull(\"null_archon_fracture\", stateTime, .065f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 119,
+          "preview": "if (fracture != null) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+          "line": 122,
+          "preview": "batch.draw(fracture, enemy.position.x - size * .5f, enemy.position.y - size * .5f, size, size);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 236,
+          "preview": "float fracture = .5f + .5f * MathUtils.sin(enemy.variantTime * 18f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 237,
+          "preview": "b = MathUtils.clamp(b * (1.08f + fracture * .08f), 0f, 1f);",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 238,
+          "preview": "alpha *= .82f + fracture * .12f;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+          "line": 239,
+          "preview": "scale *= .96f + fracture * .055f;",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 81,
+          "preview": "def fracture():",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/generate_null_sector_candidate.py",
+          "line": 146,
+          "preview": "\"decal/crack_a\":fracture,\"decal/blood_a\":blood,\"decal/scorch_a\":scorch,",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 9
+    },
+    "sha256": {
+      "definition": {
+        "file": "tools/environment/qa_environment_candidates.py",
+        "line": 24,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
+          "line": 37,
+          "preview": "String backup = MAGIC + \"\\n\" + sha256(body) + \"\\n\" + body;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
+          "line": 54,
+          "preview": "if (!sha256(body).equals(expectedHash)) throw new IllegalArgumentException(\"profile backup checksum mismatch\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
+          "line": 119,
+          "preview": "private static String sha256(String value) {",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/ProfileBackupCodecTest.java",
+          "line": 41,
+          "preview": "String duplicate = valid.substring(0, first + 1) + sha256(duplicateBody) + \"\\n\" + duplicateBody;",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/test/java/com/deadlinezero/game/meta/ProfileBackupCodecTest.java",
+          "line": 49,
+          "preview": "private static String sha256(String value) throws Exception {",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 235,
+          "preview": "actual_sha256 = hashlib.sha256(data).hexdigest()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/blender/render_actor_8dir.py",
+          "line": 244,
+          "preview": "\"sha256\": actual_sha256,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/pack_environment_art.py",
+          "line": 34,
+          "preview": "def sha256(path: Path) -> str:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/pack_environment_art.py",
+          "line": 35,
+          "preview": "h = hashlib.sha256()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/pack_environment_art.py",
+          "line": 78,
+          "preview": "\"sha256\": sha256(source),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/pack_environment_art.py",
+          "line": 145,
+          "preview": "\"pageSha256\": sha256(page_path),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 24,
+          "preview": "def sha256(path: Path) -> str:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 25,
+          "preview": "return hashlib.sha256(path.read_bytes()).hexdigest()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 121,
+          "preview": "digest = sha256(path)",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 139,
+          "preview": "\"sha256\": digest,",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/assemble_actor_sheet.py",
+          "line": 38,
+          "preview": "def sha256(path: Path) -> str:",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/assemble_actor_sheet.py",
+          "line": 39,
+          "preview": "h = hashlib.sha256()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/assemble_actor_sheet.py",
+          "line": 101,
+          "preview": "\"sha256\": sha256(args.output),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/resolve_actor_candidate.py",
+          "line": 67,
+          "preview": "\"expected_sha256\": source.get(\"sha256\", \"\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/resolve_actor_candidate.py",
+          "line": 95,
+          "preview": "\"SOURCE_EXPECTED_SHA256\": source.get(\"sha256\", \"\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/resolve_actor_candidate.py",
+          "line": 108,
+          "preview": "\"DZ_DEFENSIVE_PROP_SHA256\": defensive_prop.get(\"sha256\", \"\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/upsert_directional_actor_atlas.py",
+          "line": 147,
+          "preview": "\"png_sha256\": hashlib.sha256(args.png.read_bytes()).hexdigest(),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_actor_production_contracts.py",
+          "line": 98,
+          "preview": "actual_png_sha256 = hashlib.sha256((ROOT / png).read_bytes()).hexdigest()",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_actor_production_contracts.py",
+          "line": 101,
+          "preview": "f\"{actor}: published PNG sha256 mismatch: \"",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/sprites/validate_actor_production_contracts.py",
+          "line": 107,
+          "preview": "(\"source_sha256\", \"sha256\"),",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 25
+    },
+    "luminance": {
+      "definition": {
+        "file": "tools/environment/qa_environment_candidates.py",
+        "line": 28,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 28,
+          "preview": "def luminance(rgb: tuple[float, float, float]) -> float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 141,
+          "preview": "\"meanLuminance\": round(luminance(mean_rgb), 2),",
+          "definition_candidate": false
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 158,
+          "preview": "f\"{biome}/{slot['path']}: floor luminance outside combat-safe range \"",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "edge_rgb_mae": {
+      "definition": {
+        "file": "tools/environment/qa_environment_candidates.py",
+        "line": 33,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 33,
+          "preview": "def edge_rgb_mae(image: Image.Image) -> dict[str, float]:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 147,
+          "preview": "edges = edge_rgb_mae(image)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "border_alpha_max": {
+      "definition": {
+        "file": "tools/environment/qa_environment_candidates.py",
+        "line": 47,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 47,
+          "preview": "def border_alpha_max(image: Image.Image) -> int:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 164,
+          "preview": "record[\"borderAlphaMax\"] = border_alpha_max(image)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "alpha_coverage": {
+      "definition": {
+        "file": "tools/environment/qa_environment_candidates.py",
+        "line": 58,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 58,
+          "preview": "def alpha_coverage(image: Image.Image) -> float:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 131,
+          "preview": "coverage = alpha_coverage(image)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "make_review_sheet": {
+      "definition": {
+        "file": "tools/environment/qa_environment_candidates.py",
+        "line": 65,
+        "kind": "function",
+        "language": "python"
+      },
+      "occurrences": [
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 65,
+          "preview": "def make_review_sheet(records: list[dict], output: Path) -> None:",
+          "definition_candidate": true
+        },
+        {
+          "file": "tools/environment/qa_environment_candidates.py",
+          "line": 191,
+          "preview": "make_review_sheet(records, args.output / \"environment-review-sheet.png\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
     }
   }
 }

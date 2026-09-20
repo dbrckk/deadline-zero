@@ -22,36 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T17:59:54Z
+Generated: 2026-09-20T18:14:37Z
 
 ### Git
 - Branch: `main`
-- Head: `ee53dbdfb8b0`
-- Commit date: 2026-09-20T19:59:41+02:00
-- Commit: Integrate all 70 biome environment regions into runtime atlas (#243)
-- Tracked files: 831
+- Head: `9d85976123cb`
+- Commit date: 2026-09-20T20:14:22+02:00
+- Commit: Add semantic QA gate for 70 environment candidates (#244)
+- Tracked files: 834
 
 ### Recently changed files
-- `.github/workflows/integrate-environment-candidates.yml`
-- `assets/art/environment-cinder_foundry.png`
-- `assets/art/environment-cryo_vault.png`
-- `assets/art/environment-cryogenic_depths.png`
-- `assets/art/environment-null_sector.png`
-- `assets/art/environment-quarantine_yard.png`
-- `assets/art/game.atlas`
-- `tools/environment/install_all_environment_candidates.py`
-- `.github/workflows/cryo-vault-candidate.yml`
-- `art_sources/environment/cryo_vault/candidate-manifest.json`
-- `art_sources/environment/cryo_vault/decal/blood_a.png`
-- `art_sources/environment/cryo_vault/decal/crack_a.png`
-- `art_sources/environment/cryo_vault/decal/scorch_a.png`
+- `.github/workflows/environment-semantic-qa.yml`
+- `art_sources/environment/cinder_foundry/floor/concrete_a.png`
+- `art_sources/environment/cinder_foundry/floor/concrete_b.png`
+- `art_sources/environment/cinder_foundry/floor/concrete_c.png`
+- `art_sources/environment/cinder_foundry/floor/hazard_a.png`
 - `art_sources/environment/cryo_vault/floor/concrete_a.png`
 - `art_sources/environment/cryo_vault/floor/concrete_b.png`
 - `art_sources/environment/cryo_vault/floor/concrete_c.png`
 - `art_sources/environment/cryo_vault/floor/hazard_a.png`
-- `art_sources/environment/cryo_vault/prop/barrier_a.png`
-- `art_sources/environment/cryo_vault/prop/beacon_a.png`
-- `art_sources/environment/cryo_vault/prop/crate_a.png`
+- `art_sources/environment/cryogenic_depths/floor/concrete_a.png`
+- `art_sources/environment/cryogenic_depths/floor/concrete_b.png`
+- `art_sources/environment/cryogenic_depths/floor/concrete_c.png`
+- `art_sources/environment/cryogenic_depths/floor/hazard_a.png`
+- `art_sources/environment/null_sector/floor/concrete_a.png`
+- `art_sources/environment/null_sector/floor/concrete_b.png`
+- `art_sources/environment/null_sector/floor/concrete_c.png`
+- `art_sources/environment/null_sector/floor/hazard_a.png`
+- `tools/environment/candidate_utils.py`
+- `tools/environment/generate_cinder_foundry_candidate.py`
+- `tools/environment/generate_cryo_vault_candidate.py`
 
 ### Project signals
 - `build.gradle`

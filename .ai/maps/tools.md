@@ -54,6 +54,7 @@ blender/
   validate_rex_weapon_visibility.py
   validate_rig.py
 environment/
+  candidate_utils.py
   generate_cinder_foundry_candidate.py
   generate_cryo_vault_candidate.py
   generate_cryogenic_depths_candidate.py
@@ -61,6 +62,7 @@ environment/
   generate_quarantine_yard_candidate.py
   install_all_environment_candidates.py
   pack_environment_art.py
+  qa_environment_candidates.py
   test_upsert_environment_atlas.py
   test_validate_environment_art_contract.py
   upsert_environment_atlas.py
@@ -1058,6 +1060,36 @@ report = {
 report_path = args.output / "rig-report.json"
 ```
 
+## File: environment/candidate_utils.py
+```python
+"""Shared deterministic finishing helpers for environment candidate generators."""
+⋮----
+def make_tileable_edges(image: Image.Image, band: int = 24) -> Image.Image
+⋮----
+"""Mirror-average opposite edge bands so repeated floor tiles join cleanly.
+
+    The operation preserves the interior material treatment while making both
+    sides of each seam share the same pixel band. This is deterministic and is
+    intentionally applied only to opaque floor candidates.
+    """
+out = image.convert("RGBA").copy()
+⋮----
+px = out.load()
+⋮----
+# Pair left/right edge bands. Repeated tiles then meet with mirrored,
+# identical neighborhoods rather than merely matching the outermost pixel.
+⋮----
+left = px[i, y]
+right = px[width - 1 - i, y]
+avg = tuple((left[c] + right[c]) // 2 for c in range(4))
+⋮----
+# Pair top/bottom after horizontal reconciliation so corners also agree.
+⋮----
+top = px[x, i]
+bottom = px[x, height - 1 - i]
+avg = tuple((top[c] + bottom[c]) // 2 for c in range(4))
+```
+
 ## File: environment/generate_cinder_foundry_candidate.py
 ```python
 #!/usr/bin/env python3
@@ -1185,6 +1217,8 @@ a.output.mkdir(parents=True,exist_ok=True); assets=[]
 path=a.output/(slot+".png"); path.parent.mkdir(parents=True,exist_ok=True)
 img=finish(GENERATORS[slot](),slot,2000+i*101); img.save(path,"PNG",optimize=True); assets.append(str(path).replace("\\","/"))
 manifest={"schema":1,"biome":"cinder_foundry","stage":"procedural-authored-candidate-v1","production_ready":False,"visual_qa_pass":False,"generator":"tools/environment/generate_cinder_foundry_candidate.py","master_size":[512,512],"asset_count":14,"assets":assets,"notes":"Distinct blackened-steel/ceramic/slag candidate. Not FINAL until premium visual QA."}
+⋮----
+# Regeneration trigger: seam-safe floor masters.
 ```
 
 ## File: environment/generate_cryo_vault_candidate.py
@@ -1211,13 +1245,13 @@ d=ImageDraw.Draw(im,"RGBA")
 ⋮----
 def frost(im,seed,count=26)
 ⋮----
-d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+overlay=transparent(); d=ImageDraw.Draw(overlay,"RGBA"); rnd=random.Random(seed)
 ⋮----
 def finish(im,slot)
 ⋮----
 im=im.convert("RGBA")
 ⋮----
-im=ImageEnhance.Contrast(im).enhance(1.08); im=ImageEnhance.Sharpness(im).enhance(1.18); im.putalpha(Image.new("L",im.size,255)); return im
+im=ImageEnhance.Contrast(im).enhance(1.08); im=ImageEnhance.Sharpness(im).enhance(1.18); im.putalpha(Image.new("L",im.size,255)); return make_tileable_edges(im)
 a=im.getchannel("A"); shadow=Image.new("RGBA",im.size,(0,0,0,0)); sm=a.filter(ImageFilter.GaussianBlur(12)); shifted=Image.new("L",im.size,0); shifted.paste(sm,(10,14)); shadow.putalpha(shifted.point(lambda p:int(p*.30)))
 out=Image.alpha_composite(shadow,im); inner=ImageChops.subtract(a,a.filter(ImageFilter.MinFilter(7))); hi=Image.new("RGBA",im.size,(220,245,250,0)); hi.putalpha(inner.point(lambda p:int(p*.26))); return ImageEnhance.Sharpness(Image.alpha_composite(out,hi)).enhance(1.24)
 ⋮----
@@ -1285,6 +1319,8 @@ p=argparse.ArgumentParser(); p.add_argument("--output",type=Path,default=Path("a
 ⋮----
 path=a.output/(slot+".png"); path.parent.mkdir(parents=True,exist_ok=True); finish(GEN[slot](),slot).save(path,"PNG",optimize=True); assets.append(str(path).replace("\\","/"))
 m={"schema":1,"biome":"cryo_vault","stage":"procedural-authored-candidate-v1","production_ready":False,"visual_qa_pass":False,"generator":"tools/environment/generate_cryo_vault_candidate.py","master_size":[512,512],"asset_count":14,"assets":assets,"notes":"Cryogenic-facility candidate with frost and restrained white-blue accents. Not FINAL until premium visual QA."}
+⋮----
+# Regeneration trigger: seam-safe floor masters.
 ```
 
 ## File: environment/generate_cryogenic_depths_candidate.py
@@ -1311,7 +1347,7 @@ d=ImageDraw.Draw(im,"RGBA")
 ⋮----
 def frost(im,seed,count=30)
 ⋮----
-d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+overlay=transparent(); d=ImageDraw.Draw(overlay,"RGBA"); rnd=random.Random(seed)
 ⋮----
 def finish(im,slot)
 ⋮----
@@ -1405,6 +1441,10 @@ path=a.output/(slot+".png"); path.parent.mkdir(parents=True,exist_ok=True)
 m={"schema":1,"biome":"cryogenic_depths","stage":"procedural-authored-candidate-v1","production_ready":False,
 ⋮----
 # Deterministic by design: reruns must not mutate approved candidate masters.
+⋮----
+# Regeneration trigger: seam-safe floor masters.
+⋮----
+# Regeneration trigger: translucent frost correction.
 ```
 
 ## File: environment/generate_null_sector_candidate.py
@@ -1900,6 +1940,103 @@ fragment_path = args.output / f"environment-{args.biome}.atlas.txt"
 manifest_path = args.output / f"environment-{args.biome}.manifest.json"
 ⋮----
 manifest = {
+```
+
+## File: environment/qa_environment_candidates.py
+```python
+#!/usr/bin/env python3
+"""Static semantic QA for authored biome environment candidates.
+
+This complements the packer with inexpensive checks that catch obvious visual
+production defects before Android capture review. It never marks art FINAL.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+CONTRACT = ROOT / "config" / "environment-art-contract.json"
+SOURCE = ROOT / "art_sources" / "environment"
+DEFAULT_OUT = ROOT / "build" / "environment_art" / "semantic_qa"
+MASTER = 512
+⋮----
+def sha256(path: Path) -> str
+⋮----
+def luminance(rgb: tuple[float, float, float]) -> float
+⋮----
+def edge_rgb_mae(image: Image.Image) -> dict[str, float]
+⋮----
+rgb = image.convert("RGB")
+left = rgb.crop((0, 0, 1, MASTER))
+right = rgb.crop((MASTER - 1, 0, MASTER, MASTER))
+top = rgb.crop((0, 0, MASTER, 1))
+bottom = rgb.crop((0, MASTER - 1, MASTER, MASTER))
+lr = ImageStat.Stat(ImageChops.difference(left, right)).mean
+tb = ImageStat.Stat(ImageChops.difference(top, bottom)).mean
+⋮----
+def border_alpha_max(image: Image.Image) -> int
+⋮----
+a = image.getchannel("A")
+strips = [
+⋮----
+def alpha_coverage(image: Image.Image) -> float
+⋮----
+hist = a.histogram()
+nonzero = sum(hist[1:])
+⋮----
+def make_review_sheet(records: list[dict], output: Path) -> None
+⋮----
+tile = 128
+cols = 5
+rows = math.ceil(len(records) / cols)
+sheet = Image.new("RGBA", (cols * tile, rows * tile), (8, 12, 16, 255))
+⋮----
+image = raw.convert("RGBA")
+⋮----
+preview = Image.new("RGBA", (tile, tile), (0, 0, 0, 255))
+unit = tile // 3
+small = image.resize((unit, unit), Image.Resampling.LANCZOS)
+⋮----
+preview = Image.new("RGBA", (tile, tile), (8, 12, 16, 255))
+small = image.resize((64, 64), Image.Resampling.LANCZOS)
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+⋮----
+contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+biomes = [b["id"] for b in contract["biomes"]]
+slots = contract["slots"]
+failures: list[str] = []
+hashes: dict[str, str] = {}
+records: list[dict] = []
+⋮----
+manifest_path = SOURCE / biome / "candidate-manifest.json"
+⋮----
+manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+⋮----
+path = SOURCE / biome / (slot["path"] + ".png")
+⋮----
+digest = sha256(path)
+previous = hashes.get(digest)
+⋮----
+alpha = image.getchannel("A")
+extrema = alpha.getextrema()
+bbox = alpha.getbbox()
+coverage = alpha_coverage(image)
+stat = ImageStat.Stat(image.convert("RGB"))
+mean_rgb = tuple(stat.mean)
+record = {
+⋮----
+edges = edge_rgb_mae(image)
+⋮----
+# This is a deliberately conservative automated guard. Final seam
+# acceptance still comes from the generated 3x3 review sheet.
+⋮----
+report = {
+⋮----
+# CI retrigger after deterministic candidate regeneration.
+⋮----
+# Final retrigger after cryo frost regeneration.
 ```
 
 ## File: environment/test_upsert_environment_atlas.py

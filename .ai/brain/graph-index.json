@@ -808,9 +808,10 @@
         "tools/environment/generate_quarantine_yard_candidate.py",
         "tools/environment/install_all_environment_candidates.py",
         "tools/environment/pack_environment_art.py",
+        "tools/environment/qa_environment_candidates.py",
         "tools/environment/validate_environment_art_contract.py"
       ],
-      "in_degree": 36,
+      "in_degree": 37,
       "out_degree": 0,
       "path": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
     },
@@ -1580,6 +1581,34 @@
     },
     {
       "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryReportTest.java",
+        "tools/blender/inspect_actor_source.py",
+        "tools/blender/render_actor_8dir.py",
+        "tools/blender/repair_rex_weights.py",
+        "tools/blender/validate_rex_weapon_visibility.py",
+        "tools/blender/validate_rig.py",
+        "tools/environment/qa_environment_candidates.py",
+        "tools/environment/validate_environment_art_contract.py",
+        "tools/sprites/audit_final_art_status.py",
+        "tools/sprites/normalize_actor_frames.py",
+        "tools/sprites/normalize_rex_frames.py",
+        "tools/sprites/test_validate_actor_role_metrics.py",
+        "tools/sprites/validate_actor_role_metrics.py",
+        "tools/sprites/validate_ranged_attack_readability.py"
+      ],
+      "in_degree": 15,
+      "out_degree": 4,
+      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java"
+    },
+    {
+      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/ai/BossAffixRules.java",
         "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java",
         "core/src/main/java/com/deadlinezero/game/ai/FrostColossusBossProfile.java",
@@ -1716,33 +1745,6 @@
       "in_degree": 17,
       "out_degree": 1,
       "path": "core/src/main/java/com/deadlinezero/game/services/AdsService.java"
-    },
-    {
-      "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
-      ],
-      "dependents": [
-        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryReportTest.java",
-        "tools/blender/inspect_actor_source.py",
-        "tools/blender/render_actor_8dir.py",
-        "tools/blender/repair_rex_weights.py",
-        "tools/blender/validate_rex_weapon_visibility.py",
-        "tools/blender/validate_rig.py",
-        "tools/environment/validate_environment_art_contract.py",
-        "tools/sprites/audit_final_art_status.py",
-        "tools/sprites/normalize_actor_frames.py",
-        "tools/sprites/normalize_rex_frames.py",
-        "tools/sprites/test_validate_actor_role_metrics.py",
-        "tools/sprites/validate_actor_role_metrics.py",
-        "tools/sprites/validate_ranged_attack_readability.py"
-      ],
-      "in_degree": 14,
-      "out_degree": 4,
-      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java"
     },
     {
       "dependencies": [
@@ -2129,6 +2131,30 @@
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
         "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+        "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+        "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+        "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+        "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+        "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+        "tools/environment/pack_environment_art.py",
+        "tools/environment/qa_environment_candidates.py",
+        "tools/environment/test_validate_environment_art_contract.py",
+        "tools/environment/validate_environment_art_contract.py"
+      ],
+      "in_degree": 11,
+      "out_degree": 4,
+      "path": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java"
+    },
+    {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+        "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunRewardCalculator.java",
         "core/src/main/java/com/deadlinezero/game/meta/WeaponProgression.java",
         "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
@@ -2245,29 +2271,6 @@
     },
     {
       "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
-        "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
-        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java"
-      ],
-      "dependents": [
-        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-        "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
-        "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
-        "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-        "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
-        "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
-        "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
-        "tools/environment/pack_environment_art.py",
-        "tools/environment/test_validate_environment_art_contract.py",
-        "tools/environment/validate_environment_art_contract.py"
-      ],
-      "in_degree": 10,
-      "out_degree": 4,
-      "path": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java"
-    },
-    {
-      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java",
         "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
@@ -2290,8 +2293,8 @@
       "path": "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java"
     }
   ],
-  "edge_count": 2271,
+  "edge_count": 2278,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 443,
+  "node_count": 445,
   "schema_version": 1
 }
