@@ -222,8 +222,11 @@ public final class GameScreen extends ScreenAdapter {
         } else {
             cameraShake = 0f;
         }
-        cam.position.x = MathUtils.lerp(cam.position.x, 0f, .08f);
-        cam.position.y = MathUtils.lerp(cam.position.y, 0f, .08f);
+        // Subtle player follow and velocity look-ahead keep the arena readable while making movement feel less static.
+        float cameraTargetX = player.position.x * .14f + player.velocity.x * .055f;
+        float cameraTargetY = player.position.y * .14f + player.velocity.y * .055f;
+        cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .075f);
+        cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .075f);
         polish.applyCameraRecoil(cam);
         cam.update();
     }
@@ -390,7 +393,9 @@ public final class GameScreen extends ScreenAdapter {
                     p.critical ? VisualTheme.GOLD : VisualTheme.TEXT);
                 float vlen = p.velocity.len();
                 if (vlen > .001f) e.addImpulse(p.velocity.x / vlen * p.knockback, p.velocity.y / vlen * p.knockback);
-                impact(p.position.x, p.position.y, p.critical ? .6f : .38f, .12f, p.critical ? VisualTheme.GOLD : VisualTheme.CYAN);
+                impact(p.position.x, p.position.y, p.critical ? .78f : .44f,
+                    p.critical ? .17f : .12f, p.critical ? VisualTheme.GOLD : VisualTheme.CYAN);
+                if (p.critical) addCameraShake(.075f);
                 polish.onProjectileHit(p.critical);
                 if (p.element == DamageElement.SHOCK && e.alive) chainShock(e, p.damage * .42f, 3);
                 if (wasAlive && !e.alive) onEnemyKilled(e);
@@ -519,8 +524,29 @@ public final class GameScreen extends ScreenAdapter {
         }
         director.onKill();
         if (player.addXp(e.xpValue)) prepareUpgrade();
-        impact(e.position.x, e.position.y, e.radius * 2.3f, .28f, VisualTheme.GREEN);
-        addCameraShake(e.type == Enemy.Type.BOSS ? .72f : .08f);
+
+        float killScale = switch (e.type) {
+            case BOSS -> 4.1f;
+            case ELITE, BRUTE -> 3.15f;
+            case PHANTOM, REGENERATOR, SHIELDED -> 2.75f;
+            default -> 2.45f;
+        };
+        Color killColor = switch (e.type) {
+            case BOSS -> VisualTheme.GOLD;
+            case PHANTOM -> VisualTheme.VIOLET;
+            case REGENERATOR -> VisualTheme.GREEN;
+            case RANGED -> VisualTheme.CYAN;
+            default -> VisualTheme.RED;
+        };
+        float killDuration = e.type == Enemy.Type.BOSS ? .52f
+            : (e.type == Enemy.Type.ELITE || e.type == Enemy.Type.BRUTE ? .36f : .28f);
+        impact(e.position.x, e.position.y, e.radius * killScale, killDuration, killColor);
+        if (e.type == Enemy.Type.BOSS) {
+            impact(e.position.x, e.position.y, e.radius * 2.2f, .68f, Color.WHITE);
+        }
+        float killShake = e.type == Enemy.Type.BOSS ? .78f
+            : (e.type == Enemy.Type.ELITE || e.type == Enemy.Type.BRUTE ? .22f : .115f);
+        addCameraShake(killShake);
     }
 
     private void spawnEnemy() {
@@ -572,7 +598,7 @@ public final class GameScreen extends ScreenAdapter {
                 player.weapon.knockback, player.weapon.element);
         }
         polish.onShot(base);
-        addCameraShake(.035f);
+        addCameraShake(count > 1 ? .052f : .043f);
     }
 
     private void addCameraShake(float amount) {
