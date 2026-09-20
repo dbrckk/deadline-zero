@@ -90,6 +90,7 @@ public final class CombatHudRenderer {
             director.bossProgress(), director.bossWarning()
                 ? (AccessibilitySettings.active().highContrastTelegraphs ? Color.WHITE : VisualTheme.danger())
                 : (AccessibilitySettings.active().highContrastTelegraphs ? VisualTheme.CYAN : VisualTheme.CYAN_SOFT));
+        drawBossWarningChrome(shapes, director, timeline);
 
         if (boss != null && layout.boss() != null) {
             Rectangle b = layout.boss();
@@ -100,6 +101,7 @@ public final class CombatHudRenderer {
             shapes.setColor(VisualTheme.SURFACE_0);
             shapes.rect(b.x + b.width * .33f, b.y + 3f, 2f, b.height - 6f);
             shapes.rect(b.x + b.width * .66f, b.y + 3f, 2f, b.height - 6f);
+            drawBossPhaseChrome(shapes, b, boss, identity);
         }
 
         OnboardingState onboarding = OnboardingState.active();
@@ -145,6 +147,51 @@ public final class CombatHudRenderer {
         for (int i = 1; i < segments; i++) {
             float px = x + w * i / segments;
             shapes.rect(px - tickW * .5f, y + 2f, tickW, Math.max(0f, h - 4f));
+        }
+    }
+
+    private void drawBossWarningChrome(ShapeRenderer shapes, WaveDirector director, Rectangle timeline) {
+        if (!director.bossWarning() || director.bossSpawned()) return;
+        float seconds = Math.max(0f, director.secondsUntilBoss());
+        float urgency = 1f - MathUtils.clamp(seconds / 30f, 0f, 1f);
+        float pulse = AccessibilitySettings.active().minimizesFlashes()
+            ? .58f
+            : .58f + .22f * (MathUtils.sin(seconds * 4.8f) * .5f + .5f);
+        Color danger = AccessibilitySettings.active().highContrastTelegraphs ? Color.WHITE : VisualTheme.danger();
+        float pad = 6f + urgency * 3f;
+
+        shapes.setColor(danger.r, danger.g, danger.b, .10f + urgency * .14f);
+        shapes.rect(timeline.x - pad, timeline.y - pad, timeline.width + pad * 2f, timeline.height + pad * 2f);
+        shapes.setColor(danger.r, danger.g, danger.b, pulse);
+        shapes.rect(timeline.x - pad, timeline.y + timeline.height + pad - 2f, timeline.width + pad * 2f, 2f);
+        shapes.rect(timeline.x - pad, timeline.y - pad, timeline.width + pad * 2f, 2f);
+
+        float notchW = Math.max(18f, timeline.width * .025f);
+        float cx = timeline.x + timeline.width * .5f;
+        shapes.setColor(danger.r, danger.g, danger.b, .88f);
+        shapes.rect(cx - notchW * .5f, timeline.y + timeline.height + pad - 5f, notchW, 5f);
+    }
+
+    private void drawBossPhaseChrome(ShapeRenderer shapes, Rectangle bossRect, Enemy boss, Color identity) {
+        int phase = boss.bossPhases == null ? 1 : boss.bossPhases.phase();
+        int clampedPhase = MathUtils.clamp(phase, 1, 3);
+        float segmentW = bossRect.width / 3f;
+        float capH = Math.max(2f, 2.5f * ui());
+
+        for (int i = 0; i < 3; i++) {
+            float alpha = i < clampedPhase ? .88f : .16f;
+            shapes.setColor(identity.r, identity.g, identity.b, alpha);
+            shapes.rect(bossRect.x + i * segmentW + 2f, bossRect.y + bossRect.height - capH - 2f,
+                Math.max(0f, segmentW - 4f), capH);
+        }
+
+        if (clampedPhase >= 2) {
+            float pulse = AccessibilitySettings.active().minimizesFlashes()
+                ? .20f
+                : .16f + .08f * (MathUtils.sin(clampedPhase * 2.1f + boss.hp * .01f) * .5f + .5f);
+            shapes.setColor(identity.r, identity.g, identity.b, pulse);
+            shapes.rect(bossRect.x - 5f, bossRect.y - 5f, bossRect.width + 10f, 3f);
+            shapes.rect(bossRect.x - 5f, bossRect.y + bossRect.height + 2f, bossRect.width + 10f, 3f);
         }
     }
 
