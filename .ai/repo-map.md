@@ -47,6 +47,8 @@ The content is organized as follows:
     ai-repo-map.yml
     android-test-release.yml
     cinder-foundry-candidate.yml
+    cryo-vault-candidate.yml
+    cryogenic-depths-candidate.yml
     deadline-zero-work-watch.yml
     enemy-source-catalog.yml
     null-sector-candidate.yml
@@ -579,6 +581,8 @@ tools/
     validate_rig.py
   environment/
     generate_cinder_foundry_candidate.py
+    generate_cryo_vault_candidate.py
+    generate_cryogenic_depths_candidate.py
     generate_null_sector_candidate.py
     generate_quarantine_yard_candidate.py
     pack_environment_art.py
@@ -1515,6 +1519,207 @@ jobs:
             exit 0
           fi
           git commit -m "art(environment): add Cinder Foundry candidate masters"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+````
+
+## File: .github/workflows/cryo-vault-candidate.yml
+````yaml
+name: Cryo Vault Candidate Pack
+
+on:
+  push:
+    paths:
+      - '.github/workflows/cryo-vault-candidate.yml'
+      - 'tools/environment/generate_cryo_vault_candidate.py'
+      - 'tools/environment/pack_environment_art.py'
+      - 'tools/environment/validate_environment_art_contract.py'
+      - 'config/environment-art-contract.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cryo-vault-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+      - name: Generate deterministic Cryo Vault candidates
+        run: |
+          set -euo pipefail
+          python3 tools/environment/generate_cryo_vault_candidate.py
+          test "$(find art_sources/environment/cryo_vault -type f -name '*.png' | wc -l)" -eq 14
+      - name: Pack and validate candidate biome
+        run: |
+          set -euo pipefail
+          python3 tools/environment/pack_environment_art.py --biome cryo_vault
+          python3 tools/environment/validate_environment_art_contract.py --json > build/environment_art/coverage-before-publish.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          packed=json.loads(Path('build/environment_art/environment-cryo_vault.manifest.json').read_text())
+          candidate=json.loads(Path('art_sources/environment/cryo_vault/candidate-manifest.json').read_text())
+          assert packed['biome']=='cryo_vault'
+          assert packed['slotCount']==14 and len(packed['assets'])==14
+          assert candidate['asset_count']==14
+          assert candidate['production_ready'] is False
+          assert candidate['visual_qa_pass'] is False
+          print('Cryo Vault candidate contract PASS: 14/14 authored masters')
+          PY
+      - name: Build review contact sheet
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          slots=['floor/concrete_a','floor/concrete_b','floor/concrete_c','floor/hazard_a',
+          'decal/crack_a','decal/blood_a','decal/scorch_a','prop/barrier_a',
+          'prop/debris_a','prop/debris_b','prop/wall_a','prop/wall_b','prop/crate_a','prop/beacon_a']
+          cell=256
+          sheet=Image.new('RGBA',(cell*4,cell*4),(10,16,22,255))
+          for i,slot in enumerate(slots):
+              src=Path('art_sources/environment/cryo_vault')/(slot+'.png')
+              with Image.open(src) as raw: im=raw.convert('RGBA').resize((cell,cell),Image.Resampling.LANCZOS)
+              sheet.alpha_composite(im,((i%4)*cell,(i//4)*cell))
+          out=Path('build/environment_art/cryo-vault-contact-sheet.png'); out.parent.mkdir(parents=True,exist_ok=True); sheet.save(out,'PNG',optimize=True)
+          PY
+      - name: Upload candidate review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cryo-vault-candidate-${{ github.run_number }}
+          path: |
+            build/environment_art/environment-cryo_vault.png
+            build/environment_art/environment-cryo_vault.atlas.txt
+            build/environment_art/environment-cryo_vault.manifest.json
+            build/environment_art/cryo-vault-contact-sheet.png
+            art_sources/environment/cryo_vault/candidate-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Commit generated candidate masters to branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add art_sources/environment/cryo_vault
+          if git diff --cached --quiet; then
+            echo "Cryo Vault candidate masters already current"
+            exit 0
+          fi
+          git commit -m "art(environment): add Cryo Vault candidate masters"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+````
+
+## File: .github/workflows/cryogenic-depths-candidate.yml
+````yaml
+name: Cryogenic Depths Candidate Pack
+
+on:
+  push:
+    paths:
+      - '.github/workflows/cryogenic-depths-candidate.yml'
+      - 'tools/environment/generate_cryogenic_depths_candidate.py'
+      - 'tools/environment/pack_environment_art.py'
+      - 'tools/environment/validate_environment_art_contract.py'
+      - 'config/environment-art-contract.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cryogenic-depths-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+      - name: Generate deterministic Cryogenic Depths candidates
+        run: |
+          set -euo pipefail
+          python3 tools/environment/generate_cryogenic_depths_candidate.py
+          test "$(find art_sources/environment/cryogenic_depths -type f -name '*.png' | wc -l)" -eq 14
+      - name: Pack and validate candidate biome
+        run: |
+          set -euo pipefail
+          python3 tools/environment/pack_environment_art.py --biome cryogenic_depths
+          python3 tools/environment/validate_environment_art_contract.py --json > build/environment_art/coverage-before-publish.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          packed=json.loads(Path('build/environment_art/environment-cryogenic_depths.manifest.json').read_text())
+          candidate=json.loads(Path('art_sources/environment/cryogenic_depths/candidate-manifest.json').read_text())
+          assert packed['biome']=='cryogenic_depths'
+          assert packed['slotCount']==14 and len(packed['assets'])==14
+          assert candidate['asset_count']==14
+          assert candidate['production_ready'] is False
+          assert candidate['visual_qa_pass'] is False
+          print('Cryogenic Depths candidate contract PASS: 14/14 authored masters')
+          PY
+      - name: Build review contact sheet
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          slots=['floor/concrete_a','floor/concrete_b','floor/concrete_c','floor/hazard_a',
+          'decal/crack_a','decal/blood_a','decal/scorch_a','prop/barrier_a',
+          'prop/debris_a','prop/debris_b','prop/wall_a','prop/wall_b','prop/crate_a','prop/beacon_a']
+          cell=256
+          sheet=Image.new('RGBA',(cell*4,cell*4),(4,16,22,255))
+          for i,slot in enumerate(slots):
+              src=Path('art_sources/environment/cryogenic_depths')/(slot+'.png')
+              with Image.open(src) as raw:
+                  im=raw.convert('RGBA').resize((cell,cell),Image.Resampling.LANCZOS)
+              sheet.alpha_composite(im,((i%4)*cell,(i//4)*cell))
+          out=Path('build/environment_art/cryogenic-depths-contact-sheet.png')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          sheet.save(out,'PNG',optimize=True)
+          PY
+      - name: Upload candidate review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cryogenic-depths-candidate-${{ github.run_number }}
+          path: |
+            build/environment_art/environment-cryogenic_depths.png
+            build/environment_art/environment-cryogenic_depths.atlas.txt
+            build/environment_art/environment-cryogenic_depths.manifest.json
+            build/environment_art/cryogenic-depths-contact-sheet.png
+            art_sources/environment/cryogenic_depths/candidate-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Commit generated candidate masters to branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add art_sources/environment/cryogenic_depths
+          if git diff --cached --quiet; then
+            echo "Cryogenic Depths candidate masters already current"
+            exit 0
+          fi
+          git commit -m "art(environment): add Cryogenic Depths candidate masters"
           git push origin "HEAD:${GITHUB_REF_NAME}"
 ````
 
@@ -28784,6 +28989,226 @@ a.output.mkdir(parents=True,exist_ok=True); assets=[]
 path=a.output/(slot+".png"); path.parent.mkdir(parents=True,exist_ok=True)
 img=finish(GENERATORS[slot](),slot,2000+i*101); img.save(path,"PNG",optimize=True); assets.append(str(path).replace("\\","/"))
 manifest={"schema":1,"biome":"cinder_foundry","stage":"procedural-authored-candidate-v1","production_ready":False,"visual_qa_pass":False,"generator":"tools/environment/generate_cinder_foundry_candidate.py","master_size":[512,512],"asset_count":14,"assets":assets,"notes":"Distinct blackened-steel/ceramic/slag candidate. Not FINAL until premium visual QA."}
+````
+
+## File: tools/environment/generate_cryo_vault_candidate.py
+````python
+#!/usr/bin/env python3
+"""Generate deterministic Cryo Vault environment candidate masters."""
+⋮----
+SIZE=512
+SLOTS=("floor/concrete_a","floor/concrete_b","floor/concrete_c","floor/hazard_a",
+NAVY=(20,31,43,255); STEEL=(56,72,84,255); STEEL2=(82,99,111,255)
+ICE=(156,222,238,255); ICE2=(98,180,207,255); WHITE=(220,242,246,255); BLOOD=(80,16,24,255)
+⋮----
+def clamp(v): return 0 if v<0 else 255 if v>255 else int(v)
+def transparent(): return Image.new("RGBA",(SIZE,SIZE),(0,0,0,0))
+def noise(base,seed,strength=10)
+⋮----
+rnd=random.Random(seed); im=Image.new("RGBA",(SIZE,SIZE)); px=im.load()
+⋮----
+n=(math.sin(x*.051)+math.cos(y*.047))*strength*.25+rnd.uniform(-strength,strength)
+⋮----
+def panels(im,spacing=128)
+⋮----
+d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def frost(im,seed,count=26)
+⋮----
+d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+⋮----
+def finish(im,slot)
+⋮----
+im=im.convert("RGBA")
+⋮----
+im=ImageEnhance.Contrast(im).enhance(1.08); im=ImageEnhance.Sharpness(im).enhance(1.18); im.putalpha(Image.new("L",im.size,255)); return im
+a=im.getchannel("A"); shadow=Image.new("RGBA",im.size,(0,0,0,0)); sm=a.filter(ImageFilter.GaussianBlur(12)); shifted=Image.new("L",im.size,0); shifted.paste(sm,(10,14)); shadow.putalpha(shifted.point(lambda p:int(p*.30)))
+out=Image.alpha_composite(shadow,im); inner=ImageChops.subtract(a,a.filter(ImageFilter.MinFilter(7))); hi=Image.new("RGBA",im.size,(220,245,250,0)); hi.putalpha(inner.point(lambda p:int(p*.26))); return ImageEnhance.Sharpness(Image.alpha_composite(out,hi)).enhance(1.24)
+⋮----
+def floor_a()
+⋮----
+im=noise((43,58,70,255),301,9); panels(im,128); frost(im,302,20); return im
+def floor_b()
+⋮----
+im=noise((35,49,62,255),311,9); panels(im,96); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def floor_c()
+⋮----
+im=noise((50,62,71,255),321,10); panels(im,160); frost(im,322,32); return im
+def floor_hazard()
+⋮----
+im=noise((30,43,55,255),331,8); panels(im,128); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def ice_crack()
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(341); o=(256,256)
+⋮----
+pts=[o]; ang=b*math.tau/12+rnd.uniform(-.16,.16)
+⋮----
+r=s*rnd.randrange(18,30); pts.append((o[0]+math.cos(ang)*r+rnd.uniform(-9,9),o[1]+math.sin(ang)*r+rnd.uniform(-9,9)))
+⋮----
+def blood()
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(351)
+⋮----
+def scorch()
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def framed(box,fill,outline=STEEL2,radius=22)
+⋮----
+im=transparent(); x0,y0,x1,y1=box; sh=transparent(); sd=ImageDraw.Draw(sh,"RGBA"); sd.rounded_rectangle((x0+12,y0+16,x1+16,y1+20),radius=radius,fill=(0,0,0,105)); im=Image.alpha_composite(im,sh.filter(ImageFilter.GaussianBlur(9))); d=ImageDraw.Draw(im,"RGBA"); d.rounded_rectangle(box,radius=radius,fill=fill,outline=outline,width=7); return im
+def barrier()
+⋮----
+im=framed((72,166,440,334),(54,68,79,255)); d=ImageDraw.Draw(im,"RGBA"); d.rectangle((108,194,404,302),fill=(31,45,57,255),outline=(90,112,124,255),width=4)
+⋮----
+def debris(seed,icy=False)
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+⋮----
+cx,cy=rnd.randrange(110,402),rnd.randrange(120,392); r=rnd.randrange(14,42); pts=[(cx+math.cos(k*math.tau/6)*r*rnd.uniform(.6,1.2),cy+math.sin(k*math.tau/6)*r*rnd.uniform(.6,1.2)) for k in range(6)]; d.polygon(pts,fill=((58,78,90,255) if icy else (62,70,76,255)),outline=(20,29,36,230))
+⋮----
+def wall(seed,frosted=False)
+⋮----
+im=framed((58,112,454,378),(55,67,77,255)); d=ImageDraw.Draw(im,"RGBA"); d.rectangle((90,145,422,342),fill=(28,41,52,255),outline=(94,116,128,255),width=4)
+⋮----
+def crate()
+⋮----
+im=framed((118,112,394,386),(66,79,87,255)); d=ImageDraw.Draw(im,"RGBA"); d.rectangle((146,142,366,354),fill=(36,50,59,255),outline=(102,124,133,255),width=4); d.line((152,148,360,348),fill=(156,184,190,130),width=8); d.line((360,148,152,348),fill=(156,184,190,130),width=8); d.rectangle((218,217,294,277),fill=(49,92,108,230),outline=ICE,width=3); return im
+def beacon()
+⋮----
+im=transparent(); glow=transparent(); gd=ImageDraw.Draw(glow,"RGBA")
+⋮----
+im=Image.alpha_composite(im,glow.filter(ImageFilter.GaussianBlur(10))); d=ImageDraw.Draw(im,"RGBA"); d.ellipse((146,136,366,356),fill=(38,52,61,245),outline=(105,129,141,255),width=8); d.ellipse((184,174,328,318),fill=(42,77,91,255),outline=ICE,width=5); d.ellipse((222,212,290,280),fill=(111,202,224,255),outline=WHITE,width=4); return im
+⋮----
+GEN={"floor/concrete_a":floor_a,"floor/concrete_b":floor_b,"floor/concrete_c":floor_c,"floor/hazard_a":floor_hazard,
+⋮----
+def main()
+⋮----
+p=argparse.ArgumentParser(); p.add_argument("--output",type=Path,default=Path("art_sources/environment/cryo_vault")); p.add_argument("--manifest",type=Path,default=Path("art_sources/environment/cryo_vault/candidate-manifest.json")); a=p.parse_args(); a.output.mkdir(parents=True,exist_ok=True); assets=[]
+⋮----
+path=a.output/(slot+".png"); path.parent.mkdir(parents=True,exist_ok=True); finish(GEN[slot](),slot).save(path,"PNG",optimize=True); assets.append(str(path).replace("\\","/"))
+m={"schema":1,"biome":"cryo_vault","stage":"procedural-authored-candidate-v1","production_ready":False,"visual_qa_pass":False,"generator":"tools/environment/generate_cryo_vault_candidate.py","master_size":[512,512],"asset_count":14,"assets":assets,"notes":"Cryogenic-facility candidate with frost and restrained white-blue accents. Not FINAL until premium visual QA."}
+````
+
+## File: tools/environment/generate_cryogenic_depths_candidate.py
+````python
+#!/usr/bin/env python3
+"""Generate deterministic Cryogenic Depths environment candidate masters."""
+⋮----
+SIZE=512
+SLOTS=("floor/concrete_a","floor/concrete_b","floor/concrete_c","floor/hazard_a",
+ABYSS=(8,22,31,255); STEEL=(34,58,67,255); STEEL2=(52,86,96,255)
+TEAL=(45,182,185,255); CYAN=(93,222,231,255); ICE=(180,246,248,255); BLOOD=(64,12,24,255)
+⋮----
+def clamp(v): return 0 if v<0 else 255 if v>255 else int(v)
+def transparent(): return Image.new("RGBA",(SIZE,SIZE),(0,0,0,0))
+def noise(base,seed,strength=9)
+⋮----
+rnd=random.Random(seed); im=Image.new("RGBA",(SIZE,SIZE)); px=im.load()
+⋮----
+n=(math.sin(x*.038+p1)+math.cos(y*.043+p2))*strength*.35+rnd.uniform(-strength,strength)
+⋮----
+def seams(im,spacing=128)
+⋮----
+d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def frost(im,seed,count=30)
+⋮----
+d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+⋮----
+def finish(im,slot)
+⋮----
+im=im.convert("RGBA")
+⋮----
+im=ImageEnhance.Contrast(im).enhance(1.10)
+im=ImageEnhance.Sharpness(im).enhance(1.18)
+⋮----
+a=im.getchannel("A")
+sh=Image.new("RGBA",im.size,(0,0,0,0))
+sm=a.filter(ImageFilter.GaussianBlur(13))
+shifted=Image.new("L",im.size,0); shifted.paste(sm,(11,15))
+⋮----
+out=Image.alpha_composite(sh,im)
+edge=ImageChops.subtract(a,a.filter(ImageFilter.MinFilter(7)))
+hi=Image.new("RGBA",im.size,(160,244,246,0))
+⋮----
+def floor_a()
+⋮----
+im=noise((24,45,54,255),401); seams(im,128); frost(im,402,26)
+⋮----
+def floor_b()
+⋮----
+im=noise((17,38,48,255),411); seams(im,96); frost(im,412,20)
+⋮----
+def floor_c()
+⋮----
+im=noise((29,53,62,255),421); seams(im,160); frost(im,422,38); return im
+def floor_hazard()
+⋮----
+im=noise((13,31,41,255),431); seams(im,128); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def crack()
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(441); o=(256,256)
+⋮----
+pts=[o]; ang=b*math.tau/14+rnd.uniform(-.15,.15)
+⋮----
+r=s*rnd.randrange(17,28)
+⋮----
+def blood()
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(451)
+⋮----
+def scorch()
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def framed(box,fill,outline=STEEL2,radius=22)
+⋮----
+im=transparent(); x0,y0,x1,y1=box
+sh=transparent(); sd=ImageDraw.Draw(sh,"RGBA")
+⋮----
+im=Image.alpha_composite(im,sh.filter(ImageFilter.GaussianBlur(10)))
+⋮----
+def barrier()
+⋮----
+im=framed((70,166,442,334),(31,55,63,255)); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def debris(seed,crystal=False)
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+⋮----
+cx,cy=rnd.randrange(110,402),rnd.randrange(120,392); r=rnd.randrange(14,42)
+pts=[(cx+math.cos(k*math.tau/6)*r*rnd.uniform(.6,1.2),cy+math.sin(k*math.tau/6)*r*rnd.uniform(.6,1.2)) for k in range(6)]
+⋮----
+def wall(seed,window=False)
+⋮----
+im=framed((58,112,454,378),(35,58,66,255)); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def crate()
+⋮----
+im=framed((118,112,394,386),(45,66,71,255)); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def beacon()
+⋮----
+im=transparent(); glow=transparent(); gd=ImageDraw.Draw(glow,"RGBA")
+⋮----
+im=Image.alpha_composite(im,glow.filter(ImageFilter.GaussianBlur(10)))
+⋮----
+GEN={"floor/concrete_a":floor_a,"floor/concrete_b":floor_b,"floor/concrete_c":floor_c,"floor/hazard_a":floor_hazard,
+⋮----
+def main()
+⋮----
+p=argparse.ArgumentParser()
+⋮----
+a=p.parse_args(); a.output.mkdir(parents=True,exist_ok=True); assets=[]
+⋮----
+path=a.output/(slot+".png"); path.parent.mkdir(parents=True,exist_ok=True)
+⋮----
+m={"schema":1,"biome":"cryogenic_depths","stage":"procedural-authored-candidate-v1","production_ready":False,
+⋮----
+# Deterministic by design: reruns must not mutate approved candidate masters.
 ````
 
 ## File: tools/environment/generate_null_sector_candidate.py

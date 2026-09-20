@@ -5,37 +5,37 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "transparent": {
+    "clamp": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 23,
-        "end": 23
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 15,
+        "end": 15
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "clamp": {
+    "transparent": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 24,
-        "end": 24
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 16,
+        "end": 16
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
     "noise": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 26,
-        "end": 32
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 17,
+        "end": 23
       },
       "symbol_dependencies": [
         {
           "symbol": "clamp",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 24,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 15,
               "kind": "function",
               "language": "python"
             }
@@ -45,46 +45,58 @@
       ],
       "dependency_count": 1
     },
-    "seams": {
+    "panels": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 34,
-        "end": 43
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 24,
+        "end": 29
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "scuffs": {
+    "frost": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 45,
-        "end": 49
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 30,
+        "end": 34
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
     "finish": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 51,
-        "end": 65
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 35,
+        "end": 40
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
     "floor_a": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 67,
-        "end": 72
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 42,
+        "end": 43
       },
       "symbol_dependencies": [
+        {
+          "symbol": "frost",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 30,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
         {
           "symbol": "noise",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 26,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 17,
               "kind": "function",
               "language": "python"
             }
@@ -92,23 +104,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "scuffs",
+          "symbol": "panels",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 45,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "seams",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 34,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 24,
               "kind": "function",
               "language": "python"
             }
@@ -120,17 +120,29 @@
     },
     "floor_b": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 74,
-        "end": 80
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 44,
+        "end": 47
       },
       "symbol_dependencies": [
+        {
+          "symbol": "frost",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 30,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
         {
           "symbol": "noise",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 26,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 17,
               "kind": "function",
               "language": "python"
             }
@@ -138,23 +150,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "scuffs",
+          "symbol": "panels",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 45,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "seams",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 34,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 24,
               "kind": "function",
               "language": "python"
             }
@@ -166,17 +166,17 @@
     },
     "floor_c": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 82,
-        "end": 88
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 48,
+        "end": 49
       },
       "symbol_dependencies": [
         {
-          "symbol": "noise",
+          "symbol": "frost",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 26,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 30,
               "kind": "function",
               "language": "python"
             }
@@ -184,11 +184,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "seams",
+          "symbol": "noise",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 34,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 17,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "panels",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 24,
               "kind": "function",
               "language": "python"
             }
@@ -196,21 +208,21 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 2
+      "dependency_count": 3
     },
     "floor_hazard": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 90,
-        "end": 97
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 50,
+        "end": 53
       },
       "symbol_dependencies": [
         {
           "symbol": "noise",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 26,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 17,
               "kind": "function",
               "language": "python"
             }
@@ -218,11 +230,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "seams",
+          "symbol": "panels",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 34,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 24,
               "kind": "function",
               "language": "python"
             }
@@ -232,19 +244,19 @@
       ],
       "dependency_count": 2
     },
-    "lava_crack": {
+    "ice_crack": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 99,
-        "end": 106
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 55,
+        "end": 62
       },
       "symbol_dependencies": [
         {
           "symbol": "transparent",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 23,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 16,
               "kind": "function",
               "language": "python"
             }
@@ -256,17 +268,17 @@
     },
     "blood": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 108,
-        "end": 113
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 63,
+        "end": 68
       },
       "symbol_dependencies": [
         {
           "symbol": "transparent",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 23,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 16,
               "kind": "function",
               "language": "python"
             }
@@ -278,202 +290,17 @@
     },
     "scorch": {
       "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 115,
-        "end": 120
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 69,
+        "end": 72
       },
       "symbol_dependencies": [
         {
           "symbol": "transparent",
           "definitions": [
             {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 23,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "shadowed": {
-      "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 122,
-        "end": 127
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "transparent",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 23,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "barrier": {
-      "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 129,
-        "end": 134
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "shadowed",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 122,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "debris": {
-      "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 136,
-        "end": 144
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "transparent",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 23,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "wall": {
-      "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 146,
-        "end": 153
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "shadowed",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 122,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "crate": {
-      "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 155,
-        "end": 159
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "shadowed",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 122,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "beacon": {
-      "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 161,
-        "end": 169
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "transparent",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 23,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "main": {
-      "source": {
-        "file": "tools/environment/generate_cinder_foundry_candidate.py",
-        "start": 178,
-        "end": 298
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "finish",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cinder_foundry_candidate.py",
-              "line": 51,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "panel": {
-      "source": {
-        "file": "tools/environment/generate_null_sector_candidate.py",
-        "start": 31,
-        "end": 41
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "fracture": {
-      "source": {
-        "file": "tools/environment/generate_null_sector_candidate.py",
-        "start": 80,
-        "end": 87
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "transparent",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_null_sector_candidate.py",
-              "line": 21,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 16,
               "kind": "function",
               "language": "python"
             }
@@ -485,17 +312,192 @@
     },
     "framed": {
       "source": {
-        "file": "tools/environment/generate_null_sector_candidate.py",
-        "start": 100,
-        "end": 104
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 74,
+        "end": 75
       },
       "symbol_dependencies": [
         {
           "symbol": "transparent",
           "definitions": [
             {
-              "file": "tools/environment/generate_null_sector_candidate.py",
-              "line": 21,
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 16,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "barrier": {
+      "source": {
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 76,
+        "end": 79
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "framed",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 74,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "debris": {
+      "source": {
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 80,
+        "end": 86
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "transparent",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 16,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "wall": {
+      "source": {
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 87,
+        "end": 92
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "framed",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 74,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "crate": {
+      "source": {
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 93,
+        "end": 94
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "framed",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 74,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "beacon": {
+      "source": {
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 95,
+        "end": 98
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "transparent",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 16,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "main": {
+      "source": {
+        "file": "tools/environment/generate_cryo_vault_candidate.py",
+        "start": 105,
+        "end": 225
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "finish",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 35,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "frost",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryo_vault_candidate.py",
+              "line": 30,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "seams": {
+      "source": {
+        "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+        "start": 26,
+        "end": 33
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "crack": {
+      "source": {
+        "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+        "start": 82,
+        "end": 92
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "transparent",
+          "definitions": [
+            {
+              "file": "tools/environment/generate_cryogenic_depths_candidate.py",
+              "line": 16,
               "kind": "function",
               "language": "python"
             }

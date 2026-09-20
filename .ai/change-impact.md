@@ -1,26 +1,26 @@
 # Change impact
 
-Base: 492cfbf2cc5a97e8012b9d834c5cf66affabdfc9
-Head: b35b4f37e6a0a34abf6ec36daa6bb8a284d6dfbc
+Base: 2b61b5c826ac54314cf40aabd31b8e6a1d3f41f7
+Head: db0532aefb2f1b46ec399dc050e82acdcb77e149
 
 ## Changed files
-- A .github/workflows/null-sector-candidate.yml
-- A art_sources/environment/null_sector/candidate-manifest.json
-- A art_sources/environment/null_sector/decal/blood_a.png
-- A art_sources/environment/null_sector/decal/crack_a.png
-- A art_sources/environment/null_sector/decal/scorch_a.png
-- A art_sources/environment/null_sector/floor/concrete_a.png
-- A art_sources/environment/null_sector/floor/concrete_b.png
-- A art_sources/environment/null_sector/floor/concrete_c.png
-- A art_sources/environment/null_sector/floor/hazard_a.png
-- A art_sources/environment/null_sector/prop/barrier_a.png
-- A art_sources/environment/null_sector/prop/beacon_a.png
-- A art_sources/environment/null_sector/prop/crate_a.png
-- A art_sources/environment/null_sector/prop/debris_a.png
-- A art_sources/environment/null_sector/prop/debris_b.png
-- A art_sources/environment/null_sector/prop/wall_a.png
-- A art_sources/environment/null_sector/prop/wall_b.png
-- A tools/environment/generate_null_sector_candidate.py
+- A .github/workflows/cryo-vault-candidate.yml
+- A art_sources/environment/cryo_vault/candidate-manifest.json
+- A art_sources/environment/cryo_vault/decal/blood_a.png
+- A art_sources/environment/cryo_vault/decal/crack_a.png
+- A art_sources/environment/cryo_vault/decal/scorch_a.png
+- A art_sources/environment/cryo_vault/floor/concrete_a.png
+- A art_sources/environment/cryo_vault/floor/concrete_b.png
+- A art_sources/environment/cryo_vault/floor/concrete_c.png
+- A art_sources/environment/cryo_vault/floor/hazard_a.png
+- A art_sources/environment/cryo_vault/prop/barrier_a.png
+- A art_sources/environment/cryo_vault/prop/beacon_a.png
+- A art_sources/environment/cryo_vault/prop/crate_a.png
+- A art_sources/environment/cryo_vault/prop/debris_a.png
+- A art_sources/environment/cryo_vault/prop/debris_b.png
+- A art_sources/environment/cryo_vault/prop/wall_a.png
+- A art_sources/environment/cryo_vault/prop/wall_b.png
+- A tools/environment/generate_cryo_vault_candidate.py
 
 ## Affected areas
 - .github

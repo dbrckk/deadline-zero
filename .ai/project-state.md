@@ -22,36 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T16:59:32Z
+Generated: 2026-09-20T17:48:02Z
 
 ### Git
 - Branch: `main`
-- Head: `b35b4f37e6a0`
-- Commit date: 2026-09-20T18:59:17+02:00
-- Commit: Add Null Sector environment candidate pack (#240)
-- Tracked files: 790
+- Head: `db0532aefb2f`
+- Commit date: 2026-09-20T19:47:47+02:00
+- Commit: Add Cryo Vault environment candidate pack (#241)
+- Tracked files: 824
 
 ### Recently changed files
-- `.github/workflows/null-sector-candidate.yml`
-- `art_sources/environment/null_sector/candidate-manifest.json`
-- `art_sources/environment/null_sector/decal/blood_a.png`
-- `art_sources/environment/null_sector/decal/crack_a.png`
-- `art_sources/environment/null_sector/decal/scorch_a.png`
-- `art_sources/environment/null_sector/floor/concrete_a.png`
-- `art_sources/environment/null_sector/floor/concrete_b.png`
-- `art_sources/environment/null_sector/floor/concrete_c.png`
-- `art_sources/environment/null_sector/floor/hazard_a.png`
-- `art_sources/environment/null_sector/prop/barrier_a.png`
-- `art_sources/environment/null_sector/prop/beacon_a.png`
-- `art_sources/environment/null_sector/prop/crate_a.png`
-- `art_sources/environment/null_sector/prop/debris_a.png`
-- `art_sources/environment/null_sector/prop/debris_b.png`
-- `art_sources/environment/null_sector/prop/wall_a.png`
-- `art_sources/environment/null_sector/prop/wall_b.png`
-- `tools/environment/generate_null_sector_candidate.py`
-- `.github/workflows/cinder-foundry-candidate.yml`
-- `art_sources/environment/cinder_foundry/candidate-manifest.json`
-- `art_sources/environment/cinder_foundry/decal/blood_a.png`
+- `.github/workflows/cryo-vault-candidate.yml`
+- `art_sources/environment/cryo_vault/candidate-manifest.json`
+- `art_sources/environment/cryo_vault/decal/blood_a.png`
+- `art_sources/environment/cryo_vault/decal/crack_a.png`
+- `art_sources/environment/cryo_vault/decal/scorch_a.png`
+- `art_sources/environment/cryo_vault/floor/concrete_a.png`
+- `art_sources/environment/cryo_vault/floor/concrete_b.png`
+- `art_sources/environment/cryo_vault/floor/concrete_c.png`
+- `art_sources/environment/cryo_vault/floor/hazard_a.png`
+- `art_sources/environment/cryo_vault/prop/barrier_a.png`
+- `art_sources/environment/cryo_vault/prop/beacon_a.png`
+- `art_sources/environment/cryo_vault/prop/crate_a.png`
+- `art_sources/environment/cryo_vault/prop/debris_a.png`
+- `art_sources/environment/cryo_vault/prop/debris_b.png`
+- `art_sources/environment/cryo_vault/prop/wall_a.png`
+- `art_sources/environment/cryo_vault/prop/wall_b.png`
+- `tools/environment/generate_cryo_vault_candidate.py`
+- `.github/workflows/cryogenic-depths-candidate.yml`
+- `art_sources/environment/cryogenic_depths/candidate-manifest.json`
+- `art_sources/environment/cryogenic_depths/decal/blood_a.png`
 
 ### Project signals
 - `build.gradle`
