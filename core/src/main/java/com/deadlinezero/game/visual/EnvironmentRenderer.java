@@ -540,6 +540,11 @@ public final class EnvironmentRenderer implements Disposable {
     }
 
     private TextureRegion region(String key) {
+        EnvironmentBiomeRules.Biome biome = EnvironmentBiomeRules.forStage(RunStageContext.stage());
+        String productionKey = EnvironmentArtCatalog.productionKey(biome, key);
+        TextureRegion production = art.regionOrNull(productionKey);
+        if (production != null) return production;
+
         TextureRegion finalOrLegacy = art.regionOrNull(key);
         if (finalOrLegacy != null) return finalOrLegacy;
         return bootstrap == null ? null : bootstrap.region(key);
