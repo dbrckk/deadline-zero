@@ -187,3 +187,5 @@ def main():
     print("generated 14 Cinder Foundry candidate masters")
     return 0
 if __name__=="__main__": raise SystemExit(main())
+
+# Regeneration trigger: seam-safe floor masters.
