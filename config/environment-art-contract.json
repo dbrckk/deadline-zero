@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "purpose": "Production contract for Deadline Zero biome environment art.",
+  "runtimePolicy": {
+    "preferred": "environment/<biome>/<slot>",
+    "fallback": "environment/<slot>",
+    "bootstrapFallbackAllowedDuringDevelopment": true,
+    "releaseGoal": "all 70 biome-specific slots authored and present in art/game.atlas"
+  },
+  "biomes": [
+    {"id":"quarantine_yard","stageStart":1,"palette":"cold industrial steel, emergency red, dirty concrete"},
+    {"id":"cinder_foundry","stageStart":10,"palette":"molten orange, furnace red, black steel"},
+    {"id":"null_sector","stageStart":20,"palette":"violet void energy, electric cyan, black alloy"},
+    {"id":"cryo_vault","stageStart":30,"palette":"clean ice blue, white frost, dark navy steel"},
+    {"id":"cryogenic_depths","stageStart":40,"palette":"deep cyan, frozen teal, abyssal blue"}
+  ],
+  "slots": [
+    {"path":"floor/concrete_a","kind":"tile","tileable":true,"alpha":false},
+    {"path":"floor/concrete_b","kind":"tile","tileable":true,"alpha":false},
+    {"path":"floor/concrete_c","kind":"tile","tileable":true,"alpha":false},
+    {"path":"floor/hazard_a","kind":"tile","tileable":true,"alpha":false},
+    {"path":"decal/crack_a","kind":"decal","tileable":false,"alpha":true},
+    {"path":"decal/blood_a","kind":"decal","tileable":false,"alpha":true},
+    {"path":"decal/scorch_a","kind":"decal","tileable":false,"alpha":true},
+    {"path":"prop/barrier_a","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/debris_a","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/debris_b","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/wall_a","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/wall_b","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/crate_a","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/beacon_a","kind":"prop","tileable":false,"alpha":true}
+  ],
+  "sourceGuidance": {
+    "masterResolution": 512,
+    "runtimeTarget": 256,
+    "style": "premium top-down sci-fi survival, physically readable materials, no text, no logos",
+    "camera": "orthographic/top-down compatible",
+    "lighting": "baked local material lighting only; preserve readability under runtime tint and local-light FX",
+    "silhouetteRule": "props must remain readable at approximately 32-96 screen pixels",
+    "floorRule": "floor tiles must be seamless and low-contrast enough not to compete with enemies/projectiles",
+    "decalRule": "decals need clean transparent edges and must not contain baked rectangular backgrounds"
+  }
+}
