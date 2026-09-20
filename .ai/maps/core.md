@@ -5672,6 +5672,7 @@ float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
 combatHud.render(shapes, batch, font, player, director, enemies, w, h);
 ⋮----
 if (choosingUpgrade || choosingLegendary) drawChoiceBackdrop(w, h, choosingLegendary);
+if (gameOver) drawGameOverBackdrop(w, h);
 batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 ⋮----
 if (choosingLegendary) drawLegendaryText(w, h);
@@ -5710,6 +5711,35 @@ shapes.rect(left, cardY, 4f, cardHeight);
 ⋮----
 shapes.setColor(accent.r, accent.g, accent.b, legendary ? .10f : .06f);
 shapes.rect(left + 6f, cardY + 6f, Math.max(0f, cardWidth - 12f), Math.max(0f, cardHeight - 12f));
+⋮----
+private void drawGameOverBackdrop(float w, float h) {
+⋮----
+shapes.setColor(.004f, .006f, .010f, .88f);
+⋮----
+float panelW = Math.min(w * .58f, 760f);
+float panelH = Math.min(h * .42f, 410f);
+⋮----
+Color accent = revived ? VisualTheme.GOLD : VisualTheme.danger();
+⋮----
+shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .995f);
+⋮----
+shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .95f);
+⋮----
+shapes.rect(panelX, panelY + panelH - 2f, panelW, 2f);
+shapes.rect(panelX, panelY, 2f, panelH);
+shapes.rect(panelX + panelW - 2f, panelY, 2f, panelH);
+⋮----
+float pulse = .68f + .22f * (MathUtils.sin(visualTime * 3.2f) * .5f + .5f);
+shapes.setColor(accent.r, accent.g, accent.b, revived ? .72f : pulse);
+shapes.rect(panelX, panelY + panelH - 6f, panelW, 6f);
+shapes.rect(panelX, panelY, 5f, panelH);
+⋮----
+float ctaH = Math.max(52f, panelH * .18f);
+shapes.setColor(accent.r, accent.g, accent.b, revived ? .14f : .20f);
+shapes.rect(ctaX, ctaY, ctaW, ctaH);
+shapes.setColor(accent.r, accent.g, accent.b, .88f);
+shapes.rect(ctaX, ctaY, ctaW, 2f);
+shapes.rect(ctaX, ctaY + ctaH - 2f, ctaW, 2f);
 ⋮----
 private void drawLegendaryText(float w, float h) {
 font.getData().setScale(1.45f);
@@ -5758,11 +5788,18 @@ font.draw(batch, t(guidanceKey),
 font.draw(batch, t("combat.upgradeFooter"), 0, h * .305f, w, Align.center, false);
 ⋮----
 private void drawGameOverText(float w, float h) {
-font.getData().setScale(1.5f); font.setColor(VisualTheme.TEXT);
-font.draw(batch, t("combat.gameOver"), 0, h * .62f, w, Align.center, false);
-font.getData().setScale(.72f);
 ⋮----
-font.draw(batch, revived ? t("combat.results") : t("combat.revive"), 0, h * .45f, w, Align.center, false);
+font.getData().setScale(1.62f);
+font.setColor(accent);
+font.draw(batch, t("combat.gameOver"), 0, h * .625f, w, Align.center, false);
+⋮----
+font.setColor(VisualTheme.TEXT_DIM);
+font.draw(batch, f("hud.stage", RunStageContext.stage()), 0, h * .535f, w, Align.center, false);
+⋮----
+font.setColor(VisualTheme.TEXT_STRONG);
+font.draw(batch, revived ? t("combat.results") : t("combat.revive"), 0, h * .425f, w, Align.center, false);
+⋮----
+font.draw(batch, f("hud.kills", director.kills()), 0, h * .365f, w, Align.center, false);
 ⋮----
 private void handleOverlayInput() {
 ⋮----

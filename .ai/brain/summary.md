@@ -3,7 +3,7 @@
 - Index mode: incremental
 - Files indexed: 451
 - Files reparsed this run: 1
-- Symbols: 2568
+- Symbols: 2569
 - Internal import edges: 658
 - Impacted files: 8
 - Selected tests: 6
@@ -15,7 +15,7 @@
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
 - android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 50 symbols
-- core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 43 symbols
+- core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 44 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 34 symbols
 - core/src/main/java/com/deadlinezero/game/visual/GameArt.java: 34 symbols
@@ -46,7 +46,7 @@
 - AST files reparsed this run: 1
 - outline files retained: 449
 - top-level items retained: 2879
-- direct members retained: 3329
+- direct members retained: 3330
 - symbol shards: 27
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

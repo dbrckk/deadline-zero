@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 7f4dc0922d00e39cb33061c150d825f2b0330e2f
-Head: fbc9c5aceff7cee77e2b5155f5fd18be8787afe1
+Base: e3557631f5a9e01b305089bbb9d46f680f00f035
+Head: d5f6b766f22c06674905b73052f25f527ed7be9c
 
 ## Changed files
 - M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java

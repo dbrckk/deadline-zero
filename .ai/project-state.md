@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T18:42:38Z
+Generated: 2026-09-20T19:08:59Z
 
 ### Git
 - Branch: `main`
-- Head: `fbc9c5aceff7`
-- Commit date: 2026-09-20T20:42:25+02:00
-- Commit: ui(combat): premiumize upgrade and legendary choice overlays (#246)
+- Head: `d5f6b766f22c`
+- Commit date: 2026-09-20T21:08:47+02:00
+- Commit: ui(combat): premiumize game-over and revive overlay (#248)
 - Tracked files: 834
 
 ### Recently changed files
