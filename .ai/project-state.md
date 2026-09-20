@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T10:46:31Z
+Generated: 2026-09-20T11:33:15Z
 
 ### Git
 - Branch: `main`
-- Head: `ae995e489b31`
-- Commit date: 2026-09-20T12:46:19+02:00
-- Commit: Merge pull request #229 from dbrckk/combat-juice-pass-1
+- Head: `604b57e04474`
+- Commit date: 2026-09-20T13:33:03+02:00
+- Commit: Rerun Shambler Android QA on runtime visual changes
 - Tracked files: 728
 
 ### Recently changed files
+- `.github/workflows/shambler-android-acceptance.yml`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java`
-- `assets/art/phantom-manifest.json`
 
 ### Project signals
 - `build.gradle`

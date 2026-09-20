@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 3952b746281c60295869b7ae0bff40b4ae8191e0
-Head: ae995e489b31f9da0cd369f87a26c36dcade8aea
+Base: 30364e5a526a6d28dcabe636b5ea05e443989a7d
+Head: 604b57e0447479d4e568888055b992ddd4e0cb13
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
-- M core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java
-- M core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java
+- M .github/workflows/shambler-android-acceptance.yml
 
 ## Affected areas
-- core
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

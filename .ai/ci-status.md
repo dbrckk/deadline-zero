@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 4 success / 0 failure / 2 active
+Summary: 5 success / 0 failure / 2 active
 
-- Responsive UI QA: in_progress / pending (ae995e48)
-- Verify: queued / pending (ae995e48)
-- Verify: completed / success (9dbe1c0f)
-- Responsive UI QA: completed / success (9dbe1c0f)
-- Responsive UI QA: completed / cancelled (40c4dc14)
-- Verify: completed / cancelled (40c4dc14)
-- Verify: completed / success (e12ec17d)
-- Responsive UI QA: completed / success (e12ec17d)
+- Verify: in_progress / pending (604b57e0)
+- Responsive UI QA: in_progress / pending (604b57e0)
+- Verify: completed / success (e543de0c)
+- Responsive UI QA: completed / success (e543de0c)
+- Shambler Android Acceptance: completed / success (e543de0c)
+- Verify: completed / success (c40e593a)
+- Responsive UI QA: completed / success (c40e593a)
+- Verify: completed / cancelled (f33cea96)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

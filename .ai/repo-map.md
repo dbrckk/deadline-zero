@@ -2477,6 +2477,12 @@ jobs:
 name: Shambler Android Acceptance
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java'
+      - 'core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java'
+      - 'android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java'
   pull_request:
     branches: [main]
     paths:
@@ -2505,7 +2511,8 @@ concurrency:
 jobs:
   android-visual:
     if: >-
-      ${{ github.event_name == 'pull_request' ||
+      ${{ github.event_name == 'push' ||
+          github.event_name == 'pull_request' ||
           github.event_name == 'workflow_dispatch' ||
           github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
@@ -2514,7 +2521,7 @@ jobs:
       - name: Checkout candidate runtime
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.event_name == 'push' && github.sha || 'main' }}
 
       - name: Resolve validated Shambler smoke
         id: source
