@@ -1,10 +1,11 @@
 # Change impact
 
-Base: 08b511da434ae41ec1ae0951c7cbd48a57ba192d
-Head: de9e19757ee7b40b938ab292594ebadd1b3872f7
+Base: 771c5b4d7dc995c7d74e1f69326aa06b0813d34f
+Head: 0c2da0218a57fb55e718457dd41f7730f2267959
 
 ## Changed files
-- M .github/workflows/shambler-android-acceptance.yml
+- A .github/workflows/rex-android-acceptance.yml
+- M .github/workflows/rex-animation-smoke.yml
 
 ## Affected areas
 - .github

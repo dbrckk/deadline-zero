@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T07:45:10Z
+Generated: 2026-09-20T07:47:33Z
 
 ### Git
 - Branch: `main`
-- Head: `de9e19757ee7`
-- Commit date: 2026-09-20T09:45:00+02:00
-- Commit: Validate Shambler candidate on Android before production
-- Tracked files: 724
+- Head: `0c2da0218a57`
+- Commit date: 2026-09-20T09:47:23+02:00
+- Commit: Add Rex candidate Android visual QA
+- Tracked files: 725
 
 ### Recently changed files
+- `.github/workflows/rex-android-acceptance.yml`
+- `.github/workflows/rex-animation-smoke.yml`
 - `.github/workflows/shambler-android-acceptance.yml`
 - `.github/workflows/shambler-animation-smoke.yml`
 - `.github/workflows/shambler-publish-current.yml`
