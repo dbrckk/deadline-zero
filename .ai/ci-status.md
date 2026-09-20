@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 4 success / 0 failure / 3 active
+Summary: 6 success / 0 failure / 2 active
 
-- Verify: queued / pending (26f1527f)
-- Responsive UI QA: in_progress / pending (26f1527f)
-- Shambler Animation Smoke: in_progress / pending (26f1527f)
-- Verify: completed / success (86ae0572)
-- Responsive UI QA: completed / success (86ae0572)
-- Actor Candidate Validation: completed / success (86ae0572)
-- Shambler Animation Smoke: completed / success (86ae0572)
-- Actor Candidate Validation: completed / cancelled (05ef533b)
+- Responsive UI QA: in_progress / pending (de9e1975)
+- Verify: queued / pending (de9e1975)
+- Rex Android Acceptance: completed / success (0eacdecb)
+- Responsive UI QA: completed / success (0eacdecb)
+- Verify: completed / success (0eacdecb)
+- Rex Animation Smoke: completed / success (0eacdecb)
+- Shambler Android Acceptance: completed / success (a6082368)
+- Responsive UI QA: completed / success (a6082368)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

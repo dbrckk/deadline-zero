@@ -1,19 +1,13 @@
 # Change impact
 
-Base: e20ad8c1edd409f9806917f5bfd3bb920cd369d1
-Head: 26f1527fa188b9b7b5aaea751235551e51226fb9
+Base: 08b511da434ae41ec1ae0951c7cbd48a57ba192d
+Head: de9e19757ee7b40b938ab292594ebadd1b3872f7
 
 ## Changed files
 - M .github/workflows/shambler-android-acceptance.yml
-- M .github/workflows/shambler-animation-smoke.yml
-- M .github/workflows/shambler-publish-current.yml
-- M android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java
-- M tools/sprites/normalize_actor_frames.py
 
 ## Affected areas
 - .github
-- android
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

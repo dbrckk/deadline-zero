@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T07:23:11Z
+Generated: 2026-09-20T07:45:10Z
 
 ### Git
 - Branch: `main`
-- Head: `26f1527fa188`
-- Commit date: 2026-09-20T09:22:58+02:00
-- Commit: Add canonical Shambler source-sheet validation
+- Head: `de9e19757ee7`
+- Commit date: 2026-09-20T09:45:00+02:00
+- Commit: Validate Shambler candidate on Android before production
 - Tracked files: 724
 
 ### Recently changed files
@@ -38,13 +38,6 @@ Generated: 2026-09-20T07:23:11Z
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
 - `tools/sprites/normalize_actor_frames.py`
 - `tools/sprites/audit_final_art_status.py`
-- `.github/workflows/rex-animation-smoke.yml`
-- `.github/workflows/rex-publish-current.yml`
-- `.github/workflows/verify.yml`
-- `art_sources/README.md`
-- `docs/final-art-production-spec.md`
-- `tools/blender/build_rex_actions.py`
-- `tools/sprites/assemble_actor_sheet.py`
 
 ### Project signals
 - `build.gradle`
