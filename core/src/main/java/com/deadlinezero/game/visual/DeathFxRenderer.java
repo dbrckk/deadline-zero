@@ -25,6 +25,42 @@ public final class DeathFxRenderer {
             shapes.setColor(.06f, .055f, .05f, .48f * fade);
             shapes.ellipse(fx.x - fx.radius * .82f, fx.y - fx.radius * .22f,
                 fx.radius * 1.64f, fx.radius * .44f);
+
+            // Make the first few frames of a kill read as an event, not just a disappearing sprite.
+            float burstWindow = fx.type == Enemy.Type.BOSS ? .62f : .34f;
+            if (fx.age < burstWindow) {
+                float burst = 1f - MathUtils.clamp(fx.age / burstWindow, 0f, 1f);
+                float travel = 1f - burst;
+                float base = fx.radius * (fx.type == Enemy.Type.BOSS ? 2.35f : 1.45f);
+                float outer = base * (1f + travel * (fx.type == Enemy.Type.BOSS ? 2.7f : 2.1f));
+                int rays = fx.type == Enemy.Type.BOSS ? 12 : 7;
+                float rayAlpha = (fx.type == Enemy.Type.BOSS ? .58f : .42f) * burst;
+                for (int i = 0; i < rays; i++) {
+                    float angle = fx.angleDeg + i * (360f / rays) + (i % 2 == 0 ? 7f : -5f);
+                    float inner = base * (.30f + travel * .16f);
+                    float x1 = fx.x + MathUtils.cosDeg(angle) * inner;
+                    float y1 = fx.y + MathUtils.sinDeg(angle) * inner;
+                    float x2 = fx.x + MathUtils.cosDeg(angle) * outer;
+                    float y2 = fx.y + MathUtils.sinDeg(angle) * outer;
+                    if (fx.type == Enemy.Type.BOSS) shapes.setColor(1f, .64f, .16f, rayAlpha);
+                    else shapes.setColor(.92f, .14f, .08f, rayAlpha);
+                    shapes.rectLine(x1, y1, x2, y2, Math.max(.028f, fx.radius * .075f * burst));
+                    float shard = Math.max(.035f, fx.radius * (.11f + .08f * burst));
+                    shapes.circle(x2, y2, shard, 8);
+                }
+
+                shapes.setColor(1f, fx.type == Enemy.Type.BOSS ? .72f : .24f,
+                    fx.type == Enemy.Type.BOSS ? .18f : .08f, .24f * burst);
+                shapes.circle(fx.x, fx.y, outer * .64f, 28);
+                shapes.setColor(1f, 1f, 1f, .32f * burst);
+                shapes.circle(fx.x, fx.y, Math.max(.06f, fx.radius * .30f * burst), 12);
+            }
+
+            // Persistent secondary splatter breaks up the otherwise clean arena floor.
+            float splatter = Math.min(1f, fx.age / .16f) * fade;
+            shapes.setColor(.20f, .012f, .016f, .16f * splatter);
+            shapes.circle(fx.x + fx.radius * .58f, fx.y - fx.radius * .20f, fx.radius * .28f, 10);
+            shapes.circle(fx.x - fx.radius * .52f, fx.y + fx.radius * .08f, fx.radius * .20f, 9);
         }
     }
 
