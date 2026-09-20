@@ -96,3 +96,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+# Runtime integration is intentionally idempotent across CI reruns.
