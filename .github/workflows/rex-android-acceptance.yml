@@ -1,0 +1,214 @@
+name: Rex Android Acceptance
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/rex-android-acceptance.yml'
+  workflow_run:
+    workflows: ["Rex Animation Smoke"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      animation_run_id:
+        description: "Successful Rex Animation Smoke run ID (defaults to latest successful)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: rex-android-acceptance
+  cancel-in-progress: true
+
+jobs:
+  android-visual:
+    if: >-
+      ${{ github.event_name == 'pull_request' ||
+          github.event_name == 'workflow_dispatch' ||
+          github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Resolve validated Rex smoke
+        id: source
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_RUN_ID: ${{ github.event.workflow_run.id || '' }}
+          EVENT_HEAD_SHA: ${{ github.event.workflow_run.head_sha || '' }}
+          INPUT_RUN_ID: ${{ github.event.inputs.animation_run_id || '' }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          run_id=""
+          head_sha=""
+          if [ "$EVENT_NAME" = "workflow_run" ]; then
+            run_id="$EVENT_RUN_ID"
+            head_sha="$EVENT_HEAD_SHA"
+          else
+            run_id="$INPUT_RUN_ID"
+          fi
+
+          if [ -z "$run_id" ]; then
+            response="$(curl --fail --silent --show-error --location               -H "Authorization: Bearer $GITHUB_TOKEN"               -H "Accept: application/vnd.github+json"               "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs?branch=main&status=success&per_page=100")"
+            read -r run_id head_sha < <(printf '%s' "$response" | python3 -c '
+          import json,sys
+          runs=[r for r in json.load(sys.stdin).get("workflow_runs",[]) if r.get("name")=="Rex Animation Smoke"]
+          if not runs: raise SystemExit("No successful Rex Animation Smoke run found on main")
+          print(runs[0]["id"], runs[0]["head_sha"])
+          ')
+          fi
+
+          if [ -z "$head_sha" ]; then
+            response="$(curl --fail --silent --show-error --location               -H "Authorization: Bearer $GITHUB_TOKEN"               -H "Accept: application/vnd.github+json"               "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$run_id")"
+            head_sha="$(printf '%s' "$response" | python3 -c 'import json,sys; print(json.load(sys.stdin)["head_sha"])')"
+          fi
+
+          test -n "$run_id" -a -n "$head_sha"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
+          echo "Candidate smoke: run=$run_id sha=$head_sha"
+
+      - name: Download validated Rex candidate
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ steps.source.outputs.run_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: rex-artifact
+
+      - name: Install candidate atlas tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+
+      - name: Stage exact smoke candidate into temporary runtime atlas
+        shell: bash
+        env:
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+          SOURCE_HEAD_SHA: ${{ steps.source.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          root="$(find rex-artifact -type d -name normalized96 -print -quit)"
+          manifest="$(find rex-artifact -type f -name render-manifest.json -print -quit)"
+          qa="$(find rex-artifact -type f -name sprite-qa-report.json -print -quit)"
+          sheet="$(find rex-artifact -type f -name rex.png -print -quit)"
+          test -n "$root" -a -n "$manifest" -a -n "$qa" -a -n "$sheet"
+
+          python3 - "$manifest" "$qa" "$sheet" <<'PY'
+          import json,sys
+          from PIL import Image
+
+          manifest=json.load(open(sys.argv[1]))
+          qa=json.load(open(sys.argv[2]))
+          assert manifest.get('actor') == 'rex', manifest
+          assert manifest.get('frame_count') == 232, manifest
+          assert manifest.get('qa_pass') is True, manifest
+          assert manifest.get('weapon_visibility_pass') is True, manifest
+          assert manifest.get('production_ready') is False, (
+              'Candidate Android QA must not silently relabel Rex smoke art as production-ready',
+              manifest,
+          )
+          assert qa.get('pass') is True and qa.get('frame_count') == 232, qa
+          with Image.open(sys.argv[3]) as image:
+              assert image.format == 'PNG'
+              assert image.size == (2784, 768), image.size
+          print('Rex smoke candidate contract PASS')
+          PY
+
+          python3 tools/sprites/upsert_directional_actor_atlas.py             --actor rex             --root survivor/rex             --input "$root"             --atlas assets/art/game.atlas             --png assets/art/rex.png             --manifest build/rex-candidate-manifest.json             --source-manifest "$manifest"             --source-run-id "$SOURCE_RUN_ID"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          atlas=Path('assets/art/game.atlas').read_text()
+          dirs=('n','ne','e','se','s','sw','w','nw')
+          anims={'idle':4,'run':8,'attack':6,'hit':3,'death':8}
+          for direction in dirs:
+              for animation,count in anims.items():
+                  got=atlas.count(f'survivor/rex/{direction}/{animation}\n')
+                  assert got == count, (direction,animation,got,count)
+          assert Path('assets/art/rex.png').is_file()
+          print('Temporary Android atlas PASS: exact Rex candidate')
+          PY
+
+          mkdir -p build/rex-android-acceptance
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          payload={
+              'actor':'rex',
+              'stage':'candidate-android-visual-qa',
+              'source_smoke_run_id':int(os.environ['SOURCE_RUN_ID']),
+              'source_head_sha':os.environ['SOURCE_HEAD_SHA'],
+              'production_ready':False,
+              'android_visual_probe':'pending',
+          }
+          Path('build/rex-android-acceptance/acceptance-report.json').write_text(
+              json.dumps(payload,indent=2)+'\n'
+          )
+          PY
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Validate exact Rex candidate in Android gameplay
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_2
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            gradle :android:installDebug :android:installDebugAndroidTest -PallowTestAds=true -PallowPlaceholderAssets=true
+            adb shell settings put secure immersive_mode_confirmations confirmed || true
+            adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesRexGameplayAndAttackFrames com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/rex-acceptance.txt
+            grep -q 'OK (1 test)' /tmp/rex-acceptance.txt
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-shambler-crowd.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-attack.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-gameplay.png build/rex-android-acceptance/rex-gameplay.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-shambler-crowd.png build/rex-android-acceptance/rex-shambler-crowd.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-attack.png build/rex-android-acceptance/rex-attack.png
+            test -s build/rex-android-acceptance/rex-gameplay.png
+            test -s build/rex-android-acceptance/rex-shambler-crowd.png
+            test -s build/rex-android-acceptance/rex-attack.png
+
+      - name: Finalize Rex candidate acceptance report
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path('build/rex-android-acceptance/acceptance-report.json')
+          data=json.loads(path.read_text())
+          data['android_visual_probe']='pass'
+          data['evidence']=['rex-gameplay.png','rex-shambler-crowd.png','rex-attack.png']
+          path.write_text(json.dumps(data,indent=2)+'\n')
+          PY
+
+      - name: Upload Rex candidate Android evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rex-candidate-android-acceptance-${{ github.run_number }}
+          path: build/rex-android-acceptance/
+          if-no-files-found: warn
+          retention-days: 14
