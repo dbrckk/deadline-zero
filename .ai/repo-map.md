@@ -18178,6 +18178,8 @@ UiRenderer.progress(shapes, hpRect.x + 5f, hpRect.y + 5f, hpRect.width - 10f, hp
 hp, hp < .28f ? VisualTheme.danger() : VisualTheme.accent());
 UiRenderer.progress(shapes, xpRect.x + 5f, xpRect.y + 5f, xpRect.width - 10f, xpRect.height - 10f,
 ⋮----
+drawRailChrome(shapes, hpRect, xpRect, hp, xp);
+⋮----
 Rectangle timeline = layout.timeline();
 UiRenderer.progress(shapes, timeline.x, timeline.y, timeline.width, timeline.height,
 director.bossProgress(), director.bossWarning()
@@ -18201,6 +18203,36 @@ UiRenderer.card(shapes, hint.x, hint.y, hint.width, hint.height, false, false);
 drawMobileControls(shapes, player, layout, physicalW, physicalH);
 shapes.end();
 ⋮----
+private void drawRailChrome(ShapeRenderer shapes, Rectangle hpRect, Rectangle xpRect,
+⋮----
+float s = MathUtils.clamp(ui(), .85f, 1.35f);
+float accentH = Math.max(2f, 2.5f * s);
+⋮----
+shapes.setColor(VisualTheme.accent());
+shapes.rect(hpRect.x + 5f, hpRect.y + hpRect.height - 5f - accentH,
+Math.max(18f, (hpRect.width - 10f) * MathUtils.clamp(hpRatio, 0f, 1f)), accentH);
+shapes.setColor(VisualTheme.VIOLET);
+shapes.rect(xpRect.x + 5f, xpRect.y + xpRect.height - 5f - accentH,
+Math.max(18f, (xpRect.width - 10f) * MathUtils.clamp(xpRatio, 0f, 1f)), accentH);
+⋮----
+drawProgressTicks(shapes, hpRect.x + 5f, hpRect.y + 5f, hpRect.width - 10f, hpRect.height - 10f, 4);
+drawProgressTicks(shapes, xpRect.x + 5f, xpRect.y + 5f, xpRect.width - 10f, xpRect.height - 10f, 4);
+⋮----
+float urgency = 1f - MathUtils.clamp(hpRatio / .28f, 0f, 1f);
+Color danger = VisualTheme.danger();
+shapes.setColor(danger.r, danger.g, danger.b, .18f + urgency * .22f);
+float t = Math.max(2f, 2.5f * s);
+shapes.rect(hpRect.x - t, hpRect.y - t, hpRect.width + t * 2f, t);
+shapes.rect(hpRect.x - t, hpRect.y + hpRect.height, hpRect.width + t * 2f, t);
+shapes.rect(hpRect.x - t, hpRect.y, t, hpRect.height);
+shapes.rect(hpRect.x + hpRect.width, hpRect.y, t, hpRect.height);
+⋮----
+private void drawProgressTicks(ShapeRenderer shapes, float x, float y, float w, float h, int segments) {
+shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .72f);
+float tickW = Math.max(1f, 1.5f * ui());
+⋮----
+shapes.rect(px - tickW * .5f, y + 2f, tickW, Math.max(0f, h - 4f));
+⋮----
 private void drawMobileControls(ShapeRenderer shapes, Player player, CombatHudLayout.Layout layout,
 ⋮----
 if (VirtualStick.hudActive()) {
@@ -18218,16 +18250,22 @@ shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, .50f
 shapes.circle(ox + vx * max * .68f, oy + vy * max * .68f, max * .24f, 28);
 ⋮----
 float radius = layout.dashRadius() * (MobileCombatInput.dashDown() ? 1.12f : 1f);
-float alpha = MobileCombatInput.dashDown() ? .42f : .24f;
-if (player.canDash()) shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b, alpha);
-else shapes.setColor(VisualTheme.SURFACE_2);
-shapes.circle(layout.dashX(), layout.dashY(), radius, 36);
-shapes.setColor(player.canDash() ? VisualTheme.CYAN : VisualTheme.MUTED);
-shapes.circle(layout.dashX(), layout.dashY(), MobileCombatInput.dashDown() ? radius * .22f : radius * .12f, 18);
+float alpha = MobileCombatInput.dashDown() ? .46f : .26f;
+Color dashColor = player.canDash() ? VisualTheme.accent() : VisualTheme.MUTED;
+shapes.setColor(dashColor.r, dashColor.g, dashColor.b, alpha);
+shapes.circle(layout.dashX(), layout.dashY(), radius, 40);
+shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .82f);
+shapes.circle(layout.dashX(), layout.dashY(), radius * .78f, 40);
+shapes.setColor(dashColor.r, dashColor.g, dashColor.b, player.canDash() ? .32f : .16f);
+shapes.circle(layout.dashX(), layout.dashY(), radius * .60f, 36);
+⋮----
+shapes.circle(layout.dashX(), layout.dashY(), radius * .43f, 32);
+shapes.setColor(dashColor);
+shapes.circle(layout.dashX(), layout.dashY(),
+MobileCombatInput.dashDown() ? radius * .22f : radius * .12f, 18);
 ⋮----
 private void drawText(SpriteBatch batch, BitmapFont font, Player player, WaveDirector director,
 ⋮----
-float s = MathUtils.clamp(ui(), .85f, 1.35f);
 float w = layout.logicalWidth();
 batch.setProjectionMatrix(projection);
 batch.begin();

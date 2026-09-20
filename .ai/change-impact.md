@@ -1,37 +1,13 @@
 # Change impact
 
-Base: 44edfd4492b9bb589bd14d9267ae62abe5686790
-Head: 9d85976123cb668e62bd80b4fa847c8cb578ccee
+Base: fa35d3c813f4fa2be0ba0abe4f8e46ba2e0bedc1
+Head: 361d73fec64083f52dfefd614de084ed3f3740e9
 
 ## Changed files
-- A .github/workflows/environment-semantic-qa.yml
-- M art_sources/environment/cinder_foundry/floor/concrete_a.png
-- M art_sources/environment/cinder_foundry/floor/concrete_b.png
-- M art_sources/environment/cinder_foundry/floor/concrete_c.png
-- M art_sources/environment/cinder_foundry/floor/hazard_a.png
-- M art_sources/environment/cryo_vault/floor/concrete_a.png
-- M art_sources/environment/cryo_vault/floor/concrete_b.png
-- M art_sources/environment/cryo_vault/floor/concrete_c.png
-- M art_sources/environment/cryo_vault/floor/hazard_a.png
-- M art_sources/environment/cryogenic_depths/floor/concrete_a.png
-- M art_sources/environment/cryogenic_depths/floor/concrete_b.png
-- M art_sources/environment/cryogenic_depths/floor/concrete_c.png
-- M art_sources/environment/cryogenic_depths/floor/hazard_a.png
-- M art_sources/environment/null_sector/floor/concrete_a.png
-- M art_sources/environment/null_sector/floor/concrete_b.png
-- M art_sources/environment/null_sector/floor/concrete_c.png
-- M art_sources/environment/null_sector/floor/hazard_a.png
-- A tools/environment/candidate_utils.py
-- M tools/environment/generate_cinder_foundry_candidate.py
-- M tools/environment/generate_cryo_vault_candidate.py
-- M tools/environment/generate_cryogenic_depths_candidate.py
-- M tools/environment/generate_null_sector_candidate.py
-- A tools/environment/qa_environment_candidates.py
+- M core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java
 
 ## Affected areas
-- .github
-- art_sources
-- tools
+- core
 
 ## Related test candidates
 - No direct filename-based test match detected.

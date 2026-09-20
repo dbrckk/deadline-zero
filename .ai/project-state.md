@@ -22,16 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T18:14:37Z
+Generated: 2026-09-20T18:33:19Z
 
 ### Git
 - Branch: `main`
-- Head: `9d85976123cb`
-- Commit date: 2026-09-20T20:14:22+02:00
-- Commit: Add semantic QA gate for 70 environment candidates (#244)
+- Head: `361d73fec640`
+- Commit date: 2026-09-20T20:33:05+02:00
+- Commit: ui(combat): add premium HUD rail and dash treatment (#245)
 - Tracked files: 834
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
+- `assets/art/environment-cinder_foundry.png`
+- `assets/art/environment-cryo_vault.png`
+- `assets/art/environment-cryogenic_depths.png`
+- `assets/art/environment-null_sector.png`
 - `.github/workflows/environment-semantic-qa.yml`
 - `art_sources/environment/cinder_foundry/floor/concrete_a.png`
 - `art_sources/environment/cinder_foundry/floor/concrete_b.png`
@@ -47,11 +52,6 @@ Generated: 2026-09-20T18:14:37Z
 - `art_sources/environment/cryogenic_depths/floor/hazard_a.png`
 - `art_sources/environment/null_sector/floor/concrete_a.png`
 - `art_sources/environment/null_sector/floor/concrete_b.png`
-- `art_sources/environment/null_sector/floor/concrete_c.png`
-- `art_sources/environment/null_sector/floor/hazard_a.png`
-- `tools/environment/candidate_utils.py`
-- `tools/environment/generate_cinder_foundry_candidate.py`
-- `tools/environment/generate_cryo_vault_candidate.py`
 
 ### Project signals
 - `build.gradle`
