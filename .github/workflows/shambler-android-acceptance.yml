@@ -2,10 +2,14 @@ name: Shambler Android Acceptance
 
 on:
   workflow_run:
-    workflows: ["Publish Validated Shambler"]
+    workflows: ["Shambler Animation Smoke"]
     types: [completed]
-    branches: [main]
   workflow_dispatch:
+    inputs:
+      animation_run_id:
+        description: "Successful Shambler Animation Smoke run ID (defaults to latest successful)"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -17,36 +21,132 @@ concurrency:
 
 jobs:
   android-visual:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' ||
+          github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
-      - name: Checkout published main
+      - name: Checkout current main
         uses: actions/checkout@v4
         with:
           ref: main
 
-      - name: Verify published Shambler assets are present
+      - name: Resolve validated Shambler smoke
+        id: source
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_RUN_ID: ${{ github.event.workflow_run.id || '' }}
+          EVENT_HEAD_SHA: ${{ github.event.workflow_run.head_sha || '' }}
+          INPUT_RUN_ID: ${{ github.event.inputs.animation_run_id || '' }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          test -s assets/art/rex.png
-          test -s assets/art/shambler.png
-          test -s assets/art/shambler-manifest.json
+          run_id=""
+          head_sha=""
+          if [ "$EVENT_NAME" = "workflow_run" ]; then
+            run_id="$EVENT_RUN_ID"
+            head_sha="$EVENT_HEAD_SHA"
+          else
+            run_id="$INPUT_RUN_ID"
+          fi
+
+          if [ -z "$run_id" ]; then
+            response="$(curl --fail --silent --show-error --location               -H "Authorization: Bearer $GITHUB_TOKEN"               -H "Accept: application/vnd.github+json"               "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs?branch=main&status=success&per_page=100")"
+            read -r run_id head_sha < <(printf '%s' "$response" | python3 -c '
+          import json,sys
+          runs=[r for r in json.load(sys.stdin).get("workflow_runs",[]) if r.get("name")=="Shambler Animation Smoke"]
+          if not runs: raise SystemExit("No successful Shambler Animation Smoke run found on main")
+          print(runs[0]["id"], runs[0]["head_sha"])
+          ')
+          fi
+
+          if [ -z "$head_sha" ]; then
+            response="$(curl --fail --silent --show-error --location               -H "Authorization: Bearer $GITHUB_TOKEN"               -H "Accept: application/vnd.github+json"               "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$run_id")"
+            head_sha="$(printf '%s' "$response" | python3 -c 'import json,sys; print(json.load(sys.stdin)["head_sha"])')"
+          fi
+
+          test -n "$run_id" -a -n "$head_sha"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
+          echo "Candidate smoke: run=$run_id sha=$head_sha"
+
+      - name: Download validated Shambler candidate
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ steps.source.outputs.run_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: shambler-artifact
+
+      - name: Install candidate atlas tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+
+      - name: Stage exact smoke candidate into temporary runtime atlas
+        id: candidate
+        shell: bash
+        env:
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+          SOURCE_HEAD_SHA: ${{ steps.source.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          root="$(find shambler-artifact -type d -name normalized96 -print -quit)"
+          manifest="$(find shambler-artifact -type f -name render-manifest.json -print -quit)"
+          qa="$(find shambler-artifact -type f -name qa.json -print -quit)"
+          sheet="$(find shambler-artifact -type f -name shambler.png -print -quit)"
+          test -n "$root" -a -n "$manifest" -a -n "$qa" -a -n "$sheet"
+
+          python3 - "$manifest" "$qa" "$sheet" <<'PY'
+          import json,sys
+          from PIL import Image
+
+          manifest=json.load(open(sys.argv[1]))
+          qa=json.load(open(sys.argv[2]))
+          assert manifest.get('actor') == 'shambler', manifest
+          assert manifest.get('frame_count') == 232, manifest
+          assert manifest.get('production_ready') is False, (
+              'Candidate Android QA must not silently relabel smoke art as production-ready',
+              manifest,
+          )
+          assert qa.get('pass') is True and qa.get('frame_count') == 232, qa
+          with Image.open(sys.argv[3]) as image:
+              assert image.format == 'PNG'
+              assert image.size == (2784, 768), image.size
+          print('Shambler smoke candidate contract PASS')
+          PY
+
+          python3 tools/sprites/upsert_directional_actor_atlas.py             --actor shambler             --root enemy/shambler             --input "$root"             --atlas assets/art/game.atlas             --png assets/art/shambler.png             --manifest build/shambler-candidate-manifest.json             --source-manifest "$manifest"             --source-run-id "$SOURCE_RUN_ID"
+
           python3 - <<'PY'
-          import json
           from pathlib import Path
           atlas=Path('assets/art/game.atlas').read_text()
-          manifest=json.loads(Path('assets/art/shambler-manifest.json').read_text())
-          assert manifest['actor'] == 'shambler', manifest
-          assert manifest['frame_count'] == 232, manifest
           dirs=('n','ne','e','se','s','sw','w','nw')
           anims={'idle':4,'run':8,'attack':6,'hit':3,'death':8}
           for root in ('survivor/rex','enemy/shambler'):
-              for d in dirs:
-                  for anim,count in anims.items():
-                      got=atlas.count(f'{root}/{d}/{anim}\n')
-                      assert got == count, (root,d,anim,got,count)
-          print('Published atlas contract PASS: Rex 232 + Shambler 232')
+              for direction in dirs:
+                  for animation,count in anims.items():
+                      got=atlas.count(f'{root}/{direction}/{animation}\n')
+                      assert got == count, (root,direction,animation,got,count)
+          assert Path('assets/art/shambler.png').is_file()
+          print('Temporary Android atlas PASS: Rex + exact Shambler candidate')
+          PY
+
+          mkdir -p build/shambler-android-acceptance
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          payload={
+              'actor':'shambler',
+              'stage':'candidate-android-visual-qa',
+              'source_smoke_run_id':int(os.environ['SOURCE_RUN_ID']),
+              'source_head_sha':os.environ['SOURCE_HEAD_SHA'],
+              'production_ready':False,
+              'android_visual_probe':'pending',
+          }
+          Path('build/shambler-android-acceptance/acceptance-report.json').write_text(
+              json.dumps(payload,indent=2)+'\n'
+          )
           PY
 
       - uses: actions/setup-java@v5
@@ -64,7 +164,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Validate published Rex + Shambler in Android gameplay
+      - name: Validate exact Shambler candidate in Android gameplay
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
@@ -77,19 +177,27 @@ jobs:
             adb shell settings put secure immersive_mode_confirmations confirmed || true
             adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesShamblerGameplayAndAttackFrames com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/shambler-acceptance.txt
             grep -q 'OK (1 test)' /tmp/shambler-acceptance.txt
-            mkdir -p build/shambler-android-acceptance
             adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/shambler-gameplay.png
             adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/shambler-attack.png
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/shambler-gameplay.png build/shambler-android-acceptance/shambler-gameplay.png
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/shambler-attack.png build/shambler-android-acceptance/shambler-attack.png
             test -s build/shambler-android-acceptance/shambler-gameplay.png
             test -s build/shambler-android-acceptance/shambler-attack.png
+            python3 - <<'PY'
+            import json
+            from pathlib import Path
+            path=Path('build/shambler-android-acceptance/acceptance-report.json')
+            data=json.loads(path.read_text())
+            data['android_visual_probe']='pass'
+            data['evidence']=['shambler-gameplay.png','shambler-attack.png']
+            path.write_text(json.dumps(data,indent=2)+'\n')
+            PY
 
-      - name: Upload Shambler Android acceptance evidence
+      - name: Upload Shambler candidate Android evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: shambler-android-acceptance-${{ github.run_number }}
+          name: shambler-candidate-android-acceptance-${{ github.run_number }}
           path: build/shambler-android-acceptance/
           if-no-files-found: warn
           retention-days: 14
