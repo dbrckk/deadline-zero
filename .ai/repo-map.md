@@ -48,6 +48,7 @@ The content is organized as follows:
     android-test-release.yml
     deadline-zero-work-watch.yml
     enemy-source-catalog.yml
+    quarantine-yard-candidate.yml
     responsive-ui-qa.yml
     rex-android-acceptance.yml
     rex-animation-smoke.yml
@@ -575,6 +576,7 @@ tools/
     validate_rex_weapon_visibility.py
     validate_rig.py
   environment/
+    generate_quarantine_yard_candidate.py
     pack_environment_art.py
     test_upsert_environment_atlas.py
     test_validate_environment_art_contract.py
@@ -1661,6 +1663,120 @@ jobs:
             build/blend-inspection/
           if-no-files-found: error
           retention-days: 14
+````
+
+## File: .github/workflows/quarantine-yard-candidate.yml
+````yaml
+name: Quarantine Yard Candidate Pack
+
+on:
+  push:
+    paths:
+      - '.github/workflows/quarantine-yard-candidate.yml'
+      - 'tools/environment/generate_quarantine_yard_candidate.py'
+      - 'tools/environment/pack_environment_art.py'
+      - 'tools/environment/validate_environment_art_contract.py'
+      - 'config/environment-art-contract.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: quarantine-yard-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install image tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+
+      - name: Generate deterministic Quarantine Yard candidates
+        run: |
+          set -euo pipefail
+          python3 tools/environment/generate_quarantine_yard_candidate.py
+          test "$(find art_sources/environment/quarantine_yard -type f -name '*.png' | wc -l)" -eq 14
+
+      - name: Pack and validate candidate biome
+        run: |
+          set -euo pipefail
+          python3 tools/environment/pack_environment_art.py --biome quarantine_yard
+          python3 tools/environment/validate_environment_art_contract.py --json > build/environment_art/coverage-before-publish.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest=json.loads(Path('build/environment_art/environment-quarantine_yard.manifest.json').read_text())
+          candidate=json.loads(Path('art_sources/environment/quarantine_yard/candidate-manifest.json').read_text())
+          assert manifest['biome']=='quarantine_yard'
+          assert manifest['slotCount']==14
+          assert len(manifest['assets'])==14
+          assert candidate['asset_count']==14
+          assert candidate['production_ready'] is False
+          assert candidate['visual_qa_pass'] is False
+          print('Quarantine Yard candidate contract PASS: 14/14 authored masters')
+          PY
+
+      - name: Build review contact sheet
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageDraw
+          slots=[
+            'floor/concrete_a','floor/concrete_b','floor/concrete_c','floor/hazard_a',
+            'decal/crack_a','decal/blood_a','decal/scorch_a','prop/barrier_a',
+            'prop/debris_a','prop/debris_b','prop/wall_a','prop/wall_b',
+            'prop/crate_a','prop/beacon_a'
+          ]
+          cell=256
+          sheet=Image.new('RGBA',(cell*4,cell*4),(11,15,18,255))
+          for i,slot in enumerate(slots):
+              src=Path('art_sources/environment/quarantine_yard')/(slot+'.png')
+              with Image.open(src) as raw:
+                  im=raw.convert('RGBA').resize((cell,cell),Image.Resampling.LANCZOS)
+              x=(i%4)*cell; y=(i//4)*cell
+              sheet.alpha_composite(im,(x,y))
+          out=Path('build/environment_art/quarantine-yard-contact-sheet.png')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          sheet.save(out,'PNG',optimize=True)
+          PY
+
+      - name: Upload candidate review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: quarantine-yard-candidate-${{ github.run_number }}
+          path: |
+            build/environment_art/environment-quarantine_yard.png
+            build/environment_art/environment-quarantine_yard.atlas.txt
+            build/environment_art/environment-quarantine_yard.manifest.json
+            build/environment_art/quarantine-yard-contact-sheet.png
+            art_sources/environment/quarantine_yard/candidate-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Commit generated candidate masters to branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add art_sources/environment/quarantine_yard
+          if git diff --cached --quiet; then
+            echo "Quarantine Yard candidate masters already current"
+            exit 0
+          fi
+          git commit -m "art(environment): add Quarantine Yard candidate masters"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 ````
 
 ## File: .github/workflows/responsive-ui-qa.yml
@@ -28323,6 +28439,257 @@ ratio = weighted_vertices / total_vertices if total_vertices else 0.0
 ⋮----
 report = {
 report_path = args.output / "rig-report.json"
+````
+
+## File: tools/environment/generate_quarantine_yard_candidate.py
+````python
+#!/usr/bin/env python3
+"""Generate a deterministic Quarantine Yard environment candidate pack.
+
+This is an authored procedural candidate, not final release art. It exists to move
+M3 from zero environment sources to a reviewable, reproducible first-biome pack
+without mislabeling generated references as final.
+"""
+⋮----
+SIZE = 512
+BG = (18, 29, 34, 255)
+STEEL = (55, 72, 78, 255)
+STEEL_DARK = (29, 41, 46, 255)
+STEEL_LIGHT = (90, 108, 112, 255)
+RED = (165, 42, 38, 255)
+RED_BRIGHT = (224, 62, 48, 255)
+CYAN = (76, 202, 218, 255)
+DIRTY = (70, 66, 54, 255)
+⋮----
+SLOTS = (
+⋮----
+def clamp(v: int) -> int
+⋮----
+def rgba_noise(base, strength: int, seed: int, *, periodic: bool = False) -> Image.Image
+⋮----
+img = Image.new("RGBA", (SIZE, SIZE))
+px = img.load()
+rnd = random.Random(seed)
+phases = [rnd.random() * math.tau for _ in range(6)]
+⋮----
+n = (
+⋮----
+n = rnd.uniform(-strength, strength)
+⋮----
+def vignette(img: Image.Image, amount: float = .18) -> None
+⋮----
+cx = cy = SIZE / 2
+maxd = math.hypot(cx, cy)
+⋮----
+d = math.hypot(x - cx, y - cy) / maxd
+f = 1.0 - amount * d * d
+⋮----
+def add_panel_seams(img: Image.Image, spacing: int, alpha: int = 80) -> None
+⋮----
+d = ImageDraw.Draw(img, "RGBA")
+⋮----
+def add_scuffs(img: Image.Image, seed: int, count: int = 45) -> None
+⋮----
+x = rnd.randrange(SIZE)
+y = rnd.randrange(SIZE)
+length = rnd.randrange(8, 52)
+angle = rnd.random() * math.tau
+x2 = int(x + math.cos(angle) * length)
+y2 = int(y + math.sin(angle) * length)
+shade = rnd.choice(((8, 13, 15, 32), (120, 118, 96, 20), (145, 55, 43, 14)))
+⋮----
+def floor_variant(seed: int, base=(43, 56, 61, 255), seam=128) -> Image.Image
+⋮----
+img = rgba_noise(base, 15, seed, periodic=True)
+⋮----
+def floor_concrete_a() -> Image.Image
+⋮----
+img = floor_variant(11, (41, 53, 58, 255), 128)
+⋮----
+def floor_concrete_b() -> Image.Image
+⋮----
+img = floor_variant(17, (36, 48, 54, 255), 96)
+⋮----
+def floor_concrete_c() -> Image.Image
+⋮----
+img = floor_variant(23, (47, 57, 59, 255), 160)
+⋮----
+rnd = random.Random(23)
+⋮----
+rr = rnd.randrange(10, 34)
+⋮----
+def floor_hazard() -> Image.Image
+⋮----
+img = floor_variant(29, (32, 43, 47, 255), 128)
+overlay = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+d = ImageDraw.Draw(overlay, "RGBA")
+band = 32
+⋮----
+overlay = overlay.filter(ImageFilter.GaussianBlur(.35))
+img = Image.alpha_composite(img, overlay)
+⋮----
+def transparent() -> Image.Image
+⋮----
+def glow_layer(color, center, radii) -> Image.Image
+⋮----
+layer = transparent()
+d = ImageDraw.Draw(layer, "RGBA")
+⋮----
+def crack() -> Image.Image
+⋮----
+img = transparent()
+⋮----
+rnd = random.Random(41)
+origin = (256, 260)
+⋮----
+pts = [origin]
+angle = branch * (math.tau / 11) + rnd.uniform(-.16, .16)
+length = rnd.randrange(85, 210)
+steps = rnd.randrange(5, 9)
+⋮----
+r = length * s / steps
+⋮----
+def blood() -> Image.Image
+⋮----
+rnd = random.Random(47)
+⋮----
+x = int(rnd.gauss(256, 72))
+y = int(rnd.gauss(256, 56))
+rx = rnd.randrange(10, 52)
+ry = rnd.randrange(6, 36)
+⋮----
+x = rnd.randrange(100, 412)
+y = rnd.randrange(110, 402)
+r = rnd.randrange(3, 10)
+⋮----
+def scorch() -> Image.Image
+⋮----
+center = (256, 256)
+⋮----
+rnd = random.Random(53)
+⋮----
+ang = rnd.random() * math.tau
+r = rnd.randrange(35, 165)
+x = int(center[0] + math.cos(ang) * r)
+y = int(center[1] + math.sin(ang) * r * .72)
+rr = rnd.randrange(6, 22)
+⋮----
+def premium_finish(img: Image.Image, slot: str, seed: int) -> Image.Image
+⋮----
+"""Apply deterministic phone-scale material finishing without changing silhouette intent."""
+img = img.convert("RGBA")
+⋮----
+graded = ImageEnhance.Contrast(img).enhance(1.10)
+graded = ImageEnhance.Color(graded).enhance(1.04)
+graded = ImageEnhance.Sharpness(graded).enhance(1.20)
+# Fine periodic speckle so floors retain material read after 2x downsample.
+px = graded.load()
+⋮----
+x = rnd.randrange(SIZE); y = rnd.randrange(SIZE)
+⋮----
+delta = rnd.choice((-5, -3, -2, 2, 3, 5))
+⋮----
+alpha = img.getchannel("A")
+⋮----
+# Contact/ambient occlusion under transparent objects and decals.
+ao_mask = alpha.filter(ImageFilter.GaussianBlur(13))
+ao = Image.new("RGBA", img.size, (0, 0, 0, 0))
+shifted = Image.new("L", img.size, 0)
+⋮----
+out = Image.alpha_composite(ao, img)
+⋮----
+# Crisp bevel read: dark outer edge + cool upper edge highlight.
+expanded = alpha.filter(ImageFilter.MaxFilter(9))
+contracted = alpha.filter(ImageFilter.MinFilter(7))
+outer = ImageChops.subtract(expanded, alpha)
+inner = ImageChops.subtract(alpha, contracted)
+⋮----
+rim_dark = Image.new("RGBA", img.size, (7, 12, 14, 0))
+⋮----
+out = Image.alpha_composite(rim_dark, out)
+⋮----
+highlight = Image.new("RGBA", img.size, (150, 178, 181, 0))
+# Bias highlight toward the upper-left by masking with a simple directional ramp.
+ramp = Image.new("L", img.size)
+rp = ramp.load()
+⋮----
+hi_mask = ImageChops.multiply(inner, ramp)
+⋮----
+out = Image.alpha_composite(out, highlight)
+⋮----
+# Subtle material grain clipped to the original silhouette.
+grain = Image.new("RGBA", img.size, (0, 0, 0, 0))
+gp = grain.load()
+⋮----
+v = rnd.choice((-1, 1))
+⋮----
+out = Image.alpha_composite(out, grain)
+⋮----
+out = ImageEnhance.Contrast(out).enhance(1.08)
+out = ImageEnhance.Sharpness(out).enhance(1.28)
+⋮----
+def metallic_shadow(img: Image.Image, box, alpha=110)
+⋮----
+shadow = transparent()
+d = ImageDraw.Draw(shadow, "RGBA")
+⋮----
+def barrier() -> Image.Image
+⋮----
+img = metallic_shadow(img, (70, 170, 442, 340))
+⋮----
+def debris(seed: int, warm=False) -> Image.Image
+⋮----
+pieces=[]
+⋮----
+cx=rnd.randrange(120,392); cy=rnd.randrange(125,390)
+rr=rnd.randrange(18,52)
+pts=[]
+⋮----
+a=k*math.tau/rnd.randrange(4,7)+rnd.uniform(-.25,.25)
+rad=rr*rnd.uniform(.55,1.2)
+⋮----
+shadow=transparent(); sd=ImageDraw.Draw(shadow,"RGBA")
+⋮----
+img=Image.alpha_composite(img,shadow.filter(ImageFilter.GaussianBlur(7)))
+d=ImageDraw.Draw(img,"RGBA")
+⋮----
+base=(83,74,55,255) if warm else ((55,66,69,255) if i%2==0 else (74,78,72,255))
+⋮----
+def wall(seed: int, red_panel=False) -> Image.Image
+⋮----
+img=transparent()
+img=metallic_shadow(img,(60,120,452,385),125)
+⋮----
+def crate() -> Image.Image
+⋮----
+img=metallic_shadow(img,(120,110,392,390),125)
+⋮----
+def beacon() -> Image.Image
+⋮----
+img=Image.alpha_composite(img,glow_layer(CYAN,(256,245),((120,18),(80,28),(48,48))))
+⋮----
+rad=math.radians(a)
+x=256+math.cos(rad)*94; y=246+math.sin(rad)*94
+⋮----
+GENERATORS = {
+⋮----
+def main() -> int
+⋮----
+p=argparse.ArgumentParser(description=__doc__)
+⋮----
+args=p.parse_args()
+⋮----
+produced=[]
+⋮----
+path=args.output/(slot+".png")
+⋮----
+img=GENERATORS[slot]().convert("RGBA")
+img=premium_finish(img, slot, 1000 + len(produced) * 97)
+⋮----
+# Contract requires fully opaque floors.
+alpha=Image.new("L",img.size,255)
+⋮----
+manifest={
 ````
 
 ## File: tools/environment/pack_environment_art.py

@@ -1,29 +1,30 @@
 # Change impact
 
-Base: 4f551933d8c0643657975bb6fe0b620cbd25ce3d
-Head: fb7e7f1a54521c8832b2fbb76396034b5c089723
+Base: 2bdf3124c23520bfa1a85468d78e4a2d11e64579
+Head: 016e20fca8f2674542b00dfcd78758728701accb
 
 ## Changed files
-- M .github/workflows/verify.yml
-- A art_sources/environment/README.md
-- A config/environment-art-contract.json
-- A core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java
-- M core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java
-- A core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java
-- M docs/PRODUCTION_STATUS.md
-- M docs/ROADMAP.md
-- A tools/environment/pack_environment_art.py
-- A tools/environment/test_upsert_environment_atlas.py
-- A tools/environment/test_validate_environment_art_contract.py
-- A tools/environment/upsert_environment_atlas.py
-- A tools/environment/validate_environment_art_contract.py
+- A .github/workflows/quarantine-yard-candidate.yml
+- A art_sources/environment/quarantine_yard/candidate-manifest.json
+- A art_sources/environment/quarantine_yard/decal/blood_a.png
+- A art_sources/environment/quarantine_yard/decal/crack_a.png
+- A art_sources/environment/quarantine_yard/decal/scorch_a.png
+- A art_sources/environment/quarantine_yard/floor/concrete_a.png
+- A art_sources/environment/quarantine_yard/floor/concrete_b.png
+- A art_sources/environment/quarantine_yard/floor/concrete_c.png
+- A art_sources/environment/quarantine_yard/floor/hazard_a.png
+- A art_sources/environment/quarantine_yard/prop/barrier_a.png
+- A art_sources/environment/quarantine_yard/prop/beacon_a.png
+- A art_sources/environment/quarantine_yard/prop/crate_a.png
+- A art_sources/environment/quarantine_yard/prop/debris_a.png
+- A art_sources/environment/quarantine_yard/prop/debris_b.png
+- A art_sources/environment/quarantine_yard/prop/wall_a.png
+- A art_sources/environment/quarantine_yard/prop/wall_b.png
+- A tools/environment/generate_quarantine_yard_candidate.py
 
 ## Affected areas
 - .github
 - art_sources
-- config
-- core
-- docs
 - tools
 
 ## Related test candidates

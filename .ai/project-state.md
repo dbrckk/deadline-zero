@@ -22,32 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T11:35:45Z
+Generated: 2026-09-20T16:34:23Z
 
 ### Git
 - Branch: `main`
-- Head: `fb7e7f1a5452`
-- Commit date: 2026-09-20T13:35:33+02:00
-- Commit: Add production pipeline for 70 biome environment assets
-- Tracked files: 738
+- Head: `016e20fca8f2`
+- Commit date: 2026-09-20T18:34:11+02:00
+- Commit: Add first Quarantine Yard environment candidate pack
+- Tracked files: 756
 
 ### Recently changed files
+- `.github/workflows/quarantine-yard-candidate.yml`
+- `art_sources/environment/quarantine_yard/candidate-manifest.json`
+- `art_sources/environment/quarantine_yard/decal/blood_a.png`
+- `art_sources/environment/quarantine_yard/decal/crack_a.png`
+- `art_sources/environment/quarantine_yard/decal/scorch_a.png`
+- `art_sources/environment/quarantine_yard/floor/concrete_a.png`
+- `art_sources/environment/quarantine_yard/floor/concrete_b.png`
+- `art_sources/environment/quarantine_yard/floor/concrete_c.png`
+- `art_sources/environment/quarantine_yard/floor/hazard_a.png`
+- `art_sources/environment/quarantine_yard/prop/barrier_a.png`
+- `art_sources/environment/quarantine_yard/prop/beacon_a.png`
+- `art_sources/environment/quarantine_yard/prop/crate_a.png`
+- `art_sources/environment/quarantine_yard/prop/debris_a.png`
+- `art_sources/environment/quarantine_yard/prop/debris_b.png`
+- `art_sources/environment/quarantine_yard/prop/wall_a.png`
+- `art_sources/environment/quarantine_yard/prop/wall_b.png`
+- `tools/environment/generate_quarantine_yard_candidate.py`
 - `.github/workflows/verify.yml`
 - `art_sources/environment/README.md`
 - `config/environment-art-contract.json`
-- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java`
-- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
-- `core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java`
-- `docs/PRODUCTION_STATUS.md`
-- `docs/ROADMAP.md`
-- `tools/environment/pack_environment_art.py`
-- `tools/environment/test_upsert_environment_atlas.py`
-- `tools/environment/test_validate_environment_art_contract.py`
-- `tools/environment/upsert_environment_atlas.py`
-- `tools/environment/validate_environment_art_contract.py`
-- `docs/PREMIUM_ENVIRONMENT_ART_CONTRACT.md`
-- `.github/workflows/shambler-android-acceptance.yml`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 
 ### Project signals
 - `build.gradle`
