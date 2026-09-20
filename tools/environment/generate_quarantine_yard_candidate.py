@@ -13,7 +13,7 @@ import math
 import random
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageDraw, ImageFilter
+from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter
 
 SIZE = 512
 BG = (18, 29, 34, 255)
@@ -219,6 +219,74 @@ def scorch() -> Image.Image:
     return img.filter(ImageFilter.GaussianBlur(7))
 
 
+def premium_finish(img: Image.Image, slot: str, seed: int) -> Image.Image:
+    """Apply deterministic phone-scale material finishing without changing silhouette intent."""
+    img = img.convert("RGBA")
+    if slot.startswith("floor/"):
+        graded = ImageEnhance.Contrast(img).enhance(1.10)
+        graded = ImageEnhance.Color(graded).enhance(1.04)
+        graded = ImageEnhance.Sharpness(graded).enhance(1.20)
+        # Fine periodic speckle so floors retain material read after 2x downsample.
+        px = graded.load()
+        rnd = random.Random(seed)
+        for _ in range(2600):
+            x = rnd.randrange(SIZE); y = rnd.randrange(SIZE)
+            r, g, b, a = px[x, y]
+            delta = rnd.choice((-5, -3, -2, 2, 3, 5))
+            px[x, y] = (clamp(r + delta), clamp(g + delta), clamp(b + delta), a)
+        return graded
+
+    alpha = img.getchannel("A")
+
+    # Contact/ambient occlusion under transparent objects and decals.
+    ao_mask = alpha.filter(ImageFilter.GaussianBlur(13))
+    ao = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    shifted = Image.new("L", img.size, 0)
+    shifted.paste(ao_mask, (10, 14))
+    ao.putalpha(shifted.point(lambda p: int(p * .33)))
+    out = Image.alpha_composite(ao, img)
+
+    # Crisp bevel read: dark outer edge + cool upper edge highlight.
+    expanded = alpha.filter(ImageFilter.MaxFilter(9))
+    contracted = alpha.filter(ImageFilter.MinFilter(7))
+    outer = ImageChops.subtract(expanded, alpha)
+    inner = ImageChops.subtract(alpha, contracted)
+
+    rim_dark = Image.new("RGBA", img.size, (7, 12, 14, 0))
+    rim_dark.putalpha(outer.point(lambda p: int(p * .58)))
+    out = Image.alpha_composite(rim_dark, out)
+
+    highlight = Image.new("RGBA", img.size, (150, 178, 181, 0))
+    # Bias highlight toward the upper-left by masking with a simple directional ramp.
+    ramp = Image.new("L", img.size)
+    rp = ramp.load()
+    for y in range(SIZE):
+        for x in range(SIZE):
+            rp[x, y] = clamp(int(255 - (x + y) * .18))
+    hi_mask = ImageChops.multiply(inner, ramp)
+    highlight.putalpha(hi_mask.point(lambda p: int(p * .30)))
+    out = Image.alpha_composite(out, highlight)
+
+    # Subtle material grain clipped to the original silhouette.
+    grain = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    gp = grain.load()
+    rnd = random.Random(seed)
+    for _ in range(3600):
+        x = rnd.randrange(SIZE); y = rnd.randrange(SIZE)
+        if alpha.getpixel((x, y)) < 32:
+            continue
+        v = rnd.choice((-1, 1))
+        if v > 0:
+            gp[x, y] = (205, 218, 214, rnd.randrange(5, 13))
+        else:
+            gp[x, y] = (3, 8, 10, rnd.randrange(7, 16))
+    out = Image.alpha_composite(out, grain)
+
+    out = ImageEnhance.Contrast(out).enhance(1.08)
+    out = ImageEnhance.Sharpness(out).enhance(1.28)
+    return out
+
+
 def metallic_shadow(img: Image.Image, box, alpha=110):
     shadow = transparent()
     d = ImageDraw.Draw(shadow, "RGBA")
@@ -341,6 +409,7 @@ def main() -> int:
         path=args.output/(slot+".png")
         path.parent.mkdir(parents=True,exist_ok=True)
         img=GENERATORS[slot]().convert("RGBA")
+        img=premium_finish(img, slot, 1000 + len(produced) * 97)
         if slot.startswith("floor/"):
             # Contract requires fully opaque floors.
             alpha=Image.new("L",img.size,255)
@@ -350,14 +419,14 @@ def main() -> int:
     manifest={
         "schema":1,
         "biome":"quarantine_yard",
-        "stage":"procedural-authored-candidate",
+        "stage":"procedural-authored-candidate-v2",
         "production_ready":False,
         "visual_qa_pass":False,
         "generator":"tools/environment/generate_quarantine_yard_candidate.py",
         "master_size":[512,512],
         "asset_count":len(produced),
         "assets":produced,
-        "notes":"Deterministic candidate pack. Must not be promoted as FINAL without premium visual QA."
+        "notes":"Deterministic v2 candidate with material finishing. Must not be promoted as FINAL without premium visual QA."
     }
     args.manifest.parent.mkdir(parents=True,exist_ok=True)
     args.manifest.write_text(json.dumps(manifest,indent=2)+"\n",encoding="utf-8")
