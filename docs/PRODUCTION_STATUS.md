@@ -134,6 +134,7 @@ Only `FINAL` counts toward release-art completion.
 
 ## Cross-milestone progress snapshot
 
+- **P2 environment art:** 0/70 biome-specific production regions are authored; a 5-biome × 14-slot contract, runtime override path, deterministic packer and CI coverage reporter now define the closure path. Generic Pixmap/bootstrap environment art remains a development fallback and does not count toward the 70-slot target.
 - **M3 art:** 24/24 production actors are merged to `main`; production atlas/layout validation is automated.
 - **M5 content:** 5/5 biomes, 12/12+ weapons, 52/50+ standard upgrades, 6/6 bosses, 22/20+ gameplay enemy profiles and 8/8+ champion profiles are implemented. Final balance/pacing regression remains.
 - **M6 economy/compliance:** billing idempotency/persistence boundaries, entitlement reconciliation, rewarded-ad/consent integration and strict production configuration checks exist; licensed Play purchase/restore/refund/revocation and production ad-consent validation remain manual platform gates.

@@ -9,6 +9,15 @@ Data-driven weapons, status effects, enemy state machines, boss framework, spati
 ## P2 — Visual identity
 Production characters, 8-direction animation, enemy animation sets, environment tiles, shader stack, GPU particles, decals, dynamic light masks, boss intros, cinematic UI motion.
 
+### Environment production status
+
+- **0/70 biome-specific production environment regions are currently authored in `art/game.atlas`.**
+- The runtime now has a 5-biome × 14-slot production contract covering floors, decals and structural props.
+- Biome-specific authored regions use `environment/<biome>/<slot>` and automatically override the generic/bootstrap fallback.
+- The 70-asset target is: 20 floor tiles, 15 decals and 35 props across Quarantine Yard, Cinder Foundry, Null Sector, Cryo Vault and Cryogenic Depths.
+- Production order is Quarantine Yard -> Cinder Foundry -> Null Sector -> Cryo Vault -> Cryogenic Depths, with Android crowd/readability capture after each complete biome.
+- P2 environment closure requires 70/70 contract coverage plus semantic phone-scale QA; simple runtime tint variants do not count as production art.
+
 ### Roster production status
 
 - **24/24 production actors are merged to `main`.**
