@@ -13214,8 +13214,10 @@ cam.position.x += MathUtils.random(-1f, 1f) * cameraShake;
 cam.position.y += MathUtils.random(-1f, 1f) * cameraShake;
 cameraShake = Math.max(0f, cameraShake - dt * 2.7f);
 ⋮----
-cam.position.x = MathUtils.lerp(cam.position.x, 0f, .08f);
-cam.position.y = MathUtils.lerp(cam.position.y, 0f, .08f);
+// Subtle player follow and velocity look-ahead keep the arena readable while making movement feel less static.
+⋮----
+cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .075f);
+cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .075f);
 polish.applyCameraRecoil(cam);
 ⋮----
 private void updateEnemies(float dt) {
@@ -13321,7 +13323,9 @@ damageNumber(e.position.x, e.position.y + e.radius, p.damage + reactionBonus, p.
 ⋮----
 float vlen = p.velocity.len();
 if (vlen > .001f) e.addImpulse(p.velocity.x / vlen * p.knockback, p.velocity.y / vlen * p.knockback);
-impact(p.position.x, p.position.y, p.critical ? .6f : .38f, .12f, p.critical ? VisualTheme.GOLD : VisualTheme.CYAN);
+impact(p.position.x, p.position.y, p.critical ? .78f : .44f,
+⋮----
+if (p.critical) addCameraShake(.075f);
 polish.onProjectileHit(p.critical);
 if (p.element == DamageElement.SHOCK && e.alive) chainShock(e, p.damage * .42f, 3);
 if (wasAlive && !e.alive) onEnemyKilled(e);
@@ -13413,8 +13417,12 @@ CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.KILLCHAIN_ARMED);
 ⋮----
 director.onKill();
 if (player.addXp(e.xpValue)) prepareUpgrade();
-impact(e.position.x, e.position.y, e.radius * 2.3f, .28f, VisualTheme.GREEN);
-addCameraShake(e.type == Enemy.Type.BOSS ? .72f : .08f);
+⋮----
+impact(e.position.x, e.position.y, e.radius * killScale, killDuration, killColor);
+⋮----
+impact(e.position.x, e.position.y, e.radius * 2.2f, .68f, Color.WHITE);
+⋮----
+addCameraShake(killShake);
 ⋮----
 private void spawnEnemy() {
 Enemy.Type t = director.chooseType();
@@ -13460,7 +13468,7 @@ player.weapon.damage * protocol.damageMultiplier() * (crit ? player.weapon.critM
 Math.min(Upgrade.MAX_PENETRATION, player.weapon.penetration + protocol.bonusPenetration()),
 ⋮----
 polish.onShot(base);
-addCameraShake(.035f);
+addCameraShake(count > 1 ? .052f : .043f);
 ⋮----
 private void addCameraShake(float amount) {
 if (amount <= 0f || game.accessibility == null || !game.accessibility.allowsScreenShake()) return;
@@ -18172,6 +18180,32 @@ shapes.ellipse(fx.x - fx.radius * 1.1f, fx.y - fx.radius * .38f,
 shapes.setColor(.06f, .055f, .05f, .48f * fade);
 shapes.ellipse(fx.x - fx.radius * .82f, fx.y - fx.radius * .22f,
 ⋮----
+// Make the first few frames of a kill read as an event, not just a disappearing sprite.
+⋮----
+float burst = 1f - MathUtils.clamp(fx.age / burstWindow, 0f, 1f);
+⋮----
+float x1 = fx.x + MathUtils.cosDeg(angle) * inner;
+float y1 = fx.y + MathUtils.sinDeg(angle) * inner;
+float x2 = fx.x + MathUtils.cosDeg(angle) * outer;
+float y2 = fx.y + MathUtils.sinDeg(angle) * outer;
+if (fx.type == Enemy.Type.BOSS) shapes.setColor(1f, .64f, .16f, rayAlpha);
+else shapes.setColor(.92f, .14f, .08f, rayAlpha);
+shapes.rectLine(x1, y1, x2, y2, Math.max(.028f, fx.radius * .075f * burst));
+float shard = Math.max(.035f, fx.radius * (.11f + .08f * burst));
+shapes.circle(x2, y2, shard, 8);
+⋮----
+shapes.setColor(1f, fx.type == Enemy.Type.BOSS ? .72f : .24f,
+⋮----
+shapes.circle(fx.x, fx.y, outer * .64f, 28);
+shapes.setColor(1f, 1f, 1f, .32f * burst);
+shapes.circle(fx.x, fx.y, Math.max(.06f, fx.radius * .30f * burst), 12);
+⋮----
+// Persistent secondary splatter breaks up the otherwise clean arena floor.
+float splatter = Math.min(1f, fx.age / .16f) * fade;
+shapes.setColor(.20f, .012f, .016f, .16f * splatter);
+shapes.circle(fx.x + fx.radius * .58f, fx.y - fx.radius * .20f, fx.radius * .28f, 10);
+shapes.circle(fx.x - fx.radius * .52f, fx.y + fx.radius * .08f, fx.radius * .20f, 9);
+⋮----
 public void drawAuthored(SpriteBatch batch, Array<DeathFx> effects) {
 if (!art.authoredAvailable()) return;
 batch.begin();
@@ -18738,26 +18772,27 @@ boolean hotBiome = foundry();
 ⋮----
 int variant = detailVariant(gx, gy);
 ⋮----
-if (Math.abs(x) < 5f && Math.abs(y) < 4f) continue;
+if (Math.abs(x) < 4.5f && Math.abs(y) < 3.6f) continue;
+float scaleJitter = 1f + ((detailVariant(gx + 13, gy - 7) - 3.5f) * .045f);
 ⋮----
-if (depthsBiome) batch.setColor(.48f, .82f, .92f, .40f);
-else if (cryoBiome) batch.setColor(.72f, .94f, 1f, .42f);
-else if (nullBiome) batch.setColor(.72f, .62f, 1f, .38f);
-else batch.setColor(1f, 1f, 1f, hotBiome ? .34f : .40f);
-draw(batch, crack, x, y, 1.45f);
+if (depthsBiome) batch.setColor(.48f, .82f, .92f, variant == 0 ? .40f : .24f);
+else if (cryoBiome) batch.setColor(.72f, .94f, 1f, variant == 0 ? .42f : .25f);
+else if (nullBiome) batch.setColor(.72f, .62f, 1f, variant == 0 ? .38f : .23f);
+else batch.setColor(1f, 1f, 1f, variant == 0 ? (hotBiome ? .34f : .40f) : .22f);
+draw(batch, crack, x, y, (variant == 0 ? 1.45f : 1.05f) * scaleJitter);
 ⋮----
-if (depthsBiome) batch.setColor(.24f, .66f, .78f, .30f);
-else if (cryoBiome) batch.setColor(.48f, .86f, 1f, .28f);
-else if (nullBiome) batch.setColor(.52f, .32f, 1f, .30f);
-else batch.setColor(1f, hotBiome ? .45f : 1f, hotBiome ? .20f : 1f, .28f);
-draw(batch, stain, x, y, 1.35f);
+if (depthsBiome) batch.setColor(.24f, .66f, .78f, variant == 1 ? .30f : .18f);
+else if (cryoBiome) batch.setColor(.48f, .86f, 1f, variant == 1 ? .28f : .17f);
+else if (nullBiome) batch.setColor(.52f, .32f, 1f, variant == 1 ? .30f : .18f);
+else batch.setColor(1f, hotBiome ? .45f : 1f, hotBiome ? .20f : 1f, variant == 1 ? .28f : .17f);
+draw(batch, stain, x, y, (variant == 1 ? 1.35f : .98f) * scaleJitter);
 ⋮----
-drawPropShadow(batch, debris, x, y, 1.25f);
+drawPropShadow(batch, debris, x, y, 1.25f * scaleJitter);
 if (depthsBiome) batch.setColor(.52f, .82f, .90f, .76f);
 else if (cryoBiome) batch.setColor(.74f, .92f, 1f, .78f);
 else if (nullBiome) batch.setColor(.72f, .68f, 1f, .74f);
 else batch.setColor(hotBiome ? 1f : .78f, hotBiome ? .64f : .82f, hotBiome ? .38f : .86f, .72f);
-draw(batch, debris, x, y, 1.20f);
+draw(batch, debris, x, y, 1.20f * scaleJitter);
 ⋮----
 private void drawFoundryDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,
 ⋮----

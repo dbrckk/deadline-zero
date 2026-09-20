@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T09:45:00Z
+Generated: 2026-09-20T10:46:31Z
 
 ### Git
 - Branch: `main`
-- Head: `e12ec17ddf81`
-- Commit date: 2026-09-20T11:44:49+02:00
-- Commit: Merge pull request #228 from dbrckk/m3-backfill-production-ready-manifests
+- Head: `ae995e489b31`
+- Commit date: 2026-09-20T12:46:19+02:00
+- Commit: Merge pull request #229 from dbrckk/combat-juice-pass-1
 - Tracked files: 728
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
+- `core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java`
 - `assets/art/phantom-manifest.json`
-- `assets/art/runner-manifest.json`
-- `.github/workflows/verify.yml`
-- `tools/sprites/validate_final_art_promotion_consistency.py`
-- `assets/art/null_ward-manifest.json`
 
 ### Project signals
 - `build.gradle`

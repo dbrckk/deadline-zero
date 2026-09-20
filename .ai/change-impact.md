@@ -1,28 +1,15 @@
 # Change impact
 
-Base: 49d5c66dd48048750be6b9b840582529aafb2a2a
-Head: e12ec17ddf81d2017122df070740510480369639
+Base: 3952b746281c60295869b7ae0bff40b4ae8191e0
+Head: ae995e489b31f9da0cd369f87a26c36dcade8aea
 
 ## Changed files
-- M .github/workflows/verify.yml
-- M assets/art/bastion-manifest.json
-- M assets/art/brute-manifest.json
-- M assets/art/cinder_gunner-manifest.json
-- M assets/art/forge_hound-manifest.json
-- M assets/art/null_archon-manifest.json
-- M assets/art/null_ward-manifest.json
-- M assets/art/phantom-manifest.json
-- M assets/art/phase_stalker-manifest.json
-- M assets/art/runner-manifest.json
-- M assets/art/shielded-manifest.json
-- M assets/art/slag_guard-manifest.json
-- M assets/art/static_seer-manifest.json
-- A tools/sprites/validate_final_art_promotion_consistency.py
+- M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
+- M core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java
+- M core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java
 
 ## Affected areas
-- .github
-- assets
-- tools
+- core
 
 ## Related test candidates
 - No direct filename-based test match detected.
