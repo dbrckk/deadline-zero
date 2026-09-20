@@ -124,7 +124,8 @@ jobs:
             --output build/shambler/normalized96 \
             --report build/shambler/qa.json \
             --contact-sheet build/shambler/shambler-phone-contact-sheet.png \
-            --horizontal-anchor union-center
+            --horizontal-anchor union-center \
+            --attack-center-limit 12
           python3 - <<'PY'
           import json
           from pathlib import Path
