@@ -188,15 +188,18 @@ jobs:
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/shambler-attack.png build/shambler-android-acceptance/shambler-attack.png
             test -s build/shambler-android-acceptance/shambler-gameplay.png
             test -s build/shambler-android-acceptance/shambler-attack.png
-            python3 - <<'PY'
-            import json
-            from pathlib import Path
-            path=Path('build/shambler-android-acceptance/acceptance-report.json')
-            data=json.loads(path.read_text())
-            data['android_visual_probe']='pass'
-            data['evidence']=['shambler-gameplay.png','shambler-attack.png']
-            path.write_text(json.dumps(data,indent=2)+'\n')
-            PY
+
+      - name: Finalize Shambler candidate acceptance report
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path('build/shambler-android-acceptance/acceptance-report.json')
+          data=json.loads(path.read_text())
+          data['android_visual_probe']='pass'
+          data['evidence']=['shambler-gameplay.png','shambler-attack.png']
+          path.write_text(json.dumps(data,indent=2)+'\n')
+          PY
 
       - name: Upload Shambler candidate Android evidence
         if: always()
