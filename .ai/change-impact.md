@@ -1,16 +1,19 @@
 # Change impact
 
-Base: 0f7441e31ba84a2f7e138cedc9a270aead5faa63
-Head: 5897dae9ee432478ee8081642302ce0ab6702d2e
+Base: ead1c70a4f5dc3c7968e7c00bf4f7a0887fa4218
+Head: 8442302e3966e168162d29328da1227e010d9121
 
 ## Changed files
-- M .github/workflows/shambler-android-acceptance.yml
-- M core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java
-- A core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java
+- M .github/workflows/enemy-source-catalog.yml
+- M art_sources/README.md
+- M config/actor-production-contracts.json
+- M tools/sprites/audit_final_art_status.py
 
 ## Affected areas
 - .github
-- core
+- art_sources
+- config
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

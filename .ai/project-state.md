@@ -22,16 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T08:38:29Z
+Generated: 2026-09-20T09:29:48Z
 
 ### Git
 - Branch: `main`
-- Head: `5897dae9ee43`
-- Commit date: 2026-09-20T10:38:07+02:00
-- Commit: Improve Shambler runtime readability
+- Head: `8442302e3966`
+- Commit date: 2026-09-20T11:29:38+02:00
+- Commit: Reconcile final-art audit with QA evidence
 - Tracked files: 726
 
 ### Recently changed files
+- `.github/workflows/enemy-source-catalog.yml`
+- `art_sources/README.md`
+- `config/actor-production-contracts.json`
+- `tools/sprites/audit_final_art_status.py`
 - `.github/workflows/shambler-android-acceptance.yml`
 - `core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java`
@@ -41,7 +45,6 @@ Generated: 2026-09-20T08:38:29Z
 - `.github/workflows/shambler-publish-current.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
 - `tools/sprites/normalize_actor_frames.py`
-- `tools/sprites/audit_final_art_status.py`
 
 ### Project signals
 - `build.gradle`

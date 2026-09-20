@@ -1497,11 +1497,6 @@ name: Enemy Source Catalog
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/enemy-source-catalog.yml'
-      - 'config/actor-production-contracts.json'
-      - 'tools/blender/catalog_blend_actions.py'
 
 permissions:
   contents: read
@@ -1509,7 +1504,7 @@ permissions:
 jobs:
   catalog:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -1538,14 +1533,29 @@ jobs:
           PY
           cat /tmp/source-output >> "$GITHUB_OUTPUT"
 
-      - name: Download official pack once
+      - name: Download official pack with retry
         env:
           SOURCE_FOLDER: ${{ steps.source.outputs.folder }}
         run: |
           set -euo pipefail
           python3 -m pip install --disable-pip-version-check 'gdown>=5.2,<6'
-          mkdir -p build/quaternius-zombie-pack
-          gdown --folder --remaining-ok "$SOURCE_FOLDER" -O build/quaternius-zombie-pack
+          success=false
+          for attempt in 1 2 3; do
+            echo "Quaternius pack download attempt $attempt/3"
+            rm -rf build/quaternius-zombie-pack
+            mkdir -p build/quaternius-zombie-pack
+            if gdown --folder --remaining-ok "$SOURCE_FOLDER" -O build/quaternius-zombie-pack; then
+              success=true
+              break
+            fi
+            echo "Download attempt $attempt failed; retrying from a clean directory" >&2
+            sleep $((attempt * 5))
+          done
+          if [ "$success" != true ]; then
+            echo "Unable to download the official Quaternius pack after 3 attempts" >&2
+            exit 1
+          fi
+          test -n "$(find build/quaternius-zombie-pack -type f -name '*.blend' -print -quit)"
 
       - name: Install Blender for structural source inspection
         run: |
@@ -7295,7 +7305,17 @@ tasks.configureEach { task ->
       "published_png": "assets/art/rex.png",
       "normalization": "fixed-direction",
       "status": "accepted",
-      "requires_weapon_visibility_gate": true
+      "requires_weapon_visibility_gate": true,
+      "validation": {
+        "run_id": 35472131984,
+        "artifact_id": 10594040502,
+        "frame_count": 232,
+        "phone_qa_pass": true,
+        "weapon_visibility_pass": true,
+        "android_runtime_run_id": 35497271551,
+        "android_visual_artifact_id": 10601581509,
+        "android_visual_qa_pass": true
+      }
     },
     "shambler": {
       "kind": "enemy",
@@ -7324,6 +7344,15 @@ tasks.configureEach { task ->
       "render": {
         "ortho_scale": 3.25,
         "target_height": 0.58
+      },
+      "validation": {
+        "run_id": 35496717473,
+        "artifact_id": 10601186432,
+        "frame_count": 232,
+        "phone_qa_pass": true,
+        "android_runtime_run_id": 35499754467,
+        "android_visual_artifact_id": 10600929281,
+        "android_visual_qa_pass": true
       }
     },
     "runner": {
@@ -7362,7 +7391,8 @@ tasks.configureEach { task ->
         "master_minimum_margin_px": 40,
         "phone_qa_pass": true,
         "android_runtime_run_id": 34152199690,
-        "android_visual_artifact_id": 10029812483
+        "android_visual_artifact_id": 10029812483,
+        "android_visual_qa_pass": true
       }
     },
     "brute": {
@@ -28291,10 +28321,11 @@ manifest = {
 ## File: tools/sprites/audit_final_art_status.py
 ````python
 #!/usr/bin/env python3
-"""Report final-art maturity from the machine-readable actor contract and published manifests."""
+"""Report final-art maturity from published manifests plus production-contract evidence."""
 ⋮----
 ROOT = Path(__file__).resolve().parents[2]
 LAYOUT = ROOT / "art_sources" / "final-sprite-layout.json"
+CONTRACTS = ROOT / "config" / "actor-production-contracts.json"
 ART = ROOT / "assets" / "art"
 GATES = (
 ⋮----
@@ -28308,17 +28339,32 @@ direct = ART / f"{actor_id}-manifest.json"
 ⋮----
 fallback = ART / "boss-manifest.json"
 ⋮----
+def contract_key(actor_id: str) -> str
+⋮----
 def main() -> int
 ⋮----
 args = parse_args()
 layout = json.loads(LAYOUT.read_text(encoding="utf-8"))
+contracts = json.loads(CONTRACTS.read_text(encoding="utf-8")).get("actors", {})
 rows = []
 ⋮----
-path = manifest_path(actor["id"])
+actor_id = actor["id"]
+path = manifest_path(actor_id)
 data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
-gate_state = {key: data.get(key) is True for key, _ in GATES}
+contract = contracts.get(contract_key(actor_id), {})
+validation = contract.get("validation", {})
+⋮----
+manifest_phone = data.get("phone_qa_pass") is True
+contract_phone = validation.get("phone_qa_pass") is True
+manifest_android = data.get("android_visual_qa_pass") is True
+contract_android = validation.get("android_visual_qa_pass") is True
+manifest_accepted = data.get("android_accepted") is True
+contract_accepted = contract.get("status") == "accepted"
+⋮----
+gate_state = {
 missing_gates = [label for key, label in GATES if not gate_state[key]]
 score = len(GATES) - len(missing_gates)
+drift = []
 ⋮----
 minimum_score = min((r["maturity_score"] for r in rows), default=0)
 summary = {

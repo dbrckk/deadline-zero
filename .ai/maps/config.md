@@ -1732,7 +1732,17 @@ actor-production-contracts.json
       "published_png": "assets/art/rex.png",
       "normalization": "fixed-direction",
       "status": "accepted",
-      "requires_weapon_visibility_gate": true
+      "requires_weapon_visibility_gate": true,
+      "validation": {
+        "run_id": 35472131984,
+        "artifact_id": 10594040502,
+        "frame_count": 232,
+        "phone_qa_pass": true,
+        "weapon_visibility_pass": true,
+        "android_runtime_run_id": 35497271551,
+        "android_visual_artifact_id": 10601581509,
+        "android_visual_qa_pass": true
+      }
     },
     "shambler": {
       "kind": "enemy",
@@ -1761,6 +1771,15 @@ actor-production-contracts.json
       "render": {
         "ortho_scale": 3.25,
         "target_height": 0.58
+      },
+      "validation": {
+        "run_id": 35496717473,
+        "artifact_id": 10601186432,
+        "frame_count": 232,
+        "phone_qa_pass": true,
+        "android_runtime_run_id": 35499754467,
+        "android_visual_artifact_id": 10600929281,
+        "android_visual_qa_pass": true
       }
     },
     "runner": {
@@ -1799,7 +1818,8 @@ actor-production-contracts.json
         "master_minimum_margin_px": 40,
         "phone_qa_pass": true,
         "android_runtime_run_id": 34152199690,
-        "android_visual_artifact_id": 10029812483
+        "android_visual_artifact_id": 10029812483,
+        "android_visual_qa_pass": true
       }
     },
     "brute": {

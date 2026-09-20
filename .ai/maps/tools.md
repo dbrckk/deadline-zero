@@ -1200,10 +1200,11 @@ manifest = {
 ## File: sprites/audit_final_art_status.py
 ```python
 #!/usr/bin/env python3
-"""Report final-art maturity from the machine-readable actor contract and published manifests."""
+"""Report final-art maturity from published manifests plus production-contract evidence."""
 ⋮----
 ROOT = Path(__file__).resolve().parents[2]
 LAYOUT = ROOT / "art_sources" / "final-sprite-layout.json"
+CONTRACTS = ROOT / "config" / "actor-production-contracts.json"
 ART = ROOT / "assets" / "art"
 GATES = (
 ⋮----
@@ -1217,17 +1218,32 @@ direct = ART / f"{actor_id}-manifest.json"
 ⋮----
 fallback = ART / "boss-manifest.json"
 ⋮----
+def contract_key(actor_id: str) -> str
+⋮----
 def main() -> int
 ⋮----
 args = parse_args()
 layout = json.loads(LAYOUT.read_text(encoding="utf-8"))
+contracts = json.loads(CONTRACTS.read_text(encoding="utf-8")).get("actors", {})
 rows = []
 ⋮----
-path = manifest_path(actor["id"])
+actor_id = actor["id"]
+path = manifest_path(actor_id)
 data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
-gate_state = {key: data.get(key) is True for key, _ in GATES}
+contract = contracts.get(contract_key(actor_id), {})
+validation = contract.get("validation", {})
+⋮----
+manifest_phone = data.get("phone_qa_pass") is True
+contract_phone = validation.get("phone_qa_pass") is True
+manifest_android = data.get("android_visual_qa_pass") is True
+contract_android = validation.get("android_visual_qa_pass") is True
+manifest_accepted = data.get("android_accepted") is True
+contract_accepted = contract.get("status") == "accepted"
+⋮----
+gate_state = {
 missing_gates = [label for key, label in GATES if not gate_state[key]]
 score = len(GATES) - len(missing_gates)
+drift = []
 ⋮----
 minimum_score = min((r["maturity_score"] for r in rows), default=0)
 summary = {
