@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 318f49553897dfc540287446ec8b175241904836
-Head: 28ddc156fa21f67e613beccb60d315868d474d98
+Base: 63f72e64852d50d7e577f3372cc45b68c0b316e7
+Head: 624c1570fa5d77a904168f8e6cbfcbaaa87fe84c
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/GearScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java
 
 ## Affected areas
 - core

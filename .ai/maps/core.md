@@ -4738,10 +4738,12 @@ shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.topRail(shapes, metrics);
 UiRenderer.panel(shapes, detail.x, detail.y, detail.width, detail.height);
+drawDetailChrome(shapes, focusedWeapon, equipped);
 ⋮----
 boolean selected = weapon.id.equals(game.profile.selectedWeaponId);
 boolean unlocked = WeaponProgression.unlocked(game.profile, weapon);
 UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == focus, selected);
+drawWeaponCardChrome(shapes, r, weapon, i == focus, selected, unlocked);
 ⋮----
 shapes.setColor(0f, 0f, 0f, .28f);
 shapes.rect(r.x + 3f, r.y + 3f, r.width - 6f, r.height - 6f);
@@ -4757,6 +4759,39 @@ drawChevron(nextPage, true, page < pageCount - 1);
 ⋮----
 drawStatBars(focusedWeapon, equipped);
 shapes.end();
+⋮----
+private void drawWeaponCardChrome(ShapeRenderer shapes, Rectangle r, WeaponDefinition weapon,
+⋮----
+Color accent = unlocked ? elementColor(weapon) : VisualTheme.MUTED;
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, alpha);
+shapes.rect(r.x + 6f, r.y + 6f, 4f, Math.max(0f, r.height - 12f));
+shapes.rect(r.x + 10f, r.y + r.height - 5f, Math.max(0f, r.width - 16f), 3f);
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, equipped ? .095f : .060f);
+shapes.rect(r.x + 10f, r.y + 8f, Math.max(0f, r.width - 18f), Math.max(0f, r.height - 16f));
+⋮----
+float markerW = Math.min(64f, r.width * .20f);
+shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .92f);
+shapes.rect(r.x + r.width - markerW - 8f, r.y + 8f, markerW, 3f);
+⋮----
+private void drawDetailChrome(ShapeRenderer shapes, WeaponDefinition weapon, WeaponDefinition equipped) {
+Color accent = elementColor(weapon);
+float dpsDelta = paperDps(weapon) - paperDps(equipped);
+Color compare = Math.abs(dpsDelta) < .05f ? VisualTheme.TEXT_DIM
+: dpsDelta > 0f ? VisualTheme.positive() : VisualTheme.danger();
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, .76f);
+shapes.rect(detail.x + 5f, detail.y + detail.height - 5f, Math.max(0f, detail.width - 10f), 3f);
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, .06f);
+shapes.rect(previewX, detail.y + 10f, Math.max(0f, previewW), Math.max(0f, detail.height - 20f));
+⋮----
+shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .48f);
+shapes.rect(splitX, detail.y + 12f, 2f, Math.max(0f, detail.height - 24f));
+⋮----
+shapes.setColor(compare.r, compare.g, compare.b, .68f);
+shapes.rect(splitX + 12f, detail.y + 9f, Math.max(0f, detail.width - (splitX - detail.x) - 24f), 3f);
 ⋮----
 private void drawChevron(Rectangle bounds, boolean right, boolean enabled) {
 ⋮----
@@ -6768,10 +6803,27 @@ viewport.apply(batch, shapes);
 shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.card(shapes, hero.x, hero.y, hero.width, hero.height, true, false);
+shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .22f);
+shapes.rect(hero.x + 6f, hero.y + hero.height - 6f, hero.width - 12f, 4f);
+⋮----
+Color[] rewardAccents = {VisualTheme.GOLD, VisualTheme.accent(), VisualTheme.VIOLET};
 ⋮----
 UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, i == 0);
 ⋮----
+shapes.setColor(accent.r, accent.g, accent.b, .90f);
+shapes.rect(r.x, r.y + r.height - 4f, r.width, 4f);
+⋮----
 UiRenderer.panel(shapes, coaching.x, coaching.y, coaching.width, coaching.height);
+shapes.setColor(COACHING_ACCENT.r, COACHING_ACCENT.g, COACHING_ACCENT.b, .72f);
+shapes.rect(coaching.x, coaching.y, 4f, coaching.height);
+if (result.drop() != null) {
+Color dropAccent = VisualTheme.equipmentRarity(result.drop().rarity);
+⋮----
+shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .18f);
+shapes.rect(splitX, coaching.y + 8f, coaching.width * .37f - 8f, coaching.height - 16f);
+shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .90f);
+shapes.rect(splitX, coaching.y + coaching.height - 4f, coaching.width * .37f - 8f, 4f);
+⋮----
 UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.SELECTED);
 UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, UiRenderer.ButtonState.NORMAL);
 UiRenderer.button(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height,
@@ -6800,6 +6852,9 @@ font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
 font.setColor(VisualTheme.GOLD);
 font.draw(batch, f("result.contract", result.contractTitle(), result.contractBonusPercent()),
 ⋮----
+font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
+font.setColor(VisualTheme.accent());
+⋮----
 font.setColor(result.threatTier() > 0 ? VisualTheme.GOLD : VisualTheme.TEXT_DIM);
 font.draw(batch, f("result.threat", result.threatTier(), result.threatBonusPercent()),
 ⋮----
@@ -6822,14 +6877,16 @@ font.draw(batch, t(advice.headlineKey()), coaching.x + 24f, y, coaching.width * 
 ⋮----
 font.draw(batch, t(advice.detailKey()), coaching.x + 24f, y - 30f, coaching.width * .58f, Align.left, true);
 ⋮----
-if (result.drop() != null) {
+Color rarity = VisualTheme.equipmentRarity(result.drop().rarity);
+⋮----
+font.setColor(rarity);
+font.draw(batch, t(result.drop().rarityKey()),
 ⋮----
 font.draw(batch, f("result.drop", t(result.drop().rarityKey()), localizedName(result.drop()), result.drop().level),
 ⋮----
 private void drawActions() {
 String[] labels = {"BASE", "RETRY", bonusClaimed ? t("result.doubleClaimed") : t("result.doubleOffer")};
 ⋮----
-font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
 font.setColor(i == 2 && bonusClaimed ? VisualTheme.MUTED : i == 0 ? VisualTheme.TEXT_STRONG : VisualTheme.TEXT);
 font.draw(batch, labels[i], r.x + 8f, r.y + r.height * .60f, r.width - 16f, Align.center, true);
 ⋮----

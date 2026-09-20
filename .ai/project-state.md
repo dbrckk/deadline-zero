@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T20:02:23Z
+Generated: 2026-09-20T20:28:28Z
 
 ### Git
 - Branch: `main`
-- Head: `28ddc156fa21`
-- Commit date: 2026-09-20T22:02:12+02:00
-- Commit: ui(gear): strengthen rarity selection and comparison hierarchy (#252)
+- Head: `624c1570fa5d`
+- Commit date: 2026-09-20T22:28:08+02:00
+- Commit: ui(arsenal): strengthen element and selection hierarchy (#254)
 - Tracked files: 834
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GearScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 
 ### Project signals
 - `build.gradle`
