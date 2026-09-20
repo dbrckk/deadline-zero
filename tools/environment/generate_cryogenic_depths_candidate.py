@@ -178,3 +178,5 @@ def main():
 if __name__=="__main__": raise SystemExit(main())
 
 # Deterministic by design: reruns must not mutate approved candidate masters.
+
+# Regeneration trigger: seam-safe floor masters.
