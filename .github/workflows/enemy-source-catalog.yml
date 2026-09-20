@@ -5,7 +5,6 @@ on:
   push:
     paths:
       - '.github/workflows/enemy-source-catalog.yml'
-      - 'config/actor-production-contracts.json'
       - 'tools/blender/catalog_blend_actions.py'
 
 permissions:
@@ -14,7 +13,7 @@ permissions:
 jobs:
   catalog:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -43,14 +42,29 @@ jobs:
           PY
           cat /tmp/source-output >> "$GITHUB_OUTPUT"
 
-      - name: Download official pack once
+      - name: Download official pack with retry
         env:
           SOURCE_FOLDER: ${{ steps.source.outputs.folder }}
         run: |
           set -euo pipefail
           python3 -m pip install --disable-pip-version-check 'gdown>=5.2,<6'
-          mkdir -p build/quaternius-zombie-pack
-          gdown --folder --remaining-ok "$SOURCE_FOLDER" -O build/quaternius-zombie-pack
+          success=false
+          for attempt in 1 2 3; do
+            echo "Quaternius pack download attempt $attempt/3"
+            rm -rf build/quaternius-zombie-pack
+            mkdir -p build/quaternius-zombie-pack
+            if gdown --folder --remaining-ok "$SOURCE_FOLDER" -O build/quaternius-zombie-pack; then
+              success=true
+              break
+            fi
+            echo "Download attempt $attempt failed; retrying from a clean directory" >&2
+            sleep $((attempt * 5))
+          done
+          if [ "$success" != true ]; then
+            echo "Unable to download the official Quaternius pack after 3 attempts" >&2
+            exit 1
+          fi
+          test -n "$(find build/quaternius-zombie-pack -type f -name '*.blend' -print -quit)"
 
       - name: Install Blender for structural source inspection
         run: |
