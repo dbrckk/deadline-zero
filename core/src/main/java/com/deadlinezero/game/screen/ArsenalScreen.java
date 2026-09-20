@@ -100,6 +100,7 @@ public final class ArsenalScreen extends ScreenAdapter {
         UiRenderer.background(shapes, metrics, visualTime);
         UiRenderer.topRail(shapes, metrics);
         UiRenderer.panel(shapes, detail.x, detail.y, detail.width, detail.height);
+        drawDetailChrome(shapes, focusedWeapon, equipped);
 
         for (int i = pageStart; i < pageEnd; i++) {
             int local = i - pageStart;
@@ -108,6 +109,7 @@ public final class ArsenalScreen extends ScreenAdapter {
             boolean selected = weapon.id.equals(game.profile.selectedWeaponId);
             boolean unlocked = WeaponProgression.unlocked(game.profile, weapon);
             UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == focus, selected);
+            drawWeaponCardChrome(shapes, r, weapon, i == focus, selected, unlocked);
             if (!unlocked) {
                 shapes.setColor(0f, 0f, 0f, .28f);
                 shapes.rect(r.x + 3f, r.y + 3f, r.width - 6f, r.height - 6f);
@@ -127,6 +129,49 @@ public final class ArsenalScreen extends ScreenAdapter {
 
         drawStatBars(focusedWeapon, equipped);
         shapes.end();
+    }
+
+    private void drawWeaponCardChrome(ShapeRenderer shapes, Rectangle r, WeaponDefinition weapon,
+                                      boolean focused, boolean equipped, boolean unlocked) {
+        Color accent = unlocked ? elementColor(weapon) : VisualTheme.MUTED;
+        float alpha = !unlocked ? .18f : equipped ? .96f : focused ? .78f : .42f;
+
+        shapes.setColor(accent.r, accent.g, accent.b, alpha);
+        shapes.rect(r.x + 6f, r.y + 6f, 4f, Math.max(0f, r.height - 12f));
+        shapes.rect(r.x + 10f, r.y + r.height - 5f, Math.max(0f, r.width - 16f), 3f);
+
+        if (focused || equipped) {
+            shapes.setColor(accent.r, accent.g, accent.b, equipped ? .095f : .060f);
+            shapes.rect(r.x + 10f, r.y + 8f, Math.max(0f, r.width - 18f), Math.max(0f, r.height - 16f));
+        }
+
+        if (equipped) {
+            float markerW = Math.min(64f, r.width * .20f);
+            shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .92f);
+            shapes.rect(r.x + r.width - markerW - 8f, r.y + 8f, markerW, 3f);
+        }
+    }
+
+    private void drawDetailChrome(ShapeRenderer shapes, WeaponDefinition weapon, WeaponDefinition equipped) {
+        Color accent = elementColor(weapon);
+        float dpsDelta = paperDps(weapon) - paperDps(equipped);
+        Color compare = Math.abs(dpsDelta) < .05f ? VisualTheme.TEXT_DIM
+            : dpsDelta > 0f ? VisualTheme.positive() : VisualTheme.danger();
+
+        shapes.setColor(accent.r, accent.g, accent.b, .76f);
+        shapes.rect(detail.x + 5f, detail.y + detail.height - 5f, Math.max(0f, detail.width - 10f), 3f);
+
+        float previewX = detail.x + 12f;
+        float previewW = detail.width * .39f - 18f;
+        shapes.setColor(accent.r, accent.g, accent.b, .06f);
+        shapes.rect(previewX, detail.y + 10f, Math.max(0f, previewW), Math.max(0f, detail.height - 20f));
+
+        float splitX = detail.x + detail.width * .40f;
+        shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .48f);
+        shapes.rect(splitX, detail.y + 12f, 2f, Math.max(0f, detail.height - 24f));
+
+        shapes.setColor(compare.r, compare.g, compare.b, .68f);
+        shapes.rect(splitX + 12f, detail.y + 9f, Math.max(0f, detail.width - (splitX - detail.x) - 24f), 3f);
     }
 
     private void drawChevron(Rectangle bounds, boolean right, boolean enabled) {
