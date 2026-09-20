@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse,json,math,random
 from pathlib import Path
 from PIL import Image,ImageChops,ImageDraw,ImageEnhance,ImageFilter
+from candidate_utils import make_tileable_edges
 
 SIZE=512
 SLOTS=("floor/concrete_a","floor/concrete_b","floor/concrete_c","floor/hazard_a",
@@ -35,7 +36,7 @@ def frost(im,seed,count=26):
 def finish(im,slot):
     im=im.convert("RGBA")
     if slot.startswith("floor/"):
-        im=ImageEnhance.Contrast(im).enhance(1.08); im=ImageEnhance.Sharpness(im).enhance(1.18); im.putalpha(Image.new("L",im.size,255)); return im
+        im=ImageEnhance.Contrast(im).enhance(1.08); im=ImageEnhance.Sharpness(im).enhance(1.18); im.putalpha(Image.new("L",im.size,255)); return make_tileable_edges(im)
     a=im.getchannel("A"); shadow=Image.new("RGBA",im.size,(0,0,0,0)); sm=a.filter(ImageFilter.GaussianBlur(12)); shifted=Image.new("L",im.size,0); shifted.paste(sm,(10,14)); shadow.putalpha(shifted.point(lambda p:int(p*.30)))
     out=Image.alpha_composite(shadow,im); inner=ImageChops.subtract(a,a.filter(ImageFilter.MinFilter(7))); hi=Image.new("RGBA",im.size,(220,245,250,0)); hi.putalpha(inner.point(lambda p:int(p*.26))); return ImageEnhance.Sharpness(Image.alpha_composite(out,hi)).enhance(1.24)
 
