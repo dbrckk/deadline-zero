@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/shambler-android-acceptance.yml'
+      - 'core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java'
+      - 'core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java'
+      - 'android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java'
   workflow_run:
     workflows: ["Shambler Animation Smoke"]
     types: [completed]
@@ -32,10 +35,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Checkout current main
+      - name: Checkout candidate runtime
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || 'main' }}
 
       - name: Resolve validated Shambler smoke
         id: source
