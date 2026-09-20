@@ -1,10 +1,10 @@
 # Change impact
 
-Base: e3557631f5a9e01b305089bbb9d46f680f00f035
-Head: d5f6b766f22c06674905b73052f25f527ed7be9c
+Base: f69f4975c445de9bc0031ab6a8372891272227b7
+Head: cdffa38a1e15b8627b98fdc950f84ccace41e6cc
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
+- M core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java
 
 ## Affected areas
 - core

@@ -22,36 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T19:08:59Z
+Generated: 2026-09-20T19:23:58Z
 
 ### Git
 - Branch: `main`
-- Head: `d5f6b766f22c`
-- Commit date: 2026-09-20T21:08:47+02:00
-- Commit: ui(combat): premiumize game-over and revive overlay (#248)
+- Head: `cdffa38a1e15`
+- Commit date: 2026-09-20T21:23:46+02:00
+- Commit: ui(boss): strengthen warning and phase HUD presentation (#249)
 - Tracked files: 834
 
 ### Recently changed files
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `assets/art/environment-cinder_foundry.png`
 - `assets/art/environment-cryo_vault.png`
 - `assets/art/environment-cryogenic_depths.png`
 - `assets/art/environment-null_sector.png`
-- `.github/workflows/environment-semantic-qa.yml`
-- `art_sources/environment/cinder_foundry/floor/concrete_a.png`
-- `art_sources/environment/cinder_foundry/floor/concrete_b.png`
-- `art_sources/environment/cinder_foundry/floor/concrete_c.png`
-- `art_sources/environment/cinder_foundry/floor/hazard_a.png`
-- `art_sources/environment/cryo_vault/floor/concrete_a.png`
-- `art_sources/environment/cryo_vault/floor/concrete_b.png`
-- `art_sources/environment/cryo_vault/floor/concrete_c.png`
-- `art_sources/environment/cryo_vault/floor/hazard_a.png`
-- `art_sources/environment/cryogenic_depths/floor/concrete_a.png`
-- `art_sources/environment/cryogenic_depths/floor/concrete_b.png`
-- `art_sources/environment/cryogenic_depths/floor/concrete_c.png`
-- `art_sources/environment/cryogenic_depths/floor/hazard_a.png`
-- `art_sources/environment/null_sector/floor/concrete_a.png`
 
 ### Project signals
 - `build.gradle`

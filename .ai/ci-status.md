@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 5 success / 1 failure / 2 active
+Summary: 5 success / 0 failure / 3 active
 
-- Verify: queued / pending (d5f6b766)
-- Responsive UI QA: in_progress / pending (d5f6b766)
-- Verify: completed / success (85abd2f7)
-- Responsive UI QA: completed / success (85abd2f7)
-- Responsive UI QA: completed / success (fbc9c5ac)
-- Verify: completed / success (fbc9c5ac)
-- Responsive UI QA: completed / success (3cb63e53)
-- Verify: completed / failure (3cb63e53)
-
-## Latest failed run structure
-- Job: core
-  - Failed step: Compile and test core
+- Responsive UI QA: in_progress / pending (cdffa38a)
+- Verify: in_progress / pending (cdffa38a)
+- Deadline Zero Work Watch: completed / success (f69f4975)
+- Verify: completed / success (66a62eec)
+- Responsive UI QA: completed / success (66a62eec)
+- Verify: completed / success (f4bf2077)
+- Responsive UI QA: in_progress / pending (f4bf2077)
+- Verify: completed / success (d5f6b766)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

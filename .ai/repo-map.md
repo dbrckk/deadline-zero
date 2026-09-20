@@ -18246,6 +18246,7 @@ UiRenderer.progress(shapes, timeline.x, timeline.y, timeline.width, timeline.hei
 director.bossProgress(), director.bossWarning()
 ? (AccessibilitySettings.active().highContrastTelegraphs ? Color.WHITE : VisualTheme.danger())
 : (AccessibilitySettings.active().highContrastTelegraphs ? VisualTheme.CYAN : VisualTheme.CYAN_SOFT));
+drawBossWarningChrome(shapes, director, timeline);
 ⋮----
 if (boss != null && layout.boss() != null) {
 Rectangle b = layout.boss();
@@ -18256,6 +18257,7 @@ UiRenderer.progress(shapes, b.x + 4f, b.y + 4f, b.width - 8f, b.height - 8f, rat
 shapes.setColor(VisualTheme.SURFACE_0);
 shapes.rect(b.x + b.width * .33f, b.y + 3f, 2f, b.height - 6f);
 shapes.rect(b.x + b.width * .66f, b.y + 3f, 2f, b.height - 6f);
+drawBossPhaseChrome(shapes, b, boss, identity);
 ⋮----
 if (!onboarding.completed()) {
 Rectangle hint = layout.onboarding();
@@ -18293,6 +18295,41 @@ shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SU
 float tickW = Math.max(1f, 1.5f * ui());
 ⋮----
 shapes.rect(px - tickW * .5f, y + 2f, tickW, Math.max(0f, h - 4f));
+⋮----
+private void drawBossWarningChrome(ShapeRenderer shapes, WaveDirector director, Rectangle timeline) {
+if (!director.bossWarning() || director.bossSpawned()) return;
+float seconds = Math.max(0f, director.secondsUntilBoss());
+float urgency = 1f - MathUtils.clamp(seconds / 30f, 0f, 1f);
+float pulse = AccessibilitySettings.active().minimizesFlashes()
+⋮----
+: .58f + .22f * (MathUtils.sin(seconds * 4.8f) * .5f + .5f);
+Color danger = AccessibilitySettings.active().highContrastTelegraphs ? Color.WHITE : VisualTheme.danger();
+⋮----
+shapes.setColor(danger.r, danger.g, danger.b, .10f + urgency * .14f);
+shapes.rect(timeline.x - pad, timeline.y - pad, timeline.width + pad * 2f, timeline.height + pad * 2f);
+shapes.setColor(danger.r, danger.g, danger.b, pulse);
+shapes.rect(timeline.x - pad, timeline.y + timeline.height + pad - 2f, timeline.width + pad * 2f, 2f);
+shapes.rect(timeline.x - pad, timeline.y - pad, timeline.width + pad * 2f, 2f);
+⋮----
+float notchW = Math.max(18f, timeline.width * .025f);
+⋮----
+shapes.setColor(danger.r, danger.g, danger.b, .88f);
+shapes.rect(cx - notchW * .5f, timeline.y + timeline.height + pad - 5f, notchW, 5f);
+⋮----
+private void drawBossPhaseChrome(ShapeRenderer shapes, Rectangle bossRect, Enemy boss, Color identity) {
+int phase = boss.bossPhases == null ? 1 : boss.bossPhases.phase();
+int clampedPhase = MathUtils.clamp(phase, 1, 3);
+⋮----
+float capH = Math.max(2f, 2.5f * ui());
+⋮----
+shapes.setColor(identity.r, identity.g, identity.b, alpha);
+shapes.rect(bossRect.x + i * segmentW + 2f, bossRect.y + bossRect.height - capH - 2f,
+Math.max(0f, segmentW - 4f), capH);
+⋮----
+: .16f + .08f * (MathUtils.sin(clampedPhase * 2.1f + boss.hp * .01f) * .5f + .5f);
+shapes.setColor(identity.r, identity.g, identity.b, pulse);
+shapes.rect(bossRect.x - 5f, bossRect.y - 5f, bossRect.width + 10f, 3f);
+shapes.rect(bossRect.x - 5f, bossRect.y + bossRect.height + 2f, bossRect.width + 10f, 3f);
 ⋮----
 private void drawMobileControls(ShapeRenderer shapes, Player player, CombatHudLayout.Layout layout,
 ⋮----
@@ -18351,7 +18388,7 @@ font.setColor(director.bossWarning() ? (contrast ? Color.WHITE : VisualTheme.dan
 font.draw(batch, director.bossWarning() ? f("hud.bossSignal", remaining) : f("hud.bossEta", remaining),
 layout.timeline().x, layout.timeline().y + 29f * s, layout.timeline().width, Align.center, false);
 } else if (boss != null && layout.boss() != null) {
-int phase = boss.bossPhases == null ? 1 : boss.bossPhases.phase();
+⋮----
 font.setColor(contrast ? Color.WHITE : bossColor(boss));
 font.draw(batch, f("hud.bossPhase", bossName(boss), phase), layout.boss().x,
 layout.boss().y + layout.boss().height + 21f * s, layout.boss().width, Align.center, false);
