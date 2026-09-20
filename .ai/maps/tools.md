@@ -59,6 +59,7 @@ environment/
   generate_cryogenic_depths_candidate.py
   generate_null_sector_candidate.py
   generate_quarantine_yard_candidate.py
+  install_all_environment_candidates.py
   pack_environment_art.py
   test_upsert_environment_atlas.py
   test_validate_environment_art_contract.py
@@ -1769,6 +1770,62 @@ img=premium_finish(img, slot, 1000 + len(produced) * 97)
 alpha=Image.new("L",img.size,255)
 ⋮----
 manifest={
+```
+
+## File: environment/install_all_environment_candidates.py
+```python
+#!/usr/bin/env python3
+"""Install all authored environment candidate packs into the runtime atlas.
+
+This is an integration helper: it packs every contracted biome from
+art_sources/environment/<biome>, installs the generated atlas pages into
+assets/art/game.atlas, then enforces 70/70 runtime coverage.
+
+Candidate manifests remain candidate manifests; this tool does not mark visual
+QA or production approval as complete.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+CONTRACT = ROOT / "config" / "environment-art-contract.json"
+BUILD = ROOT / "build" / "environment_art"
+PACK = ROOT / "tools" / "environment" / "pack_environment_art.py"
+UPSERT = ROOT / "tools" / "environment" / "upsert_environment_atlas.py"
+VALIDATE = ROOT / "tools" / "environment" / "validate_environment_art_contract.py"
+ATLAS = ROOT / "assets" / "art" / "game.atlas"
+⋮----
+def run(*args: str) -> None
+⋮----
+def load_biomes() -> list[str]
+⋮----
+data = json.loads(CONTRACT.read_text(encoding="utf-8"))
+biomes = [item["id"] for item in data["biomes"]]
+⋮----
+def validate_candidate_manifest(biome: str) -> None
+⋮----
+manifest = ROOT / "art_sources" / "environment" / biome / "candidate-manifest.json"
+⋮----
+data = json.loads(manifest.read_text(encoding="utf-8"))
+⋮----
+assets = data.get("assets")
+⋮----
+# Integration must never silently promote art approval state.
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+atlas = args.atlas.resolve()
+⋮----
+biomes = load_biomes()
+⋮----
+fragment = BUILD / f"environment-{biome}.atlas.txt"
+page = BUILD / f"environment-{biome}.png"
+⋮----
+installed_pages = [atlas.parent / f"environment-{biome}.png" for biome in biomes]
+missing_pages = [str(path) for path in installed_pages if not path.is_file()]
+⋮----
+# Runtime integration is intentionally idempotent across CI reruns.
 ```
 
 ## File: environment/pack_environment_art.py

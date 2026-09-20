@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 3 success / 0 failure / 4 active
+Summary: 0 success / 4 failure / 4 active
 
-- Cryo Vault Candidate Pack: in_progress / pending (db0532ae)
-- Verify: pending / pending (db0532ae)
-- Responsive UI QA: in_progress / pending (db0532ae)
-- Verify: in_progress / pending (2b61b5c8)
-- Cryogenic Depths Candidate Pack: completed / success (2b61b5c8)
-- Responsive UI QA: completed / cancelled (2b61b5c8)
-- Responsive UI QA: completed / success (d72e8550)
-- Verify: completed / success (d72e8550)
+- Responsive UI QA: in_progress / pending (ee53dbdf)
+- Integrate Environment Candidates: in_progress / pending (ee53dbdf)
+- Verify: in_progress / pending (ee53dbdf)
+- Verify: completed / action_required (78ab8461)
+- Responsive UI QA: completed / action_required (78ab8461)
+- Environment Semantic QA: completed / action_required (78ab8461)
+- Environment Semantic QA: completed / failure (81e20eed)
+- Responsive UI QA: in_progress / pending (81e20eed)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

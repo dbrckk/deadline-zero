@@ -22,16 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T17:48:02Z
+Generated: 2026-09-20T17:59:54Z
 
 ### Git
 - Branch: `main`
-- Head: `db0532aefb2f`
-- Commit date: 2026-09-20T19:47:47+02:00
-- Commit: Add Cryo Vault environment candidate pack (#241)
-- Tracked files: 824
+- Head: `ee53dbdfb8b0`
+- Commit date: 2026-09-20T19:59:41+02:00
+- Commit: Integrate all 70 biome environment regions into runtime atlas (#243)
+- Tracked files: 831
 
 ### Recently changed files
+- `.github/workflows/integrate-environment-candidates.yml`
+- `assets/art/environment-cinder_foundry.png`
+- `assets/art/environment-cryo_vault.png`
+- `assets/art/environment-cryogenic_depths.png`
+- `assets/art/environment-null_sector.png`
+- `assets/art/environment-quarantine_yard.png`
+- `assets/art/game.atlas`
+- `tools/environment/install_all_environment_candidates.py`
 - `.github/workflows/cryo-vault-candidate.yml`
 - `art_sources/environment/cryo_vault/candidate-manifest.json`
 - `art_sources/environment/cryo_vault/decal/blood_a.png`
@@ -44,14 +52,6 @@ Generated: 2026-09-20T17:48:02Z
 - `art_sources/environment/cryo_vault/prop/barrier_a.png`
 - `art_sources/environment/cryo_vault/prop/beacon_a.png`
 - `art_sources/environment/cryo_vault/prop/crate_a.png`
-- `art_sources/environment/cryo_vault/prop/debris_a.png`
-- `art_sources/environment/cryo_vault/prop/debris_b.png`
-- `art_sources/environment/cryo_vault/prop/wall_a.png`
-- `art_sources/environment/cryo_vault/prop/wall_b.png`
-- `tools/environment/generate_cryo_vault_candidate.py`
-- `.github/workflows/cryogenic-depths-candidate.yml`
-- `art_sources/environment/cryogenic_depths/candidate-manifest.json`
-- `art_sources/environment/cryogenic_depths/decal/blood_a.png`
 
 ### Project signals
 - `build.gradle`

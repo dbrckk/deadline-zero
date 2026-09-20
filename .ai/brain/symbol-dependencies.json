@@ -5,456 +5,46 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "clamp": {
+    "run": {
       "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 15,
-        "end": 15
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "transparent": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 16,
-        "end": 16
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "noise": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 17,
-        "end": 23
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "clamp",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 15,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "panels": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 24,
+        "file": "tools/environment/install_all_environment_candidates.py",
+        "start": 28,
         "end": 29
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "frost": {
+    "load_biomes": {
       "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 30,
-        "end": 34
+        "file": "tools/environment/install_all_environment_candidates.py",
+        "start": 32,
+        "end": 37
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "finish": {
+    "validate_candidate_manifest": {
       "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 35,
-        "end": 40
+        "file": "tools/environment/install_all_environment_candidates.py",
+        "start": 40,
+        "end": 57
       },
       "symbol_dependencies": [],
       "dependency_count": 0
-    },
-    "floor_a": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 42,
-        "end": 43
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "frost",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "noise",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 17,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "panels",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 24,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "floor_b": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 44,
-        "end": 47
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "frost",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "noise",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 17,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "panels",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 24,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "floor_c": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 48,
-        "end": 49
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "frost",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 30,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "noise",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 17,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "panels",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 24,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "floor_hazard": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 50,
-        "end": 53
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "noise",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 17,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "panels",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 24,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "ice_crack": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 55,
-        "end": 62
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "transparent",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "blood": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 63,
-        "end": 68
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "transparent",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "scorch": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 69,
-        "end": 72
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "transparent",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "framed": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 74,
-        "end": 75
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "transparent",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "barrier": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 76,
-        "end": 79
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "framed",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 74,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "debris": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 80,
-        "end": 86
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "transparent",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "wall": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 87,
-        "end": 92
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "framed",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 74,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "crate": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 93,
-        "end": 94
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "framed",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 74,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "beacon": {
-      "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 95,
-        "end": 98
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "transparent",
-          "definitions": [
-            {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 16,
-              "kind": "function",
-              "language": "python"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
     },
     "main": {
       "source": {
-        "file": "tools/environment/generate_cryo_vault_candidate.py",
-        "start": 105,
-        "end": 225
+        "file": "tools/environment/install_all_environment_candidates.py",
+        "start": 60,
+        "end": 180
       },
       "symbol_dependencies": [
         {
-          "symbol": "finish",
+          "symbol": "load_biomes",
           "definitions": [
             {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 35,
+              "file": "tools/environment/install_all_environment_candidates.py",
+              "line": 32,
               "kind": "function",
               "language": "python"
             }
@@ -462,42 +52,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "frost",
+          "symbol": "run",
           "definitions": [
             {
-              "file": "tools/environment/generate_cryo_vault_candidate.py",
-              "line": 30,
+              "file": "tools/environment/install_all_environment_candidates.py",
+              "line": 28,
               "kind": "function",
               "language": "python"
             }
           ],
           "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "seams": {
-      "source": {
-        "file": "tools/environment/generate_cryogenic_depths_candidate.py",
-        "start": 26,
-        "end": 33
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "crack": {
-      "source": {
-        "file": "tools/environment/generate_cryogenic_depths_candidate.py",
-        "start": 82,
-        "end": 92
-      },
-      "symbol_dependencies": [
+        },
         {
-          "symbol": "transparent",
+          "symbol": "validate_candidate_manifest",
           "definitions": [
             {
-              "file": "tools/environment/generate_cryogenic_depths_candidate.py",
-              "line": 16,
+              "file": "tools/environment/install_all_environment_candidates.py",
+              "line": 40,
               "kind": "function",
               "language": "python"
             }
@@ -505,7 +76,7 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 3
     }
   }
 }

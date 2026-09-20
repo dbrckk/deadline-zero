@@ -3979,10 +3979,11 @@
         "tools/environment/generate_cryogenic_depths_candidate.py",
         "tools/environment/generate_null_sector_candidate.py",
         "tools/environment/generate_quarantine_yard_candidate.py",
+        "tools/environment/install_all_environment_candidates.py",
         "tools/environment/pack_environment_art.py",
         "tools/environment/validate_environment_art_contract.py"
       ],
-      "in_degree": 35,
+      "in_degree": 36,
       "out_degree": 0
     },
     "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": {
@@ -6309,6 +6310,14 @@
       "out_degree": 1
     },
     "tools/environment/generate_quarantine_yard_candidate.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/environment/install_all_environment_candidates.py": {
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
       ],

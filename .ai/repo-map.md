@@ -51,6 +51,7 @@ The content is organized as follows:
     cryogenic-depths-candidate.yml
     deadline-zero-work-watch.yml
     enemy-source-catalog.yml
+    integrate-environment-candidates.yml
     null-sector-candidate.yml
     quarantine-yard-candidate.yml
     responsive-ui-qa.yml
@@ -585,6 +586,7 @@ tools/
     generate_cryogenic_depths_candidate.py
     generate_null_sector_candidate.py
     generate_quarantine_yard_candidate.py
+    install_all_environment_candidates.py
     pack_environment_art.py
     test_upsert_environment_atlas.py
     test_validate_environment_art_contract.py
@@ -1985,6 +1987,102 @@ jobs:
             build/blend-inspection/
           if-no-files-found: error
           retention-days: 14
+````
+
+## File: .github/workflows/integrate-environment-candidates.yml
+````yaml
+name: Integrate Environment Candidates
+
+on:
+  push:
+    paths:
+      - '.github/workflows/integrate-environment-candidates.yml'
+      - 'tools/environment/install_all_environment_candidates.py'
+      - 'tools/environment/pack_environment_art.py'
+      - 'tools/environment/upsert_environment_atlas.py'
+      - 'tools/environment/validate_environment_art_contract.py'
+      - 'config/environment-art-contract.json'
+      - 'art_sources/environment/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: integrate-environment-candidates-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install image tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+
+      - name: Install all five candidate packs into runtime atlas
+        run: |
+          set -euo pipefail
+          python3 tools/environment/install_all_environment_candidates.py
+          python3 tools/environment/validate_environment_art_contract.py --require-complete --json > build/environment_art/runtime-coverage.json
+          test "$(find assets/art -maxdepth 1 -type f -name 'environment-*.png' | wc -l)" -ge 5
+
+      - name: Run environment tooling tests
+        run: |
+          set -euo pipefail
+          python3 tools/environment/test_upsert_environment_atlas.py
+          python3 tools/environment/test_validate_environment_art_contract.py
+
+      - name: Assert candidate approval state remains explicit
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          biomes=['quarantine_yard','cinder_foundry','null_sector','cryo_vault','cryogenic_depths']
+          for biome in biomes:
+              p=Path('art_sources/environment')/biome/'candidate-manifest.json'
+              d=json.loads(p.read_text())
+              assert d['asset_count']==14
+              assert d['production_ready'] is False
+              assert d['visual_qa_pass'] is False
+          print('candidate approval-state guard PASS')
+          PY
+
+      - name: Upload runtime integration review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: environment-runtime-integration-${{ github.run_number }}
+          path: |
+            build/environment_art/runtime-coverage.json
+            build/environment_art/environment-*.manifest.json
+            build/environment_art/environment-*.png
+            assets/art/game.atlas
+            assets/art/environment-*.png
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Commit integrated runtime atlas to branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/art/game.atlas assets/art/environment-*.png
+          if git diff --cached --quiet; then
+            echo "Runtime environment atlas already current"
+            exit 0
+          fi
+          git commit -m "art(environment): install 70 biome runtime regions"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 ````
 
 ## File: .github/workflows/null-sector-candidate.yml
@@ -29574,6 +29672,62 @@ img=premium_finish(img, slot, 1000 + len(produced) * 97)
 alpha=Image.new("L",img.size,255)
 ⋮----
 manifest={
+````
+
+## File: tools/environment/install_all_environment_candidates.py
+````python
+#!/usr/bin/env python3
+"""Install all authored environment candidate packs into the runtime atlas.
+
+This is an integration helper: it packs every contracted biome from
+art_sources/environment/<biome>, installs the generated atlas pages into
+assets/art/game.atlas, then enforces 70/70 runtime coverage.
+
+Candidate manifests remain candidate manifests; this tool does not mark visual
+QA or production approval as complete.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+CONTRACT = ROOT / "config" / "environment-art-contract.json"
+BUILD = ROOT / "build" / "environment_art"
+PACK = ROOT / "tools" / "environment" / "pack_environment_art.py"
+UPSERT = ROOT / "tools" / "environment" / "upsert_environment_atlas.py"
+VALIDATE = ROOT / "tools" / "environment" / "validate_environment_art_contract.py"
+ATLAS = ROOT / "assets" / "art" / "game.atlas"
+⋮----
+def run(*args: str) -> None
+⋮----
+def load_biomes() -> list[str]
+⋮----
+data = json.loads(CONTRACT.read_text(encoding="utf-8"))
+biomes = [item["id"] for item in data["biomes"]]
+⋮----
+def validate_candidate_manifest(biome: str) -> None
+⋮----
+manifest = ROOT / "art_sources" / "environment" / biome / "candidate-manifest.json"
+⋮----
+data = json.loads(manifest.read_text(encoding="utf-8"))
+⋮----
+assets = data.get("assets")
+⋮----
+# Integration must never silently promote art approval state.
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+atlas = args.atlas.resolve()
+⋮----
+biomes = load_biomes()
+⋮----
+fragment = BUILD / f"environment-{biome}.atlas.txt"
+page = BUILD / f"environment-{biome}.png"
+⋮----
+installed_pages = [atlas.parent / f"environment-{biome}.png" for biome in biomes]
+missing_pages = [str(path) for path in installed_pages if not path.is_file()]
+⋮----
+# Runtime integration is intentionally idempotent across CI reruns.
 ````
 
 ## File: tools/environment/pack_environment_art.py
