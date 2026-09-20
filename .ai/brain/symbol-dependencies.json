@@ -4,5 +4,58 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "parse_args": {
+      "source": {
+        "file": "tools/sprites/audit_final_art_status.py",
+        "start": 20,
+        "end": 23
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "manifest_path": {
+      "source": {
+        "file": "tools/sprites/audit_final_art_status.py",
+        "start": 26,
+        "end": 34
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "main": {
+      "source": {
+        "file": "tools/sprites/audit_final_art_status.py",
+        "start": 37,
+        "end": 157
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "manifest_path",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_final_art_status.py",
+              "line": 26,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "parse_args",
+          "definitions": [
+            {
+              "file": "tools/sprites/audit_final_art_status.py",
+              "line": 20,
+              "kind": "function",
+              "language": "python"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    }
+  }
 }

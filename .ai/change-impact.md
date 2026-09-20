@@ -1,13 +1,13 @@
 # Change impact
 
-Base: ac6e58992e6c0691f8a09d924136e909394af32c
-Head: a2e0f6d9467483f7cf8cbb4883762de8256b9826
+Base: 09e6bf628bded37ebee1f40262145ef08e6451f5
+Head: 27c5bf59337b9956b038156369f03a0bdacc5517
 
 ## Changed files
-- M .github/workflows/shambler-publish-current.yml
+- M tools/sprites/audit_final_art_status.py
 
 ## Affected areas
-- .github
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T02:01:23Z
+Generated: 2026-09-20T04:59:07Z
 
 ### Git
 - Branch: `main`
-- Head: `a2e0f6d94674`
-- Commit date: 2026-09-20T04:01:13+02:00
-- Commit: Gate Shambler production publication (#221)
+- Head: `27c5bf59337b`
+- Commit date: 2026-09-20T06:58:56+02:00
+- Commit: art: expose exact final-art acceptance blockers (#222)
 - Tracked files: 724
 
 ### Recently changed files
+- `tools/sprites/audit_final_art_status.py`
 - `.github/workflows/shambler-publish-current.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
 - `.github/workflows/rex-animation-smoke.yml`
@@ -41,13 +42,8 @@ Generated: 2026-09-20T02:01:23Z
 - `docs/final-art-production-spec.md`
 - `tools/blender/build_rex_actions.py`
 - `tools/sprites/assemble_actor_sheet.py`
-- `tools/sprites/audit_final_art_status.py`
 - `core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java`
 - `docs/PROFILE_MIGRATIONS.md`
-- `assets/i18n/messages.properties`
-- `core/src/main/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidance.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/test/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidanceTest.java`
 
 ### Project signals
 - `build.gradle`

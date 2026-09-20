@@ -1205,6 +1205,7 @@ manifest = {
 ROOT = Path(__file__).resolve().parents[2]
 LAYOUT = ROOT / "art_sources" / "final-sprite-layout.json"
 ART = ROOT / "assets" / "art"
+GATES = (
 ⋮----
 def parse_args()
 ⋮----
@@ -1224,12 +1225,11 @@ rows = []
 ⋮----
 path = manifest_path(actor["id"])
 data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
-production = data.get("source_production_ready") is True
-phone = data.get("phone_qa_pass") is True
-android = data.get("android_visual_qa_pass") is True
-accepted = data.get("android_accepted") is True
-score = sum((production, phone, android, accepted))
+gate_state = {key: data.get(key) is True for key, _ in GATES}
+missing_gates = [label for key, label in GATES if not gate_state[key]]
+score = len(GATES) - len(missing_gates)
 ⋮----
+minimum_score = min((r["maturity_score"] for r in rows), default=0)
 summary = {
 ```
 
