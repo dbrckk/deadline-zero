@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse, json, math, random
 from pathlib import Path
 from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter
+from candidate_utils import make_tileable_edges
 
 SIZE=512
 SLOTS=("floor/concrete_a","floor/concrete_b","floor/concrete_c","floor/hazard_a",
@@ -44,7 +45,7 @@ def finish(im,slot):
     if slot.startswith("floor/"):
         im=ImageEnhance.Contrast(im).enhance(1.10)
         im=ImageEnhance.Sharpness(im).enhance(1.18)
-        im.putalpha(Image.new("L",im.size,255)); return im
+        im.putalpha(Image.new("L",im.size,255)); return make_tileable_edges(im)
     a=im.getchannel("A")
     sh=Image.new("RGBA",im.size,(0,0,0,0))
     sm=a.filter(ImageFilter.GaussianBlur(13))
