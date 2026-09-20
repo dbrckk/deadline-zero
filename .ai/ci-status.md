@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 6 success / 0 failure / 2 active
+Summary: 4 success / 0 failure / 3 active
 
-- Responsive UI QA: in_progress / pending (27c5bf59)
-- Verify: queued / pending (27c5bf59)
-- Verify: completed / success (7b303045)
-- Responsive UI QA: completed / success (7b303045)
-- Verify: completed / success (a2e0f6d9)
-- Responsive UI QA: completed / success (a2e0f6d9)
-- Verify: completed / success (f0f7c481)
-- Responsive UI QA: completed / success (f0f7c481)
+- Verify: queued / pending (26f1527f)
+- Responsive UI QA: in_progress / pending (26f1527f)
+- Shambler Animation Smoke: in_progress / pending (26f1527f)
+- Verify: completed / success (86ae0572)
+- Responsive UI QA: completed / success (86ae0572)
+- Actor Candidate Validation: completed / success (86ae0572)
+- Shambler Animation Smoke: completed / success (86ae0572)
+- Actor Candidate Validation: completed / cancelled (05ef533b)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

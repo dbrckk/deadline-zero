@@ -2319,18 +2319,15 @@ jobs:
           script: |
             gradle :android:installDebug :android:installDebugAndroidTest -PallowTestAds=true -PallowPlaceholderAssets=true
             adb shell settings put secure immersive_mode_confirmations confirmed || true
-            adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesRexGameplayAndAttackFrames com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/shambler-acceptance.txt
+            adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesShamblerGameplayAndAttackFrames com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/shambler-acceptance.txt
             grep -q 'OK (1 test)' /tmp/shambler-acceptance.txt
             mkdir -p build/shambler-android-acceptance
-            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-gameplay.png
-            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-shambler-crowd.png
-            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-attack.png
-            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-gameplay.png build/shambler-android-acceptance/rex-gameplay.png
-            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-shambler-crowd.png build/shambler-android-acceptance/rex-shambler-crowd.png
-            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/rex-attack.png build/shambler-android-acceptance/rex-attack.png
-            test -s build/shambler-android-acceptance/rex-gameplay.png
-            test -s build/shambler-android-acceptance/rex-shambler-crowd.png
-            test -s build/shambler-android-acceptance/rex-attack.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/shambler-gameplay.png
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/shambler-attack.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/shambler-gameplay.png build/shambler-android-acceptance/shambler-gameplay.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/shambler-attack.png build/shambler-android-acceptance/shambler-attack.png
+            test -s build/shambler-android-acceptance/shambler-gameplay.png
+            test -s build/shambler-android-acceptance/shambler-attack.png
 
       - name: Upload Shambler Android acceptance evidence
         if: always()
@@ -2352,6 +2349,7 @@ on:
       - '.github/workflows/shambler-animation-smoke.yml'
       - 'tools/blender/render_actor_8dir.py'
       - 'tools/sprites/normalize_actor_frames.py'
+      - 'tools/sprites/assemble_actor_sheet.py'
 
 jobs:
   render:
@@ -2469,7 +2467,8 @@ jobs:
             --output build/shambler/normalized96 \
             --report build/shambler/qa.json \
             --contact-sheet build/shambler/shambler-phone-contact-sheet.png \
-            --horizontal-anchor union-center
+            --horizontal-anchor union-center \
+            --attack-center-limit 12
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -2479,6 +2478,45 @@ jobs:
           assert q['horizontal_anchor'] == 'union-center', q
           print('Shambler sprite QA PASS:', q['frame_count'], 'frames, scale', q['scale'])
           PY
+      - name: Assemble canonical Shambler source sheet
+        run: |
+          set -euo pipefail
+          python3 tools/sprites/assemble_actor_sheet.py \
+            --input build/shambler/normalized96 \
+            --output build/shambler/shambler.png \
+            --manifest build/shambler/shambler-sheet-manifest.json
+          cp build/shambler/shambler.png art_sources/shambler.png
+          python3 tools/validate_final_sprite_layout.py
+          python3 tools/build_final_sprite_frames.py \
+            --output build/shambler/roundtrip \
+            --clean \
+            --strict
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageChops
+
+          source = Path('build/shambler/normalized96')
+          rebuilt = Path('build/shambler/roundtrip/enemy/shambler')
+          motions = {'idle':4,'run':8,'attack':6,'hit':3,'death':8}
+          directions = ('n','ne','e','se','s','sw','w','nw')
+          checked = 0
+          for direction in directions:
+              for motion, count in motions.items():
+                  for index in range(count):
+                      before = source / motion / direction / f'{motion}_{index:02d}.png'
+                      after = rebuilt / direction / f'{motion}_{index:02d}.png'
+                      assert after.is_file(), after
+                      with Image.open(before) as a, Image.open(after) as b:
+                          ar = a.convert('RGBA')
+                          br = b.convert('RGBA')
+                          assert ar.size == br.size == (96, 96), (before, after, ar.size, br.size)
+                          assert ImageChops.difference(ar, br).getbbox() is None, (before, after)
+                      checked += 1
+          assert checked == 232
+          print(f'Shambler canonical sheet round-trip PASS: {checked} pixel-identical RGBA frames')
+          PY
+          rm art_sources/shambler.png
+
       - name: Write render manifest
         run: |
           python3 - <<'PY'
@@ -2513,6 +2551,9 @@ jobs:
             build/shambler/qa.json
             build/shambler/master-margin.json
             build/shambler/shambler-phone-contact-sheet.png
+            build/shambler/shambler.png
+            build/shambler/shambler-sheet-manifest.json
+            build/shambler/roundtrip/final-sprite-build.json
             build/shambler/render-manifest.json
             build/shambler/debug512/
           if-no-files-found: warn
@@ -2577,18 +2618,23 @@ jobs:
           repository: ${{ github.repository }}
           path: shambler-artifact
 
+      - name: Install atlas tooling
+        run: sudo apt-get update && sudo apt-get install -y python3-pil
+
       - name: Locate and verify production-approved sprite source
         id: sprites
         shell: bash
         run: |
           set -euo pipefail
           root="$(find shambler-artifact -type d -name normalized96 -print -quit)"
+          sheet="$(find shambler-artifact -type f -name shambler.png -print -quit)"
           manifest="$(find shambler-artifact -type f -name render-manifest.json -print -quit)"
           qa="$(find shambler-artifact -type f -name qa.json -print -quit)"
           margin="$(find shambler-artifact -type f -name master-margin.json -print -quit)"
-          test -n "$root" -a -n "$manifest" -a -n "$qa" -a -n "$margin"
-          python3 - "$manifest" "$qa" "$margin" <<'PY'
+          test -n "$root" -a -n "$sheet" -a -n "$manifest" -a -n "$qa" -a -n "$margin"
+          python3 - "$manifest" "$qa" "$margin" "$sheet" <<'PY'
           import json,sys
+          from PIL import Image
           manifest=json.load(open(sys.argv[1]))
           qa=json.load(open(sys.argv[2]))
           margin=json.load(open(sys.argv[3]))
@@ -2602,12 +2648,25 @@ jobs:
           assert qa.get('pass') is True and qa.get('frame_count') == 232, qa
           assert qa.get('horizontal_anchor') == 'union-center', qa
           assert margin.get('pass') is True and margin.get('frame_count') == 232, margin
+          with Image.open(sys.argv[4]) as im:
+              assert im.format == 'PNG'
+              assert im.size == (2784, 768), im.size
           PY
           echo "root=$root" >> "$GITHUB_OUTPUT"
+          echo "sheet=$sheet" >> "$GITHUB_OUTPUT"
           echo "manifest=$manifest" >> "$GITHUB_OUTPUT"
 
-      - name: Install atlas tooling
-        run: sudo apt-get update && sudo apt-get install -y python3-pil
+      - name: Stage canonical Shambler production source
+        env:
+          CANONICAL_SHEET: ${{ steps.sprites.outputs.sheet }}
+        run: |
+          set -euo pipefail
+          cp "$CANONICAL_SHEET" art_sources/shambler.png
+          python3 tools/validate_final_sprite_layout.py
+          python3 tools/build_final_sprite_frames.py \
+            --output build/shambler-publish-roundtrip \
+            --clean \
+            --strict
 
       - name: Upsert production Shambler atlas page
         env:
@@ -2665,7 +2724,7 @@ jobs:
           set -euo pipefail
           git config user.name "deadline-zero-art-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add assets/art/shambler.png assets/art/game.atlas assets/art/shambler-manifest.json
+          git add art_sources/shambler.png assets/art/shambler.png assets/art/game.atlas assets/art/shambler-manifest.json
           if git diff --cached --quiet; then
             echo "Shambler atlas already current"
             exit 0
@@ -3432,6 +3491,40 @@ runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
 Thread.sleep(80L);
 capture("rex-attack.png");
 ⋮----
+public void capturesShamblerGameplayAndAttackFrames() throws Exception {
+⋮----
+assertTrue("expected GameScreen for Shambler visual probe", game.getScreen() instanceof GameScreen);
+injectShambler((GameScreen) game.getScreen());
+⋮----
+capture("shambler-gameplay.png");
+⋮----
+runOnGameThread(activity, () -> forceShamblerAttack((GameScreen) game(activity).getScreen()));
+⋮----
+capture("shambler-attack.png");
+⋮----
+private static void injectShambler(GameScreen screen) {
+⋮----
+enemies.clear();
+enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, 3.2f, 500_000f, .01f, .58f, 0f, 1));
+⋮----
+throw new AssertionError("unable to inject Shambler for visual QA", exception);
+⋮----
+private static void forceShamblerAttack(GameScreen screen) {
+⋮----
+Field enemiesField = GameScreen.class.getDeclaredField("enemies");
+enemiesField.setAccessible(true);
+Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
+⋮----
+assertNotNull("Shambler missing before attack capture", shambler);
+Field stateField = shambler.attack.getClass().getDeclaredField("state");
+Field timerField = shambler.attack.getClass().getDeclaredField("timer");
+stateField.setAccessible(true);
+timerField.setAccessible(true);
+stateField.set(shambler.attack, EnemyState.TELEGRAPHING);
+timerField.setFloat(shambler.attack, 10f);
+⋮----
+throw new AssertionError("unable to force Shambler attack animation for visual QA", exception);
+⋮----
 public void capturesWraithGameplayAndAttackFrames() throws Exception {
 ⋮----
 // Exercise WRAITH through the real selected-survivor runtime path. Direct assignment is
@@ -3570,17 +3663,12 @@ throw new AssertionError("unable to inject CINDER GUNNER for visual QA", excepti
 ⋮----
 private static void forceCinderGunnerAttack(GameScreen screen) {
 ⋮----
-Field enemiesField = GameScreen.class.getDeclaredField("enemies");
-enemiesField.setAccessible(true);
-Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
-⋮----
 if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.CINDER_GUNNER) {
 ⋮----
 assertNotNull("CINDER GUNNER missing before attack capture", gunner);
 Field stateField = gunner.attack.getClass().getDeclaredField("state");
 Field timerField = gunner.attack.getClass().getDeclaredField("timer");
-stateField.setAccessible(true);
-timerField.setAccessible(true);
+⋮----
 stateField.set(gunner.attack, EnemyState.TELEGRAPHING);
 timerField.setFloat(gunner.attack, 10f);
 ⋮----
@@ -27934,13 +28022,39 @@ x=round((96-nw)/2)
 x=round(48-(source_center_x-b[0])*scale)
 y=92-nh
 ⋮----
-rows=[]; motion=defaultdict(list)
+cells={}
 ⋮----
 u=unions[d]; t=transforms[d]
 crop=im.crop(u).resize(tuple(t["scaled_size"]),Image.Resampling.LANCZOS)
 cell=Image.new("RGBA",(96,96),(0,0,0,0)); cell.alpha_composite(crop,tuple(t["dest"]))
-out=a.output/anim/d/f"{anim}_{i:02d}.png"; out.parent.mkdir(parents=True,exist_ok=True); cell.save(out)
+⋮----
+attack_adjustments=[]
+⋮----
+attack_keys=[("attack",d,i) for i in range(EXPECTED["attack"])]
+centers=[]
+⋮----
+bb=bbox_alpha(cells[key])
+⋮----
+median=statistics.median(centers)
+⋮----
+delta=cx-median
+⋮----
+target=median+(a.attack_center_limit if delta>0 else -a.attack_center_limit)
+shift=round(target-cx)
+cell=cells[key]
 bb=bbox_alpha(cell)
+min_shift=2-bb[0]
+max_shift=(96-2)-bb[2]
+shift=max(min_shift,min(max_shift,shift))
+shifted=Image.new("RGBA",(96,96),(0,0,0,0))
+⋮----
+new_bb=bbox_alpha(shifted)
+new_cx=(new_bb[0]+new_bb[2])/2.0 if new_bb else None
+⋮----
+rows=[]; motion=defaultdict(list)
+⋮----
+cell=cells[(anim,d,i)]
+out=a.output/anim/d/f"{anim}_{i:02d}.png"; out.parent.mkdir(parents=True,exist_ok=True); cell.save(out)
 ⋮----
 row={"path":str(out.relative_to(a.output)),"bbox":None,"margin":-1,"width":0,"height":0}
 ⋮----

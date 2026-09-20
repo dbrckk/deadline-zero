@@ -1285,13 +1285,39 @@ x=round((96-nw)/2)
 x=round(48-(source_center_x-b[0])*scale)
 y=92-nh
 ⋮----
-rows=[]; motion=defaultdict(list)
+cells={}
 ⋮----
 u=unions[d]; t=transforms[d]
 crop=im.crop(u).resize(tuple(t["scaled_size"]),Image.Resampling.LANCZOS)
 cell=Image.new("RGBA",(96,96),(0,0,0,0)); cell.alpha_composite(crop,tuple(t["dest"]))
-out=a.output/anim/d/f"{anim}_{i:02d}.png"; out.parent.mkdir(parents=True,exist_ok=True); cell.save(out)
+⋮----
+attack_adjustments=[]
+⋮----
+attack_keys=[("attack",d,i) for i in range(EXPECTED["attack"])]
+centers=[]
+⋮----
+bb=bbox_alpha(cells[key])
+⋮----
+median=statistics.median(centers)
+⋮----
+delta=cx-median
+⋮----
+target=median+(a.attack_center_limit if delta>0 else -a.attack_center_limit)
+shift=round(target-cx)
+cell=cells[key]
 bb=bbox_alpha(cell)
+min_shift=2-bb[0]
+max_shift=(96-2)-bb[2]
+shift=max(min_shift,min(max_shift,shift))
+shifted=Image.new("RGBA",(96,96),(0,0,0,0))
+⋮----
+new_bb=bbox_alpha(shifted)
+new_cx=(new_bb[0]+new_bb[2])/2.0 if new_bb else None
+⋮----
+rows=[]; motion=defaultdict(list)
+⋮----
+cell=cells[(anim,d,i)]
+out=a.output/anim/d/f"{anim}_{i:02d}.png"; out.parent.mkdir(parents=True,exist_ok=True); cell.save(out)
 ⋮----
 row={"path":str(out.relative_to(a.output)),"bbox":None,"margin":-1,"width":0,"height":0}
 ⋮----

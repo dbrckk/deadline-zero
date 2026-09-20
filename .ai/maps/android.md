@@ -229,6 +229,40 @@ runOnGameThread(activity, CombatVisualEvents::markPlayerShot);
 Thread.sleep(80L);
 capture("rex-attack.png");
 ⋮----
+public void capturesShamblerGameplayAndAttackFrames() throws Exception {
+⋮----
+assertTrue("expected GameScreen for Shambler visual probe", game.getScreen() instanceof GameScreen);
+injectShambler((GameScreen) game.getScreen());
+⋮----
+capture("shambler-gameplay.png");
+⋮----
+runOnGameThread(activity, () -> forceShamblerAttack((GameScreen) game(activity).getScreen()));
+⋮----
+capture("shambler-attack.png");
+⋮----
+private static void injectShambler(GameScreen screen) {
+⋮----
+enemies.clear();
+enemies.add(new Enemy(Enemy.Type.SHAMBLER, 0f, 3.2f, 500_000f, .01f, .58f, 0f, 1));
+⋮----
+throw new AssertionError("unable to inject Shambler for visual QA", exception);
+⋮----
+private static void forceShamblerAttack(GameScreen screen) {
+⋮----
+Field enemiesField = GameScreen.class.getDeclaredField("enemies");
+enemiesField.setAccessible(true);
+Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
+⋮----
+assertNotNull("Shambler missing before attack capture", shambler);
+Field stateField = shambler.attack.getClass().getDeclaredField("state");
+Field timerField = shambler.attack.getClass().getDeclaredField("timer");
+stateField.setAccessible(true);
+timerField.setAccessible(true);
+stateField.set(shambler.attack, EnemyState.TELEGRAPHING);
+timerField.setFloat(shambler.attack, 10f);
+⋮----
+throw new AssertionError("unable to force Shambler attack animation for visual QA", exception);
+⋮----
 public void capturesWraithGameplayAndAttackFrames() throws Exception {
 ⋮----
 // Exercise WRAITH through the real selected-survivor runtime path. Direct assignment is
@@ -367,17 +401,12 @@ throw new AssertionError("unable to inject CINDER GUNNER for visual QA", excepti
 ⋮----
 private static void forceCinderGunnerAttack(GameScreen screen) {
 ⋮----
-Field enemiesField = GameScreen.class.getDeclaredField("enemies");
-enemiesField.setAccessible(true);
-Array<Enemy> enemies = (Array<Enemy>) enemiesField.get(screen);
-⋮----
 if (enemy.alive && enemy.biomeIdentity() == BiomeEnemyRoster.Identity.CINDER_GUNNER) {
 ⋮----
 assertNotNull("CINDER GUNNER missing before attack capture", gunner);
 Field stateField = gunner.attack.getClass().getDeclaredField("state");
 Field timerField = gunner.attack.getClass().getDeclaredField("timer");
-stateField.setAccessible(true);
-timerField.setAccessible(true);
+⋮----
 stateField.set(gunner.attack, EnemyState.TELEGRAPHING);
 timerField.setFloat(gunner.attack, 10f);
 ⋮----
