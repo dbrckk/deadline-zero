@@ -22,36 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T16:34:23Z
+Generated: 2026-09-20T16:59:32Z
 
 ### Git
 - Branch: `main`
-- Head: `016e20fca8f2`
-- Commit date: 2026-09-20T18:34:11+02:00
-- Commit: Add first Quarantine Yard environment candidate pack
-- Tracked files: 756
+- Head: `b35b4f37e6a0`
+- Commit date: 2026-09-20T18:59:17+02:00
+- Commit: Add Null Sector environment candidate pack (#240)
+- Tracked files: 790
 
 ### Recently changed files
-- `.github/workflows/quarantine-yard-candidate.yml`
-- `art_sources/environment/quarantine_yard/candidate-manifest.json`
-- `art_sources/environment/quarantine_yard/decal/blood_a.png`
-- `art_sources/environment/quarantine_yard/decal/crack_a.png`
-- `art_sources/environment/quarantine_yard/decal/scorch_a.png`
-- `art_sources/environment/quarantine_yard/floor/concrete_a.png`
-- `art_sources/environment/quarantine_yard/floor/concrete_b.png`
-- `art_sources/environment/quarantine_yard/floor/concrete_c.png`
-- `art_sources/environment/quarantine_yard/floor/hazard_a.png`
-- `art_sources/environment/quarantine_yard/prop/barrier_a.png`
-- `art_sources/environment/quarantine_yard/prop/beacon_a.png`
-- `art_sources/environment/quarantine_yard/prop/crate_a.png`
-- `art_sources/environment/quarantine_yard/prop/debris_a.png`
-- `art_sources/environment/quarantine_yard/prop/debris_b.png`
-- `art_sources/environment/quarantine_yard/prop/wall_a.png`
-- `art_sources/environment/quarantine_yard/prop/wall_b.png`
-- `tools/environment/generate_quarantine_yard_candidate.py`
-- `.github/workflows/verify.yml`
-- `art_sources/environment/README.md`
-- `config/environment-art-contract.json`
+- `.github/workflows/null-sector-candidate.yml`
+- `art_sources/environment/null_sector/candidate-manifest.json`
+- `art_sources/environment/null_sector/decal/blood_a.png`
+- `art_sources/environment/null_sector/decal/crack_a.png`
+- `art_sources/environment/null_sector/decal/scorch_a.png`
+- `art_sources/environment/null_sector/floor/concrete_a.png`
+- `art_sources/environment/null_sector/floor/concrete_b.png`
+- `art_sources/environment/null_sector/floor/concrete_c.png`
+- `art_sources/environment/null_sector/floor/hazard_a.png`
+- `art_sources/environment/null_sector/prop/barrier_a.png`
+- `art_sources/environment/null_sector/prop/beacon_a.png`
+- `art_sources/environment/null_sector/prop/crate_a.png`
+- `art_sources/environment/null_sector/prop/debris_a.png`
+- `art_sources/environment/null_sector/prop/debris_b.png`
+- `art_sources/environment/null_sector/prop/wall_a.png`
+- `art_sources/environment/null_sector/prop/wall_b.png`
+- `tools/environment/generate_null_sector_candidate.py`
+- `.github/workflows/cinder-foundry-candidate.yml`
+- `art_sources/environment/cinder_foundry/candidate-manifest.json`
+- `art_sources/environment/cinder_foundry/decal/blood_a.png`
 
 ### Project signals
 - `build.gradle`

@@ -3974,11 +3974,13 @@
         "core/src/test/java/com/deadlinezero/game/visual/DirectionalGpuMemoryBudgetTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/EnvironmentBiomeRulesTest.java",
+        "tools/environment/generate_cinder_foundry_candidate.py",
+        "tools/environment/generate_null_sector_candidate.py",
         "tools/environment/generate_quarantine_yard_candidate.py",
         "tools/environment/pack_environment_art.py",
         "tools/environment/validate_environment_art_contract.py"
       ],
-      "in_degree": 31,
+      "in_degree": 33,
       "out_degree": 0
     },
     "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": {
@@ -6267,6 +6269,22 @@
     "tools/build_final_sprite_frames.py": {
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/environment/generate_cinder_foundry_candidate.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/environment/generate_null_sector_candidate.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
       ],
       "dependents": [],
       "in_degree": 0,

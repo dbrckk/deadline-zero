@@ -46,8 +46,10 @@ The content is organized as follows:
     actor-production-staging.yml
     ai-repo-map.yml
     android-test-release.yml
+    cinder-foundry-candidate.yml
     deadline-zero-work-watch.yml
     enemy-source-catalog.yml
+    null-sector-candidate.yml
     quarantine-yard-candidate.yml
     responsive-ui-qa.yml
     rex-android-acceptance.yml
@@ -576,6 +578,8 @@ tools/
     validate_rex_weapon_visibility.py
     validate_rig.py
   environment/
+    generate_cinder_foundry_candidate.py
+    generate_null_sector_candidate.py
     generate_quarantine_yard_candidate.py
     pack_environment_art.py
     test_upsert_environment_atlas.py
@@ -1401,6 +1405,119 @@ jobs:
             --prerelease
 ````
 
+## File: .github/workflows/cinder-foundry-candidate.yml
+````yaml
+name: Cinder Foundry Candidate Pack
+
+on:
+  push:
+    paths:
+      - '.github/workflows/cinder-foundry-candidate.yml'
+      - 'tools/environment/generate_cinder_foundry_candidate.py'
+      - 'tools/environment/pack_environment_art.py'
+      - 'tools/environment/validate_environment_art_contract.py'
+      - 'config/environment-art-contract.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cinder-foundry-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install image tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+
+      - name: Generate deterministic Cinder Foundry candidates
+        run: |
+          set -euo pipefail
+          python3 tools/environment/generate_cinder_foundry_candidate.py
+          test "$(find art_sources/environment/cinder_foundry -type f -name '*.png' | wc -l)" -eq 14
+
+      - name: Pack and validate candidate biome
+        run: |
+          set -euo pipefail
+          python3 tools/environment/pack_environment_art.py --biome cinder_foundry
+          python3 tools/environment/validate_environment_art_contract.py --json > build/environment_art/coverage-before-publish.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          packed=json.loads(Path('build/environment_art/environment-cinder_foundry.manifest.json').read_text())
+          candidate=json.loads(Path('art_sources/environment/cinder_foundry/candidate-manifest.json').read_text())
+          assert packed['biome']=='cinder_foundry'
+          assert packed['slotCount']==14
+          assert len(packed['assets'])==14
+          assert candidate['asset_count']==14
+          assert candidate['production_ready'] is False
+          assert candidate['visual_qa_pass'] is False
+          print('Cinder Foundry candidate contract PASS: 14/14 authored masters')
+          PY
+
+      - name: Build review contact sheet
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          slots=[
+            'floor/concrete_a','floor/concrete_b','floor/concrete_c','floor/hazard_a',
+            'decal/crack_a','decal/blood_a','decal/scorch_a','prop/barrier_a',
+            'prop/debris_a','prop/debris_b','prop/wall_a','prop/wall_b',
+            'prop/crate_a','prop/beacon_a'
+          ]
+          cell=256
+          sheet=Image.new('RGBA',(cell*4,cell*4),(12,10,9,255))
+          for i,slot in enumerate(slots):
+              src=Path('art_sources/environment/cinder_foundry')/(slot+'.png')
+              with Image.open(src) as raw:
+                  im=raw.convert('RGBA').resize((cell,cell),Image.Resampling.LANCZOS)
+              sheet.alpha_composite(im,((i%4)*cell,(i//4)*cell))
+          out=Path('build/environment_art/cinder-foundry-contact-sheet.png')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          sheet.save(out,'PNG',optimize=True)
+          PY
+
+      - name: Upload candidate review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cinder-foundry-candidate-${{ github.run_number }}
+          path: |
+            build/environment_art/environment-cinder_foundry.png
+            build/environment_art/environment-cinder_foundry.atlas.txt
+            build/environment_art/environment-cinder_foundry.manifest.json
+            build/environment_art/cinder-foundry-contact-sheet.png
+            art_sources/environment/cinder_foundry/candidate-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Commit generated candidate masters to branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add art_sources/environment/cinder_foundry
+          if git diff --cached --quiet; then
+            echo "Cinder Foundry candidate masters already current"
+            exit 0
+          fi
+          git commit -m "art(environment): add Cinder Foundry candidate masters"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+````
+
 ## File: .github/workflows/deadline-zero-work-watch.yml
 ````yaml
 name: Deadline Zero Work Watch
@@ -1663,6 +1780,105 @@ jobs:
             build/blend-inspection/
           if-no-files-found: error
           retention-days: 14
+````
+
+## File: .github/workflows/null-sector-candidate.yml
+````yaml
+name: Null Sector Candidate Pack
+
+on:
+  push:
+    paths:
+      - '.github/workflows/null-sector-candidate.yml'
+      - 'tools/environment/generate_null_sector_candidate.py'
+      - 'tools/environment/pack_environment_art.py'
+      - 'tools/environment/validate_environment_art_contract.py'
+      - 'config/environment-art-contract.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: null-sector-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image tooling
+        run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
+      - name: Generate deterministic Null Sector candidates
+        run: |
+          set -euo pipefail
+          python3 tools/environment/generate_null_sector_candidate.py
+          test "$(find art_sources/environment/null_sector -type f -name '*.png' | wc -l)" -eq 14
+      - name: Pack and validate candidate biome
+        run: |
+          set -euo pipefail
+          python3 tools/environment/pack_environment_art.py --biome null_sector
+          python3 tools/environment/validate_environment_art_contract.py --json > build/environment_art/coverage-before-publish.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          packed=json.loads(Path('build/environment_art/environment-null_sector.manifest.json').read_text())
+          candidate=json.loads(Path('art_sources/environment/null_sector/candidate-manifest.json').read_text())
+          assert packed['biome']=='null_sector'
+          assert packed['slotCount']==14 and len(packed['assets'])==14
+          assert candidate['asset_count']==14
+          assert candidate['production_ready'] is False
+          assert candidate['visual_qa_pass'] is False
+          print('Null Sector candidate contract PASS: 14/14 authored masters')
+          PY
+      - name: Build review contact sheet
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          slots=['floor/concrete_a','floor/concrete_b','floor/concrete_c','floor/hazard_a',
+          'decal/crack_a','decal/blood_a','decal/scorch_a','prop/barrier_a',
+          'prop/debris_a','prop/debris_b','prop/wall_a','prop/wall_b','prop/crate_a','prop/beacon_a']
+          cell=256
+          sheet=Image.new('RGBA',(cell*4,cell*4),(7,8,12,255))
+          for i,slot in enumerate(slots):
+              src=Path('art_sources/environment/null_sector')/(slot+'.png')
+              with Image.open(src) as raw: im=raw.convert('RGBA').resize((cell,cell),Image.Resampling.LANCZOS)
+              sheet.alpha_composite(im,((i%4)*cell,(i//4)*cell))
+          out=Path('build/environment_art/null-sector-contact-sheet.png'); out.parent.mkdir(parents=True,exist_ok=True); sheet.save(out,'PNG',optimize=True)
+          PY
+      - name: Upload candidate review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: null-sector-candidate-${{ github.run_number }}
+          path: |
+            build/environment_art/environment-null_sector.png
+            build/environment_art/environment-null_sector.atlas.txt
+            build/environment_art/environment-null_sector.manifest.json
+            build/environment_art/null-sector-contact-sheet.png
+            art_sources/environment/null_sector/candidate-manifest.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Commit generated candidate masters to branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "deadline-zero-art-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add art_sources/environment/null_sector
+          if git diff --cached --quiet; then
+            echo "Null Sector candidate masters already current"
+            exit 0
+          fi
+          git commit -m "art(environment): add Null Sector candidate masters"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
 ````
 
 ## File: .github/workflows/quarantine-yard-candidate.yml
@@ -28439,6 +28655,249 @@ ratio = weighted_vertices / total_vertices if total_vertices else 0.0
 ⋮----
 report = {
 report_path = args.output / "rig-report.json"
+````
+
+## File: tools/environment/generate_cinder_foundry_candidate.py
+````python
+#!/usr/bin/env python3
+"""Generate deterministic Cinder Foundry environment candidate masters.
+
+These are authored procedural candidates, not final release art.
+"""
+⋮----
+SIZE=512
+SLOTS=(
+BLACK=(20,22,23,255); STEEL=(48,49,47,255); STEEL2=(70,68,62,255)
+CERAMIC=(108,94,78,255); ASH=(64,60,54,255); ORANGE=(238,96,22,255)
+HOT=(255,151,42,255); RED=(152,42,25,255)
+⋮----
+def transparent(): return Image.new("RGBA",(SIZE,SIZE),(0,0,0,0))
+def clamp(v): return 0 if v<0 else 255 if v>255 else int(v)
+⋮----
+def noise(base,seed,strength=12)
+⋮----
+rnd=random.Random(seed); img=Image.new("RGBA",(SIZE,SIZE)); px=img.load()
+⋮----
+n=(math.sin(x*.075+rnd.random()*.02)+math.cos(y*.061))*strength*.32+rnd.uniform(-strength,strength)
+⋮----
+def seams(img,spacing=128,hot=False)
+⋮----
+d=ImageDraw.Draw(img,"RGBA")
+⋮----
+def scuffs(img,seed,count=60)
+⋮----
+d=ImageDraw.Draw(img,"RGBA"); rnd=random.Random(seed)
+⋮----
+x,y=rnd.randrange(SIZE),rnd.randrange(SIZE); l=rnd.randrange(8,55); a=rnd.random()*math.tau
+⋮----
+def finish(img,slot,seed)
+⋮----
+img=img.convert("RGBA")
+⋮----
+img=ImageEnhance.Contrast(img).enhance(1.12)
+img=ImageEnhance.Sharpness(img).enhance(1.22)
+⋮----
+alpha=img.getchannel("A")
+shadow=Image.new("RGBA",img.size,(0,0,0,0)); sm=alpha.filter(ImageFilter.GaussianBlur(12))
+shifted=Image.new("L",img.size,0); shifted.paste(sm,(10,14)); shadow.putalpha(shifted.point(lambda p:int(p*.36)))
+out=Image.alpha_composite(shadow,img)
+edge=ImageChops.subtract(alpha,alpha.filter(ImageFilter.MinFilter(7)))
+hi=Image.new("RGBA",img.size,(208,169,115,0)); hi.putalpha(edge.point(lambda p:int(p*.30)))
+out=Image.alpha_composite(out,hi)
+⋮----
+def floor_a()
+⋮----
+img=noise((42,43,40,255),101,13); seams(img,128); scuffs(img,102)
+⋮----
+def floor_b()
+⋮----
+img=noise((34,35,34,255),111,10); seams(img,96)
+⋮----
+def floor_c()
+⋮----
+img=noise((53,49,43,255),121,14); seams(img,160)
+d=ImageDraw.Draw(img,"RGBA"); rnd=random.Random(122)
+⋮----
+x,y=rnd.randrange(SIZE),rnd.randrange(SIZE); r=rnd.randrange(8,28)
+⋮----
+def floor_hazard()
+⋮----
+img=noise((28,29,28,255),131,10); seams(img,128)
+⋮----
+def lava_crack()
+⋮----
+img=transparent(); d=ImageDraw.Draw(img,"RGBA"); rnd=random.Random(141); o=(256,256)
+⋮----
+pts=[o]; a=b*math.tau/10+rnd.uniform(-.18,.18)
+⋮----
+r=s*rnd.randrange(22,32); pts.append((o[0]+math.cos(a)*r+rnd.uniform(-12,12),o[1]+math.sin(a)*r+rnd.uniform(-12,12)))
+⋮----
+def blood()
+⋮----
+img=transparent(); d=ImageDraw.Draw(img,"RGBA"); rnd=random.Random(151)
+⋮----
+def scorch()
+⋮----
+img=transparent(); d=ImageDraw.Draw(img,"RGBA")
+⋮----
+def shadowed(box,fill,outline=(150,112,74,255),radius=24)
+⋮----
+img=transparent(); x0,y0,x1,y1=box
+sh=transparent(); sd=ImageDraw.Draw(sh,"RGBA"); sd.rounded_rectangle((x0+15,y0+18,x1+18,y1+22),radius=radius,fill=(0,0,0,125))
+img=Image.alpha_composite(img,sh.filter(ImageFilter.GaussianBlur(10)))
+d=ImageDraw.Draw(img,"RGBA"); d.rounded_rectangle(box,radius=radius,fill=fill,outline=outline,width=8)
+⋮----
+def barrier()
+⋮----
+img=shadowed((70,164,442,334),(49,45,40,255)); d=ImageDraw.Draw(img,"RGBA")
+⋮----
+def debris(seed,slag=False)
+⋮----
+img=transparent(); d=ImageDraw.Draw(img,"RGBA"); rnd=random.Random(seed)
+⋮----
+cx,cy=rnd.randrange(110,402),rnd.randrange(120,392); r=rnd.randrange(14,44)
+pts=[(cx+math.cos(k*math.tau/5)*r*rnd.uniform(.6,1.2),cy+math.sin(k*math.tau/5)*r*rnd.uniform(.6,1.2)) for k in range(5)]
+⋮----
+def wall(seed,hotpanel=False)
+⋮----
+img=shadowed((56,112,456,378),(49,46,42,255)); d=ImageDraw.Draw(img,"RGBA")
+⋮----
+def crate()
+⋮----
+img=shadowed((116,110,396,386),(63,58,50,255)); d=ImageDraw.Draw(img,"RGBA")
+⋮----
+def beacon()
+⋮----
+img=transparent()
+glow=transparent(); gd=ImageDraw.Draw(glow,"RGBA")
+⋮----
+img=Image.alpha_composite(img,glow.filter(ImageFilter.GaussianBlur(10)))
+d=ImageDraw.Draw(img,"RGBA"); d.ellipse((145,135,367,357),fill=(28,27,25,240),outline=(118,94,68,255),width=9)
+⋮----
+GENERATORS={
+⋮----
+def main()
+⋮----
+p=argparse.ArgumentParser(); p.add_argument("--output",type=Path,default=Path("art_sources/environment/cinder_foundry")); p.add_argument("--manifest",type=Path,default=Path("art_sources/environment/cinder_foundry/candidate-manifest.json")); a=p.parse_args()
+a.output.mkdir(parents=True,exist_ok=True); assets=[]
+⋮----
+path=a.output/(slot+".png"); path.parent.mkdir(parents=True,exist_ok=True)
+img=finish(GENERATORS[slot](),slot,2000+i*101); img.save(path,"PNG",optimize=True); assets.append(str(path).replace("\\","/"))
+manifest={"schema":1,"biome":"cinder_foundry","stage":"procedural-authored-candidate-v1","production_ready":False,"visual_qa_pass":False,"generator":"tools/environment/generate_cinder_foundry_candidate.py","master_size":[512,512],"asset_count":14,"assets":assets,"notes":"Distinct blackened-steel/ceramic/slag candidate. Not FINAL until premium visual QA."}
+````
+
+## File: tools/environment/generate_null_sector_candidate.py
+````python
+#!/usr/bin/env python3
+"""Generate deterministic Null Sector environment candidate masters.
+
+Authored procedural candidate only; never marks assets production-ready.
+"""
+⋮----
+SIZE=512
+SLOTS=(
+BLACK=(11,13,18,255); ALLOY=(28,31,39,255); ALLOY2=(40,44,55,255)
+VIOLET=(137,72,220,255); VIOLET2=(83,42,145,255); CYAN=(63,202,226,255); PALE=(130,149,170,255)
+⋮----
+def clamp(v): return 0 if v<0 else 255 if v>255 else int(v)
+def transparent(): return Image.new("RGBA",(SIZE,SIZE),(0,0,0,0))
+def noise(base,seed,strength=9)
+⋮----
+rnd=random.Random(seed); im=Image.new("RGBA",(SIZE,SIZE)); px=im.load()
+⋮----
+n=(math.sin(x*.049+p1)+math.cos(y*.057+p2))*strength*.28+rnd.uniform(-strength,strength)
+⋮----
+def panel(img,spacing=128,diag=False)
+⋮----
+d=ImageDraw.Draw(img,"RGBA")
+⋮----
+def finish(img,slot)
+⋮----
+img=img.convert("RGBA")
+⋮----
+img=ImageEnhance.Contrast(img).enhance(1.08)
+img=ImageEnhance.Sharpness(img).enhance(1.18)
+⋮----
+a=img.getchannel("A")
+sh=Image.new("RGBA",img.size,(0,0,0,0)); m=a.filter(ImageFilter.GaussianBlur(12)); shifted=Image.new("L",img.size,0); shifted.paste(m,(9,13)); sh.putalpha(shifted.point(lambda p:int(p*.34)))
+out=Image.alpha_composite(sh,img)
+inner=ImageChops.subtract(a,a.filter(ImageFilter.MinFilter(7)))
+hi=Image.new("RGBA",img.size,(110,190,210,0)); hi.putalpha(inner.point(lambda p:int(p*.22)))
+⋮----
+def floor_a()
+⋮----
+im=noise((24,27,35,255),201); panel(im,128,True); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def floor_b()
+⋮----
+im=noise((19,22,29,255),211); panel(im,96); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def floor_c()
+⋮----
+im=noise((30,31,39,255),221); panel(im,160,True); d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(222)
+⋮----
+x,y=rnd.randrange(SIZE),rnd.randrange(SIZE); r=rnd.randrange(9,24)
+⋮----
+def floor_hazard()
+⋮----
+im=noise((17,19,27,255),231); panel(im,128); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def fracture()
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(241); o=(256,255)
+⋮----
+pts=[o]; ang=b*math.tau/12+rnd.uniform(-.2,.2)
+⋮----
+r=s*rnd.randrange(18,29); pts.append((o[0]+math.cos(ang)*r+rnd.uniform(-10,10),o[1]+math.sin(ang)*r+rnd.uniform(-10,10)))
+⋮----
+def blood()
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(251)
+⋮----
+def scorch()
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def framed(box,fill,outline=(83,93,120,255),radius=22)
+⋮----
+im=transparent(); x0,y0,x1,y1=box
+sh=transparent(); sd=ImageDraw.Draw(sh,"RGBA"); sd.rounded_rectangle((x0+12,y0+16,x1+16,y1+20),radius=radius,fill=(0,0,0,130))
+im=Image.alpha_composite(im,sh.filter(ImageFilter.GaussianBlur(9))); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def barrier()
+⋮----
+im=framed((70,166,442,334),(26,29,38,255)); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def debris(seed,void=False)
+⋮----
+im=transparent(); d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+⋮----
+cx,cy=rnd.randrange(110,402),rnd.randrange(120,392); r=rnd.randrange(15,42)
+pts=[(cx+math.cos(k*math.tau/6)*r*rnd.uniform(.6,1.2),cy+math.sin(k*math.tau/6)*r*rnd.uniform(.6,1.2)) for k in range(6)]
+⋮----
+def wall(seed,portal=False)
+⋮----
+im=framed((58,112,454,378),(29,31,41,255)); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def crate()
+⋮----
+im=framed((118,112,394,386),(38,40,50,255)); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+def beacon()
+⋮----
+im=transparent(); glow=transparent(); gd=ImageDraw.Draw(glow,"RGBA")
+⋮----
+im=Image.alpha_composite(im,glow.filter(ImageFilter.GaussianBlur(10))); d=ImageDraw.Draw(im,"RGBA")
+⋮----
+GEN={"floor/concrete_a":floor_a,"floor/concrete_b":floor_b,"floor/concrete_c":floor_c,"floor/hazard_a":floor_hazard,
+⋮----
+def main()
+⋮----
+p=argparse.ArgumentParser(); p.add_argument("--output",type=Path,default=Path("art_sources/environment/null_sector")); p.add_argument("--manifest",type=Path,default=Path("art_sources/environment/null_sector/candidate-manifest.json")); a=p.parse_args()
+a.output.mkdir(parents=True,exist_ok=True); assets=[]
+⋮----
+path=a.output/(slot+".png"); path.parent.mkdir(parents=True,exist_ok=True); finish(GEN[slot](),slot).save(path,"PNG",optimize=True); assets.append(str(path).replace("\\","/"))
+m={"schema":1,"biome":"null_sector","stage":"procedural-authored-candidate-v1","production_ready":False,"visual_qa_pass":False,"generator":"tools/environment/generate_null_sector_candidate.py","master_size":[512,512],"asset_count":14,"assets":assets,"notes":"Near-black/violet/cyan candidate. Keep floors dark; not FINAL until premium visual QA."}
 ````
 
 ## File: tools/environment/generate_quarantine_yard_candidate.py

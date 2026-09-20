@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 5 success / 0 failure / 3 active
+Summary: 0 success / 0 failure / 6 active
 
-- Quarantine Yard Candidate Pack: in_progress / pending (016e20fc)
-- Verify: queued / pending (016e20fc)
-- Responsive UI QA: in_progress / pending (016e20fc)
-- Deadline Zero Work Watch: completed / success (2bdf3124)
-- Responsive UI QA: completed / success (0bd78f06)
-- Verify: completed / success (0bd78f06)
-- Quarantine Yard Candidate Pack: completed / success (ed95d1a2)
-- Quarantine Yard Candidate Pack: completed / success (6208d79b)
+- Responsive UI QA: in_progress / pending (b35b4f37)
+- Verify: in_progress / pending (b35b4f37)
+- Null Sector Candidate Pack: in_progress / pending (b35b4f37)
+- Cinder Foundry Candidate Pack: in_progress / pending (492cfbf2)
+- Verify: completed / cancelled (492cfbf2)
+- Responsive UI QA: completed / cancelled (492cfbf2)
+- Deadline Zero Work Watch: in_progress / pending (68908bb9)
+- Verify: in_progress / pending (fe8257bf)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
