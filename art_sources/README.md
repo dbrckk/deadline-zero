@@ -115,7 +115,7 @@ The Google Play production asset gate depends on this coverage audit, so a parti
 
 ## Audit current production maturity
 
-Use the published per-actor manifests rather than milestone prose to see the current state:
+Use the audit below rather than milestone prose to see the current state. It reconciles published per-actor manifests with immutable QA evidence recorded in `config/actor-production-contracts.json`:
 
 ```bash
 python3 tools/sprites/audit_final_art_status.py
@@ -127,7 +127,7 @@ For machine-readable output:
 python3 tools/sprites/audit_final_art_status.py --json
 ```
 
-The audit reports all 24 contracted actors and distinguishes source production approval, phone-scale QA, Android visual QA and Android acceptance. A generated/reference candidate is therefore not counted as final merely because atlas regions exist.
+The audit reports all 24 contracted actors and distinguishes explicit source production approval, phone-scale QA, Android visual QA and accepted production-contract status. Contract evidence can satisfy QA gates when an older published manifest has not yet been backfilled; `source_production_ready` remains manifest-explicit and is never inferred from QA alone. A generated/reference candidate is therefore not counted as final merely because atlas regions exist.
 
 ## Non-negotiable QA
 
