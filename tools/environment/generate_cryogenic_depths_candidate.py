@@ -34,11 +34,12 @@ def seams(im,spacing=128):
         d.line((0,y+5,SIZE,y+5),fill=(*CYAN[:3],28),width=1)
 
 def frost(im,seed,count=30):
-    d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+    overlay=transparent(); d=ImageDraw.Draw(overlay,"RGBA"); rnd=random.Random(seed)
     for _ in range(count):
         x,y=rnd.randrange(SIZE),rnd.randrange(SIZE)
         rx,ry=rnd.randrange(20,72),rnd.randrange(6,20)
-        d.ellipse((x-rx,y-ry,x+rx,y+ry),fill=(*CYAN[:3],rnd.randrange(7,22)))
+        d.ellipse((x-rx,y-ry,x+rx,y+ry),fill=(*CYAN[:3],rnd.randrange(9,26)))
+    im.alpha_composite(overlay)
 
 def finish(im,slot):
     im=im.convert("RGBA")
