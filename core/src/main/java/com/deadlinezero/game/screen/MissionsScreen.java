@@ -3,6 +3,7 @@ package com.deadlinezero.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -98,15 +99,28 @@ public final class MissionsScreen extends ScreenAdapter {
         UiRenderer.panel(shapes, dailyPanel.x, dailyPanel.y, dailyPanel.width, dailyPanel.height);
         UiRenderer.panel(shapes, weeklyPanel.x, weeklyPanel.y, weeklyPanel.width, weeklyPanel.height);
         UiRenderer.panel(shapes, progressPanel.x, progressPanel.y, progressPanel.width, progressPanel.height);
-        for (Rectangle r : dailyRows) UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, false);
-        for (Rectangle r : weeklyRows) UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, false);
+        drawMissionStateCard(shapes, dailyRows[0], p.daily.loginClaimed, !p.daily.loginClaimed, VisualTheme.GOLD);
+        drawMissionStateCard(shapes, dailyRows[1], p.daily.killMissionClaimed, p.daily.killsToday >= 100, VisualTheme.GOLD);
+        drawMissionStateCard(shapes, dailyRows[2], p.daily.runMissionClaimed, p.daily.runsToday >= 3, VisualTheme.GOLD);
+        drawMissionStateCard(shapes, dailyRows[3], p.daily.bossMissionClaimed, p.daily.bossesToday >= 1, VisualTheme.GOLD);
+
+        drawMissionStateCard(shapes, weeklyRows[0], p.weekly.killMissionClaimed,
+            p.weekly.kills >= WeeklyService.KILL_TARGET, VisualTheme.VIOLET);
+        drawMissionStateCard(shapes, weeklyRows[1], p.weekly.runMissionClaimed,
+            p.weekly.runs >= WeeklyService.RUN_TARGET, VisualTheme.VIOLET);
+        drawMissionStateCard(shapes, weeklyRows[2], p.weekly.bossMissionClaimed,
+            p.weekly.bosses >= WeeklyService.BOSS_TARGET, VisualTheme.VIOLET);
+
         UiRenderer.card(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height, false, true);
         for (int i = 0; i < achievementRows.length; i++) {
             AchievementService.Achievement a = AchievementService.Achievement.values()[i];
             boolean unlocked = AchievementService.unlocked(p, a);
             boolean claimed = p.achievements.claimed(a);
-            UiRenderer.card(shapes, achievementRows[i].x, achievementRows[i].y, achievementRows[i].width,
-                achievementRows[i].height, unlocked && !claimed, claimed);
+            Rectangle r = achievementRows[i];
+            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, unlocked && !claimed, claimed);
+            Color accent = claimed ? VisualTheme.MUTED : unlocked ? VisualTheme.GOLD : VisualTheme.BORDER;
+            shapes.setColor(accent.r, accent.g, accent.b, claimed ? .18f : unlocked ? .78f : .28f);
+            shapes.rect(r.x + 5f, r.y + r.height - 4f, Math.max(0f, r.width - 10f), 3f);
         }
         shapes.end();
 
@@ -116,6 +130,27 @@ public final class MissionsScreen extends ScreenAdapter {
         drawWeekly(p);
         drawProgress(p);
         batch.end();
+    }
+
+    private void drawMissionStateCard(ShapeRenderer shapes, Rectangle r, boolean claimed,
+                                      boolean ready, Color categoryAccent) {
+        UiRenderer.card(shapes, r.x, r.y, r.width, r.height, ready && !claimed, claimed);
+
+        Color stateAccent = claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : categoryAccent;
+        float alpha = claimed ? .18f : ready ? .88f : .42f;
+        shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, alpha);
+        shapes.rect(r.x + 5f, r.y + r.height - 4f, Math.max(0f, r.width - 10f), 3f);
+
+        if (ready && !claimed) {
+            shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, .07f);
+            shapes.rect(r.x + 7f, r.y + 7f, Math.max(0f, r.width - 14f), Math.max(0f, r.height - 14f));
+            float notch = Math.min(22f, r.width * .08f);
+            shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, .92f);
+            shapes.rect(r.x + r.width - notch - 8f, r.y + 7f, notch, 3f);
+        } else if (claimed) {
+            shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .30f);
+            shapes.rect(r.x + 7f, r.y + 7f, Math.max(0f, r.width - 14f), Math.max(0f, r.height - 14f));
+        }
     }
 
     private void drawHeader() {
