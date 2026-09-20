@@ -191,15 +191,18 @@ jobs:
             test -s build/rex-android-acceptance/rex-gameplay.png
             test -s build/rex-android-acceptance/rex-shambler-crowd.png
             test -s build/rex-android-acceptance/rex-attack.png
-            python3 - <<'PY'
-            import json
-            from pathlib import Path
-            path=Path('build/rex-android-acceptance/acceptance-report.json')
-            data=json.loads(path.read_text())
-            data['android_visual_probe']='pass'
-            data['evidence']=['rex-gameplay.png','rex-shambler-crowd.png','rex-attack.png']
-            path.write_text(json.dumps(data,indent=2)+'\n')
-            PY
+
+      - name: Finalize Rex candidate acceptance report
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path('build/rex-android-acceptance/acceptance-report.json')
+          data=json.loads(path.read_text())
+          data['android_visual_probe']='pass'
+          data['evidence']=['rex-gameplay.png','rex-shambler-crowd.png','rex-attack.png']
+          path.write_text(json.dumps(data,indent=2)+'\n')
+          PY
 
       - name: Upload Rex candidate Android evidence
         if: always()
