@@ -29,10 +29,11 @@ def panels(im,spacing=128):
     for y in range(0,SIZE,spacing):
         d.line((0,y,SIZE,y),fill=(8,14,20,190),width=4); d.line((0,y+4,SIZE,y+4),fill=(*WHITE[:3],36),width=1)
 def frost(im,seed,count=26):
-    d=ImageDraw.Draw(im,"RGBA"); rnd=random.Random(seed)
+    overlay=transparent(); d=ImageDraw.Draw(overlay,"RGBA"); rnd=random.Random(seed)
     for _ in range(count):
         x,y=rnd.randrange(SIZE),rnd.randrange(SIZE); rx,ry=rnd.randrange(18,64),rnd.randrange(5,18)
-        d.ellipse((x-rx,y-ry,x+rx,y+ry),fill=(*ICE[:3],rnd.randrange(8,24)))
+        d.ellipse((x-rx,y-ry,x+rx,y+ry),fill=(*ICE[:3],rnd.randrange(10,28)))
+    im.alpha_composite(overlay)
 def finish(im,slot):
     im=im.convert("RGBA")
     if slot.startswith("floor/"):
