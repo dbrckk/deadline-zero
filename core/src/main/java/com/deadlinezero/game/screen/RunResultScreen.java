@@ -71,11 +71,28 @@ public final class RunResultScreen extends ScreenAdapter {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         UiRenderer.background(shapes, metrics, visualTime);
         UiRenderer.card(shapes, hero.x, hero.y, hero.width, hero.height, true, false);
+        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .22f);
+        shapes.rect(hero.x + 6f, hero.y + hero.height - 6f, hero.width - 12f, 4f);
+
+        Color[] rewardAccents = {VisualTheme.GOLD, VisualTheme.accent(), VisualTheme.VIOLET};
         for (int i = 0; i < metricsCards.length; i++) {
             Rectangle r = metricsCards[i];
             UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, i == 0);
+            Color accent = rewardAccents[i];
+            shapes.setColor(accent.r, accent.g, accent.b, .90f);
+            shapes.rect(r.x, r.y + r.height - 4f, r.width, 4f);
         }
         UiRenderer.panel(shapes, coaching.x, coaching.y, coaching.width, coaching.height);
+        shapes.setColor(COACHING_ACCENT.r, COACHING_ACCENT.g, COACHING_ACCENT.b, .72f);
+        shapes.rect(coaching.x, coaching.y, 4f, coaching.height);
+        if (result.drop() != null) {
+            Color dropAccent = VisualTheme.equipmentRarity(result.drop().rarity);
+            float splitX = coaching.x + coaching.width * .61f;
+            shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .18f);
+            shapes.rect(splitX, coaching.y + 8f, coaching.width * .37f - 8f, coaching.height - 16f);
+            shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .90f);
+            shapes.rect(splitX, coaching.y + coaching.height - 4f, coaching.width * .37f - 8f, 4f);
+        }
         UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.SELECTED);
         UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, UiRenderer.ButtonState.NORMAL);
         UiRenderer.button(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height,
@@ -105,6 +122,11 @@ public final class RunResultScreen extends ScreenAdapter {
         font.setColor(VisualTheme.GOLD);
         font.draw(batch, f("result.contract", result.contractTitle(), result.contractBonusPercent()),
             hero.x + 24f, hero.y + hero.height * .25f, hero.width * .48f, Align.center, false);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
+        font.setColor(VisualTheme.accent());
+        font.draw(batch, "+" + result.contractBonusPercent() + "%", hero.x + 24f,
+            hero.y + hero.height * .13f, hero.width * .48f, Align.center, false);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(result.threatTier() > 0 ? VisualTheme.GOLD : VisualTheme.TEXT_DIM);
         font.draw(batch, f("result.threat", result.threatTier(), result.threatBonusPercent()),
             hero.x + hero.width * .50f, hero.y + hero.height * .25f, hero.width * .46f, Align.center, false);
@@ -135,9 +157,15 @@ public final class RunResultScreen extends ScreenAdapter {
         font.draw(batch, t(advice.detailKey()), coaching.x + 24f, y - 30f, coaching.width * .58f, Align.left, true);
 
         if (result.drop() != null) {
+            Color rarity = VisualTheme.equipmentRarity(result.drop().rarity);
+            font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
+            font.setColor(rarity);
+            font.draw(batch, t(result.drop().rarityKey()),
+                coaching.x + coaching.width * .63f, y + 2f, coaching.width * .33f, Align.right, false);
+            font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
             font.setColor(VisualTheme.TEXT_STRONG);
             font.draw(batch, f("result.drop", t(result.drop().rarityKey()), localizedName(result.drop()), result.drop().level),
-                coaching.x + coaching.width * .63f, y - 8f, coaching.width * .33f, Align.right, true);
+                coaching.x + coaching.width * .63f, y - 18f, coaching.width * .33f, Align.right, true);
         }
     }
 
