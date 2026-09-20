@@ -7,6 +7,7 @@ from __future__ import annotations
 import argparse, json, math, random
 from pathlib import Path
 from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter
+from candidate_utils import make_tileable_edges
 
 SIZE=512
 SLOTS=(
@@ -46,7 +47,7 @@ def finish(img,slot):
         img=ImageEnhance.Contrast(img).enhance(1.08)
         img=ImageEnhance.Sharpness(img).enhance(1.18)
         img.putalpha(Image.new("L",img.size,255))
-        return img
+        return make_tileable_edges(img)
     a=img.getchannel("A")
     sh=Image.new("RGBA",img.size,(0,0,0,0)); m=a.filter(ImageFilter.GaussianBlur(12)); shifted=Image.new("L",img.size,0); shifted.paste(m,(9,13)); sh.putalpha(shifted.point(lambda p:int(p*.34)))
     out=Image.alpha_composite(sh,img)
