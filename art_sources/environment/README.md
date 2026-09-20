@@ -80,6 +80,16 @@ Outputs:
 
 The page is a deterministic 4x4 grid with 14 occupied 256x256 cells.
 
+Install/replace that page in the production atlas with:
+
+```bash
+python tools/environment/upsert_environment_atlas.py \
+  --fragment build/environment_art/environment-cinder_foundry.atlas.txt \
+  --page build/environment_art/environment-cinder_foundry.png
+```
+
+Then re-run the coverage validator. A complete biome moves coverage by **14 regions / 20 percentage points**.
+
 ## Runtime integration
 
 The renderer first searches:
