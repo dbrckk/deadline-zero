@@ -9,6 +9,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 LAYOUT = ROOT / "art_sources" / "final-sprite-layout.json"
 ART = ROOT / "assets" / "art"
+GATES = (
+    ("source_production_ready", "production"),
+    ("phone_qa_pass", "phone"),
+    ("android_visual_qa_pass", "android_visual"),
+    ("android_accepted", "android_accepted"),
+)
 
 
 def parse_args():
@@ -35,31 +41,32 @@ def main() -> int:
     for actor in sorted(layout["actors"], key=lambda a: (a["priority"], a["id"])):
         path = manifest_path(actor["id"])
         data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
-        production = data.get("source_production_ready") is True
-        phone = data.get("phone_qa_pass") is True
-        android = data.get("android_visual_qa_pass") is True
-        accepted = data.get("android_accepted") is True
-        score = sum((production, phone, android, accepted))
+        gate_state = {key: data.get(key) is True for key, _ in GATES}
+        missing_gates = [label for key, label in GATES if not gate_state[key]]
+        score = len(GATES) - len(missing_gates)
         rows.append({
             "id": actor["id"],
             "priority": actor["priority"],
             "root": actor["root"],
             "manifest": str(path.relative_to(ROOT)) if path.is_file() else None,
-            "source_production_ready": production,
-            "phone_qa_pass": phone,
-            "android_visual_qa_pass": android,
-            "android_accepted": accepted,
+            **gate_state,
             "maturity_score": score,
+            "missing_gates": missing_gates,
             "source_stage": data.get("source_stage"),
         })
 
+    minimum_score = min((r["maturity_score"] for r in rows), default=0)
     summary = {
         "actors": len(rows),
         "production_ready": sum(r["source_production_ready"] for r in rows),
         "phone_qa": sum(r["phone_qa_pass"] for r in rows),
         "android_visual_qa": sum(r["android_visual_qa_pass"] for r in rows),
         "android_accepted": sum(r["android_accepted"] for r in rows),
-        "least_advanced": [r["id"] for r in rows if r["maturity_score"] == min(x["maturity_score"] for x in rows)],
+        "gate_deficits": {
+            label: sum(not r[key] for r in rows)
+            for key, label in GATES
+        },
+        "least_advanced": [r["id"] for r in rows if r["maturity_score"] == minimum_score],
     }
 
     if args.json:
@@ -71,9 +78,12 @@ def main() -> int:
         f"phone-QA {summary['phone_qa']} | Android-QA {summary['android_visual_qa']} | "
         f"accepted {summary['android_accepted']}"
     )
+    print("Gate deficits: " + ", ".join(
+        f"{label}={count}" for label, count in summary["gate_deficits"].items()
+    ))
     print("Least advanced: " + ", ".join(summary["least_advanced"]))
     print()
-    print("score  actor              prod phone android accepted stage")
+    print("score  actor              prod phone android accepted stage  blockers")
     for r in rows:
         print(
             f"{r['maturity_score']:>5}  {r['id']:<18} "
@@ -81,7 +91,8 @@ def main() -> int:
             f"{'Y' if r['phone_qa_pass'] else '-':>5} "
             f"{'Y' if r['android_visual_qa_pass'] else '-':>7} "
             f"{'Y' if r['android_accepted'] else '-':>8} "
-            f"{r['source_stage'] or '-'}"
+            f"{r['source_stage'] or '-'}  "
+            f"{','.join(r['missing_gates']) or '-'}"
         )
     return 0
 
