@@ -3,6 +3,7 @@ package com.deadlinezero.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -80,6 +81,7 @@ public final class ShopScreen extends ScreenAdapter {
             Rectangle r = chestCards[i];
             boolean disabled = i == 2 && p.daily.rewardedChestClaimed;
             UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == 2 && !disabled, false);
+            drawChestChrome(shapes, r, i, disabled);
             Rectangle button = chestButton(r);
             UiRenderer.button(shapes, button.x, button.y, button.width, button.height,
                 disabled ? UiRenderer.ButtonState.DISABLED : i == 2 ? UiRenderer.ButtonState.SELECTED : UiRenderer.ButtonState.NORMAL);
@@ -89,10 +91,12 @@ public final class ShopScreen extends ScreenAdapter {
             String productId = purchaseProductId(i);
             boolean owned = (i == 0 && p.starterPackGranted) || (i == 3 && p.removeAdsPurchased);
             boolean enabled = game.services.offers.current().enabled(productId);
+            boolean featured = game.services.offers.current().featured(productId);
             UiRenderer.button(shapes, r.x, r.y, r.width, r.height,
                 owned || !enabled ? UiRenderer.ButtonState.DISABLED
-                    : game.services.offers.current().featured(productId) ? UiRenderer.ButtonState.SELECTED
+                    : featured ? UiRenderer.ButtonState.SELECTED
                     : UiRenderer.ButtonState.NORMAL);
+            drawOfferChrome(shapes, r, i, owned || !enabled, featured);
         }
         shapes.end();
 
@@ -107,6 +111,51 @@ public final class ShopScreen extends ScreenAdapter {
         batch.end();
 
         handleInput();
+    }
+
+    private void drawChestChrome(ShapeRenderer shapes, Rectangle r, int index, boolean disabled) {
+        Color accent = switch (index) {
+            case 1 -> VisualTheme.VIOLET;
+            case 2 -> VisualTheme.positive();
+            default -> VisualTheme.CYAN_SOFT;
+        };
+        float alpha = disabled ? .18f : index == 2 ? .72f : .52f;
+        shapes.setColor(accent.r, accent.g, accent.b, alpha);
+        shapes.rect(r.x + 5f, r.y + r.height - 7f, Math.max(0f, r.width - 10f), 4f);
+        shapes.setColor(accent.r, accent.g, accent.b, disabled ? .035f : .065f);
+        shapes.rect(r.x + 8f, r.y + 8f, Math.max(0f, r.width - 16f), Math.max(0f, r.height - 16f));
+
+        float emblemRadius = Math.min(r.width, r.height) * .07f;
+        float cx = r.x + r.width * .5f;
+        float cy = r.y + r.height * .72f;
+        shapes.setColor(accent.r, accent.g, accent.b, disabled ? .10f : .18f);
+        shapes.circle(cx, cy, emblemRadius * 1.7f, 28);
+        shapes.setColor(accent.r, accent.g, accent.b, disabled ? .26f : .76f);
+        shapes.circle(cx, cy, emblemRadius, 24);
+        shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .92f);
+        shapes.circle(cx, cy, emblemRadius * .48f, 20);
+    }
+
+    private void drawOfferChrome(ShapeRenderer shapes, Rectangle r, int index,
+                                 boolean disabled, boolean featured) {
+        Color accent = switch (index) {
+            case 0 -> VisualTheme.GOLD;
+            case 3 -> VisualTheme.CYAN_SOFT;
+            default -> VisualTheme.accent();
+        };
+        if (disabled) {
+            shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .24f);
+            shapes.rect(r.x + 6f, r.y + r.height - 5f, Math.max(0f, r.width - 12f), 2f);
+            return;
+        }
+
+        shapes.setColor(accent.r, accent.g, accent.b, featured ? .88f : .42f);
+        shapes.rect(r.x + 6f, r.y + r.height - (featured ? 6f : 4f),
+            Math.max(0f, r.width - 12f), featured ? 4f : 2f);
+        if (featured) {
+            shapes.setColor(accent.r, accent.g, accent.b, .08f);
+            shapes.rect(r.x + 7f, r.y + 7f, Math.max(0f, r.width - 14f), Math.max(0f, r.height - 14f));
+        }
     }
 
     private void drawHeader(PlayerProfile p) {
