@@ -6,6 +6,7 @@
     "tools-android",
     "tools-blender",
     "tools-build-final-sprite-frames.py",
+    "tools-environment",
     "tools-import-pixellab-idle.py",
     "tools-perf",
     "tools-slice-sprite-sheet.py",
@@ -608,12 +609,13 @@
         "core/src/test/java/com/deadlinezero/game/visual/DirectionalBootstrapArtTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/DirectionalBootstrapLazyLoadTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArtTest.java",
+        "tools/environment/test_upsert_environment_atlas.py",
         "tools/import_pixellab_idle.py",
         "tools/slice_sprite_sheet.py",
         "tools/test_verify_final_atlas.py",
         "tools/validate_rex_reference.py"
       ],
-      "in_degree": 45,
+      "in_degree": 46,
       "out_degree": 0,
       "path": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java"
     },
@@ -849,6 +851,44 @@
       "path": "core/src/main/java/com/deadlinezero/game/ui/UiLayout.java"
     },
     {
+      "dependencies": [],
+      "dependents": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+        "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
+        "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
+        "core/src/main/java/com/deadlinezero/game/meta/MasteryRunNotice.java",
+        "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunSettlement.java",
+        "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+        "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
+        "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
+        "core/src/main/java/com/deadlinezero/game/visual/ProductionAtlasAudit.java",
+        "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+        "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyBehaviorRules.java",
+        "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+        "core/src/main/java/com/deadlinezero/game/world/StageCombatPressureAudit.java",
+        "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/MasteryEconomyGuardrailTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/MasteryProgressTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/MasteryRunNoticeTest.java",
+        "core/src/test/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArtTest.java",
+        "core/src/test/java/com/deadlinezero/game/visual/DirectionalGpuMemoryBudgetTest.java",
+        "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java",
+        "core/src/test/java/com/deadlinezero/game/visual/EnvironmentBiomeRulesTest.java",
+        "tools/environment/pack_environment_art.py",
+        "tools/environment/validate_environment_art_contract.py"
+      ],
+      "in_degree": 30,
+      "out_degree": 0,
+      "path": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+    },
+    {
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/ai/RevenantBossProfile.java",
         "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java"
@@ -998,40 +1038,6 @@
       "in_degree": 24,
       "out_degree": 3,
       "path": "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java"
-    },
-    {
-      "dependencies": [],
-      "dependents": [
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-        "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-        "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
-        "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
-        "core/src/main/java/com/deadlinezero/game/meta/MasteryRunNotice.java",
-        "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
-        "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java",
-        "core/src/main/java/com/deadlinezero/game/meta/RunSettlement.java",
-        "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-        "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
-        "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
-        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-        "core/src/main/java/com/deadlinezero/game/visual/ProductionAtlasAudit.java",
-        "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
-        "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyBehaviorRules.java",
-        "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
-        "core/src/main/java/com/deadlinezero/game/world/StageCombatPressureAudit.java",
-        "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/MasteryEconomyGuardrailTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/MasteryProgressTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/MasteryRunNoticeTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArtTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/DirectionalGpuMemoryBudgetTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/EnvironmentBiomeRulesTest.java"
-      ],
-      "in_degree": 26,
-      "out_degree": 0,
-      "path": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
     },
     {
       "dependencies": [
@@ -1707,6 +1713,33 @@
     },
     {
       "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryReportTest.java",
+        "tools/blender/inspect_actor_source.py",
+        "tools/blender/render_actor_8dir.py",
+        "tools/blender/repair_rex_weights.py",
+        "tools/blender/validate_rex_weapon_visibility.py",
+        "tools/blender/validate_rig.py",
+        "tools/environment/validate_environment_art_contract.py",
+        "tools/sprites/audit_final_art_status.py",
+        "tools/sprites/normalize_actor_frames.py",
+        "tools/sprites/normalize_rex_frames.py",
+        "tools/sprites/test_validate_actor_role_metrics.py",
+        "tools/sprites/validate_actor_role_metrics.py",
+        "tools/sprites/validate_ranged_attack_readability.py"
+      ],
+      "in_degree": 14,
+      "out_degree": 4,
+      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java"
+    },
+    {
+      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/ai/BossAffixRules.java",
         "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java",
         "core/src/main/java/com/deadlinezero/game/ai/FrostColossusBossProfile.java",
@@ -1808,32 +1841,6 @@
       "in_degree": 14,
       "out_degree": 3,
       "path": "core/src/main/java/com/deadlinezero/game/meta/RunRewardCalculator.java"
-    },
-    {
-      "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java"
-      ],
-      "dependents": [
-        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-        "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryReportTest.java",
-        "tools/blender/inspect_actor_source.py",
-        "tools/blender/render_actor_8dir.py",
-        "tools/blender/repair_rex_weights.py",
-        "tools/blender/validate_rex_weapon_visibility.py",
-        "tools/blender/validate_rig.py",
-        "tools/sprites/audit_final_art_status.py",
-        "tools/sprites/normalize_actor_frames.py",
-        "tools/sprites/normalize_rex_frames.py",
-        "tools/sprites/test_validate_actor_role_metrics.py",
-        "tools/sprites/validate_actor_role_metrics.py",
-        "tools/sprites/validate_ranged_attack_readability.py"
-      ],
-      "in_degree": 13,
-      "out_degree": 4,
-      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java"
     },
     {
       "dependencies": [
@@ -2232,6 +2239,29 @@
     },
     {
       "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
+        "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+        "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+        "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+        "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+        "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+        "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+        "tools/environment/pack_environment_art.py",
+        "tools/environment/test_validate_environment_art_contract.py",
+        "tools/environment/validate_environment_art_contract.py"
+      ],
+      "in_degree": 10,
+      "out_degree": 4,
+      "path": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java"
+    },
+    {
+      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java",
         "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
@@ -2252,33 +2282,10 @@
       "in_degree": 9,
       "out_degree": 5,
       "path": "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java"
-    },
-    {
-      "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java",
-        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-        "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
-        "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
-        "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
-        "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java"
-      ],
-      "dependents": [
-        "core/src/main/java/com/deadlinezero/game/ai/EnemyPatternCatalog.java",
-        "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "core/src/test/java/com/deadlinezero/game/ai/BossAttackPatternCatalogTest.java",
-        "core/src/test/java/com/deadlinezero/game/ai/HarvesterBossProfileTest.java",
-        "core/src/test/java/com/deadlinezero/game/ai/NullArchonBossProfileTest.java",
-        "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
-        "tools/android/scan_runtime_log.py"
-      ],
-      "in_degree": 8,
-      "out_degree": 6,
-      "path": "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java"
     }
   ],
-  "edge_count": 2250,
+  "edge_count": 2265,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 430,
+  "node_count": 437,
   "schema_version": 1
 }

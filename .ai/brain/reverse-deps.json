@@ -945,9 +945,12 @@
         "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
         "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
         "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
-        "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java"
+        "core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java",
+        "tools/environment/pack_environment_art.py",
+        "tools/environment/test_validate_environment_art_contract.py",
+        "tools/environment/validate_environment_art_contract.py"
       ],
-      "in_degree": 7,
+      "in_degree": 10,
       "out_degree": 4
     },
     "core/src/main/java/com/deadlinezero/game/config/AccessibilitySettings.java": {
@@ -1431,6 +1434,7 @@
         "tools/blender/repair_rex_weights.py",
         "tools/blender/validate_rex_weapon_visibility.py",
         "tools/blender/validate_rig.py",
+        "tools/environment/validate_environment_art_contract.py",
         "tools/sprites/audit_final_art_status.py",
         "tools/sprites/normalize_actor_frames.py",
         "tools/sprites/normalize_rex_frames.py",
@@ -1438,7 +1442,7 @@
         "tools/sprites/validate_actor_role_metrics.py",
         "tools/sprites/validate_ranged_attack_readability.py"
       ],
-      "in_degree": 13,
+      "in_degree": 14,
       "out_degree": 4
     },
     "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java": {
@@ -2325,12 +2329,13 @@
         "core/src/test/java/com/deadlinezero/game/visual/DirectionalBootstrapArtTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/DirectionalBootstrapLazyLoadTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArtTest.java",
+        "tools/environment/test_upsert_environment_atlas.py",
         "tools/import_pixellab_idle.py",
         "tools/slice_sprite_sheet.py",
         "tools/test_verify_final_atlas.py",
         "tools/validate_rex_reference.py"
       ],
-      "in_degree": 45,
+      "in_degree": 46,
       "out_degree": 0
     },
     "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java": {
@@ -3635,10 +3640,12 @@
         "core/src/main/java/com/deadlinezero/game/entities/Enemy.java"
       ],
       "dependents": [
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java",
         "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
-        "core/src/test/java/com/deadlinezero/game/visual/BootstrapEnvironmentArtTest.java"
+        "core/src/test/java/com/deadlinezero/game/visual/BootstrapEnvironmentArtTest.java",
+        "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java"
       ],
-      "in_degree": 2,
+      "in_degree": 4,
       "out_degree": 1
     },
     "core/src/main/java/com/deadlinezero/game/visual/BootstrapVfxArt.java": {
@@ -3924,6 +3931,18 @@
       "in_degree": 4,
       "out_degree": 3
     },
+    "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/visual/BootstrapEnvironmentArt.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+        "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java"
+      ],
+      "in_degree": 2,
+      "out_degree": 2
+    },
     "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java": {
       "dependencies": [],
       "dependents": [
@@ -3939,6 +3958,7 @@
         "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
         "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
         "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java",
         "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
         "core/src/main/java/com/deadlinezero/game/visual/ProductionAtlasAudit.java",
@@ -3952,9 +3972,12 @@
         "core/src/test/java/com/deadlinezero/game/meta/MasteryRunNoticeTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArtTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/DirectionalGpuMemoryBudgetTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/EnvironmentBiomeRulesTest.java"
+        "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java",
+        "core/src/test/java/com/deadlinezero/game/visual/EnvironmentBiomeRulesTest.java",
+        "tools/environment/pack_environment_art.py",
+        "tools/environment/validate_environment_art_contract.py"
       ],
-      "in_degree": 26,
+      "in_degree": 30,
       "out_degree": 0
     },
     "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": {
@@ -3962,6 +3985,7 @@
         "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
         "core/src/main/java/com/deadlinezero/game/visual/BootstrapEnvironmentArt.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java",
         "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
         "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
         "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
@@ -3972,7 +3996,7 @@
         "core/src/test/java/com/deadlinezero/game/visual/BootstrapEnvironmentArtTest.java"
       ],
       "in_degree": 2,
-      "out_degree": 7
+      "out_degree": 8
     },
     "core/src/main/java/com/deadlinezero/game/visual/FinalArtContract.java": {
       "dependencies": [
@@ -5910,6 +5934,16 @@
       "in_degree": 0,
       "out_degree": 4
     },
+    "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/visual/BootstrapEnvironmentArt.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 3
+    },
     "core/src/test/java/com/deadlinezero/game/visual/EnvironmentBiomeRulesTest.java": {
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
@@ -6236,6 +6270,53 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 1
+    },
+    "tools/environment/pack_environment_art.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
+    },
+    "tools/environment/test_upsert_environment_atlas.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+        "tools/environment/upsert_environment_atlas.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
+    },
+    "tools/environment/test_validate_environment_art_contract.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "tools/environment/validate_environment_art_contract.py"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 2
+    },
+    "tools/environment/upsert_environment_atlas.py": {
+      "dependencies": [],
+      "dependents": [
+        "tools/environment/test_upsert_environment_atlas.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 0
+    },
+    "tools/environment/validate_environment_art_contract.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryReport.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
+      ],
+      "dependents": [
+        "tools/environment/test_validate_environment_art_contract.py"
+      ],
+      "in_degree": 1,
+      "out_degree": 3
     },
     "tools/import_pixellab_idle.py": {
       "dependencies": [

@@ -118,6 +118,7 @@ config/
     wraith.json
   actor-candidates.json
   actor-production-contracts.json
+  environment-art-contract.json
 core/
   src/
     main/
@@ -328,6 +329,7 @@ core/
                 DeathFxRenderer.java
                 Direction8.java
                 DirectionalBootstrapArt.java
+                EnvironmentArtCatalog.java
                 EnvironmentBiomeRules.java
                 EnvironmentRenderer.java
                 FinalArtContract.java
@@ -521,6 +523,7 @@ core/
                 DirectionalBootstrapArtTest.java
                 DirectionalBootstrapLazyLoadTest.java
                 DirectionalGpuMemoryBudgetTest.java
+                EnvironmentArtCatalogTest.java
                 EnvironmentBiomeRulesTest.java
                 FinalArtContractTest.java
                 FinalArtLayoutContractTest.java
@@ -571,6 +574,12 @@ tools/
     style_rex_materials.py
     validate_rex_weapon_visibility.py
     validate_rig.py
+  environment/
+    pack_environment_art.py
+    test_upsert_environment_atlas.py
+    test_validate_environment_art_contract.py
+    upsert_environment_atlas.py
+    validate_environment_art_contract.py
   perf/
     compare_android_benchmark.py
     test_compare_android_benchmark.py
@@ -3385,7 +3394,7 @@ jobs:
           gradle-version: '8.11.1'
       - name: Validate final sprite production layout
         run: |
-          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/assemble_actor_sheet.py tools/sprites/audit_final_art_status.py tools/sprites/validate_final_art_promotion_consistency.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py
+          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/assemble_actor_sheet.py tools/sprites/audit_final_art_status.py tools/sprites/validate_final_art_promotion_consistency.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py tools/environment/validate_environment_art_contract.py tools/environment/test_validate_environment_art_contract.py tools/environment/pack_environment_art.py tools/environment/upsert_environment_atlas.py tools/environment/test_upsert_environment_atlas.py
           python3 tools/validate_final_sprite_layout.py
           python3 tools/validate_rex_reference.py
           mkdir -p build
@@ -3398,6 +3407,9 @@ jobs:
           python3 -m unittest discover -s tools/sprites -p 'test_validate_actor_production_contracts.py'
           python3 -m unittest discover -s tools/perf -p 'test_compare_android_benchmark.py'
           python3 -m unittest discover -s tools/android -p 'test_scan_runtime_log.py'
+          PYTHONPATH=tools/environment python3 -m unittest discover -s tools/environment -p 'test_validate_environment_art_contract.py'
+          PYTHONPATH=tools/environment python3 -m unittest discover -s tools/environment -p 'test_upsert_environment_atlas.py'
+          python3 tools/environment/validate_environment_art_contract.py
       - name: Compile and test core
         run: gradle :core:compileJava :core:test :desktop:compileJava
       - name: Smoke-test desktop runtime
@@ -8417,6 +8429,53 @@ tasks.configureEach { task ->
         "android_visual_qa_pass": true
       }
     }
+  }
+}
+````
+
+## File: config/environment-art-contract.json
+````json
+{
+  "version": 1,
+  "purpose": "Production contract for Deadline Zero biome environment art.",
+  "runtimePolicy": {
+    "preferred": "environment/<biome>/<slot>",
+    "fallback": "environment/<slot>",
+    "bootstrapFallbackAllowedDuringDevelopment": true,
+    "releaseGoal": "all 70 biome-specific slots authored and present in art/game.atlas"
+  },
+  "biomes": [
+    {"id":"quarantine_yard","stageStart":1,"palette":"cold industrial steel, emergency red, dirty concrete"},
+    {"id":"cinder_foundry","stageStart":10,"palette":"molten orange, furnace red, black steel"},
+    {"id":"null_sector","stageStart":20,"palette":"violet void energy, electric cyan, black alloy"},
+    {"id":"cryo_vault","stageStart":30,"palette":"clean ice blue, white frost, dark navy steel"},
+    {"id":"cryogenic_depths","stageStart":40,"palette":"deep cyan, frozen teal, abyssal blue"}
+  ],
+  "slots": [
+    {"path":"floor/concrete_a","kind":"tile","tileable":true,"alpha":false},
+    {"path":"floor/concrete_b","kind":"tile","tileable":true,"alpha":false},
+    {"path":"floor/concrete_c","kind":"tile","tileable":true,"alpha":false},
+    {"path":"floor/hazard_a","kind":"tile","tileable":true,"alpha":false},
+    {"path":"decal/crack_a","kind":"decal","tileable":false,"alpha":true},
+    {"path":"decal/blood_a","kind":"decal","tileable":false,"alpha":true},
+    {"path":"decal/scorch_a","kind":"decal","tileable":false,"alpha":true},
+    {"path":"prop/barrier_a","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/debris_a","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/debris_b","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/wall_a","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/wall_b","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/crate_a","kind":"prop","tileable":false,"alpha":true},
+    {"path":"prop/beacon_a","kind":"prop","tileable":false,"alpha":true}
+  ],
+  "sourceGuidance": {
+    "masterResolution": 512,
+    "runtimeTarget": 256,
+    "style": "premium top-down sci-fi survival, physically readable materials, no text, no logos",
+    "camera": "orthographic/top-down compatible",
+    "lighting": "baked local material lighting only; preserve readability under runtime tint and local-light FX",
+    "silhouetteRule": "props must remain readable at approximately 32-96 screen pixels",
+    "floorRule": "floor tiles must be seamless and low-contrast enough not to compete with enemies/projectiles",
+    "decalRule": "decals need clean transparent edges and must not contain baked rectangular backgrounds"
   }
 }
 ````
@@ -18509,6 +18568,37 @@ private static void set(Pixmap p, float r, float g, float b, float a) { p.setCol
 @Override public void dispose() {
 ````
 
+## File: core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java
+````java
+/**
+ * Canonical production naming for biome-specific environment art.
+ *
+ * <p>The runtime always prefers these atlas regions and then falls back to the existing generic
+ * environment keys/bootstrap art. This lets production art land biome-by-biome without making
+ * incomplete packs crash or visually disappear.</p>
+ */
+public final class EnvironmentArtCatalog {
+⋮----
+public static String biomeToken(EnvironmentBiomeRules.Biome biome) {
+⋮----
+return safe.name().toLowerCase(java.util.Locale.ROOT);
+⋮----
+public static String productionKey(EnvironmentBiomeRules.Biome biome, String genericKey) {
+if (genericKey == null || !genericKey.startsWith(ROOT)) return genericKey;
+return ROOT + biomeToken(biome) + "/" + genericKey.substring(ROOT.length());
+⋮----
+public static List<String> productionKeys(EnvironmentBiomeRules.Biome biome) {
+⋮----
+for (String generic : BootstrapEnvironmentArt.KEYS) keys.add(productionKey(biome, generic));
+return Collections.unmodifiableList(keys);
+⋮----
+public static List<String> allProductionKeys() {
+⋮----
+EnvironmentBiomeRules.Biome.values().length * BootstrapEnvironmentArt.KEYS.length);
+for (EnvironmentBiomeRules.Biome biome : EnvironmentBiomeRules.Biome.values()) {
+keys.addAll(productionKeys(biome));
+````
+
 ## File: core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java
 ````java
 /** Pure stage-to-biome routing used by environment presentation and tests. */
@@ -18968,6 +19058,10 @@ return region("environment/decal/crack_a") != null
 || region("environment/prop/beacon_a") != null;
 ⋮----
 private TextureRegion region(String key) {
+EnvironmentBiomeRules.Biome biome = EnvironmentBiomeRules.forStage(RunStageContext.stage());
+String productionKey = EnvironmentArtCatalog.productionKey(biome, key);
+TextureRegion production = art.regionOrNull(productionKey);
+⋮----
 TextureRegion finalOrLegacy = art.regionOrNull(key);
 ⋮----
 return bootstrap == null ? null : bootstrap.region(key);
@@ -26134,6 +26228,27 @@ assertTrue(peakDirectionalBytes <= 20L * MIB,
 private static long rgbaBytes(int width, int height) {
 ````
 
+## File: core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java
+````java
+final class EnvironmentArtCatalogTest {
+@Test void productionKeysAreUniqueAcrossAllFiveBiomes() {
+var all = EnvironmentArtCatalog.allProductionKeys();
+assertEquals(70, all.size());
+assertEquals(70, new HashSet<>(all).size());
+⋮----
+@Test void preservesTheGenericSlotShapeUnderBiomePrefix() {
+String key = EnvironmentArtCatalog.productionKey(
+⋮----
+assertEquals("environment/cinder_foundry/prop/crate_a", key);
+⋮----
+@Test void everyBiomeDefinesTheFullFourteenSlotPack() {
+for (EnvironmentBiomeRules.Biome biome : EnvironmentBiomeRules.Biome.values()) {
+var keys = EnvironmentArtCatalog.productionKeys(biome);
+assertEquals(BootstrapEnvironmentArt.KEYS.length, keys.size());
+String prefix = "environment/" + EnvironmentArtCatalog.biomeToken(biome) + "/";
+assertTrue(keys.stream().allMatch(key -> key.startsWith(prefix)));
+````
+
 ## File: core/src/test/java/com/deadlinezero/game/visual/EnvironmentBiomeRulesTest.java
 ````java
 public final class EnvironmentBiomeRulesTest {
@@ -28208,6 +28323,219 @@ ratio = weighted_vertices / total_vertices if total_vertices else 0.0
 ⋮----
 report = {
 report_path = args.output / "rig-report.json"
+````
+
+## File: tools/environment/pack_environment_art.py
+````python
+#!/usr/bin/env python3
+"""Pack one authored biome environment set into a deterministic libGDX atlas page.
+
+Source layout:
+  art_sources/environment/<biome>/<slot path>.png
+
+Example:
+  art_sources/environment/cinder_foundry/floor/concrete_a.png
+  art_sources/environment/cinder_foundry/prop/crate_a.png
+
+The source master is expected to be 512x512. This tool downsamples each slot to
+256x256, writes one 1024x1024 RGBA page (14 occupied cells in a 4x4 grid), an
+atlas fragment and a QA manifest. It does not mutate game.atlas automatically.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+CONTRACT = ROOT / "config" / "environment-art-contract.json"
+DEFAULT_SOURCE = ROOT / "art_sources" / "environment"
+DEFAULT_BUILD = ROOT / "build" / "environment_art"
+MASTER = 512
+CELL = 256
+COLUMNS = 4
+⋮----
+def sha256(path: Path) -> str
+⋮----
+h = hashlib.sha256()
+⋮----
+def load_contract() -> dict
+⋮----
+def alpha_bbox(image: Image.Image)
+⋮----
+def normalize(source: Path, slot: dict) -> tuple[Image.Image, dict]
+⋮----
+image = raw.convert("RGBA")
+⋮----
+alpha = image.getchannel("A")
+extrema = alpha.getextrema()
+bbox = alpha_bbox(image)
+⋮----
+coverage = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) / float(MASTER * MASTER)
+⋮----
+runtime = image.resize((CELL, CELL), Image.Resampling.LANCZOS)
+⋮----
+def atlas_fragment(page_name: str, biome: str, slots: list[dict]) -> str
+⋮----
+lines = [
+⋮----
+key = f"environment/{biome}/{slot['path']}"
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+⋮----
+contract = load_contract()
+biome_ids = {item["id"] for item in contract["biomes"]}
+⋮----
+slots = contract["slots"]
+page = Image.new("RGBA", (COLUMNS * CELL, COLUMNS * CELL), (0, 0, 0, 0))
+records = []
+⋮----
+source = args.source_root / args.biome / (slot["path"] + ".png")
+⋮----
+page_name = f"environment-{args.biome}.png"
+page_path = args.output / page_name
+fragment_path = args.output / f"environment-{args.biome}.atlas.txt"
+manifest_path = args.output / f"environment-{args.biome}.manifest.json"
+⋮----
+manifest = {
+````
+
+## File: tools/environment/test_upsert_environment_atlas.py
+````python
+#!/usr/bin/env python3
+⋮----
+class EnvironmentAtlasUpsertTest(unittest.TestCase)
+⋮----
+def test_appends_new_page_without_touching_existing_page(self)
+⋮----
+existing = """actor.png
+fragment = """environment-quarantine_yard.png
+result = target.upsert_atlas_text(existing, fragment)
+⋮----
+def test_replaces_existing_environment_page_instead_of_duplicating_it(self)
+⋮----
+fragment = """environment-null_sector.png
+````
+
+## File: tools/environment/test_validate_environment_art_contract.py
+````python
+#!/usr/bin/env python3
+⋮----
+class EnvironmentArtContractTest(unittest.TestCase)
+⋮----
+def contract(self)
+⋮----
+def test_expected_matrix_is_seventy_unique_regions(self)
+⋮----
+keys = target.expected_keys(self.contract())
+⋮----
+def test_atlas_coverage_ignores_page_declarations(self)
+⋮----
+contract = self.contract()
+key = target.expected_keys(contract)[0]
+text = f"""environment-b0.png
+⋮----
+atlas = Path(directory) / "game.atlas"
+⋮----
+def test_load_contract_rejects_duplicate_slots(self)
+⋮----
+path = Path(directory) / "contract.json"
+````
+
+## File: tools/environment/upsert_environment_atlas.py
+````python
+#!/usr/bin/env python3
+"""Install or replace one generated environment atlas page in assets/art/game.atlas."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_ATLAS = ROOT / "assets" / "art" / "game.atlas"
+⋮----
+def is_page_line(line: str) -> bool
+⋮----
+stripped = line.strip()
+⋮----
+def page_blocks(text: str) -> tuple[list[str], list[list[str]]]
+⋮----
+lines = text.splitlines()
+starts = [i for i, line in enumerate(lines) if is_page_line(line)]
+⋮----
+prefix = lines[: starts[0]]
+blocks: list[list[str]] = []
+⋮----
+end = starts[index + 1] if index + 1 < len(starts) else len(lines)
+block = lines[start:end]
+⋮----
+def upsert_atlas_text(existing: str, fragment: str) -> str
+⋮----
+fragment_lines = fragment.strip().splitlines()
+⋮----
+page_name = fragment_lines[0].strip()
+⋮----
+kept = [block for block in blocks if not block or block[0].strip() != page_name]
+⋮----
+out: list[str] = []
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+⋮----
+fragment = args.fragment.read_text(encoding="utf-8")
+first = fragment.strip().splitlines()[0].strip()
+⋮----
+updated = upsert_atlas_text(args.atlas.read_text(encoding="utf-8"), fragment)
+destination = args.atlas.parent / args.page.name
+````
+
+## File: tools/environment/validate_environment_art_contract.py
+````python
+#!/usr/bin/env python3
+"""Validate the Deadline Zero biome environment-art contract and report atlas coverage."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_CONTRACT = ROOT / "config" / "environment-art-contract.json"
+DEFAULT_ATLAS = ROOT / "assets" / "art" / "game.atlas"
+EXPECTED_BIOMES = 5
+EXPECTED_SLOTS = 14
+⋮----
+def load_contract(path: Path) -> dict
+⋮----
+data = json.loads(path.read_text(encoding="utf-8"))
+biomes = data.get("biomes")
+slots = data.get("slots")
+⋮----
+biome_ids = [item.get("id") for item in biomes]
+⋮----
+slot_paths = [item.get("path") for item in slots]
+⋮----
+kind = slot.get("kind")
+⋮----
+def expected_keys(contract: dict) -> list[str]
+⋮----
+def atlas_region_names(path: Path) -> set[str]
+⋮----
+names: set[str] = set()
+⋮----
+stripped = raw.strip()
+⋮----
+lower = stripped.lower()
+⋮----
+def coverage(contract: dict, atlas: Path) -> tuple[list[str], list[str]]
+⋮----
+expected = expected_keys(contract)
+regions = atlas_region_names(atlas) if atlas.is_file() else set()
+present = [key for key in expected if key in regions]
+missing = [key for key in expected if key not in regions]
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+⋮----
+contract = load_contract(args.contract)
+⋮----
+payload = {
 ````
 
 ## File: tools/perf/compare_android_benchmark.py

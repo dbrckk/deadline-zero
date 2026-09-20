@@ -247,6 +247,7 @@ src/
               DeathFxRenderer.java
               Direction8.java
               DirectionalBootstrapArt.java
+              EnvironmentArtCatalog.java
               EnvironmentBiomeRules.java
               EnvironmentRenderer.java
               FinalArtContract.java
@@ -440,6 +441,7 @@ src/
               DirectionalBootstrapArtTest.java
               DirectionalBootstrapLazyLoadTest.java
               DirectionalGpuMemoryBudgetTest.java
+              EnvironmentArtCatalogTest.java
               EnvironmentBiomeRulesTest.java
               FinalArtContractTest.java
               FinalArtLayoutContractTest.java
@@ -10555,6 +10557,37 @@ private static void set(Pixmap p, float r, float g, float b, float a) { p.setCol
 @Override public void dispose() {
 ```
 
+## File: src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java
+```java
+/**
+ * Canonical production naming for biome-specific environment art.
+ *
+ * <p>The runtime always prefers these atlas regions and then falls back to the existing generic
+ * environment keys/bootstrap art. This lets production art land biome-by-biome without making
+ * incomplete packs crash or visually disappear.</p>
+ */
+public final class EnvironmentArtCatalog {
+⋮----
+public static String biomeToken(EnvironmentBiomeRules.Biome biome) {
+⋮----
+return safe.name().toLowerCase(java.util.Locale.ROOT);
+⋮----
+public static String productionKey(EnvironmentBiomeRules.Biome biome, String genericKey) {
+if (genericKey == null || !genericKey.startsWith(ROOT)) return genericKey;
+return ROOT + biomeToken(biome) + "/" + genericKey.substring(ROOT.length());
+⋮----
+public static List<String> productionKeys(EnvironmentBiomeRules.Biome biome) {
+⋮----
+for (String generic : BootstrapEnvironmentArt.KEYS) keys.add(productionKey(biome, generic));
+return Collections.unmodifiableList(keys);
+⋮----
+public static List<String> allProductionKeys() {
+⋮----
+EnvironmentBiomeRules.Biome.values().length * BootstrapEnvironmentArt.KEYS.length);
+for (EnvironmentBiomeRules.Biome biome : EnvironmentBiomeRules.Biome.values()) {
+keys.addAll(productionKeys(biome));
+```
+
 ## File: src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java
 ```java
 /** Pure stage-to-biome routing used by environment presentation and tests. */
@@ -11014,6 +11047,10 @@ return region("environment/decal/crack_a") != null
 || region("environment/prop/beacon_a") != null;
 ⋮----
 private TextureRegion region(String key) {
+EnvironmentBiomeRules.Biome biome = EnvironmentBiomeRules.forStage(RunStageContext.stage());
+String productionKey = EnvironmentArtCatalog.productionKey(biome, key);
+TextureRegion production = art.regionOrNull(productionKey);
+⋮----
 TextureRegion finalOrLegacy = art.regionOrNull(key);
 ⋮----
 return bootstrap == null ? null : bootstrap.region(key);
@@ -18178,6 +18215,27 @@ assertTrue(biomeDirectional <= 3L * MIB, "biome directional sheet exceeded 3 MiB
 assertTrue(peakDirectionalBytes <= 20L * MIB,
 ⋮----
 private static long rgbaBytes(int width, int height) {
+```
+
+## File: src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java
+```java
+final class EnvironmentArtCatalogTest {
+@Test void productionKeysAreUniqueAcrossAllFiveBiomes() {
+var all = EnvironmentArtCatalog.allProductionKeys();
+assertEquals(70, all.size());
+assertEquals(70, new HashSet<>(all).size());
+⋮----
+@Test void preservesTheGenericSlotShapeUnderBiomePrefix() {
+String key = EnvironmentArtCatalog.productionKey(
+⋮----
+assertEquals("environment/cinder_foundry/prop/crate_a", key);
+⋮----
+@Test void everyBiomeDefinesTheFullFourteenSlotPack() {
+for (EnvironmentBiomeRules.Biome biome : EnvironmentBiomeRules.Biome.values()) {
+var keys = EnvironmentArtCatalog.productionKeys(biome);
+assertEquals(BootstrapEnvironmentArt.KEYS.length, keys.size());
+String prefix = "environment/" + EnvironmentArtCatalog.biomeToken(biome) + "/";
+assertTrue(keys.stream().allMatch(key -> key.startsWith(prefix)));
 ```
 
 ## File: src/test/java/com/deadlinezero/game/visual/EnvironmentBiomeRulesTest.java

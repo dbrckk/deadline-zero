@@ -22,20 +22,32 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T11:34:42Z
+Generated: 2026-09-20T11:35:45Z
 
 ### Git
 - Branch: `main`
-- Head: `d31450202797`
-- Commit date: 2026-09-20T13:34:26+02:00
-- Commit: Define premium environment art production contract
-- Tracked files: 729
+- Head: `fb7e7f1a5452`
+- Commit date: 2026-09-20T13:35:33+02:00
+- Commit: Add production pipeline for 70 biome environment assets
+- Tracked files: 738
 
 ### Recently changed files
+- `.github/workflows/verify.yml`
+- `art_sources/environment/README.md`
+- `config/environment-art-contract.json`
+- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java`
+- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
+- `core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java`
+- `docs/PRODUCTION_STATUS.md`
+- `docs/ROADMAP.md`
+- `tools/environment/pack_environment_art.py`
+- `tools/environment/test_upsert_environment_atlas.py`
+- `tools/environment/test_validate_environment_art_contract.py`
+- `tools/environment/upsert_environment_atlas.py`
+- `tools/environment/validate_environment_art_contract.py`
 - `docs/PREMIUM_ENVIRONMENT_ART_CONTRACT.md`
 - `.github/workflows/shambler-android-acceptance.yml`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
 
 ### Project signals
 - `build.gradle`

@@ -53,6 +53,12 @@ blender/
   style_rex_materials.py
   validate_rex_weapon_visibility.py
   validate_rig.py
+environment/
+  pack_environment_art.py
+  test_upsert_environment_atlas.py
+  test_validate_environment_art_contract.py
+  upsert_environment_atlas.py
+  validate_environment_art_contract.py
 perf/
   compare_android_benchmark.py
   test_compare_android_benchmark.py
@@ -1044,6 +1050,219 @@ ratio = weighted_vertices / total_vertices if total_vertices else 0.0
 ⋮----
 report = {
 report_path = args.output / "rig-report.json"
+```
+
+## File: environment/pack_environment_art.py
+```python
+#!/usr/bin/env python3
+"""Pack one authored biome environment set into a deterministic libGDX atlas page.
+
+Source layout:
+  art_sources/environment/<biome>/<slot path>.png
+
+Example:
+  art_sources/environment/cinder_foundry/floor/concrete_a.png
+  art_sources/environment/cinder_foundry/prop/crate_a.png
+
+The source master is expected to be 512x512. This tool downsamples each slot to
+256x256, writes one 1024x1024 RGBA page (14 occupied cells in a 4x4 grid), an
+atlas fragment and a QA manifest. It does not mutate game.atlas automatically.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+CONTRACT = ROOT / "config" / "environment-art-contract.json"
+DEFAULT_SOURCE = ROOT / "art_sources" / "environment"
+DEFAULT_BUILD = ROOT / "build" / "environment_art"
+MASTER = 512
+CELL = 256
+COLUMNS = 4
+⋮----
+def sha256(path: Path) -> str
+⋮----
+h = hashlib.sha256()
+⋮----
+def load_contract() -> dict
+⋮----
+def alpha_bbox(image: Image.Image)
+⋮----
+def normalize(source: Path, slot: dict) -> tuple[Image.Image, dict]
+⋮----
+image = raw.convert("RGBA")
+⋮----
+alpha = image.getchannel("A")
+extrema = alpha.getextrema()
+bbox = alpha_bbox(image)
+⋮----
+coverage = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) / float(MASTER * MASTER)
+⋮----
+runtime = image.resize((CELL, CELL), Image.Resampling.LANCZOS)
+⋮----
+def atlas_fragment(page_name: str, biome: str, slots: list[dict]) -> str
+⋮----
+lines = [
+⋮----
+key = f"environment/{biome}/{slot['path']}"
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+⋮----
+contract = load_contract()
+biome_ids = {item["id"] for item in contract["biomes"]}
+⋮----
+slots = contract["slots"]
+page = Image.new("RGBA", (COLUMNS * CELL, COLUMNS * CELL), (0, 0, 0, 0))
+records = []
+⋮----
+source = args.source_root / args.biome / (slot["path"] + ".png")
+⋮----
+page_name = f"environment-{args.biome}.png"
+page_path = args.output / page_name
+fragment_path = args.output / f"environment-{args.biome}.atlas.txt"
+manifest_path = args.output / f"environment-{args.biome}.manifest.json"
+⋮----
+manifest = {
+```
+
+## File: environment/test_upsert_environment_atlas.py
+```python
+#!/usr/bin/env python3
+⋮----
+class EnvironmentAtlasUpsertTest(unittest.TestCase)
+⋮----
+def test_appends_new_page_without_touching_existing_page(self)
+⋮----
+existing = """actor.png
+fragment = """environment-quarantine_yard.png
+result = target.upsert_atlas_text(existing, fragment)
+⋮----
+def test_replaces_existing_environment_page_instead_of_duplicating_it(self)
+⋮----
+fragment = """environment-null_sector.png
+```
+
+## File: environment/test_validate_environment_art_contract.py
+```python
+#!/usr/bin/env python3
+⋮----
+class EnvironmentArtContractTest(unittest.TestCase)
+⋮----
+def contract(self)
+⋮----
+def test_expected_matrix_is_seventy_unique_regions(self)
+⋮----
+keys = target.expected_keys(self.contract())
+⋮----
+def test_atlas_coverage_ignores_page_declarations(self)
+⋮----
+contract = self.contract()
+key = target.expected_keys(contract)[0]
+text = f"""environment-b0.png
+⋮----
+atlas = Path(directory) / "game.atlas"
+⋮----
+def test_load_contract_rejects_duplicate_slots(self)
+⋮----
+path = Path(directory) / "contract.json"
+```
+
+## File: environment/upsert_environment_atlas.py
+```python
+#!/usr/bin/env python3
+"""Install or replace one generated environment atlas page in assets/art/game.atlas."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_ATLAS = ROOT / "assets" / "art" / "game.atlas"
+⋮----
+def is_page_line(line: str) -> bool
+⋮----
+stripped = line.strip()
+⋮----
+def page_blocks(text: str) -> tuple[list[str], list[list[str]]]
+⋮----
+lines = text.splitlines()
+starts = [i for i, line in enumerate(lines) if is_page_line(line)]
+⋮----
+prefix = lines[: starts[0]]
+blocks: list[list[str]] = []
+⋮----
+end = starts[index + 1] if index + 1 < len(starts) else len(lines)
+block = lines[start:end]
+⋮----
+def upsert_atlas_text(existing: str, fragment: str) -> str
+⋮----
+fragment_lines = fragment.strip().splitlines()
+⋮----
+page_name = fragment_lines[0].strip()
+⋮----
+kept = [block for block in blocks if not block or block[0].strip() != page_name]
+⋮----
+out: list[str] = []
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+⋮----
+fragment = args.fragment.read_text(encoding="utf-8")
+first = fragment.strip().splitlines()[0].strip()
+⋮----
+updated = upsert_atlas_text(args.atlas.read_text(encoding="utf-8"), fragment)
+destination = args.atlas.parent / args.page.name
+```
+
+## File: environment/validate_environment_art_contract.py
+```python
+#!/usr/bin/env python3
+"""Validate the Deadline Zero biome environment-art contract and report atlas coverage."""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_CONTRACT = ROOT / "config" / "environment-art-contract.json"
+DEFAULT_ATLAS = ROOT / "assets" / "art" / "game.atlas"
+EXPECTED_BIOMES = 5
+EXPECTED_SLOTS = 14
+⋮----
+def load_contract(path: Path) -> dict
+⋮----
+data = json.loads(path.read_text(encoding="utf-8"))
+biomes = data.get("biomes")
+slots = data.get("slots")
+⋮----
+biome_ids = [item.get("id") for item in biomes]
+⋮----
+slot_paths = [item.get("path") for item in slots]
+⋮----
+kind = slot.get("kind")
+⋮----
+def expected_keys(contract: dict) -> list[str]
+⋮----
+def atlas_region_names(path: Path) -> set[str]
+⋮----
+names: set[str] = set()
+⋮----
+stripped = raw.strip()
+⋮----
+lower = stripped.lower()
+⋮----
+def coverage(contract: dict, atlas: Path) -> tuple[list[str], list[str]]
+⋮----
+expected = expected_keys(contract)
+regions = atlas_region_names(atlas) if atlas.is_file() else set()
+present = [key for key in expected if key in regions]
+missing = [key for key in expected if key not in regions]
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser(description=__doc__)
+⋮----
+args = parser.parse_args()
+⋮----
+contract = load_contract(args.contract)
+⋮----
+payload = {
 ```
 
 ## File: perf/compare_android_benchmark.py
