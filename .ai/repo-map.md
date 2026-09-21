@@ -352,6 +352,7 @@ core/
                 LocalLightRenderer.java
                 NullBootstrapVfxArt.java
                 NullHazardPresentation.java
+                PlayerProjectilePresentation.java
                 PostFxShader.java
                 ProductionAtlasAudit.java
                 SingularityImpactTracker.java
@@ -541,6 +542,7 @@ core/
                 HostileProjectilePresentationTest.java
                 NullBootstrapVfxArtTest.java
                 NullHazardPresentationTest.java
+                PlayerProjectilePresentationTest.java
                 SingularityImpactTrackerTest.java
                 SpecialistPresentationTest.java
                 WeaponLegendaryPresentationTest.java
@@ -10743,9 +10745,11 @@ float signatureKnockback = knockback * signature.knockbackMultiplier();
 ⋮----
 this.radius = singularity ? Math.max(.16f, signature.radius()) : signature.radius();
 ⋮----
-AudioDirector.playGlobal(AudioDirector.Cue.ION_OVERCHARGE, 1.08f, 0f);
-⋮----
-AudioDirector.playGlobal(AudioDirector.Cue.CINDER_OVERHEAT, .82f, 0f);
+case ION_OVERCHARGE -> AudioDirector.playGlobal(AudioDirector.Cue.ION_OVERCHARGE, 1.08f, 0f);
+case CINDER_OVERHEAT -> AudioDirector.playGlobal(AudioDirector.Cue.CINDER_OVERHEAT, .82f, 0f);
+case TEMPEST_SURGE -> AudioDirector.playGlobal(AudioDirector.Cue.TEMPEST_SURGE, 1.18f, 0f);
+case WHITEOUT_SHATTER -> AudioDirector.playGlobal(AudioDirector.Cue.WHITEOUT_SHATTER, .92f, 0f);
+case PHOENIX_IGNITION -> AudioDirector.playGlobal(AudioDirector.Cue.PHOENIX_IGNITION, 1.02f, 0f);
 ````
 
 ## File: core/src/main/java/com/deadlinezero/game/fx/ArcFx.java
@@ -14176,9 +14180,13 @@ damageNumber(e.position.x, e.position.y + e.radius, p.damage + reactionBonus, p.
 ⋮----
 float vlen = p.velocity.len();
 if (vlen > .001f) e.addImpulse(p.velocity.x / vlen * p.knockback, p.velocity.y / vlen * p.knockback);
-impact(p.position.x, p.position.y, p.critical ? .78f : .44f,
+PlayerProjectilePresentation.Profile projectileVisual = PlayerProjectilePresentation.profile(p);
+Color impactColor = p.weaponSignature ? projectileVisual.accent() : projectileVisual.color();
+float impactScale = projectileVisual.impactScale();
+impact(p.position.x, p.position.y,
 ⋮----
-if (p.critical) addCameraShake(.075f);
+if (p.weaponSignature) addCameraShake(.095f);
+else if (p.critical) addCameraShake(.075f);
 polish.onProjectileHit(p.critical);
 if (p.element == DamageElement.SHOCK && e.alive) chainShock(e, p.damage * .42f, 3);
 if (wasAlive && !e.alive) onEnemyKilled(e);
@@ -14383,15 +14391,26 @@ shapes.circle(f.position.x, f.position.y, f.size * (1f - a * .42f), 20);
 shapes.setColor(1f, 1f, 1f, a * .42f);
 shapes.circle(f.position.x, f.position.y, Math.max(.06f, f.size * .18f * a), 12);
 ⋮----
-shapes.setColor(c);
-shapes.circle(p.position.x, p.position.y, p.critical ? .16f : .11f, 12);
+PlayerProjectilePresentation.Profile visual = PlayerProjectilePresentation.profile(p);
+Color core = visual.color();
+float radius = p.radius * visual.coreScale();
+if (visual.signature()) {
+Color accent = visual.accent();
+shapes.setColor(accent.r, accent.g, accent.b, .20f);
+shapes.circle(p.position.x, p.position.y, radius * 1.75f, 16);
+⋮----
+shapes.setColor(core);
+shapes.circle(p.position.x, p.position.y, radius, visual.signature() ? 16 : 12);
+if (visual.style() == PlayerProjectilePresentation.Style.RAIL
+|| (visual.signature() && visual.style() == PlayerProjectilePresentation.Style.TEMPEST)) {
+shapes.setColor(1f, 1f, 1f, .84f);
+shapes.circle(p.position.x, p.position.y, Math.max(.035f, radius * .38f), 9);
 ⋮----
 float visualRadius = p.radius * HostileProjectilePresentation.coreRadiusMultiplier(p.style);
 ⋮----
 shapes.setColor(core.r, core.g, core.b, .16f);
 shapes.circle(p.position.x, p.position.y, visualRadius * 1.65f, 16);
 ⋮----
-shapes.setColor(core);
 shapes.circle(p.position.x, p.position.y, visualRadius, 14);
 ⋮----
 shapes.setColor(1f, 1f, 1f, .82f);
@@ -14429,6 +14448,8 @@ shapes.circle(e.position.x, e.position.y, (e.type == Enemy.Type.BOSS ? 4.4f : 1.
 if (e.type == Enemy.Type.BOSS && e.bossCombat != null && e.bossCombat.charging()) {
 shapes.setColor(1f, .15f, .05f, .16f);
 shapes.circle(e.position.x, e.position.y, 2.3f + MathUtils.sin(visualTime * 20f) * .18f, 28);
+⋮----
+shapes.setColor(c);
 ⋮----
 shapes.ellipse(e.position.x - sx, e.position.y - sy, sx * 2f, sy * 2f);
 ⋮----
@@ -21614,6 +21635,36 @@ public static Profile forType(ArenaHazardRuntime.Type type) {
 default -> throw new IllegalArgumentException("Not a Null Sector hazard: " + type);
 ````
 
+## File: core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java
+````java
+/**
+ * Pure presentation routing for player projectiles.
+ *
+ * The combat simulation owns damage/cadence. This class only gives each weapon family a recognizable
+ * phone-scale silhouette: trail length/width, core scale, impact scale and an optional accent style.
+ */
+public final class PlayerProjectilePresentation {
+⋮----
+private static final Color PALE_CYAN = new Color(.78f, .96f, 1f, 1f);
+private static final Color ICE = new Color(.52f, .90f, 1f, 1f);
+private static final Color HOT = new Color(1f, .36f, .06f, 1f);
+private static final Color EMBER = new Color(1f, .74f, .20f, 1f);
+private static final Color ARC = new Color(.55f, .42f, 1f, 1f);
+private static final Color BREACH = new Color(1f, .30f, .12f, 1f);
+⋮----
+public static Profile profile(Projectile projectile) {
+if (projectile == null) return forWeapon("ar9", DamageElement.KINETIC, false, WeaponSignatureRuntime.Kind.NONE);
+return forWeapon(WeaponSignatureRuntime.weaponId(), projectile.element, projectile.critical,
+⋮----
+static Profile forWeapon(String weaponId, DamageElement element, boolean critical,
+⋮----
+String id = weaponId == null ? "ar9" : weaponId.toLowerCase(java.util.Locale.ROOT);
+⋮----
+alpha = Math.min(1f, alpha + .08f);
+⋮----
+return new Profile(style, color, accent, length, width, alpha, core, impact, signature);
+````
+
 ## File: core/src/main/java/com/deadlinezero/game/visual/PostFxShader.java
 ````java
 /**
@@ -21993,29 +22044,25 @@ float q = budget.quality();
 ⋮----
 float speed = p.velocity.len();
 ⋮----
-shapes.setColor(c.r, c.g, c.b, alpha * MathUtils.lerp(.65f, 1f, q));
+PlayerProjectilePresentation.Profile visual = PlayerProjectilePresentation.profile(p);
+Color c = visual.color();
+⋮----
+shapes.setColor(c.r, c.g, c.b, visual.alpha() * MathUtils.lerp(.65f, 1f, q));
 shapes.rectLine(p.position.x, p.position.y,
+p.position.x - nx * visual.trailLength(),
+p.position.y - ny * visual.trailLength(),
+visual.trailWidth());
 ⋮----
-if (p.weaponSignature && budget.allowHeavyFx()) {
-⋮----
-shapes.setColor(.86f, .96f, 1f, .74f);
-shapes.rectLine(p.position.x - sideX * .10f, p.position.y - sideY * .10f,
-⋮----
-shapes.setColor(.55f, .34f, 1f, .58f);
-shapes.circle(p.position.x - nx * .28f, p.position.y - ny * .28f, .095f, budget.geometrySegments(12, 7));
-⋮----
-shapes.setColor(1f, .20f, .02f, .42f);
-shapes.circle(p.position.x - nx * .24f, p.position.y - ny * .24f, .18f, budget.geometrySegments(14, 8));
-shapes.setColor(1f, .92f, .40f, .76f);
-shapes.circle(p.position.x, p.position.y, .085f, budget.geometrySegments(10, 6));
+drawPlayerProjectileAccent(shapes, p, visual, nx, ny);
 ⋮----
 if (p.life > 1.41f && budget.allowHeavyFx()) {
 ⋮----
-shapes.setColor(1f, .86f, .30f, .70f);
+Color accent = visual.accent();
+shapes.setColor(accent.r, accent.g, accent.b, .62f);
 shapes.triangle(bx - sideX * .12f, by - sideY * .12f,
 ⋮----
-shapes.setColor(1f, 1f, .82f, .88f);
-shapes.circle(bx, by, .105f, budget.geometrySegments(10, 6));
+shapes.setColor(1f, 1f, .88f, .84f);
+shapes.circle(bx, by, .105f * visual.coreScale(), budget.geometrySegments(10, 6));
 ⋮----
 shapes.setColor(c.r, c.g, c.b, .44f * MathUtils.lerp(.7f, 1f, q));
 ⋮----
@@ -22039,6 +22086,58 @@ float jitter = MathUtils.sin((m.life + i) * 19f) * .035f;
 shapes.circle(m.position.x - nx * (.22f + i * .22f) + ny * jitter,
 ⋮----
 .10f * (1f - t * .45f), budget.geometrySegments(10, 6));
+⋮----
+private void drawPlayerProjectileAccent(ShapeRenderer shapes, Projectile p,
+⋮----
+float core = Math.max(.055f, p.radius * visual.coreScale());
+⋮----
+switch (visual.style()) {
+⋮----
+shapes.setColor(1f, 1f, 1f, .78f);
+⋮----
+p.position.x - nx * visual.trailLength() * .82f,
+p.position.y - ny * visual.trailLength() * .82f,
+Math.max(.014f, visual.trailWidth() * .38f));
+shapes.setColor(accent.r, accent.g, accent.b, .34f);
+shapes.circle(p.position.x, p.position.y, core * .72f, budget.geometrySegments(10, 6));
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, .38f);
+shapes.rectLine(p.position.x - sideX * core, p.position.y - sideY * core,
+⋮----
+shapes.rectLine(p.position.x + sideX * core, p.position.y + sideY * core,
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, visual.signature() ? .56f : .34f);
+shapes.circle(p.position.x - nx * .22f, p.position.y - ny * .22f,
+core * (visual.signature() ? 1.32f : .88f), budget.geometrySegments(14, 8));
+shapes.setColor(1f, .90f, .45f, visual.signature() ? .78f : .48f);
+shapes.circle(p.position.x, p.position.y, core * .48f, budget.geometrySegments(10, 6));
+⋮----
+float shard = core * (visual.signature() ? 2.0f : 1.35f);
+shapes.setColor(accent.r, accent.g, accent.b, visual.signature() ? .70f : .42f);
+shapes.triangle(
+⋮----
+if (visual.signature()) {
+shapes.setColor(1f, 1f, 1f, .58f);
+shapes.rectLine(p.position.x + sideX * shard * .72f, p.position.y + sideY * shard * .72f,
+⋮----
+shapes.rectLine(p.position.x - sideX * shard * .72f, p.position.y - sideY * shard * .72f,
+⋮----
+float separation = core * (visual.signature() ? 1.25f : .82f);
+⋮----
+shapes.rectLine(p.position.x + sideX * separation, p.position.y + sideY * separation,
+p.position.x - nx * visual.trailLength() * .68f - sideX * separation,
+p.position.y - ny * visual.trailLength() * .68f - sideY * separation,
+visual.signature() ? .030f : .020f);
+⋮----
+core * .64f, budget.geometrySegments(10, 6));
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, .42f);
+shapes.circle(p.position.x - nx * .14f, p.position.y - ny * .14f,
+core * 1.15f, budget.geometrySegments(12, 7));
+shapes.setColor(1f, .78f, .34f, .42f);
+⋮----
+shapes.setColor(accent.r, accent.g, accent.b, .48f);
+shapes.circle(p.position.x, p.position.y, core, budget.geometrySegments(10, 6));
 ⋮----
 public void drawElectricArcs(ShapeRenderer shapes, Array<ArcFx> arcs, float time) {
 int segments = budget.geometrySegments(7, 4);
@@ -28191,6 +28290,61 @@ assertTrue(NullHazardPresentation.isNull(ArenaHazardRuntime.Type.STATIC_BURST));
 assertTrue(NullHazardPresentation.isNull(ArenaHazardRuntime.Type.NULL_BEAM));
 assertFalse(NullHazardPresentation.isNull(ArenaHazardRuntime.Type.LAVA_VENT));
 assertFalse(NullHazardPresentation.isNull(ArenaHazardRuntime.Type.ORBITAL_STRIKE));
+````
+
+## File: core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java
+````java
+final class PlayerProjectilePresentationTest {
+@Test void allTwelveWeaponFamiliesHaveDistinctPresentationStyles() {
+⋮----
+EnumSet.noneOf(PlayerProjectilePresentation.Style.class);
+⋮----
+for (WeaponDefinition weapon : WeaponCatalog.all()) {
+PlayerProjectilePresentation.Profile profile = PlayerProjectilePresentation.forWeapon(
+⋮----
+styles.add(profile.style());
+assertSane(profile);
+⋮----
+assertEquals(12, styles.size());
+⋮----
+@Test void allFiveSignatureShotsEscalateTheirExpectedFamily() {
+assertSignature("ion_needle", DamageElement.SHOCK, WeaponSignatureRuntime.Kind.ION_OVERCHARGE,
+⋮----
+assertSignature("cinder_cannon", DamageElement.FIRE, WeaponSignatureRuntime.Kind.CINDER_OVERHEAT,
+⋮----
+assertSignature("tempest_burst", DamageElement.SHOCK, WeaponSignatureRuntime.Kind.TEMPEST_SURGE,
+⋮----
+assertSignature("whiteout_shard", DamageElement.FROST, WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER,
+⋮----
+assertSignature("phoenix_repeater", DamageElement.FIRE, WeaponSignatureRuntime.Kind.PHOENIX_IGNITION,
+⋮----
+@Test void criticalPresentationNeverShrinksItsBaseProfile() {
+⋮----
+PlayerProjectilePresentation.Profile base = PlayerProjectilePresentation.forWeapon(
+⋮----
+PlayerProjectilePresentation.Profile crit = PlayerProjectilePresentation.forWeapon(
+⋮----
+assertTrue(crit.coreScale() >= base.coreScale());
+assertTrue(crit.impactScale() >= base.impactScale());
+assertTrue(crit.alpha() >= base.alpha());
+⋮----
+private static void assertSignature(String weaponId, DamageElement element,
+⋮----
+PlayerProjectilePresentation.Profile signature = PlayerProjectilePresentation.forWeapon(
+⋮----
+assertEquals(expectedStyle, signature.style());
+assertTrue(signature.signature());
+assertTrue(signature.trailLength() >= base.trailLength());
+assertTrue(signature.coreScale() >= base.coreScale());
+assertTrue(signature.impactScale() >= base.impactScale());
+assertSane(signature);
+⋮----
+private static void assertSane(PlayerProjectilePresentation.Profile profile) {
+assertTrue(profile.trailLength() > 0f);
+assertTrue(profile.trailWidth() > 0f);
+assertTrue(profile.alpha() > 0f && profile.alpha() <= 1f);
+assertTrue(profile.coreScale() > 0f);
+assertTrue(profile.impactScale() > 0f);
 ````
 
 ## File: core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java

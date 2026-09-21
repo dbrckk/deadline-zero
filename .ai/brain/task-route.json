@@ -4,12 +4,12 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 3,
+    "score_margin": 0,
     "tier": "bounded",
     "top_score": 36
   },
   "cache": {
-    "fingerprint": "f7a9819209ae38a561351be474e13d8e33fcffca87f0551e5137fa2e6fd38a07",
+    "fingerprint": "b67f757ce6af5132709b1fe077c8198641cb572ebcbdbdf017e55b377a01d3a3",
     "hit": false
   },
   "candidate_count": 408,
@@ -20,7 +20,7 @@
       "matched_terms": [
         "game"
       ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "path": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
       "reasons": [
         "impact",
         "recently-changed",
@@ -28,15 +28,59 @@
       ],
       "score": 36,
       "symbols": [
-        "AndroidResponsiveUiVisualProbeTest",
-        "activity",
-        "assertWidePhoneAspect",
-        "captureWide",
-        "capturesWidePhoneMetaAndCombatScreens",
-        "dedicatedWideProbe",
-        "game",
-        "runOnGameThread",
-        "settleAndCapture"
+        "AudioCueLimiter",
+        "allow",
+        "minIntervalNanos",
+        "reset"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
+      "reasons": [
+        "impact",
+        "recently-changed",
+        "search-index"
+      ],
+      "score": 36,
+      "symbols": [
+        "AudioDirector",
+        "Cue",
+        "applyMusicVolume",
+        "dispose",
+        "fallbackCue",
+        "load",
+        "loadMusic",
+        "normalizeVolume",
+        "play",
+        "playGlobal",
+        "resolveMusic",
+        "resolveSound",
+        "resume",
+        "setVolumes",
+        "startCombatMusic",
+        "stopCombatMusic",
+        "suspend"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+      "reasons": [
+        "impact",
+        "recently-changed",
+        "search-index"
+      ],
+      "score": 36,
+      "symbols": [
+        "Projectile",
+        "spawn"
       ]
     },
     {
@@ -113,57 +157,6 @@
         "recordsLoadedGameplayPerformanceTelemetry",
         "runOnGameThread",
         "writeBenchmarkJson"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-      "reasons": [
-        "impact",
-        "search-index"
-      ],
-      "score": 33,
-      "symbols": [
-        "AndroidVerticalSliceTest",
-        "activity",
-        "allowFrames",
-        "game",
-        "interruptedAndroidRunReturnsToMenuWithoutSettlementOrRewards",
-        "realAndroidRuntimeCompletesM0VerticalSliceAndPersistsSettlement",
-        "runOnGameThread"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-      "reasons": [
-        "impact",
-        "search-index"
-      ],
-      "score": 33,
-      "symbols": [
-        "DeadlineZeroGame",
-        "applyCloudRestore",
-        "finishRun",
-        "finishRunInternal",
-        "finishVictory",
-        "saveProfile",
-        "showArsenal",
-        "showCloudSave",
-        "showGear",
-        "showMenu",
-        "showMissions",
-        "showSettings",
-        "showShop",
-        "showSurvivors",
-        "startRun",
-        "startRunWithContract"
       ]
     }
   ],

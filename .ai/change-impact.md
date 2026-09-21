@@ -1,25 +1,19 @@
 # Change impact
 
-Base: a0f03acf38c114d6b0c39d38434238a66c932698
-Head: c4f23a622d0c09fe076a18aeab4e2c274565a5ee
+Base: 912c61f58dd105456c5bd3d5b3d282dc9564a101
+Head: cab667e21d40ed3e2c9522240a3678f5975a2cd7
 
 ## Changed files
-- M .github/workflows/responsive-ui-qa.yml
-- M android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java
+- M core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java
+- M core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java
+- M core/src/main/java/com/deadlinezero/game/entities/Projectile.java
 - M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java
-- M core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java
-- M core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java
-- M core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java
-- A docs/PREMIUM_VISUAL_GAP_AUDIT.md
+- A core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java
+- M core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java
+- A core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java
 
 ## Affected areas
-- .github
-- android
 - core
-- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

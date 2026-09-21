@@ -22,19 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T16:12:03Z
+Generated: 2026-09-21T17:00:29Z
 
 ### Git
 - Branch: `main`
-- Head: `c4f23a622d0c`
-- Commit date: 2026-09-21T18:11:39+02:00
-- Commit: Close Zombie Waves gameplay presentation gaps (#273)
-- Tracked files: 836
+- Head: `cab667e21d40`
+- Commit date: 2026-09-21T19:00:17+02:00
+- Commit: Differentiate every weapon family using Zombie Waves reference findings (#274)
+- Tracked files: 838
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java`
+- `core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java`
+- `core/src/main/java/com/deadlinezero/game/entities/Projectile.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java`
+- `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
+- `core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java`
 - `.github/workflows/responsive-ui-qa.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
@@ -46,11 +52,6 @@ Generated: 2026-09-21T16:12:03Z
 - `core/src/main/java/com/deadlinezero/game/screen/GearScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java`
-- `core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
 
 ### Project signals
 - `build.gradle`
