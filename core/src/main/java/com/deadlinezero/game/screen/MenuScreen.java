@@ -79,6 +79,7 @@ public final class MenuScreen extends ScreenAdapter {
             layout.threatCard().width, layout.threatCard().height, false, p.selectedThreatTier > 0);
         UiRenderer.button(shapes, layout.deploy().x, layout.deploy().y,
             layout.deploy().width, layout.deploy().height, UiRenderer.ButtonState.SELECTED);
+        drawHomeChrome(shapes, p);
 
         Rectangle[] tabs = layout.bottomTabs();
         for (int i = 0; i < tabs.length; i++) {
@@ -95,6 +96,35 @@ public final class MenuScreen extends ScreenAdapter {
             }
         }
         shapes.end();
+    }
+
+    private void drawHomeChrome(ShapeRenderer shapes, PlayerProfile p) {
+        Rectangle survivor = layout.survivorCard();
+        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .18f);
+        shapes.rect(survivor.x + 8f, survivor.y + 8f, Math.max(0f, survivor.width - 16f), Math.max(0f, survivor.height - 16f));
+        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .72f);
+        shapes.rect(survivor.x + 8f, survivor.y + survivor.height - 5f, Math.max(0f, survivor.width - 16f), 3f);
+
+        Rectangle loadout = layout.loadoutCard();
+        Color weaponAccent = VisualTheme.CYAN_SOFT;
+        shapes.setColor(weaponAccent.r, weaponAccent.g, weaponAccent.b, .46f);
+        shapes.rect(loadout.x + 6f, loadout.y + loadout.height - 4f, Math.max(0f, loadout.width - 12f), 3f);
+
+        Rectangle threat = layout.threatCard();
+        Color threatAccent = p.selectedThreatTier > 0 ? VisualTheme.GOLD : VisualTheme.CYAN_SOFT;
+        shapes.setColor(threatAccent.r, threatAccent.g, threatAccent.b, p.selectedThreatTier > 0 ? .82f : .38f);
+        shapes.rect(threat.x + 6f, threat.y + threat.height - 4f, Math.max(0f, threat.width - 12f), 3f);
+        if (p.selectedThreatTier > 0) {
+            shapes.setColor(threatAccent.r, threatAccent.g, threatAccent.b, .08f);
+            shapes.rect(threat.x + 7f, threat.y + 7f, Math.max(0f, threat.width - 14f), Math.max(0f, threat.height - 14f));
+        }
+
+        Rectangle deploy = layout.deploy();
+        float pulse = .14f + .06f * ((float)Math.sin(t * 2.4f) * .5f + .5f);
+        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, pulse);
+        shapes.rect(deploy.x + 5f, deploy.y + 5f, Math.max(0f, deploy.width - 10f), Math.max(0f, deploy.height - 10f));
+        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .92f);
+        shapes.rect(deploy.x + 12f, deploy.y + deploy.height - 5f, Math.max(0f, deploy.width - 24f), 3f);
     }
 
     private void drawContent(PlayerProfile p) {
@@ -180,6 +210,10 @@ public final class MenuScreen extends ScreenAdapter {
         font.setColor(VisualTheme.TEXT_STRONG);
         font.draw(batch, WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase(),
             r.x + pad, r.y + r.height - 64f, r.width - pad * 2f, Align.left, false);
+
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.setColor(VisualTheme.CYAN_SOFT);
+        font.draw(batch, t("menu.deployStage"), r.x + pad, r.y + r.height - 88f, r.width - pad * 2f, Align.left, false);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.GOLD);
