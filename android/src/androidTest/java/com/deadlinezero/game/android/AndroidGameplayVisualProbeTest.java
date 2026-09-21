@@ -321,6 +321,28 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesBossRevealCameraFraming() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for boss reveal visual probe", game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(4);
+                GameScreen screen = (GameScreen) game.getScreen();
+                Enemy boss = injectRevenantBoss(screen);
+                armBossReveal(screen, boss);
+            });
+
+            // The profile peaks at roughly half of its 1.2 s reveal window.
+            Thread.sleep(560L);
+            capture("boss-reveal-framing.png");
+        }
+    }
+
+
+    @Test
     public void capturesWardenGameplayAndAttackFrames() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
@@ -920,6 +942,34 @@ public final class AndroidGameplayVisualProbeTest {
             throw new AssertionError("unable to inject REVENANT boss for visual QA", exception);
         }
     }
+
+    @SuppressWarnings("unchecked")
+    private static Enemy injectRevenantBoss(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            Enemy boss = new Enemy(Enemy.Type.BOSS, 0f, 3.8f, 500_000f, .015f, .78f, 0f, 2);
+            enemies.add(boss);
+            return boss;
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject REVENANT boss for visual QA", exception);
+        }
+    }
+
+    private static void armBossReveal(GameScreen screen, Enemy boss) {
+        try {
+            Field target = GameScreen.class.getDeclaredField("bossRevealTarget");
+            target.setAccessible(true);
+            target.set(screen, boss);
+            Field timer = GameScreen.class.getDeclaredField("bossRevealTimer");
+            timer.setAccessible(true);
+            timer.setFloat(screen, com.deadlinezero.game.visual.BossRevealCameraProfile.DURATION);
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to arm boss reveal camera for visual QA", exception);
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     private static void injectAuthoredEnemyCrowd(GameScreen screen) {
