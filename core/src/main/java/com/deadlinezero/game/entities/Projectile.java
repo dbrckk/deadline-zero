@@ -44,10 +44,13 @@ public final class Projectile {
         this.radius = singularity ? Math.max(.16f, signature.radius()) : signature.radius();
         this.lastHit = null;
 
-        if (weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {
-            AudioDirector.playGlobal(AudioDirector.Cue.ION_OVERCHARGE, 1.08f, 0f);
-        } else if (weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {
-            AudioDirector.playGlobal(AudioDirector.Cue.CINDER_OVERHEAT, .82f, 0f);
+        switch (weaponSignatureKind) {
+            case ION_OVERCHARGE -> AudioDirector.playGlobal(AudioDirector.Cue.ION_OVERCHARGE, 1.08f, 0f);
+            case CINDER_OVERHEAT -> AudioDirector.playGlobal(AudioDirector.Cue.CINDER_OVERHEAT, .82f, 0f);
+            case TEMPEST_SURGE -> AudioDirector.playGlobal(AudioDirector.Cue.TEMPEST_SURGE, 1.18f, 0f);
+            case WHITEOUT_SHATTER -> AudioDirector.playGlobal(AudioDirector.Cue.WHITEOUT_SHATTER, .92f, 0f);
+            case PHOENIX_IGNITION -> AudioDirector.playGlobal(AudioDirector.Cue.PHOENIX_IGNITION, 1.02f, 0f);
+            case NONE -> { }
         }
         return this;
     }
