@@ -213,7 +213,7 @@ public final class MenuScreen extends ScreenAdapter {
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, t("menu.deployStage"), r.x + pad, r.y + r.height - 88f, r.width - pad * 2f, Align.left, false);
+        font.draw(batch, f("menu.deployStage", p.selectedStage), r.x + pad, r.y + r.height - 88f, r.width - pad * 2f, Align.left, false);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.GOLD);
