@@ -1,11 +1,12 @@
 # Change impact
 
-Base: 7e255cc7a2893849ae6a3e08b784ec94763d83f2
-Head: ce3b322927389fd8adf11d38045c30a356439c78
+Base: 51990d30a7ae0ed234a62098fcc284fad714e39d
+Head: c7d99b85960a4390d9204b149efa2478348728e2
 
 ## Changed files
 - M core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java
 - M core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java
+- A core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java
 - M core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java
 
 ## Affected areas

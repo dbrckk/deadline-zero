@@ -212,6 +212,7 @@ src/
             ui/
               MetaLayout.java
               ResponsiveGrid.java
+              UiIconRenderer.java
               UiLayout.java
               UiMotion.java
               UiRenderer.java
@@ -6225,9 +6226,11 @@ UiRenderer.card(shapes, layout.loadoutCard().x, layout.loadoutCard().y,
 layout.loadoutCard().width, layout.loadoutCard().height, false, false);
 UiRenderer.card(shapes, layout.threatCard().x, layout.threatCard().y,
 layout.threatCard().width, layout.threatCard().height, false, p.selectedThreatTier > 0);
-UiRenderer.button(shapes, layout.deploy().x, layout.deploy().y,
-layout.deploy().width, layout.deploy().height, UiRenderer.ButtonState.NORMAL);
+float deployPulse = .5f + .5f * (float)Math.sin(t * 2.4f);
+UiRenderer.premiumCta(shapes, layout.deploy().x, layout.deploy().y,
+layout.deploy().width, layout.deploy().height, VisualTheme.accent(), deployPulse);
 drawHomeChrome(shapes, p);
+drawHomeIcons(shapes, p);
 ⋮----
 Rectangle[] tabs = layout.bottomTabs();
 ⋮----
@@ -6265,13 +6268,21 @@ shapes.rect(threat.x + 6f, threat.y + threat.height - 4f, Math.max(0f, threat.wi
 shapes.setColor(threatAccent.r, threatAccent.g, threatAccent.b, .08f);
 shapes.rect(threat.x + 7f, threat.y + 7f, Math.max(0f, threat.width - 14f), Math.max(0f, threat.height - 14f));
 ⋮----
-Rectangle deploy = layout.deploy();
-float pulse = .82f + .16f * ((float)Math.sin(t * 2.4f) * .5f + .5f);
-shapes.setColor(VisualTheme.accent().r * .16f, VisualTheme.accent().g * .16f, VisualTheme.accent().b * .16f, 1f);
-shapes.rect(deploy.x + 5f, deploy.y + 5f, Math.max(0f, deploy.width - 10f), Math.max(0f, deploy.height - 10f));
-shapes.setColor(VisualTheme.accent().r * pulse, VisualTheme.accent().g * pulse, VisualTheme.accent().b * pulse, 1f);
-shapes.rect(deploy.x + 10f, deploy.y + deploy.height - 6f, Math.max(0f, deploy.width - 20f), 4f);
-shapes.rect(deploy.x + 10f, deploy.y + 10f, 4f, Math.max(0f, deploy.height - 20f));
+private void drawHomeIcons(ShapeRenderer shapes, PlayerProfile p) {
+Rectangle top = layout.topRail();
+⋮----
+VisualTheme.accent(),
+⋮----
+UiRenderer.iconBadge(shapes, ix - 4f, iy - 4f, icon + 8f, topColors[i], i != 3 || p.highestStage > 1);
+UiIconRenderer.draw(shapes, topIcons[i], ix, iy, icon, topColors[i], .95f);
+⋮----
+Color color = i == 0 ? VisualTheme.accent() : VisualTheme.TEXT_DIM;
+UiIconRenderer.draw(shapes, navIcons[i], x, y, size, color, i == 0 ? 1f : .72f);
+⋮----
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.ARSENAL,
+⋮----
+UiIconRenderer.draw(shapes,
+ThreatTierRules.unlocked(p) ? UiIconRenderer.Icon.STAGE : UiIconRenderer.Icon.LOCK,
 ⋮----
 private void drawContent(PlayerProfile p) {
 batch.begin();
@@ -6369,7 +6380,7 @@ t("menu.base"), t("menu.arsenal"), t("menu.gear"),
 t("menu.missions"), t("menu.shop"), t("menu.settings")
 ⋮----
 font.setColor(i == 0 ? VisualTheme.accent() : VisualTheme.TEXT_DIM);
-font.draw(batch, labels[i], tab.x + 6f, tab.y + tab.height * .55f, tab.width - 12f, Align.center, false);
+font.draw(batch, labels[i], tab.x + 6f, tab.y + tab.height * .30f, tab.width - 12f, Align.center, false);
 ⋮----
 private void drawBalanceDebug() {
 ⋮----
@@ -6489,6 +6500,12 @@ UiRenderer.topRail(shapes, metrics);
 UiRenderer.panel(shapes, dailyPanel.x, dailyPanel.y, dailyPanel.width, dailyPanel.height);
 UiRenderer.panel(shapes, weeklyPanel.x, weeklyPanel.y, weeklyPanel.width, weeklyPanel.height);
 UiRenderer.panel(shapes, progressPanel.x, progressPanel.y, progressPanel.width, progressPanel.height);
+UiRenderer.sectionBand(shapes, dailyPanel.x + 6f, dailyPanel.y + dailyPanel.height - 42f,
+⋮----
+UiRenderer.sectionBand(shapes, weeklyPanel.x + 6f, weeklyPanel.y + weeklyPanel.height - 42f,
+⋮----
+UiRenderer.sectionBand(shapes, progressPanel.x + 6f, progressPanel.y + progressPanel.height - 42f,
+progressPanel.width - 12f, 34f, VisualTheme.accent());
 drawMissionStateCard(shapes, dailyRows[0], p.daily.loginClaimed, !p.daily.loginClaimed, VisualTheme.GOLD);
 drawMissionStateCard(shapes, dailyRows[1], p.daily.killMissionClaimed, p.daily.killsToday >= 100, VisualTheme.GOLD);
 drawMissionStateCard(shapes, dailyRows[2], p.daily.runMissionClaimed, p.daily.runsToday >= 3, VisualTheme.GOLD);
@@ -6503,6 +6520,7 @@ drawMissionStateCard(shapes, weeklyRows[2], p.weekly.bossMissionClaimed,
 drawMissionProgressBars(shapes, p);
 ⋮----
 UiRenderer.card(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height, false, true);
+drawMissionIcons(shapes, p);
 ⋮----
 AchievementService.Achievement a = AchievementService.Achievement.values()[i];
 boolean unlocked = AchievementService.unlocked(p, a);
@@ -6521,6 +6539,23 @@ drawDaily(p);
 drawWeekly(p);
 drawProgress(p);
 batch.end();
+⋮----
+private void drawMissionIcons(ShapeRenderer shapes, PlayerProfile p) {
+⋮----
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.MISSIONS,
+⋮----
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.TROPHY,
+⋮----
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.STAGE,
+⋮----
+size, VisualTheme.accent(), .92f);
+⋮----
+AchievementService.Achievement[] all = AchievementService.Achievement.values();
+⋮----
+boolean unlocked = AchievementService.unlocked(p, all[i]);
+boolean claimed = p.achievements.claimed(all[i]);
+⋮----
+UiIconRenderer.draw(shapes,
 ⋮----
 private void drawMissionProgressBars(ShapeRenderer shapes, PlayerProfile p) {
 drawRowProgress(shapes, dailyRows[0], p.daily.loginClaimed ? 1f : 0f, VisualTheme.GOLD);
@@ -6602,20 +6637,16 @@ t("mastery.rank." + biomeRank), nextLabel(biomeNext)), masteryPanel.x + 12f,
 font.setColor(VisualTheme.TEXT_DIM);
 font.draw(batch, t("missions.achievements"), achievementsPanel.x, achievementsPanel.y + achievementsPanel.height + 18f,
 ⋮----
-AchievementService.Achievement[] all = AchievementService.Achievement.values();
-⋮----
-boolean unlocked = AchievementService.unlocked(p, all[i]);
-boolean claimed = p.achievements.claimed(all[i]);
 font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .90f);
 font.setColor(claimed ? VisualTheme.MUTED : unlocked ? VisualTheme.GOLD : VisualTheme.TEXT_DIM);
-font.draw(batch, t(all[i].titleKey()), r.x + 8f, r.y + r.height * .67f, r.width - 16f, Align.center, true);
+font.draw(batch, t(all[i].titleKey()), r.x + 34f, r.y + r.height * .67f, r.width - 42f, Align.left, true);
 font.setColor(claimed ? VisualTheme.MUTED : unlocked ? VisualTheme.accent() : VisualTheme.MUTED);
 font.draw(batch, claimed ? t("missions.claimed") : unlocked ? t("common.open") : t("missions.locked"),
 ⋮----
 private void heading(String text, Rectangle panel, com.badlogic.gdx.graphics.Color color) {
 font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION) * 1.05f);
 font.setColor(color);
-font.draw(batch, text, panel.x + 16f, panel.y + panel.height - 16f, panel.width - 32f, Align.left, false);
+font.draw(batch, text, panel.x + 16f, panel.y + panel.height - 16f, panel.width - 58f, Align.left, false);
 ⋮----
 private void drawClaimRow(Rectangle r, String text, boolean claimed, boolean ready) {
 font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * 1.04f);
@@ -8250,6 +8281,100 @@ float y = topY - (row + 1) * cardHeight - row * spec.gap();
 return new Rectangle(x, y, spec.cardWidth(), cardHeight);
 ```
 
+## File: src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java
+```java
+/**
+ * Lightweight authored icon language for production UI.
+ *
+ * Drawn from simple primitives so icons remain crisp at every supported phone
+ * resolution and do not depend on text glyphs or platform emoji rendering.
+ * Call while ShapeRenderer is in Filled mode.
+ */
+public final class UiIconRenderer {
+⋮----
+public static void draw(ShapeRenderer shapes, Icon icon, float x, float y, float size, Color color) {
+draw(shapes, icon, x, y, size, color, 1f);
+⋮----
+public static void draw(ShapeRenderer shapes, Icon icon, float x, float y, float size, Color color, float alpha) {
+⋮----
+shapes.setColor(color.r, color.g, color.b, clamp(alpha));
+⋮----
+float t = Math.max(2f, s * .10f);
+⋮----
+shapes.triangle(cx, y + s, x + s * .14f, y + s * .28f, x + s * .86f, y + s * .28f);
+set(shapes, color, alpha * .36f);
+shapes.triangle(cx, y + s * .78f, x + s * .30f, y + s * .38f, x + s * .70f, y + s * .38f);
+⋮----
+shapes.circle(cx, cy, s * .38f, 20);
+set(shapes, color, alpha * .18f);
+shapes.circle(cx, cy, s * .24f, 16);
+set(shapes, color, alpha);
+shapes.rect(cx - t * .45f, y + s * .30f, t * .9f, s * .40f);
+⋮----
+shapes.triangle(cx, y + s, x + s * .08f, cy, cx, y);
+shapes.triangle(cx, y + s, x + s * .92f, cy, cx, y);
+set(shapes, color, alpha * .30f);
+shapes.triangle(cx, y + s * .80f, x + s * .28f, cy, cx, y + s * .18f);
+shapes.triangle(cx, y + s * .80f, x + s * .72f, cy, cx, y + s * .18f);
+⋮----
+shapes.rect(x + s * .18f, y + s * .24f, s * .64f, s * .52f);
+shapes.triangle(cx, y + s, x + s * .18f, y + s * .76f, x + s * .82f, y + s * .76f);
+set(shapes, color, alpha * .24f);
+shapes.rect(x + s * .34f, y + s * .36f, s * .32f, s * .24f);
+⋮----
+shapes.triangle(cx, y + s, x + s * .06f, y + s * .48f, x + s * .94f, y + s * .48f);
+shapes.rect(x + s * .18f, y + s * .10f, s * .64f, s * .42f);
+⋮----
+shapes.rect(x + s * .42f, y + s * .10f, s * .16f, s * .28f);
+⋮----
+shapes.circle(cx, cy, s * .34f, 20);
+⋮----
+shapes.circle(cx, cy, s * .18f, 16);
+⋮----
+shapes.rect(cx - t * .5f, y, t, s);
+shapes.rect(x, cy - t * .5f, s, t);
+⋮----
+shapes.rect(x + s * .12f, y + s * .18f, s * .30f, s * .64f);
+shapes.rect(x + s * .58f, y + s * .18f, s * .30f, s * .64f);
+set(shapes, color, alpha * .22f);
+shapes.rect(x + s * .24f, y + s * .32f, s * .52f, s * .36f);
+⋮----
+shapes.rect(x + s * .10f, yy, s * .16f, s * .14f);
+shapes.rect(x + s * .36f, yy + s * .045f, s * .54f, t * .55f);
+⋮----
+shapes.rect(x + s * .16f, y + s * .18f, s * .68f, s * .56f);
+shapes.rect(x + s * .30f, y + s * .70f, s * .40f, t);
+shapes.rect(x + s * .30f, y + s * .70f, t, s * .18f);
+shapes.rect(x + s * .70f - t, y + s * .70f, t, s * .18f);
+⋮----
+shapes.rect(x + s * .28f, y + s * .30f, s * .44f, s * .10f);
+⋮----
+shapes.circle(cx, cy, s * .28f, 20);
+shapes.rect(cx - t * .5f, y, t, s * .22f);
+shapes.rect(cx - t * .5f, y + s * .78f, t, s * .22f);
+shapes.rect(x, cy - t * .5f, s * .22f, t);
+shapes.rect(x + s * .78f, cy - t * .5f, s * .22f, t);
+⋮----
+shapes.circle(cx, cy, s * .11f, 14);
+⋮----
+shapes.rect(x + s * .18f, y + s * .08f, s * .64f, s * .50f);
+shapes.rect(x + s * .28f, y + s * .56f, t, s * .22f);
+shapes.rect(x + s * .72f - t, y + s * .56f, t, s * .22f);
+shapes.rect(x + s * .28f, y + s * .74f, s * .44f, t);
+⋮----
+shapes.rect(x + s * .28f, y + s * .42f, s * .44f, s * .42f);
+shapes.rect(cx - t * .5f, y + s * .18f, t, s * .28f);
+shapes.rect(x + s * .30f, y + s * .10f, s * .40f, t);
+shapes.rect(x + s * .12f, y + s * .58f, s * .16f, t);
+shapes.rect(x + s * .72f, y + s * .58f, s * .16f, t);
+⋮----
+private static void set(ShapeRenderer shapes, Color c, float alpha) {
+shapes.setColor(c.r, c.g, c.b, clamp(alpha));
+⋮----
+private static float clamp(float v) {
+return Math.max(0f, Math.min(1f, v));
+```
+
 ## File: src/main/java/com/deadlinezero/game/ui/UiLayout.java
 ```java
 /** Pure responsive layout math shared by all production-facing UI. */
@@ -8366,6 +8491,40 @@ border(shapes, x, y, w, h, state == ButtonState.PRESSED ? 4f : 2f);
 ⋮----
 set(shapes, VisualTheme.TEXT_STRONG, .82f);
 shapes.rect(x + 7f, y + 7f, 4f, Math.max(0f, h - 14f));
+⋮----
+public static void iconBadge(ShapeRenderer shapes, float x, float y, float size, Color accent, boolean active) {
+Color a = accent == null ? VisualTheme.accent() : accent;
+set(shapes, VisualTheme.SURFACE_0, .96f);
+shapes.circle(x + size * .5f, y + size * .5f, size * .50f, 24);
+set(shapes, active ? a : VisualTheme.BORDER, active ? .24f : .18f);
+shapes.circle(x + size * .5f, y + size * .5f, size * .40f, 24);
+set(shapes, active ? a : VisualTheme.BORDER, active ? .90f : .50f);
+float t = Math.max(1.5f, size * .055f);
+border(shapes, x, y, size, size, t);
+cornerMarks(shapes, x, y, size, size, active ? a : VisualTheme.DIVIDER);
+⋮----
+public static void sectionBand(ShapeRenderer shapes, float x, float y, float w, float h, Color accent) {
+⋮----
+set(shapes, VisualTheme.SURFACE_0, .72f);
+⋮----
+set(shapes, a, .18f);
+shapes.rect(x, y, Math.min(w, Math.max(44f, w * .34f)), h);
+set(shapes, a, .88f);
+shapes.rect(x, y, 4f, h);
+shapes.rect(x + 8f, y + h - 3f, Math.max(0f, Math.min(w - 16f, w * .42f)), 2f);
+⋮----
+public static void premiumCta(ShapeRenderer shapes, float x, float y, float w, float h, Color accent, float pulse) {
+⋮----
+float p = Math.max(0f, Math.min(1f, pulse));
+set(shapes, VisualTheme.SURFACE_2, .98f);
+⋮----
+set(shapes, a, .10f + .10f * p);
+shapes.rect(x + 5f, y + 5f, Math.max(0f, w - 10f), Math.max(0f, h - 10f));
+set(shapes, a, .72f + .24f * p);
+⋮----
+shapes.rect(x + 10f, y + h - 6f, Math.max(0f, w - 20f), 4f);
+shapes.rect(x + 10f, y + 10f, 4f, Math.max(0f, h - 20f));
+cornerMarks(shapes, x, y, w, h, a);
 ⋮----
 public static void progress(ShapeRenderer shapes, float x, float y, float w, float h, float progress, Color color) {
 float p = Math.max(0f, Math.min(1f, progress));
