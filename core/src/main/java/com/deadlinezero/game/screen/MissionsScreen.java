@@ -19,6 +19,7 @@ import com.deadlinezero.game.meta.MasteryProgress;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.meta.WeeklyService;
 import com.deadlinezero.game.ui.MetaLayout;
+import com.deadlinezero.game.ui.UiIconRenderer;
 import com.deadlinezero.game.ui.UiLayout;
 import com.deadlinezero.game.ui.UiRenderer;
 import com.deadlinezero.game.ui.UiTypography;
@@ -99,6 +100,12 @@ public final class MissionsScreen extends ScreenAdapter {
         UiRenderer.panel(shapes, dailyPanel.x, dailyPanel.y, dailyPanel.width, dailyPanel.height);
         UiRenderer.panel(shapes, weeklyPanel.x, weeklyPanel.y, weeklyPanel.width, weeklyPanel.height);
         UiRenderer.panel(shapes, progressPanel.x, progressPanel.y, progressPanel.width, progressPanel.height);
+        UiRenderer.sectionBand(shapes, dailyPanel.x + 6f, dailyPanel.y + dailyPanel.height - 42f,
+            dailyPanel.width - 12f, 34f, VisualTheme.GOLD);
+        UiRenderer.sectionBand(shapes, weeklyPanel.x + 6f, weeklyPanel.y + weeklyPanel.height - 42f,
+            weeklyPanel.width - 12f, 34f, VisualTheme.VIOLET);
+        UiRenderer.sectionBand(shapes, progressPanel.x + 6f, progressPanel.y + progressPanel.height - 42f,
+            progressPanel.width - 12f, 34f, VisualTheme.accent());
         drawMissionStateCard(shapes, dailyRows[0], p.daily.loginClaimed, !p.daily.loginClaimed, VisualTheme.GOLD);
         drawMissionStateCard(shapes, dailyRows[1], p.daily.killMissionClaimed, p.daily.killsToday >= 100, VisualTheme.GOLD);
         drawMissionStateCard(shapes, dailyRows[2], p.daily.runMissionClaimed, p.daily.runsToday >= 3, VisualTheme.GOLD);
@@ -113,6 +120,7 @@ public final class MissionsScreen extends ScreenAdapter {
         drawMissionProgressBars(shapes, p);
 
         UiRenderer.card(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height, false, true);
+        drawMissionIcons(shapes, p);
         for (int i = 0; i < achievementRows.length; i++) {
             AchievementService.Achievement a = AchievementService.Achievement.values()[i];
             boolean unlocked = AchievementService.unlocked(p, a);
@@ -131,6 +139,30 @@ public final class MissionsScreen extends ScreenAdapter {
         drawWeekly(p);
         drawProgress(p);
         batch.end();
+    }
+
+    private void drawMissionIcons(ShapeRenderer shapes, PlayerProfile p) {
+        float size = 22f;
+        UiIconRenderer.draw(shapes, UiIconRenderer.Icon.MISSIONS,
+            dailyPanel.x + dailyPanel.width - 38f, dailyPanel.y + dailyPanel.height - 36f,
+            size, VisualTheme.GOLD, .92f);
+        UiIconRenderer.draw(shapes, UiIconRenderer.Icon.TROPHY,
+            weeklyPanel.x + weeklyPanel.width - 38f, weeklyPanel.y + weeklyPanel.height - 36f,
+            size, VisualTheme.VIOLET, .92f);
+        UiIconRenderer.draw(shapes, UiIconRenderer.Icon.STAGE,
+            progressPanel.x + progressPanel.width - 38f, progressPanel.y + progressPanel.height - 36f,
+            size, VisualTheme.accent(), .92f);
+
+        AchievementService.Achievement[] all = AchievementService.Achievement.values();
+        for (int i = 0; i < achievementRows.length; i++) {
+            Rectangle r = achievementRows[i];
+            boolean unlocked = AchievementService.unlocked(p, all[i]);
+            boolean claimed = p.achievements.claimed(all[i]);
+            Color accent = claimed ? VisualTheme.MUTED : unlocked ? VisualTheme.GOLD : VisualTheme.BORDER;
+            UiIconRenderer.draw(shapes,
+                unlocked ? UiIconRenderer.Icon.TROPHY : UiIconRenderer.Icon.LOCK,
+                r.x + 10f, r.y + r.height - 28f, 18f, accent, claimed ? .45f : .82f);
+        }
     }
 
     private void drawMissionProgressBars(ShapeRenderer shapes, PlayerProfile p) {
@@ -234,7 +266,7 @@ public final class MissionsScreen extends ScreenAdapter {
             boolean claimed = p.achievements.claimed(all[i]);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .90f);
             font.setColor(claimed ? VisualTheme.MUTED : unlocked ? VisualTheme.GOLD : VisualTheme.TEXT_DIM);
-            font.draw(batch, t(all[i].titleKey()), r.x + 8f, r.y + r.height * .67f, r.width - 16f, Align.center, true);
+            font.draw(batch, t(all[i].titleKey()), r.x + 34f, r.y + r.height * .67f, r.width - 42f, Align.left, true);
             font.setColor(claimed ? VisualTheme.MUTED : unlocked ? VisualTheme.accent() : VisualTheme.MUTED);
             font.draw(batch, claimed ? t("missions.claimed") : unlocked ? t("common.open") : t("missions.locked"),
                 r.x + 8f, r.y + 17f, r.width - 16f, Align.center, false);
@@ -244,7 +276,7 @@ public final class MissionsScreen extends ScreenAdapter {
     private void heading(String text, Rectangle panel, com.badlogic.gdx.graphics.Color color) {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION) * 1.05f);
         font.setColor(color);
-        font.draw(batch, text, panel.x + 16f, panel.y + panel.height - 16f, panel.width - 32f, Align.left, false);
+        font.draw(batch, text, panel.x + 16f, panel.y + panel.height - 16f, panel.width - 58f, Align.left, false);
     }
 
     private void drawClaimRow(Rectangle r, String text, boolean claimed, boolean ready) {

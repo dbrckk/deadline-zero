@@ -21,6 +21,7 @@ import com.deadlinezero.game.meta.BalanceTelemetryStore;
 import com.deadlinezero.game.meta.BalanceTelemetrySummary;
 import com.deadlinezero.game.meta.PlayerProfile;
 import com.deadlinezero.game.meta.ThreatTierRules;
+import com.deadlinezero.game.ui.UiIconRenderer;
 import com.deadlinezero.game.ui.UiLayout;
 import com.deadlinezero.game.ui.UiRenderer;
 import com.deadlinezero.game.ui.UiTypography;
@@ -77,9 +78,11 @@ public final class MenuScreen extends ScreenAdapter {
             layout.loadoutCard().width, layout.loadoutCard().height, false, false);
         UiRenderer.card(shapes, layout.threatCard().x, layout.threatCard().y,
             layout.threatCard().width, layout.threatCard().height, false, p.selectedThreatTier > 0);
-        UiRenderer.button(shapes, layout.deploy().x, layout.deploy().y,
-            layout.deploy().width, layout.deploy().height, UiRenderer.ButtonState.NORMAL);
+        float deployPulse = .5f + .5f * (float)Math.sin(t * 2.4f);
+        UiRenderer.premiumCta(shapes, layout.deploy().x, layout.deploy().y,
+            layout.deploy().width, layout.deploy().height, VisualTheme.accent(), deployPulse);
         drawHomeChrome(shapes, p);
+        drawHomeIcons(shapes, p);
 
         Rectangle[] tabs = layout.bottomTabs();
         for (int i = 0; i < tabs.length; i++) {
@@ -123,13 +126,58 @@ public final class MenuScreen extends ScreenAdapter {
             shapes.rect(threat.x + 7f, threat.y + 7f, Math.max(0f, threat.width - 14f), Math.max(0f, threat.height - 14f));
         }
 
-        Rectangle deploy = layout.deploy();
-        float pulse = .82f + .16f * ((float)Math.sin(t * 2.4f) * .5f + .5f);
-        shapes.setColor(VisualTheme.accent().r * .16f, VisualTheme.accent().g * .16f, VisualTheme.accent().b * .16f, 1f);
-        shapes.rect(deploy.x + 5f, deploy.y + 5f, Math.max(0f, deploy.width - 10f), Math.max(0f, deploy.height - 10f));
-        shapes.setColor(VisualTheme.accent().r * pulse, VisualTheme.accent().g * pulse, VisualTheme.accent().b * pulse, 1f);
-        shapes.rect(deploy.x + 10f, deploy.y + deploy.height - 6f, Math.max(0f, deploy.width - 20f), 4f);
-        shapes.rect(deploy.x + 10f, deploy.y + 10f, 4f, Math.max(0f, deploy.height - 20f));
+    }
+
+    private void drawHomeIcons(ShapeRenderer shapes, PlayerProfile p) {
+        Rectangle top = layout.topRail();
+        float col = top.width / 4f;
+        float icon = 22f;
+        float iy = top.y + top.height - icon - 12f;
+        UiIconRenderer.Icon[] topIcons = {
+            UiIconRenderer.Icon.LEVEL,
+            UiIconRenderer.Icon.CREDITS,
+            UiIconRenderer.Icon.GEMS,
+            UiIconRenderer.Icon.STAGE
+        };
+        Color[] topColors = {
+            VisualTheme.CYAN_SOFT,
+            VisualTheme.GOLD,
+            VisualTheme.accent(),
+            VisualTheme.TEXT_DIM
+        };
+        for (int i = 0; i < topIcons.length; i++) {
+            float ix = top.x + col * i + col * .5f - icon * .5f;
+            UiRenderer.iconBadge(shapes, ix - 4f, iy - 4f, icon + 8f, topColors[i], i != 3 || p.highestStage > 1);
+            UiIconRenderer.draw(shapes, topIcons[i], ix, iy, icon, topColors[i], .95f);
+        }
+
+        Rectangle[] tabs = layout.bottomTabs();
+        UiIconRenderer.Icon[] navIcons = {
+            UiIconRenderer.Icon.BASE,
+            UiIconRenderer.Icon.ARSENAL,
+            UiIconRenderer.Icon.GEAR,
+            UiIconRenderer.Icon.MISSIONS,
+            UiIconRenderer.Icon.SHOP,
+            UiIconRenderer.Icon.SETTINGS
+        };
+        for (int i = 0; i < tabs.length; i++) {
+            Rectangle tab = tabs[i];
+            float size = 22f;
+            float x = tab.x + tab.width * .5f - size * .5f;
+            float y = tab.y + tab.height * .54f;
+            Color color = i == 0 ? VisualTheme.accent() : VisualTheme.TEXT_DIM;
+            UiIconRenderer.draw(shapes, navIcons[i], x, y, size, color, i == 0 ? 1f : .72f);
+        }
+
+        Rectangle loadout = layout.loadoutCard();
+        UiIconRenderer.draw(shapes, UiIconRenderer.Icon.ARSENAL,
+            loadout.x + loadout.width - 54f, loadout.y + loadout.height - 52f, 26f, VisualTheme.CYAN_SOFT, .72f);
+
+        Rectangle threat = layout.threatCard();
+        UiIconRenderer.draw(shapes,
+            ThreatTierRules.unlocked(p) ? UiIconRenderer.Icon.STAGE : UiIconRenderer.Icon.LOCK,
+            threat.x + 18f, threat.y + threat.height * .5f - 12f, 24f,
+            p.selectedThreatTier > 0 ? VisualTheme.GOLD : VisualTheme.MUTED, .78f);
     }
 
     private void drawContent(PlayerProfile p) {
@@ -146,7 +194,7 @@ public final class MenuScreen extends ScreenAdapter {
 
     private void drawTopRail(PlayerProfile p) {
         Rectangle r = layout.topRail();
-        float baseline = r.y + r.height * .58f;
+        float baseline = r.y + r.height * .30f;
         float col = r.width / 4f;
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
@@ -260,7 +308,7 @@ public final class MenuScreen extends ScreenAdapter {
         for (int i = 0; i < tabs.length; i++) {
             Rectangle tab = tabs[i];
             font.setColor(i == 0 ? VisualTheme.accent() : VisualTheme.TEXT_DIM);
-            font.draw(batch, labels[i], tab.x + 6f, tab.y + tab.height * .55f, tab.width - 12f, Align.center, false);
+            font.draw(batch, labels[i], tab.x + 6f, tab.y + tab.height * .30f, tab.width - 12f, Align.center, false);
         }
     }
 

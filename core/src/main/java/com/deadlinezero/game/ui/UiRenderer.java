@@ -102,6 +102,43 @@ public final class UiRenderer {
         }
     }
 
+    public static void iconBadge(ShapeRenderer shapes, float x, float y, float size, Color accent, boolean active) {
+        Color a = accent == null ? VisualTheme.accent() : accent;
+        set(shapes, VisualTheme.SURFACE_0, .96f);
+        shapes.circle(x + size * .5f, y + size * .5f, size * .50f, 24);
+        set(shapes, active ? a : VisualTheme.BORDER, active ? .24f : .18f);
+        shapes.circle(x + size * .5f, y + size * .5f, size * .40f, 24);
+        set(shapes, active ? a : VisualTheme.BORDER, active ? .90f : .50f);
+        float t = Math.max(1.5f, size * .055f);
+        border(shapes, x, y, size, size, t);
+        cornerMarks(shapes, x, y, size, size, active ? a : VisualTheme.DIVIDER);
+    }
+
+    public static void sectionBand(ShapeRenderer shapes, float x, float y, float w, float h, Color accent) {
+        Color a = accent == null ? VisualTheme.accent() : accent;
+        set(shapes, VisualTheme.SURFACE_0, .72f);
+        shapes.rect(x, y, w, h);
+        set(shapes, a, .18f);
+        shapes.rect(x, y, Math.min(w, Math.max(44f, w * .34f)), h);
+        set(shapes, a, .88f);
+        shapes.rect(x, y, 4f, h);
+        shapes.rect(x + 8f, y + h - 3f, Math.max(0f, Math.min(w - 16f, w * .42f)), 2f);
+    }
+
+    public static void premiumCta(ShapeRenderer shapes, float x, float y, float w, float h, Color accent, float pulse) {
+        Color a = accent == null ? VisualTheme.accent() : accent;
+        float p = Math.max(0f, Math.min(1f, pulse));
+        set(shapes, VisualTheme.SURFACE_2, .98f);
+        shapes.rect(x, y, w, h);
+        set(shapes, a, .10f + .10f * p);
+        shapes.rect(x + 5f, y + 5f, Math.max(0f, w - 10f), Math.max(0f, h - 10f));
+        set(shapes, a, .72f + .24f * p);
+        border(shapes, x, y, w, h, 2f);
+        shapes.rect(x + 10f, y + h - 6f, Math.max(0f, w - 20f), 4f);
+        shapes.rect(x + 10f, y + 10f, 4f, Math.max(0f, h - 20f));
+        cornerMarks(shapes, x, y, w, h, a);
+    }
+
     public static void progress(ShapeRenderer shapes, float x, float y, float w, float h, float progress, Color color) {
         float p = Math.max(0f, Math.min(1f, progress));
         set(shapes, VisualTheme.SURFACE_0, .98f);
