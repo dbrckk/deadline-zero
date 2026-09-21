@@ -31,6 +31,8 @@ public final class CombatHudRenderer {
     private final Matrix4 projection = new Matrix4();
     private final String[] activeBuildKeys = new String[2];
     private float damageFlash;
+    private float onboardingHintAge;
+    private int onboardingHintStep = OnboardingHintPolicy.NONE;
     private final Localization i18n;
 
     public CombatHudRenderer(Localization i18n) {
@@ -42,7 +44,11 @@ public final class CombatHudRenderer {
         if (AccessibilitySettings.active().damageFlash) damageFlash = 1f;
     }
 
-    public void update(float dt) { damageFlash = Math.max(0f, damageFlash - dt * 2.8f); }
+    public void update(float dt) {
+        float safeDt = Math.max(0f, dt);
+        damageFlash = Math.max(0f, damageFlash - safeDt * 2.8f);
+        onboardingHintAge += safeDt;
+    }
 
     public void render(ShapeRenderer shapes, SpriteBatch batch, BitmapFont font,
                        Player player, WaveDirector director, Array<Enemy> enemies,
@@ -60,12 +66,26 @@ public final class CombatHudRenderer {
 
     private void updateOnboarding(Player player, WaveDirector director) {
         OnboardingState onboarding = OnboardingState.active();
-        if (onboarding.completed()) return;
-        if (player.velocity.len2() > .12f) onboarding.markMovementSeen();
-        if (player.dashTimer > .05f) onboarding.markDashSeen();
-        if (player.level > 1) onboarding.markUpgradeSeen();
-        if (director.bossWarning() || director.bossSpawned()) onboarding.markBossSeen();
-        onboarding.refreshCompletion();
+        if (!onboarding.completed()) {
+            if (player.velocity.len2() > .12f) onboarding.markMovementSeen();
+            if (player.dashTimer > .05f) onboarding.markDashSeen();
+            if (player.level > 1) onboarding.markUpgradeSeen();
+            if (director.bossWarning() || director.bossSpawned()) onboarding.markBossSeen();
+            onboarding.refreshCompletion();
+        }
+
+        int nextStep = OnboardingHintPolicy.step(
+            onboarding.movementSeen(), onboarding.dashSeen(), onboarding.upgradeSeen(), onboarding.bossSeen());
+        if (onboarding.completed()) nextStep = OnboardingHintPolicy.NONE;
+        if (nextStep != onboardingHintStep) {
+            onboardingHintStep = nextStep;
+            onboardingHintAge = 0f;
+        }
+    }
+
+    private boolean showOnboardingHint() {
+        return OnboardingHintPolicy.visible(
+            OnboardingState.active().completed(), onboardingHintStep, onboardingHintAge);
     }
 
     private void drawBars(ShapeRenderer shapes, Player player, WaveDirector director, Enemy boss,
@@ -104,10 +124,11 @@ public final class CombatHudRenderer {
             drawBossPhaseChrome(shapes, b, boss, identity);
         }
 
-        OnboardingState onboarding = OnboardingState.active();
-        if (!onboarding.completed()) {
+        if (showOnboardingHint()) {
             Rectangle hint = layout.onboarding();
             UiRenderer.card(shapes, hint.x, hint.y, hint.width, hint.height, false, false);
+            shapes.setColor(VisualTheme.CYAN_SOFT.r, VisualTheme.CYAN_SOFT.g, VisualTheme.CYAN_SOFT.b, .78f);
+            shapes.rect(hint.x + 7f, hint.y + hint.height - 3f, hint.width - 14f, 2f);
         }
 
         drawEventCueChrome(shapes, layout);
@@ -399,8 +420,8 @@ public final class CombatHudRenderer {
     }
 
     private void drawOnboardingHint(SpriteBatch batch, BitmapFont font, CombatHudLayout.Layout layout, float s) {
+        if (!showOnboardingHint()) return;
         OnboardingState o = OnboardingState.active();
-        if (o.completed()) return;
         String hint;
         if (!o.movementSeen()) hint = t("hud.onboardingMove");
         else if (!o.dashSeen()) hint = t("hud.onboardingDash");
@@ -408,9 +429,11 @@ public final class CombatHudRenderer {
         else if (!o.bossSeen()) hint = t("hud.onboardingBoss");
         else return;
         Rectangle r = layout.onboarding();
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * s);
-        font.setColor(VisualTheme.CYAN_SOFT);
-        font.draw(batch, hint, r.x + 14f, r.y + r.height * .62f, r.width - 28f, Align.center, true);
+        float fade = MathUtils.clamp(
+            (OnboardingHintPolicy.MAX_VISIBLE_SECONDS - onboardingHintAge) / .55f, 0f, 1f);
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * .92f * s);
+        font.setColor(VisualTheme.CYAN_SOFT.r, VisualTheme.CYAN_SOFT.g, VisualTheme.CYAN_SOFT.b, fade);
+        font.draw(batch, hint, r.x + 12f, r.y + r.height * .62f, r.width - 24f, Align.center, true);
     }
 
     private void drawDamageVignette(ShapeRenderer shapes, float w, float h) {
