@@ -86,6 +86,7 @@ public final class VictoryScreen extends ScreenAdapter {
             UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, i == 0);
         }
         UiRenderer.panel(shapes, noticePanel.x, noticePanel.y, noticePanel.width, noticePanel.height);
+        drawVictoryChrome(shapes);
         UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.NORMAL);
         UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height,
             canShare ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
@@ -100,6 +101,36 @@ public final class VictoryScreen extends ScreenAdapter {
         batch.end();
 
         handleInput(canShare);
+    }
+
+    private void drawVictoryChrome(ShapeRenderer shapes) {
+        float pulse = .72f + .18f * (float)Math.sin(visualTime * 2.2f);
+        shapes.setColor(VisualTheme.positive().r, VisualTheme.positive().g, VisualTheme.positive().b, .14f);
+        shapes.rect(hero.x + 8f, hero.y + 8f, Math.max(0f, hero.width - 16f), Math.max(0f, hero.height - 16f));
+        shapes.setColor(VisualTheme.positive().r, VisualTheme.positive().g, VisualTheme.positive().b, pulse);
+        shapes.rect(hero.x + 10f, hero.y + hero.height - 6f, Math.max(0f, hero.width - 20f), 4f);
+
+        Color[] rewardAccents = {VisualTheme.GOLD, VisualTheme.accent(), VisualTheme.VIOLET};
+        for (int i = 0; i < rewardCards.length; i++) {
+            Rectangle r = rewardCards[i];
+            Color accent = rewardAccents[i];
+            shapes.setColor(accent.r, accent.g, accent.b, .68f);
+            shapes.rect(r.x + 6f, r.y + r.height - 4f, Math.max(0f, r.width - 12f), 3f);
+            shapes.setColor(accent.r, accent.g, accent.b, .055f);
+            shapes.rect(r.x + 7f, r.y + 7f, Math.max(0f, r.width - 14f), Math.max(0f, r.height - 14f));
+        }
+
+        Color noticeAccent = result.unlockedThreatTier() > 0 ? VisualTheme.GOLD
+            : firstClear ? VisualTheme.positive() : VisualTheme.VIOLET;
+        shapes.setColor(noticeAccent.r, noticeAccent.g, noticeAccent.b, .56f);
+        shapes.rect(noticePanel.x + 7f, noticePanel.y + noticePanel.height - 4f,
+            Math.max(0f, noticePanel.width - 14f), 3f);
+
+        Rectangle next = actions[2];
+        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .10f);
+        shapes.rect(next.x + 6f, next.y + 6f, Math.max(0f, next.width - 12f), Math.max(0f, next.height - 12f));
+        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .88f);
+        shapes.rect(next.x + 10f, next.y + next.height - 4f, Math.max(0f, next.width - 20f), 3f);
     }
 
     private void drawHero() {
