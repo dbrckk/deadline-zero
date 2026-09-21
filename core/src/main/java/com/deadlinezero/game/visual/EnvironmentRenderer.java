@@ -191,11 +191,13 @@ public final class EnvironmentRenderer implements Disposable {
     }
 
     private void drawFloorInternal(SpriteBatch batch, float alpha) {
-        if (cryogenicDepths()) batch.setColor(.48f, .76f, .88f, alpha * .88f);
-        else if (cryoVault()) batch.setColor(.72f, .92f, 1f, alpha * .90f);
-        else if (nullSector()) batch.setColor(.66f, .62f, 1f, alpha * .88f);
-        else if (foundry()) batch.setColor(1f, .63f, .43f, alpha * .92f);
-        else batch.setColor(1f, 1f, 1f, alpha);
+        // Floor art carries structure, not the focal hierarchy. Keep it below actors/projectiles
+        // so phone-scale combat reads cleanly even with authored high-frequency texture detail.
+        if (cryogenicDepths()) batch.setColor(.48f, .76f, .88f, alpha * .72f);
+        else if (cryoVault()) batch.setColor(.72f, .92f, 1f, alpha * .74f);
+        else if (nullSector()) batch.setColor(.66f, .62f, 1f, alpha * .70f);
+        else if (foundry()) batch.setColor(1f, .63f, .43f, alpha * .76f);
+        else batch.setColor(.84f, .92f, .96f, alpha * .78f);
         for (int gy = -6; gy < 6; gy++) {
             for (int gx = -10; gx < 10; gx++) {
                 int variant = floorVariant(gx, gy);
@@ -205,11 +207,11 @@ public final class EnvironmentRenderer implements Disposable {
         }
         TextureRegion hazard = region("environment/floor/hazard_a");
         if (hazard != null) {
-            if (cryogenicDepths()) batch.setColor(.10f, .62f, .78f, Math.min(1f, alpha * 1.18f));
-            else if (cryoVault()) batch.setColor(.28f, .82f, 1f, Math.min(1f, alpha * 1.15f));
-            else if (nullSector()) batch.setColor(.48f, .28f, 1f, Math.min(1f, alpha * 1.15f));
-            else if (foundry()) batch.setColor(1f, .38f, .08f, Math.min(1f, alpha * 1.20f));
-            else batch.setColor(1f, 1f, 1f, Math.min(1f, alpha * 1.13f));
+            if (cryogenicDepths()) batch.setColor(.10f, .62f, .78f, Math.min(1f, alpha * .82f));
+            else if (cryoVault()) batch.setColor(.28f, .82f, 1f, Math.min(1f, alpha * .80f));
+            else if (nullSector()) batch.setColor(.48f, .28f, 1f, Math.min(1f, alpha * .78f));
+            else if (foundry()) batch.setColor(1f, .38f, .08f, Math.min(1f, alpha * .84f));
+            else batch.setColor(.82f, .94f, 1f, Math.min(1f, alpha * .76f));
             if (cryogenicDepths()) {
                 for (int x = -18; x <= 18; x += 18) {
                     batch.draw(hazard, x, -13f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
