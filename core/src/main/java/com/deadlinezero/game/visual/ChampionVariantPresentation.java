@@ -4,20 +4,32 @@ import com.deadlinezero.game.entities.Enemy;
 
 /** Stable non-color semantic cue for champion variants. */
 public final class ChampionVariantPresentation {
+    public enum Marker {
+        NONE,
+        CHEVRON,
+        ARMOR,
+        CLAW,
+        VOLATILE_CORE,
+        JUGGERNAUT,
+        RAVAGER,
+        AEGIS,
+        HUNTER
+    }
+
     private ChampionVariantPresentation() { }
 
-    public static String badge(Enemy.Variant variant) {
-        if (variant == null) return "";
+    public static Marker marker(Enemy.Variant variant) {
+        if (variant == null) return Marker.NONE;
         return switch (variant) {
-            case SWIFT -> "SW";
-            case ARMORED -> "AR";
-            case FERAL -> "FE";
-            case VOLATILE -> "VO";
-            case JUGGERNAUT -> "JU";
-            case RAVAGER -> "RA";
-            case AEGIS -> "AE";
-            case HUNTER -> "HU";
-            default -> "";
+            case SWIFT -> Marker.CHEVRON;
+            case ARMORED -> Marker.ARMOR;
+            case FERAL -> Marker.CLAW;
+            case VOLATILE -> Marker.VOLATILE_CORE;
+            case JUGGERNAUT -> Marker.JUGGERNAUT;
+            case RAVAGER -> Marker.RAVAGER;
+            case AEGIS -> Marker.AEGIS;
+            case HUNTER -> Marker.HUNTER;
+            default -> Marker.NONE;
         };
     }
 }

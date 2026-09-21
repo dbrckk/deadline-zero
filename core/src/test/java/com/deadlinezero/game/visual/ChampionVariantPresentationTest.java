@@ -1,27 +1,44 @@
 package com.deadlinezero.game.visual;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.deadlinezero.game.entities.Enemy;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.EnumSet;
 import org.junit.jupiter.api.Test;
 
 final class ChampionVariantPresentationTest {
-    @Test
-    void championBadgesAreShortUniqueAndNonColorSemanticCues() {
-        assertEquals("", ChampionVariantPresentation.badge(Enemy.Variant.NORMAL));
+    @Test void everyChampionVariantHasDistinctShapeSemantics() {
+        EnumSet<ChampionVariantPresentation.Marker> seen =
+            EnumSet.noneOf(ChampionVariantPresentation.Marker.class);
 
-        Set<String> badges = new HashSet<>();
         for (Enemy.Variant variant : Enemy.Variant.values()) {
-            if (variant == Enemy.Variant.NORMAL) continue;
-            String badge = ChampionVariantPresentation.badge(variant);
-            assertFalse(badge.isBlank(), variant + " must have a visible badge");
-            assertTrue(badge.length() <= 2, variant + " badge must stay readable at phone scale");
-            assertTrue(badges.add(badge), variant + " badge must be unique");
+            ChampionVariantPresentation.Marker marker = ChampionVariantPresentation.marker(variant);
+            if (variant == Enemy.Variant.NORMAL) {
+                assertEquals(ChampionVariantPresentation.Marker.NONE, marker);
+            } else {
+                seen.add(marker);
+            }
         }
-        assertEquals(8, badges.size());
+
+        assertEquals(8, seen.size());
+    }
+
+    @Test void highImpactVariantsKeepExpectedNonColorMarkers() {
+        assertEquals(ChampionVariantPresentation.Marker.CHEVRON,
+            ChampionVariantPresentation.marker(Enemy.Variant.SWIFT));
+        assertEquals(ChampionVariantPresentation.Marker.ARMOR,
+            ChampionVariantPresentation.marker(Enemy.Variant.ARMORED));
+        assertEquals(ChampionVariantPresentation.Marker.CLAW,
+            ChampionVariantPresentation.marker(Enemy.Variant.FERAL));
+        assertEquals(ChampionVariantPresentation.Marker.VOLATILE_CORE,
+            ChampionVariantPresentation.marker(Enemy.Variant.VOLATILE));
+        assertEquals(ChampionVariantPresentation.Marker.JUGGERNAUT,
+            ChampionVariantPresentation.marker(Enemy.Variant.JUGGERNAUT));
+        assertEquals(ChampionVariantPresentation.Marker.RAVAGER,
+            ChampionVariantPresentation.marker(Enemy.Variant.RAVAGER));
+        assertEquals(ChampionVariantPresentation.Marker.AEGIS,
+            ChampionVariantPresentation.marker(Enemy.Variant.AEGIS));
+        assertEquals(ChampionVariantPresentation.Marker.HUNTER,
+            ChampionVariantPresentation.marker(Enemy.Variant.HUNTER));
     }
 }

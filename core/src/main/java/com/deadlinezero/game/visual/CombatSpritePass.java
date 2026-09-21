@@ -72,11 +72,13 @@ public final class CombatSpritePass {
     public void renderCombat(SpriteBatch batch, Player player, Array<Enemy> enemies, Pools pools) {
         audio.update(player, enemies);
         if (!characters.authoredAvailable()) return;
+        // Champion identity markers are a ground-layer accessibility cue. Draw them before
+        // characters so the actor silhouette remains the visual priority.
+        championBadges.draw(batch, enemies);
         if (postFx.available() && quality.postFxIntensity > 0f) batch.setShader(postFx.shader(quality.postFxIntensity));
         characters.draw(batch, player, enemies);
         batch.setShader(null);
         companions.draw(batch, player);
-        championBadges.draw(batch, enemies);
 
         Enemy target = nearestEnemy(player, enemies);
         float aimAngle = target == null ? fallbackAim(player) :
