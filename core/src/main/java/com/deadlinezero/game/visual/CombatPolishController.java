@@ -1,6 +1,7 @@
 package com.deadlinezero.game.visual;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -142,6 +143,7 @@ public final class CombatPolishController {
         deaths.drawFallback(shapes, pools.deathFx);
         legendaryFx.render(shapes, player, time, fxBudget.quality());
         drawPlayerEventFx(shapes, player);
+        drawElementReactionFx(shapes, enemies);
         collectRenderEnemySubsets(enemies);
         drawLeaperTelegraphs(shapes, leaperRenderEnemies, time);
         drawBossPhaseTransitions(shapes, bossRenderEnemies, time);
@@ -179,6 +181,60 @@ public final class CombatPolishController {
                 .12f * fade * flashScale);
             shapes.circle(player.position.x, player.position.y, Math.max(.10f, radius * .62f),
                 fxBudget.geometrySegments(30, 18));
+        }
+    }
+
+    private void drawElementReactionFx(ShapeRenderer shapes, Array<Enemy> enemies) {
+        int segments = fxBudget.geometrySegments(30, 16);
+        for (Enemy enemy : enemies) {
+            if (!enemy.alive || enemy.reactionFlash <= 0f || enemy.lastReaction == Enemy.ElementReaction.NONE) continue;
+
+            float progress = MathUtils.clamp(1f - enemy.reactionFlash / .24f, 0f, 1f);
+            float fade = 1f - progress;
+            float flashScale = settings.reduceFlashes ? .45f : 1f;
+            float radius = enemy.radius * MathUtils.lerp(1.25f, 2.85f, progress);
+
+            Color primary;
+            Color secondary;
+            switch (enemy.lastReaction) {
+                case THERMAL_SHOCK -> {
+                    primary = VisualTheme.GOLD;
+                    secondary = VisualTheme.CYAN;
+                }
+                case STEAM_BURST -> {
+                    primary = Color.WHITE;
+                    secondary = VisualTheme.CYAN_SOFT;
+                }
+                case OVERLOAD -> {
+                    primary = VisualTheme.VIOLET;
+                    secondary = VisualTheme.CYAN;
+                }
+                default -> {
+                    primary = VisualTheme.CYAN_SOFT;
+                    secondary = VisualTheme.TEXT_DIM;
+                }
+            }
+
+            shapes.setColor(primary.r, primary.g, primary.b, (.18f + .22f * fade) * fade * flashScale);
+            shapes.circle(enemy.position.x, enemy.position.y, radius, segments);
+            shapes.setColor(secondary.r, secondary.g, secondary.b, .22f * fade * flashScale);
+            shapes.circle(enemy.position.x, enemy.position.y, Math.max(.08f, radius * .56f), Math.max(12, segments - 6));
+
+            if (fxBudget.allowHeavyFx()) {
+                int spokes = enemy.lastReaction == Enemy.ElementReaction.OVERLOAD ? 6 : 4;
+                for (int i = 0; i < spokes; i++) {
+                    float angle = i * (360f / spokes) + progress * 65f;
+                    float inner = enemy.radius * .45f;
+                    float outer = radius * .92f;
+                    shapes.setColor(primary.r, primary.g, primary.b, .20f * fade * flashScale);
+                    shapes.rectLine(
+                        enemy.position.x + MathUtils.cosDeg(angle) * inner,
+                        enemy.position.y + MathUtils.sinDeg(angle) * inner,
+                        enemy.position.x + MathUtils.cosDeg(angle) * outer,
+                        enemy.position.y + MathUtils.sinDeg(angle) * outer,
+                        .035f);
+                }
+            }
         }
     }
 
