@@ -15,7 +15,8 @@ import com.deadlinezero.game.meta.RunStageContext;
 public final class EnvironmentRenderer implements Disposable {
     private static final float HALF_W = 40f;
     private static final float HALF_H = 24f;
-    private static final float TILE_WORLD = 4f;
+    private static final float FLOOR_TILE_WORLD = 5.5f;
+    private static final float HAZARD_TILE_WORLD = 4f;
     private static final float TRANSITION_FLOOR_ALPHA = .62f;
     private static final float SHADOW_OFFSET_X = .22f;
     private static final float SHADOW_OFFSET_Y = -.28f;
@@ -199,7 +200,7 @@ public final class EnvironmentRenderer implements Disposable {
             for (int gx = -10; gx < 10; gx++) {
                 int variant = floorVariant(gx, gy);
                 TextureRegion region = region("environment/floor/concrete_" + (char)('a' + variant));
-                if (region != null) batch.draw(region, gx * TILE_WORLD, gy * TILE_WORLD, TILE_WORLD, TILE_WORLD);
+                if (region != null) batch.draw(region, gx * FLOOR_TILE_WORLD, gy * FLOOR_TILE_WORLD, FLOOR_TILE_WORLD, FLOOR_TILE_WORLD);
             }
         }
         TextureRegion hazard = region("environment/floor/hazard_a");
@@ -211,25 +212,30 @@ public final class EnvironmentRenderer implements Disposable {
             else batch.setColor(1f, 1f, 1f, Math.min(1f, alpha * 1.13f));
             if (cryogenicDepths()) {
                 for (int x = -24; x <= 24; x += 12) {
-                    batch.draw(hazard, x, -14f, TILE_WORLD, TILE_WORLD);
-                    batch.draw(hazard, x + 6f, 14f, TILE_WORLD, TILE_WORLD);
+                    batch.draw(hazard, x, -14f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
+                    batch.draw(hazard, x + 6f, 14f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
                 }
             } else if (cryoVault()) {
                 for (int x = -16; x <= 16; x += 8) {
-                    batch.draw(hazard, x, -10f, TILE_WORLD, TILE_WORLD);
-                    batch.draw(hazard, -x, 10f, TILE_WORLD, TILE_WORLD);
+                    batch.draw(hazard, x, -10f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
+                    batch.draw(hazard, -x, 10f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
                 }
             } else if (nullSector()) {
                 for (int y = -12; y <= 12; y += 8) {
                     int offset = ((y / 4) & 1) == 0 ? -14 : -10;
-                    for (int x = offset; x <= 14; x += 8) batch.draw(hazard, x, y, TILE_WORLD, TILE_WORLD);
+                    for (int x = offset; x <= 14; x += 8) batch.draw(hazard, x, y, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
                 }
             } else if (foundry()) {
                 for (int y = -10; y <= 10; y += 10) {
-                    for (int x = -12; x <= 12; x += 8) batch.draw(hazard, x, y, TILE_WORLD, TILE_WORLD);
+                    for (int x = -12; x <= 12; x += 8) batch.draw(hazard, x, y, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
                 }
             } else {
-                for (int x = -8; x <= 8; x += 4) batch.draw(hazard, x, -2f, TILE_WORLD, TILE_WORLD);
+                // Quarantine Yard uses sparse perimeter warning pads instead of a continuous
+                // center stripe, keeping the player and combat readable on phone screens.
+                for (int x = -12; x <= 12; x += 12) {
+                    batch.draw(hazard, x, -10f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
+                    batch.draw(hazard, -x, 10f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
+                }
             }
         }
     }
