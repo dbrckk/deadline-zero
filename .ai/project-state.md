@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T17:25:37Z
+Generated: 2026-09-21T17:48:58Z
 
 ### Git
 - Branch: `main`
-- Head: `b72ad633cffb`
-- Commit date: 2026-09-21T19:25:19+02:00
-- Commit: Make combat onboarding hints temporary and non-blocking (#278)
+- Head: `54382353d206`
+- Commit date: 2026-09-21T19:48:45+02:00
+- Commit: Stop Shambler acceptance from failing when no smoke source exists (#280)
 - Tracked files: 845
 
 ### Recently changed files
+- `.github/workflows/shambler-android-acceptance.yml`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java`
@@ -48,10 +49,6 @@ Generated: 2026-09-21T17:25:37Z
 - `core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java`
 - `core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java`
-- `core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java`
-- `core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java`
-- `core/src/main/java/com/deadlinezero/game/entities/Projectile.java`
-- `core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java`
 
 ### Project signals
 - `build.gradle`

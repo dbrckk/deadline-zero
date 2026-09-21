@@ -1,16 +1,13 @@
 # Change impact
 
-Base: ad5101ebf100fa43421e8ed90280f7351fdc382c
-Head: b72ad633cffb01566e75a8a9cd9d27831009011f
+Base: b37e839e73780a9802241a98d1a382a467e5f7d8
+Head: 54382353d2063b3c564a8a8dac2c96d0e863f13f
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java
-- M core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java
-- A core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java
-- A core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java
+- M .github/workflows/shambler-android-acceptance.yml
 
 ## Affected areas
-- core
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

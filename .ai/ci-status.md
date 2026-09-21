@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 2 success / 0 failure / 6 active
+Summary: 6 success / 0 failure / 2 active
 
-- Android Test APK: in_progress / pending (b72ad633)
-- Verify: pending / pending (b72ad633)
-- Responsive UI QA: in_progress / pending (b72ad633)
+- Responsive UI QA: in_progress / pending (54382353)
+- Verify: in_progress / pending (54382353)
+- Android Test APK: completed / success (b72ad633)
+- Verify: completed / success (b72ad633)
+- Responsive UI QA: completed / success (b72ad633)
 - Shambler Android Acceptance: completed / success (a5d9284d)
-- Verify: in_progress / pending (a5d9284d)
-- Responsive UI QA: in_progress / pending (a5d9284d)
-- Verify: in_progress / pending (a607325b)
-- Android Test APK: completed / success (a607325b)
+- Verify: completed / success (a5d9284d)
+- Responsive UI QA: completed / success (a5d9284d)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

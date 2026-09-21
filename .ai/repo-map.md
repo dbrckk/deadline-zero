@@ -3270,9 +3270,17 @@ jobs:
             read -r run_id head_sha < <(printf '%s' "$response" | python3 -c '
           import json,sys
           runs=[r for r in json.load(sys.stdin).get("workflow_runs",[]) if r.get("name")=="Shambler Animation Smoke"]
-          if not runs: raise SystemExit("No successful Shambler Animation Smoke run found on main")
-          print(runs[0]["id"], runs[0]["head_sha"])
+          if runs:
+              print(runs[0]["id"], runs[0]["head_sha"])
+          else:
+              print("", "")
           ')
+          fi
+
+          if [ -z "$run_id" ]; then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No successful Shambler Animation Smoke source exists on main; candidate acceptance is not applicable."
+            exit 0
           fi
 
           if [ -z "$head_sha" ]; then
@@ -3281,11 +3289,13 @@ jobs:
           fi
 
           test -n "$run_id" -a -n "$head_sha"
+          echo "available=true" >> "$GITHUB_OUTPUT"
           echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
           echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
           echo "Candidate smoke: run=$run_id sha=$head_sha"
 
       - name: Download validated Shambler candidate
+        if: steps.source.outputs.available == 'true'
         uses: actions/download-artifact@v4
         with:
           run-id: ${{ steps.source.outputs.run_id }}
@@ -3294,9 +3304,11 @@ jobs:
           path: shambler-artifact
 
       - name: Install candidate atlas tooling
+        if: steps.source.outputs.available == 'true'
         run: python3 -m pip install --disable-pip-version-check 'Pillow>=10,<12'
 
       - name: Stage exact smoke candidate into temporary runtime atlas
+        if: steps.source.outputs.available == 'true'
         id: candidate
         shell: bash
         env:
@@ -3363,21 +3375,25 @@ jobs:
           PY
 
       - uses: actions/setup-java@v5
+        if: steps.source.outputs.available == 'true'
         with:
           distribution: temurin
           java-version: '21'
 
       - uses: gradle/actions/setup-gradle@v4
+        if: steps.source.outputs.available == 'true'
         with:
           gradle-version: '8.11.1'
 
       - name: Enable KVM
+        if: steps.source.outputs.available == 'true'
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
       - name: Validate exact Shambler candidate in Android gameplay
+        if: steps.source.outputs.available == 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
@@ -3398,6 +3414,7 @@ jobs:
             test -s build/shambler-android-acceptance/shambler-attack.png
 
       - name: Finalize Shambler candidate acceptance report
+        if: steps.source.outputs.available == 'true'
         run: |
           python3 - <<'PY'
           import json
@@ -3410,7 +3427,7 @@ jobs:
           PY
 
       - name: Upload Shambler candidate Android evidence
-        if: always()
+        if: steps.source.outputs.available == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: shambler-candidate-android-acceptance-${{ github.run_number }}
