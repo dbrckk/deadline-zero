@@ -63,6 +63,7 @@ public final class GameScreen extends ScreenAdapter {
     private static final Color ENEMY_RANGED = new Color(.95f, .62f, .16f, 1f);
     private static final Color ENEMY_ELITE = new Color(.76f, .18f, .86f, 1f);
     private static final Color ENEMY_DEFAULT = new Color(.30f, .70f, .39f, 1f);
+    private static final float COMBAT_CAMERA_ZOOM = .88f;
 
     private final DeadlineZeroGame game;
     private final OrthographicCamera cam = new OrthographicCamera(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
@@ -637,6 +638,10 @@ public final class GameScreen extends ScreenAdapter {
     private void draw() {
         Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        // Combat uses translucent shadows, telegraphs, impacts and modal overlays extensively.
+        // ShapeRenderer does not enable alpha blending itself, so make the world pipeline explicit.
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         boolean authored = spritePass.authoredAvailable();
 
         batch.setProjectionMatrix(cam.combined);
@@ -1053,6 +1058,7 @@ public final class GameScreen extends ScreenAdapter {
     @Override public void resize(int width, int height) {
         cam.viewportWidth = GameConfig.WORLD_WIDTH;
         cam.viewportHeight = GameConfig.WORLD_WIDTH * ((float)height / width);
+        cam.zoom = COMBAT_CAMERA_ZOOM;
         cam.update();
     }
 
