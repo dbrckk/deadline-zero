@@ -1,15 +1,14 @@
 # Change impact
 
-Base: 694ad99981d4adac3f2ca4e79c769ece5f6644dc
-Head: 65dab2459de41ce8de1bc8818d979a063b264488
+Base: 467e040e0d8909d81ceac316c626eade3c8502a0
+Head: 594921340c35ba1217158a144f053df0cafaed33
 
 ## Changed files
-- M .github/workflows/verify.yml
 - M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
-- M core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java
+- A core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java
+- A core/src/test/java/com/deadlinezero/game/visual/CombatOverlayViewportTest.java
 
 ## Affected areas
-- .github
 - core
 
 ## Related test candidates

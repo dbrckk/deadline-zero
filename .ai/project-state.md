@@ -22,18 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T19:27:19Z
+Generated: 2026-09-21T19:36:23Z
 
 ### Git
 - Branch: `main`
-- Head: `65dab2459de4`
-- Commit date: 2026-09-21T21:27:04+02:00
-- Commit: Replace opaque combat telegraph disks with peripheral cues (#282)
-- Tracked files: 847
+- Head: `594921340c35`
+- Commit date: 2026-09-21T21:36:09+02:00
+- Commit: Fix HiDPI combat overlays clipping off-screen (#284)
+- Tracked files: 849
 
 ### Recently changed files
-- `.github/workflows/verify.yml`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java`
+- `core/src/test/java/com/deadlinezero/game/visual/CombatOverlayViewportTest.java`
+- `.github/workflows/verify.yml`
 - `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
 - `.github/workflows/responsive-ui-qa.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
@@ -44,9 +46,6 @@ Generated: 2026-09-21T19:27:19Z
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java`
 - `core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java`
-- `core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java`
-- `core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java`
 
 ### Project signals
 - `build.gradle`

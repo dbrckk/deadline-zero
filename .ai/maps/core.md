@@ -243,6 +243,7 @@ src/
               CombatFeel.java
               CombatHudLayout.java
               CombatHudRenderer.java
+              CombatOverlayViewport.java
               CombatPolishController.java
               CombatSpritePass.java
               CombatVisualEvents.java
@@ -444,6 +445,7 @@ src/
               ChampionVariantPresentationTest.java
               CharacterSpriteFacingTest.java
               CombatHudLayoutTest.java
+              CombatOverlayViewportTest.java
               CombatVisualEventsProtocolTest.java
               CompanionRendererTest.java
               Direction8Test.java
@@ -5770,8 +5772,13 @@ font.draw(batch, n.text, n.x - .45f, n.y, .9f, Align.center, false);
 batch.end();
 ⋮----
 private void drawHud() {
-float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-combatHud.render(shapes, batch, font, player, director, enemies, w, h);
+float physicalW = Gdx.graphics.getWidth();
+float physicalH = Gdx.graphics.getHeight();
+combatHud.render(shapes, batch, font, player, director, enemies, physicalW, physicalH);
+⋮----
+CombatOverlayViewport.compute((int) physicalW, (int) physicalH);
+float w = overlay.width();
+float h = overlay.height();
 ⋮----
 if (choosingUpgrade || choosingLegendary) drawChoiceBackdrop(w, h, choosingLegendary);
 if (gameOver) drawGameOverBackdrop(w, h);
@@ -5903,21 +5910,25 @@ if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) idx = 0;
 if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) idx = 1;
 if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) idx = 2;
 if (Gdx.input.justTouched() && legendaryChoiceCount > 0) {
+CombatOverlayViewport.Viewport overlay = CombatOverlayViewport.compute(
+Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+float logicalX = overlay.toLogicalX(Gdx.input.getX());
 idx = Math.min(legendaryChoiceCount - 1,
-(int)(Gdx.input.getX() / (float)Gdx.graphics.getWidth() * legendaryChoiceCount));
+(int)(logicalX / overlay.width() * legendaryChoiceCount));
 ⋮----
 if (legendaryChoices[idx].apply(player)) {
 addCameraShake(.64f);
 impact(player.position.x, player.position.y, 2.9f, .42f, VisualTheme.GOLD);
 ⋮----
-if (Gdx.input.justTouched()) idx = Math.min(2, (int)(Gdx.input.getX() / (float)Gdx.graphics.getWidth() * 3));
+if (Gdx.input.justTouched()) {
+⋮----
+idx = Math.min(2, (int)(logicalX / overlay.width() * 3f));
 ⋮----
 applyUpgradeWithSynergyFeedback(choices[idx]);
 ⋮----
 if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.R)) {
 finishRun();
 ⋮----
-if (Gdx.input.justTouched()) {
 if (!revived) game.services.ads.showRewarded(AdsService.Reward.REVIVE, () -> {
 ⋮----
 game.services.ads.preload();
@@ -10696,6 +10707,26 @@ private String f(String key, Object... args) { return i18n.format(key, args); }
 private Color bossColor(Enemy boss) {
 ⋮----
 default -> VisualTheme.danger();
+```
+
+## File: src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java
+```java
+/**
+ * Normalizes combat modal overlays to the same logical UI space as the HUD.
+ *
+ * Android may report a render-surface size that is larger than the captured/display backbuffer.
+ * Drawing modal cards directly in raw Gdx pixel coordinates can therefore push choices off-screen.
+ */
+public final class CombatOverlayViewport {
+⋮----
+public float toLogicalX(float physicalX) { return physicalX * scaleX; }
+public float toLogicalY(float physicalY) { return physicalY * scaleY; }
+⋮----
+public static Viewport compute(int physicalWidth, int physicalHeight) {
+int w = Math.max(1, physicalWidth);
+int h = Math.max(1, physicalHeight);
+UiLayout.Metrics m = UiLayout.compute(w, h);
+return new Viewport(m.width(), m.height(), m.width() / w, m.height() / h);
 ```
 
 ## File: src/main/java/com/deadlinezero/game/visual/CombatPolishController.java
@@ -19433,6 +19464,31 @@ CombatHudLayout.Layout wide = CombatHudLayout.compute(1536, 691, 1f, false);
 ⋮----
 assertTrue(Math.abs(wide.toLogicalX(dashPhysicalX) - wide.dashX()) < 1f);
 assertTrue(Math.abs(wide.toLogicalY(dashPhysicalY) - wide.dashY()) < 1f);
+```
+
+## File: src/test/java/com/deadlinezero/game/visual/CombatOverlayViewportTest.java
+```java
+final class CombatOverlayViewportTest {
+@Test void normalizesWidePhoneHiDpiSurfaceToLogicalHudSpace() {
+CombatOverlayViewport.Viewport v = CombatOverlayViewport.compute(2880, 1620);
+assertEquals(1280f, v.width(), .001f);
+assertEquals(720f, v.height(), .001f);
+assertEquals(1280f / 2880f, v.scaleX(), .0001f);
+assertEquals(720f / 1620f, v.scaleY(), .0001f);
+⋮----
+@Test void threeChoiceCentersStayInsideLogicalViewport() {
+⋮----
+float center = v.width() * ((i + 1f) / 4f);
+assertTrue(center > 0f && center < v.width());
+⋮----
+assertEquals(960f, v.width() * .75f, .001f);
+⋮----
+@Test void physicalTouchMappingPreservesChoiceColumns() {
+⋮----
+float physicalX = 2160f; // 75% of the reported Android surface.
+float logicalX = v.toLogicalX(physicalX);
+assertEquals(960f, logicalX, .001f);
+assertEquals(2, Math.min(2, (int)(logicalX / v.width() * 3f)));
 ```
 
 ## File: src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java
