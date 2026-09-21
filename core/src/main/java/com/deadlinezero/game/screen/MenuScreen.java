@@ -78,7 +78,7 @@ public final class MenuScreen extends ScreenAdapter {
         UiRenderer.card(shapes, layout.threatCard().x, layout.threatCard().y,
             layout.threatCard().width, layout.threatCard().height, false, p.selectedThreatTier > 0);
         UiRenderer.button(shapes, layout.deploy().x, layout.deploy().y,
-            layout.deploy().width, layout.deploy().height, UiRenderer.ButtonState.SELECTED);
+            layout.deploy().width, layout.deploy().height, UiRenderer.ButtonState.NORMAL);
         drawHomeChrome(shapes, p);
 
         Rectangle[] tabs = layout.bottomTabs();
@@ -100,10 +100,14 @@ public final class MenuScreen extends ScreenAdapter {
 
     private void drawHomeChrome(ShapeRenderer shapes, PlayerProfile p) {
         Rectangle survivor = layout.survivorCard();
-        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .18f);
-        shapes.rect(survivor.x + 8f, survivor.y + 8f, Math.max(0f, survivor.width - 16f), Math.max(0f, survivor.height - 16f));
-        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .72f);
-        shapes.rect(survivor.x + 8f, survivor.y + survivor.height - 5f, Math.max(0f, survivor.width - 16f), 3f);
+        // The survivor is the hero, not a full-screen cyan slab: frame the portrait instead.
+        shapes.setColor(VisualTheme.SURFACE_2);
+        shapes.rect(survivor.x + 10f, survivor.y + 10f, Math.max(0f, survivor.width - 20f), Math.max(0f, survivor.height - 20f));
+        shapes.setColor(VisualTheme.accent());
+        shapes.rect(survivor.x + 10f, survivor.y + 10f, 5f, Math.max(0f, survivor.height - 20f));
+        shapes.rect(survivor.x + 10f, survivor.y + survivor.height - 5f, Math.max(0f, survivor.width * .34f), 3f);
+        shapes.setColor(VisualTheme.BORDER);
+        shapes.rect(survivor.x + survivor.width * .46f, survivor.y + 24f, 1f, Math.max(0f, survivor.height - 48f));
 
         Rectangle loadout = layout.loadoutCard();
         Color weaponAccent = VisualTheme.CYAN_SOFT;
@@ -120,11 +124,12 @@ public final class MenuScreen extends ScreenAdapter {
         }
 
         Rectangle deploy = layout.deploy();
-        float pulse = .14f + .06f * ((float)Math.sin(t * 2.4f) * .5f + .5f);
-        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, pulse);
+        float pulse = .82f + .16f * ((float)Math.sin(t * 2.4f) * .5f + .5f);
+        shapes.setColor(VisualTheme.accent().r * .16f, VisualTheme.accent().g * .16f, VisualTheme.accent().b * .16f, 1f);
         shapes.rect(deploy.x + 5f, deploy.y + 5f, Math.max(0f, deploy.width - 10f), Math.max(0f, deploy.height - 10f));
-        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .92f);
-        shapes.rect(deploy.x + 12f, deploy.y + deploy.height - 5f, Math.max(0f, deploy.width - 24f), 3f);
+        shapes.setColor(VisualTheme.accent().r * pulse, VisualTheme.accent().g * pulse, VisualTheme.accent().b * pulse, 1f);
+        shapes.rect(deploy.x + 10f, deploy.y + deploy.height - 6f, Math.max(0f, deploy.width - 20f), 4f);
+        shapes.rect(deploy.x + 10f, deploy.y + 10f, 4f, Math.max(0f, deploy.height - 20f));
     }
 
     private void drawContent(PlayerProfile p) {
@@ -167,7 +172,7 @@ public final class MenuScreen extends ScreenAdapter {
 
         if (game.art.authoredAvailable()) {
             TextureRegion portrait = game.art.survivor(p.selectedSurvivor, GameArt.Motion.IDLE, t);
-            float maxH = Math.min(300f, r.height * .62f);
+            float maxH = Math.min(330f, r.height * .70f);
             float maxW = r.width * .44f;
             float aspect = portrait.getRegionWidth() / (float) Math.max(1, portrait.getRegionHeight());
             float drawH = maxH;
@@ -184,7 +189,7 @@ public final class MenuScreen extends ScreenAdapter {
 
         float tx = r.x + r.width * .49f;
         float tw = r.width * .46f;
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE));
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE) * 1.12f);
         font.setColor(VisualTheme.TEXT_STRONG);
         font.draw(batch, p.selectedSurvivor.displayName.toUpperCase(), tx, r.y + r.height * .64f, tw, Align.left, false);
 
@@ -237,7 +242,7 @@ public final class MenuScreen extends ScreenAdapter {
 
     private void drawDeploy(PlayerProfile p) {
         Rectangle r = layout.deploy();
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION) * 1.12f);
         font.setColor(VisualTheme.TEXT_STRONG);
         font.draw(batch, t("menu.deploy"), r.x, r.y + r.height * .64f, r.width, Align.center, false);
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
