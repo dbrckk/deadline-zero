@@ -53,6 +53,7 @@ import com.deadlinezero.game.visual.CombatPolishController;
 import com.deadlinezero.game.visual.CombatSpritePass;
 import com.deadlinezero.game.visual.CombatVisualEvents;
 import com.deadlinezero.game.visual.HostileProjectilePresentation;
+import com.deadlinezero.game.visual.PlayerProjectilePresentation;
 import com.deadlinezero.game.visual.VisualTheme;
 import com.deadlinezero.game.visual.WorldFxRenderer;
 import com.deadlinezero.game.world.SpatialHash;
@@ -397,9 +398,15 @@ public final class GameScreen extends ScreenAdapter {
                     p.critical ? VisualTheme.GOLD : VisualTheme.TEXT);
                 float vlen = p.velocity.len();
                 if (vlen > .001f) e.addImpulse(p.velocity.x / vlen * p.knockback, p.velocity.y / vlen * p.knockback);
-                impact(p.position.x, p.position.y, p.critical ? .78f : .44f,
-                    p.critical ? .17f : .12f, p.critical ? VisualTheme.GOLD : VisualTheme.CYAN);
-                if (p.critical) addCameraShake(.075f);
+                PlayerProjectilePresentation.Profile projectileVisual = PlayerProjectilePresentation.profile(p);
+                Color impactColor = p.weaponSignature ? projectileVisual.accent() : projectileVisual.color();
+                float impactScale = projectileVisual.impactScale();
+                impact(p.position.x, p.position.y,
+                    (p.critical ? .78f : .44f) * impactScale,
+                    (p.critical ? .17f : .12f) * (p.weaponSignature ? 1.18f : 1f),
+                    impactColor);
+                if (p.weaponSignature) addCameraShake(.095f);
+                else if (p.critical) addCameraShake(.075f);
                 polish.onProjectileHit(p.critical);
                 if (p.element == DamageElement.SHOCK && e.alive) chainShock(e, p.damage * .42f, 3);
                 if (wasAlive && !e.alive) onEnemyKilled(e);
@@ -678,14 +685,21 @@ public final class GameScreen extends ScreenAdapter {
             shapes.circle(f.position.x, f.position.y, Math.max(.06f, f.size * .18f * a), 12);
         }
         for (Projectile p : pools.projectiles) if (p.active) {
-            Color c = switch (p.element) {
-                case FIRE -> Color.ORANGE;
-                case FROST -> VisualTheme.CYAN;
-                case SHOCK -> VisualTheme.VIOLET;
-                default -> p.critical ? VisualTheme.GOLD : VisualTheme.CYAN;
-            };
-            shapes.setColor(c);
-            shapes.circle(p.position.x, p.position.y, p.critical ? .16f : .11f, 12);
+            PlayerProjectilePresentation.Profile visual = PlayerProjectilePresentation.profile(p);
+            Color core = visual.color();
+            float radius = p.radius * visual.coreScale();
+            if (visual.signature()) {
+                Color accent = visual.accent();
+                shapes.setColor(accent.r, accent.g, accent.b, .20f);
+                shapes.circle(p.position.x, p.position.y, radius * 1.75f, 16);
+            }
+            shapes.setColor(core);
+            shapes.circle(p.position.x, p.position.y, radius, visual.signature() ? 16 : 12);
+            if (visual.style() == PlayerProjectilePresentation.Style.RAIL
+                || (visual.signature() && visual.style() == PlayerProjectilePresentation.Style.TEMPEST)) {
+                shapes.setColor(1f, 1f, 1f, .84f);
+                shapes.circle(p.position.x, p.position.y, Math.max(.035f, radius * .38f), 9);
+            }
         }
         for (EnemyProjectile p : pools.hostileProjectiles) if (p.active) {
             Color core = switch (p.style) {
