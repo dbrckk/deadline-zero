@@ -17,6 +17,7 @@ import com.deadlinezero.game.services.CloudRemoteChangedException;
 import com.deadlinezero.game.services.CloudSaveAdapter;
 import com.deadlinezero.game.services.CloudSaveService;
 import com.deadlinezero.game.ui.MetaLayout;
+import com.deadlinezero.game.ui.UiIconRenderer;
 import com.deadlinezero.game.ui.UiLayout;
 import com.deadlinezero.game.ui.UiRenderer;
 import com.deadlinezero.game.ui.UiTypography;
@@ -88,6 +89,12 @@ public final class CloudSaveScreen extends ScreenAdapter {
         UiRenderer.premiumCard(shapes, statusPanel.x, statusPanel.y, statusPanel.width, statusPanel.height,
             colorForState(), false, conflict == CloudSaveService.ConflictState.DIVERGED || providerConflict, !available);
         UiRenderer.premiumPanel(shapes, warningPanel.x, warningPanel.y, warningPanel.width, warningPanel.height, VisualTheme.GOLD, false);
+        float cloudIcon = Math.min(90f, statusPanel.height * .34f);
+        float cloudX = statusPanel.x + statusPanel.width * .5f - cloudIcon * .5f;
+        float cloudY = statusPanel.y + statusPanel.height * .58f;
+        UiRenderer.iconBadge(shapes, cloudX - 10f, cloudY - 10f, cloudIcon + 20f, colorForState(), cloud.available());
+        UiIconRenderer.draw(shapes, UiIconRenderer.Icon.CLOUD, cloudX, cloudY, cloudIcon, colorForState(),
+            cloud.available() ? .92f : .34f);
         for (int i = 0; i < actions.length; i++) {
             UiRenderer.ButtonState state = (!available || busy) ? UiRenderer.ButtonState.DISABLED : UiRenderer.ButtonState.NORMAL;
             if ((i == 1 && confirmUpload) || (i == 2 && confirmDownload)) state = UiRenderer.ButtonState.DANGER;
@@ -108,11 +115,11 @@ public final class CloudSaveScreen extends ScreenAdapter {
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
         font.setColor(colorForState());
-        font.draw(batch, status, statusPanel.x + 28f, statusPanel.y + statusPanel.height * .67f,
+        font.draw(batch, status, statusPanel.x + 28f, statusPanel.y + statusPanel.height * .44f,
             statusPanel.width - 56f, Align.center, true);
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.TEXT_DIM);
-        font.draw(batch, stateSummary(), statusPanel.x + 28f, statusPanel.y + statusPanel.height * .30f,
+        font.draw(batch, stateSummary(), statusPanel.x + 28f, statusPanel.y + statusPanel.height * .22f,
             statusPanel.width - 56f, Align.center, true);
 
         font.setColor(VisualTheme.GOLD);
