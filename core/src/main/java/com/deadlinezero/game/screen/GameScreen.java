@@ -54,6 +54,7 @@ import com.deadlinezero.game.visual.CombatSpritePass;
 import com.deadlinezero.game.visual.CombatVisualEvents;
 import com.deadlinezero.game.visual.HostileProjectilePresentation;
 import com.deadlinezero.game.visual.PlayerProjectilePresentation;
+import com.deadlinezero.game.visual.UpgradeIconRenderer;
 import com.deadlinezero.game.visual.VisualTheme;
 import com.deadlinezero.game.visual.WorldFxRenderer;
 import com.deadlinezero.game.world.SpatialHash;
@@ -858,11 +859,17 @@ public final class GameScreen extends ScreenAdapter {
 
             UiRenderer.premiumCard(shapes, left, cardY, cardWidth, cardHeight,
                 accent, legendary, false, false);
-            float badge = Math.min(cardWidth, cardHeight) * .13f;
-            shapes.setColor(accent.r, accent.g, accent.b, legendary ? .24f : .14f);
-            shapes.circle(centerX, cardY + cardHeight * .69f, badge, 24);
-            shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .92f);
-            shapes.circle(centerX, cardY + cardHeight * .69f, badge * .48f, 20);
+            if (legendary) {
+                float badge = Math.min(cardWidth, cardHeight) * .13f;
+                shapes.setColor(accent.r, accent.g, accent.b, .24f);
+                shapes.circle(centerX, cardY + cardHeight * .69f, badge, 24);
+                shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .92f);
+                shapes.circle(centerX, cardY + cardHeight * .69f, badge * .48f, 20);
+            } else {
+                float iconSize = Math.min(cardWidth * .22f, cardHeight * .30f);
+                UpgradeIconRenderer.draw(shapes, choices[i], centerX,
+                    cardY + cardHeight * .73f, iconSize, accent);
+            }
         }
         shapes.end();
     }
@@ -929,44 +936,47 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private void drawUpgradeText(float w, float h) {
-        font.getData().setScale(1.65f);
+        font.getData().setScale(1.50f);
         font.setColor(VisualTheme.TEXT);
-        font.draw(batch, t("combat.upgradeTitle"), 0, h * .69f, w, Align.center, false);
+        font.draw(batch, t("combat.upgradeTitle"), 0, h * .705f, w, Align.center, false);
 
-        float cardWidth = w * .27f;
+        float panelW = w * .86f;
+        float cardWidth = Math.min(w * .27f, panelW / 3f - w * .018f);
+        float cardHeight = h * .285f;
+        float cardY = h * .34f;
         for (int i = 0; i < 3; i++) {
-            float centerX = w * (.17f + i * .33f);
+            float centerX = w * ((i + 1f) / 4f);
             float left = centerX - cardWidth * .5f;
 
-            font.getData().setScale(1.18f);
+            font.getData().setScale(1.08f);
             font.setColor(VisualTheme.upgradeRarity(choices[i].rarity));
             font.draw(batch, f("combat.upgradeCard", i + 1, t(choices[i].titleKey())),
-                left + 12f, h * .565f, cardWidth - 24f, Align.center, true);
+                left + 14f, cardY + cardHeight * .535f, cardWidth - 28f, Align.center, true);
 
-            font.getData().setScale(.92f);
+            font.getData().setScale(.78f);
             boolean buildPath = i == 0 && UpgradeSelector.isBuildFocusedChoice(player, choices[i]);
-            font.setColor(buildPath ? VisualTheme.CYAN : VisualTheme.TEXT);
+            font.setColor(buildPath ? VisualTheme.CYAN : VisualTheme.TEXT_DIM);
             font.draw(batch, buildPath
                     ? choices[i].rarity.name() + "  |  " + t("combat.upgradeBuildPath")
                     : choices[i].rarity.name(),
-                left + 12f, h * .495f, cardWidth - 24f, Align.center, false);
+                left + 14f, cardY + cardHeight * .405f, cardWidth - 28f, Align.center, false);
 
-            font.getData().setScale(.96f);
-            font.setColor(Color.WHITE);
+            font.getData().setScale(.86f);
+            font.setColor(VisualTheme.TEXT_STRONG);
             font.draw(batch, t(choices[i].descriptionKey()),
-                left + 18f, h * .435f, cardWidth - 36f, Align.center, true);
+                left + 20f, cardY + cardHeight * .295f, cardWidth - 40f, Align.center, true);
 
             String guidanceKey = AbilityUpgradeGuidance.key(player, choices[i]);
             if (guidanceKey == null) guidanceKey = ProtocolUpgradeGuidance.key(player, choices[i]);
             if (guidanceKey != null) {
-                font.getData().setScale(.78f);
+                font.getData().setScale(.70f);
                 font.setColor(VisualTheme.GOLD);
                 font.draw(batch, t(guidanceKey),
-                    left + 14f, h * .365f, cardWidth - 28f, Align.center, true);
+                    left + 18f, cardY + cardHeight * .145f, cardWidth - 36f, Align.center, true);
             }
         }
 
-        font.getData().setScale(.86f);
+        font.getData().setScale(.78f);
         font.setColor(VisualTheme.MUTED);
         font.draw(batch, t("combat.upgradeFooter"), 0, h * .305f, w, Align.center, false);
         font.getData().setScale(.75f);
