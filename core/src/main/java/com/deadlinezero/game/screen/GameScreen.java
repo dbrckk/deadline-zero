@@ -49,6 +49,7 @@ import com.deadlinezero.game.services.AdsService;
 import com.deadlinezero.game.ui.UiRenderer;
 import com.deadlinezero.game.util.Pools;
 import com.deadlinezero.game.visual.CombatHudRenderer;
+import com.deadlinezero.game.visual.CombatOverlayViewport;
 import com.deadlinezero.game.visual.CombatPolishController;
 import com.deadlinezero.game.visual.CombatSpritePass;
 import com.deadlinezero.game.visual.CombatVisualEvents;
@@ -846,9 +847,16 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private void drawHud() {
-        float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-        combatHud.render(shapes, batch, font, player, director, enemies, w, h);
+        float physicalW = Gdx.graphics.getWidth();
+        float physicalH = Gdx.graphics.getHeight();
+        combatHud.render(shapes, batch, font, player, director, enemies, physicalW, physicalH);
         if (!choosingUpgrade && !choosingLegendary && !gameOver) return;
+
+        CombatOverlayViewport.Viewport overlay =
+            CombatOverlayViewport.compute((int) physicalW, (int) physicalH);
+        float w = overlay.width();
+        float h = overlay.height();
+
         if (choosingUpgrade || choosingLegendary) drawChoiceBackdrop(w, h, choosingLegendary);
         if (gameOver) drawGameOverBackdrop(w, h);
         batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
@@ -1034,8 +1042,11 @@ public final class GameScreen extends ScreenAdapter {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) idx = 1;
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) idx = 2;
             if (Gdx.input.justTouched() && legendaryChoiceCount > 0) {
+                CombatOverlayViewport.Viewport overlay = CombatOverlayViewport.compute(
+                    Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                float logicalX = overlay.toLogicalX(Gdx.input.getX());
                 idx = Math.min(legendaryChoiceCount - 1,
-                    (int)(Gdx.input.getX() / (float)Gdx.graphics.getWidth() * legendaryChoiceCount));
+                    (int)(logicalX / overlay.width() * legendaryChoiceCount));
             }
             if (idx >= 0 && idx < legendaryChoiceCount && legendaryChoices[idx] != null) {
                 if (legendaryChoices[idx].apply(player)) {
@@ -1053,7 +1064,12 @@ public final class GameScreen extends ScreenAdapter {
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) idx = 0;
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) idx = 1;
             if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) idx = 2;
-            if (Gdx.input.justTouched()) idx = Math.min(2, (int)(Gdx.input.getX() / (float)Gdx.graphics.getWidth() * 3));
+            if (Gdx.input.justTouched()) {
+                CombatOverlayViewport.Viewport overlay = CombatOverlayViewport.compute(
+                    Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                float logicalX = overlay.toLogicalX(Gdx.input.getX());
+                idx = Math.min(2, (int)(logicalX / overlay.width() * 3f));
+            }
             if (idx >= 0) {
                 applyUpgradeWithSynergyFeedback(choices[idx]);
                 choosingUpgrade = false;
