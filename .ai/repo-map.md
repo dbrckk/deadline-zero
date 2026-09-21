@@ -18596,9 +18596,14 @@ return new Spec(duration, radius, pitch, vibration);
 
 ## File: core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java
 ````java
-/** Draws compact non-color champion identifiers above authored enemy sprites. */
+/**
+ * Draws compact, shape-based champion markers under authored enemy sprites.
+ *
+ * Champion identity must not depend on color alone, but the previous two-letter plates were almost
+ * as large as small enemies and read like debug labels. These markers keep the accessibility signal
+ * while staying subordinate to the actual actor silhouette.
+ */
 public final class ChampionBadgeRenderer {
-⋮----
 private final ShapeRenderer shapes = new ShapeRenderer();
 ⋮----
 public void draw(SpriteBatch batch, Array<Enemy> enemies) {
@@ -18606,25 +18611,55 @@ public void draw(SpriteBatch batch, Array<Enemy> enemies) {
 shapes.setProjectionMatrix(batch.getProjectionMatrix());
 shapes.begin(ShapeRenderer.ShapeType.Filled);
 ⋮----
-String badge = ChampionVariantPresentation.badge(enemy.variant);
-if (badge.length() != 2) continue;
+ChampionVariantPresentation.Marker marker = ChampionVariantPresentation.marker(enemy.variant);
 ⋮----
-// The dark plate and pixel glyphs remain readable regardless of champion tint/color-vision mode.
-shapes.setColor(VisualTheme.GOLD);
-shapes.rect(left, bottom, BADGE_WIDTH, BADGE_HEIGHT);
-shapes.setColor(.025f, .030f, .035f, 1f);
-shapes.rect(left + .045f, bottom + .045f, BADGE_WIDTH - .09f, BADGE_HEIGHT - .09f);
+float size = MathUtils.clamp(enemy.radius * .72f, .22f, .46f);
 ⋮----
-shapes.setColor(.96f, .98f, 1f, 1f);
-drawGlyph(badge.charAt(0), glyphX, glyphY);
-drawGlyph(badge.charAt(1), glyphX + glyphWidth + PIXEL, glyphY);
+drawMarker(marker, cx, cy, size);
 ⋮----
 shapes.end();
 ⋮----
-private void drawGlyph(char glyph, float x, float y) {
+private void drawMarker(ChampionVariantPresentation.Marker marker, float cx, float cy, float size) {
+float t = Math.max(.026f, size * .12f);
 ⋮----
-if (bits.charAt(row * 3 + col) != '1') continue;
-shapes.rect(x + col * PIXEL, y + (4 - row) * PIXEL, PIXEL, PIXEL);
+shapes.setColor(.015f, .022f, .028f, .44f);
+shapes.circle(cx, cy, r * 1.28f, 20);
+shapes.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b, .72f);
+⋮----
+shapes.triangle(cx + r * .82f, cy,
+⋮----
+shapes.rect(cx - r * .62f, cy - r * .44f, t, r * .88f);
+shapes.rect(cx + r * .62f - t, cy - r * .44f, t, r * .88f);
+shapes.rect(cx - r * .42f, cy + r * .52f - t, r * .84f, t);
+shapes.rect(cx - r * .42f, cy - r * .52f, r * .84f, t);
+⋮----
+shapes.rectLine(cx - r * .48f + off, cy - r * .48f,
+⋮----
+shapes.circle(cx, cy, r * .24f, 12);
+⋮----
+float dx = MathUtils.cosDeg(a) * r * .62f;
+float dy = MathUtils.sinDeg(a) * r * .62f;
+shapes.circle(cx + dx, cy + dy, r * .13f, 10);
+⋮----
+shapes.rect(cx - t * .6f, cy - r * .60f, t * 1.2f, r * 1.20f);
+shapes.rect(cx - r * .60f, cy - t * .6f, r * 1.20f, t * 1.2f);
+⋮----
+shapes.rectLine(cx - r * .52f, cy - r * .52f, cx + r * .52f, cy + r * .52f, t);
+shapes.rectLine(cx - r * .52f, cy + r * .52f, cx + r * .52f, cy - r * .52f, t);
+⋮----
+shapes.triangle(cx, cy + r * .70f,
+⋮----
+shapes.setColor(.015f, .022f, .028f, .88f);
+shapes.circle(cx, cy, r * .22f, 12);
+⋮----
+shapes.circle(cx, cy, r * .40f, 18);
+⋮----
+shapes.circle(cx, cy, r * .22f, 14);
+⋮----
+shapes.rect(cx - t * .45f, cy + r * .38f, t * .9f, r * .28f);
+shapes.rect(cx - t * .45f, cy - r * .66f, t * .9f, r * .28f);
+shapes.rect(cx + r * .38f, cy - t * .45f, r * .28f, t * .9f);
+shapes.rect(cx - r * .66f, cy - t * .45f, r * .28f, t * .9f);
 ⋮----
 public void dispose() {
 shapes.dispose();
@@ -18635,7 +18670,7 @@ shapes.dispose();
 /** Stable non-color semantic cue for champion variants. */
 public final class ChampionVariantPresentation {
 ⋮----
-public static String badge(Enemy.Variant variant) {
+public static Marker marker(Enemy.Variant variant) {
 ````
 
 ## File: core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java
@@ -19767,11 +19802,13 @@ renderCombat(batch, player, enemies, CombatPolishController.currentPools());
 public void renderCombat(SpriteBatch batch, Player player, Array<Enemy> enemies, Pools pools) {
 audio.update(player, enemies);
 ⋮----
+// Champion identity markers are a ground-layer accessibility cue. Draw them before
+// characters so the actor silhouette remains the visual priority.
+championBadges.draw(batch, enemies);
 if (postFx.available() && quality.postFxIntensity > 0f) batch.setShader(postFx.shader(quality.postFxIntensity));
 characters.draw(batch, player, enemies);
 batch.setShader(null);
 companions.draw(batch, player);
-championBadges.draw(batch, enemies);
 ⋮----
 Enemy target = nearestEnemy(player, enemies);
 float aimAngle = target == null ? fallbackAim(player) :
@@ -22166,15 +22203,34 @@ public void drawChampionAuras(ShapeRenderer shapes, Array<Enemy> enemies, float 
 ⋮----
 float pulse = .82f + MathUtils.sin(time * 7.5f + e.position.x * .37f) * .18f;
 ⋮----
-case SWIFT -> shapes.setColor(.25f, .72f, 1f, .16f + .07f * pulse);
-case ARMORED -> shapes.setColor(.70f, .80f, .95f, .16f + .06f * pulse);
-case FERAL -> shapes.setColor(1f, .18f, .10f, .18f + .08f * pulse);
+float pip = Math.max(.045f, e.radius * .12f);
 ⋮----
-case SWIFT -> shapes.setColor(.62f, .92f, 1f, .24f);
-case ARMORED -> shapes.setColor(.88f, .94f, 1f, .22f);
-case FERAL -> shapes.setColor(1f, .52f, .28f, .25f);
+shapes.setColor(.48f, .88f, 1f, .30f);
+int count = budget.allowHeavyFx() ? 4 : 3;
 ⋮----
-shapes.circle(e.position.x, e.position.y, radius * .82f, segments);
+float x = e.position.x + MathUtils.cosDeg(angle) * radius;
+float y = e.position.y + MathUtils.sinDeg(angle) * radius;
+float tangentX = -MathUtils.sinDeg(angle) * pip * 1.8f;
+float tangentY = MathUtils.cosDeg(angle) * pip * 1.8f;
+shapes.rectLine(x - tangentX, y - tangentY, x + tangentX, y + tangentY, pip * .48f);
+⋮----
+shapes.setColor(.82f, .90f, 1f, .28f);
+⋮----
+shapes.rect(e.position.x - d - bar, e.position.y - d, bar, d * .60f);
+shapes.rect(e.position.x + d, e.position.y - d, bar, d * .60f);
+shapes.rect(e.position.x - d - bar, e.position.y + d * .40f, bar, d * .60f);
+shapes.rect(e.position.x + d, e.position.y + d * .40f, bar, d * .60f);
+shapes.rect(e.position.x - d, e.position.y + d, d * .60f, bar);
+shapes.rect(e.position.x + d * .40f, e.position.y + d, d * .60f, bar);
+shapes.rect(e.position.x - d, e.position.y - d - bar, d * .60f, bar);
+shapes.rect(e.position.x + d * .40f, e.position.y - d - bar, d * .60f, bar);
+⋮----
+shapes.setColor(1f, .42f, .18f, .32f);
+⋮----
+float ox = MathUtils.cosDeg(angle);
+float oy = MathUtils.sinDeg(angle);
+⋮----
+shapes.triangle(baseX + tx * half, baseY + ty * half,
 ⋮----
 public void drawProjectileTrails(ShapeRenderer shapes, Array<Projectile> projectiles,
 ⋮----
@@ -27855,18 +27911,36 @@ assertTrue(frost.audioPitch() < alpha.audioPitch());
 ## File: core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java
 ````java
 final class ChampionVariantPresentationTest {
+@Test void everyChampionVariantHasDistinctShapeSemantics() {
 ⋮----
-void championBadgesAreShortUniqueAndNonColorSemanticCues() {
-assertEquals("", ChampionVariantPresentation.badge(Enemy.Variant.NORMAL));
+EnumSet.noneOf(ChampionVariantPresentation.Marker.class);
 ⋮----
 for (Enemy.Variant variant : Enemy.Variant.values()) {
+ChampionVariantPresentation.Marker marker = ChampionVariantPresentation.marker(variant);
 ⋮----
-String badge = ChampionVariantPresentation.badge(variant);
-assertFalse(badge.isBlank(), variant + " must have a visible badge");
-assertTrue(badge.length() <= 2, variant + " badge must stay readable at phone scale");
-assertTrue(badges.add(badge), variant + " badge must be unique");
+assertEquals(ChampionVariantPresentation.Marker.NONE, marker);
 ⋮----
-assertEquals(8, badges.size());
+seen.add(marker);
+⋮----
+assertEquals(8, seen.size());
+⋮----
+@Test void highImpactVariantsKeepExpectedNonColorMarkers() {
+assertEquals(ChampionVariantPresentation.Marker.CHEVRON,
+ChampionVariantPresentation.marker(Enemy.Variant.SWIFT));
+assertEquals(ChampionVariantPresentation.Marker.ARMOR,
+ChampionVariantPresentation.marker(Enemy.Variant.ARMORED));
+assertEquals(ChampionVariantPresentation.Marker.CLAW,
+ChampionVariantPresentation.marker(Enemy.Variant.FERAL));
+assertEquals(ChampionVariantPresentation.Marker.VOLATILE_CORE,
+ChampionVariantPresentation.marker(Enemy.Variant.VOLATILE));
+assertEquals(ChampionVariantPresentation.Marker.JUGGERNAUT,
+ChampionVariantPresentation.marker(Enemy.Variant.JUGGERNAUT));
+assertEquals(ChampionVariantPresentation.Marker.RAVAGER,
+ChampionVariantPresentation.marker(Enemy.Variant.RAVAGER));
+assertEquals(ChampionVariantPresentation.Marker.AEGIS,
+ChampionVariantPresentation.marker(Enemy.Variant.AEGIS));
+assertEquals(ChampionVariantPresentation.Marker.HUNTER,
+ChampionVariantPresentation.marker(Enemy.Variant.HUNTER));
 ````
 
 ## File: core/src/test/java/com/deadlinezero/game/visual/CharacterSpriteFacingTest.java

@@ -659,10 +659,12 @@
         "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
         "core/src/main/java/com/deadlinezero/game/visual/BossPhaseTransitionProfile.java",
+        "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
         "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
         "core/src/main/java/com/deadlinezero/game/visual/HostileProjectilePresentation.java",
@@ -679,7 +681,7 @@
         "tools/blender/add_rex_rifle.py",
         "tools/blender/render_actor_8dir.py"
       ],
-      "in_degree": 39,
+      "in_degree": 41,
       "out_degree": 5,
       "path": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java"
     },
@@ -1553,6 +1555,36 @@
     },
     {
       "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
+        "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+        "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+        "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
+        "core/src/main/java/com/deadlinezero/game/visual/GraphicsQuality.java",
+        "core/src/main/java/com/deadlinezero/game/visual/PostFxShader.java",
+        "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+        "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java"
+      ],
+      "in_degree": 1,
+      "out_degree": 20,
+      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java"
+    },
+    {
+      "dependencies": [
         "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
@@ -1582,37 +1614,9 @@
     },
     {
       "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
-        "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
         "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-        "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
-        "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
-        "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-        "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-        "core/src/main/java/com/deadlinezero/game/visual/GraphicsQuality.java",
-        "core/src/main/java/com/deadlinezero/game/visual/PostFxShader.java",
-        "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java"
-      ],
-      "dependents": [
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java"
-      ],
-      "in_degree": 1,
-      "out_degree": 19,
-      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java"
-    },
-    {
-      "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-        "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java"
+        "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
+        "core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java"
       ],
       "dependents": [
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
@@ -1634,7 +1638,7 @@
         "core/src/test/java/com/deadlinezero/game/meta/ProfileStoreBackupTest.java"
       ],
       "in_degree": 17,
-      "out_degree": 2,
+      "out_degree": 3,
       "path": "core/src/main/java/com/deadlinezero/game/meta/ProfileSchema.java"
     },
     {
@@ -2335,8 +2339,8 @@
       "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java"
     }
   ],
-  "edge_count": 2350,
+  "edge_count": 2354,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 451,
+  "node_count": 452,
   "schema_version": 1
 }

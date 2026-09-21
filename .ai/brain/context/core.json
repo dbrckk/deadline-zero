@@ -2,7 +2,7 @@
   "area": "core",
   "files": [
     {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
       "reasons": [
         "changed",
         "changed-source",
@@ -11,20 +11,30 @@
         "reverse-dependency-neighbor",
         "symbol-indexed"
       ],
-      "score": 1045
+      "score": 455
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "path": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
       "reasons": [
-        "dependency-neighbor",
         "impact",
         "reverse-dependency-neighbor",
         "symbol-indexed"
       ],
-      "score": 570
+      "score": 420
     },
     {
-      "path": "core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java",
+      "path": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "reasons": [
+        "changed",
+        "changed-source",
+        "dependency-neighbor",
+        "impact",
+        "symbol-indexed"
+      ],
+      "score": 405
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java",
       "reasons": [
         "changed",
         "changed-source",
@@ -36,7 +46,7 @@
       "score": 405
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+      "path": "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
       "reasons": [
         "changed",
         "changed-source",
@@ -45,10 +55,10 @@
         "reverse-dependency-neighbor",
         "symbol-indexed"
       ],
-      "score": 400
+      "score": 375
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+      "path": "core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java",
       "reasons": [
         "changed",
         "changed-source",
@@ -56,93 +66,78 @@
         "impact",
         "symbol-indexed"
       ],
-      "score": 390
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
-      "reasons": [
-        "dependency-neighbor"
-      ],
-      "score": 350
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-      "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
-      ],
-      "score": 310
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-      "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
-      ],
-      "score": 310
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-      "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
-      ],
-      "score": 260
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
-      "reasons": [
-        "dependency-neighbor"
-      ],
-      "score": 250
+      "score": 365
     },
     {
       "path": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
       "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 230
+      "score": 300
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+      "path": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 150
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
       "reasons": [
         "dependency-neighbor",
         "reverse-dependency-neighbor"
       ],
-      "score": 210
+      "score": 110
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java",
       "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 210
+      "score": 100
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+      "path": "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
       "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 185
+      "score": 100
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+      "path": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
       "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 160
+      "score": 100
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+      "path": "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
       "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 160
+      "score": 100
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 100
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 100
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/fx/ArcFx.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 100
     }
   ],
   "generated_by": "dbrckk/repo-brain-v6",

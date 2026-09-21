@@ -1917,7 +1917,8 @@
     "core/src/main/java/com/deadlinezero/game/meta/ProfileSchema.java": {
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-        "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java"
+        "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
+        "core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java"
       ],
       "dependents": [
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
@@ -1939,7 +1940,7 @@
         "core/src/test/java/com/deadlinezero/game/meta/ProfileStoreBackupTest.java"
       ],
       "in_degree": 17,
-      "out_degree": 2
+      "out_degree": 3
     },
     "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java": {
       "dependencies": [
@@ -3740,23 +3741,26 @@
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
         "core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java",
-        "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java"
+        "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
+        "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java"
       ],
       "dependents": [
         "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java"
       ],
       "in_degree": 1,
-      "out_degree": 3
+      "out_degree": 4
     },
     "core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java": {
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/entities/Enemy.java"
       ],
       "dependents": [
+        "core/src/main/java/com/deadlinezero/game/meta/ProfileSchema.java",
         "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
-        "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java"
+        "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java",
+        "tools/blender/style_rex_materials.py"
       ],
-      "in_degree": 2,
+      "in_degree": 4,
       "out_degree": 1
     },
     "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java": {
@@ -3911,13 +3915,14 @@
         "core/src/main/java/com/deadlinezero/game/visual/GraphicsQuality.java",
         "core/src/main/java/com/deadlinezero/game/visual/PostFxShader.java",
         "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java"
+        "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
+        "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java"
       ],
       "dependents": [
         "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java"
       ],
       "in_degree": 1,
-      "out_degree": 19
+      "out_degree": 20
     },
     "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java": {
       "dependencies": [],
@@ -4528,10 +4533,12 @@
         "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java",
         "core/src/main/java/com/deadlinezero/game/visual/BossPhaseTransitionProfile.java",
+        "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatAudioLayer.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
         "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
         "core/src/main/java/com/deadlinezero/game/visual/HostileProjectilePresentation.java",
@@ -4548,7 +4555,7 @@
         "tools/blender/add_rex_rifle.py",
         "tools/blender/render_actor_8dir.py"
       ],
-      "in_degree": 39,
+      "in_degree": 41,
       "out_degree": 5
     },
     "core/src/main/java/com/deadlinezero/game/world/DeathBurstRules.java": {
@@ -6390,6 +6397,14 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 2
+    },
+    "tools/blender/style_rex_materials.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
     },
     "tools/blender/validate_rex_weapon_visibility.py": {
       "dependencies": [

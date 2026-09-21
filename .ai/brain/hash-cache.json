@@ -20,21 +20,25 @@
       "sha256": "468b6b27d5b8ba71f1d3d30ee7cf8b4d3bb2d164d43668f972c7ea789d6f2b51",
       "size": 7800
     },
-    "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java": {
-      "sha256": "e93f5ae3de1d565c0a5ac7f86e1ffcc04c9f82f16b497b562c63cdd916ae9ddd",
-      "size": 2002
-    },
     "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java": {
       "sha256": "41f391f8b157e6a521168f401989566788a2563a88262bf3256e0862fdf61c4b",
       "size": 11146
     },
-    "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java": {
-      "sha256": "7eaea7874dee7e878a2c2eca18d80aca6d9a92bc2921c399067808895a75e8e6",
-      "size": 15517
+    "core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java": {
+      "sha256": "f959fca408a42d6d725407fae722846a67464e9cb57b5b3f8b0bf7920fedd96a",
+      "size": 2337
     },
-    "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java": {
-      "sha256": "b49a1734e6bdd2dfec6b2e6458f662c047951756d90764682239be456141a79b",
-      "size": 775
+    "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java": {
+      "sha256": "eacea625f285c5d5866fc47a7e8c66be1cb3030cb2be7b599bb05b92fc6bbb21",
+      "size": 148
+    },
+    "core/src/main/java/com/deadlinezero/game/ai/EnemyPatternCatalog.java": {
+      "sha256": "eafdce94300d6e139ff97c94700140d750a63329d4db2a9efd25b5ffe28d8bef",
+      "size": 5787
+    },
+    "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java": {
+      "sha256": "a6ba1ce52174d5c72130321b45ca33ccbe8ca59091e9d47a9b464d948231ab07",
+      "size": 113
     },
     "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java": {
       "sha256": "cf6d4f040cc650e71630547a5bc6adf2283c1dc344dcd4bd8834791ea088d860",
@@ -44,85 +48,81 @@
       "sha256": "1cb9c6717320f2bbc45a89f67bcd64fd777382797a9805e4a19be683f31d8e87",
       "size": 21615
     },
-    "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java": {
-      "sha256": "70717edd0e3616fa5f18dc39f32a8f1de3f3ed87498e65e5fc6b97d0d6c8ea35",
-      "size": 12383
+    "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java": {
+      "sha256": "269ce26307796092e6443888367e1ffef449b64dbcea738655702cb737c1ae0c",
+      "size": 2319
     },
-    "core/src/main/java/com/deadlinezero/game/meta/RunMissionRuntime.java": {
-      "sha256": "177f68896a9237bb0187a4f71ab949e14ef01c3d19dd7c6895c90f0c56f4a3a1",
-      "size": 1568
+    "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java": {
+      "sha256": "2407783d577949f50cd194e689b4be7953f712a4aa22b2d6f0774c7ec570cb0f",
+      "size": 1980
     },
-    "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java": {
-      "sha256": "dac9ee3898316f5d08248a4cb310e655387878c6f6dfb7dc8a5125a2a56dd39f",
-      "size": 7188
+    "core/src/main/java/com/deadlinezero/game/entities/Player.java": {
+      "sha256": "afa10154e26ad52e69097574f0d95ec1d24ad8254faa91776260938509c69753",
+      "size": 3704
     },
-    "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java": {
-      "sha256": "5f180d8c6a5ed01ad6151720b5be2651dc33e4f79b131579830cf9e35b81dff9",
-      "size": 1371
+    "core/src/main/java/com/deadlinezero/game/entities/Projectile.java": {
+      "sha256": "efef3526eb5f3b6dfccf4397facfe1eefb2d21266a37f0427c21336d8a3ba15a",
+      "size": 2808
     },
-    "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java": {
-      "sha256": "dea1d1a2128e091a8bfe148a06ff9332daf9b470f544928e14c9c0c6aace88bc",
-      "size": 19457
+    "core/src/main/java/com/deadlinezero/game/fx/ArcFx.java": {
+      "sha256": "a81bf78a111f5ef1e37ff868d354b9d7f7ca2018ac8f6c56ab4d9806a361e563",
+      "size": 1276
     },
-    "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java": {
-      "sha256": "00fc32b56463b52b9cd4b47a1cea2ac02dced301d3be79d769e78d751a9ce6e7",
-      "size": 20946
-    },
-    "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java": {
-      "sha256": "7e57d254edd5bad15737569880584d45af4b639aba11a035c1ae54fbdb55054c",
-      "size": 17234
+    "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java": {
+      "sha256": "94f499515ff68bd337efb7deb62755e1fd490331e6313674270f6a0df7f8eab7",
+      "size": 1751
     },
     "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": {
       "sha256": "39d38f967de926cbeffa568fd1dfc49c7ce74c1ccb7756395176f977e89a7eca",
       "size": 54403
     },
-    "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java": {
-      "sha256": "a6aea19026238f038bf70d66290a9e59abdea4a0782f0e6fa4b852d6c62046ab",
-      "size": 20288
+    "core/src/main/java/com/deadlinezero/game/util/Pools.java": {
+      "sha256": "0488ea523f482eb9f5f7f26b4a6467bfa163b7889340c35ec5a940d88f7e5f25",
+      "size": 4560
     },
-    "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java": {
-      "sha256": "aca65977aa65821ffeea7fcd54d33447088f655cea88c652baf70acd9da0a002",
-      "size": 21566
+    "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java": {
+      "sha256": "e54fe06663c9f7a16b58d51e04b8c90b0d40baea2c24e335d991bc3a76c8612e",
+      "size": 4910
     },
-    "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java": {
-      "sha256": "253eb39a2e8f3f29a111c723765f109d4fcd191f9c3698834cebfbd7db29a275",
-      "size": 21179
+    "core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java": {
+      "sha256": "146d051ce849432d3b23219c5b5e58168e8f9a4e2bc13c769c5cabc9e7dedcac",
+      "size": 968
     },
-    "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java": {
-      "sha256": "c5fd5bdc4336e2d349ebfccd497f84e0dd50916e9c08414d8ed4923ffff0bcba",
-      "size": 10771
+    "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": {
+      "sha256": "dbe3c3d34e0c00d87572248bf4b79fca4ff3d0587bd0b69c0a2b538dae3709a1",
+      "size": 31436
     },
-    "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java": {
-      "sha256": "560d1a749beaac50fc3a69f9f046b1a06850d443bb5201f2b9daae12be98eee4",
-      "size": 12622
+    "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": {
+      "sha256": "180a55b9b468f4496796e74b052c53526849f724169f11ac5a5d8a2a6eccb092",
+      "size": 5851
     },
-    "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java": {
-      "sha256": "bc0f0f45ff7020cbdaf552923a0c8f1e87c4b1e08c3b4cc129c9d474dacb1eed",
-      "size": 15329
+    "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java": {
+      "sha256": "17c080d1354835b2a2a4e08172b701f4d85cc200f61b666d61f7e5c74ac8b098",
+      "size": 3829
     },
-    "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java": {
-      "sha256": "80a2f51bf38bbb3c47eff9ce612a529f47fc398cf935a3345905056dc76b1dc5",
-      "size": 18386
+    "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java": {
+      "sha256": "c18bdbe02dabd158ae8ae3cdbe79dcf9da07843c6c84bbcd2df89d97018b5213",
+      "size": 6779
     },
-    "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java": {
-      "sha256": "f51841846fac5cb0c187cc2abe420385937cd7a71a133012b90a70d512cda78c",
-      "size": 16813
+    "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java": {
+      "sha256": "fe3e39a1f66c14e49d31531eb1a6a1ddac1716f91f8a0926fbc99ed86bcdefb7",
+      "size": 4618
     },
-    "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java": {
-      "sha256": "e695df14ea36d07c0c83178703b66549e927b18714bc024acc75ca30425cd32e",
-      "size": 16257
+    "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": {
+      "sha256": "8a56e1338335193579af7dfef335f02c4ffb557992f363f31da3fcecc3fab3d1",
+      "size": 25180
     },
-    "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java": {
-      "sha256": "da66f2b0546165e58ca0bd8da7061cc6a3417a36d1564d363efcf4dc72cf47ae",
-      "size": 9301
+    "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java": {
+      "sha256": "29472a6838a7528ab86793e9fe3e5ffa369e7d0a267b77acd852d88b52e76b41",
+      "size": 13042
     },
-    "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java": {
-      "sha256": "b53d747eb8a739bf8918ff99f1b3be243daac4e892169f8de0ae080fb8ee922a",
-      "size": 2191
+    "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java": {
+      "sha256": "80514352176fa376ff5706a1bffaea1b285904c59a93fa67612de959047776f5",
+      "size": 5472
     },
-    "core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java": {
-      "sha256": "ab828413d8d8a037864b12b99e2b89b9ca99bcbb42264016fa2d50c6f1f4b8a1",
-      "size": 2061
+    "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java": {
+      "sha256": "2daabf5a6fc9d8dcf07d6a2167d5049cc35f2bcda148e5fe5628626c9d86c9dd",
+      "size": 2035
     },
     "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java": {
       "sha256": "1b55d146600e5ed37f1c70199618fb5b4151bfd2eb215b40f77c85d48ef338e6",

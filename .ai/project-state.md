@@ -22,16 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T17:16:26Z
+Generated: 2026-09-21T17:17:17Z
 
 ### Git
 - Branch: `main`
-- Head: `c69034156b76`
-- Commit date: 2026-09-21T19:16:14+02:00
-- Commit: Replace generic upgrade rings with functional skill iconography (#275)
+- Head: `82a9237c2180`
+- Commit date: 2026-09-21T19:17:03+02:00
+- Commit: Replace debug-like champion overlays with subordinate shape markers (#276)
 - Tracked files: 841
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java`
+- `core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java`
+- `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
+- `core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java`
@@ -40,7 +45,6 @@ Generated: 2026-09-21T17:16:26Z
 - `core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java`
 - `core/src/main/java/com/deadlinezero/game/entities/Projectile.java`
 - `core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java`
-- `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
 - `core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java`
 - `.github/workflows/responsive-ui-qa.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java`
@@ -48,10 +52,6 @@ Generated: 2026-09-21T17:16:26Z
 - `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java`
-- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
-- `docs/PREMIUM_VISUAL_GAP_AUDIT.md`
-- `assets/i18n/messages.properties`
 
 ### Project signals
 - `build.gradle`
