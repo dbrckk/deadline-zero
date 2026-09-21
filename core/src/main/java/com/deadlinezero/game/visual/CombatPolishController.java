@@ -141,12 +141,45 @@ public final class CombatPolishController {
         updateAndDrawSingularityImpacts(shapes, pools, time);
         deaths.drawFallback(shapes, pools.deathFx);
         legendaryFx.render(shapes, player, time, fxBudget.quality());
+        drawPlayerEventFx(shapes, player);
         collectRenderEnemySubsets(enemies);
         drawLeaperTelegraphs(shapes, leaperRenderEnemies, time);
         drawBossPhaseTransitions(shapes, bossRenderEnemies, time);
         drawRevenantIdentity(shapes, bossRenderEnemies, time);
         drawWardenIdentity(shapes, bossRenderEnemies, time);
         if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
+    }
+
+    private void drawPlayerEventFx(ShapeRenderer shapes, Player player) {
+        float dashAge = CombatVisualEvents.dashAgeSeconds();
+        if (dashAge <= .36f) {
+            float progress = MathUtils.clamp(dashAge / .36f, 0f, 1f);
+            float fade = 1f - progress;
+            float radius = player.radius * MathUtils.lerp(1.25f, 3.15f, progress);
+            float flashScale = settings.reduceFlashes ? .48f : 1f;
+            shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b,
+                (.22f + .20f * fade) * fade * flashScale);
+            shapes.circle(player.position.x, player.position.y, radius, fxBudget.geometrySegments(32, 18));
+            shapes.setColor(VisualTheme.CYAN_SOFT.r, VisualTheme.CYAN_SOFT.g, VisualTheme.CYAN_SOFT.b,
+                .18f * fade * flashScale);
+            shapes.circle(player.position.x, player.position.y, Math.max(.08f, radius * .54f),
+                fxBudget.geometrySegments(28, 16));
+        }
+
+        float levelAge = CombatVisualEvents.levelUpAgeSeconds();
+        if (levelAge <= .82f) {
+            float progress = MathUtils.clamp(levelAge / .82f, 0f, 1f);
+            float fade = 1f - progress;
+            float radius = player.radius * MathUtils.lerp(1.45f, 4.25f, progress);
+            float flashScale = settings.reduceFlashes ? .42f : 1f;
+            shapes.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b,
+                (.16f + .26f * fade) * fade * flashScale);
+            shapes.circle(player.position.x, player.position.y, radius, fxBudget.geometrySegments(36, 20));
+            shapes.setColor(VisualTheme.VIOLET.r, VisualTheme.VIOLET.g, VisualTheme.VIOLET.b,
+                .12f * fade * flashScale);
+            shapes.circle(player.position.x, player.position.y, Math.max(.10f, radius * .62f),
+                fxBudget.geometrySegments(30, 18));
+        }
     }
 
     private void updateAndDrawSingularityImpacts(ShapeRenderer shapes, Pools pools, float time) {
