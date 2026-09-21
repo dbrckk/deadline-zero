@@ -126,7 +126,7 @@ public final class GearScreen extends ScreenAdapter {
 
         float railW = Math.min(detail.width * .48f, 520f);
         float railX = detail.x + (detail.width - railW) * .5f;
-        float railY = detail.y + detail.height * .23f;
+        float railY = detail.y + detail.height * .16f;
         UiRenderer.segmentedTrack(shapes, railX, railY, railW, 8f, .18f, 10, VisualTheme.CYAN_SOFT);
     }
 
@@ -196,12 +196,12 @@ public final class GearScreen extends ScreenAdapter {
         if (size == 0) {
             font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION) * 1.08f);
             font.setColor(VisualTheme.TEXT_STRONG);
-            font.draw(batch, t("gear.empty"), detail.x + 20f, detail.y + detail.height * .29f,
+            font.draw(batch, t("gear.empty"), detail.x + 20f, detail.y + detail.height * .23f,
                 detail.width - 40f, Align.center, false);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
             font.setColor(VisualTheme.CYAN_SOFT);
             font.draw(batch, t("gear.emptyBay"), detail.x + 20f,
-                detail.y + detail.height * .18f, detail.width - 40f, Align.center, false);
+                detail.y + detail.height * .13f, detail.width - 40f, Align.center, false);
         } else {
             for (int i = pageStart; i < pageEnd; i++) drawCard(game.profile.inventory.items().get(i), i, pageStart);
             drawDetail(game.profile.inventory.items().get(index), size);
