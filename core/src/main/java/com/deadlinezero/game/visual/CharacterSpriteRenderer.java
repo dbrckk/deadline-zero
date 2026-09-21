@@ -64,7 +64,7 @@ public final class CharacterSpriteRenderer {
 
         int pieces = RunLoadoutContext.ascensionSetPieces();
         float pulse = .5f + .5f * MathUtils.sin(clock.time * (pieces >= 4 ? 7.5f : 4.5f));
-        float r = 1f, g = 1f, b = 1f, scale = 1f;
+        float r = 1f, g = 1f, b = 1f, scale = 1.10f;
         if (pieces >= 4) {
             g = .82f + pulse * .10f;
             scale = 1.025f + pulse * .018f;

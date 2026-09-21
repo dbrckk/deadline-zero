@@ -10,6 +10,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.deadlinezero.game.DeadlineZeroGame;
+import com.deadlinezero.game.meta.RunMissionRuntime;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.screen.ArsenalScreen;
 import com.deadlinezero.game.screen.CloudSaveScreen;
@@ -18,9 +19,11 @@ import com.deadlinezero.game.screen.GearScreen;
 import com.deadlinezero.game.screen.MenuScreen;
 import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.screen.RunContractScreen;
+import com.deadlinezero.game.screen.RunResultScreen;
 import com.deadlinezero.game.screen.SettingsScreen;
 import com.deadlinezero.game.screen.ShopScreen;
 import com.deadlinezero.game.screen.SurvivorScreen;
+import com.deadlinezero.game.screen.VictoryScreen;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.concurrent.CountDownLatch;
@@ -131,6 +134,30 @@ public final class AndroidResponsiveUiVisualProbeTest {
                 assertTrue("expected GameScreen for wide-phone visual probe", game.getScreen() instanceof GameScreen);
             });
             settleAndCapture("responsive-1536x691-combat.png");
+
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.finishRun(420, 155f, false, 0);
+                assertTrue("expected RunResultScreen for wide-phone visual probe",
+                    game.getScreen() instanceof RunResultScreen);
+            });
+            settleAndCapture("responsive-1536x691-run-result.png");
+
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.showMenu();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen before victory visual probe",
+                    game.getScreen() instanceof GameScreen);
+                RunMissionRuntime.signalBossDefeated();
+            });
+            Thread.sleep(350L);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                assertTrue("expected VictoryScreen for wide-phone visual probe",
+                    game.getScreen() instanceof VictoryScreen);
+            });
+            settleAndCapture("responsive-1536x691-victory.png");
         }
     }
 

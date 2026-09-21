@@ -46,6 +46,7 @@ import com.deadlinezero.game.progression.ProtocolUpgradeGuidance;
 import com.deadlinezero.game.progression.Upgrade;
 import com.deadlinezero.game.progression.UpgradeSelector;
 import com.deadlinezero.game.services.AdsService;
+import com.deadlinezero.game.ui.UiRenderer;
 import com.deadlinezero.game.util.Pools;
 import com.deadlinezero.game.visual.CombatHudRenderer;
 import com.deadlinezero.game.visual.CombatPolishController;
@@ -63,6 +64,7 @@ public final class GameScreen extends ScreenAdapter {
     private static final Color ENEMY_RANGED = new Color(.95f, .62f, .16f, 1f);
     private static final Color ENEMY_ELITE = new Color(.76f, .18f, .86f, 1f);
     private static final Color ENEMY_DEFAULT = new Color(.30f, .70f, .39f, 1f);
+    private static final float COMBAT_CAMERA_ZOOM = .88f;
 
     private final DeadlineZeroGame game;
     private final OrthographicCamera cam = new OrthographicCamera(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
@@ -223,11 +225,12 @@ public final class GameScreen extends ScreenAdapter {
         } else {
             cameraShake = 0f;
         }
-        // Subtle player follow and velocity look-ahead keep the arena readable while making movement feel less static.
-        float cameraTargetX = player.position.x * .14f + player.velocity.x * .055f;
-        float cameraTargetY = player.position.y * .14f + player.velocity.y * .055f;
-        cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .075f);
-        cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .075f);
+        // Mobile survivor-shooter framing: keep the operative readable and let the arena move around
+        // them. A small velocity look-ahead preserves anticipation without making the camera floaty.
+        float cameraTargetX = player.position.x * .82f + player.velocity.x * .060f;
+        float cameraTargetY = player.position.y * .82f + player.velocity.y * .060f;
+        cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .11f);
+        cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .11f);
         polish.applyCameraRecoil(cam);
         cam.update();
     }
@@ -637,6 +640,10 @@ public final class GameScreen extends ScreenAdapter {
     private void draw() {
         Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        // Combat uses translucent shadows, telegraphs, impacts and modal overlays extensively.
+        // ShapeRenderer does not enable alpha blending itself, so make the world pipeline explicit.
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         boolean authored = spritePass.authoredAvailable();
 
         batch.setProjectionMatrix(cam.combined);
@@ -823,12 +830,8 @@ public final class GameScreen extends ScreenAdapter {
         float panelY = h * .265f;
         float panelW = w * .86f;
         float panelH = h * .49f;
-        shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .985f);
-        shapes.rect(panelX, panelY, panelW, panelH);
         Color panelAccent = legendary ? VisualTheme.GOLD : VisualTheme.accent();
-        shapes.setColor(panelAccent.r, panelAccent.g, panelAccent.b, legendary ? .42f : .28f);
-        shapes.rect(panelX, panelY + panelH - 3f, panelW, 3f);
-        shapes.rect(panelX, panelY, panelW, 2f);
+        UiRenderer.premiumPanel(shapes, panelX, panelY, panelW, panelH, panelAccent, true);
 
         int count = legendary ? Math.max(1, legendaryChoiceCount) : 3;
         float cardWidth = Math.min(w * .27f, panelW / Math.max(3f, count) - w * .018f);
@@ -839,20 +842,13 @@ public final class GameScreen extends ScreenAdapter {
             float left = centerX - cardWidth * .5f;
             Color accent = legendary ? VisualTheme.GOLD : VisualTheme.upgradeRarity(choices[i].rarity);
 
-            shapes.setColor(VisualTheme.SURFACE_1.r, VisualTheme.SURFACE_1.g, VisualTheme.SURFACE_1.b, .99f);
-            shapes.rect(left, cardY, cardWidth, cardHeight);
-            shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .92f);
-            shapes.rect(left, cardY, cardWidth, 2f);
-            shapes.rect(left, cardY + cardHeight - 2f, cardWidth, 2f);
-            shapes.rect(left, cardY, 2f, cardHeight);
-            shapes.rect(left + cardWidth - 2f, cardY, 2f, cardHeight);
-
-            shapes.setColor(accent.r, accent.g, accent.b, legendary ? .96f : .82f);
-            shapes.rect(left, cardY + cardHeight - 5f, cardWidth, 5f);
-            shapes.rect(left, cardY, 4f, cardHeight);
-
-            shapes.setColor(accent.r, accent.g, accent.b, legendary ? .10f : .06f);
-            shapes.rect(left + 6f, cardY + 6f, Math.max(0f, cardWidth - 12f), Math.max(0f, cardHeight - 12f));
+            UiRenderer.premiumCard(shapes, left, cardY, cardWidth, cardHeight,
+                accent, legendary, false, false);
+            float badge = Math.min(cardWidth, cardHeight) * .13f;
+            shapes.setColor(accent.r, accent.g, accent.b, legendary ? .24f : .14f);
+            shapes.circle(centerX, cardY + cardHeight * .69f, badge, 24);
+            shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .92f);
+            shapes.circle(centerX, cardY + cardHeight * .69f, badge * .48f, 20);
         }
         shapes.end();
     }
@@ -1053,6 +1049,7 @@ public final class GameScreen extends ScreenAdapter {
     @Override public void resize(int width, int height) {
         cam.viewportWidth = GameConfig.WORLD_WIDTH;
         cam.viewportHeight = GameConfig.WORLD_WIDTH * ((float)height / width);
+        cam.zoom = COMBAT_CAMERA_ZOOM;
         cam.update();
     }
 
