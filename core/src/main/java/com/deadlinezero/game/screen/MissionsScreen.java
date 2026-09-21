@@ -110,6 +110,7 @@ public final class MissionsScreen extends ScreenAdapter {
             p.weekly.runs >= WeeklyService.RUN_TARGET, VisualTheme.VIOLET);
         drawMissionStateCard(shapes, weeklyRows[2], p.weekly.bossMissionClaimed,
             p.weekly.bosses >= WeeklyService.BOSS_TARGET, VisualTheme.VIOLET);
+        drawMissionProgressBars(shapes, p);
 
         UiRenderer.card(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height, false, true);
         for (int i = 0; i < achievementRows.length; i++) {
@@ -132,18 +133,34 @@ public final class MissionsScreen extends ScreenAdapter {
         batch.end();
     }
 
+    private void drawMissionProgressBars(ShapeRenderer shapes, PlayerProfile p) {
+        drawRowProgress(shapes, dailyRows[0], p.daily.loginClaimed ? 1f : 0f, VisualTheme.GOLD);
+        drawRowProgress(shapes, dailyRows[1], p.daily.killsToday / 100f, VisualTheme.GOLD);
+        drawRowProgress(shapes, dailyRows[2], p.daily.runsToday / 3f, VisualTheme.GOLD);
+        drawRowProgress(shapes, dailyRows[3], p.daily.bossesToday, VisualTheme.GOLD);
+        drawRowProgress(shapes, weeklyRows[0], p.weekly.kills / (float) WeeklyService.KILL_TARGET, VisualTheme.VIOLET);
+        drawRowProgress(shapes, weeklyRows[1], p.weekly.runs / (float) WeeklyService.RUN_TARGET, VisualTheme.VIOLET);
+        drawRowProgress(shapes, weeklyRows[2], p.weekly.bosses / (float) WeeklyService.BOSS_TARGET, VisualTheme.VIOLET);
+    }
+
+    private void drawRowProgress(ShapeRenderer shapes, Rectangle r, float progress, Color accent) {
+        float barW = Math.max(32f, r.width - 24f);
+        UiRenderer.progress(shapes, r.x + 12f, r.y + 9f, barW, 5f, progress, accent);
+    }
+
     private void drawMissionStateCard(ShapeRenderer shapes, Rectangle r, boolean claimed,
                                       boolean ready, Color categoryAccent) {
         UiRenderer.card(shapes, r.x, r.y, r.width, r.height, ready && !claimed, claimed);
 
         Color stateAccent = claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : categoryAccent;
-        float alpha = claimed ? .18f : ready ? .88f : .42f;
-        shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, alpha);
-        shapes.rect(r.x + 5f, r.y + r.height - 4f, Math.max(0f, r.width - 10f), 3f);
+        float alpha = claimed ? .34f : ready ? 1f : .74f;
+        shapes.setColor(stateAccent.r * alpha, stateAccent.g * alpha, stateAccent.b * alpha, 1f);
+        shapes.rect(r.x + 5f, r.y + r.height - 5f, Math.max(0f, r.width - 10f), 3f);
+        shapes.rect(r.x + 5f, r.y + 5f, 3f, Math.max(0f, r.height - 10f));
 
         if (ready && !claimed) {
-            shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, .07f);
-            shapes.rect(r.x + 7f, r.y + 7f, Math.max(0f, r.width - 14f), Math.max(0f, r.height - 14f));
+            shapes.setColor(stateAccent.r * .10f, stateAccent.g * .10f, stateAccent.b * .10f, 1f);
+            shapes.rect(r.x + 8f, r.y + 16f, Math.max(0f, r.width - 16f), Math.max(0f, r.height - 24f));
             float notch = Math.min(22f, r.width * .08f);
             shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, .92f);
             shapes.rect(r.x + r.width - notch - 8f, r.y + 7f, notch, 3f);
@@ -225,13 +242,13 @@ public final class MissionsScreen extends ScreenAdapter {
     }
 
     private void heading(String text, Rectangle panel, com.badlogic.gdx.graphics.Color color) {
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION) * 1.05f);
         font.setColor(color);
         font.draw(batch, text, panel.x + 16f, panel.y + panel.height - 16f, panel.width - 32f, Align.left, false);
     }
 
     private void drawClaimRow(Rectangle r, String text, boolean claimed, boolean ready) {
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * 1.04f);
         font.setColor(claimed ? VisualTheme.MUTED : VisualTheme.TEXT_STRONG);
         font.draw(batch, text, r.x + 12f, r.y + r.height * .64f, r.width - 24f, Align.left, true);
         font.setColor(claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : VisualTheme.TEXT_DIM);
