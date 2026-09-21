@@ -78,8 +78,9 @@ public final class CharacterSpriteRenderer {
             scale = 1.008f;
         }
         float alpha = player.invulnerable() ? .78f : 1f;
-        batch.setColor(r, g, b, alpha);
-        drawCentered(batch, region, player.position.x, player.position.y - profile.footOffset(), w * scale, h * scale);
+        drawMaterialized(batch, region,
+            player.position.x, player.position.y - profile.footOffset(),
+            w * scale, h * scale, r, g, b, alpha, ActorMaterialProfile.player());
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
@@ -291,8 +292,13 @@ public final class CharacterSpriteRenderer {
             }
         }
 
-        batch.setColor(MathUtils.clamp(r, 0f, 1f), MathUtils.clamp(g, 0f, 1f), MathUtils.clamp(b, 0f, 1f), alpha);
-        drawCentered(batch, region, enemy.position.x, enemy.position.y - profile.footOffset(), w * scale, h * scale);
+        float finalR = MathUtils.clamp(r, 0f, 1f);
+        float finalG = MathUtils.clamp(g, 0f, 1f);
+        float finalB = MathUtils.clamp(b, 0f, 1f);
+        drawMaterialized(batch, region,
+            enemy.position.x, enemy.position.y - profile.footOffset(),
+            w * scale, h * scale, finalR, finalG, finalB, alpha,
+            ActorMaterialProfile.enemy(enemy.type, enemy.variant));
         batch.setColor(1f, 1f, 1f, 1f);
     }
 
@@ -312,6 +318,20 @@ public final class CharacterSpriteRenderer {
             clock.time += frameDelta;
         }
         return clock;
+    }
+
+    private void drawMaterialized(SpriteBatch batch, TextureRegion region,
+                                  float centerX, float y, float width, float height,
+                                  float r, float g, float b, float alpha,
+                                  ActorMaterialProfile.Profile material) {
+        if (material != null && material.outline()) {
+            float outlineWidth = width * material.scale();
+            float outlineHeight = height * material.scale();
+            batch.setColor(.012f, .022f, .030f, MathUtils.clamp(alpha * material.alpha(), 0f, 1f));
+            drawCentered(batch, region, centerX, y, outlineWidth, outlineHeight);
+        }
+        batch.setColor(r, g, b, alpha);
+        drawCentered(batch, region, centerX, y, width, height);
     }
 
     private void drawCentered(SpriteBatch batch, TextureRegion region, float centerX, float y, float width, float height) {
