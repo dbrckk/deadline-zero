@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T07:57:25Z
+Generated: 2026-09-21T08:13:21Z
 
 ### Git
 - Branch: `main`
-- Head: `97b32a85d661`
-- Commit date: 2026-09-21T09:57:12+02:00
-- Commit: ci(android): publish test APK after main game changes (#262)
+- Head: `ab9d94068991`
+- Commit date: 2026-09-21T10:13:06+02:00
+- Commit: ci(android): use runner SDK without broken setup action (#263)
 - Tracked files: 834
 
 ### Recently changed files
@@ -36,7 +36,6 @@ Generated: 2026-09-21T07:57:25Z
 - `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
 
 ### Project signals
 - `build.gradle`
