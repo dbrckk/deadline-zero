@@ -3858,6 +3858,7 @@
         "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+        "core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java",
         "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
         "core/src/main/java/com/deadlinezero/game/visual/WeaponLegendaryPresentation.java",
         "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
@@ -3870,7 +3871,7 @@
         "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java"
       ],
       "in_degree": 2,
-      "out_degree": 22
+      "out_degree": 23
     },
     "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": {
       "dependencies": [
@@ -4289,6 +4290,15 @@
       ],
       "in_degree": 2,
       "out_degree": 2
+    },
+    "core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java": {
+      "dependencies": [],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java"
+      ],
+      "in_degree": 2,
+      "out_degree": 0
     },
     "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java": {
       "dependencies": [
@@ -6185,6 +6195,14 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 3
+    },
+    "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
     },
     "core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java": {
       "dependencies": [

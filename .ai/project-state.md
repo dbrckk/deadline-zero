@@ -22,16 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T17:22:54Z
+Generated: 2026-09-21T17:25:37Z
 
 ### Git
 - Branch: `main`
-- Head: `a607325b83bf`
-- Commit date: 2026-09-21T19:22:39+02:00
-- Commit: Unify priority actor silhouettes with a budgeted material outline (#277)
-- Tracked files: 843
+- Head: `b72ad633cffb`
+- Commit date: 2026-09-21T19:25:19+02:00
+- Commit: Make combat onboarding hints temporary and non-blocking (#278)
+- Tracked files: 845
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
+- `core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java`
+- `core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java`
 - `core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java`
@@ -48,10 +52,6 @@ Generated: 2026-09-21T17:22:54Z
 - `core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java`
 - `core/src/main/java/com/deadlinezero/game/entities/Projectile.java`
 - `core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java`
-- `core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java`
-- `.github/workflows/responsive-ui-qa.yml`
-- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java`
-- `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 
 ### Project signals
 - `build.gradle`

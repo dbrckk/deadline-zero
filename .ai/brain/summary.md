@@ -1,15 +1,15 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 459
-- Files reparsed this run: 3
-- Symbols: 2634
+- Files indexed: 461
+- Files reparsed this run: 4
+- Symbols: 2639
 - Internal import edges: 687
-- Impacted files: 3
-- Selected tests: 1
+- Impacted files: 5
+- Selected tests: 2
 
 ## Languages
-- java: 410 files
+- java: 412 files
 - python: 49 files
 
 ## Highest-density symbol files
@@ -22,8 +22,8 @@
 - core/src/main/java/com/deadlinezero/game/entities/Enemy.java: 31 symbols
 - core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java: 31 symbols
 - core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java: 29 symbols
+- core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java: 28 symbols
 - core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java: 28 symbols
-- core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java: 27 symbols
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java: 24 symbols
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 3
-- outline files retained: 457
-- top-level items retained: 2938
-- direct members retained: 3397
+- AST files reparsed this run: 4
+- outline files retained: 459
+- top-level items retained: 2944
+- direct members retained: 3405
 - symbol shards: 27
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

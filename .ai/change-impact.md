@@ -1,12 +1,13 @@
 # Change impact
 
-Base: d25e6e651ad75c27b59180693d4ccbc4a883c936
-Head: a607325b83bfa5f246acdcff4c92e399c862e87f
+Base: ad5101ebf100fa43421e8ed90280f7351fdc382c
+Head: b72ad633cffb01566e75a8a9cd9d27831009011f
 
 ## Changed files
-- A core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java
-- M core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java
-- A core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java
+- M core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java
+- M core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java
+- A core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java
+- A core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java
 
 ## Affected areas
 - core

@@ -2,7 +2,19 @@
   "area": "core",
   "files": [
     {
-      "path": "core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java",
+      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+      "reasons": [
+        "changed",
+        "changed-source",
+        "dependency-neighbor",
+        "impact",
+        "reverse-dependency-neighbor",
+        "symbol-indexed"
+      ],
+      "score": 550
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java",
       "reasons": [
         "changed",
         "changed-source",
@@ -14,18 +26,7 @@
       "score": 405
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
-      "reasons": [
-        "changed",
-        "changed-source",
-        "impact",
-        "reverse-dependency-neighbor",
-        "symbol-indexed"
-      ],
-      "score": 395
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java",
+      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java",
       "reasons": [
         "changed",
         "changed-source",
@@ -33,14 +34,58 @@
         "impact",
         "symbol-indexed"
       ],
-      "score": 370
+      "score": 375
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java",
+      "reasons": [
+        "changed",
+        "changed-source",
+        "dependency-neighbor",
+        "impact",
+        "symbol-indexed"
+      ],
+      "score": 365
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "reasons": [
+        "impact",
+        "reverse-dependency-neighbor",
+        "symbol-indexed"
+      ],
+      "score": 360
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "reasons": [
+        "dependency-neighbor",
+        "reverse-dependency-neighbor"
+      ],
+      "score": 110
+    },
+    {
+      "path": "core/src/test/java/com/deadlinezero/game/visual/CombatHudLayoutTest.java",
+      "reasons": [
+        "reverse-dependency-neighbor",
+        "selected-test",
+        "symbol-indexed"
+      ],
+      "score": 105
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 100
     },
     {
       "path": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
       "reasons": [
         "dependency-neighbor"
       ],
-      "score": 150
+      "score": 100
     },
     {
       "path": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
@@ -50,82 +95,47 @@
       "score": 100
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
-      "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
-      ],
-      "score": 55
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java",
+      "path": "core/src/main/java/com/deadlinezero/game/input/VirtualStick.java",
       "reasons": [
         "dependency-neighbor"
       ],
-      "score": 50
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/ai/EnemyState.java",
-      "reasons": [
-        "dependency-neighbor"
-      ],
-      "score": 50
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/meta/RunLoadoutContext.java",
-      "reasons": [
-        "dependency-neighbor"
-      ],
-      "score": 50
+      "score": 100
     },
     {
       "path": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
       "reasons": [
         "dependency-neighbor"
       ],
-      "score": 50
+      "score": 100
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
+      "path": "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java",
       "reasons": [
         "dependency-neighbor"
       ],
-      "score": 50
+      "score": 100
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
+      "path": "core/src/main/java/com/deadlinezero/game/world/WaveDirector.java",
       "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 100
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/ai/EnemyPatternCatalog.java",
+      "reasons": [
+        "dependency-neighbor",
         "reverse-dependency-neighbor"
       ],
-      "score": 30
+      "score": 80
     },
     {
-      "path": "core/src/test/java/com/deadlinezero/game/visual/CharacterSpriteFacingTest.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
       "reasons": [
         "dependency-neighbor"
       ],
-      "score": 25
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
-      "reasons": [
-        "dependency-neighbor"
-      ],
-      "score": 25
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
-      "reasons": [
-        "dependency-neighbor"
-      ],
-      "score": 25
+      "score": 75
     }
   ],
   "generated_by": "dbrckk/repo-brain-v6",
