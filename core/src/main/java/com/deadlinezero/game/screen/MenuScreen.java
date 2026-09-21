@@ -72,12 +72,13 @@ public final class MenuScreen extends ScreenAdapter {
         UiRenderer.background(shapes, metrics, t);
         UiRenderer.topRail(shapes, metrics);
         UiRenderer.bottomNav(shapes, metrics);
-        UiRenderer.card(shapes, layout.survivorCard().x, layout.survivorCard().y,
-            layout.survivorCard().width, layout.survivorCard().height, true, true);
-        UiRenderer.card(shapes, layout.loadoutCard().x, layout.loadoutCard().y,
-            layout.loadoutCard().width, layout.loadoutCard().height, false, false);
-        UiRenderer.card(shapes, layout.threatCard().x, layout.threatCard().y,
-            layout.threatCard().width, layout.threatCard().height, false, p.selectedThreatTier > 0);
+        UiRenderer.premiumPanel(shapes, layout.survivorCard().x, layout.survivorCard().y,
+            layout.survivorCard().width, layout.survivorCard().height, VisualTheme.accent(), true);
+        UiRenderer.premiumPanel(shapes, layout.loadoutCard().x, layout.loadoutCard().y,
+            layout.loadoutCard().width, layout.loadoutCard().height, VisualTheme.CYAN_SOFT, false);
+        UiRenderer.premiumPanel(shapes, layout.threatCard().x, layout.threatCard().y,
+            layout.threatCard().width, layout.threatCard().height,
+            p.selectedThreatTier > 0 ? VisualTheme.GOLD : VisualTheme.CYAN_SOFT, false);
         float deployPulse = .5f + .5f * (float)Math.sin(t * 2.4f);
         UiRenderer.premiumCta(shapes, layout.deploy().x, layout.deploy().y,
             layout.deploy().width, layout.deploy().height, VisualTheme.accent(), deployPulse);
@@ -111,6 +112,19 @@ public final class MenuScreen extends ScreenAdapter {
         shapes.rect(survivor.x + 10f, survivor.y + survivor.height - 5f, Math.max(0f, survivor.width * .34f), 3f);
         shapes.setColor(VisualTheme.BORDER);
         shapes.rect(survivor.x + survivor.width * .46f, survivor.y + 24f, 1f, Math.max(0f, survivor.height - 48f));
+
+        // Hero staging: a grounded platform and soft spotlight make the survivor feel authored,
+        // rather than a loose sprite floating inside a card.
+        float heroCx = survivor.x + survivor.width * .25f;
+        float heroBaseY = survivor.y + survivor.height * .18f;
+        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .10f);
+        shapes.ellipse(heroCx - survivor.width * .16f, heroBaseY - 18f, survivor.width * .32f, 36f);
+        shapes.setColor(VisualTheme.CYAN_SOFT.r, VisualTheme.CYAN_SOFT.g, VisualTheme.CYAN_SOFT.b, .22f);
+        shapes.rect(heroCx - survivor.width * .10f, heroBaseY - 2f, survivor.width * .20f, 2f);
+        shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .035f);
+        shapes.triangle(heroCx - survivor.width * .20f, survivor.y + survivor.height - 18f,
+            heroCx + survivor.width * .20f, survivor.y + survivor.height - 18f,
+            heroCx, heroBaseY);
 
         Rectangle loadout = layout.loadoutCard();
         Color weaponAccent = VisualTheme.CYAN_SOFT;
@@ -220,8 +234,8 @@ public final class MenuScreen extends ScreenAdapter {
 
         if (game.art.authoredAvailable()) {
             TextureRegion portrait = game.art.survivor(p.selectedSurvivor, GameArt.Motion.IDLE, t);
-            float maxH = Math.min(330f, r.height * .70f);
-            float maxW = r.width * .44f;
+            float maxH = Math.min(380f, r.height * .82f);
+            float maxW = r.width * .43f;
             float aspect = portrait.getRegionWidth() / (float) Math.max(1, portrait.getRegionHeight());
             float drawH = maxH;
             float drawW = drawH * aspect;
@@ -230,7 +244,7 @@ public final class MenuScreen extends ScreenAdapter {
                 drawH = drawW / Math.max(.01f, aspect);
             }
             float px = r.x + r.width * .25f - drawW * .5f;
-            float py = r.y + Math.max(44f, (r.height - drawH) * .38f);
+            float py = r.y + Math.max(28f, (r.height - drawH) * .24f);
             batch.setColor(Color.WHITE);
             batch.draw(portrait, px, py, drawW, drawH);
         }
@@ -259,10 +273,25 @@ public final class MenuScreen extends ScreenAdapter {
         font.setColor(VisualTheme.TEXT_DIM);
         font.draw(batch, t("arsenal.title"), r.x + pad, r.y + r.height - 26f);
 
+        var weapon = WeaponCatalog.byId(p.selectedWeaponId);
+        if (game.art != null && game.art.authoredAvailable()) {
+            TextureRegion region = game.art.regionOrNull("weapon/" + weapon.id);
+            if (region != null) {
+                float areaW = r.width * .34f;
+                float areaH = r.height * .42f;
+                float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
+                float drawW = areaW;
+                float drawH = drawW / Math.max(.01f, aspect);
+                if (drawH > areaH) { drawH = areaH; drawW = drawH * aspect; }
+                batch.setColor(Color.WHITE);
+                batch.draw(region, r.x + r.width - drawW - 28f, r.y + 34f, drawW, drawH);
+            }
+        }
+
         font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
         font.setColor(VisualTheme.TEXT_STRONG);
-        font.draw(batch, WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase(),
-            r.x + pad, r.y + r.height - 64f, r.width - pad * 2f, Align.left, false);
+        font.draw(batch, weapon.displayName.toUpperCase(),
+            r.x + pad, r.y + r.height - 64f, r.width * .60f, Align.left, false);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.CYAN_SOFT);

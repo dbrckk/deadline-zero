@@ -81,6 +81,7 @@ public final class SettingsScreen extends ScreenAdapter {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         UiRenderer.background(shapes, metrics, visualTime);
         UiRenderer.topRail(shapes, metrics);
+        drawSettingsGroupFrames(shapes);
         for (int i = 0; i < rows.length; i++) {
             Rectangle r = rows[i];
             boolean disabled = isDisabled(i, privacyRequired, policyAvailable);
@@ -97,7 +98,7 @@ public final class SettingsScreen extends ScreenAdapter {
         shapes.end();
 
         batch.begin();
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * 1.05f);
         font.setColor(VisualTheme.CYAN_SOFT);
         font.draw(batch, t("shop.back"), layout.back().x + 10f, layout.back().y + layout.back().height * .56f,
             layout.back().width - 16f, Align.left, false);
@@ -116,6 +117,20 @@ public final class SettingsScreen extends ScreenAdapter {
         handleInput(s, privacyRequired, policyAvailable);
     }
 
+    private void drawSettingsGroupFrames(ShapeRenderer shapes) {
+        Color[] accents = {VisualTheme.CYAN_SOFT, VisualTheme.VIOLET, VisualTheme.GOLD};
+        for (int group = 0; group < 3; group++) {
+            Rectangle top = rows[group * ROWS_PER_COLUMN];
+            Rectangle bottom = rows[group * ROWS_PER_COLUMN + ROWS_PER_COLUMN - 1];
+            float x = top.x - 5f;
+            float y = bottom.y - 5f;
+            float w = top.width + 10f;
+            float h = top.y + top.height - bottom.y + 10f;
+            UiRenderer.premiumPanel(shapes, x, y, w, h, accents[group], false);
+            UiRenderer.sectionPlate(shapes, x + 6f, y + h - 12f, w - 12f, 8f, accents[group], true);
+        }
+    }
+
     private Color settingsAccent(int index) {
         if (index <= 5) return VisualTheme.CYAN_SOFT;
         if (index <= 11) return VisualTheme.VIOLET;
@@ -126,7 +141,7 @@ public final class SettingsScreen extends ScreenAdapter {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(disabled ? VisualTheme.MUTED : index == row ? VisualTheme.accent() : VisualTheme.TEXT_DIM);
         font.draw(batch, label, r.x + 14f, r.y + r.height - 17f, r.width - 28f, Align.left, false);
-        font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
+        font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL) * 1.04f);
         font.setColor(disabled ? VisualTheme.MUTED : index == row ? VisualTheme.TEXT_STRONG : VisualTheme.TEXT);
         font.draw(batch, value, r.x + 14f, r.y + 23f, r.width - 28f, Align.right, false);
     }
