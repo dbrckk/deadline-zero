@@ -117,6 +117,16 @@ public final class SurvivorScreen extends ScreenAdapter {
         shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .72f : .24f);
         shapes.rect(portrait.x + 8f, portrait.y + portrait.height - 5f, Math.max(0f, portrait.width - 16f), 3f);
 
+        float cx = portrait.x + portrait.width * .5f;
+        float baseY = portrait.y + portrait.height * .16f;
+        shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .10f : .035f);
+        shapes.ellipse(cx - portrait.width * .22f, baseY - 20f, portrait.width * .44f, 40f);
+        shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .24f : .08f);
+        shapes.rect(cx - portrait.width * .13f, baseY, portrait.width * .26f, 2f);
+        shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .035f : .015f);
+        shapes.triangle(cx - portrait.width * .28f, portrait.y + portrait.height - 20f,
+            cx + portrait.width * .28f, portrait.y + portrait.height - 20f, cx, baseY);
+
         Rectangle stats = layout.stats();
         shapes.setColor(selected ? VisualTheme.positive().r : accent.r,
             selected ? VisualTheme.positive().g : accent.g,
@@ -178,8 +188,8 @@ public final class SurvivorScreen extends ScreenAdapter {
         if (game.art.authoredAvailable()) {
             TextureRegion portrait = game.art.survivor(survivor, GameArt.Motion.IDLE, artTime);
             float aspect = portrait.getRegionWidth() / (float) Math.max(1, portrait.getRegionHeight());
-            float maxW = p.width * .78f;
-            float maxH = p.height * .78f;
+            float maxW = p.width * .90f;
+            float maxH = p.height * .88f;
             float drawH = maxH;
             float drawW = drawH * aspect;
             if (drawW > maxW) {
@@ -187,7 +197,7 @@ public final class SurvivorScreen extends ScreenAdapter {
                 drawH = drawW / Math.max(.01f, aspect);
             }
             float px = p.x + (p.width - drawW) * .5f;
-            float py = p.y + (p.height - drawH) * .43f;
+            float py = p.y + Math.max(18f, (p.height - drawH) * .18f);
             if (unlocked) batch.setColor(Color.WHITE);
             else batch.setColor(.38f, .42f, .46f, 1f);
             batch.draw(portrait, px, py, drawW, drawH);
@@ -197,7 +207,7 @@ public final class SurvivorScreen extends ScreenAdapter {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(unlocked ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED);
         font.draw(batch, unlocked ? "ACTIVE OPERATIVE" : "LOCKED OPERATIVE",
-            p.x + 18f, p.y + p.height - 22f, p.width - 36f, Align.center, false);
+            p.x + 18f, p.y + p.height - 18f, p.width - 36f, Align.left, false);
     }
 
     private void drawStats(SurvivorCatalog.Survivor survivor, boolean unlocked, int level, long xp, long next) {
