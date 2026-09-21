@@ -11,7 +11,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 public final class AudioDirector {
     public enum Cue {
         SHOT, CRIT, HIT, KILL, BOSS_HIT, BOSS_PHASE, BOSS_KILL, DASH, LEVEL_UP, UI_SELECT, UI_BACK,
-        SINGULARITY, ION_OVERCHARGE, CINDER_OVERHEAT, PROTOCOL_PROC, SENTINEL_BLOCK,
+        SINGULARITY, ION_OVERCHARGE, CINDER_OVERHEAT, TEMPEST_SURGE, WHITEOUT_SHATTER, PHOENIX_IGNITION,
+        PROTOCOL_PROC, SENTINEL_BLOCK,
         FOUNDRY_LAVA, FOUNDRY_STEAM, FOUNDRY_HEAT,
         NULL_RIFT, NULL_STATIC, NULL_BEAM
     }
@@ -69,9 +70,9 @@ public final class AudioDirector {
     static Cue fallbackCue(Cue cue) {
         return switch (cue) {
             case BOSS_PHASE -> Cue.BOSS_HIT;
-            case SINGULARITY, ION_OVERCHARGE, PROTOCOL_PROC -> Cue.CRIT;
-            case SENTINEL_BLOCK -> Cue.DASH;
-            case CINDER_OVERHEAT, FOUNDRY_LAVA -> Cue.BOSS_HIT;
+            case SINGULARITY, ION_OVERCHARGE, TEMPEST_SURGE, PROTOCOL_PROC -> Cue.CRIT;
+            case WHITEOUT_SHATTER, SENTINEL_BLOCK -> Cue.DASH;
+            case CINDER_OVERHEAT, PHOENIX_IGNITION, FOUNDRY_LAVA -> Cue.BOSS_HIT;
             case FOUNDRY_STEAM -> Cue.DASH;
             case FOUNDRY_HEAT -> Cue.CRIT;
             case NULL_RIFT -> Cue.SINGULARITY;
