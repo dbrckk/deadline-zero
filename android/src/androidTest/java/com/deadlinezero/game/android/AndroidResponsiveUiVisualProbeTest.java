@@ -12,10 +12,14 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.deadlinezero.game.DeadlineZeroGame;
 import com.deadlinezero.game.meta.RunModifierContext;
 import com.deadlinezero.game.screen.ArsenalScreen;
+import com.deadlinezero.game.screen.CloudSaveScreen;
 import com.deadlinezero.game.screen.GameScreen;
+import com.deadlinezero.game.screen.GearScreen;
 import com.deadlinezero.game.screen.MenuScreen;
+import com.deadlinezero.game.screen.MissionsScreen;
 import com.deadlinezero.game.screen.RunContractScreen;
 import com.deadlinezero.game.screen.SettingsScreen;
+import com.deadlinezero.game.screen.ShopScreen;
 import com.deadlinezero.game.screen.SurvivorScreen;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,6 +75,38 @@ public final class AndroidResponsiveUiVisualProbeTest {
                     game.getScreen() instanceof ArsenalScreen);
             });
             settleAndCapture("responsive-1536x691-arsenal.png");
+
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.showGear();
+                assertTrue("expected GearScreen for wide-phone visual probe",
+                    game.getScreen() instanceof GearScreen);
+            });
+            settleAndCapture("responsive-1536x691-gear.png");
+
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.showMissions();
+                assertTrue("expected MissionsScreen for wide-phone visual probe",
+                    game.getScreen() instanceof MissionsScreen);
+            });
+            settleAndCapture("responsive-1536x691-missions.png");
+
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.showShop();
+                assertTrue("expected ShopScreen for wide-phone visual probe",
+                    game.getScreen() instanceof ShopScreen);
+            });
+            settleAndCapture("responsive-1536x691-shop.png");
+
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.showCloudSave();
+                assertTrue("expected CloudSaveScreen for wide-phone visual probe",
+                    game.getScreen() instanceof CloudSaveScreen);
+            });
+            settleAndCapture("responsive-1536x691-cloud-save.png");
 
             runOnGameThread(activity, () -> {
                 DeadlineZeroGame game = game(activity);
