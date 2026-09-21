@@ -1,13 +1,18 @@
 # Change impact
 
-Base: 14e36531ad50cc14e0d9cebf6ea1fc1a13ffcee3
-Head: 934d7ba3f8a4dcbdd7422a74bd034042934d0c5a
+Base: 14dbe792b089a21ae5a93121ea109070b9844025
+Head: e5cfc48dcdce0aabd43a0982d119647f7ef4d690
 
 ## Changed files
-- M .github/workflows/responsive-ui-qa.yml
+- M assets/i18n/messages.properties
+- M core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/GearScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java
+- M core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java
 
 ## Affected areas
-- .github
+- assets
+- core
 
 ## Related test candidates
 - No direct filename-based test match detected.

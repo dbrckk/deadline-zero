@@ -4988,6 +4988,11 @@ UiRenderer.topRail(shapes, metrics);
 UiRenderer.premiumCard(shapes, statusPanel.x, statusPanel.y, statusPanel.width, statusPanel.height,
 colorForState(), false, conflict == CloudSaveService.ConflictState.DIVERGED || providerConflict, !available);
 UiRenderer.premiumPanel(shapes, warningPanel.x, warningPanel.y, warningPanel.width, warningPanel.height, VisualTheme.GOLD, false);
+float cloudIcon = Math.min(90f, statusPanel.height * .34f);
+⋮----
+UiRenderer.iconBadge(shapes, cloudX - 10f, cloudY - 10f, cloudIcon + 20f, colorForState(), cloud.available());
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.CLOUD, cloudX, cloudY, cloudIcon, colorForState(),
+cloud.available() ? .92f : .34f);
 ⋮----
 UiRenderer.premiumButton(shapes, actions[i].x, actions[i].y, actions[i].width, actions[i].height,
 state == UiRenderer.ButtonState.DANGER ? VisualTheme.danger() : i == 1 ? VisualTheme.GOLD : i == 2 ? VisualTheme.CYAN_SOFT : VisualTheme.accent(), state);
@@ -5006,10 +5011,10 @@ metrics.contentWidth() - 276f, Align.center, false);
 ⋮----
 font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
 font.setColor(colorForState());
-font.draw(batch, status, statusPanel.x + 28f, statusPanel.y + statusPanel.height * .67f,
+font.draw(batch, status, statusPanel.x + 28f, statusPanel.y + statusPanel.height * .44f,
 ⋮----
 font.setColor(VisualTheme.TEXT_DIM);
-font.draw(batch, stateSummary(), statusPanel.x + 28f, statusPanel.y + statusPanel.height * .30f,
+font.draw(batch, stateSummary(), statusPanel.x + 28f, statusPanel.y + statusPanel.height * .22f,
 ⋮----
 font.setColor(VisualTheme.GOLD);
 font.draw(batch, t("cloud.manualWarning"), warningPanel.x + 22f,
@@ -5946,6 +5951,7 @@ UiRenderer.bottomNav(shapes, metrics);
 UiRenderer.premiumPanel(shapes, detail.x, detail.y, detail.width, detail.height,
 size > 0 ? rarityColor(game.profile.inventory.items().get(index).rarity) : VisualTheme.CYAN_SOFT, true);
 if (size > 0) drawDetailChrome(shapes, game.profile.inventory.items().get(index));
+else drawEmptyGearState(shapes);
 ⋮----
 EquipmentItem item = game.profile.inventory.items().get(i);
 EquipmentItem equipped = game.profile.equipped(item.slot);
@@ -5961,6 +5967,16 @@ UiRenderer.premiumButton(shapes, actions[2].x, actions[2].y, actions[2].width, a
 UiRenderer.premiumButton(shapes, actions[3].x, actions[3].y, actions[3].width, actions[3].height, VisualTheme.VIOLET,
 ⋮----
 shapes.end();
+⋮----
+private void drawEmptyGearState(ShapeRenderer shapes) {
+float size = Math.min(118f, detail.height * .42f);
+⋮----
+UiRenderer.iconBadge(shapes, x - 12f, y - 12f, size + 24f, VisualTheme.CYAN_SOFT, false);
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.GEAR, x, y, size, VisualTheme.CYAN_SOFT, .72f);
+⋮----
+float railW = Math.min(detail.width * .48f, 520f);
+⋮----
+UiRenderer.segmentedTrack(shapes, railX, railY, railW, 8f, .18f, 10, VisualTheme.CYAN_SOFT);
 ⋮----
 private void drawGearCardChrome(ShapeRenderer shapes, Rectangle r, EquipmentItem item,
 ⋮----
@@ -6016,9 +6032,12 @@ font.setColor(ascensionPieces >= 2 ? VisualTheme.GOLD : VisualTheme.MUTED);
 font.draw(batch, ThreatSetBonusRules.summary(ascensionPieces), metrics.safeLeft() + metrics.contentWidth() * .64f,
 metrics.headerBottom() + 48f, metrics.contentWidth() * .34f, Align.right, false);
 ⋮----
-font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
+font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION) * 1.08f);
 ⋮----
-font.draw(batch, t("gear.empty"), detail.x + 20f, detail.y + detail.height * .58f,
+font.draw(batch, t("gear.empty"), detail.x + 20f, detail.y + detail.height * .29f,
+⋮----
+font.setColor(VisualTheme.CYAN_SOFT);
+font.draw(batch, t("gear.emptyBay"), detail.x + 20f,
 ⋮----
 for (int i = pageStart; i < pageEnd; i++) drawCard(game.profile.inventory.items().get(i), i, pageStart);
 drawDetail(game.profile.inventory.items().get(index), size);
@@ -6043,6 +6062,8 @@ font.draw(batch, isEquipped ? t("gear.equipped") : t("gear.unequipped"),
 font.draw(batch, t(item.rarityKey()), r.x + 16f, r.y + 16f, r.width * .45f, Align.left, false);
 ⋮----
 private void drawDetail(EquipmentItem item, int size) {
+⋮----
+font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
 ⋮----
 font.draw(batch, localizedName(item), x, top, width * .48f, Align.left, false);
 ⋮----
@@ -7252,6 +7273,9 @@ UiRenderer.topRail(shapes, metrics);
 Color chestAccent = i == 0 ? VisualTheme.CYAN_SOFT : i == 1 ? VisualTheme.VIOLET : VisualTheme.positive();
 UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, chestAccent, i == 2 && !disabled, false, disabled);
 drawChestChrome(shapes, r, i, disabled);
+float iconSize = Math.min(52f, r.width * .13f);
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.CHEST,
+⋮----
 Rectangle button = chestButton(r);
 UiRenderer.premiumButton(shapes, button.x, button.y, button.width, button.height, chestAccent,
 ⋮----
@@ -7263,6 +7287,8 @@ Color offerAccent = i == 0 ? VisualTheme.GOLD : i == 3 ? VisualTheme.CYAN_SOFT :
 UiRenderer.premiumButton(shapes, r.x, r.y, r.width, r.height, offerAccent,
 ⋮----
 drawOfferChrome(shapes, r, i, owned || !enabled, featured);
+⋮----
+UiIconRenderer.draw(shapes, offerIcon, r.x + 14f, r.y + r.height - 32f, 18f,
 ⋮----
 shapes.end();
 ⋮----
@@ -7338,9 +7364,9 @@ String[] buttons = {t("shop.open1"), t("shop.open2"), t("shop.free3")};
 ⋮----
 font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
 font.setColor(i == 0 ? VisualTheme.CYAN_SOFT : i == 1 ? VisualTheme.VIOLET : VisualTheme.positive());
-font.draw(batch, titles[i], r.x + 18f, r.y + r.height - 28f, r.width - 36f, Align.center, false);
+font.draw(batch, titles[i], r.x + 18f, r.y + r.height - 28f, r.width - 36f, Align.left, false);
 ⋮----
-font.draw(batch, descriptions[i], r.x + 26f, r.y + r.height * .57f, r.width - 52f, Align.center, true);
+font.draw(batch, descriptions[i], r.x + 26f, r.y + r.height * .50f, r.width - 52f, Align.center, true);
 Rectangle b = chestButton(r);
 ⋮----
 font.setColor(i == 2 && p.daily.rewardedChestClaimed ? VisualTheme.MUTED : VisualTheme.TEXT_STRONG);
@@ -8416,6 +8442,20 @@ shapes.rect(cx - t * .5f, y + s * .18f, t, s * .28f);
 shapes.rect(x + s * .30f, y + s * .10f, s * .40f, t);
 shapes.rect(x + s * .12f, y + s * .58f, s * .16f, t);
 shapes.rect(x + s * .72f, y + s * .58f, s * .16f, t);
+⋮----
+shapes.circle(x + s * .36f, y + s * .46f, s * .22f, 18);
+shapes.circle(x + s * .56f, y + s * .58f, s * .28f, 20);
+shapes.circle(x + s * .76f, y + s * .44f, s * .18f, 16);
+shapes.rect(x + s * .20f, y + s * .28f, s * .64f, s * .24f);
+set(shapes, color, alpha * .20f);
+shapes.rect(cx - t * .5f, y + s * .08f, t, s * .28f);
+⋮----
+shapes.rect(x + s * .16f, y + s * .20f, s * .68f, s * .46f);
+shapes.rect(x + s * .12f, y + s * .62f, s * .76f, s * .18f);
+⋮----
+shapes.rect(cx - t * .5f, y + s * .34f, t, s * .24f);
+⋮----
+shapes.rect(x + s * .20f, y + s * .68f, s * .60f, t * .65f);
 ⋮----
 private static void set(ShapeRenderer shapes, Color c, float alpha) {
 shapes.setColor(c.r, c.g, c.b, clamp(alpha));

@@ -1,19 +1,18 @@
 # CI status
 
-Summary: 5 success / 1 failure / 2 active
+Summary: 4 success / 1 failure / 3 active
 
-- Responsive UI QA: in_progress / pending (934d7ba3)
-- Verify: in_progress / pending (934d7ba3)
-- Verify: completed / success (6e015682)
-- Responsive UI QA: completed / success (6e015682)
-- Android Test APK: completed / success (49841024)
-- Verify: completed / failure (49841024)
-- Responsive UI QA: completed / success (49841024)
-- Deadline Zero Work Watch: completed / success (f20fdb9c)
+- Responsive UI QA: in_progress / pending (e5cfc48d)
+- Verify: queued / pending (e5cfc48d)
+- Android Test APK: in_progress / pending (e5cfc48d)
+- Verify: completed / success (801ede4d)
+- Responsive UI QA: completed / success (801ede4d)
+- Verify: completed / failure (1d6255cf)
+- Responsive UI QA: completed / success (1d6255cf)
+- Responsive UI QA: completed / success (934d7ba3)
 
 ## Latest failed run structure
-- Job: android-runtime
-  - Failed step: Smoke-test Android runtime and capture gameplay
-  - Failed step: Gate Android runtime crashes and ANRs
+- Job: core
+  - Failed step: Compile and test core
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
