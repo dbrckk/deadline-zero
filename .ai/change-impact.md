@@ -1,23 +1,12 @@
 # Change impact
 
-Base: 1e366413e2c5342e665d4cb6bfabcedfd020f0d0
-Head: 2c32b29e4133c3acbf47e5766b349f5dfcc1d0aa
+Base: 298430aeeadc731907fdbe45685eeb60e9db3c19
+Head: c92df7a51682752bdf70e77e3b28f577dfd18e94
 
 ## Changed files
-- M android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java
-- M core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/GearScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java
 - M core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java
 
 ## Affected areas
-- android
 - core
 
 ## Related test candidates

@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T10:57:10Z
+Generated: 2026-09-21T12:36:31Z
 
 ### Git
 - Branch: `main`
-- Head: `2c32b29e4133`
-- Commit date: 2026-09-21T12:56:55+02:00
-- Commit: Replace flat meta UI with real-time premium rendering (#267)
+- Head: `c92df7a51682`
+- Commit date: 2026-09-21T14:36:16+02:00
+- Commit: fix(ui): enable alpha blending for premium shape rendering (#268)
 - Tracked files: 835
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java`
 - `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java`
@@ -42,7 +43,6 @@ Generated: 2026-09-21T10:57:10Z
 - `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
-- `core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java`

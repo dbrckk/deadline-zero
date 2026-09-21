@@ -17175,6 +17175,12 @@ public static ButtonStyle buttonStyle(ButtonState state) {
 ⋮----
 /** Draw while ShapeRenderer is already in Filled mode. */
 public static void background(ShapeRenderer shapes, UiLayout.Metrics m, float time) {
+// ShapeRenderer does not enable blending automatically. Nearly every premium surface below
+// intentionally uses translucent overlays, so without this the alpha channel is ignored and
+// subtle 5-15% accents become opaque cyan/violet slabs on Android.
+Gdx.gl.glEnable(GL20.GL_BLEND);
+Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+⋮----
 set(shapes, VisualTheme.SURFACE_0, 1f);
 shapes.rect(0f, 0f, m.width(), m.height());
 ⋮----
