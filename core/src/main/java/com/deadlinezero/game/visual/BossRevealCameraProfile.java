@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 public final class BossRevealCameraProfile {
     public static final float DURATION = 1.20f;
     public static final float MAX_FOCUS_WEIGHT = .46f;
-    public static final float MAX_ZOOM_OUT = .14f;
+    public static final float MAX_ZOOM_OUT = .26f;
 
     private BossRevealCameraProfile() { }
 
