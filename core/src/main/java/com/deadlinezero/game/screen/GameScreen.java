@@ -52,6 +52,7 @@ import com.deadlinezero.game.visual.CombatHudRenderer;
 import com.deadlinezero.game.visual.CombatPolishController;
 import com.deadlinezero.game.visual.CombatSpritePass;
 import com.deadlinezero.game.visual.CombatVisualEvents;
+import com.deadlinezero.game.visual.BossRevealCameraProfile;
 import com.deadlinezero.game.visual.HostileProjectilePresentation;
 import com.deadlinezero.game.visual.PlayerProjectilePresentation;
 import com.deadlinezero.game.visual.UpgradeIconRenderer;
@@ -90,6 +91,8 @@ public final class GameScreen extends ScreenAdapter {
     private final CombatSpritePass spritePass;
     private final CombatPolishController polish;
     private float accumulator, fireTimer, contactTimer, cameraShake, visualTime, performanceEvaluationTimer;
+    private float bossRevealTimer;
+    private Enemy bossRevealTarget;
     private boolean choosingUpgrade, choosingLegendary, gameOver, revived, bossKilledThisRun, settling;
     private final Upgrade[] choices = new Upgrade[3];
     private final LegendaryChoice[] legendaryChoices = new LegendaryChoice[3];
@@ -231,8 +234,26 @@ public final class GameScreen extends ScreenAdapter {
         // them. A small velocity look-ahead preserves anticipation without making the camera floaty.
         float cameraTargetX = player.position.x * .82f + player.velocity.x * .060f;
         float cameraTargetY = player.position.y * .82f + player.velocity.y * .060f;
-        cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .11f);
-        cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .11f);
+        float cameraZoomTarget = COMBAT_CAMERA_ZOOM;
+
+        if (bossRevealTimer > 0f && bossRevealTarget != null && bossRevealTarget.alive) {
+            bossRevealTimer = Math.max(0f, bossRevealTimer - dt);
+            boolean reducedMotion = game.accessibility != null && game.accessibility.reducedMotion;
+            float reveal = BossRevealCameraProfile.envelope(bossRevealTimer);
+            float focus = BossRevealCameraProfile.focusWeight(reveal, reducedMotion);
+            float midpointX = (player.position.x + bossRevealTarget.position.x) * .5f;
+            float midpointY = (player.position.y + bossRevealTarget.position.y) * .5f;
+            cameraTargetX = MathUtils.lerp(cameraTargetX, midpointX, focus);
+            cameraTargetY = MathUtils.lerp(cameraTargetY, midpointY, focus);
+            cameraZoomTarget = BossRevealCameraProfile.zoom(COMBAT_CAMERA_ZOOM, reveal, reducedMotion);
+        } else {
+            bossRevealTimer = 0f;
+            bossRevealTarget = null;
+        }
+
+        cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, bossRevealTimer > 0f ? .15f : .11f);
+        cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, bossRevealTimer > 0f ? .15f : .11f);
+        cam.zoom = MathUtils.lerp(cam.zoom, cameraZoomTarget, .12f);
         polish.applyCameraRecoil(cam);
         cam.update();
     }
@@ -583,7 +604,11 @@ public final class GameScreen extends ScreenAdapter {
         enemies.add(e);
         spatial.add(e);
         abilitySystem.onEnemySpawned(e);
-        if (t == Enemy.Type.BOSS) director.onBossSpawned();
+        if (t == Enemy.Type.BOSS) {
+            director.onBossSpawned();
+            bossRevealTarget = e;
+            bossRevealTimer = BossRevealCameraProfile.DURATION;
+        }
     }
 
     private void fire(Enemy target) {
