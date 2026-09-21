@@ -1,14 +1,12 @@
 # Change impact
 
-Base: 14dbe792b089a21ae5a93121ea109070b9844025
-Head: e5cfc48dcdce0aabd43a0982d119647f7ef4d690
+Base: e1acda8481bb2740c38b7feb50ed54bcaf3d0b2a
+Head: 03fd2b7095bc53b6c30d71990d4c36ac2b7bf292
 
 ## Changed files
 - M assets/i18n/messages.properties
-- M core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java
 - M core/src/main/java/com/deadlinezero/game/screen/GearScreen.java
 - M core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java
-- M core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java
 
 ## Affected areas
 - assets

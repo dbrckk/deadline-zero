@@ -14768,7 +14768,7 @@ metrics.headerBottom() + 48f, metrics.contentWidth() * .34f, Align.right, false)
 ⋮----
 font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION) * 1.08f);
 ⋮----
-font.draw(batch, t("gear.empty"), detail.x + 20f, detail.y + detail.height * .29f,
+font.draw(batch, t("gear.empty"), detail.x + 20f, detail.y + detail.height * .23f,
 ⋮----
 font.setColor(VisualTheme.CYAN_SOFT);
 font.draw(batch, t("gear.emptyBay"), detail.x + 20f,
@@ -16114,11 +16114,11 @@ t("shop.gemPacks") + " • L",
 f("shop.removeAds", p.removeAdsPurchased ? t("shop.owned") : "")
 ⋮----
 font.setColor(owned || !enabled ? VisualTheme.MUTED : i == 0 ? VisualTheme.GOLD : i == 3 ? VisualTheme.CYAN_SOFT : VisualTheme.TEXT_STRONG);
-font.draw(batch, labels[i], r.x + 10f, r.y + r.height * .63f, r.width - 20f, Align.center, true);
+font.draw(batch, labels[i], r.x + 28f, r.y + r.height * .66f, r.width - 56f, Align.left, true);
 ⋮----
 font.setColor(owned || !enabled ? VisualTheme.MUTED : VisualTheme.TEXT_DIM);
-String sublabel = owned ? t("shop.owned") : !enabled ? t("shop.billingUnavailable") : "PLAY BILLING";
-font.draw(batch, sublabel, r.x + 10f, r.y + 22f, r.width - 20f, Align.center, false);
+String sublabel = owned ? t("shop.owned") : !enabled ? t("shop.billingUnavailable") : t("shop.playBilling");
+font.draw(batch, sublabel, r.x + 28f, r.y + 22f, r.width - 56f, Align.left, false);
 ⋮----
 private Rectangle chestButton(Rectangle card) {
 return new Rectangle(card.x + 24f, card.y + 22f, card.width - 48f, Math.max(60f, card.height * .22f));

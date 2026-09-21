@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T14:17:03Z
+Generated: 2026-09-21T14:33:31Z
 
 ### Git
 - Branch: `main`
-- Head: `e5cfc48dcdce`
-- Commit date: 2026-09-21T16:16:46+02:00
-- Commit: Polish Gear, Shop, and Cloud Save visual states (#271)
+- Head: `03fd2b7095bc`
+- Commit date: 2026-09-21T16:33:14+02:00
+- Commit: Refine Gear and Shop from Android visual QA (#272)
 - Tracked files: 835
 
 ### Recently changed files
 - `assets/i18n/messages.properties`
-- `core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GearScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java`
 - `core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java`
 - `.github/workflows/responsive-ui-qa.yml`
 - `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
@@ -43,10 +43,6 @@ Generated: 2026-09-21T14:17:03Z
 - `core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
 - `core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java`
-- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java`
-- `core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
 
 ### Project signals
 - `build.gradle`
