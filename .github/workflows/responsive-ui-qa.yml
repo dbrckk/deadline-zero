@@ -75,6 +75,10 @@ jobs:
             test -s build/android-responsive-ui-qa/responsive-1536x691-contract.png
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-combat.png build/android-responsive-ui-qa/responsive-1536x691-combat.png
             test -s build/android-responsive-ui-qa/responsive-1536x691-combat.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-run-result.png build/android-responsive-ui-qa/responsive-1536x691-run-result.png
+            test -s build/android-responsive-ui-qa/responsive-1536x691-run-result.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-victory.png build/android-responsive-ui-qa/responsive-1536x691-victory.png
+            test -s build/android-responsive-ui-qa/responsive-1536x691-victory.png
             adb shell wm size reset || true
       - name: Upload responsive UI visual QA
         if: always()
