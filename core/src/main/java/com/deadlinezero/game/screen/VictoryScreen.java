@@ -19,6 +19,7 @@ import com.deadlinezero.game.meta.ReviewPromptPolicy;
 import com.deadlinezero.game.meta.RunShareText;
 import com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog;
 import com.deadlinezero.game.ui.MetaLayout;
+import com.deadlinezero.game.ui.UiIconRenderer;
 import com.deadlinezero.game.ui.UiLayout;
 import com.deadlinezero.game.ui.UiRenderer;
 import com.deadlinezero.game.ui.UiTypography;
@@ -81,10 +82,12 @@ public final class VictoryScreen extends ScreenAdapter {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         UiRenderer.background(shapes, metrics, visualTime);
         UiRenderer.premiumPanel(shapes, hero.x, hero.y, hero.width, hero.height, VisualTheme.GOLD, true);
+        drawCelebrationBackdrop(shapes);
         for (int i = 0; i < rewardCards.length; i++) {
             Rectangle r = rewardCards[i];
             Color rewardAccent = i == 0 ? VisualTheme.GOLD : i == 1 ? VisualTheme.accent() : VisualTheme.VIOLET;
             UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, rewardAccent, false, i == 0, false);
+            drawRewardIcon(shapes, r, i, rewardAccent);
         }
         Color noticeAccent = result.unlockedThreatTier() > 0 ? VisualTheme.GOLD : firstClear ? VisualTheme.positive() : VisualTheme.VIOLET;
         UiRenderer.premiumPanel(shapes, noticePanel.x, noticePanel.y, noticePanel.width, noticePanel.height, noticeAccent, false);
@@ -103,6 +106,35 @@ public final class VictoryScreen extends ScreenAdapter {
         batch.end();
 
         handleInput(canShare);
+    }
+
+    private void drawCelebrationBackdrop(ShapeRenderer shapes) {
+        float cx = hero.x + hero.width * .5f;
+        float cy = hero.y + hero.height * .50f;
+        float pulse = .5f + .5f * (float)Math.sin(visualTime * 1.8f);
+        float outer = Math.min(hero.width * .18f, hero.height * .72f);
+        for (int i = 0; i < 10; i++) {
+            float a0 = (float)Math.toRadians(i * 36f - 5f);
+            float a1 = (float)Math.toRadians(i * 36f + 5f);
+            float inner = outer * .42f;
+            shapes.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b, .035f + pulse * .018f);
+            shapes.triangle(
+                cx + (float)Math.cos(a0) * inner, cy + (float)Math.sin(a0) * inner,
+                cx + (float)Math.cos(a1) * inner, cy + (float)Math.sin(a1) * inner,
+                cx + (float)Math.cos((a0 + a1) * .5f) * outer, cy + (float)Math.sin((a0 + a1) * .5f) * outer);
+        }
+        float trophySize = Math.min(54f, hero.height * .30f);
+        float tx = cx - trophySize * .5f;
+        float ty = hero.y + hero.height * .55f;
+        UiRenderer.iconBadge(shapes, tx - 8f, ty - 8f, trophySize + 16f, VisualTheme.GOLD, true);
+        UiIconRenderer.draw(shapes, UiIconRenderer.Icon.TROPHY, tx, ty, trophySize, VisualTheme.GOLD, .96f);
+    }
+
+    private void drawRewardIcon(ShapeRenderer shapes, Rectangle r, int index, Color accent) {
+        UiIconRenderer.Icon icon = index == 0 ? UiIconRenderer.Icon.CREDITS
+            : index == 1 ? UiIconRenderer.Icon.GEMS : UiIconRenderer.Icon.LEVEL;
+        float size = Math.min(28f, r.height * .26f);
+        UiIconRenderer.draw(shapes, icon, r.x + 16f, r.y + r.height - size - 14f, size, accent, .92f);
     }
 
     private void drawVictoryChrome(ShapeRenderer shapes) {
@@ -138,21 +170,21 @@ public final class VictoryScreen extends ScreenAdapter {
     private void drawHero() {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.DISPLAY));
         font.setColor(VisualTheme.positive());
-        font.draw(batch, t("victory.title"), hero.x + 20f, hero.y + hero.height * .75f,
+        font.draw(batch, t("victory.title"), hero.x + 20f, hero.y + hero.height * .84f,
             hero.width - 40f, Align.center, false);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY));
         font.setColor(VisualTheme.TEXT_STRONG);
         font.draw(batch, f("result.summary", result.stage(), result.kills(), formatTime(result.secondsSurvived())),
-            hero.x + 20f, hero.y + hero.height * .48f, hero.width - 40f, Align.center, false);
+            hero.x + 20f, hero.y + hero.height * .42f, hero.width - 40f, Align.center, false);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.GOLD);
         font.draw(batch, f("result.contract", result.contractTitle(), result.contractBonusPercent()),
-            hero.x + 30f, hero.y + hero.height * .25f, hero.width * .46f, Align.center, false);
+            hero.x + 30f, hero.y + hero.height * .18f, hero.width * .46f, Align.center, false);
         font.setColor(result.threatTier() > 0 ? VisualTheme.GOLD : VisualTheme.TEXT_DIM);
         font.draw(batch, f("result.threat", result.threatTier(), result.threatBonusPercent()),
-            hero.x + hero.width * .51f, hero.y + hero.height * .25f, hero.width * .45f, Align.center, false);
+            hero.x + hero.width * .51f, hero.y + hero.height * .18f, hero.width * .45f, Align.center, false);
     }
 
     private void drawRewards() {
