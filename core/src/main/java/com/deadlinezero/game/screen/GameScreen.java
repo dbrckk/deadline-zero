@@ -225,11 +225,12 @@ public final class GameScreen extends ScreenAdapter {
         } else {
             cameraShake = 0f;
         }
-        // Subtle player follow and velocity look-ahead keep the arena readable while making movement feel less static.
-        float cameraTargetX = player.position.x * .14f + player.velocity.x * .055f;
-        float cameraTargetY = player.position.y * .14f + player.velocity.y * .055f;
-        cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .075f);
-        cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .075f);
+        // Mobile survivor-shooter framing: keep the operative readable and let the arena move around
+        // them. A small velocity look-ahead preserves anticipation without making the camera floaty.
+        float cameraTargetX = player.position.x * .82f + player.velocity.x * .060f;
+        float cameraTargetY = player.position.y * .82f + player.velocity.y * .060f;
+        cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .11f);
+        cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .11f);
         polish.applyCameraRecoil(cam);
         cam.update();
     }
