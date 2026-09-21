@@ -2434,6 +2434,10 @@ jobs:
             test -s build/android-responsive-ui-qa/responsive-1536x691-contract.png
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-combat.png build/android-responsive-ui-qa/responsive-1536x691-combat.png
             test -s build/android-responsive-ui-qa/responsive-1536x691-combat.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-run-result.png build/android-responsive-ui-qa/responsive-1536x691-run-result.png
+            test -s build/android-responsive-ui-qa/responsive-1536x691-run-result.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/responsive-1536x691-victory.png build/android-responsive-ui-qa/responsive-1536x691-victory.png
+            test -s build/android-responsive-ui-qa/responsive-1536x691-victory.png
             adb shell wm size reset || true
       - name: Upload responsive UI visual QA
         if: always()
@@ -5328,6 +5332,23 @@ game.startRunWithContract(RunModifierContext.offers()[0]);
 assertTrue("expected GameScreen for wide-phone visual probe", game.getScreen() instanceof GameScreen);
 ⋮----
 settleAndCapture("responsive-1536x691-combat.png");
+⋮----
+game.finishRun(420, 155f, false, 0);
+assertTrue("expected RunResultScreen for wide-phone visual probe",
+game.getScreen() instanceof RunResultScreen);
+⋮----
+settleAndCapture("responsive-1536x691-run-result.png");
+⋮----
+assertTrue("expected GameScreen before victory visual probe",
+game.getScreen() instanceof GameScreen);
+RunMissionRuntime.signalBossDefeated();
+⋮----
+Thread.sleep(350L);
+⋮----
+assertTrue("expected VictoryScreen for wide-phone visual probe",
+game.getScreen() instanceof VictoryScreen);
+⋮----
+settleAndCapture("responsive-1536x691-victory.png");
 ⋮----
 private static boolean dedicatedWideProbe() {
 Bundle arguments = InstrumentationRegistry.getArguments();
@@ -14045,10 +14066,11 @@ cam.position.x += MathUtils.random(-1f, 1f) * cameraShake;
 cam.position.y += MathUtils.random(-1f, 1f) * cameraShake;
 cameraShake = Math.max(0f, cameraShake - dt * 2.7f);
 ⋮----
-// Subtle player follow and velocity look-ahead keep the arena readable while making movement feel less static.
+// Mobile survivor-shooter framing: keep the operative readable and let the arena move around
+// them. A small velocity look-ahead preserves anticipation without making the camera floaty.
 ⋮----
-cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .075f);
-cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .075f);
+cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .11f);
+cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .11f);
 polish.applyCameraRecoil(cam);
 ⋮----
 private void updateEnemies(float dt) {
@@ -14326,6 +14348,10 @@ game.finishRun(director.kills(), director.elapsed(), bossKilledThisRun, 0);
 private void draw() {
 Gdx.gl.glClearColor(VisualTheme.BG.r, VisualTheme.BG.g, VisualTheme.BG.b, 1f);
 Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+// Combat uses translucent shadows, telegraphs, impacts and modal overlays extensively.
+// ShapeRenderer does not enable alpha blending itself, so make the world pipeline explicit.
+Gdx.gl.glEnable(GL20.GL_BLEND);
+Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 boolean authored = spritePass.authoredAvailable();
 ⋮----
 batch.setProjectionMatrix(cam.combined);
@@ -14461,32 +14487,21 @@ shapes.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 shapes.setColor(.004f, .008f, .013f, .82f);
 shapes.rect(0f, 0f, w, h);
 ⋮----
-shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .985f);
-shapes.rect(panelX, panelY, panelW, panelH);
 Color panelAccent = legendary ? VisualTheme.GOLD : VisualTheme.accent();
-shapes.setColor(panelAccent.r, panelAccent.g, panelAccent.b, legendary ? .42f : .28f);
-shapes.rect(panelX, panelY + panelH - 3f, panelW, 3f);
-shapes.rect(panelX, panelY, panelW, 2f);
+UiRenderer.premiumPanel(shapes, panelX, panelY, panelW, panelH, panelAccent, true);
 ⋮----
 int count = legendary ? Math.max(1, legendaryChoiceCount) : 3;
 float cardWidth = Math.min(w * .27f, panelW / Math.max(3f, count) - w * .018f);
 ⋮----
 Color accent = legendary ? VisualTheme.GOLD : VisualTheme.upgradeRarity(choices[i].rarity);
 ⋮----
-shapes.setColor(VisualTheme.SURFACE_1.r, VisualTheme.SURFACE_1.g, VisualTheme.SURFACE_1.b, .99f);
-shapes.rect(left, cardY, cardWidth, cardHeight);
-shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .92f);
-shapes.rect(left, cardY, cardWidth, 2f);
-shapes.rect(left, cardY + cardHeight - 2f, cardWidth, 2f);
-shapes.rect(left, cardY, 2f, cardHeight);
-shapes.rect(left + cardWidth - 2f, cardY, 2f, cardHeight);
+UiRenderer.premiumCard(shapes, left, cardY, cardWidth, cardHeight,
 ⋮----
-shapes.setColor(accent.r, accent.g, accent.b, legendary ? .96f : .82f);
-shapes.rect(left, cardY + cardHeight - 5f, cardWidth, 5f);
-shapes.rect(left, cardY, 4f, cardHeight);
-⋮----
-shapes.setColor(accent.r, accent.g, accent.b, legendary ? .10f : .06f);
-shapes.rect(left + 6f, cardY + 6f, Math.max(0f, cardWidth - 12f), Math.max(0f, cardHeight - 12f));
+float badge = Math.min(cardWidth, cardHeight) * .13f;
+shapes.setColor(accent.r, accent.g, accent.b, legendary ? .24f : .14f);
+shapes.circle(centerX, cardY + cardHeight * .69f, badge, 24);
+shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .92f);
+shapes.circle(centerX, cardY + cardHeight * .69f, badge * .48f, 20);
 ⋮----
 private void drawGameOverBackdrop(float w, float h) {
 ⋮----
@@ -14498,9 +14513,9 @@ float panelH = Math.min(h * .42f, 410f);
 Color accent = revived ? VisualTheme.GOLD : VisualTheme.danger();
 ⋮----
 shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .995f);
-⋮----
+shapes.rect(panelX, panelY, panelW, panelH);
 shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .95f);
-⋮----
+shapes.rect(panelX, panelY, panelW, 2f);
 shapes.rect(panelX, panelY + panelH - 2f, panelW, 2f);
 shapes.rect(panelX, panelY, 2f, panelH);
 shapes.rect(panelX + panelW - 2f, panelY, 2f, panelH);
@@ -15274,9 +15289,12 @@ viewport.apply(batch, shapes);
 shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.topRail(shapes, metrics);
-UiRenderer.panel(shapes, dailyPanel.x, dailyPanel.y, dailyPanel.width, dailyPanel.height);
-UiRenderer.panel(shapes, weeklyPanel.x, weeklyPanel.y, weeklyPanel.width, weeklyPanel.height);
-UiRenderer.panel(shapes, progressPanel.x, progressPanel.y, progressPanel.width, progressPanel.height);
+UiRenderer.premiumPanel(shapes, dailyPanel.x, dailyPanel.y, dailyPanel.width, dailyPanel.height,
+⋮----
+UiRenderer.premiumPanel(shapes, weeklyPanel.x, weeklyPanel.y, weeklyPanel.width, weeklyPanel.height,
+⋮----
+UiRenderer.premiumPanel(shapes, progressPanel.x, progressPanel.y, progressPanel.width, progressPanel.height,
+VisualTheme.accent(), false);
 UiRenderer.sectionBand(shapes, dailyPanel.x + 6f, dailyPanel.y + dailyPanel.height - 42f,
 ⋮----
 UiRenderer.sectionBand(shapes, weeklyPanel.x + 6f, weeklyPanel.y + weeklyPanel.height - 42f,
@@ -15296,14 +15314,15 @@ drawMissionStateCard(shapes, weeklyRows[2], p.weekly.bossMissionClaimed,
 ⋮----
 drawMissionProgressBars(shapes, p);
 ⋮----
-UiRenderer.card(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height, false, true);
+UiRenderer.premiumPanel(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height,
+VisualTheme.accent(), true);
 drawMissionIcons(shapes, p);
 ⋮----
 AchievementService.Achievement a = AchievementService.Achievement.values()[i];
 boolean unlocked = AchievementService.unlocked(p, a);
 boolean claimed = p.achievements.claimed(a);
 ⋮----
-UiRenderer.card(shapes, r.x, r.y, r.width, r.height, unlocked && !claimed, claimed);
+UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, accent,
 ⋮----
 shapes.setColor(accent.r, accent.g, accent.b, claimed ? .18f : unlocked ? .78f : .28f);
 shapes.rect(r.x + 5f, r.y + r.height - 4f, Math.max(0f, r.width - 10f), 3f);
@@ -15349,9 +15368,8 @@ UiRenderer.progress(shapes, r.x + 12f, r.y + 9f, barW, 5f, progress, accent);
 ⋮----
 private void drawMissionStateCard(ShapeRenderer shapes, Rectangle r, boolean claimed,
 ⋮----
-UiRenderer.card(shapes, r.x, r.y, r.width, r.height, ready && !claimed, claimed);
-⋮----
 Color stateAccent = claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : categoryAccent;
+UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, stateAccent,
 ⋮----
 shapes.setColor(stateAccent.r * alpha, stateAccent.g * alpha, stateAccent.b * alpha, 1f);
 shapes.rect(r.x + 5f, r.y + r.height - 5f, Math.max(0f, r.width - 10f), 3f);
@@ -15668,6 +15686,7 @@ UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.premiumPanel(shapes, hero.x, hero.y, hero.width, hero.height, VisualTheme.accent(), true);
 shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .22f);
 shapes.rect(hero.x + 6f, hero.y + hero.height - 6f, hero.width - 12f, 4f);
+drawResultHeroMark(shapes);
 ⋮----
 Color[] rewardAccents = {VisualTheme.GOLD, VisualTheme.accent(), VisualTheme.VIOLET};
 ⋮----
@@ -15675,6 +15694,7 @@ UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, rewardAccents[i], fa
 ⋮----
 shapes.setColor(accent.r, accent.g, accent.b, .90f);
 shapes.rect(r.x, r.y + r.height - 4f, r.width, 4f);
+drawRewardIcon(shapes, r, i, accent);
 ⋮----
 UiRenderer.premiumPanel(shapes, coaching.x, coaching.y, coaching.width, coaching.height, COACHING_ACCENT, false);
 shapes.setColor(COACHING_ACCENT.r, COACHING_ACCENT.g, COACHING_ACCENT.b, .72f);
@@ -15686,6 +15706,8 @@ shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .18f);
 shapes.rect(splitX, coaching.y + 8f, coaching.width * .37f - 8f, coaching.height - 16f);
 shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .90f);
 shapes.rect(splitX, coaching.y + coaching.height - 4f, coaching.width * .37f - 8f, 4f);
+float gearSize = Math.min(38f, coaching.height * .25f);
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.GEAR,
 ⋮----
 UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.GOLD, UiRenderer.ButtonState.SELECTED);
 UiRenderer.premiumButton(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
@@ -15702,6 +15724,17 @@ batch.end();
 ⋮----
 handleInput();
 ⋮----
+private void drawResultHeroMark(ShapeRenderer shapes) {
+float size = Math.min(52f, hero.height * .30f);
+⋮----
+UiRenderer.iconBadge(shapes, x - 7f, y - 7f, size + 14f, VisualTheme.accent(), true);
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.STAGE, x, y, size, VisualTheme.accent(), .94f);
+⋮----
+private void drawRewardIcon(ShapeRenderer shapes, Rectangle r, int index, Color accent) {
+⋮----
+float size = Math.min(28f, r.height * .24f);
+UiIconRenderer.draw(shapes, icon, r.x + 16f, r.y + r.height - size - 14f, size, accent, .88f);
+⋮----
 private void drawHero() {
 font.getData().setScale(UiTypography.scale(UiTypography.Role.DISPLAY));
 font.setColor(VisualTheme.TEXT_STRONG);
@@ -15711,13 +15744,11 @@ font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY));
 font.setColor(VisualTheme.TEXT_DIM);
 font.draw(batch, f("result.summary", result.stage(), result.kills(), formatTime(result.secondsSurvived())),
 ⋮----
-font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
 font.setColor(VisualTheme.GOLD);
 font.draw(batch, f("result.contract", result.contractTitle(), result.contractBonusPercent()),
 ⋮----
-font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
-font.setColor(VisualTheme.accent());
-⋮----
+font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
 font.setColor(result.threatTier() > 0 ? VisualTheme.GOLD : VisualTheme.TEXT_DIM);
 font.draw(batch, f("result.threat", result.threatTier(), result.threatBonusPercent()),
 ⋮----
@@ -16515,9 +16546,11 @@ boolean canShare = game.services.share.available();
 shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.premiumPanel(shapes, hero.x, hero.y, hero.width, hero.height, VisualTheme.GOLD, true);
+drawCelebrationBackdrop(shapes);
 ⋮----
 Color rewardAccent = i == 0 ? VisualTheme.GOLD : i == 1 ? VisualTheme.accent() : VisualTheme.VIOLET;
 UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, rewardAccent, false, i == 0, false);
+drawRewardIcon(shapes, r, i, rewardAccent);
 ⋮----
 Color noticeAccent = result.unlockedThreatTier() > 0 ? VisualTheme.GOLD : firstClear ? VisualTheme.positive() : VisualTheme.VIOLET;
 UiRenderer.premiumPanel(shapes, noticePanel.x, noticePanel.y, noticePanel.width, noticePanel.height, noticeAccent, false);
@@ -16536,6 +16569,30 @@ drawActions(canShare);
 batch.end();
 ⋮----
 handleInput(canShare);
+⋮----
+private void drawCelebrationBackdrop(ShapeRenderer shapes) {
+⋮----
+float pulse = .5f + .5f * (float)Math.sin(visualTime * 1.8f);
+float outer = Math.min(hero.width * .18f, hero.height * .72f);
+⋮----
+float a0 = (float)Math.toRadians(i * 36f - 5f);
+float a1 = (float)Math.toRadians(i * 36f + 5f);
+⋮----
+shapes.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b, .035f + pulse * .018f);
+shapes.triangle(
+cx + (float)Math.cos(a0) * inner, cy + (float)Math.sin(a0) * inner,
+cx + (float)Math.cos(a1) * inner, cy + (float)Math.sin(a1) * inner,
+cx + (float)Math.cos((a0 + a1) * .5f) * outer, cy + (float)Math.sin((a0 + a1) * .5f) * outer);
+⋮----
+float trophySize = Math.min(54f, hero.height * .30f);
+⋮----
+UiRenderer.iconBadge(shapes, tx - 8f, ty - 8f, trophySize + 16f, VisualTheme.GOLD, true);
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.TROPHY, tx, ty, trophySize, VisualTheme.GOLD, .96f);
+⋮----
+private void drawRewardIcon(ShapeRenderer shapes, Rectangle r, int index, Color accent) {
+⋮----
+float size = Math.min(28f, r.height * .26f);
+UiIconRenderer.draw(shapes, icon, r.x + 16f, r.y + r.height - size - 14f, size, accent, .92f);
 ⋮----
 private void drawVictoryChrome(ShapeRenderer shapes) {
 float pulse = .72f + .18f * (float)Math.sin(visualTime * 2.2f);
@@ -16565,7 +16622,7 @@ shapes.rect(next.x + 10f, next.y + next.height - 4f, Math.max(0f, next.width - 2
 private void drawHero() {
 font.getData().setScale(UiTypography.scale(UiTypography.Role.DISPLAY));
 font.setColor(VisualTheme.positive());
-font.draw(batch, t("victory.title"), hero.x + 20f, hero.y + hero.height * .75f,
+font.draw(batch, t("victory.title"), hero.x + 20f, hero.y + hero.height * .84f,
 ⋮----
 font.getData().setScale(UiTypography.scale(UiTypography.Role.BODY));
 font.setColor(VisualTheme.TEXT_STRONG);
@@ -18864,10 +18921,10 @@ float bossW = Math.min(860f, m.contentWidth() * .62f);
 ⋮----
 boss = new Rectangle(m.centerX() - bossW * .5f,
 ⋮----
-float hintW = Math.min(560f, m.contentWidth() * .46f);
+float hintW = Math.min(460f, m.contentWidth() * .36f);
 ⋮----
 Rectangle onboarding = new Rectangle(m.centerX() - hintW * .5f,
-m.safeBottom() + 78f * s, hintW, hintH);
+m.safeBottom() + 58f * s, hintW, hintH);
 ⋮----
 float dashRadius = Math.max(32f * s, 28f);
 ⋮----
@@ -20342,42 +20399,43 @@ public void drawSetDressing(SpriteBatch batch) {
 if (!hasSetDressingArt()) return;
 ⋮----
 private void drawFloorInternal(SpriteBatch batch, float alpha) {
-if (cryogenicDepths()) batch.setColor(.48f, .76f, .88f, alpha * .88f);
-else if (cryoVault()) batch.setColor(.72f, .92f, 1f, alpha * .90f);
-else if (nullSector()) batch.setColor(.66f, .62f, 1f, alpha * .88f);
-else if (foundry()) batch.setColor(1f, .63f, .43f, alpha * .92f);
-else batch.setColor(1f, 1f, 1f, alpha);
+// Floor art carries structure, not the focal hierarchy. Keep it below actors/projectiles
+// so phone-scale combat reads cleanly even with authored high-frequency texture detail.
+if (cryogenicDepths()) batch.setColor(.48f, .76f, .88f, alpha * .72f);
+else if (cryoVault()) batch.setColor(.72f, .92f, 1f, alpha * .74f);
+else if (nullSector()) batch.setColor(.66f, .62f, 1f, alpha * .70f);
+else if (foundry()) batch.setColor(1f, .63f, .43f, alpha * .76f);
+else batch.setColor(.84f, .92f, .96f, alpha * .78f);
 ⋮----
 int variant = floorVariant(gx, gy);
 TextureRegion region = region("environment/floor/concrete_" + (char)('a' + variant));
-if (region != null) batch.draw(region, gx * TILE_WORLD, gy * TILE_WORLD, TILE_WORLD, TILE_WORLD);
+if (region != null) batch.draw(region, gx * FLOOR_TILE_WORLD, gy * FLOOR_TILE_WORLD, FLOOR_TILE_WORLD, FLOOR_TILE_WORLD);
 ⋮----
 TextureRegion hazard = region("environment/floor/hazard_a");
 ⋮----
-if (cryogenicDepths()) batch.setColor(.10f, .62f, .78f, Math.min(1f, alpha * 1.18f));
-else if (cryoVault()) batch.setColor(.28f, .82f, 1f, Math.min(1f, alpha * 1.15f));
-else if (nullSector()) batch.setColor(.48f, .28f, 1f, Math.min(1f, alpha * 1.15f));
-else if (foundry()) batch.setColor(1f, .38f, .08f, Math.min(1f, alpha * 1.20f));
-else batch.setColor(1f, 1f, 1f, Math.min(1f, alpha * 1.13f));
+if (cryogenicDepths()) batch.setColor(.10f, .62f, .78f, Math.min(1f, alpha * .82f));
+else if (cryoVault()) batch.setColor(.28f, .82f, 1f, Math.min(1f, alpha * .80f));
+else if (nullSector()) batch.setColor(.48f, .28f, 1f, Math.min(1f, alpha * .78f));
+else if (foundry()) batch.setColor(1f, .38f, .08f, Math.min(1f, alpha * .84f));
+else batch.setColor(.82f, .94f, 1f, Math.min(1f, alpha * .76f));
 if (cryogenicDepths()) {
 ⋮----
-batch.draw(hazard, x, -14f, TILE_WORLD, TILE_WORLD);
-batch.draw(hazard, x + 6f, 14f, TILE_WORLD, TILE_WORLD);
+batch.draw(hazard, x, -13f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
+batch.draw(hazard, x + 6f, 13f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
 ⋮----
 } else if (cryoVault()) {
 ⋮----
-batch.draw(hazard, x, -10f, TILE_WORLD, TILE_WORLD);
-batch.draw(hazard, -x, 10f, TILE_WORLD, TILE_WORLD);
+batch.draw(hazard, x, -10f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
+batch.draw(hazard, -x, 10f, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
 ⋮----
 } else if (nullSector()) {
 ⋮----
-for (int x = offset; x <= 14; x += 8) batch.draw(hazard, x, y, TILE_WORLD, TILE_WORLD);
+batch.draw(hazard, x, y, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
 ⋮----
 } else if (foundry()) {
 ⋮----
-for (int x = -12; x <= 12; x += 8) batch.draw(hazard, x, y, TILE_WORLD, TILE_WORLD);
-⋮----
-for (int x = -8; x <= 8; x += 4) batch.draw(hazard, x, -2f, TILE_WORLD, TILE_WORLD);
+// Quarantine Yard uses sparse perimeter warning pads instead of a continuous
+// center stripe, keeping the player and combat readable on phone screens.
 ⋮----
 static int floorVariant(int gridX, int gridY) {
 return Math.floorMod(gridX * 31 + gridY * 17, 3);

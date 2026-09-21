@@ -996,6 +996,23 @@ assertTrue("expected GameScreen for wide-phone visual probe", game.getScreen() i
 ⋮----
 settleAndCapture("responsive-1536x691-combat.png");
 ⋮----
+game.finishRun(420, 155f, false, 0);
+assertTrue("expected RunResultScreen for wide-phone visual probe",
+game.getScreen() instanceof RunResultScreen);
+⋮----
+settleAndCapture("responsive-1536x691-run-result.png");
+⋮----
+assertTrue("expected GameScreen before victory visual probe",
+game.getScreen() instanceof GameScreen);
+RunMissionRuntime.signalBossDefeated();
+⋮----
+Thread.sleep(350L);
+⋮----
+assertTrue("expected VictoryScreen for wide-phone visual probe",
+game.getScreen() instanceof VictoryScreen);
+⋮----
+settleAndCapture("responsive-1536x691-victory.png");
+⋮----
 private static boolean dedicatedWideProbe() {
 Bundle arguments = InstrumentationRegistry.getArguments();
 return "true".equalsIgnoreCase(arguments.getString(WIDE_PROBE_ARGUMENT, "false"));

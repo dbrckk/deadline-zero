@@ -22,27 +22,35 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T14:33:31Z
+Generated: 2026-09-21T16:12:03Z
 
 ### Git
 - Branch: `main`
-- Head: `03fd2b7095bc`
-- Commit date: 2026-09-21T16:33:14+02:00
-- Commit: Refine Gear and Shop from Android visual QA (#272)
-- Tracked files: 835
+- Head: `c4f23a622d0c`
+- Commit date: 2026-09-21T18:11:39+02:00
+- Commit: Close Zombie Waves gameplay presentation gaps (#273)
+- Tracked files: 836
 
 ### Recently changed files
+- `.github/workflows/responsive-ui-qa.yml`
+- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java`
+- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
+- `docs/PREMIUM_VISUAL_GAP_AUDIT.md`
 - `assets/i18n/messages.properties`
 - `core/src/main/java/com/deadlinezero/game/screen/GearScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java`
 - `core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java`
-- `.github/workflows/responsive-ui-qa.yml`
 - `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
-- `core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java`
 
 ### Project signals
 - `build.gradle`
