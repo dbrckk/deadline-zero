@@ -5280,6 +5280,30 @@ game.getScreen() instanceof ArsenalScreen);
 ⋮----
 settleAndCapture("responsive-1536x691-arsenal.png");
 ⋮----
+game.showGear();
+assertTrue("expected GearScreen for wide-phone visual probe",
+game.getScreen() instanceof GearScreen);
+⋮----
+settleAndCapture("responsive-1536x691-gear.png");
+⋮----
+game.showMissions();
+assertTrue("expected MissionsScreen for wide-phone visual probe",
+game.getScreen() instanceof MissionsScreen);
+⋮----
+settleAndCapture("responsive-1536x691-missions.png");
+⋮----
+game.showShop();
+assertTrue("expected ShopScreen for wide-phone visual probe",
+game.getScreen() instanceof ShopScreen);
+⋮----
+settleAndCapture("responsive-1536x691-shop.png");
+⋮----
+game.showCloudSave();
+assertTrue("expected CloudSaveScreen for wide-phone visual probe",
+game.getScreen() instanceof CloudSaveScreen);
+⋮----
+settleAndCapture("responsive-1536x691-cloud-save.png");
+⋮----
 game.showSettings();
 assertTrue("expected SettingsScreen for wide-phone visual probe",
 game.getScreen() instanceof SettingsScreen);
@@ -13440,12 +13464,12 @@ private void drawShapes(WeaponDefinition[] all, int pageStart, int pageEnd, int 
 shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.topRail(shapes, metrics);
-UiRenderer.panel(shapes, detail.x, detail.y, detail.width, detail.height);
+UiRenderer.premiumPanel(shapes, detail.x, detail.y, detail.width, detail.height, elementColor(focusedWeapon), true);
 drawDetailChrome(shapes, focusedWeapon, equipped);
 ⋮----
 boolean selected = weapon.id.equals(game.profile.selectedWeaponId);
 boolean unlocked = WeaponProgression.unlocked(game.profile, weapon);
-UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == focus, selected);
+UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, elementColor(weapon), i == focus, selected, !unlocked);
 drawWeaponCardChrome(shapes, r, weapon, i == focus, selected, unlocked);
 ⋮----
 shapes.setColor(0f, 0f, 0f, .28f);
@@ -13453,9 +13477,9 @@ shapes.rect(r.x + 3f, r.y + 3f, r.width - 6f, r.height - 6f);
 shapes.setColor(VisualTheme.GOLD);
 shapes.rect(r.x + 10f, r.y + r.height - 5f, Math.min(56f, r.width * .18f), 2f);
 ⋮----
-UiRenderer.button(shapes, previousPage.x, previousPage.y, previousPage.width, previousPage.height,
+UiRenderer.premiumButton(shapes, previousPage.x, previousPage.y, previousPage.width, previousPage.height, VisualTheme.CYAN_SOFT,
 ⋮----
-UiRenderer.button(shapes, nextPage.x, nextPage.y, nextPage.width, nextPage.height,
+UiRenderer.premiumButton(shapes, nextPage.x, nextPage.y, nextPage.width, nextPage.height, VisualTheme.CYAN_SOFT,
 ⋮----
 drawChevron(previousPage, false, page > 0);
 drawChevron(nextPage, true, page < pageCount - 1);
@@ -13688,11 +13712,12 @@ boolean available = cloud.available();
 shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.topRail(shapes, metrics);
-UiRenderer.card(shapes, statusPanel.x, statusPanel.y, statusPanel.width, statusPanel.height, false,
+UiRenderer.premiumCard(shapes, statusPanel.x, statusPanel.y, statusPanel.width, statusPanel.height,
+colorForState(), false, conflict == CloudSaveService.ConflictState.DIVERGED || providerConflict, !available);
+UiRenderer.premiumPanel(shapes, warningPanel.x, warningPanel.y, warningPanel.width, warningPanel.height, VisualTheme.GOLD, false);
 ⋮----
-UiRenderer.panel(shapes, warningPanel.x, warningPanel.y, warningPanel.width, warningPanel.height);
-⋮----
-UiRenderer.button(shapes, actions[i].x, actions[i].y, actions[i].width, actions[i].height, state);
+UiRenderer.premiumButton(shapes, actions[i].x, actions[i].y, actions[i].width, actions[i].height,
+state == UiRenderer.ButtonState.DANGER ? VisualTheme.danger() : i == 1 ? VisualTheme.GOLD : i == 2 ? VisualTheme.CYAN_SOFT : VisualTheme.accent(), state);
 ⋮----
 shapes.end();
 ⋮----
@@ -14645,21 +14670,22 @@ shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.topRail(shapes, metrics);
 UiRenderer.bottomNav(shapes, metrics);
-UiRenderer.panel(shapes, detail.x, detail.y, detail.width, detail.height);
+UiRenderer.premiumPanel(shapes, detail.x, detail.y, detail.width, detail.height,
+size > 0 ? rarityColor(game.profile.inventory.items().get(index).rarity) : VisualTheme.CYAN_SOFT, true);
 if (size > 0) drawDetailChrome(shapes, game.profile.inventory.items().get(index));
 ⋮----
 EquipmentItem item = game.profile.inventory.items().get(i);
 EquipmentItem equipped = game.profile.equipped(item.slot);
 boolean isEquipped = equipped != null && equipped.id.equals(item.id);
-UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == index, isEquipped);
+UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, rarityColor(item.rarity), i == index, isEquipped, false);
 drawGearCardChrome(shapes, r, item, i == index, isEquipped);
 ⋮----
-UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.NORMAL);
-UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height,
+UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
+UiRenderer.premiumButton(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, VisualTheme.GOLD,
 ⋮----
-UiRenderer.button(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height,
+UiRenderer.premiumButton(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height, VisualTheme.CYAN_SOFT,
 ⋮----
-UiRenderer.button(shapes, actions[3].x, actions[3].y, actions[3].width, actions[3].height,
+UiRenderer.premiumButton(shapes, actions[3].x, actions[3].y, actions[3].width, actions[3].height, VisualTheme.VIOLET,
 ⋮----
 shapes.end();
 ⋮----
@@ -15439,15 +15465,15 @@ shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, time);
 UiRenderer.topRail(shapes, metrics);
 ⋮----
-UiRenderer.card(shapes, r.x, r.y, r.width, r.height, offer.legendary(), offer.legendary());
 Color accent = accent(offer);
+UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, accent, offer.legendary(), offer.legendary(), false);
 float pulse = .80f + .20f * (float) Math.sin(time * (offer.legendary() ? 4.2f : 2.4f) + i * .7f);
 shapes.setColor(accent.r, accent.g, accent.b, .70f + pulse * .18f);
 shapes.rect(r.x + 8f, r.y + 12f, 4f, r.height - 24f);
 shapes.setColor(accent.r, accent.g, accent.b, .26f + pulse * .06f);
 shapes.rect(r.x + 18f, r.y + r.height - 8f, r.width - 36f, 2f);
 Rectangle cta = cta(r);
-UiRenderer.button(shapes, cta.x, cta.y, cta.width, cta.height,
+UiRenderer.premiumButton(shapes, cta.x, cta.y, cta.width, cta.height, accent,
 offer.legendary() ? UiRenderer.ButtonState.SELECTED : UiRenderer.ButtonState.NORMAL);
 ⋮----
 shapes.end();
@@ -15590,18 +15616,18 @@ viewport.apply(batch, shapes);
 ⋮----
 shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
-UiRenderer.card(shapes, hero.x, hero.y, hero.width, hero.height, true, false);
+UiRenderer.premiumPanel(shapes, hero.x, hero.y, hero.width, hero.height, VisualTheme.accent(), true);
 shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .22f);
 shapes.rect(hero.x + 6f, hero.y + hero.height - 6f, hero.width - 12f, 4f);
 ⋮----
 Color[] rewardAccents = {VisualTheme.GOLD, VisualTheme.accent(), VisualTheme.VIOLET};
 ⋮----
-UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, i == 0);
+UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, rewardAccents[i], false, i == 0, false);
 ⋮----
 shapes.setColor(accent.r, accent.g, accent.b, .90f);
 shapes.rect(r.x, r.y + r.height - 4f, r.width, 4f);
 ⋮----
-UiRenderer.panel(shapes, coaching.x, coaching.y, coaching.width, coaching.height);
+UiRenderer.premiumPanel(shapes, coaching.x, coaching.y, coaching.width, coaching.height, COACHING_ACCENT, false);
 shapes.setColor(COACHING_ACCENT.r, COACHING_ACCENT.g, COACHING_ACCENT.b, .72f);
 shapes.rect(coaching.x, coaching.y, 4f, coaching.height);
 if (result.drop() != null) {
@@ -15612,9 +15638,9 @@ shapes.rect(splitX, coaching.y + 8f, coaching.width * .37f - 8f, coaching.height
 shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .90f);
 shapes.rect(splitX, coaching.y + coaching.height - 4f, coaching.width * .37f - 8f, 4f);
 ⋮----
-UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.SELECTED);
-UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, UiRenderer.ButtonState.NORMAL);
-UiRenderer.button(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height,
+UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.GOLD, UiRenderer.ButtonState.SELECTED);
+UiRenderer.premiumButton(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
+UiRenderer.premiumButton(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height, VisualTheme.VIOLET,
 ⋮----
 shapes.end();
 ⋮----
@@ -15748,13 +15774,14 @@ UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.topRail(shapes, metrics);
 ⋮----
 boolean disabled = isDisabled(i, privacyRequired, policyAvailable);
-UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == row, false);
+Color accent = settingsAccent(i);
+UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, accent, i == row, false, disabled);
 ⋮----
 shapes.setColor(0f, 0f, 0f, .22f);
 shapes.rect(r.x + 3f, r.y + 3f, r.width - 6f, r.height - 6f);
 } else if (isSliderRow(i)) {
 float value = sliderValue(s, i);
-UiRenderer.progress(shapes, r.x + r.width * .56f, r.y + 10f, r.width * .38f, 7f, value, VisualTheme.accent());
+UiRenderer.segmentedTrack(shapes, r.x + r.width * .56f, r.y + 10f, r.width * .38f, 7f, value, 8, accent);
 ⋮----
 shapes.end();
 ⋮----
@@ -15775,6 +15802,10 @@ for (int i = 0; i < rows.length; i++) drawRow(i, rows[i], labels[i], values[i], 
 batch.end();
 ⋮----
 handleInput(s, privacyRequired, policyAvailable);
+⋮----
+private Color settingsAccent(int index) {
+⋮----
+return index <= 14 ? VisualTheme.GOLD : VisualTheme.accent();
 ⋮----
 private void drawRow(int index, Rectangle r, String label, String value, boolean disabled) {
 ⋮----
@@ -15918,16 +15949,18 @@ shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.topRail(shapes, metrics);
 ⋮----
-UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == 2 && !disabled, false);
+Color chestAccent = i == 0 ? VisualTheme.CYAN_SOFT : i == 1 ? VisualTheme.VIOLET : VisualTheme.positive();
+UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, chestAccent, i == 2 && !disabled, false, disabled);
 drawChestChrome(shapes, r, i, disabled);
 Rectangle button = chestButton(r);
-UiRenderer.button(shapes, button.x, button.y, button.width, button.height,
+UiRenderer.premiumButton(shapes, button.x, button.y, button.width, button.height, chestAccent,
 ⋮----
 String productId = purchaseProductId(i);
 ⋮----
 boolean enabled = game.services.offers.current().enabled(productId);
 boolean featured = game.services.offers.current().featured(productId);
-UiRenderer.button(shapes, r.x, r.y, r.width, r.height,
+Color offerAccent = i == 0 ? VisualTheme.GOLD : i == 3 ? VisualTheme.CYAN_SOFT : VisualTheme.accent();
+UiRenderer.premiumButton(shapes, r.x, r.y, r.width, r.height, offerAccent,
 ⋮----
 drawOfferChrome(shapes, r, i, owned || !enabled, featured);
 ⋮----
@@ -16180,22 +16213,26 @@ private void drawShapes(boolean unlocked, float progress) {
 shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, artTime);
 UiRenderer.topRail(shapes, metrics);
-UiRenderer.card(shapes, layout.card().x, layout.card().y, layout.card().width, layout.card().height, true, false);
-UiRenderer.panel(shapes, layout.portrait().x, layout.portrait().y, layout.portrait().width, layout.portrait().height);
-UiRenderer.panel(shapes, layout.stats().x, layout.stats().y, layout.stats().width, layout.stats().height);
+UiRenderer.premiumCard(shapes, layout.card().x, layout.card().y, layout.card().width, layout.card().height,
+unlocked ? VisualTheme.accent() : VisualTheme.MUTED, true, false, !unlocked);
+UiRenderer.premiumPanel(shapes, layout.portrait().x, layout.portrait().y, layout.portrait().width, layout.portrait().height,
+unlocked ? VisualTheme.accent() : VisualTheme.MUTED, true);
+UiRenderer.premiumPanel(shapes, layout.stats().x, layout.stats().y, layout.stats().width, layout.stats().height,
+⋮----
 drawSurvivorChrome(shapes, unlocked);
 UiRenderer.progress(shapes, layout.xpBar().x, layout.xpBar().y, layout.xpBar().width, layout.xpBar().height,
 ⋮----
-UiRenderer.button(shapes, layout.previous().x, layout.previous().y, layout.previous().width, layout.previous().height,
+UiRenderer.premiumButton(shapes, layout.previous().x, layout.previous().y, layout.previous().width, layout.previous().height,
 ⋮----
-UiRenderer.button(shapes, layout.next().x, layout.next().y, layout.next().width, layout.next().height,
+UiRenderer.premiumButton(shapes, layout.next().x, layout.next().y, layout.next().width, layout.next().height,
 ⋮----
 drawChevron(layout.previous(), false);
 drawChevron(layout.next(), true);
 ⋮----
 else if (game.profile.selectedSurvivor == SurvivorCatalog.Survivor.values()[index]) ctaState = UiRenderer.ButtonState.SELECTED;
 ⋮----
-UiRenderer.button(shapes, layout.cta().x, layout.cta().y, layout.cta().width, layout.cta().height, ctaState);
+UiRenderer.premiumButton(shapes, layout.cta().x, layout.cta().y, layout.cta().width, layout.cta().height,
+game.profile.selectedSurvivor == SurvivorCatalog.Survivor.values()[index] ? VisualTheme.positive() : VisualTheme.GOLD, ctaState);
 ⋮----
 if (!game.art.authoredAvailable()) {
 Rectangle p = layout.portrait();
@@ -16409,16 +16446,18 @@ boolean canShare = game.services.share.available();
 ⋮----
 shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
-UiRenderer.card(shapes, hero.x, hero.y, hero.width, hero.height, true, true);
+UiRenderer.premiumPanel(shapes, hero.x, hero.y, hero.width, hero.height, VisualTheme.GOLD, true);
 ⋮----
-UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, i == 0);
+Color rewardAccent = i == 0 ? VisualTheme.GOLD : i == 1 ? VisualTheme.accent() : VisualTheme.VIOLET;
+UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, rewardAccent, false, i == 0, false);
 ⋮----
-UiRenderer.panel(shapes, noticePanel.x, noticePanel.y, noticePanel.width, noticePanel.height);
+Color noticeAccent = result.unlockedThreatTier() > 0 ? VisualTheme.GOLD : firstClear ? VisualTheme.positive() : VisualTheme.VIOLET;
+UiRenderer.premiumPanel(shapes, noticePanel.x, noticePanel.y, noticePanel.width, noticePanel.height, noticeAccent, false);
 drawVictoryChrome(shapes);
-UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.NORMAL);
-UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height,
+UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
+UiRenderer.premiumButton(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, VisualTheme.VIOLET,
 ⋮----
-UiRenderer.button(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height, UiRenderer.ButtonState.SELECTED);
+UiRenderer.premiumButton(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height, VisualTheme.GOLD, UiRenderer.ButtonState.SELECTED);
 shapes.end();
 ⋮----
 batch.begin();
@@ -17151,6 +17190,20 @@ set(shapes, VisualTheme.accent(), pulse);
 ⋮----
 for (float y = 42f; y < m.height(); y += step) shapes.rect(0f, y, m.width(), 1f);
 ⋮----
+// Shader-inspired light shafts and horizon bloom, implemented with cheap geometry.
+// They create depth on every screen without shipping a static background bitmap.
+float drift = reduceMotion ? 0f : (float)Math.sin(time * .22f) * m.width() * .025f;
+float horizon = m.height() * .58f;
+set(shapes, VisualTheme.accent(), .018f);
+shapes.triangle(m.width() * .08f + drift, m.height(), m.width() * .22f + drift, m.height(),
+m.width() * .42f + drift, 0f);
+shapes.triangle(m.width() * .74f - drift, m.height(), m.width() * .86f - drift, m.height(),
+m.width() * .58f - drift, 0f);
+set(shapes, VisualTheme.CYAN_SOFT, .028f);
+shapes.rect(0f, horizon - 22f, m.width(), 44f);
+set(shapes, VisualTheme.SURFACE_0, .74f);
+shapes.rect(0f, horizon + 4f, m.width(), 2f);
+⋮----
 // Quiet edge rails create depth without flooding the screen with cyan.
 set(shapes, VisualTheme.BORDER, .28f);
 shapes.rect(m.safeLeft(), m.safeBottom(), 2f, m.safeTop() - m.safeBottom());
@@ -17228,12 +17281,106 @@ shapes.rect(x + 10f, y + h - 6f, Math.max(0f, w - 20f), 4f);
 shapes.rect(x + 10f, y + 10f, 4f, Math.max(0f, h - 20f));
 cornerMarks(shapes, x, y, w, h, a);
 ⋮----
-public static void progress(ShapeRenderer shapes, float x, float y, float w, float h, float progress, Color color) {
+/**
+     * Production panel with layered depth, bevel notches and restrained emissive trim.
+     * Draw while ShapeRenderer is already in Filled mode.
+     */
+public static void premiumPanel(ShapeRenderer shapes, float x, float y, float w, float h,
+⋮----
+float notch = Math.min(18f, Math.min(w, h) * .10f);
+⋮----
+// Shadow / separation from background.
+set(shapes, VisualTheme.BG, .92f);
+shapes.rect(x + 7f, y - 7f, Math.max(0f, w), Math.max(0f, h));
+⋮----
+// Main body + subtle inset.
+set(shapes, VisualTheme.SURFACE_1, .995f);
+⋮----
+set(shapes, VisualTheme.SURFACE_2, emphasized ? .72f : .46f);
+⋮----
+// Angular cut-corner overlays.
+set(shapes, VisualTheme.BG, 1f);
+shapes.triangle(x, y + h, x + notch, y + h, x, y + h - notch);
+shapes.triangle(x + w, y, x + w - notch, y, x + w, y + notch);
+⋮----
+// Double-frame and accent hierarchy.
+set(shapes, VisualTheme.BORDER, emphasized ? .94f : .72f);
+border(shapes, x, y, w, h, emphasized ? 2.5f : 2f);
+set(shapes, a, emphasized ? .88f : .52f);
+shapes.rect(x + notch + 5f, y + h - 4f, Math.max(0f, w - notch * 2f - 10f), 3f);
+shapes.rect(x + 4f, y + notch + 5f, 3f, Math.max(0f, h - notch * 2f - 10f));
+⋮----
+// Inner highlight gives the card material depth without a texture dependency.
+set(shapes, a, emphasized ? .10f : .045f);
+shapes.rect(x + 9f, y + 9f, Math.max(0f, w - 18f), Math.max(0f, h - 18f));
+set(shapes, VisualTheme.SURFACE_1, .96f);
+shapes.rect(x + 13f, y + 13f, Math.max(0f, w - 26f), Math.max(0f, h - 26f));
+⋮----
+cornerMarks(shapes, x + 3f, y + 3f, w - 6f, h - 6f, a);
+⋮----
+public static void premiumCard(ShapeRenderer shapes, float x, float y, float w, float h,
+⋮----
+set(shapes, VisualTheme.SURFACE_1, disabled ? .72f : .98f);
+⋮----
+set(shapes, VisualTheme.SURFACE_2, disabled ? .18f : focused || selected ? .66f : .38f);
+shapes.rect(x + 4f, y + 4f, Math.max(0f, w - 8f), Math.max(0f, h - 8f));
+⋮----
+set(shapes, frame, disabled ? .34f : focused || selected ? .95f : .64f);
+border(shapes, x, y, w, h, focused || selected ? 2.5f : 2f);
+⋮----
+set(shapes, a, disabled ? .14f : selected ? .92f : focused ? .72f : .34f);
+shapes.rect(x + 6f, y + h - 5f, Math.max(0f, w - 12f), 3f);
+shapes.rect(x + 6f, y + 7f, focused || selected ? 4f : 2f, Math.max(0f, h - 14f));
+⋮----
+set(shapes, a, .10f);
+shapes.rect(x + 10f, y + 10f, Math.max(0f, w - 20f), Math.max(0f, h - 20f));
+⋮----
+cornerMarks(shapes, x, y, w, h, frame);
+⋮----
+public static void premiumButton(ShapeRenderer shapes, float x, float y, float w, float h,
+⋮----
+set(shapes, disabled ? VisualTheme.SURFACE_1 : VisualTheme.SURFACE_2, disabled ? .60f : .99f);
+⋮----
+set(shapes, a, disabled ? .10f : active ? .18f : .07f);
+⋮----
+set(shapes, disabled ? VisualTheme.BORDER : a, disabled ? .38f : active ? 1f : .70f);
+border(shapes, x, y, w, h, active ? 3f : 2f);
+shapes.rect(x + 9f, y + h - 5f, Math.max(0f, w - 18f), active ? 4f : 2f);
+⋮----
+shapes.rect(x + 9f, y + 9f, 4f, Math.max(0f, h - 18f));
+⋮----
+cornerMarks(shapes, x, y, w, h, disabled ? VisualTheme.BORDER : a);
+⋮----
+public static void sectionPlate(ShapeRenderer shapes, float x, float y, float w, float h,
+⋮----
+set(shapes, VisualTheme.SURFACE_0, .94f);
+⋮----
+set(shapes, a, strong ? .18f : .09f);
+shapes.rect(x + 3f, y + 3f, Math.max(0f, w - 6f), Math.max(0f, h - 6f));
+set(shapes, a, strong ? .92f : .58f);
+⋮----
+shapes.rect(x + 8f, y + h - 3f, Math.max(0f, Math.min(w - 16f, w * .48f)), 2f);
+set(shapes, VisualTheme.BORDER, .62f);
+border(shapes, x, y, w, h, 1.5f);
+⋮----
+public static void segmentedTrack(ShapeRenderer shapes, float x, float y, float w, float h,
+⋮----
 float p = Math.max(0f, Math.min(1f, progress));
+int count = Math.max(1, segments);
+float gap = Math.min(3f, w / Math.max(12f, count * 8f));
+float segW = Math.max(1f, (w - gap * (count - 1)) / count);
+int filled = Math.round(p * count);
+⋮----
+set(shapes, i < filled ? a : VisualTheme.SURFACE_0, i < filled ? .95f : .98f);
+shapes.rect(sx, y, segW, h);
+set(shapes, i < filled ? a : VisualTheme.BORDER, i < filled ? .82f : .55f);
+border(shapes, sx, y, segW, h, 1f);
+⋮----
+public static void progress(ShapeRenderer shapes, float x, float y, float w, float h, float progress, Color color) {
+⋮----
 set(shapes, VisualTheme.SURFACE_0, .98f);
 ⋮----
 set(shapes, VisualTheme.BORDER, .75f);
-border(shapes, x, y, w, h, 1.5f);
 ⋮----
 set(shapes, color == null ? VisualTheme.accent() : color, .95f);
 shapes.rect(x + 2f, y + 2f, Math.max(0f, (w - 4f) * p), Math.max(0f, h - 4f));
@@ -17247,7 +17394,7 @@ border(shapes, x, y, w, h, 1f);
 ⋮----
 public static void topRail(ShapeRenderer shapes, UiLayout.Metrics m) {
 float h = m.safeTop() - m.headerBottom();
-set(shapes, VisualTheme.SURFACE_1, .96f);
+⋮----
 shapes.rect(m.safeLeft(), m.headerBottom(), m.contentWidth(), h);
 set(shapes, VisualTheme.BORDER, .78f);
 shapes.rect(m.safeLeft(), m.headerBottom(), m.contentWidth(), 2f);

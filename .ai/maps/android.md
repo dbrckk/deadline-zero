@@ -955,6 +955,30 @@ game.getScreen() instanceof ArsenalScreen);
 ⋮----
 settleAndCapture("responsive-1536x691-arsenal.png");
 ⋮----
+game.showGear();
+assertTrue("expected GearScreen for wide-phone visual probe",
+game.getScreen() instanceof GearScreen);
+⋮----
+settleAndCapture("responsive-1536x691-gear.png");
+⋮----
+game.showMissions();
+assertTrue("expected MissionsScreen for wide-phone visual probe",
+game.getScreen() instanceof MissionsScreen);
+⋮----
+settleAndCapture("responsive-1536x691-missions.png");
+⋮----
+game.showShop();
+assertTrue("expected ShopScreen for wide-phone visual probe",
+game.getScreen() instanceof ShopScreen);
+⋮----
+settleAndCapture("responsive-1536x691-shop.png");
+⋮----
+game.showCloudSave();
+assertTrue("expected CloudSaveScreen for wide-phone visual probe",
+game.getScreen() instanceof CloudSaveScreen);
+⋮----
+settleAndCapture("responsive-1536x691-cloud-save.png");
+⋮----
 game.showSettings();
 assertTrue("expected SettingsScreen for wide-phone visual probe",
 game.getScreen() instanceof SettingsScreen);

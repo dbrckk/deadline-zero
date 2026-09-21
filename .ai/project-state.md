@@ -22,20 +22,30 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T10:34:56Z
+Generated: 2026-09-21T10:57:10Z
 
 ### Git
 - Branch: `main`
-- Head: `c7d99b85960a`
-- Commit date: 2026-09-21T12:34:43+02:00
-- Commit: Establish authored premium UI visual foundation (#266)
+- Head: `2c32b29e4133`
+- Commit date: 2026-09-21T12:56:55+02:00
+- Commit: Replace flat meta UI with real-time premium rendering (#267)
 - Tracked files: 835
 
 ### Recently changed files
+- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java`
+- `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GearScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
+- `core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java`
 - `.github/workflows/android-test-release.yml`
 
 ### Project signals

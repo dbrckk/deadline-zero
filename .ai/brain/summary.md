@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 452
-- Files reparsed this run: 4
-- Symbols: 2598
-- Internal import edges: 660
+- Files reparsed this run: 11
+- Symbols: 2604
+- Internal import edges: 664
 - Impacted files: 19
-- Selected tests: 4
+- Selected tests: 5
 
 ## Languages
 - java: 403 files
@@ -27,12 +27,12 @@
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java: 24 symbols
+- core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/services/CloudSaveService.java: 23 symbols
 - tools/environment/generate_quarantine_yard_candidate.py: 23 symbols
 - core/src/main/java/com/deadlinezero/game/ai/BossCombatRuntime.java: 22 symbols
-- core/src/main/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArt.java: 22 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 4
+- AST files reparsed this run: 11
 - outline files retained: 450
-- top-level items retained: 2887
-- direct members retained: 3358
+- top-level items retained: 2892
+- direct members retained: 3364
 - symbol shards: 27
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 
