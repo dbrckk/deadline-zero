@@ -36,28 +36,38 @@ public final class UiRenderer {
         set(shapes, VisualTheme.SURFACE_0, 1f);
         shapes.rect(0f, 0f, m.width(), m.height());
 
-        set(shapes, VisualTheme.SURFACE_1, .40f);
-        shapes.rect(0f, m.height() * .68f, m.width(), m.height() * .32f);
-        set(shapes, VisualTheme.SURFACE_2, .25f);
-        shapes.rect(0f, 0f, m.width(), m.height() * .16f);
+        set(shapes, VisualTheme.SURFACE_1, .52f);
+        shapes.rect(0f, m.height() * .73f, m.width(), m.height() * .27f);
+        set(shapes, VisualTheme.SURFACE_2, .34f);
+        shapes.rect(0f, 0f, m.width(), m.height() * .13f);
 
+        // Keep the sci-fi scan language, but let content dominate the frame.
         boolean reduceMotion = AccessibilitySettings.active().reducedMotion;
-        float pulse = reduceMotion ? .055f : .055f + .025f * (float) Math.sin(time * .9f);
+        float pulse = reduceMotion ? .022f : .022f + .010f * (float) Math.sin(time * .75f);
         set(shapes, VisualTheme.accent(), pulse);
-        float step = 72f;
-        for (float y = 28f; y < m.height(); y += step) shapes.rect(0f, y, m.width(), 1f);
+        float step = 144f;
+        for (float y = 42f; y < m.height(); y += step) shapes.rect(0f, y, m.width(), 1f);
+
+        // Quiet edge rails create depth without flooding the screen with cyan.
+        set(shapes, VisualTheme.BORDER, .28f);
+        shapes.rect(m.safeLeft(), m.safeBottom(), 2f, m.safeTop() - m.safeBottom());
+        shapes.rect(m.safeLeft() + m.contentWidth() - 2f, m.safeBottom(), 2f, m.safeTop() - m.safeBottom());
     }
 
     public static void panel(ShapeRenderer shapes, float x, float y, float w, float h) {
         set(shapes, VisualTheme.SURFACE_1, .985f);
         shapes.rect(x, y, w, h);
-        set(shapes, VisualTheme.BORDER, .76f);
+        set(shapes, VisualTheme.BORDER, .64f);
         border(shapes, x, y, w, h, 2f);
+        set(shapes, VisualTheme.SURFACE_2, .72f);
+        shapes.rect(x + 3f, y + h - 4f, Math.max(0f, w - 6f), 1f);
     }
 
     public static void card(ShapeRenderer shapes, float x, float y, float w, float h, boolean focused, boolean selected) {
         set(shapes, selected ? VisualTheme.SURFACE_2 : VisualTheme.SURFACE_1, .97f);
         shapes.rect(x, y, w, h);
+        set(shapes, VisualTheme.SURFACE_0, .36f);
+        shapes.rect(x + 5f, y + 5f, Math.max(0f, w - 10f), Math.min(10f, Math.max(0f, h - 10f)));
         Color border = focused || selected ? VisualTheme.BORDER_FOCUS : VisualTheme.BORDER;
         set(shapes, border, focused || selected ? 1f : .68f);
         border(shapes, x, y, w, h, focused || selected ? 3f : 2f);
