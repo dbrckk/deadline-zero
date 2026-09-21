@@ -53,10 +53,10 @@ public final class CombatHudLayout {
                 timeline.y - bossH - 13f * s, bossW, bossH);
         }
 
-        float hintW = Math.min(560f, m.contentWidth() * .46f);
-        float hintH = 56f * s;
+        float hintW = Math.min(460f, m.contentWidth() * .36f);
+        float hintH = 44f * s;
         Rectangle onboarding = new Rectangle(m.centerX() - hintW * .5f,
-            m.safeBottom() + 78f * s, hintW, hintH);
+            m.safeBottom() + 58f * s, hintW, hintH);
 
         float dashPhysicalX = physicalW - 58f * s;
         float dashPhysicalY = 62f * s;
