@@ -252,7 +252,7 @@ public final class ArsenalScreen extends ScreenAdapter {
         float textW = detail.width - leftW - 48f;
         float top = detail.y + detail.height - 20f;
 
-        drawAuthoredPreview(weapon, detail.x + 18f, detail.y + 20f, leftW * .42f, detail.height - 38f);
+        drawAuthoredPreview(weapon, detail.x + 22f, detail.y + 76f, leftW * .84f, detail.height * .58f);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
         font.setColor(VisualTheme.TEXT_STRONG);
@@ -281,10 +281,11 @@ public final class ArsenalScreen extends ScreenAdapter {
     }
 
     private void drawStatBars(WeaponDefinition weapon, WeaponDefinition equipped) {
-        float x = detail.x + detail.width * .19f;
-        float width = detail.width * .18f;
-        float baseY = detail.y + 26f;
-        float gap = Math.max(18f, (detail.height - 44f) / 4f);
+        float leftW = detail.width * .40f;
+        float x = detail.x + 24f;
+        float width = leftW - 48f;
+        float baseY = detail.y + 22f;
+        float gap = 12f;
         drawStatBar(x, baseY, width, normalizeDps(weapon), normalizeDps(equipped), VisualTheme.accent());
         drawStatBar(x, baseY + gap, width, MathUtils.clamp((1f / weapon.fireInterval) / 8f, 0f, 1f),
             MathUtils.clamp((1f / equipped.fireInterval) / 8f, 0f, 1f), VisualTheme.CYAN_SOFT);
@@ -296,11 +297,11 @@ public final class ArsenalScreen extends ScreenAdapter {
 
     private void drawStatBar(float x, float y, float width, float value, float baseline, Color color) {
         shapes.setColor(VisualTheme.SURFACE_0);
-        shapes.rect(x, y, width, 7f);
-        shapes.setColor(VisualTheme.MUTED.r, VisualTheme.MUTED.g, VisualTheme.MUTED.b, .55f);
-        shapes.rect(x, y, width * baseline, 7f);
+        shapes.rect(x, y, width, 6f);
+        shapes.setColor(VisualTheme.MUTED.r, VisualTheme.MUTED.g, VisualTheme.MUTED.b, .35f);
+        shapes.rect(x, y, width * baseline, 6f);
         shapes.setColor(color);
-        shapes.rect(x, y + 2f, width * value, 3f);
+        shapes.rect(x, y + 1f, width * value, 4f);
     }
 
     private void drawAuthoredPreview(WeaponDefinition weapon, float x, float y, float maxW, float maxH) {
