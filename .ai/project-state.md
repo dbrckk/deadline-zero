@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-20T20:28:28Z
+Generated: 2026-09-21T05:29:27Z
 
 ### Git
 - Branch: `main`
-- Head: `624c1570fa5d`
-- Commit date: 2026-09-20T22:28:08+02:00
-- Commit: ui(arsenal): strengthen element and selection hierarchy (#254)
+- Head: `f56eab1092b5`
+- Commit date: 2026-09-21T07:29:14+02:00
+- Commit: ui(survivor): strengthen roster hierarchy and stat identity (#255)
 - Tracked files: 834
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GearScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
 
 ### Project signals
 - `build.gradle`

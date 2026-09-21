@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 63f72e64852d50d7e577f3372cc45b68c0b316e7
-Head: 624c1570fa5d77a904168f8e6cbfcbaaa87fe84c
+Base: 0b7b267e5c3b970083a1b1b21d91e00648991c10
+Head: f56eab1092b5bf86a3bd8bc38e8f6cec702bf343
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java
 
 ## Affected areas
 - core
