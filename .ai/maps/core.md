@@ -9791,6 +9791,7 @@ if (!onboarding.completed()) {
 Rectangle hint = layout.onboarding();
 UiRenderer.card(shapes, hint.x, hint.y, hint.width, hint.height, false, false);
 ⋮----
+drawEventCueChrome(shapes, layout);
 drawMobileControls(shapes, player, layout, physicalW, physicalH);
 shapes.end();
 ⋮----
@@ -9858,6 +9859,30 @@ Math.max(0f, segmentW - 4f), capH);
 shapes.setColor(identity.r, identity.g, identity.b, pulse);
 shapes.rect(bossRect.x - 5f, bossRect.y - 5f, bossRect.width + 10f, 3f);
 shapes.rect(bossRect.x - 5f, bossRect.y + bossRect.height + 2f, bossRect.width + 10f, 3f);
+⋮----
+private void drawEventCueChrome(ShapeRenderer shapes, CombatHudLayout.Layout layout) {
+⋮----
+drawCuePlate(shapes, timeline, timeline.y + 88f * s,
+CombatVisualEvents.synergyAgeSeconds(), 1.65f, VisualTheme.GOLD, 1.0f, s);
+drawCuePlate(shapes, timeline, timeline.y + 62f * s,
+CombatVisualEvents.protocolAgeSeconds(), .90f, VisualTheme.CYAN, .84f, s);
+drawCuePlate(shapes, timeline, timeline.y + 44f * s,
+CombatVisualEvents.sentinelInterceptAgeSeconds(), .72f, VisualTheme.CYAN_SOFT, .68f, s);
+⋮----
+private void drawCuePlate(ShapeRenderer shapes, Rectangle timeline, float centerY,
+⋮----
+float fade = MathUtils.clamp(1f - age / duration, 0f, 1f);
+float width = Math.min(timeline.width * widthScale, 620f * s);
+float height = Math.max(22f * s, 28f * s);
+⋮----
+shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .72f * fade);
+shapes.rect(x, y, width, height);
+shapes.setColor(accent.r, accent.g, accent.b, .10f * fade);
+shapes.rect(x + 3f, y + 3f, Math.max(0f, width - 6f), Math.max(0f, height - 6f));
+shapes.setColor(accent.r, accent.g, accent.b, .78f * fade);
+shapes.rect(x, y + height - 2f, width, 2f);
+shapes.rect(x + width * .5f - Math.max(10f, width * .04f), y,
+Math.max(20f, width * .08f), 2f);
 ⋮----
 private void drawMobileControls(ShapeRenderer shapes, Player player, CombatHudLayout.Layout layout,
 ⋮----

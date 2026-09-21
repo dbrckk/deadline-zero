@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T05:52:38Z
+Generated: 2026-09-21T06:12:57Z
 
 ### Git
 - Branch: `main`
-- Head: `65692fa7b821`
-- Commit date: 2026-09-21T07:51:50+02:00
-- Commit: Premiumize home screen hierarchy (#256)
+- Head: `87758fb90b1e`
+- Commit date: 2026-09-21T08:12:45+02:00
+- Commit: ui(combat): add premium event cue plates (#257)
 - Tracked files: 834
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GearScreen.java`
 
 ### Project signals
 - `build.gradle`
