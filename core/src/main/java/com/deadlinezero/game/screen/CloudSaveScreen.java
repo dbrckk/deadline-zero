@@ -85,13 +85,14 @@ public final class CloudSaveScreen extends ScreenAdapter {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         UiRenderer.background(shapes, metrics, visualTime);
         UiRenderer.topRail(shapes, metrics);
-        UiRenderer.card(shapes, statusPanel.x, statusPanel.y, statusPanel.width, statusPanel.height, false,
-            conflict == CloudSaveService.ConflictState.DIVERGED || providerConflict);
-        UiRenderer.panel(shapes, warningPanel.x, warningPanel.y, warningPanel.width, warningPanel.height);
+        UiRenderer.premiumCard(shapes, statusPanel.x, statusPanel.y, statusPanel.width, statusPanel.height,
+            colorForState(), false, conflict == CloudSaveService.ConflictState.DIVERGED || providerConflict, !available);
+        UiRenderer.premiumPanel(shapes, warningPanel.x, warningPanel.y, warningPanel.width, warningPanel.height, VisualTheme.GOLD, false);
         for (int i = 0; i < actions.length; i++) {
             UiRenderer.ButtonState state = (!available || busy) ? UiRenderer.ButtonState.DISABLED : UiRenderer.ButtonState.NORMAL;
             if ((i == 1 && confirmUpload) || (i == 2 && confirmDownload)) state = UiRenderer.ButtonState.DANGER;
-            UiRenderer.button(shapes, actions[i].x, actions[i].y, actions[i].width, actions[i].height, state);
+            UiRenderer.premiumButton(shapes, actions[i].x, actions[i].y, actions[i].width, actions[i].height,
+                state == UiRenderer.ButtonState.DANGER ? VisualTheme.danger() : i == 1 ? VisualTheme.GOLD : i == 2 ? VisualTheme.CYAN_SOFT : VisualTheme.accent(), state);
         }
         shapes.end();
 
