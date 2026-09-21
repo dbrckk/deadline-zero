@@ -64,15 +64,15 @@ public final class RunContractScreen extends ScreenAdapter {
         for (int i = 0; i < offers.length; i++) {
             Rectangle r = cards[i];
             RunModifierContext.Modifier offer = offers[i];
-            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, offer.legendary(), offer.legendary());
             Color accent = accent(offer);
+            UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, accent, offer.legendary(), offer.legendary(), false);
             float pulse = .80f + .20f * (float) Math.sin(time * (offer.legendary() ? 4.2f : 2.4f) + i * .7f);
             shapes.setColor(accent.r, accent.g, accent.b, .70f + pulse * .18f);
             shapes.rect(r.x + 8f, r.y + 12f, 4f, r.height - 24f);
             shapes.setColor(accent.r, accent.g, accent.b, .26f + pulse * .06f);
             shapes.rect(r.x + 18f, r.y + r.height - 8f, r.width - 36f, 2f);
             Rectangle cta = cta(r);
-            UiRenderer.button(shapes, cta.x, cta.y, cta.width, cta.height,
+            UiRenderer.premiumButton(shapes, cta.x, cta.y, cta.width, cta.height, accent,
                 offer.legendary() ? UiRenderer.ButtonState.SELECTED : UiRenderer.ButtonState.NORMAL);
         }
         shapes.end();
