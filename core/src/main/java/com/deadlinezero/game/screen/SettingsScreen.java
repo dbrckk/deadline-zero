@@ -3,6 +3,7 @@ package com.deadlinezero.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -83,13 +84,14 @@ public final class SettingsScreen extends ScreenAdapter {
         for (int i = 0; i < rows.length; i++) {
             Rectangle r = rows[i];
             boolean disabled = isDisabled(i, privacyRequired, policyAvailable);
-            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == row, false);
+            Color accent = settingsAccent(i);
+            UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, accent, i == row, false, disabled);
             if (disabled) {
                 shapes.setColor(0f, 0f, 0f, .22f);
                 shapes.rect(r.x + 3f, r.y + 3f, r.width - 6f, r.height - 6f);
             } else if (isSliderRow(i)) {
                 float value = sliderValue(s, i);
-                UiRenderer.progress(shapes, r.x + r.width * .56f, r.y + 10f, r.width * .38f, 7f, value, VisualTheme.accent());
+                UiRenderer.segmentedTrack(shapes, r.x + r.width * .56f, r.y + 10f, r.width * .38f, 7f, value, 8, accent);
             }
         }
         shapes.end();
@@ -112,6 +114,12 @@ public final class SettingsScreen extends ScreenAdapter {
         batch.end();
 
         handleInput(s, privacyRequired, policyAvailable);
+    }
+
+    private Color settingsAccent(int index) {
+        if (index <= 5) return VisualTheme.CYAN_SOFT;
+        if (index <= 11) return VisualTheme.VIOLET;
+        return index <= 14 ? VisualTheme.GOLD : VisualTheme.accent();
     }
 
     private void drawRow(int index, Rectangle r, String label, String value, boolean disabled) {
