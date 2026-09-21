@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 2a18c7b7acc40e787ed269be841e4dc5c7ea8df3
-Head: 77686664d858b61f4c323c7e5035c544416637bc
+Base: e0bd8cee829634cdb89f420a3db5bd87fbd74e37
+Head: 97b32a85d661f58400aa80c581a252d621dee620
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java
+- M .github/workflows/android-test-release.yml
 
 ## Affected areas
-- core
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

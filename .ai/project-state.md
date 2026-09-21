@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T07:39:08Z
+Generated: 2026-09-21T07:57:25Z
 
 ### Git
 - Branch: `main`
-- Head: `77686664d858`
-- Commit date: 2026-09-21T09:38:56+02:00
-- Commit: ui(victory): strengthen celebration and reward hierarchy (#261)
+- Head: `97b32a85d661`
+- Commit date: 2026-09-21T09:57:12+02:00
+- Commit: ci(android): publish test APK after main game changes (#262)
 - Tracked files: 834
 
 ### Recently changed files
+- `.github/workflows/android-test-release.yml`
 - `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
 
 ### Project signals
 - `build.gradle`

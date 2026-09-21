@@ -1346,8 +1346,16 @@ name: Android Test APK
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - '.github/workflows/android-test-release.yml'
+      - 'android/**'
+      - 'core/**'
+      - 'assets/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle.properties'
 
 permissions:
   contents: write
