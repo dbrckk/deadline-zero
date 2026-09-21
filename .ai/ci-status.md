@@ -1,14 +1,23 @@
 # CI status
 
-Summary: 6 success / 0 failure / 2 active
+Summary: 4 success / 2 failure / 2 active
 
-- Verify: queued / pending (d332a8e6)
-- Responsive UI QA: in_progress / pending (d332a8e6)
-- Deadline Zero Work Watch: completed / success (72a69416)
-- Responsive UI QA: completed / success (e3bf033a)
-- Verify: completed / success (e3bf033a)
-- Verify: completed / success (87758fb9)
-- Responsive UI QA: completed / success (87758fb9)
-- Responsive UI QA: completed / success (af0d7e6e)
+- Responsive UI QA: in_progress / pending (73535e33)
+- Verify: in_progress / pending (73535e33)
+- Responsive UI QA: completed / success (a83e0fa1)
+- Verify: completed / success (a83e0fa1)
+- Verify: completed / success (26290f8f)
+- Responsive UI QA: completed / success (26290f8f)
+- Verify: completed / failure (c7332230)
+- Responsive UI QA: completed / failure (c7332230)
+
+## Latest failed run structure
+- Job: android-runtime
+  - Failed step: Smoke-test Android runtime and capture gameplay
+  - Failed step: Gate Android runtime crashes and ANRs
+- Job: core
+  - Failed step: Compile and test core
+- Job: android
+  - Failed step: Verify Android production build
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -1,10 +1,9 @@
 # Change impact
 
-Base: 72a69416aa26a34f07531146db1a36c681d5b2fd
-Head: d332a8e60e943db9c53d0eb289391c6c9a0641f9
+Base: b262433d598866bf3d5c9cdc16b83b9cbdcc7d46
+Head: 73535e33127dfda0e55a5e5b74180ff15274bd46
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
 - M core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java
 
 ## Affected areas

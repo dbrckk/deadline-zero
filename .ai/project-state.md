@@ -22,22 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T06:42:55Z
+Generated: 2026-09-21T07:08:04Z
 
 ### Git
 - Branch: `main`
-- Head: `d332a8e60e94`
-- Commit date: 2026-09-21T08:42:44+02:00
-- Commit: Add premium dash and level-up combat feedback (#258)
+- Head: `73535e33127d`
+- Commit date: 2026-09-21T09:07:53+02:00
+- Commit: Add dedicated elemental reaction combat feedback (#259)
 - Tracked files: 834
 
 ### Recently changed files
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
 
 ### Project signals
 - `build.gradle`

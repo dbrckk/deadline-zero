@@ -10163,6 +10163,7 @@ updateAndDrawSingularityImpacts(shapes, pools, time);
 deaths.drawFallback(shapes, pools.deathFx);
 legendaryFx.render(shapes, player, time, fxBudget.quality());
 drawPlayerEventFx(shapes, player);
+drawElementReactionFx(shapes, enemies);
 collectRenderEnemySubsets(enemies);
 drawLeaperTelegraphs(shapes, leaperRenderEnemies, time);
 drawBossPhaseTransitions(shapes, bossRenderEnemies, time);
@@ -10199,6 +10200,27 @@ shapes.setColor(VisualTheme.VIOLET.r, VisualTheme.VIOLET.g, VisualTheme.VIOLET.b
 shapes.circle(player.position.x, player.position.y, Math.max(.10f, radius * .62f),
 fxBudget.geometrySegments(30, 18));
 ⋮----
+private void drawElementReactionFx(ShapeRenderer shapes, Array<Enemy> enemies) {
+int segments = fxBudget.geometrySegments(30, 16);
+⋮----
+float progress = MathUtils.clamp(1f - enemy.reactionFlash / .24f, 0f, 1f);
+⋮----
+float radius = enemy.radius * MathUtils.lerp(1.25f, 2.85f, progress);
+⋮----
+shapes.setColor(primary.r, primary.g, primary.b, (.18f + .22f * fade) * fade * flashScale);
+shapes.circle(enemy.position.x, enemy.position.y, radius, segments);
+shapes.setColor(secondary.r, secondary.g, secondary.b, .22f * fade * flashScale);
+shapes.circle(enemy.position.x, enemy.position.y, Math.max(.08f, radius * .56f), Math.max(12, segments - 6));
+⋮----
+if (fxBudget.allowHeavyFx()) {
+⋮----
+shapes.setColor(primary.r, primary.g, primary.b, .20f * fade * flashScale);
+shapes.rectLine(
+enemy.position.x + MathUtils.cosDeg(angle) * inner,
+enemy.position.y + MathUtils.sinDeg(angle) * inner,
+enemy.position.x + MathUtils.cosDeg(angle) * outer,
+enemy.position.y + MathUtils.sinDeg(angle) * outer,
+⋮----
 private void updateAndDrawSingularityImpacts(ShapeRenderer shapes, Pools pools, float time) {
 float dt = Float.isNaN(lastSingularityVisualTime) ? 0f : MathUtils.clamp(time - lastSingularityVisualTime, 0f, .05f);
 ⋮----
@@ -10224,7 +10246,6 @@ shapes.circle(impact.x, impact.y, Math.max(.05f, inner), segments);
 shapes.setColor(.86f, .72f, 1f, .46f * wave * flashScale);
 shapes.circle(impact.x, impact.y, Math.max(.04f, outer * .16f), segments);
 ⋮----
-if (fxBudget.allowHeavyFx()) {
 int rays = fxBudget.allowExtraFx() ? 10 : 6;
 ⋮----
 float from = outer * (1.16f + .12f * MathUtils.sinDeg(angle * 2f));
@@ -10311,7 +10332,7 @@ int spokes = fxBudget.allowHeavyFx() ? profile.spokes : 4;
 float inner = hazard.radius() * .26f;
 float outer = hazard.radius() * (.68f + .12f * MathUtils.sinDeg(angle * 3f + time * 90f));
 shapes.setColor(1f, .34f, .03f, (warning ? .20f : .52f) * flashScale);
-shapes.rectLine(
+⋮----
 hazard.x() + MathUtils.cosDeg(angle) * inner,
 hazard.y() + MathUtils.sinDeg(angle) * inner,
 hazard.x() + MathUtils.cosDeg(angle + 7f) * outer,
