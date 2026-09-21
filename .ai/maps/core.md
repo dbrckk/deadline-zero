@@ -6226,6 +6226,7 @@ UiRenderer.card(shapes, layout.threatCard().x, layout.threatCard().y,
 layout.threatCard().width, layout.threatCard().height, false, p.selectedThreatTier > 0);
 UiRenderer.button(shapes, layout.deploy().x, layout.deploy().y,
 layout.deploy().width, layout.deploy().height, UiRenderer.ButtonState.SELECTED);
+drawHomeChrome(shapes, p);
 ⋮----
 Rectangle[] tabs = layout.bottomTabs();
 ⋮----
@@ -6238,6 +6239,33 @@ shapes.setColor(VisualTheme.DIVIDER);
 shapes.rect(tab.x, tab.y + 18f, 1f, Math.max(0f, tab.height - 36f));
 ⋮----
 shapes.end();
+⋮----
+private void drawHomeChrome(ShapeRenderer shapes, PlayerProfile p) {
+Rectangle survivor = layout.survivorCard();
+shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .18f);
+shapes.rect(survivor.x + 8f, survivor.y + 8f, Math.max(0f, survivor.width - 16f), Math.max(0f, survivor.height - 16f));
+shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .72f);
+shapes.rect(survivor.x + 8f, survivor.y + survivor.height - 5f, Math.max(0f, survivor.width - 16f), 3f);
+⋮----
+Rectangle loadout = layout.loadoutCard();
+⋮----
+shapes.setColor(weaponAccent.r, weaponAccent.g, weaponAccent.b, .46f);
+shapes.rect(loadout.x + 6f, loadout.y + loadout.height - 4f, Math.max(0f, loadout.width - 12f), 3f);
+⋮----
+Rectangle threat = layout.threatCard();
+⋮----
+shapes.setColor(threatAccent.r, threatAccent.g, threatAccent.b, p.selectedThreatTier > 0 ? .82f : .38f);
+shapes.rect(threat.x + 6f, threat.y + threat.height - 4f, Math.max(0f, threat.width - 12f), 3f);
+⋮----
+shapes.setColor(threatAccent.r, threatAccent.g, threatAccent.b, .08f);
+shapes.rect(threat.x + 7f, threat.y + 7f, Math.max(0f, threat.width - 14f), Math.max(0f, threat.height - 14f));
+⋮----
+Rectangle deploy = layout.deploy();
+float pulse = .14f + .06f * ((float)Math.sin(t * 2.4f) * .5f + .5f);
+shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, pulse);
+shapes.rect(deploy.x + 5f, deploy.y + 5f, Math.max(0f, deploy.width - 10f), Math.max(0f, deploy.height - 10f));
+shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .92f);
+shapes.rect(deploy.x + 12f, deploy.y + deploy.height - 5f, Math.max(0f, deploy.width - 24f), 3f);
 ⋮----
 private void drawContent(PlayerProfile p) {
 batch.begin();
@@ -6304,6 +6332,8 @@ font.draw(batch, t("arsenal.title"), r.x + pad, r.y + r.height - 26f);
 font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
 ⋮----
 font.draw(batch, WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase(),
+⋮----
+font.draw(batch, f("menu.deployStage", p.selectedStage), r.x + pad, r.y + r.height - 88f, r.width - pad * 2f, Align.left, false);
 ⋮----
 font.draw(batch, t("menu.arsenal"), r.x + pad, r.y + 28f);
 ⋮----

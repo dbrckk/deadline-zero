@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 0b7b267e5c3b970083a1b1b21d91e00648991c10
-Head: f56eab1092b5bf86a3bd8bc38e8f6cec702bf343
+Base: d8b20b803337a2c678d9624fbc8f2ad069d382ce
+Head: 65692fa7b8213b026f9cbe27f129378c2d3f9874
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java
 
 ## Affected areas
 - core
