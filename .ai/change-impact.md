@@ -1,13 +1,15 @@
 # Change impact
 
-Base: 6e82bdcc2d8d20febf23c6eece81d75da11678d2
-Head: a8b1e1dfd1121cc6bc13400ff54b262aa7a99dd2
+Base: 7e255cc7a2893849ae6a3e08b784ec94763d83f2
+Head: ce3b322927389fd8adf11d38045c30a356439c78
 
 ## Changed files
-- M .github/workflows/android-test-release.yml
+- M core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java
+- M core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java
 
 ## Affected areas
-- .github
+- core
 
 ## Related test candidates
 - No direct filename-based test match detected.

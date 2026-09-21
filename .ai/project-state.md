@@ -22,19 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T08:31:40Z
+Generated: 2026-09-21T09:29:05Z
 
 ### Git
 - Branch: `main`
-- Head: `a8b1e1dfd112`
-- Commit date: 2026-09-21T10:31:25+02:00
-- Commit: ci(android): initialize sdkmanager with platform tools only (#264)
+- Head: `ce3b32292738`
+- Commit date: 2026-09-21T11:28:53+02:00
+- Commit: Rework home and missions from Android visual QA (#265)
 - Tracked files: 834
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
+- `core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java`
 - `.github/workflows/android-test-release.yml`
 - `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
 
 ### Project signals
 - `build.gradle`

@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 4 success / 1 failure / 3 active
+Summary: 5 success / 0 failure / 3 active
 
-- Verify: in_progress / pending (a8b1e1df)
-- Android Test APK: in_progress / pending (a8b1e1df)
-- Responsive UI QA: in_progress / pending (a8b1e1df)
-- Verify: completed / success (0dfca00a)
-- Responsive UI QA: completed / success (0dfca00a)
-- Verify: completed / success (ab9d9406)
-- Responsive UI QA: completed / success (ab9d9406)
-- Android Test APK: completed / failure (ab9d9406)
-
-## Latest failed run structure
-- Job: build-and-publish
-  - Failed step: Install Android SDK 36
+- Android Test APK: in_progress / pending (ce3b3229)
+- Verify: in_progress / pending (ce3b3229)
+- Responsive UI QA: in_progress / pending (ce3b3229)
+- Precise semantic refresh: completed / success (7e255cc7)
+- Responsive UI QA: completed / success (fe8726b5)
+- Verify: completed / success (fe8726b5)
+- Verify: completed / success (a8b1e1df)
+- Android Test APK: completed / success (a8b1e1df)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

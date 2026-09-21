@@ -14928,7 +14928,7 @@ layout.loadoutCard().width, layout.loadoutCard().height, false, false);
 UiRenderer.card(shapes, layout.threatCard().x, layout.threatCard().y,
 layout.threatCard().width, layout.threatCard().height, false, p.selectedThreatTier > 0);
 UiRenderer.button(shapes, layout.deploy().x, layout.deploy().y,
-layout.deploy().width, layout.deploy().height, UiRenderer.ButtonState.SELECTED);
+layout.deploy().width, layout.deploy().height, UiRenderer.ButtonState.NORMAL);
 drawHomeChrome(shapes, p);
 ⋮----
 Rectangle[] tabs = layout.bottomTabs();
@@ -14945,10 +14945,14 @@ shapes.end();
 ⋮----
 private void drawHomeChrome(ShapeRenderer shapes, PlayerProfile p) {
 Rectangle survivor = layout.survivorCard();
-shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .18f);
-shapes.rect(survivor.x + 8f, survivor.y + 8f, Math.max(0f, survivor.width - 16f), Math.max(0f, survivor.height - 16f));
-shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .72f);
-shapes.rect(survivor.x + 8f, survivor.y + survivor.height - 5f, Math.max(0f, survivor.width - 16f), 3f);
+// The survivor is the hero, not a full-screen cyan slab: frame the portrait instead.
+shapes.setColor(VisualTheme.SURFACE_2);
+shapes.rect(survivor.x + 10f, survivor.y + 10f, Math.max(0f, survivor.width - 20f), Math.max(0f, survivor.height - 20f));
+⋮----
+shapes.rect(survivor.x + 10f, survivor.y + 10f, 5f, Math.max(0f, survivor.height - 20f));
+shapes.rect(survivor.x + 10f, survivor.y + survivor.height - 5f, Math.max(0f, survivor.width * .34f), 3f);
+shapes.setColor(VisualTheme.BORDER);
+shapes.rect(survivor.x + survivor.width * .46f, survivor.y + 24f, 1f, Math.max(0f, survivor.height - 48f));
 ⋮----
 Rectangle loadout = layout.loadoutCard();
 ⋮----
@@ -14964,11 +14968,12 @@ shapes.setColor(threatAccent.r, threatAccent.g, threatAccent.b, .08f);
 shapes.rect(threat.x + 7f, threat.y + 7f, Math.max(0f, threat.width - 14f), Math.max(0f, threat.height - 14f));
 ⋮----
 Rectangle deploy = layout.deploy();
-float pulse = .14f + .06f * ((float)Math.sin(t * 2.4f) * .5f + .5f);
-shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, pulse);
+float pulse = .82f + .16f * ((float)Math.sin(t * 2.4f) * .5f + .5f);
+shapes.setColor(VisualTheme.accent().r * .16f, VisualTheme.accent().g * .16f, VisualTheme.accent().b * .16f, 1f);
 shapes.rect(deploy.x + 5f, deploy.y + 5f, Math.max(0f, deploy.width - 10f), Math.max(0f, deploy.height - 10f));
-shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .92f);
-shapes.rect(deploy.x + 12f, deploy.y + deploy.height - 5f, Math.max(0f, deploy.width - 24f), 3f);
+shapes.setColor(VisualTheme.accent().r * pulse, VisualTheme.accent().g * pulse, VisualTheme.accent().b * pulse, 1f);
+shapes.rect(deploy.x + 10f, deploy.y + deploy.height - 6f, Math.max(0f, deploy.width - 20f), 4f);
+shapes.rect(deploy.x + 10f, deploy.y + 10f, 4f, Math.max(0f, deploy.height - 20f));
 ⋮----
 private void drawContent(PlayerProfile p) {
 batch.begin();
@@ -15005,7 +15010,7 @@ font.draw(batch, t("menu.tagline"), r.x + pad, r.y + r.height - 56f);
 ⋮----
 if (game.art.authoredAvailable()) {
 TextureRegion portrait = game.art.survivor(p.selectedSurvivor, GameArt.Motion.IDLE, t);
-float maxH = Math.min(300f, r.height * .62f);
+float maxH = Math.min(330f, r.height * .70f);
 ⋮----
 float aspect = portrait.getRegionWidth() / (float) Math.max(1, portrait.getRegionHeight());
 ⋮----
@@ -15015,7 +15020,7 @@ float py = r.y + Math.max(44f, (r.height - drawH) * .38f);
 batch.setColor(Color.WHITE);
 batch.draw(portrait, px, py, drawW, drawH);
 ⋮----
-font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE));
+font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE) * 1.12f);
 font.setColor(VisualTheme.TEXT_STRONG);
 font.draw(batch, p.selectedSurvivor.displayName.toUpperCase(), tx, r.y + r.height * .64f, tw, Align.left, false);
 ⋮----
@@ -15053,6 +15058,7 @@ font.draw(batch, f("menu.threatLocked", ThreatTierRules.UNLOCK_STAGE),
 ⋮----
 private void drawDeploy(PlayerProfile p) {
 Rectangle r = layout.deploy();
+font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION) * 1.12f);
 ⋮----
 font.draw(batch, t("menu.deploy"), r.x, r.y + r.height * .64f, r.width, Align.center, false);
 ⋮----
@@ -15196,6 +15202,8 @@ drawMissionStateCard(shapes, weeklyRows[1], p.weekly.runMissionClaimed,
 ⋮----
 drawMissionStateCard(shapes, weeklyRows[2], p.weekly.bossMissionClaimed,
 ⋮----
+drawMissionProgressBars(shapes, p);
+⋮----
 UiRenderer.card(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height, false, true);
 ⋮----
 AchievementService.Achievement a = AchievementService.Achievement.values()[i];
@@ -15216,21 +15224,37 @@ drawWeekly(p);
 drawProgress(p);
 batch.end();
 ⋮----
+private void drawMissionProgressBars(ShapeRenderer shapes, PlayerProfile p) {
+drawRowProgress(shapes, dailyRows[0], p.daily.loginClaimed ? 1f : 0f, VisualTheme.GOLD);
+drawRowProgress(shapes, dailyRows[1], p.daily.killsToday / 100f, VisualTheme.GOLD);
+drawRowProgress(shapes, dailyRows[2], p.daily.runsToday / 3f, VisualTheme.GOLD);
+drawRowProgress(shapes, dailyRows[3], p.daily.bossesToday, VisualTheme.GOLD);
+drawRowProgress(shapes, weeklyRows[0], p.weekly.kills / (float) WeeklyService.KILL_TARGET, VisualTheme.VIOLET);
+drawRowProgress(shapes, weeklyRows[1], p.weekly.runs / (float) WeeklyService.RUN_TARGET, VisualTheme.VIOLET);
+drawRowProgress(shapes, weeklyRows[2], p.weekly.bosses / (float) WeeklyService.BOSS_TARGET, VisualTheme.VIOLET);
+⋮----
+private void drawRowProgress(ShapeRenderer shapes, Rectangle r, float progress, Color accent) {
+float barW = Math.max(32f, r.width - 24f);
+UiRenderer.progress(shapes, r.x + 12f, r.y + 9f, barW, 5f, progress, accent);
+⋮----
 private void drawMissionStateCard(ShapeRenderer shapes, Rectangle r, boolean claimed,
 ⋮----
 UiRenderer.card(shapes, r.x, r.y, r.width, r.height, ready && !claimed, claimed);
 ⋮----
 Color stateAccent = claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : categoryAccent;
 ⋮----
-shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, alpha);
+shapes.setColor(stateAccent.r * alpha, stateAccent.g * alpha, stateAccent.b * alpha, 1f);
+shapes.rect(r.x + 5f, r.y + r.height - 5f, Math.max(0f, r.width - 10f), 3f);
+shapes.rect(r.x + 5f, r.y + 5f, 3f, Math.max(0f, r.height - 10f));
 ⋮----
-shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, .07f);
-shapes.rect(r.x + 7f, r.y + 7f, Math.max(0f, r.width - 14f), Math.max(0f, r.height - 14f));
+shapes.setColor(stateAccent.r * .10f, stateAccent.g * .10f, stateAccent.b * .10f, 1f);
+shapes.rect(r.x + 8f, r.y + 16f, Math.max(0f, r.width - 16f), Math.max(0f, r.height - 24f));
 float notch = Math.min(22f, r.width * .08f);
 shapes.setColor(stateAccent.r, stateAccent.g, stateAccent.b, .92f);
 shapes.rect(r.x + r.width - notch - 8f, r.y + 7f, notch, 3f);
 ⋮----
 shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .30f);
+shapes.rect(r.x + 7f, r.y + 7f, Math.max(0f, r.width - 14f), Math.max(0f, r.height - 14f));
 ⋮----
 private void drawHeader() {
 font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
@@ -15291,12 +15315,12 @@ font.setColor(claimed ? VisualTheme.MUTED : unlocked ? VisualTheme.accent() : Vi
 font.draw(batch, claimed ? t("missions.claimed") : unlocked ? t("common.open") : t("missions.locked"),
 ⋮----
 private void heading(String text, Rectangle panel, com.badlogic.gdx.graphics.Color color) {
-font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
+font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION) * 1.05f);
 font.setColor(color);
 font.draw(batch, text, panel.x + 16f, panel.y + panel.height - 16f, panel.width - 32f, Align.left, false);
 ⋮----
 private void drawClaimRow(Rectangle r, String text, boolean claimed, boolean ready) {
-⋮----
+font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * 1.04f);
 font.setColor(claimed ? VisualTheme.MUTED : VisualTheme.TEXT_STRONG);
 font.draw(batch, text, r.x + 12f, r.y + r.height * .64f, r.width - 24f, Align.left, true);
 font.setColor(claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : VisualTheme.TEXT_DIM);
@@ -16990,25 +17014,36 @@ public static void background(ShapeRenderer shapes, UiLayout.Metrics m, float ti
 set(shapes, VisualTheme.SURFACE_0, 1f);
 shapes.rect(0f, 0f, m.width(), m.height());
 ⋮----
-set(shapes, VisualTheme.SURFACE_1, .40f);
-shapes.rect(0f, m.height() * .68f, m.width(), m.height() * .32f);
-set(shapes, VisualTheme.SURFACE_2, .25f);
-shapes.rect(0f, 0f, m.width(), m.height() * .16f);
+set(shapes, VisualTheme.SURFACE_1, .52f);
+shapes.rect(0f, m.height() * .73f, m.width(), m.height() * .27f);
+set(shapes, VisualTheme.SURFACE_2, .34f);
+shapes.rect(0f, 0f, m.width(), m.height() * .13f);
 ⋮----
+// Keep the sci-fi scan language, but let content dominate the frame.
 boolean reduceMotion = AccessibilitySettings.active().reducedMotion;
-float pulse = reduceMotion ? .055f : .055f + .025f * (float) Math.sin(time * .9f);
+float pulse = reduceMotion ? .022f : .022f + .010f * (float) Math.sin(time * .75f);
 set(shapes, VisualTheme.accent(), pulse);
 ⋮----
-for (float y = 28f; y < m.height(); y += step) shapes.rect(0f, y, m.width(), 1f);
+for (float y = 42f; y < m.height(); y += step) shapes.rect(0f, y, m.width(), 1f);
+⋮----
+// Quiet edge rails create depth without flooding the screen with cyan.
+set(shapes, VisualTheme.BORDER, .28f);
+shapes.rect(m.safeLeft(), m.safeBottom(), 2f, m.safeTop() - m.safeBottom());
+shapes.rect(m.safeLeft() + m.contentWidth() - 2f, m.safeBottom(), 2f, m.safeTop() - m.safeBottom());
 ⋮----
 public static void panel(ShapeRenderer shapes, float x, float y, float w, float h) {
 set(shapes, VisualTheme.SURFACE_1, .985f);
 shapes.rect(x, y, w, h);
-set(shapes, VisualTheme.BORDER, .76f);
+set(shapes, VisualTheme.BORDER, .64f);
 border(shapes, x, y, w, h, 2f);
+set(shapes, VisualTheme.SURFACE_2, .72f);
+shapes.rect(x + 3f, y + h - 4f, Math.max(0f, w - 6f), 1f);
 ⋮----
 public static void card(ShapeRenderer shapes, float x, float y, float w, float h, boolean focused, boolean selected) {
 set(shapes, selected ? VisualTheme.SURFACE_2 : VisualTheme.SURFACE_1, .97f);
+⋮----
+set(shapes, VisualTheme.SURFACE_0, .36f);
+shapes.rect(x + 5f, y + 5f, Math.max(0f, w - 10f), Math.min(10f, Math.max(0f, h - 10f)));
 ⋮----
 set(shapes, border, focused || selected ? 1f : .68f);
 border(shapes, x, y, w, h, focused || selected ? 3f : 2f);
