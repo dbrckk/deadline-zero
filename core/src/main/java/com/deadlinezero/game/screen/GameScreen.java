@@ -46,6 +46,7 @@ import com.deadlinezero.game.progression.ProtocolUpgradeGuidance;
 import com.deadlinezero.game.progression.Upgrade;
 import com.deadlinezero.game.progression.UpgradeSelector;
 import com.deadlinezero.game.services.AdsService;
+import com.deadlinezero.game.ui.UiRenderer;
 import com.deadlinezero.game.util.Pools;
 import com.deadlinezero.game.visual.CombatHudRenderer;
 import com.deadlinezero.game.visual.CombatPolishController;
@@ -828,12 +829,8 @@ public final class GameScreen extends ScreenAdapter {
         float panelY = h * .265f;
         float panelW = w * .86f;
         float panelH = h * .49f;
-        shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .985f);
-        shapes.rect(panelX, panelY, panelW, panelH);
         Color panelAccent = legendary ? VisualTheme.GOLD : VisualTheme.accent();
-        shapes.setColor(panelAccent.r, panelAccent.g, panelAccent.b, legendary ? .42f : .28f);
-        shapes.rect(panelX, panelY + panelH - 3f, panelW, 3f);
-        shapes.rect(panelX, panelY, panelW, 2f);
+        UiRenderer.premiumPanel(shapes, panelX, panelY, panelW, panelH, panelAccent, true);
 
         int count = legendary ? Math.max(1, legendaryChoiceCount) : 3;
         float cardWidth = Math.min(w * .27f, panelW / Math.max(3f, count) - w * .018f);
@@ -844,20 +841,13 @@ public final class GameScreen extends ScreenAdapter {
             float left = centerX - cardWidth * .5f;
             Color accent = legendary ? VisualTheme.GOLD : VisualTheme.upgradeRarity(choices[i].rarity);
 
-            shapes.setColor(VisualTheme.SURFACE_1.r, VisualTheme.SURFACE_1.g, VisualTheme.SURFACE_1.b, .99f);
-            shapes.rect(left, cardY, cardWidth, cardHeight);
-            shapes.setColor(VisualTheme.BORDER.r, VisualTheme.BORDER.g, VisualTheme.BORDER.b, .92f);
-            shapes.rect(left, cardY, cardWidth, 2f);
-            shapes.rect(left, cardY + cardHeight - 2f, cardWidth, 2f);
-            shapes.rect(left, cardY, 2f, cardHeight);
-            shapes.rect(left + cardWidth - 2f, cardY, 2f, cardHeight);
-
-            shapes.setColor(accent.r, accent.g, accent.b, legendary ? .96f : .82f);
-            shapes.rect(left, cardY + cardHeight - 5f, cardWidth, 5f);
-            shapes.rect(left, cardY, 4f, cardHeight);
-
-            shapes.setColor(accent.r, accent.g, accent.b, legendary ? .10f : .06f);
-            shapes.rect(left + 6f, cardY + 6f, Math.max(0f, cardWidth - 12f), Math.max(0f, cardHeight - 12f));
+            UiRenderer.premiumCard(shapes, left, cardY, cardWidth, cardHeight,
+                accent, legendary, false, false);
+            float badge = Math.min(cardWidth, cardHeight) * .13f;
+            shapes.setColor(accent.r, accent.g, accent.b, legendary ? .24f : .14f);
+            shapes.circle(centerX, cardY + cardHeight * .69f, badge, 24);
+            shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .92f);
+            shapes.circle(centerX, cardY + cardHeight * .69f, badge * .48f, 20);
         }
         shapes.end();
     }
