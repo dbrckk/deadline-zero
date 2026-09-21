@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T13:19:18Z
+Generated: 2026-09-21T13:32:02Z
 
 ### Git
 - Branch: `main`
-- Head: `498410243d6a`
-- Commit date: 2026-09-21T15:19:07+02:00
-- Commit: Improve hero staging, arsenal showcase, and settings hierarchy (#269)
+- Head: `934d7ba3f8a4`
+- Commit date: 2026-09-21T15:31:47+02:00
+- Commit: qa(android): export every captured premium meta screen (#270)
 - Tracked files: 835
 
 ### Recently changed files
+- `.github/workflows/responsive-ui-qa.yml`
 - `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java`

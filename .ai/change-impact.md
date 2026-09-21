@@ -1,16 +1,13 @@
 # Change impact
 
-Base: f20fdb9cd0adb4582abf5ea415ed92951b5f4bdf
-Head: 498410243d6acf47a445b08a0fa5f4ef9c4c5453
+Base: 14e36531ad50cc14e0d9cebf6ea1fc1a13ffcee3
+Head: 934d7ba3f8a4dcbdd7422a74bd034042934d0c5a
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java
+- M .github/workflows/responsive-ui-qa.yml
 
 ## Affected areas
-- core
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
