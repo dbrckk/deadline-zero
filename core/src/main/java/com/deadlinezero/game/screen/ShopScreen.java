@@ -21,6 +21,7 @@ import com.deadlinezero.game.meta.PurchaseGrantService;
 import com.deadlinezero.game.services.AdsService;
 import com.deadlinezero.game.services.BillingService;
 import com.deadlinezero.game.ui.MetaLayout;
+import com.deadlinezero.game.ui.UiIconRenderer;
 import com.deadlinezero.game.ui.UiLayout;
 import com.deadlinezero.game.ui.UiRenderer;
 import com.deadlinezero.game.ui.UiTypography;
@@ -83,6 +84,10 @@ public final class ShopScreen extends ScreenAdapter {
             Color chestAccent = i == 0 ? VisualTheme.CYAN_SOFT : i == 1 ? VisualTheme.VIOLET : VisualTheme.positive();
             UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, chestAccent, i == 2 && !disabled, false, disabled);
             drawChestChrome(shapes, r, i, disabled);
+            float iconSize = Math.min(52f, r.width * .13f);
+            UiIconRenderer.draw(shapes, UiIconRenderer.Icon.CHEST,
+                r.x + r.width * .5f - iconSize * .5f, r.y + r.height * .67f - iconSize * .5f,
+                iconSize, chestAccent, disabled ? .28f : .92f);
             Rectangle button = chestButton(r);
             UiRenderer.premiumButton(shapes, button.x, button.y, button.width, button.height, chestAccent,
                 disabled ? UiRenderer.ButtonState.DISABLED : i == 2 ? UiRenderer.ButtonState.SELECTED : UiRenderer.ButtonState.NORMAL);
@@ -99,6 +104,10 @@ public final class ShopScreen extends ScreenAdapter {
                     : featured ? UiRenderer.ButtonState.SELECTED
                     : UiRenderer.ButtonState.NORMAL);
             drawOfferChrome(shapes, r, i, owned || !enabled, featured);
+            UiIconRenderer.Icon offerIcon = i == 0 ? UiIconRenderer.Icon.TROPHY
+                : i == 3 ? UiIconRenderer.Icon.SETTINGS : UiIconRenderer.Icon.GEMS;
+            UiIconRenderer.draw(shapes, offerIcon, r.x + 14f, r.y + r.height - 32f, 18f,
+                offerAccent, owned || !enabled ? .32f : .80f);
         }
         shapes.end();
 
@@ -190,10 +199,10 @@ public final class ShopScreen extends ScreenAdapter {
             Rectangle r = chestCards[i];
             font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
             font.setColor(i == 0 ? VisualTheme.CYAN_SOFT : i == 1 ? VisualTheme.VIOLET : VisualTheme.positive());
-            font.draw(batch, titles[i], r.x + 18f, r.y + r.height - 28f, r.width - 36f, Align.center, false);
+            font.draw(batch, titles[i], r.x + 18f, r.y + r.height - 28f, r.width - 36f, Align.left, false);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
             font.setColor(VisualTheme.TEXT_DIM);
-            font.draw(batch, descriptions[i], r.x + 26f, r.y + r.height * .57f, r.width - 52f, Align.center, true);
+            font.draw(batch, descriptions[i], r.x + 26f, r.y + r.height * .50f, r.width - 52f, Align.center, true);
             Rectangle b = chestButton(r);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
             font.setColor(i == 2 && p.daily.rewardedChestClaimed ? VisualTheme.MUTED : VisualTheme.TEXT_STRONG);
