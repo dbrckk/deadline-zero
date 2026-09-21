@@ -200,7 +200,7 @@ public final class GearScreen extends ScreenAdapter {
                 detail.width - 40f, Align.center, false);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
             font.setColor(VisualTheme.CYAN_SOFT);
-            font.draw(batch, "EQUIPMENT BAY  •  AWAITING RECOVERED GEAR", detail.x + 20f,
+            font.draw(batch, t("gear.emptyBay"), detail.x + 20f,
                 detail.y + detail.height * .18f, detail.width - 40f, Align.center, false);
         } else {
             for (int i = pageStart; i < pageEnd; i++) drawCard(game.profile.inventory.items().get(i), i, pageStart);
