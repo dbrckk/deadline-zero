@@ -545,11 +545,13 @@ public final class CombatPolishController {
             if (!enemy.alive || enemy.type != Enemy.Type.BOSS || enemy.bossCombat == null || !enemy.bossCombat.revenant()) continue;
             float pulse = .86f + MathUtils.sin(time * (enemy.bossCombat.charging() ? 18f : 8f)) * .14f;
             float radius = enemy.radius * (1.72f + pulse * .24f);
-            shapes.setColor(.68f, .10f, .95f, .13f + .08f * pulse);
-            shapes.circle(enemy.position.x, enemy.position.y, radius, 30);
+            shapes.setColor(.68f, .10f, .95f, .46f);
+            drawIdentityRing(shapes, enemy.position.x, enemy.position.y, radius, 10, .085f);
             if (fxBudget.allowHeavyFx()) {
-                shapes.setColor(1f, .10f, .22f, .16f + .08f * pulse);
-                shapes.circle(enemy.position.x, enemy.position.y, enemy.radius * (1.28f + pulse * .12f), 26);
+                float inner = enemy.radius * (1.28f + pulse * .12f);
+                shapes.setColor(1f, .10f, .22f, .42f);
+                drawIdentitySpikes(shapes, enemy.position.x, enemy.position.y, inner,
+                    enemy.radius * .22f, 6, time * 26f);
             }
         }
     }
@@ -559,16 +561,60 @@ public final class CombatPolishController {
             if (!enemy.alive || enemy.type != Enemy.Type.BOSS || enemy.bossCombat == null || !enemy.bossCombat.warden()) continue;
             float pulse = .90f + MathUtils.sin(time * (enemy.bossCombat.charging() ? 9f : 4.5f)) * .10f;
             float outer = enemy.radius * (2.02f + pulse * .18f);
-            shapes.setColor(.10f, .55f, .82f, .12f + .07f * pulse);
-            shapes.circle(enemy.position.x, enemy.position.y, outer, 32);
-            shapes.setColor(.96f, .62f, .12f, .18f + .07f * pulse);
-            shapes.circle(enemy.position.x, enemy.position.y, enemy.radius * (1.46f + pulse * .08f), 28);
+            shapes.setColor(.10f, .55f, .82f, .44f);
+            drawIdentityRing(shapes, enemy.position.x, enemy.position.y, outer, 12, .078f);
+            shapes.setColor(.96f, .62f, .12f, .46f);
+            drawIdentityBrackets(shapes, enemy.position.x, enemy.position.y,
+                enemy.radius * (1.46f + pulse * .08f), enemy.radius * .28f);
             if (fxBudget.allowHeavyFx()) {
                 float ring = enemy.radius * (2.32f + MathUtils.sin(time * 3.2f) * .08f);
-                shapes.setColor(.75f, .88f, 1f, .07f);
-                shapes.circle(enemy.position.x, enemy.position.y, ring, 34);
+                shapes.setColor(.75f, .88f, 1f, .22f);
+                drawIdentityRing(shapes, enemy.position.x, enemy.position.y, ring, 8, .050f);
             }
         }
+    }
+
+    private void drawIdentityRing(ShapeRenderer shapes, float cx, float cy,
+                                  float radius, int count, float pipRadius) {
+        int safeCount = Math.max(4, count);
+        for (int i = 0; i < safeCount; i++) {
+            float angle = i * (360f / safeCount);
+            shapes.circle(cx + MathUtils.cosDeg(angle) * radius,
+                cy + MathUtils.sinDeg(angle) * radius, pipRadius, 8);
+        }
+    }
+
+    private void drawIdentitySpikes(ShapeRenderer shapes, float cx, float cy,
+                                    float radius, float size, int count, float rotation) {
+        int safeCount = Math.max(3, count);
+        for (int i = 0; i < safeCount; i++) {
+            float angle = rotation + i * (360f / safeCount);
+            float ox = MathUtils.cosDeg(angle);
+            float oy = MathUtils.sinDeg(angle);
+            float tx = -oy;
+            float ty = ox;
+            float tipX = cx + ox * radius;
+            float tipY = cy + oy * radius;
+            float baseX = cx + ox * (radius + size);
+            float baseY = cy + oy * (radius + size);
+            shapes.triangle(tipX, tipY,
+                baseX + tx * size * .42f, baseY + ty * size * .42f,
+                baseX - tx * size * .42f, baseY - ty * size * .42f);
+        }
+    }
+
+    private void drawIdentityBrackets(ShapeRenderer shapes, float cx, float cy,
+                                      float radius, float length) {
+        float t = Math.max(.028f, length * .11f);
+        float d = radius;
+        shapes.rect(cx - d, cy + d - t, length, t);
+        shapes.rect(cx - d, cy + d - length, t, length);
+        shapes.rect(cx + d - length, cy + d - t, length, t);
+        shapes.rect(cx + d - t, cy + d - length, t, length);
+        shapes.rect(cx - d, cy - d, length, t);
+        shapes.rect(cx - d, cy - d, t, length);
+        shapes.rect(cx + d - length, cy - d, length, t);
+        shapes.rect(cx + d - t, cy - d, t, length);
     }
 
     public void drawAuthoredDeaths(SpriteBatch batch, Pools pools) {
