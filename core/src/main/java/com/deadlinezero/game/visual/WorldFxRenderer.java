@@ -232,49 +232,17 @@ public final class WorldFxRenderer {
             if (speed < .001f) continue;
             float nx = p.velocity.x / speed;
             float ny = p.velocity.y / speed;
-            Color c = switch (p.element) {
-                case FIRE -> Color.ORANGE;
-                case FROST -> Color.CYAN;
-                case SHOCK -> VisualTheme.VIOLET;
-                default -> p.critical ? VisualTheme.GOLD : VisualTheme.CYAN;
-            };
+            PlayerProjectilePresentation.Profile visual = PlayerProjectilePresentation.profile(p);
+            Color c = visual.color();
 
-            float trailLength = p.critical ? .85f : .58f;
-            float trailWidth = p.critical ? .09f : .055f;
-            float alpha = p.critical ? .72f : .46f;
-            if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {
-                c = Color.CYAN;
-                trailLength = 1.28f;
-                trailWidth = .105f;
-                alpha = .90f;
-            } else if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {
-                c = Color.ORANGE;
-                trailLength = 1.12f;
-                trailWidth = .13f;
-                alpha = .88f;
-            }
-
-            shapes.setColor(c.r, c.g, c.b, alpha * MathUtils.lerp(.65f, 1f, q));
+            shapes.setColor(c.r, c.g, c.b, visual.alpha() * MathUtils.lerp(.65f, 1f, q));
             shapes.rectLine(p.position.x, p.position.y,
-                p.position.x - nx * trailLength,
-                p.position.y - ny * trailLength,
-                trailWidth);
+                p.position.x - nx * visual.trailLength(),
+                p.position.y - ny * visual.trailLength(),
+                visual.trailWidth());
 
-            if (p.weaponSignature && budget.allowHeavyFx()) {
-                float sideX = -ny;
-                float sideY = nx;
-                if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.ION_OVERCHARGE) {
-                    shapes.setColor(.86f, .96f, 1f, .74f);
-                    shapes.rectLine(p.position.x - sideX * .10f, p.position.y - sideY * .10f,
-                        p.position.x - nx * .92f + sideX * .10f, p.position.y - ny * .92f + sideY * .10f, .028f);
-                    shapes.setColor(.55f, .34f, 1f, .58f);
-                    shapes.circle(p.position.x - nx * .28f, p.position.y - ny * .28f, .095f, budget.geometrySegments(12, 7));
-                } else if (p.weaponSignatureKind == WeaponSignatureRuntime.Kind.CINDER_OVERHEAT) {
-                    shapes.setColor(1f, .20f, .02f, .42f);
-                    shapes.circle(p.position.x - nx * .24f, p.position.y - ny * .24f, .18f, budget.geometrySegments(14, 8));
-                    shapes.setColor(1f, .92f, .40f, .76f);
-                    shapes.circle(p.position.x, p.position.y, .085f, budget.geometrySegments(10, 6));
-                }
+            if (budget.allowHeavyFx()) {
+                drawPlayerProjectileAccent(shapes, p, visual, nx, ny);
             }
 
             if (p.life > 1.41f && budget.allowHeavyFx()) {
@@ -282,12 +250,13 @@ public final class WorldFxRenderer {
                 float by = p.position.y - ny * .20f;
                 float sideX = -ny;
                 float sideY = nx;
-                shapes.setColor(1f, .86f, .30f, .70f);
+                Color accent = visual.accent();
+                shapes.setColor(accent.r, accent.g, accent.b, .62f);
                 shapes.triangle(bx - sideX * .12f, by - sideY * .12f,
                     bx + sideX * .12f, by + sideY * .12f,
                     bx + nx * .55f, by + ny * .55f);
-                shapes.setColor(1f, 1f, .82f, .88f);
-                shapes.circle(bx, by, .105f, budget.geometrySegments(10, 6));
+                shapes.setColor(1f, 1f, .88f, .84f);
+                shapes.circle(bx, by, .105f * visual.coreScale(), budget.geometrySegments(10, 6));
             }
         }
 
@@ -358,6 +327,86 @@ public final class WorldFxRenderer {
                 shapes.circle(m.position.x - nx * (.22f + i * .22f) + ny * jitter,
                     m.position.y - ny * (.22f + i * .22f) - nx * jitter,
                     .10f * (1f - t * .45f), budget.geometrySegments(10, 6));
+            }
+        }
+    }
+
+    private void drawPlayerProjectileAccent(ShapeRenderer shapes, Projectile p,
+                                            PlayerProjectilePresentation.Profile visual,
+                                            float nx, float ny) {
+        Color accent = visual.accent();
+        float sideX = -ny;
+        float sideY = nx;
+        float core = Math.max(.055f, p.radius * visual.coreScale());
+
+        switch (visual.style()) {
+            case RAIL -> {
+                shapes.setColor(1f, 1f, 1f, .78f);
+                shapes.rectLine(p.position.x, p.position.y,
+                    p.position.x - nx * visual.trailLength() * .82f,
+                    p.position.y - ny * visual.trailLength() * .82f,
+                    Math.max(.014f, visual.trailWidth() * .38f));
+                shapes.setColor(accent.r, accent.g, accent.b, .34f);
+                shapes.circle(p.position.x, p.position.y, core * .72f, budget.geometrySegments(10, 6));
+            }
+            case SCATTER -> {
+                shapes.setColor(accent.r, accent.g, accent.b, .38f);
+                shapes.rectLine(p.position.x - sideX * core, p.position.y - sideY * core,
+                    p.position.x - nx * .30f - sideX * core * 1.6f,
+                    p.position.y - ny * .30f - sideY * core * 1.6f, .025f);
+                shapes.rectLine(p.position.x + sideX * core, p.position.y + sideY * core,
+                    p.position.x - nx * .30f + sideX * core * 1.6f,
+                    p.position.y - ny * .30f + sideY * core * 1.6f, .025f);
+            }
+            case INFERNO, CINDER, PHOENIX -> {
+                shapes.setColor(accent.r, accent.g, accent.b, visual.signature() ? .56f : .34f);
+                shapes.circle(p.position.x - nx * .22f, p.position.y - ny * .22f,
+                    core * (visual.signature() ? 1.32f : .88f), budget.geometrySegments(14, 8));
+                shapes.setColor(1f, .90f, .45f, visual.signature() ? .78f : .48f);
+                shapes.circle(p.position.x, p.position.y, core * .48f, budget.geometrySegments(10, 6));
+            }
+            case CRYO, WHITEOUT -> {
+                float shard = core * (visual.signature() ? 2.0f : 1.35f);
+                shapes.setColor(accent.r, accent.g, accent.b, visual.signature() ? .70f : .42f);
+                shapes.triangle(
+                    p.position.x + sideX * shard, p.position.y + sideY * shard,
+                    p.position.x - sideX * shard, p.position.y - sideY * shard,
+                    p.position.x + nx * shard * 1.55f, p.position.y + ny * shard * 1.55f);
+                if (visual.signature()) {
+                    shapes.setColor(1f, 1f, 1f, .58f);
+                    shapes.rectLine(p.position.x + sideX * shard * .72f, p.position.y + sideY * shard * .72f,
+                        p.position.x - nx * .55f + sideX * shard * 1.18f,
+                        p.position.y - ny * .55f + sideY * shard * 1.18f, .024f);
+                    shapes.rectLine(p.position.x - sideX * shard * .72f, p.position.y - sideY * shard * .72f,
+                        p.position.x - nx * .55f - sideX * shard * 1.18f,
+                        p.position.y - ny * .55f - sideY * shard * 1.18f, .024f);
+                }
+            }
+            case ARC, ION, TEMPEST -> {
+                float separation = core * (visual.signature() ? 1.25f : .82f);
+                shapes.setColor(accent.r, accent.g, accent.b, visual.signature() ? .70f : .42f);
+                shapes.rectLine(p.position.x + sideX * separation, p.position.y + sideY * separation,
+                    p.position.x - nx * visual.trailLength() * .68f - sideX * separation,
+                    p.position.y - ny * visual.trailLength() * .68f - sideY * separation,
+                    visual.signature() ? .030f : .020f);
+                if (visual.signature()) {
+                    shapes.setColor(1f, 1f, 1f, .58f);
+                    shapes.circle(p.position.x - nx * .24f, p.position.y - ny * .24f,
+                        core * .64f, budget.geometrySegments(10, 6));
+                }
+            }
+            case BREACHER -> {
+                shapes.setColor(accent.r, accent.g, accent.b, .42f);
+                shapes.circle(p.position.x - nx * .14f, p.position.y - ny * .14f,
+                    core * 1.15f, budget.geometrySegments(12, 7));
+                shapes.setColor(1f, .78f, .34f, .42f);
+                shapes.rectLine(p.position.x - sideX * core, p.position.y - sideY * core,
+                    p.position.x + sideX * core, p.position.y + sideY * core, .035f);
+            }
+            case VANGUARD -> {
+                if (!p.critical) return;
+                shapes.setColor(accent.r, accent.g, accent.b, .48f);
+                shapes.circle(p.position.x, p.position.y, core, budget.geometrySegments(10, 6));
             }
         }
     }
