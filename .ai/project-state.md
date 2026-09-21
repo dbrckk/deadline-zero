@@ -22,21 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T06:12:57Z
+Generated: 2026-09-21T06:42:55Z
 
 ### Git
 - Branch: `main`
-- Head: `87758fb90b1e`
-- Commit date: 2026-09-21T08:12:45+02:00
-- Commit: ui(combat): add premium event cue plates (#257)
+- Head: `d332a8e60e94`
+- Commit date: 2026-09-21T08:42:44+02:00
+- Commit: Add premium dash and level-up combat feedback (#258)
 - Tracked files: 834
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
 
 ### Project signals
 - `build.gradle`

@@ -13961,6 +13961,7 @@ player.velocity.set(move).scl(player.moveSpeed);
 if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && player.canDash() && move.len2() > .08f) {
 player.position.mulAdd(move, 4.8f);
 player.triggerDash();
+CombatVisualEvents.markDash();
 if (game.accessibility != null && game.accessibility.haptics) game.services.haptics.dash();
 addCameraShake(.12f);
 impact(player.position.x, player.position.y, .9f, .16f, VisualTheme.CYAN);
@@ -18852,12 +18853,42 @@ updateAndDrawHazards(shapes, player, pools, time);
 updateAndDrawSingularityImpacts(shapes, pools, time);
 deaths.drawFallback(shapes, pools.deathFx);
 legendaryFx.render(shapes, player, time, fxBudget.quality());
+drawPlayerEventFx(shapes, player);
 collectRenderEnemySubsets(enemies);
 drawLeaperTelegraphs(shapes, leaperRenderEnemies, time);
 drawBossPhaseTransitions(shapes, bossRenderEnemies, time);
 drawRevenantIdentity(shapes, bossRenderEnemies, time);
 drawWardenIdentity(shapes, bossRenderEnemies, time);
 if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) lights.draw(shapes, player, enemies, pools, time);
+⋮----
+private void drawPlayerEventFx(ShapeRenderer shapes, Player player) {
+float dashAge = CombatVisualEvents.dashAgeSeconds();
+⋮----
+float progress = MathUtils.clamp(dashAge / .36f, 0f, 1f);
+⋮----
+float radius = player.radius * MathUtils.lerp(1.25f, 3.15f, progress);
+⋮----
+shapes.setColor(VisualTheme.CYAN.r, VisualTheme.CYAN.g, VisualTheme.CYAN.b,
+⋮----
+shapes.circle(player.position.x, player.position.y, radius, fxBudget.geometrySegments(32, 18));
+shapes.setColor(VisualTheme.CYAN_SOFT.r, VisualTheme.CYAN_SOFT.g, VisualTheme.CYAN_SOFT.b,
+⋮----
+shapes.circle(player.position.x, player.position.y, Math.max(.08f, radius * .54f),
+fxBudget.geometrySegments(28, 16));
+⋮----
+float levelAge = CombatVisualEvents.levelUpAgeSeconds();
+⋮----
+float progress = MathUtils.clamp(levelAge / .82f, 0f, 1f);
+⋮----
+float radius = player.radius * MathUtils.lerp(1.45f, 4.25f, progress);
+⋮----
+shapes.setColor(VisualTheme.GOLD.r, VisualTheme.GOLD.g, VisualTheme.GOLD.b,
+⋮----
+shapes.circle(player.position.x, player.position.y, radius, fxBudget.geometrySegments(36, 20));
+shapes.setColor(VisualTheme.VIOLET.r, VisualTheme.VIOLET.g, VisualTheme.VIOLET.b,
+⋮----
+shapes.circle(player.position.x, player.position.y, Math.max(.10f, radius * .62f),
+fxBudget.geometrySegments(30, 18));
 ⋮----
 private void updateAndDrawSingularityImpacts(ShapeRenderer shapes, Pools pools, float time) {
 float dt = Float.isNaN(lastSingularityVisualTime) ? 0f : MathUtils.clamp(time - lastSingularityVisualTime, 0f, .05f);
