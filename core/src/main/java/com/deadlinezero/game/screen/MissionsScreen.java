@@ -97,9 +97,12 @@ public final class MissionsScreen extends ScreenAdapter {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         UiRenderer.background(shapes, metrics, visualTime);
         UiRenderer.topRail(shapes, metrics);
-        UiRenderer.panel(shapes, dailyPanel.x, dailyPanel.y, dailyPanel.width, dailyPanel.height);
-        UiRenderer.panel(shapes, weeklyPanel.x, weeklyPanel.y, weeklyPanel.width, weeklyPanel.height);
-        UiRenderer.panel(shapes, progressPanel.x, progressPanel.y, progressPanel.width, progressPanel.height);
+        UiRenderer.premiumPanel(shapes, dailyPanel.x, dailyPanel.y, dailyPanel.width, dailyPanel.height,
+            VisualTheme.GOLD, false);
+        UiRenderer.premiumPanel(shapes, weeklyPanel.x, weeklyPanel.y, weeklyPanel.width, weeklyPanel.height,
+            VisualTheme.VIOLET, false);
+        UiRenderer.premiumPanel(shapes, progressPanel.x, progressPanel.y, progressPanel.width, progressPanel.height,
+            VisualTheme.accent(), false);
         UiRenderer.sectionBand(shapes, dailyPanel.x + 6f, dailyPanel.y + dailyPanel.height - 42f,
             dailyPanel.width - 12f, 34f, VisualTheme.GOLD);
         UiRenderer.sectionBand(shapes, weeklyPanel.x + 6f, weeklyPanel.y + weeklyPanel.height - 42f,
@@ -119,15 +122,17 @@ public final class MissionsScreen extends ScreenAdapter {
             p.weekly.bosses >= WeeklyService.BOSS_TARGET, VisualTheme.VIOLET);
         drawMissionProgressBars(shapes, p);
 
-        UiRenderer.card(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height, false, true);
+        UiRenderer.premiumPanel(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height,
+            VisualTheme.accent(), true);
         drawMissionIcons(shapes, p);
         for (int i = 0; i < achievementRows.length; i++) {
             AchievementService.Achievement a = AchievementService.Achievement.values()[i];
             boolean unlocked = AchievementService.unlocked(p, a);
             boolean claimed = p.achievements.claimed(a);
             Rectangle r = achievementRows[i];
-            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, unlocked && !claimed, claimed);
             Color accent = claimed ? VisualTheme.MUTED : unlocked ? VisualTheme.GOLD : VisualTheme.BORDER;
+            UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, accent,
+                unlocked && !claimed, claimed, false);
             shapes.setColor(accent.r, accent.g, accent.b, claimed ? .18f : unlocked ? .78f : .28f);
             shapes.rect(r.x + 5f, r.y + r.height - 4f, Math.max(0f, r.width - 10f), 3f);
         }
@@ -182,9 +187,9 @@ public final class MissionsScreen extends ScreenAdapter {
 
     private void drawMissionStateCard(ShapeRenderer shapes, Rectangle r, boolean claimed,
                                       boolean ready, Color categoryAccent) {
-        UiRenderer.card(shapes, r.x, r.y, r.width, r.height, ready && !claimed, claimed);
-
         Color stateAccent = claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : categoryAccent;
+        UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, stateAccent,
+            ready && !claimed, claimed, false);
         float alpha = claimed ? .34f : ready ? 1f : .74f;
         shapes.setColor(stateAccent.r * alpha, stateAccent.g * alpha, stateAccent.b * alpha, 1f);
         shapes.rect(r.x + 5f, r.y + r.height - 5f, Math.max(0f, r.width - 10f), 3f);
