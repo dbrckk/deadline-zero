@@ -1,13 +1,19 @@
 # Change impact
 
-Base: b37e839e73780a9802241a98d1a382a467e5f7d8
-Head: 54382353d2063b3c564a8a8dac2c96d0e863f13f
+Base: be8e94010ae659993e854438d529ccb0241df767
+Head: 3baf4dc01aaeee4a186aa3d152fbf1e22d0976f6
 
 ## Changed files
-- M .github/workflows/shambler-android-acceptance.yml
+- M .github/workflows/responsive-ui-qa.yml
+- M android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java
+- M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
+- A core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java
+- A core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java
 
 ## Affected areas
 - .github
+- android
+- core
 
 ## Related test candidates
 - No direct filename-based test match detected.

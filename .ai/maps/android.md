@@ -293,6 +293,18 @@ capture("revenant-crowd.png");
 ⋮----
 capture("revenant-attack.png");
 ⋮----
+public void capturesBossRevealCameraFraming() throws Exception {
+⋮----
+assertTrue("expected GameScreen for boss reveal visual probe", game.getScreen() instanceof GameScreen);
+⋮----
+GameScreen screen = (GameScreen) game.getScreen();
+Enemy boss = injectRevenantBossForReveal(screen);
+armBossReveal(screen, boss);
+⋮----
+// The profile peaks at roughly half of its 1.2 s reveal window.
+Thread.sleep(560L);
+capture("boss-reveal-framing.png");
+⋮----
 public void capturesWardenGameplayAndAttackFrames() throws Exception {
 ⋮----
 assertTrue("expected GameScreen for WARDEN visual probe", game.getScreen() instanceof GameScreen);
@@ -617,6 +629,22 @@ throw new AssertionError("unable to inject WARDEN boss for visual QA", exception
 private static void injectRevenantBoss(GameScreen screen) {
 ⋮----
 throw new AssertionError("unable to inject REVENANT boss for visual QA", exception);
+⋮----
+private static Enemy injectRevenantBossForReveal(GameScreen screen) {
+⋮----
+Enemy boss = new Enemy(Enemy.Type.BOSS, 0f, 3.8f, 500_000f, .015f, .78f, 0f, 2);
+enemies.add(boss);
+⋮----
+private static void armBossReveal(GameScreen screen, Enemy boss) {
+⋮----
+Field target = GameScreen.class.getDeclaredField("bossRevealTarget");
+target.setAccessible(true);
+target.set(screen, boss);
+Field timer = GameScreen.class.getDeclaredField("bossRevealTimer");
+timer.setAccessible(true);
+timer.setFloat(screen, com.deadlinezero.game.visual.BossRevealCameraProfile.DURATION);
+⋮----
+throw new AssertionError("unable to arm boss reveal camera for visual QA", exception);
 ⋮----
 private static void injectAuthoredEnemyCrowd(GameScreen screen) {
 ⋮----

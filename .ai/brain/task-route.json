@@ -4,15 +4,15 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 0,
+    "score_margin": 3,
     "tier": "bounded",
-    "top_score": 27
+    "top_score": 36
   },
   "cache": {
-    "fingerprint": "1cf299914b95797c74496042b1ba22fa6e07ee7cd9934071ffe471825e0633a4",
+    "fingerprint": "307a5a4b5d24e423c66cc5377eb9441e372271c0ec00eae2708b90cb31b11145",
     "hit": false
   },
-  "candidate_count": 416,
+  "candidate_count": 418,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,33 +20,19 @@
       "matched_terms": [
         "game"
       ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 27,
-      "symbols": [
-        "AndroidFirstPlayableJourneyTest",
-        "activity",
-        "game",
-        "run",
-        "traversesContractCombatDefeatAndVictorySettlement"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
       "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
       "reasons": [
+        "impact",
+        "recently-changed",
         "search-index"
       ],
-      "score": 27,
+      "score": 36,
       "symbols": [
         "AndroidGameplayVisualProbeTest",
         "activity",
+        "armBossReveal",
         "capture",
+        "capturesBossRevealCameraFraming",
         "capturesChampionVariantCrowd",
         "capturesCinderGunnerGameplayAndAttackFrames",
         "capturesCloudSaveScreen",
@@ -61,9 +47,7 @@
         "capturesNullWardGameplayAndAttackFrames",
         "capturesPhaseStalkerGameplayAndAttackFrames",
         "capturesRevenantGameplayAndAttackFrames",
-        "capturesRexGameplayAndAttackFrames",
-        "capturesShamblerGameplayAndAttackFrames",
-        "capturesSlagGuardGameplayAndAttackFrames"
+        "capturesRexGameplayAndAttackFrames"
       ]
     },
     {
@@ -71,16 +55,18 @@
       "matched_terms": [
         "game"
       ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java",
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
       "reasons": [
+        "impact",
         "search-index"
       ],
-      "score": 27,
+      "score": 33,
       "symbols": [
-        "AndroidLauncherSmokeTest",
-        "assertAttachedAndAlive",
-        "launcherCreatesRealLibgdxSurfaceAndStaysAlive",
-        "launcherSurvivesBackgroundForegroundAndActivityRecreation"
+        "AndroidFirstPlayableJourneyTest",
+        "activity",
+        "game",
+        "run",
+        "traversesContractCombatDefeatAndVictorySettlement"
       ]
     },
     {
@@ -90,9 +76,10 @@
       ],
       "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
       "reasons": [
+        "impact",
         "search-index"
       ],
-      "score": 27,
+      "score": 33,
       "symbols": [
         "AndroidPerformanceProbeTest",
         "activity",
@@ -110,31 +97,12 @@
       "matched_terms": [
         "game"
       ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidProcessPersistenceTest.java",
-      "reasons": [
-        "search-index"
-      ],
-      "score": 27,
-      "symbols": [
-        "AndroidProcessPersistenceTest",
-        "activity",
-        "game",
-        "phase",
-        "runOnGameThread",
-        "seedProfileBeforeExternalProcessDeath",
-        "verifyProfileAfterExternalProcessRestart"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
       "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
       "reasons": [
+        "impact",
         "search-index"
       ],
-      "score": 27,
+      "score": 33,
       "symbols": [
         "AndroidResponsiveUiVisualProbeTest",
         "activity",
@@ -145,6 +113,57 @@
         "game",
         "runOnGameThread",
         "settleAndCapture"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+      "reasons": [
+        "impact",
+        "search-index"
+      ],
+      "score": 33,
+      "symbols": [
+        "AndroidVerticalSliceTest",
+        "activity",
+        "allowFrames",
+        "game",
+        "interruptedAndroidRunReturnsToMenuWithoutSettlementOrRewards",
+        "realAndroidRuntimeCompletesM0VerticalSliceAndPersistsSettlement",
+        "runOnGameThread"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "reasons": [
+        "impact",
+        "search-index"
+      ],
+      "score": 33,
+      "symbols": [
+        "DeadlineZeroGame",
+        "applyCloudRestore",
+        "finishRun",
+        "finishRunInternal",
+        "finishVictory",
+        "saveProfile",
+        "showArsenal",
+        "showCloudSave",
+        "showGear",
+        "showMenu",
+        "showMissions",
+        "showSettings",
+        "showShop",
+        "showSurvivors",
+        "startRun",
+        "startRunWithContract"
       ]
     }
   ],

@@ -324,6 +324,7 @@ core/
                 BootstrapEnvironmentArt.java
                 BootstrapVfxArt.java
                 BossPhaseTransitionProfile.java
+                BossRevealCameraProfile.java
                 ChampionBadgeRenderer.java
                 ChampionVariantPresentation.java
                 CharacterSpriteRenderer.java
@@ -528,6 +529,7 @@ core/
                 BootstrapVfxArtTest.java
                 BossIdentityArtRoutingTest.java
                 BossPhaseTransitionProfileTest.java
+                BossRevealCameraProfileTest.java
                 ChampionVariantPresentationTest.java
                 CharacterSpriteFacingTest.java
                 CombatHudLayoutTest.java
@@ -2398,10 +2400,27 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
+      - name: Initialize Android SDK tools
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+
+      - name: Preinstall emulator SDK dependencies
+        run: |
+          set -euo pipefail
+          yes | sdkmanager --licenses >/dev/null || true
+          for attempt in 1 2 3; do
+            sdkmanager --install emulator 'system-images;android-35;default;x86_64' && break
+            if [ "$attempt" -eq 3 ]; then exit 1; fi
+            rm -rf "$ANDROID_SDK_ROOT/emulator" "$ANDROID_SDK_ROOT/.temp" || true
+            sleep $((attempt * 4))
+          done
+
       - name: Capture 1536x691 responsive UI
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
+          force-avd-creation: false
           arch: x86_64
           profile: pixel_2
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
@@ -4656,6 +4675,18 @@ capture("revenant-crowd.png");
 ⋮----
 capture("revenant-attack.png");
 ⋮----
+public void capturesBossRevealCameraFraming() throws Exception {
+⋮----
+assertTrue("expected GameScreen for boss reveal visual probe", game.getScreen() instanceof GameScreen);
+⋮----
+GameScreen screen = (GameScreen) game.getScreen();
+Enemy boss = injectRevenantBossForReveal(screen);
+armBossReveal(screen, boss);
+⋮----
+// The profile peaks at roughly half of its 1.2 s reveal window.
+Thread.sleep(560L);
+capture("boss-reveal-framing.png");
+⋮----
 public void capturesWardenGameplayAndAttackFrames() throws Exception {
 ⋮----
 assertTrue("expected GameScreen for WARDEN visual probe", game.getScreen() instanceof GameScreen);
@@ -4980,6 +5011,22 @@ throw new AssertionError("unable to inject WARDEN boss for visual QA", exception
 private static void injectRevenantBoss(GameScreen screen) {
 ⋮----
 throw new AssertionError("unable to inject REVENANT boss for visual QA", exception);
+⋮----
+private static Enemy injectRevenantBossForReveal(GameScreen screen) {
+⋮----
+Enemy boss = new Enemy(Enemy.Type.BOSS, 0f, 3.8f, 500_000f, .015f, .78f, 0f, 2);
+enemies.add(boss);
+⋮----
+private static void armBossReveal(GameScreen screen, Enemy boss) {
+⋮----
+Field target = GameScreen.class.getDeclaredField("bossRevealTarget");
+target.setAccessible(true);
+target.set(screen, boss);
+Field timer = GameScreen.class.getDeclaredField("bossRevealTimer");
+timer.setAccessible(true);
+timer.setFloat(screen, com.deadlinezero.game.visual.BossRevealCameraProfile.DURATION);
+⋮----
+throw new AssertionError("unable to arm boss reveal camera for visual QA", exception);
 ⋮----
 private static void injectAuthoredEnemyCrowd(GameScreen screen) {
 ⋮----
@@ -14097,8 +14144,18 @@ cameraShake = Math.max(0f, cameraShake - dt * 2.7f);
 // Mobile survivor-shooter framing: keep the operative readable and let the arena move around
 // them. A small velocity look-ahead preserves anticipation without making the camera floaty.
 ⋮----
-cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, .11f);
-cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, .11f);
+bossRevealTimer = Math.max(0f, bossRevealTimer - dt);
+⋮----
+float reveal = BossRevealCameraProfile.envelope(bossRevealTimer);
+float focus = BossRevealCameraProfile.focusWeight(reveal, reducedMotion);
+⋮----
+cameraTargetX = MathUtils.lerp(cameraTargetX, midpointX, focus);
+cameraTargetY = MathUtils.lerp(cameraTargetY, midpointY, focus);
+cameraZoomTarget = BossRevealCameraProfile.zoom(COMBAT_CAMERA_ZOOM, reveal, reducedMotion);
+⋮----
+cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, bossRevealTimer > 0f ? .15f : .11f);
+cam.position.y = MathUtils.lerp(cam.position.y, cameraTargetY, bossRevealTimer > 0f ? .15f : .11f);
+cam.zoom = MathUtils.lerp(cam.zoom, cameraZoomTarget, .12f);
 polish.applyCameraRecoil(cam);
 ⋮----
 private void updateEnemies(float dt) {
@@ -14331,7 +14388,8 @@ default -> new Enemy(t, x, y, 52 * scale, 2.55f, .46f, 10, 8);
 enemies.add(e);
 spatial.add(e);
 abilitySystem.onEnemySpawned(e);
-if (t == Enemy.Type.BOSS) director.onBossSpawned();
+⋮----
+director.onBossSpawned();
 ⋮----
 private void fire(Enemy target) {
 aim.set(target.position).sub(player.position).nor();
@@ -18635,6 +18693,25 @@ public static Spec forPhase(BossIdentity identity, int phase) {
 int safePhase = Math.max(2, Math.min(3, phase));
 ⋮----
 return new Spec(duration, radius, pitch, vibration);
+````
+
+## File: core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java
+````java
+/** Pure timing/comfort profile for the short non-blocking camera reveal when a boss enters. */
+public final class BossRevealCameraProfile {
+⋮----
+public static float envelope(float remainingSeconds) {
+float remaining = MathUtils.clamp(remainingSeconds, 0f, DURATION);
+⋮----
+return MathUtils.sin(progress * MathUtils.PI);
+⋮----
+public static float focusWeight(float envelope, boolean reducedMotion) {
+⋮----
+return MAX_FOCUS_WEIGHT * MathUtils.clamp(envelope, 0f, 1f);
+⋮----
+public static float zoom(float baseZoom, float envelope, boolean reducedMotion) {
+⋮----
+return baseZoom + MAX_ZOOM_OUT * MathUtils.clamp(envelope, 0f, 1f);
 ````
 
 ## File: core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java
@@ -28020,6 +28097,28 @@ assertTrue(alpha.audioPitch() > warden.audioPitch());
 var frost = BossPhaseTransitionProfile.forPhase(BossIdentity.FROST_COLOSSUS, 3);
 ⋮----
 assertTrue(frost.audioPitch() < alpha.audioPitch());
+````
+
+## File: core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java
+````java
+final class BossRevealCameraProfileTest {
+@Test void revealEnvelopeStartsAndEndsAtRest() {
+assertEquals(0f, BossRevealCameraProfile.envelope(BossRevealCameraProfile.DURATION), .0001f);
+assertEquals(0f, BossRevealCameraProfile.envelope(0f), .0001f);
+float midpoint = BossRevealCameraProfile.envelope(BossRevealCameraProfile.DURATION * .5f);
+assertTrue(midpoint > .98f);
+⋮----
+@Test void revealNeverExceedsComfortBounds() {
+⋮----
+float e = BossRevealCameraProfile.envelope(remaining);
+assertTrue(e >= 0f && e <= 1.001f);
+assertTrue(BossRevealCameraProfile.focusWeight(e, false)
+⋮----
+assertTrue(BossRevealCameraProfile.zoom(.88f, e, false)
+⋮----
+@Test void reducedMotionDisablesSpecialCameraMovement() {
+assertEquals(0f, BossRevealCameraProfile.focusWeight(1f, true), .0001f);
+assertEquals(.88f, BossRevealCameraProfile.zoom(.88f, 1f, true), .0001f);
 ````
 
 ## File: core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java

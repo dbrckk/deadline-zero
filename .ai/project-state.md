@@ -22,16 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T17:48:58Z
+Generated: 2026-09-21T19:02:16Z
 
 ### Git
 - Branch: `main`
-- Head: `54382353d206`
-- Commit date: 2026-09-21T19:48:45+02:00
-- Commit: Stop Shambler acceptance from failing when no smoke source exists (#280)
-- Tracked files: 845
+- Head: `3baf4dc01aae`
+- Commit date: 2026-09-21T21:01:56+02:00
+- Commit: Add non-blocking boss reveal camera framing (#281)
+- Tracked files: 847
 
 ### Recently changed files
+- `.github/workflows/responsive-ui-qa.yml`
+- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
+- `core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java`
 - `.github/workflows/shambler-android-acceptance.yml`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
@@ -45,10 +50,6 @@ Generated: 2026-09-21T17:48:58Z
 - `core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java`
 - `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java`
-- `core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java`
 
 ### Project signals
 - `build.gradle`

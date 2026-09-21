@@ -1,20 +1,20 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 461
-- Files reparsed this run: 0
-- Symbols: 2639
-- Internal import edges: 687
-- Impacted files: 0
-- Selected tests: 0
+- Files indexed: 463
+- Files reparsed this run: 4
+- Symbols: 2647
+- Internal import edges: 688
+- Impacted files: 10
+- Selected tests: 7
 
 ## Languages
-- java: 412 files
+- java: 414 files
 - python: 49 files
 
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
-- android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 50 symbols
+- android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 53 symbols
 - core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 44 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 34 symbols
@@ -43,10 +43,10 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 0
-- outline files retained: 459
-- top-level items retained: 2944
-- direct members retained: 3405
+- AST files reparsed this run: 4
+- outline files retained: 461
+- top-level items retained: 2951
+- direct members retained: 3418
 - symbol shards: 27
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 
