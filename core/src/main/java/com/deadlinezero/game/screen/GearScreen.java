@@ -19,6 +19,7 @@ import com.deadlinezero.game.meta.EquipmentUpgradeService;
 import com.deadlinezero.game.meta.ThreatMilestoneRewardCatalog;
 import com.deadlinezero.game.meta.ThreatSetBonusRules;
 import com.deadlinezero.game.ui.ResponsiveGrid;
+import com.deadlinezero.game.ui.UiIconRenderer;
 import com.deadlinezero.game.ui.UiLayout;
 import com.deadlinezero.game.ui.UiRenderer;
 import com.deadlinezero.game.ui.UiTypography;
@@ -95,6 +96,7 @@ public final class GearScreen extends ScreenAdapter {
         UiRenderer.premiumPanel(shapes, detail.x, detail.y, detail.width, detail.height,
             size > 0 ? rarityColor(game.profile.inventory.items().get(index).rarity) : VisualTheme.CYAN_SOFT, true);
         if (size > 0) drawDetailChrome(shapes, game.profile.inventory.items().get(index));
+        else drawEmptyGearState(shapes);
 
         for (int i = pageStart; i < pageEnd; i++) {
             Rectangle r = cardBounds[i - pageStart];
@@ -113,6 +115,19 @@ public final class GearScreen extends ScreenAdapter {
         UiRenderer.premiumButton(shapes, actions[3].x, actions[3].y, actions[3].width, actions[3].height, VisualTheme.VIOLET,
             size > 0 ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
         shapes.end();
+    }
+
+    private void drawEmptyGearState(ShapeRenderer shapes) {
+        float size = Math.min(118f, detail.height * .42f);
+        float x = detail.x + detail.width * .5f - size * .5f;
+        float y = detail.y + detail.height * .53f - size * .5f;
+        UiRenderer.iconBadge(shapes, x - 12f, y - 12f, size + 24f, VisualTheme.CYAN_SOFT, false);
+        UiIconRenderer.draw(shapes, UiIconRenderer.Icon.GEAR, x, y, size, VisualTheme.CYAN_SOFT, .72f);
+
+        float railW = Math.min(detail.width * .48f, 520f);
+        float railX = detail.x + (detail.width - railW) * .5f;
+        float railY = detail.y + detail.height * .23f;
+        UiRenderer.segmentedTrack(shapes, railX, railY, railW, 8f, .18f, 10, VisualTheme.CYAN_SOFT);
     }
 
     private void drawGearCardChrome(ShapeRenderer shapes, Rectangle r, EquipmentItem item,
@@ -179,10 +194,14 @@ public final class GearScreen extends ScreenAdapter {
             metrics.headerBottom() + 48f, metrics.contentWidth() * .34f, Align.right, false);
 
         if (size == 0) {
-            font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
-            font.setColor(VisualTheme.TEXT_DIM);
-            font.draw(batch, t("gear.empty"), detail.x + 20f, detail.y + detail.height * .58f,
+            font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION) * 1.08f);
+            font.setColor(VisualTheme.TEXT_STRONG);
+            font.draw(batch, t("gear.empty"), detail.x + 20f, detail.y + detail.height * .29f,
                 detail.width - 40f, Align.center, false);
+            font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+            font.setColor(VisualTheme.CYAN_SOFT);
+            font.draw(batch, "EQUIPMENT BAY  •  AWAITING RECOVERED GEAR", detail.x + 20f,
+                detail.y + detail.height * .18f, detail.width - 40f, Align.center, false);
         } else {
             for (int i = pageStart; i < pageEnd; i++) drawCard(game.profile.inventory.items().get(i), i, pageStart);
             drawDetail(game.profile.inventory.items().get(index), size);
