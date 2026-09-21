@@ -31,6 +31,7 @@
         "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
         "core/src/main/java/com/deadlinezero/game/meta/StageRules.java",
         "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
+        "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
         "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
         "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyBehaviorRules.java",
         "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java"
@@ -113,7 +114,7 @@
         "core/src/test/java/com/deadlinezero/game/world/WaveDirectorTest.java"
       ],
       "in_degree": 75,
-      "out_degree": 15,
+      "out_degree": 16,
       "path": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java"
     },
     {
@@ -238,6 +239,8 @@
         "core/src/main/java/com/deadlinezero/game/visual/HostileProjectilePresentation.java",
         "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
         "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+        "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
         "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
         "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
         "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
@@ -257,7 +260,7 @@
         "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java"
       ],
       "in_degree": 9,
-      "out_degree": 52,
+      "out_degree": 54,
       "path": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java"
     },
     {
@@ -377,6 +380,7 @@
         "core/src/main/java/com/deadlinezero/game/visual/LegendaryFxRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/LocalLightRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
+        "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/WeaponLegendaryPresentation.java",
         "core/src/main/java/com/deadlinezero/game/visual/WeaponRenderer.java",
         "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
@@ -392,7 +396,7 @@
         "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java"
       ],
-      "in_degree": 43,
+      "in_degree": 44,
       "out_degree": 15,
       "path": "core/src/main/java/com/deadlinezero/game/entities/Player.java"
     },
@@ -850,6 +854,8 @@
         "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
         "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
         "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+        "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
         "core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java",
         "core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java",
         "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
@@ -858,9 +864,10 @@
         "core/src/test/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidanceTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java",
         "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java"
+        "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
+        "core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java"
       ],
-      "in_degree": 23,
+      "in_degree": 26,
       "out_degree": 10,
       "path": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java"
     },
@@ -1229,6 +1236,39 @@
     },
     {
       "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/config/AccessibilitySettings.java",
+        "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java",
+        "core/src/main/java/com/deadlinezero/game/progression/UpgradeRarity.java"
+      ],
+      "dependents": [
+        "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+        "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/LocalLightRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
+        "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java"
+      ],
+      "in_degree": 21,
+      "out_degree": 3,
+      "path": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java"
+    },
+    {
+      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
         "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
@@ -1355,38 +1395,6 @@
       "in_degree": 21,
       "out_degree": 2,
       "path": "core/src/main/java/com/deadlinezero/game/meta/ThreatTierRules.java"
-    },
-    {
-      "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/config/AccessibilitySettings.java",
-        "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java",
-        "core/src/main/java/com/deadlinezero/game/progression/UpgradeRarity.java"
-      ],
-      "dependents": [
-        "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java",
-        "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
-        "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
-        "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/LocalLightRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-        "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java"
-      ],
-      "in_degree": 20,
-      "out_degree": 3,
-      "path": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java"
     },
     {
       "dependencies": [
@@ -2327,8 +2335,8 @@
       "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java"
     }
   ],
-  "edge_count": 2333,
+  "edge_count": 2350,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 448,
+  "node_count": 451,
   "schema_version": 1
 }

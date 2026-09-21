@@ -1,18 +1,18 @@
 # CI status
 
-Summary: 3 success / 1 failure / 3 active
+Summary: 1 success / 1 failure / 6 active
 
-- Responsive UI QA: in_progress / pending (cab667e2)
-- Android Test APK: in_progress / pending (cab667e2)
-- Verify: in_progress / pending (cab667e2)
-- Verify: completed / success (50035b8d)
-- Responsive UI QA: completed / success (50035b8d)
-- Verify: completed / cancelled (3c49e4f0)
-- Responsive UI QA: completed / failure (3c49e4f0)
-- Responsive UI QA: completed / success (c4f23a62)
+- Android Test APK: in_progress / pending (c6903415)
+- Responsive UI QA: in_progress / pending (c6903415)
+- Verify: queued / pending (c6903415)
+- Responsive UI QA: in_progress / pending (c13686da)
+- Verify: queued / pending (c13686da)
+- Responsive UI QA: completed / success (78a8d73e)
+- Verify: in_progress / pending (78a8d73e)
+- Shambler Android Acceptance: completed / failure (78a8d73e)
 
 ## Latest failed run structure
-- Job: wide-phone-ui
-  - Failed step: Capture 1536x691 responsive UI
+- Job: android-visual
+  - Failed step: Resolve validated Shambler smoke
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

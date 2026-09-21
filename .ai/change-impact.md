@@ -1,16 +1,13 @@
 # Change impact
 
-Base: 912c61f58dd105456c5bd3d5b3d282dc9564a101
-Head: cab667e21d40ed3e2c9522240a3678f5975a2cd7
+Base: 159d37249cf4ed0ab80008dfc6c15c159aa0752f
+Head: c69034156b76d4ab397316433ebd68c357d7fd96
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java
-- M core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java
-- M core/src/main/java/com/deadlinezero/game/entities/Projectile.java
 - M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
-- A core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java
-- M core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java
-- A core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java
+- A core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java
+- A core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java
+- A core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java
 
 ## Affected areas
 - core

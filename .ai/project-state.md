@@ -22,20 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T17:00:29Z
+Generated: 2026-09-21T17:16:26Z
 
 ### Git
 - Branch: `main`
-- Head: `cab667e21d40`
-- Commit date: 2026-09-21T19:00:17+02:00
-- Commit: Differentiate every weapon family using Zombie Waves reference findings (#274)
-- Tracked files: 838
+- Head: `c69034156b76`
+- Commit date: 2026-09-21T19:16:14+02:00
+- Commit: Replace generic upgrade rings with functional skill iconography (#275)
+- Tracked files: 841
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java`
+- `core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java`
+- `core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java`
 - `core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java`
 - `core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java`
 - `core/src/main/java/com/deadlinezero/game/entities/Projectile.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java`
 - `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
 - `core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java`
@@ -49,9 +52,6 @@ Generated: 2026-09-21T17:00:29Z
 - `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
 - `docs/PREMIUM_VISUAL_GAP_AUDIT.md`
 - `assets/i18n/messages.properties`
-- `core/src/main/java/com/deadlinezero/game/screen/GearScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java`
 
 ### Project signals
 - `build.gradle`

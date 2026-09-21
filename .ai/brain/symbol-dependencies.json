@@ -5,1350 +5,11 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "AudioCueLimiter": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-        "start": 7,
-        "end": 63
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AudioDirector",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 11,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "allow",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-              "line": 10,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "minIntervalNanos",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-              "line": 25,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "reset",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-              "line": 56,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "allow": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-        "start": 11,
-        "end": 24
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AudioDirector",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 11,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "minIntervalNanos",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-              "line": 25,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "minIntervalNanos": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-        "start": 26,
-        "end": 55
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AudioDirector",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 11,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "reset": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-        "start": 57,
-        "end": 62
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "AudioDirector": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 11,
-        "end": 184
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AudioCueLimiter",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MusicProfileSelector",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-              "line": 5,
-              "kind": "enum",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
-              "line": 8,
-              "kind": "record",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 29,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "applyMusicVolume",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 162,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "dispose",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 172,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "fallbackCue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 69,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 55,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "loadMusic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 60,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "normalizeVolume",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 167,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "play",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 104,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 110,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "playGlobal",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 101,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 103,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "resolveMusic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 95,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "resolveSound",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 84,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "resume",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 146,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "setVolumes",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 155,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "startCombatMusic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 116,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 118,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "stopCombatMusic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 132,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "suspend",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 138,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 19
-    },
-    "Cue": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 12,
-        "end": 132
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AudioCueLimiter",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "AudioDirector",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 11,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "MusicProfileSelector",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-              "line": 5,
-              "kind": "enum",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
-              "line": 8,
-              "kind": "record",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 29,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "fallbackCue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 69,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "load",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 55,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "loadMusic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 60,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "play",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 104,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 110,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "playGlobal",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 101,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 103,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "resolveMusic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 95,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "resolveSound",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 84,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "startCombatMusic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 116,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 118,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "load": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 56,
-        "end": 59
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "loadMusic": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 61,
-        "end": 68
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MusicProfileSelector",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-              "line": 5,
-              "kind": "enum",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
-              "line": 8,
-              "kind": "record",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 29,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "fallbackCue": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 70,
-        "end": 83
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "resolveSound": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 85,
-        "end": 94
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "fallbackCue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 69,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "resolveMusic": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 96,
-        "end": 100
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "MusicProfileSelector",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-              "line": 5,
-              "kind": "enum",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
-              "line": 8,
-              "kind": "record",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 29,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "playGlobal": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 102,
-        "end": 102
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "play",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 104,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 110,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "play": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 105,
-        "end": 109
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "resolveSound",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 84,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "startCombatMusic": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 117,
-        "end": 117
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "stopCombatMusic": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 133,
-        "end": 137
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "suspend": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 139,
-        "end": 145
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "resume": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 147,
-        "end": 154
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "play",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 104,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 110,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "setVolumes": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 156,
-        "end": 161
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "applyMusicVolume",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 162,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "normalizeVolume",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 167,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "applyMusicVolume": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 163,
-        "end": 166
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "normalizeVolume": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 168,
-        "end": 171
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "dispose": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "start": 173,
-        "end": 183
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "Projectile": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-        "start": 9,
-        "end": 57
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AudioDirector",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 11,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "DamageElement",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
-              "line": 2,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Enemy",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 18,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Kind",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "ShotModifier",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 16,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "SingularityCoreRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SingularityCoreRuntime.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "active",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SingularityCoreRuntime.java",
-              "line": 20,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "consumeShot",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 52,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "consumeShotMark",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SingularityCoreRuntime.java",
-              "line": 14,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "playGlobal",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 101,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 103,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "spawn",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 25,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 13
-    },
-    "spawn": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-        "start": 26,
-        "end": 56
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AudioDirector",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 11,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Cue",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 12,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "DamageElement",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
-              "line": 2,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Projectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "ShotModifier",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 16,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "SingularityCoreRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SingularityCoreRuntime.java",
-              "line": 4,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "active",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SingularityCoreRuntime.java",
-              "line": 20,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "consumeShot",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 52,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "consumeShotMark",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/meta/SingularityCoreRuntime.java",
-              "line": 14,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "playGlobal",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 101,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-              "line": 103,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 11
-    },
     "GameScreen": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 62,
-        "end": 1076
+        "start": 63,
+        "end": 1086
       },
       "symbol_dependencies": [
         {
@@ -1837,8 +498,8 @@
     "performanceSnapshot": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 140,
-        "end": 142
+        "start": 141,
+        "end": 143
       },
       "symbol_dependencies": [
         {
@@ -1907,8 +568,8 @@
     "effectiveFrameRateTarget": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 144,
-        "end": 146
+        "start": 145,
+        "end": 147
       },
       "symbol_dependencies": [
         {
@@ -1929,8 +590,8 @@
     "thermalLevel": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 148,
-        "end": 150
+        "start": 149,
+        "end": 151
       },
       "symbol_dependencies": [
         {
@@ -1963,8 +624,8 @@
     "effectiveFxQuality": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 152,
-        "end": 154
+        "start": 153,
+        "end": 155
       },
       "symbol_dependencies": [
         {
@@ -1991,8 +652,8 @@
     "activeEnemyCount": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 156,
-        "end": 160
+        "start": 157,
+        "end": 161
       },
       "symbol_dependencies": [
         {
@@ -2013,8 +674,8 @@
     "activeProjectileCount": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 162,
-        "end": 168
+        "start": 163,
+        "end": 169
       },
       "symbol_dependencies": [
         {
@@ -2089,8 +750,8 @@
     "activeSpatialBucketCount": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 170,
-        "end": 172
+        "start": 171,
+        "end": 173
       },
       "symbol_dependencies": [
         {
@@ -2111,8 +772,8 @@
     "retainedSpatialBucketCount": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 174,
-        "end": 176
+        "start": 175,
+        "end": 177
       },
       "symbol_dependencies": [
         {
@@ -2133,8 +794,8 @@
     "update": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 178,
-        "end": 237
+        "start": 179,
+        "end": 238
       },
       "symbol_dependencies": [
         {
@@ -2244,7 +905,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -2298,7 +959,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1061,
+              "line": 1071,
               "kind": "symbol",
               "language": "java"
             }
@@ -2310,7 +971,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 587,
+              "line": 588,
               "kind": "symbol",
               "language": "java"
             }
@@ -2334,7 +995,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -2442,7 +1103,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 562,
+              "line": 563,
               "kind": "symbol",
               "language": "java"
             }
@@ -2466,7 +1127,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 238,
+              "line": 239,
               "kind": "symbol",
               "language": "java"
             }
@@ -2478,7 +1139,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 419,
+              "line": 420,
               "kind": "symbol",
               "language": "java"
             }
@@ -2490,7 +1151,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 376,
+              "line": 377,
               "kind": "symbol",
               "language": "java"
             }
@@ -2539,8 +1200,8 @@
     "updateEnemies": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 239,
-        "end": 292
+        "start": 240,
+        "end": 293
       },
       "symbol_dependencies": [
         {
@@ -2632,7 +1293,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -2644,7 +1305,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 357,
+              "line": 358,
               "kind": "symbol",
               "language": "java"
             }
@@ -2680,7 +1341,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 509,
+              "line": 510,
               "kind": "symbol",
               "language": "java"
             }
@@ -2704,7 +1365,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -2716,7 +1377,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 526,
+              "line": 527,
               "kind": "symbol",
               "language": "java"
             }
@@ -2728,7 +1389,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 436,
+              "line": 437,
               "kind": "symbol",
               "language": "java"
             }
@@ -2758,7 +1419,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 326,
+              "line": 327,
               "kind": "symbol",
               "language": "java"
             }
@@ -2795,8 +1456,8 @@
     "bossSummonType": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 294,
-        "end": 297
+        "start": 295,
+        "end": 298
       },
       "symbol_dependencies": [
         {
@@ -2841,8 +1502,8 @@
     "spawnBossMinions": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 327,
-        "end": 356
+        "start": 328,
+        "end": 357
       },
       "symbol_dependencies": [
         {
@@ -2922,7 +1583,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -2934,13 +1595,13 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 293,
+              "line": 294,
               "kind": "symbol",
               "language": "java"
             },
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 298,
+              "line": 299,
               "kind": "symbol",
               "language": "java"
             }
@@ -2964,7 +1625,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -2989,8 +1650,8 @@
     "bossEnragePulse": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 358,
-        "end": 375
+        "start": 359,
+        "end": 376
       },
       "symbol_dependencies": [
         {
@@ -3034,7 +1695,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -3046,7 +1707,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -3058,7 +1719,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 479,
+              "line": 480,
               "kind": "symbol",
               "language": "java"
             }
@@ -3071,8 +1732,8 @@
     "updatePlayerProjectiles": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 377,
-        "end": 418
+        "start": 378,
+        "end": 419
       },
       "symbol_dependencies": [
         {
@@ -3206,7 +1867,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -3242,7 +1903,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 488,
+              "line": 489,
               "kind": "symbol",
               "language": "java"
             }
@@ -3266,7 +1927,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 521,
+              "line": 522,
               "kind": "symbol",
               "language": "java"
             }
@@ -3278,7 +1939,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -3314,7 +1975,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 526,
+              "line": 527,
               "kind": "symbol",
               "language": "java"
             }
@@ -3363,8 +2024,8 @@
     "updateHostileProjectiles": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 420,
-        "end": 435
+        "start": 421,
+        "end": 436
       },
       "symbol_dependencies": [
         {
@@ -3426,7 +2087,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 509,
+              "line": 510,
               "kind": "symbol",
               "language": "java"
             }
@@ -3438,7 +2099,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -3451,8 +2112,8 @@
     "resolveEnemyAttack": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 437,
-        "end": 478
+        "start": 438,
+        "end": 479
       },
       "symbol_dependencies": [
         {
@@ -3556,7 +2217,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -3586,7 +2247,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -3628,7 +2289,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 479,
+              "line": 480,
               "kind": "symbol",
               "language": "java"
             }
@@ -3653,8 +2314,8 @@
     "spawnHostileShot": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 480,
-        "end": 487
+        "start": 481,
+        "end": 488
       },
       "symbol_dependencies": [
         {
@@ -3789,8 +2450,8 @@
     "chainShock": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 489,
-        "end": 508
+        "start": 490,
+        "end": 509
       },
       "symbol_dependencies": [
         {
@@ -3888,7 +2549,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 521,
+              "line": 522,
               "kind": "symbol",
               "language": "java"
             }
@@ -3900,7 +2561,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -3942,7 +2603,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 526,
+              "line": 527,
               "kind": "symbol",
               "language": "java"
             }
@@ -3991,8 +2652,8 @@
     "damagePlayer": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 510,
-        "end": 520
+        "start": 511,
+        "end": 521
       },
       "symbol_dependencies": [
         {
@@ -4012,7 +2673,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -4036,7 +2697,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 521,
+              "line": 522,
               "kind": "symbol",
               "language": "java"
             }
@@ -4048,7 +2709,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -4073,8 +2734,8 @@
     "damageNumber": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 522,
-        "end": 525
+        "start": 523,
+        "end": 526
       },
       "symbol_dependencies": [
         {
@@ -4131,8 +2792,8 @@
     "onEnemyKilled": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 527,
-        "end": 561
+        "start": 528,
+        "end": 562
       },
       "symbol_dependencies": [
         {
@@ -4200,7 +2861,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -4224,7 +2885,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -4260,7 +2921,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 624,
+              "line": 625,
               "kind": "symbol",
               "language": "java"
             }
@@ -4273,8 +2934,8 @@
     "spawnEnemy": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 563,
-        "end": 586
+        "start": 564,
+        "end": 587
       },
       "symbol_dependencies": [
         {
@@ -4444,7 +3105,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1059,
+              "line": 1069,
               "kind": "symbol",
               "language": "java"
             }
@@ -4457,8 +3118,8 @@
     "fire": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 588,
-        "end": 613
+        "start": 589,
+        "end": 614
       },
       "symbol_dependencies": [
         {
@@ -4574,7 +3235,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -4779,8 +3440,8 @@
     "addCameraShake": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 615,
-        "end": 618
+        "start": 616,
+        "end": 619
       },
       "symbol_dependencies": [],
       "dependency_count": 0
@@ -4788,8 +3449,8 @@
     "impact": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 620,
-        "end": 623
+        "start": 621,
+        "end": 624
       },
       "symbol_dependencies": [
         {
@@ -4809,7 +3470,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1061,
+              "line": 1071,
               "kind": "symbol",
               "language": "java"
             }
@@ -4858,8 +3519,8 @@
     "prepareUpgrade": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 625,
-        "end": 634
+        "start": 626,
+        "end": 635
       },
       "symbol_dependencies": [
         {
@@ -4897,7 +3558,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 635,
+              "line": 636,
               "kind": "symbol",
               "language": "java"
             }
@@ -4922,8 +3583,8 @@
     "prepareStandardUpgrade": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 636,
-        "end": 639
+        "start": 637,
+        "end": 640
       },
       "symbol_dependencies": [
         {
@@ -4962,8 +3623,8 @@
     "finishRun": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 641,
-        "end": 645
+        "start": 642,
+        "end": 646
       },
       "symbol_dependencies": [
         {
@@ -4996,8 +3657,8 @@
     "draw": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 647,
-        "end": 747
+        "start": 648,
+        "end": 748
       },
       "symbol_dependencies": [
         {
@@ -5221,7 +3882,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 785,
+              "line": 786,
               "kind": "symbol",
               "language": "java"
             }
@@ -5245,7 +3906,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 806,
+              "line": 807,
               "kind": "symbol",
               "language": "java"
             }
@@ -5269,7 +3930,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 748,
+              "line": 749,
               "kind": "symbol",
               "language": "java"
             }
@@ -5293,7 +3954,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 821,
+              "line": 822,
               "kind": "symbol",
               "language": "java"
             }
@@ -5329,7 +3990,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1061,
+              "line": 1071,
               "kind": "symbol",
               "language": "java"
             }
@@ -5408,8 +4069,8 @@
     "drawEnemy": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 749,
-        "end": 784
+        "start": 750,
+        "end": 785
       },
       "symbol_dependencies": [
         {
@@ -5466,8 +4127,8 @@
     "drawAbilityObjects": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 786,
-        "end": 805
+        "start": 787,
+        "end": 806
       },
       "symbol_dependencies": [
         {
@@ -5512,8 +4173,8 @@
     "drawCombatText": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 807,
-        "end": 820
+        "start": 808,
+        "end": 821
       },
       "symbol_dependencies": [
         {
@@ -5575,7 +4236,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 646,
+              "line": 647,
               "kind": "symbol",
               "language": "java"
             }
@@ -5588,8 +4249,8 @@
     "drawHud": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 822,
-        "end": 834
+        "start": 823,
+        "end": 835
       },
       "symbol_dependencies": [
         {
@@ -5621,7 +4282,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 835,
+              "line": 836,
               "kind": "symbol",
               "language": "java"
             }
@@ -5633,7 +4294,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 869,
+              "line": 876,
               "kind": "symbol",
               "language": "java"
             }
@@ -5645,7 +4306,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 974,
+              "line": 984,
               "kind": "symbol",
               "language": "java"
             }
@@ -5657,7 +4318,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 908,
+              "line": 915,
               "kind": "symbol",
               "language": "java"
             }
@@ -5669,7 +4330,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 930,
+              "line": 937,
               "kind": "symbol",
               "language": "java"
             }
@@ -5706,8 +4367,8 @@
     "drawChoiceBackdrop": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 836,
-        "end": 868
+        "start": 837,
+        "end": 875
       },
       "symbol_dependencies": [
         {
@@ -5716,6 +4377,18 @@
             {
               "file": "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java",
               "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "UpgradeIconRenderer",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+              "line": 12,
               "kind": "class",
               "language": "java"
             }
@@ -5771,6 +4444,18 @@
           "relation": "imported_module"
         },
         {
+          "symbol": "draw",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 647,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
           "symbol": "premiumCard",
           "definitions": [
             {
@@ -5807,13 +4492,13 @@
           "relation": "imported_module"
         }
       ],
-      "dependency_count": 7
+      "dependency_count": 9
     },
     "drawGameOverBackdrop": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 870,
-        "end": 907
+        "start": 877,
+        "end": 914
       },
       "symbol_dependencies": [
         {
@@ -5882,8 +4567,8 @@
     "drawLegendaryText": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 909,
-        "end": 929
+        "start": 916,
+        "end": 936
       },
       "symbol_dependencies": [
         {
@@ -5933,7 +4618,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 646,
+              "line": 647,
               "kind": "symbol",
               "language": "java"
             }
@@ -5945,7 +4630,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1061,
+              "line": 1071,
               "kind": "symbol",
               "language": "java"
             }
@@ -5957,7 +4642,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1059,
+              "line": 1069,
               "kind": "symbol",
               "language": "java"
             }
@@ -5988,8 +4673,8 @@
     "drawUpgradeText": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 931,
-        "end": 973
+        "start": 938,
+        "end": 983
       },
       "symbol_dependencies": [
         {
@@ -6063,7 +4748,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 646,
+              "line": 647,
               "kind": "symbol",
               "language": "java"
             }
@@ -6075,7 +4760,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1061,
+              "line": 1071,
               "kind": "symbol",
               "language": "java"
             }
@@ -6123,7 +4808,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1059,
+              "line": 1069,
               "kind": "symbol",
               "language": "java"
             }
@@ -6166,8 +4851,8 @@
     "drawGameOverText": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 975,
-        "end": 993
+        "start": 985,
+        "end": 1003
       },
       "symbol_dependencies": [
         {
@@ -6223,7 +4908,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 646,
+              "line": 647,
               "kind": "symbol",
               "language": "java"
             }
@@ -6235,7 +4920,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1061,
+              "line": 1071,
               "kind": "symbol",
               "language": "java"
             }
@@ -6271,7 +4956,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1059,
+              "line": 1069,
               "kind": "symbol",
               "language": "java"
             }
@@ -6284,8 +4969,8 @@
     "handleOverlayInput": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 995,
-        "end": 1044
+        "start": 1005,
+        "end": 1054
       },
       "symbol_dependencies": [
         {
@@ -6329,7 +5014,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -6377,7 +5062,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 1045,
+              "line": 1055,
               "kind": "symbol",
               "language": "java"
             }
@@ -6389,7 +5074,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 640,
+              "line": 641,
               "kind": "symbol",
               "language": "java"
             }
@@ -6401,7 +5086,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -6413,7 +5098,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 635,
+              "line": 636,
               "kind": "symbol",
               "language": "java"
             }
@@ -6426,8 +5111,8 @@
     "applyUpgradeWithSynergyFeedback": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 1046,
-        "end": 1058
+        "start": 1056,
+        "end": 1068
       },
       "symbol_dependencies": [
         {
@@ -6537,7 +5222,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 614,
+              "line": 615,
               "kind": "symbol",
               "language": "java"
             }
@@ -6597,7 +5282,7 @@
           "definitions": [
             {
               "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-              "line": 619,
+              "line": 620,
               "kind": "symbol",
               "language": "java"
             }
@@ -6694,8 +5379,8 @@
     "t": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 1060,
-        "end": 1060
+        "start": 1070,
+        "end": 1070
       },
       "symbol_dependencies": [
         {
@@ -6728,8 +5413,8 @@
     "f": {
       "source": {
         "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "start": 1061,
-        "end": 1061
+        "start": 1071,
+        "end": 1071
       },
       "symbol_dependencies": [
         {
@@ -6759,279 +5444,31 @@
       ],
       "dependency_count": 1
     },
-    "PlayerProjectilePresentation": {
+    "UpgradeIconRenderer": {
       "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-        "start": 14,
-        "end": 152
+        "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+        "start": 12,
+        "end": 186
       },
       "symbol_dependencies": [
         {
-          "symbol": "DamageElement",
+          "symbol": "Archetype",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
-              "line": 2,
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 7,
               "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Kind",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 29,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "Projectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Style",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 15,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "VisualTheme",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
-              "line": 9,
-              "kind": "class",
               "language": "java"
             }
           ],
           "relation": "class_like"
         },
         {
-          "symbol": "WeaponSignatureRuntime",
+          "symbol": "Upgrade",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "forWeapon",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 48,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 42,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "weaponId",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 10
-    },
-    "Style": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-        "start": 15,
-        "end": 135
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DamageElement",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
-              "line": 2,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Kind",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PlayerProjectilePresentation",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
+              "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
               "line": 14,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "Profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 29,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "Projectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "VisualTheme",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
-              "line": 9,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "forWeapon",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 48,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 42,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "weaponId",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 10
-    },
-    "Profile": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-        "start": 29,
-        "end": 149
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DamageElement",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
-              "line": 2,
               "kind": "enum",
               "language": "java"
             }
@@ -7039,502 +5476,16 @@
           "relation": "imported_module"
         },
         {
-          "symbol": "Kind",
+          "symbol": "UpgradePresentation",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PlayerProjectilePresentation",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 14,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "Projectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Style",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 15,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "VisualTheme",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
-              "line": 9,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "forWeapon",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 48,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 42,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "weaponId",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 10
-    },
-    "profile": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-        "start": 43,
-        "end": 47
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DamageElement",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
-              "line": 2,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Kind",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 29,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "Projectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "forWeapon",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 48,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "weaponId",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "forWeapon": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-        "start": 49,
-        "end": 151
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DamageElement",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/DamageElement.java",
-              "line": 2,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Kind",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 8,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 29,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "Style",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 15,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "VisualTheme",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
-              "line": 9,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "WeaponSignatureRuntime",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 7,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "weaponId",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
-              "line": 92,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "WorldFxRenderer": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-        "start": 19,
-        "end": 446
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AbilityType",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java",
-              "line": 2,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "AdaptiveFxBudget",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "ArcFx",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/fx/ArcFx.java",
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
               "line": 6,
               "kind": "class",
               "language": "java"
             }
           ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Enemy",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 18,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "EnemyProjectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "HomingMissile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Player",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-              "line": 16,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PlayerProjectilePresentation",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 14,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
           "relation": "class_like"
-        },
-        {
-          "symbol": "Profile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-              "line": 5,
-              "kind": "enum",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
-              "line": 8,
-              "kind": "record",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 29,
-              "kind": "record",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Projectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Style",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
-              "line": 9,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Tactic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 22,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Type",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 20,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Variant",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 21,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
         },
         {
           "symbol": "VisualTheme",
@@ -7549,11 +5500,11 @@
           "relation": "class_like"
         },
         {
-          "symbol": "drawAbilityEvolutionAura",
+          "symbol": "draw",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 145,
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+              "line": 19,
               "kind": "symbol",
               "language": "java"
             }
@@ -7561,11 +5512,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "drawChampionAuras",
+          "symbol": "drawGlyph",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 198,
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+              "line": 54,
               "kind": "symbol",
               "language": "java"
             }
@@ -7573,586 +5524,50 @@
           "relation": "same_file"
         },
         {
-          "symbol": "drawElectricArcs",
+          "symbol": "familyColor",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 413,
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+              "line": 38,
               "kind": "symbol",
               "language": "java"
             }
           ],
           "relation": "same_file"
-        },
-        {
-          "symbol": "drawGroundShadows",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 24,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "drawHarvesterSummonTelegraph",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 120,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "drawPlayerProjectileAccent",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 333,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "drawProjectileTrails",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 224,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "drawSpecialistTelegraph",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 70,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "fxQuality",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 21,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "pendingTactic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 438,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "phased",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 447,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "refreshFromClock",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/fx/ArcFx.java",
-              "line": 31,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "shieldFraction",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 453,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "smoothedFps",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 23,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "tacticalTelegraph",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 440,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "update",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java",
-              "line": 37,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/fx/ArcFx.java",
-              "line": 23,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
         }
       ],
-      "dependency_count": 31
+      "dependency_count": 7
     },
-    "fxQuality": {
+    "familyColor": {
       "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-        "start": 22,
-        "end": 22
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "smoothedFps": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-        "start": 23,
-        "end": 23
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "drawGroundShadows": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-        "start": 25,
-        "end": 69
+        "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+        "start": 39,
+        "end": 53
       },
       "symbol_dependencies": [
         {
-          "symbol": "Enemy",
+          "symbol": "Archetype",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 18,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Player",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-              "line": 16,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Tactic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 22,
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 7,
               "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "drawAbilityEvolutionAura",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 145,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "drawHarvesterSummonTelegraph",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 120,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "drawSpecialistTelegraph",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 70,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "pendingTactic",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 438,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "tacticalTelegraph",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 440,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "update",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java",
-              "line": 37,
-              "kind": "symbol",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/fx/ArcFx.java",
-              "line": 23,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 9
-    },
-    "drawSpecialistTelegraph": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-        "start": 71,
-        "end": 117
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Enemy",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 18,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "phased",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 447,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "shieldFraction",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 453,
-              "kind": "symbol",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "drawHarvesterSummonTelegraph": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-        "start": 120,
-        "end": 144
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Enemy",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 18,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Type",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 20,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "drawAbilityEvolutionAura": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-        "start": 146,
-        "end": 197
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "AbilityType",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilityType.java",
-              "line": 2,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Player",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-              "line": 16,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "drawChampionAuras": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-        "start": 199,
-        "end": 223
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Enemy",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 18,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Type",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 20,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Variant",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 21,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "drawProjectileTrails": {
-      "source": {
-        "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-        "start": 225,
-        "end": 332
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "EnemyProjectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "HomingMissile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/HomingMissile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "PlayerProjectilePresentation",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 14,
-              "kind": "class",
               "language": "java"
             }
           ],
           "relation": "class_like"
         },
         {
-          "symbol": "Profile",
+          "symbol": "UpgradePresentation",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/audio/MusicProfileSelector.java",
-              "line": 5,
-              "kind": "enum",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
-              "line": 8,
-              "kind": "record",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/FoundryHazardPresentation.java",
-              "line": 8,
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 6,
               "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/NullHazardPresentation.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            },
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-              "line": 29,
-              "kind": "record",
               "language": "java"
             }
           ],
           "relation": "class_like"
-        },
-        {
-          "symbol": "Projectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
-        },
-        {
-          "symbol": "Style",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
-              "line": 9,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "imported_module"
         },
         {
           "symbol": "VisualTheme",
@@ -8165,13 +5580,93 @@
             }
           ],
           "relation": "class_like"
-        },
+        }
+      ],
+      "dependency_count": 3
+    },
+    "drawGlyph": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java",
+        "start": 55,
+        "end": 185
+      },
+      "symbol_dependencies": [
         {
-          "symbol": "drawPlayerProjectileAccent",
+          "symbol": "Archetype",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-              "line": 333,
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 7,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "UpgradePresentation",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "VisualTheme",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/VisualTheme.java",
+              "line": 9,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "UpgradePresentation": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+        "start": 6,
+        "end": 51
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Archetype",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 7,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "Upgrade",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+              "line": 14,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "archetype",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 27,
               "kind": "symbol",
               "language": "java"
             }
@@ -8179,7 +5674,133 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 8
+      "dependency_count": 3
+    },
+    "Archetype": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+        "start": 7,
+        "end": 127
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Upgrade",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+              "line": 14,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "UpgradePresentation",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "archetype",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 27,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "archetype": {
+      "source": {
+        "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+        "start": 28,
+        "end": 50
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Archetype",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 7,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "Upgrade",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+              "line": 14,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "UpgradePresentationTest": {
+      "source": {
+        "file": "core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java",
+        "start": 11,
+        "end": 46
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Archetype",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 7,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Upgrade",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+              "line": 14,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "UpgradePresentation",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 6,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 3
     }
   }
 }

@@ -267,6 +267,8 @@ src/
               PostFxShader.java
               ProductionAtlasAudit.java
               SingularityImpactTracker.java
+              UpgradeIconRenderer.java
+              UpgradePresentation.java
               VisualTheme.java
               WeaponLegendaryPresentation.java
               WeaponRenderer.java
@@ -456,6 +458,7 @@ src/
               PlayerProjectilePresentationTest.java
               SingularityImpactTrackerTest.java
               SpecialistPresentationTest.java
+              UpgradePresentationTest.java
               WeaponLegendaryPresentationTest.java
             world/
               ArenaHazardRuntimeTest.java
@@ -5764,10 +5767,13 @@ Color accent = legendary ? VisualTheme.GOLD : VisualTheme.upgradeRarity(choices[
 UiRenderer.premiumCard(shapes, left, cardY, cardWidth, cardHeight,
 ⋮----
 float badge = Math.min(cardWidth, cardHeight) * .13f;
-shapes.setColor(accent.r, accent.g, accent.b, legendary ? .24f : .14f);
+shapes.setColor(accent.r, accent.g, accent.b, .24f);
 shapes.circle(centerX, cardY + cardHeight * .69f, badge, 24);
 shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, .92f);
 shapes.circle(centerX, cardY + cardHeight * .69f, badge * .48f, 20);
+⋮----
+float iconSize = Math.min(cardWidth * .22f, cardHeight * .30f);
+UpgradeIconRenderer.draw(shapes, choices[i], centerX,
 ⋮----
 private void drawGameOverBackdrop(float w, float h) {
 ⋮----
@@ -5816,29 +5822,30 @@ font.draw(batch, t(choice.descriptionKey()), x - 145f, h * .44f, 290f, Align.cen
 font.draw(batch, t("combat.legendaryFooter"), x - 145f, h * .35f, 290f, Align.center, false);
 ⋮----
 private void drawUpgradeText(float w, float h) {
-font.getData().setScale(1.65f);
+font.getData().setScale(1.50f);
 ⋮----
-font.draw(batch, t("combat.upgradeTitle"), 0, h * .69f, w, Align.center, false);
+font.draw(batch, t("combat.upgradeTitle"), 0, h * .705f, w, Align.center, false);
 ⋮----
-font.getData().setScale(1.18f);
+float cardWidth = Math.min(w * .27f, panelW / 3f - w * .018f);
+⋮----
+font.getData().setScale(1.08f);
 font.setColor(VisualTheme.upgradeRarity(choices[i].rarity));
 font.draw(batch, f("combat.upgradeCard", i + 1, t(choices[i].titleKey())),
 ⋮----
-font.getData().setScale(.92f);
+font.getData().setScale(.78f);
 boolean buildPath = i == 0 && UpgradeSelector.isBuildFocusedChoice(player, choices[i]);
-font.setColor(buildPath ? VisualTheme.CYAN : VisualTheme.TEXT);
+font.setColor(buildPath ? VisualTheme.CYAN : VisualTheme.TEXT_DIM);
 font.draw(batch, buildPath
 ? choices[i].rarity.name() + "  |  " + t("combat.upgradeBuildPath")
 : choices[i].rarity.name(),
 ⋮----
-font.getData().setScale(.96f);
-font.setColor(Color.WHITE);
+font.setColor(VisualTheme.TEXT_STRONG);
 font.draw(batch, t(choices[i].descriptionKey()),
 ⋮----
 String guidanceKey = AbilityUpgradeGuidance.key(player, choices[i]);
 if (guidanceKey == null) guidanceKey = ProtocolUpgradeGuidance.key(player, choices[i]);
 ⋮----
-font.getData().setScale(.78f);
+font.getData().setScale(.70f);
 ⋮----
 font.draw(batch, t(guidanceKey),
 ⋮----
@@ -5853,7 +5860,8 @@ font.draw(batch, t("combat.gameOver"), 0, h * .625f, w, Align.center, false);
 font.setColor(VisualTheme.TEXT_DIM);
 font.draw(batch, f("hud.stage", RunStageContext.stage()), 0, h * .535f, w, Align.center, false);
 ⋮----
-font.setColor(VisualTheme.TEXT_STRONG);
+font.getData().setScale(.92f);
+⋮----
 font.draw(batch, revived ? t("combat.results") : t("combat.revive"), 0, h * .425f, w, Align.center, false);
 ⋮----
 font.draw(batch, f("hud.kills", director.kills()), 0, h * .365f, w, Align.center, false);
@@ -13022,6 +13030,136 @@ public Array<Impact> impacts() { return impacts; }
 public int consumeTriggeredCount() {
 ```
 
+## File: src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java
+```java
+/**
+ * Scalable combat-upgrade glyphs. The rarity color owns the outer frame while the inner symbol
+ * communicates the mechanical family before the player reads the card copy.
+ */
+public final class UpgradeIconRenderer {
+private static final Color FIRE = new Color(1f, .34f, .06f, 1f);
+private static final Color ICE = new Color(.48f, .90f, 1f, 1f);
+private static final Color SHOCK = new Color(.62f, .42f, 1f, 1f);
+private static final Color ORANGE = new Color(1f, .62f, .12f, 1f);
+⋮----
+public static void draw(ShapeRenderer shapes, Upgrade upgrade, float cx, float cy, float size, Color rarity) {
+⋮----
+UpgradePresentation.Archetype type = UpgradePresentation.archetype(upgrade);
+Color family = familyColor(type);
+⋮----
+shapes.setColor(rarity.r, rarity.g, rarity.b, .18f);
+shapes.circle(cx, cy, outer * 1.18f, 28);
+shapes.setColor(rarity.r, rarity.g, rarity.b, .92f);
+shapes.circle(cx, cy, outer, 28);
+shapes.setColor(VisualTheme.SURFACE_0.r, VisualTheme.SURFACE_0.g, VisualTheme.SURFACE_0.b, 1f);
+shapes.circle(cx, cy, inner, 26);
+shapes.setColor(family.r, family.g, family.b, .18f);
+shapes.circle(cx, cy, inner * .82f, 24);
+⋮----
+drawGlyph(shapes, type, cx, cy, size * .62f, family);
+⋮----
+static Color familyColor(UpgradePresentation.Archetype type) {
+⋮----
+private static void drawGlyph(ShapeRenderer shapes, UpgradePresentation.Archetype type,
+⋮----
+float t = Math.max(2f, s * .085f);
+shapes.setColor(color);
+⋮----
+shapes.triangle(x - s * .10f, cy - s * .22f,
+⋮----
+shapes.triangle(cx, cy + s * .42f, cx - s * .34f, cy - s * .30f, cx, cy - s * .08f);
+shapes.triangle(cx, cy + s * .42f, cx + s * .34f, cy - s * .30f, cx, cy - s * .08f);
+shapes.setColor(VisualTheme.SURFACE_0);
+shapes.circle(cx, cy - s * .02f, s * .10f, 12);
+⋮----
+shapes.triangle(cx + s * .40f, cy, cx - s * .10f, cy + s * .28f, cx - s * .10f, cy - s * .28f);
+shapes.rect(cx - s * .38f, cy - t * .5f, s * .34f, t);
+shapes.rect(cx - s * .30f, cy + s * .16f, s * .20f, t * .65f);
+shapes.rect(cx - s * .30f, cy - s * .18f, s * .20f, t * .65f);
+⋮----
+shapes.rect(cx - t * .55f, cy - s * .32f, t * 1.10f, s * .64f);
+shapes.rect(cx - s * .32f, cy - t * .55f, s * .64f, t * 1.10f);
+shapes.setColor(color.r, color.g, color.b, .28f);
+shapes.circle(cx, cy, s * .36f, 20);
+⋮----
+shapes.rect(cx - s * .30f, y - t * .45f, s * .45f, t * .9f);
+shapes.triangle(cx + s * .30f, y, cx + s * .10f, y + s * .09f, cx + s * .10f, y - s * .09f);
+⋮----
+shapes.circle(cx, cy, s * .34f, 20);
+⋮----
+shapes.circle(cx, cy, s * .21f, 18);
+⋮----
+shapes.circle(cx, cy, s * .08f, 12);
+shapes.rect(cx - t * .5f, cy + s * .27f, t, s * .18f);
+shapes.rect(cx - t * .5f, cy - s * .45f, t, s * .18f);
+shapes.rect(cx + s * .27f, cy - t * .5f, s * .18f, t);
+shapes.rect(cx - s * .45f, cy - t * .5f, s * .18f, t);
+⋮----
+shapes.rect(cx - s * .35f, cy - t * .5f, s * .56f, t);
+shapes.triangle(cx + s * .40f, cy, cx + s * .12f, cy + s * .16f, cx + s * .12f, cy - s * .16f);
+shapes.setColor(color.r, color.g, color.b, .45f);
+shapes.rect(cx - s * .34f, cy + s * .16f, s * .24f, t * .55f);
+shapes.rect(cx - s * .34f, cy - s * .18f, s * .24f, t * .55f);
+⋮----
+shapes.rect(cx - t * .5f, cy - s * .34f, t, s * .68f);
+shapes.rect(cx - s * .34f, cy - t * .5f, s * .68f, t);
+⋮----
+float x = cx + MathUtils.cosDeg(a) * s * .30f;
+float y = cy + MathUtils.sinDeg(a) * s * .30f;
+shapes.circle(x, y, s * .065f, 10);
+⋮----
+shapes.triangle(cx, cy + s * .44f, cx - s * .30f, cy - s * .34f, cx + s * .30f, cy - s * .34f);
+shapes.setColor(1f, .78f, .22f, 1f);
+shapes.triangle(cx + s * .05f, cy + s * .18f, cx - s * .13f, cy - s * .25f, cx + s * .17f, cy - s * .25f);
+⋮----
+float dx = MathUtils.cosDeg(a) * s * .40f;
+float dy = MathUtils.sinDeg(a) * s * .40f;
+shapes.rectLine(cx - dx, cy - dy, cx + dx, cy + dy, t * .60f);
+⋮----
+shapes.circle(cx, cy, s * .10f, 12);
+⋮----
+shapes.triangle(cx + s * .10f, cy + s * .42f, cx - s * .25f, cy + s * .02f, cx + s * .02f, cy + s * .02f);
+shapes.triangle(cx - s * .08f, cy - s * .42f, cx + s * .25f, cy - s * .02f, cx - s * .02f, cy - s * .02f);
+⋮----
+shapes.setColor(colors[i]);
+shapes.circle(cx + MathUtils.cosDeg(a) * s * .24f,
+cy + MathUtils.sinDeg(a) * s * .24f, s * .11f, 12);
+⋮----
+shapes.circle(cx, cy, s * .07f, 10);
+⋮----
+shapes.rect(cx - t * .45f, cy - s * .22f, t * .90f, s * .44f);
+shapes.triangle(cx, cy + s * .43f, cx - s * .16f, cy + s * .16f, cx + s * .16f, cy + s * .16f);
+shapes.triangle(cx - t * .45f, cy - s * .12f, cx - s * .23f, cy - s * .34f, cx - t * .45f, cy - s * .28f);
+shapes.triangle(cx + t * .45f, cy - s * .12f, cx + s * .23f, cy - s * .34f, cx + t * .45f, cy - s * .28f);
+⋮----
+shapes.rect(cx - s * .18f, cy - s * .16f, s * .36f, s * .32f);
+shapes.rect(cx - s * .40f, cy - t * .45f, s * .22f, t * .9f);
+shapes.rect(cx + s * .18f, cy - t * .45f, s * .22f, t * .9f);
+⋮----
+shapes.circle(cx, cy, s * .11f, 12);
+⋮----
+float bx = cx + MathUtils.cosDeg(a) * s * .32f;
+float by = cy + MathUtils.sinDeg(a) * s * .32f;
+shapes.triangle(bx, by,
+cx + MathUtils.cosDeg(a + 18f) * s * .16f,
+cy + MathUtils.sinDeg(a + 18f) * s * .16f,
+cx + MathUtils.cosDeg(a - 18f) * s * .16f,
+cy + MathUtils.sinDeg(a - 18f) * s * .16f);
+⋮----
+float ex = cx + MathUtils.cosDeg(a) * s * .36f;
+float ey = cy + MathUtils.sinDeg(a) * s * .36f;
+shapes.rectLine(cx, cy, ex, ey, t * .55f);
+shapes.circle(ex, ey, s * .075f, 10);
+```
+
+## File: src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java
+```java
+/** Pure routing from run upgrades to a stable visual archetype. */
+public final class UpgradePresentation {
+⋮----
+public static Archetype archetype(Upgrade upgrade) {
+```
+
 ## File: src/main/java/com/deadlinezero/game/visual/VisualTheme.java
 ```java
 /** Centralized visual language for UI and combat. Keeps colors consistent and art-swappable. */
@@ -19664,6 +19802,41 @@ assertTrue(phantom.height() > 0f);
 assertNotEquals(shambler, shielded);
 assertNotEquals(shambler, regenerator);
 assertNotEquals(shambler, phantom);
+```
+
+## File: src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java
+```java
+final class UpgradePresentationTest {
+@Test void everyUpgradeHasAVisualArchetype() {
+for (Upgrade upgrade : Upgrade.values()) {
+assertNotNull(UpgradePresentation.archetype(upgrade), upgrade.name());
+⋮----
+assertEquals(60, Upgrade.values().length);
+⋮----
+@Test void allSixteenVisualArchetypesAreActuallyUsed() {
+⋮----
+EnumSet.noneOf(UpgradePresentation.Archetype.class);
+for (Upgrade upgrade : Upgrade.values()) seen.add(UpgradePresentation.archetype(upgrade));
+assertEquals(EnumSet.allOf(UpgradePresentation.Archetype.class), seen);
+⋮----
+@Test void signatureAbilityFamiliesRemainSemanticallyDistinct() {
+assertEquals(UpgradePresentation.Archetype.SHOCK,
+UpgradePresentation.archetype(Upgrade.TESLA_ORB));
+assertEquals(UpgradePresentation.Archetype.MISSILE,
+UpgradePresentation.archetype(Upgrade.MISSILE_SWARM));
+assertEquals(UpgradePresentation.Archetype.FROST,
+UpgradePresentation.archetype(Upgrade.CRYO_NOVA));
+assertEquals(UpgradePresentation.Archetype.DRONE,
+UpgradePresentation.archetype(Upgrade.DRONE));
+assertEquals(UpgradePresentation.Archetype.ORBITAL,
+UpgradePresentation.archetype(Upgrade.ORBITAL));
+assertEquals(UpgradePresentation.Archetype.PROTOCOL,
+UpgradePresentation.archetype(Upgrade.REACTION_CASCADE));
+⋮----
+@Test void nullUpgradeFallsBackToDamageInsteadOfCrashing() {
+assertEquals(UpgradePresentation.Archetype.DAMAGE,
+UpgradePresentation.archetype(null));
+assertTrue(UpgradePresentation.Archetype.values().length >= 16);
 ```
 
 ## File: src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java
