@@ -23,7 +23,9 @@ public final class UiIconRenderer {
         SHOP,
         SETTINGS,
         LOCK,
-        TROPHY
+        TROPHY,
+        CLOUD,
+        CHEST
     }
 
     private UiIconRenderer() {}
@@ -122,6 +124,22 @@ public final class UiIconRenderer {
                 shapes.rect(x + s * .30f, y + s * .10f, s * .40f, t);
                 shapes.rect(x + s * .12f, y + s * .58f, s * .16f, t);
                 shapes.rect(x + s * .72f, y + s * .58f, s * .16f, t);
+            }
+            case CLOUD -> {
+                shapes.circle(x + s * .36f, y + s * .46f, s * .22f, 18);
+                shapes.circle(x + s * .56f, y + s * .58f, s * .28f, 20);
+                shapes.circle(x + s * .76f, y + s * .44f, s * .18f, 16);
+                shapes.rect(x + s * .20f, y + s * .28f, s * .64f, s * .24f);
+                set(shapes, color, alpha * .20f);
+                shapes.rect(cx - t * .5f, y + s * .08f, t, s * .28f);
+            }
+            case CHEST -> {
+                shapes.rect(x + s * .16f, y + s * .20f, s * .68f, s * .46f);
+                shapes.rect(x + s * .12f, y + s * .62f, s * .76f, s * .18f);
+                set(shapes, color, alpha * .24f);
+                shapes.rect(cx - t * .5f, y + s * .34f, t, s * .24f);
+                set(shapes, color, alpha);
+                shapes.rect(x + s * .20f, y + s * .68f, s * .60f, t * .65f);
             }
         }
     }
