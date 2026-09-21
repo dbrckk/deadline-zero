@@ -1,16 +1,12 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "54382353d2063b3c564a8a8dac2c96d0e863f13f",
-  "head": "3baf4dc01aaeee4a186aa3d152fbf1e22d0976f6",
+  "base": "3baf4dc01aaeee4a186aa3d152fbf1e22d0976f6",
+  "head": "65dab2459de41ce8de1bc8818d979a063b264488",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/responsive-ui-qa.yml",
-      "status": "M"
-    },
-    {
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "path": ".github/workflows/verify.yml",
       "status": "M"
     },
     {
@@ -18,19 +14,13 @@
       "status": "M"
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java",
-      "status": "A"
-    },
-    {
-      "path": "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java",
-      "status": "A"
+      "path": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "status": "M"
     }
   ],
   "changed_source_files": [
-    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
     "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-    "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java",
-    "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java"
+    "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java"
   ],
   "impacted_files": [
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
@@ -40,8 +30,7 @@
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
     "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
     "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-    "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java",
-    "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java",
+    "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
     "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java"
   ],
   "impacted_symbols": [
@@ -832,106 +821,172 @@
       "line": 774
     },
     {
+      "name": "drawThreatRing",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 830
+    },
+    {
       "name": "drawAbilityObjects",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 811
+      "line": 839
     },
     {
       "name": "drawCombatText",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 832
+      "line": 860
     },
     {
       "name": "drawHud",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 847
+      "line": 875
     },
     {
       "name": "drawChoiceBackdrop",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 861
+      "line": 889
     },
     {
       "name": "drawGameOverBackdrop",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 901
+      "line": 929
     },
     {
       "name": "drawLegendaryText",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 940
+      "line": 968
     },
     {
       "name": "drawUpgradeText",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 962
+      "line": 990
     },
     {
       "name": "drawGameOverText",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 1009
+      "line": 1037
     },
     {
       "name": "handleOverlayInput",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 1029
+      "line": 1057
     },
     {
       "name": "applyUpgradeWithSynergyFeedback",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 1080
+      "line": 1108
     },
     {
       "name": "t",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 1094
+      "line": 1122
     },
     {
       "name": "f",
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-      "line": 1096
+      "line": 1124
     },
     {
-      "name": "BossRevealCameraProfile",
+      "name": "WorldFxRenderer",
       "kind": "class",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java",
-      "line": 6
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 19
     },
     {
-      "name": "envelope",
+      "name": "fxQuality",
       "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java",
-      "line": 12
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 21
     },
     {
-      "name": "focusWeight",
+      "name": "smoothedFps",
       "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java",
-      "line": 18
-    },
-    {
-      "name": "zoom",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
       "line": 23
     },
     {
-      "name": "BossRevealCameraProfileTest",
-      "kind": "class",
-      "file": "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java",
-      "line": 7
+      "name": "drawGroundShadows",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 24
+    },
+    {
+      "name": "drawPeripheralRing",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 71
+    },
+    {
+      "name": "drawBracketCorners",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 82
+    },
+    {
+      "name": "drawChargeArrows",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 96
+    },
+    {
+      "name": "timeDeg",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 114
+    },
+    {
+      "name": "drawSpecialistTelegraph",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 118
+    },
+    {
+      "name": "drawHarvesterSummonTelegraph",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 175
+    },
+    {
+      "name": "drawAbilityEvolutionAura",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 200
+    },
+    {
+      "name": "drawChampionAuras",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 253
+    },
+    {
+      "name": "drawProjectileTrails",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 310
+    },
+    {
+      "name": "drawPlayerProjectileAccent",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 419
+    },
+    {
+      "name": "drawElectricArcs",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 499
     },
     {
       "name": "DesktopSmokeLauncher",
@@ -994,7 +1049,6 @@
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-    "core/src/test/java/com/deadlinezero/game/screen/GameScreenBossSummonRosterTest.java",
-    "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java"
+    "core/src/test/java/com/deadlinezero/game/screen/GameScreenBossSummonRosterTest.java"
   ]
 }

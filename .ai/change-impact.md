@@ -1,18 +1,15 @@
 # Change impact
 
-Base: be8e94010ae659993e854438d529ccb0241df767
-Head: 3baf4dc01aaeee4a186aa3d152fbf1e22d0976f6
+Base: 694ad99981d4adac3f2ca4e79c769ece5f6644dc
+Head: 65dab2459de41ce8de1bc8818d979a063b264488
 
 ## Changed files
-- M .github/workflows/responsive-ui-qa.yml
-- M android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java
+- M .github/workflows/verify.yml
 - M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
-- A core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java
-- A core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java
+- M core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java
 
 ## Affected areas
 - .github
-- android
 - core
 
 ## Related test candidates

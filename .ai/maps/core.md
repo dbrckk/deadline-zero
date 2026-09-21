@@ -5707,12 +5707,20 @@ float speedRatio = MathUtils.clamp(e.velocity.len() / Math.max(.01f, e.speed), 0
 float gait = MathUtils.sin(visualTime * (5f + speedRatio * 3f) + e.position.x * .7f) * .06f * speedRatio;
 if (e.attack.state() == EnemyState.TELEGRAPHING) {
 float pulse = .82f + MathUtils.sin(visualTime * 14f) * .18f;
-shapes.setColor(VisualTheme.RED.r, VisualTheme.RED.g, VisualTheme.RED.b, .11f + .09f * pulse);
-shapes.circle(e.position.x, e.position.y, (e.type == Enemy.Type.BOSS ? 4.4f : 1.15f) * pulse, 28);
+⋮----
+shapes.setColor(VisualTheme.RED.r, VisualTheme.RED.g, VisualTheme.RED.b, .44f);
+drawThreatRing(e.position.x, e.position.y, radius, e.type == Enemy.Type.BOSS ? 10 : 6,
 ⋮----
 if (e.type == Enemy.Type.BOSS && e.bossCombat != null && e.bossCombat.charging()) {
-shapes.setColor(1f, .15f, .05f, .16f);
-shapes.circle(e.position.x, e.position.y, 2.3f + MathUtils.sin(visualTime * 20f) * .18f, 28);
+float radius = e.radius * (1.42f + MathUtils.sin(visualTime * 20f) * .08f);
+shapes.setColor(1f, .15f, .05f, .54f);
+drawThreatRing(e.position.x, e.position.y, radius, 12, .090f);
+shapes.setColor(1f, .68f, .22f, .48f);
+⋮----
+float ox = MathUtils.cosDeg(angle);
+float oy = MathUtils.sinDeg(angle);
+⋮----
+shapes.triangle(tipX, tipY,
 ⋮----
 shapes.setColor(c);
 ⋮----
@@ -5723,6 +5731,12 @@ shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 
 shapes.setColor(VisualTheme.RED);
 shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f,
 e.radius * 2f * MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f), .07f);
+⋮----
+private void drawThreatRing(float cx, float cy, float radius, int pips, float pipRadius) {
+int count = Math.max(4, pips);
+⋮----
+shapes.circle(cx + MathUtils.cosDeg(angle) * radius,
+cy + MathUtils.sinDeg(angle) * radius, pipRadius, 8);
 ⋮----
 private void drawAbilityObjects() {
 float angle = abilitySystem.runtime().orbitalAngle;
@@ -13437,21 +13451,52 @@ float phase = e.tacticalWindup <= 0f ? 0f : MathUtils.clamp(e.tacticalWindup / .
 float pulse = .55f + .45f * MathUtils.sin(e.variantTime * 34f);
 int segments = budget.geometrySegments(24, 12);
 if (e.pendingTactic() == Enemy.Tactic.STRAFE) {
-shapes.setColor(.30f, .88f, 1f, .16f + pulse * .16f);
-shapes.circle(e.position.x, e.position.y, e.radius * (1.55f + pulse * .15f), segments);
+⋮----
+shapes.setColor(.30f, .88f, 1f, .34f + pulse * .10f);
+drawPeripheralRing(shapes, e.position.x, e.position.y, radius, Math.max(5, segments / 4), .055f);
 if (budget.allowHeavyFx() && e.velocity.len2() > .01f) {
 float len = e.velocity.len();
 ⋮----
-shapes.setColor(.68f, .96f, 1f, .42f);
+shapes.setColor(.68f, .96f, 1f, .48f);
 shapes.rectLine(e.position.x - nx * e.radius * 1.8f, e.position.y - ny * e.radius * 1.8f,
 ⋮----
 } else if (e.pendingTactic() == Enemy.Tactic.CHARGE) {
 ⋮----
-shapes.setColor(1f, .38f, .10f, .18f + pulse * .18f);
-shapes.circle(e.position.x, e.position.y, radius, segments);
+shapes.setColor(1f, .38f, .10f, .38f + pulse * .10f);
+drawPeripheralRing(shapes, e.position.x, e.position.y, radius, Math.max(6, segments / 4), .064f);
 if (budget.allowHeavyFx()) {
-shapes.setColor(1f, .72f, .28f, .32f + pulse * .12f);
-shapes.circle(e.position.x, e.position.y, radius * .72f, segments);
+shapes.setColor(1f, .72f, .28f, .54f);
+drawChargeArrows(shapes, e.position.x, e.position.y, radius * .82f, e.radius * .28f);
+⋮----
+private void drawPeripheralRing(ShapeRenderer shapes, float cx, float cy,
+⋮----
+int safePips = Math.max(4, pips);
+⋮----
+float x = cx + MathUtils.cosDeg(angle) * radius;
+float y = cy + MathUtils.sinDeg(angle) * radius;
+shapes.circle(x, y, pipRadius, 8);
+⋮----
+private void drawBracketCorners(ShapeRenderer shapes, float cx, float cy,
+⋮----
+float t = Math.max(.020f, length * .12f);
+⋮----
+shapes.rect(cx - d, cy + d - t, length, t);
+shapes.rect(cx - d, cy + d - length, t, length);
+shapes.rect(cx + d - length, cy + d - t, length, t);
+shapes.rect(cx + d - t, cy + d - length, t, length);
+shapes.rect(cx - d, cy - d, length, t);
+shapes.rect(cx - d, cy - d, t, length);
+shapes.rect(cx + d - length, cy - d, length, t);
+shapes.rect(cx + d - t, cy - d, t, length);
+⋮----
+private void drawChargeArrows(ShapeRenderer shapes, float cx, float cy,
+⋮----
+float ox = MathUtils.cosDeg(angle);
+float oy = MathUtils.sinDeg(angle);
+⋮----
+shapes.triangle(tipX, tipY,
+⋮----
+private float timeDeg(float degrees) {
 ⋮----
 private void drawSpecialistTelegraph(ShapeRenderer shapes, Enemy e) {
 if (budget.quality() < .34f) return;
@@ -13460,28 +13505,34 @@ int segments = budget.geometrySegments(28, 14);
 ⋮----
 float shield = e.shieldFraction();
 ⋮----
-shapes.setColor(.24f, .76f, 1f, .10f + shield * .16f);
+shapes.setColor(.24f, .76f, 1f, .26f + shield * .14f);
+drawPeripheralRing(shapes, e.position.x, e.position.y, radius, Math.max(6, segments / 4), .050f);
 ⋮----
-shapes.setColor(.72f, .94f, 1f, .16f + shield * .18f);
-shapes.circle(e.position.x, e.position.y, radius * .88f, segments);
+shapes.setColor(.72f, .94f, 1f, .42f);
+drawBracketCorners(shapes, e.position.x, e.position.y, radius * .86f, e.radius * .34f);
 ⋮----
 float wounded = 1f - MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f);
 ⋮----
-shapes.setColor(.30f, 1f, .42f, .07f + wounded * .15f);
+shapes.setColor(.30f, 1f, .42f, .18f + wounded * .18f);
+drawPeripheralRing(shapes, e.position.x, e.position.y, radius, Math.max(5, segments / 4), .045f);
 ⋮----
-shapes.setColor(.72f, 1f, .58f, .10f + wounded * .18f);
+shapes.setColor(.72f, 1f, .58f, .42f);
+float pipRadius = Math.max(.035f, e.radius * .075f);
+⋮----
+float a = timeDeg(e.variantTime * 32f + i * 120f);
+shapes.circle(e.position.x + MathUtils.cos(a) * radius * .72f,
+e.position.y + MathUtils.sin(a) * radius * .72f, pipRadius, 10);
 ⋮----
 float radius = e.radius * (e.phased() ? 2.05f : 1.48f + pulse * .18f);
 float alpha = e.phased() ? .28f : .10f + pulse * .06f;
-shapes.setColor(.60f, .36f, 1f, alpha);
-⋮----
+shapes.setColor(.60f, .36f, 1f, Math.max(.24f, alpha));
+drawPeripheralRing(shapes, e.position.x, e.position.y, radius, Math.max(6, segments / 4), .052f);
 if (e.phased() && budget.allowHeavyFx() && e.velocity.len2() > .01f) {
 ⋮----
-shapes.setColor(.72f, .60f, 1f, .18f);
-shapes.circle(e.position.x - nx * e.radius * 1.15f, e.position.y - ny * e.radius * 1.15f,
+shapes.setColor(.72f, .60f, 1f, .30f);
+drawPeripheralRing(shapes,
 ⋮----
-shapes.setColor(.82f, .72f, 1f, .10f);
-shapes.circle(e.position.x - nx * e.radius * 2.0f, e.position.y - ny * e.radius * 2.0f,
+shapes.setColor(.82f, .72f, 1f, .18f);
 ⋮----
 /** Three collapsing portals warn the player before HARVESTER creates its next minion wave. */
 private void drawHarvesterSummonTelegraph(ShapeRenderer shapes, Enemy e) {
@@ -13571,9 +13622,6 @@ shapes.rect(e.position.x - d, e.position.y - d - bar, d * .60f, bar);
 shapes.rect(e.position.x + d * .40f, e.position.y - d - bar, d * .60f, bar);
 ⋮----
 shapes.setColor(1f, .42f, .18f, .32f);
-⋮----
-float ox = MathUtils.cosDeg(angle);
-float oy = MathUtils.sinDeg(angle);
 ⋮----
 shapes.triangle(baseX + tx * half, baseY + ty * half,
 ⋮----

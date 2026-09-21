@@ -22,19 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T19:02:16Z
+Generated: 2026-09-21T19:27:19Z
 
 ### Git
 - Branch: `main`
-- Head: `3baf4dc01aae`
-- Commit date: 2026-09-21T21:01:56+02:00
-- Commit: Add non-blocking boss reveal camera framing (#281)
+- Head: `65dab2459de4`
+- Commit date: 2026-09-21T21:27:04+02:00
+- Commit: Replace opaque combat telegraph disks with peripheral cues (#282)
 - Tracked files: 847
 
 ### Recently changed files
+- `.github/workflows/verify.yml`
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
 - `.github/workflows/responsive-ui-qa.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
 - `core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java`
 - `.github/workflows/shambler-android-acceptance.yml`
@@ -45,11 +47,6 @@ Generated: 2026-09-21T19:02:16Z
 - `core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java`
-- `core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java`
-- `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
-- `core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java`
 
 ### Project signals
 - `build.gradle`
