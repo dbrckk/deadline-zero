@@ -22,20 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T08:13:21Z
+Generated: 2026-09-21T08:31:40Z
 
 ### Git
 - Branch: `main`
-- Head: `ab9d94068991`
-- Commit date: 2026-09-21T10:13:06+02:00
-- Commit: ci(android): use runner SDK without broken setup action (#263)
+- Head: `a8b1e1dfd112`
+- Commit date: 2026-09-21T10:31:25+02:00
+- Commit: ci(android): initialize sdkmanager with platform tools only (#264)
 - Tracked files: 834
 
 ### Recently changed files
 - `.github/workflows/android-test-release.yml`
 - `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 
 ### Project signals
 - `build.gradle`
