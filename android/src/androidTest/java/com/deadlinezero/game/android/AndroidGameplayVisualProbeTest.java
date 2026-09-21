@@ -331,7 +331,7 @@ public final class AndroidGameplayVisualProbeTest {
                 assertTrue("expected GameScreen for boss reveal visual probe", game.getScreen() instanceof GameScreen);
                 RunStageContext.begin(4);
                 GameScreen screen = (GameScreen) game.getScreen();
-                Enemy boss = injectRevenantBoss(screen);
+                Enemy boss = injectRevenantBossForReveal(screen);
                 armBossReveal(screen, boss);
             });
 
@@ -944,7 +944,7 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @SuppressWarnings("unchecked")
-    private static Enemy injectRevenantBoss(GameScreen screen) {
+    private static Enemy injectRevenantBossForReveal(GameScreen screen) {
         try {
             Field field = GameScreen.class.getDeclaredField("enemies");
             field.setAccessible(true);
