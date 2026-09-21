@@ -222,6 +222,7 @@ src/
               Pools.java
             visual/
               ActiveBuildStatus.java
+              ActorMaterialProfile.java
               AdaptiveFxBudget.java
               AnimationProfileCatalog.java
               ArtManifest.java
@@ -425,6 +426,7 @@ src/
               UiRendererStateTest.java
             visual/
               ActiveBuildStatusTest.java
+              ActorMaterialProfileTest.java
               AdaptiveFxBudgetTest.java
               AnimationProfileCatalogTest.java
               ArtProfileCatalogTest.java
@@ -8951,6 +8953,28 @@ if (a.hasTargetNetworkSynergy()) return "hud.build.targetNetwork";
 if (a.hasPermafrostBladeSynergy()) return "hud.build.permafrostBlades";
 ```
 
+## File: src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java
+```java
+/**
+ * Pure presentation budget for actor silhouette reinforcement.
+ *
+ * Standard crowd enemies remain single-draw. Only player/high-priority enemies receive one
+ * enlarged dark underlay so busy authored floors cannot swallow important silhouettes.
+ */
+public final class ActorMaterialProfile {
+⋮----
+private static final Profile NONE = new Profile(false, 1f, 0f);
+private static final Profile PLAYER = new Profile(true, 1.055f, .72f);
+private static final Profile CHAMPION = new Profile(true, 1.045f, .58f);
+private static final Profile SPECIALIST = new Profile(true, 1.050f, .62f);
+private static final Profile ELITE = new Profile(true, 1.055f, .66f);
+private static final Profile BOSS = new Profile(true, 1.065f, .76f);
+⋮----
+public static Profile player() { return PLAYER; }
+⋮----
+public static Profile enemy(Enemy.Type type, Enemy.Variant variant) {
+```
+
 ## File: src/main/java/com/deadlinezero/game/visual/AdaptiveFxBudget.java
 ```java
 /** Smoothly adapts optional visual density to sustained frame rate without changing gameplay. */
@@ -9955,8 +9979,9 @@ int pieces = RunLoadoutContext.ascensionSetPieces();
 float pulse = .5f + .5f * MathUtils.sin(clock.time * (pieces >= 4 ? 7.5f : 4.5f));
 ⋮----
 float alpha = player.invulnerable() ? .78f : 1f;
-batch.setColor(r, g, b, alpha);
-drawCentered(batch, region, player.position.x, player.position.y - profile.footOffset(), w * scale, h * scale);
+drawMaterialized(batch, region,
+player.position.x, player.position.y - profile.footOffset(),
+w * scale, h * scale, r, g, b, alpha, ActorMaterialProfile.player());
 batch.setColor(1f, 1f, 1f, 1f);
 ⋮----
 static Direction8 resolvePlayerFacing(float moveX, float moveY, float aimX, float aimY,
@@ -10059,8 +10084,13 @@ float pulse = MathUtils.clamp(clock.phasePulse / .42f, 0f, 1f);
 g = MathUtils.lerp(g, .92f, wave * .35f);
 b = MathUtils.lerp(b, 1f, wave * .45f);
 ⋮----
-batch.setColor(MathUtils.clamp(r, 0f, 1f), MathUtils.clamp(g, 0f, 1f), MathUtils.clamp(b, 0f, 1f), alpha);
-drawCentered(batch, region, enemy.position.x, enemy.position.y - profile.footOffset(), w * scale, h * scale);
+float finalR = MathUtils.clamp(r, 0f, 1f);
+float finalG = MathUtils.clamp(g, 0f, 1f);
+float finalB = MathUtils.clamp(b, 0f, 1f);
+⋮----
+enemy.position.x, enemy.position.y - profile.footOffset(),
+⋮----
+ActorMaterialProfile.enemy(enemy.type, enemy.variant));
 ⋮----
 private Clock clock(Object actor, GameArt.Motion motion) {
 Clock clock = clocks.get(actor);
@@ -10070,6 +10100,17 @@ clock = new Clock();
 clocks.put(actor, clock);
 ⋮----
 clock.phasePulse = Math.max(0f, clock.phasePulse - frameDelta);
+⋮----
+private void drawMaterialized(SpriteBatch batch, TextureRegion region,
+⋮----
+if (material != null && material.outline()) {
+float outlineWidth = width * material.scale();
+float outlineHeight = height * material.scale();
+batch.setColor(.012f, .022f, .030f, MathUtils.clamp(alpha * material.alpha(), 0f, 1f));
+drawCentered(batch, region, centerX, y, outlineWidth, outlineHeight);
+⋮----
+batch.setColor(r, g, b, alpha);
+drawCentered(batch, region, centerX, y, width, height);
 ⋮----
 private void drawCentered(SpriteBatch batch, TextureRegion region, float centerX, float y, float width, float height) {
 batch.draw(region, centerX - width * .5f, y, width, height);
@@ -18809,6 +18850,35 @@ assertEquals("hud.build.stormBlade", keys[0]);
 ⋮----
 ActiveBuildStatus.fill(fresh(), keys);
 assertNull(keys[0]);
+```
+
+## File: src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java
+```java
+final class ActorMaterialProfileTest {
+@Test void standardCrowdEnemiesStaySingleDraw() {
+assertFalse(ActorMaterialProfile.enemy(Enemy.Type.SHAMBLER, Enemy.Variant.NORMAL).outline());
+assertFalse(ActorMaterialProfile.enemy(Enemy.Type.RUNNER, Enemy.Variant.NORMAL).outline());
+assertFalse(ActorMaterialProfile.enemy(Enemy.Type.BRUTE, Enemy.Variant.NORMAL).outline());
+assertFalse(ActorMaterialProfile.enemy(Enemy.Type.RANGED, Enemy.Variant.NORMAL).outline());
+⋮----
+@Test void priorityActorsReceiveSilhouetteReinforcement() {
+assertTrue(ActorMaterialProfile.player().outline());
+assertTrue(ActorMaterialProfile.enemy(Enemy.Type.BOSS, Enemy.Variant.NORMAL).outline());
+assertTrue(ActorMaterialProfile.enemy(Enemy.Type.ELITE, Enemy.Variant.NORMAL).outline());
+assertTrue(ActorMaterialProfile.enemy(Enemy.Type.SHIELDED, Enemy.Variant.NORMAL).outline());
+assertTrue(ActorMaterialProfile.enemy(Enemy.Type.REGENERATOR, Enemy.Variant.NORMAL).outline());
+assertTrue(ActorMaterialProfile.enemy(Enemy.Type.PHANTOM, Enemy.Variant.NORMAL).outline());
+assertTrue(ActorMaterialProfile.enemy(Enemy.Type.SHAMBLER, Enemy.Variant.FERAL).outline());
+⋮----
+@Test void reinforcementStaysSubtle() {
+⋮----
+ActorMaterialProfile.player(),
+ActorMaterialProfile.enemy(Enemy.Type.BOSS, Enemy.Variant.NORMAL),
+ActorMaterialProfile.enemy(Enemy.Type.ELITE, Enemy.Variant.NORMAL),
+ActorMaterialProfile.enemy(Enemy.Type.SHAMBLER, Enemy.Variant.SWIFT)
+⋮----
+assertTrue(p.scale() >= 1f && p.scale() <= 1.08f);
+assertTrue(p.alpha() >= 0f && p.alpha() <= .80f);
 ```
 
 ## File: src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java

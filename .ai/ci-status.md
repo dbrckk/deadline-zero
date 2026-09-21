@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 0 success / 0 failure / 8 active
+Summary: 0 success / 1 failure / 7 active
 
-- Verify: pending / pending (82a9237c)
-- Android Test APK: in_progress / pending (82a9237c)
-- Responsive UI QA: pending / pending (82a9237c)
-- Android Test APK: in_progress / pending (c6903415)
-- Responsive UI QA: in_progress / pending (c6903415)
-- Verify: in_progress / pending (c6903415)
-- Responsive UI QA: in_progress / pending (c13686da)
-- Verify: in_progress / pending (c13686da)
+- Verify: pending / pending (a607325b)
+- Android Test APK: in_progress / pending (a607325b)
+- Shambler Android Acceptance: in_progress / pending (a607325b)
+- Responsive UI QA: in_progress / pending (a607325b)
+- Responsive UI QA: in_progress / pending (2bbe0ba9)
+- Verify: in_progress / pending (2bbe0ba9)
+- Shambler Android Acceptance: completed / failure (2bbe0ba9)
+- Verify: in_progress / pending (82a9237c)
+
+## Latest failed run structure
+- Job: android-visual
+  - Failed step: Resolve validated Shambler smoke
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

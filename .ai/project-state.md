@@ -22,16 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T17:17:17Z
+Generated: 2026-09-21T17:22:54Z
 
 ### Git
 - Branch: `main`
-- Head: `82a9237c2180`
-- Commit date: 2026-09-21T19:17:03+02:00
-- Commit: Replace debug-like champion overlays with subordinate shape markers (#276)
-- Tracked files: 841
+- Head: `a607325b83bf`
+- Commit date: 2026-09-21T19:22:39+02:00
+- Commit: Unify priority actor silhouettes with a budgeted material outline (#277)
+- Tracked files: 843
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java`
+- `core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java`
 - `core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java`
 - `core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java`
@@ -49,9 +52,6 @@ Generated: 2026-09-21T17:17:17Z
 - `.github/workflows/responsive-ui-qa.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java`
 
 ### Project signals
 - `build.gradle`

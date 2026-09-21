@@ -1,14 +1,12 @@
 # Change impact
 
-Base: 10c818b57721ceeb6b572e9d190bd9f2c5aed88f
-Head: 82a9237c21807f83cc532b979988bd8299f4c769
+Base: d25e6e651ad75c27b59180693d4ccbc4a883c936
+Head: a607325b83bfa5f246acdcff4c92e399c862e87f
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java
-- M core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java
-- M core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java
-- M core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java
-- M core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java
+- A core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java
+- M core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java
+- A core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java
 
 ## Affected areas
 - core
