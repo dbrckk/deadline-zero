@@ -224,11 +224,11 @@ public final class ShopScreen extends ScreenAdapter {
             boolean enabled = game.services.offers.current().enabled(productId);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
             font.setColor(owned || !enabled ? VisualTheme.MUTED : i == 0 ? VisualTheme.GOLD : i == 3 ? VisualTheme.CYAN_SOFT : VisualTheme.TEXT_STRONG);
-            font.draw(batch, labels[i], r.x + 10f, r.y + r.height * .63f, r.width - 20f, Align.center, true);
+            font.draw(batch, labels[i], r.x + 28f, r.y + r.height * .66f, r.width - 56f, Align.left, true);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
             font.setColor(owned || !enabled ? VisualTheme.MUTED : VisualTheme.TEXT_DIM);
-            String sublabel = owned ? t("shop.owned") : !enabled ? t("shop.billingUnavailable") : "PLAY BILLING";
-            font.draw(batch, sublabel, r.x + 10f, r.y + 22f, r.width - 20f, Align.center, false);
+            String sublabel = owned ? t("shop.owned") : !enabled ? t("shop.billingUnavailable") : t("shop.playBilling");
+            font.draw(batch, sublabel, r.x + 28f, r.y + 22f, r.width - 56f, Align.left, false);
         }
     }
 
