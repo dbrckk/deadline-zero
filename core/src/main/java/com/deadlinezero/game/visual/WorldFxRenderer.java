@@ -198,26 +198,57 @@ public final class WorldFxRenderer {
 
     public void drawChampionAuras(ShapeRenderer shapes, Array<Enemy> enemies, float time) {
         if (budget.quality() < .42f) return;
-        int segments = budget.geometrySegments(28, 14);
         for (Enemy e : enemies) {
             if (!e.alive || e.type == Enemy.Type.BOSS || e.variant == Enemy.Variant.NORMAL) continue;
             float pulse = .82f + MathUtils.sin(time * 7.5f + e.position.x * .37f) * .18f;
-            float radius = e.radius * (1.45f + pulse * .18f);
+            float radius = e.radius * (1.34f + pulse * .08f);
+            float pip = Math.max(.045f, e.radius * .12f);
+
             switch (e.variant) {
-                case SWIFT -> shapes.setColor(.25f, .72f, 1f, .16f + .07f * pulse);
-                case ARMORED -> shapes.setColor(.70f, .80f, .95f, .16f + .06f * pulse);
-                case FERAL -> shapes.setColor(1f, .18f, .10f, .18f + .08f * pulse);
-                default -> { continue; }
-            }
-            shapes.circle(e.position.x, e.position.y, radius, segments);
-            if (budget.allowHeavyFx()) {
-                switch (e.variant) {
-                    case SWIFT -> shapes.setColor(.62f, .92f, 1f, .24f);
-                    case ARMORED -> shapes.setColor(.88f, .94f, 1f, .22f);
-                    case FERAL -> shapes.setColor(1f, .52f, .28f, .25f);
-                    default -> { continue; }
+                case SWIFT -> {
+                    shapes.setColor(.48f, .88f, 1f, .30f);
+                    int count = budget.allowHeavyFx() ? 4 : 3;
+                    float phase = time * 70f + e.position.x * 13f;
+                    for (int i = 0; i < count; i++) {
+                        float angle = phase + i * (360f / count);
+                        float x = e.position.x + MathUtils.cosDeg(angle) * radius;
+                        float y = e.position.y + MathUtils.sinDeg(angle) * radius;
+                        float tangentX = -MathUtils.sinDeg(angle) * pip * 1.8f;
+                        float tangentY = MathUtils.cosDeg(angle) * pip * 1.8f;
+                        shapes.rectLine(x - tangentX, y - tangentY, x + tangentX, y + tangentY, pip * .48f);
+                    }
                 }
-                shapes.circle(e.position.x, e.position.y, radius * .82f, segments);
+                case ARMORED -> {
+                    shapes.setColor(.82f, .90f, 1f, .28f);
+                    float d = radius * .72f;
+                    float bar = pip * .55f;
+                    shapes.rect(e.position.x - d - bar, e.position.y - d, bar, d * .60f);
+                    shapes.rect(e.position.x + d, e.position.y - d, bar, d * .60f);
+                    shapes.rect(e.position.x - d - bar, e.position.y + d * .40f, bar, d * .60f);
+                    shapes.rect(e.position.x + d, e.position.y + d * .40f, bar, d * .60f);
+                    shapes.rect(e.position.x - d, e.position.y + d, d * .60f, bar);
+                    shapes.rect(e.position.x + d * .40f, e.position.y + d, d * .60f, bar);
+                    shapes.rect(e.position.x - d, e.position.y - d - bar, d * .60f, bar);
+                    shapes.rect(e.position.x + d * .40f, e.position.y - d - bar, d * .60f, bar);
+                }
+                case FERAL -> {
+                    shapes.setColor(1f, .42f, .18f, .32f);
+                    for (int i = 0; i < 3; i++) {
+                        float angle = 90f + i * 120f + pulse * 8f;
+                        float ox = MathUtils.cosDeg(angle);
+                        float oy = MathUtils.sinDeg(angle);
+                        float tx = -oy;
+                        float ty = ox;
+                        float baseX = e.position.x + ox * radius * .76f;
+                        float baseY = e.position.y + oy * radius * .76f;
+                        float tipX = e.position.x + ox * radius * 1.10f;
+                        float tipY = e.position.y + oy * radius * 1.10f;
+                        float half = pip * 1.35f;
+                        shapes.triangle(baseX + tx * half, baseY + ty * half,
+                            baseX - tx * half, baseY - ty * half, tipX, tipY);
+                    }
+                }
+                default -> { }
             }
         }
     }
