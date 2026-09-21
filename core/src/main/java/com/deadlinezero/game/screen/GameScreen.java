@@ -182,6 +182,7 @@ public final class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && player.canDash() && move.len2() > .08f) {
             player.position.mulAdd(move, 4.8f);
             player.triggerDash();
+            CombatVisualEvents.markDash();
             if (game.accessibility != null && game.accessibility.haptics) game.services.haptics.dash();
             addCameraShake(.12f);
             impact(player.position.x, player.position.y, .9f, .16f, VisualTheme.CYAN);
