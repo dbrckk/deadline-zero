@@ -786,12 +786,31 @@ public final class GameScreen extends ScreenAdapter {
         float gait = MathUtils.sin(visualTime * (5f + speedRatio * 3f) + e.position.x * .7f) * .06f * speedRatio;
         if (e.attack.state() == EnemyState.TELEGRAPHING) {
             float pulse = .82f + MathUtils.sin(visualTime * 14f) * .18f;
-            shapes.setColor(VisualTheme.RED.r, VisualTheme.RED.g, VisualTheme.RED.b, .11f + .09f * pulse);
-            shapes.circle(e.position.x, e.position.y, (e.type == Enemy.Type.BOSS ? 4.4f : 1.15f) * pulse, 28);
+            float radius = (e.type == Enemy.Type.BOSS ? e.radius * 2.45f : e.radius * 1.72f) * pulse;
+            shapes.setColor(VisualTheme.RED.r, VisualTheme.RED.g, VisualTheme.RED.b, .44f);
+            drawThreatRing(e.position.x, e.position.y, radius, e.type == Enemy.Type.BOSS ? 10 : 6,
+                e.type == Enemy.Type.BOSS ? .085f : .052f);
         }
         if (e.type == Enemy.Type.BOSS && e.bossCombat != null && e.bossCombat.charging()) {
-            shapes.setColor(1f, .15f, .05f, .16f);
-            shapes.circle(e.position.x, e.position.y, 2.3f + MathUtils.sin(visualTime * 20f) * .18f, 28);
+            float radius = e.radius * (1.42f + MathUtils.sin(visualTime * 20f) * .08f);
+            shapes.setColor(1f, .15f, .05f, .54f);
+            drawThreatRing(e.position.x, e.position.y, radius, 12, .090f);
+            shapes.setColor(1f, .68f, .22f, .48f);
+            for (int i = 0; i < 4; i++) {
+                float angle = i * 90f + visualTime * 70f;
+                float ox = MathUtils.cosDeg(angle);
+                float oy = MathUtils.sinDeg(angle);
+                float tx = -oy;
+                float ty = ox;
+                float tipX = e.position.x + ox * radius * .78f;
+                float tipY = e.position.y + oy * radius * .78f;
+                float baseX = e.position.x + ox * radius * 1.05f;
+                float baseY = e.position.y + oy * radius * 1.05f;
+                float half = e.radius * .18f;
+                shapes.triangle(tipX, tipY,
+                    baseX + tx * half, baseY + ty * half,
+                    baseX - tx * half, baseY - ty * half);
+            }
         }
         if (drawBody) {
             if (e.hitFlash > 0f) c = Color.WHITE;
@@ -806,6 +825,15 @@ public final class GameScreen extends ScreenAdapter {
             shapes.setColor(VisualTheme.RED);
             shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f,
                 e.radius * 2f * MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f), .07f);
+        }
+    }
+
+    private void drawThreatRing(float cx, float cy, float radius, int pips, float pipRadius) {
+        int count = Math.max(4, pips);
+        for (int i = 0; i < count; i++) {
+            float angle = i * (360f / count);
+            shapes.circle(cx + MathUtils.cosDeg(angle) * radius,
+                cy + MathUtils.sinDeg(angle) * radius, pipRadius, 8);
         }
     }
 
