@@ -13572,7 +13572,7 @@ font.draw(batch, f("arsenal.cardStats", Math.round(paperDps(weapon)), Math.round
 ⋮----
 private void drawDetail(WeaponDefinition weapon, WeaponDefinition equipped) {
 ⋮----
-drawAuthoredPreview(weapon, detail.x + 18f, detail.y + 20f, leftW * .42f, detail.height - 38f);
+drawAuthoredPreview(weapon, detail.x + 22f, detail.y + 76f, leftW * .84f, detail.height * .58f);
 ⋮----
 font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
 ⋮----
@@ -13598,7 +13598,6 @@ font.draw(batch, f("arsenal.synergy", synergy.displayName), textX, detail.y + 18
 ⋮----
 private void drawStatBars(WeaponDefinition weapon, WeaponDefinition equipped) {
 ⋮----
-float gap = Math.max(18f, (detail.height - 44f) / 4f);
 drawStatBar(x, baseY, width, normalizeDps(weapon), normalizeDps(equipped), VisualTheme.accent());
 drawStatBar(x, baseY + gap, width, MathUtils.clamp((1f / weapon.fireInterval) / 8f, 0f, 1f),
 MathUtils.clamp((1f / equipped.fireInterval) / 8f, 0f, 1f), VisualTheme.CYAN_SOFT);
@@ -13609,11 +13608,11 @@ MathUtils.clamp(equipped.knockback / 5f, 0f, 1f), VisualTheme.VIOLET);
 ⋮----
 private void drawStatBar(float x, float y, float width, float value, float baseline, Color color) {
 shapes.setColor(VisualTheme.SURFACE_0);
-shapes.rect(x, y, width, 7f);
-shapes.setColor(VisualTheme.MUTED.r, VisualTheme.MUTED.g, VisualTheme.MUTED.b, .55f);
-shapes.rect(x, y, width * baseline, 7f);
+shapes.rect(x, y, width, 6f);
+shapes.setColor(VisualTheme.MUTED.r, VisualTheme.MUTED.g, VisualTheme.MUTED.b, .35f);
+shapes.rect(x, y, width * baseline, 6f);
 shapes.setColor(color);
-shapes.rect(x, y + 2f, width * value, 3f);
+shapes.rect(x, y + 1f, width * value, 4f);
 ⋮----
 private void drawAuthoredPreview(WeaponDefinition weapon, float x, float y, float maxW, float maxH) {
 if (game.art == null || !game.art.authoredAvailable()) return;
@@ -14948,12 +14947,13 @@ shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, t);
 UiRenderer.topRail(shapes, metrics);
 UiRenderer.bottomNav(shapes, metrics);
-UiRenderer.card(shapes, layout.survivorCard().x, layout.survivorCard().y,
-layout.survivorCard().width, layout.survivorCard().height, true, true);
-UiRenderer.card(shapes, layout.loadoutCard().x, layout.loadoutCard().y,
-layout.loadoutCard().width, layout.loadoutCard().height, false, false);
-UiRenderer.card(shapes, layout.threatCard().x, layout.threatCard().y,
-layout.threatCard().width, layout.threatCard().height, false, p.selectedThreatTier > 0);
+UiRenderer.premiumPanel(shapes, layout.survivorCard().x, layout.survivorCard().y,
+layout.survivorCard().width, layout.survivorCard().height, VisualTheme.accent(), true);
+UiRenderer.premiumPanel(shapes, layout.loadoutCard().x, layout.loadoutCard().y,
+layout.loadoutCard().width, layout.loadoutCard().height, VisualTheme.CYAN_SOFT, false);
+UiRenderer.premiumPanel(shapes, layout.threatCard().x, layout.threatCard().y,
+layout.threatCard().width, layout.threatCard().height,
+⋮----
 float deployPulse = .5f + .5f * (float)Math.sin(t * 2.4f);
 UiRenderer.premiumCta(shapes, layout.deploy().x, layout.deploy().y,
 layout.deploy().width, layout.deploy().height, VisualTheme.accent(), deployPulse);
@@ -14982,6 +14982,16 @@ shapes.rect(survivor.x + 10f, survivor.y + 10f, 5f, Math.max(0f, survivor.height
 shapes.rect(survivor.x + 10f, survivor.y + survivor.height - 5f, Math.max(0f, survivor.width * .34f), 3f);
 shapes.setColor(VisualTheme.BORDER);
 shapes.rect(survivor.x + survivor.width * .46f, survivor.y + 24f, 1f, Math.max(0f, survivor.height - 48f));
+⋮----
+// Hero staging: a grounded platform and soft spotlight make the survivor feel authored,
+// rather than a loose sprite floating inside a card.
+⋮----
+shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .10f);
+shapes.ellipse(heroCx - survivor.width * .16f, heroBaseY - 18f, survivor.width * .32f, 36f);
+shapes.setColor(VisualTheme.CYAN_SOFT.r, VisualTheme.CYAN_SOFT.g, VisualTheme.CYAN_SOFT.b, .22f);
+shapes.rect(heroCx - survivor.width * .10f, heroBaseY - 2f, survivor.width * .20f, 2f);
+shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .035f);
+shapes.triangle(heroCx - survivor.width * .20f, survivor.y + survivor.height - 18f,
 ⋮----
 Rectangle loadout = layout.loadoutCard();
 ⋮----
@@ -15047,13 +15057,13 @@ font.draw(batch, t("menu.tagline"), r.x + pad, r.y + r.height - 56f);
 ⋮----
 if (game.art.authoredAvailable()) {
 TextureRegion portrait = game.art.survivor(p.selectedSurvivor, GameArt.Motion.IDLE, t);
-float maxH = Math.min(330f, r.height * .70f);
+float maxH = Math.min(380f, r.height * .82f);
 ⋮----
 float aspect = portrait.getRegionWidth() / (float) Math.max(1, portrait.getRegionHeight());
 ⋮----
 drawH = drawW / Math.max(.01f, aspect);
 ⋮----
-float py = r.y + Math.max(44f, (r.height - drawH) * .38f);
+float py = r.y + Math.max(28f, (r.height - drawH) * .24f);
 batch.setColor(Color.WHITE);
 batch.draw(portrait, px, py, drawW, drawH);
 ⋮----
@@ -15074,9 +15084,19 @@ Rectangle r = layout.loadoutCard();
 ⋮----
 font.draw(batch, t("arsenal.title"), r.x + pad, r.y + r.height - 26f);
 ⋮----
+var weapon = WeaponCatalog.byId(p.selectedWeaponId);
+if (game.art != null && game.art.authoredAvailable()) {
+TextureRegion region = game.art.regionOrNull("weapon/" + weapon.id);
+⋮----
+float aspect = region.getRegionWidth() / (float)Math.max(1, region.getRegionHeight());
+⋮----
+float drawH = drawW / Math.max(.01f, aspect);
+⋮----
+batch.draw(region, r.x + r.width - drawW - 28f, r.y + 34f, drawW, drawH);
+⋮----
 font.getData().setScale(UiTypography.scale(UiTypography.Role.SECTION));
 ⋮----
-font.draw(batch, WeaponCatalog.byId(p.selectedWeaponId).displayName.toUpperCase(),
+font.draw(batch, weapon.displayName.toUpperCase(),
 ⋮----
 font.draw(batch, f("menu.deployStage", p.selectedStage), r.x + pad, r.y + r.height - 88f, r.width - pad * 2f, Align.left, false);
 ⋮----
@@ -15772,6 +15792,7 @@ String[] values = values(s, privacyRequired, policyAvailable);
 shapes.begin(ShapeRenderer.ShapeType.Filled);
 UiRenderer.background(shapes, metrics, visualTime);
 UiRenderer.topRail(shapes, metrics);
+drawSettingsGroupFrames(shapes);
 ⋮----
 boolean disabled = isDisabled(i, privacyRequired, policyAvailable);
 Color accent = settingsAccent(i);
@@ -15786,7 +15807,7 @@ UiRenderer.segmentedTrack(shapes, r.x + r.width * .56f, r.y + 10f, r.width * .38
 shapes.end();
 ⋮----
 batch.begin();
-font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
+font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * 1.05f);
 font.setColor(VisualTheme.CYAN_SOFT);
 font.draw(batch, t("shop.back"), layout.back().x + 10f, layout.back().y + layout.back().height * .56f,
 layout.back().width - 16f, Align.left, false);
@@ -15794,7 +15815,7 @@ font.getData().setScale(UiTypography.scale(UiTypography.Role.TITLE));
 font.setColor(VisualTheme.TEXT_STRONG);
 font.draw(batch, t("settings.title"), metrics.safeLeft() + 136f, metrics.headerBottom() + 56f,
 metrics.contentWidth() - 272f, Align.center, false);
-⋮----
+font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
 font.setColor(VisualTheme.TEXT_DIM);
 font.draw(batch, t("settings.subtitle"), metrics.safeLeft() + 136f, metrics.headerBottom() + 28f,
 ⋮----
@@ -15802,6 +15823,11 @@ for (int i = 0; i < rows.length; i++) drawRow(i, rows[i], labels[i], values[i], 
 batch.end();
 ⋮----
 handleInput(s, privacyRequired, policyAvailable);
+⋮----
+private void drawSettingsGroupFrames(ShapeRenderer shapes) {
+⋮----
+UiRenderer.premiumPanel(shapes, x, y, w, h, accents[group], false);
+UiRenderer.sectionPlate(shapes, x + 6f, y + h - 12f, w - 12f, 8f, accents[group], true);
 ⋮----
 private Color settingsAccent(int index) {
 ⋮----
@@ -15811,7 +15837,7 @@ private void drawRow(int index, Rectangle r, String label, String value, boolean
 ⋮----
 font.setColor(disabled ? VisualTheme.MUTED : index == row ? VisualTheme.accent() : VisualTheme.TEXT_DIM);
 font.draw(batch, label, r.x + 14f, r.y + r.height - 17f, r.width - 28f, Align.left, false);
-font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
+font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL) * 1.04f);
 font.setColor(disabled ? VisualTheme.MUTED : index == row ? VisualTheme.TEXT_STRONG : VisualTheme.TEXT);
 font.draw(batch, value, r.x + 14f, r.y + 23f, r.width - 28f, Align.right, false);
 ⋮----
@@ -16255,6 +16281,13 @@ shapes.rect(portrait.x + 8f, portrait.y + 8f, Math.max(0f, portrait.width - 16f)
 shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .72f : .24f);
 shapes.rect(portrait.x + 8f, portrait.y + portrait.height - 5f, Math.max(0f, portrait.width - 16f), 3f);
 ⋮----
+shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .10f : .035f);
+shapes.ellipse(cx - portrait.width * .22f, baseY - 20f, portrait.width * .44f, 40f);
+shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .24f : .08f);
+shapes.rect(cx - portrait.width * .13f, baseY, portrait.width * .26f, 2f);
+shapes.setColor(accent.r, accent.g, accent.b, unlocked ? .035f : .015f);
+shapes.triangle(cx - portrait.width * .28f, portrait.y + portrait.height - 20f,
+⋮----
 Rectangle stats = layout.stats();
 shapes.setColor(selected ? VisualTheme.positive().r : accent.r,
 selected ? VisualTheme.positive().g : accent.g,
@@ -16310,6 +16343,7 @@ float aspect = portrait.getRegionWidth() / (float) Math.max(1, portrait.getRegio
 ⋮----
 drawH = drawW / Math.max(.01f, aspect);
 ⋮----
+float py = p.y + Math.max(18f, (p.height - drawH) * .18f);
 if (unlocked) batch.setColor(Color.WHITE);
 else batch.setColor(.38f, .42f, .46f, 1f);
 batch.draw(portrait, px, py, drawW, drawH);

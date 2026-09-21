@@ -22,31 +22,30 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T12:36:31Z
+Generated: 2026-09-21T13:19:18Z
 
 ### Git
 - Branch: `main`
-- Head: `c92df7a51682`
-- Commit date: 2026-09-21T14:36:16+02:00
-- Commit: fix(ui): enable alpha blending for premium shape rendering (#268)
+- Head: `498410243d6a`
+- Commit date: 2026-09-21T15:19:07+02:00
+- Commit: Improve hero staging, arsenal showcase, and settings hierarchy (#269)
 - Tracked files: 835
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
 - `core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java`
-- `core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GearScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java`
-- `.github/workflows/android-test-release.yml`
 
 ### Project signals
 - `build.gradle`

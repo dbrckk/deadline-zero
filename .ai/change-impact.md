@@ -1,10 +1,13 @@
 # Change impact
 
-Base: 298430aeeadc731907fdbe45685eeb60e9db3c19
-Head: c92df7a51682752bdf70e77e3b28f577dfd18e94
+Base: f20fdb9cd0adb4582abf5ea415ed92951b5f4bdf
+Head: 498410243d6acf47a445b08a0fa5f4ef9c4c5453
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java
+- M core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java
 
 ## Affected areas
 - core
