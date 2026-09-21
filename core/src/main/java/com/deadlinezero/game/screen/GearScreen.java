@@ -92,7 +92,8 @@ public final class GearScreen extends ScreenAdapter {
         UiRenderer.background(shapes, metrics, visualTime);
         UiRenderer.topRail(shapes, metrics);
         UiRenderer.bottomNav(shapes, metrics);
-        UiRenderer.panel(shapes, detail.x, detail.y, detail.width, detail.height);
+        UiRenderer.premiumPanel(shapes, detail.x, detail.y, detail.width, detail.height,
+            size > 0 ? rarityColor(game.profile.inventory.items().get(index).rarity) : VisualTheme.CYAN_SOFT, true);
         if (size > 0) drawDetailChrome(shapes, game.profile.inventory.items().get(index));
 
         for (int i = pageStart; i < pageEnd; i++) {
@@ -100,16 +101,16 @@ public final class GearScreen extends ScreenAdapter {
             EquipmentItem item = game.profile.inventory.items().get(i);
             EquipmentItem equipped = game.profile.equipped(item.slot);
             boolean isEquipped = equipped != null && equipped.id.equals(item.id);
-            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == index, isEquipped);
+            UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, rarityColor(item.rarity), i == index, isEquipped, false);
             drawGearCardChrome(shapes, r, item, i == index, isEquipped);
         }
 
-        UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.NORMAL);
-        UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height,
+        UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
+        UiRenderer.premiumButton(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, VisualTheme.GOLD,
             size > 0 ? UiRenderer.ButtonState.SELECTED : UiRenderer.ButtonState.DISABLED);
-        UiRenderer.button(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height,
+        UiRenderer.premiumButton(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height, VisualTheme.CYAN_SOFT,
             size > 0 ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
-        UiRenderer.button(shapes, actions[3].x, actions[3].y, actions[3].width, actions[3].height,
+        UiRenderer.premiumButton(shapes, actions[3].x, actions[3].y, actions[3].width, actions[3].height, VisualTheme.VIOLET,
             size > 0 ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
         shapes.end();
     }

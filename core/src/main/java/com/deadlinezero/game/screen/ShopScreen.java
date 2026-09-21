@@ -80,10 +80,11 @@ public final class ShopScreen extends ScreenAdapter {
         for (int i = 0; i < chestCards.length; i++) {
             Rectangle r = chestCards[i];
             boolean disabled = i == 2 && p.daily.rewardedChestClaimed;
-            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == 2 && !disabled, false);
+            Color chestAccent = i == 0 ? VisualTheme.CYAN_SOFT : i == 1 ? VisualTheme.VIOLET : VisualTheme.positive();
+            UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, chestAccent, i == 2 && !disabled, false, disabled);
             drawChestChrome(shapes, r, i, disabled);
             Rectangle button = chestButton(r);
-            UiRenderer.button(shapes, button.x, button.y, button.width, button.height,
+            UiRenderer.premiumButton(shapes, button.x, button.y, button.width, button.height, chestAccent,
                 disabled ? UiRenderer.ButtonState.DISABLED : i == 2 ? UiRenderer.ButtonState.SELECTED : UiRenderer.ButtonState.NORMAL);
         }
         for (int i = 0; i < purchaseButtons.length; i++) {
@@ -92,7 +93,8 @@ public final class ShopScreen extends ScreenAdapter {
             boolean owned = (i == 0 && p.starterPackGranted) || (i == 3 && p.removeAdsPurchased);
             boolean enabled = game.services.offers.current().enabled(productId);
             boolean featured = game.services.offers.current().featured(productId);
-            UiRenderer.button(shapes, r.x, r.y, r.width, r.height,
+            Color offerAccent = i == 0 ? VisualTheme.GOLD : i == 3 ? VisualTheme.CYAN_SOFT : VisualTheme.accent();
+            UiRenderer.premiumButton(shapes, r.x, r.y, r.width, r.height, offerAccent,
                 owned || !enabled ? UiRenderer.ButtonState.DISABLED
                     : featured ? UiRenderer.ButtonState.SELECTED
                     : UiRenderer.ButtonState.NORMAL);

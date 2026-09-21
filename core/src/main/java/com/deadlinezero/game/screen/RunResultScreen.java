@@ -70,19 +70,19 @@ public final class RunResultScreen extends ScreenAdapter {
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         UiRenderer.background(shapes, metrics, visualTime);
-        UiRenderer.card(shapes, hero.x, hero.y, hero.width, hero.height, true, false);
+        UiRenderer.premiumPanel(shapes, hero.x, hero.y, hero.width, hero.height, VisualTheme.accent(), true);
         shapes.setColor(VisualTheme.accent().r, VisualTheme.accent().g, VisualTheme.accent().b, .22f);
         shapes.rect(hero.x + 6f, hero.y + hero.height - 6f, hero.width - 12f, 4f);
 
         Color[] rewardAccents = {VisualTheme.GOLD, VisualTheme.accent(), VisualTheme.VIOLET};
         for (int i = 0; i < metricsCards.length; i++) {
             Rectangle r = metricsCards[i];
-            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, i == 0);
+            UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, rewardAccents[i], false, i == 0, false);
             Color accent = rewardAccents[i];
             shapes.setColor(accent.r, accent.g, accent.b, .90f);
             shapes.rect(r.x, r.y + r.height - 4f, r.width, 4f);
         }
-        UiRenderer.panel(shapes, coaching.x, coaching.y, coaching.width, coaching.height);
+        UiRenderer.premiumPanel(shapes, coaching.x, coaching.y, coaching.width, coaching.height, COACHING_ACCENT, false);
         shapes.setColor(COACHING_ACCENT.r, COACHING_ACCENT.g, COACHING_ACCENT.b, .72f);
         shapes.rect(coaching.x, coaching.y, 4f, coaching.height);
         if (result.drop() != null) {
@@ -93,9 +93,9 @@ public final class RunResultScreen extends ScreenAdapter {
             shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .90f);
             shapes.rect(splitX, coaching.y + coaching.height - 4f, coaching.width * .37f - 8f, 4f);
         }
-        UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.SELECTED);
-        UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, UiRenderer.ButtonState.NORMAL);
-        UiRenderer.button(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height,
+        UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.GOLD, UiRenderer.ButtonState.SELECTED);
+        UiRenderer.premiumButton(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
+        UiRenderer.premiumButton(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height, VisualTheme.VIOLET,
             bonusClaimed ? UiRenderer.ButtonState.DISABLED : UiRenderer.ButtonState.NORMAL);
         shapes.end();
 

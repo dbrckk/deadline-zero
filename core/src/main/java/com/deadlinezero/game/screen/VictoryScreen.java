@@ -80,17 +80,19 @@ public final class VictoryScreen extends ScreenAdapter {
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         UiRenderer.background(shapes, metrics, visualTime);
-        UiRenderer.card(shapes, hero.x, hero.y, hero.width, hero.height, true, true);
+        UiRenderer.premiumPanel(shapes, hero.x, hero.y, hero.width, hero.height, VisualTheme.GOLD, true);
         for (int i = 0; i < rewardCards.length; i++) {
             Rectangle r = rewardCards[i];
-            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, false, i == 0);
+            Color rewardAccent = i == 0 ? VisualTheme.GOLD : i == 1 ? VisualTheme.accent() : VisualTheme.VIOLET;
+            UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, rewardAccent, false, i == 0, false);
         }
-        UiRenderer.panel(shapes, noticePanel.x, noticePanel.y, noticePanel.width, noticePanel.height);
+        Color noticeAccent = result.unlockedThreatTier() > 0 ? VisualTheme.GOLD : firstClear ? VisualTheme.positive() : VisualTheme.VIOLET;
+        UiRenderer.premiumPanel(shapes, noticePanel.x, noticePanel.y, noticePanel.width, noticePanel.height, noticeAccent, false);
         drawVictoryChrome(shapes);
-        UiRenderer.button(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, UiRenderer.ButtonState.NORMAL);
-        UiRenderer.button(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height,
+        UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
+        UiRenderer.premiumButton(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, VisualTheme.VIOLET,
             canShare ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
-        UiRenderer.button(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height, UiRenderer.ButtonState.SELECTED);
+        UiRenderer.premiumButton(shapes, actions[2].x, actions[2].y, actions[2].width, actions[2].height, VisualTheme.GOLD, UiRenderer.ButtonState.SELECTED);
         shapes.end();
 
         batch.begin();

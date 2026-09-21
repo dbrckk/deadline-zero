@@ -71,16 +71,19 @@ public final class SurvivorScreen extends ScreenAdapter {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         UiRenderer.background(shapes, metrics, artTime);
         UiRenderer.topRail(shapes, metrics);
-        UiRenderer.card(shapes, layout.card().x, layout.card().y, layout.card().width, layout.card().height, true, false);
-        UiRenderer.panel(shapes, layout.portrait().x, layout.portrait().y, layout.portrait().width, layout.portrait().height);
-        UiRenderer.panel(shapes, layout.stats().x, layout.stats().y, layout.stats().width, layout.stats().height);
+        UiRenderer.premiumCard(shapes, layout.card().x, layout.card().y, layout.card().width, layout.card().height,
+            unlocked ? VisualTheme.accent() : VisualTheme.MUTED, true, false, !unlocked);
+        UiRenderer.premiumPanel(shapes, layout.portrait().x, layout.portrait().y, layout.portrait().width, layout.portrait().height,
+            unlocked ? VisualTheme.accent() : VisualTheme.MUTED, true);
+        UiRenderer.premiumPanel(shapes, layout.stats().x, layout.stats().y, layout.stats().width, layout.stats().height,
+            unlocked ? VisualTheme.CYAN_SOFT : VisualTheme.MUTED, false);
         drawSurvivorChrome(shapes, unlocked);
         UiRenderer.progress(shapes, layout.xpBar().x, layout.xpBar().y, layout.xpBar().width, layout.xpBar().height,
             progress, VisualTheme.VIOLET);
-        UiRenderer.button(shapes, layout.previous().x, layout.previous().y, layout.previous().width, layout.previous().height,
-            UiRenderer.ButtonState.NORMAL);
-        UiRenderer.button(shapes, layout.next().x, layout.next().y, layout.next().width, layout.next().height,
-            UiRenderer.ButtonState.NORMAL);
+        UiRenderer.premiumButton(shapes, layout.previous().x, layout.previous().y, layout.previous().width, layout.previous().height,
+            VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
+        UiRenderer.premiumButton(shapes, layout.next().x, layout.next().y, layout.next().width, layout.next().height,
+            VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
         drawChevron(layout.previous(), false);
         drawChevron(layout.next(), true);
 
@@ -88,7 +91,8 @@ public final class SurvivorScreen extends ScreenAdapter {
         if (!unlocked) ctaState = UiRenderer.ButtonState.DISABLED;
         else if (game.profile.selectedSurvivor == SurvivorCatalog.Survivor.values()[index]) ctaState = UiRenderer.ButtonState.SELECTED;
         else ctaState = UiRenderer.ButtonState.NORMAL;
-        UiRenderer.button(shapes, layout.cta().x, layout.cta().y, layout.cta().width, layout.cta().height, ctaState);
+        UiRenderer.premiumButton(shapes, layout.cta().x, layout.cta().y, layout.cta().width, layout.cta().height,
+            game.profile.selectedSurvivor == SurvivorCatalog.Survivor.values()[index] ? VisualTheme.positive() : VisualTheme.GOLD, ctaState);
 
         if (!game.art.authoredAvailable()) {
             Rectangle p = layout.portrait();

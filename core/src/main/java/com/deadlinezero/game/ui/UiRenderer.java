@@ -48,6 +48,20 @@ public final class UiRenderer {
         float step = 144f;
         for (float y = 42f; y < m.height(); y += step) shapes.rect(0f, y, m.width(), 1f);
 
+        // Shader-inspired light shafts and horizon bloom, implemented with cheap geometry.
+        // They create depth on every screen without shipping a static background bitmap.
+        float drift = reduceMotion ? 0f : (float)Math.sin(time * .22f) * m.width() * .025f;
+        float horizon = m.height() * .58f;
+        set(shapes, VisualTheme.accent(), .018f);
+        shapes.triangle(m.width() * .08f + drift, m.height(), m.width() * .22f + drift, m.height(),
+            m.width() * .42f + drift, 0f);
+        shapes.triangle(m.width() * .74f - drift, m.height(), m.width() * .86f - drift, m.height(),
+            m.width() * .58f - drift, 0f);
+        set(shapes, VisualTheme.CYAN_SOFT, .028f);
+        shapes.rect(0f, horizon - 22f, m.width(), 44f);
+        set(shapes, VisualTheme.SURFACE_0, .74f);
+        shapes.rect(0f, horizon + 4f, m.width(), 2f);
+
         // Quiet edge rails create depth without flooding the screen with cyan.
         set(shapes, VisualTheme.BORDER, .28f);
         shapes.rect(m.safeLeft(), m.safeBottom(), 2f, m.safeTop() - m.safeBottom());
@@ -137,6 +151,118 @@ public final class UiRenderer {
         shapes.rect(x + 10f, y + h - 6f, Math.max(0f, w - 20f), 4f);
         shapes.rect(x + 10f, y + 10f, 4f, Math.max(0f, h - 20f));
         cornerMarks(shapes, x, y, w, h, a);
+    }
+
+    /**
+     * Production panel with layered depth, bevel notches and restrained emissive trim.
+     * Draw while ShapeRenderer is already in Filled mode.
+     */
+    public static void premiumPanel(ShapeRenderer shapes, float x, float y, float w, float h,
+                                    Color accent, boolean emphasized) {
+        Color a = accent == null ? VisualTheme.accent() : accent;
+        float notch = Math.min(18f, Math.min(w, h) * .10f);
+
+        // Shadow / separation from background.
+        set(shapes, VisualTheme.BG, .92f);
+        shapes.rect(x + 7f, y - 7f, Math.max(0f, w), Math.max(0f, h));
+
+        // Main body + subtle inset.
+        set(shapes, VisualTheme.SURFACE_1, .995f);
+        shapes.rect(x, y, w, h);
+        set(shapes, VisualTheme.SURFACE_2, emphasized ? .72f : .46f);
+        shapes.rect(x + 5f, y + 5f, Math.max(0f, w - 10f), Math.max(0f, h - 10f));
+
+        // Angular cut-corner overlays.
+        set(shapes, VisualTheme.BG, 1f);
+        shapes.triangle(x, y + h, x + notch, y + h, x, y + h - notch);
+        shapes.triangle(x + w, y, x + w - notch, y, x + w, y + notch);
+
+        // Double-frame and accent hierarchy.
+        set(shapes, VisualTheme.BORDER, emphasized ? .94f : .72f);
+        border(shapes, x, y, w, h, emphasized ? 2.5f : 2f);
+        set(shapes, a, emphasized ? .88f : .52f);
+        shapes.rect(x + notch + 5f, y + h - 4f, Math.max(0f, w - notch * 2f - 10f), 3f);
+        shapes.rect(x + 4f, y + notch + 5f, 3f, Math.max(0f, h - notch * 2f - 10f));
+
+        // Inner highlight gives the card material depth without a texture dependency.
+        set(shapes, a, emphasized ? .10f : .045f);
+        shapes.rect(x + 9f, y + 9f, Math.max(0f, w - 18f), Math.max(0f, h - 18f));
+        set(shapes, VisualTheme.SURFACE_1, .96f);
+        shapes.rect(x + 13f, y + 13f, Math.max(0f, w - 26f), Math.max(0f, h - 26f));
+
+        cornerMarks(shapes, x + 3f, y + 3f, w - 6f, h - 6f, a);
+    }
+
+    public static void premiumCard(ShapeRenderer shapes, float x, float y, float w, float h,
+                                   Color accent, boolean focused, boolean selected, boolean disabled) {
+        Color a = accent == null ? VisualTheme.accent() : accent;
+        set(shapes, VisualTheme.SURFACE_1, disabled ? .72f : .98f);
+        shapes.rect(x, y, w, h);
+        set(shapes, VisualTheme.SURFACE_2, disabled ? .18f : focused || selected ? .66f : .38f);
+        shapes.rect(x + 4f, y + 4f, Math.max(0f, w - 8f), Math.max(0f, h - 8f));
+
+        Color frame = disabled ? VisualTheme.BORDER : (focused || selected ? a : VisualTheme.BORDER);
+        set(shapes, frame, disabled ? .34f : focused || selected ? .95f : .64f);
+        border(shapes, x, y, w, h, focused || selected ? 2.5f : 2f);
+
+        set(shapes, a, disabled ? .14f : selected ? .92f : focused ? .72f : .34f);
+        shapes.rect(x + 6f, y + h - 5f, Math.max(0f, w - 12f), 3f);
+        shapes.rect(x + 6f, y + 7f, focused || selected ? 4f : 2f, Math.max(0f, h - 14f));
+
+        if (selected) {
+            set(shapes, a, .10f);
+            shapes.rect(x + 10f, y + 10f, Math.max(0f, w - 20f), Math.max(0f, h - 20f));
+        }
+        cornerMarks(shapes, x, y, w, h, frame);
+    }
+
+    public static void premiumButton(ShapeRenderer shapes, float x, float y, float w, float h,
+                                     Color accent, ButtonState state) {
+        Color a = accent == null ? VisualTheme.accent() : accent;
+        boolean disabled = state == ButtonState.DISABLED;
+        boolean active = state == ButtonState.SELECTED || state == ButtonState.PRESSED;
+        set(shapes, disabled ? VisualTheme.SURFACE_1 : VisualTheme.SURFACE_2, disabled ? .60f : .99f);
+        shapes.rect(x, y, w, h);
+        set(shapes, a, disabled ? .10f : active ? .18f : .07f);
+        shapes.rect(x + 5f, y + 5f, Math.max(0f, w - 10f), Math.max(0f, h - 10f));
+        set(shapes, disabled ? VisualTheme.BORDER : a, disabled ? .38f : active ? 1f : .70f);
+        border(shapes, x, y, w, h, active ? 3f : 2f);
+        shapes.rect(x + 9f, y + h - 5f, Math.max(0f, w - 18f), active ? 4f : 2f);
+        if (active) {
+            shapes.rect(x + 9f, y + 9f, 4f, Math.max(0f, h - 18f));
+        }
+        cornerMarks(shapes, x, y, w, h, disabled ? VisualTheme.BORDER : a);
+    }
+
+    public static void sectionPlate(ShapeRenderer shapes, float x, float y, float w, float h,
+                                    Color accent, boolean strong) {
+        Color a = accent == null ? VisualTheme.accent() : accent;
+        set(shapes, VisualTheme.SURFACE_0, .94f);
+        shapes.rect(x, y, w, h);
+        set(shapes, a, strong ? .18f : .09f);
+        shapes.rect(x + 3f, y + 3f, Math.max(0f, w - 6f), Math.max(0f, h - 6f));
+        set(shapes, a, strong ? .92f : .58f);
+        shapes.rect(x, y, 4f, h);
+        shapes.rect(x + 8f, y + h - 3f, Math.max(0f, Math.min(w - 16f, w * .48f)), 2f);
+        set(shapes, VisualTheme.BORDER, .62f);
+        border(shapes, x, y, w, h, 1.5f);
+    }
+
+    public static void segmentedTrack(ShapeRenderer shapes, float x, float y, float w, float h,
+                                      float progress, int segments, Color accent) {
+        Color a = accent == null ? VisualTheme.accent() : accent;
+        float p = Math.max(0f, Math.min(1f, progress));
+        int count = Math.max(1, segments);
+        float gap = Math.min(3f, w / Math.max(12f, count * 8f));
+        float segW = Math.max(1f, (w - gap * (count - 1)) / count);
+        int filled = Math.round(p * count);
+        for (int i = 0; i < count; i++) {
+            float sx = x + i * (segW + gap);
+            set(shapes, i < filled ? a : VisualTheme.SURFACE_0, i < filled ? .95f : .98f);
+            shapes.rect(sx, y, segW, h);
+            set(shapes, i < filled ? a : VisualTheme.BORDER, i < filled ? .82f : .55f);
+            border(shapes, sx, y, segW, h, 1f);
+        }
     }
 
     public static void progress(ShapeRenderer shapes, float x, float y, float w, float h, float progress, Color color) {

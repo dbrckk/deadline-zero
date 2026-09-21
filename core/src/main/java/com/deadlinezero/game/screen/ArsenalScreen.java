@@ -99,7 +99,7 @@ public final class ArsenalScreen extends ScreenAdapter {
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         UiRenderer.background(shapes, metrics, visualTime);
         UiRenderer.topRail(shapes, metrics);
-        UiRenderer.panel(shapes, detail.x, detail.y, detail.width, detail.height);
+        UiRenderer.premiumPanel(shapes, detail.x, detail.y, detail.width, detail.height, elementColor(focusedWeapon), true);
         drawDetailChrome(shapes, focusedWeapon, equipped);
 
         for (int i = pageStart; i < pageEnd; i++) {
@@ -108,7 +108,7 @@ public final class ArsenalScreen extends ScreenAdapter {
             WeaponDefinition weapon = all[i];
             boolean selected = weapon.id.equals(game.profile.selectedWeaponId);
             boolean unlocked = WeaponProgression.unlocked(game.profile, weapon);
-            UiRenderer.card(shapes, r.x, r.y, r.width, r.height, i == focus, selected);
+            UiRenderer.premiumCard(shapes, r.x, r.y, r.width, r.height, elementColor(weapon), i == focus, selected, !unlocked);
             drawWeaponCardChrome(shapes, r, weapon, i == focus, selected, unlocked);
             if (!unlocked) {
                 shapes.setColor(0f, 0f, 0f, .28f);
@@ -119,9 +119,9 @@ public final class ArsenalScreen extends ScreenAdapter {
         }
 
         if (pageCount > 1) {
-            UiRenderer.button(shapes, previousPage.x, previousPage.y, previousPage.width, previousPage.height,
+            UiRenderer.premiumButton(shapes, previousPage.x, previousPage.y, previousPage.width, previousPage.height, VisualTheme.CYAN_SOFT,
                 page > 0 ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
-            UiRenderer.button(shapes, nextPage.x, nextPage.y, nextPage.width, nextPage.height,
+            UiRenderer.premiumButton(shapes, nextPage.x, nextPage.y, nextPage.width, nextPage.height, VisualTheme.CYAN_SOFT,
                 page < pageCount - 1 ? UiRenderer.ButtonState.NORMAL : UiRenderer.ButtonState.DISABLED);
             drawChevron(previousPage, false, page > 0);
             drawChevron(nextPage, true, page < pageCount - 1);
