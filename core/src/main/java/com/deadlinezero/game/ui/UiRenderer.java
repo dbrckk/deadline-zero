@@ -48,6 +48,20 @@ public final class UiRenderer {
         float step = 144f;
         for (float y = 42f; y < m.height(); y += step) shapes.rect(0f, y, m.width(), 1f);
 
+        // Shader-inspired light shafts and horizon bloom, implemented with cheap geometry.
+        // They create depth on every screen without shipping a static background bitmap.
+        float drift = reduceMotion ? 0f : (float)Math.sin(time * .22f) * m.width() * .025f;
+        float horizon = m.height() * .58f;
+        set(shapes, VisualTheme.accent(), .018f);
+        shapes.triangle(m.width() * .08f + drift, m.height(), m.width() * .22f + drift, m.height(),
+            m.width() * .42f + drift, 0f);
+        shapes.triangle(m.width() * .74f - drift, m.height(), m.width() * .86f - drift, m.height(),
+            m.width() * .58f - drift, 0f);
+        set(shapes, VisualTheme.CYAN_SOFT, .028f);
+        shapes.rect(0f, horizon - 22f, m.width(), 44f);
+        set(shapes, VisualTheme.SURFACE_0, .74f);
+        shapes.rect(0f, horizon + 4f, m.width(), 2f);
+
         // Quiet edge rails create depth without flooding the screen with cyan.
         set(shapes, VisualTheme.BORDER, .28f);
         shapes.rect(m.safeLeft(), m.safeBottom(), 2f, m.safeTop() - m.safeBottom());
