@@ -16,14 +16,14 @@ public final class ArtProfileCatalog {
     private static final CharacterProfile VOLT = new CharacterProfile(1.73f, .60f, .30f, .24f);
     private static final CharacterProfile WRAITH = new CharacterProfile(1.68f, .58f, .30f, .23f);
 
-    private static final CharacterProfile SHAMBLER = new CharacterProfile(1.52f, .43f, 0f, 0f);
-    private static final CharacterProfile RUNNER = new CharacterProfile(1.26f, .36f, 0f, 0f);
-    private static final CharacterProfile BRUTE = new CharacterProfile(2.08f, .62f, 0f, 0f);
-    private static final CharacterProfile RANGED = new CharacterProfile(1.46f, .43f, 0f, 0f);
-    private static final CharacterProfile ELITE = new CharacterProfile(2.42f, .72f, 0f, 0f);
-    private static final CharacterProfile SHIELDED = new CharacterProfile(2.18f, .65f, 0f, 0f);
-    private static final CharacterProfile REGENERATOR = new CharacterProfile(1.58f, .45f, 0f, 0f);
-    private static final CharacterProfile PHANTOM = new CharacterProfile(1.38f, .40f, 0f, 0f);
+    private static final CharacterProfile SHAMBLER = new CharacterProfile(1.70f, .48f, 0f, 0f);
+    private static final CharacterProfile RUNNER = new CharacterProfile(1.46f, .41f, 0f, 0f);
+    private static final CharacterProfile BRUTE = new CharacterProfile(2.20f, .66f, 0f, 0f);
+    private static final CharacterProfile RANGED = new CharacterProfile(1.64f, .48f, 0f, 0f);
+    private static final CharacterProfile ELITE = new CharacterProfile(2.55f, .76f, 0f, 0f);
+    private static final CharacterProfile SHIELDED = new CharacterProfile(2.28f, .68f, 0f, 0f);
+    private static final CharacterProfile REGENERATOR = new CharacterProfile(1.74f, .50f, 0f, 0f);
+    private static final CharacterProfile PHANTOM = new CharacterProfile(1.55f, .45f, 0f, 0f);
     private static final CharacterProfile BOSS = new CharacterProfile(5.15f, 1.35f, 0f, 0f);
 
     private ArtProfileCatalog() {}
