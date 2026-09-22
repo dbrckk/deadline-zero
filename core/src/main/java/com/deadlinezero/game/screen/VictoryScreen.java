@@ -91,6 +91,7 @@ public final class VictoryScreen extends ScreenAdapter {
         }
         Color noticeAccent = result.unlockedThreatTier() > 0 ? VisualTheme.GOLD : firstClear ? VisualTheme.positive() : VisualTheme.VIOLET;
         UiRenderer.premiumPanel(shapes, noticePanel.x, noticePanel.y, noticePanel.width, noticePanel.height, noticeAccent, false);
+        drawNoticeShowcase(shapes);
         drawVictoryChrome(shapes);
         UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
         UiRenderer.premiumButton(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, VisualTheme.VIOLET,
@@ -135,6 +136,23 @@ public final class VictoryScreen extends ScreenAdapter {
             : index == 1 ? UiIconRenderer.Icon.GEMS : UiIconRenderer.Icon.LEVEL;
         float size = Math.min(28f, r.height * .26f);
         UiIconRenderer.draw(shapes, icon, r.x + 16f, r.y + r.height - size - 14f, size, accent, .92f);
+    }
+
+    private void drawNoticeShowcase(ShapeRenderer shapes) {
+        if (result.drop() == null) return;
+        Color rarity = VisualTheme.equipmentRarity(result.drop().rarity);
+        float cardW = noticePanel.width * .31f;
+        float cardH = noticePanel.height - 24f;
+        float x = noticePanel.x + noticePanel.width - cardW - 14f;
+        float y = noticePanel.y + 12f;
+        UiRenderer.premiumCard(shapes, x, y, cardW, cardH, rarity, true, false, false);
+        float badge = Math.min(58f, cardH * .54f);
+        UiRenderer.iconBadge(shapes, x + 14f, y + cardH * .5f - badge * .5f, badge, rarity, true);
+        UiIconRenderer.draw(shapes, UiIconRenderer.Icon.GEAR,
+            x + 22f, y + cardH * .5f - badge * .5f + 8f,
+            badge - 16f, rarity, .94f);
+        shapes.setColor(rarity.r, rarity.g, rarity.b, .88f);
+        shapes.rect(x + 7f, y + cardH - 4f, Math.max(0f, cardW - 14f), 3f);
     }
 
     private void drawVictoryChrome(ShapeRenderer shapes) {
@@ -225,12 +243,20 @@ public final class VictoryScreen extends ScreenAdapter {
             font.draw(batch, f("victory.firstClear", bonusCredits, bonusGems), left, top, width, Align.center, false);
         }
 
-        drawMasteryNotice(left, noticePanel.y + noticePanel.height * .43f, width);
+        float masteryWidth = result.drop() == null ? width : noticePanel.width * .60f;
+        drawMasteryNotice(left, noticePanel.y + noticePanel.height * .43f, masteryWidth);
         if (result.drop() != null) {
+            float cardW = noticePanel.width * .31f;
+            float x = noticePanel.x + noticePanel.width - cardW - 14f;
+            Color rarity = VisualTheme.equipmentRarity(result.drop().rarity);
+            font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
+            font.setColor(rarity);
+            font.draw(batch, t(result.drop().rarityKey()),
+                x + 78f, noticePanel.y + noticePanel.height * .64f, cardW - 92f, Align.left, false);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
             font.setColor(VisualTheme.TEXT_STRONG);
-            font.draw(batch, f("result.drop", t(result.drop().rarityKey()), localizedName(result.drop()), result.drop().level),
-                left, noticePanel.y + 22f, width, Align.center, false);
+            font.draw(batch, f("result.drop", t(result.drop().rarityKey()), dropDisplayName(result.drop()), result.drop().level),
+                x + 78f, noticePanel.y + noticePanel.height * .42f, cardW - 92f, Align.left, true);
         }
     }
 
@@ -286,6 +312,12 @@ public final class VictoryScreen extends ScreenAdapter {
         String key = item.nameKey();
         if (key != null) return t(key);
         return f("equipment.generatedName", t(item.rarityKey()), t(item.slotKey()));
+    }
+
+    private String dropDisplayName(com.deadlinezero.game.meta.EquipmentItem item) {
+        if (item == null) return "";
+        String key = item.nameKey();
+        return key != null ? t(key) : t(item.slotKey());
     }
     private String t(String key) { return game.i18n.text(key); }
     private String f(String key, Object... args) { return game.i18n.format(key, args); }
