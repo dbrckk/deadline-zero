@@ -689,7 +689,7 @@ size = output.length();
 ⋮----
 // Android Emulator occasionally exposes a stale/broken color buffer for a single frame.
 // Retry the capture, but keep the exact same semantic size gate for the final artifact.
-if (attempt < 3) Thread.sleep(300L);
+if (attempt < 5) Thread.sleep(650L);
 ⋮----
 assertTrue("gameplay QA screenshot is unexpectedly small after retries: " + size, size > 10_000L);
 ⋮----

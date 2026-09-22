@@ -22,26 +22,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T17:32:23Z
+Generated: 2026-09-22T18:16:31Z
 
 ### Git
 - Branch: `main`
-- Head: `b6d7a5d47430`
-- Commit date: 2026-09-22T19:32:11+02:00
-- Commit: Turn run drops into visual reward showcases (#295)
+- Head: `8784f56bed2e`
+- Commit date: 2026-09-22T20:16:09+02:00
+- Commit: Strengthen combat actor readability and boss reveal framing (#298)
 - Tracked files: 852
 
 ### Recently changed files
+- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
+- `core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java`
+- `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
 - `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
-- `core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java`
-- `core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java`
 
 ### Project signals
 - `build.gradle`

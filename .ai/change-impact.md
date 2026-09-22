@@ -1,13 +1,15 @@
 # Change impact
 
-Base: 1c483805d52f3ad350ee8482c0fed85dc2b70a33
-Head: b6d7a5d4743072c2997272e88deb6d21eba85402
+Base: dee2bee495aad0fefad6409adab8f3f3e903853b
+Head: 8784f56bed2ec0bb0652d6fd78f750c758badf09
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java
-- M core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java
+- M android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java
+- M core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java
+- M core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java
 
 ## Affected areas
+- android
 - core
 
 ## Related test candidates

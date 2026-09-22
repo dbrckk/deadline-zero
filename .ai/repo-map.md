@@ -5079,7 +5079,7 @@ size = output.length();
 ⋮----
 // Android Emulator occasionally exposes a stale/broken color buffer for a single frame.
 // Retry the capture, but keep the exact same semantic size gate for the final artifact.
-if (attempt < 3) Thread.sleep(300L);
+if (attempt < 5) Thread.sleep(650L);
 ⋮----
 assertTrue("gameplay QA screenshot is unexpectedly small after retries: " + size, size > 10_000L);
 ⋮----
@@ -17877,11 +17877,11 @@ if (a.hasPermafrostBladeSynergy()) return "hud.build.permafrostBlades";
 public final class ActorMaterialProfile {
 ⋮----
 private static final Profile NONE = new Profile(false, 1f, 0f);
-private static final Profile PLAYER = new Profile(true, 1.055f, .72f);
-private static final Profile CHAMPION = new Profile(true, 1.045f, .58f);
-private static final Profile SPECIALIST = new Profile(true, 1.050f, .62f);
-private static final Profile ELITE = new Profile(true, 1.055f, .66f);
-private static final Profile BOSS = new Profile(true, 1.065f, .76f);
+private static final Profile PLAYER = new Profile(true, 1.078f, .80f);
+private static final Profile CHAMPION = new Profile(true, 1.068f, .74f);
+private static final Profile SPECIALIST = new Profile(true, 1.072f, .78f);
+private static final Profile ELITE = new Profile(true, 1.076f, .80f);
+private static final Profile BOSS = new Profile(true, 1.080f, .80f);
 ⋮----
 public static Profile player() { return PLAYER; }
 ⋮----
