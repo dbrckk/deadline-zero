@@ -121,6 +121,7 @@ public final class MissionsScreen extends ScreenAdapter {
         drawMissionStateCard(shapes, weeklyRows[2], p.weekly.bossMissionClaimed,
             p.weekly.bosses >= WeeklyService.BOSS_TARGET, VisualTheme.VIOLET);
         drawMissionProgressBars(shapes, p);
+        drawMissionRowIcons(shapes, p);
 
         UiRenderer.premiumPanel(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height,
             VisualTheme.accent(), true);
@@ -168,6 +169,67 @@ public final class MissionsScreen extends ScreenAdapter {
                 unlocked ? UiIconRenderer.Icon.TROPHY : UiIconRenderer.Icon.LOCK,
                 r.x + 10f, r.y + r.height - 28f, 18f, accent, claimed ? .45f : .82f);
         }
+    }
+
+    private void drawMissionRowIcons(ShapeRenderer shapes, PlayerProfile p) {
+        UiIconRenderer.Icon[] daily = {
+            UiIconRenderer.Icon.BASE,
+            UiIconRenderer.Icon.ARSENAL,
+            UiIconRenderer.Icon.STAGE,
+            UiIconRenderer.Icon.TROPHY
+        };
+        UiIconRenderer.Icon[] weekly = {
+            UiIconRenderer.Icon.ARSENAL,
+            UiIconRenderer.Icon.STAGE,
+            UiIconRenderer.Icon.TROPHY
+        };
+        for (int i = 0; i < dailyRows.length; i++) {
+            Rectangle r = dailyRows[i];
+            boolean claimed = switch (i) {
+                case 0 -> p.daily.loginClaimed;
+                case 1 -> p.daily.killMissionClaimed;
+                case 2 -> p.daily.runMissionClaimed;
+                default -> p.daily.bossMissionClaimed;
+            };
+            boolean ready = switch (i) {
+                case 0 -> !p.daily.loginClaimed;
+                case 1 -> p.daily.killsToday >= 100;
+                case 2 -> p.daily.runsToday >= 3;
+                default -> p.daily.bossesToday >= 1;
+            };
+            Color accent = claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : VisualTheme.GOLD;
+            UiRenderer.iconBadge(shapes, r.x + 10f, r.y + r.height * .50f - 16f, 32f, accent, ready && !claimed);
+            UiIconRenderer.draw(shapes, daily[i], r.x + 16f, r.y + r.height * .50f - 10f,
+                20f, accent, claimed ? .42f : .88f);
+        }
+        for (int i = 0; i < weeklyRows.length; i++) {
+            Rectangle r = weeklyRows[i];
+            boolean claimed = switch (i) {
+                case 0 -> p.weekly.killMissionClaimed;
+                case 1 -> p.weekly.runMissionClaimed;
+                default -> p.weekly.bossMissionClaimed;
+            };
+            boolean ready = switch (i) {
+                case 0 -> p.weekly.kills >= WeeklyService.KILL_TARGET;
+                case 1 -> p.weekly.runs >= WeeklyService.RUN_TARGET;
+                default -> p.weekly.bosses >= WeeklyService.BOSS_TARGET;
+            };
+            Color accent = claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : VisualTheme.VIOLET;
+            UiRenderer.iconBadge(shapes, r.x + 10f, r.y + r.height * .50f - 16f, 32f, accent, ready && !claimed);
+            UiIconRenderer.draw(shapes, weekly[i], r.x + 16f, r.y + r.height * .50f - 10f,
+                20f, accent, claimed ? .42f : .88f);
+        }
+
+        UiRenderer.iconBadge(shapes, masteryPanel.x + 10f, masteryPanel.y + masteryPanel.height - 43f,
+            30f, VisualTheme.CYAN, false);
+        UiIconRenderer.draw(shapes, UiIconRenderer.Icon.ARSENAL,
+            masteryPanel.x + 15f, masteryPanel.y + masteryPanel.height - 38f,
+            20f, VisualTheme.CYAN, .90f);
+        UiRenderer.iconBadge(shapes, masteryPanel.x + 10f, masteryPanel.y + masteryPanel.height * .45f - 15f,
+            30f, VisualTheme.VIOLET, false);
+        UiIconRenderer.draw(shapes, UiIconRenderer.Icon.STAGE,
+            masteryPanel.x + 15f, masteryPanel.y + masteryPanel.height * .45f - 10f,
+            20f, VisualTheme.VIOLET, .90f);
     }
 
     private void drawMissionProgressBars(ShapeRenderer shapes, PlayerProfile p) {
@@ -253,12 +315,12 @@ public final class MissionsScreen extends ScreenAdapter {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.TEXT_STRONG);
         font.draw(batch, f("missions.masteryLine", t(weapon.displayNameKey()), weaponRank, MasteryProgress.MAX_RANK,
-            t("mastery.rank." + weaponRank), nextLabel(weaponNext)), masteryPanel.x + 12f,
-            masteryPanel.y + masteryPanel.height - 25f, masteryPanel.width - 24f, Align.left, true);
+            t("mastery.rank." + weaponRank), nextLabel(weaponNext)), masteryPanel.x + 50f,
+            masteryPanel.y + masteryPanel.height - 25f, masteryPanel.width - 62f, Align.left, true);
         font.setColor(VisualTheme.VIOLET);
         font.draw(batch, f("missions.masteryLine", t(biome.labelKey()), biomeRank, MasteryProgress.MAX_RANK,
-            t("mastery.rank." + biomeRank), nextLabel(biomeNext)), masteryPanel.x + 12f,
-            masteryPanel.y + masteryPanel.height * .48f, masteryPanel.width - 24f, Align.left, true);
+            t("mastery.rank." + biomeRank), nextLabel(biomeNext)), masteryPanel.x + 50f,
+            masteryPanel.y + masteryPanel.height * .48f, masteryPanel.width - 62f, Align.left, true);
 
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
         font.setColor(VisualTheme.TEXT_DIM);
@@ -287,10 +349,10 @@ public final class MissionsScreen extends ScreenAdapter {
     private void drawClaimRow(Rectangle r, String text, boolean claimed, boolean ready) {
         font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * 1.04f);
         font.setColor(claimed ? VisualTheme.MUTED : VisualTheme.TEXT_STRONG);
-        font.draw(batch, text, r.x + 12f, r.y + r.height * .64f, r.width - 24f, Align.left, true);
+        font.draw(batch, text, r.x + 52f, r.y + r.height * .64f, r.width - 64f, Align.left, true);
         font.setColor(claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : VisualTheme.TEXT_DIM);
         font.draw(batch, claimed ? t("missions.claimed") : ready ? t("common.open") : "…",
-            r.x + 12f, r.y + 17f, r.width - 24f, Align.right, false);
+            r.x + 52f, r.y + 17f, r.width - 64f, Align.right, false);
     }
 
     private String progressText(String title, int progress, int target) {
