@@ -47,9 +47,14 @@ func _physics_process(delta: float) -> void:
     _update_authored_animation()
 
     var target := _nearest_enemy()
-    if target != null and fire_clock <= 0.0:
-        _fire_at(target)
-        fire_clock = fire_interval
+    if target != null:
+        var facing := target.global_position
+        facing.y = global_position.y
+        if global_position.distance_squared_to(facing) > 0.01:
+            look_at(facing, Vector3.UP)
+        if fire_clock <= 0.0:
+            _fire_at(target)
+            fire_clock = fire_interval
 
 func set_touch_move(value: Vector2) -> void:
     touch_move = value.limit_length(1.0)
@@ -119,6 +124,19 @@ func _build_visual() -> void:
         add_child(authored_visual)
         authored_anim = DZAssetLibrary.animation_player(authored_visual)
         _play_authored("Idle_Gun")
+
+        for hidden_name in ["Knife", "WoodenBat_Saw"]:
+            var hidden := authored_visual.find_child(hidden_name, true, false)
+            if hidden is GeometryInstance3D:
+                (hidden as GeometryInstance3D).visible = false
+
+        var rifle := DZAssetLibrary.rifle()
+        if rifle != null:
+            rifle.name = "Rifle"
+            rifle.position = Vector3(0.33, 0.93, -0.38)
+            rifle.rotation_degrees = Vector3(-8.0, 180.0, -4.0)
+            rifle.scale = Vector3.ONE * 0.92
+            add_child(rifle)
 
         var ring := MeshInstance3D.new()
         var ring_mesh := CylinderMesh.new()
