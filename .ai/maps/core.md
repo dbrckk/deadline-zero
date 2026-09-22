@@ -251,6 +251,7 @@ src/
               DeathFxRenderer.java
               Direction8.java
               DirectionalBootstrapArt.java
+              EnemyHealthBarPresentation.java
               EnvironmentArtCatalog.java
               EnvironmentBiomeRules.java
               EnvironmentRenderer.java
@@ -452,6 +453,7 @@ src/
               DirectionalBootstrapArtTest.java
               DirectionalBootstrapLazyLoadTest.java
               DirectionalGpuMemoryBudgetTest.java
+              EnemyHealthBarPresentationTest.java
               EnvironmentArtCatalogTest.java
               EnvironmentBiomeRulesTest.java
               FinalArtContractTest.java
@@ -5728,11 +5730,14 @@ shapes.setColor(c);
 ⋮----
 shapes.ellipse(e.position.x - sx, e.position.y - sy, sx * 2f, sy * 2f);
 ⋮----
-shapes.setColor(.08f, .09f, .10f, .82f);
-shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f, .07f);
-shapes.setColor(VisualTheme.RED);
-shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f,
-e.radius * 2f * MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f), .07f);
+if (EnemyHealthBarPresentation.visible(e)) {
+float width = e.radius * 2f * EnemyHealthBarPresentation.widthMultiplier(e);
+⋮----
+shapes.setColor(.08f, .09f, .10f, .76f);
+shapes.rect(x, y, width, .065f);
+shapes.setColor(e.type == Enemy.Type.ELITE ? VisualTheme.GOLD : VisualTheme.RED);
+shapes.rect(x, y,
+width * MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f), .065f);
 ⋮----
 private void drawThreatRing(float cx, float cy, float radius, int pips, float pipRadius) {
 int count = Math.max(4, pips);
@@ -11647,6 +11652,16 @@ p.setColor(r / 255f, g / 255f, b / 255f, a / 255f);
 private static void set(Pixmap p, float r, float g, float b, float a) { p.setColor(r, g, b, a); }
 ⋮----
 @Override public void dispose() {
+```
+
+## File: src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java
+```java
+/** Pure presentation policy for world-space enemy health bars. */
+public final class EnemyHealthBarPresentation {
+⋮----
+public static boolean visible(Enemy enemy) {
+⋮----
+public static float widthMultiplier(Enemy enemy) {
 ```
 
 ## File: src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java
@@ -19673,6 +19688,30 @@ assertTrue(biomeDirectional <= 3L * MIB, "biome directional sheet exceeded 3 MiB
 assertTrue(peakDirectionalBytes <= 20L * MIB,
 ⋮----
 private static long rgbaBytes(int width, int height) {
+```
+
+## File: src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java
+```java
+final class EnemyHealthBarPresentationTest {
+@Test void fullHealthStandardEnemyDoesNotRenderWorldBar() {
+Enemy enemy = enemy(Enemy.Type.SHAMBLER);
+assertFalse(EnemyHealthBarPresentation.visible(enemy));
+⋮----
+@Test void damagedStandardEnemyRendersWorldBar() {
+⋮----
+assertTrue(EnemyHealthBarPresentation.visible(enemy));
+⋮----
+@Test void eliteKeepsPriorityBarAtFullHealth() {
+Enemy enemy = enemy(Enemy.Type.ELITE);
+⋮----
+assertTrue(EnemyHealthBarPresentation.widthMultiplier(enemy) > 1f);
+⋮----
+@Test void bossNeverUsesWorldBarBecauseHudOwnsBossHealth() {
+Enemy boss = enemy(Enemy.Type.BOSS);
+assertFalse(EnemyHealthBarPresentation.visible(boss));
+⋮----
+private static Enemy enemy(Enemy.Type type) {
+return new Enemy(type, 0f, 0f, 100f, 1f, .5f, 5f, 1);
 ```
 
 ## File: src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java

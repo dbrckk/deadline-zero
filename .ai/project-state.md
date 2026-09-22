@@ -22,17 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-21T19:36:23Z
+Generated: 2026-09-22T07:33:05Z
 
 ### Git
 - Branch: `main`
-- Head: `594921340c35`
-- Commit date: 2026-09-21T21:36:09+02:00
-- Commit: Fix HiDPI combat overlays clipping off-screen (#284)
-- Tracked files: 849
+- Head: `e2884235ff53`
+- Commit date: 2026-09-22T09:32:52+02:00
+- Commit: Reduce combat clutter from full-health enemy bars (#287)
+- Tracked files: 851
 
 ### Recently changed files
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java`
+- `core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java`
 - `core/src/test/java/com/deadlinezero/game/visual/CombatOverlayViewportTest.java`
 - `.github/workflows/verify.yml`
@@ -42,10 +44,6 @@ Generated: 2026-09-21T19:36:23Z
 - `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
 - `core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java`
 - `.github/workflows/shambler-android-acceptance.yml`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java`
-- `core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java`
-- `core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java`
 
 ### Project signals
 - `build.gradle`
