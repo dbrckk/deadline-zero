@@ -12,6 +12,9 @@ var contact_damage := 8.0
 var xp_value := 2
 var dead := false
 var attack_cooldown := 0.0
+var authored_visual: Node3D
+var authored_anim: AnimationPlayer
+var current_anim := ""
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -55,6 +58,7 @@ func _physics_process(delta: float) -> void:
         move_and_slide()
         if velocity.length_squared() > 0.01:
             look_at(global_position + velocity, Vector3.UP)
+    _update_authored_animation(distance)
     if distance < 0.85 and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
@@ -66,10 +70,30 @@ func take_damage(amount: float) -> void:
     _flash()
     if health <= 0.0:
         dead = true
+        velocity = Vector3.ZERO
         died.emit(xp_value, global_position)
-        queue_free()
+        if authored_anim != null and authored_anim.has_animation("Death"):
+            authored_anim.play("Death", 0.06)
+            var timer := get_tree().create_timer(0.62)
+            timer.timeout.connect(queue_free)
+        else:
+            queue_free()
 
 func _build_visual() -> void:
+    authored_visual = DZAssetLibrary.enemy(kind)
+    if authored_visual != null:
+        authored_visual.name = "Visual"
+        var scale_factor := 1.0
+        match kind:
+            "runner": scale_factor = 0.92
+            "brute": scale_factor = 1.22
+            "elite": scale_factor = 1.15
+        authored_visual.scale = Vector3.ONE * scale_factor
+        add_child(authored_visual)
+        authored_anim = DZAssetLibrary.animation_player(authored_visual)
+        _play_authored("Run_Arms" if kind == "runner" else "Walk")
+        return
+
     var root := Node3D.new()
     root.name = "Visual"
     add_child(root)
@@ -120,6 +144,22 @@ func _build_visual() -> void:
     eye_mat.emission_energy_multiplier = 3.0
     eye.material_override = eye_mat
     root.add_child(eye)
+
+func _update_authored_animation(distance: float) -> void:
+    if authored_anim == null or dead:
+        return
+    if distance < 1.05 and authored_anim.has_animation("Idle_Attack"):
+        _play_authored("Idle_Attack")
+    elif kind in ["runner", "elite"] and authored_anim.has_animation("Run_Arms"):
+        _play_authored("Run_Arms")
+    else:
+        _play_authored("Walk")
+
+func _play_authored(name: String) -> void:
+    if authored_anim == null or current_anim == name or not authored_anim.has_animation(name):
+        return
+    current_anim = name
+    authored_anim.play(name, 0.10)
 
 func _flash() -> void:
     var visual := get_node_or_null("Visual")
