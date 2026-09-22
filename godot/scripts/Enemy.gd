@@ -20,6 +20,11 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
     kind = enemy_kind
     target = chase_target
     match kind:
+        "boss":
+            max_health = 1450.0 * difficulty
+            move_speed = 1.38
+            contact_damage = 24.0
+            xp_value = 35
         "runner":
             max_health = 42.0 * difficulty
             move_speed = 3.7
@@ -88,6 +93,7 @@ func _build_visual() -> void:
             "runner": scale_factor = 0.92
             "brute": scale_factor = 1.22
             "elite": scale_factor = 1.15
+            "boss": scale_factor = 1.72
         authored_visual.scale = Vector3.ONE * scale_factor
         add_child(authored_visual)
         authored_anim = DZAssetLibrary.animation_player(authored_visual)
@@ -150,7 +156,7 @@ func _update_authored_animation(distance: float) -> void:
         return
     if distance < 1.05 and authored_anim.has_animation("Idle_Attack"):
         _play_authored("Idle_Attack")
-    elif kind in ["runner", "elite"] and authored_anim.has_animation("Run_Arms"):
+    elif kind in ["runner", "elite", "boss"] and authored_anim.has_animation("Run_Arms"):
         _play_authored("Run_Arms")
     else:
         _play_authored("Walk")
