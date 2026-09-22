@@ -29,4 +29,10 @@ final class BossRevealCameraProfileTest {
         assertEquals(0f, BossRevealCameraProfile.focusWeight(1f, true), .0001f);
         assertEquals(.88f, BossRevealCameraProfile.zoom(.88f, 1f, true), .0001f);
     }
+
+    @Test void hudSafeOffsetStaysWithinComfortBudget() {
+        assertTrue(BossRevealCameraProfile.HUD_SAFE_Y_OFFSET >= .35f);
+        assertTrue(BossRevealCameraProfile.HUD_SAFE_Y_OFFSET <= 1.10f);
+        assertTrue(BossRevealCameraProfile.MAX_ZOOM_OUT <= .20f);
+    }
 }

@@ -245,8 +245,11 @@ public final class GameScreen extends ScreenAdapter {
             float focus = BossRevealCameraProfile.focusWeight(reveal, reducedMotion);
             // Bias the cinematic framing toward the boss so its full authored silhouette sits
             // below the top HUD/boss bar instead of being clipped behind it.
-            float revealX = MathUtils.lerp(player.position.x, bossRevealTarget.position.x, .58f);
-            float revealY = MathUtils.lerp(player.position.y, bossRevealTarget.position.y, .62f);
+            float revealX = MathUtils.lerp(player.position.x, bossRevealTarget.position.x, .54f);
+            // Raising the camera in world space moves the rendered boss downward on screen,
+            // preserving a HUD-safe lane below the persistent boss bar.
+            float revealY = MathUtils.lerp(player.position.y, bossRevealTarget.position.y, .50f)
+                + BossRevealCameraProfile.HUD_SAFE_Y_OFFSET;
             cameraTargetX = MathUtils.lerp(cameraTargetX, revealX, focus);
             cameraTargetY = MathUtils.lerp(cameraTargetY, revealY, focus);
             cameraZoomTarget = BossRevealCameraProfile.zoom(COMBAT_CAMERA_ZOOM, reveal, reducedMotion);
