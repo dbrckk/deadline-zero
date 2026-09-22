@@ -12,11 +12,11 @@ public final class ActorMaterialProfile {
     public record Profile(boolean outline, float scale, float alpha) { }
 
     private static final Profile NONE = new Profile(false, 1f, 0f);
-    private static final Profile PLAYER = new Profile(true, 1.055f, .72f);
-    private static final Profile CHAMPION = new Profile(true, 1.045f, .58f);
-    private static final Profile SPECIALIST = new Profile(true, 1.050f, .62f);
-    private static final Profile ELITE = new Profile(true, 1.055f, .66f);
-    private static final Profile BOSS = new Profile(true, 1.065f, .76f);
+    private static final Profile PLAYER = new Profile(true, 1.078f, .80f);
+    private static final Profile CHAMPION = new Profile(true, 1.068f, .74f);
+    private static final Profile SPECIALIST = new Profile(true, 1.072f, .78f);
+    private static final Profile ELITE = new Profile(true, 1.076f, .80f);
+    private static final Profile BOSS = new Profile(true, 1.080f, .80f);
 
     private ActorMaterialProfile() { }
 
