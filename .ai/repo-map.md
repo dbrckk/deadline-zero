@@ -15868,7 +15868,9 @@ shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .18f);
 shapes.rect(splitX, coaching.y + 8f, coaching.width * .37f - 8f, coaching.height - 16f);
 shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .90f);
 shapes.rect(splitX, coaching.y + coaching.height - 4f, coaching.width * .37f - 8f, 4f);
-float gearSize = Math.min(38f, coaching.height * .25f);
+float gearSize = Math.min(52f, coaching.height * .38f);
+UiRenderer.iconBadge(shapes, splitX + 14f, coaching.y + coaching.height * .5f - gearSize * .5f,
+⋮----
 UiIconRenderer.draw(shapes, UiIconRenderer.Icon.GEAR,
 ⋮----
 UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.GOLD, UiRenderer.ButtonState.SELECTED);
@@ -15938,7 +15940,7 @@ Color rarity = VisualTheme.equipmentRarity(result.drop().rarity);
 font.setColor(rarity);
 font.draw(batch, t(result.drop().rarityKey()),
 ⋮----
-font.draw(batch, f("result.drop", t(result.drop().rarityKey()), localizedName(result.drop()), result.drop().level),
+font.draw(batch, f("result.drop", t(result.drop().rarityKey()), dropDisplayName(result.drop()), result.drop().level),
 ⋮----
 private void drawActions() {
 String[] labels = {"BASE", "RETRY", bonusClaimed ? t("result.doubleClaimed") : t("result.doubleOffer")};
@@ -15972,6 +15974,10 @@ private String localizedName(com.deadlinezero.game.meta.EquipmentItem item) {
 String key = item.nameKey();
 if (key != null) return t(key);
 return f("equipment.generatedName", t(item.rarityKey()), t(item.slotKey()));
+⋮----
+private String dropDisplayName(com.deadlinezero.game.meta.EquipmentItem item) {
+⋮----
+return key != null ? t(key) : t(item.slotKey());
 ⋮----
 private String t(String key) { return game.i18n.text(key); }
 private String f(String key, Object... args) { return game.i18n.format(key, args); }
@@ -16716,6 +16722,7 @@ drawRewardIcon(shapes, r, i, rewardAccent);
 ⋮----
 Color noticeAccent = result.unlockedThreatTier() > 0 ? VisualTheme.GOLD : firstClear ? VisualTheme.positive() : VisualTheme.VIOLET;
 UiRenderer.premiumPanel(shapes, noticePanel.x, noticePanel.y, noticePanel.width, noticePanel.height, noticeAccent, false);
+drawNoticeShowcase(shapes);
 drawVictoryChrome(shapes);
 UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
 UiRenderer.premiumButton(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, VisualTheme.VIOLET,
@@ -16755,6 +16762,18 @@ private void drawRewardIcon(ShapeRenderer shapes, Rectangle r, int index, Color 
 ⋮----
 float size = Math.min(28f, r.height * .26f);
 UiIconRenderer.draw(shapes, icon, r.x + 16f, r.y + r.height - size - 14f, size, accent, .92f);
+⋮----
+private void drawNoticeShowcase(ShapeRenderer shapes) {
+if (result.drop() == null) return;
+Color rarity = VisualTheme.equipmentRarity(result.drop().rarity);
+⋮----
+UiRenderer.premiumCard(shapes, x, y, cardW, cardH, rarity, true, false, false);
+float badge = Math.min(58f, cardH * .54f);
+UiRenderer.iconBadge(shapes, x + 14f, y + cardH * .5f - badge * .5f, badge, rarity, true);
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.GEAR,
+⋮----
+shapes.setColor(rarity.r, rarity.g, rarity.b, .88f);
+shapes.rect(x + 7f, y + cardH - 4f, Math.max(0f, cardW - 14f), 3f);
 ⋮----
 private void drawVictoryChrome(ShapeRenderer shapes) {
 float pulse = .72f + .18f * (float)Math.sin(visualTime * 2.2f);
@@ -16824,10 +16843,14 @@ font.draw(batch, f("victory.mythic", localizedName(exclusive).toUpperCase(java.u
 ⋮----
 font.draw(batch, f("victory.firstClear", bonusCredits, bonusGems), left, top, width, Align.center, false);
 ⋮----
-drawMasteryNotice(left, noticePanel.y + noticePanel.height * .43f, width);
+float masteryWidth = result.drop() == null ? width : noticePanel.width * .60f;
+drawMasteryNotice(left, noticePanel.y + noticePanel.height * .43f, masteryWidth);
 if (result.drop() != null) {
 ⋮----
-font.draw(batch, f("result.drop", t(result.drop().rarityKey()), localizedName(result.drop()), result.drop().level),
+font.setColor(rarity);
+font.draw(batch, t(result.drop().rarityKey()),
+⋮----
+font.draw(batch, f("result.drop", t(result.drop().rarityKey()), dropDisplayName(result.drop()), result.drop().level),
 ⋮----
 private void drawActions(boolean canShare) {
 String[] labels = {t("victory.base"), canShare ? t("victory.share") : t("victory.shareDisabled"), t("victory.nextStage")};
@@ -16874,6 +16897,10 @@ private String localizedName(com.deadlinezero.game.meta.EquipmentItem item) {
 String key = item.nameKey();
 if (key != null) return t(key);
 return f("equipment.generatedName", t(item.rarityKey()), t(item.slotKey()));
+⋮----
+private String dropDisplayName(com.deadlinezero.game.meta.EquipmentItem item) {
+⋮----
+return key != null ? t(key) : t(item.slotKey());
 ⋮----
 private String t(String key) { return game.i18n.text(key); }
 private String f(String key, Object... args) { return game.i18n.format(key, args); }

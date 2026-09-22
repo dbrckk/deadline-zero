@@ -1,10 +1,11 @@
 # Change impact
 
-Base: fb307a101afa002d470a5e4bc4926f17e96aabbd
-Head: 30948b033f67bad4a88ea4ad0991eaba8d97cc0e
+Base: 1c483805d52f3ad350ee8482c0fed85dc2b70a33
+Head: b6d7a5d4743072c2997272e88deb6d21eba85402
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java
+- M core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java
 
 ## Affected areas
 - core

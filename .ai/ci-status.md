@@ -2,13 +2,13 @@
 
 Summary: 5 success / 0 failure / 3 active
 
-- Verify: in_progress / pending (30948b03)
-- Responsive UI QA: queued / pending (30948b03)
-- Android Test APK: in_progress / pending (30948b03)
-- Verify: completed / success (0686a5fb)
-- Responsive UI QA: completed / success (0686a5fb)
-- Verify: completed / success (908fe9aa)
-- Responsive UI QA: completed / success (908fe9aa)
-- Responsive UI QA: completed / success (f57aba1f)
+- Responsive UI QA: in_progress / pending (b6d7a5d4)
+- Verify: in_progress / pending (b6d7a5d4)
+- Android Test APK: in_progress / pending (b6d7a5d4)
+- Verify: completed / success (d6fb7a52)
+- Responsive UI QA: completed / success (d6fb7a52)
+- Verify: completed / success (568e286b)
+- Responsive UI QA: completed / success (568e286b)
+- Verify: completed / success (30948b03)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T15:53:16Z
+Generated: 2026-09-22T17:32:23Z
 
 ### Git
 - Branch: `main`
-- Head: `30948b033f67`
-- Commit date: 2026-09-22T17:52:58+02:00
-- Commit: ui(missions): restore functional mission iconography on current main (#293)
+- Head: `b6d7a5d47430`
+- Commit date: 2026-09-22T19:32:11+02:00
+- Commit: Turn run drops into visual reward showcases (#295)
 - Tracked files: 852
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
+- `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java`
@@ -40,8 +42,6 @@ Generated: 2026-09-22T15:53:16Z
 - `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
 - `core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java`
 - `core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java`
-- `core/src/test/java/com/deadlinezero/game/visual/CombatOverlayViewportTest.java`
 
 ### Project signals
 - `build.gradle`
