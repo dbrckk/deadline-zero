@@ -13,6 +13,9 @@ var player: DZPlayer
 var camera: Camera3D
 var hud: DZHud
 var spawn_clock := 0.0
+var next_boss_time := 75.0
+var boss_banner_timer := 0.0
+var max_enemies := 110
 var elapsed := 0.0
 var kills := 0
 var level := 1
@@ -59,6 +62,12 @@ func _physics_process(delta: float) -> void:
     if game_over:
         return
     elapsed += delta
+    boss_banner_timer = max(0.0, boss_banner_timer - delta)
+    if elapsed >= next_boss_time:
+        _spawn_enemy("boss")
+        boss_banner_timer = 3.2
+        next_boss_time += 75.0
+
     spawn_clock -= delta
     if spawn_clock <= 0.0:
         var batch := 1 + int(elapsed / 45.0)
@@ -85,20 +94,23 @@ func _unhandled_input(event: InputEvent) -> void:
             var vector := (drag.position - touch_origin) / 90.0
             player.set_touch_move(Vector2(vector.x, vector.y).limit_length(1.0))
 
-func _spawn_enemy() -> void:
+func _spawn_enemy(forced_kind: String = "") -> void:
     if player == null or game_over:
+        return
+    if forced_kind != "boss" and get_tree().get_nodes_in_group("enemies").size() >= max_enemies:
         return
     var angle := randf() * TAU
     var radius := randf_range(12.0, 18.0)
     var pos := player.global_position + Vector3(cos(angle) * radius, 0.0, sin(angle) * radius)
     var roll := randf()
-    var kind := "shambler"
-    if elapsed > 25.0 and roll > 0.72:
-        kind = "runner"
-    if elapsed > 55.0 and roll > 0.88:
-        kind = "brute"
-    if elapsed > 100.0 and roll > 0.96:
-        kind = "elite"
+    var kind := forced_kind if not forced_kind.is_empty() else "shambler"
+    if forced_kind.is_empty():
+        if elapsed > 25.0 and roll > 0.72:
+            kind = "runner"
+        if elapsed > 55.0 and roll > 0.88:
+            kind = "brute"
+        if elapsed > 100.0 and roll > 0.96:
+            kind = "elite"
     var difficulty := 1.0 + elapsed / 210.0 + float(level - 1) * 0.035
     var enemy := DZEnemy.new()
     enemy.configure(kind, difficulty, player)
@@ -154,6 +166,8 @@ func _on_player_died() -> void:
         hud.show_game_over()
 
 func _wave_name() -> String:
+    if boss_banner_timer > 0.0:
+        return "BOSS INBOUND // ELIMINATE THE THREAT"
     if elapsed < 45.0:
         return "QUARANTINE YARD"
     if elapsed < 90.0:
