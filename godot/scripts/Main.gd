@@ -200,6 +200,14 @@ func _build_world() -> void:
     add_child(floor)
 
     for i in range(34):
+        if i < 12:
+            var authored_prop := DZAssetLibrary.barrier()
+            if authored_prop != null:
+                authored_prop.position = Vector3(randf_range(-28.0, 28.0), 0.0, randf_range(-28.0, 28.0))
+                authored_prop.rotation.y = randf_range(0.0, TAU)
+                authored_prop.scale = Vector3.ONE * randf_range(0.85, 1.15)
+                add_child(authored_prop)
+                continue
         var prop := MeshInstance3D.new()
         var box := BoxMesh.new()
         box.size = Vector3(randf_range(0.5, 1.8), randf_range(0.25, 1.1), randf_range(0.5, 1.8))
