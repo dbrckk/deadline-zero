@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.MathUtils;
 /** Pure timing/comfort profile for the short non-blocking camera reveal when a boss enters. */
 public final class BossRevealCameraProfile {
     public static final float DURATION = 1.20f;
-    public static final float MAX_FOCUS_WEIGHT = .68f;
-    public static final float MAX_ZOOM_OUT = .22f;
+    public static final float MAX_FOCUS_WEIGHT = .78f;
+    public static final float MAX_ZOOM_OUT = .15f;
 
     private BossRevealCameraProfile() { }
 
