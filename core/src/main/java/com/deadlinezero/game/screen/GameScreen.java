@@ -242,10 +242,12 @@ public final class GameScreen extends ScreenAdapter {
             boolean reducedMotion = game.accessibility != null && game.accessibility.reducedMotion;
             float reveal = BossRevealCameraProfile.envelope(bossRevealTimer);
             float focus = BossRevealCameraProfile.focusWeight(reveal, reducedMotion);
-            float midpointX = (player.position.x + bossRevealTarget.position.x) * .5f;
-            float midpointY = (player.position.y + bossRevealTarget.position.y) * .5f;
-            cameraTargetX = MathUtils.lerp(cameraTargetX, midpointX, focus);
-            cameraTargetY = MathUtils.lerp(cameraTargetY, midpointY, focus);
+            // Bias the cinematic framing toward the boss so its full authored silhouette sits
+            // below the top HUD/boss bar instead of being clipped behind it.
+            float revealX = MathUtils.lerp(player.position.x, bossRevealTarget.position.x, .58f);
+            float revealY = MathUtils.lerp(player.position.y, bossRevealTarget.position.y, .62f);
+            cameraTargetX = MathUtils.lerp(cameraTargetX, revealX, focus);
+            cameraTargetY = MathUtils.lerp(cameraTargetY, revealY, focus);
             cameraZoomTarget = BossRevealCameraProfile.zoom(COMBAT_CAMERA_ZOOM, reveal, reducedMotion);
         } else {
             bossRevealTimer = 0f;
