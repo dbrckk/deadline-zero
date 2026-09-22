@@ -25,6 +25,12 @@ final class BossRevealCameraProfileTest {
         }
     }
 
+    @Test void bossFocusBiasKeepsRevealBossForwardWithoutHardLock() {
+        assertTrue(BossRevealCameraProfile.BOSS_FOCUS_X > .5f && BossRevealCameraProfile.BOSS_FOCUS_X < .8f);
+        assertTrue(BossRevealCameraProfile.BOSS_FOCUS_Y > BossRevealCameraProfile.BOSS_FOCUS_X);
+        assertTrue(BossRevealCameraProfile.BOSS_FOCUS_Y < .85f);
+    }
+
     @Test void reducedMotionDisablesSpecialCameraMovement() {
         assertEquals(0f, BossRevealCameraProfile.focusWeight(1f, true), .0001f);
         assertEquals(.88f, BossRevealCameraProfile.zoom(.88f, 1f, true), .0001f);
