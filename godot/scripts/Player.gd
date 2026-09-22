@@ -15,6 +15,9 @@ var spread_degrees := 7.0
 var touch_move := Vector2.ZERO
 var fire_clock := 0.0
 var invulnerability := 0.0
+var authored_visual: Node3D
+var authored_anim: AnimationPlayer
+var current_anim := ""
 
 func _ready() -> void:
     add_to_group("player")
@@ -41,6 +44,7 @@ func _physics_process(delta: float) -> void:
 
     velocity = Vector3(input.x, 0.0, input.y) * move_speed
     move_and_slide()
+    _update_authored_animation()
 
     var target := _nearest_enemy()
     if target != null and fire_clock <= 0.0:
@@ -108,6 +112,31 @@ func _fire_at(enemy: DZEnemy) -> void:
         get_tree().current_scene.add_child(projectile)
 
 func _build_visual() -> void:
+    authored_visual = DZAssetLibrary.player()
+    if authored_visual != null:
+        authored_visual.name = "Visual"
+        authored_visual.scale = Vector3.ONE * 1.02
+        add_child(authored_visual)
+        authored_anim = DZAssetLibrary.animation_player(authored_visual)
+        _play_authored("Idle_Gun")
+
+        var ring := MeshInstance3D.new()
+        var ring_mesh := CylinderMesh.new()
+        ring_mesh.top_radius = 0.54
+        ring_mesh.bottom_radius = 0.54
+        ring_mesh.height = 0.025
+        ring.mesh = ring_mesh
+        ring.position.y = 0.02
+        var ring_mat := StandardMaterial3D.new()
+        ring_mat.albedo_color = Color(0.04, 0.78, 1.0, 0.26)
+        ring_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+        ring_mat.emission_enabled = true
+        ring_mat.emission = Color(0.02, 0.42, 0.70)
+        ring_mat.emission_energy_multiplier = 1.6
+        ring.material_override = ring_mat
+        add_child(ring)
+        return
+
     var visual := Node3D.new()
     visual.name = "Visual"
     add_child(visual)
@@ -146,3 +175,14 @@ func _build_visual() -> void:
     gun.rotation.x = deg_to_rad(-8.0)
     gun.material_override = body_mat
     visual.add_child(gun)
+
+func _update_authored_animation() -> void:
+    if authored_anim == null:
+        return
+    _play_authored("Run_Gun" if velocity.length_squared() > 0.08 else "Idle_Gun")
+
+func _play_authored(name: String) -> void:
+    if authored_anim == null or current_anim == name or not authored_anim.has_animation(name):
+        return
+    current_anim = name
+    authored_anim.play(name, 0.12)
