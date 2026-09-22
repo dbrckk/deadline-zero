@@ -53,6 +53,7 @@ import com.deadlinezero.game.visual.CombatOverlayViewport;
 import com.deadlinezero.game.visual.CombatPolishController;
 import com.deadlinezero.game.visual.CombatSpritePass;
 import com.deadlinezero.game.visual.CombatVisualEvents;
+import com.deadlinezero.game.visual.EnemyHealthBarPresentation;
 import com.deadlinezero.game.visual.BossRevealCameraProfile;
 import com.deadlinezero.game.visual.HostileProjectilePresentation;
 import com.deadlinezero.game.visual.PlayerProjectilePresentation;
@@ -820,12 +821,15 @@ public final class GameScreen extends ScreenAdapter {
             float sy = e.radius * (1f + gait);
             shapes.ellipse(e.position.x - sx, e.position.y - sy, sx * 2f, sy * 2f);
         }
-        if (e.type != Enemy.Type.BOSS) {
-            shapes.setColor(.08f, .09f, .10f, .82f);
-            shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f, e.radius * 2f, .07f);
-            shapes.setColor(VisualTheme.RED);
-            shapes.rect(e.position.x - e.radius, e.position.y + e.radius + .12f,
-                e.radius * 2f * MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f), .07f);
+        if (EnemyHealthBarPresentation.visible(e)) {
+            float width = e.radius * 2f * EnemyHealthBarPresentation.widthMultiplier(e);
+            float x = e.position.x - width * .5f;
+            float y = e.position.y + e.radius + .12f;
+            shapes.setColor(.08f, .09f, .10f, .76f);
+            shapes.rect(x, y, width, .065f);
+            shapes.setColor(e.type == Enemy.Type.ELITE ? VisualTheme.GOLD : VisualTheme.RED);
+            shapes.rect(x, y,
+                width * MathUtils.clamp(e.hp / Math.max(1f, e.maxHp), 0f, 1f), .065f);
         }
     }
 
