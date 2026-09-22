@@ -6,13 +6,13 @@
     "requested_max_files": 12,
     "score_margin": 0,
     "tier": "bounded",
-    "top_score": 33
+    "top_score": 27
   },
   "cache": {
-    "fingerprint": "fa486a2b3df14ec2d838474103fef038e75fa8024c20c0b41ee1681c406d5118",
+    "fingerprint": "6ee4119bc28046bb9d9b05b45ff5c75733a3894f4527cc76d490659059c8a91a",
     "hit": false
   },
-  "candidate_count": 421,
+  "candidate_count": 422,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -22,10 +22,9 @@
       ],
       "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 33,
+      "score": 27,
       "symbols": [
         "AndroidFirstPlayableJourneyTest",
         "activity",
@@ -41,10 +40,9 @@
       ],
       "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 33,
+      "score": 27,
       "symbols": [
         "AndroidGameplayVisualProbeTest",
         "activity",
@@ -73,12 +71,28 @@
       "matched_terms": [
         "game"
       ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 33,
+      "score": 27,
+      "symbols": [
+        "AndroidLauncherSmokeTest",
+        "assertAttachedAndAlive",
+        "launcherCreatesRealLibgdxSurfaceAndStaysAlive",
+        "launcherSurvivesBackgroundForegroundAndActivityRecreation"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "reasons": [
+        "search-index"
+      ],
+      "score": 27,
       "symbols": [
         "AndroidPerformanceProbeTest",
         "activity",
@@ -96,12 +110,31 @@
       "matched_terms": [
         "game"
       ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidProcessPersistenceTest.java",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 33,
+      "score": 27,
+      "symbols": [
+        "AndroidProcessPersistenceTest",
+        "activity",
+        "game",
+        "phase",
+        "runOnGameThread",
+        "seedProfileBeforeExternalProcessDeath",
+        "verifyProfileAfterExternalProcessRestart"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "reasons": [
+        "search-index"
+      ],
+      "score": 27,
       "symbols": [
         "AndroidResponsiveUiVisualProbeTest",
         "activity",
@@ -112,57 +145,6 @@
         "game",
         "runOnGameThread",
         "settleAndCapture"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-      "reasons": [
-        "impact",
-        "search-index"
-      ],
-      "score": 33,
-      "symbols": [
-        "AndroidVerticalSliceTest",
-        "activity",
-        "allowFrames",
-        "game",
-        "interruptedAndroidRunReturnsToMenuWithoutSettlementOrRewards",
-        "realAndroidRuntimeCompletesM0VerticalSliceAndPersistsSettlement",
-        "runOnGameThread"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-      "reasons": [
-        "impact",
-        "search-index"
-      ],
-      "score": 33,
-      "symbols": [
-        "DeadlineZeroGame",
-        "applyCloudRestore",
-        "finishRun",
-        "finishRunInternal",
-        "finishVictory",
-        "saveProfile",
-        "showArsenal",
-        "showCloudSave",
-        "showGear",
-        "showMenu",
-        "showMissions",
-        "showSettings",
-        "showShop",
-        "showSurvivors",
-        "startRun",
-        "startRunWithContract"
       ]
     }
   ],

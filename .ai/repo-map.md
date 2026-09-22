@@ -522,6 +522,7 @@ core/
                 ActorMaterialProfileTest.java
                 AdaptiveFxBudgetTest.java
                 AnimationProfileCatalogTest.java
+                ArtProfileCatalogPhoneReadabilityTest.java
                 ArtProfileCatalogTest.java
                 AuthoredCoreDirectionalArtTest.java
                 BiomeDirectionalBootstrapArtTest.java
@@ -17981,14 +17982,14 @@ private static final CharacterProfile BASTION = new CharacterProfile(1.86f, .65f
 private static final CharacterProfile VOLT = new CharacterProfile(1.73f, .60f, .30f, .24f);
 private static final CharacterProfile WRAITH = new CharacterProfile(1.68f, .58f, .30f, .23f);
 ⋮----
-private static final CharacterProfile SHAMBLER = new CharacterProfile(1.52f, .43f, 0f, 0f);
-private static final CharacterProfile RUNNER = new CharacterProfile(1.26f, .36f, 0f, 0f);
-private static final CharacterProfile BRUTE = new CharacterProfile(2.08f, .62f, 0f, 0f);
-private static final CharacterProfile RANGED = new CharacterProfile(1.46f, .43f, 0f, 0f);
-private static final CharacterProfile ELITE = new CharacterProfile(2.42f, .72f, 0f, 0f);
-private static final CharacterProfile SHIELDED = new CharacterProfile(2.18f, .65f, 0f, 0f);
-private static final CharacterProfile REGENERATOR = new CharacterProfile(1.58f, .45f, 0f, 0f);
-private static final CharacterProfile PHANTOM = new CharacterProfile(1.38f, .40f, 0f, 0f);
+private static final CharacterProfile SHAMBLER = new CharacterProfile(1.70f, .48f, 0f, 0f);
+private static final CharacterProfile RUNNER = new CharacterProfile(1.46f, .41f, 0f, 0f);
+private static final CharacterProfile BRUTE = new CharacterProfile(2.20f, .66f, 0f, 0f);
+private static final CharacterProfile RANGED = new CharacterProfile(1.64f, .48f, 0f, 0f);
+private static final CharacterProfile ELITE = new CharacterProfile(2.55f, .76f, 0f, 0f);
+private static final CharacterProfile SHIELDED = new CharacterProfile(2.28f, .68f, 0f, 0f);
+private static final CharacterProfile REGENERATOR = new CharacterProfile(1.74f, .50f, 0f, 0f);
+private static final CharacterProfile PHANTOM = new CharacterProfile(1.55f, .45f, 0f, 0f);
 private static final CharacterProfile BOSS = new CharacterProfile(5.15f, 1.35f, 0f, 0f);
 ⋮----
 public static CharacterProfile survivor(SurvivorCatalog.Survivor survivor) {
@@ -27937,6 +27938,28 @@ assertRange(profile.death());
 ⋮----
 private static void assertRange(float value) {
 assertTrue(value >= .04f && value <= .20f, "unsafe animation frame duration: " + value);
+````
+
+## File: core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java
+````java
+final class ArtProfileCatalogPhoneReadabilityTest {
+@Test void nonBossEnemiesStayPhoneReadableWithoutBossScaleCreep() {
+for (Enemy.Type type : Enemy.Type.values()) {
+ArtProfileCatalog.CharacterProfile p = ArtProfileCatalog.enemy(type);
+⋮----
+assertTrue(p.height() >= 4.5f);
+⋮----
+assertTrue(p.height() >= 1.45f, type + " is too small for phone-scale authored rendering");
+assertTrue(p.height() <= 2.60f, type + " is too large relative to gameplay collision scale");
+assertTrue(p.footOffset() > 0f && p.footOffset() < p.height() * .40f);
+⋮----
+@Test void highPriorityEnemiesRemainVisuallyLargerThanBasicCrowd() {
+float runner = ArtProfileCatalog.enemy(Enemy.Type.RUNNER).height();
+float shambler = ArtProfileCatalog.enemy(Enemy.Type.SHAMBLER).height();
+assertTrue(ArtProfileCatalog.enemy(Enemy.Type.BRUTE).height() > shambler);
+assertTrue(ArtProfileCatalog.enemy(Enemy.Type.ELITE).height() > shambler);
+assertTrue(ArtProfileCatalog.enemy(Enemy.Type.SHIELDED).height() > shambler);
+assertTrue(shambler > runner);
 ````
 
 ## File: core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java

@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T07:44:50Z
+Generated: 2026-09-22T15:42:11Z
 
 ### Git
 - Branch: `main`
-- Head: `a00e1210665b`
-- Commit date: 2026-09-22T09:44:31+02:00
-- Commit: Polish boss reveal framing and identity FX (#289)
-- Tracked files: 851
+- Head: `f57aba1f93e7`
+- Commit date: 2026-09-22T17:41:52+02:00
+- Commit: visual(actors): rebase phone-scale readability pass (#290)
+- Tracked files: 852
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java`
+- `core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
@@ -41,9 +43,6 @@ Generated: 2026-09-22T07:44:50Z
 - `core/src/test/java/com/deadlinezero/game/visual/CombatOverlayViewportTest.java`
 - `.github/workflows/verify.yml`
 - `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
-- `.github/workflows/responsive-ui-qa.yml`
-- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
-- `core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java`
 
 ### Project signals
 - `build.gradle`
