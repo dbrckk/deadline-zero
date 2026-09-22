@@ -95,10 +95,12 @@ public final class RunResultScreen extends ScreenAdapter {
             shapes.rect(splitX, coaching.y + 8f, coaching.width * .37f - 8f, coaching.height - 16f);
             shapes.setColor(dropAccent.r, dropAccent.g, dropAccent.b, .90f);
             shapes.rect(splitX, coaching.y + coaching.height - 4f, coaching.width * .37f - 8f, 4f);
-            float gearSize = Math.min(38f, coaching.height * .25f);
+            float gearSize = Math.min(52f, coaching.height * .38f);
+            UiRenderer.iconBadge(shapes, splitX + 14f, coaching.y + coaching.height * .5f - gearSize * .5f,
+                gearSize, dropAccent, true);
             UiIconRenderer.draw(shapes, UiIconRenderer.Icon.GEAR,
-                splitX + 16f, coaching.y + coaching.height - gearSize - 16f,
-                gearSize, dropAccent, .88f);
+                splitX + 22f, coaching.y + coaching.height * .5f - gearSize * .5f + 8f,
+                gearSize - 16f, dropAccent, .94f);
         }
         UiRenderer.premiumButton(shapes, actions[0].x, actions[0].y, actions[0].width, actions[0].height, VisualTheme.GOLD, UiRenderer.ButtonState.SELECTED);
         UiRenderer.premiumButton(shapes, actions[1].x, actions[1].y, actions[1].width, actions[1].height, VisualTheme.CYAN_SOFT, UiRenderer.ButtonState.NORMAL);
@@ -179,11 +181,11 @@ public final class RunResultScreen extends ScreenAdapter {
             font.getData().setScale(UiTypography.scale(UiTypography.Role.LABEL));
             font.setColor(rarity);
             font.draw(batch, t(result.drop().rarityKey()),
-                coaching.x + coaching.width * .63f, y + 2f, coaching.width * .33f, Align.right, false);
+                coaching.x + coaching.width * .70f, y + 2f, coaching.width * .25f, Align.left, false);
             font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION));
             font.setColor(VisualTheme.TEXT_STRONG);
-            font.draw(batch, f("result.drop", t(result.drop().rarityKey()), localizedName(result.drop()), result.drop().level),
-                coaching.x + coaching.width * .63f, y - 18f, coaching.width * .33f, Align.right, true);
+            font.draw(batch, f("result.drop", t(result.drop().rarityKey()), dropDisplayName(result.drop()), result.drop().level),
+                coaching.x + coaching.width * .70f, y - 18f, coaching.width * .25f, Align.left, true);
         }
     }
 
@@ -228,6 +230,12 @@ public final class RunResultScreen extends ScreenAdapter {
         String key = item.nameKey();
         if (key != null) return t(key);
         return f("equipment.generatedName", t(item.rarityKey()), t(item.slotKey()));
+    }
+
+    private String dropDisplayName(com.deadlinezero.game.meta.EquipmentItem item) {
+        if (item == null) return "";
+        String key = item.nameKey();
+        return key != null ? t(key) : t(item.slotKey());
     }
     private String t(String key) { return game.i18n.text(key); }
     private String f(String key, Object... args) { return game.i18n.format(key, args); }
