@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 621ab261f8b97215396c5a8a3aa7787c65e61675
-Head: e2884235ff5305b35f529d4a6b5dd72c7b9af5d0
+Base: fef615dfdb161f015b09159f4571f8981aee02f3
+Head: a00e1210665bd6c57d9c9f4603c6348782fb3779
 
 ## Changed files
 - M core/src/main/java/com/deadlinezero/game/screen/GameScreen.java
-- A core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java
-- A core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java
+- M core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java
+- M core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java
 
 ## Affected areas
 - core

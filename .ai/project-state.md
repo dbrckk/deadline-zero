@@ -22,17 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T07:33:05Z
+Generated: 2026-09-22T07:44:50Z
 
 ### Git
 - Branch: `main`
-- Head: `e2884235ff53`
-- Commit date: 2026-09-22T09:32:52+02:00
-- Commit: Reduce combat clutter from full-health enemy bars (#287)
+- Head: `a00e1210665b`
+- Commit date: 2026-09-22T09:44:31+02:00
+- Commit: Polish boss reveal framing and identity FX (#289)
 - Tracked files: 851
 
 ### Recently changed files
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
+- `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
 - `core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java`
 - `core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java`
@@ -41,9 +43,7 @@ Generated: 2026-09-22T07:33:05Z
 - `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
 - `.github/workflows/responsive-ui-qa.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
-- `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
 - `core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java`
-- `.github/workflows/shambler-android-acceptance.yml`
 
 ### Project signals
 - `build.gradle`

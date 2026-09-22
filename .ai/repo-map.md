@@ -14155,9 +14155,12 @@ bossRevealTimer = Math.max(0f, bossRevealTimer - dt);
 ⋮----
 float reveal = BossRevealCameraProfile.envelope(bossRevealTimer);
 float focus = BossRevealCameraProfile.focusWeight(reveal, reducedMotion);
-⋮----
-cameraTargetX = MathUtils.lerp(cameraTargetX, midpointX, focus);
-cameraTargetY = MathUtils.lerp(cameraTargetY, midpointY, focus);
+// Bias the cinematic framing toward the boss so its full authored silhouette sits
+// below the top HUD/boss bar instead of being clipped behind it.
+float revealX = MathUtils.lerp(player.position.x, bossRevealTarget.position.x, .58f);
+float revealY = MathUtils.lerp(player.position.y, bossRevealTarget.position.y, .62f);
+cameraTargetX = MathUtils.lerp(cameraTargetX, revealX, focus);
+cameraTargetY = MathUtils.lerp(cameraTargetY, revealY, focus);
 cameraZoomTarget = BossRevealCameraProfile.zoom(COMBAT_CAMERA_ZOOM, reveal, reducedMotion);
 ⋮----
 cam.position.x = MathUtils.lerp(cam.position.x, cameraTargetX, bossRevealTimer > 0f ? .15f : .11f);
@@ -19904,13 +19907,24 @@ float progress = MathUtils.clamp((time - phaseFxStarted) / Math.max(.001f, spec.
 ⋮----
 float radius = phaseBoss.radius * MathUtils.lerp(1.08f, spec.radiusMultiplier(), progress);
 ⋮----
-shapes.setColor(r, g, b, (.28f + .20f * fade) * fade * alphaScale);
-shapes.circle(phaseBoss.position.x, phaseBoss.position.y, radius, 36);
-shapes.setColor(r, g, b, .14f * fade * alphaScale);
-shapes.circle(phaseBoss.position.x, phaseBoss.position.y, radius * 1.34f, 38);
+shapes.setColor(r, g, b, (.34f + .18f * fade) * fade * alphaScale);
+drawBossPeripheralRing(shapes, phaseBoss.position.x, phaseBoss.position.y, radius, 12,
+Math.max(.055f, phaseBoss.radius * .055f));
+shapes.setColor(r, g, b, .24f * fade * alphaScale);
+drawBossPeripheralRing(shapes, phaseBoss.position.x, phaseBoss.position.y, radius * 1.28f, 8,
+Math.max(.045f, phaseBoss.radius * .045f));
 if (!settings.reduceFlashes && fxBudget.allowHeavyFx()) {
-shapes.setColor(1f, 1f, 1f, .20f * fade);
-shapes.circle(phaseBoss.position.x, phaseBoss.position.y, phaseBoss.radius * (.42f + .34f * fade), 20);
+shapes.setColor(1f, 1f, 1f, .34f * fade);
+drawBossPeripheralRing(shapes, phaseBoss.position.x, phaseBoss.position.y,
+⋮----
+Math.max(.035f, phaseBoss.radius * .04f));
+⋮----
+private void drawBossPeripheralRing(ShapeRenderer shapes, float cx, float cy,
+⋮----
+int count = Math.max(4, pips);
+⋮----
+shapes.circle(cx + MathUtils.cosDeg(angle) * radius,
+cy + MathUtils.sinDeg(angle) * radius, pipRadius, 8);
 ⋮----
 private void drawLeaperTelegraphs(ShapeRenderer shapes, Array<Enemy> enemies, float time) {
 ⋮----
@@ -19931,25 +19945,31 @@ private void drawRevenantIdentity(ShapeRenderer shapes, Array<Enemy> enemies, fl
 if (!enemy.alive || enemy.type != Enemy.Type.BOSS || enemy.bossCombat == null || !enemy.bossCombat.revenant()) continue;
 float pulse = .86f + MathUtils.sin(time * (enemy.bossCombat.charging() ? 18f : 8f)) * .14f;
 ⋮----
-shapes.setColor(.68f, .10f, .95f, .13f + .08f * pulse);
-shapes.circle(enemy.position.x, enemy.position.y, radius, 30);
+shapes.setColor(.68f, .10f, .95f, .32f + .08f * pulse);
+drawBossPeripheralRing(shapes, enemy.position.x, enemy.position.y, radius, 10,
+Math.max(.045f, enemy.radius * .05f));
 ⋮----
-shapes.setColor(1f, .10f, .22f, .16f + .08f * pulse);
-shapes.circle(enemy.position.x, enemy.position.y, enemy.radius * (1.28f + pulse * .12f), 26);
+shapes.setColor(1f, .10f, .22f, .36f + .08f * pulse);
+drawBossPeripheralRing(shapes, enemy.position.x, enemy.position.y,
+⋮----
+Math.max(.040f, enemy.radius * .045f));
 ⋮----
 private void drawWardenIdentity(ShapeRenderer shapes, Array<Enemy> enemies, float time) {
 ⋮----
 if (!enemy.alive || enemy.type != Enemy.Type.BOSS || enemy.bossCombat == null || !enemy.bossCombat.warden()) continue;
 float pulse = .90f + MathUtils.sin(time * (enemy.bossCombat.charging() ? 9f : 4.5f)) * .10f;
 ⋮----
-shapes.setColor(.10f, .55f, .82f, .12f + .07f * pulse);
-shapes.circle(enemy.position.x, enemy.position.y, outer, 32);
-shapes.setColor(.96f, .62f, .12f, .18f + .07f * pulse);
-shapes.circle(enemy.position.x, enemy.position.y, enemy.radius * (1.46f + pulse * .08f), 28);
+shapes.setColor(.10f, .55f, .82f, .30f + .07f * pulse);
+drawBossPeripheralRing(shapes, enemy.position.x, enemy.position.y, outer, 12,
+Math.max(.050f, enemy.radius * .052f));
+shapes.setColor(.96f, .62f, .12f, .38f + .07f * pulse);
+⋮----
+Math.max(.042f, enemy.radius * .047f));
 ⋮----
 float ring = enemy.radius * (2.32f + MathUtils.sin(time * 3.2f) * .08f);
-shapes.setColor(.75f, .88f, 1f, .07f);
-shapes.circle(enemy.position.x, enemy.position.y, ring, 34);
+shapes.setColor(.75f, .88f, 1f, .18f);
+drawBossPeripheralRing(shapes, enemy.position.x, enemy.position.y, ring, 6,
+Math.max(.034f, enemy.radius * .038f));
 ⋮----
 public void drawAuthoredDeaths(SpriteBatch batch, Pools pools) {
 ⋮----

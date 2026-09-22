@@ -3,7 +3,7 @@
 - Index mode: incremental
 - Files indexed: 467
 - Files reparsed this run: 3
-- Symbols: 2663
+- Symbols: 2664
 - Internal import edges: 693
 - Impacted files: 10
 - Selected tests: 7
@@ -26,9 +26,9 @@
 - core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java: 28 symbols
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java: 26 symbols
+- core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 25 symbols
 - core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java: 24 symbols
-- core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java: 23 symbols
 - core/src/main/java/com/deadlinezero/game/services/CloudSaveService.java: 23 symbols
@@ -46,7 +46,7 @@
 - AST files reparsed this run: 3
 - outline files retained: 465
 - top-level items retained: 2966
-- direct members retained: 3438
+- direct members retained: 3439
 - symbol shards: 27
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 
