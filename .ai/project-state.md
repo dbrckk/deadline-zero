@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T15:42:11Z
+Generated: 2026-09-22T15:53:16Z
 
 ### Git
 - Branch: `main`
-- Head: `f57aba1f93e7`
-- Commit date: 2026-09-22T17:41:52+02:00
-- Commit: visual(actors): rebase phone-scale readability pass (#290)
+- Head: `30948b033f67`
+- Commit date: 2026-09-22T17:52:58+02:00
+- Commit: ui(missions): restore functional mission iconography on current main (#293)
 - Tracked files: 852
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java`
 - `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
@@ -41,8 +42,6 @@ Generated: 2026-09-22T15:42:11Z
 - `core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java`
 - `core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java`
 - `core/src/test/java/com/deadlinezero/game/visual/CombatOverlayViewportTest.java`
-- `.github/workflows/verify.yml`
-- `core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java`
 
 ### Project signals
 - `build.gradle`

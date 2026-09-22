@@ -1,61 +1,610 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "a00e1210665bd6c57d9c9f4603c6348782fb3779",
-  "head": "f57aba1f93e73320966a29cd846ab3c6fee1a6a6",
+  "base": "f57aba1f93e73320966a29cd846ab3c6fee1a6a6",
+  "head": "30948b033f67bad4a88ea4ad0991eaba8d97cc0e",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
+      "path": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
       "status": "M"
-    },
-    {
-      "path": "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java",
-      "status": "A"
     }
   ],
   "changed_source_files": [
-    "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
-    "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java"
+    "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java"
   ],
   "impacted_files": [
-    "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
-    "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java"
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+    "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+    "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java"
   ],
   "impacted_symbols": [
     {
-      "name": "ArtProfileCatalog",
+      "name": "AndroidGameplayVisualProbeTest",
       "kind": "class",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
-      "line": 10
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 34
     },
     {
-      "name": "CharacterProfile",
-      "kind": "record",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
-      "line": 11
-    },
-    {
-      "name": "survivor",
+      "name": "capturesWeeklyMissionsScreen",
       "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
-      "line": 30
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 36
     },
     {
-      "name": "enemy",
+      "name": "capturesGraphicsQualitySettings",
       "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java",
-      "line": 40
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 63
     },
     {
-      "name": "ArtProfileCatalogPhoneReadabilityTest",
+      "name": "capturesCloudSaveScreen",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 83
+    },
+    {
+      "name": "capturesChampionVariantCrowd",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 97
+    },
+    {
+      "name": "injectChampionVariantCrowd",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 114
+    },
+    {
+      "name": "capturesExpandedUpgradePoolOverlay",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 140
+    },
+    {
+      "name": "injectUpgradeChoices",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 154
+    },
+    {
+      "name": "capturesRexGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 177
+    },
+    {
+      "name": "capturesShamblerGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 205
+    },
+    {
+      "name": "injectShambler",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 227
+    },
+    {
+      "name": "forceShamblerAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 240
+    },
+    {
+      "name": "capturesWraithGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 265
+    },
+    {
+      "name": "capturesRevenantGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 297
+    },
+    {
+      "name": "capturesBossRevealCameraFraming",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 324
+    },
+    {
+      "name": "capturesWardenGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 346
+    },
+    {
+      "name": "capturesHarvesterGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 369
+    },
+    {
+      "name": "capturesFrostColossusGameplay",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 392
+    },
+    {
+      "name": "injectFrostColossusBoss",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 412
+    },
+    {
+      "name": "capturesCryogenicDepthsGameplay",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 426
+    },
+    {
+      "name": "injectCryogenicDepthsCrowd",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 446
+    },
+    {
+      "name": "capturesCryoVaultGameplay",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 460
+    },
+    {
+      "name": "injectCryoVaultCrowd",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 480
+    },
+    {
+      "name": "capturesCinderGunnerGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 494
+    },
+    {
+      "name": "injectCinderGunner",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 519
+    },
+    {
+      "name": "forceCinderGunnerAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 534
+    },
+    {
+      "name": "capturesNullWardGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 559
+    },
+    {
+      "name": "injectNullWard",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 582
+    },
+    {
+      "name": "forceNullWardAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 597
+    },
+    {
+      "name": "capturesStaticSeerGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 622
+    },
+    {
+      "name": "injectStaticSeer",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 645
+    },
+    {
+      "name": "forceStaticSeerAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 660
+    },
+    {
+      "name": "capturesPhaseStalkerGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 685
+    },
+    {
+      "name": "injectPhaseStalker",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 708
+    },
+    {
+      "name": "forcePhaseStalkerAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 723
+    },
+    {
+      "name": "capturesSlagGuardGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 748
+    },
+    {
+      "name": "injectSlagGuard",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 771
+    },
+    {
+      "name": "forceSlagGuardAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 786
+    },
+    {
+      "name": "capturesForgeHoundGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 811
+    },
+    {
+      "name": "injectForgeHound",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 836
+    },
+    {
+      "name": "forceForgeHoundAttack",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 851
+    },
+    {
+      "name": "capturesNullArchonGameplayAndAttackFrames",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 876
+    },
+    {
+      "name": "injectNullArchonBoss",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 899
+    },
+    {
+      "name": "injectHarvesterBoss",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 911
+    },
+    {
+      "name": "injectWardenBoss",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 923
+    },
+    {
+      "name": "injectRevenantBoss",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 935
+    },
+    {
+      "name": "injectRevenantBossForReveal",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 947
+    },
+    {
+      "name": "armBossReveal",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 959
+    },
+    {
+      "name": "injectAuthoredEnemyCrowd",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 975
+    },
+    {
+      "name": "capture",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 1008
+    },
+    {
+      "name": "activity",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 1034
+    },
+    {
+      "name": "game",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 1042
+    },
+    {
+      "name": "runOnGameThread",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "line": 1048
+    },
+    {
+      "name": "AndroidResponsiveUiVisualProbeTest",
       "kind": "class",
-      "file": "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java",
-      "line": 7
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 43
+    },
+    {
+      "name": "capturesWidePhoneMetaAndCombatScreens",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 48
+    },
+    {
+      "name": "dedicatedWideProbe",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 163
+    },
+    {
+      "name": "assertWidePhoneAspect",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 168
+    },
+    {
+      "name": "settleAndCapture",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 180
+    },
+    {
+      "name": "captureWide",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 185
+    },
+    {
+      "name": "activity",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 216
+    },
+    {
+      "name": "game",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 224
+    },
+    {
+      "name": "runOnGameThread",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "line": 230
+    },
+    {
+      "name": "DeadlineZeroGame",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 46
+    },
+    {
+      "name": "showMenu",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 95
+    },
+    {
+      "name": "showGear",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 97
+    },
+    {
+      "name": "showArsenal",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 98
+    },
+    {
+      "name": "showMissions",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 99
+    },
+    {
+      "name": "showShop",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 100
+    },
+    {
+      "name": "showSurvivors",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 101
+    },
+    {
+      "name": "showSettings",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 102
+    },
+    {
+      "name": "showCloudSave",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 103
+    },
+    {
+      "name": "startRun",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 106
+    },
+    {
+      "name": "startRunWithContract",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 116
+    },
+    {
+      "name": "finishVictory",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 124
+    },
+    {
+      "name": "finishRun",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 129
+    },
+    {
+      "name": "finishRunInternal",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 134
+    },
+    {
+      "name": "applyCloudRestore",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 192
+    },
+    {
+      "name": "saveProfile",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+      "line": 205
+    },
+    {
+      "name": "MissionsScreen",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 31
+    },
+    {
+      "name": "drawMissionIcons",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 149
+    },
+    {
+      "name": "drawMissionRowIcons",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 173
+    },
+    {
+      "name": "drawMissionProgressBars",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 234
+    },
+    {
+      "name": "drawRowProgress",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 244
+    },
+    {
+      "name": "drawMissionStateCard",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 249
+    },
+    {
+      "name": "drawHeader",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 271
+    },
+    {
+      "name": "drawDaily",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 282
+    },
+    {
+      "name": "drawWeekly",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 295
+    },
+    {
+      "name": "drawProgress",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 305
+    },
+    {
+      "name": "heading",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 342
+    },
+    {
+      "name": "drawClaimRow",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 348
+    },
+    {
+      "name": "progressText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 357
+    },
+    {
+      "name": "handleInput",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 361
+    },
+    {
+      "name": "claimAchievement",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 395
+    },
+    {
+      "name": "nextLabel",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 401
+    },
+    {
+      "name": "inset",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 406
+    },
+    {
+      "name": "t",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 410
+    },
+    {
+      "name": "f",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "line": 412
     }
   ],
   "selected_tests": [
-    "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java",
-    "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java"
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java"
   ]
 }

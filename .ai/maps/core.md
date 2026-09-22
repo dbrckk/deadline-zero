@@ -6638,6 +6638,7 @@ drawMissionStateCard(shapes, weeklyRows[1], p.weekly.runMissionClaimed,
 drawMissionStateCard(shapes, weeklyRows[2], p.weekly.bossMissionClaimed,
 ⋮----
 drawMissionProgressBars(shapes, p);
+drawMissionRowIcons(shapes, p);
 ⋮----
 UiRenderer.premiumPanel(shapes, masteryPanel.x, masteryPanel.y, masteryPanel.width, masteryPanel.height,
 VisualTheme.accent(), true);
@@ -6677,6 +6678,22 @@ boolean unlocked = AchievementService.unlocked(p, all[i]);
 boolean claimed = p.achievements.claimed(all[i]);
 ⋮----
 UiIconRenderer.draw(shapes,
+⋮----
+private void drawMissionRowIcons(ShapeRenderer shapes, PlayerProfile p) {
+⋮----
+Color accent = claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : VisualTheme.GOLD;
+UiRenderer.iconBadge(shapes, r.x + 10f, r.y + r.height * .50f - 16f, 32f, accent, ready && !claimed);
+UiIconRenderer.draw(shapes, daily[i], r.x + 16f, r.y + r.height * .50f - 10f,
+⋮----
+Color accent = claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : VisualTheme.VIOLET;
+⋮----
+UiIconRenderer.draw(shapes, weekly[i], r.x + 16f, r.y + r.height * .50f - 10f,
+⋮----
+UiRenderer.iconBadge(shapes, masteryPanel.x + 10f, masteryPanel.y + masteryPanel.height - 43f,
+⋮----
+UiIconRenderer.draw(shapes, UiIconRenderer.Icon.ARSENAL,
+⋮----
+UiRenderer.iconBadge(shapes, masteryPanel.x + 10f, masteryPanel.y + masteryPanel.height * .45f - 15f,
 ⋮----
 private void drawMissionProgressBars(ShapeRenderer shapes, PlayerProfile p) {
 drawRowProgress(shapes, dailyRows[0], p.daily.loginClaimed ? 1f : 0f, VisualTheme.GOLD);
@@ -6748,11 +6765,11 @@ int weaponNext = p.mastery.winsForNextWeaponRank(weapon.id);
 int biomeNext = p.mastery.winsForNextBiomeRank(biome);
 ⋮----
 font.draw(batch, f("missions.masteryLine", t(weapon.displayNameKey()), weaponRank, MasteryProgress.MAX_RANK,
-t("mastery.rank." + weaponRank), nextLabel(weaponNext)), masteryPanel.x + 12f,
+t("mastery.rank." + weaponRank), nextLabel(weaponNext)), masteryPanel.x + 50f,
 ⋮----
 font.setColor(VisualTheme.VIOLET);
 font.draw(batch, f("missions.masteryLine", t(biome.labelKey()), biomeRank, MasteryProgress.MAX_RANK,
-t("mastery.rank." + biomeRank), nextLabel(biomeNext)), masteryPanel.x + 12f,
+t("mastery.rank." + biomeRank), nextLabel(biomeNext)), masteryPanel.x + 50f,
 ⋮----
 font.setColor(VisualTheme.TEXT_DIM);
 font.draw(batch, t("missions.achievements"), achievementsPanel.x, achievementsPanel.y + achievementsPanel.height + 18f,
@@ -6771,7 +6788,7 @@ font.draw(batch, text, panel.x + 16f, panel.y + panel.height - 16f, panel.width 
 private void drawClaimRow(Rectangle r, String text, boolean claimed, boolean ready) {
 font.getData().setScale(UiTypography.scale(UiTypography.Role.CAPTION) * 1.04f);
 font.setColor(claimed ? VisualTheme.MUTED : VisualTheme.TEXT_STRONG);
-font.draw(batch, text, r.x + 12f, r.y + r.height * .64f, r.width - 24f, Align.left, true);
+font.draw(batch, text, r.x + 52f, r.y + r.height * .64f, r.width - 64f, Align.left, true);
 font.setColor(claimed ? VisualTheme.MUTED : ready ? VisualTheme.positive() : VisualTheme.TEXT_DIM);
 font.draw(batch, claimed ? t("missions.claimed") : ready ? t("common.open") : "…",
 ⋮----

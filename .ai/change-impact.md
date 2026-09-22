@@ -1,11 +1,10 @@
 # Change impact
 
-Base: ff1ef65a21b7522664755a287ff490ca578af67e
-Head: f57aba1f93e73320966a29cd846ab3c6fee1a6a6
+Base: fb307a101afa002d470a5e4bc4926f17e96aabbd
+Head: 30948b033f67bad4a88ea4ad0991eaba8d97cc0e
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java
-- A core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java
+- M core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java
 
 ## Affected areas
 - core
