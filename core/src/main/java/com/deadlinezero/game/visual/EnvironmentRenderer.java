@@ -202,7 +202,14 @@ public final class EnvironmentRenderer implements Disposable {
             for (int gx = -10; gx < 10; gx++) {
                 int variant = floorVariant(gx, gy);
                 TextureRegion region = region("environment/floor/concrete_" + (char)('a' + variant));
-                if (region != null) batch.draw(region, gx * FLOOR_TILE_WORLD, gy * FLOOR_TILE_WORLD, FLOOR_TILE_WORLD, FLOOR_TILE_WORLD);
+                if (region != null) {
+                    float x = gx * FLOOR_TILE_WORLD;
+                    float y = gy * FLOOR_TILE_WORLD;
+                    float half = FLOOR_TILE_WORLD * .5f;
+                    float rotation = floorRotationQuarterTurns(gx, gy) * 90f;
+                    batch.draw(region, x, y, half, half,
+                        FLOOR_TILE_WORLD, FLOOR_TILE_WORLD, 1f, 1f, rotation);
+                }
             }
         }
         TextureRegion hazard = region("environment/floor/hazard_a");
@@ -247,6 +254,12 @@ public final class EnvironmentRenderer implements Disposable {
 
     static int floorVariant(int gridX, int gridY) {
         return Math.floorMod(gridX * 31 + gridY * 17, 3);
+    }
+
+    static int floorRotationQuarterTurns(int gridX, int gridY) {
+        int h = gridX * 0x1f123bb5 ^ gridY * 0x6ac690c5;
+        h ^= h >>> 15;
+        return Math.floorMod(h, 4);
     }
 
     static int detailVariant(int gridX, int gridY) {
