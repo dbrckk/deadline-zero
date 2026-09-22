@@ -5338,8 +5338,11 @@ float reveal = BossRevealCameraProfile.envelope(bossRevealTimer);
 float focus = BossRevealCameraProfile.focusWeight(reveal, reducedMotion);
 // Bias the cinematic framing toward the boss so its full authored silhouette sits
 // below the top HUD/boss bar instead of being clipped behind it.
-float revealX = MathUtils.lerp(player.position.x, bossRevealTarget.position.x, .58f);
-float revealY = MathUtils.lerp(player.position.y, bossRevealTarget.position.y, .62f);
+float revealX = MathUtils.lerp(player.position.x, bossRevealTarget.position.x, .54f);
+// Raising the camera in world space moves the rendered boss downward on screen,
+// preserving a HUD-safe lane below the persistent boss bar.
+float revealY = MathUtils.lerp(player.position.y, bossRevealTarget.position.y, .50f)
+⋮----
 cameraTargetX = MathUtils.lerp(cameraTargetX, revealX, focus);
 cameraTargetY = MathUtils.lerp(cameraTargetY, revealY, focus);
 cameraZoomTarget = BossRevealCameraProfile.zoom(COMBAT_CAMERA_ZOOM, reveal, reducedMotion);
@@ -19483,6 +19486,11 @@ assertTrue(BossRevealCameraProfile.zoom(.88f, e, false)
 @Test void reducedMotionDisablesSpecialCameraMovement() {
 assertEquals(0f, BossRevealCameraProfile.focusWeight(1f, true), .0001f);
 assertEquals(.88f, BossRevealCameraProfile.zoom(.88f, 1f, true), .0001f);
+⋮----
+@Test void hudSafeOffsetStaysWithinComfortBudget() {
+assertTrue(BossRevealCameraProfile.HUD_SAFE_Y_OFFSET >= .35f);
+assertTrue(BossRevealCameraProfile.HUD_SAFE_Y_OFFSET <= 1.10f);
+assertTrue(BossRevealCameraProfile.MAX_ZOOM_OUT <= .20f);
 ```
 
 ## File: src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java

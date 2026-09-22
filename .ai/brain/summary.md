@@ -5,8 +5,8 @@
 - Files reparsed this run: 3
 - Symbols: 2669
 - Internal import edges: 694
-- Impacted files: 4
-- Selected tests: 3
+- Impacted files: 10
+- Selected tests: 7
 
 ## Languages
 - java: 419 files
@@ -46,7 +46,7 @@
 - AST files reparsed this run: 3
 - outline files retained: 466
 - top-level items retained: 2970
-- direct members retained: 3445
+- direct members retained: 3447
 - symbol shards: 27
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
 

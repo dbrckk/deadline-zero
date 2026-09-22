@@ -22,26 +22,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T18:16:31Z
+Generated: 2026-09-22T18:47:39Z
 
 ### Git
 - Branch: `main`
-- Head: `8784f56bed2e`
-- Commit date: 2026-09-22T20:16:09+02:00
-- Commit: Strengthen combat actor readability and boss reveal framing (#298)
+- Head: `77f8b0c86bbf`
+- Commit date: 2026-09-22T20:47:25+02:00
+- Commit: Keep boss reveal framing clear of the top HUD (#299)
 - Tracked files: 852
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
+- `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
+- `core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
 - `core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java`
-- `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
 - `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
 - `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
 - `core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java`
 - `core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java`
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java`
 
 ### Project signals
 - `build.gradle`
