@@ -12,6 +12,8 @@ var fire_interval := 0.34
 var projectile_speed := 19.0
 var multishot := 1
 var spread_degrees := 7.0
+var weapon_profile := "vanguard"
+var weapon_tint := Color(0.18, 0.90, 1.0)
 var touch_move := Vector2.ZERO
 var fire_clock := 0.0
 var invulnerability := 0.0
@@ -113,7 +115,7 @@ func _fire_at(enemy: DZEnemy) -> void:
         var dir := base_dir.rotated(Vector3.UP, deg_to_rad(offset * spread_degrees))
         var projectile := DZProjectile.new()
         projectile.setup(global_position + Vector3(0.0, 0.72, 0.0) + dir * 0.5,
-            dir, projectile_speed, weapon_damage, Color(0.18, 0.90, 1.0))
+            dir, projectile_speed, weapon_damage, weapon_tint, weapon_profile)
         get_tree().current_scene.add_child(projectile)
 
 func _build_visual() -> void:
