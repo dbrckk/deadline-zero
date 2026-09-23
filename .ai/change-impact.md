@@ -1,12 +1,13 @@
 # Change impact
 
-Base: 99b20b10803d69f9d37c53d3bf2043ea60102bdb
-Head: eb1e306b14dfc2ca9f73ad1427a89dd68d6be64f
+Base: dcab86bce82a388338806824f1d9b6d3ea00b38d
+Head: 622651d366477d60cb5a41ffc57cfe92f97ad075
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/Enemy.gd
-- A godot/tests/enemy_archetype_combat_test.gd
+- M godot/scripts/Player.gd
+- M godot/scripts/Projectile.gd
+- A godot/tests/weapon_presentation_test.gd
 
 ## Affected areas
 - .github

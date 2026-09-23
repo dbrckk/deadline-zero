@@ -602,6 +602,7 @@ godot/
     combat_feel_test.gd
     enemy_archetype_combat_test.gd
     smoke_test.gd
+    weapon_presentation_test.gd
 tools/
   android/
     scan_runtime_log.py
@@ -2136,6 +2137,12 @@ jobs:
           set -euo pipefail
           /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --headless --path godot --script res://tests/enemy_archetype_combat_test.gd
+
+      - name: Validate weapon presentation identities
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot --script res://tests/weapon_presentation_test.gd
 
       - name: Run Godot smoke test
         run: |
@@ -30778,6 +30785,8 @@ var fire_interval := 0.34
 var projectile_speed := 19.0
 var multishot := 1
 var spread_degrees := 7.0
+var weapon_profile := "vanguard"
+var weapon_tint := Color(0.18, 0.90, 1.0)
 var touch_move := Vector2.ZERO
 var fire_clock := 0.0
 var invulnerability := 0.0
@@ -30879,7 +30888,7 @@ func _fire_at(enemy: DZEnemy) -> void:
         var dir := base_dir.rotated(Vector3.UP, deg_to_rad(offset * spread_degrees))
         var projectile := DZProjectile.new()
         projectile.setup(global_position + Vector3(0.0, 0.72, 0.0) + dir * 0.5,
-            dir, projectile_speed, weapon_damage, Color(0.18, 0.90, 1.0))
+            dir, projectile_speed, weapon_damage, weapon_tint, weapon_profile)
         get_tree().current_scene.add_child(projectile)
 
 func _build_visual() -> void:
@@ -30984,18 +30993,59 @@ var radius := 0.34
 var age := 0.0
 var tint := Color(0.25, 0.9, 1.0)
 var critical_chance := 0.08
+var visual_profile := "vanguard"
+var trail_length := 0.55
+var trail_width := 0.055
+var core_radius := 0.11
+var impact_scale := 1.0
 
-func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color) -> void:
+func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color,
+        profile := "vanguard") -> void:
     global_position = origin
     velocity = direction.normalized() * speed
     damage = shot_damage
     tint = shot_tint
+    visual_profile = profile
+    _apply_profile(profile)
+
+func _apply_profile(profile: String) -> void:
+    match profile:
+        "scatter":
+            trail_length = 0.32
+            trail_width = 0.09
+            core_radius = 0.13
+            impact_scale = 1.18
+        "rail":
+            trail_length = 1.25
+            trail_width = 0.035
+            core_radius = 0.075
+            impact_scale = 1.34
+        "inferno":
+            trail_length = 0.72
+            trail_width = 0.075
+            core_radius = 0.12
+            impact_scale = 1.22
+        "cryo":
+            trail_length = 0.82
+            trail_width = 0.07
+            core_radius = 0.12
+            impact_scale = 1.24
+        "arc":
+            trail_length = 0.94
+            trail_width = 0.045
+            core_radius = 0.09
+            impact_scale = 1.20
+        _:
+            trail_length = 0.55
+            trail_width = 0.055
+            core_radius = 0.11
+            impact_scale = 1.0
 
 func _ready() -> void:
     var glow := MeshInstance3D.new()
     var mesh := SphereMesh.new()
-    mesh.radius = 0.11
-    mesh.height = 0.22
+    mesh.radius = core_radius
+    mesh.height = core_radius * 2.0
     glow.mesh = mesh
     var mat := StandardMaterial3D.new()
     mat.albedo_color = tint
@@ -31007,13 +31057,56 @@ func _ready() -> void:
 
     var trail := MeshInstance3D.new()
     var trail_mesh := BoxMesh.new()
-    trail_mesh.size = Vector3(0.055, 0.055, 0.55)
+    trail_mesh.size = Vector3(trail_width, trail_width, trail_length)
     trail.mesh = trail_mesh
-    trail.position.z = 0.28
+    trail.position.z = trail_length * 0.52
     trail.material_override = mat
     add_child(trail)
+
+    if visual_profile == "cryo":
+        glow.scale = Vector3(0.62, 1.55, 0.62)
+        glow.rotation_degrees.z = 45.0
+    elif visual_profile == "scatter":
+        _add_side_spark(mat, -1.0)
+        _add_side_spark(mat, 1.0)
+    elif visual_profile == "arc":
+        _add_arc_accent()
+    elif visual_profile == "inferno":
+        _add_flame_core()
+
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity.normalized(), Vector3.UP)
+
+func _add_side_spark(mat: StandardMaterial3D, side: float) -> void:
+    var spark := MeshInstance3D.new()
+    var mesh := BoxMesh.new()
+    mesh.size = Vector3(0.025, 0.025, trail_length * 0.62)
+    spark.mesh = mesh
+    spark.position = Vector3(side * 0.10, 0.0, trail_length * 0.30)
+    spark.material_override = mat
+    add_child(spark)
+
+func _add_arc_accent() -> void:
+    var accent := MeshInstance3D.new()
+    var mesh := TorusMesh.new()
+    mesh.inner_radius = core_radius * 0.85
+    mesh.outer_radius = core_radius * 1.45
+    accent.mesh = mesh
+    accent.rotation_degrees.x = 90.0
+    var mat := StandardMaterial3D.new()
+    mat.albedo_color = Color(0.58, 0.36, 1.0)
+    mat.emission_enabled = true
+    mat.emission = mat.albedo_color
+    mat.emission_energy_multiplier = 4.0
+    accent.material_override = mat
+    add_child(accent)
+
+func _add_flame_core() -> void:
+    var core := OmniLight3D.new()
+    core.light_color = Color(1.0, 0.30, 0.04)
+    core.light_energy = 1.1
+    core.omni_range = 1.35
+    add_child(core)
 
 func _physics_process(delta: float) -> void:
     age += delta
@@ -31038,7 +31131,7 @@ func _physics_process(delta: float) -> void:
 func _impact(critical := false) -> void:
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.76, 0.18) if critical else tint
-    fx.scale_boost = 1.45 if critical else 1.0
+    fx.scale_boost = (1.45 if critical else 1.0) * impact_scale
     get_tree().current_scene.add_child(fx)
     fx.global_position = global_position
 ````
@@ -31207,6 +31300,31 @@ func _process(_delta: float) -> bool:
             quit(0)
         return true
     return false
+````
+
+## File: godot/tests/weapon_presentation_test.gd
+````
+extends SceneTree
+
+func _init() -> void:
+    var projectile := FileAccess.get_file_as_string("res://scripts/Projectile.gd")
+    var player := FileAccess.get_file_as_string("res://scripts/Player.gd")
+
+    for profile in ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]:
+        assert(projectile.contains("\"" + profile + "\""))
+    assert(projectile.contains("trail_length"))
+    assert(projectile.contains("trail_width"))
+    assert(projectile.contains("core_radius"))
+    assert(projectile.contains("impact_scale"))
+    assert(projectile.contains("_add_side_spark"))
+    assert(projectile.contains("_add_arc_accent"))
+    assert(projectile.contains("_add_flame_core"))
+    assert(player.contains("weapon_profile"))
+    assert(player.contains("weapon_tint"))
+    assert(player.contains("weapon_profile)"))
+
+    print("weapon_presentation_test: PASS")
+    quit()
 ````
 
 ## File: tools/android/scan_runtime_log.py

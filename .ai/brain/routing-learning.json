@@ -2,34 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Add Hunter and Sentinel drone doctrines",
-      "terms": [
-        "add",
-        "doctrines",
-        "drone",
-        "hunter",
-        "sentinel"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java",
-        "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
-        "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
-        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrine.java",
-        "core/src/main/java/com/deadlinezero/game/abilities/DroneDoctrineRules.java",
-        "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
-        "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
-        "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java",
-        "core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java",
-        "core/src/test/java/com/deadlinezero/game/abilities/DroneDoctrineRulesTest.java",
-        "core/src/test/java/com/deadlinezero/game/entities/NullWardSupportTest.java",
-        "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Give drone doctrines distinct combat visuals",
       "terms": [
         "combat",
@@ -1245,6 +1217,26 @@
         "godot/scripts/Enemy.gd",
         "godot/tests/enemy_archetype_combat_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Give native 3D weapons distinct projectile identities (#308)",
+      "terms": [
+        "308",
+        "3d",
+        "distinct",
+        "give",
+        "identities",
+        "native",
+        "projectile",
+        "weapons"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Player.gd",
+        "godot/scripts/Projectile.gd",
+        "godot/tests/weapon_presentation_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1490,6 +1482,11 @@
       "godot/scripts/Enemy.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4
     },
+    "308": {
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
+    },
     "3d": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/CombatFeel.gd": 4,
@@ -1497,13 +1494,14 @@
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/ImpactFx.gd": 8,
       "godot/scripts/Main.gd": 8,
-      "godot/scripts/Player.gd": 4,
-      "godot/scripts/Projectile.gd": 8,
+      "godot/scripts/Player.gd": 8,
+      "godot/scripts/Projectile.gd": 12,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/combat_feel_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
-      "godot/tests/smoke_test.gd": 4
+      "godot/tests/smoke_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "70": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
@@ -1999,7 +1997,10 @@
     "distinct": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "docs": {
       "core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java": 4
@@ -2289,7 +2290,10 @@
       "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/tests/enemy_archetype_combat_test.gd": 4
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "godot": {
       "godot/scripts/AssetLibrary.gd": 4,
@@ -2375,7 +2379,10 @@
     },
     "identities": {
       "godot/scripts/Enemy.gd": 4,
-      "godot/tests/enemy_archetype_combat_test.gd": 4
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "identity": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
@@ -2535,11 +2542,12 @@
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 4,
-      "godot/scripts/Player.gd": 4,
-      "godot/scripts/Projectile.gd": 4,
+      "godot/scripts/Player.gd": 8,
+      "godot/scripts/Projectile.gd": 8,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
-      "godot/tests/smoke_test.gd": 4
+      "godot/tests/smoke_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "newly": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java": 4,
@@ -2743,7 +2751,10 @@
       "core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "protocol": {
       "core/src/main/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidance.java": 4,
@@ -3301,6 +3312,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java": 4
+    },
+    "weapons": {
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "yard": {
       "tools/environment/generate_quarantine_yard_candidate.py": 4
