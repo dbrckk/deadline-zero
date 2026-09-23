@@ -3,6 +3,7 @@ extends CharacterBody3D
 
 signal died(xp_value: int, at: Vector3)
 signal impact(at: Vector3, critical: bool, killed: bool, boss: bool)
+signal health_changed(current: float, maximum: float)
 
 var target: Node3D
 var kind := "shambler"
@@ -52,6 +53,7 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
             contact_damage = 8.0
             xp_value = 2
     health = max_health
+    health_changed.emit(health, max_health)
 
 func _ready() -> void:
     add_to_group("enemies")
@@ -147,6 +149,7 @@ func take_damage(amount: float, critical := false) -> void:
     if dead:
         return
     health -= amount
+    health_changed.emit(max(0.0, health), max_health)
     var killed := health <= 0.0
     impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
     _flash(critical, killed)
