@@ -28,6 +28,12 @@ var touch_origin := Vector2.ZERO
 var camera_kick := 0.0
 var camera_kick_phase := 0.0
 var hit_freeze_left := 0.0
+var boss_reveal_target: DZEnemy
+var boss_reveal_left := 0.0
+
+const BOSS_REVEAL_DURATION := 1.15
+const BOSS_REVEAL_FOCUS := 0.58
+const BOSS_REVEAL_FOV_DELTA := 5.5
 
 func _ready() -> void:
     randomize()
@@ -66,10 +72,26 @@ func _process(delta: float) -> void:
     camera_kick_phase += delta * 38.0
 
     if player and is_instance_valid(player):
+        var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0)
         var desired := player.global_position + Vector3(0.0, 14.0, 10.0)
+        var target_fov := 48.0
+
+        if boss_reveal_left > 0.0 and boss_reveal_target != null and is_instance_valid(boss_reveal_target) and not boss_reveal_target.dead:
+            boss_reveal_left = max(0.0, boss_reveal_left - delta)
+            var normalized := clamp(boss_reveal_left / BOSS_REVEAL_DURATION, 0.0, 1.0)
+            var envelope := sin((1.0 - normalized) * PI)
+            var midpoint := player.global_position.lerp(boss_reveal_target.global_position, BOSS_REVEAL_FOCUS)
+            focus_point = focus_point.lerp(midpoint + Vector3(0.0, 0.78, 0.0), envelope)
+            desired = desired.lerp(midpoint + Vector3(0.0, 15.0, 11.2), envelope * 0.72)
+            target_fov = 48.0 + BOSS_REVEAL_FOV_DELTA * envelope
+        else:
+            boss_reveal_left = 0.0
+            boss_reveal_target = null
+
         var kick_offset := Vector3(sin(camera_kick_phase), 0.0, cos(camera_kick_phase * 1.27)) * camera_kick
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
-        camera.look_at(player.global_position + Vector3(0.0, 0.65, 0.0), Vector3.UP)
+        camera.fov = lerpf(camera.fov, target_fov, 1.0 - exp(-delta * 5.5))
+        camera.look_at(focus_point, Vector3.UP)
 
 func _physics_process(delta: float) -> void:
     if game_over:
@@ -131,6 +153,9 @@ func _spawn_enemy(forced_kind: String = "") -> void:
     enemy.impact.connect(_on_enemy_impact)
     add_child(enemy)
     enemy.global_position = pos
+    if kind == "boss":
+        boss_reveal_target = enemy
+        boss_reveal_left = BOSS_REVEAL_DURATION
 
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
