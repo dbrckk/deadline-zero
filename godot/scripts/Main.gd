@@ -30,6 +30,9 @@ var camera_kick_phase := 0.0
 var hit_freeze_left := 0.0
 var boss_reveal_target: DZEnemy
 var boss_reveal_left := 0.0
+var impact_audio: AudioStreamPlayer
+var boss_audio: AudioStreamPlayer
+var impact_streams := {}
 
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
@@ -57,6 +60,7 @@ func _ready() -> void:
     hud.upgrade_chosen.connect(_on_upgrade_chosen)
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed)
+    _build_combat_audio()
 
     for i in range(8):
         _spawn_enemy()
@@ -154,6 +158,7 @@ func _spawn_enemy(forced_kind: String = "") -> void:
     add_child(enemy)
     enemy.global_position = pos
     if kind == "boss":
+        _play_boss_stinger()
         boss_reveal_target = enemy
         boss_reveal_left = BOSS_REVEAL_DURATION
         enemy.health_changed.connect(_on_boss_health_changed)
@@ -166,6 +171,7 @@ func _on_boss_health_changed(current: float, maximum: float) -> void:
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
     camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
+    _play_impact_audio(critical, killed, boss)
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
     kills += 1
@@ -295,3 +301,29 @@ func _build_world() -> void:
         stripe_mat.emission_energy_multiplier = 0.45
         stripe.material_override = stripe_mat
         add_child(stripe)
+
+func _build_combat_audio() -> void:
+    impact_audio = AudioStreamPlayer.new()
+    impact_audio.name = "ImpactAudio"
+    impact_audio.volume_db = -9.0
+    add_child(impact_audio)
+
+    boss_audio = AudioStreamPlayer.new()
+    boss_audio.name = "BossStinger"
+    boss_audio.volume_db = -6.0
+    boss_audio.stream = DZCombatAudio.boss_stinger()
+    add_child(boss_audio)
+
+func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
+    if impact_audio == null:
+        return
+    var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
+    if not impact_streams.has(key):
+        impact_streams[key] = DZCombatAudio.impact_stream(critical, killed, boss)
+    impact_audio.stream = impact_streams[key]
+    impact_audio.pitch_scale = randf_range(0.96, 1.04)
+    impact_audio.play()
+
+func _play_boss_stinger() -> void:
+    if boss_audio != null:
+        boss_audio.play()
