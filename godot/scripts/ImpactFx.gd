@@ -4,6 +4,7 @@ extends Node3D
 var life := 0.18
 var age := 0.0
 var color := Color(0.25, 0.9, 1.0, 1.0)
+var scale_boost := 1.0
 var mesh_instance: MeshInstance3D
 var light: OmniLight3D
 
@@ -31,7 +32,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
     age += delta
     var t := clamp(age / life, 0.0, 1.0)
-    scale = Vector3.ONE * lerp(0.55, 2.2, t)
+    scale = Vector3.ONE * lerp(0.55, 2.2 * scale_boost, t)
     var material := mesh_instance.material_override as StandardMaterial3D
     if material:
         var c := color
