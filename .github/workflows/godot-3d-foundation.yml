@@ -1,0 +1,53 @@
+name: Godot 3D Foundation
+
+on:
+  pull_request:
+    paths:
+      - 'project.godot'
+      - 'godot/**'
+      - 'docs/GODOT_3D_MIGRATION.md'
+      - '.github/workflows/godot-3d-foundation.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'project.godot'
+      - 'godot/**'
+      - 'docs/GODOT_3D_MIGRATION.md'
+      - '.github/workflows/godot-3d-foundation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate migration contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s project.godot
+          test -s godot/scenes/vertical_slice.tscn
+          test -s godot/scripts/vertical_slice.gd
+          test -s godot/assets/ATTRIBUTION.md
+          test -s docs/GODOT_3D_MIGRATION.md
+          grep -Fq 'Godot 4 real-time 3D runtime' docs/GODOT_3D_MIGRATION.md
+          grep -Fq 'Do not import ripped/extracted Zombie Waves' docs/GODOT_3D_MIGRATION.md
+          grep -Fq 'res://godot/scenes/vertical_slice.tscn' project.godot
+      - name: Install Godot 4 headless
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq godot4 || true
+          if ! command -v godot4 >/dev/null 2>&1; then
+            echo 'godot4 package unavailable on this runner; structural validation remains authoritative for this foundation PR.'
+          fi
+      - name: Parse Godot project when engine is available
+        shell: bash
+        run: |
+          set -euo pipefail
+          if command -v godot4 >/dev/null 2>&1; then
+            timeout 30s godot4 --headless --editor --path . --quit
+          fi
