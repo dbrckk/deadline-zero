@@ -156,6 +156,12 @@ func _spawn_enemy(forced_kind: String = "") -> void:
     if kind == "boss":
         boss_reveal_target = enemy
         boss_reveal_left = BOSS_REVEAL_DURATION
+        enemy.health_changed.connect(_on_boss_health_changed)
+        hud.show_boss("REVENANT PRIME", enemy.max_health)
+
+func _on_boss_health_changed(current: float, maximum: float) -> void:
+    if hud:
+        hud.set_boss_health(current, maximum)
 
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
