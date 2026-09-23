@@ -78,9 +78,9 @@ func _process(delta: float) -> void:
 
         if boss_reveal_left > 0.0 and boss_reveal_target != null and is_instance_valid(boss_reveal_target) and not boss_reveal_target.dead:
             boss_reveal_left = max(0.0, boss_reveal_left - delta)
-            var normalized := clamp(boss_reveal_left / BOSS_REVEAL_DURATION, 0.0, 1.0)
-            var envelope := sin((1.0 - normalized) * PI)
-            var midpoint := player.global_position.lerp(boss_reveal_target.global_position, BOSS_REVEAL_FOCUS)
+            var normalized: float = clampf(boss_reveal_left / BOSS_REVEAL_DURATION, 0.0, 1.0)
+            var envelope: float = sin((1.0 - normalized) * PI)
+            var midpoint: Vector3 = player.global_position.lerp(boss_reveal_target.global_position, BOSS_REVEAL_FOCUS)
             focus_point = focus_point.lerp(midpoint + Vector3(0.0, 0.78, 0.0), envelope)
             desired = desired.lerp(midpoint + Vector3(0.0, 15.0, 11.2), envelope * 0.72)
             target_fov = 48.0 + BOSS_REVEAL_FOV_DELTA * envelope
