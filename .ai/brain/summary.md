@@ -1,17 +1,17 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 479
-- Files reparsed this run: 2
-- Symbols: 2732
+- Files indexed: 481
+- Files reparsed this run: 6
+- Symbols: 2736
 - Internal import edges: 794
-- Impacted files: 2
-- Selected tests: 1
+- Impacted files: 66
+- Selected tests: 38
 
 ## Languages
 - java: 420 files
 - python: 49 files
-- gdscript: 10 files
+- gdscript: 12 files
 
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
@@ -44,7 +44,7 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 2
+- AST files reparsed this run: 0
 - outline files retained: 467
 - top-level items retained: 2976
 - direct members retained: 3450

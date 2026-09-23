@@ -1,14 +1,20 @@
 # Change impact
 
-Base: 2b4273a5e7300a6e9fa10b89bf021f48e344d494
-Head: b36daeda6b72449e60a7dc2fa3d0311c4a13273a
+Base: d569d2dda97a2b864ab8ba9f48cdaeb524355fd0
+Head: 6cadae135a3b73bb31dd74462f60029634cbc248
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java
-- A core/src/test/java/com/deadlinezero/game/visual/EnvironmentFloorVariationTest.java
+- M .github/workflows/godot-verify.yml
+- A godot/scripts/CombatFeel.gd
+- M godot/scripts/Enemy.gd
+- M godot/scripts/ImpactFx.gd
+- M godot/scripts/Main.gd
+- M godot/scripts/Projectile.gd
+- A godot/tests/combat_feel_test.gd
 
 ## Affected areas
-- core
+- .github
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

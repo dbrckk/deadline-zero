@@ -589,6 +589,7 @@ godot/
     asset_manifest.json
   scripts/
     AssetLibrary.gd
+    CombatFeel.gd
     Enemy.gd
     Hud.gd
     ImpactFx.gd
@@ -598,6 +599,7 @@ godot/
     XpOrb.gd
   tests/
     authored_asset_validation.gd
+    combat_feel_test.gd
     smoke_test.gd
 tools/
   android/
@@ -2121,6 +2123,12 @@ jobs:
           set -euo pipefail
           /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --headless --path godot --script res://tests/authored_asset_validation.gd
+
+      - name: Validate combat-feel profile
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot --script res://tests/combat_feel_test.gd
 
       - name: Run Godot smoke test
         run: |
@@ -30029,12 +30037,43 @@ static func animation_player(root: Node) -> AnimationPlayer:
     return direct as AnimationPlayer
 ````
 
+## File: godot/scripts/CombatFeel.gd
+````
+class_name DZCombatFeel
+extends RefCounted
+
+const DEFAULT_HIT_FREEZE := 0.022
+const CRITICAL_HIT_FREEZE := 0.038
+const KILL_HIT_FREEZE := 0.030
+const BOSS_HIT_FREEZE := 0.044
+
+static func hit_freeze_seconds(critical: bool, killed: bool, boss: bool) -> float:
+    if boss:
+        return BOSS_HIT_FREEZE
+    if critical:
+        return CRITICAL_HIT_FREEZE
+    if killed:
+        return KILL_HIT_FREEZE
+    return DEFAULT_HIT_FREEZE
+
+static func camera_kick(critical: bool, killed: bool, boss: bool) -> float:
+    var kick := 0.055
+    if killed:
+        kick += 0.025
+    if critical:
+        kick += 0.035
+    if boss:
+        kick += 0.050
+    return min(kick, 0.16)
+````
+
 ## File: godot/scripts/Enemy.gd
 ````
 class_name DZEnemy
 extends CharacterBody3D
 
 signal died(xp_value: int, at: Vector3)
+signal impact(at: Vector3, critical: bool, killed: bool, boss: bool)
 
 var target: Node3D
 var kind := "shambler"
@@ -30101,12 +30140,14 @@ func _physics_process(delta: float) -> void:
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
 
-func take_damage(amount: float) -> void:
+func take_damage(amount: float, critical := false) -> void:
     if dead:
         return
     health -= amount
-    _flash()
-    if health <= 0.0:
+    var killed := health <= 0.0
+    impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
+    _flash(critical, killed)
+    if killed:
         dead = true
         velocity = Vector3.ZERO
         died.emit(xp_value, global_position)
@@ -30200,12 +30241,14 @@ func _play_authored(name: String) -> void:
     current_anim = name
     authored_anim.play(name, 0.10)
 
-func _flash() -> void:
+func _flash(critical := false, killed := false) -> void:
     var visual := get_node_or_null("Visual")
     if visual:
+        var base_scale := visual.scale
+        var punch := 1.12 if critical else (1.10 if killed else 1.065)
         var tween := create_tween()
-        tween.tween_property(visual, "scale", visual.scale * 1.08, 0.045)
-        tween.tween_property(visual, "scale", visual.scale, 0.07)
+        tween.tween_property(visual, "scale", base_scale * punch, 0.035)
+        tween.tween_property(visual, "scale", base_scale, 0.075)
 ````
 
 ## File: godot/scripts/Hud.gd
@@ -30326,6 +30369,7 @@ extends Node3D
 var life := 0.18
 var age := 0.0
 var color := Color(0.25, 0.9, 1.0, 1.0)
+var scale_boost := 1.0
 var mesh_instance: MeshInstance3D
 var light: OmniLight3D
 
@@ -30353,7 +30397,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
     age += delta
     var t := clamp(age / life, 0.0, 1.0)
-    scale = Vector3.ONE * lerp(0.55, 2.2, t)
+    scale = Vector3.ONE * lerp(0.55, 2.2 * scale_boost, t)
     var material := mesh_instance.material_override as StandardMaterial3D
     if material:
         var c := color
@@ -30393,6 +30437,9 @@ var game_over := false
 var pending_upgrades: Array = []
 var touch_id := -1
 var touch_origin := Vector2.ZERO
+var camera_kick := 0.0
+var camera_kick_phase := 0.0
+var hit_freeze_left := 0.0
 
 func _ready() -> void:
     randomize()
@@ -30421,9 +30468,19 @@ func _ready() -> void:
         _spawn_enemy()
 
 func _process(delta: float) -> void:
+    if hit_freeze_left > 0.0:
+        hit_freeze_left = max(0.0, hit_freeze_left - delta)
+        Engine.time_scale = 0.12
+    else:
+        Engine.time_scale = 1.0
+
+    camera_kick = move_toward(camera_kick, 0.0, delta * 0.95)
+    camera_kick_phase += delta * 38.0
+
     if player and is_instance_valid(player):
         var desired := player.global_position + Vector3(0.0, 14.0, 10.0)
-        camera.global_position = camera.global_position.lerp(desired, 1.0 - exp(-delta * 4.5))
+        var kick_offset := Vector3(sin(camera_kick_phase), 0.0, cos(camera_kick_phase * 1.27)) * camera_kick
+        camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.look_at(player.global_position + Vector3(0.0, 0.65, 0.0), Vector3.UP)
 
 func _physics_process(delta: float) -> void:
@@ -30483,8 +30540,13 @@ func _spawn_enemy(forced_kind: String = "") -> void:
     var enemy := DZEnemy.new()
     enemy.configure(kind, difficulty, player)
     enemy.died.connect(_on_enemy_died)
+    enemy.impact.connect(_on_enemy_impact)
     add_child(enemy)
     enemy.global_position = pos
+
+func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
+    hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
+    camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
     kills += 1
@@ -30529,6 +30591,7 @@ func _on_health_changed(current: float, maximum: float) -> void:
         hud.set_health(current, maximum)
 
 func _on_player_died() -> void:
+    Engine.time_scale = 1.0
     game_over = true
     if hud:
         hud.show_game_over()
@@ -30839,6 +30902,7 @@ var lifetime := 1.8
 var radius := 0.34
 var age := 0.0
 var tint := Color(0.25, 0.9, 1.0)
+var critical_chance := 0.08
 
 func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color) -> void:
     global_position = origin
@@ -30881,17 +30945,19 @@ func _physics_process(delta: float) -> void:
         if enemy == null or enemy.dead:
             continue
         if global_position.distance_squared_to(enemy.global_position) <= radius * radius:
-            enemy.take_damage(damage)
-            _impact()
+            var critical := randf() < critical_chance
+            enemy.take_damage(damage * (1.75 if critical else 1.0), critical)
+            _impact(critical)
             queue_free()
             return
 
     if age >= lifetime:
         queue_free()
 
-func _impact() -> void:
+func _impact(critical := false) -> void:
     var fx := ImpactFx.new()
-    fx.color = tint
+    fx.color = Color(1.0, 0.76, 0.18) if critical else tint
+    fx.scale_boost = 1.45 if critical else 1.0
     get_tree().current_scene.add_child(fx)
     fx.global_position = global_position
 ````
@@ -30993,6 +31059,27 @@ func _find_animation_player(node: Node) -> AnimationPlayer:
         if found != null:
             return found
     return null
+````
+
+## File: godot/tests/combat_feel_test.gd
+````
+extends SceneTree
+
+func _initialize() -> void:
+    _assert(DZCombatFeel.DEFAULT_HIT_FREEZE > 0.0, "default hit freeze must be positive")
+    _assert(DZCombatFeel.CRITICAL_HIT_FREEZE > DZCombatFeel.DEFAULT_HIT_FREEZE, "critical must read stronger")
+    _assert(DZCombatFeel.BOSS_HIT_FREEZE <= 0.050, "boss hit freeze must stay mobile-safe")
+    _assert(DZCombatFeel.camera_kick(false, false, false) < DZCombatFeel.camera_kick(true, true, true),
+        "important impacts must produce stronger camera feedback")
+    _assert(DZCombatFeel.camera_kick(true, true, true) <= 0.16, "camera kick comfort bound")
+    print("Deadline Zero Godot combat-feel profile: OK")
+    quit(0)
+
+func _assert(condition: bool, message: String) -> void:
+    if condition:
+        return
+    push_error(message)
+    quit(1)
 ````
 
 ## File: godot/tests/smoke_test.gd

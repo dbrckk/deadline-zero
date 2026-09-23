@@ -22,19 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T07:48:23Z
+Generated: 2026-09-23T09:15:14Z
 
 ### Git
 - Branch: `main`
-- Head: `b36daeda6b72`
-- Commit date: 2026-09-23T09:48:11+02:00
-- Commit: Break visible repetition in biome floor tiles (#304)
-- Tracked files: 879
+- Head: `6cadae135a3b`
+- Commit date: 2026-09-23T11:14:59+02:00
+- Commit: Add 3D hit-stop, critical impacts and camera feedback (#306)
+- Tracked files: 881
 
 ### Recently changed files
+- `.github/workflows/godot-verify.yml`
+- `godot/scripts/CombatFeel.gd`
+- `godot/scripts/Enemy.gd`
+- `godot/scripts/ImpactFx.gd`
+- `godot/scripts/Main.gd`
+- `godot/scripts/Projectile.gd`
+- `godot/tests/combat_feel_test.gd`
 - `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
 - `core/src/test/java/com/deadlinezero/game/visual/EnvironmentFloorVariationTest.java`
-- `.github/workflows/godot-verify.yml`
 - `docs/GODOT_3D_MIGRATION.md`
 - `godot/README.md`
 - `godot/assets/asset_manifest.json`
@@ -46,12 +52,6 @@ Generated: 2026-09-23T07:48:23Z
 - `godot/assets/third_party/quaternius/zombie_apocalypse/zombie_basic.gltf`
 - `godot/assets/third_party/quaternius/zombie_apocalypse/zombie_chubby.gltf`
 - `godot/project.godot`
-- `godot/scenes/Main.tscn`
-- `godot/scripts/AssetLibrary.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/scripts/Hud.gd`
-- `godot/scripts/ImpactFx.gd`
-- `godot/scripts/Main.gd`
 
 ### Project signals
 - `build.gradle`
