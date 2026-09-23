@@ -269,6 +269,7 @@ func _add_eye_beacon(color: Color, at: Vector3, size: float) -> void:
     mesh.radius = size
     mesh.height = size * 2.0
     beacon.mesh = mesh
+    beacon.name = "SignatureBeacon"
     beacon.position = at
     beacon.material_override = _signature_material(color, 3.2)
     add_child(beacon)
@@ -280,6 +281,7 @@ func _add_runner_blades(color: Color) -> void:
         var mesh := BoxMesh.new()
         mesh.size = Vector3(0.055, 0.34, 0.16)
         blade.mesh = mesh
+        blade.name = "RunnerBladeL" if side < 0.0 else "RunnerBladeR"
         blade.position = Vector3(side * 0.38, 0.84, 0.04)
         blade.rotation_degrees = Vector3(0.0, 0.0, side * -24.0)
         blade.material_override = mat
@@ -293,6 +295,7 @@ func _add_brute_shoulders(color: Color) -> void:
         var mesh := BoxMesh.new()
         mesh.size = Vector3(0.32, 0.16, 0.36)
         plate.mesh = mesh
+        plate.name = "BrutePlateL" if side < 0.0 else "BrutePlateR"
         plate.position = Vector3(side * 0.48, 1.12, 0.02)
         plate.rotation_degrees.z = side * -12.0
         plate.material_override = mat
@@ -306,6 +309,7 @@ func _add_elite_crown(color: Color) -> void:
         var mesh := BoxMesh.new()
         mesh.size = Vector3(0.08, 0.44, 0.12)
         fin.mesh = mesh
+        fin.name = "EliteFinL" if side < 0.0 else "EliteFinR"
         fin.position = Vector3(side * 0.31, 1.62, 0.06)
         fin.rotation_degrees.z = side * -28.0
         fin.material_override = mat
@@ -319,6 +323,7 @@ func _add_boss_frame(color: Color) -> void:
         var mesh := BoxMesh.new()
         mesh.size = Vector3(0.10, 0.58, 0.18)
         horn.mesh = mesh
+        horn.name = "BossHornL" if side < 0.0 else "BossHornR"
         horn.position = Vector3(side * 0.46, 1.76, 0.08)
         horn.rotation_degrees.z = side * -34.0
         horn.material_override = mat
@@ -328,6 +333,7 @@ func _add_boss_frame(color: Color) -> void:
     core_mesh.radius = 0.10
     core_mesh.height = 0.20
     core.mesh = core_mesh
+    core.name = "BossCore"
     core.position = Vector3(0.0, 1.30, -0.42)
     core.material_override = mat
     add_child(core)
