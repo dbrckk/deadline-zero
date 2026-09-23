@@ -358,8 +358,8 @@ func _play_authored(name: String) -> void:
 func _flash(critical := false, killed := false) -> void:
     var visual := get_node_or_null("Visual")
     if visual:
-        var base_scale := visual.scale
-        var punch := 1.12 if critical else (1.10 if killed else 1.065)
-        var tween := create_tween()
+        var base_scale: Vector3 = visual.scale
+        var punch: float = 1.12 if critical else (1.10 if killed else 1.065)
+        var tween: Tween = create_tween()
         tween.tween_property(visual, "scale", base_scale * punch, 0.035)
         tween.tween_property(visual, "scale", base_scale, 0.075)
