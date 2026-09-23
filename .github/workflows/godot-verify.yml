@@ -69,6 +69,12 @@ jobs:
           /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --headless --path godot --script res://tests/boss_reveal_camera_test.gd
 
+      - name: Validate boss HUD identity
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot --script res://tests/boss_hud_identity_test.gd
+
       - name: Run Godot smoke test
         run: |
           set -euo pipefail
