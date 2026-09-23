@@ -13,6 +13,11 @@ var upgrade_cards: Array[VBoxContainer] = []
 var upgrade_family_labels: Array[Label] = []
 var upgrade_title_labels: Array[Label] = []
 var upgrade_detail_labels: Array[Label] = []
+var boss_panel: PanelContainer
+var boss_name_label: Label
+var boss_hp_bar: ProgressBar
+var boss_phase_label: Label
+var boss_hp_max := 1.0
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -29,6 +34,26 @@ func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float)
 
 func set_wave(text: String) -> void:
     wave_label.text = text
+
+func show_boss(name: String, maximum: float) -> void:
+    boss_hp_max = max(1.0, maximum)
+    boss_name_label.text = name
+    boss_hp_bar.max_value = boss_hp_max
+    boss_hp_bar.value = boss_hp_max
+    boss_phase_label.text = "THREAT LOCK"
+    boss_panel.visible = true
+
+func set_boss_health(value: float, maximum: float) -> void:
+    boss_hp_max = max(1.0, maximum)
+    boss_hp_bar.max_value = boss_hp_max
+    boss_hp_bar.value = clamp(value, 0.0, boss_hp_max)
+    var ratio := boss_hp_bar.value / boss_hp_max
+    boss_phase_label.text = "PHASE III // EXECUTE" if ratio <= 0.30 else ("PHASE II // ENRAGED" if ratio <= 0.65 else "PHASE I // HUNT")
+    if boss_hp_bar.value <= 0.0:
+        boss_panel.visible = false
+
+func hide_boss() -> void:
+    boss_panel.visible = false
 
 func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
@@ -80,6 +105,52 @@ func _build() -> void:
     wave_label.position = Vector2(-220, 24)
     wave_label.size = Vector2(440, 42)
     root.add_child(wave_label)
+
+    boss_panel = PanelContainer.new()
+    boss_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
+    boss_panel.position = Vector2(-330, 76)
+    boss_panel.size = Vector2(660, 78)
+    boss_panel.visible = false
+    root.add_child(boss_panel)
+
+    var boss_box := VBoxContainer.new()
+    boss_box.add_theme_constant_override("separation", 3)
+    boss_panel.add_child(boss_box)
+
+    var boss_header := HBoxContainer.new()
+    boss_header.alignment = BoxContainer.ALIGNMENT_CENTER
+    boss_box.add_child(boss_header)
+
+    boss_name_label = Label.new()
+    boss_name_label.text = "REVENANT PRIME"
+    boss_name_label.add_theme_font_size_override("font_size", 18)
+    boss_name_label.modulate = Color(1.0, 0.82, 0.42)
+    boss_header.add_child(boss_name_label)
+
+    var spacer := Control.new()
+    spacer.custom_minimum_size = Vector2(32, 1)
+    boss_header.add_child(spacer)
+
+    boss_phase_label = Label.new()
+    boss_phase_label.text = "PHASE I // HUNT"
+    boss_phase_label.add_theme_font_size_override("font_size", 13)
+    boss_phase_label.modulate = Color(1.0, 0.42, 0.26)
+    boss_header.add_child(boss_phase_label)
+
+    boss_hp_bar = ProgressBar.new()
+    boss_hp_bar.custom_minimum_size = Vector2(620, 18)
+    boss_hp_bar.show_percentage = false
+    boss_box.add_child(boss_hp_bar)
+
+    var boss_style := StyleBoxFlat.new()
+    boss_style.bg_color = Color(0.025, 0.035, 0.045, 0.96)
+    boss_style.border_color = Color(0.92, 0.28, 0.12, 0.72)
+    boss_style.set_border_width_all(2)
+    boss_style.corner_radius_top_left = 6
+    boss_style.corner_radius_top_right = 6
+    boss_style.corner_radius_bottom_left = 6
+    boss_style.corner_radius_bottom_right = 6
+    boss_panel.add_theme_stylebox_override("panel", boss_style)
 
     upgrade_panel = PanelContainer.new()
     upgrade_panel.set_anchors_preset(Control.PRESET_CENTER)
