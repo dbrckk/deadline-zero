@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Show active build identity in combat HUD",
-      "terms": [
-        "active",
-        "build",
-        "combat",
-        "hud",
-        "identity",
-        "show"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
-        "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Announce newly activated ability synergies",
       "terms": [
         "ability",
@@ -1239,6 +1221,25 @@
         "godot/scripts/Main.gd",
         "godot/tests/upgrade_presentation_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Add native 3D boss reveal camera framing (#310)",
+      "terms": [
+        "310",
+        "3d",
+        "add",
+        "boss",
+        "camera",
+        "framing",
+        "native",
+        "reveal"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Main.gd",
+        "godot/tests/boss_reveal_camera_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1494,17 +1495,22 @@
       "godot/scripts/Main.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4
     },
+    "310": {
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/boss_reveal_camera_test.gd": 4
+    },
     "3d": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/CombatFeel.gd": 4,
       "godot/scripts/Enemy.gd": 12,
       "godot/scripts/Hud.gd": 8,
       "godot/scripts/ImpactFx.gd": 8,
-      "godot/scripts/Main.gd": 12,
+      "godot/scripts/Main.gd": 16,
       "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 12,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
+      "godot/tests/boss_reveal_camera_test.gd": 4,
       "godot/tests/combat_feel_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
       "godot/tests/smoke_test.gd": 4,
@@ -1596,8 +1602,9 @@
       "godot/scripts/CombatFeel.gd": 4,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Main.gd": 8,
       "godot/scripts/Projectile.gd": 4,
+      "godot/tests/boss_reveal_camera_test.gd": 4,
       "godot/tests/combat_feel_test.gd": 4,
       "tools/environment/candidate_utils.py": 4,
       "tools/environment/generate_cinder_foundry_candidate.py": 8,
@@ -1739,7 +1746,9 @@
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 16,
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 8
+      "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 8,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/boss_reveal_camera_test.gd": 4
     },
     "bosses": {
       "godot/scripts/Enemy.gd": 4,
@@ -1779,8 +1788,9 @@
       "godot/scripts/CombatFeel.gd": 4,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Main.gd": 8,
       "godot/scripts/Projectile.gd": 4,
+      "godot/tests/boss_reveal_camera_test.gd": 4,
       "godot/tests/combat_feel_test.gd": 4
     },
     "cancel": {
@@ -2216,7 +2226,9 @@
       "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 16,
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 8
+      "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 8,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/boss_reveal_camera_test.gd": 4
     },
     "from": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 8,
@@ -2558,11 +2570,12 @@
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 8,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 8,
+      "godot/scripts/Main.gd": 12,
       "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 8,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
+      "godot/tests/boss_reveal_camera_test.gd": 4,
       "godot/tests/smoke_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
@@ -2932,7 +2945,9 @@
       "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 16,
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 8
+      "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 8,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/boss_reveal_camera_test.gd": 4
     },
     "review": {
       "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java": 4,

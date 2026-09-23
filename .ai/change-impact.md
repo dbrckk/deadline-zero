@@ -1,13 +1,12 @@
 # Change impact
 
-Base: 63e5784c048de4b1f5b4418c49d12a9a81567c53
-Head: 786ad54830d86db70ae5f598c47497c90dda883c
+Base: 57fa91d9503d9171c6a0fe7f79823286d48c5962
+Head: 0529bb90bfb169f0b02fc5675ae4f8a292739c20
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/Hud.gd
 - M godot/scripts/Main.gd
-- A godot/tests/upgrade_presentation_test.gd
+- A godot/tests/boss_reveal_camera_test.gd
 
 ## Affected areas
 - .github

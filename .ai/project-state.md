@@ -22,19 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T10:45:10Z
+Generated: 2026-09-23T12:54:21Z
 
 ### Git
 - Branch: `main`
-- Head: `786ad54830d8`
-- Commit date: 2026-09-23T12:44:57+02:00
-- Commit: Give native 3D upgrades distinct visual identities (#309)
-- Tracked files: 884
+- Head: `0529bb90bfb1`
+- Commit date: 2026-09-23T14:54:08+02:00
+- Commit: Add native 3D boss reveal camera framing (#310)
+- Tracked files: 885
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/Hud.gd`
 - `godot/scripts/Main.gd`
+- `godot/tests/boss_reveal_camera_test.gd`
+- `godot/scripts/Hud.gd`
 - `godot/tests/upgrade_presentation_test.gd`
 - `godot/scripts/Player.gd`
 - `godot/scripts/Projectile.gd`
@@ -44,8 +45,6 @@ Generated: 2026-09-23T10:45:10Z
 - `godot/scripts/CombatFeel.gd`
 - `godot/scripts/ImpactFx.gd`
 - `godot/tests/combat_feel_test.gd`
-- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
-- `core/src/test/java/com/deadlinezero/game/visual/EnvironmentFloorVariationTest.java`
 
 ### Project signals
 - `build.gradle`
