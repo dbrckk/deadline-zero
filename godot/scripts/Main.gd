@@ -1,12 +1,12 @@
 extends Node3D
 
 const UPGRADE_POOL := [
-    {"id":"damage", "label":"HEAVY PAYLOAD\nDamage +25%"},
-    {"id":"rate", "label":"RAPID FIRE\nFire rate +22%"},
-    {"id":"speed", "label":"SCOUT FRAME\nMove speed +14%"},
-    {"id":"health", "label":"REACTIVE PLATING\nMax HP +30"},
-    {"id":"projectile", "label":"HYPER VELOCITY\nProjectile speed +20%"},
-    {"id":"multishot", "label":"MULTISHOT\n+1 projectile"}
+    {"id":"damage", "title":"HEAVY PAYLOAD", "detail":"Damage +25%", "family":"OFFENSE"},
+    {"id":"rate", "title":"RAPID FIRE", "detail":"Fire rate +22%", "family":"CADENCE"},
+    {"id":"speed", "title":"SCOUT FRAME", "detail":"Move speed +14%", "family":"MOBILITY"},
+    {"id":"health", "title":"REACTIVE PLATING", "detail":"Max HP +30", "family":"SURVIVAL"},
+    {"id":"projectile", "title":"HYPER VELOCITY", "detail":"Projectile speed +20%", "family":"BALLISTIC"},
+    {"id":"multishot", "title":"MULTISHOT", "detail":"+1 projectile", "family":"BARRAGE"}
 ]
 
 var player: DZPlayer
@@ -160,10 +160,7 @@ func _offer_upgrade() -> void:
     available.shuffle()
     for i in range(3):
         pending_upgrades.append(available[i])
-    var labels: Array[String] = []
-    for item in pending_upgrades:
-        labels.append(item["label"])
-    hud.show_upgrade(labels)
+    hud.show_upgrade(pending_upgrades)
     get_tree().paused = true
 
 func _on_upgrade_chosen(index: int) -> void:
