@@ -457,6 +457,7 @@ src/
               EnemyHealthBarPresentationTest.java
               EnvironmentArtCatalogTest.java
               EnvironmentBiomeRulesTest.java
+              EnvironmentFloorVariationTest.java
               FinalArtContractTest.java
               FinalArtLayoutContractTest.java
               FoundryHazardPresentationTest.java
@@ -11938,7 +11939,9 @@ else batch.setColor(.84f, .92f, .96f, alpha * .78f);
 ⋮----
 int variant = floorVariant(gx, gy);
 TextureRegion region = region("environment/floor/concrete_" + (char)('a' + variant));
-if (region != null) batch.draw(region, gx * FLOOR_TILE_WORLD, gy * FLOOR_TILE_WORLD, FLOOR_TILE_WORLD, FLOOR_TILE_WORLD);
+⋮----
+float rotation = floorRotationQuarterTurns(gx, gy) * 90f;
+batch.draw(region, x, y, half, half,
 ⋮----
 TextureRegion hazard = region("environment/floor/hazard_a");
 ⋮----
@@ -11968,6 +11971,10 @@ batch.draw(hazard, x, y, HAZARD_TILE_WORLD, HAZARD_TILE_WORLD);
 ⋮----
 static int floorVariant(int gridX, int gridY) {
 return Math.floorMod(gridX * 31 + gridY * 17, 3);
+⋮----
+static int floorRotationQuarterTurns(int gridX, int gridY) {
+⋮----
+return Math.floorMod(h, 4);
 ⋮----
 static int detailVariant(int gridX, int gridY) {
 ⋮----
@@ -19866,6 +19873,22 @@ assertFalse(EnvironmentBiomeRules.isCryogenicDepths(39));
 @Test public void invalidStagesSanitizeToFirstBiome() {
 assertEquals(EnvironmentBiomeRules.Biome.QUARANTINE_YARD, EnvironmentBiomeRules.forStage(0));
 assertEquals(EnvironmentBiomeRules.Biome.QUARANTINE_YARD, EnvironmentBiomeRules.forStage(-50));
+```
+
+## File: src/test/java/com/deadlinezero/game/visual/EnvironmentFloorVariationTest.java
+```java
+final class EnvironmentFloorVariationTest {
+@Test void floorRotationIsDeterministicAndQuarterTurnBounded() {
+⋮----
+int rotation = EnvironmentRenderer.floorRotationQuarterTurns(x, y);
+assertTrue(rotation >= 0 && rotation <= 3);
+assertEquals(rotation, EnvironmentRenderer.floorRotationQuarterTurns(x, y));
+⋮----
+@Test void visibleArenaUsesAllFourOrientations() {
+⋮----
+rotations.add(EnvironmentRenderer.floorRotationQuarterTurns(x, y));
+⋮----
+assertEquals(Set.of(0, 1, 2, 3), rotations);
 ```
 
 ## File: src/test/java/com/deadlinezero/game/visual/FinalArtContractTest.java

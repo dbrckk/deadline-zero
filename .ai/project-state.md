@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T07:08:05Z
+Generated: 2026-09-23T07:48:23Z
 
 ### Git
 - Branch: `main`
-- Head: `a14874134e72`
-- Commit date: 2026-09-23T09:07:51+02:00
-- Commit: Start native Godot 3D survivor-shooter migration (#302)
-- Tracked files: 875
+- Head: `b36daeda6b72`
+- Commit date: 2026-09-23T09:48:11+02:00
+- Commit: Break visible repetition in biome floor tiles (#304)
+- Tracked files: 879
 
 ### Recently changed files
+- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
+- `core/src/test/java/com/deadlinezero/game/visual/EnvironmentFloorVariationTest.java`
 - `.github/workflows/godot-verify.yml`
 - `docs/GODOT_3D_MIGRATION.md`
 - `godot/README.md`
@@ -50,8 +52,6 @@ Generated: 2026-09-23T07:08:05Z
 - `godot/scripts/Hud.gd`
 - `godot/scripts/ImpactFx.gd`
 - `godot/scripts/Main.gd`
-- `godot/scripts/Player.gd`
-- `godot/scripts/Projectile.gd`
 
 ### Project signals
 - `build.gradle`
