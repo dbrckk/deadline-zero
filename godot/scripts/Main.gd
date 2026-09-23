@@ -25,6 +25,9 @@ var game_over := false
 var pending_upgrades: Array = []
 var touch_id := -1
 var touch_origin := Vector2.ZERO
+var camera_kick := 0.0
+var camera_kick_phase := 0.0
+var hit_freeze_left := 0.0
 
 func _ready() -> void:
     randomize()
@@ -53,9 +56,19 @@ func _ready() -> void:
         _spawn_enemy()
 
 func _process(delta: float) -> void:
+    if hit_freeze_left > 0.0:
+        hit_freeze_left = max(0.0, hit_freeze_left - delta)
+        Engine.time_scale = 0.12
+    else:
+        Engine.time_scale = 1.0
+
+    camera_kick = move_toward(camera_kick, 0.0, delta * 0.95)
+    camera_kick_phase += delta * 38.0
+
     if player and is_instance_valid(player):
         var desired := player.global_position + Vector3(0.0, 14.0, 10.0)
-        camera.global_position = camera.global_position.lerp(desired, 1.0 - exp(-delta * 4.5))
+        var kick_offset := Vector3(sin(camera_kick_phase), 0.0, cos(camera_kick_phase * 1.27)) * camera_kick
+        camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.look_at(player.global_position + Vector3(0.0, 0.65, 0.0), Vector3.UP)
 
 func _physics_process(delta: float) -> void:
@@ -115,8 +128,13 @@ func _spawn_enemy(forced_kind: String = "") -> void:
     var enemy := DZEnemy.new()
     enemy.configure(kind, difficulty, player)
     enemy.died.connect(_on_enemy_died)
+    enemy.impact.connect(_on_enemy_impact)
     add_child(enemy)
     enemy.global_position = pos
+
+func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
+    hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
+    camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
     kills += 1
@@ -161,6 +179,7 @@ func _on_health_changed(current: float, maximum: float) -> void:
         hud.set_health(current, maximum)
 
 func _on_player_died() -> void:
+    Engine.time_scale = 1.0
     game_over = true
     if hud:
         hud.show_game_over()
