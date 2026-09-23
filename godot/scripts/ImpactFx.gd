@@ -31,11 +31,11 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
     age += delta
-    var t := clamp(age / life, 0.0, 1.0)
+    var t: float = clampf(age / life, 0.0, 1.0)
     scale = Vector3.ONE * lerp(0.55, 2.2 * scale_boost, t)
     var material := mesh_instance.material_override as StandardMaterial3D
     if material:
-        var c := color
+        var c: Color = color
         c.a = 1.0 - t
         material.albedo_color = c
     light.light_energy = lerp(2.0, 0.0, t)
