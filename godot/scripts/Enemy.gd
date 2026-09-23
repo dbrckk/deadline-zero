@@ -2,6 +2,7 @@ class_name DZEnemy
 extends CharacterBody3D
 
 signal died(xp_value: int, at: Vector3)
+signal impact(at: Vector3, critical: bool, killed: bool, boss: bool)
 
 var target: Node3D
 var kind := "shambler"
@@ -68,12 +69,14 @@ func _physics_process(delta: float) -> void:
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
 
-func take_damage(amount: float) -> void:
+func take_damage(amount: float, critical := false) -> void:
     if dead:
         return
     health -= amount
-    _flash()
-    if health <= 0.0:
+    var killed := health <= 0.0
+    impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
+    _flash(critical, killed)
+    if killed:
         dead = true
         velocity = Vector3.ZERO
         died.emit(xp_value, global_position)
@@ -167,9 +170,11 @@ func _play_authored(name: String) -> void:
     current_anim = name
     authored_anim.play(name, 0.10)
 
-func _flash() -> void:
+func _flash(critical := false, killed := false) -> void:
     var visual := get_node_or_null("Visual")
     if visual:
+        var base_scale := visual.scale
+        var punch := 1.12 if critical else (1.10 if killed else 1.065)
         var tween := create_tween()
-        tween.tween_property(visual, "scale", visual.scale * 1.08, 0.045)
-        tween.tween_property(visual, "scale", visual.scale, 0.07)
+        tween.tween_property(visual, "scale", base_scale * punch, 0.035)
+        tween.tween_property(visual, "scale", base_scale, 0.075)
