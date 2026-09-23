@@ -7,6 +7,7 @@ var lifetime := 1.8
 var radius := 0.34
 var age := 0.0
 var tint := Color(0.25, 0.9, 1.0)
+var critical_chance := 0.08
 
 func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color) -> void:
     global_position = origin
@@ -49,16 +50,18 @@ func _physics_process(delta: float) -> void:
         if enemy == null or enemy.dead:
             continue
         if global_position.distance_squared_to(enemy.global_position) <= radius * radius:
-            enemy.take_damage(damage)
-            _impact()
+            var critical := randf() < critical_chance
+            enemy.take_damage(damage * (1.75 if critical else 1.0), critical)
+            _impact(critical)
             queue_free()
             return
 
     if age >= lifetime:
         queue_free()
 
-func _impact() -> void:
+func _impact(critical := false) -> void:
     var fx := ImpactFx.new()
-    fx.color = tint
+    fx.color = Color(1.0, 0.76, 0.18) if critical else tint
+    fx.scale_boost = 1.45 if critical else 1.0
     get_tree().current_scene.add_child(fx)
     fx.global_position = global_position
