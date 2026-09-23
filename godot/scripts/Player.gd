@@ -20,10 +20,13 @@ var invulnerability := 0.0
 var authored_visual: Node3D
 var authored_anim: AnimationPlayer
 var current_anim := ""
+var shot_audio: AudioStreamPlayer3D
+var shot_streams := {}
 
 func _ready() -> void:
     add_to_group("player")
     _build_visual()
+    _build_audio()
     health_changed.emit(health, max_health)
 
 func _physics_process(delta: float) -> void:
@@ -105,6 +108,7 @@ func _nearest_enemy() -> DZEnemy:
     return best
 
 func _fire_at(enemy: DZEnemy) -> void:
+    _play_shot_audio()
     var base_dir := global_position.direction_to(enemy.global_position)
     base_dir.y = 0.0
     base_dir = base_dir.normalized()
@@ -206,3 +210,20 @@ func _play_authored(name: String) -> void:
         return
     current_anim = name
     authored_anim.play(name, 0.12)
+
+func _build_audio() -> void:
+    shot_audio = AudioStreamPlayer3D.new()
+    shot_audio.name = "ShotAudio"
+    shot_audio.max_distance = 28.0
+    shot_audio.unit_size = 5.0
+    shot_audio.volume_db = -11.0
+    add_child(shot_audio)
+
+func _play_shot_audio() -> void:
+    if shot_audio == null:
+        return
+    if not shot_streams.has(weapon_profile):
+        shot_streams[weapon_profile] = DZCombatAudio.shot_stream(weapon_profile)
+    shot_audio.stream = shot_streams[weapon_profile]
+    shot_audio.pitch_scale = randf_range(0.97, 1.03)
+    shot_audio.play()
