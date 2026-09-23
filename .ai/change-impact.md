@@ -1,14 +1,14 @@
 # Change impact
 
-Base: 8c2808b970f4641eae8a83eb764c0e17b046ee1e
-Head: c6766cbe4f364ceca661ff3840bd3468150fb0cd
+Base: d2baea3a7896ca8a41e674ef5f8b9fb5367c512a
+Head: 2d9cedb85278c1ba10ab1ea6fd715d1f57c51833
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
 - M godot/scripts/Enemy.gd
-- M godot/scripts/Hud.gd
+- M godot/scripts/ImpactFx.gd
 - M godot/scripts/Main.gd
-- A godot/tests/boss_hud_identity_test.gd
+- A godot/tests/enemy_silhouette_identity_test.gd
 
 ## Affected areas
 - .github

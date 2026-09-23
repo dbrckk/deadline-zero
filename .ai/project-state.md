@@ -22,27 +22,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T14:29:57Z
+Generated: 2026-09-23T15:35:33Z
 
 ### Git
 - Branch: `main`
-- Head: `c6766cbe4f36`
-- Commit date: 2026-09-23T16:29:44+02:00
-- Commit: Give native 3D bosses a dedicated identity HUD (#311)
-- Tracked files: 886
+- Head: `2d9cedb85278`
+- Commit date: 2026-09-23T17:35:19+02:00
+- Commit: Give native 3D enemy archetypes distinct silhouettes (#312)
+- Tracked files: 887
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
 - `godot/scripts/Enemy.gd`
-- `godot/scripts/Hud.gd`
+- `godot/scripts/ImpactFx.gd`
 - `godot/scripts/Main.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/scripts/Hud.gd`
 - `godot/tests/boss_hud_identity_test.gd`
 - `godot/tests/boss_reveal_camera_test.gd`
 - `godot/tests/upgrade_presentation_test.gd`
 - `godot/scripts/Player.gd`
 - `godot/scripts/Projectile.gd`
 - `godot/tests/weapon_presentation_test.gd`
-- `godot/tests/enemy_archetype_combat_test.gd`
 
 ### Project signals
 - `build.gradle`

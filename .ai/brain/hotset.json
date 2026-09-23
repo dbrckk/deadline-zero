@@ -17,7 +17,7 @@
         "impact",
         "symbol-indexed"
       ],
-      "score": 1715
+      "score": 1750
     },
     {
       "path": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
@@ -27,7 +27,7 @@
         "reverse-dependency-neighbor",
         "symbol-indexed"
       ],
-      "score": 1145
+      "score": 1235
     },
     {
       "path": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
@@ -47,20 +47,20 @@
       "score": 840
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-      "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
-      ],
-      "score": 610
-    },
-    {
       "path": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
       "reasons": [
         "dependency-neighbor",
         "impact",
         "reverse-dependency-neighbor",
         "symbol-indexed"
+      ],
+      "score": 670
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
+      "reasons": [
+        "dependency-neighbor",
+        "reverse-dependency-neighbor"
       ],
       "score": 610
     },
@@ -85,12 +85,42 @@
       "score": 595
     },
     {
+      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "reasons": [
+        "dependency-neighbor",
+        "impact",
+        "reverse-dependency-neighbor",
+        "symbol-indexed"
+      ],
+      "score": 575
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "reasons": [
+        "dependency-neighbor",
+        "impact",
+        "reverse-dependency-neighbor",
+        "symbol-indexed"
+      ],
+      "score": 560
+    },
+    {
       "path": "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java",
       "reasons": [
         "dependency-neighbor",
         "reverse-dependency-neighbor"
       ],
       "score": 555
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
+      "reasons": [
+        "dependency-neighbor",
+        "impact",
+        "reverse-dependency-neighbor",
+        "symbol-indexed"
+      ],
+      "score": 505
     },
     {
       "path": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
@@ -110,14 +140,12 @@
       "score": 500
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "path": "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
       "reasons": [
         "dependency-neighbor",
-        "impact",
-        "reverse-dependency-neighbor",
-        "symbol-indexed"
+        "reverse-dependency-neighbor"
       ],
-      "score": 485
+      "score": 455
     },
     {
       "path": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
@@ -130,14 +158,25 @@
       "score": 450
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
+      "path": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
       "reasons": [
         "dependency-neighbor",
         "impact",
         "reverse-dependency-neighbor",
         "symbol-indexed"
       ],
-      "score": 445
+      "score": 430
+    },
+    {
+      "path": "godot/scripts/ImpactFx.gd",
+      "reasons": [
+        "changed",
+        "changed-source",
+        "dependency-neighbor",
+        "impact",
+        "symbol-indexed"
+      ],
+      "score": 415
     },
     {
       "path": "godot/scripts/Main.gd",
@@ -149,22 +188,6 @@
         "symbol-indexed"
       ],
       "score": 415
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-      "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
-      ],
-      "score": 410
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/entities/EnemyProjectile.java",
-      "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
-      ],
-      "score": 405
     },
     {
       "path": "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java",
@@ -185,17 +208,17 @@
       "score": 380
     },
     {
-      "path": "godot/scripts/Hud.gd",
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
       "reasons": [
-        "changed",
-        "changed-source",
         "impact",
+        "reverse-dependency-neighbor",
+        "selected-test",
         "symbol-indexed"
       ],
-      "score": 380
+      "score": 375
     },
     {
-      "path": "godot/tests/boss_hud_identity_test.gd",
+      "path": "godot/tests/enemy_silhouette_identity_test.gd",
       "reasons": [
         "changed",
         "changed-source",
@@ -223,30 +246,27 @@
       "score": 350
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+      "path": "core/src/main/java/com/deadlinezero/game/fx/DeathFx.java",
       "reasons": [
         "dependency-neighbor",
         "impact",
         "reverse-dependency-neighbor",
         "symbol-indexed"
       ],
-      "score": 340
-    },
-    {
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
-      "reasons": [
-        "impact",
-        "reverse-dependency-neighbor",
-        "selected-test",
-        "symbol-indexed"
-      ],
-      "score": 315
+      "score": 325
     },
     {
       "path": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
       "reasons": [
         "dependency-neighbor",
         "reverse-dependency-neighbor"
+      ],
+      "score": 300
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
+      "reasons": [
+        "dependency-neighbor"
       ],
       "score": 300
     },
@@ -273,26 +293,6 @@
         "dependency-neighbor",
         "impact",
         "reverse-dependency-neighbor",
-        "symbol-indexed"
-      ],
-      "score": 280
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/world/RunEncounterDirector.java",
-      "reasons": [
-        "dependency-neighbor",
-        "impact",
-        "reverse-dependency-neighbor",
-        "symbol-indexed"
-      ],
-      "score": 280
-    },
-    {
-      "path": "core/src/test/java/com/deadlinezero/game/visual/BootstrapArtCatalogTest.java",
-      "reasons": [
-        "impact",
-        "reverse-dependency-neighbor",
-        "selected-test",
         "symbol-indexed"
       ],
       "score": 280

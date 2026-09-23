@@ -2,30 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Make Sentinel projectile blocks explicit",
-      "terms": [
-        "blocks",
-        "explicit",
-        "make",
-        "projectile",
-        "sentinel"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
-        "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-        "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
-        "core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java",
-        "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Add Play in-app review after meaningful victories",
       "terms": [
         "add",
@@ -1241,6 +1217,27 @@
         "godot/scripts/Main.gd",
         "godot/tests/boss_hud_identity_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Give native 3D enemy archetypes distinct silhouettes (#312)",
+      "terms": [
+        "312",
+        "3d",
+        "archetypes",
+        "distinct",
+        "enemy",
+        "give",
+        "native",
+        "silhouettes"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/scripts/ImpactFx.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/enemy_silhouette_identity_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1506,13 +1503,19 @@
       "godot/scripts/Main.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 4
     },
+    "312": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
+    },
     "3d": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/CombatFeel.gd": 4,
-      "godot/scripts/Enemy.gd": 16,
+      "godot/scripts/Enemy.gd": 20,
       "godot/scripts/Hud.gd": 12,
-      "godot/scripts/ImpactFx.gd": 8,
-      "godot/scripts/Main.gd": 20,
+      "godot/scripts/ImpactFx.gd": 12,
+      "godot/scripts/Main.gd": 24,
       "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 12,
       "godot/scripts/XpOrb.gd": 4,
@@ -1521,6 +1524,7 @@
       "godot/tests/boss_reveal_camera_test.gd": 4,
       "godot/tests/combat_feel_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/smoke_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
@@ -1664,6 +1668,12 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java": 4,
       "core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4
+    },
+    "archetypes": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
     "arsenal": {
       "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java": 8,
@@ -2031,10 +2041,13 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4,
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
@@ -2100,7 +2113,11 @@
     "enemy": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
     "environment": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
@@ -2327,13 +2344,15 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4,
-      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/Enemy.gd": 12,
       "godot/scripts/Hud.gd": 8,
-      "godot/scripts/Main.gd": 8,
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Main.gd": 12,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
@@ -2591,16 +2610,17 @@
     },
     "native": {
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/Enemy.gd": 12,
       "godot/scripts/Hud.gd": 12,
-      "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 16,
+      "godot/scripts/ImpactFx.gd": 8,
+      "godot/scripts/Main.gd": 20,
       "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 8,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/boss_reveal_camera_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/smoke_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
@@ -3132,7 +3152,11 @@
     "silhouettes": {
       "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
     "skill": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,

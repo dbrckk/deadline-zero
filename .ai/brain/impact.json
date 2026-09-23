@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "0529bb90bfb169f0b02fc5675ae4f8a292739c20",
-  "head": "c6766cbe4f364ceca661ff3840bd3468150fb0cd",
+  "base": "c6766cbe4f364ceca661ff3840bd3468150fb0cd",
+  "head": "2d9cedb85278c1ba10ab1ea6fd715d1f57c51833",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -14,7 +14,7 @@
       "status": "M"
     },
     {
-      "path": "godot/scripts/Hud.gd",
+      "path": "godot/scripts/ImpactFx.gd",
       "status": "M"
     },
     {
@@ -22,15 +22,15 @@
       "status": "M"
     },
     {
-      "path": "godot/tests/boss_hud_identity_test.gd",
+      "path": "godot/tests/enemy_silhouette_identity_test.gd",
       "status": "A"
     }
   ],
   "changed_source_files": [
     "godot/scripts/Enemy.gd",
-    "godot/scripts/Hud.gd",
+    "godot/scripts/ImpactFx.gd",
     "godot/scripts/Main.gd",
-    "godot/tests/boss_hud_identity_test.gd"
+    "godot/tests/enemy_silhouette_identity_test.gd"
   ],
   "impacted_files": [
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
@@ -42,6 +42,7 @@
     "core/src/main/java/com/deadlinezero/game/fx/DeathFx.java",
     "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
     "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+    "core/src/main/java/com/deadlinezero/game/util/Pools.java",
     "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java",
     "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
     "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
@@ -88,9 +89,9 @@
     "core/src/test/java/com/deadlinezero/game/world/SpatialHashTest.java",
     "core/src/test/java/com/deadlinezero/game/world/WaveDirectorTest.java",
     "godot/scripts/Enemy.gd",
-    "godot/scripts/Hud.gd",
+    "godot/scripts/ImpactFx.gd",
     "godot/scripts/Main.gd",
-    "godot/tests/boss_hud_identity_test.gd"
+    "godot/tests/enemy_silhouette_identity_test.gd"
   ],
   "impacted_symbols": [
     {
@@ -1084,6 +1085,54 @@
       "line": 1149
     },
     {
+      "name": "Pools",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 12
+    },
+    {
+      "name": "projectile",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 46
+    },
+    {
+      "name": "hostileProjectile",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 56
+    },
+    {
+      "name": "homingMissile",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 66
+    },
+    {
+      "name": "impact",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 76
+    },
+    {
+      "name": "damageNumber",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 86
+    },
+    {
+      "name": "arc",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 96
+    },
+    {
+      "name": "deathFx",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 106
+    },
+    {
       "name": "ActorMaterialProfile",
       "kind": "class",
       "file": "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java",
@@ -1844,54 +1893,6 @@
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
       "line": 16
-    },
-    {
-      "name": "drawAuthored",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
-      "line": 66
-    },
-    {
-      "name": "EnemyHealthBarPresentation",
-      "kind": "class",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java",
-      "line": 6
-    },
-    {
-      "name": "visible",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java",
-      "line": 8
-    },
-    {
-      "name": "widthMultiplier",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java",
-      "line": 14
-    },
-    {
-      "name": "GameArt",
-      "kind": "class",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-      "line": 21
-    },
-    {
-      "name": "Motion",
-      "kind": "enum",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-      "line": 22
-    },
-    {
-      "name": "authoredAvailable",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-      "line": 50
-    },
-    {
-      "name": "survivor",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
-      "line": 52
     }
   ],
   "selected_tests": [
@@ -1919,7 +1920,6 @@
     "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/BootstrapArtCatalogTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java",
-    "core/src/test/java/com/deadlinezero/game/visual/CombatHudLayoutTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/HostileProjectilePresentationTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/SpecialistPresentationTest.java",
@@ -1929,6 +1929,6 @@
     "core/src/test/java/com/deadlinezero/game/world/EndgameWaveCompositionRulesTest.java",
     "core/src/test/java/com/deadlinezero/game/world/SpatialHashTest.java",
     "core/src/test/java/com/deadlinezero/game/world/WaveDirectorTest.java",
-    "godot/tests/boss_hud_identity_test.gd"
+    "godot/tests/enemy_silhouette_identity_test.gd"
   ]
 }
