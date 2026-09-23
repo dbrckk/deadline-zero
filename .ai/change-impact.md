@@ -1,12 +1,14 @@
 # Change impact
 
-Base: 57fa91d9503d9171c6a0fe7f79823286d48c5962
-Head: 0529bb90bfb169f0b02fc5675ae4f8a292739c20
+Base: 8c2808b970f4641eae8a83eb764c0e17b046ee1e
+Head: c6766cbe4f364ceca661ff3840bd3468150fb0cd
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
+- M godot/scripts/Enemy.gd
+- M godot/scripts/Hud.gd
 - M godot/scripts/Main.gd
-- A godot/tests/boss_reveal_camera_test.gd
+- A godot/tests/boss_hud_identity_test.gd
 
 ## Affected areas
 - .github

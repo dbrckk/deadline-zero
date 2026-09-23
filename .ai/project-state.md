@@ -22,29 +22,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T12:54:21Z
+Generated: 2026-09-23T14:29:57Z
 
 ### Git
 - Branch: `main`
-- Head: `0529bb90bfb1`
-- Commit date: 2026-09-23T14:54:08+02:00
-- Commit: Add native 3D boss reveal camera framing (#310)
-- Tracked files: 885
+- Head: `c6766cbe4f36`
+- Commit date: 2026-09-23T16:29:44+02:00
+- Commit: Give native 3D bosses a dedicated identity HUD (#311)
+- Tracked files: 886
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/Main.gd`
-- `godot/tests/boss_reveal_camera_test.gd`
+- `godot/scripts/Enemy.gd`
 - `godot/scripts/Hud.gd`
+- `godot/scripts/Main.gd`
+- `godot/tests/boss_hud_identity_test.gd`
+- `godot/tests/boss_reveal_camera_test.gd`
 - `godot/tests/upgrade_presentation_test.gd`
 - `godot/scripts/Player.gd`
 - `godot/scripts/Projectile.gd`
 - `godot/tests/weapon_presentation_test.gd`
-- `godot/scripts/Enemy.gd`
 - `godot/tests/enemy_archetype_combat_test.gd`
-- `godot/scripts/CombatFeel.gd`
-- `godot/scripts/ImpactFx.gd`
-- `godot/tests/combat_feel_test.gd`
 
 ### Project signals
 - `build.gradle`

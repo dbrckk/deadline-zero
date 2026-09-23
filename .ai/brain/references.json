@@ -5,23 +5,117 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
+    "DZEnemy": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1,
+        "kind": "class",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1,
+          "preview": "class_name DZEnemy",
+          "definition_candidate": true
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 31,
+          "preview": "var boss_reveal_target: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 150,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 94,
+          "preview": "func _nearest_enemy() -> DZEnemy:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 95,
+          "preview": "var best: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 98,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 107,
+          "preview": "func _fire_at(enemy: DZEnemy) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 133,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "configure": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 25,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 147,
+          "preview": "if (!cloud.available()) return t(\"cloud.configure\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 302,
+          "preview": "if (!cloud.available()) return t(\"cloud.configure\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 26,
+          "preview": "func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 151,
+          "preview": "enemy.configure(kind, difficulty, player)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
     "_ready": {
       "definition": {
-        "file": "godot/scripts/Main.gd",
-        "line": 37,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 57,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 56,
+          "line": 58,
           "preview": "func _ready() -> void:",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Hud.gd",
-          "line": 17,
+          "line": 22,
           "preview": "func _ready() -> void:",
           "definition_candidate": false
         },
@@ -58,6 +152,773 @@
       ],
       "occurrence_count": 7
     },
+    "_physics_process": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 61,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 62,
+          "preview": "func _physics_process(delta: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 96,
+          "preview": "func _physics_process(delta: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 29,
+          "preview": "func _physics_process(delta: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 126,
+          "preview": "func _physics_process(delta: float) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_begin_telegraphed_attack": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 97,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 80,
+          "preview": "_begin_telegraphed_attack(0.46, target.global_position)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 84,
+          "preview": "_begin_telegraphed_attack(0.68, target.global_position)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 98,
+          "preview": "func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 6,
+          "preview": "assert(source.contains(\"_begin_telegraphed_attack\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_resolve_telegraphed_attack": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 105,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 76,
+          "preview": "_resolve_telegraphed_attack()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 106,
+          "preview": "func _resolve_telegraphed_attack() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 7,
+          "preview": "assert(source.contains(\"_resolve_telegraphed_attack\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_show_telegraph": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 117,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 102,
+          "preview": "_show_telegraph(1.75 if kind == \"boss\" else 1.05, duration)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 118,
+          "preview": "func _show_telegraph(radius: float, duration: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 11,
+          "preview": "assert(source.contains(\"_show_telegraph\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_spawn_attack_impact": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 140,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 115,
+          "preview": "_spawn_attack_impact(impact_point, radius)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 141,
+          "preview": "func _spawn_attack_impact(at: Vector3, radius: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 12,
+          "preview": "assert(source.contains(\"_spawn_attack_impact\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "take_damage": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 147,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 94,
+          "preview": "if distance < 0.85 and attack_cooldown <= 0.0 and target.has_method(\"take_damage\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 95,
+          "preview": "target.take_damage(contact_damage)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 113,
+          "preview": "if target.global_position.distance_to(impact_point) <= radius and target.has_method(\"take_damage\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 114,
+          "preview": "target.take_damage(damage)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 148,
+          "preview": "func take_damage(amount: float, critical := false) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 64,
+          "preview": "func take_damage(amount: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 138,
+          "preview": "enemy.take_damage(damage * (1.75 if critical else 1.0), critical)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 10,
+          "preview": "assert(source.contains(\"target.take_damage(damage)\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "_build_visual": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 166,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 60,
+          "preview": "_build_visual()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 167,
+          "preview": "func _build_visual() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 26,
+          "preview": "_build_visual()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 121,
+          "preview": "func _build_visual() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_update_authored_animation": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 233,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 93,
+          "preview": "_update_authored_animation(distance)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 234,
+          "preview": "func _update_authored_animation(distance: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 49,
+          "preview": "_update_authored_animation()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 199,
+          "preview": "func _update_authored_animation() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_play_authored": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 243,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 104,
+          "preview": "_play_authored(\"Idle_Attack\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 180,
+          "preview": "_play_authored(\"Run_Arms\" if kind == \"runner\" else \"Walk\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 238,
+          "preview": "_play_authored(\"Idle_Attack\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 240,
+          "preview": "_play_authored(\"Run_Arms\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 242,
+          "preview": "_play_authored(\"Walk\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 244,
+          "preview": "func _play_authored(name: String) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 128,
+          "preview": "_play_authored(\"Idle_Gun\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 202,
+          "preview": "_play_authored(\"Run_Gun\" if velocity.length_squared() > 0.08 else \"Idle_Gun\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 204,
+          "preview": "func _play_authored(name: String) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 9
+    },
+    "_flash": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 249,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 155,
+          "preview": "_flash(critical, killed)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 250,
+          "preview": "func _flash(critical := false, killed := false) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "DZHud": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 1,
+        "kind": "class",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 1,
+          "preview": "class_name DZHud",
+          "definition_candidate": true
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 14,
+          "preview": "var hud: DZHud",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 55,
+          "preview": "hud = DZHud.new()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "set_health": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 25,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 26,
+          "preview": "func set_health(value: float, maximum: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 58,
+          "preview": "hud.set_health(player.health, player.max_health)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 207,
+          "preview": "hud.set_health(current, maximum)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "set_progress": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 29,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 30,
+          "preview": "func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 59,
+          "preview": "hud.set_progress(xp, xp_next, level, kills, elapsed)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 112,
+          "preview": "hud.set_progress(xp, xp_next, level, kills, elapsed)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "set_wave": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 34,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 35,
+          "preview": "func set_wave(text: String) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 113,
+          "preview": "hud.set_wave(_wave_name())",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "show_boss": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 37,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 38,
+          "preview": "func show_boss(name: String, maximum: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 160,
+          "preview": "hud.show_boss(\"REVENANT PRIME\", enemy.max_health)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_hud_identity_test.gd",
+          "line": 8,
+          "preview": "assert(hud_source.contains(\"func show_boss(\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_hud_identity_test.gd",
+          "line": 16,
+          "preview": "assert(main_source.contains(\"hud.show_boss(\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "set_boss_health": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 45,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 46,
+          "preview": "func set_boss_health(value: float, maximum: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 164,
+          "preview": "hud.set_boss_health(current, maximum)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_hud_identity_test.gd",
+          "line": 9,
+          "preview": "assert(hud_source.contains(\"func set_boss_health(\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "hide_boss": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 54,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 55,
+          "preview": "func hide_boss() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "show_upgrade": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 57,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 58,
+          "preview": "func show_upgrade(items: Array) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 194,
+          "preview": "hud.show_upgrade(pending_upgrades)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "hide_upgrade": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 68,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 69,
+          "preview": "func hide_upgrade() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 202,
+          "preview": "hud.hide_upgrade()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "show_game_over": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 71,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 72,
+          "preview": "func show_game_over() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 213,
+          "preview": "hud.show_game_over()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_build": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 74,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 24,
+          "preview": "_build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 75,
+          "preview": "func _build() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_upgrade_glyph": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 213,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 65,
+          "preview": "upgrade_buttons[i].text = _upgrade_glyph(id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 214,
+          "preview": "func _upgrade_glyph(id: String) -> String:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/upgrade_presentation_test.gd",
+          "line": 15,
+          "preview": "assert(hud_text.contains(\"func _upgrade_glyph\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_upgrade_color": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 223,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 224,
+          "preview": "func _upgrade_color(id: String) -> Color:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 233,
+          "preview": "var accent := _upgrade_color(id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/upgrade_presentation_test.gd",
+          "line": 16,
+          "preview": "assert(hud_text.contains(\"func _upgrade_color\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_style_upgrade_card": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 231,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 66,
+          "preview": "_style_upgrade_card(i, id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 232,
+          "preview": "func _style_upgrade_card(index: int, id: String) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/upgrade_presentation_test.gd",
+          "line": 17,
+          "preview": "assert(hud_text.contains(\"func _style_upgrade_card\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_on_upgrade_pressed": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 251,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 195,
+          "preview": "button.pressed.connect(_on_upgrade_pressed.bind(i))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 252,
+          "preview": "func _on_upgrade_pressed(index: int) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
     "_process": {
       "definition": {
         "file": "godot/scripts/Main.gd",
@@ -88,41 +949,6 @@
           "file": "godot/tests/smoke_test.gd",
           "line": 14,
           "preview": "func _process(_delta: float) -> bool:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "_physics_process": {
-      "definition": {
-        "file": "godot/scripts/Main.gd",
-        "line": 95,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Enemy.gd",
-          "line": 60,
-          "preview": "func _physics_process(delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Main.gd",
-          "line": 96,
-          "preview": "func _physics_process(delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 29,
-          "preview": "func _physics_process(delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Projectile.gd",
-          "line": 126,
-          "preview": "func _physics_process(delta: float) -> void:",
           "definition_candidate": false
         }
       ],
@@ -180,10 +1006,39 @@
       ],
       "occurrence_count": 4
     },
+    "_on_boss_health_changed": {
+      "definition": {
+        "file": "godot/scripts/Main.gd",
+        "line": 161,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 159,
+          "preview": "enemy.health_changed.connect(_on_boss_health_changed)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 162,
+          "preview": "func _on_boss_health_changed(current: float, maximum: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_hud_identity_test.gd",
+          "line": 15,
+          "preview": "assert(main_source.contains(\"enemy.health_changed.connect(_on_boss_health_changed)\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
     "_on_enemy_impact": {
       "definition": {
         "file": "godot/scripts/Main.gd",
-        "line": 159,
+        "line": 165,
         "kind": "function",
         "language": "gdscript"
       },
@@ -196,7 +1051,7 @@
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 160,
+          "line": 166,
           "preview": "func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:",
           "definition_candidate": false
         }
@@ -206,7 +1061,7 @@
     "_on_enemy_died": {
       "definition": {
         "file": "godot/scripts/Main.gd",
-        "line": 163,
+        "line": 169,
         "kind": "function",
         "language": "gdscript"
       },
@@ -219,7 +1074,7 @@
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 164,
+          "line": 170,
           "preview": "func _on_enemy_died(xp_value: int, at: Vector3) -> void:",
           "definition_candidate": false
         }
@@ -229,20 +1084,20 @@
     "_on_xp_collected": {
       "definition": {
         "file": "godot/scripts/Main.gd",
-        "line": 172,
+        "line": 178,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
           "file": "godot/scripts/Main.gd",
-          "line": 169,
+          "line": 175,
           "preview": "orb.collected.connect(_on_xp_collected)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 173,
+          "line": 179,
           "preview": "func _on_xp_collected(amount: int) -> void:",
           "definition_candidate": false
         }
@@ -252,20 +1107,20 @@
     "_offer_upgrade": {
       "definition": {
         "file": "godot/scripts/Main.gd",
-        "line": 181,
+        "line": 187,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
           "file": "godot/scripts/Main.gd",
-          "line": 179,
+          "line": 185,
           "preview": "_offer_upgrade()",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 182,
+          "line": 188,
           "preview": "func _offer_upgrade() -> void:",
           "definition_candidate": false
         }
@@ -275,7 +1130,7 @@
     "_on_upgrade_chosen": {
       "definition": {
         "file": "godot/scripts/Main.gd",
-        "line": 190,
+        "line": 196,
         "kind": "function",
         "language": "gdscript"
       },
@@ -288,7 +1143,7 @@
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 191,
+          "line": 197,
           "preview": "func _on_upgrade_chosen(index: int) -> void:",
           "definition_candidate": false
         }
@@ -298,7 +1153,7 @@
     "_on_health_changed": {
       "definition": {
         "file": "godot/scripts/Main.gd",
-        "line": 198,
+        "line": 204,
         "kind": "function",
         "language": "gdscript"
       },
@@ -311,7 +1166,7 @@
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 199,
+          "line": 205,
           "preview": "func _on_health_changed(current: float, maximum: float) -> void:",
           "definition_candidate": false
         }
@@ -321,7 +1176,7 @@
     "_on_player_died": {
       "definition": {
         "file": "godot/scripts/Main.gd",
-        "line": 202,
+        "line": 208,
         "kind": "function",
         "language": "gdscript"
       },
@@ -334,7 +1189,7 @@
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 203,
+          "line": 209,
           "preview": "func _on_player_died() -> void:",
           "definition_candidate": false
         }
@@ -344,7 +1199,7 @@
     "_wave_name": {
       "definition": {
         "file": "godot/scripts/Main.gd",
-        "line": 208,
+        "line": 214,
         "kind": "function",
         "language": "gdscript"
       },
@@ -357,7 +1212,7 @@
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 209,
+          "line": 215,
           "preview": "func _wave_name() -> String:",
           "definition_candidate": false
         }
@@ -367,7 +1222,7 @@
     "_build_world": {
       "definition": {
         "file": "godot/scripts/Main.gd",
-        "line": 219,
+        "line": 225,
         "kind": "function",
         "language": "gdscript"
       },
@@ -380,7 +1235,7 @@
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 220,
+          "line": 226,
           "preview": "func _build_world() -> void:",
           "definition_candidate": false
         }
@@ -389,12 +1244,18 @@
     },
     "_init": {
       "definition": {
-        "file": "godot/tests/boss_reveal_camera_test.gd",
+        "file": "godot/tests/boss_hud_identity_test.gd",
         "line": 2,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
+        {
+          "file": "godot/tests/boss_hud_identity_test.gd",
+          "line": 3,
+          "preview": "func _init() -> void:",
+          "definition_candidate": false
+        },
         {
           "file": "godot/tests/boss_reveal_camera_test.gd",
           "line": 3,
@@ -420,7 +1281,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 4
+      "occurrence_count": 5
     }
   }
 }

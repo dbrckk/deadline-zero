@@ -50,6 +50,7 @@ scripts/
   XpOrb.gd
 tests/
   authored_asset_validation.gd
+  boss_hud_identity_test.gd
   boss_reveal_camera_test.gd
   combat_feel_test.gd
   enemy_archetype_combat_test.gd
@@ -135,6 +136,7 @@ extends CharacterBody3D
 
 signal died(xp_value: int, at: Vector3)
 signal impact(at: Vector3, critical: bool, killed: bool, boss: bool)
+signal health_changed(current: float, maximum: float)
 
 var target: Node3D
 var kind := "shambler"
@@ -184,6 +186,7 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
             contact_damage = 8.0
             xp_value = 2
     health = max_health
+    health_changed.emit(health, max_health)
 
 func _ready() -> void:
     add_to_group("enemies")
@@ -279,6 +282,7 @@ func take_damage(amount: float, critical := false) -> void:
     if dead:
         return
     health -= amount
+    health_changed.emit(max(0.0, health), max_health)
     var killed := health <= 0.0
     impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
     _flash(critical, killed)
@@ -403,6 +407,11 @@ var upgrade_cards: Array[VBoxContainer] = []
 var upgrade_family_labels: Array[Label] = []
 var upgrade_title_labels: Array[Label] = []
 var upgrade_detail_labels: Array[Label] = []
+var boss_panel: PanelContainer
+var boss_name_label: Label
+var boss_hp_bar: ProgressBar
+var boss_phase_label: Label
+var boss_hp_max := 1.0
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -419,6 +428,26 @@ func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float)
 
 func set_wave(text: String) -> void:
     wave_label.text = text
+
+func show_boss(name: String, maximum: float) -> void:
+    boss_hp_max = max(1.0, maximum)
+    boss_name_label.text = name
+    boss_hp_bar.max_value = boss_hp_max
+    boss_hp_bar.value = boss_hp_max
+    boss_phase_label.text = "THREAT LOCK"
+    boss_panel.visible = true
+
+func set_boss_health(value: float, maximum: float) -> void:
+    boss_hp_max = max(1.0, maximum)
+    boss_hp_bar.max_value = boss_hp_max
+    boss_hp_bar.value = clamp(value, 0.0, boss_hp_max)
+    var ratio := boss_hp_bar.value / boss_hp_max
+    boss_phase_label.text = "PHASE III // EXECUTE" if ratio <= 0.30 else ("PHASE II // ENRAGED" if ratio <= 0.65 else "PHASE I // HUNT")
+    if boss_hp_bar.value <= 0.0:
+        boss_panel.visible = false
+
+func hide_boss() -> void:
+    boss_panel.visible = false
 
 func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
@@ -470,6 +499,52 @@ func _build() -> void:
     wave_label.position = Vector2(-220, 24)
     wave_label.size = Vector2(440, 42)
     root.add_child(wave_label)
+
+    boss_panel = PanelContainer.new()
+    boss_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
+    boss_panel.position = Vector2(-330, 76)
+    boss_panel.size = Vector2(660, 78)
+    boss_panel.visible = false
+    root.add_child(boss_panel)
+
+    var boss_box := VBoxContainer.new()
+    boss_box.add_theme_constant_override("separation", 3)
+    boss_panel.add_child(boss_box)
+
+    var boss_header := HBoxContainer.new()
+    boss_header.alignment = BoxContainer.ALIGNMENT_CENTER
+    boss_box.add_child(boss_header)
+
+    boss_name_label = Label.new()
+    boss_name_label.text = "REVENANT PRIME"
+    boss_name_label.add_theme_font_size_override("font_size", 18)
+    boss_name_label.modulate = Color(1.0, 0.82, 0.42)
+    boss_header.add_child(boss_name_label)
+
+    var spacer := Control.new()
+    spacer.custom_minimum_size = Vector2(32, 1)
+    boss_header.add_child(spacer)
+
+    boss_phase_label = Label.new()
+    boss_phase_label.text = "PHASE I // HUNT"
+    boss_phase_label.add_theme_font_size_override("font_size", 13)
+    boss_phase_label.modulate = Color(1.0, 0.42, 0.26)
+    boss_header.add_child(boss_phase_label)
+
+    boss_hp_bar = ProgressBar.new()
+    boss_hp_bar.custom_minimum_size = Vector2(620, 18)
+    boss_hp_bar.show_percentage = false
+    boss_box.add_child(boss_hp_bar)
+
+    var boss_style := StyleBoxFlat.new()
+    boss_style.bg_color = Color(0.025, 0.035, 0.045, 0.96)
+    boss_style.border_color = Color(0.92, 0.28, 0.12, 0.72)
+    boss_style.set_border_width_all(2)
+    boss_style.corner_radius_top_left = 6
+    boss_style.corner_radius_top_right = 6
+    boss_style.corner_radius_bottom_left = 6
+    boss_style.corner_radius_bottom_right = 6
+    boss_panel.add_theme_stylebox_override("panel", boss_style)
 
     upgrade_panel = PanelContainer.new()
     upgrade_panel.set_anchors_preset(Control.PRESET_CENTER)
@@ -779,6 +854,12 @@ func _spawn_enemy(forced_kind: String = "") -> void:
     if kind == "boss":
         boss_reveal_target = enemy
         boss_reveal_left = BOSS_REVEAL_DURATION
+        enemy.health_changed.connect(_on_boss_health_changed)
+        hud.show_boss("REVENANT PRIME", enemy.max_health)
+
+func _on_boss_health_changed(current: float, maximum: float) -> void:
+    if hud:
+        hud.set_boss_health(current, maximum)
 
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
@@ -1378,6 +1459,29 @@ func _find_animation_player(node: Node) -> AnimationPlayer:
         if found != null:
             return found
     return null
+```
+
+## File: tests/boss_hud_identity_test.gd
+```
+extends SceneTree
+
+func _init() -> void:
+    var hud_source := FileAccess.get_file_as_string("res://scripts/Hud.gd")
+    var enemy_source := FileAccess.get_file_as_string("res://scripts/Enemy.gd")
+    var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+
+    assert(hud_source.contains("func show_boss("))
+    assert(hud_source.contains("func set_boss_health("))
+    assert(hud_source.contains("PHASE II // ENRAGED"))
+    assert(hud_source.contains("PHASE III // EXECUTE"))
+    assert(hud_source.contains("boss_hp_bar"))
+    assert(enemy_source.contains("signal health_changed"))
+    assert(enemy_source.contains("health_changed.emit(max(0.0, health), max_health)"))
+    assert(main_source.contains("enemy.health_changed.connect(_on_boss_health_changed)"))
+    assert(main_source.contains("hud.show_boss("))
+
+    print("Godot boss HUD identity validation passed")
+    quit()
 ```
 
 ## File: tests/boss_reveal_camera_test.gd

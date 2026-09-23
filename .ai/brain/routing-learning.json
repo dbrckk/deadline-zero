@@ -2,26 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Announce newly activated ability synergies",
-      "terms": [
-        "ability",
-        "activated",
-        "announce",
-        "newly",
-        "synergies"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java",
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
-        "core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Make Sentinel projectile blocks explicit",
       "terms": [
         "blocks",
@@ -1240,6 +1220,27 @@
         "godot/scripts/Main.gd",
         "godot/tests/boss_reveal_camera_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Give native 3D bosses a dedicated identity HUD (#311)",
+      "terms": [
+        "311",
+        "3d",
+        "bosses",
+        "dedicated",
+        "give",
+        "hud",
+        "identity",
+        "native"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/scripts/Hud.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/boss_hud_identity_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1499,17 +1500,24 @@
       "godot/scripts/Main.gd": 4,
       "godot/tests/boss_reveal_camera_test.gd": 4
     },
+    "311": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/boss_hud_identity_test.gd": 4
+    },
     "3d": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/CombatFeel.gd": 4,
-      "godot/scripts/Enemy.gd": 12,
-      "godot/scripts/Hud.gd": 8,
+      "godot/scripts/Enemy.gd": 16,
+      "godot/scripts/Hud.gd": 12,
       "godot/scripts/ImpactFx.gd": 8,
-      "godot/scripts/Main.gd": 16,
+      "godot/scripts/Main.gd": 20,
       "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 12,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
+      "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/boss_reveal_camera_test.gd": 4,
       "godot/tests/combat_feel_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
@@ -1751,7 +1759,10 @@
       "godot/tests/boss_reveal_camera_test.gd": 4
     },
     "bosses": {
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4
     },
     "break": {
@@ -1997,7 +2008,11 @@
       "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java": 4
     },
     "dedicated": {
-      "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4
+      "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/boss_hud_identity_test.gd": 4
     },
     "differentiate": {
       "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java": 4,
@@ -2312,11 +2327,12 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4,
-      "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/Hud.gd": 8,
+      "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
+      "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
@@ -2378,7 +2394,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 12,
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/boss_hud_identity_test.gd": 4
     },
     "hunter": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java": 4,
@@ -2420,7 +2440,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/boss_hud_identity_test.gd": 4
     },
     "impacts": {
       "godot/scripts/CombatFeel.gd": 4,
@@ -2567,14 +2591,15 @@
     },
     "native": {
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 8,
+      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/Hud.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 12,
+      "godot/scripts/Main.gd": 16,
       "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 8,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
+      "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/boss_reveal_camera_test.gd": 4,
       "godot/tests/smoke_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4,
