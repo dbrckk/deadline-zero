@@ -22,26 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-22T18:47:39Z
+Generated: 2026-09-23T07:08:05Z
 
 ### Git
 - Branch: `main`
-- Head: `77f8b0c86bbf`
-- Commit date: 2026-09-22T20:47:25+02:00
-- Commit: Keep boss reveal framing clear of the top HUD (#299)
-- Tracked files: 852
+- Head: `a14874134e72`
+- Commit date: 2026-09-23T09:07:51+02:00
+- Commit: Start native Godot 3D survivor-shooter migration (#302)
+- Tracked files: 875
 
 ### Recently changed files
-- `core/src/main/java/com/deadlinezero/game/screen/GameScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java`
-- `core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java`
-- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
-- `core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java`
-- `core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java`
-- `core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java`
-- `core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java`
-- `core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java`
+- `.github/workflows/godot-verify.yml`
+- `docs/GODOT_3D_MIGRATION.md`
+- `godot/README.md`
+- `godot/assets/asset_manifest.json`
+- `godot/assets/third_party/ASSET_SOURCES.md`
+- `godot/assets/third_party/quaternius/zombie_apocalypse/LICENSE.txt`
+- `godot/assets/third_party/quaternius/zombie_apocalypse/plastic_barrier.gltf`
+- `godot/assets/third_party/quaternius/zombie_apocalypse/player_matt.gltf`
+- `godot/assets/third_party/quaternius/zombie_apocalypse/rifle.gltf`
+- `godot/assets/third_party/quaternius/zombie_apocalypse/zombie_basic.gltf`
+- `godot/assets/third_party/quaternius/zombie_apocalypse/zombie_chubby.gltf`
+- `godot/project.godot`
+- `godot/scenes/Main.tscn`
+- `godot/scripts/AssetLibrary.gd`
+- `godot/scripts/Enemy.gd`
+- `godot/scripts/Hud.gd`
+- `godot/scripts/ImpactFx.gd`
+- `godot/scripts/Main.gd`
+- `godot/scripts/Player.gd`
+- `godot/scripts/Projectile.gd`
 
 ### Project signals
 - `build.gradle`
