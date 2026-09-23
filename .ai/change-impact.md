@@ -1,13 +1,13 @@
 # Change impact
 
-Base: dcab86bce82a388338806824f1d9b6d3ea00b38d
-Head: 622651d366477d60cb5a41ffc57cfe92f97ad075
+Base: 63e5784c048de4b1f5b4418c49d12a9a81567c53
+Head: 786ad54830d86db70ae5f598c47497c90dda883c
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/Player.gd
-- M godot/scripts/Projectile.gd
-- A godot/tests/weapon_presentation_test.gd
+- M godot/scripts/Hud.gd
+- M godot/scripts/Main.gd
+- A godot/tests/upgrade_presentation_test.gd
 
 ## Affected areas
 - .github

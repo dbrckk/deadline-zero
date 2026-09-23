@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Give drone doctrines distinct combat visuals",
-      "terms": [
-        "combat",
-        "distinct",
-        "doctrines",
-        "drone",
-        "give",
-        "visuals"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java",
-        "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Show active build identity in combat HUD",
       "terms": [
         "active",
@@ -1237,6 +1219,26 @@
         "godot/scripts/Projectile.gd",
         "godot/tests/weapon_presentation_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Give native 3D upgrades distinct visual identities (#309)",
+      "terms": [
+        "309",
+        "3d",
+        "distinct",
+        "give",
+        "identities",
+        "native",
+        "upgrades",
+        "visual"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Hud.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/upgrade_presentation_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1487,13 +1489,18 @@
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
+    "309": {
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/upgrade_presentation_test.gd": 4
+    },
     "3d": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/CombatFeel.gd": 4,
       "godot/scripts/Enemy.gd": 12,
-      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Hud.gd": 8,
       "godot/scripts/ImpactFx.gd": 8,
-      "godot/scripts/Main.gd": 8,
+      "godot/scripts/Main.gd": 12,
       "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 12,
       "godot/scripts/XpOrb.gd": 4,
@@ -1501,6 +1508,7 @@
       "godot/tests/combat_feel_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
       "godot/tests/smoke_test.gd": 4,
+      "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "70": {
@@ -1998,8 +2006,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
+      "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "docs": {
@@ -2290,9 +2301,12 @@
       "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4,
       "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
+      "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "godot": {
@@ -2379,9 +2393,12 @@
     },
     "identities": {
       "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
+      "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "identity": {
@@ -2539,14 +2556,15 @@
     "native": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Hud.gd": 8,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 8,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/smoke_test.gd": 4,
+      "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "newly": {
@@ -3233,6 +3251,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java": 4
     },
+    "upgrades": {
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/upgrade_presentation_test.gd": 4
+    },
     "using": {
       "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java": 4,
       "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java": 4,
@@ -3278,7 +3301,10 @@
       "core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java": 8,
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 8,
       "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/upgrade_presentation_test.gd": 4
     },
     "visuals": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,

@@ -22,17 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T10:33:48Z
+Generated: 2026-09-23T10:45:10Z
 
 ### Git
 - Branch: `main`
-- Head: `622651d36647`
-- Commit date: 2026-09-23T12:33:36+02:00
-- Commit: Give native 3D weapons distinct projectile identities (#308)
-- Tracked files: 883
+- Head: `786ad54830d8`
+- Commit date: 2026-09-23T12:44:57+02:00
+- Commit: Give native 3D upgrades distinct visual identities (#309)
+- Tracked files: 884
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
+- `godot/scripts/Hud.gd`
+- `godot/scripts/Main.gd`
+- `godot/tests/upgrade_presentation_test.gd`
 - `godot/scripts/Player.gd`
 - `godot/scripts/Projectile.gd`
 - `godot/tests/weapon_presentation_test.gd`
@@ -40,18 +43,9 @@ Generated: 2026-09-23T10:33:48Z
 - `godot/tests/enemy_archetype_combat_test.gd`
 - `godot/scripts/CombatFeel.gd`
 - `godot/scripts/ImpactFx.gd`
-- `godot/scripts/Main.gd`
 - `godot/tests/combat_feel_test.gd`
 - `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
 - `core/src/test/java/com/deadlinezero/game/visual/EnvironmentFloorVariationTest.java`
-- `docs/GODOT_3D_MIGRATION.md`
-- `godot/README.md`
-- `godot/assets/asset_manifest.json`
-- `godot/assets/third_party/ASSET_SOURCES.md`
-- `godot/assets/third_party/quaternius/zombie_apocalypse/LICENSE.txt`
-- `godot/assets/third_party/quaternius/zombie_apocalypse/plastic_barrier.gltf`
-- `godot/assets/third_party/quaternius/zombie_apocalypse/player_matt.gltf`
-- `godot/assets/third_party/quaternius/zombie_apocalypse/rifle.gltf`
 
 ### Project signals
 - `build.gradle`

@@ -53,6 +53,7 @@ tests/
   combat_feel_test.gd
   enemy_archetype_combat_test.gd
   smoke_test.gd
+  upgrade_presentation_test.gd
   weapon_presentation_test.gd
 ```
 
@@ -397,6 +398,10 @@ var status_label: Label
 var wave_label: Label
 var upgrade_panel: PanelContainer
 var upgrade_buttons: Array[Button] = []
+var upgrade_cards: Array[VBoxContainer] = []
+var upgrade_family_labels: Array[Label] = []
+var upgrade_title_labels: Array[Label] = []
+var upgrade_detail_labels: Array[Label] = []
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -414,9 +419,15 @@ func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float)
 func set_wave(text: String) -> void:
     wave_label.text = text
 
-func show_upgrade(labels: Array[String]) -> void:
+func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
-        upgrade_buttons[i].text = labels[i] if i < labels.size() else "UPGRADE"
+        var item: Dictionary = items[i] if i < items.size() else {}
+        var id := str(item.get("id", "damage"))
+        upgrade_family_labels[i].text = str(item.get("family", "UPGRADE"))
+        upgrade_title_labels[i].text = str(item.get("title", "UPGRADE"))
+        upgrade_detail_labels[i].text = str(item.get("detail", ""))
+        upgrade_buttons[i].text = _upgrade_glyph(id)
+        _style_upgrade_card(i, id)
     upgrade_panel.visible = true
 
 func hide_upgrade() -> void:
@@ -482,13 +493,79 @@ func _build() -> void:
     box.add_child(row)
 
     for i in range(3):
+        var card := VBoxContainer.new()
+        card.custom_minimum_size = Vector2(280, 190)
+        card.add_theme_constant_override("separation", 5)
+        row.add_child(card)
+        upgrade_cards.append(card)
+
+        var family := Label.new()
+        family.text = "UPGRADE"
+        family.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+        family.add_theme_font_size_override("font_size", 13)
+        card.add_child(family)
+        upgrade_family_labels.append(family)
+
         var button := Button.new()
-        button.custom_minimum_size = Vector2(280, 190)
-        button.text = "UPGRADE"
-        button.add_theme_font_size_override("font_size", 22)
+        button.custom_minimum_size = Vector2(280, 82)
+        button.text = "◆"
+        button.add_theme_font_size_override("font_size", 38)
         button.pressed.connect(_on_upgrade_pressed.bind(i))
-        row.add_child(button)
+        card.add_child(button)
         upgrade_buttons.append(button)
+
+        var upgrade_title := Label.new()
+        upgrade_title.text = "UPGRADE"
+        upgrade_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+        upgrade_title.add_theme_font_size_override("font_size", 21)
+        card.add_child(upgrade_title)
+        upgrade_title_labels.append(upgrade_title)
+
+        var detail := Label.new()
+        detail.text = ""
+        detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+        detail.add_theme_font_size_override("font_size", 16)
+        detail.modulate = Color(0.76, 0.84, 0.90)
+        card.add_child(detail)
+        upgrade_detail_labels.append(detail)
+
+func _upgrade_glyph(id: String) -> String:
+    match id:
+        "damage": return "▲"
+        "rate": return "»»"
+        "speed": return "➤"
+        "health": return "+"
+        "projectile": return "◆"
+        "multishot": return "⋙"
+        _: return "◆"
+
+func _upgrade_color(id: String) -> Color:
+    match id:
+        "damage", "multishot": return Color(1.0, 0.66, 0.18)
+        "rate", "speed": return Color(0.18, 0.86, 1.0)
+        "health": return Color(0.32, 0.94, 0.52)
+        "projectile": return Color(0.76, 0.82, 1.0)
+        _: return Color(0.58, 0.42, 1.0)
+
+func _style_upgrade_card(index: int, id: String) -> void:
+    var accent := _upgrade_color(id)
+    upgrade_family_labels[index].modulate = accent
+    upgrade_title_labels[index].modulate = Color.WHITE
+    var normal := StyleBoxFlat.new()
+    normal.bg_color = Color(0.035, 0.055, 0.070, 0.98)
+    normal.border_color = Color(accent.r, accent.g, accent.b, 0.72)
+    normal.set_border_width_all(2)
+    normal.corner_radius_top_left = 8
+    normal.corner_radius_top_right = 8
+    normal.corner_radius_bottom_left = 8
+    normal.corner_radius_bottom_right = 8
+    var hover := normal.duplicate()
+    hover.bg_color = Color(accent.r * 0.16, accent.g * 0.16, accent.b * 0.16, 1.0)
+    hover.border_color = accent
+    upgrade_buttons[index].add_theme_stylebox_override("normal", normal)
+    upgrade_buttons[index].add_theme_stylebox_override("hover", hover)
+    upgrade_buttons[index].add_theme_stylebox_override("pressed", hover)
+    upgrade_buttons[index].add_theme_color_override("font_color", accent)
 
 func _on_upgrade_pressed(index: int) -> void:
     upgrade_chosen.emit(index)
@@ -546,12 +623,12 @@ func _process(delta: float) -> void:
 extends Node3D
 
 const UPGRADE_POOL := [
-    {"id":"damage", "label":"HEAVY PAYLOAD\nDamage +25%"},
-    {"id":"rate", "label":"RAPID FIRE\nFire rate +22%"},
-    {"id":"speed", "label":"SCOUT FRAME\nMove speed +14%"},
-    {"id":"health", "label":"REACTIVE PLATING\nMax HP +30"},
-    {"id":"projectile", "label":"HYPER VELOCITY\nProjectile speed +20%"},
-    {"id":"multishot", "label":"MULTISHOT\n+1 projectile"}
+    {"id":"damage", "title":"HEAVY PAYLOAD", "detail":"Damage +25%", "family":"OFFENSE"},
+    {"id":"rate", "title":"RAPID FIRE", "detail":"Fire rate +22%", "family":"CADENCE"},
+    {"id":"speed", "title":"SCOUT FRAME", "detail":"Move speed +14%", "family":"MOBILITY"},
+    {"id":"health", "title":"REACTIVE PLATING", "detail":"Max HP +30", "family":"SURVIVAL"},
+    {"id":"projectile", "title":"HYPER VELOCITY", "detail":"Projectile speed +20%", "family":"BALLISTIC"},
+    {"id":"multishot", "title":"MULTISHOT", "detail":"+1 projectile", "family":"BARRAGE"}
 ]
 
 var player: DZPlayer
@@ -705,10 +782,7 @@ func _offer_upgrade() -> void:
     available.shuffle()
     for i in range(3):
         pending_upgrades.append(available[i])
-    var labels: Array[String] = []
-    for item in pending_upgrades:
-        labels.append(item["label"])
-    hud.show_upgrade(labels)
+    hud.show_upgrade(pending_upgrades)
     get_tree().paused = true
 
 func _on_upgrade_chosen(index: int) -> void:
@@ -1345,6 +1419,32 @@ func _process(_delta: float) -> bool:
             quit(0)
         return true
     return false
+```
+
+## File: tests/upgrade_presentation_test.gd
+```
+extends SceneTree
+
+func _init() -> void:
+    var main_text := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    var hud_text := FileAccess.get_file_as_string("res://scripts/Hud.gd")
+
+    var ids := ["damage", "rate", "speed", "health", "projectile", "multishot"]
+    for id in ids:
+        assert(main_text.contains("\"id\":\"" + id + "\""))
+        assert(hud_text.contains("\"" + id + "\""))
+
+    assert(main_text.contains("\"family\":\"OFFENSE\""))
+    assert(main_text.contains("\"family\":\"SURVIVAL\""))
+    assert(main_text.contains("\"family\":\"BARRAGE\""))
+    assert(hud_text.contains("func _upgrade_glyph"))
+    assert(hud_text.contains("func _upgrade_color"))
+    assert(hud_text.contains("func _style_upgrade_card"))
+    assert(hud_text.contains("StyleBoxFlat.new()"))
+    assert(hud_text.contains("upgrade_family_labels"))
+    assert(hud_text.contains("upgrade_detail_labels"))
+    print("godot upgrade presentation test passed")
+    quit(0)
 ```
 
 ## File: tests/weapon_presentation_test.gd
