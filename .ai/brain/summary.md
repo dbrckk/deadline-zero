@@ -1,17 +1,17 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 481
-- Files reparsed this run: 6
-- Symbols: 2736
+- Files indexed: 482
+- Files reparsed this run: 2
+- Symbols: 2741
 - Internal import edges: 794
-- Impacted files: 66
-- Selected tests: 38
+- Impacted files: 56
+- Selected tests: 34
 
 ## Languages
 - java: 420 files
 - python: 49 files
-- gdscript: 12 files
+- gdscript: 13 files
 
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols

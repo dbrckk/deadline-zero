@@ -600,6 +600,7 @@ godot/
   tests/
     authored_asset_validation.gd
     combat_feel_test.gd
+    enemy_archetype_combat_test.gd
     smoke_test.gd
 tools/
   android/
@@ -2129,6 +2130,12 @@ jobs:
           set -euo pipefail
           /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --headless --path godot --script res://tests/combat_feel_test.gd
+
+      - name: Validate enemy archetype combat
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot --script res://tests/enemy_archetype_combat_test.gd
 
       - name: Run Godot smoke test
         run: |
@@ -30087,6 +30094,11 @@ var attack_cooldown := 0.0
 var authored_visual: Node3D
 var authored_anim: AnimationPlayer
 var current_anim := ""
+var attack_windup := 0.0
+var attack_target_position := Vector3.ZERO
+var elite_burst_clock := 2.4
+var boss_slam_clock := 3.6
+var telegraph_visual: Node3D
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -30127,9 +30139,28 @@ func _physics_process(delta: float) -> void:
     if dead or target == null or not is_instance_valid(target):
         return
     attack_cooldown = max(0.0, attack_cooldown - delta)
+    elite_burst_clock = max(0.0, elite_burst_clock - delta)
+    boss_slam_clock = max(0.0, boss_slam_clock - delta)
     var delta_pos := target.global_position - global_position
     delta_pos.y = 0.0
     var distance := delta_pos.length()
+
+    if attack_windup > 0.0:
+        velocity = Vector3.ZERO
+        attack_windup = max(0.0, attack_windup - delta)
+        if attack_windup <= 0.0:
+            _resolve_telegraphed_attack()
+        return
+
+    if kind == "elite" and elite_burst_clock <= 0.0 and distance < 5.2:
+        _begin_telegraphed_attack(0.46, target.global_position)
+        elite_burst_clock = 3.0
+        return
+    if kind == "boss" and boss_slam_clock <= 0.0 and distance < 4.6:
+        _begin_telegraphed_attack(0.68, target.global_position)
+        boss_slam_clock = 4.1
+        return
+
     if distance > 0.05:
         velocity = delta_pos.normalized() * move_speed
         move_and_slide()
@@ -30139,6 +30170,56 @@ func _physics_process(delta: float) -> void:
     if distance < 0.85 and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> void:
+    attack_windup = duration
+    attack_target_position = target_position
+    attack_target_position.y = global_position.y
+    _show_telegraph(1.75 if kind == "boss" else 1.05, duration)
+    if authored_anim != null and authored_anim.has_animation("Idle_Attack"):
+        _play_authored("Idle_Attack")
+
+func _resolve_telegraphed_attack() -> void:
+    if target == null or not is_instance_valid(target):
+        return
+    var radius := 1.95 if kind == "boss" else 1.18
+    var damage := contact_damage * (1.35 if kind == "boss" else 0.82)
+    var impact_point := global_position.lerp(attack_target_position, 0.58)
+    impact_point.y = 0.05
+    if target.global_position.distance_to(impact_point) <= radius and target.has_method("take_damage"):
+        target.take_damage(damage)
+    _spawn_attack_impact(impact_point, radius)
+    attack_cooldown = 0.88 if kind == "boss" else 0.64
+
+func _show_telegraph(radius: float, duration: float) -> void:
+    if telegraph_visual != null and is_instance_valid(telegraph_visual):
+        telegraph_visual.queue_free()
+    telegraph_visual = MeshInstance3D.new()
+    var mesh := CylinderMesh.new()
+    mesh.top_radius = radius
+    mesh.bottom_radius = radius
+    mesh.height = 0.018
+    telegraph_visual.mesh = mesh
+    telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.025, 0.0)
+    var mat := StandardMaterial3D.new()
+    mat.albedo_color = Color(1.0, 0.16, 0.04, 0.20)
+    mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    mat.emission_enabled = true
+    mat.emission = Color(1.0, 0.08, 0.01)
+    mat.emission_energy_multiplier = 1.5
+    telegraph_visual.material_override = mat
+    get_tree().current_scene.add_child(telegraph_visual)
+    var tween := telegraph_visual.create_tween()
+    telegraph_visual.scale = Vector3(0.42, 1.0, 0.42)
+    tween.tween_property(telegraph_visual, "scale", Vector3.ONE, duration)
+    tween.tween_callback(telegraph_visual.queue_free)
+
+func _spawn_attack_impact(at: Vector3, radius: float) -> void:
+    var fx := ImpactFx.new()
+    fx.color = Color(1.0, 0.22, 0.05) if kind == "boss" else Color(0.72, 0.28, 1.0)
+    fx.scale_boost = radius * 1.35
+    get_tree().current_scene.add_child(fx)
+    fx.global_position = at + Vector3(0.0, 0.10, 0.0)
 
 func take_damage(amount: float, critical := false) -> void:
     if dead:
@@ -31080,6 +31161,24 @@ func _assert(condition: bool, message: String) -> void:
         return
     push_error(message)
     quit(1)
+````
+
+## File: godot/tests/enemy_archetype_combat_test.gd
+````
+extends SceneTree
+
+func _init() -> void:
+    var source := FileAccess.get_file_as_string("res://scripts/Enemy.gd")
+    assert(source.contains("attack_windup"))
+    assert(source.contains("_begin_telegraphed_attack"))
+    assert(source.contains("_resolve_telegraphed_attack"))
+    assert(source.contains("kind == \"elite\""))
+    assert(source.contains("kind == \"boss\""))
+    assert(source.contains("target.take_damage(damage)"))
+    assert(source.contains("_show_telegraph"))
+    assert(source.contains("_spawn_attack_impact"))
+    print("enemy_archetype_combat_test: PASS")
+    quit()
 ````
 
 ## File: godot/tests/smoke_test.gd

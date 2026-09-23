@@ -22,19 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-23T09:15:14Z
+Generated: 2026-09-23T09:49:00Z
 
 ### Git
 - Branch: `main`
-- Head: `6cadae135a3b`
-- Commit date: 2026-09-23T11:14:59+02:00
-- Commit: Add 3D hit-stop, critical impacts and camera feedback (#306)
-- Tracked files: 881
+- Head: `eb1e306b14df`
+- Commit date: 2026-09-23T11:48:48+02:00
+- Commit: Give 3D elites and bosses telegraphed combat identities (#307)
+- Tracked files: 882
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/CombatFeel.gd`
 - `godot/scripts/Enemy.gd`
+- `godot/tests/enemy_archetype_combat_test.gd`
+- `godot/scripts/CombatFeel.gd`
 - `godot/scripts/ImpactFx.gd`
 - `godot/scripts/Main.gd`
 - `godot/scripts/Projectile.gd`
@@ -51,7 +52,6 @@ Generated: 2026-09-23T09:15:14Z
 - `godot/assets/third_party/quaternius/zombie_apocalypse/rifle.gltf`
 - `godot/assets/third_party/quaternius/zombie_apocalypse/zombie_basic.gltf`
 - `godot/assets/third_party/quaternius/zombie_apocalypse/zombie_chubby.gltf`
-- `godot/project.godot`
 
 ### Project signals
 - `build.gradle`

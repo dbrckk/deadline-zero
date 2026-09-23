@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "b36daeda6b72449e60a7dc2fa3d0311c4a13273a",
-  "head": "6cadae135a3b73bb31dd74462f60029634cbc248",
+  "base": "6cadae135a3b73bb31dd74462f60029634cbc248",
+  "head": "eb1e306b14dfc2ca9f73ad1427a89dd68d6be64f",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -10,37 +10,17 @@
       "status": "M"
     },
     {
-      "path": "godot/scripts/CombatFeel.gd",
-      "status": "A"
-    },
-    {
       "path": "godot/scripts/Enemy.gd",
       "status": "M"
     },
     {
-      "path": "godot/scripts/ImpactFx.gd",
-      "status": "M"
-    },
-    {
-      "path": "godot/scripts/Main.gd",
-      "status": "M"
-    },
-    {
-      "path": "godot/scripts/Projectile.gd",
-      "status": "M"
-    },
-    {
-      "path": "godot/tests/combat_feel_test.gd",
+      "path": "godot/tests/enemy_archetype_combat_test.gd",
       "status": "A"
     }
   ],
   "changed_source_files": [
-    "godot/scripts/CombatFeel.gd",
     "godot/scripts/Enemy.gd",
-    "godot/scripts/ImpactFx.gd",
-    "godot/scripts/Main.gd",
-    "godot/scripts/Projectile.gd",
-    "godot/tests/combat_feel_test.gd"
+    "godot/tests/enemy_archetype_combat_test.gd"
   ],
   "impacted_files": [
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
@@ -52,7 +32,6 @@
     "core/src/main/java/com/deadlinezero/game/fx/DeathFx.java",
     "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
     "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-    "core/src/main/java/com/deadlinezero/game/util/Pools.java",
     "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java",
     "core/src/main/java/com/deadlinezero/game/visual/AnimationProfileCatalog.java",
     "core/src/main/java/com/deadlinezero/game/visual/ArtManifest.java",
@@ -70,8 +49,6 @@
     "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
     "core/src/main/java/com/deadlinezero/game/visual/HostileProjectilePresentation.java",
     "core/src/main/java/com/deadlinezero/game/visual/LocalLightRenderer.java",
-    "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-    "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
     "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
     "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
     "core/src/main/java/com/deadlinezero/game/world/DeathBurstRules.java",
@@ -84,8 +61,6 @@
     "core/src/test/java/com/deadlinezero/game/ai/EnemyVariantBalanceTest.java",
     "core/src/test/java/com/deadlinezero/game/ai/LeaperRegistryTest.java",
     "core/src/test/java/com/deadlinezero/game/ai/LeaperRuntimeTest.java",
-    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
-    "core/src/test/java/com/deadlinezero/game/meta/SingularityCoreRuntimeTest.java",
     "core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java",
     "core/src/test/java/com/deadlinezero/game/screen/GameScreenBossSummonRosterTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java",
@@ -96,19 +71,14 @@
     "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/HostileProjectilePresentationTest.java",
-    "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/SpecialistPresentationTest.java",
     "core/src/test/java/com/deadlinezero/game/world/ArenaHazardRuntimeTest.java",
     "core/src/test/java/com/deadlinezero/game/world/BiomeEnemyRosterTest.java",
     "core/src/test/java/com/deadlinezero/game/world/EndgameWaveCompositionRulesTest.java",
     "core/src/test/java/com/deadlinezero/game/world/SpatialHashTest.java",
     "core/src/test/java/com/deadlinezero/game/world/WaveDirectorTest.java",
-    "godot/scripts/CombatFeel.gd",
     "godot/scripts/Enemy.gd",
-    "godot/scripts/ImpactFx.gd",
-    "godot/scripts/Main.gd",
-    "godot/scripts/Projectile.gd",
-    "godot/tests/combat_feel_test.gd"
+    "godot/tests/enemy_archetype_combat_test.gd"
   ],
   "impacted_symbols": [
     {
@@ -1102,54 +1072,6 @@
       "line": 1149
     },
     {
-      "name": "Pools",
-      "kind": "class",
-      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-      "line": 12
-    },
-    {
-      "name": "projectile",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-      "line": 46
-    },
-    {
-      "name": "hostileProjectile",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-      "line": 56
-    },
-    {
-      "name": "homingMissile",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-      "line": 66
-    },
-    {
-      "name": "impact",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-      "line": 76
-    },
-    {
-      "name": "damageNumber",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-      "line": 86
-    },
-    {
-      "name": "arc",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-      "line": 96
-    },
-    {
-      "name": "deathFx",
-      "kind": "symbol",
-      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-      "line": 106
-    },
-    {
       "name": "ActorMaterialProfile",
       "kind": "class",
       "file": "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java",
@@ -1910,6 +1832,54 @@
       "kind": "symbol",
       "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
       "line": 16
+    },
+    {
+      "name": "drawAuthored",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/DeathFxRenderer.java",
+      "line": 66
+    },
+    {
+      "name": "EnemyHealthBarPresentation",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java",
+      "line": 6
+    },
+    {
+      "name": "visible",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java",
+      "line": 8
+    },
+    {
+      "name": "widthMultiplier",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java",
+      "line": 14
+    },
+    {
+      "name": "GameArt",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
+      "line": 21
+    },
+    {
+      "name": "Motion",
+      "kind": "enum",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
+      "line": 22
+    },
+    {
+      "name": "authoredAvailable",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
+      "line": 50
+    },
+    {
+      "name": "survivor",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
+      "line": 52
     }
   ],
   "selected_tests": [
@@ -1920,7 +1890,6 @@
     "core/src/test/java/com/deadlinezero/game/ai/EnemyVariantBalanceTest.java",
     "core/src/test/java/com/deadlinezero/game/ai/LeaperRegistryTest.java",
     "core/src/test/java/com/deadlinezero/game/ai/LeaperRuntimeTest.java",
-    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
     "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeElementResistanceTest.java",
     "core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeTacticsTest.java",
     "core/src/test/java/com/deadlinezero/game/entities/EnemyChargeImpactTest.java",
@@ -1930,7 +1899,6 @@
     "core/src/test/java/com/deadlinezero/game/entities/EnemySpecialistTest.java",
     "core/src/test/java/com/deadlinezero/game/entities/EnemyTacticsTest.java",
     "core/src/test/java/com/deadlinezero/game/entities/EnemyVariantTest.java",
-    "core/src/test/java/com/deadlinezero/game/meta/SingularityCoreRuntimeTest.java",
     "core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java",
     "core/src/test/java/com/deadlinezero/game/screen/GameScreenBossSummonRosterTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java",
@@ -1941,8 +1909,6 @@
     "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/HostileProjectilePresentationTest.java",
-    "core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java",
-    "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/SpecialistPresentationTest.java",
     "core/src/test/java/com/deadlinezero/game/world/ArenaHazardRuntimeTest.java",
     "core/src/test/java/com/deadlinezero/game/world/BiomeEnemyBehaviorRulesTest.java",
@@ -1950,6 +1916,6 @@
     "core/src/test/java/com/deadlinezero/game/world/EndgameWaveCompositionRulesTest.java",
     "core/src/test/java/com/deadlinezero/game/world/SpatialHashTest.java",
     "core/src/test/java/com/deadlinezero/game/world/WaveDirectorTest.java",
-    "godot/tests/combat_feel_test.gd"
+    "godot/tests/enemy_archetype_combat_test.gd"
   ]
 }

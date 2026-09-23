@@ -2,33 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Cancel obsolete CI runs automatically",
-      "terms": [
-        "automatically",
-        "cancel",
-        "ci",
-        "obsolete",
-        "runs"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java",
-        "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
-        "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-        "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
-        "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
-        "core/src/main/java/com/deadlinezero/game/progression/UpgradeSelector.java",
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
-        "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java",
-        "core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java",
-        "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java",
-        "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Add Hunter and Sentinel drone doctrines",
       "terms": [
         "add",
@@ -1253,6 +1226,25 @@
         "godot/scripts/Projectile.gd",
         "godot/tests/combat_feel_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Give 3D elites and bosses telegraphed combat identities (#307)",
+      "terms": [
+        "307",
+        "3d",
+        "bosses",
+        "combat",
+        "elites",
+        "give",
+        "identities",
+        "telegraphed"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/tests/enemy_archetype_combat_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1494,10 +1486,14 @@
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/combat_feel_test.gd": 4
     },
+    "307": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4
+    },
     "3d": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/CombatFeel.gd": 4,
-      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/Enemy.gd": 12,
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/ImpactFx.gd": 8,
       "godot/scripts/Main.gd": 8,
@@ -1506,6 +1502,7 @@
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/combat_feel_test.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4,
       "godot/tests/smoke_test.gd": 4
     },
     "70": {
@@ -1738,6 +1735,10 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 8
     },
+    "bosses": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4
+    },
     "break": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnvironmentFloorVariationTest.java": 4
@@ -1922,7 +1923,9 @@
       "core/src/test/java/com/deadlinezero/game/visual/CombatOverlayViewportTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4
     },
     "comparison": {
       "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java": 4
@@ -2049,6 +2052,10 @@
     },
     "elemental": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4
+    },
+    "elites": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4
     },
     "enable": {
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 4
@@ -2280,7 +2287,9 @@
     "give": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4
     },
     "godot": {
       "godot/scripts/AssetLibrary.gd": 4,
@@ -2363,6 +2372,10 @@
       "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java": 4
+    },
+    "identities": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4
     },
     "identity": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
@@ -3139,6 +3152,10 @@
     "telegraph": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4
+    },
+    "telegraphed": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4
     },
     "temporary": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java": 4,

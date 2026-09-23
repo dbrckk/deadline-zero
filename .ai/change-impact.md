@@ -1,16 +1,12 @@
 # Change impact
 
-Base: d569d2dda97a2b864ab8ba9f48cdaeb524355fd0
-Head: 6cadae135a3b73bb31dd74462f60029634cbc248
+Base: 99b20b10803d69f9d37c53d3bf2043ea60102bdb
+Head: eb1e306b14dfc2ca9f73ad1427a89dd68d6be64f
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- A godot/scripts/CombatFeel.gd
 - M godot/scripts/Enemy.gd
-- M godot/scripts/ImpactFx.gd
-- M godot/scripts/Main.gd
-- M godot/scripts/Projectile.gd
-- A godot/tests/combat_feel_test.gd
+- A godot/tests/enemy_archetype_combat_test.gd
 
 ## Affected areas
 - .github
