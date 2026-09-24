@@ -58,6 +58,7 @@ func _ready() -> void:
     hud = DZHud.new()
     add_child(hud)
     hud.upgrade_chosen.connect(_on_upgrade_chosen)
+    hud.restart_requested.connect(_on_restart_requested)
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     _build_combat_audio()
@@ -216,7 +217,12 @@ func _on_player_died() -> void:
     Engine.time_scale = 1.0
     game_over = true
     if hud:
-        hud.show_game_over()
+        hud.show_game_over(kills, level, elapsed)
+
+func _on_restart_requested() -> void:
+    Engine.time_scale = 1.0
+    get_tree().paused = false
+    get_tree().reload_current_scene()
 
 func _wave_name() -> String:
     if boss_banner_timer > 0.0:
