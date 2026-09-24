@@ -244,6 +244,10 @@ func _build_world() -> void:
     env.ambient_light_color = Color(0.22, 0.34, 0.42)
     env.ambient_light_energy = 0.85
     env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+    env.fog_enabled = true
+    env.fog_light_color = Color(0.08, 0.13, 0.16)
+    env.fog_light_energy = 0.55
+    env.fog_density = 0.008
     environment.environment = env
     add_child(environment)
 
@@ -272,26 +276,7 @@ func _build_world() -> void:
     floor.material_override = floor_mat
     add_child(floor)
 
-    for i in range(34):
-        if i < 12:
-            var authored_prop := DZAssetLibrary.barrier()
-            if authored_prop != null:
-                authored_prop.position = Vector3(randf_range(-28.0, 28.0), 0.0, randf_range(-28.0, 28.0))
-                authored_prop.rotation.y = randf_range(0.0, TAU)
-                authored_prop.scale = Vector3.ONE * randf_range(0.85, 1.15)
-                add_child(authored_prop)
-                continue
-        var prop := MeshInstance3D.new()
-        var box := BoxMesh.new()
-        box.size = Vector3(randf_range(0.5, 1.8), randf_range(0.25, 1.1), randf_range(0.5, 1.8))
-        prop.mesh = box
-        prop.position = Vector3(randf_range(-28.0, 28.0), box.size.y * 0.5, randf_range(-28.0, 28.0))
-        var mat := StandardMaterial3D.new()
-        mat.albedo_color = Color(0.11, 0.13, 0.14).lerp(Color(0.22, 0.12, 0.06), randf() * 0.35)
-        mat.roughness = 0.74
-        mat.metallic = 0.35
-        prop.material_override = mat
-        add_child(prop)
+    _build_authored_barrier_clusters()
 
     for i in range(18):
         var stripe := MeshInstance3D.new()
@@ -333,3 +318,33 @@ func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
 func _play_boss_stinger() -> void:
     if boss_audio != null:
         boss_audio.play()
+
+
+func _build_authored_barrier_clusters() -> void:
+    var placements := [
+        [Vector3(-12.5, 0.0, -9.0), -8.0, 1.05],
+        [Vector3(-10.1, 0.0, -8.4), 12.0, 0.96],
+        [Vector3(-7.8, 0.0, -7.7), -5.0, 1.02],
+        [Vector3(11.8, 0.0, -8.6), 176.0, 1.08],
+        [Vector3(9.3, 0.0, -8.0), 188.0, 0.94],
+        [Vector3(6.9, 0.0, -7.3), 172.0, 1.00],
+        [Vector3(-13.4, 0.0, 8.8), 9.0, 1.02],
+        [Vector3(-10.9, 0.0, 8.2), -10.0, 0.98],
+        [Vector3(-8.5, 0.0, 7.6), 6.0, 1.06],
+        [Vector3(12.7, 0.0, 9.0), 181.0, 1.04],
+        [Vector3(10.2, 0.0, 8.3), 169.0, 0.96],
+        [Vector3(7.8, 0.0, 7.6), 184.0, 1.00],
+        [Vector3(-20.0, 0.0, -1.6), 90.0, 1.06],
+        [Vector3(-20.0, 0.0, 1.2), 90.0, 0.96],
+        [Vector3(20.0, 0.0, -1.6), -90.0, 1.06],
+        [Vector3(20.0, 0.0, 1.2), -90.0, 0.96]
+    ]
+    for item in placements:
+        var barrier := DZAssetLibrary.barrier()
+        if barrier == null:
+            continue
+        barrier.position = item[0]
+        barrier.rotation_degrees.y = item[1]
+        barrier.scale = Vector3.ONE * item[2]
+        barrier.add_to_group("authored_environment")
+        add_child(barrier)
