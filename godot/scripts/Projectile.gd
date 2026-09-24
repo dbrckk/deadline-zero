@@ -19,6 +19,7 @@ var chain_targets := 0
 var slow_multiplier := 1.0
 var slow_duration := 0.0
 var hit_enemy_ids := {}
+var spawn_secondary_fx := true
 
 func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color,
         profile := "vanguard") -> void:
@@ -188,11 +189,12 @@ func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) 
             continue
         if primary.global_position.distance_to(enemy.global_position) <= range_radius:
             enemy.take_damage(splash_damage, false)
-            var fx := ImpactFx.new()
-            fx.color = Color(1.0, 0.24, 0.035)
-            fx.scale_boost = 0.72
-            get_tree().current_scene.add_child(fx)
-            fx.global_position = enemy.global_position + Vector3(0.0, 0.45, 0.0)
+            if spawn_secondary_fx:
+                var fx := ImpactFx.new()
+                fx.color = Color(1.0, 0.24, 0.035)
+                fx.scale_boost = 0.72
+                get_tree().current_scene.add_child(fx)
+                fx.global_position = enemy.global_position + Vector3(0.0, 0.45, 0.0)
 
 func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
     if chain_targets <= 0:
@@ -212,8 +214,9 @@ func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
         var chained := candidates[i]
         var falloff := 0.56 if i == 0 else 0.38
         chained.take_damage(dealt_damage * falloff, false)
-        var fx := ImpactFx.new()
-        fx.color = Color(0.64, 0.42, 1.0)
-        fx.scale_boost = 0.78
-        get_tree().current_scene.add_child(fx)
-        fx.global_position = chained.global_position + Vector3(0.0, 0.55, 0.0)
+        if spawn_secondary_fx:
+            var fx := ImpactFx.new()
+            fx.color = Color(0.64, 0.42, 1.0)
+            fx.scale_boost = 0.78
+            get_tree().current_scene.add_child(fx)
+            fx.global_position = chained.global_position + Vector3(0.0, 0.55, 0.0)
