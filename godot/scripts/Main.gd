@@ -96,6 +96,7 @@ func _process(delta: float) -> void:
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.fov = lerpf(camera.fov, target_fov, 1.0 - exp(-delta * 5.5))
         camera.look_at(focus_point, Vector3.UP)
+        _update_offscreen_threat_indicator()
 
 func _physics_process(delta: float) -> void:
     if game_over:
@@ -327,3 +328,43 @@ func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
 func _play_boss_stinger() -> void:
     if boss_audio != null:
         boss_audio.play()
+
+
+func _update_offscreen_threat_indicator() -> void:
+    if hud == null or camera == null or player == null or game_over:
+        if hud:
+            hud.hide_offscreen_threat()
+        return
+
+    var best: DZEnemy
+    var best_distance := INF
+    for node in get_tree().get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy == null or enemy.dead or (enemy.kind != "elite" and enemy.kind != "boss"):
+            continue
+        var distance := player.global_position.distance_to(enemy.global_position)
+        if distance < best_distance:
+            best_distance = distance
+            best = enemy
+
+    if best == null:
+        hud.hide_offscreen_threat()
+        return
+
+    var viewport_size := get_viewport().get_visible_rect().size
+    var screen_pos := camera.unproject_position(best.global_position + Vector3(0.0, 0.9, 0.0))
+    var margin := Vector2(84.0, 72.0)
+    var inside := not camera.is_position_behind(best.global_position)         and screen_pos.x >= margin.x         and screen_pos.y >= margin.y         and screen_pos.x <= viewport_size.x - margin.x         and screen_pos.y <= viewport_size.y - margin.y
+
+    if inside:
+        hud.hide_offscreen_threat()
+        return
+
+    var center := viewport_size * 0.5
+    var direction := screen_pos - center
+    if camera.is_position_behind(best.global_position):
+        direction = -direction
+    if direction.length_squared() < 0.001:
+        direction = Vector2.RIGHT
+
+    hud.set_offscreen_threat(direction.normalized(), best.kind, best_distance)
