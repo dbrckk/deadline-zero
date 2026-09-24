@@ -32,8 +32,15 @@ Repository-side checklist for Play Console declarations that cannot be inferred 
 
 ## Monetization
 
+Canonical production product IDs:
+
+- `remove_ads_lifetime`
+- `starter_pack_01`
+- `gems_250`
+- `gems_1200`
+
 - [ ] Confirm every production in-app product exists and is active in Play Console.
-- [ ] Confirm product identifiers exactly match the shipping build configuration.
+- [ ] Confirm product identifiers exactly match the shipping build configuration above.
 - [ ] Test purchase, acknowledgement, restore and refund/revocation behavior with licensed test accounts.
 - [ ] Confirm ad/reward wording does not imply guaranteed monetary value.
 
