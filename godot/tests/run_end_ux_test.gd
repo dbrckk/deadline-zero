@@ -40,14 +40,14 @@ func _initialize() -> void:
         quit(1)
         return
 
-    var restart_signaled := false
+    var restart_state := {"signaled": false}
     hud.restart_requested.connect(func() -> void:
-        restart_signaled = true
+        restart_state["signaled"] = true
     )
     restart_button.pressed.emit()
     await process_frame
 
-    if not restart_signaled:
+    if not bool(restart_state["signaled"]):
         push_error("Redeploy button did not emit restart_requested")
         quit(1)
         return
