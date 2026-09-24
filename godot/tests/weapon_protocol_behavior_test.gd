@@ -15,21 +15,25 @@ func _initialize() -> void:
     var primary := ENEMY_SCRIPT.new()
     primary.configure("shambler", 1.0, target)
     root.add_child(primary)
+    primary.process_mode = Node.PROCESS_MODE_DISABLED
     primary.global_position = Vector3.ZERO
 
     var nearby := ENEMY_SCRIPT.new()
     nearby.configure("shambler", 1.0, target)
     root.add_child(nearby)
+    nearby.process_mode = Node.PROCESS_MODE_DISABLED
     nearby.global_position = Vector3(1.2, 0.0, 0.0)
 
     var nearby_two := ENEMY_SCRIPT.new()
     nearby_two.configure("shambler", 1.0, target)
     root.add_child(nearby_two)
+    nearby_two.process_mode = Node.PROCESS_MODE_DISABLED
     nearby_two.global_position = Vector3(2.2, 0.0, 0.0)
     await process_frame
 
     var cryo := PROJECTILE_SCRIPT.new()
     root.add_child(cryo)
+    cryo.process_mode = Node.PROCESS_MODE_DISABLED
     cryo.setup(Vector3.ZERO, Vector3.RIGHT, 10.0, 20.0, Color.WHITE, "cryo")
     cryo._apply_protocol_hit(primary, 20.0)
     if primary.slow_multiplier >= 1.0 or primary.slow_left <= 0.0:
@@ -39,6 +43,7 @@ func _initialize() -> void:
 
     var inferno := PROJECTILE_SCRIPT.new()
     root.add_child(inferno)
+    inferno.process_mode = Node.PROCESS_MODE_DISABLED
     inferno.setup(Vector3.ZERO, Vector3.RIGHT, 10.0, 20.0, Color.WHITE, "inferno")
     var nearby_before := nearby.health
     inferno._apply_protocol_hit(primary, 20.0)
@@ -49,6 +54,7 @@ func _initialize() -> void:
 
     var arc := PROJECTILE_SCRIPT.new()
     root.add_child(arc)
+    arc.process_mode = Node.PROCESS_MODE_DISABLED
     arc.setup(Vector3.ZERO, Vector3.RIGHT, 10.0, 20.0, Color.WHITE, "arc")
     var arc_one_before := nearby.health
     var arc_two_before := nearby_two.health
@@ -66,4 +72,6 @@ func _initialize() -> void:
         return
 
     print("Deadline Zero weapon protocol behavior: OK")
+    root.queue_free()
+    await process_frame
     quit(0)
