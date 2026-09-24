@@ -14,10 +14,12 @@ func _initialize() -> void:
     current_scene = root
     var target := DummyTarget.new()
     root.add_child(target)
+    await process_frame
 
     var charger := ENEMY_SCRIPT.new()
     charger.configure("charger", 1.0, target)
     charger.process_mode = Node.PROCESS_MODE_DISABLED
+    charger.spawn_secondary_fx = false
     root.add_child(charger)
     if charger.move_speed <= 2.0 or charger.contact_damage < 12.0 or charger.xp_value < 4:
         push_error("Charger baseline identity is incorrect")
@@ -27,6 +29,7 @@ func _initialize() -> void:
     var harrier := ENEMY_SCRIPT.new()
     harrier.configure("harrier", 1.0, target)
     harrier.process_mode = Node.PROCESS_MODE_DISABLED
+    harrier.spawn_secondary_fx = false
     root.add_child(harrier)
     if harrier.move_speed <= charger.move_speed or harrier.max_health >= charger.max_health:
         push_error("Harrier mobility/risk identity is incorrect")
@@ -36,6 +39,7 @@ func _initialize() -> void:
     var regenerator := ENEMY_SCRIPT.new()
     regenerator.configure("regenerator", 1.0, target)
     regenerator.process_mode = Node.PROCESS_MODE_DISABLED
+    regenerator.spawn_secondary_fx = false
     root.add_child(regenerator)
     var full_health: float = regenerator.health
     regenerator.health = full_health * 0.50
@@ -45,6 +49,7 @@ func _initialize() -> void:
         quit(1)
         return
 
+    await process_frame
     charger.pending_special = "charge"
     charger.attack_target_position = Vector3(4.0, 0.0, 0.0)
     charger.global_position = Vector3.ZERO
@@ -57,10 +62,13 @@ func _initialize() -> void:
 
     var harrier_target := DummyTarget.new()
     root.add_child(harrier_target)
+    await process_frame
     var shooter := ENEMY_SCRIPT.new()
     shooter.configure("harrier", 1.0, harrier_target)
     shooter.process_mode = Node.PROCESS_MODE_DISABLED
+    shooter.spawn_secondary_fx = false
     root.add_child(shooter)
+    await process_frame
     shooter.pending_special = "harrier_shot"
     shooter._resolve_telegraphed_attack()
     if harrier_target.damage_taken <= 0.0:
