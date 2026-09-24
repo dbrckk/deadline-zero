@@ -365,6 +365,14 @@ func _upgrade_glyph(id: String) -> String:
         "health": return "+"
         "projectile": return "◆"
         "multishot": return "⋙"
+        "berserker": return "✦"
+        "overclock": return "⚡"
+        "fortress": return "⬢"
+        "scatter_protocol": return "⋰"
+        "rail_protocol": return "━"
+        "inferno_protocol": return "▲"
+        "cryo_protocol": return "◇"
+        "arc_protocol": return "⌁"
         _: return "◆"
 
 func _upgrade_color(id: String) -> Color:
@@ -373,6 +381,14 @@ func _upgrade_color(id: String) -> Color:
         "rate", "speed": return Color(0.18, 0.86, 1.0)
         "health": return Color(0.32, 0.94, 0.52)
         "projectile": return Color(0.76, 0.82, 1.0)
+        "berserker": return Color(1.0, 0.22, 0.12)
+        "overclock": return Color(1.0, 0.82, 0.18)
+        "fortress": return Color(0.38, 0.86, 0.72)
+        "scatter_protocol": return Color(1.0, 0.56, 0.18)
+        "rail_protocol": return Color(0.72, 0.58, 1.0)
+        "inferno_protocol": return Color(1.0, 0.24, 0.035)
+        "cryo_protocol": return Color(0.30, 0.90, 1.0)
+        "arc_protocol": return Color(0.64, 0.42, 1.0)
         _: return Color(0.58, 0.42, 1.0)
 
 func _style_upgrade_card(index: int, id: String) -> void:
