@@ -273,25 +273,10 @@ func _build_world() -> void:
     add_child(floor)
 
     for i in range(34):
-        if i < 12:
-            var authored_prop := DZAssetLibrary.barrier()
-            if authored_prop != null:
-                authored_prop.position = Vector3(randf_range(-28.0, 28.0), 0.0, randf_range(-28.0, 28.0))
-                authored_prop.rotation.y = randf_range(0.0, TAU)
-                authored_prop.scale = Vector3.ONE * randf_range(0.85, 1.15)
-                add_child(authored_prop)
-                continue
-        var prop := MeshInstance3D.new()
-        var box := BoxMesh.new()
-        box.size = Vector3(randf_range(0.5, 1.8), randf_range(0.25, 1.1), randf_range(0.5, 1.8))
-        prop.mesh = box
-        prop.position = Vector3(randf_range(-28.0, 28.0), box.size.y * 0.5, randf_range(-28.0, 28.0))
-        var mat := StandardMaterial3D.new()
-        mat.albedo_color = Color(0.11, 0.13, 0.14).lerp(Color(0.22, 0.12, 0.06), randf() * 0.35)
-        mat.roughness = 0.74
-        mat.metallic = 0.35
-        prop.material_override = mat
-        add_child(prop)
+        _spawn_authored_world_prop(i)
+
+    for i in range(10):
+        _spawn_street_damage(i)
 
     for i in range(18):
         var stripe := MeshInstance3D.new()
@@ -307,6 +292,63 @@ func _build_world() -> void:
         stripe_mat.emission_energy_multiplier = 0.45
         stripe.material_override = stripe_mat
         add_child(stripe)
+
+func _spawn_authored_world_prop(index: int) -> void:
+    var prop: Node3D
+    var variant := index % 6
+    match variant:
+        0:
+            prop = DZAssetLibrary.barrier()
+        1:
+            prop = DZAssetLibrary.barrel()
+        2:
+            prop = DZAssetLibrary.pallet()
+        3:
+            prop = DZAssetLibrary.traffic_cone()
+        4:
+            prop = DZAssetLibrary.trash_bag()
+        _:
+            prop = DZAssetLibrary.street_lights()
+
+    if prop == null:
+        return
+
+    prop.name = "EnvironmentProp_%02d" % index
+    prop.add_to_group("environment_props")
+
+    var radius := randf_range(10.0, 29.0)
+    var angle := randf() * TAU
+    prop.position = Vector3(cos(angle) * radius, 0.0, sin(angle) * radius)
+    prop.rotation.y = randf_range(0.0, TAU)
+
+    match variant:
+        0:
+            prop.scale = Vector3.ONE * randf_range(0.90, 1.08)
+        1:
+            prop.scale = Vector3.ONE * randf_range(0.86, 1.08)
+        2:
+            prop.scale = Vector3.ONE * randf_range(0.92, 1.12)
+        3:
+            prop.scale = Vector3.ONE * randf_range(0.88, 1.05)
+        4:
+            prop.scale = Vector3.ONE * randf_range(0.92, 1.12)
+        _:
+            prop.scale = Vector3.ONE * randf_range(0.92, 1.04)
+
+    add_child(prop)
+
+func _spawn_street_damage(index: int) -> void:
+    var crack := DZAssetLibrary.street_crack()
+    if crack == null:
+        return
+    crack.name = "StreetDamage_%02d" % index
+    crack.add_to_group("environment_ground_detail")
+    var radius := randf_range(5.0, 25.0)
+    var angle := randf() * TAU
+    crack.position = Vector3(cos(angle) * radius, 0.012, sin(angle) * radius)
+    crack.rotation.y = randf_range(0.0, TAU)
+    crack.scale = Vector3.ONE * randf_range(0.92, 1.12)
+    add_child(crack)
 
 func _build_combat_audio() -> void:
     impact_audio = AudioStreamPlayer.new()
