@@ -3,13 +3,18 @@ extends SceneTree
 const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
 
 func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _run_test() -> void:
     var root := Node3D.new()
     get_root().add_child(root)
     current_scene = root
+    await process_frame
 
     var enemy := ENEMY_SCRIPT.new()
     root.add_child(enemy)
     await process_frame
+
     enemy.kind = "boss"
     enemy.global_position = Vector3.ZERO
     enemy.attack_target_position = Vector3(2.0, 0.0, 0.0)
