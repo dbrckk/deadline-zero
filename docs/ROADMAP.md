@@ -41,7 +41,7 @@ Rewarded placements, no-ads entitlement, starter pack, premium currency, store c
 
 - **5/5 biomes reached:** Quarantine Yard, Cinder Foundry, Null Sector, Cryo Vault and Cryogenic Depths.
 - **12/12+ weapons reached:** the production Arsenal now contains twelve progression-gated weapons.
-- **52/50+ standard upgrades reached:** the level-up pool spans offense, survivability, mobility, elemental specialization and hybrid build matrices, with explicit mobile-safe stacking caps.
+- **60/50+ standard upgrades reached:** the level-up pool spans offense, survivability, mobility, elemental specialization and hybrid build matrices, with explicit mobile-safe stacking caps.
 - **6/6 bosses reached:** Alpha, Revenant, Warden, Harvester, Null Archon and Frost Colossus all route through the shared boss framework with phase-specific runtime behavior.
 - **22/20+ gameplay enemy profiles reached:** 8 base non-boss archetypes + 6 authored biome-signature profiles + 8 champion variants. Counts intentionally describe gameplay profiles, not duplicated art actors.
 - **8/8+ champion/elite profiles reached:** Swift, Armored, Feral, Volatile, Juggernaut, Ravager, Aegis and Hunter each carry distinct stat/cadence/pattern tuning.
