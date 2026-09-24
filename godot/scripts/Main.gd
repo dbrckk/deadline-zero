@@ -231,8 +231,19 @@ func _on_health_changed(current: float, maximum: float) -> void:
 func _on_player_died() -> void:
     Engine.time_scale = 1.0
     game_over = true
+    _freeze_combat()
     if hud:
         hud.show_game_over(kills, level, elapsed)
+
+func _freeze_combat() -> void:
+    for node in get_tree().get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy != null:
+            enemy.set_combat_enabled(false)
+    for node in get_tree().get_nodes_in_group("projectiles"):
+        var projectile := node as DZProjectile
+        if projectile != null:
+            projectile.set_combat_enabled(false)
 
 func _on_restart_requested() -> void:
     Engine.time_scale = 1.0

@@ -20,6 +20,7 @@ var slow_multiplier := 1.0
 var slow_duration := 0.0
 var hit_enemy_ids := {}
 var spawn_secondary_fx := true
+var combat_enabled := true
 
 func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color,
         profile := "vanguard") -> void:
@@ -82,6 +83,7 @@ func _apply_profile(profile: String) -> void:
             impact_scale = 1.0
 
 func _ready() -> void:
+    add_to_group("projectiles")
     var glow := MeshInstance3D.new()
     var mesh := SphereMesh.new()
     mesh.radius = core_radius
@@ -148,7 +150,14 @@ func _add_flame_core() -> void:
     core.omni_range = 1.35
     add_child(core)
 
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if not enabled:
+        velocity = Vector3.ZERO
+
 func _physics_process(delta: float) -> void:
+    if not combat_enabled:
+        return
     age += delta
     global_position += velocity * delta
 
