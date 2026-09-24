@@ -238,76 +238,142 @@ func _wave_name() -> String:
 
 func _build_world() -> void:
     var environment := WorldEnvironment.new()
+    environment.name = "QuarantineEnvironment"
     var env := Environment.new()
     env.background_mode = Environment.BG_COLOR
-    env.background_color = Color(0.012, 0.020, 0.027)
+    env.background_color = Color(0.008, 0.014, 0.020)
     env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-    env.ambient_light_color = Color(0.22, 0.34, 0.42)
-    env.ambient_light_energy = 0.85
+    env.ambient_light_color = Color(0.16, 0.27, 0.34)
+    env.ambient_light_energy = 0.72
     env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+    env.fog_enabled = true
+    env.fog_light_color = Color(0.08, 0.16, 0.20)
+    env.fog_light_energy = 0.42
+    env.fog_density = 0.010
     environment.environment = env
     add_child(environment)
 
     var sun := DirectionalLight3D.new()
+    sun.name = "ColdKeyLight"
     sun.rotation_degrees = Vector3(-58.0, -28.0, 0.0)
-    sun.light_color = Color(0.76, 0.88, 1.0)
-    sun.light_energy = 1.4
+    sun.light_color = Color(0.70, 0.84, 1.0)
+    sun.light_energy = 1.28
     sun.shadow_enabled = true
     add_child(sun)
 
     var fill := OmniLight3D.new()
-    fill.position = Vector3(0.0, 8.0, 0.0)
-    fill.light_color = Color(0.08, 0.65, 1.0)
-    fill.light_energy = 2.2
-    fill.omni_range = 28.0
+    fill.name = "ContainmentFill"
+    fill.position = Vector3(0.0, 7.5, 0.0)
+    fill.light_color = Color(0.04, 0.52, 0.92)
+    fill.light_energy = 1.7
+    fill.omni_range = 24.0
     add_child(fill)
 
+    for side in [-1.0, 1.0]:
+        var rim := OmniLight3D.new()
+        rim.name = "EmergencyRimL" if side < 0.0 else "EmergencyRimR"
+        rim.position = Vector3(side * 18.0, 3.2, -10.0)
+        rim.light_color = Color(1.0, 0.17, 0.045)
+        rim.light_energy = 3.4
+        rim.omni_range = 13.0
+        add_child(rim)
+
     var floor := MeshInstance3D.new()
+    floor.name = "QuarantineFloor"
     var plane := PlaneMesh.new()
     plane.size = Vector2(72.0, 72.0)
     floor.mesh = plane
     var floor_mat := StandardMaterial3D.new()
-    floor_mat.albedo_color = Color(0.075, 0.09, 0.095)
-    floor_mat.roughness = 0.86
-    floor_mat.metallic = 0.08
+    floor_mat.albedo_color = Color(0.045, 0.055, 0.060)
+    floor_mat.roughness = 0.91
+    floor_mat.metallic = 0.05
     floor.material_override = floor_mat
     add_child(floor)
 
-    for i in range(34):
-        if i < 12:
-            var authored_prop := DZAssetLibrary.barrier()
-            if authored_prop != null:
-                authored_prop.position = Vector3(randf_range(-28.0, 28.0), 0.0, randf_range(-28.0, 28.0))
-                authored_prop.rotation.y = randf_range(0.0, TAU)
-                authored_prop.scale = Vector3.ONE * randf_range(0.85, 1.15)
-                add_child(authored_prop)
-                continue
-        var prop := MeshInstance3D.new()
-        var box := BoxMesh.new()
-        box.size = Vector3(randf_range(0.5, 1.8), randf_range(0.25, 1.1), randf_range(0.5, 1.8))
-        prop.mesh = box
-        prop.position = Vector3(randf_range(-28.0, 28.0), box.size.y * 0.5, randf_range(-28.0, 28.0))
-        var mat := StandardMaterial3D.new()
-        mat.albedo_color = Color(0.11, 0.13, 0.14).lerp(Color(0.22, 0.12, 0.06), randf() * 0.35)
-        mat.roughness = 0.74
-        mat.metallic = 0.35
-        prop.material_override = mat
-        add_child(prop)
+    _build_containment_lanes()
+    _build_authored_barrier_clusters()
+    _build_perimeter_beacons()
 
-    for i in range(18):
-        var stripe := MeshInstance3D.new()
-        var stripe_mesh := BoxMesh.new()
-        stripe_mesh.size = Vector3(randf_range(1.5, 4.0), 0.015, 0.08)
-        stripe.mesh = stripe_mesh
-        stripe.position = Vector3(randf_range(-26.0, 26.0), 0.012, randf_range(-26.0, 26.0))
-        stripe.rotation.y = randf_range(0.0, TAU)
-        var stripe_mat := StandardMaterial3D.new()
-        stripe_mat.albedo_color = Color(0.82, 0.42, 0.06)
-        stripe_mat.emission_enabled = true
-        stripe_mat.emission = Color(0.45, 0.10, 0.01)
-        stripe_mat.emission_energy_multiplier = 0.45
-        stripe.material_override = stripe_mat
-        add_child(stripe)
+func _build_authored_barrier_clusters() -> void:
+    var clusters := [
+        {"center": Vector3(-16.0, 0.0, -11.0), "rotation": 0.18},
+        {"center": Vector3(15.0, 0.0, -9.0), "rotation": -0.28},
+        {"center": Vector3(-14.0, 0.0, 13.0), "rotation": 0.72},
+        {"center": Vector3(17.0, 0.0, 12.0), "rotation": -0.66}
+    ]
+    for cluster_index in range(clusters.size()):
+        var cluster: Dictionary = clusters[cluster_index]
+        var center: Vector3 = cluster["center"]
+        var base_rotation: float = cluster["rotation"]
+        for item_index in range(4):
+            var barrier := DZAssetLibrary.barrier()
+            if barrier == null:
+                continue
+            barrier.name = "AuthoredBarrier_%d_%d" % [cluster_index, item_index]
+            var lateral := (float(item_index) - 1.5) * 1.65
+            barrier.position = center + Vector3(lateral, 0.0, sin(float(item_index) * 1.7) * 0.42)
+            barrier.rotation.y = base_rotation + (0.08 if item_index % 2 == 0 else -0.08)
+            barrier.scale = Vector3.ONE * (0.95 + float(item_index % 3) * 0.05)
+            add_child(barrier)
+
+func _build_containment_lanes() -> void:
+    var lane_material := StandardMaterial3D.new()
+    lane_material.albedo_color = Color(0.84, 0.37, 0.045)
+    lane_material.emission_enabled = true
+    lane_material.emission = Color(0.68, 0.13, 0.015)
+    lane_material.emission_energy_multiplier = 0.72
+    lane_material.roughness = 0.58
+
+    for axis in range(2):
+        for offset in [-8.0, 8.0]:
+            for segment in range(-5, 6):
+                var stripe := MeshInstance3D.new()
+                stripe.name = "ContainmentLane_%d_%d_%d" % [axis, int(offset), segment]
+                var stripe_mesh := BoxMesh.new()
+                stripe_mesh.size = Vector3(2.6, 0.016, 0.10) if axis == 0 else Vector3(0.10, 0.016, 2.6)
+                stripe.mesh = stripe_mesh
+                stripe.position = Vector3(float(segment) * 3.6, 0.014, offset) if axis == 0 else Vector3(offset, 0.014, float(segment) * 3.6)
+                stripe.material_override = lane_material
+                add_child(stripe)
+
+    for ring_index in range(4):
+        var marker := MeshInstance3D.new()
+        marker.name = "ContainmentMarker_%d" % ring_index
+        var marker_mesh := CylinderMesh.new()
+        marker_mesh.top_radius = 2.3 + float(ring_index) * 0.72
+        marker_mesh.bottom_radius = marker_mesh.top_radius
+        marker_mesh.height = 0.012
+        marker.mesh = marker_mesh
+        marker.position.y = 0.010 + float(ring_index) * 0.001
+        var marker_mat := StandardMaterial3D.new()
+        marker_mat.albedo_color = Color(0.04, 0.38, 0.52, 0.045)
+        marker_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+        marker_mat.emission_enabled = true
+        marker_mat.emission = Color(0.02, 0.28, 0.44)
+        marker_mat.emission_energy_multiplier = 0.32 + float(ring_index) * 0.08
+        marker.material_override = marker_mat
+        add_child(marker)
+
+func _build_perimeter_beacons() -> void:
+    var beacon_material := StandardMaterial3D.new()
+    beacon_material.albedo_color = Color(1.0, 0.10, 0.025)
+    beacon_material.emission_enabled = true
+    beacon_material.emission = Color(1.0, 0.045, 0.01)
+    beacon_material.emission_energy_multiplier = 4.0
+
+    for index in range(12):
+        var angle := TAU * float(index) / 12.0
+        var radius := 27.0
+        var beacon := MeshInstance3D.new()
+        beacon.name = "PerimeterBeacon_%02d" % index
+        var mesh := CylinderMesh.new()
+        mesh.top_radius = 0.07
+        mesh.bottom_radius = 0.13
+        mesh.height = 0.72
+        beacon.mesh = mesh
+        beacon.position = Vector3(cos(angle) * radius, 0.36, sin(angle) * radius)
+        beacon.material_override = beacon_material
+        add_child(beacon)
 
 func _build_combat_audio() -> void:
     impact_audio = AudioStreamPlayer.new()
