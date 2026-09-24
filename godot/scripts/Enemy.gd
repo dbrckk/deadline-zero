@@ -28,6 +28,7 @@ var slow_left := 0.0
 var special_clock := 1.8
 var regeneration_clock := 1.0
 var pending_special := ""
+var spawn_secondary_fx := true
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -207,6 +208,8 @@ func _show_telegraph(radius: float, duration: float) -> void:
     tween.chain().tween_callback(telegraph_visual.queue_free)
 
 func _spawn_attack_impact(at: Vector3, radius: float) -> void:
+    if not spawn_secondary_fx:
+        return
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.22, 0.05) if kind == "boss" else Color(0.72, 0.28, 1.0)
     fx.scale_boost = radius * 1.35
