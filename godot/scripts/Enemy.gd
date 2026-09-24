@@ -25,6 +25,10 @@ var telegraph_visual: Node3D
 var telegraph_material: StandardMaterial3D
 var slow_multiplier := 1.0
 var slow_left := 0.0
+var special_clock := 1.8
+var regeneration_clock := 1.0
+var pending_special := ""
+var spawn_secondary_fx := true
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -50,6 +54,21 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
             move_speed = 2.0
             contact_damage = 18.0
             xp_value = 8
+        "charger":
+            max_health = 105.0 * difficulty
+            move_speed = 2.35
+            contact_damage = 13.0
+            xp_value = 4
+        "harrier":
+            max_health = 74.0 * difficulty
+            move_speed = 2.75
+            contact_damage = 9.0
+            xp_value = 4
+        "regenerator":
+            max_health = 128.0 * difficulty
+            move_speed = 1.72
+            contact_damage = 10.0
+            xp_value = 5
         _:
             max_health = 68.0 * difficulty
             move_speed = 2.15
@@ -68,6 +87,8 @@ func _physics_process(delta: float) -> void:
     attack_cooldown = max(0.0, attack_cooldown - delta)
     elite_burst_clock = max(0.0, elite_burst_clock - delta)
     boss_slam_clock = max(0.0, boss_slam_clock - delta)
+    special_clock = max(0.0, special_clock - delta)
+    regeneration_clock = max(0.0, regeneration_clock - delta)
     slow_left = max(0.0, slow_left - delta)
     if slow_left <= 0.0:
         slow_multiplier = 1.0
@@ -75,11 +96,27 @@ func _physics_process(delta: float) -> void:
     delta_pos.y = 0.0
     var distance := delta_pos.length()
 
+    if kind == "regenerator" and regeneration_clock <= 0.0:
+        _regenerate()
+        regeneration_clock = 1.0
+
     if attack_windup > 0.0:
         velocity = Vector3.ZERO
         attack_windup = max(0.0, attack_windup - delta)
         if attack_windup <= 0.0:
             _resolve_telegraphed_attack()
+        return
+
+    if kind == "charger" and special_clock <= 0.0 and distance > 2.2 and distance < 7.2:
+        pending_special = "charge"
+        _begin_telegraphed_attack(0.52, target.global_position)
+        special_clock = 3.4
+        return
+
+    if kind == "harrier" and special_clock <= 0.0 and distance >= 3.5 and distance <= 8.5:
+        pending_special = "harrier_shot"
+        _begin_telegraphed_attack(0.42, target.global_position)
+        special_clock = 2.6
         return
 
     if kind == "elite" and elite_burst_clock <= 0.0 and distance < 5.2:
@@ -92,7 +129,13 @@ func _physics_process(delta: float) -> void:
         return
 
     if distance > 0.05:
-        velocity = delta_pos.normalized() * move_speed * slow_multiplier
+        var movement_direction: Vector3 = delta_pos.normalized()
+        if kind == "harrier":
+            if distance < 4.4:
+                movement_direction = -movement_direction
+            elif distance <= 6.6:
+                movement_direction = Vector3(-movement_direction.z, 0.0, movement_direction.x)
+        velocity = movement_direction * move_speed * slow_multiplier
         move_and_slide()
         if velocity.length_squared() > 0.01:
             look_at(global_position + velocity, Vector3.UP)
@@ -112,9 +155,26 @@ func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> voi
 func _resolve_telegraphed_attack() -> void:
     if target == null or not is_instance_valid(target):
         return
-    var radius := 1.95 if kind == "boss" else 1.18
-    var damage := contact_damage * (1.35 if kind == "boss" else 0.82)
-    var impact_point := global_position.lerp(attack_target_position, 0.58)
+    if pending_special == "charge":
+        var charge_target: Vector3 = attack_target_position
+        charge_target.y = global_position.y
+        global_position = global_position.lerp(charge_target, 0.88)
+        if target.global_position.distance_to(global_position) <= 1.15 and target.has_method("take_damage"):
+            target.take_damage(contact_damage * 1.30)
+        _spawn_attack_impact(global_position + Vector3(0.0, 0.05, 0.0), 1.05)
+        pending_special = ""
+        attack_cooldown = 0.80
+        return
+    if pending_special == "harrier_shot":
+        if target.has_method("take_damage"):
+            target.take_damage(contact_damage * 0.88)
+        _spawn_attack_impact(target.global_position + Vector3(0.0, 0.08, 0.0), 0.72)
+        pending_special = ""
+        attack_cooldown = 0.95
+        return
+    var radius: float = 1.95 if kind == "boss" else 1.18
+    var damage: float = contact_damage * (1.35 if kind == "boss" else 0.82)
+    var impact_point: Vector3 = global_position.lerp(attack_target_position, 0.58)
     impact_point.y = 0.05
     if target.global_position.distance_to(impact_point) <= radius and target.has_method("take_damage"):
         target.take_damage(damage)
@@ -148,11 +208,20 @@ func _show_telegraph(radius: float, duration: float) -> void:
     tween.chain().tween_callback(telegraph_visual.queue_free)
 
 func _spawn_attack_impact(at: Vector3, radius: float) -> void:
+    if not spawn_secondary_fx:
+        return
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.22, 0.05) if kind == "boss" else Color(0.72, 0.28, 1.0)
     fx.scale_boost = radius * 1.35
     get_tree().current_scene.add_child(fx)
     fx.global_position = at + Vector3(0.0, 0.10, 0.0)
+
+func _regenerate() -> void:
+    if dead or health <= 0.0 or health >= max_health:
+        return
+    var healed: float = minf(max_health * 0.035, max_health - health)
+    health += healed
+    health_changed.emit(health, max_health)
 
 func apply_slow(multiplier: float, duration: float) -> void:
     slow_multiplier = min(slow_multiplier, clampf(multiplier, 0.30, 1.0))
@@ -186,6 +255,9 @@ func _build_visual() -> void:
             "runner": scale_factor = 0.92
             "brute": scale_factor = 1.22
             "elite": scale_factor = 1.15
+            "charger": scale_factor = 1.18
+            "harrier": scale_factor = 0.94
+            "regenerator": scale_factor = 1.10
             "boss": scale_factor = 1.72
         authored_visual.scale = Vector3.ONE * scale_factor
         add_child(authored_visual)
@@ -259,6 +331,15 @@ func _add_archetype_signature() -> void:
             _add_brute_shoulders(accent)
         "elite":
             accent = Color(0.72, 0.30, 1.0)
+            _add_elite_crown(accent)
+        "charger":
+            accent = Color(1.0, 0.32, 0.08)
+            _add_brute_shoulders(accent)
+        "harrier":
+            accent = Color(0.12, 0.82, 1.0)
+            _add_runner_blades(accent)
+        "regenerator":
+            accent = Color(0.18, 1.0, 0.48)
             _add_elite_crown(accent)
         "boss":
             accent = Color(1.0, 0.62, 0.12)

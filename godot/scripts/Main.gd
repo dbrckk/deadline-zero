@@ -156,9 +156,15 @@ func _spawn_enemy(forced_kind: String = "") -> void:
     if forced_kind.is_empty():
         if elapsed > 25.0 and roll > 0.72:
             kind = "runner"
-        if elapsed > 55.0 and roll > 0.88:
+        if elapsed > 45.0 and roll > 0.80:
+            kind = "charger"
+        if elapsed > 65.0 and roll > 0.86:
+            kind = "harrier"
+        if elapsed > 82.0 and roll > 0.91:
+            kind = "regenerator"
+        if elapsed > 100.0 and roll > 0.95:
             kind = "brute"
-        if elapsed > 100.0 and roll > 0.96:
+        if elapsed > 125.0 and roll > 0.975:
             kind = "elite"
     var difficulty := 1.0 + elapsed / 210.0 + float(level - 1) * 0.035
     var enemy := DZEnemy.new()
