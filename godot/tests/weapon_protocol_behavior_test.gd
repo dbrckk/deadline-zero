@@ -34,6 +34,7 @@ func _initialize() -> void:
     var cryo := PROJECTILE_SCRIPT.new()
     root.add_child(cryo)
     cryo.process_mode = Node.PROCESS_MODE_DISABLED
+    cryo.spawn_secondary_fx = false
     cryo.setup(Vector3.ZERO, Vector3.RIGHT, 10.0, 20.0, Color.WHITE, "cryo")
     cryo._apply_protocol_hit(primary, 20.0)
     if primary.slow_multiplier >= 1.0 or primary.slow_left <= 0.0:
@@ -44,6 +45,7 @@ func _initialize() -> void:
     var inferno := PROJECTILE_SCRIPT.new()
     root.add_child(inferno)
     inferno.process_mode = Node.PROCESS_MODE_DISABLED
+    inferno.spawn_secondary_fx = false
     inferno.setup(Vector3.ZERO, Vector3.RIGHT, 10.0, 20.0, Color.WHITE, "inferno")
     var nearby_before := nearby.health
     inferno._apply_protocol_hit(primary, 20.0)
@@ -55,6 +57,7 @@ func _initialize() -> void:
     var arc := PROJECTILE_SCRIPT.new()
     root.add_child(arc)
     arc.process_mode = Node.PROCESS_MODE_DISABLED
+    arc.spawn_secondary_fx = false
     arc.setup(Vector3.ZERO, Vector3.RIGHT, 10.0, 20.0, Color.WHITE, "arc")
     var arc_one_before := nearby.health
     var arc_two_before := nearby_two.health
@@ -72,6 +75,4 @@ func _initialize() -> void:
         return
 
     print("Deadline Zero weapon protocol behavior: OK")
-    root.queue_free()
-    await process_frame
     quit(0)
