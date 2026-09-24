@@ -18,6 +18,8 @@ var boss_name_label: Label
 var boss_hp_bar: ProgressBar
 var boss_phase_label: Label
 var boss_hp_max := 1.0
+var threat_panel: PanelContainer
+var threat_label: Label
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -54,6 +56,31 @@ func set_boss_health(value: float, maximum: float) -> void:
 
 func hide_boss() -> void:
     boss_panel.visible = false
+
+func set_offscreen_threat(direction: Vector2, threat_kind: String, distance: float) -> void:
+    if direction.length_squared() < 0.001:
+        hide_offscreen_threat()
+        return
+    var arrow := _direction_arrow(direction.normalized())
+    threat_label.text = "%s  %s  %dm" % [arrow, threat_kind.to_upper(), int(round(distance))]
+    threat_panel.visible = true
+
+func hide_offscreen_threat() -> void:
+    threat_panel.visible = false
+
+func _direction_arrow(direction: Vector2) -> String:
+    var angle := atan2(direction.y, direction.x)
+    var octant := int(round(angle / (PI / 4.0)))
+    match octant:
+        0: return "→"
+        1: return "↘"
+        2: return "↓"
+        3: return "↙"
+        4, -4: return "←"
+        -3: return "↖"
+        -2: return "↑"
+        -1: return "↗"
+        _: return "→"
 
 func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
@@ -105,6 +132,34 @@ func _build() -> void:
     wave_label.position = Vector2(-220, 24)
     wave_label.size = Vector2(440, 42)
     root.add_child(wave_label)
+
+    threat_panel = PanelContainer.new()
+    threat_panel.name = "ThreatPanel"
+    threat_panel.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+    threat_panel.position = Vector2(-210, -34)
+    threat_panel.size = Vector2(180, 68)
+    threat_panel.visible = false
+    threat_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(threat_panel)
+
+    threat_label = Label.new()
+    threat_label.name = "ThreatLabel"
+    threat_label.text = "→ ELITE  18m"
+    threat_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    threat_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    threat_label.add_theme_font_size_override("font_size", 18)
+    threat_label.modulate = Color(1.0, 0.56, 0.22)
+    threat_panel.add_child(threat_label)
+
+    var threat_style := StyleBoxFlat.new()
+    threat_style.bg_color = Color(0.06, 0.025, 0.01, 0.88)
+    threat_style.border_color = Color(1.0, 0.42, 0.08, 0.86)
+    threat_style.set_border_width_all(2)
+    threat_style.corner_radius_top_left = 8
+    threat_style.corner_radius_top_right = 8
+    threat_style.corner_radius_bottom_left = 8
+    threat_style.corner_radius_bottom_right = 8
+    threat_panel.add_theme_stylebox_override("panel", threat_style)
 
     boss_panel = PanelContainer.new()
     boss_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
