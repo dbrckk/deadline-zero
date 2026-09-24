@@ -23,6 +23,8 @@ var elite_burst_clock := 2.4
 var boss_slam_clock := 3.6
 var telegraph_visual: Node3D
 var telegraph_material: StandardMaterial3D
+var slow_multiplier := 1.0
+var slow_left := 0.0
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -66,6 +68,9 @@ func _physics_process(delta: float) -> void:
     attack_cooldown = max(0.0, attack_cooldown - delta)
     elite_burst_clock = max(0.0, elite_burst_clock - delta)
     boss_slam_clock = max(0.0, boss_slam_clock - delta)
+    slow_left = max(0.0, slow_left - delta)
+    if slow_left <= 0.0:
+        slow_multiplier = 1.0
     var delta_pos := target.global_position - global_position
     delta_pos.y = 0.0
     var distance := delta_pos.length()
@@ -87,7 +92,7 @@ func _physics_process(delta: float) -> void:
         return
 
     if distance > 0.05:
-        velocity = delta_pos.normalized() * move_speed
+        velocity = delta_pos.normalized() * move_speed * slow_multiplier
         move_and_slide()
         if velocity.length_squared() > 0.01:
             look_at(global_position + velocity, Vector3.UP)
@@ -148,6 +153,10 @@ func _spawn_attack_impact(at: Vector3, radius: float) -> void:
     fx.scale_boost = radius * 1.35
     get_tree().current_scene.add_child(fx)
     fx.global_position = at + Vector3(0.0, 0.10, 0.0)
+
+func apply_slow(multiplier: float, duration: float) -> void:
+    slow_multiplier = min(slow_multiplier, clampf(multiplier, 0.30, 1.0))
+    slow_left = max(slow_left, max(0.0, duration))
 
 func take_damage(amount: float, critical := false) -> void:
     if dead:
