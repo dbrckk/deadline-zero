@@ -2,6 +2,7 @@ class_name DZHud
 extends CanvasLayer
 
 signal upgrade_chosen(index: int)
+signal restart_requested
 
 var hp_bar: ProgressBar
 var xp_bar: ProgressBar
@@ -18,6 +19,8 @@ var boss_name_label: Label
 var boss_hp_bar: ProgressBar
 var boss_phase_label: Label
 var boss_hp_max := 1.0
+var game_over_panel: PanelContainer
+var game_over_summary: Label
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -69,8 +72,14 @@ func show_upgrade(items: Array) -> void:
 func hide_upgrade() -> void:
     upgrade_panel.visible = false
 
-func show_game_over() -> void:
+func show_game_over(kills: int, level: int, elapsed: float) -> void:
     wave_label.text = "RUN TERMINATED"
+    upgrade_panel.visible = false
+    boss_panel.visible = false
+    var minutes := int(elapsed) / 60
+    var seconds := int(elapsed) % 60
+    game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]
+    game_over_panel.visible = true
 
 func _build() -> void:
     var root := Control.new()
@@ -105,6 +114,52 @@ func _build() -> void:
     wave_label.position = Vector2(-220, 24)
     wave_label.size = Vector2(440, 42)
     root.add_child(wave_label)
+
+    game_over_panel = PanelContainer.new()
+    game_over_panel.set_anchors_preset(Control.PRESET_CENTER)
+    game_over_panel.position = Vector2(-270, -120)
+    game_over_panel.size = Vector2(540, 240)
+    game_over_panel.visible = false
+    root.add_child(game_over_panel)
+
+    var game_over_box := VBoxContainer.new()
+    game_over_box.alignment = BoxContainer.ALIGNMENT_CENTER
+    game_over_box.add_theme_constant_override("separation", 16)
+    game_over_panel.add_child(game_over_box)
+
+    var game_over_title := Label.new()
+    game_over_title.text = "SIGNAL LOST"
+    game_over_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    game_over_title.add_theme_font_size_override("font_size", 34)
+    game_over_title.modulate = Color(1.0, 0.34, 0.20)
+    game_over_box.add_child(game_over_title)
+
+    game_over_summary = Label.new()
+    game_over_summary.text = "LEVEL 1   •   KILLS 0   •   00:00"
+    game_over_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    game_over_summary.add_theme_font_size_override("font_size", 18)
+    game_over_summary.modulate = Color(0.82, 0.88, 0.92)
+    game_over_box.add_child(game_over_summary)
+
+    var restart_button := Button.new()
+    restart_button.name = "RestartButton"
+    restart_button.text = "REDEPLOY"
+    restart_button.custom_minimum_size = Vector2(260, 58)
+    restart_button.add_theme_font_size_override("font_size", 21)
+    restart_button.pressed.connect(func() -> void:
+        restart_requested.emit()
+    )
+    game_over_box.add_child(restart_button)
+
+    var game_over_style := StyleBoxFlat.new()
+    game_over_style.bg_color = Color(0.018, 0.026, 0.034, 0.97)
+    game_over_style.border_color = Color(1.0, 0.22, 0.10, 0.78)
+    game_over_style.set_border_width_all(2)
+    game_over_style.corner_radius_top_left = 10
+    game_over_style.corner_radius_top_right = 10
+    game_over_style.corner_radius_bottom_left = 10
+    game_over_style.corner_radius_bottom_right = 10
+    game_over_panel.add_theme_stylebox_override("panel", game_over_style)
 
     boss_panel = PanelContainer.new()
     boss_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
