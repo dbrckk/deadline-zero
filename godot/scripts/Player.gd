@@ -22,6 +22,7 @@ var authored_anim: AnimationPlayer
 var current_anim := ""
 var shot_audio: AudioStreamPlayer3D
 var shot_streams := {}
+var damage_pulse: MeshInstance3D
 
 func _ready() -> void:
     add_to_group("player")
@@ -70,6 +71,7 @@ func take_damage(amount: float) -> void:
     health = max(0.0, health - amount)
     invulnerability = 0.18
     health_changed.emit(health, max_health)
+    _trigger_damage_feedback()
     if health <= 0.0:
         died.emit()
 
@@ -159,6 +161,7 @@ func _build_visual() -> void:
         ring_mat.emission_energy_multiplier = 1.6
         ring.material_override = ring_mat
         add_child(ring)
+        _build_damage_feedback()
         return
 
     var visual := Node3D.new()
@@ -199,6 +202,48 @@ func _build_visual() -> void:
     gun.rotation.x = deg_to_rad(-8.0)
     gun.material_override = body_mat
     visual.add_child(gun)
+    _build_damage_feedback()
+
+func _build_damage_feedback() -> void:
+    damage_pulse = MeshInstance3D.new()
+    damage_pulse.name = "DamagePulse"
+    var pulse_mesh := CylinderMesh.new()
+    pulse_mesh.top_radius = 0.82
+    pulse_mesh.bottom_radius = 0.82
+    pulse_mesh.height = 0.035
+    damage_pulse.mesh = pulse_mesh
+    damage_pulse.position.y = 0.06
+    damage_pulse.visible = false
+
+    var pulse_mat := StandardMaterial3D.new()
+    pulse_mat.albedo_color = Color(1.0, 0.08, 0.035, 0.34)
+    pulse_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    pulse_mat.emission_enabled = true
+    pulse_mat.emission = Color(1.0, 0.035, 0.01)
+    pulse_mat.emission_energy_multiplier = 3.2
+    pulse_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    damage_pulse.material_override = pulse_mat
+    add_child(damage_pulse)
+
+func _trigger_damage_feedback() -> void:
+    if damage_pulse != null and is_instance_valid(damage_pulse):
+        damage_pulse.visible = true
+        damage_pulse.scale = Vector3(0.72, 1.0, 0.72)
+        var pulse_tween: Tween = create_tween()
+        pulse_tween.set_trans(Tween.TRANS_QUAD)
+        pulse_tween.set_ease(Tween.EASE_OUT)
+        pulse_tween.tween_property(damage_pulse, "scale", Vector3(1.42, 1.0, 1.42), 0.16)
+        pulse_tween.tween_callback(func() -> void:
+            if damage_pulse != null and is_instance_valid(damage_pulse):
+                damage_pulse.visible = false
+        )
+
+    var visual := get_node_or_null("Visual") as Node3D
+    if visual != null:
+        var base_scale: Vector3 = visual.scale
+        var recoil_tween: Tween = create_tween()
+        recoil_tween.tween_property(visual, "scale", base_scale * Vector3(1.08, 0.94, 1.08), 0.035)
+        recoil_tween.tween_property(visual, "scale", base_scale, 0.085)
 
 func _update_authored_animation() -> void:
     if authored_anim == null:
