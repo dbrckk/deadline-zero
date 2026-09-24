@@ -9,10 +9,16 @@ class DummyTarget:
         damage_taken += amount
 
 func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
     var target := DummyTarget.new()
+    root.add_child(target)
 
     var charger := ENEMY_SCRIPT.new()
     charger.configure("charger", 1.0, target)
+    charger.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(charger)
     if charger.move_speed <= 2.0 or charger.contact_damage < 12.0 or charger.xp_value < 4:
         push_error("Charger baseline identity is incorrect")
         quit(1)
@@ -20,6 +26,8 @@ func _initialize() -> void:
 
     var harrier := ENEMY_SCRIPT.new()
     harrier.configure("harrier", 1.0, target)
+    harrier.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(harrier)
     if harrier.move_speed <= charger.move_speed or harrier.max_health >= charger.max_health:
         push_error("Harrier mobility/risk identity is incorrect")
         quit(1)
@@ -27,6 +35,8 @@ func _initialize() -> void:
 
     var regenerator := ENEMY_SCRIPT.new()
     regenerator.configure("regenerator", 1.0, target)
+    regenerator.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(regenerator)
     var full_health: float = regenerator.health
     regenerator.health = full_health * 0.50
     regenerator._regenerate()
@@ -46,8 +56,11 @@ func _initialize() -> void:
         return
 
     var harrier_target := DummyTarget.new()
+    root.add_child(harrier_target)
     var shooter := ENEMY_SCRIPT.new()
     shooter.configure("harrier", 1.0, harrier_target)
+    shooter.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(shooter)
     shooter.pending_special = "harrier_shot"
     shooter._resolve_telegraphed_attack()
     if harrier_target.damage_taken <= 0.0:
