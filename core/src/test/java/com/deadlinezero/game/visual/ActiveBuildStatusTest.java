@@ -49,6 +49,45 @@ final class ActiveBuildStatusTest {
         assertEquals("hud.build.stormBlade", keys[0]);
     }
 
+    @Test void evolvedProtocolFillsOpenBuildSlot() {
+        Player p = fresh();
+        p.protocols.enableRhythm();
+        p.protocols.evolveRhythm();
+
+        String[] keys = new String[2];
+        ActiveBuildStatus.fill(p, keys);
+        assertEquals("hud.build.rhythmAccelerator", keys[0]);
+        assertNull(keys[1]);
+    }
+
+    @Test void doctrineAndSynergyKeepPriorityOverEvolvedProtocol() {
+        Player p = fresh();
+        for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.TESLA_ORB);
+        for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.DRONE);
+        p.abilities.chooseDroneDoctrine(DroneDoctrine.SENTINEL);
+        p.protocols.enableKillchain();
+        p.protocols.evolveKillchain();
+
+        String[] keys = new String[2];
+        ActiveBuildStatus.fill(p, keys);
+        assertEquals("hud.build.sentinel", keys[0]);
+        assertEquals("hud.build.arcReactor", keys[1]);
+    }
+
+    @Test void protocolPriorityIsStableWhenSeveralAreEvolved() {
+        Player p = fresh();
+        p.protocols.enableRhythm();
+        p.protocols.enableKillchain();
+        p.protocols.enableReactionCore();
+        p.protocols.evolveRhythm();
+        p.protocols.evolveKillchain();
+        p.protocols.evolveReactionCore();
+
+        String[] keys = new String[2];
+        ActiveBuildStatus.fill(p, keys);
+        assertEquals("hud.build.rhythmAccelerator", keys[0]);
+    }
+
     @Test void emptyBuildProducesNoTags() {
         String[] keys = new String[2];
         ActiveBuildStatus.fill(fresh(), keys);
