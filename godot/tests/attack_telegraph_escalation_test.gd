@@ -9,6 +9,7 @@ func _initialize() -> void:
 
     var enemy := ENEMY_SCRIPT.new()
     root.add_child(enemy)
+    await process_frame
     enemy.kind = "boss"
     enemy.global_position = Vector3.ZERO
     enemy.attack_target_position = Vector3(2.0, 0.0, 0.0)
