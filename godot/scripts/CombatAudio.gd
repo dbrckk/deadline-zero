@@ -5,14 +5,14 @@ extends RefCounted
 # weapon/enemy audio is still being produced. Each cue is intentionally short and phone-safe.
 
 static func shot_stream(profile: String) -> AudioStreamWAV:
-    var spec := {
+    var spec: Array = {
         "vanguard": [1180.0, 720.0, 0.055, 0.20],
         "scatter": [520.0, 220.0, 0.085, 0.34],
         "rail": [1960.0, 980.0, 0.070, 0.18],
         "inferno": [760.0, 330.0, 0.080, 0.28],
         "cryo": [1540.0, 1080.0, 0.072, 0.16],
         "arc": [1320.0, 460.0, 0.075, 0.22]
-    }.get(profile, [1180.0, 720.0, 0.055, 0.20])
+    }.get(profile, [1180.0, 720.0, 0.055, 0.20]) as Array
     return _chirp(float(spec[0]), float(spec[1]), float(spec[2]), float(spec[3]), 0.82)
 
 static func impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStreamWAV:
@@ -29,20 +29,20 @@ static func boss_stinger() -> AudioStreamWAV:
 
 static func _chirp(start_hz: float, end_hz: float, seconds: float, noise_mix: float,
         gain: float) -> AudioStreamWAV:
-    var rate := 22050
-    var frames := maxi(64, int(seconds * rate))
+    var rate: int = 22050
+    var frames: int = maxi(64, int(seconds * rate))
     var bytes := PackedByteArray()
     bytes.resize(frames * 2)
-    var phase := 0.0
+    var phase: float = 0.0
     for i in range(frames):
-        var t := float(i) / float(maxi(1, frames - 1))
-        var hz := lerpf(start_hz, end_hz, t)
+        var t: float = float(i) / float(maxi(1, frames - 1))
+        var hz: float = lerpf(start_hz, end_hz, t)
         phase += TAU * hz / float(rate)
-        var envelope := pow(1.0 - t, 2.15)
-        var tone := sin(phase) * (1.0 - noise_mix)
-        var noise := (randf() * 2.0 - 1.0) * noise_mix
-        var sample := clampf((tone + noise) * envelope * gain, -1.0, 1.0)
-        var value := int(sample * 32767.0)
+        var envelope: float = pow(1.0 - t, 2.15)
+        var tone: float = sin(phase) * (1.0 - noise_mix)
+        var noise: float = (randf() * 2.0 - 1.0) * noise_mix
+        var sample: float = clampf((tone + noise) * envelope * gain, -1.0, 1.0)
+        var value: int = int(sample * 32767.0)
         if value < 0:
             value += 65536
         bytes[i * 2] = value & 0xff
