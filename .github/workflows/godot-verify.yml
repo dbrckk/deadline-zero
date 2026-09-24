@@ -39,6 +39,12 @@ jobs:
           /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --headless --path godot --script res://tests/authored_asset_validation.gd
 
+      - name: Validate authored environment assets
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot --script res://tests/environment_asset_validation_test.gd
+
       - name: Validate combat-feel profile
         run: |
           set -euo pipefail
