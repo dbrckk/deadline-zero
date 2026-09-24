@@ -95,6 +95,51 @@ func apply_upgrade(id: String) -> void:
             projectile_speed *= 1.20
         "multishot":
             multishot = min(multishot + 1, 5)
+        "berserker":
+            weapon_damage *= 1.45
+            max_health = max(40.0, max_health * 0.85)
+            health = min(health, max_health)
+            health_changed.emit(health, max_health)
+        "overclock":
+            fire_interval = max(0.09, fire_interval * 0.72)
+            weapon_damage *= 0.90
+        "fortress":
+            max_health += 55.0
+            health = min(max_health, health + 55.0)
+            move_speed *= 0.94
+            health_changed.emit(health, max_health)
+        "scatter_protocol":
+            weapon_profile = "scatter"
+            weapon_tint = Color(1.0, 0.56, 0.18)
+            multishot = min(multishot + 2, 5)
+            spread_degrees = max(spread_degrees, 11.0)
+            weapon_damage *= 0.82
+        "rail_protocol":
+            weapon_profile = "rail"
+            weapon_tint = Color(0.72, 0.58, 1.0)
+            weapon_damage *= 1.50
+            projectile_speed *= 1.40
+            fire_interval = min(0.80, fire_interval * 1.22)
+            multishot = 1
+            spread_degrees = 3.0
+        "inferno_protocol":
+            weapon_profile = "inferno"
+            weapon_tint = Color(1.0, 0.24, 0.035)
+            weapon_damage *= 1.20
+            fire_interval = min(0.80, fire_interval * 1.08)
+        "cryo_protocol":
+            weapon_profile = "cryo"
+            weapon_tint = Color(0.30, 0.90, 1.0)
+            projectile_speed *= 1.12
+            fire_interval = max(0.09, fire_interval * 0.90)
+            weapon_damage *= 0.95
+        "arc_protocol":
+            weapon_profile = "arc"
+            weapon_tint = Color(0.64, 0.42, 1.0)
+            multishot = min(multishot + 1, 5)
+            spread_degrees = min(spread_degrees, 4.0)
+            fire_interval = max(0.09, fire_interval * 0.92)
+            weapon_damage *= 0.90
 
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
