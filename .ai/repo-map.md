@@ -589,6 +589,7 @@ godot/
     asset_manifest.json
   scripts/
     AssetLibrary.gd
+    CombatAudio.gd
     CombatFeel.gd
     Enemy.gd
     Hud.gd
@@ -601,6 +602,7 @@ godot/
     authored_asset_validation.gd
     boss_hud_identity_test.gd
     boss_reveal_camera_test.gd
+    combat_audio_feedback_test.gd
     combat_feel_test.gd
     enemy_archetype_combat_test.gd
     enemy_silhouette_identity_test.gd
@@ -2171,6 +2173,12 @@ jobs:
           set -euo pipefail
           /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --headless --path godot --script res://tests/boss_hud_identity_test.gd
+
+      - name: Validate combat audio feedback
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot --script res://tests/combat_audio_feedback_test.gd
 
       - name: Run Godot smoke test
         run: |
@@ -30079,6 +30087,66 @@ static func animation_player(root: Node) -> AnimationPlayer:
     return direct as AnimationPlayer
 ````
 
+## File: godot/scripts/CombatAudio.gd
+````
+class_name DZCombatAudio
+extends RefCounted
+
+# Procedural one-shot synthesis keeps the native 3D combat lane self-contained while authored
+# weapon/enemy audio is still being produced. Each cue is intentionally short and phone-safe.
+
+static func shot_stream(profile: String) -> AudioStreamWAV:
+    var spec: Array = {
+        "vanguard": [1180.0, 720.0, 0.055, 0.20],
+        "scatter": [520.0, 220.0, 0.085, 0.34],
+        "rail": [1960.0, 980.0, 0.070, 0.18],
+        "inferno": [760.0, 330.0, 0.080, 0.28],
+        "cryo": [1540.0, 1080.0, 0.072, 0.16],
+        "arc": [1320.0, 460.0, 0.075, 0.22]
+    }.get(profile, [1180.0, 720.0, 0.055, 0.20]) as Array
+    return _chirp(float(spec[0]), float(spec[1]), float(spec[2]), float(spec[3]), 0.82)
+
+static func impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStreamWAV:
+    if boss:
+        return _chirp(210.0, 92.0, 0.120, 0.42, 0.92)
+    if killed:
+        return _chirp(390.0, 145.0, 0.095, 0.34, 0.88)
+    if critical:
+        return _chirp(980.0, 420.0, 0.082, 0.24, 0.88)
+    return _chirp(640.0, 260.0, 0.052, 0.18, 0.72)
+
+static func boss_stinger() -> AudioStreamWAV:
+    return _chirp(170.0, 72.0, 0.240, 0.50, 0.94)
+
+static func _chirp(start_hz: float, end_hz: float, seconds: float, noise_mix: float,
+        gain: float) -> AudioStreamWAV:
+    var rate: int = 22050
+    var frames: int = maxi(64, int(seconds * rate))
+    var bytes := PackedByteArray()
+    bytes.resize(frames * 2)
+    var phase: float = 0.0
+    for i in range(frames):
+        var t: float = float(i) / float(maxi(1, frames - 1))
+        var hz: float = lerpf(start_hz, end_hz, t)
+        phase += TAU * hz / float(rate)
+        var envelope: float = pow(1.0 - t, 2.15)
+        var tone: float = sin(phase) * (1.0 - noise_mix)
+        var noise: float = (randf() * 2.0 - 1.0) * noise_mix
+        var sample: float = clampf((tone + noise) * envelope * gain, -1.0, 1.0)
+        var value: int = int(sample * 32767.0)
+        if value < 0:
+            value += 65536
+        bytes[i * 2] = value & 0xff
+        bytes[i * 2 + 1] = (value >> 8) & 0xff
+
+    var wav := AudioStreamWAV.new()
+    wav.format = AudioStreamWAV.FORMAT_16_BITS
+    wav.mix_rate = rate
+    wav.stereo = false
+    wav.data = bytes
+    return wav
+````
+
 ## File: godot/scripts/CombatFeel.gd
 ````
 class_name DZCombatFeel
@@ -30816,6 +30884,9 @@ var camera_kick_phase := 0.0
 var hit_freeze_left := 0.0
 var boss_reveal_target: DZEnemy
 var boss_reveal_left := 0.0
+var impact_audio: AudioStreamPlayer
+var boss_audio: AudioStreamPlayer
+var impact_streams := {}
 
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
@@ -30843,6 +30914,7 @@ func _ready() -> void:
     hud.upgrade_chosen.connect(_on_upgrade_chosen)
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed)
+    _build_combat_audio()
 
     for i in range(8):
         _spawn_enemy()
@@ -30940,6 +31012,7 @@ func _spawn_enemy(forced_kind: String = "") -> void:
     add_child(enemy)
     enemy.global_position = pos
     if kind == "boss":
+        _play_boss_stinger()
         boss_reveal_target = enemy
         boss_reveal_left = BOSS_REVEAL_DURATION
         enemy.health_changed.connect(_on_boss_health_changed)
@@ -30952,6 +31025,7 @@ func _on_boss_health_changed(current: float, maximum: float) -> void:
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
     camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
+    _play_impact_audio(critical, killed, boss)
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
     kills += 1
@@ -31081,6 +31155,32 @@ func _build_world() -> void:
         stripe_mat.emission_energy_multiplier = 0.45
         stripe.material_override = stripe_mat
         add_child(stripe)
+
+func _build_combat_audio() -> void:
+    impact_audio = AudioStreamPlayer.new()
+    impact_audio.name = "ImpactAudio"
+    impact_audio.volume_db = -9.0
+    add_child(impact_audio)
+
+    boss_audio = AudioStreamPlayer.new()
+    boss_audio.name = "BossStinger"
+    boss_audio.volume_db = -6.0
+    boss_audio.stream = DZCombatAudio.boss_stinger()
+    add_child(boss_audio)
+
+func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
+    if impact_audio == null:
+        return
+    var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
+    if not impact_streams.has(key):
+        impact_streams[key] = DZCombatAudio.impact_stream(critical, killed, boss)
+    impact_audio.stream = impact_streams[key]
+    impact_audio.pitch_scale = randf_range(0.96, 1.04)
+    impact_audio.play()
+
+func _play_boss_stinger() -> void:
+    if boss_audio != null:
+        boss_audio.play()
 ````
 
 ## File: godot/scripts/Player.gd
@@ -31107,10 +31207,13 @@ var invulnerability := 0.0
 var authored_visual: Node3D
 var authored_anim: AnimationPlayer
 var current_anim := ""
+var shot_audio: AudioStreamPlayer3D
+var shot_streams := {}
 
 func _ready() -> void:
     add_to_group("player")
     _build_visual()
+    _build_audio()
     health_changed.emit(health, max_health)
 
 func _physics_process(delta: float) -> void:
@@ -31192,6 +31295,7 @@ func _nearest_enemy() -> DZEnemy:
     return best
 
 func _fire_at(enemy: DZEnemy) -> void:
+    _play_shot_audio()
     var base_dir := global_position.direction_to(enemy.global_position)
     base_dir.y = 0.0
     base_dir = base_dir.normalized()
@@ -31293,6 +31397,23 @@ func _play_authored(name: String) -> void:
         return
     current_anim = name
     authored_anim.play(name, 0.12)
+
+func _build_audio() -> void:
+    shot_audio = AudioStreamPlayer3D.new()
+    shot_audio.name = "ShotAudio"
+    shot_audio.max_distance = 28.0
+    shot_audio.unit_size = 5.0
+    shot_audio.volume_db = -11.0
+    add_child(shot_audio)
+
+func _play_shot_audio() -> void:
+    if shot_audio == null:
+        return
+    if not shot_streams.has(weapon_profile):
+        shot_streams[weapon_profile] = DZCombatAudio.shot_stream(weapon_profile)
+    shot_audio.stream = shot_streams[weapon_profile]
+    shot_audio.pitch_scale = randf_range(0.97, 1.03)
+    shot_audio.play()
 ````
 
 ## File: godot/scripts/Projectile.gd
@@ -31590,6 +31711,47 @@ func _init() -> void:
     assert(5.5 <= 7.0)
     assert(0.58 >= 0.45 and 0.58 <= 0.68)
     print("godot boss reveal camera validation passed")
+    quit()
+````
+
+## File: godot/tests/combat_audio_feedback_test.gd
+````
+extends SceneTree
+
+func _init() -> void:
+    # Validate synthesis metadata only. Reading AudioStreamWAV.data from a headless
+    # Godot process has proven disproportionately slow in CI and does not add
+    # meaningful coverage over construction + duration/profile checks.
+    var profiles := ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]
+    var durations := []
+    for profile in profiles:
+        var stream := DZCombatAudio.shot_stream(profile)
+        assert(stream != null)
+        assert(stream.mix_rate == 22050)
+        assert(stream.format == AudioStreamWAV.FORMAT_16_BITS)
+        assert(not stream.stereo)
+        assert(stream.get_length() > 0.04)
+        assert(stream.get_length() < 0.12)
+        durations.append(stream.get_length())
+
+    var hit := DZCombatAudio.impact_stream(false, false, false)
+    var critical := DZCombatAudio.impact_stream(true, false, false)
+    var killed := DZCombatAudio.impact_stream(false, true, false)
+    var boss_hit := DZCombatAudio.impact_stream(false, false, true)
+    var boss := DZCombatAudio.boss_stinger()
+
+    for stream in [hit, critical, killed, boss_hit, boss]:
+        assert(stream != null)
+        assert(stream.mix_rate == 22050)
+        assert(stream.format == AudioStreamWAV.FORMAT_16_BITS)
+        assert(not stream.stereo)
+
+    assert(hit.get_length() < critical.get_length())
+    assert(critical.get_length() < killed.get_length())
+    assert(killed.get_length() < boss_hit.get_length())
+    assert(boss_hit.get_length() < boss.get_length())
+    assert(durations[1] > durations[0])
+    print("combat audio feedback test passed")
     quit()
 ````
 

@@ -1,14 +1,14 @@
 # Change impact
 
-Base: d2baea3a7896ca8a41e674ef5f8b9fb5367c512a
-Head: 2d9cedb85278c1ba10ab1ea6fd715d1f57c51833
+Base: a4afa992bbe9bee6e5d7ccbed44c0b615cb0621d
+Head: e040a154d446d1e6a094170152093b7f8069cbdc
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/Enemy.gd
-- M godot/scripts/ImpactFx.gd
+- A godot/scripts/CombatAudio.gd
 - M godot/scripts/Main.gd
-- A godot/tests/enemy_silhouette_identity_test.gd
+- M godot/scripts/Player.gd
+- A godot/tests/combat_audio_feedback_test.gd
 
 ## Affected areas
 - .github
