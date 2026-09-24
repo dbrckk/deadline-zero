@@ -29,6 +29,7 @@ var special_clock := 1.8
 var regeneration_clock := 1.0
 var pending_special := ""
 var spawn_secondary_fx := true
+var combat_enabled := true
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -82,6 +83,9 @@ func _ready() -> void:
     _build_visual()
 
 func _physics_process(delta: float) -> void:
+    if not combat_enabled:
+        velocity = Vector3.ZERO
+        return
     if dead or target == null or not is_instance_valid(target):
         return
     attack_cooldown = max(0.0, attack_cooldown - delta)
@@ -143,6 +147,17 @@ func _physics_process(delta: float) -> void:
     if distance < 0.85 and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if enabled:
+        return
+    velocity = Vector3.ZERO
+    attack_windup = 0.0
+    pending_special = ""
+    if telegraph_visual != null and is_instance_valid(telegraph_visual):
+        telegraph_visual.queue_free()
+    telegraph_visual = null
 
 func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> void:
     attack_windup = duration
