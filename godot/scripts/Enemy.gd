@@ -22,6 +22,7 @@ var attack_target_position := Vector3.ZERO
 var elite_burst_clock := 2.4
 var boss_slam_clock := 3.6
 var telegraph_visual: Node3D
+var telegraph_material: StandardMaterial3D
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -125,18 +126,21 @@ func _show_telegraph(radius: float, duration: float) -> void:
     mesh.height = 0.018
     telegraph_visual.mesh = mesh
     telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.025, 0.0)
-    var mat := StandardMaterial3D.new()
-    mat.albedo_color = Color(1.0, 0.16, 0.04, 0.20)
-    mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    mat.emission_enabled = true
-    mat.emission = Color(1.0, 0.08, 0.01)
-    mat.emission_energy_multiplier = 1.5
-    telegraph_visual.material_override = mat
+    telegraph_material = StandardMaterial3D.new()
+    telegraph_material.albedo_color = Color(1.0, 0.16, 0.04, 0.16)
+    telegraph_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    telegraph_material.emission_enabled = true
+    telegraph_material.emission = Color(1.0, 0.08, 0.01)
+    telegraph_material.emission_energy_multiplier = 1.4
+    telegraph_visual.material_override = telegraph_material
     get_tree().current_scene.add_child(telegraph_visual)
     var tween := telegraph_visual.create_tween()
+    tween.set_parallel(true)
     telegraph_visual.scale = Vector3(0.42, 1.0, 0.42)
-    tween.tween_property(telegraph_visual, "scale", Vector3.ONE, duration)
-    tween.tween_callback(telegraph_visual.queue_free)
+    tween.tween_property(telegraph_visual, "scale", Vector3.ONE, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(telegraph_material, "emission_energy_multiplier", 5.2 if kind == "boss" else 4.2, duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.08, 0.015, 0.48 if kind == "boss" else 0.40), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.chain().tween_callback(telegraph_visual.queue_free)
 
 func _spawn_attack_impact(at: Vector3, radius: float) -> void:
     var fx := ImpactFx.new()
