@@ -21,6 +21,10 @@ var boss_phase_label: Label
 var boss_hp_max := 1.0
 var game_over_panel: PanelContainer
 var game_over_summary: Label
+var low_health_panel: PanelContainer
+var low_health_label: Label
+var threat_panel: PanelContainer
+var threat_label: Label
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -29,6 +33,10 @@ func _ready() -> void:
 func set_health(value: float, maximum: float) -> void:
     hp_bar.max_value = max(1.0, maximum)
     hp_bar.value = value
+    var ratio: float = clampf(value / max(1.0, maximum), 0.0, 1.0)
+    low_health_panel.visible = value > 0.0 and ratio <= 0.30
+    if low_health_panel.visible:
+        low_health_label.text = "CRITICAL INTEGRITY  •  %d%%" % int(round(ratio * 100.0))
 
 func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float) -> void:
     xp_bar.max_value = max(1, next_xp)
@@ -58,6 +66,31 @@ func set_boss_health(value: float, maximum: float) -> void:
 func hide_boss() -> void:
     boss_panel.visible = false
 
+func set_offscreen_threat(direction: Vector2, threat_kind: String, distance: float) -> void:
+    if direction.length_squared() < 0.001:
+        hide_offscreen_threat()
+        return
+    var arrow := _direction_arrow(direction.normalized())
+    threat_label.text = "%s  %s  %dm" % [arrow, threat_kind.to_upper(), int(round(distance))]
+    threat_panel.visible = true
+
+func hide_offscreen_threat() -> void:
+    threat_panel.visible = false
+
+func _direction_arrow(direction: Vector2) -> String:
+    var angle := atan2(direction.y, direction.x)
+    var octant := int(round(angle / (PI / 4.0)))
+    match octant:
+        0: return "→"
+        1: return "↘"
+        2: return "↓"
+        3: return "↙"
+        4, -4: return "←"
+        -3: return "↖"
+        -2: return "↑"
+        -1: return "↗"
+        _: return "→"
+
 func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
         var item: Dictionary = items[i] if i < items.size() else {}
@@ -79,6 +112,8 @@ func show_game_over(kills: int, level: int, elapsed: float) -> void:
     var minutes := int(elapsed) / 60
     var seconds := int(elapsed) % 60
     game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]
+    low_health_panel.visible = false
+    threat_panel.visible = false
     game_over_panel.visible = true
 
 func _build() -> void:
@@ -114,6 +149,62 @@ func _build() -> void:
     wave_label.position = Vector2(-220, 24)
     wave_label.size = Vector2(440, 42)
     root.add_child(wave_label)
+
+    low_health_panel = PanelContainer.new()
+    low_health_panel.name = "LowHealthPanel"
+    low_health_panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+    low_health_panel.position = Vector2(-210, -92)
+    low_health_panel.size = Vector2(420, 52)
+    low_health_panel.visible = false
+    low_health_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(low_health_panel)
+
+    low_health_label = Label.new()
+    low_health_label.name = "LowHealthLabel"
+    low_health_label.text = "CRITICAL INTEGRITY"
+    low_health_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    low_health_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    low_health_label.add_theme_font_size_override("font_size", 19)
+    low_health_label.modulate = Color(1.0, 0.58, 0.44)
+    low_health_panel.add_child(low_health_label)
+
+    var low_health_style := StyleBoxFlat.new()
+    low_health_style.bg_color = Color(0.16, 0.015, 0.01, 0.88)
+    low_health_style.border_color = Color(1.0, 0.18, 0.08, 0.92)
+    low_health_style.set_border_width_all(2)
+    low_health_style.corner_radius_top_left = 8
+    low_health_style.corner_radius_top_right = 8
+    low_health_style.corner_radius_bottom_left = 8
+    low_health_style.corner_radius_bottom_right = 8
+    low_health_panel.add_theme_stylebox_override("panel", low_health_style)
+
+    threat_panel = PanelContainer.new()
+    threat_panel.name = "ThreatPanel"
+    threat_panel.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+    threat_panel.position = Vector2(-210, -34)
+    threat_panel.size = Vector2(180, 68)
+    threat_panel.visible = false
+    threat_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(threat_panel)
+
+    threat_label = Label.new()
+    threat_label.name = "ThreatLabel"
+    threat_label.text = "→  ELITE  18m"
+    threat_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    threat_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    threat_label.add_theme_font_size_override("font_size", 18)
+    threat_label.modulate = Color(1.0, 0.56, 0.22)
+    threat_panel.add_child(threat_label)
+
+    var threat_style := StyleBoxFlat.new()
+    threat_style.bg_color = Color(0.06, 0.025, 0.01, 0.88)
+    threat_style.border_color = Color(1.0, 0.42, 0.08, 0.86)
+    threat_style.set_border_width_all(2)
+    threat_style.corner_radius_top_left = 8
+    threat_style.corner_radius_top_right = 8
+    threat_style.corner_radius_bottom_left = 8
+    threat_style.corner_radius_bottom_right = 8
+    threat_panel.add_theme_stylebox_override("panel", threat_style)
 
     game_over_panel = PanelContainer.new()
     game_over_panel.set_anchors_preset(Control.PRESET_CENTER)
