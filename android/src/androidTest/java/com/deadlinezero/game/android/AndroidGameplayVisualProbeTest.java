@@ -1012,7 +1012,7 @@ public final class AndroidGameplayVisualProbeTest {
         File output = new File(root, name);
 
         long size = 0L;
-        for (int attempt = 1; attempt <= 5; attempt++) {
+        for (int attempt = 1; attempt <= 8; attempt++) {
             Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
             assertNotNull("Android UiAutomation did not return a screenshot", bitmap);
             try (FileOutputStream stream = new FileOutputStream(output, false)) {
@@ -1026,7 +1026,7 @@ public final class AndroidGameplayVisualProbeTest {
 
             // Android Emulator occasionally exposes a stale/broken color buffer for a single frame.
             // Retry the capture, but keep the exact same semantic size gate for the final artifact.
-            if (attempt < 5) Thread.sleep(650L);
+            if (attempt < 8) Thread.sleep(900L);
         }
 
         assertTrue("gameplay QA screenshot is unexpectedly small after retries: " + size, size > 10_000L);
