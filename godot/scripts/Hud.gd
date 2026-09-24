@@ -18,6 +18,8 @@ var boss_name_label: Label
 var boss_hp_bar: ProgressBar
 var boss_phase_label: Label
 var boss_hp_max := 1.0
+var low_health_panel: PanelContainer
+var low_health_label: Label
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -26,6 +28,10 @@ func _ready() -> void:
 func set_health(value: float, maximum: float) -> void:
     hp_bar.max_value = max(1.0, maximum)
     hp_bar.value = value
+    var ratio: float = clampf(value / max(1.0, maximum), 0.0, 1.0)
+    low_health_panel.visible = value > 0.0 and ratio <= 0.30
+    if low_health_panel.visible:
+        low_health_label.text = "CRITICAL INTEGRITY  •  %d%%" % int(round(ratio * 100.0))
 
 func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float) -> void:
     xp_bar.max_value = max(1, next_xp)
@@ -105,6 +111,34 @@ func _build() -> void:
     wave_label.position = Vector2(-220, 24)
     wave_label.size = Vector2(440, 42)
     root.add_child(wave_label)
+
+    low_health_panel = PanelContainer.new()
+    low_health_panel.name = "LowHealthPanel"
+    low_health_panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+    low_health_panel.position = Vector2(-210, -92)
+    low_health_panel.size = Vector2(420, 52)
+    low_health_panel.visible = false
+    low_health_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(low_health_panel)
+
+    low_health_label = Label.new()
+    low_health_label.name = "LowHealthLabel"
+    low_health_label.text = "CRITICAL INTEGRITY"
+    low_health_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    low_health_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    low_health_label.add_theme_font_size_override("font_size", 19)
+    low_health_label.modulate = Color(1.0, 0.58, 0.44)
+    low_health_panel.add_child(low_health_label)
+
+    var low_health_style := StyleBoxFlat.new()
+    low_health_style.bg_color = Color(0.16, 0.015, 0.01, 0.88)
+    low_health_style.border_color = Color(1.0, 0.18, 0.08, 0.92)
+    low_health_style.set_border_width_all(2)
+    low_health_style.corner_radius_top_left = 8
+    low_health_style.corner_radius_top_right = 8
+    low_health_style.corner_radius_bottom_left = 8
+    low_health_style.corner_radius_bottom_right = 8
+    low_health_panel.add_theme_stylebox_override("panel", low_health_style)
 
     boss_panel = PanelContainer.new()
     boss_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
