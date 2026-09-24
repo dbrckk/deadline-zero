@@ -222,7 +222,7 @@ func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
     candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
         return primary.global_position.distance_squared_to(a.global_position) < primary.global_position.distance_squared_to(b.global_position)
     )
-    var count := min(chain_targets, candidates.size())
+    var count: int = mini(chain_targets, candidates.size())
     for i in range(count):
         var chained := candidates[i]
         var falloff := 0.56 if i == 0 else 0.38
