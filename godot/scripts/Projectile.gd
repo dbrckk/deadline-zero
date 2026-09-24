@@ -30,6 +30,18 @@ func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float
     visual_profile = profile
     _apply_profile(profile)
 
+static func protocol_pierce_budget(profile: String) -> int:
+    return 2 if profile == "rail" else 0
+
+static func protocol_splash_radius(profile: String) -> float:
+    return 1.85 if profile == "inferno" else 0.0
+
+static func protocol_chain_targets(profile: String) -> int:
+    return 2 if profile == "arc" else 0
+
+static func protocol_slow(profile: String) -> Vector2:
+    return Vector2(0.62, 1.6) if profile == "cryo" else Vector2(1.0, 0.0)
+
 func _apply_profile(profile: String) -> void:
     match profile:
         "scatter":
@@ -42,26 +54,27 @@ func _apply_profile(profile: String) -> void:
             trail_width = 0.035
             core_radius = 0.075
             impact_scale = 1.34
-            pierce_remaining = 2
+            pierce_remaining = protocol_pierce_budget(profile)
         "inferno":
             trail_length = 0.72
             trail_width = 0.075
             core_radius = 0.12
             impact_scale = 1.22
-            splash_radius = 1.85
+            splash_radius = protocol_splash_radius(profile)
         "cryo":
             trail_length = 0.82
             trail_width = 0.07
             core_radius = 0.12
             impact_scale = 1.24
-            slow_multiplier = 0.62
-            slow_duration = 1.6
+            var slow := protocol_slow(profile)
+            slow_multiplier = slow.x
+            slow_duration = slow.y
         "arc":
             trail_length = 0.94
             trail_width = 0.045
             core_radius = 0.09
             impact_scale = 1.20
-            chain_targets = 2
+            chain_targets = protocol_chain_targets(profile)
         _:
             trail_length = 0.55
             trail_width = 0.055
