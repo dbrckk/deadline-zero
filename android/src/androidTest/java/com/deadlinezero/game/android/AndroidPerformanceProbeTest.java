@@ -40,7 +40,7 @@ public final class AndroidPerformanceProbeTest {
                 injectLoad((GameScreen) game.getScreen());
             });
 
-            Thread.sleep(2600L);
+            waitForTelemetry(activity, 8000L);
 
             AtomicReference<PerformanceTelemetry.Snapshot> snapshotRef = new AtomicReference<>();
             AtomicReference<Integer> targetRef = new AtomicReference<>();
@@ -100,7 +100,7 @@ public final class AndroidPerformanceProbeTest {
                 injectStressLoad((GameScreen) game.getScreen());
             });
 
-            Thread.sleep(3200L);
+            waitForTelemetry(activity, 10000L);
 
             AtomicReference<PerformanceTelemetry.Snapshot> snapshotRef = new AtomicReference<>();
             AtomicReference<Integer> targetRef = new AtomicReference<>();
@@ -267,6 +267,22 @@ public final class AndroidPerformanceProbeTest {
         } catch (ReflectiveOperationException exception) {
             throw new AssertionError("unable to inject deterministic stress load", exception);
         }
+    }
+
+    private static void waitForTelemetry(AndroidLauncher activity, long timeoutMs) throws Exception {
+        long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMs);
+        AtomicReference<PerformanceTelemetry.Snapshot> snapshotRef = new AtomicReference<>();
+        do {
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                if (game.getScreen() instanceof GameScreen) {
+                    snapshotRef.set(((GameScreen) game.getScreen()).performanceSnapshot());
+                }
+            });
+            PerformanceTelemetry.Snapshot snapshot = snapshotRef.get();
+            if (snapshot != null && snapshot.averageFps() > 5f) return;
+            Thread.sleep(300L);
+        } while (System.nanoTime() < deadline);
     }
 
     private static AndroidLauncher activity(ActivityScenario<AndroidLauncher> scenario) {
