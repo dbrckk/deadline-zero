@@ -22,28 +22,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-24T12:44:33Z
+Generated: 2026-09-24T14:15:14Z
 
 ### Git
 - Branch: `main`
-- Head: `e040a154d446`
-- Commit date: 2026-09-24T14:44:16+02:00
-- Commit: Add semantic combat audio feedback to native 3D (#313)
-- Tracked files: 889
+- Head: `cb03953cf4a2`
+- Commit date: 2026-09-24T16:15:01+02:00
+- Commit: Add native 3D run-end summary and redeploy flow (#316)
+- Tracked files: 890
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/CombatAudio.gd`
+- `godot/scripts/Hud.gd`
 - `godot/scripts/Main.gd`
+- `godot/tests/run_end_ux_test.gd`
+- `godot/scripts/CombatAudio.gd`
 - `godot/scripts/Player.gd`
 - `godot/tests/combat_audio_feedback_test.gd`
 - `godot/scripts/Enemy.gd`
 - `godot/scripts/ImpactFx.gd`
 - `godot/tests/enemy_silhouette_identity_test.gd`
-- `godot/scripts/Hud.gd`
 - `godot/tests/boss_hud_identity_test.gd`
 - `godot/tests/boss_reveal_camera_test.gd`
-- `godot/tests/upgrade_presentation_test.gd`
 
 ### Project signals
 - `build.gradle`

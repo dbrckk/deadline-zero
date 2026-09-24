@@ -57,6 +57,7 @@ tests/
   combat_feel_test.gd
   enemy_archetype_combat_test.gd
   enemy_silhouette_identity_test.gd
+  run_end_ux_test.gd
   smoke_test.gd
   upgrade_presentation_test.gd
   weapon_presentation_test.gd
@@ -567,6 +568,7 @@ class_name DZHud
 extends CanvasLayer
 
 signal upgrade_chosen(index: int)
+signal restart_requested
 
 var hp_bar: ProgressBar
 var xp_bar: ProgressBar
@@ -583,6 +585,8 @@ var boss_name_label: Label
 var boss_hp_bar: ProgressBar
 var boss_phase_label: Label
 var boss_hp_max := 1.0
+var game_over_panel: PanelContainer
+var game_over_summary: Label
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -634,8 +638,14 @@ func show_upgrade(items: Array) -> void:
 func hide_upgrade() -> void:
     upgrade_panel.visible = false
 
-func show_game_over() -> void:
+func show_game_over(kills: int, level: int, elapsed: float) -> void:
     wave_label.text = "RUN TERMINATED"
+    upgrade_panel.visible = false
+    boss_panel.visible = false
+    var minutes := int(elapsed) / 60
+    var seconds := int(elapsed) % 60
+    game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]
+    game_over_panel.visible = true
 
 func _build() -> void:
     var root := Control.new()
@@ -670,6 +680,52 @@ func _build() -> void:
     wave_label.position = Vector2(-220, 24)
     wave_label.size = Vector2(440, 42)
     root.add_child(wave_label)
+
+    game_over_panel = PanelContainer.new()
+    game_over_panel.set_anchors_preset(Control.PRESET_CENTER)
+    game_over_panel.position = Vector2(-270, -120)
+    game_over_panel.size = Vector2(540, 240)
+    game_over_panel.visible = false
+    root.add_child(game_over_panel)
+
+    var game_over_box := VBoxContainer.new()
+    game_over_box.alignment = BoxContainer.ALIGNMENT_CENTER
+    game_over_box.add_theme_constant_override("separation", 16)
+    game_over_panel.add_child(game_over_box)
+
+    var game_over_title := Label.new()
+    game_over_title.text = "SIGNAL LOST"
+    game_over_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    game_over_title.add_theme_font_size_override("font_size", 34)
+    game_over_title.modulate = Color(1.0, 0.34, 0.20)
+    game_over_box.add_child(game_over_title)
+
+    game_over_summary = Label.new()
+    game_over_summary.text = "LEVEL 1   •   KILLS 0   •   00:00"
+    game_over_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    game_over_summary.add_theme_font_size_override("font_size", 18)
+    game_over_summary.modulate = Color(0.82, 0.88, 0.92)
+    game_over_box.add_child(game_over_summary)
+
+    var restart_button := Button.new()
+    restart_button.name = "RestartButton"
+    restart_button.text = "REDEPLOY"
+    restart_button.custom_minimum_size = Vector2(260, 58)
+    restart_button.add_theme_font_size_override("font_size", 21)
+    restart_button.pressed.connect(func() -> void:
+        restart_requested.emit()
+    )
+    game_over_box.add_child(restart_button)
+
+    var game_over_style := StyleBoxFlat.new()
+    game_over_style.bg_color = Color(0.018, 0.026, 0.034, 0.97)
+    game_over_style.border_color = Color(1.0, 0.22, 0.10, 0.78)
+    game_over_style.set_border_width_all(2)
+    game_over_style.corner_radius_top_left = 10
+    game_over_style.corner_radius_top_right = 10
+    game_over_style.corner_radius_bottom_left = 10
+    game_over_style.corner_radius_bottom_right = 10
+    game_over_panel.add_theme_stylebox_override("panel", game_over_style)
 
     boss_panel = PanelContainer.new()
     boss_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
@@ -927,6 +983,7 @@ func _ready() -> void:
     hud = DZHud.new()
     add_child(hud)
     hud.upgrade_chosen.connect(_on_upgrade_chosen)
+    hud.restart_requested.connect(_on_restart_requested)
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     _build_combat_audio()
@@ -1085,7 +1142,12 @@ func _on_player_died() -> void:
     Engine.time_scale = 1.0
     game_over = true
     if hud:
-        hud.show_game_over()
+        hud.show_game_over(kills, level, elapsed)
+
+func _on_restart_requested() -> void:
+    Engine.time_scale = 1.0
+    get_tree().paused = false
+    get_tree().reload_current_scene()
 
 func _wave_name() -> String:
     if boss_banner_timer > 0.0:
@@ -1841,6 +1903,66 @@ func _initialize() -> void:
         enemy.queue_free()
 
     print("Deadline Zero enemy silhouette identity: OK")
+    quit(0)
+```
+
+## File: tests/run_end_ux_test.gd
+```
+extends SceneTree
+
+const HUD_SCRIPT := preload("res://scripts/Hud.gd")
+
+func _initialize() -> void:
+    var root := Node.new()
+    get_root().add_child(root)
+
+    var hud := HUD_SCRIPT.new()
+    root.add_child(hud)
+    await process_frame
+
+    if hud.game_over_panel == null:
+        push_error("Game-over panel was not created")
+        quit(1)
+        return
+    if hud.game_over_panel.visible:
+        push_error("Game-over panel should start hidden")
+        quit(1)
+        return
+
+    hud.show_game_over(37, 8, 154.0)
+
+    if not hud.game_over_panel.visible:
+        push_error("Game-over panel did not become visible")
+        quit(1)
+        return
+    if hud.game_over_summary == null:
+        push_error("Game-over summary label is missing")
+        quit(1)
+        return
+    if hud.game_over_summary.text != "LEVEL 8   •   KILLS 37   •   02:34":
+        push_error("Unexpected game-over summary: %s" % hud.game_over_summary.text)
+        quit(1)
+        return
+
+    var restart_button := hud.game_over_panel.find_child("RestartButton", true, false) as Button
+    if restart_button == null:
+        push_error("Redeploy button is missing")
+        quit(1)
+        return
+
+    var restart_state := {"signaled": false}
+    hud.restart_requested.connect(func() -> void:
+        restart_state["signaled"] = true
+    )
+    restart_button.pressed.emit()
+    await process_frame
+
+    if not bool(restart_state["signaled"]):
+        push_error("Redeploy button did not emit restart_requested")
+        quit(1)
+        return
+
+    print("Deadline Zero run-end UX: OK")
     quit(0)
 ```
 

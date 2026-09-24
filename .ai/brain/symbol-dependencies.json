@@ -5,64 +5,19 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "DZCombatAudio": {
+    "DZHud": {
       "source": {
-        "file": "godot/scripts/CombatAudio.gd",
+        "file": "godot/scripts/Hud.gd",
         "start": 1,
         "end": 121
       },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "_ready": {
-      "source": {
-        "file": "godot/scripts/Main.gd",
-        "start": 40,
-        "end": 160
-      },
       "symbol_dependencies": [
         {
-          "symbol": "DZEnemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZHud",
+          "symbol": "_build",
           "definitions": [
             {
               "file": "godot/scripts/Hud.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZPlayer",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_combat_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 304,
+              "line": 83,
               "kind": "function",
               "language": "gdscript"
             }
@@ -70,11 +25,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_build_world",
+          "symbol": "_ready",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 231,
+              "file": "godot/scripts/Hud.gd",
+              "line": 24,
               "kind": "function",
               "language": "gdscript"
             }
@@ -82,11 +37,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_enemy_died",
+          "symbol": "_style_upgrade_card",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 175,
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
               "kind": "function",
               "language": "gdscript"
             }
@@ -94,11 +49,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_enemy_impact",
+          "symbol": "_upgrade_glyph",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 170,
+              "file": "godot/scripts/Hud.gd",
+              "line": 268,
               "kind": "function",
               "language": "gdscript"
             }
@@ -106,11 +61,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_health_changed",
+          "symbol": "hide_boss",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 210,
+              "file": "godot/scripts/Hud.gd",
+              "line": 57,
               "kind": "function",
               "language": "gdscript"
             }
@@ -118,11 +73,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_player_died",
+          "symbol": "hide_upgrade",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 214,
+              "file": "godot/scripts/Hud.gd",
+              "line": 71,
               "kind": "function",
               "language": "gdscript"
             }
@@ -130,11 +85,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_upgrade_chosen",
+          "symbol": "set_boss_health",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 202,
+              "file": "godot/scripts/Hud.gd",
+              "line": 48,
               "kind": "function",
               "language": "gdscript"
             }
@@ -142,11 +97,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_physics_process",
+          "symbol": "set_health",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 99,
+              "file": "godot/scripts/Hud.gd",
+              "line": 28,
               "kind": "function",
               "language": "gdscript"
             }
@@ -154,11 +109,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_process",
+          "symbol": "set_progress",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 67,
+              "file": "godot/scripts/Hud.gd",
+              "line": 32,
               "kind": "function",
               "language": "gdscript"
             }
@@ -166,11 +121,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_spawn_enemy",
+          "symbol": "set_wave",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 135,
+              "file": "godot/scripts/Hud.gd",
+              "line": 37,
               "kind": "function",
               "language": "gdscript"
             }
@@ -178,11 +133,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_unhandled_input",
+          "symbol": "show_boss",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 118,
+              "file": "godot/scripts/Hud.gd",
+              "line": 40,
               "kind": "function",
               "language": "gdscript"
             }
@@ -190,11 +145,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_wave_name",
+          "symbol": "show_game_over",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 220,
+              "file": "godot/scripts/Hud.gd",
+              "line": 74,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 60,
               "kind": "function",
               "language": "gdscript"
             }
@@ -202,13 +169,1097 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 15
+      "dependency_count": 13
+    },
+    "_ready": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 24,
+        "end": 144
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 83,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 268,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 57,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 71,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 48,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 28,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_progress",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 32,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_wave",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 37,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 40,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 74,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 60,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 12
+    },
+    "set_health": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 28,
+        "end": 148
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 83,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 268,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 57,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 71,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 48,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_progress",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 32,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_wave",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 37,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 40,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 74,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 60,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 11
+    },
+    "set_progress": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 32,
+        "end": 152
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 83,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 268,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 57,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 71,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 48,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_wave",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 37,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 40,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 74,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 60,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 10
+    },
+    "set_wave": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 37,
+        "end": 157
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 83,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 268,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 57,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 71,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 48,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 40,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 74,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 60,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "show_boss": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 40,
+        "end": 160
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 83,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 268,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 57,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 71,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 48,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 74,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 60,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "set_boss_health": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 48,
+        "end": 168
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 83,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 268,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 57,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 71,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 74,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 60,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "hide_boss": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 57,
+        "end": 177
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 83,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 268,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 71,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 74,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 60,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "show_upgrade": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 60,
+        "end": 180
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 83,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 268,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 71,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 74,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "hide_upgrade": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 71,
+        "end": 191
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 83,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 74,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "show_game_over": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 74,
+        "end": 194
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 83,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "_build": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 83,
+        "end": 203
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_upgrade_glyph": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 268,
+        "end": 388
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_on_upgrade_pressed",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 306,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_color",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 278,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "_upgrade_color": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 278,
+        "end": 398
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_on_upgrade_pressed",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 306,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 286,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "_style_upgrade_card": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 286,
+        "end": 406
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_on_upgrade_pressed",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 306,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_color",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 278,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "_on_upgrade_pressed": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 306,
+        "end": 426
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
     },
     "_process": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 67,
-        "end": 187
+        "start": 68,
+        "end": 188
       },
       "symbol_dependencies": [
         {
@@ -252,7 +1303,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 166,
+              "line": 167,
               "kind": "function",
               "language": "gdscript"
             }
@@ -264,7 +1315,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 175,
+              "line": 176,
               "kind": "function",
               "language": "gdscript"
             }
@@ -276,7 +1327,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 170,
+              "line": 171,
               "kind": "function",
               "language": "gdscript"
             }
@@ -288,7 +1339,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 184,
+              "line": 185,
               "kind": "function",
               "language": "gdscript"
             }
@@ -300,7 +1351,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 99,
+              "line": 100,
               "kind": "function",
               "language": "gdscript"
             }
@@ -312,7 +1363,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 326,
+              "line": 332,
               "kind": "function",
               "language": "gdscript"
             }
@@ -324,7 +1375,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 316,
+              "line": 322,
               "kind": "function",
               "language": "gdscript"
             }
@@ -336,7 +1387,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 135,
+              "line": 136,
               "kind": "function",
               "language": "gdscript"
             }
@@ -348,7 +1399,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 118,
+              "line": 119,
               "kind": "function",
               "language": "gdscript"
             }
@@ -360,7 +1411,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 220,
+              "line": 226,
               "kind": "function",
               "language": "gdscript"
             }
@@ -373,8 +1424,8 @@
     "_physics_process": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 99,
-        "end": 219
+        "start": 100,
+        "end": 220
       },
       "symbol_dependencies": [
         {
@@ -418,7 +1469,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 193,
+              "line": 194,
               "kind": "function",
               "language": "gdscript"
             }
@@ -430,7 +1481,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 166,
+              "line": 167,
               "kind": "function",
               "language": "gdscript"
             }
@@ -442,7 +1493,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 175,
+              "line": 176,
               "kind": "function",
               "language": "gdscript"
             }
@@ -454,7 +1505,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 170,
+              "line": 171,
               "kind": "function",
               "language": "gdscript"
             }
@@ -466,7 +1517,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 210,
+              "line": 211,
               "kind": "function",
               "language": "gdscript"
             }
@@ -478,7 +1529,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 214,
+              "line": 215,
               "kind": "function",
               "language": "gdscript"
             }
@@ -490,7 +1541,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 202,
+              "line": 203,
               "kind": "function",
               "language": "gdscript"
             }
@@ -502,7 +1553,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 184,
+              "line": 185,
               "kind": "function",
               "language": "gdscript"
             }
@@ -514,7 +1565,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 326,
+              "line": 332,
               "kind": "function",
               "language": "gdscript"
             }
@@ -526,7 +1577,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 316,
+              "line": 322,
               "kind": "function",
               "language": "gdscript"
             }
@@ -538,7 +1589,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 135,
+              "line": 136,
               "kind": "function",
               "language": "gdscript"
             }
@@ -550,7 +1601,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 118,
+              "line": 119,
               "kind": "function",
               "language": "gdscript"
             }
@@ -562,7 +1613,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 220,
+              "line": 226,
               "kind": "function",
               "language": "gdscript"
             }
@@ -575,8 +1626,8 @@
     "_unhandled_input": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 118,
-        "end": 238
+        "start": 119,
+        "end": 239
       },
       "symbol_dependencies": [
         {
@@ -620,7 +1671,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 231,
+              "line": 237,
               "kind": "function",
               "language": "gdscript"
             }
@@ -632,7 +1683,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 193,
+              "line": 194,
               "kind": "function",
               "language": "gdscript"
             }
@@ -644,7 +1695,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 166,
+              "line": 167,
               "kind": "function",
               "language": "gdscript"
             }
@@ -656,7 +1707,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 175,
+              "line": 176,
               "kind": "function",
               "language": "gdscript"
             }
@@ -668,7 +1719,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 170,
+              "line": 171,
               "kind": "function",
               "language": "gdscript"
             }
@@ -680,7 +1731,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 210,
+              "line": 211,
               "kind": "function",
               "language": "gdscript"
             }
@@ -692,7 +1743,19 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 214,
+              "line": 215,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_restart_requested",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 221,
               "kind": "function",
               "language": "gdscript"
             }
@@ -704,7 +1767,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 202,
+              "line": 203,
               "kind": "function",
               "language": "gdscript"
             }
@@ -716,7 +1779,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 184,
+              "line": 185,
               "kind": "function",
               "language": "gdscript"
             }
@@ -728,7 +1791,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 326,
+              "line": 332,
               "kind": "function",
               "language": "gdscript"
             }
@@ -740,7 +1803,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 316,
+              "line": 322,
               "kind": "function",
               "language": "gdscript"
             }
@@ -752,7 +1815,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 135,
+              "line": 136,
               "kind": "function",
               "language": "gdscript"
             }
@@ -764,7 +1827,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 220,
+              "line": 226,
               "kind": "function",
               "language": "gdscript"
             }
@@ -772,13 +1835,13 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 16
+      "dependency_count": 17
     },
     "_spawn_enemy": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 135,
-        "end": 255
+        "start": 136,
+        "end": 256
       },
       "symbol_dependencies": [
         {
@@ -822,7 +1885,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 231,
+              "line": 237,
               "kind": "function",
               "language": "gdscript"
             }
@@ -834,7 +1897,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 193,
+              "line": 194,
               "kind": "function",
               "language": "gdscript"
             }
@@ -846,7 +1909,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 166,
+              "line": 167,
               "kind": "function",
               "language": "gdscript"
             }
@@ -858,7 +1921,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 175,
+              "line": 176,
               "kind": "function",
               "language": "gdscript"
             }
@@ -870,7 +1933,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 170,
+              "line": 171,
               "kind": "function",
               "language": "gdscript"
             }
@@ -882,7 +1945,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 210,
+              "line": 211,
               "kind": "function",
               "language": "gdscript"
             }
@@ -894,7 +1957,19 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 214,
+              "line": 215,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_restart_requested",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 221,
               "kind": "function",
               "language": "gdscript"
             }
@@ -906,7 +1981,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 202,
+              "line": 203,
               "kind": "function",
               "language": "gdscript"
             }
@@ -918,7 +1993,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 184,
+              "line": 185,
               "kind": "function",
               "language": "gdscript"
             }
@@ -930,7 +2005,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 326,
+              "line": 332,
               "kind": "function",
               "language": "gdscript"
             }
@@ -942,7 +2017,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 316,
+              "line": 322,
               "kind": "function",
               "language": "gdscript"
             }
@@ -954,7 +2029,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 220,
+              "line": 226,
               "kind": "function",
               "language": "gdscript"
             }
@@ -962,13 +2037,13 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 15
+      "dependency_count": 16
     },
     "_on_boss_health_changed": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 166,
-        "end": 286
+        "start": 167,
+        "end": 287
       },
       "symbol_dependencies": [
         {
@@ -1012,7 +2087,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 231,
+              "line": 237,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1024,7 +2099,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 193,
+              "line": 194,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1036,7 +2111,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 175,
+              "line": 176,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1048,7 +2123,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 170,
+              "line": 171,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1060,7 +2135,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 210,
+              "line": 211,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1072,7 +2147,19 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 214,
+              "line": 215,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_restart_requested",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 221,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1084,7 +2171,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 202,
+              "line": 203,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1096,7 +2183,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 184,
+              "line": 185,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1108,7 +2195,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 316,
+              "line": 322,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1120,7 +2207,173 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 220,
+              "line": 226,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 14
+    },
+    "_on_enemy_impact": {
+      "source": {
+        "file": "godot/scripts/Main.gd",
+        "start": 171,
+        "end": 291
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DZCombatFeel",
+          "definitions": [
+            {
+              "file": "godot/scripts/CombatFeel.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DZXpOrb",
+          "definitions": [
+            {
+              "file": "godot/scripts/XpOrb.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_build_world",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 237,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_offer_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 194,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_enemy_died",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 176,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_health_changed",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 211,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_player_died",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 215,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_restart_requested",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 221,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_upgrade_chosen",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 203,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_xp_collected",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 185,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_impact_audio",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 322,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_wave_name",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 226,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1130,165 +2383,11 @@
       ],
       "dependency_count": 13
     },
-    "_on_enemy_impact": {
-      "source": {
-        "file": "godot/scripts/Main.gd",
-        "start": 170,
-        "end": 290
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZCombatFeel",
-          "definitions": [
-            {
-              "file": "godot/scripts/CombatFeel.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZXpOrb",
-          "definitions": [
-            {
-              "file": "godot/scripts/XpOrb.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_world",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 231,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_offer_upgrade",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 193,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_on_enemy_died",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 175,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_on_health_changed",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 210,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_on_player_died",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 214,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_on_upgrade_chosen",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 202,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_on_xp_collected",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 184,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_impact_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 316,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_wave_name",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 220,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
     "_on_enemy_died": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 175,
-        "end": 295
+        "start": 176,
+        "end": 296
       },
       "symbol_dependencies": [
         {
@@ -1320,7 +2419,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 231,
+              "line": 237,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1332,7 +2431,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 193,
+              "line": 194,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1344,7 +2443,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 210,
+              "line": 211,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1356,7 +2455,19 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 214,
+              "line": 215,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_restart_requested",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 221,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1368,7 +2479,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 202,
+              "line": 203,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1380,7 +2491,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 184,
+              "line": 185,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1392,7 +2503,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 220,
+              "line": 226,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1400,13 +2511,13 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 9
+      "dependency_count": 10
     },
     "_on_xp_collected": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 184,
-        "end": 304
+        "start": 185,
+        "end": 305
       },
       "symbol_dependencies": [
         {
@@ -1426,7 +2537,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 231,
+              "line": 237,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1438,7 +2549,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 193,
+              "line": 194,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1450,7 +2561,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 210,
+              "line": 211,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1462,7 +2573,19 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 214,
+              "line": 215,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_restart_requested",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 221,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1474,7 +2597,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 202,
+              "line": 203,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1486,207 +2609,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 220,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "_offer_upgrade": {
-      "source": {
-        "file": "godot/scripts/Main.gd",
-        "start": 193,
-        "end": 313
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_combat_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 304,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_world",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 231,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_on_health_changed",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 210,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_on_player_died",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 214,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_on_upgrade_chosen",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 202,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_wave_name",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 220,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 7
-    },
-    "_on_upgrade_chosen": {
-      "source": {
-        "file": "godot/scripts/Main.gd",
-        "start": 202,
-        "end": 322
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZCombatAudio",
-          "definitions": [
-            {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_combat_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 304,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_world",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 231,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_on_health_changed",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 210,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_on_player_died",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 214,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_impact_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 316,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_wave_name",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 220,
+              "line": 226,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1696,11 +2619,117 @@
       ],
       "dependency_count": 8
     },
-    "_on_health_changed": {
+    "_offer_upgrade": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 210,
-        "end": 330
+        "start": 194,
+        "end": 314
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_build_combat_audio",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 310,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_world",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 237,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_health_changed",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 211,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_player_died",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 215,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_restart_requested",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 221,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_upgrade_chosen",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 203,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_wave_name",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 226,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "_on_upgrade_chosen": {
+      "source": {
+        "file": "godot/scripts/Main.gd",
+        "start": 203,
+        "end": 323
       },
       "symbol_dependencies": [
         {
@@ -1732,7 +2761,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 304,
+              "line": 310,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1744,7 +2773,19 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 231,
+              "line": 237,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_health_changed",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 211,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1756,7 +2797,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 214,
+              "line": 215,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1764,11 +2805,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_boss_stinger",
+          "symbol": "_on_restart_requested",
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 326,
+              "line": 221,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1780,7 +2821,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 316,
+              "line": 322,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1792,7 +2833,113 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 220,
+              "line": 226,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "_on_health_changed": {
+      "source": {
+        "file": "godot/scripts/Main.gd",
+        "start": 211,
+        "end": 331
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DZCombatAudio",
+          "definitions": [
+            {
+              "file": "godot/scripts/CombatAudio.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_build_combat_audio",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 310,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_world",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 237,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_player_died",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 215,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_restart_requested",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 221,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_impact_audio",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 322,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_wave_name",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 226,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1805,8 +2952,8 @@
     "_on_player_died": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 214,
-        "end": 334
+        "start": 215,
+        "end": 335
       },
       "symbol_dependencies": [
         {
@@ -1838,7 +2985,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 304,
+              "line": 310,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1850,7 +2997,19 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 231,
+              "line": 237,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_on_restart_requested",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 221,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1862,7 +3021,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 326,
+              "line": 332,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1874,7 +3033,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 316,
+              "line": 322,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1886,7 +3045,101 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 220,
+              "line": 226,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "_on_restart_requested": {
+      "source": {
+        "file": "godot/scripts/Main.gd",
+        "start": 221,
+        "end": 341
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DZCombatAudio",
+          "definitions": [
+            {
+              "file": "godot/scripts/CombatAudio.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_build_combat_audio",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 310,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_world",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 237,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_boss_stinger",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 332,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_impact_audio",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 322,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_wave_name",
+          "definitions": [
+            {
+              "file": "godot/scripts/Main.gd",
+              "line": 226,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1899,8 +3152,8 @@
     "_wave_name": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 220,
-        "end": 340
+        "start": 226,
+        "end": 346
       },
       "symbol_dependencies": [
         {
@@ -1932,7 +3185,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 304,
+              "line": 310,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1944,7 +3197,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 231,
+              "line": 237,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1956,7 +3209,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 326,
+              "line": 332,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1968,7 +3221,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 316,
+              "line": 322,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1981,8 +3234,8 @@
     "_build_world": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 231,
-        "end": 351
+        "start": 237,
+        "end": 357
       },
       "symbol_dependencies": [
         {
@@ -2014,7 +3267,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 304,
+              "line": 310,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2026,7 +3279,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 326,
+              "line": 332,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2038,7 +3291,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 316,
+              "line": 322,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2051,8 +3304,8 @@
     "_build_combat_audio": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 304,
-        "end": 424
+        "start": 310,
+        "end": 430
       },
       "symbol_dependencies": [
         {
@@ -2072,7 +3325,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 326,
+              "line": 332,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2084,7 +3337,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 316,
+              "line": 322,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2097,8 +3350,8 @@
     "_play_impact_audio": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 316,
-        "end": 436
+        "start": 322,
+        "end": 442
       },
       "symbol_dependencies": [
         {
@@ -2118,7 +3371,7 @@
           "definitions": [
             {
               "file": "godot/scripts/Main.gd",
-              "line": 326,
+              "line": 332,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2131,1185 +3384,20 @@
     "_play_boss_stinger": {
       "source": {
         "file": "godot/scripts/Main.gd",
-        "start": 326,
-        "end": 446
+        "start": 332,
+        "end": 452
       },
       "symbol_dependencies": [],
       "dependency_count": 0
     },
-    "DZPlayer": {
+    "_initialize": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 1,
-        "end": 121
+        "file": "godot/tests/run_end_ux_test.gd",
+        "start": 4,
+        "end": 124
       },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZEnemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 213,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 124,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 109,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_nearest_enemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 96,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_physics_process",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 31,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_ready",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 25,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_update_authored_animation",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 202,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "apply_upgrade",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 79,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "heal_full",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 75,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "set_touch_move",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 63,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "take_damage",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 66,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 14
-    },
-    "set_touch_move": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 63,
-        "end": 183
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZEnemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 124,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 109,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_nearest_enemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 96,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_authored",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "apply_upgrade",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 79,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "heal_full",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 75,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "take_damage",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 66,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 11
-    },
-    "take_damage": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 66,
-        "end": 186
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZEnemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 124,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 109,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_nearest_enemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 96,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_authored",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "apply_upgrade",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 79,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "heal_full",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 75,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 10
-    },
-    "heal_full": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 75,
-        "end": 195
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZEnemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 124,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 109,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_nearest_enemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 96,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_authored",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "apply_upgrade",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 79,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 9
-    },
-    "apply_upgrade": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 79,
-        "end": 199
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZEnemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 124,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 109,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_nearest_enemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 96,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_authored",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 8
-    },
-    "_nearest_enemy": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 96,
-        "end": 216
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZEnemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 213,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 124,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 109,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_authored",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_update_authored_animation",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 202,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 9
-    },
-    "_fire_at": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 109,
-        "end": 229
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZCombatAudio",
-          "definitions": [
-            {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZEnemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 213,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 124,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_authored",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_update_authored_animation",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 202,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 9
-    },
-    "_build_visual": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 124,
-        "end": 244
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZCombatAudio",
-          "definitions": [
-            {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 213,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_authored",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_update_authored_animation",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 202,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "_update_authored_animation": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 202,
-        "end": 322
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZCombatAudio",
-          "definitions": [
-            {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 213,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_authored",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 4
-    },
-    "_play_authored": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 207,
-        "end": 327
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZCombatAudio",
-          "definitions": [
-            {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 213,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "_build_audio": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 213,
-        "end": 333
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZCombatAudio",
-          "definitions": [
-            {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 221,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "_play_shot_audio": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 221,
-        "end": 341
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZCombatAudio",
-          "definitions": [
-            {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "_init": {
-      "source": {
-        "file": "godot/tests/combat_audio_feedback_test.gd",
-        "start": 2,
-        "end": 122
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZCombatAudio",
-          "definitions": [
-            {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 1
+      "symbol_dependencies": [],
+      "dependency_count": 0
     }
   }
 }

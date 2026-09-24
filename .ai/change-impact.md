@@ -1,14 +1,13 @@
 # Change impact
 
-Base: a4afa992bbe9bee6e5d7ccbed44c0b615cb0621d
-Head: e040a154d446d1e6a094170152093b7f8069cbdc
+Base: 9c04eda7afb9bb21d493bbb60dcd9529ac39d184
+Head: cb03953cf4a261bf2db75b4702022ca20088e3db
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- A godot/scripts/CombatAudio.gd
+- M godot/scripts/Hud.gd
 - M godot/scripts/Main.gd
-- M godot/scripts/Player.gd
-- A godot/tests/combat_audio_feedback_test.gd
+- A godot/tests/run_end_ux_test.gd
 
 ## Affected areas
 - .github
