@@ -14,14 +14,15 @@ func _initialize() -> void:
     current_scene = root
     var target := DummyTarget.new()
     root.add_child(target)
+    target.global_position = Vector3(100.0, 0.0, 0.0)
     await physics_frame
 
     var charger := ENEMY_SCRIPT.new()
     charger.configure("charger", 1.0, target)
-    charger.process_mode = Node.PROCESS_MODE_DISABLED
     charger.spawn_secondary_fx = false
     root.add_child(charger)
     await physics_frame
+    charger.process_mode = Node.PROCESS_MODE_DISABLED
     if charger.move_speed <= 2.0 or charger.contact_damage < 12.0 or charger.xp_value < 4:
         push_error("Charger baseline identity is incorrect")
         quit(1)
@@ -69,14 +70,15 @@ func _initialize() -> void:
 
     var dodge_target := DummyTarget.new()
     root.add_child(dodge_target)
-    dodge_target.global_position = Vector3(4.0, 0.0, 0.0)
+    dodge_target.global_position = Vector3(100.0, 0.0, 0.0)
     await physics_frame
     var dodge_charger := ENEMY_SCRIPT.new()
     dodge_charger.configure("charger", 1.0, dodge_target)
-    dodge_charger.process_mode = Node.PROCESS_MODE_DISABLED
     dodge_charger.spawn_secondary_fx = false
     root.add_child(dodge_charger)
     await physics_frame
+    dodge_charger.process_mode = Node.PROCESS_MODE_DISABLED
+    dodge_target.global_position = Vector3(4.0, 0.0, 0.0)
     dodge_charger.global_position = Vector3.ZERO
     dodge_charger.attack_target_position = dodge_target.global_position
     dodge_charger.pending_special = "charge"
