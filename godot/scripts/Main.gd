@@ -209,9 +209,13 @@ func _on_xp_collected(amount: int) -> void:
 
 func _offer_upgrade() -> void:
     pending_upgrades.clear()
-    var available := UPGRADE_POOL.duplicate(true)
+    var available: Array = []
+    for upgrade in UPGRADE_POOL:
+        var id := String(upgrade["id"])
+        if player == null or player.can_apply_upgrade(id):
+            available.append(upgrade.duplicate(true))
     available.shuffle()
-    for i in range(3):
+    for i in range(mini(3, available.size())):
         pending_upgrades.append(available[i])
     hud.show_upgrade(pending_upgrades)
     get_tree().paused = true
