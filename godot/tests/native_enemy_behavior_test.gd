@@ -158,5 +158,19 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var damage_enemy := ENEMY_SCRIPT.new()
+    damage_enemy.configure("shambler", 1.0, target)
+    damage_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    damage_enemy.spawn_secondary_fx = false
+    root.add_child(damage_enemy)
+    await process_frame
+    damage_enemy.take_damage(12.0, true)
+    await process_frame
+    var damage_number := root.find_child("DamageNumber*", true, false) as Label3D
+    if damage_number == null or not damage_number.text.contains("12"):
+        push_error("Enemy hit did not spawn readable world-space damage number")
+        quit(1)
+        return
+
     print("Deadline Zero native enemy behaviors: OK")
     quit(0)
