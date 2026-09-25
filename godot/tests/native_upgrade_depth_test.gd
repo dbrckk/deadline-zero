@@ -76,5 +76,17 @@ func _initialize() -> void:
         quit(1)
         return
 
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("inferno_protocol")
+    var inferno_damage := player.weapon_damage
+    var inferno_interval := player.fire_interval
+    player.apply_upgrade("inferno_protocol")
+    if not is_equal_approx(player.weapon_damage, inferno_damage) or not is_equal_approx(player.fire_interval, inferno_interval):
+        push_error("Weapon protocols should be idempotent when reapplied")
+        quit(1)
+        return
+
     print("Deadline Zero native upgrade depth: OK")
     quit(0)

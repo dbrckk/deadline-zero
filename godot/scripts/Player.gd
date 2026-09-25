@@ -24,6 +24,7 @@ var shot_audio: AudioStreamPlayer3D
 var shot_streams := {}
 var damage_pulse: MeshInstance3D
 var combat_enabled := true
+var applied_protocols := {}
 
 func _ready() -> void:
     add_to_group("player")
@@ -94,6 +95,10 @@ func heal_full() -> void:
     health_changed.emit(health, max_health)
 
 func apply_upgrade(id: String) -> void:
+    if id.ends_with("_protocol"):
+        if applied_protocols.has(id):
+            return
+        applied_protocols[id] = true
     match id:
         "damage":
             weapon_damage *= 1.25
