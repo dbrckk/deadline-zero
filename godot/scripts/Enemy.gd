@@ -30,6 +30,10 @@ var regeneration_clock := 1.0
 var pending_special := ""
 var spawn_secondary_fx := true
 var combat_enabled := true
+var charge_active := false
+var charge_direction := Vector3.ZERO
+var charge_left := 0.0
+var charge_hit := false
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -96,6 +100,9 @@ func _physics_process(delta: float) -> void:
     slow_left = max(0.0, slow_left - delta)
     if slow_left <= 0.0:
         slow_multiplier = 1.0
+    if charge_active:
+        _process_charge(delta)
+        return
     var delta_pos := target.global_position - global_position
     delta_pos.y = 0.0
     var distance := delta_pos.length()
@@ -148,6 +155,24 @@ func _physics_process(delta: float) -> void:
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
 
+func _process_charge(delta: float) -> void:
+    charge_left = max(0.0, charge_left - delta)
+    velocity = charge_direction * 9.4
+    move_and_slide()
+    if velocity.length_squared() > 0.01:
+        look_at(global_position + velocity, Vector3.UP)
+    if not charge_hit and target != null and is_instance_valid(target):
+        var target_offset := target.global_position - global_position
+        target_offset.y = 0.0
+        if target_offset.length() <= 1.0 and target.has_method("take_damage"):
+            target.take_damage(contact_damage * 1.30)
+            charge_hit = true
+            _spawn_attack_impact(global_position + Vector3(0.0, 0.05, 0.0), 1.05)
+    if charge_left <= 0.0:
+        charge_active = false
+        velocity = Vector3.ZERO
+        attack_cooldown = 0.80
+
 func set_combat_enabled(enabled: bool) -> void:
     combat_enabled = enabled
     if enabled:
@@ -155,6 +180,9 @@ func set_combat_enabled(enabled: bool) -> void:
     velocity = Vector3.ZERO
     attack_windup = 0.0
     pending_special = ""
+    charge_active = false
+    charge_left = 0.0
+    charge_hit = false
     if telegraph_visual != null and is_instance_valid(telegraph_visual):
         telegraph_visual.queue_free()
     telegraph_visual = null
@@ -171,14 +199,15 @@ func _resolve_telegraphed_attack() -> void:
     if target == null or not is_instance_valid(target):
         return
     if pending_special == "charge":
-        var charge_target: Vector3 = attack_target_position
-        charge_target.y = global_position.y
-        global_position = global_position.lerp(charge_target, 0.88)
-        if target.global_position.distance_to(global_position) <= 1.15 and target.has_method("take_damage"):
-            target.take_damage(contact_damage * 1.30)
-        _spawn_attack_impact(global_position + Vector3(0.0, 0.05, 0.0), 1.05)
+        var direction := attack_target_position - global_position
+        direction.y = 0.0
+        if direction.length_squared() < 0.001:
+            direction = global_transform.basis.z * -1.0
+        charge_direction = direction.normalized()
+        charge_left = clampf(direction.length() / 9.4, 0.28, 0.72)
+        charge_active = true
+        charge_hit = false
         pending_special = ""
-        attack_cooldown = 0.80
         return
     if pending_special == "harrier_shot":
         var shot := DZEnemyProjectile.new()
