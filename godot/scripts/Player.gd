@@ -1,6 +1,8 @@
 class_name DZPlayer
 extends CharacterBody3D
 
+const WEAPON_CATALOG := preload("res://scripts/WeaponCatalog.gd")
+
 signal health_changed(current: float, maximum: float)
 signal died
 
@@ -134,38 +136,35 @@ func apply_upgrade(id: String) -> void:
             health = min(max_health, health + 55.0)
             move_speed *= 0.94
             health_changed.emit(health, max_health)
-        "scatter_protocol":
-            weapon_profile = "scatter"
-            weapon_tint = Color(1.0, 0.56, 0.18)
-            multishot = min(multishot + 2, 5)
-            spread_degrees = max(spread_degrees, 11.0)
-            weapon_damage *= 0.82
-        "rail_protocol":
-            weapon_profile = "rail"
-            weapon_tint = Color(0.72, 0.58, 1.0)
-            weapon_damage *= 1.50
-            projectile_speed *= 1.40
-            fire_interval = min(0.80, fire_interval * 1.22)
-            multishot = 1
-            spread_degrees = 3.0
-        "inferno_protocol":
-            weapon_profile = "inferno"
-            weapon_tint = Color(1.0, 0.24, 0.035)
-            weapon_damage *= 1.20
-            fire_interval = min(0.80, fire_interval * 1.08)
-        "cryo_protocol":
-            weapon_profile = "cryo"
-            weapon_tint = Color(0.30, 0.90, 1.0)
-            projectile_speed *= 1.12
-            fire_interval = max(0.09, fire_interval * 0.90)
-            weapon_damage *= 0.95
-        "arc_protocol":
-            weapon_profile = "arc"
-            weapon_tint = Color(0.64, 0.42, 1.0)
-            multishot = min(multishot + 1, 5)
-            spread_degrees = min(spread_degrees, 4.0)
-            fire_interval = max(0.09, fire_interval * 0.92)
-            weapon_damage *= 0.90
+        "scatter_protocol", "rail_protocol", "inferno_protocol", "cryo_protocol", "arc_protocol":
+            _apply_weapon_protocol(WEAPON_CATALOG.protocol(id))
+
+func _apply_weapon_protocol(config: Dictionary) -> void:
+    if config.is_empty():
+        return
+    weapon_profile = String(config.get("weapon_profile", weapon_profile))
+    weapon_tint = config.get("tint", weapon_tint)
+    weapon_damage *= float(config.get("damage_mult", 1.0))
+    projectile_speed *= float(config.get("projectile_speed_mult", 1.0))
+
+    if config.has("fire_interval_mult"):
+        fire_interval *= float(config["fire_interval_mult"])
+    if config.has("fire_interval_min"):
+        fire_interval = max(float(config["fire_interval_min"]), fire_interval)
+    if config.has("fire_interval_max"):
+        fire_interval = min(float(config["fire_interval_max"]), fire_interval)
+
+    if config.has("multishot_set"):
+        multishot = int(config["multishot_set"])
+    if config.has("multishot_add"):
+        multishot = min(multishot + int(config["multishot_add"]), 5)
+
+    if config.has("spread_set"):
+        spread_degrees = float(config["spread_set"])
+    if config.has("spread_min"):
+        spread_degrees = max(spread_degrees, float(config["spread_min"]))
+    if config.has("spread_max"):
+        spread_degrees = min(spread_degrees, float(config["spread_max"]))
 
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
