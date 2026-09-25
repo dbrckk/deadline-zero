@@ -27,6 +27,9 @@ var slow_multiplier := 1.0
 var slow_left := 0.0
 var special_clock := 1.8
 var regeneration_clock := 1.0
+var regeneration_windup := 0.0
+var regeneration_visual: Node3D
+var regeneration_material: StandardMaterial3D
 var pending_special := ""
 var spawn_secondary_fx := true
 var combat_enabled := true
@@ -103,13 +106,17 @@ func _physics_process(delta: float) -> void:
     if charge_active:
         _process_charge(delta)
         return
+    if regeneration_windup > 0.0:
+        _process_regeneration(delta)
+        return
     var delta_pos := target.global_position - global_position
     delta_pos.y = 0.0
     var distance := delta_pos.length()
 
-    if kind == "regenerator" and regeneration_clock <= 0.0:
-        _regenerate()
+    if kind == "regenerator" and regeneration_clock <= 0.0 and health < max_health:
+        _begin_regeneration()
         regeneration_clock = 1.0
+        return
 
     if attack_windup > 0.0:
         velocity = Vector3.ZERO
@@ -183,6 +190,11 @@ func set_combat_enabled(enabled: bool) -> void:
     charge_active = false
     charge_left = 0.0
     charge_hit = false
+    regeneration_windup = 0.0
+    if regeneration_visual != null and is_instance_valid(regeneration_visual):
+        regeneration_visual.queue_free()
+    regeneration_visual = null
+    regeneration_material = null
     if telegraph_visual != null and is_instance_valid(telegraph_visual):
         telegraph_visual.queue_free()
     telegraph_visual = null
@@ -260,6 +272,48 @@ func _spawn_attack_impact(at: Vector3, radius: float) -> void:
     fx.scale_boost = radius * 1.35
     get_tree().current_scene.add_child(fx)
     fx.global_position = at + Vector3(0.0, 0.10, 0.0)
+
+func _begin_regeneration() -> void:
+    if dead or not combat_enabled or health <= 0.0 or health >= max_health:
+        return
+    regeneration_windup = 0.42
+    if regeneration_visual != null and is_instance_valid(regeneration_visual):
+        regeneration_visual.queue_free()
+    var pulse := MeshInstance3D.new()
+    pulse.name = "RegenerationPulse"
+    var mesh := CylinderMesh.new()
+    mesh.top_radius = 0.88
+    mesh.bottom_radius = 0.88
+    mesh.height = 0.022
+    pulse.mesh = mesh
+    pulse.position = Vector3(0.0, 0.035, 0.0)
+    regeneration_material = StandardMaterial3D.new()
+    regeneration_material.albedo_color = Color(0.12, 1.0, 0.42, 0.18)
+    regeneration_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    regeneration_material.emission_enabled = true
+    regeneration_material.emission = Color(0.08, 1.0, 0.34)
+    regeneration_material.emission_energy_multiplier = 1.8
+    pulse.material_override = regeneration_material
+    regeneration_visual = pulse
+    add_child(pulse)
+    pulse.scale = Vector3(0.48, 1.0, 0.48)
+    var tween := pulse.create_tween()
+    tween.set_parallel(true)
+    tween.tween_property(pulse, "scale", Vector3(1.18, 1.0, 1.18), regeneration_windup).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(regeneration_material, "emission_energy_multiplier", 4.0, regeneration_windup).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+
+func _process_regeneration(delta: float) -> void:
+    if regeneration_windup <= 0.0:
+        return
+    regeneration_windup = max(0.0, regeneration_windup - delta)
+    velocity = Vector3.ZERO
+    if regeneration_windup > 0.0:
+        return
+    _regenerate()
+    if regeneration_visual != null and is_instance_valid(regeneration_visual):
+        regeneration_visual.queue_free()
+    regeneration_visual = null
+    regeneration_material = null
 
 func _regenerate() -> void:
     if dead or health <= 0.0 or health >= max_health:
