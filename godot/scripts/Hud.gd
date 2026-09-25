@@ -174,7 +174,7 @@ func _build() -> void:
     pause_button.pressed.connect(func() -> void:
         pause_requested.emit()
     )
-    root.add_child(pause_button)
+    add_child(pause_button)
 
     pause_panel = PanelContainer.new()
     pause_panel.name = "PausePanel"
@@ -182,7 +182,7 @@ func _build() -> void:
     pause_panel.position = Vector2(-250, -210)
     pause_panel.size = Vector2(500, 420)
     pause_panel.visible = false
-    root.add_child(pause_panel)
+    add_child(pause_panel)
 
     var pause_box := VBoxContainer.new()
     pause_box.alignment = BoxContainer.ALIGNMENT_CENTER
