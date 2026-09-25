@@ -1,5 +1,7 @@
 extends Node3D
 
+const HAPTICS := preload("res://scripts/Haptics.gd")
+
 const UPGRADE_POOL := [
     {"id":"damage", "title":"HEAVY PAYLOAD", "detail":"Damage +25%", "family":"OFFENSE"},
     {"id":"rate", "title":"RAPID FIRE", "detail":"Fire rate +22%", "family":"CADENCE"},
@@ -461,6 +463,7 @@ func _build_combat_audio() -> void:
     add_child(boss_audio)
 
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
+    HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
     if impact_audio == null:
         return
     var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
