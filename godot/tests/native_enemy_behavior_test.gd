@@ -44,11 +44,36 @@ func _initialize() -> void:
     root.add_child(regenerator)
     var full_health: float = regenerator.health
     regenerator.health = full_health * 0.50
-    regenerator._regenerate()
-    if regenerator.health <= full_health * 0.50 or regenerator.health > full_health:
-        push_error("Regenerator healing behavior is incorrect")
+    var before_channel: float = regenerator.health
+    regenerator._begin_regeneration()
+    if regenerator.health != before_channel or regenerator.regeneration_windup <= 0.0:
+        push_error("Regenerator should telegraph healing before restoring health")
         quit(1)
         return
+    if regenerator.regeneration_visual == null or not is_instance_valid(regenerator.regeneration_visual):
+        push_error("Regenerator healing telegraph is missing")
+        quit(1)
+        return
+    regenerator._process_regeneration(0.50)
+    if regenerator.health <= before_channel or regenerator.health > full_health:
+        push_error("Regenerator healing resolution is incorrect")
+        quit(1)
+        return
+    regenerator.health = full_health - 1.0
+    regenerator._begin_regeneration()
+    regenerator._process_regeneration(0.50)
+    if regenerator.health > full_health:
+        push_error("Regenerator healing exceeded max health")
+        quit(1)
+        return
+    regenerator.health = full_health * 0.50
+    regenerator._begin_regeneration()
+    regenerator.set_combat_enabled(false)
+    if regenerator.regeneration_windup > 0.0 or regenerator.regeneration_visual != null:
+        push_error("Regenerator healing telegraph was not cancelled with combat")
+        quit(1)
+        return
+    regenerator.set_combat_enabled(true)
 
     charger.pending_special = "charge"
     charger.attack_target_position = Vector3(4.0, 0.0, 0.0)
