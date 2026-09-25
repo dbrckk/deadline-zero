@@ -67,6 +67,8 @@ func _ready() -> void:
     add_child(hud)
     hud.upgrade_chosen.connect(_on_upgrade_chosen)
     hud.restart_requested.connect(_on_restart_requested)
+    hud.pause_requested.connect(_on_pause_requested)
+    hud.resume_requested.connect(_on_resume_requested)
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     _build_combat_audio()
@@ -209,9 +211,13 @@ func _on_xp_collected(amount: int) -> void:
 
 func _offer_upgrade() -> void:
     pending_upgrades.clear()
-    var available := UPGRADE_POOL.duplicate(true)
+    var available: Array = []
+    for upgrade in UPGRADE_POOL:
+        var id := String(upgrade["id"])
+        if player == null or player.can_apply_upgrade(id):
+            available.append(upgrade.duplicate(true))
     available.shuffle()
-    for i in range(3):
+    for i in range(mini(3, available.size())):
         pending_upgrades.append(available[i])
     hud.show_upgrade(pending_upgrades)
     get_tree().paused = true
@@ -227,6 +233,17 @@ func _on_upgrade_chosen(index: int) -> void:
 func _on_health_changed(current: float, maximum: float) -> void:
     if hud:
         hud.set_health(current, maximum)
+
+func _on_pause_requested() -> void:
+    if game_over or not pending_upgrades.is_empty():
+        return
+    hud.show_pause_settings()
+    get_tree().paused = true
+
+func _on_resume_requested() -> void:
+    hud.hide_pause_settings()
+    if not game_over and pending_upgrades.is_empty():
+        get_tree().paused = false
 
 func _on_player_died() -> void:
     Engine.time_scale = 1.0
