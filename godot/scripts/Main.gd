@@ -236,6 +236,8 @@ func _on_player_died() -> void:
         hud.show_game_over(kills, level, elapsed)
 
 func _freeze_combat() -> void:
+    if player != null and is_instance_valid(player):
+        player.set_combat_enabled(false)
     for node in get_tree().get_nodes_in_group("enemies"):
         var enemy := node as DZEnemy
         if enemy != null:
