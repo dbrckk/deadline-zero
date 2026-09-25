@@ -3,6 +3,10 @@ extends CanvasLayer
 
 signal upgrade_chosen(index: int)
 signal restart_requested
+signal pause_requested
+signal resume_requested
+signal master_volume_changed(value: float)
+signal sfx_volume_changed(value: float)
 
 var hp_bar: ProgressBar
 var xp_bar: ProgressBar
@@ -25,6 +29,10 @@ var low_health_panel: PanelContainer
 var low_health_label: Label
 var threat_panel: PanelContainer
 var threat_label: Label
+var pause_panel: PanelContainer
+var pause_button: Button
+var master_volume: HSlider
+var sfx_volume: HSlider
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -105,6 +113,12 @@ func show_upgrade(items: Array) -> void:
 func hide_upgrade() -> void:
     upgrade_panel.visible = false
 
+func show_pause_settings() -> void:
+    pause_panel.visible = true
+
+func hide_pause_settings() -> void:
+    pause_panel.visible = false
+
 func show_game_over(kills: int, level: int, elapsed: float) -> void:
     wave_label.text = "RUN TERMINATED"
     upgrade_panel.visible = false
@@ -149,6 +163,92 @@ func _build() -> void:
     wave_label.position = Vector2(-220, 24)
     wave_label.size = Vector2(440, 42)
     root.add_child(wave_label)
+
+    pause_button = Button.new()
+    pause_button.name = "PauseButton"
+    pause_button.text = "Ⅱ"
+    pause_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+    pause_button.position = Vector2(-86, 24)
+    pause_button.size = Vector2(58, 58)
+    pause_button.add_theme_font_size_override("font_size", 22)
+    pause_button.pressed.connect(func() -> void:
+        pause_requested.emit()
+    )
+    root.add_child(pause_button)
+
+    pause_panel = PanelContainer.new()
+    pause_panel.name = "PausePanel"
+    pause_panel.set_anchors_preset(Control.PRESET_CENTER)
+    pause_panel.position = Vector2(-250, -210)
+    pause_panel.size = Vector2(500, 420)
+    pause_panel.visible = false
+    root.add_child(pause_panel)
+
+    var pause_box := VBoxContainer.new()
+    pause_box.alignment = BoxContainer.ALIGNMENT_CENTER
+    pause_box.add_theme_constant_override("separation", 18)
+    pause_panel.add_child(pause_box)
+
+    var pause_title := Label.new()
+    pause_title.text = "SYSTEM PAUSED"
+    pause_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    pause_title.add_theme_font_size_override("font_size", 30)
+    pause_title.modulate = Color(0.72, 0.92, 1.0)
+    pause_box.add_child(pause_title)
+
+    var master_label := Label.new()
+    master_label.text = "MASTER VOLUME"
+    master_label.add_theme_font_size_override("font_size", 16)
+    pause_box.add_child(master_label)
+
+    master_volume = HSlider.new()
+    master_volume.name = "MasterVolume"
+    master_volume.min_value = 0.0
+    master_volume.max_value = 1.0
+    master_volume.step = 0.05
+    master_volume.value = 0.85
+    master_volume.custom_minimum_size = Vector2(360, 42)
+    master_volume.value_changed.connect(func(value: float) -> void:
+        master_volume_changed.emit(value)
+    )
+    pause_box.add_child(master_volume)
+
+    var sfx_label := Label.new()
+    sfx_label.text = "SFX VOLUME"
+    sfx_label.add_theme_font_size_override("font_size", 16)
+    pause_box.add_child(sfx_label)
+
+    sfx_volume = HSlider.new()
+    sfx_volume.name = "SfxVolume"
+    sfx_volume.min_value = 0.0
+    sfx_volume.max_value = 1.0
+    sfx_volume.step = 0.05
+    sfx_volume.value = 0.90
+    sfx_volume.custom_minimum_size = Vector2(360, 42)
+    sfx_volume.value_changed.connect(func(value: float) -> void:
+        sfx_volume_changed.emit(value)
+    )
+    pause_box.add_child(sfx_volume)
+
+    var resume_button := Button.new()
+    resume_button.name = "ResumeButton"
+    resume_button.text = "RESUME"
+    resume_button.custom_minimum_size = Vector2(280, 62)
+    resume_button.add_theme_font_size_override("font_size", 21)
+    resume_button.pressed.connect(func() -> void:
+        resume_requested.emit()
+    )
+    pause_box.add_child(resume_button)
+
+    var pause_style := StyleBoxFlat.new()
+    pause_style.bg_color = Color(0.018, 0.028, 0.038, 0.98)
+    pause_style.border_color = Color(0.20, 0.78, 1.0, 0.72)
+    pause_style.set_border_width_all(2)
+    pause_style.corner_radius_top_left = 12
+    pause_style.corner_radius_top_right = 12
+    pause_style.corner_radius_bottom_left = 12
+    pause_style.corner_radius_bottom_right = 12
+    pause_panel.add_theme_stylebox_override("panel", pause_style)
 
     low_health_panel = PanelContainer.new()
     low_health_panel.name = "LowHealthPanel"
