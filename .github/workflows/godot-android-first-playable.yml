@@ -104,6 +104,39 @@ jobs:
           (cd build/godot-android && sha256sum deadline-zero-godot-debug.apk > SHA256SUMS.txt)
           (cd build/godot-android && sha256sum -c SHA256SUMS.txt)
 
+      - name: Enable KVM for native Godot smoke test
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Smoke-test native Godot APK
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_2
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-boot-timeout: 600
+          disable-animations: true
+          script: |
+            set -euo pipefail
+            APK=build/godot-android/deadline-zero-godot-debug.apk
+            adb wait-for-device
+            adb install -r "$APK"
+            adb shell pm path com.deadlinezero.godot | grep -q 'package:'
+            ACTIVITY=$(adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.godot | tr -d '\r' | tail -n 1)
+            test -n "$ACTIVITY"
+            adb logcat -c
+            adb shell monkey -p com.deadlinezero.godot -c android.intent.category.LAUNCHER 1
+            sleep 8
+            adb shell pidof com.deadlinezero.godot | grep -q .
+            adb logcat -d -v threadtime > build/godot-android/startup-logcat.txt
+            if grep -E 'FATAL EXCEPTION|ANR in com\.deadlinezero\.godot|Process: com\.deadlinezero\.godot.*has died' build/godot-android/startup-logcat.txt; then
+              echo "Native Godot startup crash/ANR detected"
+              exit 1
+            fi
+
       - name: Upload native Godot first-playable APK
         uses: actions/upload-artifact@v4
         with:
@@ -113,5 +146,6 @@ jobs:
             build/godot-android/SHA256SUMS.txt
             build/godot-android/badging.txt
             build/godot-android/badging-stderr.txt
+            build/godot-android/startup-logcat.txt
           if-no-files-found: error
           retention-days: 14
