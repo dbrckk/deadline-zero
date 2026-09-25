@@ -18,10 +18,10 @@ func _initialize() -> void:
 
     var charger := ENEMY_SCRIPT.new()
     charger.configure("charger", 1.0, target)
+    charger.process_mode = Node.PROCESS_MODE_DISABLED
     charger.spawn_secondary_fx = false
     root.add_child(charger)
     await physics_frame
-    charger.process_mode = Node.PROCESS_MODE_DISABLED
     if charger.move_speed <= 2.0 or charger.contact_damage < 12.0 or charger.xp_value < 4:
         push_error("Charger baseline identity is incorrect")
         quit(1)
@@ -54,6 +54,7 @@ func _initialize() -> void:
     charger.attack_target_position = Vector3(4.0, 0.0, 0.0)
     charger.global_position = Vector3.ZERO
     target.global_position = Vector3(3.6, 0.0, 0.0)
+    target.damage_taken = 0.0
     charger._resolve_telegraphed_attack()
     if not charger.charge_active or target.damage_taken > 0.0:
         push_error("Charger special should start a real dash before dealing damage")
@@ -72,10 +73,10 @@ func _initialize() -> void:
     await physics_frame
     var dodge_charger := ENEMY_SCRIPT.new()
     dodge_charger.configure("charger", 1.0, dodge_target)
+    dodge_charger.process_mode = Node.PROCESS_MODE_DISABLED
     dodge_charger.spawn_secondary_fx = false
     root.add_child(dodge_charger)
     await physics_frame
-    dodge_charger.process_mode = Node.PROCESS_MODE_DISABLED
     dodge_charger.global_position = Vector3.ZERO
     dodge_charger.attack_target_position = dodge_target.global_position
     dodge_charger.pending_special = "charge"
