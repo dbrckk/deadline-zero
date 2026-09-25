@@ -55,5 +55,18 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var parent := Node3D.new()
+    parent.position = Vector3(9.0, 0.0, -4.0)
+    get_root().add_child(parent)
+    var spawned := PROJECTILE_SCRIPT.new()
+    var spawn_origin := Vector3(2.0, 0.7, 3.0)
+    spawned.setup(spawn_origin, Vector3.FORWARD, 10.0, 10.0, Color.WHITE, "vanguard")
+    parent.add_child(spawned)
+    await process_frame
+    if spawned.global_position.distance_to(spawn_origin) > 0.001:
+        push_error("Projectile setup did not preserve global spawn origin under a transformed parent")
+        quit(1)
+        return
+
     print("Deadline Zero weapon protocol behavior: OK")
     quit(0)
