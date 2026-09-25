@@ -69,10 +69,38 @@ func _initialize() -> void:
     shooter.spawn_secondary_fx = false
     root.add_child(shooter)
     await process_frame
+    shooter.global_position = Vector3.ZERO
+    harrier_target.global_position = Vector3(4.0, 0.0, 0.0)
+    shooter.attack_target_position = harrier_target.global_position
     shooter.pending_special = "harrier_shot"
     shooter._resolve_telegraphed_attack()
+    await process_frame
+    var hostile_projectiles := get_nodes_in_group("hostile_projectiles")
+    if hostile_projectiles.size() != 1:
+        push_error("Harrier ranged special did not spawn exactly one hostile projectile")
+        quit(1)
+        return
+    var shot := hostile_projectiles[0] as DZEnemyProjectile
+    for i in range(8):
+        shot._physics_process(0.10)
     if harrier_target.damage_taken <= 0.0:
-        push_error("Harrier ranged special did not damage target")
+        push_error("Harrier projectile did not damage target on impact")
+        quit(1)
+        return
+
+    var dodge_target := DummyTarget.new()
+    root.add_child(dodge_target)
+    dodge_target.global_position = Vector3(4.0, 0.0, 0.0)
+    await process_frame
+    var dodge_shot := DZEnemyProjectile.new()
+    root.add_child(dodge_shot)
+    dodge_shot.global_position = Vector3.ZERO
+    dodge_shot.configure(dodge_target.global_position, dodge_target, 10.0, 8.0)
+    dodge_target.global_position = Vector3(4.0, 0.0, 3.0)
+    for i in range(10):
+        dodge_shot._physics_process(0.10)
+    if dodge_target.damage_taken > 0.0:
+        push_error("Harrier projectile incorrectly homed into a dodging target")
         quit(1)
         return
 
