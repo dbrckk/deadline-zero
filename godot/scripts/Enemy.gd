@@ -181,9 +181,10 @@ func _resolve_telegraphed_attack() -> void:
         attack_cooldown = 0.80
         return
     if pending_special == "harrier_shot":
-        if target.has_method("take_damage"):
-            target.take_damage(contact_damage * 0.88)
-        _spawn_attack_impact(target.global_position + Vector3(0.0, 0.08, 0.0), 0.72)
+        var shot := DZEnemyProjectile.new()
+        get_tree().current_scene.add_child(shot)
+        shot.global_position = global_position + Vector3(0.0, 0.34, 0.0)
+        shot.configure(attack_target_position, target, contact_damage * 0.88)
         pending_special = ""
         attack_cooldown = 0.95
         return
