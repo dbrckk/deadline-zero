@@ -141,6 +141,12 @@ jobs:
           /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --headless --path godot --script res://tests/run_end_combat_freeze_test.gd
 
+      - name: Validate first-playable run path
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot --script res://tests/first_playable_run_path_test.gd
+
       - name: Run Godot smoke test
         run: |
           set -euo pipefail
