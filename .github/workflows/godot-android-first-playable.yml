@@ -94,7 +94,9 @@ jobs:
         run: |
           set -euo pipefail
           APK=build/godot-android/deadline-zero-godot-debug.apk
-          aapt dump badging "$APK" | tee build/godot-android/badging.txt
+          AAPT="$ANDROID_HOME/build-tools/35.0.1/aapt"
+          test -x "$AAPT"
+          "$AAPT" dump badging "$APK" | tee build/godot-android/badging.txt
           grep -q "package: name='com.deadlinezero.godot'" build/godot-android/badging.txt
           unzip -l "$APK" | tee build/godot-android/apk-contents.txt
           grep -q 'lib/arm64-v8a/' build/godot-android/apk-contents.txt
