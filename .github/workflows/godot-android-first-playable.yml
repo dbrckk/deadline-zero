@@ -156,10 +156,7 @@ jobs:
             adb shell pidof com.deadlinezero.godot | grep -q .
             mkdir -p build/godot-android-smoke
             adb logcat -d -v threadtime > build/godot-android-smoke/startup-logcat.txt
-            if grep -E 'FATAL EXCEPTION|ANR in com\.deadlinezero\.godot|Process: com\.deadlinezero\.godot.*has died' build/godot-android-smoke/startup-logcat.txt; then
-              echo "Native Godot startup crash/ANR detected"
-              exit 1
-            fi
+            ! grep -Eq 'FATAL EXCEPTION|ANR in com\.deadlinezero\.godot|Process: com\.deadlinezero\.godot.*has died' build/godot-android-smoke/startup-logcat.txt
 
       - name: Upload native Godot startup diagnostics
         uses: actions/upload-artifact@v4
