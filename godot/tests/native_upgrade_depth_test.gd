@@ -88,5 +88,11 @@ func _initialize() -> void:
         quit(1)
         return
 
+    player.apply_upgrade("rail_protocol")
+    if player.weapon_profile != "inferno" or not is_equal_approx(player.weapon_damage, inferno_damage) or not is_equal_approx(player.fire_interval, inferno_interval):
+        push_error("Weapon protocols should be mutually exclusive")
+        quit(1)
+        return
+
     print("Deadline Zero native upgrade depth: OK")
     quit(0)
