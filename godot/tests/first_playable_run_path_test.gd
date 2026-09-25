@@ -67,6 +67,14 @@ func _initialize() -> void:
         push_error("Active projectile was not frozen at run end")
         quit(1)
         return
+
+    var projectiles_after_freeze := get_nodes_in_group("projectiles").size()
+    main.player.fire_clock = 0.0
+    main.player._physics_process(0.016)
+    if get_nodes_in_group("projectiles").size() != projectiles_after_freeze:
+        push_error("Player continued auto-firing after death")
+        quit(1)
+        return
     for node in get_nodes_in_group("enemies"):
         var enemy := node as DZEnemy
         if enemy != null and enemy.combat_enabled:
