@@ -143,7 +143,7 @@ jobs:
           emulator-boot-timeout: 600
           disable-animations: true
           script: |
-            set -euo pipefail
+            set -eu
             APK=build/godot-android/deadline-zero-godot-debug.apk
             adb wait-for-device
             timeout 300s bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 2; done'
