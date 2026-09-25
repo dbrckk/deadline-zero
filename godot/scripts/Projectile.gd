@@ -88,6 +88,7 @@ func _apply_profile(profile: String) -> void:
             impact_scale = 1.0
 
 func _ready() -> void:
+    top_level = true
     if has_configured_origin:
         global_position = configured_origin
     add_to_group("projectiles")
