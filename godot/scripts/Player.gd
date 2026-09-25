@@ -97,7 +97,7 @@ func heal_full() -> void:
 func can_apply_upgrade(id: String) -> bool:
     if not id.ends_with("_protocol"):
         return true
-    return applied_protocols.is_empty() or applied_protocols.has(id)
+    return applied_protocols.is_empty()
 
 func apply_upgrade(id: String) -> void:
     if not can_apply_upgrade(id):
