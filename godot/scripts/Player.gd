@@ -23,6 +23,7 @@ var current_anim := ""
 var shot_audio: AudioStreamPlayer3D
 var shot_streams := {}
 var damage_pulse: MeshInstance3D
+var combat_enabled := true
 
 func _ready() -> void:
     add_to_group("player")
@@ -31,7 +32,7 @@ func _ready() -> void:
     health_changed.emit(health, max_health)
 
 func _physics_process(delta: float) -> void:
-    if health <= 0.0:
+    if not combat_enabled or health <= 0.0:
         velocity = Vector3.ZERO
         touch_move = Vector2.ZERO
         return
@@ -66,6 +67,14 @@ func _physics_process(delta: float) -> void:
         if fire_clock <= 0.0:
             _fire_at(target)
             fire_clock = fire_interval
+
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if enabled:
+        return
+    velocity = Vector3.ZERO
+    touch_move = Vector2.ZERO
+    fire_clock = max(fire_clock, fire_interval)
 
 func set_touch_move(value: Vector2) -> void:
     touch_move = value.limit_length(1.0)
