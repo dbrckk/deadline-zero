@@ -37,6 +37,19 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main.player.apply_upgrade("inferno_protocol")
+    seed(424242)
+    for offer_index in range(12):
+        main._offer_upgrade()
+        for upgrade in main.pending_upgrades:
+            if String(upgrade["id"]).ends_with("_protocol"):
+                push_error("Protocol upgrade remained in offer after a protocol was locked")
+                quit(1)
+                return
+        main.pending_upgrades.clear()
+        main.hud.hide_upgrade()
+        paused = false
+
     var bosses_before := _count_kind("boss")
     main._spawn_enemy("boss")
     await process_frame
