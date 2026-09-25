@@ -19,6 +19,25 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var pause_button := hud.get_node_or_null("PauseButton") as Button
+    var pause_panel := hud.get_node_or_null("PausePanel") as PanelContainer
+    if pause_button == null or pause_panel == null:
+        push_error("Pause/settings controls were not created")
+        quit(1)
+        return
+    if pause_panel.visible:
+        push_error("Pause/settings panel should start hidden")
+        quit(1)
+        return
+    if pause_panel.find_child("ResumeButton", true, false) == null:
+        push_error("Pause/settings panel is missing resume control")
+        quit(1)
+        return
+    if pause_panel.find_child("MasterVolume", true, false) == null or pause_panel.find_child("SfxVolume", true, false) == null:
+        push_error("Pause/settings panel is missing audio sliders")
+        quit(1)
+        return
+
     hud.show_game_over(37, 8, 154.0)
 
     if not hud.game_over_panel.visible:
