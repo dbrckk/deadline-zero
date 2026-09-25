@@ -100,11 +100,9 @@ func _physics_process(delta: float) -> void:
     slow_left = max(0.0, slow_left - delta)
     if slow_left <= 0.0:
         slow_multiplier = 1.0
-
     if charge_active:
         _process_charge(delta)
         return
-
     var delta_pos := target.global_position - global_position
     delta_pos.y = 0.0
     var distance := delta_pos.length()
@@ -386,100 +384,121 @@ func _add_archetype_signature() -> void:
             accent = Color(0.12, 0.82, 1.0)
             _add_runner_blades(accent)
         "regenerator":
-            accent = Color(0.18, 1.0, 0.56)
-            _add_regenerator_core(accent)
-        "boss":
-            accent = Color(1.0, 0.10, 0.04)
+            accent = Color(0.18, 1.0, 0.48)
             _add_elite_crown(accent)
+        "boss":
+            accent = Color(1.0, 0.62, 0.12)
+            _add_boss_frame(accent)
         _:
-            return
-    _add_signature_light(accent)
+            _add_eye_beacon(accent, Vector3(0.0, 1.62, -0.28), 0.055)
+
+func _signature_material(color: Color, energy := 2.2) -> StandardMaterial3D:
+    var mat := StandardMaterial3D.new()
+    mat.albedo_color = color
+    mat.metallic = 0.24
+    mat.roughness = 0.34
+    mat.emission_enabled = true
+    mat.emission = color
+    mat.emission_energy_multiplier = energy
+    return mat
+
+func _add_eye_beacon(color: Color, at: Vector3, size: float) -> void:
+    var beacon := MeshInstance3D.new()
+    var mesh := SphereMesh.new()
+    mesh.radius = size
+    mesh.height = size * 2.0
+    beacon.mesh = mesh
+    beacon.name = "SignatureBeacon"
+    beacon.position = at
+    beacon.material_override = _signature_material(color, 3.2)
+    add_child(beacon)
 
 func _add_runner_blades(color: Color) -> void:
+    var mat := _signature_material(color, 2.8)
     for side in [-1.0, 1.0]:
         var blade := MeshInstance3D.new()
         var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.08, 0.08, 0.70)
+        mesh.size = Vector3(0.055, 0.34, 0.16)
         blade.mesh = mesh
-        blade.position = Vector3(0.42 * side, 0.88, 0.0)
-        blade.rotation_degrees.z = -22.0 * side
-        blade.material_override = _signature_material(color)
-        authored_visual.add_child(blade)
+        blade.name = "RunnerBladeL" if side < 0.0 else "RunnerBladeR"
+        blade.position = Vector3(side * 0.38, 0.84, 0.04)
+        blade.rotation_degrees = Vector3(0.0, 0.0, side * -24.0)
+        blade.material_override = mat
+        add_child(blade)
+    _add_eye_beacon(color, Vector3(0.0, 1.58, -0.30), 0.050)
 
 func _add_brute_shoulders(color: Color) -> void:
+    var mat := _signature_material(color, 2.1)
     for side in [-1.0, 1.0]:
         var plate := MeshInstance3D.new()
         var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.34, 0.14, 0.42)
+        mesh.size = Vector3(0.32, 0.16, 0.36)
         plate.mesh = mesh
-        plate.position = Vector3(0.46 * side, 1.14, 0.0)
-        plate.rotation_degrees.z = 14.0 * side
-        plate.material_override = _signature_material(color)
-        authored_visual.add_child(plate)
+        plate.name = "BrutePlateL" if side < 0.0 else "BrutePlateR"
+        plate.position = Vector3(side * 0.48, 1.12, 0.02)
+        plate.rotation_degrees.z = side * -12.0
+        plate.material_override = mat
+        add_child(plate)
+    _add_eye_beacon(color, Vector3(0.0, 1.72, -0.34), 0.070)
 
 func _add_elite_crown(color: Color) -> void:
-    for index in range(3):
-        var spike := MeshInstance3D.new()
+    var mat := _signature_material(color, 3.0)
+    for side in [-1.0, 1.0]:
+        var fin := MeshInstance3D.new()
         var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.07, 0.42 + index * 0.07, 0.07)
-        spike.mesh = mesh
-        spike.position = Vector3((index - 1) * 0.16, 1.72, 0.04)
-        spike.rotation_degrees.z = float(index - 1) * -12.0
-        spike.material_override = _signature_material(color)
-        authored_visual.add_child(spike)
+        mesh.size = Vector3(0.08, 0.44, 0.12)
+        fin.mesh = mesh
+        fin.name = "EliteFinL" if side < 0.0 else "EliteFinR"
+        fin.position = Vector3(side * 0.31, 1.62, 0.06)
+        fin.rotation_degrees.z = side * -28.0
+        fin.material_override = mat
+        add_child(fin)
+    _add_eye_beacon(color, Vector3(0.0, 1.70, -0.34), 0.075)
 
-func _add_regenerator_core(color: Color) -> void:
+func _add_boss_frame(color: Color) -> void:
+    var mat := _signature_material(color, 3.2)
+    for side in [-1.0, 1.0]:
+        var horn := MeshInstance3D.new()
+        var mesh := BoxMesh.new()
+        mesh.size = Vector3(0.10, 0.58, 0.18)
+        horn.mesh = mesh
+        horn.name = "BossHornL" if side < 0.0 else "BossHornR"
+        horn.position = Vector3(side * 0.46, 1.76, 0.08)
+        horn.rotation_degrees.z = side * -34.0
+        horn.material_override = mat
+        add_child(horn)
     var core := MeshInstance3D.new()
-    var mesh := SphereMesh.new()
-    mesh.radius = 0.16
-    mesh.height = 0.32
-    core.mesh = mesh
-    core.position = Vector3(0.0, 1.03, -0.34)
-    core.material_override = _signature_material(color)
-    authored_visual.add_child(core)
-
-func _add_signature_light(color: Color) -> void:
-    var light := OmniLight3D.new()
-    light.light_color = color
-    light.light_energy = 1.15 if kind != "boss" else 1.9
-    light.omni_range = 2.0 if kind != "boss" else 3.0
-    light.position = Vector3(0.0, 1.05, 0.0)
-    authored_visual.add_child(light)
-
-func _signature_material(color: Color) -> StandardMaterial3D:
-    var material := StandardMaterial3D.new()
-    material.albedo_color = color
-    material.metallic = 0.42
-    material.roughness = 0.24
-    material.emission_enabled = true
-    material.emission = color
-    material.emission_energy_multiplier = 3.2
-    return material
+    var core_mesh := SphereMesh.new()
+    core_mesh.radius = 0.10
+    core_mesh.height = 0.20
+    core.mesh = core_mesh
+    core.name = "BossCore"
+    core.position = Vector3(0.0, 1.30, -0.42)
+    core.material_override = mat
+    add_child(core)
+    _add_eye_beacon(color, Vector3(0.0, 1.78, -0.42), 0.090)
 
 func _update_authored_animation(distance: float) -> void:
-    if authored_anim == null:
+    if authored_anim == null or dead:
         return
-    if attack_windup > 0.0:
-        return
-    if distance < 0.95 and attack_cooldown <= 0.05 and authored_anim.has_animation("Idle_Attack"):
+    if distance < 1.05 and authored_anim.has_animation("Idle_Attack"):
         _play_authored("Idle_Attack")
-    elif velocity.length_squared() > 0.02:
-        _play_authored("Run_Arms" if kind == "runner" and authored_anim.has_animation("Run_Arms") else "Walk")
+    elif kind in ["runner", "elite", "boss"] and authored_anim.has_animation("Run_Arms"):
+        _play_authored("Run_Arms")
     else:
-        _play_authored("Idle")
+        _play_authored("Walk")
 
 func _play_authored(name: String) -> void:
     if authored_anim == null or current_anim == name or not authored_anim.has_animation(name):
         return
-    authored_anim.play(name, 0.12)
     current_anim = name
+    authored_anim.play(name, 0.10)
 
-func _flash(critical: bool, killed: bool) -> void:
-    var visual := get_node_or_null("Visual") as Node3D
-    if visual == null:
-        return
-    var original_scale := visual.scale
-    var multiplier := 1.10 if killed else (1.06 if critical else 1.025)
-    var tween := create_tween()
-    tween.tween_property(visual, "scale", original_scale * multiplier, 0.045)
-    tween.tween_property(visual, "scale", original_scale, 0.09)
+func _flash(critical := false, killed := false) -> void:
+    var visual := get_node_or_null("Visual")
+    if visual:
+        var base_scale: Vector3 = visual.scale
+        var punch: float = 1.12 if critical else (1.10 if killed else 1.065)
+        var tween: Tween = create_tween()
+        tween.tween_property(visual, "scale", base_scale * punch, 0.035)
+        tween.tween_property(visual, "scale", base_scale, 0.075)
