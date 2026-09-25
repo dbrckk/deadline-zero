@@ -80,9 +80,21 @@ func _build_visual() -> void:
     halo.material_override = halo_mat
     add_child(halo)
 
-    var light := OmniLight3D.new()
-    light.name = "HarrierBoltLight"
-    light.light_color = Color(0.12, 0.76, 1.0)
-    light.light_energy = 2.2
-    light.omni_range = 2.4
-    add_child(light)
+    var trail := MeshInstance3D.new()
+    trail.name = "HarrierBoltTrail"
+    var trail_mesh := BoxMesh.new()
+    trail_mesh.size = Vector3(0.07, 0.07, 0.78)
+    trail.mesh = trail_mesh
+    trail.position = Vector3(0.0, 0.0, 0.42)
+    var trail_mat := StandardMaterial3D.new()
+    trail_mat.albedo_color = Color(0.05, 0.64, 1.0, 0.42)
+    trail_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    trail_mat.emission_enabled = true
+    trail_mat.emission = Color(0.04, 0.58, 1.0)
+    trail_mat.emission_energy_multiplier = 3.8
+    trail_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    trail.material_override = trail_mat
+    add_child(trail)
+
+    if velocity.length_squared() > 0.01:
+        look_at(global_position + velocity.normalized(), Vector3.UP)
