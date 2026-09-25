@@ -19,6 +19,26 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var pause_button := main.hud.get_node_or_null("PauseButton") as Button
+    var pause_panel := main.hud.get_node_or_null("PausePanel") as PanelContainer
+    if pause_button == null or pause_panel == null:
+        push_error("Pause controls are unavailable in first-playable path")
+        quit(1)
+        return
+    pause_button.pressed.emit()
+    await process_frame
+    if not paused or not pause_panel.visible:
+        push_error("Pause action did not pause gameplay and show settings")
+        quit(1)
+        return
+    var resume_button := pause_panel.find_child("ResumeButton", true, false) as Button
+    resume_button.pressed.emit()
+    await process_frame
+    if paused or pause_panel.visible:
+        push_error("Resume action did not restore gameplay")
+        quit(1)
+        return
+
     var previous_level: int = main.level
     var threshold: int = main.xp_next
     main._on_xp_collected(threshold)
