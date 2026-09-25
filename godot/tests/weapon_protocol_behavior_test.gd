@@ -62,7 +62,6 @@ func _initialize() -> void:
     var spawn_origin := Vector3(2.0, 0.7, 3.0)
     spawned.setup(spawn_origin, Vector3.FORWARD, 10.0, 10.0, Color.WHITE, "vanguard")
     parent.add_child(spawned)
-    await process_frame
     if spawned.global_position.distance_to(spawn_origin) > 0.001:
         push_error("Projectile setup did not preserve global spawn origin under a transformed parent")
         quit(1)
