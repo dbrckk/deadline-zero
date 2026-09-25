@@ -144,14 +144,12 @@ jobs:
           disable-animations: true
           script: |
             set -eu
-            APK=build/godot-android/deadline-zero-godot-debug.apk
             adb wait-for-device
             timeout 300s bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 2; done'
             adb shell input keyevent 82 || true
-            adb install -r "$APK"
+            adb install -r build/godot-android/deadline-zero-godot-debug.apk
             adb shell pm path com.deadlinezero.godot | grep -q 'package:'
-            ACTIVITY=$(adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.godot | tr -d '\r' | tail -n 1)
-            test -n "$ACTIVITY"
+            test -n "$(adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.godot | tr -d '\r' | tail -n 1)"
             adb logcat -c
             adb shell monkey -p com.deadlinezero.godot -c android.intent.category.LAUNCHER 1
             sleep 8
