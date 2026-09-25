@@ -21,10 +21,15 @@ var slow_duration := 0.0
 var hit_enemy_ids := {}
 var spawn_secondary_fx := true
 var combat_enabled := true
+var configured_origin := Vector3.ZERO
+var has_configured_origin := false
 
 func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color,
         profile := "vanguard") -> void:
-    global_position = origin
+    configured_origin = origin
+    has_configured_origin = true
+    if is_inside_tree():
+        global_position = origin
     velocity = direction.normalized() * speed
     damage = shot_damage
     tint = shot_tint
@@ -83,6 +88,9 @@ func _apply_profile(profile: String) -> void:
             impact_scale = 1.0
 
 func _ready() -> void:
+    top_level = true
+    if has_configured_origin:
+        global_position = configured_origin
     add_to_group("projectiles")
     var glow := MeshInstance3D.new()
     var mesh := SphereMesh.new()
