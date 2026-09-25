@@ -96,7 +96,7 @@ jobs:
           APK=build/godot-android/deadline-zero-godot-debug.apk
           AAPT="$ANDROID_HOME/build-tools/35.0.1/aapt"
           test -x "$AAPT"
-          "$AAPT" dump badging "$APK" | tee build/godot-android/badging.txt
+          "$AAPT" dump badging "$APK" > build/godot-android/badging.txt 2> build/godot-android/badging-stderr.txt || true
           grep -q "package: name='com.deadlinezero.godot'" build/godot-android/badging.txt
           unzip -l "$APK" | tee build/godot-android/apk-contents.txt
           grep -q 'lib/arm64-v8a/' build/godot-android/apk-contents.txt
@@ -112,5 +112,6 @@ jobs:
             build/godot-android/deadline-zero-godot-debug.apk
             build/godot-android/SHA256SUMS.txt
             build/godot-android/badging.txt
+            build/godot-android/badging-stderr.txt
           if-no-files-found: error
           retention-days: 14
