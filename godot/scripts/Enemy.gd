@@ -333,6 +333,7 @@ func take_damage(amount: float, critical := false) -> void:
     health_changed.emit(max(0.0, health), max_health)
     var killed := health <= 0.0
     impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
+    _spawn_damage_number(amount, critical)
     _flash(critical, killed)
     if killed:
         dead = true
@@ -344,6 +345,29 @@ func take_damage(amount: float, critical := false) -> void:
             timer.timeout.connect(queue_free)
         else:
             queue_free()
+
+func _spawn_damage_number(amount: float, critical: bool) -> void:
+    if get_tree() == null or get_tree().current_scene == null:
+        return
+    var number := Label3D.new()
+    number.name = "DamageNumber_%d" % Time.get_ticks_usec()
+    number.text = "%d" % int(round(amount))
+    number.font_size = 34 if critical else 26
+    number.outline_size = 8 if critical else 6
+    number.modulate = Color(1.0, 0.72, 0.12) if critical else Color(0.92, 0.97, 1.0)
+    number.outline_modulate = Color(0.02, 0.03, 0.05, 0.96)
+    number.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+    number.no_depth_test = true
+    number.pixel_size = 0.0038 if critical else 0.0032
+    get_tree().current_scene.add_child(number)
+    number.global_position = global_position + Vector3(0.0, 1.28, 0.0)
+
+    var rise := 0.82 if critical else 0.62
+    var tween := number.create_tween()
+    tween.set_parallel(true)
+    tween.tween_property(number, "global_position", number.global_position + Vector3(0.0, rise, 0.0), 0.58).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(number, "modulate:a", 0.0, 0.58).set_delay(0.18)
+    tween.chain().tween_callback(number.queue_free)
 
 func _build_visual() -> void:
     authored_visual = DZAssetLibrary.enemy(kind)
