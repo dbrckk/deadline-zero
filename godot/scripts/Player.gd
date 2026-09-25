@@ -31,6 +31,11 @@ func _ready() -> void:
     health_changed.emit(health, max_health)
 
 func _physics_process(delta: float) -> void:
+    if health <= 0.0:
+        velocity = Vector3.ZERO
+        touch_move = Vector2.ZERO
+        return
+
     invulnerability = max(0.0, invulnerability - delta)
     fire_clock -= delta
 
