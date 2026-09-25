@@ -48,10 +48,13 @@ const BOSS_REVEAL_FOV_DELTA := 5.5
 
 func _ready() -> void:
     randomize()
+    _ensure_audio_buses()
     _build_world()
 
     player = DZPlayer.new()
     add_child(player)
+    if player.shot_audio != null:
+        player.shot_audio.bus = "SFX"
     player.global_position = Vector3.ZERO
     player.health_changed.connect(_on_health_changed)
     player.died.connect(_on_player_died)
@@ -67,6 +70,10 @@ func _ready() -> void:
     add_child(hud)
     hud.upgrade_chosen.connect(_on_upgrade_chosen)
     hud.restart_requested.connect(_on_restart_requested)
+    hud.pause_requested.connect(_on_pause_requested)
+    hud.resume_requested.connect(_on_resume_requested)
+    hud.master_volume_changed.connect(_on_master_volume_changed)
+    hud.sfx_volume_changed.connect(_on_sfx_volume_changed)
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     _build_combat_audio()
@@ -231,6 +238,35 @@ func _on_upgrade_chosen(index: int) -> void:
 func _on_health_changed(current: float, maximum: float) -> void:
     if hud:
         hud.set_health(current, maximum)
+
+func _ensure_audio_buses() -> void:
+    if AudioServer.get_bus_index("SFX") < 0:
+        AudioServer.add_bus()
+        AudioServer.set_bus_name(AudioServer.bus_count - 1, "SFX")
+
+func _set_bus_linear_volume(bus_name: String, value: float) -> void:
+    var bus_index := AudioServer.get_bus_index(bus_name)
+    if bus_index < 0:
+        return
+    var linear := clampf(value, 0.0, 1.0)
+    AudioServer.set_bus_volume_db(bus_index, -80.0 if linear <= 0.0 else linear_to_db(linear))
+
+func _on_master_volume_changed(value: float) -> void:
+    _set_bus_linear_volume("Master", value)
+
+func _on_sfx_volume_changed(value: float) -> void:
+    _set_bus_linear_volume("SFX", value)
+
+func _on_pause_requested() -> void:
+    if game_over or not pending_upgrades.is_empty():
+        return
+    hud.show_pause_settings()
+    get_tree().paused = true
+
+func _on_resume_requested() -> void:
+    hud.hide_pause_settings()
+    if not game_over and pending_upgrades.is_empty():
+        get_tree().paused = false
 
 func _on_player_died() -> void:
     Engine.time_scale = 1.0
@@ -413,11 +449,13 @@ func _build_perimeter_beacons() -> void:
 func _build_combat_audio() -> void:
     impact_audio = AudioStreamPlayer.new()
     impact_audio.name = "ImpactAudio"
+    impact_audio.bus = "SFX"
     impact_audio.volume_db = -9.0
     add_child(impact_audio)
 
     boss_audio = AudioStreamPlayer.new()
     boss_audio.name = "BossStinger"
+    boss_audio.bus = "SFX"
     boss_audio.volume_db = -6.0
     boss_audio.stream = DZCombatAudio.boss_stinger()
     add_child(boss_audio)

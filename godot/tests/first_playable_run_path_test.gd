@@ -19,6 +19,46 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var pause_button := main.hud.get_node_or_null("PauseButton") as Button
+    var pause_panel := main.hud.get_node_or_null("PausePanel") as PanelContainer
+    if pause_button == null or pause_panel == null:
+        push_error("Pause controls are unavailable in first-playable path")
+        quit(1)
+        return
+    pause_button.pressed.emit()
+    await process_frame
+    if not paused or not pause_panel.visible:
+        push_error("Pause action did not pause gameplay and show settings")
+        quit(1)
+        return
+    var resume_button := pause_panel.find_child("ResumeButton", true, false) as Button
+    resume_button.pressed.emit()
+    await process_frame
+    if paused or pause_panel.visible:
+        push_error("Resume action did not restore gameplay")
+        quit(1)
+        return
+
+    var master_slider := pause_panel.find_child("MasterVolume", true, false) as HSlider
+    var sfx_slider := pause_panel.find_child("SfxVolume", true, false) as HSlider
+    master_slider.value = 0.35
+    sfx_slider.value = 0.45
+    await process_frame
+    var master_bus := AudioServer.get_bus_index("Master")
+    var sfx_bus := AudioServer.get_bus_index("SFX")
+    if sfx_bus < 0:
+        push_error("Pause settings did not create dedicated SFX audio bus")
+        quit(1)
+        return
+    if abs(AudioServer.get_bus_volume_db(master_bus) - linear_to_db(0.35)) > 0.25:
+        push_error("Master volume slider did not update Master bus")
+        quit(1)
+        return
+    if abs(AudioServer.get_bus_volume_db(sfx_bus) - linear_to_db(0.45)) > 0.25:
+        push_error("SFX volume slider did not update SFX bus")
+        quit(1)
+        return
+
     var previous_level: int = main.level
     var threshold: int = main.xp_next
     main._on_xp_collected(threshold)
