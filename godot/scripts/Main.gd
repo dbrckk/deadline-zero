@@ -244,6 +244,10 @@ func _freeze_combat() -> void:
         var projectile := node as DZProjectile
         if projectile != null:
             projectile.set_combat_enabled(false)
+    for node in get_tree().get_nodes_in_group("hostile_projectiles"):
+        var hostile := node as DZEnemyProjectile
+        if hostile != null:
+            hostile.set_combat_enabled(false)
 
 func _on_restart_requested() -> void:
     Engine.time_scale = 1.0
