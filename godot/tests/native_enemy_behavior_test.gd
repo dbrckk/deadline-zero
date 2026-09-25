@@ -55,8 +55,35 @@ func _initialize() -> void:
     charger.global_position = Vector3.ZERO
     target.global_position = Vector3(3.6, 0.0, 0.0)
     charger._resolve_telegraphed_attack()
-    if charger.global_position.x <= 2.5 or target.damage_taken <= 0.0:
-        push_error("Charger special did not advance and damage target")
+    if not charger.charge_active or target.damage_taken > 0.0:
+        push_error("Charger special should start a real dash before dealing damage")
+        quit(1)
+        return
+    for i in range(5):
+        charger._process_charge(0.10)
+    if target.damage_taken <= 0.0 or charger.global_position.x <= 2.5:
+        push_error("Charger dash did not advance through and damage its target")
+        quit(1)
+        return
+
+    var dodge_target := DummyTarget.new()
+    root.add_child(dodge_target)
+    dodge_target.global_position = Vector3(4.0, 0.0, 0.0)
+    await process_frame
+    var dodge_charger := ENEMY_SCRIPT.new()
+    dodge_charger.configure("charger", 1.0, dodge_target)
+    dodge_charger.process_mode = Node.PROCESS_MODE_DISABLED
+    dodge_charger.spawn_secondary_fx = false
+    root.add_child(dodge_charger)
+    dodge_charger.global_position = Vector3.ZERO
+    dodge_charger.attack_target_position = dodge_target.global_position
+    dodge_charger.pending_special = "charge"
+    dodge_charger._resolve_telegraphed_attack()
+    dodge_target.global_position = Vector3(4.0, 0.0, 3.0)
+    for i in range(6):
+        dodge_charger._process_charge(0.10)
+    if dodge_target.damage_taken > 0.0:
+        push_error("Charger dash incorrectly tracked a laterally dodging target")
         quit(1)
         return
 
@@ -88,18 +115,18 @@ func _initialize() -> void:
         quit(1)
         return
 
-    var dodge_target := DummyTarget.new()
-    root.add_child(dodge_target)
-    dodge_target.global_position = Vector3(4.0, 0.0, 0.0)
+    var harrier_dodge_target := DummyTarget.new()
+    root.add_child(harrier_dodge_target)
+    harrier_dodge_target.global_position = Vector3(4.0, 0.0, 0.0)
     await process_frame
     var dodge_shot := DZEnemyProjectile.new()
     root.add_child(dodge_shot)
     dodge_shot.global_position = Vector3.ZERO
-    dodge_shot.configure(dodge_target.global_position, dodge_target, 10.0, 8.0)
-    dodge_target.global_position = Vector3(4.0, 0.0, 3.0)
+    dodge_shot.configure(harrier_dodge_target.global_position, harrier_dodge_target, 10.0, 8.0)
+    harrier_dodge_target.global_position = Vector3(4.0, 0.0, 3.0)
     for i in range(10):
         dodge_shot._physics_process(0.10)
-    if dodge_target.damage_taken > 0.0:
+    if harrier_dodge_target.damage_taken > 0.0:
         push_error("Harrier projectile incorrectly homed into a dodging target")
         quit(1)
         return
