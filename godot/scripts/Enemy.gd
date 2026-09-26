@@ -282,6 +282,7 @@ func _show_telegraph(radius: float, duration: float) -> void:
     mesh.bottom_radius = radius
     mesh.height = 0.018
     telegraph_visual.mesh = mesh
+    get_tree().current_scene.add_child(telegraph_visual)
     telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.025, 0.0)
     telegraph_material = StandardMaterial3D.new()
     telegraph_material.albedo_color = Color(1.0, 0.16, 0.04, 0.16)
@@ -290,7 +291,6 @@ func _show_telegraph(radius: float, duration: float) -> void:
     telegraph_material.emission = Color(1.0, 0.08, 0.01)
     telegraph_material.emission_energy_multiplier = 1.4
     telegraph_visual.material_override = telegraph_material
-    get_tree().current_scene.add_child(telegraph_visual)
     var tween := telegraph_visual.create_tween()
     tween.set_parallel(true)
     telegraph_visual.scale = Vector3(0.42, 1.0, 0.42)
