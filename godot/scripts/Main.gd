@@ -390,10 +390,8 @@ func _build_world() -> void:
     var plane := PlaneMesh.new()
     plane.size = Vector2(72.0, 72.0)
     floor.mesh = plane
-    var floor_mat := StandardMaterial3D.new()
-    floor_mat.albedo_color = Color(0.045, 0.055, 0.060)
-    floor_mat.roughness = 0.91
-    floor_mat.metallic = 0.05
+    var floor_mat := ShaderMaterial.new()
+    floor_mat.shader = load("res://shaders/quarantine_floor.gdshader") as Shader
     floor.material_override = floor_mat
     add_child(floor)
 
