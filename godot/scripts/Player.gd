@@ -99,6 +99,36 @@ func can_apply_upgrade(id: String) -> bool:
         return true
     return applied_protocols.is_empty()
 
+func _apply_weapon_profile_data(profile_id: String, data: Dictionary) -> void:
+    weapon_profile = profile_id
+    if data.has("tint"):
+        weapon_tint = data["tint"]
+
+    weapon_damage *= float(data.get("damage_multiplier", 1.0))
+    projectile_speed *= float(data.get("projectile_speed_multiplier", 1.0))
+
+    var interval_multiplier := float(data.get("fire_interval_multiplier", 1.0))
+    fire_interval *= interval_multiplier
+    if data.has("fire_interval_floor"):
+        fire_interval = max(float(data["fire_interval_floor"]), fire_interval)
+    if data.has("fire_interval_cap"):
+        fire_interval = min(float(data["fire_interval_cap"]), fire_interval)
+
+    if data.has("multishot_set"):
+        multishot = int(data["multishot_set"])
+    elif data.has("multishot_add"):
+        multishot = min(
+            multishot + int(data["multishot_add"]),
+            int(data.get("multishot_cap", 5))
+        )
+
+    if data.has("spread_set"):
+        spread_degrees = float(data["spread_set"])
+    if data.has("spread_min"):
+        spread_degrees = max(spread_degrees, float(data["spread_min"]))
+    if data.has("spread_max"):
+        spread_degrees = min(spread_degrees, float(data["spread_max"]))
+
 func apply_upgrade(id: String) -> void:
     if not can_apply_upgrade(id):
         return
@@ -135,37 +165,15 @@ func apply_upgrade(id: String) -> void:
             move_speed *= 0.94
             health_changed.emit(health, max_health)
         "scatter_protocol":
-            weapon_profile = "scatter"
-            weapon_tint = Color(1.0, 0.56, 0.18)
-            multishot = min(multishot + 2, 5)
-            spread_degrees = max(spread_degrees, 11.0)
-            weapon_damage *= 0.82
+            _apply_weapon_profile_data("scatter", DZWeaponProfiles.profile("scatter"))
         "rail_protocol":
-            weapon_profile = "rail"
-            weapon_tint = Color(0.72, 0.58, 1.0)
-            weapon_damage *= 1.50
-            projectile_speed *= 1.40
-            fire_interval = min(0.80, fire_interval * 1.22)
-            multishot = 1
-            spread_degrees = 3.0
+            _apply_weapon_profile_data("rail", DZWeaponProfiles.profile("rail"))
         "inferno_protocol":
-            weapon_profile = "inferno"
-            weapon_tint = Color(1.0, 0.24, 0.035)
-            weapon_damage *= 1.20
-            fire_interval = min(0.80, fire_interval * 1.08)
+            _apply_weapon_profile_data("inferno", DZWeaponProfiles.profile("inferno"))
         "cryo_protocol":
-            weapon_profile = "cryo"
-            weapon_tint = Color(0.30, 0.90, 1.0)
-            projectile_speed *= 1.12
-            fire_interval = max(0.09, fire_interval * 0.90)
-            weapon_damage *= 0.95
+            _apply_weapon_profile_data("cryo", DZWeaponProfiles.profile("cryo"))
         "arc_protocol":
-            weapon_profile = "arc"
-            weapon_tint = Color(0.64, 0.42, 1.0)
-            multishot = min(multishot + 1, 5)
-            spread_degrees = min(spread_degrees, 4.0)
-            fire_interval = max(0.09, fire_interval * 0.92)
-            weapon_damage *= 0.90
+            _apply_weapon_profile_data("arc", DZWeaponProfiles.profile("arc"))
 
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
