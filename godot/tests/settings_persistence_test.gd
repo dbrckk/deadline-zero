@@ -29,8 +29,8 @@ func _initialize() -> void:
 
     var integration_path := "user://deadline-zero-settings-integration-test.cfg"
     script.save(integration_path, {
-        "master_volume": 0.37,
-        "sfx_volume": 0.58
+        "master_volume": 0.35,
+        "sfx_volume": 0.60
     })
 
     var main := MAIN_SCENE.instantiate()
@@ -45,24 +45,24 @@ func _initialize() -> void:
         return
 
     main._load_audio_settings(integration_path)
-    if not is_equal_approx(main.hud.master_volume.value, 0.37):
+    if not is_equal_approx(main.hud.master_volume.value, 0.35):
         push_error("Persisted master volume was not restored into pause settings")
         quit(1)
         return
-    if not is_equal_approx(main.hud.sfx_volume.value, 0.58):
+    if not is_equal_approx(main.hud.sfx_volume.value, 0.60):
         push_error("Persisted SFX volume was not restored into pause settings")
         quit(1)
         return
 
-    main.hud.master_volume.value = 0.61
-    main.hud.sfx_volume.value = 0.47
+    main.hud.master_volume.value = 0.60
+    main.hud.sfx_volume.value = 0.45
     main._save_audio_settings(integration_path)
     var round_trip: Dictionary = script.load_settings(integration_path)
-    if not is_equal_approx(float(round_trip.get("master_volume", -1.0)), 0.61):
+    if not is_equal_approx(float(round_trip.get("master_volume", -1.0)), 0.60):
         push_error("Updated master volume was not saved from pause settings")
         quit(1)
         return
-    if not is_equal_approx(float(round_trip.get("sfx_volume", -1.0)), 0.47):
+    if not is_equal_approx(float(round_trip.get("sfx_volume", -1.0)), 0.45):
         push_error("Updated SFX volume was not saved from pause settings")
         quit(1)
         return
