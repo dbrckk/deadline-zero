@@ -11,6 +11,13 @@ static func pattern_for(kind: String) -> int:
         _:
             return 0
 
+static func event_for_impact(critical: bool, killed: bool, boss: bool) -> String:
+    if boss:
+        return "boss"
+    if critical or killed:
+        return "critical"
+    return "hit"
+
 static func amplitude_for(kind: String) -> float:
     match kind:
         "hit":
