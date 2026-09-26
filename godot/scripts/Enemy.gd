@@ -42,6 +42,9 @@ var charge_active := false
 var charge_direction := Vector3.ZERO
 var charge_left := 0.0
 var charge_hit := false
+var hit_flash_visual: MeshInstance3D
+var hit_flash_material: StandardMaterial3D
+var hit_reaction_tween: Tween
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -93,6 +96,7 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
 func _ready() -> void:
     add_to_group("enemies")
     _build_visual()
+    _build_hit_flash()
 
 func _physics_process(delta: float) -> void:
     if not combat_enabled:
@@ -405,7 +409,7 @@ func take_damage(amount: float, critical := false) -> void:
     var killed := health <= 0.0
     impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
     _spawn_damage_number(amount, critical)
-    _flash(critical, killed)
+    _play_hit_reaction(critical, killed)
     if killed:
         dead = true
         velocity = Vector3.ZERO
@@ -416,6 +420,73 @@ func take_damage(amount: float, critical := false) -> void:
             timer.timeout.connect(queue_free)
         else:
             queue_free()
+
+func hit_reaction_profile() -> Dictionary:
+    if kind == "boss":
+        return {"id": "boss_hit", "punch": 1.035, "flash": 5.0, "duration": 0.13, "recoil": 0.025}
+    if kind == "elite":
+        return {"id": "elite_hit", "punch": 1.075, "flash": 6.2, "duration": 0.12, "recoil": 0.055}
+    return {"id": "normal_hit", "punch": 1.10, "flash": 7.0, "duration": 0.10, "recoil": 0.085}
+
+func _play_hit_reaction(critical: bool, killed: bool) -> void:
+    var visual := get_node_or_null("Visual") as Node3D
+    if visual == null:
+        return
+    var profile := hit_reaction_profile()
+    if hit_reaction_tween != null and hit_reaction_tween.is_valid():
+        hit_reaction_tween.kill()
+    var base_scale := visual.scale
+    var punch := float(profile["punch"]) * (1.035 if critical else 1.0)
+    var duration := float(profile["duration"])
+    var recoil := float(profile["recoil"])
+    var base_position := visual.position
+    var recoil_direction := Vector3.ZERO
+    if target != null and is_instance_valid(target):
+        recoil_direction = global_position - target.global_position
+        recoil_direction.y = 0.0
+        if recoil_direction.length_squared() > 0.001:
+            recoil_direction = recoil_direction.normalized() * recoil
+    if hit_flash_visual != null:
+        hit_flash_visual.visible = true
+        hit_flash_material.emission_energy_multiplier = float(profile["flash"]) * (1.18 if critical else 1.0)
+        hit_flash_material.albedo_color.a = 0.30 if critical else 0.20
+    hit_reaction_tween = create_tween()
+    hit_reaction_tween.set_parallel(true)
+    hit_reaction_tween.tween_property(visual, "scale", base_scale * punch, duration * 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    hit_reaction_tween.tween_property(visual, "position", base_position + recoil_direction, duration * 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    if hit_flash_visual != null:
+        hit_reaction_tween.tween_property(hit_flash_material, "emission_energy_multiplier", 0.0, duration)
+        hit_reaction_tween.tween_property(hit_flash_material, "albedo_color:a", 0.0, duration)
+    hit_reaction_tween.set_parallel(false)
+    hit_reaction_tween.tween_property(visual, "scale", base_scale * (1.04 if killed else 1.0), duration * 0.66).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    hit_reaction_tween.parallel().tween_property(visual, "position", base_position, duration * 0.66).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    hit_reaction_tween.tween_callback(func() -> void:
+        if hit_flash_visual != null:
+            hit_flash_visual.visible = false
+    )
+
+func _build_hit_flash() -> void:
+    hit_flash_visual = MeshInstance3D.new()
+    hit_flash_visual.name = "HitFlash"
+    var mesh := CylinderMesh.new()
+    var scale_factor := 1.0
+    if kind == "boss": scale_factor = 1.62
+    elif kind in ["elite", "brute", "charger"]: scale_factor = 1.18
+    mesh.top_radius = 0.46 * scale_factor
+    mesh.bottom_radius = 0.52 * scale_factor
+    mesh.height = 1.28 * scale_factor
+    hit_flash_visual.mesh = mesh
+    hit_flash_visual.position.y = 0.66 * scale_factor
+    hit_flash_material = StandardMaterial3D.new()
+    hit_flash_material.albedo_color = Color(1.0, 0.86, 0.58, 0.0)
+    hit_flash_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    hit_flash_material.emission_enabled = true
+    hit_flash_material.emission = Color(1.0, 0.58, 0.16)
+    hit_flash_material.emission_energy_multiplier = 0.0
+    hit_flash_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    hit_flash_visual.material_override = hit_flash_material
+    hit_flash_visual.visible = false
+    add_child(hit_flash_visual)
 
 func _spawn_damage_number(amount: float, critical: bool) -> void:
     if get_tree() == null or get_tree().current_scene == null:
@@ -644,10 +715,4 @@ func _play_authored(name: String) -> void:
     authored_anim.play(name, 0.10)
 
 func _flash(critical := false, killed := false) -> void:
-    var visual := get_node_or_null("Visual")
-    if visual:
-        var base_scale: Vector3 = visual.scale
-        var punch: float = 1.12 if critical else (1.10 if killed else 1.065)
-        var tween: Tween = create_tween()
-        tween.tween_property(visual, "scale", base_scale * punch, 0.035)
-        tween.tween_property(visual, "scale", base_scale, 0.075)
+    _play_hit_reaction(critical, killed)

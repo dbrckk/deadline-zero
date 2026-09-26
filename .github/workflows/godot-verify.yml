@@ -3,205 +3,91 @@ name: Godot 3D Verify
 on:
   pull_request:
     paths:
-      - 'godot/**'
-      - 'docs/GODOT_3D_MIGRATION.md'
-      - '.github/workflows/godot-verify.yml'
+      - "godot/**"
+      - ".github/workflows/godot-verify.yml"
   push:
     branches: [main]
     paths:
-      - 'godot/**'
-      - 'docs/GODOT_3D_MIGRATION.md'
-      - '.github/workflows/godot-verify.yml'
-  workflow_dispatch:
+      - "godot/**"
+      - ".github/workflows/godot-verify.yml"
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
 
       - name: Download Godot 4.7.2
         run: |
           set -euo pipefail
-          curl -fL --retry 4             https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip             -o /tmp/godot.zip
+          curl -fL --retry 4 https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o /tmp/godot.zip
           unzip -q /tmp/godot.zip -d /tmp/godot
           chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
 
       - name: Import and parse Godot project
         run: |
           set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64             --headless --path godot --editor --quit
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --editor --quit
 
       - name: Validate authored 3D imports
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/authored_asset_validation.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_asset_validation.gd
       - name: Validate combat-feel profile
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/combat_feel_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_feel_test.gd
       - name: Validate mobile-safe impact FX
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/impact_fx_mobile_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/impact_fx_mobile_test.gd
       - name: Validate enemy archetype combat
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/enemy_archetype_combat_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_archetype_combat_test.gd
+      - name: Validate enemy hit reaction hierarchy
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_hit_reaction_test.gd
+      - name: Validate run director escalation
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/run_director_escalation_test.gd
       - name: Validate enemy silhouette identities
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/enemy_silhouette_identity_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_silhouette_identity_test.gd
       - name: Validate weapon presentation identities
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/weapon_presentation_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_presentation_test.gd
       - name: Validate weapon profile data
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/weapon_profile_data_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_profile_data_test.gd
       - name: Validate upgrade presentation identities
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/upgrade_presentation_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/upgrade_presentation_test.gd
       - name: Validate boss reveal camera
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/boss_reveal_camera_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/boss_reveal_camera_test.gd
       - name: Validate boss HUD identity
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/boss_hud_identity_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/boss_hud_identity_test.gd
       - name: Validate boss phase runtime
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/boss_phase_runtime_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/boss_phase_runtime_test.gd
       - name: Validate combat audio feedback
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/combat_audio_feedback_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_audio_feedback_test.gd
       - name: Validate run-end UX
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/run_end_ux_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/run_end_ux_test.gd
       - name: Validate consolidated combat danger HUD
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/combat_danger_hud_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_danger_hud_test.gd
       - name: Validate attack telegraph escalation
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/attack_telegraph_escalation_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/attack_telegraph_escalation_test.gd
       - name: Validate player damage feedback
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/player_damage_feedback_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/player_damage_feedback_test.gd
       - name: Validate screen-space impact FX
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/screen_space_fx_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/screen_space_fx_test.gd
       - name: Validate environment identity
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/environment_identity_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_identity_test.gd
       - name: Validate native upgrade depth
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/native_upgrade_depth_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/native_upgrade_depth_test.gd
       - name: Validate weapon protocol behavior
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/weapon_protocol_behavior_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_protocol_behavior_test.gd
       - name: Validate enemy spatial hash
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/spatial_hash_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/spatial_hash_test.gd
       - name: Validate native enemy behaviors
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/native_enemy_behavior_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/native_enemy_behavior_test.gd
       - name: Validate status effects
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/status_effects_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/status_effects_test.gd
       - name: Validate enemy projectile visual
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/enemy_projectile_visual_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_projectile_visual_test.gd
       - name: Validate haptics service
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/haptics_service_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/haptics_service_test.gd
       - name: Validate settings persistence
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/settings_persistence_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/settings_persistence_test.gd
       - name: Validate run-end combat freeze
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/run_end_combat_freeze_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/run_end_combat_freeze_test.gd
       - name: Validate first-playable run path
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/first_playable_run_path_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/first_playable_run_path_test.gd
       - name: Run Godot smoke test
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64             --headless --path godot --script res://tests/smoke_test.gd
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/smoke_test.gd

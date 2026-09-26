@@ -49,43 +49,29 @@ static func protocol_slow(profile: String) -> Vector2:
     return Vector2(0.62, 1.6) if profile == "cryo" else Vector2(1.0, 0.0)
 
 func _apply_profile(profile: String) -> void:
+    var feedback := DZWeaponProfiles.profile(profile)
+    trail_length = float(feedback.get("trail_length", 0.55))
+    impact_scale = float(feedback.get("impact_weight", 1.0))
+    var projectile_scale := float(feedback.get("projectile_scale", 1.0))
+    core_radius = 0.11 * projectile_scale
+    trail_width = 0.055 * projectile_scale
     match profile:
         "scatter":
-            trail_length = 0.32
-            trail_width = 0.09
-            core_radius = 0.13
-            impact_scale = 1.18
+            trail_width *= 1.40
         "rail":
-            trail_length = 1.25
-            trail_width = 0.035
-            core_radius = 0.075
-            impact_scale = 1.34
+            trail_width *= 0.64
             pierce_remaining = protocol_pierce_budget(profile)
         "inferno":
-            trail_length = 0.72
-            trail_width = 0.075
-            core_radius = 0.12
-            impact_scale = 1.22
+            trail_width *= 1.24
             splash_radius = protocol_splash_radius(profile)
         "cryo":
-            trail_length = 0.82
-            trail_width = 0.07
-            core_radius = 0.12
-            impact_scale = 1.24
+            trail_width *= 1.18
             var slow := protocol_slow(profile)
             slow_multiplier = slow.x
             slow_duration = slow.y
         "arc":
-            trail_length = 0.94
-            trail_width = 0.045
-            core_radius = 0.09
-            impact_scale = 1.20
+            trail_width *= 0.82
             chain_targets = protocol_chain_targets(profile)
-        _:
-            trail_length = 0.55
-            trail_width = 0.055
-            core_radius = 0.11
-            impact_scale = 1.0
 
 func _ready() -> void:
     top_level = true
@@ -122,7 +108,7 @@ func _ready() -> void:
     elif visual_profile == "arc":
         _add_arc_accent()
     elif visual_profile == "inferno":
-        _add_flame_core()
+        _add_flame_core(mat)
 
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity.normalized(), Vector3.UP)
@@ -151,12 +137,15 @@ func _add_arc_accent() -> void:
     accent.material_override = mat
     add_child(accent)
 
-func _add_flame_core() -> void:
-    var core := OmniLight3D.new()
-    core.light_color = Color(1.0, 0.30, 0.04)
-    core.light_energy = 1.1
-    core.omni_range = 1.35
-    add_child(core)
+func _add_flame_core(base_material: StandardMaterial3D) -> void:
+    var flame := MeshInstance3D.new()
+    var mesh := SphereMesh.new()
+    mesh.radius = core_radius * 0.58
+    mesh.height = core_radius * 1.55
+    flame.mesh = mesh
+    flame.scale = Vector3(0.72, 0.72, 1.42)
+    flame.material_override = base_material
+    add_child(flame)
 
 func set_combat_enabled(enabled: bool) -> void:
     combat_enabled = enabled
@@ -168,7 +157,6 @@ func _physics_process(delta: float) -> void:
         return
     age += delta
     global_position += velocity * delta
-
     for node in _candidate_enemies():
         if not is_instance_valid(node):
             continue
@@ -187,7 +175,6 @@ func _physics_process(delta: float) -> void:
                 continue
             queue_free()
             return
-
     if age >= lifetime:
         queue_free()
 
@@ -204,7 +191,6 @@ func _impact(critical := false) -> void:
     get_tree().current_scene.add_child(fx)
     fx.global_position = global_position
 
-
 func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
     match visual_profile:
         "inferno":
@@ -215,8 +201,6 @@ func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
         "arc":
             primary.apply_shock(0.24)
             _apply_chain(primary, dealt_damage)
-        _:
-            pass
 
 func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) -> void:
     if range_radius <= 0.0:
