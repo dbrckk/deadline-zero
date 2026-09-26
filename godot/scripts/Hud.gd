@@ -33,6 +33,8 @@ var pause_panel: PanelContainer
 var pause_button: Button
 var master_volume: HSlider
 var sfx_volume: HSlider
+var impact_flash: ColorRect
+var impact_flash_tween: Tween
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -119,6 +121,34 @@ func show_pause_settings() -> void:
 func hide_pause_settings() -> void:
     pause_panel.visible = false
 
+func show_impact_flash(critical: bool, killed: bool, boss: bool) -> void:
+    if impact_flash == null:
+        return
+    if impact_flash_tween != null and impact_flash_tween.is_valid():
+        impact_flash_tween.kill()
+
+    var alpha := 0.055
+    var tint := Color(0.68, 0.90, 1.0, alpha)
+    if critical:
+        alpha = 0.10
+        tint = Color(1.0, 0.74, 0.20, alpha)
+    if killed:
+        alpha = maxf(alpha, 0.13)
+        tint = Color(1.0, 0.38, 0.16, alpha)
+    if boss:
+        alpha = maxf(alpha, 0.18)
+        tint = Color(1.0, 0.12, 0.055, alpha)
+
+    impact_flash.color = tint
+    impact_flash.visible = true
+    impact_flash_tween = create_tween()
+    impact_flash_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    impact_flash_tween.tween_property(impact_flash, "color:a", 0.0, 0.16 if boss else 0.11)
+    impact_flash_tween.tween_callback(func() -> void:
+        if impact_flash != null:
+            impact_flash.visible = false
+    )
+
 func show_game_over(kills: int, level: int, elapsed: float) -> void:
     wave_label.text = "RUN TERMINATED"
     upgrade_panel.visible = false
@@ -134,6 +164,14 @@ func _build() -> void:
     var root := Control.new()
     root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
     add_child(root)
+
+    impact_flash = ColorRect.new()
+    impact_flash.name = "ImpactFlash"
+    impact_flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    impact_flash.color = Color(1.0, 1.0, 1.0, 0.0)
+    impact_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    impact_flash.visible = false
+    root.add_child(impact_flash)
 
     var top := VBoxContainer.new()
     top.position = Vector2(28, 24)

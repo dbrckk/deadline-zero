@@ -194,6 +194,8 @@ func _on_boss_health_changed(current: float, maximum: float) -> void:
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
     camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
+    if hud:
+        hud.show_impact_flash(critical, killed, boss)
     _play_impact_audio(critical, killed, boss)
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
