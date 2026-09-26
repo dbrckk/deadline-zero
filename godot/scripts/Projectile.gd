@@ -213,6 +213,7 @@ func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
         "cryo":
             primary.apply_slow(slow_multiplier, slow_duration)
         "arc":
+            primary.apply_shock(0.24)
             _apply_chain(primary, dealt_damage)
         _:
             pass

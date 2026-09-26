@@ -46,6 +46,7 @@ func _initialize() -> void:
 
     var projectile := PROJECTILE_SCRIPT.new()
     projectile.visual_profile = "inferno"
+    projectile.process_mode = Node.PROCESS_MODE_DISABLED
     projectile.spawn_secondary_fx = false
     root.add_child(projectile)
     await process_frame
@@ -56,5 +57,37 @@ func _initialize() -> void:
         quit(1)
         return
 
-    print("Deadline Zero enemy burn status: OK")
+    if not enemy.has_method("apply_shock"):
+        push_error("Enemy shock status API is missing")
+        quit(1)
+        return
+    enemy.velocity = Vector3(3.0, 0.0, 0.0)
+    enemy.apply_shock(0.40)
+    if enemy.shock_left <= 0.0 or enemy.velocity.length_squared() > 0.001:
+        push_error("Shock status did not immediately immobilize enemy")
+        quit(1)
+        return
+
+    var arc_target := ENEMY_SCRIPT.new()
+    arc_target.configure("shambler", 1.0, target)
+    arc_target.process_mode = Node.PROCESS_MODE_DISABLED
+    arc_target.spawn_secondary_fx = false
+    root.add_child(arc_target)
+    await process_frame
+
+    var arc_projectile := PROJECTILE_SCRIPT.new()
+    arc_projectile.visual_profile = "arc"
+    arc_projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    arc_projectile.spawn_secondary_fx = false
+    root.add_child(arc_projectile)
+    await process_frame
+    arc_projectile._apply_profile("arc")
+    arc_projectile.chain_targets = 0
+    arc_projectile._apply_protocol_hit(arc_target, 24.0)
+    if arc_target.shock_left <= 0.0:
+        push_error("Arc projectile did not apply shock control")
+        quit(1)
+        return
+
+    print("Deadline Zero enemy status effects: OK")
     quit(0)
