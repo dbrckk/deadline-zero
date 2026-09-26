@@ -21,6 +21,7 @@ var attack_windup := 0.0
 var attack_target_position := Vector3.ZERO
 var elite_burst_clock := 2.4
 var boss_slam_clock := 3.6
+var boss_phase := 1
 var telegraph_visual: Node3D
 var telegraph_material: StandardMaterial3D
 var slow_multiplier := 1.0
@@ -99,6 +100,8 @@ func _physics_process(delta: float) -> void:
     _process_status_effects(delta)
     if dead or target == null or not is_instance_valid(target):
         return
+    if kind == "boss":
+        _update_boss_phase()
     attack_cooldown = max(0.0, attack_cooldown - delta)
     elite_burst_clock = max(0.0, elite_burst_clock - delta)
     boss_slam_clock = max(0.0, boss_slam_clock - delta)
@@ -146,8 +149,8 @@ func _physics_process(delta: float) -> void:
         elite_burst_clock = 3.0
         return
     if kind == "boss" and boss_slam_clock <= 0.0 and distance < 4.6:
-        _begin_telegraphed_attack(0.68, target.global_position)
-        boss_slam_clock = 4.1
+        _begin_telegraphed_attack(_boss_slam_windup(), target.global_position)
+        boss_slam_clock = _boss_slam_cooldown()
         return
 
     if distance > 0.05:
@@ -165,6 +168,34 @@ func _physics_process(delta: float) -> void:
     if distance < 0.85 and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _update_boss_phase() -> void:
+    if kind != "boss" or max_health <= 0.0:
+        return
+    var ratio := clampf(health / max_health, 0.0, 1.0)
+    boss_phase = 3 if ratio <= 0.30 else (2 if ratio <= 0.65 else 1)
+    match boss_phase:
+        2:
+            move_speed = 1.55
+            contact_damage = 27.0
+        3:
+            move_speed = 1.76
+            contact_damage = 31.0
+        _:
+            move_speed = 1.38
+            contact_damage = 24.0
+
+func _boss_slam_windup() -> float:
+    match boss_phase:
+        2: return 0.56
+        3: return 0.44
+        _: return 0.68
+
+func _boss_slam_cooldown() -> float:
+    match boss_phase:
+        2: return 3.4
+        3: return 2.8
+        _: return 4.1
 
 func _process_charge(delta: float) -> void:
     charge_left = max(0.0, charge_left - delta)
