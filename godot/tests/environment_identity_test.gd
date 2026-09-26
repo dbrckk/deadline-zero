@@ -17,6 +17,18 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var floor_mesh := floor as MeshInstance3D
+    var floor_material := floor_mesh.material_override if floor_mesh != null else null
+    if not (floor_material is ShaderMaterial):
+        push_error("Quarantine floor is missing production shader material")
+        quit(1)
+        return
+    var shader_code := (floor_material as ShaderMaterial).shader.code if (floor_material as ShaderMaterial).shader != null else ""
+    if not shader_code.contains("containment_grid") or shader_code.contains("screen_texture") or shader_code.contains("depth_texture"):
+        push_error("Quarantine floor shader is missing mobile-safe containment detail")
+        quit(1)
+        return
+
     var barrier_count := 0
     var lane_count := 0
     var beacon_count := 0
