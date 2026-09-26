@@ -61,5 +61,22 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var upgrades := [
+        {"id":"damage", "title":"HEAVY PAYLOAD", "detail":"Damage +25%", "family":"OFFENSE"},
+        {"id":"speed", "title":"SCOUT FRAME", "detail":"Move speed +14%", "family":"MOBILITY"},
+        {"id":"health", "title":"REACTIVE PLATING", "detail":"Max HP +30", "family":"SURVIVAL"}
+    ]
+    hud.show_upgrade(upgrades)
+    var first_card := hud.upgrade_cards[0]
+    if first_card.scale.x >= 0.999 or first_card.modulate.a >= 0.999:
+        push_error("Upgrade cards should enter with lightweight motion")
+        quit(1)
+        return
+    await create_timer(0.32).timeout
+    if absf(first_card.scale.x - 1.0) > 0.01 or first_card.modulate.a < 0.98:
+        push_error("Upgrade card entrance motion did not settle cleanly")
+        quit(1)
+        return
+
     print("Deadline Zero combat danger HUD: OK")
     quit(0)

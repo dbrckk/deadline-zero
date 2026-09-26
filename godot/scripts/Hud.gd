@@ -37,6 +37,7 @@ var impact_flash: ColorRect
 var impact_flash_tween: Tween
 var damage_vignette: ColorRect
 var damage_vignette_tween: Tween
+var upgrade_motion_tweens: Array[Tween] = []
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -120,6 +121,11 @@ func _direction_arrow(direction: Vector2) -> String:
         _: return "→"
 
 func show_upgrade(items: Array) -> void:
+    for tween in upgrade_motion_tweens:
+        if tween != null and tween.is_valid():
+            tween.kill()
+    upgrade_motion_tweens.clear()
+
     for i in range(upgrade_buttons.size()):
         var item: Dictionary = items[i] if i < items.size() else {}
         var id := str(item.get("id", "damage"))
@@ -128,6 +134,17 @@ func show_upgrade(items: Array) -> void:
         upgrade_detail_labels[i].text = str(item.get("detail", ""))
         upgrade_buttons[i].text = _upgrade_glyph(id)
         _style_upgrade_card(i, id)
+
+        var card := upgrade_cards[i]
+        card.pivot_offset = card.size * 0.5
+        card.scale = Vector2(0.94, 0.94)
+        card.modulate.a = 0.0
+        var motion := card.create_tween()
+        motion.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+        motion.set_parallel(true)
+        motion.tween_property(card, "scale", Vector2.ONE, 0.18).set_delay(float(i) * 0.055).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+        motion.tween_property(card, "modulate:a", 1.0, 0.14).set_delay(float(i) * 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+        upgrade_motion_tweens.append(motion)
     upgrade_panel.visible = true
 
 func hide_upgrade() -> void:
