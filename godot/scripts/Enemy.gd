@@ -25,6 +25,9 @@ var telegraph_visual: Node3D
 var telegraph_material: StandardMaterial3D
 var slow_multiplier := 1.0
 var slow_left := 0.0
+var burn_dps := 0.0
+var burn_left := 0.0
+var burn_tick_accumulator := 0.0
 var special_clock := 1.8
 var regeneration_clock := 1.0
 var regeneration_windup := 0.0
@@ -93,6 +96,7 @@ func _physics_process(delta: float) -> void:
     if not combat_enabled:
         velocity = Vector3.ZERO
         return
+    _process_status_effects(delta)
     if dead or target == null or not is_instance_valid(target):
         return
     attack_cooldown = max(0.0, attack_cooldown - delta)
@@ -325,6 +329,30 @@ func _regenerate() -> void:
 func apply_slow(multiplier: float, duration: float) -> void:
     slow_multiplier = min(slow_multiplier, clampf(multiplier, 0.30, 1.0))
     slow_left = max(slow_left, max(0.0, duration))
+
+func apply_burn(dps: float, duration: float) -> void:
+    if dead or dps <= 0.0 or duration <= 0.0:
+        return
+    burn_dps = maxf(burn_dps, dps)
+    burn_left = maxf(burn_left, duration)
+
+func _process_status_effects(delta: float) -> void:
+    if dead or burn_left <= 0.0 or burn_dps <= 0.0:
+        return
+    var active_delta := minf(maxf(delta, 0.0), burn_left)
+    burn_left = maxf(0.0, burn_left - maxf(delta, 0.0))
+    burn_tick_accumulator += active_delta
+
+    const BURN_TICK := 0.25
+    while burn_tick_accumulator >= BURN_TICK and not dead:
+        burn_tick_accumulator -= BURN_TICK
+        take_damage(burn_dps * BURN_TICK, false)
+
+    if burn_left <= 0.0:
+        if burn_tick_accumulator > 0.0 and not dead:
+            take_damage(burn_dps * burn_tick_accumulator, false)
+        burn_tick_accumulator = 0.0
+        burn_dps = 0.0
 
 func take_damage(amount: float, critical := false) -> void:
     if dead:
