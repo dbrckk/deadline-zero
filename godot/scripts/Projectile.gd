@@ -169,7 +169,7 @@ func _physics_process(delta: float) -> void:
     age += delta
     global_position += velocity * delta
 
-    for node in get_tree().get_nodes_in_group("enemies"):
+    for node in _candidate_enemies():
         if not is_instance_valid(node):
             continue
         var enemy := node as DZEnemy
@@ -190,6 +190,12 @@ func _physics_process(delta: float) -> void:
 
     if age >= lifetime:
         queue_free()
+
+func _candidate_enemies() -> Array:
+    var scene := get_tree().current_scene if get_tree() != null else null
+    if scene != null and scene.has_method("query_enemies_near"):
+        return scene.query_enemies_near(global_position, radius)
+    return get_tree().get_nodes_in_group("enemies") if get_tree() != null else []
 
 func _impact(critical := false) -> void:
     var fx := ImpactFx.new()
