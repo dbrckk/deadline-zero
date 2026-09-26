@@ -31,5 +31,19 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var sparks := fx.get_node_or_null("ImpactSparks") as GPUParticles3D
+    if sparks == null:
+        push_error("Impact FX is missing mobile-safe GPU sparks")
+        quit(1)
+        return
+    if sparks.amount > 12 or sparks.amount < 4:
+        push_error("Impact spark count must stay within mobile budget")
+        quit(1)
+        return
+    if sparks.lifetime > 0.35:
+        push_error("Impact sparks live too long for dense mobile combat")
+        quit(1)
+        return
+
     print("Deadline Zero mobile-safe impact FX: OK")
     quit(0)
