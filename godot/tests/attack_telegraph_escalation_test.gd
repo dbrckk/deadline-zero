@@ -6,6 +6,17 @@ func _initialize() -> void:
     call_deferred("_run_test")
 
 func _run_test() -> void:
+    var enemy_source := FileAccess.get_file_as_string("res://scripts/Enemy.gd")
+    var show_start := enemy_source.find("func _show_telegraph")
+    var impact_start := enemy_source.find("func _spawn_attack_impact")
+    var show_block := enemy_source.substr(show_start, impact_start - show_start)
+    var add_index := show_block.find("add_child(telegraph_visual)")
+    var global_index := show_block.find("telegraph_visual.global_position")
+    if add_index < 0 or global_index < 0 or global_index < add_index:
+        push_error("Telegraph global transform must be assigned only after scene insertion")
+        quit(1)
+        return
+
     var root := Node3D.new()
     get_root().add_child(root)
     current_scene = root
