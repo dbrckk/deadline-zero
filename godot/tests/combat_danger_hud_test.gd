@@ -9,7 +9,7 @@ func _initialize() -> void:
     root.add_child(hud)
     await process_frame
 
-    var vignette := hud.get_node_or_null("DamageVignette") as ColorRect
+    var vignette := hud.find_child("DamageVignette", true, false) as ColorRect
     if vignette == null:
         push_error("Screen-space damage vignette is missing")
         quit(1)
