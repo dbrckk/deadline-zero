@@ -35,10 +35,28 @@ var master_volume: HSlider
 var sfx_volume: HSlider
 var impact_flash: ColorRect
 var impact_flash_tween: Tween
+var damage_vignette: ColorRect
+var damage_vignette_tween: Tween
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
     _build()
+
+func pulse_damage_screen() -> void:
+    if damage_vignette == null:
+        return
+    if damage_vignette_tween != null and damage_vignette_tween.is_valid():
+        damage_vignette_tween.kill()
+    damage_vignette.visible = true
+    damage_vignette.modulate.a = 1.0
+    damage_vignette_tween = damage_vignette.create_tween()
+    damage_vignette_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    damage_vignette_tween.tween_property(damage_vignette, "modulate:a", 0.0, 0.26).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    damage_vignette_tween.tween_callback(func() -> void:
+        if damage_vignette != null:
+            damage_vignette.visible = false
+            damage_vignette.modulate.a = 1.0
+    )
 
 func set_health(value: float, maximum: float) -> void:
     hp_bar.max_value = max(1.0, maximum)
@@ -172,6 +190,14 @@ func _build() -> void:
     impact_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
     impact_flash.visible = false
     root.add_child(impact_flash)
+
+    damage_vignette = ColorRect.new()
+    damage_vignette.name = "DamageVignette"
+    damage_vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    damage_vignette.color = Color(0.58, 0.015, 0.0, 0.30)
+    damage_vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    damage_vignette.visible = false
+    root.add_child(damage_vignette)
 
     var top := VBoxContainer.new()
     top.position = Vector2(28, 24)
@@ -371,183 +397,154 @@ func _build() -> void:
     game_over_box.add_child(game_over_summary)
 
     var restart_button := Button.new()
-    restart_button.name = "RestartButton"
     restart_button.text = "REDEPLOY"
-    restart_button.custom_minimum_size = Vector2(260, 58)
+    restart_button.custom_minimum_size = Vector2(280, 64)
     restart_button.add_theme_font_size_override("font_size", 21)
     restart_button.pressed.connect(func() -> void:
         restart_requested.emit()
     )
     game_over_box.add_child(restart_button)
 
-    var game_over_style := StyleBoxFlat.new()
-    game_over_style.bg_color = Color(0.018, 0.026, 0.034, 0.97)
-    game_over_style.border_color = Color(1.0, 0.22, 0.10, 0.78)
-    game_over_style.set_border_width_all(2)
-    game_over_style.corner_radius_top_left = 10
-    game_over_style.corner_radius_top_right = 10
-    game_over_style.corner_radius_bottom_left = 10
-    game_over_style.corner_radius_bottom_right = 10
-    game_over_panel.add_theme_stylebox_override("panel", game_over_style)
-
     boss_panel = PanelContainer.new()
+    boss_panel.name = "BossPanel"
     boss_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
-    boss_panel.position = Vector2(-330, 76)
-    boss_panel.size = Vector2(660, 78)
+    boss_panel.position = Vector2(-320, 82)
+    boss_panel.size = Vector2(640, 92)
     boss_panel.visible = false
     root.add_child(boss_panel)
 
     var boss_box := VBoxContainer.new()
-    boss_box.add_theme_constant_override("separation", 3)
+    boss_box.add_theme_constant_override("separation", 4)
     boss_panel.add_child(boss_box)
 
-    var boss_header := HBoxContainer.new()
-    boss_header.alignment = BoxContainer.ALIGNMENT_CENTER
-    boss_box.add_child(boss_header)
-
     boss_name_label = Label.new()
+    boss_name_label.name = "BossName"
     boss_name_label.text = "REVENANT PRIME"
-    boss_name_label.add_theme_font_size_override("font_size", 18)
-    boss_name_label.modulate = Color(1.0, 0.82, 0.42)
-    boss_header.add_child(boss_name_label)
-
-    var spacer := Control.new()
-    spacer.custom_minimum_size = Vector2(32, 1)
-    boss_header.add_child(spacer)
+    boss_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    boss_name_label.add_theme_font_size_override("font_size", 20)
+    boss_name_label.modulate = Color(1.0, 0.58, 0.34)
+    boss_box.add_child(boss_name_label)
 
     boss_phase_label = Label.new()
-    boss_phase_label.text = "PHASE I // HUNT"
+    boss_phase_label.name = "BossPhase"
+    boss_phase_label.text = "THREAT LOCK"
+    boss_phase_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     boss_phase_label.add_theme_font_size_override("font_size", 13)
-    boss_phase_label.modulate = Color(1.0, 0.42, 0.26)
-    boss_header.add_child(boss_phase_label)
+    boss_phase_label.modulate = Color(1.0, 0.76, 0.54)
+    boss_box.add_child(boss_phase_label)
 
     boss_hp_bar = ProgressBar.new()
-    boss_hp_bar.custom_minimum_size = Vector2(620, 18)
+    boss_hp_bar.name = "BossHP"
     boss_hp_bar.show_percentage = false
+    boss_hp_bar.custom_minimum_size = Vector2(600, 18)
     boss_box.add_child(boss_hp_bar)
-
-    var boss_style := StyleBoxFlat.new()
-    boss_style.bg_color = Color(0.025, 0.035, 0.045, 0.96)
-    boss_style.border_color = Color(0.92, 0.28, 0.12, 0.72)
-    boss_style.set_border_width_all(2)
-    boss_style.corner_radius_top_left = 6
-    boss_style.corner_radius_top_right = 6
-    boss_style.corner_radius_bottom_left = 6
-    boss_style.corner_radius_bottom_right = 6
-    boss_panel.add_theme_stylebox_override("panel", boss_style)
 
     upgrade_panel = PanelContainer.new()
     upgrade_panel.set_anchors_preset(Control.PRESET_CENTER)
-    upgrade_panel.position = Vector2(-480, -155)
-    upgrade_panel.size = Vector2(960, 310)
+    upgrade_panel.position = Vector2(-520, -210)
+    upgrade_panel.size = Vector2(1040, 420)
     upgrade_panel.visible = false
     root.add_child(upgrade_panel)
 
-    var box := VBoxContainer.new()
-    box.add_theme_constant_override("separation", 18)
-    upgrade_panel.add_child(box)
+    var upgrade_box := VBoxContainer.new()
+    upgrade_box.add_theme_constant_override("separation", 16)
+    upgrade_panel.add_child(upgrade_box)
 
     var title := Label.new()
-    title.text = "SELECT COMBAT UPGRADE"
+    title.text = "TACTICAL UPLINK // SELECT ONE"
     title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-    title.add_theme_font_size_override("font_size", 30)
-    box.add_child(title)
+    title.add_theme_font_size_override("font_size", 24)
+    title.modulate = Color(0.72, 0.92, 1.0)
+    upgrade_box.add_child(title)
 
-    var row := HBoxContainer.new()
-    row.alignment = BoxContainer.ALIGNMENT_CENTER
-    row.add_theme_constant_override("separation", 18)
-    box.add_child(row)
+    var choices := HBoxContainer.new()
+    choices.alignment = BoxContainer.ALIGNMENT_CENTER
+    choices.add_theme_constant_override("separation", 18)
+    upgrade_box.add_child(choices)
 
     for i in range(3):
         var card := VBoxContainer.new()
-        card.custom_minimum_size = Vector2(280, 190)
-        card.add_theme_constant_override("separation", 5)
-        row.add_child(card)
+        card.name = "UpgradeCard%d" % i
+        card.custom_minimum_size = Vector2(300, 250)
+        card.add_theme_constant_override("separation", 10)
+        choices.add_child(card)
         upgrade_cards.append(card)
 
         var family := Label.new()
+        family.name = "Family"
         family.text = "UPGRADE"
         family.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        family.add_theme_font_size_override("font_size", 13)
+        family.add_theme_font_size_override("font_size", 14)
+        family.modulate = Color(0.55, 0.82, 1.0)
         card.add_child(family)
         upgrade_family_labels.append(family)
 
         var button := Button.new()
-        button.custom_minimum_size = Vector2(280, 82)
+        button.name = "UpgradeButton%d" % i
         button.text = "◆"
-        button.add_theme_font_size_override("font_size", 38)
-        button.pressed.connect(_on_upgrade_pressed.bind(i))
+        button.custom_minimum_size = Vector2(260, 92)
+        button.add_theme_font_size_override("font_size", 42)
+        button.pressed.connect(func() -> void:
+            upgrade_chosen.emit(i)
+        )
         card.add_child(button)
         upgrade_buttons.append(button)
 
-        var upgrade_title := Label.new()
-        upgrade_title.text = "UPGRADE"
-        upgrade_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        upgrade_title.add_theme_font_size_override("font_size", 21)
-        card.add_child(upgrade_title)
-        upgrade_title_labels.append(upgrade_title)
+        var card_title := Label.new()
+        card_title.name = "Title"
+        card_title.text = "UPGRADE"
+        card_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+        card_title.add_theme_font_size_override("font_size", 19)
+        card.add_child(card_title)
+        upgrade_title_labels.append(card_title)
 
         var detail := Label.new()
+        detail.name = "Detail"
         detail.text = ""
         detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        detail.add_theme_font_size_override("font_size", 16)
-        detail.modulate = Color(0.76, 0.84, 0.90)
+        detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+        detail.custom_minimum_size = Vector2(280, 52)
+        detail.add_theme_font_size_override("font_size", 15)
+        detail.modulate = Color(0.78, 0.84, 0.88)
         card.add_child(detail)
         upgrade_detail_labels.append(detail)
 
 func _upgrade_glyph(id: String) -> String:
     match id:
-        "damage": return "▲"
-        "rate": return "»»"
+        "damage": return "✦"
+        "rate": return "»"
         "speed": return "➤"
-        "health": return "+"
-        "projectile": return "◆"
-        "multishot": return "⋙"
-        "berserker": return "✦"
-        "overclock": return "⚡"
+        "health": return "✚"
+        "projectile": return "➟"
+        "multishot": return "⋮"
+        "berserker": return "⚡"
+        "overclock": return "⟳"
         "fortress": return "⬢"
         "scatter_protocol": return "⋰"
         "rail_protocol": return "━"
         "inferno_protocol": return "▲"
         "cryo_protocol": return "◇"
-        "arc_protocol": return "⌁"
+        "arc_protocol": return "ϟ"
         _: return "◆"
 
-func _upgrade_color(id: String) -> Color:
-    match id:
-        "damage", "multishot": return Color(1.0, 0.66, 0.18)
-        "rate", "speed": return Color(0.18, 0.86, 1.0)
-        "health": return Color(0.32, 0.94, 0.52)
-        "projectile": return Color(0.76, 0.82, 1.0)
-        "berserker": return Color(1.0, 0.22, 0.12)
-        "overclock": return Color(1.0, 0.82, 0.18)
-        "fortress": return Color(0.38, 0.86, 0.72)
-        "scatter_protocol": return Color(1.0, 0.56, 0.18)
-        "rail_protocol": return Color(0.72, 0.58, 1.0)
-        "inferno_protocol": return Color(1.0, 0.24, 0.035)
-        "cryo_protocol": return Color(0.30, 0.90, 1.0)
-        "arc_protocol": return Color(0.64, 0.42, 1.0)
-        _: return Color(0.58, 0.42, 1.0)
-
 func _style_upgrade_card(index: int, id: String) -> void:
-    var accent := _upgrade_color(id)
-    upgrade_family_labels[index].modulate = accent
-    upgrade_title_labels[index].modulate = Color.WHITE
-    var normal := StyleBoxFlat.new()
-    normal.bg_color = Color(0.035, 0.055, 0.070, 0.98)
-    normal.border_color = Color(accent.r, accent.g, accent.b, 0.72)
-    normal.set_border_width_all(2)
-    normal.corner_radius_top_left = 8
-    normal.corner_radius_top_right = 8
-    normal.corner_radius_bottom_left = 8
-    normal.corner_radius_bottom_right = 8
-    var hover := normal.duplicate()
-    hover.bg_color = Color(accent.r * 0.16, accent.g * 0.16, accent.b * 0.16, 1.0)
-    hover.border_color = accent
-    upgrade_buttons[index].add_theme_stylebox_override("normal", normal)
-    upgrade_buttons[index].add_theme_stylebox_override("hover", hover)
-    upgrade_buttons[index].add_theme_stylebox_override("pressed", hover)
-    upgrade_buttons[index].add_theme_color_override("font_color", accent)
-
-func _on_upgrade_pressed(index: int) -> void:
-    upgrade_chosen.emit(index)
+    if index < 0 or index >= upgrade_cards.size():
+        return
+    var family_color := Color(0.22, 0.78, 1.0)
+    if id in ["damage", "berserker", "rail_protocol"]:
+        family_color = Color(1.0, 0.35, 0.16)
+    elif id in ["rate", "overclock", "multishot", "scatter_protocol"]:
+        family_color = Color(1.0, 0.72, 0.18)
+    elif id in ["health", "fortress"]:
+        family_color = Color(0.30, 1.0, 0.52)
+    elif id in ["speed", "projectile"]:
+        family_color = Color(0.22, 0.82, 1.0)
+    elif id == "inferno_protocol":
+        family_color = Color(1.0, 0.24, 0.08)
+    elif id == "cryo_protocol":
+        family_color = Color(0.22, 0.90, 1.0)
+    elif id == "arc_protocol":
+        family_color = Color(0.72, 0.46, 1.0)
+    upgrade_family_labels[index].modulate = family_color
+    upgrade_title_labels[index].modulate = family_color.lightened(0.12)
+    upgrade_buttons[index].modulate = family_color
