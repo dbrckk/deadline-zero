@@ -29,6 +29,7 @@ var slow_left := 0.0
 var burn_dps := 0.0
 var burn_left := 0.0
 var burn_tick_accumulator := 0.0
+var shock_left := 0.0
 var special_clock := 1.8
 var regeneration_clock := 1.0
 var regeneration_windup := 0.0
@@ -98,7 +99,11 @@ func _physics_process(delta: float) -> void:
         velocity = Vector3.ZERO
         return
     _process_status_effects(delta)
+    shock_left = maxf(0.0, shock_left - maxf(delta, 0.0))
     if dead or target == null or not is_instance_valid(target):
+        return
+    if shock_left > 0.0:
+        velocity = Vector3.ZERO
         return
     if kind == "boss":
         _update_boss_phase()
@@ -366,6 +371,13 @@ func apply_burn(dps: float, duration: float) -> void:
         return
     burn_dps = maxf(burn_dps, dps)
     burn_left = maxf(burn_left, duration)
+
+func apply_shock(duration: float) -> void:
+    if dead or duration <= 0.0:
+        return
+    var resistance := 0.45 if kind == "boss" else (0.65 if kind == "elite" else 1.0)
+    shock_left = maxf(shock_left, duration * resistance)
+    velocity = Vector3.ZERO
 
 func _process_status_effects(delta: float) -> void:
     if dead or burn_left <= 0.0 or burn_dps <= 0.0:
