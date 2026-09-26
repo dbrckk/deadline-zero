@@ -70,5 +70,13 @@ func _initialize() -> void:
         quit(1)
         return
 
+    parent.queue_free()
+    enemy.free()
+    target.free()
+    rail.free()
+    inferno.free()
+    arc.free()
+    await process_frame
+
     print("Deadline Zero weapon protocol behavior: OK")
     quit(0)
