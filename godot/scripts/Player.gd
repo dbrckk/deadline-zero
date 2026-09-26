@@ -23,6 +23,8 @@ var current_anim := ""
 var shot_audio: AudioStreamPlayer3D
 var shot_streams := {}
 var damage_pulse: MeshInstance3D
+var muzzle_flash: MeshInstance3D
+var muzzle_flash_tween: Tween
 var combat_enabled := true
 var applied_protocols := {}
 
@@ -195,6 +197,7 @@ func _fire_at(enemy: DZEnemy) -> void:
     base_dir = base_dir.normalized()
     if base_dir.length_squared() < 0.01:
         return
+    _trigger_muzzle_flash()
     for i in range(multishot):
         var offset := float(i) - float(multishot - 1) * 0.5
         var dir := base_dir.rotated(Vector3.UP, deg_to_rad(offset * spread_degrees))
@@ -241,6 +244,7 @@ func _build_visual() -> void:
         ring.material_override = ring_mat
         add_child(ring)
         _build_damage_feedback()
+        _build_muzzle_flash()
         return
 
     var visual := Node3D.new()
@@ -282,6 +286,46 @@ func _build_visual() -> void:
     gun.material_override = body_mat
     visual.add_child(gun)
     _build_damage_feedback()
+    _build_muzzle_flash()
+
+func _build_muzzle_flash() -> void:
+    muzzle_flash = MeshInstance3D.new()
+    muzzle_flash.name = "MuzzleFlash"
+    var flash_mesh := SphereMesh.new()
+    flash_mesh.radius = 0.085
+    flash_mesh.height = 0.18
+    muzzle_flash.mesh = flash_mesh
+    muzzle_flash.position = Vector3(0.36, 0.92, -0.92)
+    muzzle_flash.scale = Vector3(0.70, 0.70, 1.55)
+    muzzle_flash.visible = false
+
+    var flash_mat := StandardMaterial3D.new()
+    flash_mat.albedo_color = Color(1.0, 0.66, 0.16, 0.92)
+    flash_mat.emission_enabled = true
+    flash_mat.emission = Color(1.0, 0.42, 0.06)
+    flash_mat.emission_energy_multiplier = 5.2
+    flash_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    flash_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    muzzle_flash.material_override = flash_mat
+    add_child(muzzle_flash)
+
+func _trigger_muzzle_flash() -> void:
+    if muzzle_flash == null or not is_instance_valid(muzzle_flash):
+        return
+    if muzzle_flash_tween != null and muzzle_flash_tween.is_valid():
+        muzzle_flash_tween.kill()
+    muzzle_flash.visible = true
+    muzzle_flash.modulate.a = 1.0
+    muzzle_flash.scale = Vector3(0.62, 0.62, 1.30)
+    muzzle_flash_tween = muzzle_flash.create_tween()
+    muzzle_flash_tween.set_parallel(true)
+    muzzle_flash_tween.tween_property(muzzle_flash, "scale", Vector3(1.05, 1.05, 1.85), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    muzzle_flash_tween.tween_property(muzzle_flash, "modulate:a", 0.0, 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+    muzzle_flash_tween.chain().tween_callback(func() -> void:
+        if muzzle_flash != null and is_instance_valid(muzzle_flash):
+            muzzle_flash.visible = false
+            muzzle_flash.modulate.a = 1.0
+    )
 
 func _build_damage_feedback() -> void:
     damage_pulse = MeshInstance3D.new()
