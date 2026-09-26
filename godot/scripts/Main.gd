@@ -1,5 +1,7 @@
 extends Node3D
 
+const HAPTICS := preload("res://scripts/Haptics.gd")
+
 const UPGRADE_POOL := [
     {"id":"damage", "title":"HEAVY PAYLOAD", "detail":"Damage +25%", "family":"OFFENSE"},
     {"id":"rate", "title":"RAPID FIRE", "detail":"Fire rate +22%", "family":"CADENCE"},
@@ -338,14 +340,17 @@ func _wave_name() -> String:
 
 func _build_world() -> void:
     var environment := WorldEnvironment.new()
-    environment.name = "QuarantineEnvironment"
     var env := Environment.new()
     env.background_mode = Environment.BG_COLOR
-    env.background_color = Color(0.008, 0.014, 0.020)
+    env.background_color = Color(0.012, 0.020, 0.026)
     env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-    env.ambient_light_color = Color(0.16, 0.27, 0.34)
-    env.ambient_light_energy = 0.72
+    env.ambient_light_color = Color(0.18, 0.28, 0.34)
+    env.ambient_light_energy = 0.58
     env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+    env.glow_enabled = true
+    env.glow_intensity = 0.62
+    env.glow_strength = 0.74
+    env.glow_bloom = 0.18
     env.fog_enabled = true
     env.fog_light_color = Color(0.08, 0.16, 0.20)
     env.fog_light_energy = 0.42
@@ -428,52 +433,54 @@ func _build_containment_lanes() -> void:
         for offset in [-8.0, 8.0]:
             for segment in range(-5, 6):
                 var stripe := MeshInstance3D.new()
-                stripe.name = "ContainmentLane_%d_%d_%d" % [axis, int(offset), segment]
-                var stripe_mesh := BoxMesh.new()
-                stripe_mesh.size = Vector3(2.6, 0.016, 0.10) if axis == 0 else Vector3(0.10, 0.016, 2.6)
-                stripe.mesh = stripe_mesh
-                stripe.position = Vector3(float(segment) * 3.6, 0.014, offset) if axis == 0 else Vector3(offset, 0.014, float(segment) * 3.6)
+                stripe.name = "ContainmentStripe_%d_%d_%d" % [axis, int(offset), segment]
+                var mesh := BoxMesh.new()
+                mesh.size = Vector3(2.4, 0.018, 0.14) if axis == 0 else Vector3(0.14, 0.018, 2.4)
+                stripe.mesh = mesh
+                stripe.position = Vector3(float(segment) * 4.8, 0.014, offset) if axis == 0 else Vector3(offset, 0.014, float(segment) * 4.8)
                 stripe.material_override = lane_material
                 add_child(stripe)
 
-    for ring_index in range(4):
-        var marker := MeshInstance3D.new()
-        marker.name = "ContainmentMarker_%d" % ring_index
-        var marker_mesh := CylinderMesh.new()
-        marker_mesh.top_radius = 2.3 + float(ring_index) * 0.72
-        marker_mesh.bottom_radius = marker_mesh.top_radius
-        marker_mesh.height = 0.012
-        marker.mesh = marker_mesh
-        marker.position.y = 0.010 + float(ring_index) * 0.001
-        var marker_mat := StandardMaterial3D.new()
-        marker_mat.albedo_color = Color(0.04, 0.38, 0.52, 0.045)
-        marker_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-        marker_mat.emission_enabled = true
-        marker_mat.emission = Color(0.02, 0.28, 0.44)
-        marker_mat.emission_energy_multiplier = 0.32 + float(ring_index) * 0.08
-        marker.material_override = marker_mat
-        add_child(marker)
-
 func _build_perimeter_beacons() -> void:
     var beacon_material := StandardMaterial3D.new()
-    beacon_material.albedo_color = Color(1.0, 0.10, 0.025)
-    beacon_material.emission_enabled = true
-    beacon_material.emission = Color(1.0, 0.045, 0.01)
-    beacon_material.emission_energy_multiplier = 4.0
+    beacon_material.albedo_color = Color(0.11, 0.14, 0.15)
+    beacon_material.metallic = 0.66
+    beacon_material.roughness = 0.31
 
-    for index in range(12):
-        var angle := TAU * float(index) / 12.0
-        var radius := 27.0
-        var beacon := MeshInstance3D.new()
-        beacon.name = "PerimeterBeacon_%02d" % index
-        var mesh := CylinderMesh.new()
-        mesh.top_radius = 0.07
-        mesh.bottom_radius = 0.13
-        mesh.height = 0.72
-        beacon.mesh = mesh
-        beacon.position = Vector3(cos(angle) * radius, 0.36, sin(angle) * radius)
-        beacon.material_override = beacon_material
-        add_child(beacon)
+    var beacon_glow := StandardMaterial3D.new()
+    beacon_glow.albedo_color = Color(0.05, 0.46, 0.72)
+    beacon_glow.emission_enabled = true
+    beacon_glow.emission = Color(0.02, 0.48, 0.92)
+    beacon_glow.emission_energy_multiplier = 2.8
+
+    var positions := [
+        Vector3(-25.0, 0.0, -25.0), Vector3(25.0, 0.0, -25.0),
+        Vector3(-25.0, 0.0, 25.0), Vector3(25.0, 0.0, 25.0)
+    ]
+    for i in range(positions.size()):
+        var root := Node3D.new()
+        root.name = "ContainmentBeacon_%d" % i
+        root.position = positions[i]
+        add_child(root)
+
+        var post := MeshInstance3D.new()
+        var post_mesh := CylinderMesh.new()
+        post_mesh.top_radius = 0.16
+        post_mesh.bottom_radius = 0.22
+        post_mesh.height = 2.8
+        post.mesh = post_mesh
+        post.position.y = 1.4
+        post.material_override = beacon_material
+        root.add_child(post)
+
+        var lamp := MeshInstance3D.new()
+        var lamp_mesh := SphereMesh.new()
+        lamp_mesh.radius = 0.18
+        lamp_mesh.height = 0.34
+        lamp.mesh = lamp_mesh
+        lamp.position.y = 2.72
+        lamp.material_override = beacon_glow
+        root.add_child(lamp)
 
 func _build_combat_audio() -> void:
     impact_audio = AudioStreamPlayer.new()
@@ -490,6 +497,7 @@ func _build_combat_audio() -> void:
     add_child(boss_audio)
 
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
+    HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
     if impact_audio == null:
         return
     var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
@@ -502,7 +510,6 @@ func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
 func _play_boss_stinger() -> void:
     if boss_audio != null:
         boss_audio.play()
-
 
 func _update_offscreen_threat_indicator() -> void:
     if hud == null or camera == null or player == null or game_over:
@@ -528,17 +535,10 @@ func _update_offscreen_threat_indicator() -> void:
     var viewport_size := get_viewport().get_visible_rect().size
     var screen_pos := camera.unproject_position(best.global_position + Vector3(0.0, 0.9, 0.0))
     var margin := Vector2(84.0, 72.0)
-    var inside := not camera.is_position_behind(best.global_position)         and screen_pos.x >= margin.x         and screen_pos.y >= margin.y         and screen_pos.x <= viewport_size.x - margin.x         and screen_pos.y <= viewport_size.y - margin.y
-
+    var inside := screen_pos.x >= margin.x and screen_pos.y >= margin.y and screen_pos.x <= viewport_size.x - margin.x and screen_pos.y <= viewport_size.y - margin.y
     if inside:
         hud.hide_offscreen_threat()
         return
 
-    var center := viewport_size * 0.5
-    var direction := screen_pos - center
-    if camera.is_position_behind(best.global_position):
-        direction = -direction
-    if direction.length_squared() < 0.001:
-        direction = Vector2.RIGHT
-
-    hud.set_offscreen_threat(direction.normalized(), best.kind, best_distance)
+    var direction := screen_pos - viewport_size * 0.5
+    hud.set_offscreen_threat(direction, best.kind, best_distance)
