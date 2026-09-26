@@ -10,6 +10,10 @@ func _initialize() -> void:
         return
     var game := packed.instantiate()
     root.add_child(game)
+    if current_scene != game:
+        push_error("Smoke test must install Main as current_scene")
+        quit(1)
+        return
 
 func _process(_delta: float) -> bool:
     frames += 1
