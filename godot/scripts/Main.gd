@@ -1,5 +1,7 @@
 extends Node3D
 
+const HAPTICS := preload("res://scripts/Haptics.gd")
+
 const UPGRADE_POOL := [
     {"id":"damage", "title":"HEAVY PAYLOAD", "detail":"Damage +25%", "family":"OFFENSE"},
     {"id":"rate", "title":"RAPID FIRE", "detail":"Fire rate +22%", "family":"CADENCE"},
@@ -42,6 +44,7 @@ var impact_audio: AudioStreamPlayer
 var boss_audio: AudioStreamPlayer
 var impact_streams := {}
 var enemy_spatial_index := DZSpatialHash.new(4.0)
+var last_player_health := -1.0
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const BOSS_REVEAL_DURATION := 1.15
@@ -77,6 +80,7 @@ func _ready() -> void:
     hud.master_volume_changed.connect(_on_master_volume_changed)
     hud.sfx_volume_changed.connect(_on_sfx_volume_changed)
     _load_audio_settings()
+    last_player_health = player.health
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     _build_combat_audio()
@@ -246,7 +250,10 @@ func _on_upgrade_chosen(index: int) -> void:
 
 func _on_health_changed(current: float, maximum: float) -> void:
     if hud:
+        if last_player_health >= 0.0 and current < last_player_health:
+            hud.pulse_damage_screen()
         hud.set_health(current, maximum)
+    last_player_health = current
 
 func _ensure_audio_buses() -> void:
     if AudioServer.get_bus_index("SFX") < 0:
@@ -490,6 +497,7 @@ func _build_combat_audio() -> void:
     add_child(boss_audio)
 
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
+    HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
     if impact_audio == null:
         return
     var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))

@@ -9,6 +9,26 @@ func _initialize() -> void:
     root.add_child(hud)
     await process_frame
 
+    var vignette := hud.find_child("DamageVignette", true, false) as ColorRect
+    if vignette == null:
+        push_error("Screen-space damage vignette is missing")
+        quit(1)
+        return
+    if vignette.visible:
+        push_error("Damage vignette should start hidden")
+        quit(1)
+        return
+    hud.pulse_damage_screen()
+    if not vignette.visible:
+        push_error("Damage vignette did not become visible")
+        quit(1)
+        return
+    await create_timer(0.35).timeout
+    if vignette.visible:
+        push_error("Damage vignette did not clear after pulse")
+        quit(1)
+        return
+
     hud.set_health(30.0, 100.0)
     if not hud.low_health_panel.visible:
         push_error("Low-health warning missing at 30 percent")
