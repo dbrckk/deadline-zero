@@ -46,6 +46,7 @@ func _initialize() -> void:
 
     var projectile := PROJECTILE_SCRIPT.new()
     projectile.visual_profile = "inferno"
+    projectile.process_mode = Node.PROCESS_MODE_DISABLED
     projectile.spawn_secondary_fx = false
     root.add_child(projectile)
     await process_frame
@@ -76,6 +77,7 @@ func _initialize() -> void:
 
     var arc_projectile := PROJECTILE_SCRIPT.new()
     arc_projectile.visual_profile = "arc"
+    arc_projectile.process_mode = Node.PROCESS_MODE_DISABLED
     arc_projectile.spawn_secondary_fx = false
     root.add_child(arc_projectile)
     await process_frame
