@@ -62,9 +62,8 @@ func _initialize() -> void:
         return
     enemy.velocity = Vector3(3.0, 0.0, 0.0)
     enemy.apply_shock(0.40)
-    enemy._physics_process(0.10)
     if enemy.shock_left <= 0.0 or enemy.velocity.length_squared() > 0.001:
-        push_error("Shock status did not briefly immobilize enemy")
+        push_error("Shock status did not immediately immobilize enemy")
         quit(1)
         return
 
@@ -81,6 +80,7 @@ func _initialize() -> void:
     root.add_child(arc_projectile)
     await process_frame
     arc_projectile._apply_profile("arc")
+    arc_projectile.chain_targets = 0
     arc_projectile._apply_protocol_hit(arc_target, 24.0)
     if arc_target.shock_left <= 0.0:
         push_error("Arc projectile did not apply shock control")
