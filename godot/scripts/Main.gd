@@ -43,6 +43,7 @@ var boss_audio: AudioStreamPlayer
 var impact_streams := {}
 var enemy_spatial_index := DZSpatialHash.new(4.0)
 
+const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_REVEAL_FOV_DELTA := 5.5
@@ -75,6 +76,7 @@ func _ready() -> void:
     hud.resume_requested.connect(_on_resume_requested)
     hud.master_volume_changed.connect(_on_master_volume_changed)
     hud.sfx_volume_changed.connect(_on_sfx_volume_changed)
+    _load_audio_settings()
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     _build_combat_audio()
@@ -258,11 +260,31 @@ func _set_bus_linear_volume(bus_name: String, value: float) -> void:
     var linear := clampf(value, 0.0, 1.0)
     AudioServer.set_bus_volume_db(bus_index, -80.0 if linear <= 0.0 else linear_to_db(linear))
 
+func _load_audio_settings(path := SETTINGS_PATH) -> void:
+    var settings := DZGameSettings.load_settings(path)
+    var master := float(settings.get("master_volume", 0.85))
+    var sfx := float(settings.get("sfx_volume", 0.90))
+    if hud != null:
+        hud.master_volume.set_value_no_signal(master)
+        hud.sfx_volume.set_value_no_signal(sfx)
+    _set_bus_linear_volume("Master", master)
+    _set_bus_linear_volume("SFX", sfx)
+
+func _save_audio_settings(path := SETTINGS_PATH) -> void:
+    var master := hud.master_volume.value if hud != null else 0.85
+    var sfx := hud.sfx_volume.value if hud != null else 0.90
+    DZGameSettings.save(path, {
+        "master_volume": master,
+        "sfx_volume": sfx
+    })
+
 func _on_master_volume_changed(value: float) -> void:
     _set_bus_linear_volume("Master", value)
+    _save_audio_settings()
 
 func _on_sfx_volume_changed(value: float) -> void:
     _set_bus_linear_volume("SFX", value)
+    _save_audio_settings()
 
 func _on_pause_requested() -> void:
     if game_over or not pending_upgrades.is_empty():
