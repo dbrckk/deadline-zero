@@ -37,10 +37,28 @@ var impact_flash: ColorRect
 var impact_flash_tween: Tween
 var damage_vignette: ColorRect
 var damage_vignette_tween: Tween
+var damage_vignette: ColorRect
+var damage_vignette_tween: Tween
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
     _build()
+
+func pulse_damage_screen() -> void:
+    if damage_vignette == null:
+        return
+    if damage_vignette_tween != null and damage_vignette_tween.is_valid():
+        damage_vignette_tween.kill()
+    damage_vignette.visible = true
+    damage_vignette.modulate.a = 1.0
+    damage_vignette_tween = damage_vignette.create_tween()
+    damage_vignette_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    damage_vignette_tween.tween_property(damage_vignette, "modulate:a", 0.0, 0.26).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    damage_vignette_tween.tween_callback(func() -> void:
+        if damage_vignette != null:
+            damage_vignette.visible = false
+            damage_vignette.modulate.a = 1.0
+    )
 
 func pulse_damage_screen() -> void:
     if damage_vignette == null:
@@ -190,6 +208,14 @@ func _build() -> void:
     impact_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
     impact_flash.visible = false
     root.add_child(impact_flash)
+
+    damage_vignette = ColorRect.new()
+    damage_vignette.name = "DamageVignette"
+    damage_vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    damage_vignette.color = Color(0.58, 0.015, 0.0, 0.30)
+    damage_vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    damage_vignette.visible = false
+    root.add_child(damage_vignette)
 
     damage_vignette = ColorRect.new()
     damage_vignette.name = "DamageVignette"
