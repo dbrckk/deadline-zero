@@ -47,5 +47,9 @@ func _initialize() -> void:
             quit(1)
             return
 
+    current_scene = null
+    scene.queue_free()
+    await process_frame
+
     print("Deadline Zero environment identity: OK")
     quit(0)
