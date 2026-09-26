@@ -41,6 +41,7 @@ var boss_reveal_left := 0.0
 var impact_audio: AudioStreamPlayer
 var boss_audio: AudioStreamPlayer
 var impact_streams := {}
+var enemy_spatial_index := DZSpatialHash.new(4.0)
 
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
@@ -130,6 +131,7 @@ func _physics_process(delta: float) -> void:
         for i in range(min(batch, 4)):
             _spawn_enemy()
         spawn_clock = max(0.20, 0.82 - elapsed * 0.0035)
+    enemy_spatial_index.rebuild(get_tree().get_nodes_in_group("enemies"))
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     hud.set_wave(_wave_name())
 
@@ -149,6 +151,9 @@ func _unhandled_input(event: InputEvent) -> void:
         if drag.index == touch_id:
             var vector := (drag.position - touch_origin) / 90.0
             player.set_touch_move(Vector2(vector.x, vector.y).limit_length(1.0))
+
+func query_enemies_near(position: Vector3, radius: float) -> Array:
+    return enemy_spatial_index.query(position, radius)
 
 func _spawn_enemy(forced_kind: String = "") -> void:
     if player == null or game_over:

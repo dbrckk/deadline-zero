@@ -135,6 +135,12 @@ jobs:
           /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --headless --path godot --script res://tests/weapon_protocol_behavior_test.gd
 
+      - name: Validate enemy spatial hash
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot --script res://tests/spatial_hash_test.gd
+
       - name: Validate native enemy behaviors
         run: |
           set -euo pipefail
