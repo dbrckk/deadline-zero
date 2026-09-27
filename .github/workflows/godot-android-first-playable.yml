@@ -160,15 +160,9 @@ jobs:
             adb shell dumpsys package com.deadlinezero.godot > build/godot-android-smoke/package.txt || true
             adb shell pidof com.deadlinezero.godot > build/godot-android-smoke/pid.txt || true
 
-            if ! grep -q '[0-9]' build/godot-android-smoke/pid.txt; then
-              echo 'Deadline Zero process exited during startup' >&2
-              grep -Ei 'deadlinezero|godot|FATAL EXCEPTION|AndroidRuntime|DEBUG|crash|signal|vulkan|swiftshader|am_crash|am_kill|am_proc_died' build/godot-android-smoke/startup-logcat.txt | tail -n 300 >&2 || true
-              exit 1
-            fi
-            if grep -Eq 'FATAL EXCEPTION|ANR in com\.deadlinezero\.godot|Process: com\.deadlinezero\.godot.*has died' build/godot-android-smoke/startup-logcat.txt; then
-              echo 'Fatal Android startup condition detected' >&2
-              exit 1
-            fi
+            test -s build/godot-android-smoke/pid.txt || grep -Ei 'deadlinezero|godot|FATAL EXCEPTION|AndroidRuntime|DEBUG|crash|signal|vulkan|swiftshader|am_crash|am_kill|am_proc_died' build/godot-android-smoke/startup-logcat.txt | tail -n 300 >&2 || true
+            grep -q '[0-9]' build/godot-android-smoke/pid.txt
+            ! grep -Eq 'FATAL EXCEPTION|ANR in com\\.deadlinezero\\.godot|Process: com\\.deadlinezero\\.godot.*has died' build/godot-android-smoke/startup-logcat.txt
 
       - name: Upload native Godot startup diagnostics
         uses: actions/upload-artifact@v4
