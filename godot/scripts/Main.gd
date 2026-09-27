@@ -45,6 +45,9 @@ var boss_audio: AudioStreamPlayer
 var impact_streams := {}
 var enemy_spatial_index := DZSpatialHash.new(4.0)
 var last_player_health := -1.0
+var run_director := DZRunDirector.new()
+var spawn_rng := RandomNumberGenerator.new()
+var director_profile: Dictionary = {}
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const BOSS_REVEAL_DURATION := 1.15
@@ -53,6 +56,9 @@ const BOSS_REVEAL_FOV_DELTA := 5.5
 
 func _ready() -> void:
     randomize()
+    spawn_rng.randomize()
+    director_profile = run_director.profile(elapsed, level)
+    max_enemies = int(director_profile["max_enemies"])
     _ensure_audio_buses()
     _build_world()
 
@@ -125,6 +131,8 @@ func _physics_process(delta: float) -> void:
     if game_over:
         return
     elapsed += delta
+    director_profile = run_director.profile(elapsed, level)
+    max_enemies = int(director_profile["max_enemies"])
     boss_banner_timer = max(0.0, boss_banner_timer - delta)
     if elapsed >= next_boss_time:
         _spawn_enemy("boss")
@@ -133,10 +141,10 @@ func _physics_process(delta: float) -> void:
 
     spawn_clock -= delta
     if spawn_clock <= 0.0:
-        var batch := 1 + int(elapsed / 45.0)
-        for i in range(min(batch, 4)):
+        var batch := int(director_profile["batch_size"])
+        for i in range(batch):
             _spawn_enemy()
-        spawn_clock = max(0.20, 0.82 - elapsed * 0.0035)
+        spawn_clock = float(director_profile["spawn_interval"])
     enemy_spatial_index.rebuild(get_tree().get_nodes_in_group("enemies"))
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     hud.set_wave(_wave_name())
@@ -166,25 +174,11 @@ func _spawn_enemy(forced_kind: String = "") -> void:
         return
     if forced_kind != "boss" and get_tree().get_nodes_in_group("enemies").size() >= max_enemies:
         return
-    var angle := randf() * TAU
-    var radius := randf_range(12.0, 18.0)
+    var angle := spawn_rng.randf() * TAU
+    var radius := spawn_rng.randf_range(12.0, 18.0)
     var pos := player.global_position + Vector3(cos(angle) * radius, 0.0, sin(angle) * radius)
-    var roll := randf()
-    var kind := forced_kind if not forced_kind.is_empty() else "shambler"
-    if forced_kind.is_empty():
-        if elapsed > 25.0 and roll > 0.72:
-            kind = "runner"
-        if elapsed > 45.0 and roll > 0.80:
-            kind = "charger"
-        if elapsed > 65.0 and roll > 0.86:
-            kind = "harrier"
-        if elapsed > 82.0 and roll > 0.91:
-            kind = "regenerator"
-        if elapsed > 100.0 and roll > 0.95:
-            kind = "brute"
-        if elapsed > 125.0 and roll > 0.975:
-            kind = "elite"
-    var difficulty := 1.0 + elapsed / 210.0 + float(level - 1) * 0.035
+    var kind := forced_kind if not forced_kind.is_empty() else run_director.choose_enemy(elapsed, level, spawn_rng)
+    var difficulty := float(director_profile.get("difficulty", 1.0))
     var enemy := DZEnemy.new()
     enemy.configure(kind, difficulty, player)
     enemy.died.connect(_on_enemy_died)
@@ -511,7 +505,6 @@ func _play_boss_stinger() -> void:
     if boss_audio != null:
         boss_audio.play()
 
-
 func _update_offscreen_threat_indicator() -> void:
     if hud == null or camera == null or player == null or game_over:
         if hud:
@@ -536,7 +529,7 @@ func _update_offscreen_threat_indicator() -> void:
     var viewport_size := get_viewport().get_visible_rect().size
     var screen_pos := camera.unproject_position(best.global_position + Vector3(0.0, 0.9, 0.0))
     var margin := Vector2(84.0, 72.0)
-    var inside := not camera.is_position_behind(best.global_position)         and screen_pos.x >= margin.x         and screen_pos.y >= margin.y         and screen_pos.x <= viewport_size.x - margin.x         and screen_pos.y <= viewport_size.y - margin.y
+    var inside := not camera.is_position_behind(best.global_position) and screen_pos.x >= margin.x and screen_pos.y >= margin.y and screen_pos.x <= viewport_size.x - margin.x and screen_pos.y <= viewport_size.y - margin.y
 
     if inside:
         hud.hide_offscreen_threat()
