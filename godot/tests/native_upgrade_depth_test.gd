@@ -49,6 +49,16 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if player.can_apply_upgrade("multishot"):
+        push_error("Rail protocol must reject multishot upgrades to preserve its single-shot identity")
+        quit(1)
+        return
+    player.apply_upgrade("multishot")
+    if player.multishot != 1:
+        push_error("Rail protocol allowed multishot to bypass its single-shot identity")
+        quit(1)
+        return
+
     player = PLAYER_SCRIPT.new()
     root.add_child(player)
     await process_frame
