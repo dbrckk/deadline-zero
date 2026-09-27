@@ -9,6 +9,7 @@ signal master_volume_changed(value: float)
 signal sfx_volume_changed(value: float)
 
 var hp_bar: ProgressBar
+var health_bar: ProgressBar
 var xp_bar: ProgressBar
 var status_label: Label
 var wave_label: Label
@@ -144,7 +145,6 @@ func show_impact_flash(critical: bool, killed: bool, boss: bool) -> void:
         return
     if impact_flash_tween != null and impact_flash_tween.is_valid():
         impact_flash_tween.kill()
-
     var alpha := 0.055
     var tint := Color(0.68, 0.90, 1.0, alpha)
     if critical:
@@ -156,7 +156,6 @@ func show_impact_flash(critical: bool, killed: bool, boss: bool) -> void:
     if boss:
         alpha = maxf(alpha, 0.18)
         tint = Color(1.0, 0.12, 0.055, alpha)
-
     impact_flash.color = tint
     impact_flash.visible = true
     impact_flash_tween = create_tween()
@@ -199,25 +198,60 @@ func _build() -> void:
     damage_vignette.visible = false
     root.add_child(damage_vignette)
 
-    var top := VBoxContainer.new()
-    top.position = Vector2(28, 24)
-    top.size = Vector2(500, 100)
-    root.add_child(top)
+    var vital_panel := PanelContainer.new()
+    vital_panel.name = "VitalPanel"
+    vital_panel.position = Vector2(28, 24)
+    vital_panel.size = Vector2(500, 108)
+    vital_panel.custom_minimum_size = Vector2(420, 96)
+    vital_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(vital_panel)
+
+    var vital_style := StyleBoxFlat.new()
+    vital_style.bg_color = Color(0.018, 0.032, 0.042, 0.92)
+    vital_style.border_color = Color(0.16, 0.62, 0.82, 0.70)
+    vital_style.set_border_width_all(1)
+    vital_style.border_width_left = 4
+    vital_style.corner_radius_top_left = 8
+    vital_style.corner_radius_top_right = 8
+    vital_style.corner_radius_bottom_left = 8
+    vital_style.corner_radius_bottom_right = 8
+    vital_style.content_margin_left = 16.0
+    vital_style.content_margin_right = 14.0
+    vital_style.content_margin_top = 10.0
+    vital_style.content_margin_bottom = 10.0
+    vital_panel.add_theme_stylebox_override("panel", vital_style)
+
+    var vital_stack := VBoxContainer.new()
+    vital_stack.name = "VitalStack"
+    vital_stack.add_theme_constant_override("separation", 4)
+    vital_panel.add_child(vital_stack)
+
+    var vital_accent := ColorRect.new()
+    vital_accent.name = "VitalAccent"
+    vital_accent.color = Color(0.18, 0.82, 1.0, 0.92)
+    vital_accent.custom_minimum_size = Vector2(120, 3)
+    vital_accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    vital_stack.add_child(vital_accent)
 
     hp_bar = ProgressBar.new()
+    hp_bar.name = "HealthBar"
     hp_bar.custom_minimum_size = Vector2(420, 22)
     hp_bar.show_percentage = false
-    top.add_child(hp_bar)
+    vital_stack.add_child(hp_bar)
+    health_bar = hp_bar
 
     xp_bar = ProgressBar.new()
+    xp_bar.name = "XpBar"
     xp_bar.custom_minimum_size = Vector2(420, 12)
     xp_bar.show_percentage = false
-    top.add_child(xp_bar)
+    vital_stack.add_child(xp_bar)
 
     status_label = Label.new()
+    status_label.name = "CombatStatus"
     status_label.text = "LV 1   KILLS 0"
     status_label.add_theme_font_size_override("font_size", 20)
-    top.add_child(status_label)
+    status_label.modulate = Color(0.88, 0.94, 0.98)
+    vital_stack.add_child(status_label)
 
     wave_label = Label.new()
     wave_label.text = "QUARANTINE YARD"
@@ -235,9 +269,7 @@ func _build() -> void:
     pause_button.position = Vector2(-86, 24)
     pause_button.size = Vector2(58, 58)
     pause_button.add_theme_font_size_override("font_size", 22)
-    pause_button.pressed.connect(func() -> void:
-        pause_requested.emit()
-    )
+    pause_button.pressed.connect(func() -> void: pause_requested.emit())
     add_child(pause_button)
 
     pause_panel = PanelContainer.new()
@@ -247,24 +279,20 @@ func _build() -> void:
     pause_panel.size = Vector2(500, 420)
     pause_panel.visible = false
     add_child(pause_panel)
-
     var pause_box := VBoxContainer.new()
     pause_box.alignment = BoxContainer.ALIGNMENT_CENTER
     pause_box.add_theme_constant_override("separation", 18)
     pause_panel.add_child(pause_box)
-
     var pause_title := Label.new()
     pause_title.text = "SYSTEM PAUSED"
     pause_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     pause_title.add_theme_font_size_override("font_size", 30)
     pause_title.modulate = Color(0.72, 0.92, 1.0)
     pause_box.add_child(pause_title)
-
     var master_label := Label.new()
     master_label.text = "MASTER VOLUME"
     master_label.add_theme_font_size_override("font_size", 16)
     pause_box.add_child(master_label)
-
     master_volume = HSlider.new()
     master_volume.name = "MasterVolume"
     master_volume.min_value = 0.0
@@ -272,16 +300,12 @@ func _build() -> void:
     master_volume.step = 0.05
     master_volume.value = 0.85
     master_volume.custom_minimum_size = Vector2(360, 42)
-    master_volume.value_changed.connect(func(value: float) -> void:
-        master_volume_changed.emit(value)
-    )
+    master_volume.value_changed.connect(func(value: float) -> void: master_volume_changed.emit(value))
     pause_box.add_child(master_volume)
-
     var sfx_label := Label.new()
     sfx_label.text = "SFX VOLUME"
     sfx_label.add_theme_font_size_override("font_size", 16)
     pause_box.add_child(sfx_label)
-
     sfx_volume = HSlider.new()
     sfx_volume.name = "SfxVolume"
     sfx_volume.min_value = 0.0
@@ -289,21 +313,15 @@ func _build() -> void:
     sfx_volume.step = 0.05
     sfx_volume.value = 0.90
     sfx_volume.custom_minimum_size = Vector2(360, 42)
-    sfx_volume.value_changed.connect(func(value: float) -> void:
-        sfx_volume_changed.emit(value)
-    )
+    sfx_volume.value_changed.connect(func(value: float) -> void: sfx_volume_changed.emit(value))
     pause_box.add_child(sfx_volume)
-
     var resume_button := Button.new()
     resume_button.name = "ResumeButton"
     resume_button.text = "RESUME"
     resume_button.custom_minimum_size = Vector2(280, 62)
     resume_button.add_theme_font_size_override("font_size", 21)
-    resume_button.pressed.connect(func() -> void:
-        resume_requested.emit()
-    )
+    resume_button.pressed.connect(func() -> void: resume_requested.emit())
     pause_box.add_child(resume_button)
-
     var pause_style := StyleBoxFlat.new()
     pause_style.bg_color = Color(0.018, 0.028, 0.038, 0.98)
     pause_style.border_color = Color(0.20, 0.78, 1.0, 0.72)
@@ -322,7 +340,6 @@ func _build() -> void:
     low_health_panel.visible = false
     low_health_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
     root.add_child(low_health_panel)
-
     low_health_label = Label.new()
     low_health_label.name = "LowHealthLabel"
     low_health_label.text = "CRITICAL INTEGRITY"
@@ -331,10 +348,9 @@ func _build() -> void:
     low_health_label.add_theme_font_size_override("font_size", 19)
     low_health_label.modulate = Color(1.0, 0.58, 0.44)
     low_health_panel.add_child(low_health_label)
-
     var low_health_style := StyleBoxFlat.new()
-    low_health_style.bg_color = Color(0.16, 0.015, 0.01, 0.88)
-    low_health_style.border_color = Color(1.0, 0.18, 0.08, 0.92)
+    low_health_style.bg_color = Color(0.16, 0.015, 0.01, 0.96)
+    low_health_style.border_color = Color(1.0, 0.18, 0.08, 0.98)
     low_health_style.set_border_width_all(2)
     low_health_style.corner_radius_top_left = 8
     low_health_style.corner_radius_top_right = 8
@@ -350,7 +366,6 @@ func _build() -> void:
     threat_panel.visible = false
     threat_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
     root.add_child(threat_panel)
-
     threat_label = Label.new()
     threat_label.name = "ThreatLabel"
     threat_label.text = "→  ELITE  18m"
@@ -359,7 +374,6 @@ func _build() -> void:
     threat_label.add_theme_font_size_override("font_size", 18)
     threat_label.modulate = Color(1.0, 0.56, 0.22)
     threat_panel.add_child(threat_label)
-
     var threat_style := StyleBoxFlat.new()
     threat_style.bg_color = Color(0.06, 0.025, 0.01, 0.88)
     threat_style.border_color = Color(1.0, 0.42, 0.08, 0.86)
@@ -376,36 +390,29 @@ func _build() -> void:
     game_over_panel.size = Vector2(540, 240)
     game_over_panel.visible = false
     root.add_child(game_over_panel)
-
     var game_over_box := VBoxContainer.new()
     game_over_box.alignment = BoxContainer.ALIGNMENT_CENTER
     game_over_box.add_theme_constant_override("separation", 16)
     game_over_panel.add_child(game_over_box)
-
     var game_over_title := Label.new()
     game_over_title.text = "SIGNAL LOST"
     game_over_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     game_over_title.add_theme_font_size_override("font_size", 34)
     game_over_title.modulate = Color(1.0, 0.34, 0.20)
     game_over_box.add_child(game_over_title)
-
     game_over_summary = Label.new()
     game_over_summary.text = "LEVEL 1   •   KILLS 0   •   00:00"
     game_over_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     game_over_summary.add_theme_font_size_override("font_size", 18)
     game_over_summary.modulate = Color(0.82, 0.88, 0.92)
     game_over_box.add_child(game_over_summary)
-
     var restart_button := Button.new()
     restart_button.name = "RestartButton"
     restart_button.text = "REDEPLOY"
     restart_button.custom_minimum_size = Vector2(260, 58)
     restart_button.add_theme_font_size_override("font_size", 21)
-    restart_button.pressed.connect(func() -> void:
-        restart_requested.emit()
-    )
+    restart_button.pressed.connect(func() -> void: restart_requested.emit())
     game_over_box.add_child(restart_button)
-
     var game_over_style := StyleBoxFlat.new()
     game_over_style.bg_color = Color(0.018, 0.026, 0.034, 0.97)
     game_over_style.border_color = Color(1.0, 0.22, 0.10, 0.78)
@@ -417,41 +424,35 @@ func _build() -> void:
     game_over_panel.add_theme_stylebox_override("panel", game_over_style)
 
     boss_panel = PanelContainer.new()
+    boss_panel.name = "BossPanel"
     boss_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
     boss_panel.position = Vector2(-330, 76)
     boss_panel.size = Vector2(660, 78)
     boss_panel.visible = false
     root.add_child(boss_panel)
-
     var boss_box := VBoxContainer.new()
     boss_box.add_theme_constant_override("separation", 3)
     boss_panel.add_child(boss_box)
-
     var boss_header := HBoxContainer.new()
     boss_header.alignment = BoxContainer.ALIGNMENT_CENTER
     boss_box.add_child(boss_header)
-
     boss_name_label = Label.new()
     boss_name_label.text = "REVENANT PRIME"
     boss_name_label.add_theme_font_size_override("font_size", 18)
     boss_name_label.modulate = Color(1.0, 0.82, 0.42)
     boss_header.add_child(boss_name_label)
-
     var spacer := Control.new()
     spacer.custom_minimum_size = Vector2(32, 1)
     boss_header.add_child(spacer)
-
     boss_phase_label = Label.new()
     boss_phase_label.text = "PHASE I // HUNT"
     boss_phase_label.add_theme_font_size_override("font_size", 13)
     boss_phase_label.modulate = Color(1.0, 0.42, 0.26)
     boss_header.add_child(boss_phase_label)
-
     boss_hp_bar = ProgressBar.new()
     boss_hp_bar.custom_minimum_size = Vector2(620, 18)
     boss_hp_bar.show_percentage = false
     boss_box.add_child(boss_hp_bar)
-
     var boss_style := StyleBoxFlat.new()
     boss_style.bg_color = Color(0.025, 0.035, 0.045, 0.96)
     boss_style.border_color = Color(0.92, 0.28, 0.12, 0.72)
@@ -463,41 +464,36 @@ func _build() -> void:
     boss_panel.add_theme_stylebox_override("panel", boss_style)
 
     upgrade_panel = PanelContainer.new()
+    upgrade_panel.name = "UpgradePanel"
     upgrade_panel.set_anchors_preset(Control.PRESET_CENTER)
     upgrade_panel.position = Vector2(-480, -155)
     upgrade_panel.size = Vector2(960, 310)
     upgrade_panel.visible = false
     root.add_child(upgrade_panel)
-
     var box := VBoxContainer.new()
     box.add_theme_constant_override("separation", 18)
     upgrade_panel.add_child(box)
-
     var title := Label.new()
     title.text = "SELECT COMBAT UPGRADE"
     title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     title.add_theme_font_size_override("font_size", 30)
     box.add_child(title)
-
     var row := HBoxContainer.new()
     row.alignment = BoxContainer.ALIGNMENT_CENTER
     row.add_theme_constant_override("separation", 18)
     box.add_child(row)
-
     for i in range(3):
         var card := VBoxContainer.new()
         card.custom_minimum_size = Vector2(280, 190)
         card.add_theme_constant_override("separation", 5)
         row.add_child(card)
         upgrade_cards.append(card)
-
         var family := Label.new()
         family.text = "UPGRADE"
         family.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
         family.add_theme_font_size_override("font_size", 13)
         card.add_child(family)
         upgrade_family_labels.append(family)
-
         var button := Button.new()
         button.custom_minimum_size = Vector2(280, 82)
         button.text = "◆"
@@ -505,14 +501,12 @@ func _build() -> void:
         button.pressed.connect(_on_upgrade_pressed.bind(i))
         card.add_child(button)
         upgrade_buttons.append(button)
-
         var upgrade_title := Label.new()
         upgrade_title.text = "UPGRADE"
         upgrade_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
         upgrade_title.add_theme_font_size_override("font_size", 21)
         card.add_child(upgrade_title)
         upgrade_title_labels.append(upgrade_title)
-
         var detail := Label.new()
         detail.text = ""
         detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

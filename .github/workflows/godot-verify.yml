@@ -61,6 +61,8 @@ jobs:
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/run_end_ux_test.gd
       - name: Validate consolidated combat danger HUD
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_danger_hud_test.gd
+      - name: Validate combat HUD readability hierarchy
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/hud_readability_hierarchy_test.gd
       - name: Validate attack telegraph escalation
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/attack_telegraph_escalation_test.gd
       - name: Validate player damage feedback
