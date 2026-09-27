@@ -95,6 +95,8 @@ func heal_full() -> void:
     health_changed.emit(health, max_health)
 
 func can_apply_upgrade(id: String) -> bool:
+    if id == "multishot" and weapon_profile == "rail":
+        return false
     if not id.ends_with("_protocol"):
         return true
     return applied_protocols.is_empty()
