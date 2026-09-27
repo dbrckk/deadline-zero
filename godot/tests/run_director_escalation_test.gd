@@ -55,13 +55,16 @@ func _init() -> void:
         "run_director.choose_enemy(elapsed, level, spawn_rng)",
         "director_profile[\"spawn_interval\"]",
         "director_profile[\"batch_size\"]",
-        "director_profile[\"max_enemies\"]",
-        "director_profile[\"difficulty\"]"
+        "director_profile[\"max_enemies\"]"
     ]:
         if main_source.find(required) < 0:
             push_error("Main runtime is not wired to RunDirector: %s" % required)
             quit(1)
             return
+    if main_source.find("director_profile[\"difficulty\"]") < 0 and main_source.find("director_profile.get(\"difficulty\"") < 0:
+        push_error("Main runtime is not wired to RunDirector difficulty")
+        quit(1)
+        return
     for legacy in ["1 + int(elapsed / 45.0)", "0.82 - elapsed * 0.0035", "if elapsed > 25.0 and roll > 0.72", "var difficulty := 1.0 + elapsed / 210.0"]:
         if main_source.find(legacy) >= 0:
             push_error("Legacy hard-coded pacing remains in Main.gd: %s" % legacy)
