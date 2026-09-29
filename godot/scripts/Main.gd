@@ -514,7 +514,7 @@ func _select_priority_threat(candidates: Array, origin: Vector3) -> DZEnemy:
         if enemy == null or enemy.dead or (enemy.kind != "elite" and enemy.kind != "boss"):
             continue
         var priority := 2 if enemy.kind == "boss" else 1
-        var distance := origin.distance_to(enemy.global_position)
+        var distance := origin.distance_to(enemy.position)
         if priority > best_priority or (priority == best_priority and distance < best_distance):
             best_priority = priority
             best_distance = distance
@@ -527,7 +527,7 @@ func _update_offscreen_threat_indicator() -> void:
             hud.hide_offscreen_threat()
         return
 
-    var best := _select_priority_threat(get_tree().get_nodes_in_group("enemies"), player.global_position)
+    var best := _select_priority_threat(get_tree().get_nodes_in_group("enemies"), player.position)
     if best == null:
         hud.hide_offscreen_threat()
         return
