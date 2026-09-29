@@ -5,6 +5,10 @@ const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
 
 func _initialize() -> void:
     var main := MAIN_SCRIPT.new()
+    if not main.has_method("_select_priority_threat"):
+        push_error("Off-screen threat priority selector is missing")
+        quit(1)
+        return
 
     var near_elite := ENEMY_SCRIPT.new()
     near_elite.kind = "elite"
