@@ -190,7 +190,9 @@ jobs:
             adb shell dumpsys activity top > build/godot-android-smoke/activity-top.txt || true
             grep -m1 'ACTIVITY com.deadlinezero.godot/com.godot.game.GodotApp' build/godot-android-smoke/activity-top.txt
             ! grep -Eq 'FATAL EXCEPTION|ANR in com\\.deadlinezero\\.godot|Process: com\\.deadlinezero\\.godot.*has died' build/godot-android-smoke/startup-logcat.txt
-            python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape screenshot, got {w}x{h}"; print(f"GODOT_SCREENSHOT {w}x{h}")'
+            ! grep -Eq 'SceneShaderGLES3: Program linking failed|CanvasShaderGLES3: Program linking failed|Couldn.t present to Vulkan queue' build/godot-android-smoke/startup-logcat.txt
+            test "$(stat -c%s build/godot-android-smoke/first-playable.png)" -ge 20000
+            python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape screenshot, got {w}x{h}"; print(f"GODOT_SCREENSHOT {w}x{h} bytes={len(b)}")'
 
       - name: Upload native Godot startup diagnostics
         uses: actions/upload-artifact@v4
