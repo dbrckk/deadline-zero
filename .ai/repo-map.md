@@ -4377,7 +4377,9 @@ jobs:
             adb shell input keyevent 82 || true
             timeout 12m gradle :android:connectedDebugAndroidTest
             gradle :android:installDebug :android:installDebugAndroidTest
-            mkdir -p build/android-performance
+            mkdir -p build/android-performance build/android-runtime
+            timeout 3m adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGraphicsProfileProbeTest#everyGraphicsProfileAndFrameRateTargetReachesGameScreen com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/android-graphics-profile-matrix.txt
+            grep -q 'OK (1 test)' /tmp/android-graphics-profile-matrix.txt
             adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/graphics-profile-matrix.json
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/graphics-profile-matrix.json build/android-performance/graphics-profile-matrix.json
             test -s build/android-performance/graphics-profile-matrix.json

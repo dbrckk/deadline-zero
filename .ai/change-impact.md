@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 47b0bdcedaacbea2e8ad255ae1dedd9115eda83e
-Head: 0286b6554613d81c8a67c1322ef480abca0e27d3
+Base: 09b7a97adf91e930638402790cb81b11a88c227f
+Head: ba2e8e6ccbd4641654e2664969f112456396a16c
 
 ## Changed files
-- M core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java
+- M .github/workflows/verify.yml
 
 ## Affected areas
-- core
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

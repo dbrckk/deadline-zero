@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T13:21:04Z
+Generated: 2026-09-30T14:36:45Z
 
 ### Git
 - Branch: `main`
-- Head: `0286b6554613`
-- Commit date: 2026-09-30T15:20:54+02:00
-- Commit: Deepen biome runtime set dressing
+- Head: `ba2e8e6ccbd4`
+- Commit date: 2026-09-30T16:36:31+02:00
+- Commit: Preserve graphics profile evidence after Android tests
 - Tracked files: 926
 
 ### Recently changed files
+- `.github/workflows/verify.yml`
 - `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
 - `docs/PREMIUM_ENVIRONMENT_ART_CONTRACT.md`
-- `.github/workflows/verify.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
 
 ### Project signals
