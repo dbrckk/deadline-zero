@@ -16,6 +16,8 @@ These can be proven by repository CI/build tooling:
 - [x] 160-enemy / 180-projectile stress benchmark.
 - [x] Production atlas/layout validation.
 - [x] Play listing metadata validation.
+- [x] Accessibility settings persistence, Settings-screen exposure, reduced-motion enforcement and release-contract coverage.
+- [x] Localization catalog/key/formatting guardrails and English-only release contract coverage.
 - [x] Data Safety contract presence/structure.
 - [x] Play Console declaration contract presence/structure.
 - [x] Version-matched Play release notes.
@@ -30,6 +32,8 @@ These require real account state, licensed Play services, or physical hardware a
 - [ ] Complete player-controlled run on representative physical Android hardware.
 - [ ] Physical lifecycle/background/foreground/process-death matrix.
 - [ ] Low/mid/high device performance and thermal calibration.
+- [ ] Physical accessibility/readability pass across touch targets, UI-scale extremes, reduced motion/flashes, high-contrast telegraphs and color-vision modes.
+- [ ] Localization visual QA for every locale advertised in Play; current shipping contract remains English-only.
 - [ ] Google Play Billing licensed-account purchase/restore/refund/revocation matrix.
 - [ ] Production AdMob/UMP consent behavior on a real Play-delivered build.
 - [ ] Google Play Games production configuration/account validation.
