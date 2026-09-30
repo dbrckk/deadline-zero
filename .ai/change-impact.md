@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 3d371651daada2ec661dd656618f562148460fe2
-Head: 5c2660ce574291bc2c43111f361709bf2e2d461f
+Base: d9c9c0d2f75f3c62b9c2171fd0d7d403a02ae485
+Head: 1c9d5ecf0c386701c2117dacbbaa1eccd7320db4
 
 ## Changed files
-- M .github/workflows/verify.yml
+- M docs/PREMIUM_ENVIRONMENT_ART_CONTRACT.md
 
 ## Affected areas
-- .github
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.

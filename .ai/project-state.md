@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T13:17:20Z
+Generated: 2026-09-30T13:18:05Z
 
 ### Git
 - Branch: `main`
-- Head: `5c2660ce5742`
-- Commit date: 2026-09-30T15:16:54+02:00
-- Commit: Archive Quarantine Yard visual evidence
+- Head: `1c9d5ecf0c38`
+- Commit date: 2026-09-30T15:17:50+02:00
+- Commit: Align environment art contract with biome-specific pipeline
 - Tracked files: 926
 
 ### Recently changed files
+- `docs/PREMIUM_ENVIRONMENT_ART_CONTRACT.md`
 - `.github/workflows/verify.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java`
