@@ -423,6 +423,41 @@ public final class AndroidGameplayVisualProbeTest {
     }
 
     @Test
+    public void capturesQuarantineYardGameplay() throws Exception {
+        try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
+            AndroidLauncher activity = activity(scenario);
+            runOnGameThread(activity, () -> {
+                DeadlineZeroGame game = game(activity);
+                game.startRun();
+                game.startRunWithContract(RunModifierContext.offers()[0]);
+                assertTrue("expected GameScreen for QUARANTINE YARD visual probe",
+                    game.getScreen() instanceof GameScreen);
+                RunStageContext.begin(1);
+                assertTrue("stage 1 must route to QUARANTINE YARD",
+                    com.deadlinezero.game.visual.EnvironmentBiomeRules.forStage(1)
+                        == com.deadlinezero.game.visual.EnvironmentBiomeRules.Biome.QUARANTINE_YARD);
+                injectQuarantineYardCrowd((GameScreen) game.getScreen());
+            });
+            Thread.sleep(1200L);
+            capture("quarantine-yard-gameplay.png");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void injectQuarantineYardCrowd(GameScreen screen) {
+        try {
+            Field field = GameScreen.class.getDeclaredField("enemies");
+            field.setAccessible(true);
+            Array<Enemy> enemies = (Array<Enemy>) field.get(screen);
+            enemies.add(new Enemy(Enemy.Type.SHAMBLER, -5.0f, 3.0f, 500_000f, .02f, .50f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.RUNNER, 0.4f, 4.2f, 500_000f, .02f, .44f, 0f, 1));
+            enemies.add(new Enemy(Enemy.Type.RANGED, 5.1f, 2.7f, 500_000f, .02f, .46f, 0f, 1));
+        } catch (ReflectiveOperationException exception) {
+            throw new AssertionError("unable to inject QUARANTINE YARD crowd for visual QA", exception);
+        }
+    }
+
+    @Test
     public void capturesCryogenicDepthsGameplay() throws Exception {
         try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
             AndroidLauncher activity = activity(scenario);
