@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 744a31d947e6f68f9f7c6c6f9e86d48ca1b51333
-Head: 7c772df714a8183cb1781b9c6104539cf14c42b0
+Base: bdbfb5dc0e5f915dc06b46581a564d8bd56e55a5
+Head: 332df201b321baa62349eb1d5547a1609fce4034
 
 ## Changed files
-- M .github/workflows/godot-android-first-playable.yml
+- M .github/workflows/responsive-ui-qa.yml
 
 ## Affected areas
 - .github

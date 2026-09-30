@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T14:44:18Z
+Generated: 2026-09-30T14:46:27Z
 
 ### Git
 - Branch: `main`
-- Head: `864e09cdb4b2`
-- Commit date: 2026-09-30T14:44:02Z
-- Commit: chore(ai): refresh unified AI context
+- Head: `332df201b321`
+- Commit date: 2026-09-30T16:45:50+02:00
+- Commit: Ignore AI context-only CI churn
 - Tracked files: 937
 
 ### Recently changed files
+- `.github/workflows/responsive-ui-qa.yml`
+- `.github/workflows/verify.yml`
 - `.github/workflows/godot-android-first-playable.yml`
 - `.github/workflows/godot-verify.yml`
 - `godot/tests/environment_asset_validation_test.gd`
-- `godot/tests/authored_world_dressing_test.gd`
-- `godot/scripts/Main.gd`
 
 ### Project signals
 - `build.gradle`

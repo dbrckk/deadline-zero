@@ -2531,6 +2531,8 @@ name: Responsive UI QA
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '.ai/**'
   pull_request:
 
 concurrency:
@@ -4277,6 +4279,8 @@ name: Verify
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '.ai/**'
   pull_request:
 
 concurrency:
