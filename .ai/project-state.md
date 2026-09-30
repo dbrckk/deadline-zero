@@ -22,18 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T20:08:51Z
+Generated: 2026-09-30T20:15:13Z
 
 ### Git
 - Branch: `main`
-- Head: `1b59eba8a411`
-- Commit date: 2026-09-30T22:08:38+02:00
-- Commit: Use Android top activity for Godot smoke
+- Head: `80bb2ed001ef`
+- Commit date: 2026-09-30T22:14:58+02:00
+- Commit: Fit Godot compatibility shaders to mobile limits
 - Tracked files: 938
 
 ### Recently changed files
 - `.github/workflows/godot-android-first-playable.yml`
-- `godot/export_presets.cfg`
+- `godot/project.godot`
+- `godot/tests/mobile_orientation_test.gd`
 
 ### Project signals
 - `build.gradle`

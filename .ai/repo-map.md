@@ -2127,7 +2127,9 @@ jobs:
             adb shell dumpsys activity top > build/godot-android-smoke/activity-top.txt || true
             grep -m1 'ACTIVITY com.deadlinezero.godot/com.godot.game.GodotApp' build/godot-android-smoke/activity-top.txt
             ! grep -Eq 'FATAL EXCEPTION|ANR in com\\.deadlinezero\\.godot|Process: com\\.deadlinezero\\.godot.*has died' build/godot-android-smoke/startup-logcat.txt
-            python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape screenshot, got {w}x{h}"; print(f"GODOT_SCREENSHOT {w}x{h}")'
+            ! grep -Eq 'SceneShaderGLES3: Program linking failed|CanvasShaderGLES3: Program linking failed|Couldn.t present to Vulkan queue' build/godot-android-smoke/startup-logcat.txt
+            test "$(stat -c%s build/godot-android-smoke/first-playable.png)" -ge 20000
+            python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape screenshot, got {w}x{h}"; print(f"GODOT_SCREENSHOT {w}x{h} bytes={len(b)}")'
 
       - name: Upload native Godot startup diagnostics
         uses: actions/upload-artifact@v4
@@ -27984,6 +27986,8 @@ func _run_test() -> void:
     var height := int(ProjectSettings.get_setting("display/window/size/viewport_height", 0))
     var orientation := int(ProjectSettings.get_setting("display/window/handheld/orientation", -1))
     var mobile_renderer := String(ProjectSettings.get_setting("rendering/renderer/rendering_method.mobile", ""))
+    var max_lights_per_object := int(ProjectSettings.get_setting("rendering/limits/opengl/max_lights_per_object", 8))
+    var max_renderable_lights := int(ProjectSettings.get_setting("rendering/limits/opengl/max_renderable_lights", 32))
 
     if width <= height:
         push_error("Godot mobile viewport must remain landscape, got %dx%d" % [width, height])
@@ -27995,6 +27999,14 @@ func _run_test() -> void:
         return
     if mobile_renderer != "gl_compatibility":
         push_error("Godot mobile renderer must remain gl_compatibility, got %s" % mobile_renderer)
+        quit(1)
+        return
+    if max_lights_per_object > 4:
+        push_error("Compatibility renderer light budget is too high for low-end GLES3: %d" % max_lights_per_object)
+        quit(1)
+        return
+    if max_renderable_lights > 16:
+        push_error("Compatibility renderer frame light budget is too high: %d" % max_renderable_lights)
         quit(1)
         return
 
