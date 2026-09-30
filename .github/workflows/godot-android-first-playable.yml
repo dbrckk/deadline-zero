@@ -167,6 +167,9 @@ jobs:
               adb shell input keyevent 66 || true
               sleep 2
             fi
+            adb shell uiautomator dump /sdcard/deadline-zero-window-final.xml >/dev/null 2>&1 || true
+            adb pull /sdcard/deadline-zero-window-final.xml build/godot-android-smoke/window-final.xml >/dev/null 2>&1 || true
+            ! grep -q 'Viewing full screen' build/godot-android-smoke/window-final.xml 2>/dev/null
 
             adb exec-out screencap -p > build/godot-android-smoke/first-playable.png
             test -s build/godot-android-smoke/first-playable.png
