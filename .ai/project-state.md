@@ -22,18 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T20:15:13Z
+Generated: 2026-09-30T20:16:34Z
 
 ### Git
 - Branch: `main`
-- Head: `80bb2ed001ef`
-- Commit date: 2026-09-30T22:14:58+02:00
-- Commit: Fit Godot compatibility shaders to mobile limits
+- Head: `b1af3108a3e7`
+- Commit date: 2026-09-30T22:16:22+02:00
+- Commit: Apply Godot OpenGL light budgets correctly
 - Tracked files: 938
 
 ### Recently changed files
-- `.github/workflows/godot-android-first-playable.yml`
 - `godot/project.godot`
+- `.github/workflows/godot-android-first-playable.yml`
 - `godot/tests/mobile_orientation_test.gd`
 
 ### Project signals
