@@ -1,114 +1,97 @@
 DEADLINE ZERO — PROJECT STATUS
 ==============================
 
-Last update: 2026-09-09
-Current phase: Premium art pipeline / 11 authored production actors accepted; remaining survivor variants and polish next.
+Last update: 2026-09-30
+Current phase: Playable production hardening / combat identity, release quality gates, and final premium polish.
 
 CURRENT GOAL
 ------------
-Reach premium stylized 2.5D mobile-shooter quality using authoritative 3D masters -> orthographic 8-direction renders -> normalized 96x96 frames -> strict QA -> additive multi-actor atlas -> real Android gameplay validation.
+Ship a reliable, premium stylized 2.5D mobile shooter that is genuinely playable on Android, keeps progression and monetization safe, and meets Play Store release quality gates.
+
+CURRENT BASELINE
+----------------
+[OK] Main gameplay, Android first-playable, responsive UI, and Godot verification workflows are active.
+[OK] Data-driven weapon protocols and combat identity are implemented and covered by regression tests.
+[OK] Boss phases, status effects, impact feedback, run escalation, and Rail single-shot identity are implemented on main.
+[OK] Premium authored actor pipeline is productionized with immutable sources, deterministic rendering, additive atlas publication, strict QA, and Android visual acceptance.
+[OK] 24 production actor contracts are currently status=accepted in config/actor-production-contracts.json.
+[OK] No authored-actor production blocker remains.
 
 ACCEPTED PRODUCTION ACTORS
 --------------------------
-[OK] REX — 232 frames, survivor/rex, rifle visibility gate, Android accepted.
-[OK] NYX — Quaternius BlueSoldier_Female + deterministic compact rifle, survivor/nyx, 232 frames, Android accepted.
-[OK] SHAMBLER — Quaternius Zombie Apocalypse Kit, 232 frames, Android accepted.
-[OK] RUNNER — Quaternius Zombie_Female, 232 frames, Android accepted.
-[OK] BRUTE — Quaternius Demon, heavy silhouette, 232 frames, Android accepted.
-[OK] RANGED — BlueSoldier_Male + deterministic compact rifle, 232 frames, Android accepted.
-[OK] ELITE — Quaternius Orc, native weapon attack, 232 frames, Android accepted.
-[OK] SHIELDED — BlueSoldier_Male + fingerprinted KayKit shield, 232 frames, Android accepted.
-[OK] REGENERATOR — Quaternius Green Blob, organic silhouette, 232 frames, Android accepted.
-[OK] PHANTOM — Quaternius Ghost, ethereal silhouette, 232 frames, Android accepted.
-[OK] BOSS — Quaternius Big Yeti, boss/alpha, dominant silhouette, 232 frames, Android accepted.
+Survivors:
+[OK] REX
+[OK] NYX
+[OK] BASTION
+[OK] VOLT
+[OK] WRAITH
 
-CURRENT NYX STATUS
-------------------
-[OK] Immutable CC0 source: ariesyous/projectbluebean @ 4769997aaea204c66735813e2bf61dc3c94e7631.
-[OK] Source BlueSoldier_Female.blend; blob ceaceb30aa5389cea266acf3becdae863c5820d4; SHA-256 9f79873e2e3452f4a3ac64ff7ba3388c01d6e62633f3477ab8a27d844c3adfb2.
-[OK] Exact 232-frame contract; Idle / Run / Shoot_OneHanded / RecieveHit / Death.
-[OK] Minimum master margin 40 px; median silhouette 37x60.5 px / 2079 px2.
-[OK] Explicit compact-rifle geometry and native ranged attack validated.
-[OK] Atlas root survivor/nyx published additively; production atlas contains 11 authored actor pages / 2552 authored frames.
-[OK] Verify #1487 / run 34395791923 passed core, Android build and real Android runtime with Survivor.NYX selected through the production runtime path.
-[OK] Android visual artifact 10121562557 inspected and accepted for phone-scale crowded gameplay and attack readability.
-[OK] Candidate status=accepted and NYX manifest records Android acceptance.
+Core enemies:
+[OK] SHAMBLER
+[OK] RUNNER
+[OK] BRUTE
+[OK] RANGED
+[OK] ELITE
+[OK] SHIELDED
+[OK] REGENERATOR
+[OK] PHANTOM
 
-PIPELINE INDUSTRIALIZATION
---------------------------
-[OK] Immutable candidate provenance and verdicts live in config/actor-candidates.json + config/actor-candidates.d/*.json.
-[OK] Shared action resolution handles importer suffixes and rejects ambiguous canonical matches.
-[OK] Candidate validation covers fingerprint, Blender import, actions, exact 232 frames, margins, normalization and role metrics.
-[OK] .blend, .fbx, .gltf and .glb sources supported.
-[OK] Renderer supports deterministic weapons and immutable defensive props.
-[OK] Additive atlas publication preserves previously accepted actor roots.
-[OK] config/actor-production-contracts.json is authoritative.
-[OK] Real Android visual acceptance is mandatory before status=accepted.
-[OK] GitHub Actions is primary CI; CircleCI remains fallback.
+Bosses / boss-class:
+[OK] BOSS / ALPHA
+[OK] REVENANT
+[OK] WARDEN
+[OK] HARVESTER
+[OK] NULL_ARCHON
 
-IMPORTANT DECISIONS
--------------------
-- Never accept an actor solely because CI is green; phone-scale and real Android evidence are mandatory.
-- Production atlas publication remains additive/upsert-based.
-- Sources must be license-identified and fingerprinted.
-- Preserve meaningful native animation/root motion; normalize the motion envelope rather than every frame independently.
-- Shared actor contract remains 8 directions / 232 frames / 96x96 unless explicitly versioned.
-- Role identity must be measurable where practical.
-- Explicit weapon/defensive geometry is required for roles that depend on it.
-- Accepted actor roots and contracts must survive later staging.
-- BOSS keeps the shared 232-frame contract; only render scale is role-specific.
+Biome enemies:
+[OK] FORGE_HOUND
+[OK] CINDER_GUNNER
+[OK] SLAG_GUARD
+[OK] PHASE_STALKER
+[OK] STATIC_SEER
+[OK] NULL_WARD
 
-CURRENT BLOCKER
----------------
-No authored-actor production blocker remains. NYX contract publication and final accepted-contract CI remain before PR #52 merge.
-
-IMMEDIATE NEXT ACTION
----------------------
-Publish NYX in config/actor-production-contracts.json, run final accepted-contract CI, merge PR #52, then proceed to BASTION, VOLT and WRAITH.
-
-ORDER OF EXECUTION
-------------------
-1. Rex production vertical slice. [DONE]
-2. Shambler production vertical slice. [DONE]
-3. Multi-actor atlas + accepted-actor contract. [DONE]
-4. Runner production vertical slice. [DONE]
-5. Generic candidate validation infrastructure. [DONE]
-6. BRUTE qualification + staging + Android acceptance. [DONE]
-7. Generic production staging workflow. [DONE]
-8. RANGED qualification + staging + Android acceptance. [DONE]
-9. ELITE qualification + staging + Android acceptance. [DONE]
-10. SHIELDED qualification + staging + Android acceptance. [DONE]
-11. REGENERATOR qualification + staging + Android acceptance. [DONE]
-12. PHANTOM qualification + staging + Android acceptance. [DONE]
-13. BOSS authored production actor. [DONE]
-14. NYX authored survivor. [DONE]
-15. BASTION authored survivor. [NOW]
-16. VOLT authored survivor. [NEXT]
-17. WRAITH authored survivor. [NEXT]
-18. Final visual polish. [NEXT]
-
-SHARED ACTOR CONTRACT
----------------------
+ACTOR PIPELINE CONTRACT
+-----------------------
 Directions: n, ne, e, se, s, sw, w, nw.
 Animations: idle=4, run=8, attack=6, hit=3, death=8 frames per direction.
 Total: 232 frames per actor.
 Final cell: 96x96.
 Authoritative definition: config/actor-production-contracts.json.
 
-QUALITY GATES
--------------
-REX: ACCEPTED.
-NYX: ACCEPTED.
-SHAMBLER: ACCEPTED.
-RUNNER: ACCEPTED.
-BRUTE: ACCEPTED.
-RANGED: ACCEPTED.
-ELITE: ACCEPTED.
-SHIELDED: ACCEPTED.
-REGENERATOR: ACCEPTED.
-PHANTOM: ACCEPTED.
-BOSS: ACCEPTED.
+PIPELINE INDUSTRIALIZATION
+--------------------------
+[OK] Immutable candidate provenance and verdicts live in config/actor-candidates.json + config/actor-candidates.d/*.json.
+[OK] Shared action resolution handles importer suffixes and rejects ambiguous canonical matches.
+[OK] Candidate validation covers fingerprint, Blender import, actions, exact 232 frames, margins, normalization, and role metrics.
+[OK] .blend, .fbx, .gltf and .glb sources are supported.
+[OK] Renderer supports deterministic weapons and immutable defensive props.
+[OK] Additive atlas publication preserves accepted actor roots.
+[OK] Real Android visual acceptance is required before status=accepted.
+[OK] GitHub Actions is primary CI; CircleCI remains fallback.
 
-NEXT QUALITY GATE
------------------
-BASTION must pass immutable-source validation, exact 232-frame QA, phone-scale distinction and real Android visual acceptance without regressing the 11 accepted production actor roots.
+CURRENT RELEASE BLOCKERS
+------------------------
+[M0] Physical-device Android lifecycle validation is still required for process death/relaunch, durable profile persistence, audio resume, and fullscreen-ad lifecycle behavior. See issue #16.
+[M0] Google Play license-test validation is still required for durable entitlement restore/revocation and physical reconnect/cancel paths. See issue #17.
+[M7] Release-candidate quality gates remain open: device performance profiles, FPS/thermal/ANR measurements, accessibility, localization, store assets from shipping build, closed-test feedback, and final release checklists. See issue #14.
+[CI] Repository standards context packaging was over budget on 2026-09-29; .repomixignore now excludes core/src/test from AI packaging only. Tests themselves remain present and continue to run in CI.
+
+IMMEDIATE NEXT ACTIONS
+----------------------
+1. Keep main green across Verify, Responsive UI QA, Godot Android First Playable, Godot 3D Verify, and Repository standards.
+2. Continue final premium gameplay/UI/environment polish where it produces visible in-game improvement.
+3. Finish remaining automated release-hardening that does not require physical Play license-test hardware.
+4. Execute issue #16 and #17 physical-device matrices when a representative Android device and Play license-test account are available.
+5. Complete issue #14 release-candidate measurements and Play Store checklists before store submission.
+
+IMPORTANT DECISIONS
+-------------------
+- Reliability and real execution take priority over speculative feature growth.
+- Never mark physical-device or Play license-test criteria complete from emulator/CI evidence alone.
+- Never accept an actor solely because CI is green; phone-scale and real Android evidence remain mandatory.
+- Production atlas publication remains additive/upsert-based.
+- Sources must be license-identified and fingerprinted.
+- Preserve meaningful native animation/root motion; normalize the motion envelope rather than every frame independently.
+- Explicit weapon/defensive geometry is required for roles that depend on it.
+- Accepted actor roots and contracts must survive later staging.
