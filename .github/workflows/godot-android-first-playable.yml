@@ -154,6 +154,8 @@ jobs:
             adb shell monkey -p com.deadlinezero.godot -c android.intent.category.LAUNCHER 1
             sleep 8
 
+            adb exec-out screencap -p > build/godot-android-smoke/first-playable.png
+            test -s build/godot-android-smoke/first-playable.png
             adb logcat -d -v threadtime > build/godot-android-smoke/startup-logcat.txt || true
             adb shell dumpsys activity processes > build/godot-android-smoke/activity-processes.txt || true
             adb shell dumpsys activity exit-info com.deadlinezero.godot > build/godot-android-smoke/exit-info.txt || true
