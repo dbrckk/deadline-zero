@@ -112,6 +112,11 @@ jobs:
             adb shell input keyevent 82 || true
             timeout 12m gradle :android:connectedDebugAndroidTest
             gradle :android:installDebug :android:installDebugAndroidTest
+            mkdir -p build/android-performance
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/graphics-profile-matrix.json
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/graphics-profile-matrix.json build/android-performance/graphics-profile-matrix.json
+            test -s build/android-performance/graphics-profile-matrix.json
+            python3 -c 'import json; from pathlib import Path; data=json.loads(Path("build/android-performance/graphics-profile-matrix.json").read_text()); rows=data.get("combinations", []); assert data.get("schemaVersion")==1, data; assert len(rows)==12, rows; expected={(q,f) for q in ("LOW","MEDIUM","HIGH","ULTRA") for f in (60,90,120)}; actual={(r["quality"],r["requestedFps"]) for r in rows}; assert actual==expected, (actual,expected); assert all(r["effectiveFps"]==r["requestedFps"] for r in rows), rows; assert all(0.40 <= r["effectiveFxQuality"] <= r["qualityCeiling"] + 0.0001 for r in rows), rows; print("GRAPHICS_PROFILE_MATRIX", json.dumps(data, sort_keys=True))'
             adb shell pm path com.deadlinezero.game | grep -q 'package:'
             adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.game | grep -q 'AndroidLauncher'
             adb shell settings put secure immersive_mode_confirmations confirmed || true
@@ -264,6 +269,7 @@ jobs:
           path: |
             build/android-performance/performance-probe.json
             build/android-performance/performance-stress.json
+            build/android-performance/graphics-profile-matrix.json
           if-no-files-found: warn
           retention-days: 30
 
