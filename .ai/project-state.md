@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T14:46:27Z
+Generated: 2026-09-30T14:50:52Z
 
 ### Git
 - Branch: `main`
-- Head: `332df201b321`
-- Commit date: 2026-09-30T16:45:50+02:00
-- Commit: Ignore AI context-only CI churn
-- Tracked files: 937
+- Head: `dc3f630baf01`
+- Commit date: 2026-09-30T16:50:34+02:00
+- Commit: Cancel stale Godot Android builds
+- Tracked files: 938
 
 ### Recently changed files
-- `.github/workflows/responsive-ui-qa.yml`
-- `.github/workflows/verify.yml`
 - `.github/workflows/godot-android-first-playable.yml`
 - `.github/workflows/godot-verify.yml`
-- `godot/tests/environment_asset_validation_test.gd`
+- `godot/tests/mobile_orientation_test.gd`
+- `godot/project.godot`
 
 ### Project signals
 - `build.gradle`

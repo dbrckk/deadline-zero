@@ -434,6 +434,7 @@ godot/
     haptics_service_test.gd
     hud_readability_hierarchy_test.gd
     impact_fx_mobile_test.gd
+    mobile_orientation_test.gd
     native_enemy_behavior_test.gd
     native_upgrade_depth_test.gd
     player_damage_feedback_test.gd
@@ -1948,6 +1949,10 @@ on:
       - '.github/workflows/godot-android-first-playable.yml'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-godot-android:
     runs-on: ubuntu-latest
@@ -2086,9 +2091,19 @@ jobs:
             adb install -r build/godot-android/deadline-zero-godot-debug.apk
             adb shell pm path com.deadlinezero.godot | grep -q 'package:'
             test -n "$(adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.godot | tr -d '\r' | tail -n 1)"
+            adb shell settings put secure immersive_mode_confirmations confirmed || true
             adb logcat -c
             adb shell monkey -p com.deadlinezero.godot -c android.intent.category.LAUNCHER 1
             sleep 8
+
+            # Guard against Android's first-use immersive tutorial obscuring visual QA.
+            adb shell uiautomator dump /sdcard/deadline-zero-window.xml >/dev/null 2>&1 || true
+            adb pull /sdcard/deadline-zero-window.xml build/godot-android-smoke/window.xml >/dev/null 2>&1 || true
+            if grep -q 'Viewing full screen' build/godot-android-smoke/window.xml 2>/dev/null; then
+              adb shell settings put secure immersive_mode_confirmations confirmed || true
+              adb shell input keyevent 66 || true
+              sleep 2
+            fi
 
             adb exec-out screencap -p > build/godot-android-smoke/first-playable.png
             test -s build/godot-android-smoke/first-playable.png
@@ -2191,6 +2206,8 @@ jobs:
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_asset_validation_test.gd
       - name: Validate authored world dressing
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_world_dressing_test.gd
+      - name: Validate mobile landscape contract
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/mobile_orientation_test.gd
       - name: Validate native upgrade depth
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/native_upgrade_depth_test.gd
       - name: Validate weapon protocol behavior
@@ -27940,6 +27957,31 @@ func _initialize() -> void:
         return
 
     print("Deadline Zero mobile-safe impact FX: OK")
+    quit(0)
+````
+
+## File: godot/tests/mobile_orientation_test.gd
+````
+extends SceneTree
+
+func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _run_test() -> void:
+    var width := int(ProjectSettings.get_setting("display/window/size/viewport_width", 0))
+    var height := int(ProjectSettings.get_setting("display/window/size/viewport_height", 0))
+    var orientation := int(ProjectSettings.get_setting("display/window/handheld/orientation", -1))
+
+    if width <= height:
+        push_error("Godot mobile viewport must remain landscape, got %dx%d" % [width, height])
+        quit(1)
+        return
+    if orientation != DisplayServer.SCREEN_SENSOR_LANDSCAPE:
+        push_error("Godot handheld orientation must be SCREEN_SENSOR_LANDSCAPE, got %d" % orientation)
+        quit(1)
+        return
+
+    print("Deadline Zero mobile landscape contract: OK")
     quit(0)
 ````
 
