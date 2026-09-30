@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T15:04:41Z
+Generated: 2026-09-30T19:49:16Z
 
 ### Git
 - Branch: `main`
-- Head: `1e632e352e70`
-- Commit date: 2026-09-30T17:04:18+02:00
-- Commit: Guard Godot mobile compatibility renderer
+- Head: `8f33076b8662`
+- Commit date: 2026-09-30T21:49:05+02:00
+- Commit: Make Godot Android smoke launch deterministic
 - Tracked files: 938
 
 ### Recently changed files
+- `.github/workflows/godot-android-first-playable.yml`
 - `godot/tests/mobile_orientation_test.gd`
 - `godot/project.godot`
-- `.github/workflows/godot-android-first-playable.yml`
 
 ### Project signals
 - `build.gradle`

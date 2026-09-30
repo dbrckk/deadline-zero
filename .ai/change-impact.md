@@ -1,13 +1,13 @@
 # Change impact
 
-Base: e3849e1847d44c6858dda993aeb210f1176ea798
-Head: 1e632e352e706b9c571deceac5e4ec45f8ab6068
+Base: 8fa6f5c7b4a10700ba2f92b36d3eebfbaa53e761
+Head: 8f33076b86627d3b683a52c9df35c48a28749caa
 
 ## Changed files
-- M godot/tests/mobile_orientation_test.gd
+- M .github/workflows/godot-android-first-playable.yml
 
 ## Affected areas
-- godot
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

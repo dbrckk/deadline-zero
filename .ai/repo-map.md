@@ -2090,11 +2090,26 @@ jobs:
             adb shell input keyevent 82 || true
             adb install -r build/godot-android/deadline-zero-godot-debug.apk
             adb shell pm path com.deadlinezero.godot | grep -q 'package:'
-            test -n "$(adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.godot | tr -d '\r' | tail -n 1)"
+            COMPONENT="$(adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.godot | tr -d '\r' | tail -n 1)"
+            test -n "$COMPONENT"
+            test "$COMPONENT" != "No activity found"
+            echo "GODOT_LAUNCH_COMPONENT=$COMPONENT"
             adb shell settings put secure immersive_mode_confirmations confirmed || true
             adb logcat -c
-            adb shell monkey -p com.deadlinezero.godot -c android.intent.category.LAUNCHER 1
-            sleep 8
+            adb shell am force-stop com.deadlinezero.godot
+            adb shell am start -W -n "$COMPONENT" | tee build/godot-android-smoke/am-start.txt
+            grep -Eq 'Status: ok|Complete' build/godot-android-smoke/am-start.txt
+
+            timeout 30s bash -c '
+              while true; do
+                resumed="$(adb shell dumpsys activity activities 2>/dev/null | grep -m1 "mResumedActivity" || true)"
+                printf "%s\n" "$resumed"
+                printf "%s\n" "$resumed" | grep -q "com.deadlinezero.godot" && exit 0
+                sleep 1
+              done
+            '
+            adb shell pidof com.deadlinezero.godot | grep -q .
+            sleep 5
 
             # Guard against Android's first-use immersive tutorial obscuring visual QA.
             adb shell uiautomator dump /sdcard/deadline-zero-window.xml >/dev/null 2>&1 || true
@@ -2106,8 +2121,10 @@ jobs:
 
             adb exec-out screencap -p > build/godot-android-smoke/first-playable.png
             test -s build/godot-android-smoke/first-playable.png
-            python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape screenshot, got {w}x{h}"; print(f"GODOT_SCREENSHOT {w}x{h}")'
+
+            # Always persist runtime state before visual assertions so failures remain diagnosable.
             adb logcat -d -v threadtime > build/godot-android-smoke/startup-logcat.txt || true
+            adb shell dumpsys activity activities > build/godot-android-smoke/activity-activities.txt || true
             adb shell dumpsys activity processes > build/godot-android-smoke/activity-processes.txt || true
             adb shell dumpsys activity exit-info com.deadlinezero.godot > build/godot-android-smoke/exit-info.txt || true
             adb shell dumpsys package com.deadlinezero.godot > build/godot-android-smoke/package.txt || true
@@ -2115,7 +2132,9 @@ jobs:
 
             test -s build/godot-android-smoke/pid.txt || grep -Ei 'deadlinezero|godot|FATAL EXCEPTION|AndroidRuntime|DEBUG|crash|signal|vulkan|swiftshader|am_crash|am_kill|am_proc_died' build/godot-android-smoke/startup-logcat.txt | tail -n 300 >&2 || true
             grep -q '[0-9]' build/godot-android-smoke/pid.txt
+            grep -m1 'mResumedActivity' build/godot-android-smoke/activity-activities.txt | grep -q 'com.deadlinezero.godot'
             ! grep -Eq 'FATAL EXCEPTION|ANR in com\\.deadlinezero\\.godot|Process: com\\.deadlinezero\\.godot.*has died' build/godot-android-smoke/startup-logcat.txt
+            python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape screenshot, got {w}x{h}"; print(f"GODOT_SCREENSHOT {w}x{h}")'
 
       - name: Upload native Godot startup diagnostics
         uses: actions/upload-artifact@v4
