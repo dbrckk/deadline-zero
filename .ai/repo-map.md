@@ -2091,11 +2091,12 @@ jobs:
             adb shell input keyevent 82 || true
             adb install -r build/godot-android/deadline-zero-godot-debug.apk
             adb shell pm path com.deadlinezero.godot | grep -q 'package:'
-            printf '%s\n' 'com.deadlinezero.godot/org.godotengine.godot.FullScreenGodotApp' > build/godot-android-smoke/launch-component.txt
+            adb shell dumpsys package com.deadlinezero.godot > build/godot-android-smoke/package-before-launch.txt || true
+            printf '%s\n' 'android.intent.action.MAIN @ com.deadlinezero.godot' > build/godot-android-smoke/launch-component.txt
             adb shell settings put secure immersive_mode_confirmations confirmed || true
             adb logcat -c
             adb shell am force-stop com.deadlinezero.godot
-            adb shell am start -W -n com.deadlinezero.godot/org.godotengine.godot.FullScreenGodotApp | tee build/godot-android-smoke/am-start.txt
+            adb shell am start -W -a android.intent.action.MAIN -p com.deadlinezero.godot | tee build/godot-android-smoke/am-start.txt
             grep -Eq 'Status: ok|Complete' build/godot-android-smoke/am-start.txt
 
             timeout 30s bash -c '
