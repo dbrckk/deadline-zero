@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T12:29:53Z
+Generated: 2026-09-30T12:31:52Z
 
 ### Git
 - Branch: `main`
-- Head: `e4cc767a2b17`
-- Commit date: 2026-09-30T14:29:42+02:00
-- Commit: Fix repository map context budget
+- Head: `083bd63d503d`
+- Commit date: 2026-09-30T14:31:39+02:00
+- Commit: Refresh project status to current production baseline
 - Tracked files: 922
 
 ### Recently changed files
+- `PROJECT_STATUS.txt`
 - `.repomixignore`
 - `godot/scripts/Player.gd`
 - `godot/tests/native_upgrade_depth_test.gd`
@@ -50,8 +51,6 @@ Generated: 2026-09-30T12:29:53Z
 - `godot/tests/run_director_runtime_integration_test.gd`
 - `godot/tests/weapon_protocol_behavior_test.gd`
 - `godot/tests/status_effects_test.gd`
-- `godot/scripts/ImpactFx.gd`
-- `godot/tests/impact_fx_mobile_test.gd`
 
 ### Project signals
 - `build.gradle`
