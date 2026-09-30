@@ -22,20 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T14:50:52Z
+Generated: 2026-09-30T14:52:49Z
 
 ### Git
 - Branch: `main`
-- Head: `dc3f630baf01`
-- Commit date: 2026-09-30T16:50:34+02:00
-- Commit: Cancel stale Godot Android builds
+- Head: `4622becc6af8`
+- Commit date: 2026-09-30T16:52:30+02:00
+- Commit: Reject obstructed Godot Android captures
 - Tracked files: 938
 
 ### Recently changed files
 - `.github/workflows/godot-android-first-playable.yml`
 - `.github/workflows/godot-verify.yml`
 - `godot/tests/mobile_orientation_test.gd`
-- `godot/project.godot`
 
 ### Project signals
 - `build.gradle`

@@ -1,7 +1,7 @@
 # Change impact
 
-Base: c20a45cea8d2b65d97a3ecc2eb185c44552a1d83
-Head: dc3f630baf01523af4c4d7d010b5d6923e72d145
+Base: cad029744551bed66a9e99c13b3d4c81f953a21c
+Head: 4622becc6af8213d8d92dc47c987e7714250c192
 
 ## Changed files
 - M .github/workflows/godot-android-first-playable.yml

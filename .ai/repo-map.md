@@ -2104,9 +2104,13 @@ jobs:
               adb shell input keyevent 66 || true
               sleep 2
             fi
+            adb shell uiautomator dump /sdcard/deadline-zero-window-final.xml >/dev/null 2>&1 || true
+            adb pull /sdcard/deadline-zero-window-final.xml build/godot-android-smoke/window-final.xml >/dev/null 2>&1 || true
+            ! grep -q 'Viewing full screen' build/godot-android-smoke/window-final.xml 2>/dev/null
 
             adb exec-out screencap -p > build/godot-android-smoke/first-playable.png
             test -s build/godot-android-smoke/first-playable.png
+            python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape screenshot, got {w}x{h}"; print(f"GODOT_SCREENSHOT {w}x{h}")'
             adb logcat -d -v threadtime > build/godot-android-smoke/startup-logcat.txt || true
             adb shell dumpsys activity processes > build/godot-android-smoke/activity-processes.txt || true
             adb shell dumpsys activity exit-info com.deadlinezero.godot > build/godot-android-smoke/exit-info.txt || true
