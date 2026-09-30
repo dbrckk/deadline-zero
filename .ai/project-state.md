@@ -22,35 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T12:31:52Z
+Generated: 2026-09-30T12:59:27Z
 
 ### Git
 - Branch: `main`
-- Head: `083bd63d503d`
-- Commit date: 2026-09-30T14:31:39+02:00
-- Commit: Refresh project status to current production baseline
-- Tracked files: 922
+- Head: `9dd4392d8eb8`
+- Commit date: 2026-09-30T14:59:03+02:00
+- Commit: Track accessibility and localization release gates
+- Tracked files: 925
 
 ### Recently changed files
+- `play/store/RELEASE_READINESS.md`
+- `core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java`
 - `PROJECT_STATUS.txt`
 - `.repomixignore`
 - `godot/scripts/Player.gd`
 - `godot/tests/native_upgrade_depth_test.gd`
-- `.github/workflows/godot-android-first-playable.yml`
-- `.github/workflows/godot-verify.yml`
-- `docs/superpowers/plans/2026-09-26-combat-depth-v1.md`
-- `godot/scripts/Enemy.gd`
-- `godot/scripts/Hud.gd`
-- `godot/scripts/Main.gd`
-- `godot/scripts/Projectile.gd`
-- `godot/scripts/RunDirector.gd`
-- `godot/scripts/WeaponProfiles.gd`
-- `godot/tests/enemy_hit_reaction_test.gd`
-- `godot/tests/hud_readability_hierarchy_test.gd`
-- `godot/tests/run_director_escalation_test.gd`
-- `godot/tests/run_director_runtime_integration_test.gd`
-- `godot/tests/weapon_protocol_behavior_test.gd`
-- `godot/tests/status_effects_test.gd`
 
 ### Project signals
 - `build.gradle`

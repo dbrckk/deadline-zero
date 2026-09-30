@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 23adaf3de1df5fc6a84f4c2c998bc7c40d22fd13
-Head: 083bd63d503d0602ac836d7627eee40111016b86
+Base: 8ecb3d9fba1add178de1c016a5645987f82798b8
+Head: 9dd4392d8eb8314ec4061b26c82cc3c17da2a8e3
 
 ## Changed files
-- M PROJECT_STATUS.txt
+- M play/store/RELEASE_READINESS.md
 
 ## Affected areas
-- (root)
+- play
 
 ## Related test candidates
 - No direct filename-based test match detected.

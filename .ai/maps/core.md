@@ -335,6 +335,7 @@ src/
               WeaponSignatureRuntimeTest.java
             config/
               AccessibilityColorVisionTest.java
+              AccessibilityReleaseContractTest.java
               AccessibilitySettingsTest.java
               GraphicsSettingsTest.java
               LocalizationCatalogGuardTest.java
@@ -15573,6 +15574,48 @@ assertEquals(1f, settings.musicVolume);
 assertFalse(settings.screenShake);
 assertFalse(settings.hitStop);
 assertTrue(settings.reduceFlashes);
+```
+
+## File: src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java
+```java
+/**
+ * Release guardrail ensuring the documented accessibility surface remains wired into
+ * persistent runtime settings and the production Settings screen.
+ */
+final class AccessibilityReleaseContractTest {
+@Test void releaseContractMatchesShippingAccessibilitySurface() throws Exception {
+Path root = repositoryRoot();
+String settings = Files.readString(root.resolve(
+⋮----
+String screen = Files.readString(root.resolve(
+⋮----
+String contract = Files.readString(root.resolve(
+⋮----
+assertTrue(settings.contains(control), "Accessibility setting missing from persistence model: " + control);
+⋮----
+assertTrue(screen.contains(key), "Accessibility control missing from Settings screen: " + key);
+⋮----
+assertTrue(settings.contains("enforceReducedMotion()"));
+assertTrue(settings.contains("screenShake = false"));
+assertTrue(settings.contains("hitStop = false"));
+assertTrue(settings.contains("reduceFlashes = true"));
+⋮----
+assertTrue(contract.contains("Every setting persists after app restart."));
+assertTrue(contract.contains("Reduced motion materially reduces non-essential motion."));
+assertTrue(contract.contains("High-contrast telegraphs remain readable in dense combat."));
+assertTrue(contract.contains("Critical gameplay information is not communicated by color alone"));
+⋮----
+@Test void automatedAccessibilityRegressionCoverageExists() {
+⋮----
+assertTrue(Files.isRegularFile(root.resolve(
+⋮----
+private static Path repositoryRoot() {
+Path current = Path.of("").toAbsolutePath().normalize();
+for (Path candidate = current; candidate != null; candidate = candidate.getParent()) {
+if (Files.isRegularFile(candidate.resolve("play/store/ACCESSIBILITY.md"))
+&& Files.isDirectory(candidate.resolve("core/src/main/java"))) {
+⋮----
+throw new IllegalStateException("Unable to locate repository root from " + current);
 ```
 
 ## File: src/test/java/com/deadlinezero/game/config/AccessibilitySettingsTest.java
