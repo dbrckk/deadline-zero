@@ -2099,7 +2099,7 @@ jobs:
             adb shell am start -W -a android.intent.action.MAIN -p com.deadlinezero.godot | tee build/godot-android-smoke/am-start.txt
             grep -Eq 'Status: ok|Complete' build/godot-android-smoke/am-start.txt
 
-            timeout 30s sh -c 'until adb shell dumpsys activity activities 2>/dev/null | grep -m1 "mResumedActivity" | grep -q "com.deadlinezero.godot"; do sleep 1; done'
+            timeout 30s sh -c 'until adb shell dumpsys activity top 2>/dev/null | grep -m1 "ACTIVITY com.deadlinezero.godot/com.godot.game.GodotApp" >/dev/null; do sleep 1; done'
             adb shell pidof com.deadlinezero.godot | grep -q .
             sleep 5
 
@@ -2124,7 +2124,8 @@ jobs:
 
             test -s build/godot-android-smoke/pid.txt || grep -Ei 'deadlinezero|godot|FATAL EXCEPTION|AndroidRuntime|DEBUG|crash|signal|vulkan|swiftshader|am_crash|am_kill|am_proc_died' build/godot-android-smoke/startup-logcat.txt | tail -n 300 >&2 || true
             grep -q '[0-9]' build/godot-android-smoke/pid.txt
-            grep -m1 'mResumedActivity' build/godot-android-smoke/activity-activities.txt | grep -q 'com.deadlinezero.godot'
+            adb shell dumpsys activity top > build/godot-android-smoke/activity-top.txt || true
+            grep -m1 'ACTIVITY com.deadlinezero.godot/com.godot.game.GodotApp' build/godot-android-smoke/activity-top.txt
             ! grep -Eq 'FATAL EXCEPTION|ANR in com\\.deadlinezero\\.godot|Process: com\\.deadlinezero\\.godot.*has died' build/godot-android-smoke/startup-logcat.txt
             python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape screenshot, got {w}x{h}"; print(f"GODOT_SCREENSHOT {w}x{h}")'
 

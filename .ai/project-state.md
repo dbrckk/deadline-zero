@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T20:04:42Z
+Generated: 2026-09-30T20:08:51Z
 
 ### Git
 - Branch: `main`
-- Head: `b9bad68d2214`
-- Commit date: 2026-09-30T22:04:14+02:00
-- Commit: Fix Godot smoke resumed-activity wait
+- Head: `1b59eba8a411`
+- Commit date: 2026-09-30T22:08:38+02:00
+- Commit: Use Android top activity for Godot smoke
 - Tracked files: 938
 
 ### Recently changed files
