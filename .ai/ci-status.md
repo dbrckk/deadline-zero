@@ -1,19 +1,18 @@
 # CI status
 
-Summary: 2 success / 1 failure / 5 active
+Summary: 1 success / 1 failure / 4 active
 
-- Verify: pending / pending (e950f3fc)
-- Responsive UI QA: in_progress / pending (e950f3fc)
-- Godot 3D Verify: in_progress / pending (e950f3fc)
-- Godot Android First Playable: in_progress / pending (e950f3fc)
-- Verify: in_progress / pending (8f33076b)
-- Godot Android First Playable: completed / failure (8f33076b)
-- Responsive UI QA: completed / success (8f33076b)
-- Deadline Zero Work Watch: completed / success (8fa6f5c7)
+- Responsive UI QA: queued / pending (c084ec47)
+- Verify: pending / pending (c084ec47)
+- Godot Android First Playable: in_progress / pending (c084ec47)
+- Verify: in_progress / pending (e950f3fc)
+- Responsive UI QA: completed / cancelled (e950f3fc)
+- Godot 3D Verify: completed / success (e950f3fc)
+- Godot Android First Playable: completed / failure (e950f3fc)
+- Verify: completed / cancelled (8f33076b)
 
 ## Latest failed run structure
-- Job: smoke-godot-android
-  - Failed step: Smoke-test native Godot APK
-  - Failed step: Upload native Godot startup diagnostics
+- Job: build-godot-android
+  - Failed step: Validate native APK package and architectures
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

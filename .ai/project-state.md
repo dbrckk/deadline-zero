@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T19:54:35Z
+Generated: 2026-09-30T19:57:14Z
 
 ### Git
 - Branch: `main`
-- Head: `e950f3fcc81b`
-- Commit date: 2026-09-30T21:54:22+02:00
-- Commit: Restore launchable Godot Android app
+- Head: `c084ec47ba49`
+- Commit date: 2026-09-30T21:57:00+02:00
+- Commit: Launch native Godot activity directly
 - Tracked files: 938
 
 ### Recently changed files
