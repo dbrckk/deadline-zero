@@ -22,18 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T14:57:25Z
+Generated: 2026-09-30T15:04:41Z
 
 ### Git
 - Branch: `main`
-- Head: `b34698e39cbc`
-- Commit date: 2026-09-30T16:57:06+02:00
-- Commit: Fix Godot smoke shell execution
+- Head: `1e632e352e70`
+- Commit date: 2026-09-30T17:04:18+02:00
+- Commit: Guard Godot mobile compatibility renderer
 - Tracked files: 938
 
 ### Recently changed files
+- `godot/tests/mobile_orientation_test.gd`
+- `godot/project.godot`
 - `.github/workflows/godot-android-first-playable.yml`
-- `.github/workflows/godot-verify.yml`
 
 ### Project signals
 - `build.gradle`
