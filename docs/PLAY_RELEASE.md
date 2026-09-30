@@ -106,15 +106,16 @@ For any release-candidate commit, archive the `android-runtime-diagnostics-*` an
 Before Play Console upload:
 
 1. Build with `gradle :android:bundlePlayRelease`; do not bypass this task with a direct `bundleRelease` for a production upload.
-2. Verify `gradle verifyFinalAtlasCoverage` passes on the exact atlas included in the AAB.\4.  Archive the successful Verify run's `runtime-release-evidence.json`, performance JSONs and runtime diagnostics for the exact release-candidate commit.
-3. Verify the AAB is signed with the intended upload key.
-4. Confirm consent/privacy flows on a clean install.
-5. Confirm Settings > Privacy policy opens the exact public URL entered in Play Console.
-6. Confirm rewarded ads use production placement IDs on an internal-test build.
-7. Confirm Remove Ads purchase, restore, acknowledgement, and app restart behavior through a Play license-test account.
-8. Confirm Starter Pack and gem consumables deliver exactly once across process death and retry.
-9. Confirm pause/resume, audio focus, background/foreground, rotation lock, fullscreen-ad lifecycle, and process recreation behavior on physical Android hardware.
-10. Confirm the four Play Billing products match the source catalog exactly: `remove_ads_lifetime`, `starter_pack_01`, `gems_250`, `gems_1200`.
-11. Confirm the Play listing privacy-policy URL matches the in-app privacy destination and the Data safety declaration covers production SDK behavior.
-12. Confirm all graphics and listing metadata satisfy `docs/STORE_RELEASE.md`.
-13. Keep the upload keystore backed up securely outside the repository.
+2. Verify `gradle verifyFinalAtlasCoverage` passes on the exact atlas included in the AAB.
+3. Archive the successful Verify run's `runtime-release-evidence.json`, performance JSONs and runtime diagnostics for the exact release-candidate commit.
+4. Verify the AAB is signed with the intended upload key.
+5. Confirm consent/privacy flows on a clean install.
+6. Confirm Settings > Privacy policy opens the exact public URL entered in Play Console.
+7. Confirm rewarded ads use production placement IDs on an internal-test build.
+8. Confirm Remove Ads purchase, restore, acknowledgement, and app restart behavior through a Play license-test account.
+9. Confirm Starter Pack and gem consumables deliver exactly once across process death and retry.
+10. Confirm pause/resume, audio focus, background/foreground, rotation lock, fullscreen-ad lifecycle, and process recreation behavior on physical Android hardware.
+11. Confirm the four Play Billing products match the source catalog exactly: `remove_ads_lifetime`, `starter_pack_01`, `gems_250`, `gems_1200`.
+12. Confirm the Play listing privacy-policy URL matches the in-app privacy destination and the Data safety declaration covers production SDK behavior.
+13. Confirm all graphics and listing metadata satisfy `docs/STORE_RELEASE.md`.
+14. Keep the upload keystore backed up securely outside the repository.
