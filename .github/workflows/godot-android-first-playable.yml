@@ -102,6 +102,8 @@ jobs:
           test -x "$AAPT"
           "$AAPT" dump badging "$APK" > build/godot-android/badging.txt 2> build/godot-android/badging-stderr.txt || true
           grep -q "package: name='com.deadlinezero.godot'" build/godot-android/badging.txt
+          grep -q "launchable-activity:" build/godot-android/badging.txt
+          grep -q "launchable-activity: name=" build/godot-android/badging.txt
           unzip -l "$APK" | tee build/godot-android/apk-contents.txt
           grep -q 'lib/arm64-v8a/' build/godot-android/apk-contents.txt
           grep -q 'lib/x86_64/' build/godot-android/apk-contents.txt
@@ -153,14 +155,13 @@ jobs:
             adb shell input keyevent 82 || true
             adb install -r build/godot-android/deadline-zero-godot-debug.apk
             adb shell pm path com.deadlinezero.godot | grep -q 'package:'
-            COMPONENT="$(adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.godot | tr -d '\r' | tail -n 1)"
-            test -n "$COMPONENT"
-            test "$COMPONENT" != "No activity found"
-            echo "GODOT_LAUNCH_COMPONENT=$COMPONENT"
+            adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.godot | tr -d '\r' | tail -n 1 | tee build/godot-android-smoke/launch-component.txt
+            test -s build/godot-android-smoke/launch-component.txt
+            ! grep -qx 'No activity found' build/godot-android-smoke/launch-component.txt
             adb shell settings put secure immersive_mode_confirmations confirmed || true
             adb logcat -c
             adb shell am force-stop com.deadlinezero.godot
-            adb shell am start -W -n "$COMPONENT" | tee build/godot-android-smoke/am-start.txt
+            adb shell am start -W -n "$(cat build/godot-android-smoke/launch-component.txt)" | tee build/godot-android-smoke/am-start.txt
             grep -Eq 'Status: ok|Complete' build/godot-android-smoke/am-start.txt
 
             timeout 30s bash -c '
