@@ -162,11 +162,7 @@ jobs:
             # Guard against Android's first-use immersive tutorial obscuring visual QA.
             adb shell uiautomator dump /sdcard/deadline-zero-window.xml >/dev/null 2>&1 || true
             adb pull /sdcard/deadline-zero-window.xml build/godot-android-smoke/window.xml >/dev/null 2>&1 || true
-            if grep -q 'Viewing full screen' build/godot-android-smoke/window.xml 2>/dev/null; then
-              adb shell settings put secure immersive_mode_confirmations confirmed || true
-              adb shell input keyevent 66 || true
-              sleep 2
-            fi
+            grep -q 'Viewing full screen' build/godot-android-smoke/window.xml 2>/dev/null && { adb shell settings put secure immersive_mode_confirmations confirmed || true; adb shell input keyevent 66 || true; sleep 2; } || true
             adb shell uiautomator dump /sdcard/deadline-zero-window-final.xml >/dev/null 2>&1 || true
             adb pull /sdcard/deadline-zero-window-final.xml build/godot-android-smoke/window-final.xml >/dev/null 2>&1 || true
             ! grep -q 'Viewing full screen' build/godot-android-smoke/window-final.xml 2>/dev/null
