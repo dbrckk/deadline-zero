@@ -1,13 +1,13 @@
 # Change impact
 
-Base: d9c9c0d2f75f3c62b9c2171fd0d7d403a02ae485
-Head: 1c9d5ecf0c386701c2117dacbbaa1eccd7320db4
+Base: 47b0bdcedaacbea2e8ad255ae1dedd9115eda83e
+Head: 0286b6554613d81c8a67c1322ef480abca0e27d3
 
 ## Changed files
-- M docs/PREMIUM_ENVIRONMENT_ART_CONTRACT.md
+- M core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java
 
 ## Affected areas
-- docs
+- core
 
 ## Related test candidates
 - No direct filename-based test match detected.

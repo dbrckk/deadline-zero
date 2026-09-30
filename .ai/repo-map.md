@@ -21107,6 +21107,7 @@ TextureRegion crate = region("environment/prop/crate_a");
 TextureRegion beacon = region("environment/prop/beacon_a");
 ⋮----
 drawAmbientDetails(batch, crack, blood, scorch, debrisA, debrisB);
+drawMidfieldStructureClusters(batch, barrier, crate, debrisA, debrisB);
 ⋮----
 drawCryogenicDepthsDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);
 ⋮----
@@ -21173,6 +21174,25 @@ else if (cryoBiome) batch.setColor(.74f, .92f, 1f, .78f);
 else if (nullBiome) batch.setColor(.72f, .68f, 1f, .74f);
 else batch.setColor(hotBiome ? 1f : .78f, hotBiome ? .64f : .82f, hotBiome ? .38f : .86f, .72f);
 draw(batch, debris, x, y, 1.20f * scaleJitter);
+⋮----
+private void drawMidfieldStructureClusters(SpriteBatch batch, TextureRegion barrier,
+⋮----
+// Major biome props live near arena edges, but phone framing spends most of a run in the
+// inner ~30x18 world units. Small deterministic clusters in that band break up the tiled
+// floor, create depth cues and environmental storytelling, and deliberately keep a clear
+// combat lane around the player spawn/aiming center.
+⋮----
+drawPropShadow(batch, primary, x, y, primaryWidth);
+drawPropShadow(batch, secondary, x + (i < 2 ? 1.15f : -1.05f),
+⋮----
+if (cryogenicDepths()) batch.setColor(.48f, .78f, .88f, .80f);
+else if (cryoVault()) batch.setColor(.72f, .92f, 1f, .82f);
+else if (nullSector()) batch.setColor(.70f, .62f, 1f, .80f);
+else if (foundry()) batch.setColor(1f, .62f, .36f, .82f);
+else batch.setColor(.82f, .90f, .94f, .82f);
+⋮----
+draw(batch, primary, x, y, primaryWidth);
+draw(batch, secondary, x + (i < 2 ? 1.15f : -1.05f),
 ⋮----
 private void drawFoundryDressing(SpriteBatch batch, TextureRegion crack, TextureRegion scorch,
 ⋮----
