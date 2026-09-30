@@ -285,6 +285,7 @@ public final class EnvironmentRenderer implements Disposable {
         TextureRegion beacon = region("environment/prop/beacon_a");
 
         drawAmbientDetails(batch, crack, blood, scorch, debrisA, debrisB);
+        drawMidfieldStructureClusters(batch, barrier, crate, debrisA, debrisB);
 
         if (cryogenicDepths()) {
             drawCryogenicDepthsDressing(batch, crack, scorch, barrier, debrisA, debrisB, wallA, wallB, crate, beacon);
@@ -365,6 +366,46 @@ public final class EnvironmentRenderer implements Disposable {
                     draw(batch, debris, x, y, 1.20f * scaleJitter);
                 }
             }
+        }
+        batch.setColor(Color.WHITE);
+    }
+
+    private void drawMidfieldStructureClusters(SpriteBatch batch, TextureRegion barrier,
+                                                TextureRegion crate, TextureRegion debrisA,
+                                                TextureRegion debrisB) {
+        // Major biome props live near arena edges, but phone framing spends most of a run in the
+        // inner ~30x18 world units. Small deterministic clusters in that band break up the tiled
+        // floor, create depth cues and environmental storytelling, and deliberately keep a clear
+        // combat lane around the player spawn/aiming center.
+        float[][] clusters = {
+            {-11.2f,  6.6f,  1.00f},
+            { 11.4f, -6.8f,  .94f},
+            { -9.4f, -8.5f,  .86f},
+            {  9.8f,  8.4f,  .82f}
+        };
+
+        for (int i = 0; i < clusters.length; i++) {
+            float x = clusters[i][0];
+            float y = clusters[i][1];
+            float s = clusters[i][2];
+            TextureRegion primary = (i & 1) == 0 ? barrier : crate;
+            TextureRegion secondary = (i & 1) == 0 ? debrisA : debrisB;
+            float primaryWidth = 2.15f * s;
+            float debrisWidth = 1.28f * s;
+
+            drawPropShadow(batch, primary, x, y, primaryWidth);
+            drawPropShadow(batch, secondary, x + (i < 2 ? 1.15f : -1.05f),
+                y + ((i & 1) == 0 ? -.82f : .78f), debrisWidth);
+
+            if (cryogenicDepths()) batch.setColor(.48f, .78f, .88f, .80f);
+            else if (cryoVault()) batch.setColor(.72f, .92f, 1f, .82f);
+            else if (nullSector()) batch.setColor(.70f, .62f, 1f, .80f);
+            else if (foundry()) batch.setColor(1f, .62f, .36f, .82f);
+            else batch.setColor(.82f, .90f, .94f, .82f);
+
+            draw(batch, primary, x, y, primaryWidth);
+            draw(batch, secondary, x + (i < 2 ? 1.15f : -1.05f),
+                y + ((i & 1) == 0 ? -.82f : .78f), debrisWidth);
         }
         batch.setColor(Color.WHITE);
     }
