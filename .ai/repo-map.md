@@ -52,6 +52,7 @@ The content is organized as follows:
     deadline-zero-work-watch.yml
     enemy-source-catalog.yml
     environment-semantic-qa.yml
+    godot-android-first-playable.yml
     godot-verify.yml
     integrate-environment-candidates.yml
     null-sector-candidate.yml
@@ -380,198 +381,6 @@ core/
                 StageCombatPressureAudit.java
                 WaveDirector.java
               DeadlineZeroGame.java
-    test/
-      java/
-        com/
-          deadlinezero/
-            game/
-              abilities/
-                AbilityLoadoutTierTest.java
-                AbilitySynergyUnlockDetectorTest.java
-                AbilityUpgradeGuidanceTest.java
-                DroneDoctrineRulesTest.java
-              ai/
-                AttackControllerCadenceTest.java
-                BiomeEnemyAttackPatternTest.java
-                BossAffixRulesTest.java
-                BossAttackPatternCatalogTest.java
-                BossCombatSecondaryTuningTest.java
-                BossCombatVariantTest.java
-                BossIdentityTest.java
-                BossVariantStatsContractTest.java
-                EnemyPatternCatalogTest.java
-                EnemyVariantBalanceTest.java
-                FrostColossusBossProfileTest.java
-                HarvesterBossProfileTest.java
-                HarvesterSummonTelegraphTest.java
-                LeaperProfileTest.java
-                LeaperRegistryTest.java
-                LeaperRuntimeTest.java
-                NullArchonBossProfileTest.java
-                RevenantBossProfileTest.java
-                WardenBossProfileTest.java
-              audio/
-                AudioCueLimiterTest.java
-                AudioDirectorFallbackTest.java
-                AudioDirectorVolumeTest.java
-                FoundryHazardAudioContractTest.java
-                MusicProfileSelectorTest.java
-                NullHazardAudioContractTest.java
-                WeaponSignatureAudioContractTest.java
-              combat/
-                EndgameWeaponArchetypeTest.java
-                WeaponCatalogTest.java
-                WeaponSignatureBalanceTest.java
-                WeaponSignatureRuntimeTest.java
-              config/
-                AccessibilityColorVisionTest.java
-                AccessibilitySettingsTest.java
-                GraphicsSettingsTest.java
-                LocalizationCatalogGuardTest.java
-                LocalizationGlyphSanitizerTest.java
-                LocalizationReleaseContractTest.java
-                MobileRuntimeBudgetTest.java
-              entities/
-                EnemyBiomeElementResistanceTest.java
-                EnemyBiomeTacticsTest.java
-                EnemyChargeImpactTest.java
-                EnemyContentScaleTest.java
-                EnemyElementReactionTest.java
-                EnemyProjectileStyleTest.java
-                EnemySpecialistTest.java
-                EnemyTacticsTest.java
-                EnemyVariantTest.java
-                NullWardSupportTest.java
-              fx/
-                DamageNumberTest.java
-              meta/
-                AchievementServiceTest.java
-                BalanceCoefficientAuditTest.java
-                BalanceCurveRegressionTest.java
-                BalanceHealthRulesTest.java
-                BalanceTelemetryReportTest.java
-                BalanceTelemetryRuntimeTest.java
-                BalanceTelemetrySegmentsTest.java
-                BalanceTelemetrySummaryTest.java
-                ConsumablePurchaseDeliveryTest.java
-                CounterSafetyTest.java
-                DailyServiceTest.java
-                EndgameMutatorRulesTest.java
-                EquipmentUpgradeSafetyTest.java
-                InventoryRestoreTest.java
-                MasteryEconomyGuardrailTest.java
-                MasteryProgressTest.java
-                MasteryRunNoticeTest.java
-                OnboardingCompletionPolicyTest.java
-                P0RunRegressionTest.java
-                PlayerProfileSafetyTest.java
-                ProfileBackupCodecTest.java
-                ProfileBackupSummaryTest.java
-                ProfileMigrationDocumentationTest.java
-                ProfileSchemaTest.java
-                ProfileStoreBackupTest.java
-                PurchaseGrantServiceTest.java
-                ReviewPromptPolicyTest.java
-                RunLoadoutContextResetTest.java
-                RunMissionRuntimeTest.java
-                RunModifierContextTest.java
-                RunRecoveryAdviceTest.java
-                RunRewardCalculatorTest.java
-                RunShareTextTest.java
-                SingularityCoreRuntimeTest.java
-                StageRulesTest.java
-                SurvivorProgressionSafetyTest.java
-                ThreatProgressionServiceTest.java
-                ThreatSetBonusRulesTest.java
-                ThreatTierRulesTest.java
-                WeaponProgressionTest.java
-                WeaponSynergyRulesTest.java
-                WeeklyServiceTest.java
-              perf/
-                AdaptiveFrameRateGovernorTest.java
-                PerformanceTelemetryTest.java
-                ThermalBudgetPolicyTest.java
-              progression/
-                CombatProtocolStateTest.java
-                LegendarySelectorTest.java
-                LegendaryStateTest.java
-                ProtocolUpgradeGuidanceTest.java
-                RemainingWeaponFamilyLegendaryBalanceTest.java
-                UpgradeDraftPolicyTest.java
-                UpgradePoolTest.java
-                WeaponFamilyLegendaryBalanceTest.java
-                WeaponFamilyLegendaryTest.java
-              screen/
-                GameScreenBossSummonRosterTest.java
-                MenuLayoutModelTest.java
-                MetaScreenLayoutContractTest.java
-                SurvivorLayoutModelTest.java
-              services/
-                BillingProductCatalogTest.java
-                BillingServiceStateTest.java
-                CloudSaveServiceTest.java
-                OfferConfigServiceTest.java
-                SingleFlightGateTest.java
-                ThermalServiceTest.java
-              ui/
-                ResponsiveGridTest.java
-                UiLayoutTest.java
-                UiMotionTest.java
-                UiRendererStateTest.java
-              visual/
-                ActiveBuildStatusTest.java
-                ActorMaterialProfileTest.java
-                AdaptiveFxBudgetTest.java
-                AnimationProfileCatalogTest.java
-                ArtProfileCatalogPhoneReadabilityTest.java
-                ArtProfileCatalogTest.java
-                AuthoredCoreDirectionalArtTest.java
-                BiomeDirectionalBootstrapArtTest.java
-                BootstrapArtAssetTest.java
-                BootstrapArtCatalogTest.java
-                BootstrapEnvironmentArtTest.java
-                BootstrapVfxArtTest.java
-                BossIdentityArtRoutingTest.java
-                BossPhaseTransitionProfileTest.java
-                BossRevealCameraProfileTest.java
-                ChampionVariantPresentationTest.java
-                CharacterSpriteFacingTest.java
-                CombatHudLayoutTest.java
-                CombatOverlayViewportTest.java
-                CombatVisualEventsProtocolTest.java
-                CompanionRendererTest.java
-                Direction8Test.java
-                DirectionalBootstrapArtTest.java
-                DirectionalBootstrapLazyLoadTest.java
-                DirectionalGpuMemoryBudgetTest.java
-                EnemyHealthBarPresentationTest.java
-                EnvironmentArtCatalogTest.java
-                EnvironmentBiomeRulesTest.java
-                EnvironmentFloorVariationTest.java
-                FinalArtContractTest.java
-                FinalArtLayoutContractTest.java
-                FoundryHazardPresentationTest.java
-                HighResBossDirectionalArtTest.java
-                HighResDirectionalBootstrapArtTest.java
-                HostileProjectilePresentationTest.java
-                NullBootstrapVfxArtTest.java
-                NullHazardPresentationTest.java
-                OnboardingHintPolicyTest.java
-                PlayerProjectilePresentationTest.java
-                SingularityImpactTrackerTest.java
-                SpecialistPresentationTest.java
-                UpgradePresentationTest.java
-                WeaponLegendaryPresentationTest.java
-              world/
-                ArenaHazardRuntimeTest.java
-                BiomeEnemyBehaviorRulesTest.java
-                BiomeEnemyRosterTest.java
-                EndgameWaveCompositionRulesTest.java
-                FoundryHazardActivationCueTest.java
-                RunEncounterDirectorTest.java
-                SpatialHashTest.java
-                StageCombatPressureAuditTest.java
-                WaveDirectorTest.java
   build.gradle
 desktop/
   src/
@@ -592,24 +401,52 @@ godot/
     CombatAudio.gd
     CombatFeel.gd
     Enemy.gd
+    EnemyProjectile.gd
+    GameSettings.gd
+    Haptics.gd
     Hud.gd
     ImpactFx.gd
     Main.gd
     Player.gd
     Projectile.gd
+    RunDirector.gd
+    SpatialHash.gd
+    WeaponProfiles.gd
     XpOrb.gd
   tests/
+    attack_telegraph_escalation_test.gd
     authored_asset_validation.gd
     boss_hud_identity_test.gd
+    boss_phase_runtime_test.gd
     boss_reveal_camera_test.gd
     combat_audio_feedback_test.gd
+    combat_danger_hud_test.gd
     combat_feel_test.gd
     enemy_archetype_combat_test.gd
+    enemy_hit_reaction_test.gd
+    enemy_projectile_visual_test.gd
     enemy_silhouette_identity_test.gd
+    environment_identity_test.gd
+    first_playable_run_path_test.gd
+    haptics_service_test.gd
+    hud_readability_hierarchy_test.gd
+    impact_fx_mobile_test.gd
+    native_enemy_behavior_test.gd
+    native_upgrade_depth_test.gd
+    player_damage_feedback_test.gd
+    run_director_escalation_test.gd
+    run_director_runtime_integration_test.gd
+    run_end_combat_freeze_test.gd
     run_end_ux_test.gd
+    screen_space_fx_test.gd
+    settings_persistence_test.gd
     smoke_test.gd
+    spatial_hash_test.gd
+    status_effects_test.gd
     upgrade_presentation_test.gd
     weapon_presentation_test.gd
+    weapon_profile_data_test.gd
+    weapon_protocol_behavior_test.gd
 tools/
   android/
     scan_runtime_log.py
@@ -2090,6 +1927,184 @@ jobs:
           retention-days: 14
 ````
 
+## File: .github/workflows/godot-android-first-playable.yml
+````yaml
+name: Godot Android First Playable
+
+on:
+  pull_request:
+    paths:
+      - 'godot/**'
+      - '.github/workflows/godot-android-first-playable.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'godot/**'
+      - '.github/workflows/godot-android-first-playable.yml'
+  workflow_dispatch:
+
+jobs:
+  build-godot-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+
+      - name: Install Android SDK components
+        run: |
+          set -euo pipefail
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.1"
+
+      - name: Download Godot 4.7.2 editor and matching export templates
+        run: |
+          set -euo pipefail
+          curl -fL --retry 4 \
+            https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip \
+            -o /tmp/godot.zip
+          curl -fL --retry 4 \
+            https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz \
+            -o /tmp/godot-templates.tpz
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+          rm -rf /tmp/godot-template-unpack
+          mkdir -p /tmp/godot-template-unpack
+          unzip -q /tmp/godot-templates.tpz -d /tmp/godot-template-unpack
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp -R /tmp/godot-template-unpack/templates/. "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+          test -s "$HOME/.local/share/godot/export_templates/4.7.2.stable/android_debug.apk"
+
+      - name: Configure Godot Android editor settings
+        run: |
+          set -euo pipefail
+          keytool -genkeypair -v \
+            -keystore /tmp/deadline-zero-debug.keystore \
+            -storepass android \
+            -alias androiddebugkey \
+            -keypass android \
+            -dname "CN=Android Debug,O=Deadline Zero,C=FR" \
+            -keyalg RSA -keysize 2048 -validity 10000
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<EOF
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/android_sdk_path = "${ANDROID_HOME}"
+          export/android/java_sdk_path = "${JAVA_HOME}"
+          export/android/debug_keystore = "/tmp/deadline-zero-debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
+          export/android/shutdown_adb_on_exit = true
+          EOF
+
+      - name: Import Godot project
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot --editor --quit
+
+      - name: Export native Godot Android debug APK
+        run: |
+          set -euo pipefail
+          mkdir -p build/godot-android
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot \
+            --export-debug "Android Debug" \
+            "$(pwd)/build/godot-android/deadline-zero-godot-debug.apk"
+          test -s build/godot-android/deadline-zero-godot-debug.apk
+
+      - name: Validate native APK package and architectures
+        run: |
+          set -euo pipefail
+          APK=build/godot-android/deadline-zero-godot-debug.apk
+          AAPT="$ANDROID_HOME/build-tools/35.0.1/aapt"
+          test -x "$AAPT"
+          "$AAPT" dump badging "$APK" > build/godot-android/badging.txt 2> build/godot-android/badging-stderr.txt || true
+          grep -q "package: name='com.deadlinezero.godot'" build/godot-android/badging.txt
+          unzip -l "$APK" | tee build/godot-android/apk-contents.txt
+          grep -q 'lib/arm64-v8a/' build/godot-android/apk-contents.txt
+          grep -q 'lib/x86_64/' build/godot-android/apk-contents.txt
+          (cd build/godot-android && sha256sum deadline-zero-godot-debug.apk > SHA256SUMS.txt)
+          (cd build/godot-android && sha256sum -c SHA256SUMS.txt)
+
+      - name: Upload native Godot first-playable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: deadline-zero-godot-first-playable-${{ github.sha }}
+          path: |
+            build/godot-android/deadline-zero-godot-debug.apk
+            build/godot-android/SHA256SUMS.txt
+            build/godot-android/badging.txt
+            build/godot-android/badging-stderr.txt
+          if-no-files-found: error
+          retention-days: 14
+
+  smoke-godot-android:
+    needs: build-godot-android
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: deadline-zero-godot-first-playable-${{ github.sha }}
+          path: build/godot-android
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Smoke-test native Godot APK
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_2
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-boot-timeout: 600
+          disable-animations: true
+          script: |
+            set -eu
+            mkdir -p build/godot-android-smoke
+            adb wait-for-device
+            timeout 300s bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 2; done'
+            adb shell input keyevent 82 || true
+            adb install -r build/godot-android/deadline-zero-godot-debug.apk
+            adb shell pm path com.deadlinezero.godot | grep -q 'package:'
+            test -n "$(adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.deadlinezero.godot | tr -d '\r' | tail -n 1)"
+            adb logcat -c
+            adb shell monkey -p com.deadlinezero.godot -c android.intent.category.LAUNCHER 1
+            sleep 8
+
+            adb logcat -d -v threadtime > build/godot-android-smoke/startup-logcat.txt || true
+            adb shell dumpsys activity processes > build/godot-android-smoke/activity-processes.txt || true
+            adb shell dumpsys activity exit-info com.deadlinezero.godot > build/godot-android-smoke/exit-info.txt || true
+            adb shell dumpsys package com.deadlinezero.godot > build/godot-android-smoke/package.txt || true
+            adb shell pidof com.deadlinezero.godot > build/godot-android-smoke/pid.txt || true
+
+            test -s build/godot-android-smoke/pid.txt || grep -Ei 'deadlinezero|godot|FATAL EXCEPTION|AndroidRuntime|DEBUG|crash|signal|vulkan|swiftshader|am_crash|am_kill|am_proc_died' build/godot-android-smoke/startup-logcat.txt | tail -n 300 >&2 || true
+            grep -q '[0-9]' build/godot-android-smoke/pid.txt
+            ! grep -Eq 'FATAL EXCEPTION|ANR in com\\.deadlinezero\\.godot|Process: com\\.deadlinezero\\.godot.*has died' build/godot-android-smoke/startup-logcat.txt
+
+      - name: Upload native Godot startup diagnostics
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deadline-zero-godot-smoke-${{ github.sha }}
+          path: build/godot-android-smoke/
+          if-no-files-found: error
+          retention-days: 14
+````
+
 ## File: .github/workflows/godot-verify.yml
 ````yaml
 name: Godot 3D Verify
@@ -2097,100 +2112,96 @@ name: Godot 3D Verify
 on:
   pull_request:
     paths:
-      - 'godot/**'
-      - 'docs/GODOT_3D_MIGRATION.md'
-      - '.github/workflows/godot-verify.yml'
+      - "godot/**"
+      - ".github/workflows/godot-verify.yml"
   push:
     branches: [main]
     paths:
-      - 'godot/**'
-      - 'docs/GODOT_3D_MIGRATION.md'
-      - '.github/workflows/godot-verify.yml'
-  workflow_dispatch:
+      - "godot/**"
+      - ".github/workflows/godot-verify.yml"
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Download Godot 4.7.2
         run: |
           set -euo pipefail
-          curl -fL --retry 4             https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip             -o /tmp/godot.zip
+          curl -fL --retry 4 https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o /tmp/godot.zip
           unzip -q /tmp/godot.zip -d /tmp/godot
           chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
 
       - name: Import and parse Godot project
         run: |
           set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64             --headless --path godot --editor --quit
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --editor --quit
 
       - name: Validate authored 3D imports
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/authored_asset_validation.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_asset_validation.gd
       - name: Validate combat-feel profile
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/combat_feel_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_feel_test.gd
+      - name: Validate mobile-safe impact FX
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/impact_fx_mobile_test.gd
       - name: Validate enemy archetype combat
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/enemy_archetype_combat_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_archetype_combat_test.gd
+      - name: Validate enemy hit reaction hierarchy
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_hit_reaction_test.gd
+      - name: Validate run director escalation
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/run_director_escalation_test.gd
       - name: Validate enemy silhouette identities
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/enemy_silhouette_identity_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_silhouette_identity_test.gd
       - name: Validate weapon presentation identities
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/weapon_presentation_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_presentation_test.gd
+      - name: Validate weapon profile data
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_profile_data_test.gd
       - name: Validate upgrade presentation identities
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/upgrade_presentation_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/upgrade_presentation_test.gd
       - name: Validate boss reveal camera
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/boss_reveal_camera_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/boss_reveal_camera_test.gd
       - name: Validate boss HUD identity
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/boss_hud_identity_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/boss_hud_identity_test.gd
+      - name: Validate boss phase runtime
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/boss_phase_runtime_test.gd
       - name: Validate combat audio feedback
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/combat_audio_feedback_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_audio_feedback_test.gd
       - name: Validate run-end UX
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --script res://tests/run_end_ux_test.gd
-
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/run_end_ux_test.gd
+      - name: Validate consolidated combat danger HUD
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_danger_hud_test.gd
+      - name: Validate combat HUD readability hierarchy
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/hud_readability_hierarchy_test.gd
+      - name: Validate attack telegraph escalation
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/attack_telegraph_escalation_test.gd
+      - name: Validate player damage feedback
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/player_damage_feedback_test.gd
+      - name: Validate screen-space impact FX
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/screen_space_fx_test.gd
+      - name: Validate environment identity
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_identity_test.gd
+      - name: Validate native upgrade depth
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/native_upgrade_depth_test.gd
+      - name: Validate weapon protocol behavior
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_protocol_behavior_test.gd
+      - name: Validate enemy spatial hash
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/spatial_hash_test.gd
+      - name: Validate native enemy behaviors
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/native_enemy_behavior_test.gd
+      - name: Validate status effects
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/status_effects_test.gd
+      - name: Validate enemy projectile visual
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_projectile_visual_test.gd
+      - name: Validate haptics service
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/haptics_service_test.gd
+      - name: Validate settings persistence
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/settings_persistence_test.gd
+      - name: Validate run-end combat freeze
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/run_end_combat_freeze_test.gd
+      - name: Validate first-playable run path
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/first_playable_run_path_test.gd
       - name: Run Godot smoke test
-        run: |
-          set -euo pipefail
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64             --headless --path godot --script res://tests/smoke_test.gd
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/smoke_test.gd
 ````
 
 ## File: .github/workflows/integrate-environment-candidates.yml
@@ -2523,7 +2534,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -4269,7 +4280,7 @@ jobs:
   core:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -4303,7 +4314,7 @@ jobs:
   android:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -4336,7 +4347,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -5210,7 +5221,7 @@ size = output.length();
 ⋮----
 // Android Emulator occasionally exposes a stale/broken color buffer for a single frame.
 // Retry the capture, but keep the exact same semantic size gate for the final artifact.
-if (attempt < 5) Thread.sleep(650L);
+if (attempt < 8) Thread.sleep(900L);
 ⋮----
 assertTrue("gameplay QA screenshot is unexpectedly small after retries: " + size, size > 10_000L);
 ⋮----
@@ -5276,7 +5287,7 @@ game.startRunWithContract(RunModifierContext.offers()[0]);
 assertTrue("expected GameScreen for performance probe", game.getScreen() instanceof GameScreen);
 injectLoad((GameScreen) game.getScreen());
 ⋮----
-Thread.sleep(2600L);
+waitForTelemetry(activity, 8000L);
 ⋮----
 GameScreen screen = (GameScreen) game(activity).getScreen();
 snapshotRef.set(screen.performanceSnapshot());
@@ -5315,7 +5326,7 @@ public void recordsHordeProjectileStressTelemetry() throws Exception {
 assertTrue("expected GameScreen for stress probe", game.getScreen() instanceof GameScreen);
 injectStressLoad((GameScreen) game.getScreen());
 ⋮----
-Thread.sleep(3200L);
+waitForTelemetry(activity, 10000L);
 ⋮----
 assertNotNull("stress performance snapshot missing", snapshot);
 assertTrue("stress probe did not collect enough frames", snapshot.averageFps() > 5f);
@@ -5388,6 +5399,16 @@ assertTrue("stress probe failed to inject horde", enemies.size >= 160);
 assertTrue("stress probe projectile pool too small", projectileTarget >= 140);
 ⋮----
 throw new AssertionError("unable to inject deterministic stress load", exception);
+⋮----
+private static void waitForTelemetry(AndroidLauncher activity, long timeoutMs) throws Exception {
+long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMs);
+⋮----
+if (game.getScreen() instanceof GameScreen) {
+snapshotRef.set(((GameScreen) game.getScreen()).performanceSnapshot());
+⋮----
+if (snapshot != null && snapshot.averageFps() > 5f) return;
+Thread.sleep(300L);
+} while (System.nanoTime() < deadline);
 ⋮----
 private static AndroidLauncher activity(ActivityScenario<AndroidLauncher> scenario) {
 ⋮----
@@ -23464,6447 +23485,6 @@ if (art != null) art.dispose();
 @Override public void setScreen(com.badlogic.gdx.Screen screen) { if (getScreen() != null) getScreen().dispose(); super.setScreen(screen); }
 ````
 
-## File: core/src/test/java/com/deadlinezero/game/abilities/AbilityLoadoutTierTest.java
-````java
-public final class AbilityLoadoutTierTest {
-@Test public void tiersAdvanceAtLevelsThreeAndFive() {
-AbilityLoadout loadout = new AbilityLoadout();
-assertEquals(0, loadout.tier(AbilityType.TESLA_ORB));
-loadout.upgrade(AbilityType.TESLA_ORB);
-assertEquals(1, loadout.tier(AbilityType.TESLA_ORB));
-⋮----
-assertEquals(2, loadout.tier(AbilityType.TESLA_ORB));
-⋮----
-assertEquals(3, loadout.tier(AbilityType.TESLA_ORB));
-assertTrue(loadout.evolved(AbilityType.TESLA_ORB));
-⋮----
-@Test public void levelsRemainCappedAtFive() {
-⋮----
-for (int i = 0; i < 20; i++) loadout.upgrade(AbilityType.DRONE);
-assertEquals(AbilityLoadout.MAX_LEVEL, loadout.level(AbilityType.DRONE));
-⋮----
-@Test public void superconductorRequiresMatureTeslaAndCryo() {
-⋮----
-for (int i = 0; i < 3; i++) loadout.upgrade(AbilityType.TESLA_ORB);
-assertFalse(loadout.hasSuperconductorSynergy());
-for (int i = 0; i < 3; i++) loadout.upgrade(AbilityType.CRYO_NOVA);
-assertTrue(loadout.hasSuperconductorSynergy());
-⋮----
-@Test public void droneDoctrineRequiresTierTwoAndIsExclusive() {
-⋮----
-assertFalse(loadout.chooseDroneDoctrine(DroneDoctrine.HUNTER));
-for (int i = 0; i < 3; i++) loadout.upgrade(AbilityType.DRONE);
-assertTrue(loadout.chooseDroneDoctrine(DroneDoctrine.HUNTER));
-assertEquals(DroneDoctrine.HUNTER, loadout.droneDoctrine());
-assertTrue(loadout.hasDroneDoctrine());
-assertFalse(loadout.chooseDroneDoctrine(DroneDoctrine.SENTINEL));
-⋮----
-@Test public void stormBladeRequiresBothEvolutions() {
-⋮----
-for (int i = 0; i < 5; i++) loadout.upgrade(AbilityType.ORBITAL_BLADE);
-for (int i = 0; i < 4; i++) loadout.upgrade(AbilityType.TESLA_ORB);
-assertFalse(loadout.hasStormBladeSynergy());
-⋮----
-assertTrue(loadout.hasStormBladeSynergy());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java
-````java
-final class AbilitySynergyUnlockDetectorTest {
-@Test void detectsNewSuperconductorAfterMaturingTesla() {
-AbilityLoadout a = new AbilityLoadout();
-for (int i = 0; i < 3; i++) a.upgrade(AbilityType.CRYO_NOVA);
-for (int i = 0; i < 2; i++) a.upgrade(AbilityType.TESLA_ORB);
-var before = AbilitySynergyUnlockDetector.snapshot(a);
-⋮----
-a.upgrade(AbilityType.TESLA_ORB);
-⋮----
-assertEquals(AbilitySynergyUnlockDetector.Synergy.SUPERCONDUCTOR,
-AbilitySynergyUnlockDetector.newlyActivated(before, a));
-⋮----
-@Test void noEventWhenUpgradeDoesNotCreateSynergy() {
-⋮----
-assertEquals(AbilitySynergyUnlockDetector.Synergy.NONE,
-⋮----
-@Test void stormBladeHasPriorityWhenSeveralSynergiesAppearTogether() {
-⋮----
-for (int i = 0; i < 5; i++) a.upgrade(AbilityType.ORBITAL_BLADE);
-for (int i = 0; i < 4; i++) a.upgrade(AbilityType.TESLA_ORB);
-⋮----
-assertEquals(AbilitySynergyUnlockDetector.Synergy.STORM_BLADE,
-````
-
-## File: core/src/test/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidanceTest.java
-````java
-final class AbilityUpgradeGuidanceTest {
-private Player fresh() {
-RunLoadoutContext.end();
-return new Player(0f, 0f);
-⋮----
-@Test void freshAbilityShowsUnlockThenTierAndEvolutionMilestones() {
-Player p = fresh();
-assertEquals("combat.abilityGuidance.unlock", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
-p.abilities.upgrade(AbilityType.TESLA_ORB);
-assertEquals("combat.abilityGuidance.level", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
-⋮----
-assertEquals("combat.abilityGuidance.tier2", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
-⋮----
-assertEquals("combat.abilityGuidance.evolution", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
-⋮----
-@Test void choiceThatCompletesSynergyOverridesGenericMilestone() {
-⋮----
-for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.CRYO_NOVA);
-for (int i = 0; i < 2; i++) p.abilities.upgrade(AbilityType.TESLA_ORB);
-assertEquals("combat.synergy.superconductor", AbilityUpgradeGuidance.key(p, Upgrade.TESLA_ORB));
-⋮----
-@Test void evolvedTeslaMakesDroneTierTwoChoiceExposeArcReactor() {
-⋮----
-for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.TESLA_ORB);
-for (int i = 0; i < 2; i++) p.abilities.upgrade(AbilityType.DRONE);
-assertEquals("combat.synergy.arcReactor", AbilityUpgradeGuidance.key(p, Upgrade.DRONE));
-⋮----
-@Test void nonAbilityAndMaxedAbilityHaveNoGuidance() {
-⋮----
-assertNull(AbilityUpgradeGuidance.key(p, Upgrade.DAMAGE));
-for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.ORBITAL_BLADE);
-assertNull(AbilityUpgradeGuidance.key(p, Upgrade.ORBITAL));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/abilities/DroneDoctrineRulesTest.java
-````java
-final class DroneDoctrineRulesTest {
-@Test void hunterIsTheOffensiveDoctrine() {
-assertEquals(1.30f, DroneDoctrineRules.damageMultiplier(DroneDoctrine.HUNTER), .0001f);
-assertEquals(.72f, DroneDoctrineRules.secondaryTargetMultiplier(DroneDoctrine.HUNTER, false), .0001f);
-assertEquals(.82f, DroneDoctrineRules.secondaryTargetMultiplier(DroneDoctrine.HUNTER, true), .0001f);
-assertEquals(0f, DroneDoctrineRules.interceptionRange(DroneDoctrine.HUNTER), .0001f);
-⋮----
-@Test void sentinelTradesDamageForProjectileInterception() {
-assertEquals(.88f, DroneDoctrineRules.damageMultiplier(DroneDoctrine.SENTINEL), .0001f);
-assertEquals(0f, DroneDoctrineRules.secondaryTargetMultiplier(DroneDoctrine.SENTINEL, false), .0001f);
-assertEquals(3.4f, DroneDoctrineRules.interceptionRange(DroneDoctrine.SENTINEL), .0001f);
-⋮----
-@Test void noDoctrinePreservesExistingDroneBehavior() {
-assertEquals(1f, DroneDoctrineRules.damageMultiplier(DroneDoctrine.NONE), .0001f);
-assertEquals(0f, DroneDoctrineRules.secondaryTargetMultiplier(DroneDoctrine.NONE, false), .0001f);
-assertEquals(.62f, DroneDoctrineRules.secondaryTargetMultiplier(DroneDoctrine.NONE, true), .0001f);
-assertEquals(0f, DroneDoctrineRules.interceptionRange(DroneDoctrine.NONE), .0001f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/AttackControllerCadenceTest.java
-````java
-public final class AttackControllerCadenceTest {
-@Test public void cadenceModifiersAreClamped() {
-AttackController c = new AttackController(EnemyArchetype.MELEE);
-c.setCadence(.1f, 4f, .2f);
-assertEquals(.45f, c.cooldownMultiplier(), .0001f);
-assertEquals(1.8f, c.telegraphMultiplier(), .0001f);
-⋮----
-@Test public void fasterCadenceUsesShorterConfiguredCycle() {
-AttackController fast = new AttackController(EnemyArchetype.MELEE);
-AttackController slow = new AttackController(EnemyArchetype.MELEE);
-fast.setCadence(.50f, .70f, .70f);
-slow.setCadence(1.40f, 1.30f, 1.30f);
-⋮----
-assertTrue(fast.cooldownMultiplier() < slow.cooldownMultiplier());
-assertTrue(fast.telegraphMultiplier() < slow.telegraphMultiplier());
-⋮----
-float fastCycle = EnemyArchetype.MELEE.attackCooldown * fast.cooldownMultiplier()
-+ EnemyArchetype.MELEE.telegraphDuration * fast.telegraphMultiplier();
-float slowCycle = EnemyArchetype.MELEE.attackCooldown * slow.cooldownMultiplier()
-+ EnemyArchetype.MELEE.telegraphDuration * slow.telegraphMultiplier();
-assertTrue(fastCycle < slowCycle);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/BiomeEnemyAttackPatternTest.java
-````java
-public final class BiomeEnemyAttackPatternTest {
-@AfterEach void resetStage() { RunStageContext.begin(1); }
-⋮----
-@Test public void cinderGunnerUsesExplosiveBurstInsteadOfSingleShot() {
-RunStageContext.begin(10);
-var p = EnemyPatternCatalog.ranged(Enemy.Variant.NORMAL);
-assertEquals(3, p.shots());
-assertEquals(6.5f, p.spreadDegrees(), .001f);
-assertTrue(p.explosive());
-assertEquals(1.15f, p.explosionRadius(), .001f);
-assertTrue(p.shots() * p.damageMultiplier() <= 1.05f);
-⋮----
-@Test public void staticSeerUsesFastWideZoningFan() {
-RunStageContext.begin(20);
-⋮----
-assertEquals(5, p.shots());
-assertEquals(15f, p.spreadDegrees(), .001f);
-assertTrue(p.speedMultiplier() > 1.1f);
-assertFalse(p.explosive());
-assertEquals(1f, p.shots() * p.damageMultiplier(), .001f);
-⋮----
-@Test public void forgeHoundPounceIsFastRecoveryAndCompact() {
-⋮----
-var p = EnemyPatternCatalog.charge(Enemy.Type.RUNNER, Enemy.Variant.NORMAL);
-assertTrue(p.recoveryMultiplier() < .7f);
-assertTrue(p.impactRadius() < 1f);
-assertTrue(p.impactDamageMultiplier() > 1.2f);
-⋮----
-@Test public void slagGuardRamIsHeavyAndWide() {
-⋮----
-var p = EnemyPatternCatalog.charge(Enemy.Type.SHIELDED, Enemy.Variant.NORMAL);
-assertTrue(p.impactDamageMultiplier() > 1.7f);
-assertTrue(p.impactRadius() > 1.3f);
-assertTrue(p.knockbackStrength() > 1.4f);
-assertTrue(p.recoveryMultiplier() > 1.2f);
-⋮----
-@Test public void quarantinePatternsRemainHistorical() {
-RunStageContext.begin(1);
-var ranged = EnemyPatternCatalog.ranged(Enemy.Variant.NORMAL);
-assertEquals(1, ranged.shots());
-assertEquals(1f, ranged.damageMultiplier(), .001f);
-assertFalse(ranged.explosive());
-var charge = EnemyPatternCatalog.charge(Enemy.Type.BRUTE, Enemy.Variant.NORMAL);
-assertEquals(1.38f, charge.impactDamageMultiplier(), .001f);
-assertEquals(1.12f, charge.impactRadius(), .001f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/BossAffixRulesTest.java
-````java
-final class BossAffixRulesTest {
-@AfterEach void cleanup() { RunStageContext.begin(1, 0, 0); }
-⋮----
-@Test void standardRunsHaveNoBossAffix() {
-assertEquals(BossAffixRules.Affix.NONE, BossAffixRules.forRun(10, 0));
-⋮----
-@Test void ascendedRunsRotateDeterministically() {
-BossAffixRules.Affix first = BossAffixRules.forRun(12, 7);
-BossAffixRules.Affix second = BossAffixRules.forRun(12, 7);
-assertEquals(first, second);
-assertTrue(first != BossAffixRules.Affix.NONE);
-⋮----
-@Test void maximumThreatAlwaysUsesApocalypse() {
-assertEquals(BossAffixRules.Affix.APOCALYPSE,
-BossAffixRules.forRun(20, ThreatTierRules.MAX_TIER));
-⋮----
-@Test void affixRaisesBossStatsOnAscendedRun() {
-RunStageContext.begin(12, 4, 0);
-BossVariantStats.Stats normal = BossVariantStats.forStage(12, 1000f, 1f, 20f);
-RunStageContext.begin(12, 4, 20);
-BossVariantStats.Stats ascended = BossVariantStats.forStage(12, 1000f, 1f, 20f);
-assertTrue(ascended.hp() > normal.hp());
-assertTrue(ascended.speed() > normal.speed());
-assertTrue(ascended.damage() > normal.damage());
-⋮----
-@Test void apocalypseIncreasesBossActionPressure() {
-RunStageContext.begin(20, 0, 20);
-BossCombatRuntime runtime = new BossCombatRuntime(BossIdentity.ALPHA);
-assertEquals(BossAffixRules.Affix.APOCALYPSE, runtime.affix());
-assertEquals(9, runtime.summonCount(3));
-assertEquals(28, runtime.enrageShots());
-assertEquals(3, runtime.enrageExplosiveEvery());
-assertTrue(runtime.enrageExplosionRadius() > 2f);
-assertTrue(runtime.enrageProjectileSpeed() > 8.2f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/BossAttackPatternCatalogTest.java
-````java
-final class BossAttackPatternCatalogTest {
-@Test void revenantIsDenserAndFasterInEachPhase() {
-⋮----
-var alpha = BossAttackPatternCatalog.forPhase(false, phase);
-var revenant = BossAttackPatternCatalog.forPhase(true, phase);
-assertTrue(revenant.shots() >= alpha.shots());
-assertTrue(revenant.speedMultiplier() > alpha.speedMultiplier());
-⋮----
-@Test void phaseTwoRevenantIntroducesExplosives() {
-var alpha = BossAttackPatternCatalog.forPhase(false, 2);
-var revenant = BossAttackPatternCatalog.forPhase(true, 2);
-assertEquals(0, alpha.explosiveEvery());
-assertTrue(revenant.explosiveEvery() > 0);
-assertTrue(revenant.explosionRadius() > 0f);
-⋮----
-@Test void phaseThreeRevenantEscalatesDensity() {
-var phase2 = BossAttackPatternCatalog.forPhase(true, 2);
-var phase3 = BossAttackPatternCatalog.forPhase(true, 3);
-assertTrue(phase3.shots() > phase2.shots());
-assertTrue(phase3.explosionRadius() >= phase2.explosionRadius());
-⋮----
-@Test void wardenTradesDensityAndSpeedForHeavyAreaDenial() {
-⋮----
-var alpha = BossAttackPatternCatalog.forPhase(BossIdentity.ALPHA, phase);
-var warden = BossAttackPatternCatalog.forPhase(BossIdentity.WARDEN, phase);
-assertTrue(warden.shots() <= alpha.shots());
-assertTrue(warden.speedMultiplier() < alpha.speedMultiplier());
-assertTrue(warden.damageMultiplier() > alpha.damageMultiplier());
-⋮----
-var phase2 = BossAttackPatternCatalog.forPhase(BossIdentity.WARDEN, 2);
-var phase3 = BossAttackPatternCatalog.forPhase(BossIdentity.WARDEN, 3);
-assertEquals(2, phase2.explosiveEvery());
-⋮----
-@Test void legacyBooleanRoutingStillUsesWardenOnWardenStages() {
-RunStageContext.begin(7);
-⋮----
-var routed = BossAttackPatternCatalog.forPhase(false, 2);
-var expected = BossAttackPatternCatalog.forPhase(BossIdentity.WARDEN, 2);
-assertEquals(expected, routed);
-⋮----
-RunStageContext.begin(1);
-⋮----
-@Test void frostColossusEscalatesFromHeavyVolleyToAreaDenial() {
-var p1 = BossAttackPatternCatalog.forPhase(BossIdentity.FROST_COLOSSUS, 1);
-var p2 = BossAttackPatternCatalog.forPhase(BossIdentity.FROST_COLOSSUS, 2);
-var p3 = BossAttackPatternCatalog.forPhase(BossIdentity.FROST_COLOSSUS, 3);
-assertTrue(p1.damageMultiplier() > p2.damageMultiplier());
-assertTrue(p2.radial());
-assertTrue(p3.radial());
-assertTrue(p3.shots() > p2.shots());
-assertTrue(p3.explosionRadius() > p2.explosionRadius());
-assertEquals(2, p3.explosiveEvery());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/BossCombatSecondaryTuningTest.java
-````java
-final class BossCombatSecondaryTuningTest {
-@Test void revenantSummonsMoreMinions() {
-BossCombatRuntime alpha = new BossCombatRuntime(false);
-BossCombatRuntime revenant = new BossCombatRuntime(true);
-assertTrue(revenant.summonCount(2) > alpha.summonCount(2));
-assertTrue(revenant.summonCount(3) > alpha.summonCount(3));
-⋮----
-@Test void revenantEnrageIsDenserAndFaster() {
-⋮----
-assertTrue(revenant.enrageShots() > alpha.enrageShots());
-assertTrue(revenant.enrageProjectileSpeed() > alpha.enrageProjectileSpeed());
-assertTrue(revenant.enrageExplosiveEvery() < alpha.enrageExplosiveEvery());
-assertTrue(revenant.enrageExplosionRadius() > alpha.enrageExplosionRadius());
-⋮----
-@Test void alphaKeepsExistingSecondaryValues() {
-⋮----
-assertEquals(3, alpha.summonCount(2));
-assertEquals(6, alpha.summonCount(3));
-assertEquals(20, alpha.enrageShots());
-assertEquals(8.2f, alpha.enrageProjectileSpeed(), .0001f);
-assertEquals(4, alpha.enrageExplosiveEvery());
-assertEquals(2.0f, alpha.enrageExplosionRadius(), .0001f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/BossCombatVariantTest.java
-````java
-final class BossCombatVariantTest {
-@Test void revenantSummonsMoreMinions() {
-var alpha = new BossCombatRuntime(false);
-var revenant = new BossCombatRuntime(true);
-assertTrue(revenant.summonCount(2) > alpha.summonCount(2));
-assertTrue(revenant.summonCount(3) > alpha.summonCount(3));
-⋮----
-@Test void revenantEnrageIsDenserAndFaster() {
-⋮----
-assertTrue(revenant.enrageShots() > alpha.enrageShots());
-assertTrue(revenant.enrageProjectileSpeed() > alpha.enrageProjectileSpeed());
-assertTrue(revenant.enrageExplosiveEvery() < alpha.enrageExplosiveEvery());
-assertTrue(revenant.enrageExplosionRadius() > alpha.enrageExplosionRadius());
-⋮----
-@Test void alphaKeepsLegacySecondaryPattern() {
-⋮----
-assertEquals(3, alpha.summonCount(2));
-assertEquals(6, alpha.summonCount(3));
-assertEquals(20, alpha.enrageShots());
-assertEquals(8.2f, alpha.enrageProjectileSpeed(), .0001f);
-⋮----
-@Test void frostColossusUsesHeavyControlledSecondaryPattern() {
-var frost = new BossCombatRuntime(BossIdentity.FROST_COLOSSUS);
-assertEquals(FrostColossusBossProfile.PHASE2_SUMMON_COUNT, frost.summonCount(2));
-assertEquals(FrostColossusBossProfile.PHASE3_SUMMON_COUNT, frost.summonCount(3));
-assertEquals(FrostColossusBossProfile.ENRAGE_SHOTS, frost.enrageShots());
-assertEquals(FrostColossusBossProfile.ENRAGE_PROJECTILE_SPEED, frost.enrageProjectileSpeed(), .0001f);
-assertEquals(FrostColossusBossProfile.ENRAGE_EXPLOSIVE_EVERY, frost.enrageExplosiveEvery());
-assertEquals(FrostColossusBossProfile.ENRAGE_EXPLOSION_RADIUS, frost.enrageExplosionRadius(), .0001f);
-assertTrue(frost.frostColossus());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/BossIdentityTest.java
-````java
-final class BossIdentityTest {
-@Test void preservesEarlyAlphaAndExistingRevenantStages() {
-assertEquals(BossIdentity.ALPHA, BossIdentity.forStage(1));
-assertEquals(BossIdentity.REVENANT, BossIdentity.forStage(4));
-assertEquals(BossIdentity.ALPHA, BossIdentity.forStage(5));
-assertEquals(BossIdentity.REVENANT, BossIdentity.forStage(6));
-⋮----
-@Test void introducesWardenOnLateOddCycleWithoutCollidingWithRevenant() {
-assertEquals(BossIdentity.WARDEN, BossIdentity.forStage(7));
-assertEquals(BossIdentity.REVENANT, BossIdentity.forStage(8));
-assertEquals(BossIdentity.ALPHA, BossIdentity.forStage(9));
-assertEquals(BossIdentity.REVENANT, BossIdentity.forStage(10));
-assertEquals(BossIdentity.WARDEN, BossIdentity.forStage(11));
-⋮----
-@Test void introducesFrostColossusAtCryogenicMilestones() {
-assertEquals(6, BossIdentity.values().length);
-assertEquals(BossIdentity.NULL_ARCHON, BossIdentity.forStage(35));
-assertEquals(BossIdentity.FROST_COLOSSUS, BossIdentity.forStage(40));
-assertEquals(BossIdentity.NULL_ARCHON, BossIdentity.forStage(45));
-assertEquals(BossIdentity.FROST_COLOSSUS, BossIdentity.forStage(50));
-assertNotEquals(BossIdentity.FROST_COLOSSUS, BossIdentity.forStage(39));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/BossVariantStatsContractTest.java
-````java
-final class BossVariantStatsContractTest {
-@Test void alphaKeepsBaseStats() {
-var s = BossVariantStats.forStage(3, 2200f, 1.35f, 24f);
-assertEquals(2200f, s.hp(), .001f);
-assertEquals(1.35f, s.speed(), .001f);
-assertEquals(24f, s.damage(), .001f);
-⋮----
-@Test void revenantTradesHpForPressure() {
-var s = BossVariantStats.forStage(4, 2200f, 1.35f, 24f);
-assertTrue(s.hp() < 2200f);
-assertTrue(s.speed() > 1.35f);
-assertTrue(s.damage() > 24f);
-⋮----
-@Test void frostColossusIsSlowDurableAndHeavy() {
-var s = BossVariantStats.forIdentity(BossIdentity.FROST_COLOSSUS, 2200f, 1.35f, 24f);
-assertTrue(s.hp() > 3000f);
-assertTrue(s.speed() < 1.10f);
-assertTrue(s.damage() > 27f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/EnemyPatternCatalogTest.java
-````java
-public final class EnemyPatternCatalogTest {
-@Test public void rangedVariantsHaveDistinctThreatProfiles() {
-var normal = EnemyPatternCatalog.ranged(Enemy.Variant.NORMAL);
-var swift = EnemyPatternCatalog.ranged(Enemy.Variant.SWIFT);
-var armored = EnemyPatternCatalog.ranged(Enemy.Variant.ARMORED);
-var feral = EnemyPatternCatalog.ranged(Enemy.Variant.FERAL);
-⋮----
-assertTrue(swift.shots() > normal.shots());
-assertTrue(feral.shots() > swift.shots());
-assertTrue(armored.explosive());
-assertFalse(normal.explosive());
-assertTrue(armored.damageMultiplier() > normal.damageMultiplier());
-⋮----
-@Test public void eliteChargeIsMoreThreateningThanBruteCharge() {
-var brute = EnemyPatternCatalog.charge(Enemy.Type.BRUTE, Enemy.Variant.NORMAL);
-var elite = EnemyPatternCatalog.charge(Enemy.Type.ELITE, Enemy.Variant.NORMAL);
-assertTrue(elite.impactDamageMultiplier() > brute.impactDamageMultiplier());
-assertTrue(elite.impactRadius() > brute.impactRadius());
-assertTrue(elite.knockbackStrength() > brute.knockbackStrength());
-⋮----
-@Test public void feralChargeTradesRecoveryForAggression() {
-var normal = EnemyPatternCatalog.charge(Enemy.Type.BRUTE, Enemy.Variant.NORMAL);
-var feral = EnemyPatternCatalog.charge(Enemy.Type.BRUTE, Enemy.Variant.FERAL);
-assertTrue(feral.impactDamageMultiplier() > normal.impactDamageMultiplier());
-assertTrue(feral.recoveryMultiplier() < normal.recoveryMultiplier());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/EnemyVariantBalanceTest.java
-````java
-final class EnemyVariantBalanceTest {
-@Test void allChampionRangedPatternsStayInsideProductionBounds() {
-for (Enemy.Variant variant : Enemy.Variant.values()) {
-⋮----
-var p = EnemyPatternCatalog.ranged(variant);
-assertTrue(p.shots() >= 1 && p.shots() <= 8, variant + " shots");
-assertTrue(p.spreadDegrees() >= 0f && p.spreadDegrees() <= 20f, variant + " spread");
-assertTrue(p.speedMultiplier() >= .80f && p.speedMultiplier() <= 1.35f, variant + " speed");
-assertTrue(p.damageMultiplier() >= .10f && p.damageMultiplier() <= 1.55f, variant + " damage");
-if (p.explosive()) assertTrue(p.explosionRadius() >= 1f && p.explosionRadius() <= 2f, variant + " radius");
-⋮----
-@Test void allChampionChargePatternsStayInsideProductionBounds() {
-⋮----
-var p = EnemyPatternCatalog.charge(Enemy.Type.ELITE, variant);
-assertTrue(p.impactDamageMultiplier() >= .75f && p.impactDamageMultiplier() <= 3f, variant + " damage");
-assertTrue(p.impactRadius() >= .8f && p.impactRadius() <= 2f, variant + " radius");
-assertTrue(p.knockbackStrength() >= .7f && p.knockbackStrength() <= 2.5f, variant + " knockback");
-assertTrue(p.recoveryMultiplier() >= .45f && p.recoveryMultiplier() <= 1.6f, variant + " recovery");
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/FrostColossusBossProfileTest.java
-````java
-final class FrostColossusBossProfileTest {
-@Test void tuningRemainsHeavyAndBounded() {
-assertTrue(FrostColossusBossProfile.HP_MULTIPLIER >= 1.30f && FrostColossusBossProfile.HP_MULTIPLIER <= 1.55f);
-assertTrue(FrostColossusBossProfile.SPEED_MULTIPLIER >= .70f && FrostColossusBossProfile.SPEED_MULTIPLIER < 1f);
-assertTrue(FrostColossusBossProfile.DAMAGE_MULTIPLIER >= 1.10f && FrostColossusBossProfile.DAMAGE_MULTIPLIER <= 1.30f);
-assertTrue(FrostColossusBossProfile.PHASE3_CHARGE_COOLDOWN < FrostColossusBossProfile.PHASE2_CHARGE_COOLDOWN);
-assertTrue(FrostColossusBossProfile.PHASE3_SUMMON_COOLDOWN < FrostColossusBossProfile.PHASE2_SUMMON_COOLDOWN);
-assertTrue(FrostColossusBossProfile.PHASE3_SUMMON_COUNT > FrostColossusBossProfile.PHASE2_SUMMON_COUNT);
-assertTrue(FrostColossusBossProfile.ENRAGE_EXPLOSION_RADIUS >= 2.5f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/HarvesterBossProfileTest.java
-````java
-final class HarvesterBossProfileTest {
-@Test void entersLateGameRotationDeterministically() {
-assertEquals(BossIdentity.HARVESTER, BossIdentity.forStage(12));
-assertEquals(BossIdentity.HARVESTER, BossIdentity.forStage(17));
-assertEquals(BossIdentity.HARVESTER, BossIdentity.forStage(22));
-⋮----
-@Test void identityHasPressureOrientedStats() {
-BossVariantStats.Stats stats = BossVariantStats.forIdentity(BossIdentity.HARVESTER, 100f, 2f, 10f);
-assertEquals(116f, stats.hp(), .001f);
-assertEquals(2.16f, stats.speed(), .001f);
-assertEquals(11.4f, stats.damage(), .001f);
-⋮----
-@Test void phaseThreeUsesDenseFastProjectilePattern() {
-BossAttackPatternCatalog.Pattern pattern = BossAttackPatternCatalog.forPhase(BossIdentity.HARVESTER, 3);
-assertEquals(24, pattern.shots());
-assertTrue(pattern.radial());
-assertTrue(pattern.speedMultiplier() >= 1.2f);
-assertEquals(4, pattern.explosiveEvery());
-⋮----
-@Test void runtimeSummonsMoreMinionsThanWarden() {
-BossCombatRuntime harvester = new BossCombatRuntime(BossIdentity.HARVESTER);
-BossCombatRuntime warden = new BossCombatRuntime(BossIdentity.WARDEN);
-assertTrue(harvester.summonCount(2) > warden.summonCount(2));
-assertTrue(harvester.summonCount(3) > warden.summonCount(3));
-assertTrue(harvester.enrageShots() > warden.enrageShots());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/HarvesterSummonTelegraphTest.java
-````java
-final class HarvesterSummonTelegraphTest {
-@Test void exposesDeterministicWarningBeforeSummon() {
-BossCombatRuntime runtime = new BossCombatRuntime(BossIdentity.HARVESTER);
-assertFalse(runtime.summonTelegraphing(2));
-runtime.update(7.40f, 2);
-assertTrue(runtime.summonTelegraphing(2));
-float progress = runtime.summonTelegraphProgress(2);
-assertTrue(progress > 0f && progress < 1f);
-runtime.update(.61f, 2);
-⋮----
-assertTrue(runtime.consumeSummon(2));
-⋮----
-@Test void phaseOneNeverTelegraphsSummons() {
-⋮----
-runtime.update(8f, 1);
-assertFalse(runtime.summonTelegraphing(1));
-assertTrue(runtime.summonTelegraphProgress(1) == 0f);
-⋮----
-@Test void warningWindowIsLongEnoughToRead() {
-assertTrue(BossCombatRuntime.summonTelegraphSeconds() >= .65f);
-assertTrue(BossCombatRuntime.summonTelegraphSeconds() <= .90f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/LeaperProfileTest.java
-````java
-final class LeaperProfileTest {
-@Test void leapRangeIsReadableAndBounded() {
-assertFalse(LeaperProfile.inLeapRange(1.5f));
-assertTrue(LeaperProfile.inLeapRange(2.2f));
-assertTrue(LeaperProfile.inLeapRange(6f));
-assertTrue(LeaperProfile.inLeapRange(8.6f));
-assertFalse(LeaperProfile.inLeapRange(9f));
-⋮----
-@Test void leapTimingRemainsTelegraphable() {
-assertTrue(LeaperProfile.LEAP_WINDUP >= .16f);
-assertTrue(LeaperProfile.LEAP_IMPACT_WINDOW <= .25f);
-assertTrue(LeaperProfile.LEAP_COOLDOWN_MIN >= 1.25f);
-assertTrue(LeaperProfile.LEAP_COOLDOWN_MAX > LeaperProfile.LEAP_COOLDOWN_MIN);
-⋮----
-@Test void baseProfileOccupiesFastSkirmisherBand() {
-assertTrue(LeaperProfile.BASE_HP >= 35f && LeaperProfile.BASE_HP <= 70f);
-assertTrue(LeaperProfile.BASE_SPEED >= 2.8f && LeaperProfile.BASE_SPEED <= 3.8f);
-assertTrue(LeaperProfile.LEAP_IMPULSE > LeaperProfile.BASE_SPEED);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/LeaperRegistryTest.java
-````java
-final class LeaperRegistryTest {
-⋮----
-void registryMarksOnlyRegisteredEnemyInstances() {
-LeaperRegistry registry = new LeaperRegistry();
-Enemy a = new Enemy(Enemy.Type.RUNNER, 0f, 0f, 10f, 2f, .3f, 1f, 1);
-Enemy b = new Enemy(Enemy.Type.RUNNER, 0f, 0f, 10f, 2f, .3f, 1f, 1);
-⋮----
-assertFalse(registry.contains(a));
-assertFalse(registry.contains(b));
-registry.register(a);
-assertTrue(registry.contains(a));
-⋮----
-void nullRegistrationIsIgnoredSafely() {
-⋮----
-registry.register(null);
-assertFalse(registry.contains(null));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/LeaperRuntimeTest.java
-````java
-final class LeaperRuntimeTest {
-@Test void registeredEnemyCanTelegraphAndImpactOnce() {
-LeaperRuntime runtime = new LeaperRuntime();
-Enemy enemy = new Enemy(Enemy.Type.RUNNER, 0f, 0f, 46f, 3.15f, .38f, 12f, 10);
-runtime.register(enemy);
-assertTrue(runtime.contains(enemy));
-⋮----
-for (int i = 0; i < 240 && !runtime.telegraphing(enemy); i++) {
-runtime.update(enemy, .02f, 4f, 1f, 0f);
-⋮----
-assertTrue(runtime.telegraphing(enemy));
-⋮----
-for (int i = 0; i < 20; i++) runtime.update(enemy, .02f, 4f, 1f, 0f);
-assertTrue(enemy.impulse.x > 0f);
-assertTrue(runtime.consumeImpact(enemy));
-assertFalse(runtime.consumeImpact(enemy));
-⋮----
-@Test void unregisteredEnemyNeverActivates() {
-⋮----
-for (int i = 0; i < 200; i++) runtime.update(enemy, .02f, 4f, 1f, 0f);
-assertFalse(runtime.contains(enemy));
-assertFalse(runtime.telegraphing(enemy));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/NullArchonBossProfileTest.java
-````java
-final class NullArchonBossProfileTest {
-@Test void nullArchonOwnsFiveStageNullMilestones() {
-assertEquals(BossIdentity.NULL_ARCHON, BossIdentity.forStage(20));
-assertEquals(BossIdentity.NULL_ARCHON, BossIdentity.forStage(25));
-assertEquals(BossIdentity.NULL_ARCHON, BossIdentity.forStage(30));
-assertTrue(BossIdentity.forStage(19) != BossIdentity.NULL_ARCHON);
-assertTrue(BossIdentity.forStage(21) != BossIdentity.NULL_ARCHON);
-⋮----
-@Test void nullArchonHasFastDensePhaseThreePattern() {
-BossAttackPatternCatalog.Pattern p = BossAttackPatternCatalog.forPhase(BossIdentity.NULL_ARCHON, 3);
-assertEquals(30, p.shots());
-assertEquals(12f, p.spreadDegrees(), .0001f);
-assertTrue(p.speedMultiplier() > 1.20f);
-assertEquals(5, p.explosiveEvery());
-assertTrue(p.explosionRadius() >= 1.70f);
-assertTrue(p.radial());
-⋮----
-@Test void nullArchonCombatCadenceIsDistinctAndAggressive() {
-BossCombatRuntime runtime = new BossCombatRuntime(BossIdentity.NULL_ARCHON);
-assertTrue(runtime.nullArchon());
-assertEquals(NullArchonBossProfile.PHASE3_SUMMON_COUNT, runtime.summonCount(3));
-assertEquals(NullArchonBossProfile.ENRAGE_SHOTS, runtime.enrageShots());
-assertEquals(NullArchonBossProfile.ENRAGE_PROJECTILE_SPEED, runtime.enrageProjectileSpeed(), .0001f);
-assertEquals(NullArchonBossProfile.ENRAGE_EXPLOSIVE_EVERY, runtime.enrageExplosiveEvery());
-assertEquals(NullArchonBossProfile.ENRAGE_EXPLOSION_RADIUS, runtime.enrageExplosionRadius(), .0001f);
-⋮----
-@Test void nullArchonStatsRemainInsideLateGameBossEnvelope() {
-assertTrue(NullArchonBossProfile.HP_MULTIPLIER >= 1.15f && NullArchonBossProfile.HP_MULTIPLIER <= 1.30f);
-assertTrue(NullArchonBossProfile.SPEED_MULTIPLIER >= 1.05f && NullArchonBossProfile.SPEED_MULTIPLIER <= 1.18f);
-assertTrue(NullArchonBossProfile.DAMAGE_MULTIPLIER >= 1.10f && NullArchonBossProfile.DAMAGE_MULTIPLIER <= 1.22f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/RevenantBossProfileTest.java
-````java
-final class RevenantBossProfileTest {
-@Test void alternatesAfterStageFour() {
-assertFalse(RevenantBossProfile.useForStage(3));
-assertTrue(RevenantBossProfile.useForStage(4));
-assertFalse(RevenantBossProfile.useForStage(5));
-assertTrue(RevenantBossProfile.useForStage(6));
-⋮----
-@Test void tradesDurabilityForPressure() {
-assertTrue(RevenantBossProfile.HP_MULTIPLIER < 1f);
-assertTrue(RevenantBossProfile.SPEED_MULTIPLIER > 1f);
-assertTrue(RevenantBossProfile.DAMAGE_MULTIPLIER > 1f);
-assertTrue(RevenantBossProfile.PHASE3_CHARGE_COOLDOWN < RevenantBossProfile.PHASE2_CHARGE_COOLDOWN);
-assertTrue(RevenantBossProfile.PHASE3_SUMMON_COOLDOWN < RevenantBossProfile.PHASE2_SUMMON_COOLDOWN);
-⋮----
-@Test void revenantRecoversChargeEarlier() {
-BossCombatRuntime standard = new BossCombatRuntime(false);
-BossCombatRuntime revenant = new BossCombatRuntime(true);
-standard.update(5f, 2);
-revenant.update(5f, 2);
-assertTrue(standard.consumeCharge(2));
-assertTrue(revenant.consumeCharge(2));
-standard.update(3.5f, 2);
-revenant.update(3.5f, 2);
-assertFalse(standard.consumeCharge(2));
-⋮----
-@Test void revenantSummonsMoreMinionsInLaterPhases() {
-⋮----
-assertEquals(3, standard.summonCount(2));
-assertEquals(6, standard.summonCount(3));
-assertEquals(RevenantBossProfile.PHASE2_SUMMON_COUNT, revenant.summonCount(2));
-assertEquals(RevenantBossProfile.PHASE3_SUMMON_COUNT, revenant.summonCount(3));
-assertTrue(revenant.summonCount(2) > standard.summonCount(2));
-assertTrue(revenant.summonCount(3) > standard.summonCount(3));
-⋮----
-@Test void revenantEnrageIsDenserAndFaster() {
-⋮----
-assertTrue(revenant.enrageShots() > standard.enrageShots());
-assertTrue(revenant.enrageProjectileSpeed() > standard.enrageProjectileSpeed());
-assertTrue(revenant.enrageExplosiveEvery() < standard.enrageExplosiveEvery());
-assertTrue(revenant.enrageExplosionRadius() > standard.enrageExplosionRadius());
-assertEquals(RevenantBossProfile.ENRAGE_SHOTS, revenant.enrageShots());
-assertEquals(RevenantBossProfile.ENRAGE_PROJECTILE_SPEED, revenant.enrageProjectileSpeed());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ai/WardenBossProfileTest.java
-````java
-final class WardenBossProfileTest {
-@Test void wardenIsHeavySlowAndDangerous() {
-assertTrue(WardenBossProfile.HP_MULTIPLIER > 1f);
-assertTrue(WardenBossProfile.SPEED_MULTIPLIER < 1f);
-assertTrue(WardenBossProfile.DAMAGE_MULTIPLIER > 1f);
-⋮----
-@Test void stageSevenReceivesWardenStats() {
-var base = BossVariantStats.forStage(1, 100f, 10f, 20f);
-var warden = BossVariantStats.forStage(7, 100f, 10f, 20f);
-assertTrue(warden.hp() > base.hp());
-assertTrue(warden.speed() < base.speed());
-assertTrue(warden.damage() > base.damage());
-⋮----
-@Test void runtimeUsesLowDensityHeavyPressure() {
-BossCombatRuntime runtime = new BossCombatRuntime(BossIdentity.WARDEN);
-assertEquals(2, runtime.summonCount(2));
-assertEquals(4, runtime.summonCount(3));
-assertEquals(12, runtime.enrageShots());
-assertEquals(2, runtime.enrageExplosiveEvery());
-assertTrue(runtime.enrageExplosionRadius() > 2f);
-assertTrue(runtime.warden());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/audio/AudioCueLimiterTest.java
-````java
-final class AudioCueLimiterTest {
-@Test void firstCueAlwaysPasses() {
-AudioCueLimiter limiter = new AudioCueLimiter();
-assertTrue(limiter.allow(AudioDirector.Cue.SHOT, 1_000_000L));
-⋮----
-@Test void repeatedCueInsideWindowIsRejected() {
-⋮----
-assertTrue(limiter.allow(AudioDirector.Cue.HIT, now));
-assertFalse(limiter.allow(AudioDirector.Cue.HIT, now + 20_000_000L));
-⋮----
-@Test void cuePassesOnceItsWindowExpires() {
-⋮----
-assertTrue(limiter.allow(AudioDirector.Cue.CRIT, now));
-assertTrue(limiter.allow(AudioDirector.Cue.CRIT,
-now + AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.CRIT)));
-⋮----
-@Test void cuesAreRateLimitedIndependently() {
-⋮----
-assertTrue(limiter.allow(AudioDirector.Cue.SHOT, now));
-assertTrue(limiter.allow(AudioDirector.Cue.KILL, now));
-assertFalse(limiter.allow(AudioDirector.Cue.SHOT, now + 1_000_000L));
-⋮----
-@Test void bossPhaseCueCannotStackDuringTransitionBurst() {
-⋮----
-assertTrue(limiter.allow(AudioDirector.Cue.BOSS_PHASE, now));
-assertFalse(limiter.allow(AudioDirector.Cue.BOSS_PHASE, now + 300_000_000L));
-assertTrue(limiter.allow(AudioDirector.Cue.BOSS_PHASE,
-now + AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.BOSS_PHASE)));
-⋮----
-@Test void sentinelBlocksAreRateLimitedDuringProjectileBursts() {
-⋮----
-assertTrue(limiter.allow(AudioDirector.Cue.SENTINEL_BLOCK, now));
-assertFalse(limiter.allow(AudioDirector.Cue.SENTINEL_BLOCK, now + 100_000_000L));
-assertTrue(limiter.allow(AudioDirector.Cue.SENTINEL_BLOCK,
-now + AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.SENTINEL_BLOCK)));
-⋮----
-@Test void resetRestoresImmediatePlayback() {
-⋮----
-assertTrue(limiter.allow(AudioDirector.Cue.UI_SELECT, now));
-assertFalse(limiter.allow(AudioDirector.Cue.UI_SELECT, now + 1_000_000L));
-limiter.reset();
-assertTrue(limiter.allow(AudioDirector.Cue.UI_SELECT, now + 1_000_000L));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java
-````java
-final class AudioDirectorFallbackTest {
-@Test void bossPhaseFallsBackToBossHitWhenDedicatedAssetIsMissing() {
-assertEquals(AudioDirector.Cue.BOSS_HIT, AudioDirector.fallbackCue(AudioDirector.Cue.BOSS_PHASE));
-⋮----
-@Test void protocolProcFallsBackToCritWithoutDedicatedAsset() {
-assertEquals(AudioDirector.Cue.CRIT, AudioDirector.fallbackCue(AudioDirector.Cue.PROTOCOL_PROC));
-⋮----
-@Test void sentinelBlockFallsBackToDashWithoutDedicatedAsset() {
-assertEquals(AudioDirector.Cue.DASH, AudioDirector.fallbackCue(AudioDirector.Cue.SENTINEL_BLOCK));
-⋮----
-@Test void ordinaryCuesDoNotUnexpectedlyAlias() {
-assertNull(AudioDirector.fallbackCue(AudioDirector.Cue.SHOT));
-assertNull(AudioDirector.fallbackCue(AudioDirector.Cue.BOSS_KILL));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/audio/AudioDirectorVolumeTest.java
-````java
-final class AudioDirectorVolumeTest {
-@Test void clampsFiniteVolumesToUnitRange() {
-assertEquals(0f, AudioDirector.normalizeVolume(-0.5f));
-assertEquals(0.35f, AudioDirector.normalizeVolume(0.35f));
-assertEquals(1f, AudioDirector.normalizeVolume(1.8f));
-⋮----
-@Test void rejectsNonFiniteVolumesToSafeSilence() {
-assertEquals(0f, AudioDirector.normalizeVolume(Float.NaN));
-assertEquals(0f, AudioDirector.normalizeVolume(Float.POSITIVE_INFINITY));
-assertEquals(0f, AudioDirector.normalizeVolume(Float.NEGATIVE_INFINITY));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/audio/FoundryHazardAudioContractTest.java
-````java
-final class FoundryHazardAudioContractTest {
-@Test void dedicatedFoundryCuesHaveSafeFallbacks() {
-assertEquals(AudioDirector.Cue.BOSS_HIT, AudioDirector.fallbackCue(AudioDirector.Cue.FOUNDRY_LAVA));
-assertEquals(AudioDirector.Cue.DASH, AudioDirector.fallbackCue(AudioDirector.Cue.FOUNDRY_STEAM));
-assertEquals(AudioDirector.Cue.CRIT, AudioDirector.fallbackCue(AudioDirector.Cue.FOUNDRY_HEAT));
-⋮----
-@Test void foundryCuesAreRateLimitedAsEnvironmentalEvents() {
-assertTrue(AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.FOUNDRY_LAVA) >= 400_000_000L);
-assertTrue(AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.FOUNDRY_STEAM) >= 250_000_000L);
-assertTrue(AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.FOUNDRY_HEAT) >= 350_000_000L);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/audio/MusicProfileSelectorTest.java
-````java
-final class MusicProfileSelectorTest {
-@Test void stagesMapToStableIntensityBands() {
-assertEquals(MusicProfileSelector.Profile.SURVIVAL, MusicProfileSelector.forStage(-3));
-assertEquals(MusicProfileSelector.Profile.SURVIVAL, MusicProfileSelector.forStage(1));
-assertEquals(MusicProfileSelector.Profile.SURVIVAL, MusicProfileSelector.forStage(3));
-assertEquals(MusicProfileSelector.Profile.PRESSURE, MusicProfileSelector.forStage(4));
-assertEquals(MusicProfileSelector.Profile.PRESSURE, MusicProfileSelector.forStage(6));
-assertEquals(MusicProfileSelector.Profile.APEX, MusicProfileSelector.forStage(7));
-assertEquals(MusicProfileSelector.Profile.APEX, MusicProfileSelector.forStage(99));
-⋮----
-@Test void profilesExposeDeterministicAssetPaths() {
-assertEquals("audio/music/combat.ogg", MusicProfileSelector.assetPath(MusicProfileSelector.Profile.SURVIVAL));
-assertEquals("audio/music/combat_pressure.ogg", MusicProfileSelector.assetPath(MusicProfileSelector.Profile.PRESSURE));
-assertEquals("audio/music/combat_apex.ogg", MusicProfileSelector.assetPath(MusicProfileSelector.Profile.APEX));
-assertEquals("audio/music/combat.ogg", MusicProfileSelector.assetPath(null));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/audio/NullHazardAudioContractTest.java
-````java
-final class NullHazardAudioContractTest {
-@Test void nullHazardCuesHaveResilientFallbackChains() {
-assertEquals(AudioDirector.Cue.SINGULARITY, AudioDirector.fallbackCue(AudioDirector.Cue.NULL_RIFT));
-assertEquals(AudioDirector.Cue.CRIT, AudioDirector.fallbackCue(AudioDirector.Cue.NULL_STATIC));
-assertEquals(AudioDirector.Cue.BOSS_PHASE, AudioDirector.fallbackCue(AudioDirector.Cue.NULL_BEAM));
-⋮----
-@Test void nullHazardCuesAreRateLimitedAsEnvironmentalEvents() {
-assertTrue(AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.NULL_RIFT) >= 400_000_000L);
-assertTrue(AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.NULL_STATIC) >= 250_000_000L);
-assertTrue(AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.NULL_BEAM) >= 350_000_000L);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/audio/WeaponSignatureAudioContractTest.java
-````java
-final class WeaponSignatureAudioContractTest {
-@Test void authoredSignatureCuesHaveSafeFallbacks() {
-assertEquals(AudioDirector.Cue.CRIT, AudioDirector.fallbackCue(AudioDirector.Cue.ION_OVERCHARGE));
-assertEquals(AudioDirector.Cue.BOSS_HIT, AudioDirector.fallbackCue(AudioDirector.Cue.CINDER_OVERHEAT));
-⋮----
-@Test void signatureCuesAreRateLimitedIndependently() {
-long ion = AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.ION_OVERCHARGE);
-long cinder = AudioCueLimiter.minIntervalNanos(AudioDirector.Cue.CINDER_OVERHEAT);
-assertTrue(ion >= 100_000_000L);
-assertTrue(cinder >= 220_000_000L);
-assertTrue(cinder > ion);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/combat/EndgameWeaponArchetypeTest.java
-````java
-final class EndgameWeaponArchetypeTest {
-@Test void ionNeedleIsPrecisionShockPiercer() {
-⋮----
-assertEquals(DamageElement.SHOCK, weapon.element);
-assertTrue(weapon.fireInterval < .10f);
-assertTrue(weapon.critChance >= .20f);
-assertTrue(weapon.penetration >= 2);
-assertTrue(weapon.spreadDegrees < 1f);
-⋮----
-@Test void cinderCannonIsSlowHeavyFireWeapon() {
-⋮----
-assertEquals(DamageElement.FIRE, weapon.element);
-assertTrue(weapon.damage >= 80f);
-assertTrue(weapon.fireInterval >= 1f);
-assertTrue(weapon.knockback >= 4f);
-assertTrue(weapon.penetration >= 1);
-⋮----
-@Test void newWeaponsStayInsideGlobalPaperDpsBand() {
-assertTrue(WeaponCatalog.paperDps(WeaponCatalog.ION_NEEDLE) <= 230f);
-assertTrue(WeaponCatalog.paperDps(WeaponCatalog.ION_NEEDLE) >= 45f);
-assertTrue(WeaponCatalog.paperDps(WeaponCatalog.CINDER_CANNON) <= 230f);
-assertTrue(WeaponCatalog.paperDps(WeaponCatalog.CINDER_CANNON) >= 45f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/combat/WeaponCatalogTest.java
-````java
-final class WeaponCatalogTest {
-⋮----
-void rosterHasDistinctStableIds() {
-WeaponDefinition[] all = WeaponCatalog.all();
-assertTrue(all.length >= 12);
-⋮----
-assertNotNull(weapon);
-assertTrue(ids.add(weapon.id), "duplicate weapon id: " + weapon.id);
-assertEquals(weapon, WeaponCatalog.byId(weapon.id));
-⋮----
-void everyWeaponHasSafeRuntimeParameters() {
-for (WeaponDefinition weapon : WeaponCatalog.all()) {
-assertTrue(weapon.damage > 0f);
-assertTrue(weapon.fireInterval >= .04f);
-assertTrue(weapon.projectileSpeed >= 10f);
-assertTrue(weapon.projectileCount >= 1 && weapon.projectileCount <= 12);
-assertTrue(weapon.spreadDegrees >= 0f && weapon.spreadDegrees <= 16f);
-assertTrue(weapon.critChance >= 0f && weapon.critChance <= .35f);
-assertTrue(weapon.critMultiplier >= 1f && weapon.critMultiplier <= 3f);
-assertTrue(weapon.penetration >= 0 && weapon.penetration <= 6);
-assertTrue(weapon.knockback >= 0f && weapon.knockback <= 5f);
-assertNotNull(weapon.element);
-⋮----
-void rawPaperDpsStaysWithinIntentionalBand() {
-⋮----
-float dps = WeaponCatalog.paperDps(weapon);
-assertTrue(dps >= 45f, weapon.id + " paper DPS too low: " + dps);
-assertTrue(dps <= 230f, weapon.id + " paper DPS too high: " + dps);
-⋮----
-void elementalRosterCoversFireFrostAndShock() {
-⋮----
-assertTrue(fire && frost && shock);
-⋮----
-void unknownIdsFallBackSafelyToStarterWeapon() {
-assertEquals(WeaponCatalog.AR9, WeaponCatalog.byId(null));
-assertEquals(WeaponCatalog.AR9, WeaponCatalog.byId("missing_weapon"));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java
-````java
-final class WeaponSignatureBalanceTest {
-@Test void ionNeedleSignatureStaysInsideControlledAverageDamageBudget() {
-assertAverageDamageMultiplier(WeaponCatalog.ION_NEEDLE, 1.18f, 1.26f);
-⋮----
-@Test void cinderThermalCycleStaysInsideControlledAverageDamageBudget() {
-assertAverageDamageMultiplier(WeaponCatalog.CINDER_CANNON, 1.12f, 1.16f);
-⋮----
-@Test void newEndgameSignaturesStayInsideControlledAverageDamageBudget() {
-assertAverageDamageMultiplier(WeaponCatalog.TEMPEST_BURST, 1.02f, 1.05f);
-assertAverageDamageMultiplier(WeaponCatalog.WHITEOUT_SHARD, 1.01f, 1.04f);
-assertAverageDamageMultiplier(WeaponCatalog.PHOENIX_REPEATER, 1.05f, 1.08f);
-⋮----
-@Test void nonSignatureWeaponsNeverReceiveSignaturePower() {
-Set<String> signatureIds = Set.of(
-⋮----
-for (WeaponDefinition weapon : WeaponCatalog.all()) {
-if (signatureIds.contains(weapon.id)) continue;
-WeaponSignatureRuntime.begin(weapon);
-⋮----
-var modifier = WeaponSignatureRuntime.consumeShot(false);
-assertTrue(!modifier.active() && modifier.damageMultiplier() == 1f,
-⋮----
-private static void assertAverageDamageMultiplier(WeaponDefinition weapon, float min, float max) {
-⋮----
-for (int i = 0; i < 120; i++) totalMultiplier += WeaponSignatureRuntime.consumeShot(false).damageMultiplier();
-⋮----
-assertTrue(average >= min && average <= max,
-````
-
-## File: core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java
-````java
-final class WeaponSignatureRuntimeTest {
-@BeforeEach void resetCore() { SingularityCoreRuntime.begin(false); }
-⋮----
-@Test void ionNeedleOverchargesExactlyEveryFifthProjectile() {
-WeaponSignatureRuntime.begin(WeaponCatalog.ION_NEEDLE);
-⋮----
-var mark = WeaponSignatureRuntime.consumeShot(false);
-assertEquals(i % 5 == 0, mark.active());
-⋮----
-assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, mark.kind());
-assertTrue(mark.forceCritical());
-assertEquals(1, mark.penetrationBonus());
-assertTrue(mark.damageMultiplier() >= 2f);
-} else assertEquals(WeaponSignatureRuntime.Kind.NONE, mark.kind());
-⋮----
-@Test void cinderCannonThermalCycleTriggersEveryFourthShell() {
-WeaponSignatureRuntime.begin(WeaponCatalog.CINDER_CANNON);
-⋮----
-assertEquals(i % 4 == 0, mark.active());
-⋮----
-assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, mark.kind());
-assertFalse(mark.forceCritical());
-assertEquals(1.55f, mark.damageMultiplier(), .0001f);
-assertEquals(.17f, mark.radius(), .0001f);
-⋮----
-@Test void tempestBurstSurgesOnEverySecondThreeShotBurst() {
-WeaponSignatureRuntime.begin(WeaponCatalog.TEMPEST_BURST);
-⋮----
-assertEquals(i % 6 == 0, mark.active());
-⋮----
-assertEquals(WeaponSignatureRuntime.Kind.TEMPEST_SURGE, mark.kind());
-assertEquals(2, mark.penetrationBonus());
-assertEquals(1.20f, mark.damageMultiplier(), .0001f);
-⋮----
-@Test void whiteoutShardAddsControlShardEverySecondVolley() {
-WeaponSignatureRuntime.begin(WeaponCatalog.WHITEOUT_SHARD);
-⋮----
-assertEquals(i % 8 == 0, mark.active());
-⋮----
-assertEquals(WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER, mark.kind());
-⋮----
-assertEquals(1.38f, mark.knockbackMultiplier(), .0001f);
-⋮----
-@Test void phoenixRepeaterIgnitesEveryFifthRound() {
-WeaponSignatureRuntime.begin(WeaponCatalog.PHOENIX_REPEATER);
-⋮----
-assertEquals(WeaponSignatureRuntime.Kind.PHOENIX_IGNITION, mark.kind());
-assertEquals(1.30f, mark.damageMultiplier(), .0001f);
-⋮----
-@Test void beginningANewRunResetsSignatureCadence() {
-⋮----
-for (int i = 0; i < 4; i++) assertFalse(WeaponSignatureRuntime.consumeShot(false).active());
-⋮----
-assertFalse(WeaponSignatureRuntime.consumeShot(false).active());
-assertEquals(1, WeaponSignatureRuntime.shotIndex());
-⋮----
-@Test void ionOverchargeTransformsActualProjectile() {
-⋮----
-for (int i = 0; i < 4; i++) new Projectile().spawn(0, 0, 1, 0, 10f, false, 2, 1f, DamageElement.SHOCK);
-Projectile p = new Projectile().spawn(0, 0, 1, 0, 10f, false, 2, 1f, DamageElement.SHOCK);
-assertTrue(p.weaponSignature);
-assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, p.weaponSignatureKind);
-assertTrue(p.critical);
-assertEquals(3, p.penetrationRemaining);
-assertTrue(p.damage >= 20f);
-assertTrue(p.radius > .11f);
-⋮----
-@Test void cinderThermalShellStacksWithNormalFireIdentity() {
-⋮----
-for (int i = 0; i < 3; i++) new Projectile().spawn(0, 0, 1, 0, 20f, false, 1, 4f, DamageElement.FIRE);
-Projectile p = new Projectile().spawn(0, 0, 1, 0, 20f, false, 1, 4f, DamageElement.FIRE);
-⋮----
-assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, p.weaponSignatureKind);
-assertEquals(DamageElement.FIRE, p.element);
-assertEquals(31f, p.damage, .0001f);
-assertEquals(2, p.penetrationRemaining);
-assertEquals(.17f, p.radius, .0001f);
-assertTrue(p.knockback > 4f);
-⋮----
-@Test void newEndgameSignaturesTransformActualProjectiles() {
-⋮----
-for (int i = 0; i < 5; i++) new Projectile().spawn(0, 0, 1, 0, 10f, false, 1, 1f, DamageElement.SHOCK);
-Projectile tempest = new Projectile().spawn(0, 0, 1, 0, 10f, false, 1, 1f, DamageElement.SHOCK);
-assertEquals(WeaponSignatureRuntime.Kind.TEMPEST_SURGE, tempest.weaponSignatureKind);
-assertEquals(3, tempest.penetrationRemaining);
-assertEquals(12f, tempest.damage, .0001f);
-⋮----
-for (int i = 0; i < 7; i++) new Projectile().spawn(0, 0, 1, 0, 20f, false, 0, 2f, DamageElement.FROST);
-Projectile whiteout = new Projectile().spawn(0, 0, 1, 0, 20f, false, 0, 2f, DamageElement.FROST);
-assertEquals(WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER, whiteout.weaponSignatureKind);
-assertEquals(1, whiteout.penetrationRemaining);
-assertTrue(whiteout.knockback > 2.7f);
-⋮----
-for (int i = 0; i < 4; i++) new Projectile().spawn(0, 0, 1, 0, 20f, false, 1, 1f, DamageElement.FIRE);
-Projectile phoenix = new Projectile().spawn(0, 0, 1, 0, 20f, false, 1, 1f, DamageElement.FIRE);
-assertEquals(WeaponSignatureRuntime.Kind.PHOENIX_IGNITION, phoenix.weaponSignatureKind);
-assertEquals(26f, phoenix.damage, .0001f);
-assertEquals(2, phoenix.penetrationRemaining);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/config/AccessibilityColorVisionTest.java
-````java
-final class AccessibilityColorVisionTest {
-@Test void colorVisionModesCycleBothDirections() {
-⋮----
-assertEquals(AccessibilitySettings.ColorVisionMode.DEUTERANOPIA, mode.next(1));
-assertEquals(AccessibilitySettings.ColorVisionMode.TRITANOPIA, mode.next(-1));
-assertEquals(AccessibilitySettings.ColorVisionMode.STANDARD,
-AccessibilitySettings.ColorVisionMode.TRITANOPIA.next(1));
-⋮----
-@Test void invalidStoredColorVisionModeFallsBackToStandard() {
-⋮----
-AccessibilitySettings.ColorVisionMode.fromStored("UNKNOWN"));
-⋮----
-AccessibilitySettings.ColorVisionMode.fromStored(null));
-⋮----
-@Test void normalizeClampsComfortScalarsAndReducedMotion() {
-AccessibilitySettings settings = new AccessibilitySettings();
-⋮----
-settings.normalize();
-assertEquals(1f, settings.screenShakeStrength);
-assertEquals(.85f, settings.uiScale);
-assertEquals(1f, settings.masterVolume);
-assertEquals(0f, settings.sfxVolume);
-assertEquals(1f, settings.musicVolume);
-assertFalse(settings.screenShake);
-assertFalse(settings.hitStop);
-assertTrue(settings.reduceFlashes);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/config/AccessibilitySettingsTest.java
-````java
-final class AccessibilitySettingsTest {
-@Test void reducedMotionDisablesMotionHeavyFeedback() {
-AccessibilitySettings settings = new AccessibilitySettings();
-settings.setReducedMotion(true);
-⋮----
-assertTrue(settings.reducedMotion);
-assertTrue(settings.motionControlLocked());
-assertFalse(settings.screenShake);
-assertFalse(settings.hitStop);
-assertTrue(settings.reduceFlashes);
-assertFalse(settings.allowsScreenShake());
-assertFalse(settings.allowsHitStop());
-assertTrue(settings.minimizesFlashes());
-⋮----
-@Test void normalizationRepairsInconsistentReducedMotionPreferences() {
-⋮----
-settings.normalize();
-⋮----
-@Test void disablingPresetRestoresMotionFeedbackWithoutTouchingFlashPreference() {
-⋮----
-settings.setReducedMotion(false);
-⋮----
-assertFalse(settings.reducedMotion);
-assertFalse(settings.motionControlLocked());
-assertTrue(settings.screenShake);
-assertTrue(settings.hitStop);
-⋮----
-assertTrue(settings.allowsScreenShake());
-assertTrue(settings.allowsHitStop());
-⋮----
-@Test void helperMethodsRespectManualControls() {
-⋮----
-assertFalse(settings.minimizesFlashes());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/config/GraphicsSettingsTest.java
-````java
-final class GraphicsSettingsTest {
-@Test void profilesAreStrictlyOrderedAndBounded() {
-var values = GraphicsSettings.Quality.values();
-assertEquals(4, values.length);
-⋮----
-assertTrue(values[i].fxCeiling >= .40f && values[i].fxCeiling <= 1f);
-if (i > 0) assertTrue(values[i].fxCeiling > values[i - 1].fxCeiling);
-⋮----
-@Test void qualityNavigationClampsAtEnds() {
-assertEquals(GraphicsSettings.Quality.LOW, GraphicsSettings.Quality.LOW.next(-1));
-assertEquals(GraphicsSettings.Quality.MEDIUM, GraphicsSettings.Quality.LOW.next(1));
-assertEquals(GraphicsSettings.Quality.ULTRA, GraphicsSettings.Quality.ULTRA.next(1));
-assertEquals(GraphicsSettings.Quality.HIGH, GraphicsSettings.Quality.ULTRA.next(-1));
-⋮----
-@Test void frameRateTargetsAreExplicitAndClampAtEnds() {
-var values = GraphicsSettings.FrameRate.values();
-assertEquals(3, values.length);
-assertEquals(60, values[0].target);
-assertEquals(90, values[1].target);
-assertEquals(120, values[2].target);
-assertEquals(GraphicsSettings.FrameRate.FPS_60, GraphicsSettings.FrameRate.FPS_60.next(-1));
-assertEquals(GraphicsSettings.FrameRate.FPS_90, GraphicsSettings.FrameRate.FPS_60.next(1));
-assertEquals(GraphicsSettings.FrameRate.FPS_120, GraphicsSettings.FrameRate.FPS_120.next(1));
-assertEquals(GraphicsSettings.FrameRate.FPS_90, GraphicsSettings.FrameRate.FPS_120.next(-1));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java
-````java
-/**
- * Repository-level localization guardrail.
- *
- * Fails CI when a static UI localization lookup references a missing key, the English catalog
- * contains duplicate keys, a MessageFormat placeholder sequence is malformed, or a screen
- * reintroduces a direct user-facing literal in BitmapFont.draw(). Dynamic content families are
- * resolved through stable enum/id-derived keys and are therefore exempt from static orphan checks.
- */
-final class LocalizationCatalogGuardTest {
-private static final Pattern STATIC_LOOKUP = Pattern.compile(
-⋮----
-private static final Pattern DIRECT_FONT_LITERAL = Pattern.compile(
-⋮----
-private static final Set<String> ALLOWED_PRESENTATION_LITERALS = Set.of("‹", "›", "", " • ");
-private static final List<String> DYNAMIC_PREFIXES = List.of(
-⋮----
-@Test void catalogHasUniqueKeysAndValidPlaceholderSequences() throws Exception {
-Catalog catalog = loadCatalog();
-assertTrue(catalog.duplicates.isEmpty(), "Duplicate i18n keys: " + catalog.duplicates);
-⋮----
-for (Map.Entry<String, String> entry : catalog.values.entrySet()) {
-⋮----
-new MessageFormat(entry.getValue());
-⋮----
-malformed.add(entry.getKey() + " -> " + exception.getMessage());
-⋮----
-assertTrue(malformed.isEmpty(), "Malformed i18n MessageFormat patterns: " + malformed);
-⋮----
-@Test void everyStaticLocalizationLookupExistsInCatalog() throws Exception {
-⋮----
-Set<String> referenced = staticReferencedKeys();
-⋮----
-missing.removeAll(catalog.values.keySet());
-if (!missing.isEmpty()) {
-System.err.println("I18N_MISSING_KEYS " + missing);
-⋮----
-assertTrue(missing.isEmpty(), "Missing i18n keys referenced by UI code: " + missing);
-⋮----
-@Test void screensDoNotReintroduceDirectUserFacingFontLiterals() throws Exception {
-Path root = repositoryRoot();
-⋮----
-for (Path source : presentationSources(root)) {
-String content = Files.readString(source, StandardCharsets.UTF_8);
-Matcher matcher = DIRECT_FONT_LITERAL.matcher(content);
-while (matcher.find()) {
-String literal = matcher.group(1);
-if (ALLOWED_PRESENTATION_LITERALS.contains(literal)) continue;
-if (literal.isBlank()) continue;
-violations.add(root.relativize(source) + " -> \"" + literal + "\"");
-⋮----
-assertTrue(violations.isEmpty(),
-⋮----
-@Test void catalogOrphanAuditStaysVisibleWithoutBlockingDynamicContent() throws Exception {
-⋮----
-List<String> clearOrphans = catalog.values.keySet().stream()
-.filter(key -> !referenced.contains(key))
-.filter(key -> DYNAMIC_PREFIXES.stream().noneMatch(key::startsWith))
-.sorted()
-.toList();
-⋮----
-// Diagnostic only: static orphan detection is intentionally non-blocking because some
-// strings are reached indirectly by runtime state. It remains visible in test reports.
-if (!clearOrphans.isEmpty()) {
-System.out.println("I18N_ORPHAN_AUDIT " + clearOrphans.size() + " candidate(s): " + clearOrphans);
-⋮----
-assertFalse(catalog.values.isEmpty(), "Localization catalog must not be empty");
-⋮----
-private static Set<String> staticReferencedKeys() throws IOException {
-⋮----
-Matcher matcher = STATIC_LOOKUP.matcher(content);
-⋮----
-String key = matcher.group(1);
-if (key.endsWith(".") && DYNAMIC_PREFIXES.stream().anyMatch(key::startsWith)) continue;
-keys.add(key);
-⋮----
-private static List<Path> presentationSources(Path root) throws IOException {
-⋮----
-Path screens = root.resolve("core/src/main/java/com/deadlinezero/game/screen");
-try (Stream<Path> stream = Files.walk(screens)) {
-stream.filter(path -> path.toString().endsWith(".java")).forEach(result::add);
-⋮----
-result.add(root.resolve("core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java"));
-result.add(root.resolve("core/src/main/java/com/deadlinezero/game/meta/RunShareText.java"));
-⋮----
-private static Catalog loadCatalog() throws IOException {
-Path file = repositoryRoot().resolve("assets/i18n/messages.properties");
-⋮----
-for (String raw : Files.readAllLines(file, StandardCharsets.UTF_8)) {
-String line = raw.strip();
-if (line.isEmpty() || line.startsWith("#") || line.startsWith("!")) continue;
-int split = firstUnescapedSeparator(line);
-⋮----
-String key = line.substring(0, split).strip();
-String value = line.substring(split + 1).strip();
-if (values.putIfAbsent(key, value) != null) duplicates.add(key);
-⋮----
-return new Catalog(values, duplicates);
-⋮----
-private static int firstUnescapedSeparator(String line) {
-⋮----
-for (int i = 0; i < line.length(); i++) {
-char ch = line.charAt(i);
-⋮----
-private static Path repositoryRoot() {
-Path current = Path.of("").toAbsolutePath().normalize();
-for (Path candidate = current; candidate != null; candidate = candidate.getParent()) {
-if (Files.isRegularFile(candidate.resolve("assets/i18n/messages.properties"))
-&& Files.isDirectory(candidate.resolve("core/src/main/java"))) return candidate;
-⋮----
-throw new IllegalStateException("Unable to locate repository root from " + current);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/config/LocalizationGlyphSanitizerTest.java
-````java
-final class LocalizationGlyphSanitizerTest {
-⋮----
-void unsupportedUiGlyphsAreNormalizedForDefaultBitmapFont() {
-⋮----
-String sanitized = Localization.sanitizeForBitmapFont(source);
-⋮----
-assertEquals("A | B < C > D <- E -> F ^ G v H - I - J ... K", sanitized);
-⋮----
-assertFalse(sanitized.indexOf(unsupported) >= 0, "unsupported glyph survived: " + unsupported);
-⋮----
-void unresolvedFormatTokensDoNotLeakIntoVisibleUi() {
-assertEquals("TAP / R TO CHANGE",
-Localization.sanitizeForBitmapFont("{0} • TAP / R TO CHANGE"));
-⋮----
-void leadingDesktopEscapeHintDoesNotCrowdMobileBackRail() {
-assertEquals("BACK TO BASE", Localization.sanitizeForBitmapFont("ESC • BACK TO BASE"));
-assertEquals("TAP A CARD | ESC TO CANCEL",
-Localization.sanitizeForBitmapFont("TAP A CARD • ESC TO CANCEL"));
-⋮----
-void nullAndAsciiStringsRemainSafe() {
-assertEquals("", Localization.sanitizeForBitmapFont(null));
-assertEquals("DPS 120 | FIRE 0.25s", Localization.sanitizeForBitmapFont("DPS 120 | FIRE 0.25s"));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java
-````java
-final class LocalizationReleaseContractTest {
-@Test void releaseContractMatchesRepositoryLocalizationArchitecture() throws Exception {
-Path root = repositoryRoot();
-String contract = Files.readString(root.resolve("play/store/LOCALIZATION.md"), StandardCharsets.UTF_8);
-⋮----
-assertTrue(Files.isRegularFile(root.resolve("assets/i18n/messages.properties")));
-assertTrue(Files.isRegularFile(root.resolve(
-⋮----
-assertTrue(contract.contains("repository-level localization architecture"));
-assertTrue(contract.contains("centralized English catalog"));
-assertTrue(contract.contains("English-only"));
-assertTrue(contract.contains("[x] Centralized translatable string catalog exists for core UI."));
-assertTrue(contract.contains("[ ] Runtime locale selection is implemented."));
-assertFalse(contract.contains("no repository-level i18n/localization resource system"));
-⋮----
-private static Path repositoryRoot() {
-Path current = Path.of("").toAbsolutePath().normalize();
-for (Path candidate = current; candidate != null; candidate = candidate.getParent()) {
-if (Files.isRegularFile(candidate.resolve("play/store/LOCALIZATION.md"))
-&& Files.isRegularFile(candidate.resolve("assets/i18n/messages.properties"))) {
-⋮----
-throw new IllegalStateException("Unable to locate repository root from " + current);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/config/MobileRuntimeBudgetTest.java
-````java
-final class MobileRuntimeBudgetTest {
-@Test void hardCapsStayWithinMobileSafetyBudget() {
-assertTrue(GameConfig.MAX_ENEMIES <= 420);
-assertTrue(GameConfig.MAX_PROJECTILES <= 768);
-assertTrue(Pools.MAX_HOSTILE_PROJECTILES <= 384);
-assertTrue(Pools.MAX_HOMING_MISSILES <= 96);
-assertTrue(Pools.MAX_IMPACTS <= 192);
-assertTrue(Pools.MAX_DAMAGE_NUMBERS <= 192);
-assertTrue(Pools.MAX_ARCS <= 96);
-assertTrue(Pools.MAX_DEATH_FX <= 72);
-⋮----
-@Test void budgetsKeepEnoughHeadroomForEndgameBuilds() {
-assertTrue(GameConfig.MAX_ENEMIES >= 300);
-assertTrue(GameConfig.MAX_PROJECTILES >= 600);
-assertTrue(Pools.MAX_HOSTILE_PROJECTILES >= 256);
-assertTrue(Pools.MAX_DAMAGE_NUMBERS >= 128);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeElementResistanceTest.java
-````java
-public final class EnemyBiomeElementResistanceTest {
-@AfterEach void resetStage() {
-RunStageContext.begin(1);
-⋮----
-@Test public void forgeHoundAttenuatesFireStatusPowerAndDuration() {
-RunStageContext.begin(10);
-Enemy e = enemy(Enemy.Type.RUNNER);
-e.applyElement(DamageElement.FIRE, 100f);
-⋮----
-assertEquals(13.64f, e.burnDps, .001f);
-assertEquals(1.488f, e.burnTimer, .001f);
-⋮----
-@Test public void cinderGunnerUsesItsOwnFireResistance() {
-⋮----
-Enemy e = enemy(Enemy.Type.RANGED);
-⋮----
-assertEquals(15.84f, e.burnDps, .001f);
-assertEquals(1.728f, e.burnTimer, .001f);
-⋮----
-@Test public void nonResistedElementKeepsFullStatusPower() {
-⋮----
-Enemy baseline = enemy(Enemy.Type.RUNNER);
-baseline.applyElement(DamageElement.FIRE, 100f);
-⋮----
-assertEquals(22f, baseline.burnDps, .001f);
-assertEquals(2.4f, baseline.burnTimer, .001f);
-assertTrue(resisted < baseline.burnDps);
-⋮----
-@Test public void phaseStalkerAttenuatesShockReactionAndStun() {
-RunStageContext.begin(20);
-Enemy e = enemy(Enemy.Type.PHANTOM);
-⋮----
-e.applyElement(DamageElement.SHOCK, 100f);
-⋮----
-assertEquals(Enemy.ElementReaction.OVERLOAD, e.lastReaction);
-assertEquals(13.64f, before - e.hp, .01f);
-assertEquals(.341f, e.shockTimer, .001f);
-⋮----
-@Test public void nullWardAttenuatesFrostReactionAndSlow() {
-⋮----
-Enemy e = enemy(Enemy.Type.REGENERATOR);
-⋮----
-e.applyElement(DamageElement.FROST, 100f);
-⋮----
-assertEquals(Enemy.ElementReaction.STEAM_BURST, e.lastReaction);
-assertEquals(18.48f, before - e.hp, .01f);
-assertEquals(1.056f, e.slowTimer, .001f);
-assertEquals(.7492f, e.slowMultiplier, .001f);
-⋮----
-private Enemy enemy(Enemy.Type type) {
-return new Enemy(type, 0f, 0f, 1000f, 1f, .5f, 10f, 1, false);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/entities/EnemyBiomeTacticsTest.java
-````java
-public final class EnemyBiomeTacticsTest {
-@AfterEach void resetStage() { RunStageContext.begin(1); }
-⋮----
-@Test public void forgeHoundSchedulesChargeAtMidRange() {
-RunStageContext.begin(10);
-Enemy e = new Enemy(Enemy.Type.RUNNER, 0, 0, 100, 4f, .3f, 8f, 1);
-e.updateAi(.01f, 5f);
-assertEquals(Enemy.Tactic.CHARGE, e.pendingTactic());
-assertTrue(e.tacticalTelegraph());
-⋮----
-@Test public void cinderGunnerSchedulesStrafe() {
-⋮----
-Enemy e = new Enemy(Enemy.Type.RANGED, 0, 0, 100, 2f, .4f, 8f, 1);
-e.updateAi(.01f, 6f);
-assertEquals(Enemy.Tactic.STRAFE, e.pendingTactic());
-⋮----
-@Test public void slagGuardSchedulesHeavyCharge() {
-⋮----
-Enemy e = new Enemy(Enemy.Type.SHIELDED, 0, 0, 100, 2f, .5f, 8f, 1);
-⋮----
-@Test public void phaseStalkerSchedulesFlankStrafe() {
-RunStageContext.begin(20);
-Enemy e = new Enemy(Enemy.Type.PHANTOM, 0, 0, 100, 3f, .4f, 8f, 1);
-⋮----
-@Test public void staticSeerSchedulesZoningStrafe() {
-⋮----
-e.updateAi(.01f, 8f);
-⋮----
-@Test public void nullWardGetsSupportRecoveryMultiplier() {
-⋮----
-Enemy e = new Enemy(Enemy.Type.REGENERATOR, 0, 0, 1000, 2f, .4f, 8f, 1);
-assertTrue(e.biomeBehavior().recoveryMultiplier() > 1.5f);
-assertTrue(e.biomeBehavior().speedMultiplier() < 1f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/entities/EnemyChargeImpactTest.java
-````java
-public final class EnemyChargeImpactTest {
-@Test public void chargeImpactCanOnlyBeConsumedOncePerCharge() {
-RunStageContext.begin(1);
-Enemy e = new Enemy(Enemy.Type.BRUTE, 0f, 0f, 200f, 1.6f, .72f, 18f, 10);
-e.velocity.set(1f, 0f);
-⋮----
-e.updateAi(.01f, 4f);
-e.updateStatus(.40f);
-⋮----
-assertTrue(e.chargeImpactActive());
-assertTrue(e.consumeChargeImpact());
-assertFalse(e.consumeChargeImpact());
-assertFalse(e.chargeImpactActive());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/entities/EnemyContentScaleTest.java
-````java
-final class EnemyContentScaleTest {
-@Test void p5EnemyAndEliteProfileTargetsAreExplicitlyMet() {
-int baseEnemyArchetypes = Enemy.Type.values().length - 1; // BOSS counted separately.
-int biomeSignatureProfiles = BiomeEnemyRoster.Identity.values().length - 1; // NONE is fallback.
-int championProfiles = Enemy.Variant.values().length - 1; // NORMAL is baseline.
-⋮----
-assertEquals(8, baseEnemyArchetypes);
-assertEquals(6, biomeSignatureProfiles);
-assertEquals(8, championProfiles);
-assertTrue(baseEnemyArchetypes + biomeSignatureProfiles + championProfiles >= 20,
-⋮----
-assertTrue(championProfiles >= 8, "champion/elite profile count regressed below P5 8+ target");
-⋮----
-@Test void championRollCoversAllEightProfilesWithStableBoundaries() {
-assertEquals(Enemy.Variant.SWIFT, Enemy.variantForRoll(0f));
-assertEquals(Enemy.Variant.ARMORED, Enemy.variantForRoll(.125f));
-assertEquals(Enemy.Variant.FERAL, Enemy.variantForRoll(.25f));
-assertEquals(Enemy.Variant.VOLATILE, Enemy.variantForRoll(.375f));
-assertEquals(Enemy.Variant.JUGGERNAUT, Enemy.variantForRoll(.5f));
-assertEquals(Enemy.Variant.RAVAGER, Enemy.variantForRoll(.625f));
-assertEquals(Enemy.Variant.AEGIS, Enemy.variantForRoll(.75f));
-assertEquals(Enemy.Variant.HUNTER, Enemy.variantForRoll(.875f));
-assertEquals(Enemy.Variant.HUNTER, Enemy.variantForRoll(1f));
-assertEquals(Enemy.Variant.SWIFT, Enemy.variantForRoll(-1f));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/entities/EnemyElementReactionTest.java
-````java
-public final class EnemyElementReactionTest {
-private Enemy enemy() {
-RunStageContext.begin(1);
-return new Enemy(Enemy.Type.BOSS, 0f, 0f, 500f, 1f, .6f, 10f, 1);
-⋮----
-@Test public void fireOnFrozenTargetTriggersThermalShock() {
-Enemy e = enemy();
-e.applyElement(DamageElement.FROST, 40f);
-⋮----
-e.applyElement(DamageElement.FIRE, 40f);
-⋮----
-assertEquals(Enemy.ElementReaction.THERMAL_SHOCK, e.lastReaction);
-assertTrue(e.hp < hpBefore);
-assertEquals(0f, e.slowTimer, .0001f);
-assertTrue(e.burnTimer > 0f);
-⋮----
-@Test public void frostOnBurningTargetTriggersSteamBurst() {
-⋮----
-assertEquals(Enemy.ElementReaction.STEAM_BURST, e.lastReaction);
-⋮----
-assertEquals(0f, e.burnTimer, .0001f);
-assertTrue(e.slowTimer > 0f);
-⋮----
-@Test public void shockOnPrimedTargetTriggersLongerOverloadStun() {
-⋮----
-e.applyElement(DamageElement.FIRE, 30f);
-⋮----
-e.applyElement(DamageElement.SHOCK, 30f);
-⋮----
-assertEquals(Enemy.ElementReaction.OVERLOAD, e.lastReaction);
-⋮----
-assertTrue(e.shockTimer >= .55f);
-⋮----
-@Test public void reactionMarkerExpiresWithRuntimeUpdate() {
-⋮----
-e.updateStatus(.30f);
-⋮----
-assertEquals(Enemy.ElementReaction.NONE, e.lastReaction);
-assertEquals(0f, e.reactionFlash, .0001f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/entities/EnemyProjectileStyleTest.java
-````java
-final class EnemyProjectileStyleTest {
-@Test void defaultStyleTracksActiveBiome() {
-RunStageContext.begin(1, 0, 0);
-assertEquals(EnemyProjectile.Style.DEFAULT, EnemyProjectile.defaultStyleForActiveBiome());
-⋮----
-RunStageContext.begin(10, 0, 0);
-assertEquals(EnemyProjectile.Style.CINDER, EnemyProjectile.defaultStyleForActiveBiome());
-⋮----
-RunStageContext.begin(20, 0, 0);
-assertEquals(EnemyProjectile.Style.NULL, EnemyProjectile.defaultStyleForActiveBiome());
-⋮----
-@Test void nullSectorThinNonExplosiveVolleyUsesStaticIdentity() {
-⋮----
-assertEquals(EnemyProjectile.Style.STATIC,
-EnemyProjectile.defaultStyleForActiveContext(.18f, false));
-assertEquals(EnemyProjectile.Style.NULL,
-EnemyProjectile.defaultStyleForActiveContext(.22f, false));
-⋮----
-EnemyProjectile.defaultStyleForActiveContext(.18f, true));
-⋮----
-@Test void explicitSourceStyleOverridesBiomeFallback() {
-⋮----
-EnemyProjectile projectile = new EnemyProjectile().spawn(
-⋮----
-assertEquals(EnemyProjectile.Style.CINDER, projectile.style);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/entities/EnemySpecialistTest.java
-````java
-final class EnemySpecialistTest {
-@BeforeEach void resetStage() { RunStageContext.begin(1, 0, 0); }
-@AfterEach void cleanupStage() { RunStageContext.begin(1, 0, 0); }
-⋮----
-@Test void shieldedEnemyAbsorbsDamageBeforeHealth() {
-Enemy enemy = new Enemy(Enemy.Type.SHIELDED, 0f, 0f, 100f, 2f, .5f, 10f, 10);
-⋮----
-enemy.damage(Math.min(20f, shieldBefore));
-⋮----
-assertEquals(hpBefore, enemy.hp, .001f);
-assertTrue(enemy.shieldHp < shieldBefore);
-assertTrue(enemy.shieldFraction() >= 0f && enemy.shieldFraction() <= 1f);
-⋮----
-@Test void shieldedEnemyRechargesAfterRecoveryDelay() {
-⋮----
-enemy.damage(enemy.shieldHp * .5f);
-⋮----
-for (int i = 0; i < 260; i++) enemy.updateStatus(1f / 60f);
-⋮----
-assertTrue(enemy.shieldHp > depleted);
-assertTrue(enemy.shieldHp <= enemy.shieldMaxHp);
-⋮----
-@Test void regeneratorRecoversHealthOnlyAfterTakingPressureBreak() {
-Enemy enemy = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .5f, 10f, 10);
-enemy.damage(35f);
-⋮----
-for (int i = 0; i < 120; i++) enemy.updateStatus(1f / 60f);
-assertEquals(damaged, enemy.hp, .01f);
-⋮----
-assertTrue(enemy.hp > damaged);
-assertTrue(enemy.hp <= enemy.maxHp);
-⋮----
-@Test void phantomCyclesIntoMitigationAndSpeedWindow() {
-Enemy enemy = new Enemy(Enemy.Type.PHANTOM, 0f, 0f, 100f, 2f, .5f, 10f, 10);
-assertFalse(enemy.phased());
-⋮----
-for (int i = 0; i < 216; i++) enemy.updateStatus(1f / 60f);
-assertTrue(enemy.phased());
-assertTrue(enemy.effectiveSpeed() > baseConfiguredSpeed * 1.30f,
-⋮----
-enemy.damage(50f);
-assertTrue(before - enemy.hp < 20f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/entities/EnemyTacticsTest.java
-````java
-public final class EnemyTacticsTest {
-@Test public void rangedPreparesStrafeAtOuterPreferredRange() {
-RunStageContext.begin(1);
-Enemy ranged = new Enemy(Enemy.Type.RANGED, 0f, 0f, 72f, 2.15f, .42f, 13f, 12);
-ranged.velocity.set(1f, 0f);
-ranged.updateAi(.01f, 8.5f);
-assertEquals(Enemy.Tactic.STRAFE, ranged.pendingTactic());
-assertTrue(ranged.tacticalTelegraph());
-⋮----
-@Test public void brutePreparesChargeAtMidRange() {
-⋮----
-Enemy brute = new Enemy(Enemy.Type.BRUTE, 0f, 0f, 145f, 1.6f, .72f, 18f, 15);
-brute.velocity.set(1f, 0f);
-brute.updateAi(.01f, 5f);
-assertEquals(Enemy.Tactic.CHARGE, brute.pendingTactic());
-assertTrue(brute.tacticalTelegraph());
-⋮----
-@Test public void bossDoesNotUseGenericTactics() {
-⋮----
-Enemy boss = new Enemy(Enemy.Type.BOSS, 0f, 0f, 2200f, 1.35f, 1.65f, 24f, 280);
-boss.velocity.set(1f, 0f);
-boss.updateAi(.01f, 5f);
-assertEquals(Enemy.Tactic.NONE, boss.pendingTactic());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/entities/EnemyVariantTest.java
-````java
-final class EnemyVariantTest {
-@Test void armoredResistsKnockback() {
-Enemy normal = new Enemy(Enemy.Type.SHAMBLER, 0f, 0f, 100f, 2f, .4f, 10f, 5);
-Enemy armored = new Enemy(Enemy.Type.SHAMBLER, 0f, 0f, 100f, 2f, .4f, 10f, 5);
-⋮----
-armored.applyVariant(Enemy.Variant.ARMORED);
-normal.addImpulse(10f, 0f);
-armored.addImpulse(10f, 0f);
-assertTrue(armored.impulse.x < normal.impulse.x * .5f);
-⋮----
-@Test void feralEnragesAtLowHealth() {
-Enemy feral = new Enemy(Enemy.Type.SHAMBLER, 0f, 0f, 100f, 2f, .4f, 10f, 5);
-⋮----
-feral.applyVariant(Enemy.Variant.FERAL);
-float healthySpeed = feral.effectiveSpeed();
-⋮----
-float enragedSpeed = feral.effectiveSpeed();
-assertTrue(enragedSpeed > healthySpeed * 1.15f);
-⋮----
-@Test void swiftHasBurstWindow() {
-Enemy swift = new Enemy(Enemy.Type.SHAMBLER, 0f, 0f, 100f, 2f, .4f, 10f, 5);
-⋮----
-swift.applyVariant(Enemy.Variant.SWIFT);
-⋮----
-float burst = swift.effectiveSpeed();
-⋮----
-float cruise = swift.effectiveSpeed();
-assertTrue(burst > cruise * 1.20f);
-⋮----
-@Test void bossNeverAcceptsChampionVariant() {
-Enemy boss = new Enemy(Enemy.Type.BOSS, 0f, 0f, 1000f, 1f, 1f, 20f, 100);
-boss.applyVariant(Enemy.Variant.FERAL);
-assertEquals(Enemy.Variant.NORMAL, boss.variant);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/entities/NullWardSupportTest.java
-````java
-final class NullWardSupportTest {
-@Test void pulseHealsAndBuffsNearbyNonBossAlly() {
-RunStageContext.begin(20, 77, 0);
-Enemy ward = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8, false);
-Enemy ally = new Enemy(Enemy.Type.RUNNER, 1f, 0f, 100f, 3f, .35f, 10f, 8, false);
-ally.damage(50f);
-⋮----
-float speedBefore = ally.effectiveSpeed();
-⋮----
-ward.updateStatus(Enemy.nullWardPulseInterval());
-⋮----
-assertTrue(ally.hp > hpBefore, "Null Ward should heal a nearby ally");
-assertTrue(ally.supportBuffed(), "Null Ward should grant its temporary support buff");
-assertTrue(ally.effectiveSpeed() > speedBefore, "support buff should increase ally mobility");
-assertTrue(ward.supportPulseFlash() > 0f, "pulse should expose a short visual event window");
-⋮----
-@Test void simultaneousWardsCannotStackBurstHealingOnOneTarget() {
-RunStageContext.begin(20, 79, 0);
-Enemy wardA = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8, false);
-Enemy wardB = new Enemy(Enemy.Type.REGENERATOR, .5f, 0f, 100f, 2f, .45f, 10f, 8, false);
-⋮----
-ally.damage(60f);
-⋮----
-wardA.updateStatus(Enemy.nullWardPulseInterval());
-wardB.updateStatus(Enemy.nullWardPulseInterval());
-⋮----
-assertEquals(before + expectedSingleHeal, ally.hp, .01f,
-⋮----
-assertTrue(ally.supportBuffed(), "the shared target should still receive the support buff");
-⋮----
-@Test void pulseIgnoresBossesAndDistantEnemies() {
-RunStageContext.begin(20, 78, 0);
-Enemy ward = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 100f, 2f, .45f, 10f, 8);
-Enemy boss = new Enemy(Enemy.Type.BOSS, 1f, 0f, 500f, 1f, 1.2f, 20f, 100, false);
-Enemy distant = new Enemy(Enemy.Type.RUNNER, Enemy.nullWardPulseRadius() + 2f, 0f, 100f, 3f, .35f, 10f, 8, false);
-boss.damage(100f);
-distant.damage(40f);
-⋮----
-assertEquals(bossHp, boss.hp, .001f);
-assertEquals(distantHp, distant.hp, .001f);
-assertTrue(!boss.supportBuffed());
-assertTrue(!distant.supportBuffed());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/fx/DamageNumberTest.java
-````java
-final class DamageNumberTest {
-@Test void displayTextIsRoundedAndCachedAtSpawn() {
-DamageNumber number = new DamageNumber().spawn(1f, 2f, 12.6f, false, Color.WHITE);
-assertEquals("13", number.text);
-⋮----
-number.update(.1f);
-⋮----
-@Test void displayTextClampsToAtLeastOne() {
-DamageNumber number = new DamageNumber().spawn(0f, 0f, .2f, false, Color.WHITE);
-assertEquals("1", number.text);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/AchievementServiceTest.java
-````java
-public final class AchievementServiceTest {
-@Test void lifetimeThresholdsUnlockDeterministically() {
-PlayerProfile p = new PlayerProfile();
-assertFalse(AchievementService.unlocked(p, AchievementService.Achievement.FIRST_DEPLOYMENT));
-⋮----
-for (AchievementService.Achievement achievement : AchievementService.Achievement.values()) {
-assertTrue(AchievementService.unlocked(p, achievement), achievement.name());
-⋮----
-@Test void claimPaysExactlyOnce() {
-⋮----
-long before = p.currency(PlayerProfile.Currency.CREDITS);
-assertTrue(AchievementService.claim(p, AchievementService.Achievement.FIRST_DEPLOYMENT));
-assertEquals(before + 500L, p.currency(PlayerProfile.Currency.CREDITS));
-assertTrue(p.achievements.claimed(AchievementService.Achievement.FIRST_DEPLOYMENT));
-assertFalse(AchievementService.claim(p, AchievementService.Achievement.FIRST_DEPLOYMENT));
-⋮----
-@Test void lockedAchievementCannotBeClaimed() {
-⋮----
-assertFalse(AchievementService.claim(p, AchievementService.Achievement.DEEP_STRIKE));
-assertFalse(p.achievements.claimed(AchievementService.Achievement.DEEP_STRIKE));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/BalanceCoefficientAuditTest.java
-````java
-final class BalanceCoefficientAuditTest {
-@Test void stageCurveStaysMonotonicWithoutSpikes() {
-assertTrue(BalanceCoefficientAudit.stageCurvesHealthy());
-⋮----
-@Test void threatCurveStaysMonotonicAndRewarded() {
-assertTrue(BalanceCoefficientAudit.threatCurvesHealthy());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/BalanceCurveRegressionTest.java
-````java
-/** Release gates for campaign/endgame pacing and reward curves. */
-public final class BalanceCurveRegressionTest {
-public static void bossArrivalPacingIsBoundedAndMonotonic() {
-⋮----
-float seconds = StageMissionRules.bossArrivalSeconds(stage);
-check(seconds >= previous, "boss arrival regressed at stage " + stage);
-check(seconds <= 600f, "boss arrival exceeds ten-minute first-playable ceiling");
-⋮----
-near(StageMissionRules.bossArrivalSeconds(1), 360f, "StageMissionRules.bossArrivalSeconds(1)");
-near(StageMissionRules.bossArrivalSeconds(17), 600f, "StageMissionRules.bossArrivalSeconds(17)");
-⋮----
-public static void threatCurveRaisesRiskAndRewardsWithoutSpeedRunaway() {
-⋮----
-float hp = ThreatTierRules.enemyHpMultiplier(tier);
-float damage = ThreatTierRules.enemyDamageMultiplier(tier);
-float speed = ThreatTierRules.enemySpeedMultiplier(tier);
-float spawn = ThreatTierRules.spawnIntervalMultiplier(tier);
-float reward = ThreatTierRules.rewardMultiplier(tier);
-check(hp >= previousHp, "balance invariant failed");
-check(damage >= previousDamage, "balance invariant failed");
-check(reward >= previousReward, "balance invariant failed");
-check(speed <= 1.28f, "threat speed exceeds readability ceiling");
-check(spawn >= .72f, "spawn interval falls below density floor");
-⋮----
-near(ThreatTierRules.enemyHpMultiplier(20), 4.0f, "ThreatTierRules.enemyHpMultiplier(20)");
-near(ThreatTierRules.enemyDamageMultiplier(20), 2.10f, "ThreatTierRules.enemyDamageMultiplier(20)");
-near(ThreatTierRules.rewardMultiplier(20), 2.50f, "ThreatTierRules.rewardMultiplier(20)");
-⋮----
-public static void campaignBaseCurveIsStrictlyProgressive() {
-RunStageContext.begin(1, 0, 0);
-RunModifierContext.end();
-⋮----
-float nextHp = StageRules.enemyHpMultiplier(stage);
-float nextDamage = StageRules.enemyDamageMultiplier(stage);
-float nextReward = StageRules.rewardMultiplier(stage);
-check(nextHp > hp, "balance invariant failed");
-check(nextDamage > damage, "balance invariant failed");
-check(nextReward > reward, "balance invariant failed");
-check(StageRules.enemySpeedMultiplier(stage) <= 1.78f, "campaign speed exceeds global ceiling");
-⋮----
-public static void firstClearRewardsRemainProgressive() {
-⋮----
-long nextCredits = StageMissionRules.firstClearCredits(stage);
-int nextGems = StageMissionRules.firstClearGems(stage);
-check(nextCredits > credits, "balance invariant failed");
-check(nextGems >= gems, "balance invariant failed");
-⋮----
-check(StageMissionRules.firstClearGems(20) <= 30, "first-clear gems must stay bounded");
-⋮----
-private static void near(float actual, float expected, String label) {
-check(Math.abs(actual - expected) <= .001f, label + ": expected " + expected + ", got " + actual);
-⋮----
-private static void check(boolean condition, String message) {
-if (!condition) throw new AssertionError(message);
-⋮----
-public static void main(String[] args) {
-bossArrivalPacingIsBoundedAndMonotonic();
-threatCurveRaisesRiskAndRewardsWithoutSpeedRunaway();
-campaignBaseCurveIsStrictlyProgressive();
-firstClearRewardsRemainProgressive();
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/BalanceHealthRulesTest.java
-````java
-final class BalanceHealthRulesTest {
-@Test void requiresEnoughRunsBeforeJudging() {
-⋮----
-assertEquals(BalanceHealthRules.Status.LOW_SAMPLE, BalanceHealthRules.assess(summary).status());
-⋮----
-@Test void detectsDifficultyAndDurationOutliers() {
-assertEquals(BalanceHealthRules.Status.TOO_HARD,
-BalanceHealthRules.assess(new BalanceTelemetrySummary.Summary(10, 2, .20f, 100f, 40f, 80f, 20f)).status());
-assertEquals(BalanceHealthRules.Status.TOO_EASY,
-BalanceHealthRules.assess(new BalanceTelemetrySummary.Summary(10, 9, .90f, 100f, 40f, 80f, 20f)).status());
-assertEquals(BalanceHealthRules.Status.TOO_SHORT,
-BalanceHealthRules.assess(new BalanceTelemetrySummary.Summary(10, 5, .50f, 30f, 40f, 80f, 20f)).status());
-assertEquals(BalanceHealthRules.Status.TOO_LONG,
-BalanceHealthRules.assess(new BalanceTelemetrySummary.Summary(10, 5, .50f, 240f, 40f, 80f, 20f)).status());
-⋮----
-@Test void acceptsTargetEnvelope() {
-⋮----
-assertEquals(BalanceHealthRules.Status.HEALTHY, BalanceHealthRules.assess(summary).status());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryReportTest.java
-````java
-final class BalanceTelemetryReportTest {
-@Test void identifiesStrongestSupportedOutlier() {
-⋮----
-for (int i = 0; i < 6; i++) samples.add(sample(4, 0, false, "REDLINE", "STANDARD PRESSURE", "REX", "ar9"));
-for (int i = 0; i < 6; i++) samples.add(sample(5, 0, i < 4, "BLOOD MOON", "STANDARD PRESSURE", "NYX", "shotgun"));
-⋮----
-BalanceTelemetryReport.Report report = BalanceTelemetryReport.analyze(samples);
-assertNotNull(report.worstOutlier());
-assertEquals(BalanceHealthRules.Status.TOO_HARD, report.worstOutlier().assessment().status());
-assertEquals(BalanceTelemetrySegments.Dimension.STAGE, report.worstOutlier().dimension());
-assertEquals("4", report.worstOutlier().key());
-⋮----
-@Test void healthySegmentsProduceNoOutlier() {
-⋮----
-for (int i = 0; i < 10; i++) samples.add(sample(4, 1, i < 5, "REDLINE", "STANDARD PRESSURE", "REX", "ar9"));
-⋮----
-assertEquals(BalanceHealthRules.Status.HEALTHY, report.overallHealth().status());
-assertNull(report.worstOutlier());
-⋮----
-@Test void mutatorCanSurfaceAsTheWorstOutlier() {
-⋮----
-for (int i = 0; i < 6; i++) samples.add(sample(12, 6, false, "REDLINE", "SWARM", "REX", "ar9"));
-for (int i = 0; i < 6; i++) samples.add(sample(12, 6, i < 4, "REDLINE", "BULWARK", "REX", "ar9"));
-⋮----
-private static BalanceRunSample sample(int stage, int threat, boolean victory, String contract,
-⋮----
-return new BalanceRunSample(1, stage, threat, 1, victory, 100f, 20, 5000f, 800f, 300f, 80f,
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetryRuntimeTest.java
-````java
-final class BalanceTelemetryRuntimeTest {
-@Test void runAccumulatorCapturesCombatAndResetsBetweenRuns() {
-RunStageContext.begin(12, 7, 5);
-BalanceTelemetryRuntime.setContract("BLOOD MOON");
-BalanceTelemetryRuntime.recordDamageDealt(120f);
-BalanceTelemetryRuntime.recordDamageDealt(30f);
-BalanceTelemetryRuntime.recordDamageReceived(40f);
-⋮----
-BalanceRunSample first = BalanceTelemetryRuntime.settle(true, 60f, 24);
-assertEquals(12, first.stage());
-assertEquals(5, first.threatTier());
-assertEquals(7, first.runOrdinal());
-assertEquals("BLOOD MOON", first.contract());
-assertEquals(EndgameMutatorRules.label(), first.mutator());
-assertEquals(150f, first.damageDealt(), .001f);
-assertEquals(40f, first.damageReceived(), .001f);
-assertEquals(120f, first.maxHitDealt(), .001f);
-assertEquals(40f, first.maxHitReceived(), .001f);
-assertEquals(2.5f, first.dps(), .001f);
-assertTrue(first.victory());
-assertFalse(BalanceTelemetryRuntime.active());
-⋮----
-RunStageContext.begin(2, 8, 0);
-BalanceRunSample second = BalanceTelemetryRuntime.settle(false, 30f, 2);
-assertEquals(0f, second.damageDealt(), .001f);
-assertEquals(0f, second.damageReceived(), .001f);
-assertEquals("STANDARD", second.contract());
-assertEquals("STANDARD PRESSURE", second.mutator());
-assertFalse(second.victory());
-⋮----
-@Test void invalidDamageNeverPoisonsTelemetry() {
-RunStageContext.begin(1, 0, 0);
-BalanceTelemetryRuntime.recordDamageDealt(Float.NaN);
-BalanceTelemetryRuntime.recordDamageDealt(Float.POSITIVE_INFINITY);
-BalanceTelemetryRuntime.recordDamageReceived(-50f);
-BalanceRunSample sample = BalanceTelemetryRuntime.settle(false, Float.NaN, -9);
-assertEquals(0f, sample.damageDealt(), .001f);
-assertEquals(0f, sample.damageReceived(), .001f);
-assertEquals(0f, sample.seconds(), .001f);
-assertEquals(0, sample.kills());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySegmentsTest.java
-````java
-final class BalanceTelemetrySegmentsTest {
-@Test void groupsAndSortsNumericDimensions() {
-⋮----
-samples.add(sample(3, 2, true, "REDLINE", "STANDARD PRESSURE", "REX", "ar9"));
-samples.add(sample(1, 0, false, "REDLINE", "STANDARD PRESSURE", "NYX", "shotgun"));
-samples.add(sample(3, 2, true, "BLOOD MOON", "STANDARD PRESSURE", "REX", "ar9"));
-⋮----
-List<BalanceTelemetrySegments.Segment> stages = BalanceTelemetrySegments.group(samples, BalanceTelemetrySegments.Dimension.STAGE);
-assertEquals(List.of("1", "3"), stages.stream().map(BalanceTelemetrySegments.Segment::key).toList());
-assertEquals(2, stages.get(1).summary().runs());
-assertEquals(1f, stages.get(1).summary().winRate(), .0001f);
-⋮----
-List<BalanceTelemetrySegments.Segment> threats = BalanceTelemetrySegments.group(samples, BalanceTelemetrySegments.Dimension.THREAT);
-assertEquals(List.of("0", "2"), threats.stream().map(BalanceTelemetrySegments.Segment::key).toList());
-⋮----
-@Test void groupsCategoricalDimensionsDeterministically() {
-⋮----
-samples.add(sample(10, 5, true, "REDLINE", "SWARM", "REX", "ar9"));
-samples.add(sample(10, 5, false, "BLOOD MOON", "BULWARK", "NYX", "shotgun"));
-⋮----
-var contracts = BalanceTelemetrySegments.group(samples, BalanceTelemetrySegments.Dimension.CONTRACT);
-assertEquals(List.of("BLOOD MOON", "REDLINE"), contracts.stream().map(BalanceTelemetrySegments.Segment::key).toList());
-assertEquals(2, contracts.get(1).summary().runs());
-assertTrue(contracts.get(1).summary().averageDps() > 0f);
-⋮----
-var mutators = BalanceTelemetrySegments.group(samples, BalanceTelemetrySegments.Dimension.MUTATOR);
-assertEquals(List.of("BULWARK", "SWARM"), mutators.stream().map(BalanceTelemetrySegments.Segment::key).toList());
-assertEquals(2, mutators.get(1).summary().runs());
-⋮----
-private static BalanceRunSample sample(int stage, int threat, boolean victory, String contract,
-⋮----
-return new BalanceRunSample(1, stage, threat, 1, victory, 100f, 20, 5000f, 800f, 300f, 80f,
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySummaryTest.java
-````java
-final class BalanceTelemetrySummaryTest {
-@Test void summaryComputesStableBalancingMetrics() {
-⋮----
-samples.add(new BalanceRunSample(1, 10, 2, 4, true, 60f, 30,
-⋮----
-samples.add(new BalanceRunSample(2, 10, 2, 5, false, 120f, 20,
-⋮----
-BalanceTelemetrySummary.Summary summary = BalanceTelemetrySummary.summarize(samples);
-assertEquals(2, summary.runs());
-assertEquals(1, summary.wins());
-assertEquals(.5f, summary.winRate(), .0001f);
-assertEquals(90f, summary.averageSeconds(), .0001f);
-assertEquals(7.5f, summary.averageDps(), .0001f);
-assertEquals(120f, summary.averageDamageTakenPerMinute(), .0001f);
-assertEquals(20f, summary.averageKillsPerMinute(), .0001f);
-⋮----
-@Test void emptySummaryIsAllZero() {
-BalanceTelemetrySummary.Summary summary = BalanceTelemetrySummary.summarize(new Array<>());
-assertEquals(0, summary.runs());
-assertEquals(0f, summary.winRate(), .0001f);
-assertEquals(0f, summary.averageDps(), .0001f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/ConsumablePurchaseDeliveryTest.java
-````java
-final class ConsumablePurchaseDeliveryTest {
-@Test void grantIsPersistedBeforePlayConsumption() {
-PlayerProfile profile = new PlayerProfile();
-RecordingBilling billing = new RecordingBilling();
-⋮----
-boolean granted = ConsumablePurchaseDelivery.deliver(profile, billing, receipt,
-⋮----
-assertEquals(250L, profile.currency(PlayerProfile.Currency.GEMS));
-assertTrue(profile.hasDeliveredPurchaseReceipt("token-1"));
-events.add("persist");
-⋮----
-assertTrue(firstDelivery);
-events.add("finalized");
-⋮----
-() -> events.add("failure"));
-⋮----
-assertTrue(granted);
-assertEquals(List.of("persist", "consume", "finalized"), events);
-⋮----
-@Test void replayedReceiptDoesNotDuplicateCurrencyButIsStillFinalized() {
-⋮----
-assertTrue(ConsumablePurchaseDelivery.deliver(profile, billing, receipt, () -> {}, ignored -> {}, () -> {}));
-assertEquals(1_200L, profile.currency(PlayerProfile.Currency.GEMS));
-⋮----
-boolean grantedAgain = ConsumablePurchaseDelivery.deliver(profile, billing, receipt,
-() -> events.add("persist"),
-⋮----
-assertFalse(firstDelivery);
-⋮----
-assertFalse(grantedAgain);
-⋮----
-@Test void invalidReceiptNeverMutatesPersistsOrConsumes() {
-⋮----
-assertFalse(ConsumablePurchaseDelivery.deliver(profile, billing,
-⋮----
-() -> events.add("persist"), ignored -> events.add("finalized"), () -> events.add("failure")));
-⋮----
-assertEquals(0L, profile.currency(PlayerProfile.Currency.GEMS));
-assertTrue(events.isEmpty());
-⋮----
-private static final class RecordingBilling implements BillingService {
-⋮----
-@Override public void initialize() {}
-@Override public boolean owns(String productId) { return false; }
-@Override public void purchase(String productId, Runnable onSuccess, Runnable onFailure) { onFailure.run(); }
-@Override public void restore() {}
-@Override public void finishConsumable(String receiptId, Runnable onSuccess, Runnable onFailure) {
-events.add("consume");
-onSuccess.run();
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/CounterSafetyTest.java
-````java
-final class CounterSafetyTest {
-@Test void longAdditionSaturatesInsteadOfWrapping() {
-assertEquals(Long.MAX_VALUE, SaturatingMath.addPositive(Long.MAX_VALUE - 3L, 10L));
-assertEquals(12L, SaturatingMath.addPositive(5L, 7L));
-assertEquals(5L, SaturatingMath.addPositive(5L, -7L));
-⋮----
-@Test void dailyCountersSaturateAndIgnoreNegativeKills() {
-assertEquals(Integer.MAX_VALUE, DailyCounterMath.increment(Integer.MAX_VALUE));
-assertEquals(Integer.MAX_VALUE, DailyCounterMath.addKills(Integer.MAX_VALUE - 2, 10));
-assertEquals(25, DailyCounterMath.addKills(25, -100));
-assertEquals(31, DailyCounterMath.addKills(25, 6));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/DailyServiceTest.java
-````java
-public final class DailyServiceTest {
-@Test public void loginRewardCannotBeClaimedTwice() {
-PlayerProfile profile = new PlayerProfile();
-DailyService.refresh(profile, 100L);
-⋮----
-assertTrue(DailyService.claimLogin(profile));
-long credits = profile.currency(PlayerProfile.Currency.CREDITS);
-long gems = profile.currency(PlayerProfile.Currency.GEMS);
-⋮----
-assertFalse(DailyService.claimLogin(profile));
-assertEquals(credits, profile.currency(PlayerProfile.Currency.CREDITS));
-assertEquals(gems, profile.currency(PlayerProfile.Currency.GEMS));
-⋮----
-@Test public void consecutiveDaysIncreaseStreakAndThirdDayGrantsGems() {
-⋮----
-DailyService.refresh(profile, 200L);
-⋮----
-DailyService.refresh(profile, 201L);
-⋮----
-DailyService.refresh(profile, 202L);
-⋮----
-long gemsBefore = profile.currency(PlayerProfile.Currency.GEMS);
-assertEquals(3, profile.daily.loginStreak);
-⋮----
-assertEquals(gemsBefore + 2L, profile.currency(PlayerProfile.Currency.GEMS));
-⋮----
-@Test public void missionsRequireThresholdAndCannotDoublePay() {
-⋮----
-DailyService.refresh(profile, 300L);
-⋮----
-DailyService.recordRun(profile, 99, false);
-assertFalse(DailyService.claimKillMission(profile));
-assertFalse(DailyService.claimRunMission(profile));
-assertFalse(DailyService.claimBossMission(profile));
-⋮----
-DailyService.recordRun(profile, 1, true);
-DailyService.recordRun(profile, 0, false);
-long creditsBefore = profile.currency(PlayerProfile.Currency.CREDITS);
-⋮----
-assertTrue(DailyService.claimKillMission(profile));
-assertTrue(DailyService.claimRunMission(profile));
-assertTrue(DailyService.claimBossMission(profile));
-assertEquals(creditsBefore + 800L, profile.currency(PlayerProfile.Currency.CREDITS));
-assertEquals(gemsBefore + 3L, profile.currency(PlayerProfile.Currency.GEMS));
-⋮----
-@Test public void missedDayResetsStreak() {
-⋮----
-DailyService.refresh(profile, 400L);
-DailyService.refresh(profile, 401L);
-DailyService.refresh(profile, 405L);
-assertEquals(1, profile.daily.loginStreak);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/EndgameMutatorRulesTest.java
-````java
-final class EndgameMutatorRulesTest {
-@AfterEach void reset() {
-RunModifierContext.end();
-RunStageContext.begin(1, 0, 0);
-⋮----
-@Test void mutatorsStayDisabledBelowThreatThree() {
-⋮----
-RunStageContext.begin(20, 7, threat);
-assertEquals(EndgameMutatorRules.Mutator.NONE, EndgameMutatorRules.current());
-assertFalse(EndgameMutatorRules.active());
-assertEquals(1f, EndgameMutatorRules.rewardMultiplier());
-⋮----
-@Test void sameRunIdentityAlwaysProducesSameMutator() {
-RunStageContext.begin(24, 13, 5);
-EndgameMutatorRules.Mutator first = EndgameMutatorRules.current();
-⋮----
-assertEquals(first, EndgameMutatorRules.current());
-assertNotEquals(EndgameMutatorRules.Mutator.NONE, first);
-⋮----
-@Test void highThreatRotationExposesMultiplePressureProfiles() {
-boolean[] seen = new boolean[EndgameMutatorRules.Mutator.values().length];
-⋮----
-RunStageContext.begin(22, ordinal, 5);
-int index = EndgameMutatorRules.current().ordinal();
-⋮----
-assertTrue(count >= 4);
-⋮----
-@Test void everyMutatorStaysInsideCombatAndEconomyBudget() {
-for (EndgameMutatorRules.Mutator mutator : EndgameMutatorRules.Mutator.values()) {
-assertTrue(mutator.enemyHp >= .90f && mutator.enemyHp <= 1.10f);
-assertTrue(mutator.enemySpeed >= .98f && mutator.enemySpeed <= 1.05f);
-assertTrue(mutator.enemyDamage >= 1f && mutator.enemyDamage <= 1.10f);
-assertTrue(mutator.spawnInterval >= .88f && mutator.spawnInterval <= 1f);
-assertTrue(mutator.reward >= 1f && mutator.reward <= 1.08f);
-⋮----
-@Test void compositeMutatorPressureNeverExceedsTwentyPercentOverlay() {
-⋮----
-/ Math.max(.01f, mutator.spawnInterval);
-assertTrue(pressure >= .95f, mutator + " should remain a meaningful endgame profile");
-assertTrue(pressure <= 1.20f, mutator + " exceeds the allowed composite pressure overlay: " + pressure);
-⋮----
-@Test void runModifierScalingIncludesCurrentMutatorWithoutChangingLowThreatRuns() {
-RunStageContext.begin(10, 2, 0);
-RunModifierContext.begin();
-float lowHp = RunModifierContext.modifier().enemyHp;
-float lowReward = RunModifierContext.modifier().reward;
-assertEquals(lowHp, RunModifierContext.enemyHpMultiplier(), .0001f);
-assertEquals(lowReward, RunModifierContext.rewardMultiplier(), .0001f);
-⋮----
-RunStageContext.begin(10, 2, 4);
-⋮----
-assertEquals(RunModifierContext.modifier().enemyHp * EndgameMutatorRules.enemyHpMultiplier(),
-RunModifierContext.enemyHpMultiplier(), .0001f);
-assertEquals(RunModifierContext.modifier().reward * EndgameMutatorRules.rewardMultiplier(),
-RunModifierContext.rewardMultiplier(), .0001f);
-⋮----
-@Test void activeRunTitleSurfacesMutatorWithoutChangingContractIdentity() {
-RunStageContext.begin(20, 9, 6);
-⋮----
-String contract = RunModifierContext.modifier().title;
-assertTrue(RunModifierContext.title().startsWith(contract + " • "));
-assertTrue(RunModifierContext.title().endsWith(EndgameMutatorRules.label()));
-⋮----
-BalanceTelemetryRuntime.setContract(contract);
-BalanceRunSample sample = BalanceTelemetryRuntime.settle(false, 30f, 4);
-assertEquals(contract, sample.contract());
-assertEquals(EndgameMutatorRules.label(), sample.mutator());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/EquipmentUpgradeSafetyTest.java
-````java
-final class EquipmentUpgradeSafetyTest {
-@Test void extremeLevelCostSaturatesInsteadOfOverflowingCheap() {
-EquipmentItem item = item(Integer.MAX_VALUE, .10f);
-assertEquals(Long.MAX_VALUE, EquipmentUpgradeService.cost(item));
-⋮----
-@Test void maxLevelUpgradeDoesNotChargeOrWrapLevel() {
-PlayerProfile profile = fundedProfile();
-⋮----
-EquipmentItem result = EquipmentUpgradeService.upgrade(profile, item);
-⋮----
-assertSame(item, result);
-assertEquals(Long.MAX_VALUE, profile.currency(PlayerProfile.Currency.CREDITS));
-⋮----
-@Test void nonRepresentablePowerUpgradeDoesNotChargeOrResetPower() {
-⋮----
-EquipmentItem item = item(10, Float.MAX_VALUE);
-⋮----
-assertTrue(result.powerBonus > 0f);
-⋮----
-private static PlayerProfile fundedProfile() {
-PlayerProfile profile = new PlayerProfile();
-profile.addCurrency(PlayerProfile.Currency.CREDITS, Long.MAX_VALUE);
-⋮----
-private static EquipmentItem item(int level, float power) {
-return new EquipmentItem("safety", "Safety", PlayerProfile.EquipmentSlot.WEAPON,
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/InventoryRestoreTest.java
-````java
-final class InventoryRestoreTest {
-@Test void persistedExclusiveGearSurvivesAFullNormalInventory() {
-Inventory inventory = new Inventory();
-⋮----
-assertTrue(inventory.restore(normal("normal_" + i)));
-⋮----
-EquipmentItem exclusive = ThreatMilestoneRewardCatalog.forTier(5);
-assertTrue(inventory.restore(exclusive));
-assertNotNull(inventory.find(exclusive.id));
-assertEquals(Inventory.NORMAL_CAPACITY + 1, inventory.size());
-⋮----
-@Test void restoreStillRejectsOverflowAndDuplicateExclusiveGear() {
-⋮----
-for (int i = 0; i < Inventory.NORMAL_CAPACITY; i++) assertTrue(inventory.restore(normal("normal_" + i)));
-⋮----
-for (int tier : tiers) assertTrue(inventory.restore(ThreatMilestoneRewardCatalog.forTier(tier)));
-⋮----
-assertFalse(inventory.restore(ThreatMilestoneRewardCatalog.forTier(5)));
-assertFalse(inventory.restore(normal("overflow")));
-assertEquals(Inventory.MAX_ITEMS, inventory.size());
-⋮----
-private static EquipmentItem normal(String id) {
-return new EquipmentItem(id, id, PlayerProfile.EquipmentSlot.ARMOR,
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/MasteryEconomyGuardrailTest.java
-````java
-final class MasteryEconomyGuardrailTest {
-@Test void fullMasteryEconomyRemainsFiniteAndNonPayToWin() {
-⋮----
-for (WeaponDefinition weapon : WeaponCatalog.all()) {
-MasteryProgress mastery = new MasteryProgress();
-⋮----
-MasteryProgress.Gain gain = mastery.recordVictory(weapon.id, 1);
-totalCredits += gain.creditsReward() - (gain.biomeRankAfter() > gain.biomeRankBefore() ? 260 : 0);
-totalGems += gain.gemsReward() - (gain.biomeRankAfter() > gain.biomeRankBefore() ? 3 : 0);
-⋮----
-assertEquals(WeaponCatalog.all().length * MasteryProgress.MAX_RANK * 180, totalCredits);
-⋮----
-expectedGems += MasteryProgress.MAX_RANK * MasteryProgress.weaponGemsPerRank(weapon);
-⋮----
-assertEquals(expectedGems, totalGems);
-assertTrue(totalGems <= 100, "weapon mastery gem budget drifted too high");
-⋮----
-@Test void biomeMasteryBudgetIsSmallAndOneTime() {
-int credits = EnvironmentBiomeRules.Biome.values().length * MasteryProgress.MAX_RANK * 260;
-int gems = EnvironmentBiomeRules.Biome.values().length * MasteryProgress.MAX_RANK * 3;
-assertEquals(6500, credits);
-assertEquals(75, gems);
-⋮----
-@Test void persistenceIdentifiersStaySafeAndUnique() {
-⋮----
-assertTrue(weapon.id.matches("[a-z0-9_]+"), weapon.id);
-assertTrue(ids.add(weapon.id), "duplicate weapon mastery id: " + weapon.id);
-⋮----
-assertEquals(12, ids.size());
-assertEquals(5, EnvironmentBiomeRules.Biome.values().length);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/MasteryProgressTest.java
-````java
-final class MasteryProgressTest {
-@Test void weaponAndBiomeRanksFollowPermanentVictoryThresholds() {
-MasteryProgress mastery = new MasteryProgress();
-assertEquals(0, mastery.weaponRank(WeaponCatalog.AR9.id));
-MasteryProgress.Gain first = mastery.recordVictory(WeaponCatalog.AR9.id, 1);
-assertEquals(1, first.weaponRankAfter());
-assertEquals(1, first.biomeRankAfter());
-assertTrue(first.rankedUp());
-assertEquals(440, first.creditsReward());
-assertEquals(5, first.gemsReward());
-⋮----
-mastery.recordVictory(WeaponCatalog.AR9.id, 1);
-MasteryProgress.Gain third = mastery.recordVictory(WeaponCatalog.AR9.id, 1);
-assertEquals(2, third.weaponRankAfter());
-assertEquals(2, third.biomeRankAfter());
-assertEquals(440, third.creditsReward());
-assertEquals(5, third.gemsReward());
-assertEquals(4, mastery.winsForNextWeaponRank(WeaponCatalog.AR9.id));
-⋮----
-@Test void prestigeTitlesAreStableAndClamped() {
-assertEquals("UNTRAINED", MasteryProgress.rankTitle(-5));
-assertEquals("INITIATE", MasteryProgress.rankTitle(1));
-assertEquals("SPECIALIST", MasteryProgress.rankTitle(2));
-assertEquals("VETERAN", MasteryProgress.rankTitle(3));
-assertEquals("ELITE", MasteryProgress.rankTitle(4));
-assertEquals("ASCENDANT", MasteryProgress.rankTitle(5));
-assertEquals("ASCENDANT", MasteryProgress.rankTitle(99));
-⋮----
-@Test void masterySeparatesWeaponsAndBiomes() {
-⋮----
-mastery.recordVictory(WeaponCatalog.CINDER_CANNON.id, 12);
-assertEquals(1, mastery.weaponWins(WeaponCatalog.CINDER_CANNON.id));
-assertEquals(0, mastery.weaponWins(WeaponCatalog.AR9.id));
-assertEquals(1, mastery.biomeWins(EnvironmentBiomeRules.Biome.CINDER_FOUNDRY));
-assertEquals(0, mastery.biomeWins(EnvironmentBiomeRules.Biome.NULL_SECTOR));
-⋮----
-@Test void noRepeatedRankRewardBetweenThresholds() {
-⋮----
-mastery.recordVictory(WeaponCatalog.AR9.id, 20);
-MasteryProgress.Gain second = mastery.recordVictory(WeaponCatalog.AR9.id, 20);
-assertFalse(second.rankedUp());
-assertEquals(0, second.creditsReward());
-assertEquals(0, second.gemsReward());
-⋮----
-@Test void maxRankIsBoundedAndSanitized() {
-⋮----
-mastery.setWeaponWins(WeaponCatalog.AR9.id, Integer.MAX_VALUE);
-mastery.setBiomeWins(EnvironmentBiomeRules.Biome.NULL_SECTOR, -10);
-assertEquals(MasteryProgress.MAX_RANK, mastery.weaponRank(WeaponCatalog.AR9.id));
-assertEquals(0, mastery.winsForNextWeaponRank(WeaponCatalog.AR9.id));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/MasteryRunNoticeTest.java
-````java
-final class MasteryRunNoticeTest {
-@AfterEach void clear() { MasteryRunNotice.clear(); }
-⋮----
-@Test void capturesOnlyRanksThatActuallyAdvanced() {
-⋮----
-MasteryRunNotice.capture(gain, "VX Rail Rifle", EnvironmentBiomeRules.Biome.NULL_SECTOR);
-MasteryRunNotice.Notice notice = MasteryRunNotice.current();
-assertTrue(notice.visible());
-assertTrue(notice.weaponRankedUp());
-assertEquals(2, notice.weaponRank());
-assertEquals(0, notice.biomeRank());
-assertEquals(180, notice.creditsReward());
-assertEquals(2, notice.gemsReward());
-⋮----
-@Test void nonRankVictoryClearsStaleNotice() {
-MasteryRunNotice.capture(new MasteryProgress.Gain(0, 1, 0, 1, 440, 5),
-⋮----
-MasteryRunNotice.capture(new MasteryProgress.Gain(1, 1, 1, 1, 0, 0),
-⋮----
-assertNull(MasteryRunNotice.current());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/OnboardingCompletionPolicyTest.java
-````java
-final class OnboardingCompletionPolicyTest {
-@Test void requiresEveryTutorialMilestone() {
-assertFalse(OnboardingCompletionPolicy.completed(false, false, false, false));
-assertFalse(OnboardingCompletionPolicy.completed(true, false, true, true));
-assertFalse(OnboardingCompletionPolicy.completed(true, true, false, true));
-assertFalse(OnboardingCompletionPolicy.completed(true, true, true, false));
-assertTrue(OnboardingCompletionPolicy.completed(true, true, true, true));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/P0RunRegressionTest.java
-````java
-/** Cross-system P0 regressions for run settlement, persistence and interrupted-run safety. */
-final class P0RunRegressionTest {
-⋮----
-static void startHeadlessGdx() {
-app = new HeadlessApplication(new ApplicationListener() {
-@Override public void create() { }
-@Override public void resize(int width, int height) { }
-@Override public void render() { }
-@Override public void pause() { }
-@Override public void resume() { }
-@Override public void dispose() { }
-⋮----
-static void stopHeadlessGdx() {
-if (app != null) app.exit();
-⋮----
-void resetState() {
-Preferences preferences = Gdx.app.getPreferences("deadline-zero-profile-v1");
-preferences.clear();
-preferences.flush();
-RunMissionRuntime.end();
-RunModifierContext.end();
-RunEncounterRuntime.end();
-RunLoadoutContext.end();
-RunStageContext.begin(1, 0, 0);
-⋮----
-void repeatedVictorySignalSettlesOnlyOnce() {
-PlayerProfile profile = ProfileStore.load();
-long creditsBefore = profile.currency(PlayerProfile.Currency.CREDITS);
-⋮----
-RunMissionRuntime.begin(() -> RunSettlement.apply(profile, 20, 180f, true, 1));
-RunMissionRuntime.update(180f, 20);
-⋮----
-RunMissionRuntime.signalBossDefeated();
-long creditsAfterFirstSignal = profile.currency(PlayerProfile.Currency.CREDITS);
-⋮----
-assertEquals(runsBefore + 1, runsAfterFirstSignal);
-assertEquals(runsAfterFirstSignal, profile.totalRuns);
-assertTrue(creditsAfterFirstSignal > creditsBefore);
-assertEquals(creditsAfterFirstSignal, profile.currency(PlayerProfile.Currency.CREDITS));
-⋮----
-void completedSettlementSurvivesSaveReloadWithoutDuplication() {
-⋮----
-profile.addCurrency(PlayerProfile.Currency.CREDITS, 100L);
-⋮----
-RunSettlement.apply(profile, 17, 125f, false, 1);
-long expectedCredits = profile.currency(PlayerProfile.Currency.CREDITS);
-long expectedGems = profile.currency(PlayerProfile.Currency.GEMS);
-⋮----
-ProfileStore.save(profile);
-PlayerProfile restored = ProfileStore.load();
-⋮----
-assertEquals(expectedCredits, restored.currency(PlayerProfile.Currency.CREDITS));
-assertEquals(expectedGems, restored.currency(PlayerProfile.Currency.GEMS));
-assertEquals(expectedXp, restored.accountXp);
-assertEquals(expectedRuns, restored.totalRuns);
-assertEquals(expectedKills, restored.totalKills);
-⋮----
-ProfileStore.save(restored);
-PlayerProfile restoredAgain = ProfileStore.load();
-assertEquals(expectedCredits, restoredAgain.currency(PlayerProfile.Currency.CREDITS));
-assertEquals(expectedGems, restoredAgain.currency(PlayerProfile.Currency.GEMS));
-assertEquals(expectedXp, restoredAgain.accountXp);
-assertEquals(expectedRuns, restoredAgain.totalRuns);
-assertEquals(expectedKills, restoredAgain.totalKills);
-⋮----
-void interruptedRunEndsWithoutGrantingSettlementRewards() {
-⋮----
-long gemsBefore = profile.currency(PlayerProfile.Currency.GEMS);
-⋮----
-RunMissionRuntime.begin(() -> RunSettlement.apply(profile, 50, 300f, true, 1));
-RunMissionRuntime.update(240f, 39);
-⋮----
-assertEquals(creditsBefore, profile.currency(PlayerProfile.Currency.CREDITS));
-assertEquals(gemsBefore, profile.currency(PlayerProfile.Currency.GEMS));
-assertEquals(xpBefore, profile.accountXp);
-assertEquals(runsBefore, profile.totalRuns);
-assertEquals(killsBefore, profile.totalKills);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/PlayerProfileSafetyTest.java
-````java
-final class PlayerProfileSafetyTest {
-@Test void currenciesSaturateInsteadOfWrapping() {
-PlayerProfile profile = new PlayerProfile();
-profile.addCurrency(PlayerProfile.Currency.CREDITS, Long.MAX_VALUE - 2L);
-profile.addCurrency(PlayerProfile.Currency.CREDITS, 10L);
-assertEquals(Long.MAX_VALUE, profile.currency(PlayerProfile.Currency.CREDITS));
-⋮----
-@Test void runCountersSaturateAndIgnoreNegativeKills() {
-⋮----
-profile.recordRun(10, 4);
-assertEquals(Integer.MAX_VALUE, profile.totalRuns);
-assertEquals(Long.MAX_VALUE, profile.totalKills);
-⋮----
-profile.recordRun(-100, 4);
-assertEquals(25L, profile.totalKills);
-⋮----
-@Test void accountXpPreservesNormalThresholds() {
-⋮----
-profile.addAccountXp(249L);
-assertEquals(1, profile.accountLevel);
-assertEquals(249L, profile.accountXp);
-⋮----
-profile.addAccountXp(1L);
-assertEquals(2, profile.accountLevel);
-assertEquals(0L, profile.accountXp);
-⋮----
-profile.addAccountXp(360L);
-assertEquals(3, profile.accountLevel);
-⋮----
-@Test void extremeAccountXpAdvancesWithoutLinearLevelLoop() {
-ProfileCounterMath.LevelProgress progress = ProfileCounterMath.advanceAccountXp(1, 0L, Long.MAX_VALUE);
-assertTrue(progress.level() > 1_000_000);
-assertTrue(progress.level() < Integer.MAX_VALUE);
-assertTrue(progress.xp() >= 0L);
-assertTrue(progress.xp() < ProfileCounterMath.xpForLevel(progress.level()));
-⋮----
-@Test void maxLevelNeverCarriesUnboundedXp() {
-ProfileCounterMath.LevelProgress progress = ProfileCounterMath.advanceAccountXp(
-⋮----
-assertEquals(Integer.MAX_VALUE, progress.level());
-assertEquals(ProfileCounterMath.xpForLevel(Integer.MAX_VALUE) - 1L, progress.xp());
-⋮----
-@Test void restoredProfileIsCanonicalizedBeforeUse() {
-⋮----
-profile.normalizeLoadedState();
-⋮----
-assertEquals(1, profile.highestStage);
-assertEquals(1, profile.selectedStage);
-assertEquals(0, profile.totalRuns);
-assertEquals(0L, profile.totalKills);
-⋮----
-@Test void nonFiniteEquipmentPowerCannotPoisonAggregateStats() {
-⋮----
-EquipmentItem item = new EquipmentItem("bad", "Bad Save", PlayerProfile.EquipmentSlot.ARMOR,
-⋮----
-profile.equip(item);
-assertEquals(0f, item.powerBonus);
-assertEquals(1f, profile.aggregatePowerMultiplier());
-⋮----
-EquipmentItem infinite = new EquipmentItem("inf", "Infinite Save", PlayerProfile.EquipmentSlot.CORE,
-⋮----
-assertEquals(0f, infinite.powerBonus);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/ProfileBackupCodecTest.java
-````java
-final class ProfileBackupCodecTest {
-@Test void roundTripsEverySupportedPreferenceTypeDeterministically() {
-⋮----
-values.put("z-string", "héllo\nworld");
-values.put("a-int", 42);
-values.put("long", 9_000_000_000L);
-values.put("float", 1.25f);
-values.put("bool", true);
-values.put(ProfileSchema.VERSION_KEY, ProfileSchema.CURRENT_VERSION);
-⋮----
-String a = ProfileBackupCodec.encode(values);
-String b = ProfileBackupCodec.encode(new LinkedHashMap<>(values));
-⋮----
-assertEquals(a, b);
-assertEquals(values, ProfileBackupCodec.decode(a));
-assertEquals(ProfileSchema.CURRENT_VERSION, ProfileBackupCodec.schemaVersion(ProfileBackupCodec.decode(a)));
-⋮----
-@Test void tamperingIsRejectedBeforeImport() {
-String backup = ProfileBackupCodec.encode(Map.of("credits", 123L));
-assertThrows(IllegalArgumentException.class, () -> ProfileBackupCodec.decode(backup + "x"));
-⋮----
-@Test void duplicateKeysAreRejected() throws Exception {
-String valid = ProfileBackupCodec.encode(Map.of("credits", 123L));
-int first = valid.indexOf('\n');
-int second = valid.indexOf('\n', first + 1);
-String body = valid.substring(second + 1);
-⋮----
-String duplicate = valid.substring(0, first + 1) + sha256(duplicateBody) + "\n" + duplicateBody;
-⋮----
-assertThrows(IllegalArgumentException.class, () -> ProfileBackupCodec.decode(duplicate));
-⋮----
-@Test void unsupportedValueTypesAreRejected() {
-assertThrows(IllegalArgumentException.class, () -> ProfileBackupCodec.encode(Map.of("bad", 1.0d)));
-⋮----
-private static String sha256(String value) throws Exception {
-byte[] digest = MessageDigest.getInstance("SHA-256").digest(value.getBytes(StandardCharsets.UTF_8));
-StringBuilder out = new StringBuilder(digest.length * 2);
-for (byte b : digest) out.append(String.format("%02x", b));
-return out.toString();
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/ProfileBackupSummaryTest.java
-````java
-final class ProfileBackupSummaryTest {
-@Test void dominanceRequiresNoRegressionAcrossMonotoneProgress() {
-ProfileBackupSummary local = ProfileBackupSummary.from(Map.of(
-⋮----
-ProfileBackupSummary remote = ProfileBackupSummary.from(Map.of(
-⋮----
-assertTrue(local.dominates(remote));
-assertFalse(remote.dominates(local));
-⋮----
-@Test void conflictingProgressIsNotDominance() {
-ProfileBackupSummary moreStage = ProfileBackupSummary.from(Map.of(
-⋮----
-ProfileBackupSummary moreHistory = ProfileBackupSummary.from(Map.of(
-⋮----
-assertFalse(moreStage.dominates(moreHistory));
-assertFalse(moreHistory.dominates(moreStage));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java
-````java
-final class ProfileMigrationDocumentationTest {
-@Test void documentedSchemaVersionMatchesRuntimeSchema() throws Exception {
-Path root = repositoryRoot();
-String contract = Files.readString(root.resolve("docs/PROFILE_MIGRATIONS.md"), StandardCharsets.UTF_8);
-⋮----
-assertTrue(contract.contains("- Current version: `" + ProfileSchema.CURRENT_VERSION + "`"),
-⋮----
-assertTrue(contract.contains("Version `1 -> 2`"));
-assertTrue(contract.contains("Version `2 -> 3`"));
-assertTrue(contract.contains("newer unsupported schema remains untouched"));
-⋮----
-private static Path repositoryRoot() {
-Path current = Path.of("").toAbsolutePath().normalize();
-for (Path candidate = current; candidate != null; candidate = candidate.getParent()) {
-if (Files.isRegularFile(candidate.resolve("docs/PROFILE_MIGRATIONS.md"))
-&& Files.isRegularFile(candidate.resolve("settings.gradle"))) {
-⋮----
-throw new IllegalStateException("Unable to locate repository root from " + current);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/ProfileSchemaTest.java
-````java
-final class ProfileSchemaTest {
-@Test void legacyProfileIsStampedWithoutLosingExistingValues() {
-MemoryStore store = new MemoryStore();
-store.values.put("credits", 12500);
-store.values.put("inventory.count", 120);
-store.values.put("purchase.receipt.count", 7);
-store.values.put("survivor.REX.level", 12);
-⋮----
-assertTrue(ProfileSchema.migrate(store));
-⋮----
-assertEquals(ProfileSchema.CURRENT_VERSION, store.getInteger(ProfileSchema.VERSION_KEY, -1));
-assertEquals(12500, store.getInteger("credits", -1));
-assertEquals(120, store.getInteger("inventory.count", -1));
-assertEquals(7, store.getInteger("purchase.receipt.count", -1));
-assertEquals(12, store.getInteger("survivor.REX.level", -1));
-assertEquals(1, store.flushes);
-⋮----
-@Test void v1ProfileMigratesThroughV3WithoutLosingProgress() {
-⋮----
-store.putInteger(ProfileSchema.VERSION_KEY, 1);
-store.putInteger("credits", 4321);
-store.putInteger("daily.runs", 2);
-⋮----
-assertEquals(3, store.getInteger(ProfileSchema.VERSION_KEY, -1));
-assertEquals(4321, store.getInteger("credits", -1));
-assertEquals(2, store.getInteger("daily.runs", -1));
-⋮----
-@Test void v2ProfileMigratesToV3WithoutLosingWeeklyProgress() {
-⋮----
-store.putInteger(ProfileSchema.VERSION_KEY, 2);
-store.putInteger("weekly.kills", 760);
-store.putInteger("weekly.runs", 11);
-⋮----
-assertEquals(760, store.getInteger("weekly.kills", -1));
-assertEquals(11, store.getInteger("weekly.runs", -1));
-⋮----
-@Test void currentSchemaMigrationIsIdempotent() {
-⋮----
-store.putInteger(ProfileSchema.VERSION_KEY, ProfileSchema.CURRENT_VERSION);
-store.putInteger("gems", 999);
-⋮----
-assertEquals(999, store.getInteger("gems", -1));
-assertEquals(0, store.flushes);
-⋮----
-@Test void newerSchemaIsPreservedAndRejectedForWrites() {
-⋮----
-store.putInteger(ProfileSchema.VERSION_KEY, ProfileSchema.CURRENT_VERSION + 3);
-store.putInteger("credits", 777);
-⋮----
-assertFalse(ProfileSchema.migrate(store));
-⋮----
-assertEquals(ProfileSchema.CURRENT_VERSION + 3, store.getInteger(ProfileSchema.VERSION_KEY, -1));
-assertEquals(777, store.getInteger("credits", -1));
-⋮----
-@Test void corruptNegativeVersionIsTreatedAsLegacy() {
-⋮----
-store.putInteger(ProfileSchema.VERSION_KEY, -42);
-store.putInteger("accountLevel", 5);
-⋮----
-assertEquals(5, store.getInteger("accountLevel", -1));
-⋮----
-private static final class MemoryStore implements ProfileSchema.Store {
-⋮----
-@Override public int getInteger(String key, int defaultValue) {
-return values.getOrDefault(key, defaultValue);
-⋮----
-@Override public void putInteger(String key, int value) {
-values.put(key, value);
-⋮----
-@Override public void flush() {
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/ProfileStoreBackupTest.java
-````java
-final class ProfileStoreBackupTest {
-⋮----
-@BeforeAll static void startGdx() {
-app = new HeadlessApplication(new ApplicationAdapter() {}, new HeadlessApplicationConfiguration());
-⋮----
-@AfterAll static void stopGdx() {
-if (app != null) app.exit();
-⋮----
-@Test void typePoisonedBackupRollsBackToOriginalReadableProfile() {
-Preferences prefs = Gdx.app.getPreferences(PREFS);
-prefs.clear();
-prefs.putInteger(ProfileSchema.VERSION_KEY, ProfileSchema.CURRENT_VERSION);
-prefs.putInteger("accountLevel", 7);
-prefs.putLong("credits", 321L);
-prefs.flush();
-⋮----
-Map<String, Object> poisoned = new HashMap<>(prefs.get());
-poisoned.put("accountLevel", "not-an-integer");
-String backup = ProfileBackupCodec.encode(poisoned);
-⋮----
-assertThrows(RuntimeException.class, () -> ProfileStore.importBackup(backup));
-⋮----
-assertEquals(7, prefs.getInteger("accountLevel", -1));
-assertEquals(321L, prefs.getLong("credits", -1L));
-assertEquals(7, ProfileStore.load().accountLevel);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java
-````java
-public final class PurchaseGrantServiceTest {
-@Test public void removeAdsIsPermanentAndIdempotent() {
-PlayerProfile profile = new PlayerProfile();
-assertTrue(PurchaseGrantService.grant(profile, BillingService.REMOVE_ADS));
-assertTrue(profile.removeAdsPurchased);
-assertFalse(PurchaseGrantService.grant(profile, BillingService.REMOVE_ADS));
-⋮----
-@Test public void starterPackPaysExactlyOnce() {
-⋮----
-assertTrue(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));
-assertEquals(5_000L, profile.currency(PlayerProfile.Currency.CREDITS));
-assertEquals(250L, profile.currency(PlayerProfile.Currency.GEMS));
-⋮----
-assertFalse(PurchaseGrantService.grant(profile, BillingService.STARTER_PACK));
-⋮----
-@Test public void gemProductsRemainConsumableWithDistinctReceipts() {
-⋮----
-assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "receipt-small-1"));
-assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "receipt-small-2"));
-assertEquals(500L, profile.currency(PlayerProfile.Currency.GEMS));
-⋮----
-assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_LARGE, "receipt-large-1"));
-assertEquals(1_700L, profile.currency(PlayerProfile.Currency.GEMS));
-⋮----
-@Test public void consumableWithoutReceiptIsRejected() {
-⋮----
-assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL));
-assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, null));
-assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, ""));
-assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "   "));
-⋮----
-assertEquals(0L, profile.currency(PlayerProfile.Currency.GEMS));
-assertTrue(profile.deliveredPurchaseReceipts().isEmpty());
-⋮----
-@Test public void sameConsumableReceiptCanOnlyBeGrantedOnce() {
-⋮----
-assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));
-⋮----
-assertTrue(profile.hasDeliveredPurchaseReceipt(receipt));
-⋮----
-assertFalse(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, receipt));
-⋮----
-@Test public void differentConsumableReceiptsStillStack() {
-⋮----
-assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "receipt-a"));
-assertTrue(PurchaseGrantService.grant(profile, BillingService.GEMS_SMALL, "receipt-b"));
-⋮----
-@Test public void restoreOnlyRehydratesPermanentEntitlements() {
-⋮----
-FakeBilling billing = new FakeBilling(true, BillingService.REMOVE_ADS, BillingService.STARTER_PACK, BillingService.GEMS_LARGE);
-⋮----
-assertTrue(PurchaseGrantService.syncPermanent(profile, billing));
-⋮----
-assertTrue(profile.starterPackGranted);
-⋮----
-assertFalse(PurchaseGrantService.syncPermanent(profile, billing));
-⋮----
-@Test public void cachedRemoveAdsSurvivesUntilStoreSnapshotIsAuthoritative() {
-⋮----
-assertFalse(PurchaseGrantService.syncPermanent(profile, new FakeBilling(false)));
-⋮----
-@Test public void authoritativeStoreSnapshotRevokesStaleRemoveAds() {
-⋮----
-assertTrue(PurchaseGrantService.syncPermanent(profile, new FakeBilling(true)));
-assertFalse(profile.removeAdsPurchased);
-⋮----
-@Test public void unknownProductCannotMutateProfile() {
-⋮----
-assertFalse(PurchaseGrantService.grant(profile, "unknown_product"));
-assertEquals(0L, profile.currency(PlayerProfile.Currency.CREDITS));
-⋮----
-private static final class FakeBilling implements BillingService {
-⋮----
-for (String id : ids) owned.add(id);
-⋮----
-@Override public void initialize() { }
-@Override public boolean owns(String productId) { return owned.contains(productId); }
-@Override public boolean authoritativeEntitlements() { return authoritative; }
-@Override public void purchase(String productId, Runnable onSuccess, Runnable onFailure) { onFailure.run(); }
-@Override public void restore() { }
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java
-````java
-final class ReviewPromptPolicyTest {
-@Test void onlyMeaningfulFirstClearIsEligible() {
-assertFalse(ReviewPromptPolicy.eligible(false, 5, false));
-assertFalse(ReviewPromptPolicy.eligible(true, 1, false));
-assertFalse(ReviewPromptPolicy.eligible(true, 2, false));
-assertTrue(ReviewPromptPolicy.eligible(true, 3, false));
-assertTrue(ReviewPromptPolicy.eligible(true, 20, false));
-assertFalse(ReviewPromptPolicy.eligible(true, 20, true));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/RunLoadoutContextResetTest.java
-````java
-final class RunLoadoutContextResetTest {
-@Test void endRestoresSafeDefaultLoadoutState() {
-PlayerProfile profile = new PlayerProfile();
-⋮----
-RunLoadoutContext.begin(profile);
-RunLoadoutContext.end();
-⋮----
-assertEquals(1f, RunLoadoutContext.maxHpMultiplier(), 0.0001f);
-assertEquals(1f, RunLoadoutContext.moveSpeedMultiplier(), 0.0001f);
-assertEquals(1f, RunLoadoutContext.dashCooldownMultiplier(), 0.0001f);
-assertEquals(.30f, RunLoadoutContext.dashInvulnerabilitySeconds(), 0.0001f);
-assertEquals(1f, RunLoadoutContext.weaponDamageMultiplier(), 0.0001f);
-assertEquals(0f, RunLoadoutContext.critChanceBonus(), 0.0001f);
-assertEquals(0f, RunLoadoutContext.critDamageBonus(), 0.0001f);
-assertEquals(1f, RunLoadoutContext.abilityPowerMultiplier(), 0.0001f);
-assertEquals(1f, RunLoadoutContext.damageTakenMultiplier(), 0.0001f);
-assertEquals(0, RunLoadoutContext.startingTeslaLevel());
-assertEquals(0, RunLoadoutContext.ascensionSetPieces());
-assertFalse(RunLoadoutContext.zeroDayCoreEquipped());
-assertEquals(SurvivorCatalog.Survivor.REX, RunLoadoutContext.survivor());
-assertEquals(WeaponCatalog.AR9.id, RunLoadoutContext.weaponDefinition().id);
-assertEquals(WeaponSynergyRules.Synergy.NONE, RunLoadoutContext.weaponSynergy());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/RunMissionRuntimeTest.java
-````java
-final class RunMissionRuntimeTest {
-@AfterEach void cleanup() { RunMissionRuntime.end(); }
-⋮----
-@Test void standardMissionSignalsVictoryAfterOneBoss() {
-AtomicInteger callbacks = new AtomicInteger();
-RunMissionRuntime.begin(callbacks::incrementAndGet, 1);
-RunMissionRuntime.signalBossDefeated();
-assertEquals(1, RunMissionRuntime.bossKills());
-assertEquals(1, callbacks.get());
-⋮----
-@Test void twinMissionWaitsForSecondBossAndSignalsOnce() {
-⋮----
-RunMissionRuntime.begin(callbacks::incrementAndGet, 2);
-⋮----
-assertEquals(0, callbacks.get());
-⋮----
-assertEquals(2, RunMissionRuntime.bossKills());
-⋮----
-@Test void requiredBossCountIsSanitized() {
-RunMissionRuntime.begin(() -> {}, 0);
-assertEquals(1, RunMissionRuntime.requiredBossKills());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/RunModifierContextTest.java
-````java
-final class RunModifierContextTest {
-private static final EnumSet<RunModifierContext.Modifier> STANDARD = EnumSet.of(
-⋮----
-@AfterEach void cleanup() { RunModifierContext.end(); }
-⋮----
-@Test void selectionIsDeterministicForSameStageAndRunOrdinal() {
-RunStageContext.begin(7, 12);
-RunModifierContext.begin();
-RunModifierContext.Modifier first = RunModifierContext.modifier();
-RunModifierContext.end();
-⋮----
-assertEquals(first, RunModifierContext.modifier());
-⋮----
-@Test void consecutiveFallbackRunsNeverRepeatTheSameStandardContract() {
-⋮----
-RunStageContext.begin(9, ordinal);
-⋮----
-RunModifierContext.Modifier current = RunModifierContext.modifier();
-assertTrue(STANDARD.contains(current));
-if (previous != null) assertNotEquals(previous, current);
-⋮----
-@Test void fallbackRotationExposesEveryStandardContractWithinFiveRuns() {
-EnumSet<RunModifierContext.Modifier> seen = EnumSet.noneOf(RunModifierContext.Modifier.class);
-⋮----
-seen.add(RunModifierContext.modifier());
-⋮----
-assertEquals(STANDARD, seen);
-⋮----
-@Test void offerSetContainsThreeUniqueDeterministicContracts() {
-RunStageContext.begin(11, 27);
-RunModifierContext.Modifier[] first = RunModifierContext.offers();
-RunModifierContext.Modifier[] second = RunModifierContext.offers();
-assertEquals(3, first.length);
-assertEquals(first[0], second[0]);
-assertEquals(first[1], second[1]);
-assertEquals(first[2], second[2]);
-assertEquals(3, EnumSet.of(first[0], first[1], first[2]).size());
-⋮----
-@Test void legendaryOfferAppearsOnDeterministicCadenceAfterStageThree() {
-RunStageContext.begin(3, 1);
-assertTrue(RunModifierContext.legendaryOfferAvailable());
-RunModifierContext.Modifier[] offers = RunModifierContext.offers();
-assertTrue(offers[2].legendary());
-assertTrue(offers[2].rewardBonusPercent() >= 48);
-⋮----
-RunStageContext.begin(2, 2);
-assertFalse(RunModifierContext.legendaryOfferAvailable());
-for (RunModifierContext.Modifier offer : RunModifierContext.offers()) assertFalse(offer.legendary());
-⋮----
-@Test void legendaryRotationExposesAllThreeLegendaryMutators() {
-⋮----
-RunStageContext.begin(stage, ordinal);
-if (RunModifierContext.legendaryOfferAvailable()) {
-RunModifierContext.Modifier legendary = RunModifierContext.offers()[2];
-assertTrue(legendary.legendary());
-seen.add(legendary);
-⋮----
-assertEquals(EnumSet.of(RunModifierContext.Modifier.PHANTOM_ECLIPSE,
-⋮----
-@Test void onlyOfferedContractsCanBeActivated() {
-RunStageContext.begin(4, 2);
-⋮----
-assertTrue(RunModifierContext.choose(offers[1]));
-assertEquals(offers[1], RunModifierContext.modifier());
-⋮----
-for (RunModifierContext.Modifier candidate : RunModifierContext.Modifier.values()) {
-⋮----
-assertNotNull(outsider);
-assertFalse(RunModifierContext.choose(outsider));
-assertFalse(RunModifierContext.active());
-⋮----
-@Test void activeContractAlwaysPaysARewardPremium() {
-RunStageContext.begin(6, 3);
-⋮----
-assertNotNull(RunModifierContext.modifier());
-assertTrue(RunModifierContext.rewardMultiplier() > 1f);
-assertTrue(RunModifierContext.rewardBonusPercent() >= 18);
-⋮----
-@Test void rewardCalculatorIncludesActiveContractPremium() {
-⋮----
-RunRewardCalculator.Rewards baseline = RunRewardCalculator.calculate(120, 240f, true, 6);
-RunStageContext.begin(6, 18);
-⋮----
-RunRewardCalculator.Rewards contracted = RunRewardCalculator.calculate(120, 240f, true, 6);
-assertTrue(contracted.credits() > baseline.credits());
-assertTrue(contracted.accountXp() > baseline.accountXp());
-assertEquals(baseline.gems(), contracted.gems());
-⋮----
-@Test void twinApexRequiresTwoBossDefeatsWhenOffered() {
-⋮----
-for (RunModifierContext.Modifier offer : RunModifierContext.offers()) {
-⋮----
-assertTrue(RunModifierContext.choose(offer));
-assertEquals(2, RunModifierContext.requiredBossKills());
-⋮----
-assertTrue(found);
-⋮----
-@Test void stageRulesApplyCombatContractMultipliers() {
-⋮----
-float hp = StageRules.enemyHpMultiplier(8);
-float speed = StageRules.enemySpeedMultiplier(8);
-float damage = StageRules.enemyDamageMultiplier(8);
-RunStageContext.begin(8, 5);
-⋮----
-RunModifierContext.Modifier modifier = RunModifierContext.modifier();
-assertEquals(hp * modifier.enemyHp, StageRules.enemyHpMultiplier(8), .0001f);
-assertEquals(Math.min(1.60f, speed * modifier.enemySpeed), StageRules.enemySpeedMultiplier(8), .0001f);
-assertEquals(damage * modifier.enemyDamage, StageRules.enemyDamageMultiplier(8), .0001f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/RunRecoveryAdviceTest.java
-````java
-final class RunRecoveryAdviceTest {
-@Test void earlyHighThreatFailureRecommendsSurvivability() {
-RunResult result = result(20, 6, 20f, 8);
-RunRecoveryAdvice.Advice advice = RunRecoveryAdvice.forResult(result);
-assertEquals(RunRecoveryAdvice.Focus.SURVIVABILITY, advice.focus());
-assertTrue(advice.detail().contains("Threat"));
-⋮----
-@Test void slowMidRunClearRecommendsOffense() {
-// Stage 10 targets 495s; 300s is past the opening gate while 8 kills is clearly below target clear speed.
-RunResult result = result(10, 0, 300f, 8);
-⋮----
-assertEquals(RunRecoveryAdvice.Focus.OFFENSE, advice.focus());
-⋮----
-@Test void lateFailureWithGoodClearSpeedRecommendsFinalDefense() {
-⋮----
-float nearBoss = StageMissionRules.bossArrivalSeconds(stage) * .90f;
-// Keep clear speed above the 14 KPM offense threshold so late-run defense is the deciding branch.
-RunResult result = result(stage, 2, nearBoss, 150);
-⋮----
-assertEquals(RunRecoveryAdvice.Focus.ENDGAME_DEFENSE, advice.focus());
-⋮----
-@Test void adviceIsPureAndNullSafe() {
-assertEquals(RunRecoveryAdvice.Focus.BALANCED, RunRecoveryAdvice.forResult(null).focus());
-⋮----
-private static RunResult result(int stage, int threat, float seconds, int kills) {
-return new RunResult(kills, seconds, false, stage,
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/RunRewardCalculatorTest.java
-````java
-final class RunRewardCalculatorTest {
-@Test void ordinaryRewardsRemainStable() {
-var rewards = RunRewardCalculator.calculate(60, 120f, true, 1);
-assertEquals(345L, rewards.credits());
-assertEquals(195L, rewards.accountXp());
-assertEquals(1, rewards.gems());
-⋮----
-@Test void largeRunsKeepLongPrecisionInsteadOfNarrowingToInt() {
-var rewards = RunRewardCalculator.calculate(Integer.MAX_VALUE, 0f, false, 100);
-assertTrue(rewards.credits() > Integer.MAX_VALUE);
-assertTrue(rewards.accountXp() > Integer.MAX_VALUE);
-⋮----
-@Test void scalingSaturatesSafelyAtLongLimit() {
-assertEquals(Long.MAX_VALUE, ProfileCounterMath.scaleNonNegative(Long.MAX_VALUE, 2f));
-assertEquals(0L, ProfileCounterMath.scaleNonNegative(100L, Float.NaN));
-assertEquals(0L, ProfileCounterMath.scaleNonNegative(-100L, 2f));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/RunShareTextTest.java
-````java
-final class RunShareTextTest {
-@Test void shareTextContainsOnlySettledRunFactsAndPlayLink() {
-RunResult result = new RunResult(87, 154f, true, 20,
-⋮----
-String text = RunShareText.format(result);
-assertTrue(text.contains("Stage 20"));
-assertTrue(text.contains("Threat 6"));
-assertTrue(text.contains("87 kills"));
-assertTrue(text.contains("02:34"));
-assertTrue(text.contains("REDLINE • SWARM"));
-assertTrue(text.endsWith(RunShareText.PLAY_URL));
-assertFalse(text.toLowerCase().contains("best"));
-assertFalse(text.toLowerCase().contains("million"));
-⋮----
-@Test void threatZeroDoesNotPretendAscensionWasActive() {
-RunResult result = new RunResult(10, 65f, true, 2,
-⋮----
-assertFalse(text.contains("Threat 0"));
-assertTrue(text.contains("01:05"));
-⋮----
-@Test void contractTextCannotInjectExtraLines() {
-RunResult result = new RunResult(1, 1f, true, 1,
-⋮----
-assertTrue(text.contains("Contract: REDLINE FAKE CLAIM"));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/SingularityCoreRuntimeTest.java
-````java
-final class SingularityCoreRuntimeTest {
-@AfterEach void cleanup() { SingularityCoreRuntime.begin(false); }
-⋮----
-@Test void disabledRuntimeNeverMarksShots() {
-SingularityCoreRuntime.begin(false);
-for (int i = 0; i < 12; i++) assertFalse(SingularityCoreRuntime.consumeShotMark());
-assertEquals(0L, SingularityCoreRuntime.shotSequence());
-⋮----
-@Test void activeRuntimeMarksExactlyEverySixthShot() {
-SingularityCoreRuntime.begin(true);
-⋮----
-assertEquals(i % SingularityCoreRules.SHOT_INTERVAL == 0, SingularityCoreRuntime.consumeShotMark());
-⋮----
-assertEquals(18L, SingularityCoreRuntime.shotSequence());
-⋮----
-@Test void beginResetsCadenceForEveryRun() {
-⋮----
-for (int i = 0; i < 5; i++) assertFalse(SingularityCoreRuntime.consumeShotMark());
-⋮----
-assertTrue(SingularityCoreRuntime.consumeShotMark());
-⋮----
-@Test void sixthProjectileBecomesSingularityShockRound() {
-⋮----
-projectile = new Projectile().spawn(0f, 0f, 10f, 0f, 100f, false, 1, 2f, DamageElement.KINETIC);
-⋮----
-assertTrue(projectile.singularity);
-assertEquals(135f, projectile.damage, .0001f);
-assertEquals(3, projectile.penetrationRemaining);
-assertEquals(3.6f, projectile.knockback, .0001f);
-assertEquals(.16f, projectile.radius, .0001f);
-assertEquals(DamageElement.SHOCK, projectile.element);
-⋮----
-@Test void ordinaryProjectilesKeepOriginalCombatProfile() {
-⋮----
-Projectile projectile = new Projectile().spawn(0f, 0f, 10f, 0f, 100f, true, 1, 2f, DamageElement.FIRE);
-assertFalse(projectile.singularity);
-assertEquals(100f, projectile.damage, .0001f);
-assertEquals(1, projectile.penetrationRemaining);
-assertEquals(2f, projectile.knockback, .0001f);
-assertEquals(.11f, projectile.radius, .0001f);
-assertEquals(DamageElement.FIRE, projectile.element);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/StageRulesTest.java
-````java
-final class StageRulesTest {
-⋮----
-void stageOneUsesNeutralMultipliers() {
-assertEquals(1f, StageRules.enemyHpMultiplier(1), 0.0001f);
-assertEquals(1f, StageRules.enemyDamageMultiplier(1), 0.0001f);
-assertEquals(1f, StageRules.enemySpeedMultiplier(1), 0.0001f);
-assertEquals(1f, StageRules.rewardMultiplier(1), 0.0001f);
-⋮----
-void invalidStagesClampToStageOne() {
-assertEquals(StageRules.enemyHpMultiplier(1), StageRules.enemyHpMultiplier(-12), 0.0001f);
-assertEquals(StageRules.enemyDamageMultiplier(1), StageRules.enemyDamageMultiplier(0), 0.0001f);
-assertEquals(2, StageRules.nextStage(0));
-⋮----
-void scalingRemainsMonotonicAcrossCampaignRange() {
-float previousHp = StageRules.enemyHpMultiplier(1);
-float previousDamage = StageRules.enemyDamageMultiplier(1);
-float previousReward = StageRules.rewardMultiplier(1);
-⋮----
-float hp = StageRules.enemyHpMultiplier(stage);
-float damage = StageRules.enemyDamageMultiplier(stage);
-float reward = StageRules.rewardMultiplier(stage);
-assertTrue(hp > previousHp);
-assertTrue(damage > previousDamage);
-assertTrue(reward > previousReward);
-⋮----
-void enemySpeedHasHardSafetyCap() {
-assertTrue(StageRules.enemySpeedMultiplier(1000) <= 1.42f);
-assertEquals(1.42f, StageRules.enemySpeedMultiplier(1000), 0.0001f);
-⋮----
-void nextStageAlwaysAdvancesExactlyOneFromClampedInput() {
-assertEquals(2, StageRules.nextStage(1));
-assertEquals(26, StageRules.nextStage(25));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/SurvivorProgressionSafetyTest.java
-````java
-final class SurvivorProgressionSafetyTest {
-@Test void exactThresholdLevelsNormally() {
-SurvivorProgression progression = new SurvivorProgression();
-progression.addXp(SurvivorCatalog.Survivor.REX, 180L);
-assertEquals(2, progression.level(SurvivorCatalog.Survivor.REX));
-assertEquals(0L, progression.xp(SurvivorCatalog.Survivor.REX));
-⋮----
-@Test void extremeXpRemainsCanonicalWithoutOverflow() {
-⋮----
-progression.addXp(SurvivorCatalog.Survivor.REX, Long.MAX_VALUE);
-⋮----
-int level = progression.level(SurvivorCatalog.Survivor.REX);
-long xp = progression.xp(SurvivorCatalog.Survivor.REX);
-assertTrue(level > 1_000_000);
-assertTrue(xp >= 0L);
-assertTrue(xp < progression.xpForNext(SurvivorCatalog.Survivor.REX));
-⋮----
-@Test void corruptedPersistedXpIsNormalizedOnRestore() {
-⋮----
-progression.setState(SurvivorCatalog.Survivor.NYX, 1, Long.MAX_VALUE, true);
-⋮----
-assertTrue(progression.level(SurvivorCatalog.Survivor.NYX) > 1);
-assertTrue(progression.xp(SurvivorCatalog.Survivor.NYX) >= 0L);
-assertTrue(progression.xp(SurvivorCatalog.Survivor.NYX) < progression.xpForNext(SurvivorCatalog.Survivor.NYX));
-assertTrue(progression.unlocked(SurvivorCatalog.Survivor.NYX));
-⋮----
-@Test void addingToExistingProgressCannotWrapNegative() {
-⋮----
-progression.setState(SurvivorCatalog.Survivor.REX, 50, 100L, true);
-⋮----
-assertTrue(progression.xp(SurvivorCatalog.Survivor.REX) >= 0L);
-assertTrue(progression.xp(SurvivorCatalog.Survivor.REX) < progression.xpForNext(SurvivorCatalog.Survivor.REX));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/ThreatProgressionServiceTest.java
-````java
-final class ThreatProgressionServiceTest {
-@Test void clearBeforeEndgameDoesNotUnlockThreat() {
-PlayerProfile profile = new PlayerProfile();
-⋮----
-ThreatProgressionService.UnlockResult result = ThreatProgressionService.applyBossClear(profile, 9, 0);
-assertFalse(result.unlocked());
-assertEquals(0, profile.highestThreatTier);
-⋮----
-@Test void clearingHighestThreatUnlocksExactlyOneTier() {
-⋮----
-ThreatProgressionService.UnlockResult result = ThreatProgressionService.applyBossClear(profile, 10, 3);
-assertTrue(result.unlocked());
-assertEquals(4, result.tier());
-assertEquals(4, profile.highestThreatTier);
-assertEquals(4, profile.selectedThreatTier);
-⋮----
-@Test void lowerThreatClearCannotAdvanceHighestThreat() {
-⋮----
-ThreatProgressionService.UnlockResult result = ThreatProgressionService.applyBossClear(profile, 12, 3);
-⋮----
-assertEquals(6, profile.highestThreatTier);
-⋮----
-@Test void milestoneGemsAndMythicGearAreGrantedOnlyOnFirstUnlock() {
-⋮----
-ThreatProgressionService.UnlockResult result = ThreatProgressionService.applyBossClear(profile, 10, 4);
-⋮----
-assertEquals(5, result.tier());
-assertEquals(6, result.milestoneGems());
-assertEquals(6L, profile.currency(PlayerProfile.Currency.GEMS));
-⋮----
-EquipmentItem reward = profile.inventory.find("threat_05_helmet");
-assertNotNull(reward);
-assertEquals(EquipmentItem.Rarity.MYTHIC, reward.rarity);
-assertEquals(PlayerProfile.EquipmentSlot.HELMET, reward.slot);
-⋮----
-int itemCount = profile.inventory.size();
-ThreatProgressionService.UnlockResult duplicate = ThreatProgressionService.applyBossClear(profile, 10, 4);
-assertFalse(duplicate.unlocked());
-⋮----
-assertEquals(itemCount, profile.inventory.size());
-⋮----
-@Test void milestoneGearUsesReservedCapacityWhenNormalInventoryIsFull() {
-⋮----
-assertTrue(profile.inventory.add(new EquipmentItem("normal_" + i, "Normal " + i,
-⋮----
-assertTrue(profile.inventory.full());
-⋮----
-assertNotNull(profile.inventory.find("threat_05_helmet"));
-assertEquals(Inventory.NORMAL_CAPACITY + 1, profile.inventory.size());
-⋮----
-@Test void allMilestoneRewardsAreUniqueAndMappedToExpectedTiers() {
-⋮----
-EquipmentItem item = ThreatMilestoneRewardCatalog.forTier(tiers[i]);
-assertNotNull(item);
-assertEquals(EquipmentItem.Rarity.MYTHIC, item.rarity);
-⋮----
-for (int j = i + 1; j < ids.length; j++) assertFalse(ids[i].equals(ids[j]));
-⋮----
-@Test void maxThreatCannotOverflow() {
-⋮----
-ThreatProgressionService.UnlockResult result = ThreatProgressionService.applyBossClear(profile, 30, ThreatTierRules.MAX_TIER);
-⋮----
-assertEquals(ThreatTierRules.MAX_TIER, profile.highestThreatTier);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/ThreatSetBonusRulesTest.java
-````java
-final class ThreatSetBonusRulesTest {
-@Test void setCountsOnlyEquippedExclusiveMilestoneItems() {
-PlayerProfile profile = new PlayerProfile();
-EquipmentItem helm = ThreatMilestoneRewardCatalog.forTier(5);
-EquipmentItem gloves = ThreatMilestoneRewardCatalog.forTier(10);
-EquipmentItem ordinary = new EquipmentItem("ordinary", "Ordinary Armor",
-⋮----
-profile.inventory.add(helm);
-profile.inventory.add(gloves);
-profile.inventory.add(ordinary);
-EquipmentService.equip(profile, helm.id);
-EquipmentService.equip(profile, gloves.id);
-EquipmentService.equip(profile, ordinary.id);
-assertEquals(2, ThreatSetBonusRules.equippedPieces(profile));
-⋮----
-@Test void twoPieceBonusImprovesWeaponAndAbilityOnly() {
-assertEquals(1.08f, ThreatSetBonusRules.weaponMultiplier(2), .0001f);
-assertEquals(1.08f, ThreatSetBonusRules.abilityMultiplier(2), .0001f);
-assertEquals(1f, ThreatSetBonusRules.hpMultiplier(2), .0001f);
-assertEquals(1f, ThreatSetBonusRules.moveSpeedMultiplier(2), .0001f);
-⋮----
-@Test void threePieceBonusAddsDurabilityAndMobility() {
-assertEquals(1.05f, ThreatSetBonusRules.hpMultiplier(3), .0001f);
-assertEquals(1.06f, ThreatSetBonusRules.moveSpeedMultiplier(3), .0001f);
-assertEquals(1f, ThreatSetBonusRules.damageTakenMultiplier(3), .0001f);
-⋮----
-@Test void fourPieceBonusAddsDefenseAndDashWindow() {
-assertEquals(.90f, ThreatSetBonusRules.damageTakenMultiplier(4), .0001f);
-assertEquals(.06f, ThreatSetBonusRules.dashInvulnerabilityBonus(4), .0001f);
-⋮----
-@Test void runLoadoutSnapshotsEquippedAscensionSet() {
-⋮----
-EquipmentItem item = ThreatMilestoneRewardCatalog.forTier(tier);
-profile.inventory.add(item);
-EquipmentService.equip(profile, item.id);
-⋮----
-RunLoadoutContext.begin(profile);
-assertEquals(4, RunLoadoutContext.ascensionSetPieces());
-assertTrue(RunLoadoutContext.weaponDamageMultiplier() > 1f);
-assertTrue(RunLoadoutContext.abilityPowerMultiplier() > 1f);
-assertTrue(RunLoadoutContext.damageTakenMultiplier() < 1f);
-assertTrue(RunLoadoutContext.dashInvulnerabilitySeconds() >= .36f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/ThreatTierRulesTest.java
-````java
-final class ThreatTierRulesTest {
-@AfterEach void cleanup() {
-RunModifierContext.end();
-RunStageContext.begin(1, 0, 0);
-⋮----
-@Test void threatRemainsLockedBeforeStageTen() {
-PlayerProfile profile = new PlayerProfile();
-⋮----
-profile.normalizeLoadedState();
-assertFalse(ThreatTierRules.unlocked(profile));
-assertEquals(0, profile.highestThreatTier);
-assertEquals(0, profile.selectedThreatTier);
-assertFalse(profile.selectThreatTier(1));
-⋮----
-@Test void unlockedProfileCanSelectOnlyEarnedThreat() {
-⋮----
-assertTrue(ThreatTierRules.unlocked(profile));
-assertTrue(profile.selectThreatTier(4));
-assertEquals(4, profile.selectedThreatTier);
-assertFalse(profile.selectThreatTier(5));
-⋮----
-@Test void nextThreatUnlocksSequentiallyAndCapsAtTwenty() {
-⋮----
-assertTrue(profile.unlockNextThreatTier());
-assertEquals(1, profile.highestThreatTier);
-assertEquals(1, profile.selectedThreatTier);
-⋮----
-assertFalse(profile.unlockNextThreatTier());
-assertEquals(ThreatTierRules.MAX_TIER, profile.highestThreatTier);
-⋮----
-@Test void threatTierRaisesCombatAndRewardScaling() {
-RunStageContext.begin(10, 0, 0);
-float hp0 = StageRules.enemyHpMultiplier(10);
-float damage0 = StageRules.enemyDamageMultiplier(10);
-float speed0 = StageRules.enemySpeedMultiplier(10);
-float reward0 = StageRules.rewardMultiplier(10);
-⋮----
-RunStageContext.begin(10, 0, 8);
-assertTrue(StageRules.enemyHpMultiplier(10) > hp0);
-assertTrue(StageRules.enemyDamageMultiplier(10) > damage0);
-assertTrue(StageRules.enemySpeedMultiplier(10) > speed0);
-assertTrue(StageRules.rewardMultiplier(10) > reward0);
-⋮----
-@Test void threatTierAlsoAcceleratesSpawnPressure() {
-⋮----
-RunModifierContext.begin();
-RunModifierContext.Modifier baselineContract = RunModifierContext.modifier();
-float standardPressure = RunModifierContext.spawnIntervalMultiplier();
-⋮----
-RunStageContext.begin(10, 0, 10);
-⋮----
-assertEquals(baselineContract, RunModifierContext.modifier(),
-⋮----
-float ascendedPressure = RunModifierContext.spawnIntervalMultiplier();
-⋮----
-* EndgameMutatorRules.spawnIntervalMultiplier()
-* ThreatTierRules.spawnIntervalMultiplier(10);
-⋮----
-assertTrue(ascendedPressure < standardPressure);
-assertEquals(expected, ascendedPressure, .0001f);
-⋮----
-@Test void milestoneGemsAreOnlyPaidEveryFiveTiers() {
-assertEquals(0, ThreatTierRules.milestoneGemReward(4));
-assertEquals(6, ThreatTierRules.milestoneGemReward(5));
-assertEquals(8, ThreatTierRules.milestoneGemReward(10));
-assertEquals(12, ThreatTierRules.milestoneGemReward(20));
-⋮----
-@Test void runSeedIncludesThreatTier() {
-RunStageContext.begin(12, 33, 0);
-int base = RunStageContext.encounterSeed();
-RunStageContext.begin(12, 33, 1);
-int ascended = RunStageContext.encounterSeed();
-assertTrue(base != ascended);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/WeaponProgressionTest.java
-````java
-final class WeaponProgressionTest {
-⋮----
-void starterWeaponIsAlwaysAvailable() {
-assertTrue(WeaponProgression.unlocked(null, WeaponCatalog.AR9));
-PlayerProfile profile = new PlayerProfile();
-assertTrue(WeaponProgression.unlocked(profile, WeaponCatalog.AR9));
-assertEquals(WeaponCatalog.AR9, profile.selectedWeapon());
-⋮----
-void lockedWeaponCannotBeSelectedEarly() {
-⋮----
-assertFalse(profile.selectWeapon(WeaponCatalog.RAIL_RIFLE));
-⋮----
-void accountLevelUnlocksWeaponSelection() {
-⋮----
-assertTrue(profile.selectWeapon(WeaponCatalog.ARC_CARBINE));
-assertEquals(WeaponCatalog.ARC_CARBINE, profile.selectedWeapon());
-⋮----
-void stageProgressCanUnlockControlWeaponsEarlier() {
-⋮----
-assertTrue(WeaponProgression.unlocked(profile, WeaponCatalog.ARC_CARBINE));
-⋮----
-void endgameWeaponsUnlockInDeterministicOrder() {
-⋮----
-assertFalse(WeaponProgression.unlocked(profile, WeaponCatalog.TEMPEST_BURST));
-⋮----
-assertTrue(WeaponProgression.unlocked(profile, WeaponCatalog.TEMPEST_BURST));
-assertFalse(WeaponProgression.unlocked(profile, WeaponCatalog.WHITEOUT_SHARD));
-⋮----
-assertTrue(WeaponProgression.unlocked(profile, WeaponCatalog.WHITEOUT_SHARD));
-assertFalse(WeaponProgression.unlocked(profile, WeaponCatalog.PHOENIX_REPEATER));
-⋮----
-assertTrue(profile.selectWeapon(WeaponCatalog.PHOENIX_REPEATER));
-assertEquals(WeaponCatalog.PHOENIX_REPEATER, profile.selectedWeapon());
-⋮----
-void stageProgressAlsoUnlocksEndgameWeapons() {
-⋮----
-assertTrue(WeaponProgression.unlocked(profile, WeaponCatalog.PHOENIX_REPEATER));
-⋮----
-void invalidStoredWeaponFallsBackSafely() {
-⋮----
-profile.validateSelectedWeapon();
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/WeaponSynergyRulesTest.java
-````java
-final class WeaponSynergyRulesTest {
-@Test void resolvesOnlyIntentionalSignaturePairs() {
-assertEquals(WeaponSynergyRules.Synergy.ARC_CONDUCTOR,
-WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.ION_NEEDLE));
-assertEquals(WeaponSynergyRules.Synergy.EXECUTION_PROTOCOL,
-WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.NYX, WeaponCatalog.ION_NEEDLE));
-assertEquals(WeaponSynergyRules.Synergy.SIEGE_FURNACE,
-WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.CINDER_CANNON));
-assertEquals(WeaponSynergyRules.Synergy.CRYO_GHOST,
-WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.CRYO_LANCE));
-assertEquals(WeaponSynergyRules.Synergy.TEMPEST_CIRCUIT,
-WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.TEMPEST_BURST));
-assertEquals(WeaponSynergyRules.Synergy.WHITEOUT_GHOST,
-WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.WRAITH, WeaponCatalog.WHITEOUT_SHARD));
-assertEquals(WeaponSynergyRules.Synergy.PHOENIX_BULWARK,
-WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.BASTION, WeaponCatalog.PHOENIX_REPEATER));
-assertEquals(WeaponSynergyRules.Synergy.NONE,
-WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.REX, WeaponCatalog.ION_NEEDLE));
-⋮----
-WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.VOLT, WeaponCatalog.AR9));
-⋮----
-WeaponSynergyRules.resolve(SurvivorCatalog.Survivor.NYX, WeaponCatalog.PHOENIX_REPEATER));
-⋮----
-@Test void synergyBonusesStayInsideSafePowerBudget() {
-for (WeaponSynergyRules.Synergy synergy : WeaponSynergyRules.Synergy.values()) {
-assertTrue(synergy.weaponDamageMultiplier >= 1f && synergy.weaponDamageMultiplier <= 1.12f);
-assertTrue(synergy.abilityPowerMultiplier >= 1f && synergy.abilityPowerMultiplier <= 1.10f);
-assertTrue(synergy.critChanceBonus >= 0f && synergy.critChanceBonus <= .06f);
-assertTrue(synergy.damageTakenMultiplier >= .95f && synergy.damageTakenMultiplier <= 1f);
-⋮----
-@Test void nullInputsFallBackWithoutGrantingFreeSynergy() {
-assertEquals(WeaponSynergyRules.Synergy.NONE, WeaponSynergyRules.resolve(null, null));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/meta/WeeklyServiceTest.java
-````java
-public final class WeeklyServiceTest {
-@Test public void utcWeeksRollOverOnMonday() {
-assertEquals(0L, WeeklyService.weekIndexForEpochDay(0L));
-assertEquals(0L, WeeklyService.weekIndexForEpochDay(3L));
-assertEquals(1L, WeeklyService.weekIndexForEpochDay(4L));
-assertEquals(-1L, WeeklyService.weekIndexForEpochDay(-4L));
-⋮----
-@Test public void sameWeekKeepsProgressAndNextWeekResets() {
-PlayerProfile profile = new PlayerProfile();
-WeeklyService.refresh(profile, 100L);
-WeeklyService.recordRun(profile, 250, true);
-⋮----
-WeeklyService.refresh(profile, 101L);
-assertEquals(week, profile.weekly.weekIndex);
-assertEquals(250, profile.weekly.kills);
-assertEquals(1, profile.weekly.runs);
-assertEquals(1, profile.weekly.bosses);
-⋮----
-WeeklyService.refresh(profile, 107L);
-assertTrue(profile.weekly.weekIndex > week);
-assertEquals(0, profile.weekly.kills);
-assertEquals(0, profile.weekly.runs);
-assertEquals(0, profile.weekly.bosses);
-⋮----
-@Test public void weeklyClaimsRequireTargetsAndCannotDoublePay() {
-⋮----
-WeeklyService.refresh(profile, 200L);
-⋮----
-WeeklyService.recordRun(profile, i == 0 ? WeeklyService.KILL_TARGET : 0, i < WeeklyService.BOSS_TARGET);
-⋮----
-long creditsBefore = profile.currency(PlayerProfile.Currency.CREDITS);
-long gemsBefore = profile.currency(PlayerProfile.Currency.GEMS);
-⋮----
-assertTrue(WeeklyService.claimKillMission(profile));
-assertTrue(WeeklyService.claimRunMission(profile));
-assertTrue(WeeklyService.claimBossMission(profile));
-assertEquals(creditsBefore + 6000L, profile.currency(PlayerProfile.Currency.CREDITS));
-assertEquals(gemsBefore + 12L, profile.currency(PlayerProfile.Currency.GEMS));
-⋮----
-assertFalse(WeeklyService.claimKillMission(profile));
-assertFalse(WeeklyService.claimRunMission(profile));
-assertFalse(WeeklyService.claimBossMission(profile));
-⋮----
-@Test public void countersClampInsteadOfOverflowing() {
-⋮----
-WeeklyService.recordRun(profile, 50, true);
-assertEquals(Integer.MAX_VALUE, profile.weekly.kills);
-assertEquals(Integer.MAX_VALUE, profile.weekly.runs);
-assertEquals(Integer.MAX_VALUE, profile.weekly.bosses);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/perf/AdaptiveFrameRateGovernorTest.java
-````java
-final class AdaptiveFrameRateGovernorTest {
-@Test void startsAtSelectedTarget() {
-AdaptiveFrameRateGovernor governor = new AdaptiveFrameRateGovernor();
-governor.reset(120);
-assertEquals(120, governor.effectiveTarget());
-⋮----
-@Test void sustainedInstabilityStepsDownOneTier() {
-⋮----
-governor.update(120, bad);
-⋮----
-assertEquals(90, governor.effectiveTarget());
-⋮----
-@Test void recoveryIsSlowerThanDegradation() {
-⋮----
-for (int i = 0; i < 3; i++) governor.update(120, bad120);
-⋮----
-for (int i = 0; i < 7; i++) governor.update(120, stable90);
-⋮----
-governor.update(120, stable90);
-⋮----
-@Test void userCeilingAlwaysWinsImmediately() {
-⋮----
-assertEquals(60, governor.update(60, stable120));
-⋮----
-@Test void normalizesUnsupportedTargets() {
-⋮----
-governor.reset(75);
-assertEquals(60, governor.effectiveTarget());
-governor.reset(100);
-⋮----
-governor.reset(144);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/perf/PerformanceTelemetryTest.java
-````java
-final class PerformanceTelemetryTest {
-@Test void stableSixtyFpsWindowPasses() {
-PerformanceTelemetry telemetry = new PerformanceTelemetry();
-for (int i = 0; i < 120; i++) telemetry.record(1f / 60f, 60);
-PerformanceTelemetry.Snapshot s = telemetry.snapshot(60);
-assertEquals(60, s.targetFps());
-assertTrue(s.averageFps() >= 59.9f);
-assertTrue(s.p95FrameMs() < 17f);
-assertEquals(0f, s.jankRatio(), .0001f);
-assertTrue(s.stable());
-⋮----
-@Test void sustainedSlowFramesFailTarget() {
-⋮----
-for (int i = 0; i < 120; i++) telemetry.record(1f / 45f, 60);
-⋮----
-assertTrue(s.averageFps() < 50f);
-assertFalse(s.stable());
-⋮----
-@Test void jankBurstsAreDetected() {
-⋮----
-for (int i = 0; i < 110; i++) telemetry.record(1f / 60f, 60);
-for (int i = 0; i < 10; i++) telemetry.record(.050f, 60);
-⋮----
-assertTrue(s.jankRatio() > .05f);
-assertTrue(s.p95FrameMs() >= 50f);
-⋮----
-@Test void invalidSamplesAreIgnored() {
-⋮----
-telemetry.record(0f, 60);
-telemetry.record(Float.NaN, 60);
-telemetry.record(-1f, 60);
-assertEquals(0, telemetry.sampleCount());
-assertFalse(telemetry.snapshot(60).stable());
-⋮----
-@Test void rollingWindowIsBounded() {
-⋮----
-for (int i = 0; i < 1000; i++) telemetry.record(1f / 120f, 120);
-assertEquals(240, telemetry.sampleCount());
-assertTrue(telemetry.snapshot(120).stable());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/perf/ThermalBudgetPolicyTest.java
-````java
-final class ThermalBudgetPolicyTest {
-@Test void userTargetWinsWhenBelowThermalCeiling() {
-assertEquals(60, ThermalBudgetPolicy.allowedFps(60, ThermalService.Level.NORMAL));
-assertEquals(90, ThermalBudgetPolicy.allowedFps(90, ThermalService.Level.LIGHT));
-⋮----
-@Test void thermalPressureCapsHighFrameRateTargets() {
-assertEquals(90, ThermalBudgetPolicy.allowedFps(120, ThermalService.Level.MODERATE));
-assertEquals(60, ThermalBudgetPolicy.allowedFps(120, ThermalService.Level.SEVERE));
-assertEquals(60, ThermalBudgetPolicy.allowedFps(120, ThermalService.Level.CRITICAL));
-⋮----
-@Test void unsupportedUserTargetsNormalizeToSupportedTiers() {
-assertEquals(60, ThermalBudgetPolicy.allowedFps(75, ThermalService.Level.NORMAL));
-assertEquals(90, ThermalBudgetPolicy.allowedFps(100, ThermalService.Level.NORMAL));
-assertEquals(120, ThermalBudgetPolicy.allowedFps(144, ThermalService.Level.NORMAL));
-⋮----
-@Test void fxCeilingTracksThermalLevel() {
-assertEquals(1.00f, ThermalBudgetPolicy.fxCeiling(ThermalService.Level.NORMAL), .0001f);
-assertEquals(.92f, ThermalBudgetPolicy.fxCeiling(ThermalService.Level.LIGHT), .0001f);
-assertEquals(.76f, ThermalBudgetPolicy.fxCeiling(ThermalService.Level.MODERATE), .0001f);
-assertEquals(.58f, ThermalBudgetPolicy.fxCeiling(ThermalService.Level.SEVERE), .0001f);
-assertEquals(.46f, ThermalBudgetPolicy.fxCeiling(ThermalService.Level.CRITICAL), .0001f);
-⋮----
-@Test void nullThermalLevelFailsOpenToUnknownPolicy() {
-assertEquals(120, ThermalBudgetPolicy.allowedFps(120, null));
-assertEquals(1.00f, ThermalBudgetPolicy.fxCeiling(null), .0001f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java
-````java
-final class CombatProtocolStateTest {
-@Test void rhythmEmpowersEverySixthVolley() {
-CombatProtocolState state = new CombatProtocolState();
-state.enableRhythm();
-for (int i = 0; i < 5; i++) assertEquals(1f, state.onVolley().damageMultiplier(), .0001f);
-var proc = state.onVolley();
-assertTrue(proc.forcedCrit());
-assertEquals(1.30f, proc.damageMultiplier(), .0001f);
-assertEquals(1f, state.onVolley().damageMultiplier(), .0001f);
-⋮----
-@Test void killchainArmsAndConsumesNextVolley() {
-⋮----
-state.enableKillchain();
-for (int i = 0; i < 7; i++) state.onKill();
-assertFalse(state.killchainArmed());
-state.onKill();
-assertTrue(state.killchainArmed());
-⋮----
-assertEquals(1.45f, proc.damageMultiplier(), .0001f);
-assertEquals(1, proc.bonusPenetration());
-⋮----
-@Test void simultaneousProcsCombineWithoutUnboundedStacking() {
-⋮----
-for (int i = 0; i < 5; i++) state.onVolley();
-for (int i = 0; i < 8; i++) state.onKill();
-⋮----
-assertEquals(1.75f, proc.damageMultiplier(), .0001f);
-⋮----
-@Test void evolvedRhythmProcsEveryFourthVolleyAtHigherDamage() {
-⋮----
-state.evolveRhythm();
-for (int i = 0; i < 3; i++) assertEquals(1f, state.onVolley().damageMultiplier(), .0001f);
-⋮----
-@Test void evolvedKillchainArmsAfterFiveKillsWithTwoPenetration() {
-⋮----
-state.evolveKillchain();
-for (int i = 0; i < 4; i++) assertFalse(state.onKill());
-assertTrue(state.onKill());
-⋮----
-assertEquals(1.60f, proc.damageMultiplier(), .0001f);
-assertEquals(2, proc.bonusPenetration());
-⋮----
-@Test void evolvedCombinedProcRemainsCapped() {
-⋮----
-for (int i = 0; i < 3; i++) state.onVolley();
-for (int i = 0; i < 5; i++) state.onKill();
-⋮----
-assertEquals(2.05f, proc.damageMultiplier(), .0001f);
-⋮----
-@Test void reactionCoreOnlyAmplifiesRealElementReactions() {
-⋮----
-state.enableReactionCore();
-assertEquals(0f, state.reactionBonus(100f, Enemy.ElementReaction.NONE), .0001f);
-assertEquals(35f, state.reactionBonus(100f, Enemy.ElementReaction.OVERLOAD), .0001f);
-assertEquals(0f, state.reactionBonus(-5f, Enemy.ElementReaction.THERMAL_SHOCK), .0001f);
-⋮----
-@Test void evolvedReactionCoreRaisesBonusToFiftyFivePercent() {
-⋮----
-state.evolveReactionCore();
-assertEquals(55f, state.reactionBonus(100f, Enemy.ElementReaction.OVERLOAD), .0001f);
-⋮----
-@Test void evolutionsCannotActivateBeforeTheirBaseProtocol() {
-⋮----
-assertFalse(state.rhythmEvolved());
-assertFalse(state.killchainEvolved());
-assertFalse(state.reactionEvolved());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/progression/LegendarySelectorTest.java
-````java
-public final class LegendarySelectorTest {
-@Test public void offersBeginAtLevelEight() {
-Player p = new Player(0f, 0f);
-⋮----
-assertFalse(LegendarySelector.shouldOffer(p));
-⋮----
-assertTrue(LegendarySelector.shouldOffer(p));
-⋮----
-@Test public void selectorNeverReturnsOwnedChoice() {
-⋮----
-assertTrue(LegendaryEffects.applyOverdrive(p));
-⋮----
-int count = LegendarySelector.fillChoices(p, choices);
-assertEquals(3, count);
-⋮----
-assertNotNull(choices[i]);
-assertTrue(choices[i] != LegendaryChoice.OVERDRIVE);
-⋮----
-@Test public void weaponFamilyChoiceKeepsOffersAliveAfterGenericChoicesAreOwned() {
-⋮----
-assertTrue(LegendaryEffects.applySingularity(p));
-assertTrue(LegendaryEffects.applyApex(p));
-⋮----
-assertTrue(LegendaryChoice.VANGUARD_PROTOCOL.eligible(p));
-assertTrue(LegendaryEffects.applyVanguardProtocol(p));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/progression/LegendaryStateTest.java
-````java
-public final class LegendaryStateTest {
-@Test public void grantsAreOneShot() {
-LegendaryState state = new LegendaryState();
-assertFalse(state.hasAny());
-assertTrue(state.grantOverdrive());
-assertFalse(state.grantOverdrive());
-assertTrue(state.hasOverdrive());
-assertTrue(state.hasAny());
-⋮----
-@Test public void flagsRemainIndependent() {
-⋮----
-assertTrue(state.grantSingularity());
-assertTrue(state.grantApex());
-assertFalse(state.hasOverdrive());
-assertTrue(state.hasSingularity());
-assertTrue(state.hasApex());
-⋮----
-@Test public void overdriveTransformsWeaponAndMobilityOnce() {
-Player player = new Player(0f, 0f);
-⋮----
-assertTrue(LegendaryEffects.applyOverdrive(player));
-assertFalse(LegendaryEffects.applyOverdrive(player));
-assertTrue(player.weapon.damage > damage);
-assertTrue(player.weapon.fireInterval < interval);
-assertTrue(player.moveSpeed > speed);
-⋮----
-@Test public void singularityTransformsBallisticsOnce() {
-⋮----
-assertTrue(LegendaryEffects.applySingularity(player));
-assertFalse(LegendaryEffects.applySingularity(player));
-assertEquals(projectiles + 2, player.weapon.projectileCount);
-assertEquals(penetration + 3, player.weapon.penetration);
-⋮----
-@Test public void apexEstablishesEveryAbilityAtTierTwo() {
-⋮----
-assertTrue(LegendaryEffects.applyApex(player));
-assertFalse(LegendaryEffects.applyApex(player));
-for (AbilityType type : AbilityType.values()) assertTrue(player.abilities.tier(type) >= 2);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidanceTest.java
-````java
-final class ProtocolUpgradeGuidanceTest {
-private Player fresh() {
-RunLoadoutContext.end();
-return new Player(0f, 0f);
-⋮----
-@Test void baseProtocolChoicesShowUnlockGuidance() {
-Player p = fresh();
-assertEquals("combat.protocolGuidance.unlock",
-ProtocolUpgradeGuidance.key(p, Upgrade.RHYTHM_DRIVER));
-⋮----
-ProtocolUpgradeGuidance.key(p, Upgrade.KILLCHAIN_CAPACITOR));
-⋮----
-ProtocolUpgradeGuidance.key(p, Upgrade.REACTION_CORE));
-⋮----
-@Test void evolutionChoiceShowsEvolutionGuidanceAfterBase() {
-⋮----
-Upgrade.RHYTHM_DRIVER.apply(p);
-assertEquals("combat.protocolGuidance.evolution",
-ProtocolUpgradeGuidance.key(p, Upgrade.RHYTHM_ACCELERATOR));
-⋮----
-@Test void evolutionGuidanceDisappearsAfterEvolution() {
-⋮----
-Upgrade.KILLCHAIN_CAPACITOR.apply(p);
-Upgrade.KILLCHAIN_OVERCHARGE.apply(p);
-assertNull(ProtocolUpgradeGuidance.key(p, Upgrade.KILLCHAIN_OVERCHARGE));
-⋮----
-@Test void nonProtocolUpgradeHasNoProtocolGuidance() {
-assertNull(ProtocolUpgradeGuidance.key(fresh(), Upgrade.DAMAGE));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/progression/RemainingWeaponFamilyLegendaryBalanceTest.java
-````java
-final class RemainingWeaponFamilyLegendaryBalanceTest {
-@Test void ar9VanguardStaysInsideAssaultPowerBudget() {
-⋮----
-assertTrue(dpsMultiplier >= 1.26f && dpsMultiplier <= 1.31f);
-⋮----
-@Test void scatterMaelstromControlsVolleyGrowth() {
-⋮----
-assertTrue(volleyMultiplier >= 1.08f && volleyMultiplier <= 1.11f);
-⋮----
-@Test void infernoPyroclasmControlsSustainedGrowth() {
-⋮----
-assertTrue(dpsMultiplier >= 1.30f && dpsMultiplier <= 1.33f);
-⋮----
-@Test void breacherRuptureControlsPelletGrowth() {
-````
-
-## File: core/src/test/java/com/deadlinezero/game/progression/UpgradeDraftPolicyTest.java
-````java
-final class UpgradeDraftPolicyTest {
-private Player freshPlayer() {
-RunLoadoutContext.end();
-return new Player(0f, 0f);
-⋮----
-@Test void kineticFreshRunKeepsBroadDraftPool() {
-Player player = freshPlayer();
-assertFalse(UpgradeDraftPolicy.hasEstablishedBuild(player));
-assertEquals(1f, UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.FIRE_CONTROL), .0001f);
-assertEquals(1f, UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.TESLA_ORB), .0001f);
-⋮----
-@Test void elementalBuildStronglyPrefersMatchingFamilyAndDeemphasizesConflicts() {
-⋮----
-assertTrue(UpgradeDraftPolicy.hasEstablishedBuild(player));
-assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.FIRE_CONTROL) >= 2f);
-assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.THERMAL_LANCE));
-assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.CRYO_HAMMER) < 1f);
-assertFalse(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.CRYO_HAMMER));
-⋮----
-@Test void investedAbilityPrefersItsOwnTreeAndKnownSynergyPartners() {
-⋮----
-player.abilities.upgrade(AbilityType.TESLA_ORB);
-⋮----
-assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.TESLA_ORB));
-assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.CRYO_NOVA));
-assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.DRONE));
-assertFalse(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.MISSILE_SWARM));
-⋮----
-@Test void maturePartnerRaisesSynergyOfferWeight() {
-⋮----
-player.abilities.upgrade(AbilityType.CRYO_NOVA);
-⋮----
-assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.MISSILE_SWARM) >= 2f);
-assertTrue(UpgradeDraftPolicy.affinityMultiplier(player, Upgrade.ORBITAL) >= 2f);
-⋮----
-@Test void protocolEvolutionBecomesFocusedBuildPathChoice() {
-⋮----
-player.protocols.enableRhythm();
-⋮----
-assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, Upgrade.RHYTHM_ACCELERATOR));
-assertTrue(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_ACCELERATOR));
-⋮----
-@Test void establishedElementAlwaysGetsOneRelevantDraftSlot() {
-⋮----
-UpgradeSelector.fillChoices(player, choices);
-assertTrue(UpgradeDraftPolicy.isFocusedCandidate(player, choices[0]), choices[0].name());
-assertTrue(UpgradeSelector.isAvailable(player, choices[0]), choices[0].name());
-assertTrue(choices[0] != choices[1] && choices[0] != choices[2] && choices[1] != choices[2]);
-⋮----
-@Test void establishedAbilityAlwaysGetsOwnOrSynergyRelevantDraftSlot() {
-````
-
-## File: core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java
-````java
-final class UpgradePoolTest {
-@Test void productionPoolMeetsFiftyUpgradeTargetWithUniquePresentation() {
-Upgrade[] upgrades = Upgrade.values();
-assertTrue(upgrades.length >= 50, "P5 requires 50+ standard upgrades");
-assertEquals(60, upgrades.length);
-⋮----
-assertTrue(titles.add(upgrade.title), "duplicate upgrade title: " + upgrade.title);
-assertFalse(upgrade.description.isBlank(), upgrade.name());
-⋮----
-assertTrue(common >= 10, "common pool too small");
-assertTrue(rare >= 20, "rare pool too small");
-assertTrue(epic >= 8, "epic pool too small");
-⋮----
-@Test void everyUpgradeKeepsRuntimeStatsFiniteAndInsideSafetyCaps() {
-RunLoadoutContext.end();
-for (Upgrade upgrade : Upgrade.values()) {
-Player player = new Player(0f, 0f);
-upgrade.apply(player);
-assertRuntimeSafe(player, upgrade.name());
-⋮----
-@Test void repeatedStackingSaturatesInsteadOfEscapingMobileSafetyCaps() {
-⋮----
-for (int i = 0; i < 120; i++) for (Upgrade upgrade : stress) upgrade.apply(player);
-⋮----
-assertEquals(Upgrade.MIN_FIRE_INTERVAL, player.weapon.fireInterval, .0001f);
-assertEquals(Upgrade.MAX_DAMAGE, player.weapon.damage, .0001f);
-assertEquals(Upgrade.MAX_MOVE_SPEED, player.moveSpeed, .0001f);
-assertEquals(Upgrade.MAX_HP, player.maxHp, .0001f);
-assertEquals(Upgrade.MAX_PROJECTILES, player.weapon.projectileCount);
-assertEquals(Upgrade.MAX_CRIT_CHANCE, player.weapon.critChance, .0001f);
-assertEquals(Upgrade.MAX_CRIT_MULTIPLIER, player.weapon.critMultiplier, .0001f);
-assertEquals(Upgrade.MAX_PROJECTILE_SPEED, player.weapon.projectileSpeed, .0001f);
-assertEquals(Upgrade.MAX_PENETRATION, player.weapon.penetration);
-assertEquals(Upgrade.MAX_KNOCKBACK, player.weapon.knockback, .0001f);
-assertEquals(Upgrade.MIN_DASH_COOLDOWN, player.dashCooldown, .0001f);
-⋮----
-@Test void selectorAlwaysReturnsThreeDistinctEligibleChoices() {
-⋮----
-UpgradeSelector.fillChoices(player, choices);
-⋮----
-assertNotNull(choice);
-assertTrue(unique.add(choice), "selector returned duplicate choice");
-assertTrue(UpgradeSelector.isAvailable(player, choice), choice.name());
-⋮----
-@Test void everyUpgradeEventuallyStopsBeingUsefulWhenRepeatedAlone() {
-⋮----
-while (UpgradeSelector.isAvailable(player, upgrade) && applications < 240) {
-⋮----
-assertTrue(applications < 240, "upgrade never saturated: " + upgrade.name());
-assertFalse(UpgradeSelector.isAvailable(player, upgrade), "upgrade still offered after saturation: " + upgrade.name());
-⋮----
-@Test void droneDoctrinesUnlockAtTierTwoAndBecomeMutuallyExclusive() {
-⋮----
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DRONE_HUNTER_DOCTRINE));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DRONE_SENTINEL_DOCTRINE));
-⋮----
-for (int i = 0; i < 3; i++) Upgrade.DRONE.apply(player);
-assertTrue(UpgradeSelector.isAvailable(player, Upgrade.DRONE_HUNTER_DOCTRINE));
-assertTrue(UpgradeSelector.isAvailable(player, Upgrade.DRONE_SENTINEL_DOCTRINE));
-⋮----
-Upgrade.DRONE_HUNTER_DOCTRINE.apply(player);
-⋮----
-@Test void protocolEvolutionsRequireTheirBaseAndThenSaturate() {
-⋮----
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_ACCELERATOR));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_OVERCHARGE));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CASCADE));
-⋮----
-Upgrade.RHYTHM_DRIVER.apply(player);
-Upgrade.KILLCHAIN_CAPACITOR.apply(player);
-Upgrade.REACTION_CORE.apply(player);
-⋮----
-assertTrue(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_ACCELERATOR));
-assertTrue(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_OVERCHARGE));
-assertTrue(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CASCADE));
-⋮----
-Upgrade.RHYTHM_ACCELERATOR.apply(player);
-Upgrade.KILLCHAIN_OVERCHARGE.apply(player);
-Upgrade.REACTION_CASCADE.apply(player);
-⋮----
-@Test void eventProtocolsAreOneTimeRunChoices() {
-⋮----
-assertTrue(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_DRIVER));
-assertTrue(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_CAPACITOR));
-assertTrue(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CORE));
-⋮----
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.RHYTHM_DRIVER));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.KILLCHAIN_CAPACITOR));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.REACTION_CORE));
-⋮----
-@Test void hardCappedChoicesDisappearFromEligibility() {
-⋮----
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.RAPID_FIRE));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DAMAGE));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.SPEED));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.MULTISHOT));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.CRIT));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.CRIT_POWER));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.BALLISTICS));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.PENETRATION));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.KNOCKBACK));
-assertFalse(UpgradeSelector.isAvailable(player, Upgrade.DASH_CORE));
-⋮----
-private static void assertRuntimeSafe(Player player, String context) {
-assertTrue(Float.isFinite(player.hp), context);
-assertTrue(Float.isFinite(player.maxHp), context);
-assertTrue(Float.isFinite(player.moveSpeed), context);
-assertTrue(Float.isFinite(player.dashCooldown), context);
-assertTrue(Float.isFinite(player.weapon.damage), context);
-assertTrue(Float.isFinite(player.weapon.fireInterval), context);
-assertTrue(Float.isFinite(player.weapon.projectileSpeed), context);
-assertTrue(Float.isFinite(player.weapon.spreadDegrees), context);
-assertTrue(Float.isFinite(player.weapon.critChance), context);
-assertTrue(Float.isFinite(player.weapon.critMultiplier), context);
-assertTrue(Float.isFinite(player.weapon.knockback), context);
-⋮----
-assertTrue(player.maxHp >= Upgrade.MIN_HP && player.maxHp <= Upgrade.MAX_HP, context);
-assertTrue(player.hp >= 0f && player.hp <= player.maxHp, context);
-assertTrue(player.moveSpeed >= 1f && player.moveSpeed <= Upgrade.MAX_MOVE_SPEED, context);
-assertTrue(player.dashCooldown >= Upgrade.MIN_DASH_COOLDOWN, context);
-assertTrue(player.weapon.damage > 0f && player.weapon.damage <= Upgrade.MAX_DAMAGE, context);
-assertTrue(player.weapon.fireInterval >= Upgrade.MIN_FIRE_INTERVAL, context);
-assertTrue(player.weapon.projectileSpeed >= 1f && player.weapon.projectileSpeed <= Upgrade.MAX_PROJECTILE_SPEED, context);
-assertTrue(player.weapon.projectileCount >= 1 && player.weapon.projectileCount <= Upgrade.MAX_PROJECTILES, context);
-assertTrue(player.weapon.spreadDegrees >= 0f && player.weapon.spreadDegrees <= Upgrade.MAX_SPREAD_DEGREES, context);
-assertTrue(player.weapon.critChance >= 0f && player.weapon.critChance <= Upgrade.MAX_CRIT_CHANCE, context);
-assertTrue(player.weapon.critMultiplier >= 1f && player.weapon.critMultiplier <= Upgrade.MAX_CRIT_MULTIPLIER, context);
-assertTrue(player.weapon.penetration >= 0 && player.weapon.penetration <= Upgrade.MAX_PENETRATION, context);
-assertTrue(player.weapon.knockback >= 0f && player.weapon.knockback <= Upgrade.MAX_KNOCKBACK, context);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryBalanceTest.java
-````java
-final class WeaponFamilyLegendaryBalanceTest {
-@AfterEach void resetLoadout() { RunLoadoutContext.begin(null); }
-⋮----
-@Test void directWeaponTransformationsStayInsideIntentionalPowerBands() {
-assertVolleyBand("rail_rifle", LegendaryChoice.RAIL_PHASE_LANCE, 1.18f, 1.28f);
-assertVolleyBand("cryo_lance", LegendaryChoice.CRYO_PRISM, 1.40f, 1.48f);
-assertVolleyBand("arc_carbine", LegendaryChoice.ARC_OVERLOAD, 1.32f, 1.40f);
-⋮----
-@Test void cinderFurnaceOnlyAddsModestBaselineCadenceBeforeSignaturePayload() {
-Player p = playerWith("cinder_cannon");
-⋮----
-assertTrue(LegendaryChoice.CINDER_FURNACE.apply(p));
-⋮----
-assertTrue(cadenceGain >= 1.05f && cadenceGain <= 1.08f);
-⋮----
-@Test void ionCascadeKeepsBaselineWeaponDamageStable() {
-Player p = playerWith("ion_needle");
-⋮----
-assertTrue(LegendaryChoice.ION_CASCADE.apply(p));
-assertTrue(Math.abs(p.weapon.damage / before - 1f) < .0001f);
-⋮----
-private static void assertVolleyBand(String weaponId, LegendaryChoice choice, float min, float max) {
-Player p = playerWith(weaponId);
-⋮----
-assertTrue(choice.apply(p));
-⋮----
-assertTrue(ratio >= min && ratio <= max, weaponId + " volley ratio out of band: " + ratio);
-⋮----
-private static Player playerWith(String weaponId) {
-PlayerProfile profile = new PlayerProfile();
-⋮----
-RunLoadoutContext.begin(profile);
-Player player = new Player(0f, 0f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/progression/WeaponFamilyLegendaryTest.java
-````java
-final class WeaponFamilyLegendaryTest {
-@AfterEach void resetLoadout() { RunLoadoutContext.begin(null); }
-⋮----
-@Test void ionCascadeOnlyAppearsForIonNeedleAndAcceleratesSignatureCadence() {
-Player p = playerWith("ion_needle");
-⋮----
-assertTrue(LegendaryChoice.ION_CASCADE.eligible(p));
-assertFalse(LegendaryChoice.CINDER_FURNACE.eligible(p));
-assertTrue(LegendaryChoice.ION_CASCADE.apply(p));
-assertTrue(p.legendary.hasIonCascade());
-assertTrue(WeaponSignatureRuntime.ionCascadeEnabled());
-⋮----
-var shot = WeaponSignatureRuntime.consumeShot(false);
-assertEquals(i == 4, shot.active());
-⋮----
-assertEquals(WeaponSignatureRuntime.Kind.ION_OVERCHARGE, shot.kind());
-assertEquals(2, shot.penetrationBonus());
-assertTrue(shot.radius() >= .15f);
-⋮----
-assertFalse(LegendaryChoice.ION_CASCADE.eligible(p));
-⋮----
-@Test void cinderFurnaceCyclesEveryThirdShellAndStrengthensPayload() {
-Player p = playerWith("cinder_cannon");
-⋮----
-assertTrue(LegendaryChoice.CINDER_FURNACE.apply(p));
-assertTrue(WeaponSignatureRuntime.cinderFurnaceEnabled());
-⋮----
-assertEquals(i == 3, shot.active());
-⋮----
-assertEquals(WeaponSignatureRuntime.Kind.CINDER_OVERHEAT, shot.kind());
-assertEquals(1.72f, shot.damageMultiplier(), .0001f);
-⋮----
-assertEquals(.21f, shot.radius(), .0001f);
-⋮----
-@Test void railPhaseLanceTurnsPrecisionWeaponIntoExtremePiercer() {
-Player p = playerWith("rail_rifle");
-⋮----
-assertTrue(LegendaryChoice.RAIL_PHASE_LANCE.apply(p));
-assertEquals(damage * 1.22f, p.weapon.damage, .0001f);
-assertEquals(speed * 1.12f, p.weapon.projectileSpeed, .0001f);
-assertEquals(penetration + 2, p.weapon.penetration);
-assertEquals(crit + .08f, p.weapon.critChance, .0001f);
-⋮----
-@Test void cryoPrismCreatesThreeControlledFrostLances() {
-Player p = playerWith("cryo_lance");
-⋮----
-assertTrue(LegendaryChoice.CRYO_PRISM.apply(p));
-assertEquals(3, p.weapon.projectileCount);
-assertEquals(damage * .48f, p.weapon.damage, .0001f);
-assertEquals(penetration + 1, p.weapon.penetration);
-assertTrue(p.weapon.spreadDegrees >= 5f);
-⋮----
-@Test void arcOverloadDoublesShockVectorsWithoutRunawayPaperDamage() {
-Player p = playerWith("arc_carbine");
-⋮----
-assertTrue(LegendaryChoice.ARC_OVERLOAD.apply(p));
-assertEquals(2, p.weapon.projectileCount);
-assertEquals(damage * .68f, p.weapon.damage, .0001f);
-assertEquals(2, p.weapon.penetration);
-⋮----
-assertTrue(totalVolley >= damage * 1.30f && totalVolley <= damage * 1.40f);
-⋮----
-@Test void incompatibleWeaponSpecificChoicesNeverEnterOffers() {
-Player p = playerWith("ar9");
-⋮----
-int count = LegendarySelector.fillChoices(p, out);
-assertEquals(4, count);
-⋮----
-assertTrue(choice == LegendaryChoice.OVERDRIVE
-⋮----
-assertTrue(sawVanguard);
-⋮----
-@Test void ownedGeneralLegendariesStillAllowCompatibleFamilyOffer() {
-⋮----
-assertTrue(LegendaryEffects.applyOverdrive(p));
-assertTrue(LegendaryEffects.applySingularity(p));
-assertTrue(LegendaryEffects.applyApex(p));
-assertTrue(LegendarySelector.shouldOffer(p));
-⋮----
-assertEquals(1, LegendarySelector.fillChoices(p, out));
-assertEquals(LegendaryChoice.RAIL_PHASE_LANCE, out[0]);
-⋮----
-private static Player playerWith(String weaponId) {
-PlayerProfile profile = new PlayerProfile();
-⋮----
-RunLoadoutContext.begin(profile);
-return new Player(0f, 0f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/screen/GameScreenBossSummonRosterTest.java
-````java
-public final class GameScreenBossSummonRosterTest {
-@Test public void nullArchonPhaseTwoUsesStalkersAndSeersOnly() {
-assertEquals(Enemy.Type.PHANTOM, GameScreen.bossSummonType(true, false, 2, 0));
-assertEquals(Enemy.Type.RANGED, GameScreen.bossSummonType(true, false, 2, 1));
-assertEquals(Enemy.Type.PHANTOM, GameScreen.bossSummonType(true, false, 2, 2));
-assertEquals(Enemy.Type.PHANTOM, GameScreen.bossSummonType(true, false, 2, 3));
-⋮----
-@Test public void nullArchonPhaseThreeAddsNullWards() {
-assertEquals(Enemy.Type.PHANTOM, GameScreen.bossSummonType(true, false, 3, 0));
-assertEquals(Enemy.Type.RANGED, GameScreen.bossSummonType(true, false, 3, 1));
-assertEquals(Enemy.Type.REGENERATOR, GameScreen.bossSummonType(true, false, 3, 2));
-assertEquals(Enemy.Type.PHANTOM, GameScreen.bossSummonType(true, false, 3, 3));
-assertEquals(Enemy.Type.RANGED, GameScreen.bossSummonType(true, false, 3, 4));
-assertEquals(Enemy.Type.REGENERATOR, GameScreen.bossSummonType(true, false, 3, 5));
-⋮----
-@Test public void revenantHistoricalPhaseThreeCadenceIsPreserved() {
-assertEquals(Enemy.Type.RANGED, GameScreen.bossSummonType(false, true, 3, 0));
-assertEquals(Enemy.Type.RUNNER, GameScreen.bossSummonType(false, true, 3, 1));
-assertEquals(Enemy.Type.RANGED, GameScreen.bossSummonType(false, true, 3, 2));
-assertEquals(Enemy.Type.RUNNER, GameScreen.bossSummonType(false, true, 3, 3));
-⋮----
-@Test public void standardBossHistoricalRosterIsPreserved() {
-assertEquals(Enemy.Type.RUNNER, GameScreen.bossSummonType(false, false, 2, 0));
-assertEquals(Enemy.Type.RANGED, GameScreen.bossSummonType(false, false, 3, 0));
-assertEquals(Enemy.Type.RUNNER, GameScreen.bossSummonType(false, false, 3, 1));
-assertEquals(Enemy.Type.RUNNER, GameScreen.bossSummonType(false, false, 3, 2));
-assertEquals(Enemy.Type.RANGED, GameScreen.bossSummonType(false, false, 3, 3));
-⋮----
-@Test public void frostColossusUsesHeavyCryogenicSummons() {
-assertEquals(Enemy.Type.SHIELDED, GameScreen.bossSummonType(BossIdentity.FROST_COLOSSUS, 2, 0));
-assertEquals(Enemy.Type.BRUTE, GameScreen.bossSummonType(BossIdentity.FROST_COLOSSUS, 2, 1));
-assertEquals(Enemy.Type.SHIELDED, GameScreen.bossSummonType(BossIdentity.FROST_COLOSSUS, 3, 0));
-assertEquals(Enemy.Type.BRUTE, GameScreen.bossSummonType(BossIdentity.FROST_COLOSSUS, 3, 1));
-assertEquals(Enemy.Type.RANGED, GameScreen.bossSummonType(BossIdentity.FROST_COLOSSUS, 3, 2));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/screen/MenuLayoutModelTest.java
-````java
-final class MenuLayoutModelTest {
-⋮----
-void homeLayoutIsContainedAndNonOverlappingAtBaselineAndWidePhone() {
-⋮----
-UiLayout.Metrics metrics = UiLayout.compute(size[0], size[1]);
-MenuLayoutModel.Layout layout = MenuLayoutModel.layout(metrics);
-⋮----
-assertContained(layout.survivorCard(), metrics);
-assertContained(layout.loadoutCard(), metrics);
-assertContained(layout.threatCard(), metrics);
-assertContained(layout.deploy(), metrics);
-assertTrue(layout.deploy().height >= metrics.touchTarget());
-assertFalse(layout.survivorCard().overlaps(layout.deploy()));
-assertFalse(layout.loadoutCard().overlaps(layout.deploy()));
-assertFalse(layout.threatCard().overlaps(layout.deploy()));
-⋮----
-void bottomTabsAreEvenAndTouchSafe() {
-UiLayout.Metrics metrics = UiLayout.compute(1536, 691);
-⋮----
-Rectangle[] tabs = layout.bottomTabs();
-⋮----
-assertEquals(6, tabs.length);
-⋮----
-assertEquals(width, tab.width, .01f);
-assertTrue(tab.width >= metrics.touchTarget());
-assertTrue(tab.height >= metrics.touchTarget());
-assertTrue(layout.bottomNav().contains(tab));
-⋮----
-private static void assertContained(Rectangle r, UiLayout.Metrics m) {
-assertTrue(r.x >= m.safeLeft() - .01f);
-assertTrue(r.y >= m.safeBottom() - .01f);
-assertTrue(r.x + r.width <= m.safeRight() + .01f);
-assertTrue(r.y + r.height <= m.safeTop() + .01f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/screen/MetaScreenLayoutContractTest.java
-````java
-final class MetaScreenLayoutContractTest {
-⋮----
-void sharedMetaLayoutKeepsPanelsAndActionsInsideSafeFrame() {
-⋮----
-UiLayout.Metrics metrics = UiLayout.compute(size[0], size[1]);
-MetaLayout.Layout layout = MetaLayout.compute(metrics);
-⋮----
-assertContained(layout.header(), metrics);
-assertContained(layout.content(), metrics);
-assertContained(layout.footer(), metrics);
-assertContained(layout.back(), metrics);
-⋮----
-Rectangle[] columns = MetaLayout.columns(layout.content(), 3, 18f);
-for (Rectangle column : columns) assertContained(column, metrics);
-assertFalse(columns[0].overlaps(columns[1]));
-assertFalse(columns[1].overlaps(columns[2]));
-⋮----
-Rectangle[] actions = MetaLayout.actions(layout.footer(), 4, 12f);
-⋮----
-assertTrue(action.height >= metrics.touchTarget());
-assertContained(action, metrics);
-⋮----
-void cardRowsStayTouchSafe() {
-UiLayout.Metrics metrics = UiLayout.compute(1536, 691);
-⋮----
-Rectangle[] rows = MetaLayout.rows(layout.content(), 5, 12f);
-for (Rectangle row : rows) assertTrue(row.height >= metrics.touchTarget());
-⋮----
-private static void assertContained(Rectangle r, UiLayout.Metrics m) {
-assertTrue(r.x >= m.safeLeft() - .01f);
-assertTrue(r.y >= m.safeBottom() - .01f);
-assertTrue(r.x + r.width <= m.safeRight() + .01f);
-assertTrue(r.y + r.height <= m.safeTop() + .01f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/screen/SurvivorLayoutModelTest.java
-````java
-final class SurvivorLayoutModelTest {
-⋮----
-void rosterLayoutStaysReadableAtBaselineAndWidePhone() {
-⋮----
-UiLayout.Metrics metrics = UiLayout.compute(size[0], size[1]);
-SurvivorLayoutModel.Layout layout = SurvivorLayoutModel.layout(metrics);
-⋮----
-assertContained(layout.card(), metrics);
-assertContained(layout.portrait(), metrics);
-assertContained(layout.stats(), metrics);
-assertContained(layout.xpBar(), metrics);
-assertContained(layout.cta(), metrics);
-assertTrue(layout.cta().height >= metrics.touchTarget());
-assertTrue(layout.previous().width >= metrics.touchTarget());
-assertTrue(layout.next().width >= metrics.touchTarget());
-assertFalse(layout.portrait().overlaps(layout.stats()));
-assertFalse(layout.stats().overlaps(layout.cta()));
-assertFalse(layout.xpBar().overlaps(layout.cta()));
-⋮----
-void navigationAndSelectionAreExplicitTargets() {
-UiLayout.Metrics metrics = UiLayout.compute(1536, 691);
-⋮----
-Rectangle empty = new Rectangle(layout.card().x + layout.card().width * .45f,
-layout.card().y + 12f, 30f, 30f);
-⋮----
-assertFalse(layout.previous().overlaps(layout.next()));
-assertFalse(layout.cta().overlaps(layout.previous()));
-assertFalse(layout.cta().overlaps(layout.next()));
-assertFalse(layout.cta().overlaps(empty));
-⋮----
-private static void assertContained(Rectangle r, UiLayout.Metrics m) {
-assertTrue(r.x >= m.safeLeft() - .01f);
-assertTrue(r.y >= m.safeBottom() - .01f);
-assertTrue(r.x + r.width <= m.safeRight() + .01f);
-assertTrue(r.y + r.height <= m.safeTop() + .01f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/services/BillingProductCatalogTest.java
-````java
-final class BillingProductCatalogTest {
-@Test void catalogContainsExactlyTheExpectedProducts() {
-assertEquals(Set.of(
-⋮----
-@Test void productIdsArePlaySafeAndUnique() {
-assertEquals(4, BillingService.PRODUCTS.size());
-⋮----
-assertTrue(id.matches("[a-z0-9_]{3,64}"), () -> "Invalid Play product id: " + id);
-assertFalse(id.startsWith("test_"), () -> "Test product leaked into production catalog: " + id);
-assertFalse(id.contains("placeholder"), () -> "Placeholder product leaked into production catalog: " + id);
-⋮----
-@Test void durableAndConsumableClassificationIsCompleteAndExclusive() {
-⋮----
-assertTrue(BillingService.isDurable(id) ^ BillingService.isConsumable(id),
-⋮----
-assertTrue(BillingService.isKnownProduct(id));
-⋮----
-assertFalse(BillingService.isKnownProduct("unknown_product"));
-assertFalse(BillingService.isDurable("unknown_product"));
-assertFalse(BillingService.isConsumable("unknown_product"));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/services/BillingServiceStateTest.java
-````java
-final class BillingServiceStateTest {
-@Test void legacyImplementationsDefaultToReadyAndNoActiveProduct() {
-BillingService service = new BillingService() {
-@Override public void initialize() {}
-@Override public boolean owns(String productId) { return false; }
-@Override public void purchase(String productId, Runnable onSuccess, Runnable onFailure) {}
-@Override public void restore() {}
-⋮----
-assertEquals(BillingService.State.READY, service.state());
-assertEquals("", service.activeProductId());
-⋮----
-@Test void pendingStateRemainsDistinctFromInProgress() {
-assertEquals("PURCHASE_IN_PROGRESS", BillingService.State.PURCHASE_IN_PROGRESS.name());
-assertEquals("PURCHASE_PENDING", BillingService.State.PURCHASE_PENDING.name());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/services/CloudSaveServiceTest.java
-````java
-final class CloudSaveServiceTest {
-@Test void unavailableAdapterBehavesAsEmptyRemote() throws Exception {
-CloudSaveService service = new CloudSaveService(null);
-assertFalse(service.available());
-assertNull(service.inspectRemote());
-assertEquals(CloudSaveService.DownloadResult.EMPTY_REMOTE, service.downloadRemote().result());
-⋮----
-@Test void unavailableProviderRejectsUploadExplicitly() {
-⋮----
-String backup = ProfileBackupCodec.encode(Map.of("accountLevel", 1));
-assertThrows(IllegalStateException.class, () -> service.upload(backup));
-⋮----
-@Test void corruptRemotePayloadIsRejectedBeforeImport() {
-CloudSaveService service = serviceReturning("not-a-valid-backup");
-assertThrows(IllegalArgumentException.class, service::inspectRemote);
-⋮----
-@Test void monotoneAdvanceIsSafeOnlyWhenEveryOtherPersistedFieldMatches() throws Exception {
-⋮----
-localValues.put("highestStage", 4);
-localValues.put("accountLevel", 8);
-localValues.put("totalRuns", 20);
-localValues.put("totalKills", 3000L);
-localValues.put("threat.highest", 1);
-localValues.put("credits", 100L);
-⋮----
-remoteValues.put("highestStage", 6);
-remoteValues.put("accountLevel", 9);
-remoteValues.put("totalRuns", 30);
-remoteValues.put("totalKills", 5000L);
-remoteValues.put("threat.highest", 2);
-⋮----
-CloudSaveService service = serviceReturning(ProfileBackupCodec.encode(remoteValues));
-assertEquals(CloudSaveService.ConflictState.REMOTE_AHEAD,
-service.compareRemoteToLocal(ProfileBackupCodec.encode(localValues)));
-⋮----
-@Test void uniqueNonMonotoneProgressForcesDivergedEvenWhenRemoteCountersAreAhead() throws Exception {
-⋮----
-localValues.put("achievement.FIRST_CLEAR.claimed", true);
-⋮----
-remoteValues.put("achievement.FIRST_CLEAR.claimed", false);
-⋮----
-assertEquals(CloudSaveService.ConflictState.DIVERGED,
-⋮----
-@Test void exactPayloadEqualityIsEqual() throws Exception {
-String backup = ProfileBackupCodec.encode(Map.of(
-⋮----
-CloudSaveService service = serviceReturning(backup);
-assertEquals(CloudSaveService.ConflictState.EQUAL, service.compareRemoteToLocal(backup));
-⋮----
-@Test void observedRemoteIdentityRequiresPayloadAndVersionToMatch() {
-⋮----
-assertTrue(CloudSaveService.sameRemote(observed, new CloudSaveAdapter.RemoteBackup("payload-a", 100L)));
-assertFalse(CloudSaveService.sameRemote(observed, new CloudSaveAdapter.RemoteBackup("payload-b", 100L)));
-assertFalse(CloudSaveService.sameRemote(observed, new CloudSaveAdapter.RemoteBackup("payload-a", 101L)));
-assertFalse(CloudSaveService.sameRemote(observed, null));
-assertTrue(CloudSaveService.sameRemote(null, null));
-⋮----
-@Test void classificationCanBeBoundToAnExactAlreadyInspectedRemote() {
-⋮----
-local.put("highestStage", 4);
-local.put("accountLevel", 8);
-local.put("totalRuns", 20);
-local.put("totalKills", 3000L);
-local.put("threat.highest", 1);
-local.put("credits", 100L);
-⋮----
-remote.put("highestStage", 5);
-remote.put("totalRuns", 25);
-String localBackup = ProfileBackupCodec.encode(local);
-String remoteBackup = ProfileBackupCodec.encode(remote);
-⋮----
-CloudSaveService service = serviceReturning("unused");
-⋮----
-service.classify(localBackup, new CloudSaveAdapter.RemoteBackup(remoteBackup, 123L)));
-⋮----
-@Test void authenticationRequestIsDelegatedExplicitly() throws Exception {
-⋮----
-CloudSaveService service = new CloudSaveService(new CloudSaveAdapter() {
-@Override public boolean supportsAuthentication() { return true; }
-@Override public void authenticate() { authenticated[0] = true; }
-@Override public RemoteBackup read() { return null; }
-@Override public void write(String payload) { }
-⋮----
-assertTrue(service.supportsAuthentication());
-service.authenticate();
-assertTrue(authenticated[0]);
-⋮----
-@Test void providerConflictChoiceIsDelegatedExplicitly() throws Exception {
-⋮----
-@Override public ProviderConflict pendingConflict() { return conflict; }
-@Override public void resolvePendingConflict(ConflictChoice choice) { chosen[0] = choice; }
-⋮----
-assertEquals(conflict, service.pendingProviderConflict());
-service.resolveProviderConflict(CloudSaveAdapter.ConflictChoice.CONFLICTING);
-assertEquals(CloudSaveAdapter.ConflictChoice.CONFLICTING, chosen[0]);
-⋮----
-@Test void uploadRejectsCorruptLocalPayloadBeforeProviderWrite() {
-⋮----
-@Override public void write(String payload) { throw new AssertionError("provider must not receive corrupt backup"); }
-⋮----
-assertThrows(IllegalArgumentException.class, () -> service.upload("corrupt"));
-⋮----
-@Test void restoreResultRequiresFreshProfileOnAppliedRestore() {
-assertTrue(CloudSaveService.RestoreResult.class.isRecord());
-⋮----
-private static CloudSaveService serviceReturning(String payload) {
-return new CloudSaveService(new CloudSaveAdapter() {
-@Override public RemoteBackup read() { return new RemoteBackup(payload, 789L); }
-@Override public void write(String ignored) { }
-````
-
-## File: core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java
-````java
-final class OfferConfigServiceTest {
-@Test void defaultsKeepEveryKnownProductAvailable() {
-OfferConfigService.Snapshot snapshot = OfferConfigService.safeDefaults();
-for (String productId : BillingService.PRODUCTS) assertTrue(snapshot.enabled(productId));
-assertTrue(snapshot.featured(BillingService.STARTER_PACK));
-⋮----
-@Test void missingOrFullyInvalidRemoteConfigFallsBackSafely() {
-assertEquals(BillingService.PRODUCTS, OfferConfigService.sanitize(null, null).enabledProducts());
-assertEquals(BillingService.PRODUCTS, OfferConfigService.sanitize(Set.of(), "").enabledProducts());
-assertEquals(BillingService.PRODUCTS,
-OfferConfigService.sanitize(Set.of("unknown_offer"), "unknown_offer").enabledProducts());
-⋮----
-@Test void remoteConfigCanOnlyExposeKnownProducts() {
-OfferConfigService.Snapshot snapshot = OfferConfigService.sanitize(
-Set.of(BillingService.GEMS_SMALL, "not_a_play_product"),
-⋮----
-assertEquals(Set.of(BillingService.GEMS_SMALL), snapshot.enabledProducts());
-assertTrue(snapshot.enabled(BillingService.GEMS_SMALL));
-assertTrue(snapshot.featured(BillingService.GEMS_SMALL));
-assertFalse(snapshot.enabled("not_a_play_product"));
-⋮----
-@Test void featuredOfferMustAlsoBeEnabled() {
-⋮----
-Set.of(BillingService.GEMS_SMALL),
-⋮----
-assertEquals("", snapshot.featuredProductId());
-assertFalse(snapshot.featured(BillingService.STARTER_PACK));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/services/SingleFlightGateTest.java
-````java
-final class SingleFlightGateTest {
-@Test void rejectsOverlappingOperationsUntilReleased() {
-SingleFlightGate gate = new SingleFlightGate();
-⋮----
-assertTrue(gate.tryBegin());
-assertTrue(gate.active());
-assertFalse(gate.tryBegin());
-⋮----
-gate.end();
-assertFalse(gate.active());
-⋮----
-@Test void endIsIdempotent() {
-````
-
-## File: core/src/test/java/com/deadlinezero/game/services/ThermalServiceTest.java
-````java
-final class ThermalServiceTest {
-@Test void thermalLevelsApplyConservativeFpsCeilings() {
-assertEquals(120, ThermalService.Level.UNKNOWN.fpsCeiling);
-assertEquals(120, ThermalService.Level.NORMAL.fpsCeiling);
-assertEquals(120, ThermalService.Level.LIGHT.fpsCeiling);
-assertEquals(90, ThermalService.Level.MODERATE.fpsCeiling);
-assertEquals(60, ThermalService.Level.SEVERE.fpsCeiling);
-assertEquals(60, ThermalService.Level.CRITICAL.fpsCeiling);
-assertEquals(1.00f, ThermalService.Level.NORMAL.fxCeiling, .0001f);
-assertEquals(.92f, ThermalService.Level.LIGHT.fxCeiling, .0001f);
-assertEquals(.76f, ThermalService.Level.MODERATE.fxCeiling, .0001f);
-assertEquals(.58f, ThermalService.Level.SEVERE.fxCeiling, .0001f);
-assertEquals(.46f, ThermalService.Level.CRITICAL.fxCeiling, .0001f);
-⋮----
-@Test void noOpIsNonRestrictive() {
-assertEquals(ThermalService.Level.UNKNOWN, ThermalService.noOp().level());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ui/ResponsiveGridTest.java
-````java
-final class ResponsiveGridTest {
-⋮----
-void baselineUsesTwoColumnsAndWidePhoneUsesThree() {
-UiLayout.Metrics baseline = UiLayout.compute(1280, 720);
-UiLayout.Metrics wide = UiLayout.compute(1536, 691);
-⋮----
-ResponsiveGrid.Spec baseGrid = ResponsiveGrid.compute(baseline.contentWidth(), 420f, 3, 16f);
-ResponsiveGrid.Spec wideGrid = ResponsiveGrid.compute(wide.contentWidth(), 420f, 3, 16f);
-⋮----
-assertEquals(2, baseGrid.columns());
-assertEquals(3, wideGrid.columns());
-assertTrue(baseGrid.cardWidth() >= 300f);
-assertTrue(wideGrid.cardWidth() >= 300f);
-⋮----
-void targetFormatsProduceTouchSafeNonOverlappingCards() {
-⋮----
-UiLayout.Metrics m = UiLayout.compute(size[0], size[1]);
-ResponsiveGrid.Spec spec = ResponsiveGrid.compute(m.contentWidth(), 420f, 3, 16f);
-Rectangle a = ResponsiveGrid.cardBounds(0, m.safeLeft(), m.contentTop(), 108f, spec);
-Rectangle b = ResponsiveGrid.cardBounds(1, m.safeLeft(), m.contentTop(), 108f, spec);
-assertTrue(a.width >= 300f);
-assertTrue(a.height >= m.touchTarget());
-assertTrue(b.x >= a.x + a.width + 15.9f);
-assertTrue(b.x + b.width <= m.safeRight() + .01f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ui/UiLayoutTest.java
-````java
-final class UiLayoutTest {
-⋮----
-void widePhoneExtendsHorizontallyWithoutShrinkingLogicalHeight() {
-UiLayout.Metrics m = UiLayout.compute(1536, 691);
-⋮----
-assertEquals(720f, m.height(), 0.01f);
-assertTrue(m.width() > 1280f);
-assertTrue(m.safeLeft() >= 24f);
-assertTrue(m.safeRight() <= m.width() - 24f);
-assertTrue(m.contentWidth() >= 1180f);
-⋮----
-void requiredFormatsKeepSafeFrameAndTouchTargets() {
-⋮----
-UiLayout.Metrics m = UiLayout.compute(size[0], size[1]);
-assertTrue(m.width() >= 1280f);
-assertTrue(m.height() >= 720f);
-assertTrue(m.contentWidth() > 0f);
-assertTrue(m.touchTarget() >= 56f);
-assertTrue(m.safeBottom() < m.safeTop());
-assertTrue(m.headerBottom() <= m.safeTop());
-assertTrue(m.footerTop() >= m.safeBottom());
-assertTrue(m.contentBottom() < m.contentTop());
-⋮----
-void sixteenByTenExtendsVerticallyWithoutStretching() {
-UiLayout.Metrics m = UiLayout.compute(2560, 1600);
-assertEquals(1280f, m.width(), 0.01f);
-assertEquals(800f, m.height(), 0.01f);
-⋮----
-void invalidPhysicalDimensionsFallBackToBaseline() {
-UiLayout.Metrics m = UiLayout.compute(0, 0);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ui/UiMotionTest.java
-````java
-final class UiMotionTest {
-⋮----
-void timingConstantsStayWithinInteractionBudget() {
-assertTrue(UiMotion.PRESS_SECONDS >= .07f && UiMotion.PRESS_SECONDS <= .10f);
-assertTrue(UiMotion.FOCUS_SECONDS >= .10f && UiMotion.FOCUS_SECONDS <= .14f);
-assertTrue(UiMotion.REVEAL_SECONDS >= .16f && UiMotion.REVEAL_SECONDS <= .22f);
-⋮----
-void reducedMotionResolvesImmediatelyToStableEndState() {
-assertEquals(1f, UiMotion.progress(0f, UiMotion.REVEAL_SECONDS, true), .0001f);
-assertEquals(1f, UiMotion.progress(.01f, UiMotion.PRESS_SECONDS, true), .0001f);
-⋮----
-void progressIsClampedAndMonotonic() {
-float a = UiMotion.progress(0f, UiMotion.REVEAL_SECONDS, false);
-float b = UiMotion.progress(UiMotion.REVEAL_SECONDS * .5f, UiMotion.REVEAL_SECONDS, false);
-float c = UiMotion.progress(UiMotion.REVEAL_SECONDS, UiMotion.REVEAL_SECONDS, false);
-assertEquals(0f, a, .0001f);
-assertTrue(b > a && b < c);
-assertEquals(1f, c, .0001f);
-assertEquals(1f, UiMotion.progress(99f, UiMotion.REVEAL_SECONDS, false), .0001f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/ui/UiRendererStateTest.java
-````java
-final class UiRendererStateTest {
-⋮----
-void interactiveStatesResolveToDistinctSemanticStyles() {
-UiRenderer.ButtonStyle normal = UiRenderer.buttonStyle(UiRenderer.ButtonState.NORMAL);
-UiRenderer.ButtonStyle pressed = UiRenderer.buttonStyle(UiRenderer.ButtonState.PRESSED);
-UiRenderer.ButtonStyle selected = UiRenderer.buttonStyle(UiRenderer.ButtonState.SELECTED);
-UiRenderer.ButtonStyle disabled = UiRenderer.buttonStyle(UiRenderer.ButtonState.DISABLED);
-UiRenderer.ButtonStyle danger = UiRenderer.buttonStyle(UiRenderer.ButtonState.DANGER);
-⋮----
-assertNotEquals(normal.tone(), selected.tone());
-assertNotEquals(normal.tone(), disabled.tone());
-assertNotEquals(selected.tone(), danger.tone());
-assertTrue(pressed.fillAlpha() > normal.fillAlpha());
-assertTrue(disabled.labelAlpha() > 0f);
-assertTrue(disabled.borderAlpha() > 0f);
-assertTrue(danger.borderAlpha() >= normal.borderAlpha());
-⋮----
-void nullStateFallsBackToNormalPresentation() {
-UiRenderer.ButtonStyle fallback = UiRenderer.buttonStyle(null);
-⋮----
-assertTrue(fallback == normal);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java
-````java
-final class ActiveBuildStatusTest {
-private Player fresh() {
-RunLoadoutContext.end();
-return new Player(0f, 0f);
-⋮----
-@Test void doctrineTakesFirstHudSlot() {
-Player p = fresh();
-for (int i = 0; i < 3; i++) p.abilities.upgrade(AbilityType.DRONE);
-p.abilities.chooseDroneDoctrine(DroneDoctrine.HUNTER);
-⋮----
-ActiveBuildStatus.fill(p, keys);
-assertEquals("hud.build.hunter", keys[0]);
-assertNull(keys[1]);
-⋮----
-@Test void secondSlotShowsPrimaryActiveSynergy() {
-⋮----
-for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.TESLA_ORB);
-⋮----
-p.abilities.chooseDroneDoctrine(DroneDoctrine.SENTINEL);
-⋮----
-assertEquals("hud.build.sentinel", keys[0]);
-assertEquals("hud.build.arcReactor", keys[1]);
-⋮----
-@Test void strongestLateSynergyWinsSingleSynergySlot() {
-⋮----
-for (int i = 0; i < 5; i++) p.abilities.upgrade(AbilityType.ORBITAL_BLADE);
-⋮----
-assertEquals("hud.build.stormBlade", keys[0]);
-⋮----
-@Test void emptyBuildProducesNoTags() {
-⋮----
-ActiveBuildStatus.fill(fresh(), keys);
-assertNull(keys[0]);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java
-````java
-final class ActorMaterialProfileTest {
-@Test void standardCrowdEnemiesStaySingleDraw() {
-assertFalse(ActorMaterialProfile.enemy(Enemy.Type.SHAMBLER, Enemy.Variant.NORMAL).outline());
-assertFalse(ActorMaterialProfile.enemy(Enemy.Type.RUNNER, Enemy.Variant.NORMAL).outline());
-assertFalse(ActorMaterialProfile.enemy(Enemy.Type.BRUTE, Enemy.Variant.NORMAL).outline());
-assertFalse(ActorMaterialProfile.enemy(Enemy.Type.RANGED, Enemy.Variant.NORMAL).outline());
-⋮----
-@Test void priorityActorsReceiveSilhouetteReinforcement() {
-assertTrue(ActorMaterialProfile.player().outline());
-assertTrue(ActorMaterialProfile.enemy(Enemy.Type.BOSS, Enemy.Variant.NORMAL).outline());
-assertTrue(ActorMaterialProfile.enemy(Enemy.Type.ELITE, Enemy.Variant.NORMAL).outline());
-assertTrue(ActorMaterialProfile.enemy(Enemy.Type.SHIELDED, Enemy.Variant.NORMAL).outline());
-assertTrue(ActorMaterialProfile.enemy(Enemy.Type.REGENERATOR, Enemy.Variant.NORMAL).outline());
-assertTrue(ActorMaterialProfile.enemy(Enemy.Type.PHANTOM, Enemy.Variant.NORMAL).outline());
-assertTrue(ActorMaterialProfile.enemy(Enemy.Type.SHAMBLER, Enemy.Variant.FERAL).outline());
-⋮----
-@Test void reinforcementStaysSubtle() {
-⋮----
-ActorMaterialProfile.player(),
-ActorMaterialProfile.enemy(Enemy.Type.BOSS, Enemy.Variant.NORMAL),
-ActorMaterialProfile.enemy(Enemy.Type.ELITE, Enemy.Variant.NORMAL),
-ActorMaterialProfile.enemy(Enemy.Type.SHAMBLER, Enemy.Variant.SWIFT)
-⋮----
-assertTrue(p.scale() >= 1f && p.scale() <= 1.08f);
-assertTrue(p.alpha() >= 0f && p.alpha() <= .80f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java
-````java
-final class AdaptiveFxBudgetTest {
-@Test void externalCeilingCanReduceQualityImmediately() {
-AdaptiveFxBudget budget = new AdaptiveFxBudget();
-budget.setExternalCeiling(.58f);
-assertEquals(.58f, budget.quality(), .0001f);
-⋮----
-@Test void recoveryIsGradualToAvoidThermalOscillation() {
-⋮----
-budget.setExternalCeiling(1f);
-⋮----
-budget.advanceExternalCeiling(.1f);
-assertTrue(budget.quality() > .58f);
-assertTrue(budget.quality() < 1f);
-⋮----
-@Test void externalCeilingIsClampedToSupportedRange() {
-⋮----
-budget.setExternalCeiling(.10f);
-assertEquals(.40f, budget.quality(), .0001f);
-budget.setExternalCeiling(2f);
-for (int i = 0; i < 400; i++) budget.advanceExternalCeiling(.1f);
-assertEquals(1f, budget.quality(), .003f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/AnimationProfileCatalogTest.java
-````java
-final class AnimationProfileCatalogTest {
-⋮----
-void fastArchetypesAnimateFasterThanHeavyArchetypes() {
-var wraith = AnimationProfileCatalog.survivor(SurvivorCatalog.Survivor.WRAITH);
-var bastion = AnimationProfileCatalog.survivor(SurvivorCatalog.Survivor.BASTION);
-assertTrue(wraith.run() < bastion.run());
-assertTrue(wraith.attack() < bastion.attack());
-⋮----
-var runner = AnimationProfileCatalog.enemy(Enemy.Type.RUNNER);
-var brute = AnimationProfileCatalog.enemy(Enemy.Type.BRUTE);
-assertTrue(runner.run() < brute.run());
-assertTrue(runner.attack() < brute.attack());
-⋮----
-void everyProductionTimingIsSafeForRealtimeAnimation() {
-for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
-assertSafe(AnimationProfileCatalog.survivor(survivor));
-⋮----
-for (Enemy.Type type : Enemy.Type.values()) {
-assertSafe(AnimationProfileCatalog.enemy(type));
-⋮----
-void transientHitAndDeathAnimationsNeverLoop() {
-assertTrue(AnimationProfileCatalog.loops(GameArt.Motion.IDLE));
-assertTrue(AnimationProfileCatalog.loops(GameArt.Motion.RUN));
-assertTrue(AnimationProfileCatalog.loops(GameArt.Motion.ATTACK));
-assertFalse(AnimationProfileCatalog.loops(GameArt.Motion.HIT));
-assertFalse(AnimationProfileCatalog.loops(GameArt.Motion.DEATH));
-⋮----
-private static void assertSafe(AnimationProfileCatalog.Profile profile) {
-assertRange(profile.idle());
-assertRange(profile.run());
-assertRange(profile.attack());
-assertRange(profile.hit());
-assertRange(profile.death());
-⋮----
-private static void assertRange(float value) {
-assertTrue(value >= .04f && value <= .20f, "unsafe animation frame duration: " + value);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java
-````java
-final class ArtProfileCatalogPhoneReadabilityTest {
-@Test void nonBossEnemiesStayPhoneReadableWithoutBossScaleCreep() {
-for (Enemy.Type type : Enemy.Type.values()) {
-ArtProfileCatalog.CharacterProfile p = ArtProfileCatalog.enemy(type);
-⋮----
-assertTrue(p.height() >= 4.5f);
-⋮----
-assertTrue(p.height() >= 1.45f, type + " is too small for phone-scale authored rendering");
-assertTrue(p.height() <= 2.60f, type + " is too large relative to gameplay collision scale");
-assertTrue(p.footOffset() > 0f && p.footOffset() < p.height() * .40f);
-⋮----
-@Test void highPriorityEnemiesRemainVisuallyLargerThanBasicCrowd() {
-float runner = ArtProfileCatalog.enemy(Enemy.Type.RUNNER).height();
-float shambler = ArtProfileCatalog.enemy(Enemy.Type.SHAMBLER).height();
-assertTrue(ArtProfileCatalog.enemy(Enemy.Type.BRUTE).height() > shambler);
-assertTrue(ArtProfileCatalog.enemy(Enemy.Type.ELITE).height() > shambler);
-assertTrue(ArtProfileCatalog.enemy(Enemy.Type.SHIELDED).height() > shambler);
-assertTrue(shambler > runner);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java
-````java
-final class ArtProfileCatalogTest {
-@Test void shamblerKeepsReadableStandardEnemyScale() {
-var shambler = ArtProfileCatalog.enemy(Enemy.Type.SHAMBLER);
-var runner = ArtProfileCatalog.enemy(Enemy.Type.RUNNER);
-var rex = ArtProfileCatalog.survivor(SurvivorCatalog.Survivor.REX);
-⋮----
-assertTrue(shambler.height() >= 1.50f, "Shambler must remain readable at phone gameplay scale");
-assertTrue(shambler.height() > runner.height(), "Runner should remain the smaller/faster silhouette");
-assertTrue(shambler.height() < rex.height(), "Baseline Shambler must remain smaller than Rex");
-assertTrue(shambler.footOffset() >= .40f && shambler.footOffset() <= .48f,
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArtTest.java
-````java
-final class AuthoredCoreDirectionalArtTest {
-⋮----
-@Test void optionalShippedPngMustMatchRuntimeGridAndContainVisibleTiles() throws Exception {
-Path asset = locateAsset();
-⋮----
-// Absence is supported deliberately: GameArt falls back to deterministic generated art.
-assertEquals(768, AuthoredCoreDirectionalArt.width());
-assertEquals(2016, AuthoredCoreDirectionalArt.height());
-⋮----
-BufferedImage image = ImageIO.read(asset.toFile());
-assertNotNull(image, "assets/art/core_authored.png must be a real PNG when shipped");
-assertEquals(AuthoredCoreDirectionalArt.width(), image.getWidth());
-assertEquals(AuthoredCoreDirectionalArt.height(), image.getHeight());
-assertEquals(768, image.getWidth());
-assertEquals(2016, image.getHeight());
-⋮----
-if (((image.getRGB(x, y) >>> 24) & 0xff) > 16) visible++;
-⋮----
-assertTrue(visible >= 40, "authored tile " + tile + " unexpectedly empty: " + visible);
-⋮----
-@Test void allSevenActorsCoverEightDirectionsAndFiveMotions() {
-⋮----
-assertMotion(root, direction, "idle", 2);
-assertMotion(root, direction, "run", 3);
-assertMotion(root, direction, "attack", 2);
-assertMotion(root, direction, "hit", 2);
-assertMotion(root, direction, "death", 3);
-⋮----
-assertEquals(7, AuthoredCoreDirectionalArt.ACTOR_COUNT);
-assertEquals(672, AuthoredCoreDirectionalArt.TOTAL_TILES);
-⋮----
-@Test void unrelatedActorsRemainOnTheirDedicatedFallbackLayers() {
-assertEquals(-1, AuthoredCoreDirectionalArt.firstTile("enemy/brute/e/run"));
-assertEquals(-1, AuthoredCoreDirectionalArt.firstTile("enemy/ranged/e/run"));
-assertEquals(-1, AuthoredCoreDirectionalArt.firstTile("boss/alpha/e/run"));
-⋮----
-private static void assertMotion(String root, String direction, String motion, int frames) {
-⋮----
-assertTrue(AuthoredCoreDirectionalArt.firstTile(key) >= 0, key);
-assertEquals(frames, AuthoredCoreDirectionalArt.frameCount(key), key);
-⋮----
-private static Path locateAsset() {
-Path direct = Path.of("assets", "art", "core_authored.png");
-if (Files.isRegularFile(direct)) return direct;
-Path parent = Path.of("..", "assets", "art", "core_authored.png");
-if (Files.isRegularFile(parent)) return parent;
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/BiomeDirectionalBootstrapArtTest.java
-````java
-final class BiomeDirectionalBootstrapArtTest {
-⋮----
-@Test void everyBiomeIdentityHasFullEightWayMotionCoverage() {
-for (BiomeEnemyRoster.Identity identity : BiomeEnemyRoster.Identity.values()) {
-⋮----
-String root = BiomeDirectionalBootstrapArt.root(identity);
-⋮----
-assertTrue(BiomeDirectionalBootstrapArt.firstTile(key) >= 0, () -> "Missing biome art: " + key);
-⋮----
-@Test void nullArchonHasDedicatedCoverageSeparateFromLegacyBosses() {
-⋮----
-assertTrue(BiomeDirectionalBootstrapArt.firstTile(key) >= 0, () -> "Missing Null Archon art: " + key);
-⋮----
-assertNotEquals(
-BiomeDirectionalBootstrapArt.firstTile("enemy/biome/phase_stalker/e/idle"),
-BiomeDirectionalBootstrapArt.firstTile("boss/null_archon/e/idle"));
-⋮----
-@Test void motionFrameCountsMatchRuntimeAnimationContract() {
-⋮----
-assertTrue(BiomeDirectionalBootstrapArt.frameCount(root + "idle") == 1);
-assertTrue(BiomeDirectionalBootstrapArt.frameCount(root + "attack") == 2);
-assertTrue(BiomeDirectionalBootstrapArt.frameCount(root + "run") == 3);
-assertTrue(BiomeDirectionalBootstrapArt.frameCount(root + "death") == 3);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/BootstrapArtAssetTest.java
-````java
-final class BootstrapArtAssetTest {
-@Test void shippedBootstrapPngIsValidAndEveryTileHasVisiblePixels() throws Exception {
-Path asset = locateAsset();
-String encoded = Files.readString(asset, StandardCharsets.UTF_8).trim();
-byte[] png = Base64.getDecoder().decode(encoded);
-⋮----
-assertTrue(png.length > 1024, "bootstrap art unexpectedly tiny");
-assertEquals((byte)0x89, png[0]);
-assertEquals((byte)'P', png[1]);
-assertEquals((byte)'N', png[2]);
-assertEquals((byte)'G', png[3]);
-⋮----
-BufferedImage image = ImageIO.read(new ByteArrayInputStream(png));
-assertNotNull(image, "bootstrap art must decode as PNG");
-assertEquals(256, image.getWidth());
-assertEquals(256, image.getHeight());
-⋮----
-if (((image.getRGB(x, y) >>> 24) & 0xff) > 16) visible++;
-⋮----
-assertTrue(visible >= 80, "bootstrap tile " + tile + " lacks visible authored pixels: " + visible);
-⋮----
-private static Path locateAsset() {
-Path direct = Path.of("assets", "art", "game.png.b64");
-if (Files.isRegularFile(direct)) return direct;
-Path parent = Path.of("..", "assets", "art", "game.png.b64");
-if (Files.isRegularFile(parent)) return parent;
-throw new AssertionError("Cannot locate assets/art/game.png.b64 from " + Path.of("").toAbsolutePath());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/BootstrapArtCatalogTest.java
-````java
-final class BootstrapArtCatalogTest {
-⋮----
-@Test void bootstrapCoversEntireProductionArtContract() {
-for (String key : ArtManifest.REQUIRED_STATIC) assertSupported(key);
-for (String key : ArtManifest.REQUIRED_FX) assertSupported(key);
-⋮----
-for (WeaponDefinition weapon : WeaponCatalog.all()) assertSupported("weapon/" + weapon.id);
-⋮----
-for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
-String root = "survivor/" + survivor.name().toLowerCase();
-for (String motion : MOTIONS) assertSupported(root + "/" + motion);
-⋮----
-for (Enemy.Type type : Enemy.Type.values()) {
-String root = "enemy/" + type.name().toLowerCase();
-⋮----
-assertSupported(root + "/corpse");
-⋮----
-for (BossIdentity identity : BossIdentity.values()) {
-String root = GameArt.bossRoot(identity);
-⋮----
-@Test void portableBase64DecoderHandlesPaddingAndWhitespace() {
-byte[] decoded = GameArt.decodeBase64("U HJvZHVjdGlvbi1hcnQ=\n");
-assertArrayEquals("Production-art".getBytes(StandardCharsets.UTF_8), decoded);
-⋮----
-private static void assertSupported(String key) {
-assertTrue(BootstrapArtCatalog.supports(key), () -> "Missing bootstrap art mapping: " + key);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/BootstrapEnvironmentArtTest.java
-````java
-final class BootstrapEnvironmentArtTest {
-@Test void environmentKeysAreUniqueAndAddressable() {
-⋮----
-assertEquals(i, BootstrapEnvironmentArt.indexOf(key), key);
-⋮----
-assertTrue(!key.equals(BootstrapEnvironmentArt.KEYS[j]), "Duplicate environment key: " + key);
-⋮----
-@Test void sheetFitsConservativeMobileTextureLimits() {
-⋮----
-assertTrue(BootstrapEnvironmentArt.COLUMNS * BootstrapEnvironmentArt.TILE <= 2048);
-assertTrue(rows * BootstrapEnvironmentArt.TILE <= 2048);
-⋮----
-@Test void requiredSetDressingIsPresent() {
-⋮----
-for (String key : required) assertTrue(BootstrapEnvironmentArt.indexOf(key) >= 0, key);
-⋮----
-@Test void floorVariationIsStableAndCoversAllConcreteTiles() {
-⋮----
-int first = EnvironmentRenderer.floorVariant(x, y);
-int second = EnvironmentRenderer.floorVariant(x, y);
-assertEquals(first, second);
-assertTrue(first >= 0 && first < 3);
-⋮----
-assertTrue(seen[0] && seen[1] && seen[2]);
-⋮----
-@Test void microDetailDistributionIsStableSparseAndVaried() {
-⋮----
-int first = EnvironmentRenderer.detailVariant(x, y);
-int second = EnvironmentRenderer.detailVariant(x, y);
-⋮----
-assertTrue(first >= 0 && first < 8);
-⋮----
-assertTrue(variants >= 6, "variants=" + variants);
-assertTrue(visible >= 8 && visible <= total / 2, "visible=" + visible + "/" + total);
-⋮----
-@Test void beaconPulseIsDeterministicAndAlwaysNormalized() {
-⋮----
-float first = EnvironmentRenderer.beaconPulse(time);
-float second = EnvironmentRenderer.beaconPulse(time);
-assertEquals(first, second, 0f);
-assertTrue(first >= 0f && first <= 1f, "pulse=" + first);
-⋮----
-assertTrue(sawLow && sawHigh);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/BootstrapVfxArtTest.java
-````java
-final class BootstrapVfxArtTest {
-⋮----
-@Test void everyRequiredEffectHasMultipleFrames() {
-assertEquals(ArtManifest.REQUIRED_FX.length, EFFECTS.length);
-⋮----
-assertEquals(i, BootstrapVfxArt.effectIndex(key), key);
-assertTrue(BootstrapVfxArt.firstTile(key) >= 0, key);
-assertTrue(BootstrapVfxArt.frameCount(key) >= 4, key);
-assertEquals(ArtManifest.REQUIRED_FX[i], key);
-⋮----
-@Test void effectBlocksAreContiguousAndNonOverlapping() {
-⋮----
-int first = BootstrapVfxArt.firstTile(effect);
-assertEquals(previousLast + 1, first);
-⋮----
-assertEquals(BootstrapVfxArt.TOTAL_TILES - 1, previousLast);
-assertEquals(EFFECTS.length * BootstrapVfxArt.FRAMES_PER_EFFECT, BootstrapVfxArt.TOTAL_TILES);
-⋮----
-@Test void sheetStaysSmallAndMobileSafe() {
-assertTrue(BootstrapVfxArt.width() <= 1024);
-assertTrue(BootstrapVfxArt.height() <= 1024);
-assertEquals(384, BootstrapVfxArt.width());
-assertEquals(576, BootstrapVfxArt.height());
-⋮----
-@Test void malformedOrUnknownEffectsAreRejected() {
-assertEquals(-1, BootstrapVfxArt.effectIndex(null));
-assertEquals(-1, BootstrapVfxArt.firstTile("fx/unknown"));
-assertEquals(0, BootstrapVfxArt.frameCount("fx/unknown"));
-assertEquals(-1, BootstrapVfxArt.firstTile("muzzle_fire"));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/BossIdentityArtRoutingTest.java
-````java
-final class BossIdentityArtRoutingTest {
-@Test void everyBossIdentityMapsToItsOwnStableArtRoot() {
-assertEquals("boss/alpha", GameArt.bossRoot(BossIdentity.ALPHA));
-assertEquals("boss/revenant", GameArt.bossRoot(BossIdentity.REVENANT));
-assertEquals("boss/warden", GameArt.bossRoot(BossIdentity.WARDEN));
-assertEquals("boss/harvester", GameArt.bossRoot(BossIdentity.HARVESTER));
-assertEquals("boss/null_archon", GameArt.bossRoot(BossIdentity.NULL_ARCHON));
-assertEquals("boss/warden", GameArt.bossRoot(BossIdentity.FROST_COLOSSUS));
-assertEquals("boss/alpha", GameArt.bossRoot(null));
-⋮----
-@Test void everyBossIdentityHasAProductionSafeBootstrapAcrossDirectionsAndMotions() {
-⋮----
-for (BossIdentity identity : BossIdentity.values()) {
-String root = GameArt.bossRoot(identity);
-⋮----
-boolean directional = DirectionalBootstrapArt.firstTile(key) >= 0;
-boolean compactFallback = BootstrapArtCatalog.supports(key);
-assertTrue(directional || compactFallback, () -> "Missing boss art fallback: " + key);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/BossPhaseTransitionProfileTest.java
-````java
-final class BossPhaseTransitionProfileTest {
-@Test void phaseThreeEscalatesPresentation() {
-var phase2 = BossPhaseTransitionProfile.forPhase(BossIdentity.ALPHA, 2);
-var phase3 = BossPhaseTransitionProfile.forPhase(BossIdentity.ALPHA, 3);
-assertTrue(phase3.duration() > phase2.duration());
-assertTrue(phase3.radiusMultiplier() > phase2.radiusMultiplier());
-assertTrue(phase3.vibrationMs() > phase2.vibrationMs());
-⋮----
-@Test void identitiesHaveDistinctAudioWeight() {
-var revenant = BossPhaseTransitionProfile.forPhase(BossIdentity.REVENANT, 3);
-var alpha = BossPhaseTransitionProfile.forPhase(BossIdentity.ALPHA, 3);
-var warden = BossPhaseTransitionProfile.forPhase(BossIdentity.WARDEN, 3);
-assertTrue(revenant.audioPitch() > alpha.audioPitch());
-assertTrue(alpha.audioPitch() > warden.audioPitch());
-⋮----
-@Test void frostColossusHasDistinctHeavyPhasePitch() {
-var frost = BossPhaseTransitionProfile.forPhase(BossIdentity.FROST_COLOSSUS, 3);
-⋮----
-assertTrue(frost.audioPitch() < alpha.audioPitch());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java
-````java
-final class BossRevealCameraProfileTest {
-@Test void revealEnvelopeStartsAndEndsAtRest() {
-assertEquals(0f, BossRevealCameraProfile.envelope(BossRevealCameraProfile.DURATION), .0001f);
-assertEquals(0f, BossRevealCameraProfile.envelope(0f), .0001f);
-float midpoint = BossRevealCameraProfile.envelope(BossRevealCameraProfile.DURATION * .5f);
-assertTrue(midpoint > .98f);
-⋮----
-@Test void revealNeverExceedsComfortBounds() {
-⋮----
-float e = BossRevealCameraProfile.envelope(remaining);
-assertTrue(e >= 0f && e <= 1.001f);
-assertTrue(BossRevealCameraProfile.focusWeight(e, false)
-⋮----
-assertTrue(BossRevealCameraProfile.zoom(.88f, e, false)
-⋮----
-@Test void reducedMotionDisablesSpecialCameraMovement() {
-assertEquals(0f, BossRevealCameraProfile.focusWeight(1f, true), .0001f);
-assertEquals(.88f, BossRevealCameraProfile.zoom(.88f, 1f, true), .0001f);
-⋮----
-@Test void hudSafeOffsetStaysWithinComfortBudget() {
-assertTrue(BossRevealCameraProfile.HUD_SAFE_Y_OFFSET >= .35f);
-assertTrue(BossRevealCameraProfile.HUD_SAFE_Y_OFFSET <= 1.10f);
-assertTrue(BossRevealCameraProfile.MAX_ZOOM_OUT <= .20f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java
-````java
-final class ChampionVariantPresentationTest {
-@Test void everyChampionVariantHasDistinctShapeSemantics() {
-⋮----
-EnumSet.noneOf(ChampionVariantPresentation.Marker.class);
-⋮----
-for (Enemy.Variant variant : Enemy.Variant.values()) {
-ChampionVariantPresentation.Marker marker = ChampionVariantPresentation.marker(variant);
-⋮----
-assertEquals(ChampionVariantPresentation.Marker.NONE, marker);
-⋮----
-seen.add(marker);
-⋮----
-assertEquals(8, seen.size());
-⋮----
-@Test void highImpactVariantsKeepExpectedNonColorMarkers() {
-assertEquals(ChampionVariantPresentation.Marker.CHEVRON,
-ChampionVariantPresentation.marker(Enemy.Variant.SWIFT));
-assertEquals(ChampionVariantPresentation.Marker.ARMOR,
-ChampionVariantPresentation.marker(Enemy.Variant.ARMORED));
-assertEquals(ChampionVariantPresentation.Marker.CLAW,
-ChampionVariantPresentation.marker(Enemy.Variant.FERAL));
-assertEquals(ChampionVariantPresentation.Marker.VOLATILE_CORE,
-ChampionVariantPresentation.marker(Enemy.Variant.VOLATILE));
-assertEquals(ChampionVariantPresentation.Marker.JUGGERNAUT,
-ChampionVariantPresentation.marker(Enemy.Variant.JUGGERNAUT));
-assertEquals(ChampionVariantPresentation.Marker.RAVAGER,
-ChampionVariantPresentation.marker(Enemy.Variant.RAVAGER));
-assertEquals(ChampionVariantPresentation.Marker.AEGIS,
-ChampionVariantPresentation.marker(Enemy.Variant.AEGIS));
-assertEquals(ChampionVariantPresentation.Marker.HUNTER,
-ChampionVariantPresentation.marker(Enemy.Variant.HUNTER));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/CharacterSpriteFacingTest.java
-````java
-final class CharacterSpriteFacingTest {
-⋮----
-void attackFacingUsesAimVectorOverMovement() {
-assertEquals(Direction8.N,
-CharacterSpriteRenderer.resolvePlayerFacing(1f, 0f, 0f, 4f, true, Direction8.E));
-assertEquals(Direction8.SW,
-CharacterSpriteRenderer.resolvePlayerFacing(0f, 1f, -3f, -3f, true, Direction8.N));
-⋮----
-void nonAttackFacingStillUsesMovement() {
-assertEquals(Direction8.W,
-CharacterSpriteRenderer.resolvePlayerFacing(-2f, 0f, 0f, 4f, false, Direction8.E));
-⋮----
-void attackWithoutTargetKeepsMovementOrPreviousFacing() {
-assertEquals(Direction8.SE,
-CharacterSpriteRenderer.resolvePlayerFacing(2f, -2f, 0f, 0f, true, Direction8.N));
-assertEquals(Direction8.NW,
-CharacterSpriteRenderer.resolvePlayerFacing(0f, 0f, 0f, 0f, true, Direction8.NW));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/CombatHudLayoutTest.java
-````java
-final class CombatHudLayoutTest {
-⋮----
-void hudStaysNonOverlappingAcrossTargetFormatsAndUiScales() {
-⋮----
-CombatHudLayout.Layout layout = CombatHudLayout.compute(size[0], size[1], scale, boss);
-assertTrue(layout.hp().width > 0f);
-assertTrue(layout.xp().width > 0f);
-assertFalse(layout.hp().overlaps(layout.xp()));
-assertFalse(layout.timeline().overlaps(layout.hp()));
-assertFalse(layout.timeline().overlaps(layout.xp()));
-⋮----
-assertTrue(layout.boss() != null);
-assertFalse(layout.boss().overlaps(layout.timeline()));
-⋮----
-assertTrue(layout.dashRadius() * 2f >= 56f);
-assertTrue(layout.logicalWidth() >= 1280f);
-assertTrue(layout.logicalHeight() >= 720f);
-⋮----
-void physicalControlCoordinatesMapIntoLogicalHudSpace() {
-CombatHudLayout.Layout wide = CombatHudLayout.compute(1536, 691, 1f, false);
-⋮----
-assertTrue(Math.abs(wide.toLogicalX(dashPhysicalX) - wide.dashX()) < 1f);
-assertTrue(Math.abs(wide.toLogicalY(dashPhysicalY) - wide.dashY()) < 1f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/CombatOverlayViewportTest.java
-````java
-final class CombatOverlayViewportTest {
-@Test void normalizesWidePhoneHiDpiSurfaceToLogicalHudSpace() {
-CombatOverlayViewport.Viewport v = CombatOverlayViewport.compute(2880, 1620);
-assertEquals(1280f, v.width(), .001f);
-assertEquals(720f, v.height(), .001f);
-assertEquals(1280f / 2880f, v.scaleX(), .0001f);
-assertEquals(720f / 1620f, v.scaleY(), .0001f);
-⋮----
-@Test void threeChoiceCentersStayInsideLogicalViewport() {
-⋮----
-float center = v.width() * ((i + 1f) / 4f);
-assertTrue(center > 0f && center < v.width());
-⋮----
-assertEquals(960f, v.width() * .75f, .001f);
-⋮----
-@Test void physicalTouchMappingPreservesChoiceColumns() {
-⋮----
-float physicalX = 2160f; // 75% of the reported Android surface.
-float logicalX = v.toLogicalX(physicalX);
-assertEquals(960f, logicalX, .001f);
-assertEquals(2, Math.min(2, (int)(logicalX / v.width() * 3f)));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java
-````java
-final class CombatVisualEventsProtocolTest {
-@Test void protocolCuePublishesAndResets() {
-CombatVisualEvents.reset();
-assertEquals(CombatVisualEvents.ProtocolCue.NONE, CombatVisualEvents.protocolCue());
-long before = CombatVisualEvents.protocolSerial();
-⋮----
-CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.RHYTHM);
-assertEquals(CombatVisualEvents.ProtocolCue.RHYTHM, CombatVisualEvents.protocolCue());
-assertEquals(before + 1, CombatVisualEvents.protocolSerial());
-assertTrue(CombatVisualEvents.protocolAgeSeconds() < 1f);
-⋮----
-assertEquals(0L, CombatVisualEvents.protocolSerial());
-⋮----
-@Test void noneCueDoesNotPublish() {
-⋮----
-CombatVisualEvents.markProtocol(CombatVisualEvents.ProtocolCue.NONE);
-⋮----
-@Test void sentinelInterceptPublishesAndResets() {
-⋮----
-CombatVisualEvents.markSentinelIntercept();
-assertEquals(1L, CombatVisualEvents.sentinelInterceptSerial());
-assertTrue(CombatVisualEvents.sentinelInterceptAgeSeconds() < 1f);
-⋮----
-assertEquals(0L, CombatVisualEvents.sentinelInterceptSerial());
-⋮----
-@Test void synergyUnlockPublishesAndResets() {
-⋮----
-CombatVisualEvents.markSynergy("hud.synergyUnlocked.arcReactor");
-assertEquals("hud.synergyUnlocked.arcReactor", CombatVisualEvents.synergyKey());
-assertEquals(1L, CombatVisualEvents.synergySerial());
-assertTrue(CombatVisualEvents.synergyAgeSeconds() < 1f);
-⋮----
-assertEquals(0L, CombatVisualEvents.synergySerial());
-assertEquals(null, CombatVisualEvents.synergyKey());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java
-````java
-final class CompanionRendererTest {
-@Test void hunterUsesAggressiveWideOrbit() {
-assertEquals(2.25f, CompanionRenderer.orbitRadius(DroneDoctrine.HUNTER), .0001f);
-assertEquals(145f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.HUNTER), .0001f);
-assertEquals(.76f, CompanionRenderer.baseSize(DroneDoctrine.HUNTER), .0001f);
-⋮----
-@Test void sentinelUsesDefensiveCompactOrbit() {
-assertEquals(1.55f, CompanionRenderer.orbitRadius(DroneDoctrine.SENTINEL), .0001f);
-assertEquals(95f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.SENTINEL), .0001f);
-assertEquals(.86f, CompanionRenderer.baseSize(DroneDoctrine.SENTINEL), .0001f);
-⋮----
-@Test void baseDroneKeepsNeutralPresentation() {
-assertEquals(1.80f, CompanionRenderer.orbitRadius(DroneDoctrine.NONE), .0001f);
-assertEquals(110f, CompanionRenderer.orbitSpeedDegrees(DroneDoctrine.NONE), .0001f);
-assertEquals(.80f, CompanionRenderer.baseSize(DroneDoctrine.NONE), .0001f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/Direction8Test.java
-````java
-final class Direction8Test {
-@Test void cardinalAndDiagonalVectorsMapToStableDirections() {
-assertEquals(Direction8.E, Direction8.fromVector(1f, 0f, Direction8.N));
-assertEquals(Direction8.NE, Direction8.fromVector(1f, 1f, Direction8.E));
-assertEquals(Direction8.N, Direction8.fromVector(0f, 1f, Direction8.E));
-assertEquals(Direction8.NW, Direction8.fromVector(-1f, 1f, Direction8.E));
-assertEquals(Direction8.W, Direction8.fromVector(-1f, 0f, Direction8.E));
-assertEquals(Direction8.SW, Direction8.fromVector(-1f, -1f, Direction8.E));
-assertEquals(Direction8.S, Direction8.fromVector(0f, -1f, Direction8.E));
-assertEquals(Direction8.SE, Direction8.fromVector(1f, -1f, Direction8.E));
-⋮----
-@Test void stationaryOrInvalidVectorsPreservePreviousFacing() {
-assertEquals(Direction8.NW, Direction8.fromVector(0f, 0f, Direction8.NW));
-assertEquals(Direction8.S, Direction8.fromVector(Float.NaN, 1f, Direction8.S));
-assertEquals(Direction8.E, Direction8.fromVector(0f, 0f, null));
-⋮----
-@Test void directionalAtlasPrefixIsCanonical() {
-assertEquals("survivor/rex/nw/run",
-GameArt.directionalPrefix("survivor/rex", Direction8.NW, GameArt.Motion.RUN));
-assertEquals("enemy/brute/e/attack",
-GameArt.directionalPrefix("enemy/brute", null, GameArt.Motion.ATTACK));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/DirectionalBootstrapArtTest.java
-````java
-final class DirectionalBootstrapArtTest {
-⋮----
-@Test void coreCombatRosterCoversEightDirectionsAndAllMotions() {
-⋮----
-assertMotion(root, direction, "idle", 2);
-assertMotion(root, direction, "run", 3);
-assertMotion(root, direction, "attack", 2);
-assertMotion(root, direction, "hit", 2);
-assertMotion(root, direction, "death", 3);
-⋮----
-@Test void everyPlayableSurvivorHasFullDirectionalCoverage() {
-for (SurvivorCatalog.Survivor survivor : SurvivorCatalog.Survivor.values()) {
-String root = "survivor/" + survivor.name().toLowerCase();
-⋮----
-@Test void everyActorDirectionOccupiesExactlyOneTwelveTileMotionBlock() {
-⋮----
-int idle = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/idle");
-int run = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/run");
-int attack = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/attack");
-int hit = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/hit");
-int death = DirectionalBootstrapArt.firstTile(root + "/" + direction + "/death");
-assertEquals(idle + 2, run, root + "/" + direction);
-assertEquals(idle + 5, attack, root + "/" + direction);
-assertEquals(idle + 7, hit, root + "/" + direction);
-assertEquals(idle + 9, death, root + "/" + direction);
-assertTrue(death + 2 < DirectionalBootstrapArt.TOTAL_TILES, root + "/" + direction);
-⋮----
-@Test void actorBlocksAreContiguousNonOverlappingAndInsideSheet() {
-⋮----
-int first = DirectionalBootstrapArt.firstTile(root + "/n/idle");
-int last = DirectionalBootstrapArt.firstTile(root + "/nw/death") + 2;
-assertTrue(first > previousLast, root);
-assertEquals(DirectionalBootstrapArt.ACTOR_BLOCK - 1, last - first, root);
-⋮----
-assertTrue(previousLast < DirectionalBootstrapArt.TOTAL_TILES);
-assertEquals(DirectionalBootstrapArt.ACTOR_BLOCK * ROOTS.length, DirectionalBootstrapArt.TOTAL_TILES);
-assertEquals(1344, DirectionalBootstrapArt.TOTAL_TILES);
-⋮----
-@Test void generatedSheetStaysWithinBaselineGlesTextureDimension() {
-⋮----
-assertTrue(width <= 2048, "bootstrap sheet width exceeds baseline GLES texture size");
-assertTrue(height <= 2048, "bootstrap sheet height exceeds baseline GLES texture size");
-assertEquals(768, width);
-assertEquals(1792, height);
-⋮----
-@Test void actorIdentityLookupIsStable() {
-assertEquals(ROOTS.length, DirectionalBootstrapArt.ACTOR_COUNT);
-assertEquals(8, DIRECTIONS.length);
-assertEquals(12, DirectionalBootstrapArt.FRAMES_PER_DIRECTION);
-⋮----
-assertEquals(i, DirectionalBootstrapArt.actorIndex(ROOTS[i] + "/e/run"));
-⋮----
-@Test void malformedOrUnsupportedKeysAreRejected() {
-assertEquals(-1, DirectionalBootstrapArt.firstTile(null));
-assertEquals(-1, DirectionalBootstrapArt.firstTile("survivor/rex/run"));
-assertEquals(-1, DirectionalBootstrapArt.firstTile("survivor/unknown/e/run"));
-assertEquals(-1, DirectionalBootstrapArt.firstTile("enemy/shielded/e/run"));
-assertEquals(-1, DirectionalBootstrapArt.firstTile("enemy/runner/center/run"));
-assertEquals(-1, DirectionalBootstrapArt.firstTile("boss/harvester/e/dance"));
-⋮----
-private static void assertMotion(String root, String direction, String motion, int frames) {
-⋮----
-int first = DirectionalBootstrapArt.firstTile(key);
-assertTrue(first >= 0, () -> "Missing directional bootstrap key: " + key);
-assertEquals(frames, DirectionalBootstrapArt.frameCount(key), key);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/DirectionalBootstrapLazyLoadTest.java
-````java
-final class DirectionalBootstrapLazyLoadTest {
-@Test void creationAndKeyLookupDoNotRequireGraphicsAllocation() {
-DirectionalBootstrapArt art = assertDoesNotThrow(DirectionalBootstrapArt::create);
-⋮----
-assertTrue(art.supports("survivor/rex/e/run"));
-assertTrue(art.supports("enemy/brute/nw/death"));
-assertTrue(art.supports("boss/harvester/s/attack"));
-⋮----
-assertDoesNotThrow(art::dispose);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/DirectionalGpuMemoryBudgetTest.java
-````java
-final class DirectionalGpuMemoryBudgetTest {
-⋮----
-@Test void directionalLayersStayInsideTwentyMiBGpuBudget() {
-long baseDirectional = rgbaBytes(768, 1792);
-long highResCore = rgbaBytes(HighResDirectionalBootstrapArt.width(), HighResDirectionalBootstrapArt.height());
-long highResBoss = rgbaBytes(HighResBossDirectionalArt.width(), HighResBossDirectionalArt.height());
-long biomeDirectional = rgbaBytes(BiomeDirectionalBootstrapArt.width(), BiomeDirectionalBootstrapArt.height());
-⋮----
-assertTrue(baseDirectional <= 6L * MIB, "base directional sheet exceeded 6 MiB");
-assertTrue(highResCore <= 6L * MIB, "48px core sheet exceeded 6 MiB");
-assertTrue(highResBoss <= 6L * MIB, "64px boss sheet exceeded 6 MiB");
-assertTrue(biomeDirectional <= 3L * MIB, "biome directional sheet exceeded 3 MiB");
-⋮----
-assertTrue(peakDirectionalBytes <= 20L * MIB,
-⋮----
-private static long rgbaBytes(int width, int height) {
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java
-````java
-final class EnemyHealthBarPresentationTest {
-@Test void fullHealthStandardEnemyDoesNotRenderWorldBar() {
-Enemy enemy = enemy(Enemy.Type.SHAMBLER);
-assertFalse(EnemyHealthBarPresentation.visible(enemy));
-⋮----
-@Test void damagedStandardEnemyRendersWorldBar() {
-⋮----
-assertTrue(EnemyHealthBarPresentation.visible(enemy));
-⋮----
-@Test void eliteKeepsPriorityBarAtFullHealth() {
-Enemy enemy = enemy(Enemy.Type.ELITE);
-⋮----
-assertTrue(EnemyHealthBarPresentation.widthMultiplier(enemy) > 1f);
-⋮----
-@Test void bossNeverUsesWorldBarBecauseHudOwnsBossHealth() {
-Enemy boss = enemy(Enemy.Type.BOSS);
-assertFalse(EnemyHealthBarPresentation.visible(boss));
-⋮----
-private static Enemy enemy(Enemy.Type type) {
-return new Enemy(type, 0f, 0f, 100f, 1f, .5f, 5f, 1);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java
-````java
-final class EnvironmentArtCatalogTest {
-@Test void productionKeysAreUniqueAcrossAllFiveBiomes() {
-var all = EnvironmentArtCatalog.allProductionKeys();
-assertEquals(70, all.size());
-assertEquals(70, new HashSet<>(all).size());
-⋮----
-@Test void preservesTheGenericSlotShapeUnderBiomePrefix() {
-String key = EnvironmentArtCatalog.productionKey(
-⋮----
-assertEquals("environment/cinder_foundry/prop/crate_a", key);
-⋮----
-@Test void everyBiomeDefinesTheFullFourteenSlotPack() {
-for (EnvironmentBiomeRules.Biome biome : EnvironmentBiomeRules.Biome.values()) {
-var keys = EnvironmentArtCatalog.productionKeys(biome);
-assertEquals(BootstrapEnvironmentArt.KEYS.length, keys.size());
-String prefix = "environment/" + EnvironmentArtCatalog.biomeToken(biome) + "/";
-assertTrue(keys.stream().allMatch(key -> key.startsWith(prefix)));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/EnvironmentBiomeRulesTest.java
-````java
-public final class EnvironmentBiomeRulesTest {
-@Test public void quarantineOwnsEarlyStages() {
-assertEquals(EnvironmentBiomeRules.Biome.QUARANTINE_YARD, EnvironmentBiomeRules.forStage(1));
-assertEquals(EnvironmentBiomeRules.Biome.QUARANTINE_YARD, EnvironmentBiomeRules.forStage(9));
-assertFalse(EnvironmentBiomeRules.isFoundry(9));
-assertFalse(EnvironmentBiomeRules.isNullSector(9));
-⋮----
-@Test public void foundryOwnsMiddleStagesOnly() {
-assertEquals(EnvironmentBiomeRules.Biome.CINDER_FOUNDRY, EnvironmentBiomeRules.forStage(10));
-assertEquals(EnvironmentBiomeRules.Biome.CINDER_FOUNDRY, EnvironmentBiomeRules.forStage(19));
-assertTrue(EnvironmentBiomeRules.isFoundry(10));
-assertFalse(EnvironmentBiomeRules.isFoundry(20));
-⋮----
-@Test public void nullSectorOwnsStagesTwentyThroughTwentyNine() {
-assertEquals(EnvironmentBiomeRules.Biome.NULL_SECTOR, EnvironmentBiomeRules.forStage(20));
-assertEquals(EnvironmentBiomeRules.Biome.NULL_SECTOR, EnvironmentBiomeRules.forStage(29));
-assertTrue(EnvironmentBiomeRules.isNullSector(20));
-assertFalse(EnvironmentBiomeRules.isNullSector(30));
-⋮----
-@Test public void cryoVaultOwnsStagesThirtyThroughThirtyNine() {
-assertEquals(EnvironmentBiomeRules.Biome.CRYO_VAULT, EnvironmentBiomeRules.forStage(30));
-assertEquals(EnvironmentBiomeRules.Biome.CRYO_VAULT, EnvironmentBiomeRules.forStage(39));
-assertTrue(EnvironmentBiomeRules.isCryoVault(30));
-assertFalse(EnvironmentBiomeRules.isCryoVault(40));
-⋮----
-@Test public void cryogenicDepthsStartsAtStageForty() {
-assertEquals(EnvironmentBiomeRules.Biome.CRYOGENIC_DEPTHS, EnvironmentBiomeRules.forStage(40));
-assertEquals(EnvironmentBiomeRules.Biome.CRYOGENIC_DEPTHS, EnvironmentBiomeRules.forStage(55));
-assertTrue(EnvironmentBiomeRules.isCryogenicDepths(40));
-assertFalse(EnvironmentBiomeRules.isCryogenicDepths(39));
-⋮----
-@Test public void invalidStagesSanitizeToFirstBiome() {
-assertEquals(EnvironmentBiomeRules.Biome.QUARANTINE_YARD, EnvironmentBiomeRules.forStage(0));
-assertEquals(EnvironmentBiomeRules.Biome.QUARANTINE_YARD, EnvironmentBiomeRules.forStage(-50));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/EnvironmentFloorVariationTest.java
-````java
-final class EnvironmentFloorVariationTest {
-@Test void floorRotationIsDeterministicAndQuarterTurnBounded() {
-⋮----
-int rotation = EnvironmentRenderer.floorRotationQuarterTurns(x, y);
-assertTrue(rotation >= 0 && rotation <= 3);
-assertEquals(rotation, EnvironmentRenderer.floorRotationQuarterTurns(x, y));
-⋮----
-@Test void visibleArenaUsesAllFourOrientations() {
-⋮----
-rotations.add(EnvironmentRenderer.floorRotationQuarterTurns(x, y));
-⋮----
-assertEquals(Set.of(0, 1, 2, 3), rotations);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/FinalArtContractTest.java
-````java
-final class FinalArtContractTest {
-@Test void standardActorFrameFloorMatchesProductionSpec() {
-assertEquals(4, FinalArtContract.minimumFrames(GameArt.Motion.IDLE, false));
-assertEquals(8, FinalArtContract.minimumFrames(GameArt.Motion.RUN, false));
-assertEquals(6, FinalArtContract.minimumFrames(GameArt.Motion.ATTACK, false));
-assertEquals(3, FinalArtContract.minimumFrames(GameArt.Motion.HIT, false));
-assertEquals(8, FinalArtContract.minimumFrames(GameArt.Motion.DEATH, false));
-assertEquals(232, FinalArtContract.minimumDirectionalActorFrames(false));
-⋮----
-@Test void bossFrameFloorIsHigherForReadability() {
-assertEquals(6, FinalArtContract.minimumFrames(GameArt.Motion.IDLE, true));
-assertEquals(8, FinalArtContract.minimumFrames(GameArt.Motion.ATTACK, true));
-assertEquals(4, FinalArtContract.minimumFrames(GameArt.Motion.HIT, true));
-assertEquals(10, FinalArtContract.minimumFrames(GameArt.Motion.DEATH, true));
-assertEquals(288, FinalArtContract.minimumDirectionalActorFrames(true));
-⋮----
-@Test void productionContractKeepsEightDirectionsAndFastRunHeadroom() {
-assertEquals(8, FinalArtContract.directions());
-assertTrue(FinalArtContract.preferredFastRunFrames() >= 10);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/FinalArtLayoutContractTest.java
-````java
-final class FinalArtLayoutContractTest {
-@Test void productionLayoutMatchesRuntimeFrameContract() throws IOException {
-JsonValue layout = new JsonReader().parse(Files.readString(layoutPath()));
-⋮----
-JsonValue directions = layout.get("directions");
-assertEquals(FinalArtContract.directions(), directions.size);
-⋮----
-for (Direction8 direction : Direction8.values()) {
-assertEquals(direction.atlasToken(), directions.getString(directionIndex++));
-⋮----
-JsonValue motionOrder = layout.get("motionOrder");
-assertEquals(GameArt.Motion.values().length, motionOrder.size);
-⋮----
-for (GameArt.Motion motion : GameArt.Motion.values()) {
-assertEquals(motion.name().toLowerCase(), motionOrder.getString(motionIndex++));
-⋮----
-JsonValue standard = layout.get("standardFrames");
-JsonValue boss = layout.get("bossFrames");
-⋮----
-String key = motion.name().toLowerCase();
-assertEquals(FinalArtContract.minimumFrames(motion, false), standard.getInt(key), key + " standard frames");
-assertEquals(FinalArtContract.minimumFrames(motion, true), boss.getInt(key), key + " boss frames");
-⋮----
-int expectedStandardFrames = FinalArtContract.minimumDirectionalActorFrames(false);
-int expectedBossFrames = FinalArtContract.minimumDirectionalActorFrames(true);
-assertEquals(232, expectedStandardFrames);
-assertEquals(288, expectedBossFrames);
-⋮----
-@Test void everyFastRunOverrideUsesRuntimePreferredBudget() throws IOException {
-JsonValue actors = new JsonReader().parse(Files.readString(layoutPath())).get("actors");
-⋮----
-if (!actor.has("runFrames")) continue;
-assertEquals(FinalArtContract.preferredFastRunFrames(), actor.getInt("runFrames"), actor.getString("id"));
-fastActors.add(actor.getString("id"));
-⋮----
-assertTrue(fastActors.contains("wraith"));
-assertTrue(fastActors.contains("forge_hound"));
-assertTrue(fastActors.contains("phase_stalker"));
-⋮----
-private static Path layoutPath() {
-Path direct = Path.of("art_sources", "final-sprite-layout.json");
-if (Files.isRegularFile(direct)) return direct;
-Path fromCore = Path.of("..", "art_sources", "final-sprite-layout.json");
-if (Files.isRegularFile(fromCore)) return fromCore;
-throw new IllegalStateException("Unable to locate art_sources/final-sprite-layout.json from "
-+ Path.of("").toAbsolutePath());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/FoundryHazardPresentationTest.java
-````java
-final class FoundryHazardPresentationTest {
-@Test void foundryTypesRouteToDistinctProfilesAndCues() {
-FoundryHazardPresentation.Profile lava = FoundryHazardPresentation.forType(ArenaHazardRuntime.Type.LAVA_VENT);
-FoundryHazardPresentation.Profile steam = FoundryHazardPresentation.forType(ArenaHazardRuntime.Type.STEAM_JET);
-FoundryHazardPresentation.Profile heat = FoundryHazardPresentation.forType(ArenaHazardRuntime.Type.HEAT_LINE);
-⋮----
-assertEquals(AudioDirector.Cue.FOUNDRY_LAVA, lava.cue);
-assertEquals(AudioDirector.Cue.FOUNDRY_STEAM, steam.cue);
-assertEquals(AudioDirector.Cue.FOUNDRY_HEAT, heat.cue);
-assertNotEquals(lava.pulseSpeed, steam.pulseSpeed);
-assertNotEquals(steam.pulseSpeed, heat.pulseSpeed);
-assertTrue(lava.spokes > 0);
-assertTrue(steam.spokes > 0);
-assertTrue(heat.spokes > 0);
-⋮----
-@Test void onlyBiomeSpecificTypesAreClassifiedAsFoundry() {
-assertTrue(FoundryHazardPresentation.isFoundry(ArenaHazardRuntime.Type.LAVA_VENT));
-assertTrue(FoundryHazardPresentation.isFoundry(ArenaHazardRuntime.Type.STEAM_JET));
-assertTrue(FoundryHazardPresentation.isFoundry(ArenaHazardRuntime.Type.HEAT_LINE));
-assertFalse(FoundryHazardPresentation.isFoundry(ArenaHazardRuntime.Type.ORBITAL_STRIKE));
-assertFalse(FoundryHazardPresentation.isFoundry(ArenaHazardRuntime.Type.DEATH_BURST));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/HighResBossDirectionalArtTest.java
-````java
-final class HighResBossDirectionalArtTest {
-⋮----
-@Test void sheetStaysWithinConservativeGlesDimensions() {
-assertEquals(64, HighResBossDirectionalArt.TILE);
-assertEquals(4, HighResBossDirectionalArt.ACTOR_COUNT);
-assertEquals(384, HighResBossDirectionalArt.TOTAL_TILES);
-assertEquals(1024, HighResBossDirectionalArt.width());
-assertEquals(1536, HighResBossDirectionalArt.height());
-assertTrue(HighResBossDirectionalArt.width() <= 2048);
-assertTrue(HighResBossDirectionalArt.height() <= 2048);
-⋮----
-@Test void everyBossDirectionAndMotionHasExpectedAnimationFrames() {
-⋮----
-assertMotion(root, direction, "idle", 2);
-assertMotion(root, direction, "run", 3);
-assertMotion(root, direction, "attack", 2);
-assertMotion(root, direction, "hit", 2);
-assertMotion(root, direction, "death", 3);
-⋮----
-@Test void actorAndDirectionBlocksNeverOverlap() {
-⋮----
-assertEquals(base, HighResBossDirectionalArt.firstTile(root + "idle"));
-assertEquals(base + 2, HighResBossDirectionalArt.firstTile(root + "run"));
-assertEquals(base + 5, HighResBossDirectionalArt.firstTile(root + "attack"));
-assertEquals(base + 7, HighResBossDirectionalArt.firstTile(root + "hit"));
-assertEquals(base + 9, HighResBossDirectionalArt.firstTile(root + "death"));
-⋮----
-private static void assertMotion(String root, String direction, String motion, int frames) {
-⋮----
-assertTrue(HighResBossDirectionalArt.firstTile(key) >= 0, key);
-assertEquals(frames, HighResBossDirectionalArt.frameCount(key), key);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArtTest.java
-````java
-final class HighResDirectionalBootstrapArtTest {
-⋮----
-@Test void highVisibilityRosterHasFullEightWayMotionCoverage() {
-⋮----
-assertMotion(root, direction, "idle", 2);
-assertMotion(root, direction, "run", 3);
-assertMotion(root, direction, "attack", 2);
-assertMotion(root, direction, "hit", 2);
-assertMotion(root, direction, "death", 3);
-⋮----
-@Test void eachDirectionUsesOneContiguousTwelveTileBlock() {
-⋮----
-int idle = HighResDirectionalBootstrapArt.firstTile(root + "/" + direction + "/idle");
-int run = HighResDirectionalBootstrapArt.firstTile(root + "/" + direction + "/run");
-int attack = HighResDirectionalBootstrapArt.firstTile(root + "/" + direction + "/attack");
-int hit = HighResDirectionalBootstrapArt.firstTile(root + "/" + direction + "/hit");
-int death = HighResDirectionalBootstrapArt.firstTile(root + "/" + direction + "/death");
-assertEquals(idle + 2, run);
-assertEquals(idle + 5, attack);
-assertEquals(idle + 7, hit);
-assertEquals(idle + 9, death);
-assertTrue(death + 2 < HighResDirectionalBootstrapArt.TOTAL_TILES);
-⋮----
-@Test void memoryFootprintStaysInsideConservativeGlesDimension() {
-assertEquals(7, HighResDirectionalBootstrapArt.ACTOR_COUNT);
-assertEquals(12, HighResDirectionalBootstrapArt.FRAMES_PER_DIRECTION);
-assertEquals(672, HighResDirectionalBootstrapArt.TOTAL_TILES);
-assertEquals(768, HighResDirectionalBootstrapArt.width());
-assertEquals(2016, HighResDirectionalBootstrapArt.height());
-assertTrue(HighResDirectionalBootstrapArt.width() <= 2048);
-assertTrue(HighResDirectionalBootstrapArt.height() <= 2048);
-⋮----
-@Test void intentionallyFallsBackForLessVisibleRoster() {
-assertEquals(-1, HighResDirectionalBootstrapArt.firstTile("enemy/brute/e/run"));
-assertEquals(-1, HighResDirectionalBootstrapArt.firstTile("enemy/ranged/e/run"));
-assertEquals(-1, HighResDirectionalBootstrapArt.firstTile("boss/alpha/e/run"));
-assertEquals(-1, HighResDirectionalBootstrapArt.firstTile("survivor/unknown/e/run"));
-⋮----
-@Test void actorLookupOrderIsStable() {
-⋮----
-assertEquals(i, HighResDirectionalBootstrapArt.actorIndex(ROOTS[i] + "/e/run"));
-⋮----
-private static void assertMotion(String root, String direction, String motion, int frames) {
-⋮----
-assertTrue(HighResDirectionalBootstrapArt.firstTile(key) >= 0, key);
-assertEquals(frames, HighResDirectionalBootstrapArt.frameCount(key), key);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/HostileProjectilePresentationTest.java
-````java
-final class HostileProjectilePresentationTest {
-@AfterEach void reset() { RunStageContext.begin(1, 0, 0); }
-⋮----
-@Test void cinderGunnerAndStaticSeerUseDistinctSourceStyles() {
-RunStageContext.begin(12, 4, 0);
-Enemy cinder = new Enemy(Enemy.Type.RANGED, 0f, 0f, 50f, 2f, .4f, 10f, 5);
-assertEquals(EnemyProjectile.Style.CINDER, HostileProjectilePresentation.styleFor(cinder));
-⋮----
-RunStageContext.begin(22, 4, 0);
-Enemy seer = new Enemy(Enemy.Type.RANGED, 0f, 0f, 50f, 2f, .4f, 10f, 5);
-assertEquals(EnemyProjectile.Style.STATIC, HostileProjectilePresentation.styleFor(seer));
-⋮----
-@Test void nullSupportAndPhantomUseVoidIdentity() {
-RunStageContext.begin(22, 5, 0);
-Enemy ward = new Enemy(Enemy.Type.REGENERATOR, 0f, 0f, 80f, 2f, .45f, 10f, 5);
-Enemy stalker = new Enemy(Enemy.Type.PHANTOM, 0f, 0f, 60f, 3f, .4f, 10f, 5);
-assertEquals(EnemyProjectile.Style.NULL, HostileProjectilePresentation.styleFor(ward));
-assertEquals(EnemyProjectile.Style.NULL, HostileProjectilePresentation.styleFor(stalker));
-⋮----
-@Test void frostColossusUsesColdEnergyProjectileStyle() {
-RunStageContext.begin(40, 6, 0);
-Enemy frost = new Enemy(Enemy.Type.BOSS, 0f, 0f, 5000f, 1f, 1f, 20f, 100);
-assertEquals(EnemyProjectile.Style.STATIC, HostileProjectilePresentation.styleFor(frost));
-⋮----
-@Test void ordinaryEarlyGameEnemyRemainsDefault() {
-RunStageContext.begin(4, 2, 0);
-Enemy ranged = new Enemy(Enemy.Type.RANGED, 0f, 0f, 50f, 2f, .4f, 10f, 5);
-assertEquals(EnemyProjectile.Style.DEFAULT, HostileProjectilePresentation.styleFor(ranged));
-⋮----
-@Test void presentationMultipliersNeverChangeCollisionRadiusContract() {
-for (EnemyProjectile.Style style : EnemyProjectile.Style.values()) {
-float multiplier = HostileProjectilePresentation.coreRadiusMultiplier(style);
-assertTrue(multiplier >= .80f && multiplier <= 1.25f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/NullBootstrapVfxArtTest.java
-````java
-final class NullBootstrapVfxArtTest {
-@Test void exposesEveryNullArchonEffectAsEightFrameAnimation() {
-⋮----
-assertEquals(i * NullBootstrapVfxArt.FRAMES_PER_EFFECT, NullBootstrapVfxArt.firstTile(keys[i]));
-⋮----
-assertEquals(24, NullBootstrapVfxArt.TOTAL_TILES);
-assertEquals(512, NullBootstrapVfxArt.width());
-assertEquals(192, NullBootstrapVfxArt.height());
-⋮----
-@Test void createAndLookupDoNotRequireGraphicsContext() {
-NullBootstrapVfxArt art = NullBootstrapVfxArt.create();
-⋮----
-assertTrue(art.supports("fx/null_archon_aura"));
-assertTrue(art.supports("fx/null_archon_portal"));
-assertTrue(art.supports("fx/null_archon_fracture"));
-⋮----
-art.dispose();
-⋮----
-@Test void rejectsUnknownEffects() {
-assertEquals(-1, NullBootstrapVfxArt.firstTile("fx/null_archon_unknown"));
-assertTrue(NullBootstrapVfxArt.firstTile(null) < 0);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/NullHazardPresentationTest.java
-````java
-final class NullHazardPresentationTest {
-@Test void nullTypesRouteToDistinctProfilesAndCues() {
-NullHazardPresentation.Profile rift = NullHazardPresentation.forType(ArenaHazardRuntime.Type.VOID_RIFT);
-NullHazardPresentation.Profile statik = NullHazardPresentation.forType(ArenaHazardRuntime.Type.STATIC_BURST);
-NullHazardPresentation.Profile beam = NullHazardPresentation.forType(ArenaHazardRuntime.Type.NULL_BEAM);
-⋮----
-assertEquals(AudioDirector.Cue.NULL_RIFT, rift.cue);
-assertEquals(AudioDirector.Cue.NULL_STATIC, statik.cue);
-assertEquals(AudioDirector.Cue.NULL_BEAM, beam.cue);
-assertNotEquals(rift.pulseSpeed, statik.pulseSpeed);
-assertNotEquals(statik.pulseSpeed, beam.pulseSpeed);
-assertTrue(rift.spokes > 0);
-assertTrue(statik.spokes > 0);
-assertTrue(beam.spokes > 0);
-⋮----
-@Test void nullClassificationDoesNotCaptureOtherBiomeHazards() {
-assertTrue(NullHazardPresentation.isNull(ArenaHazardRuntime.Type.VOID_RIFT));
-assertTrue(NullHazardPresentation.isNull(ArenaHazardRuntime.Type.STATIC_BURST));
-assertTrue(NullHazardPresentation.isNull(ArenaHazardRuntime.Type.NULL_BEAM));
-assertFalse(NullHazardPresentation.isNull(ArenaHazardRuntime.Type.LAVA_VENT));
-assertFalse(NullHazardPresentation.isNull(ArenaHazardRuntime.Type.ORBITAL_STRIKE));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java
-````java
-final class OnboardingHintPolicyTest {
-@Test void stepsAdvanceInGameplayOrder() {
-assertEquals(0, OnboardingHintPolicy.step(false, false, false, false));
-assertEquals(1, OnboardingHintPolicy.step(true, false, false, false));
-assertEquals(2, OnboardingHintPolicy.step(true, true, false, false));
-assertEquals(3, OnboardingHintPolicy.step(true, true, true, false));
-assertEquals(OnboardingHintPolicy.NONE,
-OnboardingHintPolicy.step(true, true, true, true));
-⋮----
-@Test void eachHintAutoHidesWithoutCompletingOnboarding() {
-assertTrue(OnboardingHintPolicy.visible(false, 1, 0f));
-assertTrue(OnboardingHintPolicy.visible(false, 1, OnboardingHintPolicy.MAX_VISIBLE_SECONDS - .01f));
-assertFalse(OnboardingHintPolicy.visible(false, 1, OnboardingHintPolicy.MAX_VISIBLE_SECONDS));
-assertFalse(OnboardingHintPolicy.visible(false, OnboardingHintPolicy.NONE, 0f));
-assertFalse(OnboardingHintPolicy.visible(true, 1, 0f));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java
-````java
-final class PlayerProjectilePresentationTest {
-@Test void allTwelveWeaponFamiliesHaveDistinctPresentationStyles() {
-⋮----
-EnumSet.noneOf(PlayerProjectilePresentation.Style.class);
-⋮----
-for (WeaponDefinition weapon : WeaponCatalog.all()) {
-PlayerProjectilePresentation.Profile profile = PlayerProjectilePresentation.forWeapon(
-⋮----
-styles.add(profile.style());
-assertSane(profile);
-⋮----
-assertEquals(12, styles.size());
-⋮----
-@Test void allFiveSignatureShotsEscalateTheirExpectedFamily() {
-assertSignature("ion_needle", DamageElement.SHOCK, WeaponSignatureRuntime.Kind.ION_OVERCHARGE,
-⋮----
-assertSignature("cinder_cannon", DamageElement.FIRE, WeaponSignatureRuntime.Kind.CINDER_OVERHEAT,
-⋮----
-assertSignature("tempest_burst", DamageElement.SHOCK, WeaponSignatureRuntime.Kind.TEMPEST_SURGE,
-⋮----
-assertSignature("whiteout_shard", DamageElement.FROST, WeaponSignatureRuntime.Kind.WHITEOUT_SHATTER,
-⋮----
-assertSignature("phoenix_repeater", DamageElement.FIRE, WeaponSignatureRuntime.Kind.PHOENIX_IGNITION,
-⋮----
-@Test void criticalPresentationNeverShrinksItsBaseProfile() {
-⋮----
-PlayerProjectilePresentation.Profile base = PlayerProjectilePresentation.forWeapon(
-⋮----
-PlayerProjectilePresentation.Profile crit = PlayerProjectilePresentation.forWeapon(
-⋮----
-assertTrue(crit.coreScale() >= base.coreScale());
-assertTrue(crit.impactScale() >= base.impactScale());
-assertTrue(crit.alpha() >= base.alpha());
-⋮----
-private static void assertSignature(String weaponId, DamageElement element,
-⋮----
-PlayerProjectilePresentation.Profile signature = PlayerProjectilePresentation.forWeapon(
-⋮----
-assertEquals(expectedStyle, signature.style());
-assertTrue(signature.signature());
-assertTrue(signature.trailLength() >= base.trailLength());
-assertTrue(signature.coreScale() >= base.coreScale());
-assertTrue(signature.impactScale() >= base.impactScale());
-assertSane(signature);
-⋮----
-private static void assertSane(PlayerProjectilePresentation.Profile profile) {
-assertTrue(profile.trailLength() > 0f);
-assertTrue(profile.trailWidth() > 0f);
-assertTrue(profile.alpha() > 0f && profile.alpha() <= 1f);
-assertTrue(profile.coreScale() > 0f);
-assertTrue(profile.impactScale() > 0f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java
-````java
-final class SingularityImpactTrackerTest {
-@Test void activeSingularityEmitsExactlyOneImpactWhenItEnds() {
-SingularityImpactTracker tracker = new SingularityImpactTracker();
-⋮----
-Projectile projectile = singularity(1L, 3f, -2f, true);
-projectiles.add(projectile);
-⋮----
-tracker.update(projectiles, .016f);
-assertEquals(0, tracker.impacts().size);
-assertEquals(0, tracker.consumeTriggeredCount());
-⋮----
-assertEquals(1, tracker.impacts().size);
-assertEquals(1, tracker.consumeTriggeredCount());
-assertEquals(3f, tracker.impacts().first().x, .0001f);
-assertEquals(-2f, tracker.impacts().first().y, .0001f);
-⋮----
-@Test void pooledReuseStillEmitsPreviousSingularityAtLastKnownPosition() {
-⋮----
-Projectile projectile = singularity(4L, -5f, 6f, true);
-⋮----
-projectile.position.set(11f, 12f);
-⋮----
-assertEquals(-5f, tracker.impacts().first().x, .0001f);
-assertEquals(6f, tracker.impacts().first().y, .0001f);
-⋮----
-@Test void singularityThatEndsBeforeFirstRenderStillProducesImpact() {
-⋮----
-projectiles.add(singularity(9L, 1.5f, 2.5f, false));
-⋮----
-assertEquals(1.5f, tracker.impacts().first().x, .0001f);
-assertEquals(2.5f, tracker.impacts().first().y, .0001f);
-⋮----
-@Test void impactsExpireAfterTheirVisualLifetime() {
-⋮----
-projectiles.add(singularity(2L, 0f, 0f, false));
-tracker.update(projectiles, 0f);
-⋮----
-tracker.update(projectiles, SingularityImpactTracker.IMPACT_LIFETIME + .01f);
-⋮----
-@Test void impactProgressMovesFromZeroTowardOne() {
-⋮----
-projectiles.add(singularity(3L, 0f, 0f, false));
-⋮----
-float start = tracker.impacts().first().progress();
-tracker.update(projectiles, SingularityImpactTracker.IMPACT_LIFETIME * .5f);
-float middle = tracker.impacts().first().progress();
-assertEquals(0f, start, .0001f);
-assertTrue(middle > .45f && middle < .55f);
-⋮----
-private static Projectile singularity(long generation, float x, float y, boolean active) {
-Projectile projectile = new Projectile();
-⋮----
-projectile.position.set(x, y);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/SpecialistPresentationTest.java
-````java
-final class SpecialistPresentationTest {
-@Test void specialistProfilesArePurposefullyDistinct() {
-var shambler = ArtProfileCatalog.enemy(Enemy.Type.SHAMBLER);
-var shielded = ArtProfileCatalog.enemy(Enemy.Type.SHIELDED);
-var regenerator = ArtProfileCatalog.enemy(Enemy.Type.REGENERATOR);
-var phantom = ArtProfileCatalog.enemy(Enemy.Type.PHANTOM);
-⋮----
-assertTrue(shielded.height() > shambler.height());
-assertTrue(regenerator.height() > shambler.height());
-assertTrue(phantom.height() > 0f);
-assertNotEquals(shambler, shielded);
-assertNotEquals(shambler, regenerator);
-assertNotEquals(shambler, phantom);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java
-````java
-final class UpgradePresentationTest {
-@Test void everyUpgradeHasAVisualArchetype() {
-for (Upgrade upgrade : Upgrade.values()) {
-assertNotNull(UpgradePresentation.archetype(upgrade), upgrade.name());
-⋮----
-assertEquals(60, Upgrade.values().length);
-⋮----
-@Test void allSixteenVisualArchetypesAreActuallyUsed() {
-⋮----
-EnumSet.noneOf(UpgradePresentation.Archetype.class);
-for (Upgrade upgrade : Upgrade.values()) seen.add(UpgradePresentation.archetype(upgrade));
-assertEquals(EnumSet.allOf(UpgradePresentation.Archetype.class), seen);
-⋮----
-@Test void signatureAbilityFamiliesRemainSemanticallyDistinct() {
-assertEquals(UpgradePresentation.Archetype.SHOCK,
-UpgradePresentation.archetype(Upgrade.TESLA_ORB));
-assertEquals(UpgradePresentation.Archetype.MISSILE,
-UpgradePresentation.archetype(Upgrade.MISSILE_SWARM));
-assertEquals(UpgradePresentation.Archetype.FROST,
-UpgradePresentation.archetype(Upgrade.CRYO_NOVA));
-assertEquals(UpgradePresentation.Archetype.DRONE,
-UpgradePresentation.archetype(Upgrade.DRONE));
-assertEquals(UpgradePresentation.Archetype.ORBITAL,
-UpgradePresentation.archetype(Upgrade.ORBITAL));
-assertEquals(UpgradePresentation.Archetype.PROTOCOL,
-UpgradePresentation.archetype(Upgrade.REACTION_CASCADE));
-⋮----
-@Test void nullUpgradeFallsBackToDamageInsteadOfCrashing() {
-assertEquals(UpgradePresentation.Archetype.DAMAGE,
-UpgradePresentation.archetype(null));
-assertTrue(UpgradePresentation.Archetype.values().length >= 16);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/visual/WeaponLegendaryPresentationTest.java
-````java
-final class WeaponLegendaryPresentationTest {
-@Test void everyWeaponFamilyLegendaryHasDistinctPresentation() {
-⋮----
-for (WeaponLegendaryPresentation.Style style : WeaponLegendaryPresentation.Style.values()) {
-⋮----
-assertTrue(labels.add(style.label), "duplicate legendary presentation label: " + style.label);
-assertTrue(style.r >= 0f && style.r <= 1f);
-assertTrue(style.g >= 0f && style.g <= 1f);
-assertTrue(style.b >= 0f && style.b <= 1f);
-⋮----
-assertEquals(9, labels.size());
-⋮----
-@Test void stateRoutesAllNineWeaponFamilies() {
-assertStyle(WeaponLegendaryPresentation.Style.VANGUARD, p -> p.legendary.grantVanguardProtocol());
-assertStyle(WeaponLegendaryPresentation.Style.SCATTER, p -> p.legendary.grantScatterMaelstrom());
-assertStyle(WeaponLegendaryPresentation.Style.RAIL, p -> p.legendary.grantRailPhaseLance());
-assertStyle(WeaponLegendaryPresentation.Style.INFERNO, p -> p.legendary.grantInfernoPyroclasm());
-assertStyle(WeaponLegendaryPresentation.Style.CRYO, p -> p.legendary.grantCryoPrism());
-assertStyle(WeaponLegendaryPresentation.Style.ARC, p -> p.legendary.grantArcOverload());
-assertStyle(WeaponLegendaryPresentation.Style.BREACHER, p -> p.legendary.grantBreacherRupture());
-assertStyle(WeaponLegendaryPresentation.Style.ION, p -> p.legendary.grantIonCascade());
-assertStyle(WeaponLegendaryPresentation.Style.CINDER, p -> p.legendary.grantCinderFurnace());
-⋮----
-@Test void genericLegendaryDoesNotPretendToBeWeaponFamilyPerk() {
-Player p = new Player(0f, 0f);
-p.legendary.grantOverdrive();
-assertEquals(WeaponLegendaryPresentation.Style.NONE, WeaponLegendaryPresentation.style(p));
-assertNotEquals("OVERDRIVE", WeaponLegendaryPresentation.Style.VANGUARD.label);
-⋮----
-private static void assertStyle(WeaponLegendaryPresentation.Style expected, Grant grant) {
-⋮----
-grant.apply(p);
-assertEquals(expected, WeaponLegendaryPresentation.style(p));
-⋮----
-private interface Grant { void apply(Player player); }
-````
-
-## File: core/src/test/java/com/deadlinezero/game/world/ArenaHazardRuntimeTest.java
-````java
-final class ArenaHazardRuntimeTest {
-@Test void deathBurstCannotDamageDuringWarningAndHitsOnlyOnce() {
-ArenaHazardRuntime runtime = new ArenaHazardRuntime(12, 4, 10);
-runtime.scheduleDeathBurst(2f, -1f, 2.2f, 31f);
-⋮----
-assertEquals(0f, runtime.consumePlayerDamage(2f, -1f, .4f), .0001f);
-runtime.update(.30f, 0f, 0f);
-assertEquals(ArenaHazardRuntime.Phase.WARNING, runtime.hazards().get(0).phase());
-⋮----
-runtime.update(.19f, 0f, 0f);
-assertEquals(ArenaHazardRuntime.Phase.ACTIVE, runtime.hazards().get(0).phase());
-assertEquals(31f, runtime.consumePlayerDamage(2f, -1f, .4f), .0001f);
-⋮----
-@Test void playerOutsideActiveHazardIsNotHit() {
-⋮----
-runtime.scheduleDeathBurst(0f, 0f, 2f, 20f);
-runtime.update(.49f, 0f, 0f);
-assertEquals(0f, runtime.consumePlayerDamage(4f, 0f, .4f), .0001f);
-assertFalse(runtime.hazards().get(0).playerDamageConsumed());
-⋮----
-@Test void periodicHazardsUnlockAtThreatFive() {
-ArenaHazardRuntime standard = new ArenaHazardRuntime(10, 1, 4);
-assertFalse(standard.periodicHazardsEnabled());
-assertTrue(Float.isInfinite(standard.periodicInterval()));
-⋮----
-ArenaHazardRuntime ascended = new ArenaHazardRuntime(10, 1, 5);
-assertTrue(ascended.periodicHazardsEnabled());
-assertTrue(Float.isFinite(ascended.periodicInterval()));
-⋮----
-@Test void periodicStrikePlacementIsDeterministicForSameRun() {
-ArenaHazardRuntime first = new ArenaHazardRuntime(14, 22, 9);
-ArenaHazardRuntime second = new ArenaHazardRuntime(14, 22, 9);
-float interval = first.periodicInterval();
-⋮----
-first.update(.05f, 3f, -2f);
-second.update(.05f, 3f, -2f);
-⋮----
-assertEquals(1, first.activeCount());
-assertEquals(1, second.activeCount());
-ArenaHazardRuntime.Hazard a = first.hazards().get(0);
-ArenaHazardRuntime.Hazard b = second.hazards().get(0);
-assertEquals(a.type(), b.type());
-assertEquals(a.x(), b.x(), .0001f);
-assertEquals(a.y(), b.y(), .0001f);
-assertEquals(a.radius(), b.radius(), .0001f);
-assertEquals(a.damage(), b.damage(), .0001f);
-⋮----
-@Test void higherThreatRaisesPeriodicDamageAndFrequency() {
-ArenaHazardRuntime tier5 = new ArenaHazardRuntime(12, 0, 5);
-ArenaHazardRuntime tier20 = new ArenaHazardRuntime(12, 0, 20);
-assertTrue(tier20.periodicInterval() < tier5.periodicInterval());
-⋮----
-float interval = tier20.periodicInterval();
-for (float elapsed = 0f; elapsed < interval + .1f; elapsed += .05f) tier20.update(.05f, 0f, 0f);
-assertTrue(tier20.hazards().get(0).damage() > 14f);
-⋮----
-@Test void foundryHazardsOwnStagesTenThroughNineteen() {
-ArenaHazardRuntime yard = new ArenaHazardRuntime(9, 2, 0);
-assertFalse(yard.foundryHazardsEnabled());
-assertTrue(Float.isInfinite(yard.foundryHazardInterval()));
-⋮----
-ArenaHazardRuntime foundry = new ArenaHazardRuntime(10, 2, 0);
-assertTrue(foundry.foundryHazardsEnabled());
-assertTrue(Float.isFinite(foundry.foundryHazardInterval()));
-⋮----
-ArenaHazardRuntime lastFoundry = new ArenaHazardRuntime(19, 2, 0);
-assertTrue(lastFoundry.foundryHazardsEnabled());
-ArenaHazardRuntime nullSector = new ArenaHazardRuntime(20, 2, 0);
-assertFalse(nullSector.foundryHazardsEnabled());
-assertTrue(Float.isInfinite(nullSector.foundryHazardInterval()));
-⋮----
-@Test void foundryHazardsAreDeterministicForSameRun() {
-ArenaHazardRuntime first = new ArenaHazardRuntime(18, 37, 6);
-ArenaHazardRuntime second = new ArenaHazardRuntime(18, 37, 6);
-float untilFirst = first.foundryHazardInterval() * .72f + .05f;
-⋮----
-first.update(.05f, 4f, -1f);
-second.update(.05f, 4f, -1f);
-⋮----
-assertEquals(first.activeCount(), second.activeCount());
-assertTrue(first.activeCount() > 0);
-for (int i = 0; i < first.activeCount(); i++) {
-ArenaHazardRuntime.Hazard a = first.hazards().get(i);
-ArenaHazardRuntime.Hazard b = second.hazards().get(i);
-⋮----
-@Test void laterFoundryStagesIncreasePressureButStayBounded() {
-ArenaHazardRuntime stage10 = new ArenaHazardRuntime(10, 0, 0);
-ArenaHazardRuntime stage19 = new ArenaHazardRuntime(19, 0, 0);
-assertTrue(stage19.foundryHazardInterval() < stage10.foundryHazardInterval());
-assertTrue(stage19.foundryHazardInterval() >= 10.2f);
-⋮----
-@Test void foundryWarningEventuallyBecomesDamageableAndStillHitsOnce() {
-ArenaHazardRuntime runtime = new ArenaHazardRuntime(10, 3, 0);
-float untilFirst = runtime.foundryHazardInterval() * .72f + .05f;
-for (float elapsed = 0f; elapsed < untilFirst; elapsed += .05f) runtime.update(.05f, 0f, 0f);
-ArenaHazardRuntime.Hazard target = runtime.hazards().get(0);
-assertEquals(0f, runtime.consumePlayerDamage(target.x(), target.y(), .1f), .0001f);
-⋮----
-runtime.update(.05f, 0f, 0f);
-damage = runtime.consumePlayerDamage(target.x(), target.y(), .1f);
-⋮----
-assertTrue(damage > 0f);
-⋮----
-@Test void nullSectorHazardsStartAtStageTwentyAndReplaceFoundryPressure() {
-ArenaHazardRuntime stage19 = new ArenaHazardRuntime(19, 4, 0);
-assertFalse(stage19.nullSectorHazardsEnabled());
-assertTrue(Float.isInfinite(stage19.nullSectorHazardInterval()));
-⋮----
-ArenaHazardRuntime stage20 = new ArenaHazardRuntime(20, 4, 0);
-assertTrue(stage20.nullSectorHazardsEnabled());
-assertFalse(stage20.foundryHazardsEnabled());
-assertTrue(Float.isFinite(stage20.nullSectorHazardInterval()));
-⋮----
-float untilFirst = stage20.nullSectorHazardInterval() * .68f + .05f;
-for (float elapsed = 0f; elapsed < untilFirst; elapsed += .05f) stage20.update(.05f, 1f, 2f);
-assertTrue(stage20.activeCount() > 0);
-for (ArenaHazardRuntime.Hazard hazard : stage20.hazards()) {
-assertTrue(hazard.type() == ArenaHazardRuntime.Type.VOID_RIFT
-|| hazard.type() == ArenaHazardRuntime.Type.STATIC_BURST
-|| hazard.type() == ArenaHazardRuntime.Type.NULL_BEAM);
-assertEquals(ArenaHazardRuntime.Phase.WARNING, hazard.phase());
-assertEquals(0f, stage20.consumePlayerDamage(hazard.x(), hazard.y(), .1f), .0001f);
-⋮----
-@Test void nullSectorHazardsAreDeterministicForSameRun() {
-ArenaHazardRuntime first = new ArenaHazardRuntime(24, 19, 0);
-ArenaHazardRuntime second = new ArenaHazardRuntime(24, 19, 0);
-float untilFirst = first.nullSectorHazardInterval() * .68f + .05f;
-⋮----
-first.update(.05f, -3f, 2f);
-second.update(.05f, -3f, 2f);
-⋮----
-@Test void laterNullSectorStagesIncreasePressureButStayBounded() {
-ArenaHazardRuntime stage20 = new ArenaHazardRuntime(20, 0, 0);
-ArenaHazardRuntime stage30 = new ArenaHazardRuntime(30, 0, 0);
-assertTrue(stage30.nullSectorHazardInterval() < stage20.nullSectorHazardInterval());
-assertTrue(stage30.nullSectorHazardInterval() >= 8.8f);
-⋮----
-@Test void deathBurstRulesEscalateWithThreatAndNeverApplyToBoss() {
-assertFalse(DeathBurstRules.enabled(Enemy.Type.BRUTE, 7));
-assertTrue(DeathBurstRules.enabled(Enemy.Type.BRUTE, 8));
-assertTrue(DeathBurstRules.enabled(Enemy.Type.SHIELDED, 8));
-assertFalse(DeathBurstRules.enabled(Enemy.Type.PHANTOM, 14));
-assertTrue(DeathBurstRules.enabled(Enemy.Type.PHANTOM, 15));
-assertFalse(DeathBurstRules.enabled(Enemy.Type.BOSS, 20));
-assertTrue(DeathBurstRules.damage(Enemy.Type.ELITE, 20) > DeathBurstRules.damage(Enemy.Type.ELITE, 8));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/world/BiomeEnemyBehaviorRulesTest.java
-````java
-public final class BiomeEnemyBehaviorRulesTest {
-@Test public void forgeHoundIsAggressiveBurstCharger() {
-var p = BiomeEnemyBehaviorRules.forIdentity(BiomeEnemyRoster.Identity.FORGE_HOUND);
-assertTrue(p.aggressiveCharge());
-assertFalse(p.evasiveStrafe());
-assertTrue(p.speedMultiplier() > 1f);
-assertTrue(p.burstMultiplier() > 1.3f);
-assertTrue(p.chargeStrengthMultiplier() > 1.2f);
-⋮----
-@Test public void cinderGunnerPrioritizesStrongFrequentStrafes() {
-var p = BiomeEnemyBehaviorRules.forIdentity(BiomeEnemyRoster.Identity.CINDER_GUNNER);
-assertTrue(p.evasiveStrafe());
-assertFalse(p.aggressiveCharge());
-assertTrue(p.tacticCooldownMultiplier() < .8f);
-assertTrue(p.strafeStrengthMultiplier() > 1.3f);
-⋮----
-@Test public void slagGuardTradesSpeedForChargeWeight() {
-var p = BiomeEnemyBehaviorRules.forIdentity(BiomeEnemyRoster.Identity.SLAG_GUARD);
-assertTrue(p.speedMultiplier() < 1f);
-⋮----
-assertTrue(p.chargeStrengthMultiplier() > 1.35f);
-⋮----
-@Test public void phaseStalkerHasHighestMobilityBurst() {
-var phase = BiomeEnemyBehaviorRules.forIdentity(BiomeEnemyRoster.Identity.PHASE_STALKER);
-var forge = BiomeEnemyBehaviorRules.forIdentity(BiomeEnemyRoster.Identity.FORGE_HOUND);
-assertTrue(phase.evasiveStrafe());
-assertTrue(phase.burstMultiplier() > forge.burstMultiplier());
-assertTrue(phase.strafeStrengthMultiplier() > 1.4f);
-⋮----
-@Test public void staticSeerHasFastestTacticalCadence() {
-var seer = BiomeEnemyBehaviorRules.forIdentity(BiomeEnemyRoster.Identity.STATIC_SEER);
-var cinder = BiomeEnemyBehaviorRules.forIdentity(BiomeEnemyRoster.Identity.CINDER_GUNNER);
-assertTrue(seer.tacticCooldownMultiplier() < cinder.tacticCooldownMultiplier());
-assertTrue(seer.strafeStrengthMultiplier() > cinder.strafeStrengthMultiplier());
-⋮----
-@Test public void nullWardIsSlowSupportRegenerator() {
-var p = BiomeEnemyBehaviorRules.forIdentity(BiomeEnemyRoster.Identity.NULL_WARD);
-assertTrue(p.speedMultiplier() < .9f);
-assertTrue(p.recoveryMultiplier() > 1.5f);
-⋮----
-@Test public void standardEnemiesKeepNeutralProfile() {
-var p = BiomeEnemyBehaviorRules.forIdentity(BiomeEnemyRoster.Identity.NONE);
-assertEquals(1f, p.speedMultiplier(), .0001f);
-assertEquals(1f, p.burstMultiplier(), .0001f);
-assertEquals(1f, p.tacticCooldownMultiplier(), .0001f);
-assertEquals(1f, p.recoveryMultiplier(), .0001f);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/world/BiomeEnemyRosterTest.java
-````java
-final class BiomeEnemyRosterTest {
-@Test void quarantineKeepsStandardPopulation() {
-assertEquals(BiomeEnemyRoster.Identity.NONE, BiomeEnemyRoster.identityFor(9, Enemy.Type.RUNNER));
-assertEquals(Enemy.Type.SHAMBLER, BiomeEnemyRoster.remap(9, .1f, Enemy.Type.SHAMBLER));
-⋮----
-@Test void foundryMapsThreeSignatureEnemies() {
-assertEquals(BiomeEnemyRoster.Identity.FORGE_HOUND, BiomeEnemyRoster.identityFor(10, Enemy.Type.RUNNER));
-assertEquals(BiomeEnemyRoster.Identity.CINDER_GUNNER, BiomeEnemyRoster.identityFor(15, Enemy.Type.RANGED));
-assertEquals(BiomeEnemyRoster.Identity.SLAG_GUARD, BiomeEnemyRoster.identityFor(19, Enemy.Type.SHIELDED));
-assertEquals(Enemy.Type.RUNNER, BiomeEnemyRoster.remap(10, .10f, Enemy.Type.SHAMBLER));
-assertEquals(Enemy.Type.RANGED, BiomeEnemyRoster.remap(10, .25f, Enemy.Type.SHAMBLER));
-assertEquals(Enemy.Type.SHIELDED, BiomeEnemyRoster.remap(10, .40f, Enemy.Type.SHAMBLER));
-⋮----
-@Test void nullSectorMapsThreeSignatureEnemies() {
-assertEquals(BiomeEnemyRoster.Identity.PHASE_STALKER, BiomeEnemyRoster.identityFor(20, Enemy.Type.PHANTOM));
-assertEquals(BiomeEnemyRoster.Identity.STATIC_SEER, BiomeEnemyRoster.identityFor(25, Enemy.Type.RANGED));
-assertEquals(BiomeEnemyRoster.Identity.NULL_WARD, BiomeEnemyRoster.identityFor(29, Enemy.Type.REGENERATOR));
-assertEquals(Enemy.Type.PHANTOM, BiomeEnemyRoster.remap(20, .10f, Enemy.Type.SHAMBLER));
-assertEquals(Enemy.Type.RANGED, BiomeEnemyRoster.remap(20, .30f, Enemy.Type.SHAMBLER));
-assertEquals(Enemy.Type.REGENERATOR, BiomeEnemyRoster.remap(20, .48f, Enemy.Type.SHAMBLER));
-⋮----
-@Test void cryoVaultUsesHeavyControlPopulationWithoutReusingBiomeIdentityArt() {
-assertEquals(BiomeEnemyRoster.Identity.NONE, BiomeEnemyRoster.identityFor(30, Enemy.Type.SHIELDED));
-assertEquals(Enemy.Type.SHIELDED, BiomeEnemyRoster.remap(30, .10f, Enemy.Type.SHAMBLER));
-assertEquals(Enemy.Type.PHANTOM, BiomeEnemyRoster.remap(30, .30f, Enemy.Type.SHAMBLER));
-assertEquals(Enemy.Type.BRUTE, BiomeEnemyRoster.remap(30, .48f, Enemy.Type.SHAMBLER));
-assertEquals(.62f, BiomeEnemyRoster.elementalDamageMultiplier(30, Enemy.Type.SHIELDED, DamageElement.FROST), .0001f);
-assertEquals(.72f, BiomeEnemyRoster.elementalDamageMultiplier(30, Enemy.Type.BRUTE, DamageElement.FROST), .0001f);
-assertEquals(.78f, BiomeEnemyRoster.elementalDamageMultiplier(30, Enemy.Type.PHANTOM, DamageElement.FROST), .0001f);
-assertEquals(1f, BiomeEnemyRoster.elementalDamageMultiplier(30, Enemy.Type.SHIELDED, DamageElement.FIRE), .0001f);
-⋮----
-@Test void cryogenicDepthsUsesSustainRangedElitePressure() {
-assertEquals(BiomeEnemyRoster.Identity.NONE, BiomeEnemyRoster.identityFor(40, Enemy.Type.REGENERATOR));
-assertEquals(Enemy.Type.REGENERATOR, BiomeEnemyRoster.remap(40, .10f, Enemy.Type.SHAMBLER));
-assertEquals(Enemy.Type.RANGED, BiomeEnemyRoster.remap(40, .30f, Enemy.Type.SHAMBLER));
-assertEquals(Enemy.Type.ELITE, BiomeEnemyRoster.remap(40, .52f, Enemy.Type.SHAMBLER));
-assertEquals(.58f, BiomeEnemyRoster.elementalDamageMultiplier(40, Enemy.Type.REGENERATOR, DamageElement.FROST), .0001f);
-assertEquals(.70f, BiomeEnemyRoster.elementalDamageMultiplier(40, Enemy.Type.RANGED, DamageElement.SHOCK), .0001f);
-assertEquals(1.12f, BiomeEnemyRoster.elementalDamageMultiplier(40, Enemy.Type.ELITE, DamageElement.FIRE), .0001f);
-⋮----
-@Test void elementalResistanceProfilesAreBoundedAndSpecific() {
-assertEquals(.62f, BiomeEnemyRoster.elementalDamageMultiplier(10, Enemy.Type.RUNNER, DamageElement.FIRE), .0001f);
-assertEquals(1f, BiomeEnemyRoster.elementalDamageMultiplier(10, Enemy.Type.RUNNER, DamageElement.SHOCK), .0001f);
-assertEquals(.58f, BiomeEnemyRoster.elementalDamageMultiplier(20, Enemy.Type.RANGED, DamageElement.SHOCK), .0001f);
-assertEquals(.66f, BiomeEnemyRoster.elementalDamageMultiplier(20, Enemy.Type.REGENERATOR, DamageElement.FROST), .0001f);
-for (BiomeEnemyRoster.Identity identity : BiomeEnemyRoster.Identity.values()) {
-assertTrue(identity.resistanceMultiplier > 0f && identity.resistanceMultiplier <= 1f);
-⋮----
-@Test void bossesAreNeverRemappedOrAssignedARegularIdentity() {
-assertEquals(Enemy.Type.BOSS, BiomeEnemyRoster.remap(25, .1f, Enemy.Type.BOSS));
-assertEquals(BiomeEnemyRoster.Identity.NONE, BiomeEnemyRoster.identityFor(25, Enemy.Type.BOSS));
-````
-
-## File: core/src/test/java/com/deadlinezero/game/world/EndgameWaveCompositionRulesTest.java
-````java
-final class EndgameWaveCompositionRulesTest {
-@Test void noOverrideBeforeThreatFive() {
-for (EndgameMutatorRules.Mutator mutator : EndgameMutatorRules.Mutator.values()) {
-assertEquals(Enemy.Type.BRUTE,
-EndgameWaveCompositionRules.override(4, mutator, WaveDirector.PressureBand.CRISIS, 0f, Enemy.Type.BRUTE));
-⋮----
-@Test void eachMutatorHasARecognizableCompositionIdentity() {
-assertEquals(Enemy.Type.RUNNER, EndgameWaveCompositionRules.override(10,
-⋮----
-assertEquals(Enemy.Type.SHIELDED, EndgameWaveCompositionRules.override(10,
-⋮----
-assertEquals(Enemy.Type.BRUTE, EndgameWaveCompositionRules.override(10,
-⋮----
-@Test void overrideBudgetRemainsBoundedAndRisesTowardCrisis() {
-float opening5 = EndgameWaveCompositionRules.maximumOverrideShare(5, WaveDirector.PressureBand.OPENING);
-float crisis5 = EndgameWaveCompositionRules.maximumOverrideShare(5, WaveDirector.PressureBand.CRISIS);
-float crisis10 = EndgameWaveCompositionRules.maximumOverrideShare(10, WaveDirector.PressureBand.CRISIS);
-⋮----
-assertTrue(opening5 > 0f);
-assertTrue(crisis5 > opening5);
-assertTrue(crisis10 > crisis5);
-assertTrue(crisis10 <= .35f, "mutator composition must never replace more than 35% of normal picks");
-⋮----
-@Test void rollsOutsideBudgetPreserveEncounterChoice() {
-⋮----
-assertEquals(fallback, EndgameWaveCompositionRules.override(10,
-⋮----
-@Test void everyActiveMutatorCanBreakARepeatedEnemyStreak() {
-⋮----
-Enemy.Type replacement = EndgameWaveCompositionRules.streakBreaker(mutator, repeated);
-assertNotEquals(repeated, replacement, mutator + " must have a same-theme streak breaker");
-assertNotEquals(Enemy.Type.BOSS, replacement);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/world/FoundryHazardActivationCueTest.java
-````java
-final class FoundryHazardActivationCueTest {
-@Test void activationCueFiresExactlyOnceAfterWarningCompletes() {
-ArenaHazardRuntime runtime = new ArenaHazardRuntime(10, 3, 0);
-float spawnDelay = runtime.foundryHazardInterval() * .72f;
-⋮----
-runtime.update(.05f, 0f, 0f);
-⋮----
-ArenaHazardRuntime.Hazard hazard = runtime.hazards().get(0);
-⋮----
-assertFalse(hazard.consumeActivationCue());
-for (int i = 0; i < 30 && hazard.phase() == ArenaHazardRuntime.Phase.WARNING; i++) {
-⋮----
-assertTrue(hazard.consumeActivationCue());
-````
-
-## File: core/src/test/java/com/deadlinezero/game/world/RunEncounterDirectorTest.java
-````java
-final class RunEncounterDirectorTest {
-@Test void sameStageAndOrdinalProduceSameEncounterPlan() {
-RunStageContext.begin(4, 12);
-RunEncounterDirector first = new RunEncounterDirector(4);
-⋮----
-RunEncounterDirector second = new RunEncounterDirector(4);
-⋮----
-for (int i = 0; i < 3; i++) assertEquals(first.planned(i), second.planned(i));
-⋮----
-@Test void consecutiveRunsChangeEncounterPlan() {
-⋮----
-RunStageContext.begin(4, 13);
-⋮----
-for (int i = 0; i < 3; i++) differs |= first.planned(i) != second.planned(i);
-assertTrue(differs);
-⋮----
-@Test void eachRunUsesThreeDistinctEncounters() {
-RunStageContext.begin(8, 27);
-RunEncounterDirector director = new RunEncounterDirector(8);
-⋮----
-for (int i = 0; i < 3; i++) unique.add(director.planned(i));
-assertEquals(3, unique.size());
-assertNotEquals(RunEncounterDirector.Type.NONE, director.planned(0));
-⋮----
-@Test void runRotationExposesSpecialistEncounters() {
-⋮----
-RunStageContext.begin(6, ordinal);
-RunEncounterDirector director = new RunEncounterDirector(6);
-for (int i = 0; i < 3; i++) seen.add(director.planned(i));
-⋮----
-assertTrue(seen.contains(RunEncounterDirector.Type.PHANTOM_BREACH));
-assertTrue(seen.contains(RunEncounterDirector.Type.REGEN_BLOOM));
-assertTrue(seen.contains(RunEncounterDirector.Type.BULWARK_LINE));
-⋮----
-@Test void highThreatMutatorGuaranteesItsSignatureEncounterWithoutDuplicates() {
-⋮----
-RunStageContext.begin(20, ordinal, 6);
-EndgameMutatorRules.Mutator mutator = EndgameMutatorRules.current();
-RunEncounterDirector director = new RunEncounterDirector(20);
-⋮----
-assertEquals(3, unique.size(), "anchoring must preserve three distinct events");
-⋮----
-assertTrue(unique.contains(expected), mutator + " should surface its signature encounter");
-````
-
-## File: core/src/test/java/com/deadlinezero/game/world/SpatialHashTest.java
-````java
-final class SpatialHashTest {
-private static Enemy enemy(float x, float y) {
-return new Enemy(Enemy.Type.SHAMBLER, x, y, 100f, 1f, .4f, 1f, 1);
-⋮----
-@Test void nearestReturnsClosestAliveEnemyAcrossCellBoundaries() {
-SpatialHash hash = new SpatialHash(2.2f);
-⋮----
-Enemy fartherSameCell = enemy(1.8f, 0f);
-Enemy closestNextCell = enemy(2.21f, 0f);
-Enemy far = enemy(8f, 0f);
-enemies.add(fartherSameCell);
-enemies.add(closestNextCell);
-enemies.add(far);
-⋮----
-hash.rebuild(enemies);
-⋮----
-assertSame(fartherSameCell, hash.nearest(0f, 0f));
-assertSame(closestNextCell, hash.nearest(2.15f, 0f));
-⋮----
-@Test void nearestSkipsDeadEnemies() {
-⋮----
-Enemy dead = enemy(.2f, 0f);
-Enemy alive = enemy(1.1f, 0f);
-⋮----
-enemies.add(dead);
-enemies.add(alive);
-⋮----
-assertSame(alive, hash.nearest(0f, 0f));
-⋮----
-@Test void nearestReturnsNullForEmptyOrAllDeadIndex() {
-⋮----
-assertNull(hash.nearest(0f, 0f));
-⋮----
-Enemy dead = enemy(0f, 0f);
-⋮----
-assertEquals(0, hash.activeBucketCount());
-⋮----
-@Test void nearestWithinHonorsRadiusAndExclusions() {
-⋮----
-Enemy source = enemy(0f, 0f);
-Enemy excluded = enemy(1f, 0f);
-Enemy valid = enemy(2.8f, 0f);
-Enemy outside = enemy(3.41f, 0f);
-enemies.add(source);
-enemies.add(excluded);
-enemies.add(valid);
-enemies.add(outside);
-⋮----
-assertSame(valid, hash.nearestWithin(0f, 0f, 3.4f, source, excluded));
-assertNull(hash.nearestWithin(0f, 0f, .9f, source, excluded));
-⋮----
-@Test void nearestWithinUsesTrueEuclideanRadiusNotOnlyCoveredCells() {
-⋮----
-Enemy diagonalOutside = enemy(2.5f, 2.5f);
-Enemy inside = enemy(2.0f, 2.0f);
-enemies.add(diagonalOutside);
-enemies.add(inside);
-⋮----
-assertSame(inside, hash.nearestWithin(0f, 0f, 3.4f, null, null));
-⋮----
-@Test void incrementalAddMakesSpawnImmediatelyQueryable() {
-⋮----
-Enemy spawned = enemy(3f, 0f);
-⋮----
-hash.add(spawned);
-⋮----
-assertSame(spawned, hash.nearest(0f, 0f));
-assertEquals(1, hash.activeBucketCount());
-⋮----
-@Test void rebuildAfterIncrementalAddDoesNotDuplicateEnemy() {
-⋮----
-Enemy spawned = enemy(1f, 0f);
-enemies.add(spawned);
-⋮----
-hash.query(1f, 0f, .5f, out);
-assertEquals(1, out.size);
-assertSame(spawned, out.first());
-⋮----
-@Test void historicalBucketsDoNotStayActiveAcrossRebuilds() {
-⋮----
-enemies.clear();
-enemies.add(enemy(i * 2.3f, 0f));
-⋮----
-int retained = hash.retainedBucketCount();
-assertEquals(120, retained);
-⋮----
-enemies.add(enemy(0f, 0f));
-⋮----
-assertEquals(retained, hash.retainedBucketCount());
-⋮----
-@Test void retainedBucketsAreReusedWhileActiveCountTracksCurrentPopulation() {
-⋮----
-enemies.add(enemy(-5f, 0f));
-enemies.add(enemy(5f, 0f));
-⋮----
-assertEquals(2, hash.activeBucketCount());
-assertEquals(2, retained);
-````
-
-## File: core/src/test/java/com/deadlinezero/game/world/StageCombatPressureAuditTest.java
-````java
-final class StageCombatPressureAuditTest {
-@Test void lateGamePressureIsStrictlyMonotonic() {
-float previous = StageCombatPressureAudit.snapshot(9).compositePressure();
-⋮----
-float current = StageCombatPressureAudit.snapshot(stage).compositePressure();
-assertTrue(current > previous, "stage " + stage + " pressure must exceed previous stage");
-⋮----
-@Test void foundryBoundaryAddsContentWithoutAnUnfairSpike() {
-float jump = StageCombatPressureAudit.relativeJump(9, 10);
-assertTrue(jump > .20f, "Foundry should feel materially harder than stage 9");
-assertTrue(jump < .27f, "Foundry boundary pressure spike too large: " + jump);
-⋮----
-@Test void nullSectorBoundaryRemainsReadable() {
-float jump = StageCombatPressureAudit.relativeJump(19, 20);
-assertTrue(jump > .10f, "Null Sector should introduce a meaningful pressure step");
-assertTrue(jump < .15f, "Null Sector boundary pressure spike too large: " + jump);
-⋮----
-@Test void postBoundaryStageStepsStayControlled() {
-⋮----
-float jump = StageCombatPressureAudit.relativeJump(stage - 1, stage);
-assertTrue(jump < .21f, "stage " + stage + " pressure jump too large: " + jump);
-⋮----
-@Test void biomeHazardPressureIsAbsentThenExplicit() {
-StageCombatPressureAudit.Snapshot quarantine = StageCombatPressureAudit.snapshot(9);
-StageCombatPressureAudit.Snapshot foundry = StageCombatPressureAudit.snapshot(10);
-StageCombatPressureAudit.Snapshot nullSector = StageCombatPressureAudit.snapshot(20);
-assertTrue(!Float.isFinite(quarantine.hazardInterval()));
-assertTrue(Float.isFinite(foundry.hazardInterval()));
-assertTrue(Float.isFinite(nullSector.hazardInterval()));
-float foundryPressurePerSecond = foundry.nominalHazardDamage() / foundry.hazardInterval();
-float nullPressurePerSecond = nullSector.nominalHazardDamage() / nullSector.hazardInterval();
-assertTrue(nullPressurePerSecond > foundryPressurePerSecond,
-````
-
-## File: core/src/test/java/com/deadlinezero/game/world/WaveDirectorTest.java
-````java
-public final class WaveDirectorTest {
-@AfterEach public void cleanup() { RunModifierContext.end(); }
-⋮----
-@Test public void pressureBandsProgressTowardBoss() {
-RunStageContext.begin(1);
-WaveDirector d = new WaveDirector();
-float boss = d.bossArrivalSeconds();
-assertEquals(WaveDirector.PressureBand.OPENING, d.pressureBand());
-d.update(boss * .30f);
-assertEquals(WaveDirector.PressureBand.BUILD, d.pressureBand());
-⋮----
-assertEquals(WaveDirector.PressureBand.ASSAULT, d.pressureBand());
-d.update(boss * .25f);
-assertEquals(WaveDirector.PressureBand.CRISIS, d.pressureBand());
-⋮----
-@Test public void spawnCadenceAcceleratesAcrossPressureBands() {
-⋮----
-WaveDirector opening = new WaveDirector();
-opening.onSpawn();
-opening.update(.30f);
-assertTrue(!opening.shouldSpawn());
-⋮----
-WaveDirector crisis = new WaveDirector();
-crisis.update(crisis.bossArrivalSeconds() * .85f);
-crisis.onSpawn();
-crisis.update(.30f);
-assertTrue(crisis.shouldSpawn());
-⋮----
-@Test public void bossBecomesPendingAtArrival() {
-RunStageContext.begin(3);
-⋮----
-d.update(d.bossArrivalSeconds() + .01f);
-assertTrue(d.bossPending());
-⋮----
-@Test public void twinApexSpawnsTwoBossSignalsBeforeClosingGate() {
-activateLegendary(RunModifierContext.Modifier.TWIN_APEX);
-⋮----
-assertEquals(Enemy.Type.BOSS, d.chooseType());
-d.onBossSpawned();
-assertEquals(1, d.bossSpawnCount());
-⋮----
-assertTrue(!d.bossSpawned());
-⋮----
-d.onSpawn();
-d.update(.20f);
-assertTrue(d.shouldSpawn());
-⋮----
-assertEquals(2, d.bossSpawnCount());
-assertTrue(d.bossSpawned());
-⋮----
-@Test public void phantomEclipseHasDeterministicPhantomDominatedMapping() {
-activateLegendary(RunModifierContext.Modifier.PHANTOM_ECLIPSE);
-⋮----
-assertEquals(Enemy.Type.PHANTOM, d.legendaryOverride(.00f));
-assertEquals(Enemy.Type.PHANTOM, d.legendaryOverride(.55f));
-assertEquals(Enemy.Type.RUNNER, d.legendaryOverride(.60f));
-assertEquals(Enemy.Type.RANGED, d.legendaryOverride(.80f));
-assertEquals(Enemy.Type.REGENERATOR, d.legendaryOverride(.90f));
-assertEquals(Enemy.Type.ELITE, d.legendaryOverride(.99f));
-⋮----
-@Test public void specialistSiegeMapsEveryRollToHeavySpecialists() {
-activateLegendary(RunModifierContext.Modifier.SPECIALIST_SIEGE);
-⋮----
-assertEquals(Enemy.Type.SHIELDED, d.legendaryOverride(.00f));
-assertEquals(Enemy.Type.REGENERATOR, d.legendaryOverride(.40f));
-assertEquals(Enemy.Type.ELITE, d.legendaryOverride(.70f));
-assertEquals(Enemy.Type.BRUTE, d.legendaryOverride(.85f));
-assertEquals(Enemy.Type.RANGED, d.legendaryOverride(.99f));
-⋮----
-private static void activateLegendary(RunModifierContext.Modifier target) {
-⋮----
-RunStageContext.begin(stage, ordinal);
-for (RunModifierContext.Modifier offer : RunModifierContext.offers()) {
-⋮----
-if (!RunModifierContext.choose(target)) throw new AssertionError("Legendary contract activation failed");
-⋮----
-throw new AssertionError("Legendary contract was never offered: " + target);
-````
-
 ## File: core/build.gradle
 ````
 plugins { id 'java-library' }
@@ -30209,7 +23789,30 @@ var attack_windup := 0.0
 var attack_target_position := Vector3.ZERO
 var elite_burst_clock := 2.4
 var boss_slam_clock := 3.6
+var boss_phase := 1
 var telegraph_visual: Node3D
+var telegraph_material: StandardMaterial3D
+var slow_multiplier := 1.0
+var slow_left := 0.0
+var burn_dps := 0.0
+var burn_left := 0.0
+var burn_tick_accumulator := 0.0
+var shock_left := 0.0
+var special_clock := 1.8
+var regeneration_clock := 1.0
+var regeneration_windup := 0.0
+var regeneration_visual: Node3D
+var regeneration_material: StandardMaterial3D
+var pending_special := ""
+var spawn_secondary_fx := true
+var combat_enabled := true
+var charge_active := false
+var charge_direction := Vector3.ZERO
+var charge_left := 0.0
+var charge_hit := false
+var hit_flash_visual: MeshInstance3D
+var hit_flash_material: StandardMaterial3D
+var hit_reaction_tween: Tween
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -30235,6 +23838,21 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
             move_speed = 2.0
             contact_damage = 18.0
             xp_value = 8
+        "charger":
+            max_health = 105.0 * difficulty
+            move_speed = 2.35
+            contact_damage = 13.0
+            xp_value = 4
+        "harrier":
+            max_health = 74.0 * difficulty
+            move_speed = 2.75
+            contact_damage = 9.0
+            xp_value = 4
+        "regenerator":
+            max_health = 128.0 * difficulty
+            move_speed = 1.72
+            contact_damage = 10.0
+            xp_value = 5
         _:
             max_health = 68.0 * difficulty
             move_speed = 2.15
@@ -30246,16 +23864,43 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
 func _ready() -> void:
     add_to_group("enemies")
     _build_visual()
+    _build_hit_flash()
 
 func _physics_process(delta: float) -> void:
+    if not combat_enabled:
+        velocity = Vector3.ZERO
+        return
+    _process_status_effects(delta)
+    shock_left = maxf(0.0, shock_left - maxf(delta, 0.0))
     if dead or target == null or not is_instance_valid(target):
         return
+    if shock_left > 0.0:
+        velocity = Vector3.ZERO
+        return
+    if kind == "boss":
+        _update_boss_phase()
     attack_cooldown = max(0.0, attack_cooldown - delta)
     elite_burst_clock = max(0.0, elite_burst_clock - delta)
     boss_slam_clock = max(0.0, boss_slam_clock - delta)
+    special_clock = max(0.0, special_clock - delta)
+    regeneration_clock = max(0.0, regeneration_clock - delta)
+    slow_left = max(0.0, slow_left - delta)
+    if slow_left <= 0.0:
+        slow_multiplier = 1.0
+    if charge_active:
+        _process_charge(delta)
+        return
+    if regeneration_windup > 0.0:
+        _process_regeneration(delta)
+        return
     var delta_pos := target.global_position - global_position
     delta_pos.y = 0.0
     var distance := delta_pos.length()
+
+    if kind == "regenerator" and regeneration_clock <= 0.0 and health < max_health:
+        _begin_regeneration()
+        regeneration_clock = 1.0
+        return
 
     if attack_windup > 0.0:
         velocity = Vector3.ZERO
@@ -30264,17 +23909,35 @@ func _physics_process(delta: float) -> void:
             _resolve_telegraphed_attack()
         return
 
+    if kind == "charger" and special_clock <= 0.0 and distance > 2.2 and distance < 7.2:
+        pending_special = "charge"
+        _begin_telegraphed_attack(0.52, target.global_position)
+        special_clock = 3.4
+        return
+
+    if kind == "harrier" and special_clock <= 0.0 and distance >= 3.5 and distance <= 8.5:
+        pending_special = "harrier_shot"
+        _begin_telegraphed_attack(0.42, target.global_position)
+        special_clock = 2.6
+        return
+
     if kind == "elite" and elite_burst_clock <= 0.0 and distance < 5.2:
         _begin_telegraphed_attack(0.46, target.global_position)
         elite_burst_clock = 3.0
         return
     if kind == "boss" and boss_slam_clock <= 0.0 and distance < 4.6:
-        _begin_telegraphed_attack(0.68, target.global_position)
-        boss_slam_clock = 4.1
+        _begin_telegraphed_attack(_boss_slam_windup(), target.global_position)
+        boss_slam_clock = _boss_slam_cooldown()
         return
 
     if distance > 0.05:
-        velocity = delta_pos.normalized() * move_speed
+        var movement_direction: Vector3 = delta_pos.normalized()
+        if kind == "harrier":
+            if distance < 4.4:
+                movement_direction = -movement_direction
+            elif distance <= 6.6:
+                movement_direction = Vector3(-movement_direction.z, 0.0, movement_direction.x)
+        velocity = movement_direction * move_speed * slow_multiplier
         move_and_slide()
         if velocity.length_squared() > 0.01:
             look_at(global_position + velocity, Vector3.UP)
@@ -30282,6 +23945,71 @@ func _physics_process(delta: float) -> void:
     if distance < 0.85 and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _update_boss_phase() -> void:
+    if kind != "boss" or max_health <= 0.0:
+        return
+    var ratio := clampf(health / max_health, 0.0, 1.0)
+    boss_phase = 3 if ratio <= 0.30 else (2 if ratio <= 0.65 else 1)
+    match boss_phase:
+        2:
+            move_speed = 1.55
+            contact_damage = 27.0
+        3:
+            move_speed = 1.76
+            contact_damage = 31.0
+        _:
+            move_speed = 1.38
+            contact_damage = 24.0
+
+func _boss_slam_windup() -> float:
+    match boss_phase:
+        2: return 0.56
+        3: return 0.44
+        _: return 0.68
+
+func _boss_slam_cooldown() -> float:
+    match boss_phase:
+        2: return 3.4
+        3: return 2.8
+        _: return 4.1
+
+func _process_charge(delta: float) -> void:
+    charge_left = max(0.0, charge_left - delta)
+    velocity = charge_direction * 9.4
+    move_and_slide()
+    if velocity.length_squared() > 0.01:
+        look_at(global_position + velocity, Vector3.UP)
+    if not charge_hit and target != null and is_instance_valid(target):
+        var target_offset := target.global_position - global_position
+        target_offset.y = 0.0
+        if target_offset.length() <= 1.0 and target.has_method("take_damage"):
+            target.take_damage(contact_damage * 1.30)
+            charge_hit = true
+            _spawn_attack_impact(global_position + Vector3(0.0, 0.05, 0.0), 1.05)
+    if charge_left <= 0.0:
+        charge_active = false
+        velocity = Vector3.ZERO
+        attack_cooldown = 0.80
+
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if enabled:
+        return
+    velocity = Vector3.ZERO
+    attack_windup = 0.0
+    pending_special = ""
+    charge_active = false
+    charge_left = 0.0
+    charge_hit = false
+    regeneration_windup = 0.0
+    if regeneration_visual != null and is_instance_valid(regeneration_visual):
+        regeneration_visual.queue_free()
+    regeneration_visual = null
+    regeneration_material = null
+    if telegraph_visual != null and is_instance_valid(telegraph_visual):
+        telegraph_visual.queue_free()
+    telegraph_visual = null
 
 func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> void:
     attack_windup = duration
@@ -30294,9 +24022,28 @@ func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> voi
 func _resolve_telegraphed_attack() -> void:
     if target == null or not is_instance_valid(target):
         return
-    var radius := 1.95 if kind == "boss" else 1.18
-    var damage := contact_damage * (1.35 if kind == "boss" else 0.82)
-    var impact_point := global_position.lerp(attack_target_position, 0.58)
+    if pending_special == "charge":
+        var direction := attack_target_position - global_position
+        direction.y = 0.0
+        if direction.length_squared() < 0.001:
+            direction = global_transform.basis.z * -1.0
+        charge_direction = direction.normalized()
+        charge_left = clampf(direction.length() / 9.4, 0.28, 0.72)
+        charge_active = true
+        charge_hit = false
+        pending_special = ""
+        return
+    if pending_special == "harrier_shot":
+        var shot := DZEnemyProjectile.new()
+        get_tree().current_scene.add_child(shot)
+        shot.global_position = global_position + Vector3(0.0, 0.34, 0.0)
+        shot.configure(attack_target_position, target, contact_damage * 0.88)
+        pending_special = ""
+        attack_cooldown = 0.95
+        return
+    var radius: float = 1.95 if kind == "boss" else 1.18
+    var damage: float = contact_damage * (1.35 if kind == "boss" else 0.82)
+    var impact_point: Vector3 = global_position.lerp(attack_target_position, 0.58)
     impact_point.y = 0.05
     if target.global_position.distance_to(impact_point) <= radius and target.has_method("take_damage"):
         target.take_damage(damage)
@@ -30312,26 +24059,115 @@ func _show_telegraph(radius: float, duration: float) -> void:
     mesh.bottom_radius = radius
     mesh.height = 0.018
     telegraph_visual.mesh = mesh
-    telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.025, 0.0)
-    var mat := StandardMaterial3D.new()
-    mat.albedo_color = Color(1.0, 0.16, 0.04, 0.20)
-    mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    mat.emission_enabled = true
-    mat.emission = Color(1.0, 0.08, 0.01)
-    mat.emission_energy_multiplier = 1.5
-    telegraph_visual.material_override = mat
     get_tree().current_scene.add_child(telegraph_visual)
+    telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.025, 0.0)
+    telegraph_material = StandardMaterial3D.new()
+    telegraph_material.albedo_color = Color(1.0, 0.16, 0.04, 0.16)
+    telegraph_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    telegraph_material.emission_enabled = true
+    telegraph_material.emission = Color(1.0, 0.08, 0.01)
+    telegraph_material.emission_energy_multiplier = 1.4
+    telegraph_visual.material_override = telegraph_material
     var tween := telegraph_visual.create_tween()
+    tween.set_parallel(true)
     telegraph_visual.scale = Vector3(0.42, 1.0, 0.42)
-    tween.tween_property(telegraph_visual, "scale", Vector3.ONE, duration)
-    tween.tween_callback(telegraph_visual.queue_free)
+    tween.tween_property(telegraph_visual, "scale", Vector3.ONE, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(telegraph_material, "emission_energy_multiplier", 5.2 if kind == "boss" else 4.2, duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.08, 0.015, 0.48 if kind == "boss" else 0.40), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.chain().tween_callback(telegraph_visual.queue_free)
 
 func _spawn_attack_impact(at: Vector3, radius: float) -> void:
+    if not spawn_secondary_fx:
+        return
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.22, 0.05) if kind == "boss" else Color(0.72, 0.28, 1.0)
     fx.scale_boost = radius * 1.35
     get_tree().current_scene.add_child(fx)
     fx.global_position = at + Vector3(0.0, 0.10, 0.0)
+
+func _begin_regeneration() -> void:
+    if dead or not combat_enabled or health <= 0.0 or health >= max_health:
+        return
+    regeneration_windup = 0.42
+    if regeneration_visual != null and is_instance_valid(regeneration_visual):
+        regeneration_visual.queue_free()
+    var pulse := MeshInstance3D.new()
+    pulse.name = "RegenerationPulse"
+    var mesh := CylinderMesh.new()
+    mesh.top_radius = 0.88
+    mesh.bottom_radius = 0.88
+    mesh.height = 0.022
+    pulse.mesh = mesh
+    pulse.position = Vector3(0.0, 0.035, 0.0)
+    regeneration_material = StandardMaterial3D.new()
+    regeneration_material.albedo_color = Color(0.12, 1.0, 0.42, 0.18)
+    regeneration_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    regeneration_material.emission_enabled = true
+    regeneration_material.emission = Color(0.08, 1.0, 0.34)
+    regeneration_material.emission_energy_multiplier = 1.8
+    pulse.material_override = regeneration_material
+    regeneration_visual = pulse
+    add_child(pulse)
+    pulse.scale = Vector3(0.48, 1.0, 0.48)
+    var tween := pulse.create_tween()
+    tween.set_parallel(true)
+    tween.tween_property(pulse, "scale", Vector3(1.18, 1.0, 1.18), regeneration_windup).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(regeneration_material, "emission_energy_multiplier", 4.0, regeneration_windup).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+
+func _process_regeneration(delta: float) -> void:
+    if regeneration_windup <= 0.0:
+        return
+    regeneration_windup = max(0.0, regeneration_windup - delta)
+    velocity = Vector3.ZERO
+    if regeneration_windup > 0.0:
+        return
+    _regenerate()
+    if regeneration_visual != null and is_instance_valid(regeneration_visual):
+        regeneration_visual.queue_free()
+    regeneration_visual = null
+    regeneration_material = null
+
+func _regenerate() -> void:
+    if dead or health <= 0.0 or health >= max_health:
+        return
+    var healed: float = minf(max_health * 0.035, max_health - health)
+    health += healed
+    health_changed.emit(health, max_health)
+
+func apply_slow(multiplier: float, duration: float) -> void:
+    slow_multiplier = min(slow_multiplier, clampf(multiplier, 0.30, 1.0))
+    slow_left = max(slow_left, max(0.0, duration))
+
+func apply_burn(dps: float, duration: float) -> void:
+    if dead or dps <= 0.0 or duration <= 0.0:
+        return
+    burn_dps = maxf(burn_dps, dps)
+    burn_left = maxf(burn_left, duration)
+
+func apply_shock(duration: float) -> void:
+    if dead or duration <= 0.0:
+        return
+    var resistance := 0.45 if kind == "boss" else (0.65 if kind == "elite" else 1.0)
+    shock_left = maxf(shock_left, duration * resistance)
+    velocity = Vector3.ZERO
+
+func _process_status_effects(delta: float) -> void:
+    if dead or burn_left <= 0.0 or burn_dps <= 0.0:
+        return
+    var active_delta := minf(maxf(delta, 0.0), burn_left)
+    burn_left = maxf(0.0, burn_left - maxf(delta, 0.0))
+    burn_tick_accumulator += active_delta
+
+    const BURN_TICK := 0.25
+    while burn_tick_accumulator >= BURN_TICK and not dead:
+        burn_tick_accumulator -= BURN_TICK
+        take_damage(burn_dps * BURN_TICK, false)
+
+    if burn_left <= 0.0:
+        if burn_tick_accumulator > 0.0 and not dead:
+            take_damage(burn_dps * burn_tick_accumulator, false)
+        burn_tick_accumulator = 0.0
+        burn_dps = 0.0
 
 func take_damage(amount: float, critical := false) -> void:
     if dead:
@@ -30340,7 +24176,8 @@ func take_damage(amount: float, critical := false) -> void:
     health_changed.emit(max(0.0, health), max_health)
     var killed := health <= 0.0
     impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
-    _flash(critical, killed)
+    _spawn_damage_number(amount, critical)
+    _play_hit_reaction(critical, killed)
     if killed:
         dead = true
         velocity = Vector3.ZERO
@@ -30352,6 +24189,96 @@ func take_damage(amount: float, critical := false) -> void:
         else:
             queue_free()
 
+func hit_reaction_profile() -> Dictionary:
+    if kind == "boss":
+        return {"id": "boss_hit", "punch": 1.035, "flash": 5.0, "duration": 0.13, "recoil": 0.025}
+    if kind == "elite":
+        return {"id": "elite_hit", "punch": 1.075, "flash": 6.2, "duration": 0.12, "recoil": 0.055}
+    return {"id": "normal_hit", "punch": 1.10, "flash": 7.0, "duration": 0.10, "recoil": 0.085}
+
+func _play_hit_reaction(critical: bool, killed: bool) -> void:
+    var visual := get_node_or_null("Visual") as Node3D
+    if visual == null:
+        return
+    var profile := hit_reaction_profile()
+    if hit_reaction_tween != null and hit_reaction_tween.is_valid():
+        hit_reaction_tween.kill()
+    var base_scale := visual.scale
+    var punch := float(profile["punch"]) * (1.035 if critical else 1.0)
+    var duration := float(profile["duration"])
+    var recoil := float(profile["recoil"])
+    var base_position := visual.position
+    var recoil_direction := Vector3.ZERO
+    if target != null and is_instance_valid(target):
+        recoil_direction = global_position - target.global_position
+        recoil_direction.y = 0.0
+        if recoil_direction.length_squared() > 0.001:
+            recoil_direction = recoil_direction.normalized() * recoil
+    if hit_flash_visual != null:
+        hit_flash_visual.visible = true
+        hit_flash_material.emission_energy_multiplier = float(profile["flash"]) * (1.18 if critical else 1.0)
+        hit_flash_material.albedo_color.a = 0.30 if critical else 0.20
+    hit_reaction_tween = create_tween()
+    hit_reaction_tween.set_parallel(true)
+    hit_reaction_tween.tween_property(visual, "scale", base_scale * punch, duration * 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    hit_reaction_tween.tween_property(visual, "position", base_position + recoil_direction, duration * 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    if hit_flash_visual != null:
+        hit_reaction_tween.tween_property(hit_flash_material, "emission_energy_multiplier", 0.0, duration)
+        hit_reaction_tween.tween_property(hit_flash_material, "albedo_color:a", 0.0, duration)
+    hit_reaction_tween.set_parallel(false)
+    hit_reaction_tween.tween_property(visual, "scale", base_scale * (1.04 if killed else 1.0), duration * 0.66).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    hit_reaction_tween.parallel().tween_property(visual, "position", base_position, duration * 0.66).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    hit_reaction_tween.tween_callback(func() -> void:
+        if hit_flash_visual != null:
+            hit_flash_visual.visible = false
+    )
+
+func _build_hit_flash() -> void:
+    hit_flash_visual = MeshInstance3D.new()
+    hit_flash_visual.name = "HitFlash"
+    var mesh := CylinderMesh.new()
+    var scale_factor := 1.0
+    if kind == "boss": scale_factor = 1.62
+    elif kind in ["elite", "brute", "charger"]: scale_factor = 1.18
+    mesh.top_radius = 0.46 * scale_factor
+    mesh.bottom_radius = 0.52 * scale_factor
+    mesh.height = 1.28 * scale_factor
+    hit_flash_visual.mesh = mesh
+    hit_flash_visual.position.y = 0.66 * scale_factor
+    hit_flash_material = StandardMaterial3D.new()
+    hit_flash_material.albedo_color = Color(1.0, 0.86, 0.58, 0.0)
+    hit_flash_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    hit_flash_material.emission_enabled = true
+    hit_flash_material.emission = Color(1.0, 0.58, 0.16)
+    hit_flash_material.emission_energy_multiplier = 0.0
+    hit_flash_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    hit_flash_visual.material_override = hit_flash_material
+    hit_flash_visual.visible = false
+    add_child(hit_flash_visual)
+
+func _spawn_damage_number(amount: float, critical: bool) -> void:
+    if get_tree() == null or get_tree().current_scene == null:
+        return
+    var number := Label3D.new()
+    number.name = "DamageNumber_%d" % Time.get_ticks_usec()
+    number.text = "%d" % int(round(amount))
+    number.font_size = 34 if critical else 26
+    number.outline_size = 8 if critical else 6
+    number.modulate = Color(1.0, 0.72, 0.12) if critical else Color(0.92, 0.97, 1.0)
+    number.outline_modulate = Color(0.02, 0.03, 0.05, 0.96)
+    number.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+    number.no_depth_test = true
+    number.pixel_size = 0.0038 if critical else 0.0032
+    get_tree().current_scene.add_child(number)
+    number.global_position = global_position + Vector3(0.0, 1.28, 0.0)
+
+    var rise := 0.82 if critical else 0.62
+    var tween := number.create_tween()
+    tween.set_parallel(true)
+    tween.tween_property(number, "global_position", number.global_position + Vector3(0.0, rise, 0.0), 0.58).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(number, "modulate:a", 0.0, 0.58).set_delay(0.18)
+    tween.chain().tween_callback(number.queue_free)
+
 func _build_visual() -> void:
     authored_visual = DZAssetLibrary.enemy(kind)
     if authored_visual != null:
@@ -30361,6 +24288,9 @@ func _build_visual() -> void:
             "runner": scale_factor = 0.92
             "brute": scale_factor = 1.22
             "elite": scale_factor = 1.15
+            "charger": scale_factor = 1.18
+            "harrier": scale_factor = 0.94
+            "regenerator": scale_factor = 1.10
             "boss": scale_factor = 1.72
         authored_visual.scale = Vector3.ONE * scale_factor
         add_child(authored_visual)
@@ -30434,6 +24364,15 @@ func _add_archetype_signature() -> void:
             _add_brute_shoulders(accent)
         "elite":
             accent = Color(0.72, 0.30, 1.0)
+            _add_elite_crown(accent)
+        "charger":
+            accent = Color(1.0, 0.32, 0.08)
+            _add_brute_shoulders(accent)
+        "harrier":
+            accent = Color(0.12, 0.82, 1.0)
+            _add_runner_blades(accent)
+        "regenerator":
+            accent = Color(0.18, 1.0, 0.48)
             _add_elite_crown(accent)
         "boss":
             accent = Color(1.0, 0.62, 0.12)
@@ -30544,13 +24483,177 @@ func _play_authored(name: String) -> void:
     authored_anim.play(name, 0.10)
 
 func _flash(critical := false, killed := false) -> void:
-    var visual := get_node_or_null("Visual")
-    if visual:
-        var base_scale: Vector3 = visual.scale
-        var punch: float = 1.12 if critical else (1.10 if killed else 1.065)
-        var tween: Tween = create_tween()
-        tween.tween_property(visual, "scale", base_scale * punch, 0.035)
-        tween.tween_property(visual, "scale", base_scale, 0.075)
+    _play_hit_reaction(critical, killed)
+````
+
+## File: godot/scripts/EnemyProjectile.gd
+````
+class_name DZEnemyProjectile
+extends Node3D
+
+var velocity := Vector3.ZERO
+var damage := 0.0
+var target: Node3D
+var lifetime := 4.0
+var hit_radius := 0.72
+var combat_enabled := true
+var resolved := false
+
+func configure(target_position: Vector3, chase_target: Node3D, amount: float, speed := 8.6) -> void:
+    target = chase_target
+    damage = amount
+    var direction := target_position - global_position
+    direction.y = 0.0
+    if direction.length_squared() < 0.001:
+        direction = Vector3.FORWARD
+    velocity = direction.normalized() * speed
+
+func _ready() -> void:
+    add_to_group("hostile_projectiles")
+    _build_visual()
+
+func _physics_process(delta: float) -> void:
+    if not combat_enabled or resolved:
+        return
+    lifetime -= delta
+    if lifetime <= 0.0:
+        queue_free()
+        return
+    global_position += velocity * delta
+    if target == null or not is_instance_valid(target):
+        return
+    var offset := target.global_position - global_position
+    offset.y = 0.0
+    if offset.length() <= hit_radius:
+        _hit_target()
+
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if not enabled:
+        velocity = Vector3.ZERO
+
+func _hit_target() -> void:
+    if resolved:
+        return
+    resolved = true
+    if target != null and is_instance_valid(target) and target.has_method("take_damage"):
+        target.take_damage(damage)
+    queue_free()
+
+func _build_visual() -> void:
+    var core := MeshInstance3D.new()
+    core.name = "HarrierBoltCore"
+    var core_mesh := SphereMesh.new()
+    core_mesh.radius = 0.13
+    core_mesh.height = 0.26
+    core.mesh = core_mesh
+    var core_mat := StandardMaterial3D.new()
+    core_mat.albedo_color = Color(0.08, 0.78, 1.0)
+    core_mat.emission_enabled = true
+    core_mat.emission = Color(0.04, 0.66, 1.0)
+    core_mat.emission_energy_multiplier = 5.2
+    core.material_override = core_mat
+    add_child(core)
+
+    var halo := MeshInstance3D.new()
+    halo.name = "HarrierBoltHalo"
+    var halo_mesh := SphereMesh.new()
+    halo_mesh.radius = 0.24
+    halo_mesh.height = 0.48
+    halo.mesh = halo_mesh
+    var halo_mat := StandardMaterial3D.new()
+    halo_mat.albedo_color = Color(0.08, 0.72, 1.0, 0.18)
+    halo_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    halo_mat.emission_enabled = true
+    halo_mat.emission = Color(0.04, 0.55, 1.0)
+    halo_mat.emission_energy_multiplier = 2.6
+    halo.material_override = halo_mat
+    add_child(halo)
+
+    var trail := MeshInstance3D.new()
+    trail.name = "HarrierBoltTrail"
+    var trail_mesh := BoxMesh.new()
+    trail_mesh.size = Vector3(0.07, 0.07, 0.78)
+    trail.mesh = trail_mesh
+    trail.position = Vector3(0.0, 0.0, 0.42)
+    var trail_mat := StandardMaterial3D.new()
+    trail_mat.albedo_color = Color(0.05, 0.64, 1.0, 0.42)
+    trail_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    trail_mat.emission_enabled = true
+    trail_mat.emission = Color(0.04, 0.58, 1.0)
+    trail_mat.emission_energy_multiplier = 3.8
+    trail_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    trail.material_override = trail_mat
+    add_child(trail)
+
+    if velocity.length_squared() > 0.01:
+        look_at(global_position + velocity.normalized(), Vector3.UP)
+````
+
+## File: godot/scripts/GameSettings.gd
+````
+class_name DZGameSettings
+extends RefCounted
+
+const DEFAULTS := {
+    "master_volume": 0.85,
+    "sfx_volume": 0.90
+}
+
+static func save(path: String, settings: Dictionary) -> Error:
+    var config := ConfigFile.new()
+    config.set_value("audio", "master_volume", clampf(float(settings.get("master_volume", DEFAULTS["master_volume"])), 0.0, 1.0))
+    config.set_value("audio", "sfx_volume", clampf(float(settings.get("sfx_volume", DEFAULTS["sfx_volume"])), 0.0, 1.0))
+    return config.save(path)
+
+static func load_settings(path: String) -> Dictionary:
+    var result := DEFAULTS.duplicate(true)
+    var config := ConfigFile.new()
+    if config.load(path) != OK:
+        return result
+    result["master_volume"] = clampf(float(config.get_value("audio", "master_volume", DEFAULTS["master_volume"])), 0.0, 1.0)
+    result["sfx_volume"] = clampf(float(config.get_value("audio", "sfx_volume", DEFAULTS["sfx_volume"])), 0.0, 1.0)
+    return result
+````
+
+## File: godot/scripts/Haptics.gd
+````
+extends RefCounted
+
+static func pattern_for(kind: String) -> int:
+    match kind:
+        "hit":
+            return 18
+        "critical":
+            return 38
+        "boss":
+            return 72
+        _:
+            return 0
+
+static func event_for_impact(critical: bool, killed: bool, boss: bool) -> String:
+    if boss:
+        return "boss"
+    if critical or killed:
+        return "critical"
+    return "hit"
+
+static func amplitude_for(kind: String) -> float:
+    match kind:
+        "hit":
+            return 0.32
+        "critical":
+            return 0.58
+        "boss":
+            return 0.82
+        _:
+            return 0.0
+
+static func pulse(kind: String) -> void:
+    var duration := pattern_for(kind)
+    if duration <= 0:
+        return
+    Input.vibrate_handheld(duration, amplitude_for(kind))
 ````
 
 ## File: godot/scripts/Hud.gd
@@ -30560,8 +24663,13 @@ extends CanvasLayer
 
 signal upgrade_chosen(index: int)
 signal restart_requested
+signal pause_requested
+signal resume_requested
+signal master_volume_changed(value: float)
+signal sfx_volume_changed(value: float)
 
 var hp_bar: ProgressBar
+var health_bar: ProgressBar
 var xp_bar: ProgressBar
 var status_label: Label
 var wave_label: Label
@@ -30578,14 +24686,46 @@ var boss_phase_label: Label
 var boss_hp_max := 1.0
 var game_over_panel: PanelContainer
 var game_over_summary: Label
+var low_health_panel: PanelContainer
+var low_health_label: Label
+var threat_panel: PanelContainer
+var threat_label: Label
+var pause_panel: PanelContainer
+var pause_button: Button
+var master_volume: HSlider
+var sfx_volume: HSlider
+var impact_flash: ColorRect
+var impact_flash_tween: Tween
+var damage_vignette: ColorRect
+var damage_vignette_tween: Tween
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
     _build()
 
+func pulse_damage_screen() -> void:
+    if damage_vignette == null:
+        return
+    if damage_vignette_tween != null and damage_vignette_tween.is_valid():
+        damage_vignette_tween.kill()
+    damage_vignette.visible = true
+    damage_vignette.modulate.a = 1.0
+    damage_vignette_tween = damage_vignette.create_tween()
+    damage_vignette_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    damage_vignette_tween.tween_property(damage_vignette, "modulate:a", 0.0, 0.26).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    damage_vignette_tween.tween_callback(func() -> void:
+        if damage_vignette != null:
+            damage_vignette.visible = false
+            damage_vignette.modulate.a = 1.0
+    )
+
 func set_health(value: float, maximum: float) -> void:
     hp_bar.max_value = max(1.0, maximum)
     hp_bar.value = value
+    var ratio: float = clampf(value / max(1.0, maximum), 0.0, 1.0)
+    low_health_panel.visible = value > 0.0 and ratio <= 0.30
+    if low_health_panel.visible:
+        low_health_label.text = "CRITICAL INTEGRITY  •  %d%%" % int(round(ratio * 100.0))
 
 func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float) -> void:
     xp_bar.max_value = max(1, next_xp)
@@ -30615,6 +24755,31 @@ func set_boss_health(value: float, maximum: float) -> void:
 func hide_boss() -> void:
     boss_panel.visible = false
 
+func set_offscreen_threat(direction: Vector2, threat_kind: String, distance: float) -> void:
+    if direction.length_squared() < 0.001:
+        hide_offscreen_threat()
+        return
+    var arrow := _direction_arrow(direction.normalized())
+    threat_label.text = "%s  %s  %dm" % [arrow, threat_kind.to_upper(), int(round(distance))]
+    threat_panel.visible = true
+
+func hide_offscreen_threat() -> void:
+    threat_panel.visible = false
+
+func _direction_arrow(direction: Vector2) -> String:
+    var angle := atan2(direction.y, direction.x)
+    var octant := int(round(angle / (PI / 4.0)))
+    match octant:
+        0: return "→"
+        1: return "↘"
+        2: return "↓"
+        3: return "↙"
+        4, -4: return "←"
+        -3: return "↖"
+        -2: return "↑"
+        -1: return "↗"
+        _: return "→"
+
 func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
         var item: Dictionary = items[i] if i < items.size() else {}
@@ -30629,6 +24794,38 @@ func show_upgrade(items: Array) -> void:
 func hide_upgrade() -> void:
     upgrade_panel.visible = false
 
+func show_pause_settings() -> void:
+    pause_panel.visible = true
+
+func hide_pause_settings() -> void:
+    pause_panel.visible = false
+
+func show_impact_flash(critical: bool, killed: bool, boss: bool) -> void:
+    if impact_flash == null:
+        return
+    if impact_flash_tween != null and impact_flash_tween.is_valid():
+        impact_flash_tween.kill()
+    var alpha := 0.055
+    var tint := Color(0.68, 0.90, 1.0, alpha)
+    if critical:
+        alpha = 0.10
+        tint = Color(1.0, 0.74, 0.20, alpha)
+    if killed:
+        alpha = maxf(alpha, 0.13)
+        tint = Color(1.0, 0.38, 0.16, alpha)
+    if boss:
+        alpha = maxf(alpha, 0.18)
+        tint = Color(1.0, 0.12, 0.055, alpha)
+    impact_flash.color = tint
+    impact_flash.visible = true
+    impact_flash_tween = create_tween()
+    impact_flash_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    impact_flash_tween.tween_property(impact_flash, "color:a", 0.0, 0.16 if boss else 0.11)
+    impact_flash_tween.tween_callback(func() -> void:
+        if impact_flash != null:
+            impact_flash.visible = false
+    )
+
 func show_game_over(kills: int, level: int, elapsed: float) -> void:
     wave_label.text = "RUN TERMINATED"
     upgrade_panel.visible = false
@@ -30636,6 +24833,8 @@ func show_game_over(kills: int, level: int, elapsed: float) -> void:
     var minutes := int(elapsed) / 60
     var seconds := int(elapsed) % 60
     game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]
+    low_health_panel.visible = false
+    threat_panel.visible = false
     game_over_panel.visible = true
 
 func _build() -> void:
@@ -30643,25 +24842,76 @@ func _build() -> void:
     root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
     add_child(root)
 
-    var top := VBoxContainer.new()
-    top.position = Vector2(28, 24)
-    top.size = Vector2(500, 100)
-    root.add_child(top)
+    impact_flash = ColorRect.new()
+    impact_flash.name = "ImpactFlash"
+    impact_flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    impact_flash.color = Color(1.0, 1.0, 1.0, 0.0)
+    impact_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    impact_flash.visible = false
+    root.add_child(impact_flash)
+
+    damage_vignette = ColorRect.new()
+    damage_vignette.name = "DamageVignette"
+    damage_vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    damage_vignette.color = Color(0.58, 0.015, 0.0, 0.30)
+    damage_vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    damage_vignette.visible = false
+    root.add_child(damage_vignette)
+
+    var vital_panel := PanelContainer.new()
+    vital_panel.name = "VitalPanel"
+    vital_panel.position = Vector2(28, 24)
+    vital_panel.size = Vector2(500, 108)
+    vital_panel.custom_minimum_size = Vector2(420, 96)
+    vital_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(vital_panel)
+
+    var vital_style := StyleBoxFlat.new()
+    vital_style.bg_color = Color(0.018, 0.032, 0.042, 0.92)
+    vital_style.border_color = Color(0.16, 0.62, 0.82, 0.70)
+    vital_style.set_border_width_all(1)
+    vital_style.border_width_left = 4
+    vital_style.corner_radius_top_left = 8
+    vital_style.corner_radius_top_right = 8
+    vital_style.corner_radius_bottom_left = 8
+    vital_style.corner_radius_bottom_right = 8
+    vital_style.content_margin_left = 16.0
+    vital_style.content_margin_right = 14.0
+    vital_style.content_margin_top = 10.0
+    vital_style.content_margin_bottom = 10.0
+    vital_panel.add_theme_stylebox_override("panel", vital_style)
+
+    var vital_stack := VBoxContainer.new()
+    vital_stack.name = "VitalStack"
+    vital_stack.add_theme_constant_override("separation", 4)
+    vital_panel.add_child(vital_stack)
+
+    var vital_accent := ColorRect.new()
+    vital_accent.name = "VitalAccent"
+    vital_accent.color = Color(0.18, 0.82, 1.0, 0.92)
+    vital_accent.custom_minimum_size = Vector2(120, 3)
+    vital_accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    vital_stack.add_child(vital_accent)
 
     hp_bar = ProgressBar.new()
+    hp_bar.name = "HealthBar"
     hp_bar.custom_minimum_size = Vector2(420, 22)
     hp_bar.show_percentage = false
-    top.add_child(hp_bar)
+    vital_stack.add_child(hp_bar)
+    health_bar = hp_bar
 
     xp_bar = ProgressBar.new()
+    xp_bar.name = "XpBar"
     xp_bar.custom_minimum_size = Vector2(420, 12)
     xp_bar.show_percentage = false
-    top.add_child(xp_bar)
+    vital_stack.add_child(xp_bar)
 
     status_label = Label.new()
+    status_label.name = "CombatStatus"
     status_label.text = "LV 1   KILLS 0"
     status_label.add_theme_font_size_override("font_size", 20)
-    top.add_child(status_label)
+    status_label.modulate = Color(0.88, 0.94, 0.98)
+    vital_stack.add_child(status_label)
 
     wave_label = Label.new()
     wave_label.text = "QUARANTINE YARD"
@@ -30672,42 +24922,157 @@ func _build() -> void:
     wave_label.size = Vector2(440, 42)
     root.add_child(wave_label)
 
+    pause_button = Button.new()
+    pause_button.name = "PauseButton"
+    pause_button.text = "Ⅱ"
+    pause_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+    pause_button.position = Vector2(-86, 24)
+    pause_button.size = Vector2(58, 58)
+    pause_button.add_theme_font_size_override("font_size", 22)
+    pause_button.pressed.connect(func() -> void: pause_requested.emit())
+    add_child(pause_button)
+
+    pause_panel = PanelContainer.new()
+    pause_panel.name = "PausePanel"
+    pause_panel.set_anchors_preset(Control.PRESET_CENTER)
+    pause_panel.position = Vector2(-250, -210)
+    pause_panel.size = Vector2(500, 420)
+    pause_panel.visible = false
+    add_child(pause_panel)
+    var pause_box := VBoxContainer.new()
+    pause_box.alignment = BoxContainer.ALIGNMENT_CENTER
+    pause_box.add_theme_constant_override("separation", 18)
+    pause_panel.add_child(pause_box)
+    var pause_title := Label.new()
+    pause_title.text = "SYSTEM PAUSED"
+    pause_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    pause_title.add_theme_font_size_override("font_size", 30)
+    pause_title.modulate = Color(0.72, 0.92, 1.0)
+    pause_box.add_child(pause_title)
+    var master_label := Label.new()
+    master_label.text = "MASTER VOLUME"
+    master_label.add_theme_font_size_override("font_size", 16)
+    pause_box.add_child(master_label)
+    master_volume = HSlider.new()
+    master_volume.name = "MasterVolume"
+    master_volume.min_value = 0.0
+    master_volume.max_value = 1.0
+    master_volume.step = 0.05
+    master_volume.value = 0.85
+    master_volume.custom_minimum_size = Vector2(360, 42)
+    master_volume.value_changed.connect(func(value: float) -> void: master_volume_changed.emit(value))
+    pause_box.add_child(master_volume)
+    var sfx_label := Label.new()
+    sfx_label.text = "SFX VOLUME"
+    sfx_label.add_theme_font_size_override("font_size", 16)
+    pause_box.add_child(sfx_label)
+    sfx_volume = HSlider.new()
+    sfx_volume.name = "SfxVolume"
+    sfx_volume.min_value = 0.0
+    sfx_volume.max_value = 1.0
+    sfx_volume.step = 0.05
+    sfx_volume.value = 0.90
+    sfx_volume.custom_minimum_size = Vector2(360, 42)
+    sfx_volume.value_changed.connect(func(value: float) -> void: sfx_volume_changed.emit(value))
+    pause_box.add_child(sfx_volume)
+    var resume_button := Button.new()
+    resume_button.name = "ResumeButton"
+    resume_button.text = "RESUME"
+    resume_button.custom_minimum_size = Vector2(280, 62)
+    resume_button.add_theme_font_size_override("font_size", 21)
+    resume_button.pressed.connect(func() -> void: resume_requested.emit())
+    pause_box.add_child(resume_button)
+    var pause_style := StyleBoxFlat.new()
+    pause_style.bg_color = Color(0.018, 0.028, 0.038, 0.98)
+    pause_style.border_color = Color(0.20, 0.78, 1.0, 0.72)
+    pause_style.set_border_width_all(2)
+    pause_style.corner_radius_top_left = 12
+    pause_style.corner_radius_top_right = 12
+    pause_style.corner_radius_bottom_left = 12
+    pause_style.corner_radius_bottom_right = 12
+    pause_panel.add_theme_stylebox_override("panel", pause_style)
+
+    low_health_panel = PanelContainer.new()
+    low_health_panel.name = "LowHealthPanel"
+    low_health_panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+    low_health_panel.position = Vector2(-210, -92)
+    low_health_panel.size = Vector2(420, 52)
+    low_health_panel.visible = false
+    low_health_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(low_health_panel)
+    low_health_label = Label.new()
+    low_health_label.name = "LowHealthLabel"
+    low_health_label.text = "CRITICAL INTEGRITY"
+    low_health_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    low_health_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    low_health_label.add_theme_font_size_override("font_size", 19)
+    low_health_label.modulate = Color(1.0, 0.58, 0.44)
+    low_health_panel.add_child(low_health_label)
+    var low_health_style := StyleBoxFlat.new()
+    low_health_style.bg_color = Color(0.16, 0.015, 0.01, 0.96)
+    low_health_style.border_color = Color(1.0, 0.18, 0.08, 0.98)
+    low_health_style.set_border_width_all(2)
+    low_health_style.corner_radius_top_left = 8
+    low_health_style.corner_radius_top_right = 8
+    low_health_style.corner_radius_bottom_left = 8
+    low_health_style.corner_radius_bottom_right = 8
+    low_health_panel.add_theme_stylebox_override("panel", low_health_style)
+
+    threat_panel = PanelContainer.new()
+    threat_panel.name = "ThreatPanel"
+    threat_panel.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+    threat_panel.position = Vector2(-210, -34)
+    threat_panel.size = Vector2(180, 68)
+    threat_panel.visible = false
+    threat_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(threat_panel)
+    threat_label = Label.new()
+    threat_label.name = "ThreatLabel"
+    threat_label.text = "→  ELITE  18m"
+    threat_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    threat_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    threat_label.add_theme_font_size_override("font_size", 18)
+    threat_label.modulate = Color(1.0, 0.56, 0.22)
+    threat_panel.add_child(threat_label)
+    var threat_style := StyleBoxFlat.new()
+    threat_style.bg_color = Color(0.06, 0.025, 0.01, 0.88)
+    threat_style.border_color = Color(1.0, 0.42, 0.08, 0.86)
+    threat_style.set_border_width_all(2)
+    threat_style.corner_radius_top_left = 8
+    threat_style.corner_radius_top_right = 8
+    threat_style.corner_radius_bottom_left = 8
+    threat_style.corner_radius_bottom_right = 8
+    threat_panel.add_theme_stylebox_override("panel", threat_style)
+
     game_over_panel = PanelContainer.new()
     game_over_panel.set_anchors_preset(Control.PRESET_CENTER)
     game_over_panel.position = Vector2(-270, -120)
     game_over_panel.size = Vector2(540, 240)
     game_over_panel.visible = false
     root.add_child(game_over_panel)
-
     var game_over_box := VBoxContainer.new()
     game_over_box.alignment = BoxContainer.ALIGNMENT_CENTER
     game_over_box.add_theme_constant_override("separation", 16)
     game_over_panel.add_child(game_over_box)
-
     var game_over_title := Label.new()
     game_over_title.text = "SIGNAL LOST"
     game_over_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     game_over_title.add_theme_font_size_override("font_size", 34)
     game_over_title.modulate = Color(1.0, 0.34, 0.20)
     game_over_box.add_child(game_over_title)
-
     game_over_summary = Label.new()
     game_over_summary.text = "LEVEL 1   •   KILLS 0   •   00:00"
     game_over_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     game_over_summary.add_theme_font_size_override("font_size", 18)
     game_over_summary.modulate = Color(0.82, 0.88, 0.92)
     game_over_box.add_child(game_over_summary)
-
     var restart_button := Button.new()
     restart_button.name = "RestartButton"
     restart_button.text = "REDEPLOY"
     restart_button.custom_minimum_size = Vector2(260, 58)
     restart_button.add_theme_font_size_override("font_size", 21)
-    restart_button.pressed.connect(func() -> void:
-        restart_requested.emit()
-    )
+    restart_button.pressed.connect(func() -> void: restart_requested.emit())
     game_over_box.add_child(restart_button)
-
     var game_over_style := StyleBoxFlat.new()
     game_over_style.bg_color = Color(0.018, 0.026, 0.034, 0.97)
     game_over_style.border_color = Color(1.0, 0.22, 0.10, 0.78)
@@ -30719,41 +25084,35 @@ func _build() -> void:
     game_over_panel.add_theme_stylebox_override("panel", game_over_style)
 
     boss_panel = PanelContainer.new()
+    boss_panel.name = "BossPanel"
     boss_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
     boss_panel.position = Vector2(-330, 76)
     boss_panel.size = Vector2(660, 78)
     boss_panel.visible = false
     root.add_child(boss_panel)
-
     var boss_box := VBoxContainer.new()
     boss_box.add_theme_constant_override("separation", 3)
     boss_panel.add_child(boss_box)
-
     var boss_header := HBoxContainer.new()
     boss_header.alignment = BoxContainer.ALIGNMENT_CENTER
     boss_box.add_child(boss_header)
-
     boss_name_label = Label.new()
     boss_name_label.text = "REVENANT PRIME"
     boss_name_label.add_theme_font_size_override("font_size", 18)
     boss_name_label.modulate = Color(1.0, 0.82, 0.42)
     boss_header.add_child(boss_name_label)
-
     var spacer := Control.new()
     spacer.custom_minimum_size = Vector2(32, 1)
     boss_header.add_child(spacer)
-
     boss_phase_label = Label.new()
     boss_phase_label.text = "PHASE I // HUNT"
     boss_phase_label.add_theme_font_size_override("font_size", 13)
     boss_phase_label.modulate = Color(1.0, 0.42, 0.26)
     boss_header.add_child(boss_phase_label)
-
     boss_hp_bar = ProgressBar.new()
     boss_hp_bar.custom_minimum_size = Vector2(620, 18)
     boss_hp_bar.show_percentage = false
     boss_box.add_child(boss_hp_bar)
-
     var boss_style := StyleBoxFlat.new()
     boss_style.bg_color = Color(0.025, 0.035, 0.045, 0.96)
     boss_style.border_color = Color(0.92, 0.28, 0.12, 0.72)
@@ -30765,41 +25124,36 @@ func _build() -> void:
     boss_panel.add_theme_stylebox_override("panel", boss_style)
 
     upgrade_panel = PanelContainer.new()
+    upgrade_panel.name = "UpgradePanel"
     upgrade_panel.set_anchors_preset(Control.PRESET_CENTER)
     upgrade_panel.position = Vector2(-480, -155)
     upgrade_panel.size = Vector2(960, 310)
     upgrade_panel.visible = false
     root.add_child(upgrade_panel)
-
     var box := VBoxContainer.new()
     box.add_theme_constant_override("separation", 18)
     upgrade_panel.add_child(box)
-
     var title := Label.new()
     title.text = "SELECT COMBAT UPGRADE"
     title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     title.add_theme_font_size_override("font_size", 30)
     box.add_child(title)
-
     var row := HBoxContainer.new()
     row.alignment = BoxContainer.ALIGNMENT_CENTER
     row.add_theme_constant_override("separation", 18)
     box.add_child(row)
-
     for i in range(3):
         var card := VBoxContainer.new()
         card.custom_minimum_size = Vector2(280, 190)
         card.add_theme_constant_override("separation", 5)
         row.add_child(card)
         upgrade_cards.append(card)
-
         var family := Label.new()
         family.text = "UPGRADE"
         family.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
         family.add_theme_font_size_override("font_size", 13)
         card.add_child(family)
         upgrade_family_labels.append(family)
-
         var button := Button.new()
         button.custom_minimum_size = Vector2(280, 82)
         button.text = "◆"
@@ -30807,14 +25161,12 @@ func _build() -> void:
         button.pressed.connect(_on_upgrade_pressed.bind(i))
         card.add_child(button)
         upgrade_buttons.append(button)
-
         var upgrade_title := Label.new()
         upgrade_title.text = "UPGRADE"
         upgrade_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
         upgrade_title.add_theme_font_size_override("font_size", 21)
         card.add_child(upgrade_title)
         upgrade_title_labels.append(upgrade_title)
-
         var detail := Label.new()
         detail.text = ""
         detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -30831,6 +25183,14 @@ func _upgrade_glyph(id: String) -> String:
         "health": return "+"
         "projectile": return "◆"
         "multishot": return "⋙"
+        "berserker": return "✦"
+        "overclock": return "⚡"
+        "fortress": return "⬢"
+        "scatter_protocol": return "⋰"
+        "rail_protocol": return "━"
+        "inferno_protocol": return "▲"
+        "cryo_protocol": return "◇"
+        "arc_protocol": return "⌁"
         _: return "◆"
 
 func _upgrade_color(id: String) -> Color:
@@ -30839,6 +25199,14 @@ func _upgrade_color(id: String) -> Color:
         "rate", "speed": return Color(0.18, 0.86, 1.0)
         "health": return Color(0.32, 0.94, 0.52)
         "projectile": return Color(0.76, 0.82, 1.0)
+        "berserker": return Color(1.0, 0.22, 0.12)
+        "overclock": return Color(1.0, 0.82, 0.18)
+        "fortress": return Color(0.38, 0.86, 0.72)
+        "scatter_protocol": return Color(1.0, 0.56, 0.18)
+        "rail_protocol": return Color(0.72, 0.58, 1.0)
+        "inferno_protocol": return Color(1.0, 0.24, 0.035)
+        "cryo_protocol": return Color(0.30, 0.90, 1.0)
+        "arc_protocol": return Color(0.64, 0.42, 1.0)
         _: return Color(0.58, 0.42, 1.0)
 
 func _style_upgrade_card(index: int, id: String) -> void:
@@ -30875,46 +25243,102 @@ var age := 0.0
 var color := Color(0.25, 0.9, 1.0, 1.0)
 var scale_boost := 1.0
 var mesh_instance: MeshInstance3D
-var light: OmniLight3D
+var ring_instance: MeshInstance3D
+var core_material: StandardMaterial3D
+var ring_material: StandardMaterial3D
 
 func _ready() -> void:
     mesh_instance = MeshInstance3D.new()
+    mesh_instance.name = "ImpactCore"
     var sphere := SphereMesh.new()
     sphere.radius = 0.18
     sphere.height = 0.36
     mesh_instance.mesh = sphere
-    var material := StandardMaterial3D.new()
-    material.albedo_color = color
-    material.emission_enabled = true
-    material.emission = color
-    material.emission_energy_multiplier = 3.2
-    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    mesh_instance.material_override = material
+    core_material = _make_material(color, 4.2)
+    mesh_instance.material_override = core_material
     add_child(mesh_instance)
 
-    light = OmniLight3D.new()
-    light.light_color = color
-    light.light_energy = 2.0
-    light.omni_range = 2.5
-    add_child(light)
+    ring_instance = MeshInstance3D.new()
+    ring_instance.name = "ImpactRing"
+    var ring := TorusMesh.new()
+    ring.inner_radius = 0.24
+    ring.outer_radius = 0.34
+    ring_instance.mesh = ring
+    ring_instance.rotation_degrees.x = 90.0
+    ring_material = _make_material(color.lightened(0.18), 3.4)
+    ring_instance.material_override = ring_material
+    add_child(ring_instance)
+
+    var sparks := GPUParticles3D.new()
+    sparks.name = "ImpactSparks"
+    sparks.amount = 8
+    sparks.lifetime = 0.22
+    sparks.one_shot = true
+    sparks.explosiveness = 1.0
+    sparks.randomness = 0.35
+    sparks.local_coords = false
+
+    var particle_material := ParticleProcessMaterial.new()
+    particle_material.direction = Vector3(0.0, 1.0, 0.0)
+    particle_material.spread = 70.0
+    particle_material.initial_velocity_min = 2.2
+    particle_material.initial_velocity_max = 4.2
+    particle_material.gravity = Vector3(0.0, -7.0, 0.0)
+    particle_material.scale_min = 0.45
+    particle_material.scale_max = 1.0
+    particle_material.color = color
+    sparks.process_material = particle_material
+
+    var spark_mesh := QuadMesh.new()
+    spark_mesh.size = Vector2(0.055, 0.16)
+    var spark_material := StandardMaterial3D.new()
+    spark_material.albedo_color = color
+    spark_material.emission_enabled = true
+    spark_material.emission = color
+    spark_material.emission_energy_multiplier = 4.5
+    spark_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    spark_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    spark_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    spark_mesh.material = spark_material
+    sparks.draw_pass_1 = spark_mesh
+    add_child(sparks)
+    sparks.emitting = true
+
+func _make_material(tint: Color, energy: float) -> StandardMaterial3D:
+    var material := StandardMaterial3D.new()
+    material.albedo_color = tint
+    material.emission_enabled = true
+    material.emission = tint
+    material.emission_energy_multiplier = energy
+    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    return material
 
 func _process(delta: float) -> void:
     age += delta
     var t: float = clampf(age / life, 0.0, 1.0)
     scale = Vector3.ONE * lerp(0.55, 2.2 * scale_boost, t)
-    var material := mesh_instance.material_override as StandardMaterial3D
-    if material:
-        var c: Color = color
-        c.a = 1.0 - t
-        material.albedo_color = c
-    light.light_energy = lerp(2.0, 0.0, t)
+    _fade_material(core_material, t)
+    _fade_material(ring_material, t)
+    if ring_instance != null:
+        ring_instance.scale = Vector3.ONE * lerp(0.72, 1.45, t)
     if age >= life:
         queue_free()
+
+func _fade_material(material: StandardMaterial3D, t: float) -> void:
+    if material == null:
+        return
+    var faded := material.albedo_color
+    faded.a = 1.0 - t
+    material.albedo_color = faded
+    material.emission_energy_multiplier = lerp(4.0, 0.5, t)
 ````
 
 ## File: godot/scripts/Main.gd
 ````
 extends Node3D
+
+const HAPTICS := preload("res://scripts/Haptics.gd")
 
 const UPGRADE_POOL := [
     {"id":"damage", "title":"HEAVY PAYLOAD", "detail":"Damage +25%", "family":"OFFENSE"},
@@ -30922,7 +25346,15 @@ const UPGRADE_POOL := [
     {"id":"speed", "title":"SCOUT FRAME", "detail":"Move speed +14%", "family":"MOBILITY"},
     {"id":"health", "title":"REACTIVE PLATING", "detail":"Max HP +30", "family":"SURVIVAL"},
     {"id":"projectile", "title":"HYPER VELOCITY", "detail":"Projectile speed +20%", "family":"BALLISTIC"},
-    {"id":"multishot", "title":"MULTISHOT", "detail":"+1 projectile", "family":"BARRAGE"}
+    {"id":"multishot", "title":"MULTISHOT", "detail":"+1 projectile", "family":"BARRAGE"},
+    {"id":"berserker", "title":"BERSERKER CORE", "detail":"+45% damage / -15% max HP", "family":"RISK"},
+    {"id":"overclock", "title":"OVERCLOCK", "detail":"+28% fire speed / -10% damage", "family":"CADENCE"},
+    {"id":"fortress", "title":"FORTRESS FRAME", "detail":"+55 max HP / -6% move speed", "family":"SURVIVAL"},
+    {"id":"scatter_protocol", "title":"SCATTER PROTOCOL", "detail":"+2 projectiles / wider spread", "family":"WEAPON"},
+    {"id":"rail_protocol", "title":"RAIL PROTOCOL", "detail":"Heavy fast rounds / slower cadence", "family":"WEAPON"},
+    {"id":"inferno_protocol", "title":"INFERNO PROTOCOL", "detail":"+20% damage / slower cadence", "family":"ELEMENTAL"},
+    {"id":"cryo_protocol", "title":"CRYO PROTOCOL", "detail":"Faster rounds / tighter cadence", "family":"ELEMENTAL"},
+    {"id":"arc_protocol", "title":"ARC PROTOCOL", "detail":"+1 projectile / tight spread", "family":"ELEMENTAL"}
 ]
 
 var player: DZPlayer
@@ -30949,17 +25381,29 @@ var boss_reveal_left := 0.0
 var impact_audio: AudioStreamPlayer
 var boss_audio: AudioStreamPlayer
 var impact_streams := {}
+var enemy_spatial_index := DZSpatialHash.new(4.0)
+var last_player_health := -1.0
+var run_director := DZRunDirector.new()
+var spawn_rng := RandomNumberGenerator.new()
+var director_profile: Dictionary = {}
 
+const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_REVEAL_FOV_DELTA := 5.5
 
 func _ready() -> void:
     randomize()
+    spawn_rng.randomize()
+    director_profile = run_director.profile(elapsed, level)
+    max_enemies = int(director_profile["max_enemies"])
+    _ensure_audio_buses()
     _build_world()
 
     player = DZPlayer.new()
     add_child(player)
+    if player.shot_audio != null:
+        player.shot_audio.bus = "SFX"
     player.global_position = Vector3.ZERO
     player.health_changed.connect(_on_health_changed)
     player.died.connect(_on_player_died)
@@ -30975,6 +25419,12 @@ func _ready() -> void:
     add_child(hud)
     hud.upgrade_chosen.connect(_on_upgrade_chosen)
     hud.restart_requested.connect(_on_restart_requested)
+    hud.pause_requested.connect(_on_pause_requested)
+    hud.resume_requested.connect(_on_resume_requested)
+    hud.master_volume_changed.connect(_on_master_volume_changed)
+    hud.sfx_volume_changed.connect(_on_sfx_volume_changed)
+    _load_audio_settings()
+    last_player_health = player.health
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     _build_combat_audio()
@@ -31013,11 +25463,14 @@ func _process(delta: float) -> void:
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.fov = lerpf(camera.fov, target_fov, 1.0 - exp(-delta * 5.5))
         camera.look_at(focus_point, Vector3.UP)
+        _update_offscreen_threat_indicator()
 
 func _physics_process(delta: float) -> void:
     if game_over:
         return
     elapsed += delta
+    director_profile = run_director.profile(elapsed, level)
+    max_enemies = int(director_profile["max_enemies"])
     boss_banner_timer = max(0.0, boss_banner_timer - delta)
     if elapsed >= next_boss_time:
         _spawn_enemy("boss")
@@ -31026,10 +25479,11 @@ func _physics_process(delta: float) -> void:
 
     spawn_clock -= delta
     if spawn_clock <= 0.0:
-        var batch := 1 + int(elapsed / 45.0)
-        for i in range(min(batch, 4)):
+        var batch := int(director_profile["batch_size"])
+        for i in range(batch):
             _spawn_enemy()
-        spawn_clock = max(0.20, 0.82 - elapsed * 0.0035)
+        spawn_clock = float(director_profile["spawn_interval"])
+    enemy_spatial_index.rebuild(get_tree().get_nodes_in_group("enemies"))
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     hud.set_wave(_wave_name())
 
@@ -31050,24 +25504,19 @@ func _unhandled_input(event: InputEvent) -> void:
             var vector := (drag.position - touch_origin) / 90.0
             player.set_touch_move(Vector2(vector.x, vector.y).limit_length(1.0))
 
+func query_enemies_near(position: Vector3, radius: float) -> Array:
+    return enemy_spatial_index.query(position, radius)
+
 func _spawn_enemy(forced_kind: String = "") -> void:
     if player == null or game_over:
         return
     if forced_kind != "boss" and get_tree().get_nodes_in_group("enemies").size() >= max_enemies:
         return
-    var angle := randf() * TAU
-    var radius := randf_range(12.0, 18.0)
+    var angle := spawn_rng.randf() * TAU
+    var radius := spawn_rng.randf_range(12.0, 18.0)
     var pos := player.global_position + Vector3(cos(angle) * radius, 0.0, sin(angle) * radius)
-    var roll := randf()
-    var kind := forced_kind if not forced_kind.is_empty() else "shambler"
-    if forced_kind.is_empty():
-        if elapsed > 25.0 and roll > 0.72:
-            kind = "runner"
-        if elapsed > 55.0 and roll > 0.88:
-            kind = "brute"
-        if elapsed > 100.0 and roll > 0.96:
-            kind = "elite"
-    var difficulty := 1.0 + elapsed / 210.0 + float(level - 1) * 0.035
+    var kind := forced_kind if not forced_kind.is_empty() else run_director.choose_enemy(elapsed, level, spawn_rng)
+    var difficulty := float(director_profile.get("difficulty", 1.0))
     var enemy := DZEnemy.new()
     enemy.configure(kind, difficulty, player)
     enemy.died.connect(_on_enemy_died)
@@ -31088,6 +25537,8 @@ func _on_boss_health_changed(current: float, maximum: float) -> void:
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
     camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
+    if hud:
+        hud.show_impact_flash(critical, killed, boss)
     _play_impact_audio(critical, killed, boss)
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
@@ -31110,9 +25561,13 @@ func _on_xp_collected(amount: int) -> void:
 
 func _offer_upgrade() -> void:
     pending_upgrades.clear()
-    var available := UPGRADE_POOL.duplicate(true)
+    var available: Array = []
+    for upgrade in UPGRADE_POOL:
+        var id := String(upgrade["id"])
+        if player == null or player.can_apply_upgrade(id):
+            available.append(upgrade.duplicate(true))
     available.shuffle()
-    for i in range(3):
+    for i in range(mini(3, available.size())):
         pending_upgrades.append(available[i])
     hud.show_upgrade(pending_upgrades)
     get_tree().paused = true
@@ -31127,13 +25582,82 @@ func _on_upgrade_chosen(index: int) -> void:
 
 func _on_health_changed(current: float, maximum: float) -> void:
     if hud:
+        if last_player_health >= 0.0 and current < last_player_health:
+            hud.pulse_damage_screen()
         hud.set_health(current, maximum)
+    last_player_health = current
+
+func _ensure_audio_buses() -> void:
+    if AudioServer.get_bus_index("SFX") < 0:
+        AudioServer.add_bus()
+        AudioServer.set_bus_name(AudioServer.bus_count - 1, "SFX")
+
+func _set_bus_linear_volume(bus_name: String, value: float) -> void:
+    var bus_index := AudioServer.get_bus_index(bus_name)
+    if bus_index < 0:
+        return
+    var linear := clampf(value, 0.0, 1.0)
+    AudioServer.set_bus_volume_db(bus_index, -80.0 if linear <= 0.0 else linear_to_db(linear))
+
+func _load_audio_settings(path := SETTINGS_PATH) -> void:
+    var settings := DZGameSettings.load_settings(path)
+    var master := float(settings.get("master_volume", 0.85))
+    var sfx := float(settings.get("sfx_volume", 0.90))
+    if hud != null:
+        hud.master_volume.set_value_no_signal(master)
+        hud.sfx_volume.set_value_no_signal(sfx)
+    _set_bus_linear_volume("Master", master)
+    _set_bus_linear_volume("SFX", sfx)
+
+func _save_audio_settings(path := SETTINGS_PATH) -> void:
+    var master := hud.master_volume.value if hud != null else 0.85
+    var sfx := hud.sfx_volume.value if hud != null else 0.90
+    DZGameSettings.save(path, {
+        "master_volume": master,
+        "sfx_volume": sfx
+    })
+
+func _on_master_volume_changed(value: float) -> void:
+    _set_bus_linear_volume("Master", value)
+    _save_audio_settings()
+
+func _on_sfx_volume_changed(value: float) -> void:
+    _set_bus_linear_volume("SFX", value)
+    _save_audio_settings()
+
+func _on_pause_requested() -> void:
+    if game_over or not pending_upgrades.is_empty():
+        return
+    hud.show_pause_settings()
+    get_tree().paused = true
+
+func _on_resume_requested() -> void:
+    hud.hide_pause_settings()
+    if not game_over and pending_upgrades.is_empty():
+        get_tree().paused = false
 
 func _on_player_died() -> void:
     Engine.time_scale = 1.0
     game_over = true
+    _freeze_combat()
     if hud:
         hud.show_game_over(kills, level, elapsed)
+
+func _freeze_combat() -> void:
+    if player != null and is_instance_valid(player):
+        player.set_combat_enabled(false)
+    for node in get_tree().get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy != null:
+            enemy.set_combat_enabled(false)
+    for node in get_tree().get_nodes_in_group("projectiles"):
+        var projectile := node as DZProjectile
+        if projectile != null:
+            projectile.set_combat_enabled(false)
+    for node in get_tree().get_nodes_in_group("hostile_projectiles"):
+        var hostile := node as DZEnemyProjectile
+        if hostile != null:
+            hostile.set_combat_enabled(false)
 
 func _on_restart_requested() -> void:
     Engine.time_scale = 1.0
@@ -31153,90 +25677,159 @@ func _wave_name() -> String:
 
 func _build_world() -> void:
     var environment := WorldEnvironment.new()
+    environment.name = "QuarantineEnvironment"
     var env := Environment.new()
     env.background_mode = Environment.BG_COLOR
-    env.background_color = Color(0.012, 0.020, 0.027)
+    env.background_color = Color(0.008, 0.014, 0.020)
     env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-    env.ambient_light_color = Color(0.22, 0.34, 0.42)
-    env.ambient_light_energy = 0.85
+    env.ambient_light_color = Color(0.16, 0.27, 0.34)
+    env.ambient_light_energy = 0.72
     env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+    env.fog_enabled = true
+    env.fog_light_color = Color(0.08, 0.16, 0.20)
+    env.fog_light_energy = 0.42
+    env.fog_density = 0.010
     environment.environment = env
     add_child(environment)
 
     var sun := DirectionalLight3D.new()
+    sun.name = "ColdKeyLight"
     sun.rotation_degrees = Vector3(-58.0, -28.0, 0.0)
-    sun.light_color = Color(0.76, 0.88, 1.0)
-    sun.light_energy = 1.4
+    sun.light_color = Color(0.70, 0.84, 1.0)
+    sun.light_energy = 1.28
     sun.shadow_enabled = true
     add_child(sun)
 
     var fill := OmniLight3D.new()
-    fill.position = Vector3(0.0, 8.0, 0.0)
-    fill.light_color = Color(0.08, 0.65, 1.0)
-    fill.light_energy = 2.2
-    fill.omni_range = 28.0
+    fill.name = "ContainmentFill"
+    fill.position = Vector3(0.0, 7.5, 0.0)
+    fill.light_color = Color(0.04, 0.52, 0.92)
+    fill.light_energy = 1.7
+    fill.omni_range = 24.0
     add_child(fill)
 
+    for side in [-1.0, 1.0]:
+        var rim := OmniLight3D.new()
+        rim.name = "EmergencyRimL" if side < 0.0 else "EmergencyRimR"
+        rim.position = Vector3(side * 18.0, 3.2, -10.0)
+        rim.light_color = Color(1.0, 0.17, 0.045)
+        rim.light_energy = 3.4
+        rim.omni_range = 13.0
+        add_child(rim)
+
     var floor := MeshInstance3D.new()
+    floor.name = "QuarantineFloor"
     var plane := PlaneMesh.new()
     plane.size = Vector2(72.0, 72.0)
     floor.mesh = plane
     var floor_mat := StandardMaterial3D.new()
-    floor_mat.albedo_color = Color(0.075, 0.09, 0.095)
-    floor_mat.roughness = 0.86
-    floor_mat.metallic = 0.08
+    floor_mat.albedo_color = Color(0.045, 0.055, 0.060)
+    floor_mat.roughness = 0.91
+    floor_mat.metallic = 0.05
     floor.material_override = floor_mat
     add_child(floor)
 
-    for i in range(34):
-        if i < 12:
-            var authored_prop := DZAssetLibrary.barrier()
-            if authored_prop != null:
-                authored_prop.position = Vector3(randf_range(-28.0, 28.0), 0.0, randf_range(-28.0, 28.0))
-                authored_prop.rotation.y = randf_range(0.0, TAU)
-                authored_prop.scale = Vector3.ONE * randf_range(0.85, 1.15)
-                add_child(authored_prop)
-                continue
-        var prop := MeshInstance3D.new()
-        var box := BoxMesh.new()
-        box.size = Vector3(randf_range(0.5, 1.8), randf_range(0.25, 1.1), randf_range(0.5, 1.8))
-        prop.mesh = box
-        prop.position = Vector3(randf_range(-28.0, 28.0), box.size.y * 0.5, randf_range(-28.0, 28.0))
-        var mat := StandardMaterial3D.new()
-        mat.albedo_color = Color(0.11, 0.13, 0.14).lerp(Color(0.22, 0.12, 0.06), randf() * 0.35)
-        mat.roughness = 0.74
-        mat.metallic = 0.35
-        prop.material_override = mat
-        add_child(prop)
+    _build_containment_lanes()
+    _build_authored_barrier_clusters()
+    _build_perimeter_beacons()
 
-    for i in range(18):
-        var stripe := MeshInstance3D.new()
-        var stripe_mesh := BoxMesh.new()
-        stripe_mesh.size = Vector3(randf_range(1.5, 4.0), 0.015, 0.08)
-        stripe.mesh = stripe_mesh
-        stripe.position = Vector3(randf_range(-26.0, 26.0), 0.012, randf_range(-26.0, 26.0))
-        stripe.rotation.y = randf_range(0.0, TAU)
-        var stripe_mat := StandardMaterial3D.new()
-        stripe_mat.albedo_color = Color(0.82, 0.42, 0.06)
-        stripe_mat.emission_enabled = true
-        stripe_mat.emission = Color(0.45, 0.10, 0.01)
-        stripe_mat.emission_energy_multiplier = 0.45
-        stripe.material_override = stripe_mat
-        add_child(stripe)
+func _build_authored_barrier_clusters() -> void:
+    var clusters := [
+        {"center": Vector3(-16.0, 0.0, -11.0), "rotation": 0.18},
+        {"center": Vector3(15.0, 0.0, -9.0), "rotation": -0.28},
+        {"center": Vector3(-14.0, 0.0, 13.0), "rotation": 0.72},
+        {"center": Vector3(17.0, 0.0, 12.0), "rotation": -0.66}
+    ]
+    for cluster_index in range(clusters.size()):
+        var cluster: Dictionary = clusters[cluster_index]
+        var center: Vector3 = cluster["center"]
+        var base_rotation: float = cluster["rotation"]
+        for item_index in range(4):
+            var barrier := DZAssetLibrary.barrier()
+            if barrier == null:
+                continue
+            barrier.name = "AuthoredBarrier_%d_%d" % [cluster_index, item_index]
+            var lateral := (float(item_index) - 1.5) * 1.65
+            barrier.position = center + Vector3(lateral, 0.0, sin(float(item_index) * 1.7) * 0.42)
+            barrier.rotation.y = base_rotation + (0.08 if item_index % 2 == 0 else -0.08)
+            barrier.scale = Vector3.ONE * (0.95 + float(item_index % 3) * 0.05)
+            add_child(barrier)
+
+func _build_containment_lanes() -> void:
+    var lane_material := StandardMaterial3D.new()
+    lane_material.albedo_color = Color(0.84, 0.37, 0.045)
+    lane_material.emission_enabled = true
+    lane_material.emission = Color(0.68, 0.13, 0.015)
+    lane_material.emission_energy_multiplier = 0.72
+    lane_material.roughness = 0.58
+
+    for axis in range(2):
+        for offset in [-8.0, 8.0]:
+            for segment in range(-5, 6):
+                var stripe := MeshInstance3D.new()
+                stripe.name = "ContainmentLane_%d_%d_%d" % [axis, int(offset), segment]
+                var stripe_mesh := BoxMesh.new()
+                stripe_mesh.size = Vector3(2.6, 0.016, 0.10) if axis == 0 else Vector3(0.10, 0.016, 2.6)
+                stripe.mesh = stripe_mesh
+                stripe.position = Vector3(float(segment) * 3.6, 0.014, offset) if axis == 0 else Vector3(offset, 0.014, float(segment) * 3.6)
+                stripe.material_override = lane_material
+                add_child(stripe)
+
+    for ring_index in range(4):
+        var marker := MeshInstance3D.new()
+        marker.name = "ContainmentMarker_%d" % ring_index
+        var marker_mesh := CylinderMesh.new()
+        marker_mesh.top_radius = 2.3 + float(ring_index) * 0.72
+        marker_mesh.bottom_radius = marker_mesh.top_radius
+        marker_mesh.height = 0.012
+        marker.mesh = marker_mesh
+        marker.position.y = 0.010 + float(ring_index) * 0.001
+        var marker_mat := StandardMaterial3D.new()
+        marker_mat.albedo_color = Color(0.04, 0.38, 0.52, 0.045)
+        marker_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+        marker_mat.emission_enabled = true
+        marker_mat.emission = Color(0.02, 0.28, 0.44)
+        marker_mat.emission_energy_multiplier = 0.32 + float(ring_index) * 0.08
+        marker.material_override = marker_mat
+        add_child(marker)
+
+func _build_perimeter_beacons() -> void:
+    var beacon_material := StandardMaterial3D.new()
+    beacon_material.albedo_color = Color(1.0, 0.10, 0.025)
+    beacon_material.emission_enabled = true
+    beacon_material.emission = Color(1.0, 0.045, 0.01)
+    beacon_material.emission_energy_multiplier = 4.0
+
+    for index in range(12):
+        var angle := TAU * float(index) / 12.0
+        var radius := 27.0
+        var beacon := MeshInstance3D.new()
+        beacon.name = "PerimeterBeacon_%02d" % index
+        var mesh := CylinderMesh.new()
+        mesh.top_radius = 0.07
+        mesh.bottom_radius = 0.13
+        mesh.height = 0.72
+        beacon.mesh = mesh
+        beacon.position = Vector3(cos(angle) * radius, 0.36, sin(angle) * radius)
+        beacon.material_override = beacon_material
+        add_child(beacon)
 
 func _build_combat_audio() -> void:
     impact_audio = AudioStreamPlayer.new()
     impact_audio.name = "ImpactAudio"
+    impact_audio.bus = "SFX"
     impact_audio.volume_db = -9.0
     add_child(impact_audio)
 
     boss_audio = AudioStreamPlayer.new()
     boss_audio.name = "BossStinger"
+    boss_audio.bus = "SFX"
     boss_audio.volume_db = -6.0
     boss_audio.stream = DZCombatAudio.boss_stinger()
     add_child(boss_audio)
 
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
+    HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
     if impact_audio == null:
         return
     var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
@@ -31249,6 +25842,45 @@ func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
 func _play_boss_stinger() -> void:
     if boss_audio != null:
         boss_audio.play()
+
+func _update_offscreen_threat_indicator() -> void:
+    if hud == null or camera == null or player == null or game_over:
+        if hud:
+            hud.hide_offscreen_threat()
+        return
+
+    var best: DZEnemy
+    var best_distance := INF
+    for node in get_tree().get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy == null or enemy.dead or (enemy.kind != "elite" and enemy.kind != "boss"):
+            continue
+        var distance := player.global_position.distance_to(enemy.global_position)
+        if distance < best_distance:
+            best_distance = distance
+            best = enemy
+
+    if best == null:
+        hud.hide_offscreen_threat()
+        return
+
+    var viewport_size := get_viewport().get_visible_rect().size
+    var screen_pos := camera.unproject_position(best.global_position + Vector3(0.0, 0.9, 0.0))
+    var margin := Vector2(84.0, 72.0)
+    var inside := not camera.is_position_behind(best.global_position) and screen_pos.x >= margin.x and screen_pos.y >= margin.y and screen_pos.x <= viewport_size.x - margin.x and screen_pos.y <= viewport_size.y - margin.y
+
+    if inside:
+        hud.hide_offscreen_threat()
+        return
+
+    var center := viewport_size * 0.5
+    var direction := screen_pos - center
+    if camera.is_position_behind(best.global_position):
+        direction = -direction
+    if direction.length_squared() < 0.001:
+        direction = Vector2.RIGHT
+
+    hud.set_offscreen_threat(direction.normalized(), best.kind, best_distance)
 ````
 
 ## File: godot/scripts/Player.gd
@@ -31277,6 +25909,9 @@ var authored_anim: AnimationPlayer
 var current_anim := ""
 var shot_audio: AudioStreamPlayer3D
 var shot_streams := {}
+var damage_pulse: MeshInstance3D
+var combat_enabled := true
+var applied_protocols := {}
 
 func _ready() -> void:
     add_to_group("player")
@@ -31285,6 +25920,11 @@ func _ready() -> void:
     health_changed.emit(health, max_health)
 
 func _physics_process(delta: float) -> void:
+    if not combat_enabled or health <= 0.0:
+        velocity = Vector3.ZERO
+        touch_move = Vector2.ZERO
+        return
+
     invulnerability = max(0.0, invulnerability - delta)
     fire_clock -= delta
 
@@ -31316,6 +25956,14 @@ func _physics_process(delta: float) -> void:
             _fire_at(target)
             fire_clock = fire_interval
 
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if enabled:
+        return
+    velocity = Vector3.ZERO
+    touch_move = Vector2.ZERO
+    fire_clock = max(fire_clock, fire_interval)
+
 func set_touch_move(value: Vector2) -> void:
     touch_move = value.limit_length(1.0)
 
@@ -31325,6 +25973,7 @@ func take_damage(amount: float) -> void:
     health = max(0.0, health - amount)
     invulnerability = 0.18
     health_changed.emit(health, max_health)
+    _trigger_damage_feedback()
     if health <= 0.0:
         died.emit()
 
@@ -31332,7 +25981,50 @@ func heal_full() -> void:
     health = max_health
     health_changed.emit(health, max_health)
 
+func can_apply_upgrade(id: String) -> bool:
+    if id == "multishot" and weapon_profile == "rail":
+        return false
+    if not id.ends_with("_protocol"):
+        return true
+    return applied_protocols.is_empty()
+
+func _apply_weapon_profile_data(profile_id: String, data: Dictionary) -> void:
+    weapon_profile = profile_id
+    if data.has("tint"):
+        weapon_tint = data["tint"]
+
+    weapon_damage *= float(data.get("damage_multiplier", 1.0))
+    projectile_speed *= float(data.get("projectile_speed_multiplier", 1.0))
+
+    var interval_multiplier := float(data.get("fire_interval_multiplier", 1.0))
+    fire_interval *= interval_multiplier
+    if data.has("fire_interval_floor"):
+        fire_interval = max(float(data["fire_interval_floor"]), fire_interval)
+    if data.has("fire_interval_cap"):
+        fire_interval = min(float(data["fire_interval_cap"]), fire_interval)
+
+    if data.has("multishot_set"):
+        multishot = int(data["multishot_set"])
+    elif data.has("multishot_add"):
+        multishot = min(
+            multishot + int(data["multishot_add"]),
+            int(data.get("multishot_cap", 5))
+        )
+
+    if data.has("spread_set"):
+        spread_degrees = float(data["spread_set"])
+    if data.has("spread_min"):
+        spread_degrees = max(spread_degrees, float(data["spread_min"]))
+    if data.has("spread_max"):
+        spread_degrees = min(spread_degrees, float(data["spread_max"]))
+
 func apply_upgrade(id: String) -> void:
+    if not can_apply_upgrade(id):
+        return
+    if id.ends_with("_protocol"):
+        if applied_protocols.has(id):
+            return
+        applied_protocols[id] = true
     match id:
         "damage":
             weapon_damage *= 1.25
@@ -31348,6 +26040,29 @@ func apply_upgrade(id: String) -> void:
             projectile_speed *= 1.20
         "multishot":
             multishot = min(multishot + 1, 5)
+        "berserker":
+            weapon_damage *= 1.45
+            max_health = max(40.0, max_health * 0.85)
+            health = min(health, max_health)
+            health_changed.emit(health, max_health)
+        "overclock":
+            fire_interval = max(0.09, fire_interval * 0.72)
+            weapon_damage *= 0.90
+        "fortress":
+            max_health += 55.0
+            health = min(max_health, health + 55.0)
+            move_speed *= 0.94
+            health_changed.emit(health, max_health)
+        "scatter_protocol":
+            _apply_weapon_profile_data("scatter", DZWeaponProfiles.profile("scatter"))
+        "rail_protocol":
+            _apply_weapon_profile_data("rail", DZWeaponProfiles.profile("rail"))
+        "inferno_protocol":
+            _apply_weapon_profile_data("inferno", DZWeaponProfiles.profile("inferno"))
+        "cryo_protocol":
+            _apply_weapon_profile_data("cryo", DZWeaponProfiles.profile("cryo"))
+        "arc_protocol":
+            _apply_weapon_profile_data("arc", DZWeaponProfiles.profile("arc"))
 
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
@@ -31414,6 +26129,7 @@ func _build_visual() -> void:
         ring_mat.emission_energy_multiplier = 1.6
         ring.material_override = ring_mat
         add_child(ring)
+        _build_damage_feedback()
         return
 
     var visual := Node3D.new()
@@ -31454,6 +26170,48 @@ func _build_visual() -> void:
     gun.rotation.x = deg_to_rad(-8.0)
     gun.material_override = body_mat
     visual.add_child(gun)
+    _build_damage_feedback()
+
+func _build_damage_feedback() -> void:
+    damage_pulse = MeshInstance3D.new()
+    damage_pulse.name = "DamagePulse"
+    var pulse_mesh := CylinderMesh.new()
+    pulse_mesh.top_radius = 0.82
+    pulse_mesh.bottom_radius = 0.82
+    pulse_mesh.height = 0.035
+    damage_pulse.mesh = pulse_mesh
+    damage_pulse.position.y = 0.06
+    damage_pulse.visible = false
+
+    var pulse_mat := StandardMaterial3D.new()
+    pulse_mat.albedo_color = Color(1.0, 0.08, 0.035, 0.34)
+    pulse_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    pulse_mat.emission_enabled = true
+    pulse_mat.emission = Color(1.0, 0.035, 0.01)
+    pulse_mat.emission_energy_multiplier = 3.2
+    pulse_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    damage_pulse.material_override = pulse_mat
+    add_child(damage_pulse)
+
+func _trigger_damage_feedback() -> void:
+    if damage_pulse != null and is_instance_valid(damage_pulse):
+        damage_pulse.visible = true
+        damage_pulse.scale = Vector3(0.72, 1.0, 0.72)
+        var pulse_tween: Tween = create_tween()
+        pulse_tween.set_trans(Tween.TRANS_QUAD)
+        pulse_tween.set_ease(Tween.EASE_OUT)
+        pulse_tween.tween_property(damage_pulse, "scale", Vector3(1.42, 1.0, 1.42), 0.16)
+        pulse_tween.tween_callback(func() -> void:
+            if damage_pulse != null and is_instance_valid(damage_pulse):
+                damage_pulse.visible = false
+        )
+
+    var visual := get_node_or_null("Visual") as Node3D
+    if visual != null:
+        var base_scale: Vector3 = visual.scale
+        var recoil_tween: Tween = create_tween()
+        recoil_tween.tween_property(visual, "scale", base_scale * Vector3(1.08, 0.94, 1.08), 0.035)
+        recoil_tween.tween_property(visual, "scale", base_scale, 0.085)
 
 func _update_authored_animation() -> void:
     if authored_anim == null:
@@ -31501,50 +26259,71 @@ var trail_length := 0.55
 var trail_width := 0.055
 var core_radius := 0.11
 var impact_scale := 1.0
+var pierce_remaining := 0
+var splash_radius := 0.0
+var chain_targets := 0
+var slow_multiplier := 1.0
+var slow_duration := 0.0
+var hit_enemy_ids := {}
+var spawn_secondary_fx := true
+var combat_enabled := true
+var configured_origin := Vector3.ZERO
+var has_configured_origin := false
 
 func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color,
         profile := "vanguard") -> void:
-    global_position = origin
+    configured_origin = origin
+    has_configured_origin = true
+    if is_inside_tree():
+        global_position = origin
     velocity = direction.normalized() * speed
     damage = shot_damage
     tint = shot_tint
     visual_profile = profile
     _apply_profile(profile)
 
+static func protocol_pierce_budget(profile: String) -> int:
+    return 2 if profile == "rail" else 0
+
+static func protocol_splash_radius(profile: String) -> float:
+    return 1.85 if profile == "inferno" else 0.0
+
+static func protocol_chain_targets(profile: String) -> int:
+    return 2 if profile == "arc" else 0
+
+static func protocol_slow(profile: String) -> Vector2:
+    return Vector2(0.62, 1.6) if profile == "cryo" else Vector2(1.0, 0.0)
+
 func _apply_profile(profile: String) -> void:
+    var feedback := DZWeaponProfiles.profile(profile)
+    trail_length = float(feedback.get("trail_length", 0.55))
+    impact_scale = float(feedback.get("impact_weight", 1.0))
+    var projectile_scale := float(feedback.get("projectile_scale", 1.0))
+    core_radius = 0.11 * projectile_scale
+    trail_width = 0.055 * projectile_scale
     match profile:
         "scatter":
-            trail_length = 0.32
-            trail_width = 0.09
-            core_radius = 0.13
-            impact_scale = 1.18
+            trail_width *= 1.40
         "rail":
-            trail_length = 1.25
-            trail_width = 0.035
-            core_radius = 0.075
-            impact_scale = 1.34
+            trail_width *= 0.64
+            pierce_remaining = protocol_pierce_budget(profile)
         "inferno":
-            trail_length = 0.72
-            trail_width = 0.075
-            core_radius = 0.12
-            impact_scale = 1.22
+            trail_width *= 1.24
+            splash_radius = protocol_splash_radius(profile)
         "cryo":
-            trail_length = 0.82
-            trail_width = 0.07
-            core_radius = 0.12
-            impact_scale = 1.24
+            trail_width *= 1.18
+            var slow := protocol_slow(profile)
+            slow_multiplier = slow.x
+            slow_duration = slow.y
         "arc":
-            trail_length = 0.94
-            trail_width = 0.045
-            core_radius = 0.09
-            impact_scale = 1.20
-        _:
-            trail_length = 0.55
-            trail_width = 0.055
-            core_radius = 0.11
-            impact_scale = 1.0
+            trail_width *= 0.82
+            chain_targets = protocol_chain_targets(profile)
 
 func _ready() -> void:
+    top_level = true
+    if has_configured_origin:
+        global_position = configured_origin
+    add_to_group("projectiles")
     var glow := MeshInstance3D.new()
     var mesh := SphereMesh.new()
     mesh.radius = core_radius
@@ -31575,7 +26354,7 @@ func _ready() -> void:
     elif visual_profile == "arc":
         _add_arc_accent()
     elif visual_profile == "inferno":
-        _add_flame_core()
+        _add_flame_core(mat)
 
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity.normalized(), Vector3.UP)
@@ -31604,32 +26383,52 @@ func _add_arc_accent() -> void:
     accent.material_override = mat
     add_child(accent)
 
-func _add_flame_core() -> void:
-    var core := OmniLight3D.new()
-    core.light_color = Color(1.0, 0.30, 0.04)
-    core.light_energy = 1.1
-    core.omni_range = 1.35
-    add_child(core)
+func _add_flame_core(base_material: StandardMaterial3D) -> void:
+    var flame := MeshInstance3D.new()
+    var mesh := SphereMesh.new()
+    mesh.radius = core_radius * 0.58
+    mesh.height = core_radius * 1.55
+    flame.mesh = mesh
+    flame.scale = Vector3(0.72, 0.72, 1.42)
+    flame.material_override = base_material
+    add_child(flame)
+
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if not enabled:
+        velocity = Vector3.ZERO
 
 func _physics_process(delta: float) -> void:
+    if not combat_enabled:
+        return
     age += delta
     global_position += velocity * delta
-
-    for node in get_tree().get_nodes_in_group("enemies"):
+    for node in _candidate_enemies():
         if not is_instance_valid(node):
             continue
         var enemy := node as DZEnemy
-        if enemy == null or enemy.dead:
+        if enemy == null or enemy.dead or hit_enemy_ids.has(enemy.get_instance_id()):
             continue
         if global_position.distance_squared_to(enemy.global_position) <= radius * radius:
             var critical := randf() < critical_chance
-            enemy.take_damage(damage * (1.75 if critical else 1.0), critical)
+            var dealt_damage := damage * (1.75 if critical else 1.0)
+            hit_enemy_ids[enemy.get_instance_id()] = true
+            enemy.take_damage(dealt_damage, critical)
+            _apply_protocol_hit(enemy, dealt_damage)
             _impact(critical)
+            if visual_profile == "rail" and pierce_remaining > 0:
+                pierce_remaining -= 1
+                continue
             queue_free()
             return
-
     if age >= lifetime:
         queue_free()
+
+func _candidate_enemies() -> Array:
+    var scene := get_tree().current_scene if get_tree() != null else null
+    if scene != null and scene.has_method("query_enemies_near"):
+        return scene.query_enemies_near(global_position, radius)
+    return get_tree().get_nodes_in_group("enemies") if get_tree() != null else []
 
 func _impact(critical := false) -> void:
     var fx := ImpactFx.new()
@@ -31637,6 +26436,268 @@ func _impact(critical := false) -> void:
     fx.scale_boost = (1.45 if critical else 1.0) * impact_scale
     get_tree().current_scene.add_child(fx)
     fx.global_position = global_position
+
+func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
+    match visual_profile:
+        "inferno":
+            primary.apply_burn(dealt_damage * 0.16, 2.0)
+            _apply_splash(primary, dealt_damage * 0.45, splash_radius)
+        "cryo":
+            primary.apply_slow(slow_multiplier, slow_duration)
+        "arc":
+            primary.apply_shock(0.24)
+            _apply_chain(primary, dealt_damage)
+
+func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) -> void:
+    if range_radius <= 0.0:
+        return
+    for node in get_tree().get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy == null or enemy.dead or enemy == primary:
+            continue
+        if primary.global_position.distance_to(enemy.global_position) <= range_radius:
+            enemy.take_damage(splash_damage, false)
+            if spawn_secondary_fx:
+                var fx := ImpactFx.new()
+                fx.color = Color(1.0, 0.24, 0.035)
+                fx.scale_boost = 0.72
+                get_tree().current_scene.add_child(fx)
+                fx.global_position = enemy.global_position + Vector3(0.0, 0.45, 0.0)
+
+func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
+    if chain_targets <= 0:
+        return
+    var candidates: Array[DZEnemy] = []
+    for node in get_tree().get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy == null or enemy.dead or enemy == primary:
+            continue
+        if primary.global_position.distance_to(enemy.global_position) <= 3.8:
+            candidates.append(enemy)
+    candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
+        return primary.global_position.distance_squared_to(a.global_position) < primary.global_position.distance_squared_to(b.global_position)
+    )
+    var count: int = mini(chain_targets, candidates.size())
+    for i in range(count):
+        var chained := candidates[i]
+        var falloff := 0.56 if i == 0 else 0.38
+        chained.take_damage(dealt_damage * falloff, false)
+        if spawn_secondary_fx:
+            var fx := ImpactFx.new()
+            fx.color = Color(0.64, 0.42, 1.0)
+            fx.scale_boost = 0.78
+            get_tree().current_scene.add_child(fx)
+            fx.global_position = chained.global_position + Vector3(0.0, 0.55, 0.0)
+````
+
+## File: godot/scripts/RunDirector.gd
+````
+class_name DZRunDirector
+extends RefCounted
+
+const PHASES := [
+    {"start": 0.0, "name": "BREACH", "interval": 0.82, "batch": 1, "max_enemies": 78},
+    {"start": 45.0, "name": "SURGE", "interval": 0.68, "batch": 2, "max_enemies": 88},
+    {"start": 90.0, "name": "PRESSURE", "interval": 0.54, "batch": 3, "max_enemies": 98},
+    {"start": 150.0, "name": "OVERRUN", "interval": 0.40, "batch": 4, "max_enemies": 110},
+    {"start": 225.0, "name": "EXTINCTION", "interval": 0.31, "batch": 5, "max_enemies": 118}
+]
+
+func profile(elapsed: float, level: int) -> Dictionary:
+    var phase: Dictionary = PHASES[0]
+    for candidate in PHASES:
+        if elapsed >= float(candidate["start"]):
+            phase = candidate
+        else:
+            break
+    var phase_age: float = maxf(0.0, elapsed - float(phase["start"]))
+    var interval: float = maxf(0.22, float(phase["interval"]) - minf(0.09, phase_age * 0.0009))
+    var difficulty: float = 1.0 + elapsed / 210.0 + float(maxi(level - 1, 0)) * 0.035
+    return {
+        "phase": String(phase["name"]),
+        "spawn_interval": interval,
+        "batch_size": int(phase["batch"]),
+        "difficulty": difficulty,
+        "max_enemies": int(phase["max_enemies"])
+    }
+
+func choose_enemy(elapsed: float, level: int, rng: RandomNumberGenerator) -> String:
+    var weights := _weights(elapsed, level)
+    var total := 0.0
+    for weight in weights.values():
+        total += float(weight)
+    var roll := rng.randf() * total
+    var cursor := 0.0
+    for kind in ["shambler", "runner", "charger", "harrier", "regenerator", "brute", "elite"]:
+        cursor += float(weights.get(kind, 0.0))
+        if roll <= cursor:
+            return kind
+    return "shambler"
+
+func enemy_sequence(elapsed: float, level: int, seed_value: int, count: int) -> Array:
+    var rng := RandomNumberGenerator.new()
+    rng.seed = seed_value
+    var result: Array = []
+    for i in range(maxi(count, 0)):
+        result.append(choose_enemy(elapsed, level, rng))
+    return result
+
+func _weights(elapsed: float, level: int) -> Dictionary:
+    var weights := {
+        "shambler": 1.0,
+        "runner": 0.0,
+        "charger": 0.0,
+        "harrier": 0.0,
+        "regenerator": 0.0,
+        "brute": 0.0,
+        "elite": 0.0
+    }
+    if elapsed >= 25.0:
+        weights["runner"] = 0.38
+    if elapsed >= 45.0:
+        weights["charger"] = 0.22
+    if elapsed >= 65.0:
+        weights["harrier"] = 0.18
+    if elapsed >= 82.0:
+        weights["regenerator"] = 0.14
+    if elapsed >= 100.0:
+        weights["brute"] = 0.12
+    if elapsed >= 125.0:
+        weights["elite"] = 0.08
+    var escalation := clampf((elapsed - 90.0) / 180.0, 0.0, 1.0) + clampf(float(level - 4) * 0.035, 0.0, 0.18)
+    weights["shambler"] = maxf(0.48, 1.0 - escalation * 0.42)
+    weights["charger"] += escalation * 0.08
+    weights["harrier"] += escalation * 0.07
+    weights["brute"] += escalation * 0.06
+    weights["elite"] += escalation * 0.04
+    return weights
+````
+
+## File: godot/scripts/SpatialHash.gd
+````
+class_name DZSpatialHash
+extends RefCounted
+
+var cell_size := 4.0
+var buckets := {}
+
+func _init(size := 4.0) -> void:
+    cell_size = maxf(0.5, float(size))
+
+func rebuild(nodes: Array) -> void:
+    buckets.clear()
+    for node in nodes:
+        if node == null or not is_instance_valid(node) or not node is Node3D:
+            continue
+        var key := _cell((node as Node3D).global_position)
+        if not buckets.has(key):
+            buckets[key] = []
+        buckets[key].append(node)
+
+func query(position: Vector3, radius: float) -> Array:
+    var result: Array = []
+    var safe_radius := maxf(0.0, radius)
+    var min_key := _cell(position - Vector3(safe_radius, 0.0, safe_radius))
+    var max_key := _cell(position + Vector3(safe_radius, 0.0, safe_radius))
+    var radius_sq := safe_radius * safe_radius
+    for x in range(min_key.x, max_key.x + 1):
+        for z in range(min_key.y, max_key.y + 1):
+            var key := Vector2i(x, z)
+            if not buckets.has(key):
+                continue
+            for node in buckets[key]:
+                if node == null or not is_instance_valid(node) or not node is Node3D:
+                    continue
+                var delta := (node as Node3D).global_position - position
+                delta.y = 0.0
+                if delta.length_squared() <= radius_sq:
+                    result.append(node)
+    return result
+
+func _cell(position: Vector3) -> Vector2i:
+    return Vector2i(
+        int(floor(position.x / cell_size)),
+        int(floor(position.z / cell_size))
+    )
+````
+
+## File: godot/scripts/WeaponProfiles.gd
+````
+class_name DZWeaponProfiles
+extends RefCounted
+
+const PROFILES := {
+    "vanguard": {
+        "tint": Color(0.18, 0.90, 1.0),
+        "damage_multiplier": 1.0,
+        "projectile_speed_multiplier": 1.0,
+        "fire_interval_multiplier": 1.0,
+        "projectile_scale": 1.0,
+        "trail_length": 0.55,
+        "impact_weight": 1.0
+    },
+    "scatter": {
+        "tint": Color(1.0, 0.56, 0.18),
+        "damage_multiplier": 0.82,
+        "projectile_speed_multiplier": 1.0,
+        "fire_interval_multiplier": 1.0,
+        "multishot_add": 2,
+        "multishot_cap": 5,
+        "spread_min": 11.0,
+        "projectile_scale": 1.16,
+        "trail_length": 0.32,
+        "impact_weight": 1.18
+    },
+    "rail": {
+        "tint": Color(0.72, 0.58, 1.0),
+        "damage_multiplier": 1.50,
+        "projectile_speed_multiplier": 1.40,
+        "fire_interval_multiplier": 1.22,
+        "fire_interval_cap": 0.80,
+        "multishot_set": 1,
+        "spread_set": 3.0,
+        "projectile_scale": 0.78,
+        "trail_length": 1.25,
+        "impact_weight": 1.34
+    },
+    "inferno": {
+        "tint": Color(1.0, 0.24, 0.035),
+        "damage_multiplier": 1.20,
+        "projectile_speed_multiplier": 1.0,
+        "fire_interval_multiplier": 1.08,
+        "fire_interval_cap": 0.80,
+        "projectile_scale": 1.10,
+        "trail_length": 0.72,
+        "impact_weight": 1.22
+    },
+    "cryo": {
+        "tint": Color(0.30, 0.90, 1.0),
+        "damage_multiplier": 0.95,
+        "projectile_speed_multiplier": 1.12,
+        "fire_interval_multiplier": 0.90,
+        "fire_interval_floor": 0.09,
+        "projectile_scale": 1.08,
+        "trail_length": 0.82,
+        "impact_weight": 1.24
+    },
+    "arc": {
+        "tint": Color(0.64, 0.42, 1.0),
+        "damage_multiplier": 0.90,
+        "projectile_speed_multiplier": 1.0,
+        "fire_interval_multiplier": 0.92,
+        "fire_interval_floor": 0.09,
+        "multishot_add": 1,
+        "multishot_cap": 5,
+        "spread_max": 4.0,
+        "projectile_scale": 0.92,
+        "trail_length": 0.94,
+        "impact_weight": 1.20
+    }
+}
+
+static func profile(id: String) -> Dictionary:
+    var key := id if PROFILES.has(id) else "vanguard"
+    return (PROFILES[key] as Dictionary).duplicate(true)
 ````
 
 ## File: godot/scripts/XpOrb.gd
@@ -31681,6 +26742,68 @@ func _process(delta: float) -> void:
     if distance < 0.55:
         collected.emit(amount)
         queue_free()
+````
+
+## File: godot/tests/attack_telegraph_escalation_test.gd
+````
+extends SceneTree
+
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+
+func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _run_test() -> void:
+    var enemy_source := FileAccess.get_file_as_string("res://scripts/Enemy.gd")
+    var show_start := enemy_source.find("func _show_telegraph")
+    var impact_start := enemy_source.find("func _spawn_attack_impact")
+    var show_block := enemy_source.substr(show_start, impact_start - show_start)
+    var add_index := show_block.find("add_child(telegraph_visual)")
+    var global_index := show_block.find("telegraph_visual.global_position")
+    if add_index < 0 or global_index < 0 or global_index < add_index:
+        push_error("Telegraph global transform must be assigned only after scene insertion")
+        quit(1)
+        return
+
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    await process_frame
+
+    var enemy := ENEMY_SCRIPT.new()
+    root.add_child(enemy)
+    await process_frame
+
+    enemy.kind = "boss"
+    enemy.global_position = Vector3.ZERO
+    enemy.attack_target_position = Vector3(2.0, 0.0, 0.0)
+    enemy._show_telegraph(1.75, 0.40)
+    await process_frame
+
+    if enemy.telegraph_visual == null or enemy.telegraph_material == null:
+        push_error("Telegraph visual/material missing")
+        quit(1)
+        return
+
+    var start_energy := enemy.telegraph_material.emission_energy_multiplier
+    var start_alpha := enemy.telegraph_material.albedo_color.a
+    await create_timer(0.22).timeout
+
+    if enemy.telegraph_material.emission_energy_multiplier <= start_energy:
+        push_error("Telegraph emission did not intensify")
+        quit(1)
+        return
+    if enemy.telegraph_material.albedo_color.a <= start_alpha:
+        push_error("Telegraph opacity did not intensify")
+        quit(1)
+        return
+    if enemy.telegraph_visual.scale.x <= 0.42:
+        push_error("Telegraph scale did not expand")
+        quit(1)
+        return
+
+    print("Deadline Zero attack telegraph escalation: OK")
+    quit(0)
 ````
 
 ## File: godot/tests/authored_asset_validation.gd
@@ -31761,6 +26884,68 @@ func _init() -> void:
     quit()
 ````
 
+## File: godot/tests/boss_phase_runtime_test.gd
+````
+extends SceneTree
+
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var target := Node3D.new()
+    root.add_child(target)
+
+    var boss := ENEMY_SCRIPT.new()
+    boss.configure("boss", 1.0, target)
+    boss.process_mode = Node.PROCESS_MODE_DISABLED
+    boss.spawn_secondary_fx = false
+    root.add_child(boss)
+    await process_frame
+
+    if not boss.has_method("_update_boss_phase"):
+        push_error("Boss runtime phase API is missing")
+        quit(1)
+        return
+
+    var phase1_speed: float = boss.move_speed
+    var phase1_damage: float = boss.contact_damage
+
+    boss.health = boss.max_health * 0.60
+    boss._update_boss_phase()
+    if boss.boss_phase != 2:
+        push_error("Boss did not enter phase II below 65% health")
+        quit(1)
+        return
+    if boss.move_speed <= phase1_speed or boss.contact_damage <= phase1_damage:
+        push_error("Boss phase II did not escalate movement and damage")
+        quit(1)
+        return
+
+    var phase2_speed: float = boss.move_speed
+    var phase2_damage: float = boss.contact_damage
+    boss.health = boss.max_health * 0.25
+    boss._update_boss_phase()
+    if boss.boss_phase != 3:
+        push_error("Boss did not enter phase III below 30% health")
+        quit(1)
+        return
+    if boss.move_speed <= phase2_speed or boss.contact_damage <= phase2_damage:
+        push_error("Boss phase III did not escalate movement and damage")
+        quit(1)
+        return
+
+    if boss._boss_slam_windup() >= 0.68 or boss._boss_slam_cooldown() >= 4.1:
+        push_error("Boss phase III did not accelerate slam cadence")
+        quit(1)
+        return
+
+    print("Deadline Zero boss phase runtime: OK")
+    quit(0)
+````
+
 ## File: godot/tests/boss_reveal_camera_test.gd
 ````
 extends SceneTree
@@ -31823,6 +27008,75 @@ func _init() -> void:
     quit()
 ````
 
+## File: godot/tests/combat_danger_hud_test.gd
+````
+extends SceneTree
+
+const HUD_SCRIPT := preload("res://scripts/Hud.gd")
+
+func _initialize() -> void:
+    var root := Node.new()
+    get_root().add_child(root)
+    var hud := HUD_SCRIPT.new()
+    root.add_child(hud)
+    await process_frame
+
+    var vignette := hud.find_child("DamageVignette", true, false) as ColorRect
+    if vignette == null:
+        push_error("Screen-space damage vignette is missing")
+        quit(1)
+        return
+    if vignette.visible:
+        push_error("Damage vignette should start hidden")
+        quit(1)
+        return
+    hud.pulse_damage_screen()
+    if not vignette.visible:
+        push_error("Damage vignette did not become visible")
+        quit(1)
+        return
+    await create_timer(0.35).timeout
+    if vignette.visible:
+        push_error("Damage vignette did not clear after pulse")
+        quit(1)
+        return
+
+    hud.set_health(30.0, 100.0)
+    if not hud.low_health_panel.visible:
+        push_error("Low-health warning missing at 30 percent")
+        quit(1)
+        return
+    if hud.low_health_label.text != "CRITICAL INTEGRITY  •  30%":
+        push_error("Unexpected low-health label")
+        quit(1)
+        return
+
+    hud.set_health(31.0, 100.0)
+    if hud.low_health_panel.visible:
+        push_error("Low-health warning should clear above threshold")
+        quit(1)
+        return
+
+    hud.set_offscreen_threat(Vector2(-1.0, -1.0), "boss", 27.6)
+    if not hud.threat_panel.visible:
+        push_error("Threat indicator should be visible")
+        quit(1)
+        return
+    if hud.threat_label.text != "↖  BOSS  28m":
+        push_error("Unexpected threat label: %s" % hud.threat_label.text)
+        quit(1)
+        return
+
+    hud.set_offscreen_threat(Vector2.ZERO, "boss", 10.0)
+    if hud.threat_panel.visible:
+        push_error("Zero direction should clear threat indicator")
+        quit(1)
+        return
+
+    print("Deadline Zero combat danger HUD: OK")
+    quit(0)
+````
+
 ## File: godot/tests/combat_feel_test.gd
 ````
 extends SceneTree
@@ -31862,6 +27116,67 @@ func _init() -> void:
     quit()
 ````
 
+## File: godot/tests/enemy_hit_reaction_test.gd
+````
+extends SceneTree
+
+func _initialize() -> void:
+    var source := FileAccess.get_file_as_string("res://scripts/Enemy.gd")
+    var required := {
+        "hit_reaction_profile": "Enemy must expose a hit reaction profile",
+        "_play_hit_reaction": "Enemy damage must trigger a hit reaction",
+        "normal_hit": "Normal enemies need a readable hit reaction",
+        "elite_hit": "Elites need a heavier hit reaction",
+        "boss_hit": "Bosses need a restrained but weighty hit reaction",
+        "hit_flash_material": "Hit reaction must include a material flash without dynamic lights"
+    }
+    for token in required:
+        if not source.contains(token):
+            push_error(required[token])
+            quit(1)
+            return
+    if source.contains("hit_reaction_light"):
+        push_error("Hit reactions must not allocate per-hit dynamic lights")
+        quit(1)
+        return
+    print("enemy_hit_reaction_test: PASS")
+    quit(0)
+````
+
+## File: godot/tests/enemy_projectile_visual_test.gd
+````
+extends SceneTree
+
+const PROJECTILE_SCRIPT := preload("res://scripts/EnemyProjectile.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var projectile := PROJECTILE_SCRIPT.new()
+    root.add_child(projectile)
+    await process_frame
+
+    var light_count := 0
+    var trail := projectile.get_node_or_null("HarrierBoltTrail") as MeshInstance3D
+    for child in projectile.get_children():
+        if child is OmniLight3D:
+            light_count += 1
+
+    if light_count != 0:
+        push_error("Harrier bolt should avoid per-projectile dynamic lights on mobile")
+        quit(1)
+        return
+    if trail == null:
+        push_error("Harrier bolt is missing emissive travel-direction trail")
+        quit(1)
+        return
+
+    print("Deadline Zero enemy projectile visual: OK")
+    quit(0)
+````
+
 ## File: godot/tests/enemy_silhouette_identity_test.gd
 ````
 extends SceneTree
@@ -31897,6 +27212,918 @@ func _initialize() -> void:
     quit(0)
 ````
 
+## File: godot/tests/environment_identity_test.gd
+````
+extends SceneTree
+
+const MAIN_SCENE := preload("res://scenes/Main.tscn")
+
+func _initialize() -> void:
+    var scene := MAIN_SCENE.instantiate()
+    get_root().add_child(scene)
+    current_scene = scene
+    await process_frame
+    await process_frame
+
+    var floor := scene.get_node_or_null("QuarantineFloor")
+    var env := scene.get_node_or_null("QuarantineEnvironment")
+    var fill := scene.get_node_or_null("ContainmentFill")
+    if floor == null or env == null or fill == null:
+        push_error("Authored quarantine environment anchors are missing")
+        quit(1)
+        return
+
+    var barrier_count := 0
+    var lane_count := 0
+    var beacon_count := 0
+    for child in scene.get_children():
+        if child.name.begins_with("AuthoredBarrier_"):
+            barrier_count += 1
+        elif child.name.begins_with("ContainmentLane_"):
+            lane_count += 1
+        elif child.name.begins_with("PerimeterBeacon_"):
+            beacon_count += 1
+
+    if barrier_count < 12:
+        push_error("Expected authored barrier clusters, got %d" % barrier_count)
+        quit(1)
+        return
+    if lane_count < 40:
+        push_error("Expected structured containment lanes, got %d" % lane_count)
+        quit(1)
+        return
+    if beacon_count != 12:
+        push_error("Expected 12 perimeter beacons, got %d" % beacon_count)
+        quit(1)
+        return
+
+    for child in scene.get_children():
+        if child is MeshInstance3D and child.name.begins_with("PrototypeProp"):
+            push_error("Prototype prop remained in production arena")
+            quit(1)
+            return
+
+    print("Deadline Zero environment identity: OK")
+    quit(0)
+````
+
+## File: godot/tests/first_playable_run_path_test.gd
+````
+extends SceneTree
+
+const MAIN_SCENE := preload("res://scenes/Main.tscn")
+const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+
+func _initialize() -> void:
+    var main := MAIN_SCENE.instantiate()
+    get_root().add_child(main)
+    current_scene = main
+    await process_frame
+    await process_frame
+
+    if main.player == null or main.hud == null or main.camera == null:
+        push_error("Run path did not initialize player, HUD and camera")
+        quit(1)
+        return
+    if get_nodes_in_group("enemies").size() < 8:
+        push_error("Run path did not create initial enemy population")
+        quit(1)
+        return
+
+    var pause_button := main.hud.get_node_or_null("PauseButton") as Button
+    var pause_panel := main.hud.get_node_or_null("PausePanel") as PanelContainer
+    if pause_button == null or pause_panel == null:
+        push_error("Pause controls are unavailable in first-playable path")
+        quit(1)
+        return
+    pause_button.pressed.emit()
+    await process_frame
+    if not paused or not pause_panel.visible:
+        push_error("Pause action did not pause gameplay and show settings")
+        quit(1)
+        return
+    var resume_button := pause_panel.find_child("ResumeButton", true, false) as Button
+    resume_button.pressed.emit()
+    await process_frame
+    if paused or pause_panel.visible:
+        push_error("Resume action did not restore gameplay")
+        quit(1)
+        return
+
+    var master_slider := pause_panel.find_child("MasterVolume", true, false) as HSlider
+    var sfx_slider := pause_panel.find_child("SfxVolume", true, false) as HSlider
+    master_slider.value = 0.35
+    sfx_slider.value = 0.45
+    await process_frame
+    var master_bus := AudioServer.get_bus_index("Master")
+    var sfx_bus := AudioServer.get_bus_index("SFX")
+    if sfx_bus < 0:
+        push_error("Pause settings did not create dedicated SFX audio bus")
+        quit(1)
+        return
+    if abs(AudioServer.get_bus_volume_db(master_bus) - linear_to_db(0.35)) > 0.25:
+        push_error("Master volume slider did not update Master bus")
+        quit(1)
+        return
+    if abs(AudioServer.get_bus_volume_db(sfx_bus) - linear_to_db(0.45)) > 0.25:
+        push_error("SFX volume slider did not update SFX bus")
+        quit(1)
+        return
+
+    var previous_level: int = main.level
+    var threshold: int = main.xp_next
+    main._on_xp_collected(threshold)
+    if main.level != previous_level + 1 or main.pending_upgrades.size() != 3:
+        push_error("XP progression did not open a three-choice upgrade")
+        quit(1)
+        return
+    if not main.hud.upgrade_panel.visible or not paused:
+        push_error("Upgrade state did not pause combat and show the upgrade panel")
+        quit(1)
+        return
+
+    main._on_upgrade_chosen(0)
+    if main.pending_upgrades.size() != 0 or main.hud.upgrade_panel.visible or paused:
+        push_error("Upgrade selection did not resume the run cleanly")
+        quit(1)
+        return
+
+    main.player.apply_upgrade("inferno_protocol")
+    seed(424242)
+    for offer_index in range(12):
+        main._offer_upgrade()
+        for upgrade in main.pending_upgrades:
+            if String(upgrade["id"]).ends_with("_protocol"):
+                push_error("Protocol upgrade remained in offer after a protocol was locked")
+                quit(1)
+                return
+        main.pending_upgrades.clear()
+        main.hud.hide_upgrade()
+        paused = false
+
+    var bosses_before := _count_kind("boss")
+    main._spawn_enemy("boss")
+    await process_frame
+    if _count_kind("boss") != bosses_before + 1:
+        push_error("Forced boss spawn failed")
+        quit(1)
+        return
+    if not main.hud.boss_panel.visible or main.boss_reveal_target == null:
+        push_error("Boss spawn did not activate boss HUD/reveal state")
+        quit(1)
+        return
+
+    var projectile := PROJECTILE_SCRIPT.new()
+    main.add_child(projectile)
+    projectile.velocity = Vector3(8.0, 0.0, 0.0)
+    await process_frame
+
+    main._on_player_died()
+    if not main.game_over or not main.hud.game_over_panel.visible:
+        push_error("Player death did not enter visible game-over state")
+        quit(1)
+        return
+    if main.hud.wave_label.text != "RUN TERMINATED":
+        push_error("Run-end HUD did not enter terminated state")
+        quit(1)
+        return
+    if projectile.combat_enabled or projectile.velocity.length_squared() > 0.0:
+        push_error("Active projectile was not frozen at run end")
+        quit(1)
+        return
+
+    var projectiles_after_freeze := get_nodes_in_group("projectiles").size()
+    main.player.fire_clock = 0.0
+    main.player._physics_process(0.016)
+    if get_nodes_in_group("projectiles").size() != projectiles_after_freeze:
+        push_error("Player continued auto-firing after death")
+        quit(1)
+        return
+    for node in get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy != null and enemy.combat_enabled:
+            push_error("Enemy remained combat-enabled after run end")
+            quit(1)
+            return
+
+    var restart_button := main.hud.game_over_panel.find_child("RestartButton", true, false) as Button
+    if restart_button == null or restart_button.disabled:
+        push_error("Run-end restart action is unavailable")
+        quit(1)
+        return
+
+    print("Deadline Zero first-playable run path: OK")
+    quit(0)
+
+func _count_kind(kind: String) -> int:
+    var count := 0
+    for node in get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy != null and enemy.kind == kind:
+            count += 1
+    return count
+````
+
+## File: godot/tests/haptics_service_test.gd
+````
+extends SceneTree
+
+const HAPTICS := preload("res://scripts/Haptics.gd")
+
+func _initialize() -> void:
+    if HAPTICS.pattern_for("hit") <= 0:
+        push_error("Hit haptic pattern is missing")
+        quit(1)
+        return
+    if HAPTICS.pattern_for("critical") <= HAPTICS.pattern_for("hit"):
+        push_error("Critical haptic should be stronger than regular hit")
+        quit(1)
+        return
+    if HAPTICS.pattern_for("boss") <= HAPTICS.pattern_for("critical"):
+        push_error("Boss haptic should be strongest combat pulse")
+        quit(1)
+        return
+    if HAPTICS.pattern_for("none") != 0:
+        push_error("Unknown haptic pattern should be silent")
+        quit(1)
+        return
+
+    if HAPTICS.event_for_impact(false, false, false) != "hit":
+        push_error("Regular impact haptic mapping is incorrect")
+        quit(1)
+        return
+    if HAPTICS.event_for_impact(true, false, false) != "critical":
+        push_error("Critical impact haptic mapping is incorrect")
+        quit(1)
+        return
+    if HAPTICS.event_for_impact(false, true, false) != "critical":
+        push_error("Kill impact haptic mapping is incorrect")
+        quit(1)
+        return
+    if HAPTICS.event_for_impact(false, false, true) != "boss":
+        push_error("Boss impact haptic mapping is incorrect")
+        quit(1)
+        return
+
+    var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    if not main_source.contains("HAPTICS.pulse(HAPTICS.event_for_impact"):
+        push_error("Main impact path is not wired to combat haptics")
+        quit(1)
+        return
+
+    print("Deadline Zero haptics service: OK")
+    quit(0)
+````
+
+## File: godot/tests/hud_readability_hierarchy_test.gd
+````
+extends SceneTree
+
+const HUD_SCRIPT := preload("res://scripts/Hud.gd")
+
+func _initialize() -> void:
+    var root := Node.new()
+    get_root().add_child(root)
+    var hud := HUD_SCRIPT.new()
+    root.add_child(hud)
+    await process_frame
+
+    for node_name in ["VitalPanel", "VitalAccent", "ThreatPanel", "BossPanel", "UpgradePanel"]:
+        if hud.find_child(node_name, true, false) == null:
+            push_error("HUD readability hierarchy missing node: %s" % node_name)
+            quit(1)
+            return
+
+    var vital_panel := hud.find_child("VitalPanel", true, false) as Control
+    if vital_panel == null or vital_panel.size.x < 300.0 or vital_panel.size.y < 82.0:
+        push_error("Vital panel must reserve a readable combat-safe footprint")
+        quit(1)
+        return
+
+    if hud.health_bar == null or hud.health_bar.custom_minimum_size.y < 18.0:
+        push_error("Health bar must remain readable under combat pressure")
+        quit(1)
+        return
+    if hud.xp_bar == null or hud.xp_bar.custom_minimum_size.y < 8.0:
+        push_error("XP bar must retain a distinct secondary hierarchy")
+        quit(1)
+        return
+
+    hud.set_health(24.0, 100.0)
+    if not hud.low_health_panel.visible:
+        push_error("Critical health state must remain immediately visible")
+        quit(1)
+        return
+    if hud.low_health_panel.modulate.a < 0.95:
+        push_error("Critical health warning must not be visually muted")
+        quit(1)
+        return
+
+    hud.set_offscreen_threat(Vector2.RIGHT, "boss", 18.0)
+    if not hud.threat_panel.visible or hud.threat_label == null:
+        push_error("Boss threat must remain readable while off screen")
+        quit(1)
+        return
+    if hud.threat_label.get_theme_font_size("font_size") < 18:
+        push_error("Threat typography is too small for mobile combat")
+        quit(1)
+        return
+
+    print("hud_readability_hierarchy_test: PASS")
+    quit(0)
+````
+
+## File: godot/tests/impact_fx_mobile_test.gd
+````
+extends SceneTree
+
+const IMPACT_SCRIPT := preload("res://scripts/ImpactFx.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var fx := IMPACT_SCRIPT.new()
+    root.add_child(fx)
+    await process_frame
+
+    var light_count := 0
+    var mesh_count := 0
+    var ring_found := false
+    for child in fx.get_children():
+        if child is OmniLight3D:
+            light_count += 1
+        if child is MeshInstance3D:
+            mesh_count += 1
+            if child.name == "ImpactRing":
+                ring_found = true
+
+    if light_count != 0:
+        push_error("Impact FX should avoid per-hit dynamic lights on mobile")
+        quit(1)
+        return
+    if mesh_count < 2 or not ring_found:
+        push_error("Impact FX is missing layered emissive geometry")
+        quit(1)
+        return
+
+    var sparks := fx.get_node_or_null("ImpactSparks") as GPUParticles3D
+    if sparks == null:
+        push_error("Impact FX is missing mobile-safe GPU sparks")
+        quit(1)
+        return
+    if sparks.amount > 12 or sparks.amount < 4:
+        push_error("Impact spark count must stay within mobile budget")
+        quit(1)
+        return
+    if sparks.lifetime > 0.35:
+        push_error("Impact sparks live too long for dense mobile combat")
+        quit(1)
+        return
+
+    print("Deadline Zero mobile-safe impact FX: OK")
+    quit(0)
+````
+
+## File: godot/tests/native_enemy_behavior_test.gd
+````
+extends SceneTree
+
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+
+class DummyTarget:
+    extends Node3D
+    var damage_taken := 0.0
+    func take_damage(amount: float) -> void:
+        damage_taken += amount
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    var target := DummyTarget.new()
+    target.position = Vector3(100.0, 0.0, 0.0)
+    root.add_child(target)
+    await physics_frame
+
+    var charger := ENEMY_SCRIPT.new()
+    charger.configure("charger", 1.0, target)
+    charger.spawn_secondary_fx = false
+    root.add_child(charger)
+    await physics_frame
+    if charger.move_speed <= 2.0 or charger.contact_damage < 12.0 or charger.xp_value < 4:
+        push_error("Charger baseline identity is incorrect")
+        quit(1)
+        return
+
+    var harrier := ENEMY_SCRIPT.new()
+    harrier.configure("harrier", 1.0, target)
+    harrier.process_mode = Node.PROCESS_MODE_DISABLED
+    harrier.spawn_secondary_fx = false
+    root.add_child(harrier)
+    if harrier.move_speed <= charger.move_speed or harrier.max_health >= charger.max_health:
+        push_error("Harrier mobility/risk identity is incorrect")
+        quit(1)
+        return
+
+    var regenerator := ENEMY_SCRIPT.new()
+    regenerator.configure("regenerator", 1.0, target)
+    regenerator.process_mode = Node.PROCESS_MODE_DISABLED
+    regenerator.spawn_secondary_fx = false
+    root.add_child(regenerator)
+    var full_health: float = regenerator.health
+    regenerator.health = full_health * 0.50
+    var before_channel: float = regenerator.health
+    regenerator._begin_regeneration()
+    if regenerator.health != before_channel or regenerator.regeneration_windup <= 0.0:
+        push_error("Regenerator should telegraph healing before restoring health")
+        quit(1)
+        return
+    if regenerator.regeneration_visual == null or not is_instance_valid(regenerator.regeneration_visual):
+        push_error("Regenerator healing telegraph is missing")
+        quit(1)
+        return
+    regenerator._process_regeneration(0.50)
+    if regenerator.health <= before_channel or regenerator.health > full_health:
+        push_error("Regenerator healing resolution is incorrect")
+        quit(1)
+        return
+    regenerator.health = full_health - 1.0
+    regenerator._begin_regeneration()
+    regenerator._process_regeneration(0.50)
+    if regenerator.health > full_health:
+        push_error("Regenerator healing exceeded max health")
+        quit(1)
+        return
+    regenerator.health = full_health * 0.50
+    regenerator._begin_regeneration()
+    regenerator.set_combat_enabled(false)
+    if regenerator.regeneration_windup > 0.0 or regenerator.regeneration_visual != null:
+        push_error("Regenerator healing telegraph was not cancelled with combat")
+        quit(1)
+        return
+    regenerator.set_combat_enabled(true)
+
+    charger.pending_special = "charge"
+    charger.attack_target_position = Vector3(4.0, 0.0, 0.0)
+    charger.global_position = Vector3.ZERO
+    target.global_position = Vector3(3.6, 0.0, 0.0)
+    target.damage_taken = 0.0
+    charger._resolve_telegraphed_attack()
+    if not charger.charge_active or target.damage_taken > 0.0:
+        push_error("Charger special should start a real dash before dealing damage")
+        quit(1)
+        return
+    for i in range(30):
+        await physics_frame
+    if target.damage_taken <= 0.0 or charger.global_position.x <= 2.5:
+        push_error("Charger dash did not advance through and damage its target")
+        quit(1)
+        return
+
+    var dodge_target := DummyTarget.new()
+    dodge_target.position = Vector3(100.0, 0.0, 0.0)
+    root.add_child(dodge_target)
+    await physics_frame
+    var dodge_charger := ENEMY_SCRIPT.new()
+    dodge_charger.configure("charger", 1.0, dodge_target)
+    dodge_charger.spawn_secondary_fx = false
+    root.add_child(dodge_charger)
+    await physics_frame
+    dodge_target.global_position = Vector3(4.0, 0.0, 0.0)
+    dodge_charger.global_position = Vector3.ZERO
+    dodge_charger.attack_target_position = dodge_target.global_position
+    dodge_charger.pending_special = "charge"
+    dodge_charger._resolve_telegraphed_attack()
+    dodge_target.global_position = Vector3(4.0, 0.0, 3.0)
+    for i in range(34):
+        await physics_frame
+    if dodge_target.damage_taken > 0.0:
+        push_error("Charger dash incorrectly tracked a laterally dodging target")
+        quit(1)
+        return
+
+    var harrier_target := DummyTarget.new()
+    root.add_child(harrier_target)
+    await process_frame
+    var shooter := ENEMY_SCRIPT.new()
+    shooter.configure("harrier", 1.0, harrier_target)
+    shooter.process_mode = Node.PROCESS_MODE_DISABLED
+    shooter.spawn_secondary_fx = false
+    root.add_child(shooter)
+    await process_frame
+    shooter.global_position = Vector3.ZERO
+    harrier_target.global_position = Vector3(4.0, 0.0, 0.0)
+    shooter.attack_target_position = harrier_target.global_position
+    shooter.pending_special = "harrier_shot"
+    shooter._resolve_telegraphed_attack()
+    await process_frame
+    var hostile_projectiles := get_nodes_in_group("hostile_projectiles")
+    if hostile_projectiles.size() != 1:
+        push_error("Harrier ranged special did not spawn exactly one hostile projectile")
+        quit(1)
+        return
+    var shot := hostile_projectiles[0] as DZEnemyProjectile
+    for i in range(8):
+        shot._physics_process(0.10)
+    if harrier_target.damage_taken <= 0.0:
+        push_error("Harrier projectile did not damage target on impact")
+        quit(1)
+        return
+
+    var harrier_dodge_target := DummyTarget.new()
+    root.add_child(harrier_dodge_target)
+    harrier_dodge_target.global_position = Vector3(4.0, 0.0, 0.0)
+    await process_frame
+    var dodge_shot := DZEnemyProjectile.new()
+    root.add_child(dodge_shot)
+    dodge_shot.global_position = Vector3.ZERO
+    dodge_shot.configure(harrier_dodge_target.global_position, harrier_dodge_target, 10.0, 8.0)
+    harrier_dodge_target.global_position = Vector3(4.0, 0.0, 3.0)
+    for i in range(10):
+        dodge_shot._physics_process(0.10)
+    if harrier_dodge_target.damage_taken > 0.0:
+        push_error("Harrier projectile incorrectly homed into a dodging target")
+        quit(1)
+        return
+
+    var damage_enemy := ENEMY_SCRIPT.new()
+    damage_enemy.configure("shambler", 1.0, target)
+    damage_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    damage_enemy.spawn_secondary_fx = false
+    root.add_child(damage_enemy)
+    await process_frame
+    damage_enemy.take_damage(12.0, true)
+    await process_frame
+    var damage_number := root.find_child("DamageNumber*", true, false) as Label3D
+    if damage_number == null or not damage_number.text.contains("12"):
+        push_error("Enemy hit did not spawn readable world-space damage number")
+        quit(1)
+        return
+
+    print("Deadline Zero native enemy behaviors: OK")
+    quit(0)
+````
+
+## File: godot/tests/native_upgrade_depth_test.gd
+````
+extends SceneTree
+
+const PLAYER_SCRIPT := preload("res://scripts/Player.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    await process_frame
+
+    var player := PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+
+    var base_damage := player.weapon_damage
+    var base_health := player.max_health
+    var base_speed := player.move_speed
+
+    player.apply_upgrade("berserker")
+    if player.weapon_damage <= base_damage or player.max_health >= base_health:
+        push_error("Berserker tradeoff was not applied")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("fortress")
+    if player.max_health <= base_health or player.move_speed >= base_speed:
+        push_error("Fortress tradeoff was not applied")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("scatter_protocol")
+    if player.weapon_profile != "scatter" or player.multishot < 3 or player.spread_degrees < 11.0:
+        push_error("Scatter protocol identity is incomplete")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("rail_protocol")
+    if player.weapon_profile != "rail" or player.multishot != 1 or player.projectile_speed <= 19.0:
+        push_error("Rail protocol identity is incomplete")
+        quit(1)
+        return
+
+    if player.can_apply_upgrade("multishot"):
+        push_error("Rail protocol must reject multishot upgrades to preserve its single-shot identity")
+        quit(1)
+        return
+    player.apply_upgrade("multishot")
+    if player.multishot != 1:
+        push_error("Rail protocol allowed multishot to bypass its single-shot identity")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("inferno_protocol")
+    if player.weapon_profile != "inferno":
+        push_error("Inferno protocol profile missing")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("cryo_protocol")
+    if player.weapon_profile != "cryo":
+        push_error("Cryo protocol profile missing")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("arc_protocol")
+    if player.weapon_profile != "arc" or player.multishot < 2:
+        push_error("Arc protocol identity is incomplete")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("inferno_protocol")
+    var inferno_damage := player.weapon_damage
+    var inferno_interval := player.fire_interval
+    player.apply_upgrade("inferno_protocol")
+    if not is_equal_approx(player.weapon_damage, inferno_damage) or not is_equal_approx(player.fire_interval, inferno_interval):
+        push_error("Weapon protocols should be idempotent when reapplied")
+        quit(1)
+        return
+
+    player.apply_upgrade("rail_protocol")
+    if player.weapon_profile != "inferno" or not is_equal_approx(player.weapon_damage, inferno_damage) or not is_equal_approx(player.fire_interval, inferno_interval):
+        push_error("Weapon protocols should be mutually exclusive")
+        quit(1)
+        return
+
+    print("Deadline Zero native upgrade depth: OK")
+    quit(0)
+````
+
+## File: godot/tests/player_damage_feedback_test.gd
+````
+extends SceneTree
+
+const PLAYER_SCRIPT := preload("res://scripts/Player.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+
+    var player := PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+
+    var pulse := player.get_node_or_null("DamagePulse") as MeshInstance3D
+    if pulse == null:
+        push_error("Player damage feedback pulse is missing")
+        quit(1)
+        return
+    if pulse.visible:
+        push_error("Damage pulse should start hidden")
+        quit(1)
+        return
+
+    var initial_health: float = player.health
+    player.take_damage(12.0)
+    if not is_equal_approx(player.health, initial_health - 12.0):
+        push_error("Player health did not decrease on first hit")
+        quit(1)
+        return
+    if not pulse.visible:
+        push_error("Damage pulse did not become visible after damage")
+        quit(1)
+        return
+    if player.invulnerability <= 0.0:
+        push_error("Damage hit did not arm invulnerability window")
+        quit(1)
+        return
+
+    var health_after_first_hit: float = player.health
+    player.take_damage(12.0)
+    if not is_equal_approx(player.health, health_after_first_hit):
+        push_error("Invulnerability window failed to reject immediate repeated damage")
+        quit(1)
+        return
+
+    await create_timer(0.20).timeout
+    if pulse.visible:
+        push_error("Damage pulse did not clear after its presentation window")
+        quit(1)
+        return
+
+    print("Deadline Zero player damage feedback: OK")
+    quit(0)
+````
+
+## File: godot/tests/run_director_escalation_test.gd
+````
+extends SceneTree
+
+func _init() -> void:
+    var director_script := load("res://scripts/RunDirector.gd")
+    if director_script == null:
+        push_error("RunDirector must exist")
+        quit(1)
+        return
+
+    var director = director_script.new()
+    var opening: Dictionary = director.profile(0.0, 1)
+    var pressure: Dictionary = director.profile(90.0, 4)
+    var late: Dictionary = director.profile(180.0, 7)
+
+    if not _require_keys(opening):
+        quit(1)
+        return
+    if float(opening["spawn_interval"]) <= float(pressure["spawn_interval"]):
+        push_error("Pressure phase must spawn faster than opening")
+        quit(1)
+        return
+    if int(opening["batch_size"]) >= int(late["batch_size"]):
+        push_error("Late phase must spawn larger batches than opening")
+        quit(1)
+        return
+    if float(opening["difficulty"]) >= float(late["difficulty"]):
+        push_error("Late phase difficulty must exceed opening")
+        quit(1)
+        return
+    if String(opening["phase"]) == String(late["phase"]):
+        push_error("Run phase identity must escalate over time")
+        quit(1)
+        return
+
+    var seed_a: Array = director.enemy_sequence(135.0, 5, 24680, 12)
+    var seed_b: Array = director.enemy_sequence(135.0, 5, 24680, 12)
+    var seed_c: Array = director.enemy_sequence(135.0, 5, 24681, 12)
+    if seed_a != seed_b:
+        push_error("Enemy sequence must be deterministic for a fixed seed")
+        quit(1)
+        return
+    if seed_a == seed_c:
+        push_error("Different seeds must be able to produce different enemy sequences")
+        quit(1)
+        return
+    if not ("brute" in seed_a or "elite" in seed_a or "charger" in seed_a or "harrier" in seed_a or "regenerator" in seed_a):
+        push_error("Escalated sequence must contain a pressure archetype")
+        quit(1)
+        return
+
+    var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    for required in [
+        "var run_director := DZRunDirector.new()",
+        "run_director.profile(elapsed, level)",
+        "run_director.choose_enemy(elapsed, level, spawn_rng)",
+        "director_profile[\"spawn_interval\"]",
+        "director_profile[\"batch_size\"]",
+        "director_profile[\"max_enemies\"]"
+    ]:
+        if main_source.find(required) < 0:
+            push_error("Main runtime is not wired to RunDirector: %s" % required)
+            quit(1)
+            return
+    if main_source.find("director_profile[\"difficulty\"]") < 0 and main_source.find("director_profile.get(\"difficulty\"") < 0:
+        push_error("Main runtime is not wired to RunDirector difficulty")
+        quit(1)
+        return
+    for legacy in ["1 + int(elapsed / 45.0)", "0.82 - elapsed * 0.0035", "if elapsed > 25.0 and roll > 0.72", "var difficulty := 1.0 + elapsed / 210.0"]:
+        if main_source.find(legacy) >= 0:
+            push_error("Legacy hard-coded pacing remains in Main.gd: %s" % legacy)
+            quit(1)
+            return
+
+    print("run_director_escalation_test: PASS")
+    quit(0)
+
+func _require_keys(profile: Dictionary) -> bool:
+    for key in ["phase", "spawn_interval", "batch_size", "difficulty", "max_enemies"]:
+        if not profile.has(key):
+            push_error("Run director profile missing key: %s" % key)
+            return false
+    return true
+````
+
+## File: godot/tests/run_director_runtime_integration_test.gd
+````
+extends SceneTree
+
+func _init() -> void:
+    var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    if main_source.is_empty():
+        push_error("Main.gd must be readable")
+        quit(1)
+        return
+
+    for required in [
+        "var run_director := DZRunDirector.new()",
+        "run_director.profile(elapsed, level)",
+        "run_director.choose_enemy(elapsed, level, spawn_rng)",
+        "director_profile[\"spawn_interval\"]",
+        "director_profile[\"batch_size\"]",
+        "director_profile[\"max_enemies\"]",
+        "director_profile[\"difficulty\"]"
+    ]:
+        if main_source.find(required) < 0:
+            push_error("Main runtime is not wired to RunDirector: %s" % required)
+            quit(1)
+            return
+
+    for legacy in [
+        "1 + int(elapsed / 45.0)",
+        "0.82 - elapsed * 0.0035",
+        "if elapsed > 25.0 and roll > 0.72",
+        "var difficulty := 1.0 + elapsed / 210.0"
+    ]:
+        if main_source.find(legacy) >= 0:
+            push_error("Legacy hard-coded pacing remains in Main.gd: %s" % legacy)
+            quit(1)
+            return
+
+    print("run_director_runtime_integration_test: PASS")
+    quit(0)
+````
+
+## File: godot/tests/run_end_combat_freeze_test.gd
+````
+extends SceneTree
+
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var target := Node3D.new()
+    root.add_child(target)
+
+    var enemy := ENEMY_SCRIPT.new()
+    enemy.configure("charger", 1.0, target)
+    enemy.spawn_secondary_fx = false
+    root.add_child(enemy)
+    enemy.velocity = Vector3(3.0, 0.0, 0.0)
+    enemy.attack_windup = 0.5
+    enemy.pending_special = "charge"
+
+    var telegraph := Node3D.new()
+    root.add_child(telegraph)
+    enemy.telegraph_visual = telegraph
+
+    var projectile := PROJECTILE_SCRIPT.new()
+    root.add_child(projectile)
+    projectile.velocity = Vector3(5.0, 0.0, 0.0)
+
+    enemy.set_combat_enabled(false)
+    projectile.set_combat_enabled(false)
+    await process_frame
+
+    if enemy.combat_enabled:
+        push_error("Enemy combat freeze flag was not disabled")
+        quit(1)
+        return
+    if enemy.velocity.length_squared() > 0.0:
+        push_error("Enemy velocity was not cleared")
+        quit(1)
+        return
+    if enemy.attack_windup > 0.0 or not enemy.pending_special.is_empty():
+        push_error("Enemy telegraphed attack was not cancelled")
+        quit(1)
+        return
+    if enemy.telegraph_visual != null:
+        push_error("Enemy telegraph reference was not cleared")
+        quit(1)
+        return
+    if projectile.combat_enabled:
+        push_error("Projectile combat freeze flag was not disabled")
+        quit(1)
+        return
+    if projectile.velocity.length_squared() > 0.0:
+        push_error("Projectile velocity was not cleared")
+        quit(1)
+        return
+
+    print("Deadline Zero run-end combat freeze: OK")
+    quit(0)
+````
+
 ## File: godot/tests/run_end_ux_test.gd
 ````
 extends SceneTree
@@ -31917,6 +28144,25 @@ func _initialize() -> void:
         return
     if hud.game_over_panel.visible:
         push_error("Game-over panel should start hidden")
+        quit(1)
+        return
+
+    var pause_button := hud.get_node_or_null("PauseButton") as Button
+    var pause_panel := hud.get_node_or_null("PausePanel") as PanelContainer
+    if pause_button == null or pause_panel == null:
+        push_error("Pause/settings controls were not created")
+        quit(1)
+        return
+    if pause_panel.visible:
+        push_error("Pause/settings panel should start hidden")
+        quit(1)
+        return
+    if pause_panel.find_child("ResumeButton", true, false) == null:
+        push_error("Pause/settings panel is missing resume control")
+        quit(1)
+        return
+    if pause_panel.find_child("MasterVolume", true, false) == null or pause_panel.find_child("SfxVolume", true, false) == null:
+        push_error("Pause/settings panel is missing audio sliders")
         quit(1)
         return
 
@@ -31957,6 +28203,114 @@ func _initialize() -> void:
     quit(0)
 ````
 
+## File: godot/tests/screen_space_fx_test.gd
+````
+extends SceneTree
+
+const HUD_SCRIPT := preload("res://scripts/Hud.gd")
+
+func _initialize() -> void:
+    var root := Control.new()
+    get_root().add_child(root)
+    var hud := HUD_SCRIPT.new()
+    root.add_child(hud)
+    await process_frame
+
+    if not hud.has_method("show_impact_flash") or not "impact_flash" in hud:
+        push_error("HUD screen-space impact flash API is missing")
+        quit(1)
+        return
+
+    hud.show_impact_flash(true, false, false)
+    if hud.impact_flash == null or not hud.impact_flash.visible:
+        push_error("Critical enemy hit did not trigger screen-space impact flash")
+        quit(1)
+        return
+    if hud.impact_flash.color.a <= 0.0:
+        push_error("Impact flash alpha was not visible")
+        quit(1)
+        return
+
+    print("Deadline Zero screen-space impact FX: OK")
+    quit(0)
+````
+
+## File: godot/tests/settings_persistence_test.gd
+````
+extends SceneTree
+
+const MAIN_SCENE := preload("res://scenes/Main.tscn")
+
+func _initialize() -> void:
+    var script := load("res://scripts/GameSettings.gd")
+    if script == null:
+        push_error("Game settings persistence service is missing")
+        quit(1)
+        return
+
+    var path := "user://deadline-zero-settings-test.cfg"
+    var expected := {
+        "master_volume": 0.42,
+        "sfx_volume": 0.33
+    }
+    script.save(path, expected)
+    var loaded: Dictionary = script.load_settings(path)
+    if not is_equal_approx(float(loaded.get("master_volume", -1.0)), 0.42):
+        push_error("Master volume setting did not persist")
+        quit(1)
+        return
+    if not is_equal_approx(float(loaded.get("sfx_volume", -1.0)), 0.33):
+        push_error("SFX volume setting did not persist")
+        quit(1)
+        return
+
+    DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+    var integration_path := "user://deadline-zero-settings-integration-test.cfg"
+    script.save(integration_path, {
+        "master_volume": 0.35,
+        "sfx_volume": 0.60
+    })
+
+    var main := MAIN_SCENE.instantiate()
+    get_root().add_child(main)
+    current_scene = main
+    await process_frame
+    await process_frame
+
+    if not main.has_method("_load_audio_settings") or not main.has_method("_save_audio_settings"):
+        push_error("Main settings persistence integration is missing")
+        quit(1)
+        return
+
+    main._load_audio_settings(integration_path)
+    if not is_equal_approx(main.hud.master_volume.value, 0.35):
+        push_error("Persisted master volume was not restored into pause settings")
+        quit(1)
+        return
+    if not is_equal_approx(main.hud.sfx_volume.value, 0.60):
+        push_error("Persisted SFX volume was not restored into pause settings")
+        quit(1)
+        return
+
+    main.hud.master_volume.value = 0.60
+    main.hud.sfx_volume.value = 0.45
+    main._save_audio_settings(integration_path)
+    var round_trip: Dictionary = script.load_settings(integration_path)
+    if not is_equal_approx(float(round_trip.get("master_volume", -1.0)), 0.60):
+        push_error("Updated master volume was not saved from pause settings")
+        quit(1)
+        return
+    if not is_equal_approx(float(round_trip.get("sfx_volume", -1.0)), 0.45):
+        push_error("Updated SFX volume was not saved from pause settings")
+        quit(1)
+        return
+
+    DirAccess.remove_absolute(ProjectSettings.globalize_path(integration_path))
+    print("Deadline Zero settings persistence: OK")
+    quit(0)
+````
+
 ## File: godot/tests/smoke_test.gd
 ````
 extends SceneTree
@@ -31971,6 +28325,11 @@ func _initialize() -> void:
         return
     var game := packed.instantiate()
     root.add_child(game)
+    current_scene = game
+    if current_scene != game:
+        push_error("Smoke test must install Main as current_scene")
+        quit(1)
+        return
 
 func _process(_delta: float) -> bool:
     frames += 1
@@ -31985,9 +28344,169 @@ func _process(_delta: float) -> bool:
     return false
 ````
 
+## File: godot/tests/spatial_hash_test.gd
+````
+extends SceneTree
+
+const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+
+class QueryScene:
+    extends Node3D
+    var query_called := false
+
+    func query_enemies_near(_position: Vector3, _radius: float) -> Array:
+        query_called = true
+        return []
+
+func _initialize() -> void:
+    var script := load("res://scripts/SpatialHash.gd")
+    if script == null:
+        push_error("Spatial hash service is missing")
+        quit(1)
+        return
+
+    var root := Node3D.new()
+    get_root().add_child(root)
+    var index = script.new(4.0)
+    var near_enemy := Node3D.new()
+    near_enemy.position = Vector3(1.0, 0.0, 1.0)
+    root.add_child(near_enemy)
+    var far_enemy := Node3D.new()
+    far_enemy.position = Vector3(12.0, 0.0, 12.0)
+    root.add_child(far_enemy)
+    await process_frame
+
+    index.rebuild([near_enemy, far_enemy])
+    var nearby: Array = index.query(Vector3.ZERO, 3.0)
+    if not nearby.has(near_enemy) or nearby.has(far_enemy):
+        push_error("Spatial hash query did not isolate nearby enemies")
+        quit(1)
+        return
+
+    var query_scene := QueryScene.new()
+    get_root().add_child(query_scene)
+    current_scene = query_scene
+    var projectile := PROJECTILE_SCRIPT.new()
+    query_scene.add_child(projectile)
+    await process_frame
+    if not projectile.has_method("_candidate_enemies"):
+        push_error("Projectile spatial-query integration is missing")
+        quit(1)
+        return
+    projectile._candidate_enemies()
+    if not query_scene.query_called:
+        push_error("Projectile did not consume scene spatial query")
+        quit(1)
+        return
+
+    print("Deadline Zero enemy spatial hash: OK")
+    quit(0)
+````
+
+## File: godot/tests/status_effects_test.gd
+````
+extends SceneTree
+
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var target := Node3D.new()
+    root.add_child(target)
+
+    var enemy := ENEMY_SCRIPT.new()
+    enemy.configure("shambler", 1.0, target)
+    enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    enemy.spawn_secondary_fx = false
+    root.add_child(enemy)
+    await process_frame
+
+    if not enemy.has_method("apply_burn") or not enemy.has_method("_process_status_effects"):
+        push_error("Enemy burn status API is missing")
+        quit(1)
+        return
+
+    var before := enemy.health
+    enemy.apply_burn(8.0, 1.0)
+    enemy._process_status_effects(0.5)
+    if enemy.health >= before or enemy.burn_left <= 0.0:
+        push_error("Burn status did not deal damage over time")
+        quit(1)
+        return
+
+    enemy._process_status_effects(0.6)
+    if enemy.burn_left > 0.0:
+        push_error("Burn status did not expire after its duration")
+        quit(1)
+        return
+
+    var inferno_target := ENEMY_SCRIPT.new()
+    inferno_target.configure("shambler", 1.0, target)
+    inferno_target.process_mode = Node.PROCESS_MODE_DISABLED
+    inferno_target.spawn_secondary_fx = false
+    root.add_child(inferno_target)
+    await process_frame
+
+    var projectile := PROJECTILE_SCRIPT.new()
+    projectile.visual_profile = "inferno"
+    projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    projectile.spawn_secondary_fx = false
+    root.add_child(projectile)
+    await process_frame
+    projectile._apply_profile("inferno")
+    projectile._apply_protocol_hit(inferno_target, 24.0)
+    if inferno_target.burn_left <= 0.0 or inferno_target.burn_dps <= 0.0:
+        push_error("Inferno projectile did not apply persistent burn")
+        quit(1)
+        return
+
+    if not enemy.has_method("apply_shock"):
+        push_error("Enemy shock status API is missing")
+        quit(1)
+        return
+    enemy.velocity = Vector3(3.0, 0.0, 0.0)
+    enemy.apply_shock(0.40)
+    if enemy.shock_left <= 0.0 or enemy.velocity.length_squared() > 0.001:
+        push_error("Shock status did not immediately immobilize enemy")
+        quit(1)
+        return
+
+    var arc_target := ENEMY_SCRIPT.new()
+    arc_target.configure("shambler", 1.0, target)
+    arc_target.process_mode = Node.PROCESS_MODE_DISABLED
+    arc_target.spawn_secondary_fx = false
+    root.add_child(arc_target)
+    await process_frame
+
+    var arc_projectile := PROJECTILE_SCRIPT.new()
+    arc_projectile.visual_profile = "arc"
+    arc_projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    arc_projectile.spawn_secondary_fx = false
+    root.add_child(arc_projectile)
+    await process_frame
+    arc_projectile._apply_profile("arc")
+    arc_projectile.chain_targets = 0
+    arc_projectile._apply_protocol_hit(arc_target, 24.0)
+    if arc_target.shock_left <= 0.0:
+        push_error("Arc projectile did not apply shock control")
+        quit(1)
+        return
+
+    print("Deadline Zero enemy status effects: OK")
+    quit(0)
+````
+
 ## File: godot/tests/upgrade_presentation_test.gd
 ````
 extends SceneTree
+
+func _fail(message: String) -> void:
+    push_error(message)
+    quit(1)
 
 func _init() -> void:
     var main_text := FileAccess.get_file_as_string("res://scripts/Main.gd")
@@ -31995,18 +28514,32 @@ func _init() -> void:
 
     var ids := ["damage", "rate", "speed", "health", "projectile", "multishot"]
     for id in ids:
-        assert(main_text.contains("\"id\":\"" + id + "\""))
-        assert(hud_text.contains("\"" + id + "\""))
+        if not main_text.contains("\"id\":\"" + id + "\""):
+            _fail("Upgrade pool is missing id: %s" % id)
+            return
+        if not hud_text.contains("\"" + id + "\""):
+            _fail("HUD presentation is missing id: %s" % id)
+            return
 
-    assert(main_text.contains("\"family\":\"OFFENSE\""))
-    assert(main_text.contains("\"family\":\"SURVIVAL\""))
-    assert(main_text.contains("\"family\":\"BARRAGE\""))
-    assert(hud_text.contains("func _upgrade_glyph"))
-    assert(hud_text.contains("func _upgrade_color"))
-    assert(hud_text.contains("func _style_upgrade_card"))
-    assert(hud_text.contains("StyleBoxFlat.new()"))
-    assert(hud_text.contains("upgrade_family_labels"))
-    assert(hud_text.contains("upgrade_detail_labels"))
+    var required_main := ["\"family\":\"OFFENSE\"", "\"family\":\"SURVIVAL\"", "\"family\":\"BARRAGE\""]
+    for token in required_main:
+        if not main_text.contains(token):
+            _fail("Upgrade presentation is missing family token: %s" % token)
+            return
+
+    var required_hud := [
+        "func _upgrade_glyph",
+        "func _upgrade_color",
+        "func _style_upgrade_card",
+        "StyleBoxFlat.new()",
+        "upgrade_family_labels",
+        "upgrade_detail_labels"
+    ]
+    for token in required_hud:
+        if not hud_text.contains(token):
+            _fail("HUD upgrade presentation is missing token: %s" % token)
+            return
+
     print("godot upgrade presentation test passed")
     quit(0)
 ````
@@ -32034,6 +28567,188 @@ func _init() -> void:
 
     print("weapon_presentation_test: PASS")
     quit()
+````
+
+## File: godot/tests/weapon_profile_data_test.gd
+````
+extends SceneTree
+
+const PLAYER_SCRIPT := preload("res://scripts/Player.gd")
+
+func _initialize() -> void:
+    var script := load("res://scripts/WeaponProfiles.gd")
+    if script == null:
+        push_error("Data-driven weapon profile catalog is missing")
+        quit(1)
+        return
+
+    var rail: Dictionary = script.profile("rail")
+    if rail.is_empty():
+        push_error("Rail weapon profile data is missing")
+        quit(1)
+        return
+    if float(rail.get("damage_multiplier", 1.0)) <= 1.0:
+        push_error("Rail profile damage multiplier is not represented as data")
+        quit(1)
+        return
+    if int(rail.get("multishot_set", 0)) != 1:
+        push_error("Rail profile multishot rule is not represented as data")
+        quit(1)
+        return
+
+    var cryo: Dictionary = script.profile("cryo")
+    if float(cryo.get("projectile_speed_multiplier", 1.0)) <= 1.0:
+        push_error("Cryo projectile speed rule is not represented as data")
+        quit(1)
+        return
+
+    var root := Node3D.new()
+    get_root().add_child(root)
+    var player := PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    if not player.has_method("_apply_weapon_profile_data"):
+        push_error("Player generic weapon-profile applicator is missing")
+        quit(1)
+        return
+
+    var base_damage: float = player.weapon_damage
+    var base_speed: float = player.projectile_speed
+    var base_interval: float = player.fire_interval
+    var custom := {
+        "tint": Color(0.9, 0.2, 0.7),
+        "damage_multiplier": 2.0,
+        "projectile_speed_multiplier": 1.5,
+        "fire_interval_multiplier": 0.5,
+        "fire_interval_floor": 0.10,
+        "multishot_add": 1,
+        "multishot_cap": 5,
+        "spread_max": 4.0
+    }
+    player._apply_weapon_profile_data("test_profile", custom)
+    if player.weapon_profile != "test_profile":
+        push_error("Generic profile applicator did not set weapon profile")
+        quit(1)
+        return
+    if not is_equal_approx(player.weapon_damage, base_damage * 2.0):
+        push_error("Generic profile applicator ignored damage data")
+        quit(1)
+        return
+    if not is_equal_approx(player.projectile_speed, base_speed * 1.5):
+        push_error("Generic profile applicator ignored projectile speed data")
+        quit(1)
+        return
+    if not is_equal_approx(player.fire_interval, max(0.10, base_interval * 0.5)):
+        push_error("Generic profile applicator ignored cadence data")
+        quit(1)
+        return
+
+    print("Deadline Zero weapon profile data: OK")
+    quit(0)
+````
+
+## File: godot/tests/weapon_protocol_behavior_test.gd
+````
+extends SceneTree
+
+const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+const WEAPON_PROFILES := preload("res://scripts/WeaponProfiles.gd")
+
+func _initialize() -> void:
+    if PROJECTILE_SCRIPT.protocol_pierce_budget("rail") != 2:
+        push_error("Rail pierce budget is incorrect")
+        quit(1)
+        return
+    if not is_equal_approx(PROJECTILE_SCRIPT.protocol_splash_radius("inferno"), 1.85):
+        push_error("Inferno splash radius is incorrect")
+        quit(1)
+        return
+    if PROJECTILE_SCRIPT.protocol_chain_targets("arc") != 2:
+        push_error("Arc chain target count is incorrect")
+        quit(1)
+        return
+    var slow := PROJECTILE_SCRIPT.protocol_slow("cryo")
+    if slow.x >= 1.0 or slow.y <= 0.0:
+        push_error("Cryo slow rule is incorrect")
+        quit(1)
+        return
+
+    var signatures := {}
+    for id in ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]:
+        var profile := WEAPON_PROFILES.profile(id)
+        for key in ["projectile_scale", "trail_length", "impact_weight"]:
+            if not profile.has(key):
+                push_error("Weapon profile %s is missing feedback key %s" % [id, key])
+                quit(1)
+                return
+        var signature := "%s|%s|%s" % [profile["projectile_scale"], profile["trail_length"], profile["impact_weight"]]
+        if signatures.has(signature):
+            push_error("Weapon feedback signature is not distinct: %s and %s" % [signatures[signature], id])
+            quit(1)
+            return
+        signatures[signature] = id
+    if float(WEAPON_PROFILES.profile("rail")["impact_weight"]) <= float(WEAPON_PROFILES.profile("vanguard")["impact_weight"]):
+        push_error("Rail impact should read heavier than Vanguard")
+        quit(1)
+        return
+    if float(WEAPON_PROFILES.profile("scatter")["trail_length"]) >= float(WEAPON_PROFILES.profile("rail")["trail_length"]):
+        push_error("Scatter should read shorter-ranged than Rail")
+        quit(1)
+        return
+
+    var target := Node3D.new()
+    var enemy := ENEMY_SCRIPT.new()
+    enemy.configure("shambler", 1.0, target)
+    enemy.apply_slow(slow.x, slow.y)
+    if enemy.slow_multiplier >= 1.0 or enemy.slow_left <= 0.0:
+        push_error("Enemy slow state was not applied")
+        quit(1)
+        return
+
+    var rail := PROJECTILE_SCRIPT.new()
+    rail._apply_profile("rail")
+    if rail.pierce_remaining != 2:
+        push_error("Rail runtime profile did not consume deterministic rule")
+        quit(1)
+        return
+    var inferno := PROJECTILE_SCRIPT.new()
+    inferno._apply_profile("inferno")
+    if not is_equal_approx(inferno.splash_radius, 1.85):
+        push_error("Inferno runtime profile did not consume deterministic rule")
+        quit(1)
+        return
+    var arc := PROJECTILE_SCRIPT.new()
+    arc._apply_profile("arc")
+    if arc.chain_targets != 2:
+        push_error("Arc runtime profile did not consume deterministic rule")
+        quit(1)
+        return
+
+    var parent := Node3D.new()
+    parent.position = Vector3(9.0, 0.0, -4.0)
+    get_root().add_child(parent)
+    await process_frame
+    var spawned := PROJECTILE_SCRIPT.new()
+    spawned.process_mode = Node.PROCESS_MODE_DISABLED
+    var spawn_origin := Vector3(2.0, 0.7, 3.0)
+    spawned.setup(spawn_origin, Vector3.FORWARD, 10.0, 10.0, Color.WHITE, "vanguard")
+    parent.add_child(spawned)
+    await process_frame
+    if spawned.global_position.distance_to(spawn_origin) > 0.001:
+        push_error("Projectile setup did not preserve global spawn origin under a transformed parent")
+        quit(1)
+        return
+
+    parent.queue_free()
+    enemy.free()
+    target.free()
+    rail.free()
+    inferno.free()
+    arc.free()
+    await process_frame
+    print("Deadline Zero weapon protocol behavior: OK")
+    quit(0)
 ````
 
 ## File: tools/android/scan_runtime_log.py

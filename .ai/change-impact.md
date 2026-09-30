@@ -1,17 +1,13 @@
 # Change impact
 
-Base: 9c04eda7afb9bb21d493bbb60dcd9529ac39d184
-Head: cb03953cf4a261bf2db75b4702022ca20088e3db
+Base: ad94a58480c97c4f80ad4daf5d1130f20dee124c
+Head: e4cc767a2b1766b5a32654a11c4480749dac7e6f
 
 ## Changed files
-- M .github/workflows/godot-verify.yml
-- M godot/scripts/Hud.gd
-- M godot/scripts/Main.gd
-- A godot/tests/run_end_ux_test.gd
+- A .repomixignore
 
 ## Affected areas
-- .github
-- godot
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.

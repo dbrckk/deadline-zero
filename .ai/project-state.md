@@ -22,28 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-24T14:15:14Z
+Generated: 2026-09-30T12:29:53Z
 
 ### Git
 - Branch: `main`
-- Head: `cb03953cf4a2`
-- Commit date: 2026-09-24T16:15:01+02:00
-- Commit: Add native 3D run-end summary and redeploy flow (#316)
-- Tracked files: 890
+- Head: `e4cc767a2b17`
+- Commit date: 2026-09-30T14:29:42+02:00
+- Commit: Fix repository map context budget
+- Tracked files: 922
 
 ### Recently changed files
+- `.repomixignore`
+- `godot/scripts/Player.gd`
+- `godot/tests/native_upgrade_depth_test.gd`
+- `.github/workflows/godot-android-first-playable.yml`
 - `.github/workflows/godot-verify.yml`
+- `docs/superpowers/plans/2026-09-26-combat-depth-v1.md`
+- `godot/scripts/Enemy.gd`
 - `godot/scripts/Hud.gd`
 - `godot/scripts/Main.gd`
-- `godot/tests/run_end_ux_test.gd`
-- `godot/scripts/CombatAudio.gd`
-- `godot/scripts/Player.gd`
-- `godot/tests/combat_audio_feedback_test.gd`
-- `godot/scripts/Enemy.gd`
+- `godot/scripts/Projectile.gd`
+- `godot/scripts/RunDirector.gd`
+- `godot/scripts/WeaponProfiles.gd`
+- `godot/tests/enemy_hit_reaction_test.gd`
+- `godot/tests/hud_readability_hierarchy_test.gd`
+- `godot/tests/run_director_escalation_test.gd`
+- `godot/tests/run_director_runtime_integration_test.gd`
+- `godot/tests/weapon_protocol_behavior_test.gd`
+- `godot/tests/status_effects_test.gd`
 - `godot/scripts/ImpactFx.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
-- `godot/tests/boss_hud_identity_test.gd`
-- `godot/tests/boss_reveal_camera_test.gd`
+- `godot/tests/impact_fx_mobile_test.gd`
 
 ### Project signals
 - `build.gradle`

@@ -689,7 +689,7 @@ size = output.length();
 ⋮----
 // Android Emulator occasionally exposes a stale/broken color buffer for a single frame.
 // Retry the capture, but keep the exact same semantic size gate for the final artifact.
-if (attempt < 5) Thread.sleep(650L);
+if (attempt < 8) Thread.sleep(900L);
 ⋮----
 assertTrue("gameplay QA screenshot is unexpectedly small after retries: " + size, size > 10_000L);
 ⋮----
@@ -755,7 +755,7 @@ game.startRunWithContract(RunModifierContext.offers()[0]);
 assertTrue("expected GameScreen for performance probe", game.getScreen() instanceof GameScreen);
 injectLoad((GameScreen) game.getScreen());
 ⋮----
-Thread.sleep(2600L);
+waitForTelemetry(activity, 8000L);
 ⋮----
 GameScreen screen = (GameScreen) game(activity).getScreen();
 snapshotRef.set(screen.performanceSnapshot());
@@ -794,7 +794,7 @@ public void recordsHordeProjectileStressTelemetry() throws Exception {
 assertTrue("expected GameScreen for stress probe", game.getScreen() instanceof GameScreen);
 injectStressLoad((GameScreen) game.getScreen());
 ⋮----
-Thread.sleep(3200L);
+waitForTelemetry(activity, 10000L);
 ⋮----
 assertNotNull("stress performance snapshot missing", snapshot);
 assertTrue("stress probe did not collect enough frames", snapshot.averageFps() > 5f);
@@ -867,6 +867,16 @@ assertTrue("stress probe failed to inject horde", enemies.size >= 160);
 assertTrue("stress probe projectile pool too small", projectileTarget >= 140);
 ⋮----
 throw new AssertionError("unable to inject deterministic stress load", exception);
+⋮----
+private static void waitForTelemetry(AndroidLauncher activity, long timeoutMs) throws Exception {
+long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMs);
+⋮----
+if (game.getScreen() instanceof GameScreen) {
+snapshotRef.set(((GameScreen) game.getScreen()).performanceSnapshot());
+⋮----
+if (snapshot != null && snapshot.averageFps() > 5f) return;
+Thread.sleep(300L);
+} while (System.nanoTime() < deadline);
 ⋮----
 private static AndroidLauncher activity(ActivityScenario<AndroidLauncher> scenario) {
 ⋮----

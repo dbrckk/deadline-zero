@@ -43,24 +43,52 @@ scripts/
   CombatAudio.gd
   CombatFeel.gd
   Enemy.gd
+  EnemyProjectile.gd
+  GameSettings.gd
+  Haptics.gd
   Hud.gd
   ImpactFx.gd
   Main.gd
   Player.gd
   Projectile.gd
+  RunDirector.gd
+  SpatialHash.gd
+  WeaponProfiles.gd
   XpOrb.gd
 tests/
+  attack_telegraph_escalation_test.gd
   authored_asset_validation.gd
   boss_hud_identity_test.gd
+  boss_phase_runtime_test.gd
   boss_reveal_camera_test.gd
   combat_audio_feedback_test.gd
+  combat_danger_hud_test.gd
   combat_feel_test.gd
   enemy_archetype_combat_test.gd
+  enemy_hit_reaction_test.gd
+  enemy_projectile_visual_test.gd
   enemy_silhouette_identity_test.gd
+  environment_identity_test.gd
+  first_playable_run_path_test.gd
+  haptics_service_test.gd
+  hud_readability_hierarchy_test.gd
+  impact_fx_mobile_test.gd
+  native_enemy_behavior_test.gd
+  native_upgrade_depth_test.gd
+  player_damage_feedback_test.gd
+  run_director_escalation_test.gd
+  run_director_runtime_integration_test.gd
+  run_end_combat_freeze_test.gd
   run_end_ux_test.gd
+  screen_space_fx_test.gd
+  settings_persistence_test.gd
   smoke_test.gd
+  spatial_hash_test.gd
+  status_effects_test.gd
   upgrade_presentation_test.gd
   weapon_presentation_test.gd
+  weapon_profile_data_test.gd
+  weapon_protocol_behavior_test.gd
 ```
 
 # Files
@@ -218,7 +246,30 @@ var attack_windup := 0.0
 var attack_target_position := Vector3.ZERO
 var elite_burst_clock := 2.4
 var boss_slam_clock := 3.6
+var boss_phase := 1
 var telegraph_visual: Node3D
+var telegraph_material: StandardMaterial3D
+var slow_multiplier := 1.0
+var slow_left := 0.0
+var burn_dps := 0.0
+var burn_left := 0.0
+var burn_tick_accumulator := 0.0
+var shock_left := 0.0
+var special_clock := 1.8
+var regeneration_clock := 1.0
+var regeneration_windup := 0.0
+var regeneration_visual: Node3D
+var regeneration_material: StandardMaterial3D
+var pending_special := ""
+var spawn_secondary_fx := true
+var combat_enabled := true
+var charge_active := false
+var charge_direction := Vector3.ZERO
+var charge_left := 0.0
+var charge_hit := false
+var hit_flash_visual: MeshInstance3D
+var hit_flash_material: StandardMaterial3D
+var hit_reaction_tween: Tween
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -244,6 +295,21 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
             move_speed = 2.0
             contact_damage = 18.0
             xp_value = 8
+        "charger":
+            max_health = 105.0 * difficulty
+            move_speed = 2.35
+            contact_damage = 13.0
+            xp_value = 4
+        "harrier":
+            max_health = 74.0 * difficulty
+            move_speed = 2.75
+            contact_damage = 9.0
+            xp_value = 4
+        "regenerator":
+            max_health = 128.0 * difficulty
+            move_speed = 1.72
+            contact_damage = 10.0
+            xp_value = 5
         _:
             max_health = 68.0 * difficulty
             move_speed = 2.15
@@ -255,16 +321,43 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
 func _ready() -> void:
     add_to_group("enemies")
     _build_visual()
+    _build_hit_flash()
 
 func _physics_process(delta: float) -> void:
+    if not combat_enabled:
+        velocity = Vector3.ZERO
+        return
+    _process_status_effects(delta)
+    shock_left = maxf(0.0, shock_left - maxf(delta, 0.0))
     if dead or target == null or not is_instance_valid(target):
         return
+    if shock_left > 0.0:
+        velocity = Vector3.ZERO
+        return
+    if kind == "boss":
+        _update_boss_phase()
     attack_cooldown = max(0.0, attack_cooldown - delta)
     elite_burst_clock = max(0.0, elite_burst_clock - delta)
     boss_slam_clock = max(0.0, boss_slam_clock - delta)
+    special_clock = max(0.0, special_clock - delta)
+    regeneration_clock = max(0.0, regeneration_clock - delta)
+    slow_left = max(0.0, slow_left - delta)
+    if slow_left <= 0.0:
+        slow_multiplier = 1.0
+    if charge_active:
+        _process_charge(delta)
+        return
+    if regeneration_windup > 0.0:
+        _process_regeneration(delta)
+        return
     var delta_pos := target.global_position - global_position
     delta_pos.y = 0.0
     var distance := delta_pos.length()
+
+    if kind == "regenerator" and regeneration_clock <= 0.0 and health < max_health:
+        _begin_regeneration()
+        regeneration_clock = 1.0
+        return
 
     if attack_windup > 0.0:
         velocity = Vector3.ZERO
@@ -273,17 +366,35 @@ func _physics_process(delta: float) -> void:
             _resolve_telegraphed_attack()
         return
 
+    if kind == "charger" and special_clock <= 0.0 and distance > 2.2 and distance < 7.2:
+        pending_special = "charge"
+        _begin_telegraphed_attack(0.52, target.global_position)
+        special_clock = 3.4
+        return
+
+    if kind == "harrier" and special_clock <= 0.0 and distance >= 3.5 and distance <= 8.5:
+        pending_special = "harrier_shot"
+        _begin_telegraphed_attack(0.42, target.global_position)
+        special_clock = 2.6
+        return
+
     if kind == "elite" and elite_burst_clock <= 0.0 and distance < 5.2:
         _begin_telegraphed_attack(0.46, target.global_position)
         elite_burst_clock = 3.0
         return
     if kind == "boss" and boss_slam_clock <= 0.0 and distance < 4.6:
-        _begin_telegraphed_attack(0.68, target.global_position)
-        boss_slam_clock = 4.1
+        _begin_telegraphed_attack(_boss_slam_windup(), target.global_position)
+        boss_slam_clock = _boss_slam_cooldown()
         return
 
     if distance > 0.05:
-        velocity = delta_pos.normalized() * move_speed
+        var movement_direction: Vector3 = delta_pos.normalized()
+        if kind == "harrier":
+            if distance < 4.4:
+                movement_direction = -movement_direction
+            elif distance <= 6.6:
+                movement_direction = Vector3(-movement_direction.z, 0.0, movement_direction.x)
+        velocity = movement_direction * move_speed * slow_multiplier
         move_and_slide()
         if velocity.length_squared() > 0.01:
             look_at(global_position + velocity, Vector3.UP)
@@ -291,6 +402,71 @@ func _physics_process(delta: float) -> void:
     if distance < 0.85 and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _update_boss_phase() -> void:
+    if kind != "boss" or max_health <= 0.0:
+        return
+    var ratio := clampf(health / max_health, 0.0, 1.0)
+    boss_phase = 3 if ratio <= 0.30 else (2 if ratio <= 0.65 else 1)
+    match boss_phase:
+        2:
+            move_speed = 1.55
+            contact_damage = 27.0
+        3:
+            move_speed = 1.76
+            contact_damage = 31.0
+        _:
+            move_speed = 1.38
+            contact_damage = 24.0
+
+func _boss_slam_windup() -> float:
+    match boss_phase:
+        2: return 0.56
+        3: return 0.44
+        _: return 0.68
+
+func _boss_slam_cooldown() -> float:
+    match boss_phase:
+        2: return 3.4
+        3: return 2.8
+        _: return 4.1
+
+func _process_charge(delta: float) -> void:
+    charge_left = max(0.0, charge_left - delta)
+    velocity = charge_direction * 9.4
+    move_and_slide()
+    if velocity.length_squared() > 0.01:
+        look_at(global_position + velocity, Vector3.UP)
+    if not charge_hit and target != null and is_instance_valid(target):
+        var target_offset := target.global_position - global_position
+        target_offset.y = 0.0
+        if target_offset.length() <= 1.0 and target.has_method("take_damage"):
+            target.take_damage(contact_damage * 1.30)
+            charge_hit = true
+            _spawn_attack_impact(global_position + Vector3(0.0, 0.05, 0.0), 1.05)
+    if charge_left <= 0.0:
+        charge_active = false
+        velocity = Vector3.ZERO
+        attack_cooldown = 0.80
+
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if enabled:
+        return
+    velocity = Vector3.ZERO
+    attack_windup = 0.0
+    pending_special = ""
+    charge_active = false
+    charge_left = 0.0
+    charge_hit = false
+    regeneration_windup = 0.0
+    if regeneration_visual != null and is_instance_valid(regeneration_visual):
+        regeneration_visual.queue_free()
+    regeneration_visual = null
+    regeneration_material = null
+    if telegraph_visual != null and is_instance_valid(telegraph_visual):
+        telegraph_visual.queue_free()
+    telegraph_visual = null
 
 func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> void:
     attack_windup = duration
@@ -303,9 +479,28 @@ func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> voi
 func _resolve_telegraphed_attack() -> void:
     if target == null or not is_instance_valid(target):
         return
-    var radius := 1.95 if kind == "boss" else 1.18
-    var damage := contact_damage * (1.35 if kind == "boss" else 0.82)
-    var impact_point := global_position.lerp(attack_target_position, 0.58)
+    if pending_special == "charge":
+        var direction := attack_target_position - global_position
+        direction.y = 0.0
+        if direction.length_squared() < 0.001:
+            direction = global_transform.basis.z * -1.0
+        charge_direction = direction.normalized()
+        charge_left = clampf(direction.length() / 9.4, 0.28, 0.72)
+        charge_active = true
+        charge_hit = false
+        pending_special = ""
+        return
+    if pending_special == "harrier_shot":
+        var shot := DZEnemyProjectile.new()
+        get_tree().current_scene.add_child(shot)
+        shot.global_position = global_position + Vector3(0.0, 0.34, 0.0)
+        shot.configure(attack_target_position, target, contact_damage * 0.88)
+        pending_special = ""
+        attack_cooldown = 0.95
+        return
+    var radius: float = 1.95 if kind == "boss" else 1.18
+    var damage: float = contact_damage * (1.35 if kind == "boss" else 0.82)
+    var impact_point: Vector3 = global_position.lerp(attack_target_position, 0.58)
     impact_point.y = 0.05
     if target.global_position.distance_to(impact_point) <= radius and target.has_method("take_damage"):
         target.take_damage(damage)
@@ -321,26 +516,115 @@ func _show_telegraph(radius: float, duration: float) -> void:
     mesh.bottom_radius = radius
     mesh.height = 0.018
     telegraph_visual.mesh = mesh
-    telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.025, 0.0)
-    var mat := StandardMaterial3D.new()
-    mat.albedo_color = Color(1.0, 0.16, 0.04, 0.20)
-    mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    mat.emission_enabled = true
-    mat.emission = Color(1.0, 0.08, 0.01)
-    mat.emission_energy_multiplier = 1.5
-    telegraph_visual.material_override = mat
     get_tree().current_scene.add_child(telegraph_visual)
+    telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.025, 0.0)
+    telegraph_material = StandardMaterial3D.new()
+    telegraph_material.albedo_color = Color(1.0, 0.16, 0.04, 0.16)
+    telegraph_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    telegraph_material.emission_enabled = true
+    telegraph_material.emission = Color(1.0, 0.08, 0.01)
+    telegraph_material.emission_energy_multiplier = 1.4
+    telegraph_visual.material_override = telegraph_material
     var tween := telegraph_visual.create_tween()
+    tween.set_parallel(true)
     telegraph_visual.scale = Vector3(0.42, 1.0, 0.42)
-    tween.tween_property(telegraph_visual, "scale", Vector3.ONE, duration)
-    tween.tween_callback(telegraph_visual.queue_free)
+    tween.tween_property(telegraph_visual, "scale", Vector3.ONE, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(telegraph_material, "emission_energy_multiplier", 5.2 if kind == "boss" else 4.2, duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.08, 0.015, 0.48 if kind == "boss" else 0.40), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.chain().tween_callback(telegraph_visual.queue_free)
 
 func _spawn_attack_impact(at: Vector3, radius: float) -> void:
+    if not spawn_secondary_fx:
+        return
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.22, 0.05) if kind == "boss" else Color(0.72, 0.28, 1.0)
     fx.scale_boost = radius * 1.35
     get_tree().current_scene.add_child(fx)
     fx.global_position = at + Vector3(0.0, 0.10, 0.0)
+
+func _begin_regeneration() -> void:
+    if dead or not combat_enabled or health <= 0.0 or health >= max_health:
+        return
+    regeneration_windup = 0.42
+    if regeneration_visual != null and is_instance_valid(regeneration_visual):
+        regeneration_visual.queue_free()
+    var pulse := MeshInstance3D.new()
+    pulse.name = "RegenerationPulse"
+    var mesh := CylinderMesh.new()
+    mesh.top_radius = 0.88
+    mesh.bottom_radius = 0.88
+    mesh.height = 0.022
+    pulse.mesh = mesh
+    pulse.position = Vector3(0.0, 0.035, 0.0)
+    regeneration_material = StandardMaterial3D.new()
+    regeneration_material.albedo_color = Color(0.12, 1.0, 0.42, 0.18)
+    regeneration_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    regeneration_material.emission_enabled = true
+    regeneration_material.emission = Color(0.08, 1.0, 0.34)
+    regeneration_material.emission_energy_multiplier = 1.8
+    pulse.material_override = regeneration_material
+    regeneration_visual = pulse
+    add_child(pulse)
+    pulse.scale = Vector3(0.48, 1.0, 0.48)
+    var tween := pulse.create_tween()
+    tween.set_parallel(true)
+    tween.tween_property(pulse, "scale", Vector3(1.18, 1.0, 1.18), regeneration_windup).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(regeneration_material, "emission_energy_multiplier", 4.0, regeneration_windup).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+
+func _process_regeneration(delta: float) -> void:
+    if regeneration_windup <= 0.0:
+        return
+    regeneration_windup = max(0.0, regeneration_windup - delta)
+    velocity = Vector3.ZERO
+    if regeneration_windup > 0.0:
+        return
+    _regenerate()
+    if regeneration_visual != null and is_instance_valid(regeneration_visual):
+        regeneration_visual.queue_free()
+    regeneration_visual = null
+    regeneration_material = null
+
+func _regenerate() -> void:
+    if dead or health <= 0.0 or health >= max_health:
+        return
+    var healed: float = minf(max_health * 0.035, max_health - health)
+    health += healed
+    health_changed.emit(health, max_health)
+
+func apply_slow(multiplier: float, duration: float) -> void:
+    slow_multiplier = min(slow_multiplier, clampf(multiplier, 0.30, 1.0))
+    slow_left = max(slow_left, max(0.0, duration))
+
+func apply_burn(dps: float, duration: float) -> void:
+    if dead or dps <= 0.0 or duration <= 0.0:
+        return
+    burn_dps = maxf(burn_dps, dps)
+    burn_left = maxf(burn_left, duration)
+
+func apply_shock(duration: float) -> void:
+    if dead or duration <= 0.0:
+        return
+    var resistance := 0.45 if kind == "boss" else (0.65 if kind == "elite" else 1.0)
+    shock_left = maxf(shock_left, duration * resistance)
+    velocity = Vector3.ZERO
+
+func _process_status_effects(delta: float) -> void:
+    if dead or burn_left <= 0.0 or burn_dps <= 0.0:
+        return
+    var active_delta := minf(maxf(delta, 0.0), burn_left)
+    burn_left = maxf(0.0, burn_left - maxf(delta, 0.0))
+    burn_tick_accumulator += active_delta
+
+    const BURN_TICK := 0.25
+    while burn_tick_accumulator >= BURN_TICK and not dead:
+        burn_tick_accumulator -= BURN_TICK
+        take_damage(burn_dps * BURN_TICK, false)
+
+    if burn_left <= 0.0:
+        if burn_tick_accumulator > 0.0 and not dead:
+            take_damage(burn_dps * burn_tick_accumulator, false)
+        burn_tick_accumulator = 0.0
+        burn_dps = 0.0
 
 func take_damage(amount: float, critical := false) -> void:
     if dead:
@@ -349,7 +633,8 @@ func take_damage(amount: float, critical := false) -> void:
     health_changed.emit(max(0.0, health), max_health)
     var killed := health <= 0.0
     impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
-    _flash(critical, killed)
+    _spawn_damage_number(amount, critical)
+    _play_hit_reaction(critical, killed)
     if killed:
         dead = true
         velocity = Vector3.ZERO
@@ -361,6 +646,96 @@ func take_damage(amount: float, critical := false) -> void:
         else:
             queue_free()
 
+func hit_reaction_profile() -> Dictionary:
+    if kind == "boss":
+        return {"id": "boss_hit", "punch": 1.035, "flash": 5.0, "duration": 0.13, "recoil": 0.025}
+    if kind == "elite":
+        return {"id": "elite_hit", "punch": 1.075, "flash": 6.2, "duration": 0.12, "recoil": 0.055}
+    return {"id": "normal_hit", "punch": 1.10, "flash": 7.0, "duration": 0.10, "recoil": 0.085}
+
+func _play_hit_reaction(critical: bool, killed: bool) -> void:
+    var visual := get_node_or_null("Visual") as Node3D
+    if visual == null:
+        return
+    var profile := hit_reaction_profile()
+    if hit_reaction_tween != null and hit_reaction_tween.is_valid():
+        hit_reaction_tween.kill()
+    var base_scale := visual.scale
+    var punch := float(profile["punch"]) * (1.035 if critical else 1.0)
+    var duration := float(profile["duration"])
+    var recoil := float(profile["recoil"])
+    var base_position := visual.position
+    var recoil_direction := Vector3.ZERO
+    if target != null and is_instance_valid(target):
+        recoil_direction = global_position - target.global_position
+        recoil_direction.y = 0.0
+        if recoil_direction.length_squared() > 0.001:
+            recoil_direction = recoil_direction.normalized() * recoil
+    if hit_flash_visual != null:
+        hit_flash_visual.visible = true
+        hit_flash_material.emission_energy_multiplier = float(profile["flash"]) * (1.18 if critical else 1.0)
+        hit_flash_material.albedo_color.a = 0.30 if critical else 0.20
+    hit_reaction_tween = create_tween()
+    hit_reaction_tween.set_parallel(true)
+    hit_reaction_tween.tween_property(visual, "scale", base_scale * punch, duration * 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    hit_reaction_tween.tween_property(visual, "position", base_position + recoil_direction, duration * 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    if hit_flash_visual != null:
+        hit_reaction_tween.tween_property(hit_flash_material, "emission_energy_multiplier", 0.0, duration)
+        hit_reaction_tween.tween_property(hit_flash_material, "albedo_color:a", 0.0, duration)
+    hit_reaction_tween.set_parallel(false)
+    hit_reaction_tween.tween_property(visual, "scale", base_scale * (1.04 if killed else 1.0), duration * 0.66).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    hit_reaction_tween.parallel().tween_property(visual, "position", base_position, duration * 0.66).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    hit_reaction_tween.tween_callback(func() -> void:
+        if hit_flash_visual != null:
+            hit_flash_visual.visible = false
+    )
+
+func _build_hit_flash() -> void:
+    hit_flash_visual = MeshInstance3D.new()
+    hit_flash_visual.name = "HitFlash"
+    var mesh := CylinderMesh.new()
+    var scale_factor := 1.0
+    if kind == "boss": scale_factor = 1.62
+    elif kind in ["elite", "brute", "charger"]: scale_factor = 1.18
+    mesh.top_radius = 0.46 * scale_factor
+    mesh.bottom_radius = 0.52 * scale_factor
+    mesh.height = 1.28 * scale_factor
+    hit_flash_visual.mesh = mesh
+    hit_flash_visual.position.y = 0.66 * scale_factor
+    hit_flash_material = StandardMaterial3D.new()
+    hit_flash_material.albedo_color = Color(1.0, 0.86, 0.58, 0.0)
+    hit_flash_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    hit_flash_material.emission_enabled = true
+    hit_flash_material.emission = Color(1.0, 0.58, 0.16)
+    hit_flash_material.emission_energy_multiplier = 0.0
+    hit_flash_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    hit_flash_visual.material_override = hit_flash_material
+    hit_flash_visual.visible = false
+    add_child(hit_flash_visual)
+
+func _spawn_damage_number(amount: float, critical: bool) -> void:
+    if get_tree() == null or get_tree().current_scene == null:
+        return
+    var number := Label3D.new()
+    number.name = "DamageNumber_%d" % Time.get_ticks_usec()
+    number.text = "%d" % int(round(amount))
+    number.font_size = 34 if critical else 26
+    number.outline_size = 8 if critical else 6
+    number.modulate = Color(1.0, 0.72, 0.12) if critical else Color(0.92, 0.97, 1.0)
+    number.outline_modulate = Color(0.02, 0.03, 0.05, 0.96)
+    number.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+    number.no_depth_test = true
+    number.pixel_size = 0.0038 if critical else 0.0032
+    get_tree().current_scene.add_child(number)
+    number.global_position = global_position + Vector3(0.0, 1.28, 0.0)
+
+    var rise := 0.82 if critical else 0.62
+    var tween := number.create_tween()
+    tween.set_parallel(true)
+    tween.tween_property(number, "global_position", number.global_position + Vector3(0.0, rise, 0.0), 0.58).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(number, "modulate:a", 0.0, 0.58).set_delay(0.18)
+    tween.chain().tween_callback(number.queue_free)
+
 func _build_visual() -> void:
     authored_visual = DZAssetLibrary.enemy(kind)
     if authored_visual != null:
@@ -370,6 +745,9 @@ func _build_visual() -> void:
             "runner": scale_factor = 0.92
             "brute": scale_factor = 1.22
             "elite": scale_factor = 1.15
+            "charger": scale_factor = 1.18
+            "harrier": scale_factor = 0.94
+            "regenerator": scale_factor = 1.10
             "boss": scale_factor = 1.72
         authored_visual.scale = Vector3.ONE * scale_factor
         add_child(authored_visual)
@@ -443,6 +821,15 @@ func _add_archetype_signature() -> void:
             _add_brute_shoulders(accent)
         "elite":
             accent = Color(0.72, 0.30, 1.0)
+            _add_elite_crown(accent)
+        "charger":
+            accent = Color(1.0, 0.32, 0.08)
+            _add_brute_shoulders(accent)
+        "harrier":
+            accent = Color(0.12, 0.82, 1.0)
+            _add_runner_blades(accent)
+        "regenerator":
+            accent = Color(0.18, 1.0, 0.48)
             _add_elite_crown(accent)
         "boss":
             accent = Color(1.0, 0.62, 0.12)
@@ -553,13 +940,177 @@ func _play_authored(name: String) -> void:
     authored_anim.play(name, 0.10)
 
 func _flash(critical := false, killed := false) -> void:
-    var visual := get_node_or_null("Visual")
-    if visual:
-        var base_scale: Vector3 = visual.scale
-        var punch: float = 1.12 if critical else (1.10 if killed else 1.065)
-        var tween: Tween = create_tween()
-        tween.tween_property(visual, "scale", base_scale * punch, 0.035)
-        tween.tween_property(visual, "scale", base_scale, 0.075)
+    _play_hit_reaction(critical, killed)
+```
+
+## File: scripts/EnemyProjectile.gd
+```
+class_name DZEnemyProjectile
+extends Node3D
+
+var velocity := Vector3.ZERO
+var damage := 0.0
+var target: Node3D
+var lifetime := 4.0
+var hit_radius := 0.72
+var combat_enabled := true
+var resolved := false
+
+func configure(target_position: Vector3, chase_target: Node3D, amount: float, speed := 8.6) -> void:
+    target = chase_target
+    damage = amount
+    var direction := target_position - global_position
+    direction.y = 0.0
+    if direction.length_squared() < 0.001:
+        direction = Vector3.FORWARD
+    velocity = direction.normalized() * speed
+
+func _ready() -> void:
+    add_to_group("hostile_projectiles")
+    _build_visual()
+
+func _physics_process(delta: float) -> void:
+    if not combat_enabled or resolved:
+        return
+    lifetime -= delta
+    if lifetime <= 0.0:
+        queue_free()
+        return
+    global_position += velocity * delta
+    if target == null or not is_instance_valid(target):
+        return
+    var offset := target.global_position - global_position
+    offset.y = 0.0
+    if offset.length() <= hit_radius:
+        _hit_target()
+
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if not enabled:
+        velocity = Vector3.ZERO
+
+func _hit_target() -> void:
+    if resolved:
+        return
+    resolved = true
+    if target != null and is_instance_valid(target) and target.has_method("take_damage"):
+        target.take_damage(damage)
+    queue_free()
+
+func _build_visual() -> void:
+    var core := MeshInstance3D.new()
+    core.name = "HarrierBoltCore"
+    var core_mesh := SphereMesh.new()
+    core_mesh.radius = 0.13
+    core_mesh.height = 0.26
+    core.mesh = core_mesh
+    var core_mat := StandardMaterial3D.new()
+    core_mat.albedo_color = Color(0.08, 0.78, 1.0)
+    core_mat.emission_enabled = true
+    core_mat.emission = Color(0.04, 0.66, 1.0)
+    core_mat.emission_energy_multiplier = 5.2
+    core.material_override = core_mat
+    add_child(core)
+
+    var halo := MeshInstance3D.new()
+    halo.name = "HarrierBoltHalo"
+    var halo_mesh := SphereMesh.new()
+    halo_mesh.radius = 0.24
+    halo_mesh.height = 0.48
+    halo.mesh = halo_mesh
+    var halo_mat := StandardMaterial3D.new()
+    halo_mat.albedo_color = Color(0.08, 0.72, 1.0, 0.18)
+    halo_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    halo_mat.emission_enabled = true
+    halo_mat.emission = Color(0.04, 0.55, 1.0)
+    halo_mat.emission_energy_multiplier = 2.6
+    halo.material_override = halo_mat
+    add_child(halo)
+
+    var trail := MeshInstance3D.new()
+    trail.name = "HarrierBoltTrail"
+    var trail_mesh := BoxMesh.new()
+    trail_mesh.size = Vector3(0.07, 0.07, 0.78)
+    trail.mesh = trail_mesh
+    trail.position = Vector3(0.0, 0.0, 0.42)
+    var trail_mat := StandardMaterial3D.new()
+    trail_mat.albedo_color = Color(0.05, 0.64, 1.0, 0.42)
+    trail_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    trail_mat.emission_enabled = true
+    trail_mat.emission = Color(0.04, 0.58, 1.0)
+    trail_mat.emission_energy_multiplier = 3.8
+    trail_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    trail.material_override = trail_mat
+    add_child(trail)
+
+    if velocity.length_squared() > 0.01:
+        look_at(global_position + velocity.normalized(), Vector3.UP)
+```
+
+## File: scripts/GameSettings.gd
+```
+class_name DZGameSettings
+extends RefCounted
+
+const DEFAULTS := {
+    "master_volume": 0.85,
+    "sfx_volume": 0.90
+}
+
+static func save(path: String, settings: Dictionary) -> Error:
+    var config := ConfigFile.new()
+    config.set_value("audio", "master_volume", clampf(float(settings.get("master_volume", DEFAULTS["master_volume"])), 0.0, 1.0))
+    config.set_value("audio", "sfx_volume", clampf(float(settings.get("sfx_volume", DEFAULTS["sfx_volume"])), 0.0, 1.0))
+    return config.save(path)
+
+static func load_settings(path: String) -> Dictionary:
+    var result := DEFAULTS.duplicate(true)
+    var config := ConfigFile.new()
+    if config.load(path) != OK:
+        return result
+    result["master_volume"] = clampf(float(config.get_value("audio", "master_volume", DEFAULTS["master_volume"])), 0.0, 1.0)
+    result["sfx_volume"] = clampf(float(config.get_value("audio", "sfx_volume", DEFAULTS["sfx_volume"])), 0.0, 1.0)
+    return result
+```
+
+## File: scripts/Haptics.gd
+```
+extends RefCounted
+
+static func pattern_for(kind: String) -> int:
+    match kind:
+        "hit":
+            return 18
+        "critical":
+            return 38
+        "boss":
+            return 72
+        _:
+            return 0
+
+static func event_for_impact(critical: bool, killed: bool, boss: bool) -> String:
+    if boss:
+        return "boss"
+    if critical or killed:
+        return "critical"
+    return "hit"
+
+static func amplitude_for(kind: String) -> float:
+    match kind:
+        "hit":
+            return 0.32
+        "critical":
+            return 0.58
+        "boss":
+            return 0.82
+        _:
+            return 0.0
+
+static func pulse(kind: String) -> void:
+    var duration := pattern_for(kind)
+    if duration <= 0:
+        return
+    Input.vibrate_handheld(duration, amplitude_for(kind))
 ```
 
 ## File: scripts/Hud.gd
@@ -569,8 +1120,13 @@ extends CanvasLayer
 
 signal upgrade_chosen(index: int)
 signal restart_requested
+signal pause_requested
+signal resume_requested
+signal master_volume_changed(value: float)
+signal sfx_volume_changed(value: float)
 
 var hp_bar: ProgressBar
+var health_bar: ProgressBar
 var xp_bar: ProgressBar
 var status_label: Label
 var wave_label: Label
@@ -587,14 +1143,46 @@ var boss_phase_label: Label
 var boss_hp_max := 1.0
 var game_over_panel: PanelContainer
 var game_over_summary: Label
+var low_health_panel: PanelContainer
+var low_health_label: Label
+var threat_panel: PanelContainer
+var threat_label: Label
+var pause_panel: PanelContainer
+var pause_button: Button
+var master_volume: HSlider
+var sfx_volume: HSlider
+var impact_flash: ColorRect
+var impact_flash_tween: Tween
+var damage_vignette: ColorRect
+var damage_vignette_tween: Tween
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
     _build()
 
+func pulse_damage_screen() -> void:
+    if damage_vignette == null:
+        return
+    if damage_vignette_tween != null and damage_vignette_tween.is_valid():
+        damage_vignette_tween.kill()
+    damage_vignette.visible = true
+    damage_vignette.modulate.a = 1.0
+    damage_vignette_tween = damage_vignette.create_tween()
+    damage_vignette_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    damage_vignette_tween.tween_property(damage_vignette, "modulate:a", 0.0, 0.26).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    damage_vignette_tween.tween_callback(func() -> void:
+        if damage_vignette != null:
+            damage_vignette.visible = false
+            damage_vignette.modulate.a = 1.0
+    )
+
 func set_health(value: float, maximum: float) -> void:
     hp_bar.max_value = max(1.0, maximum)
     hp_bar.value = value
+    var ratio: float = clampf(value / max(1.0, maximum), 0.0, 1.0)
+    low_health_panel.visible = value > 0.0 and ratio <= 0.30
+    if low_health_panel.visible:
+        low_health_label.text = "CRITICAL INTEGRITY  •  %d%%" % int(round(ratio * 100.0))
 
 func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float) -> void:
     xp_bar.max_value = max(1, next_xp)
@@ -624,6 +1212,31 @@ func set_boss_health(value: float, maximum: float) -> void:
 func hide_boss() -> void:
     boss_panel.visible = false
 
+func set_offscreen_threat(direction: Vector2, threat_kind: String, distance: float) -> void:
+    if direction.length_squared() < 0.001:
+        hide_offscreen_threat()
+        return
+    var arrow := _direction_arrow(direction.normalized())
+    threat_label.text = "%s  %s  %dm" % [arrow, threat_kind.to_upper(), int(round(distance))]
+    threat_panel.visible = true
+
+func hide_offscreen_threat() -> void:
+    threat_panel.visible = false
+
+func _direction_arrow(direction: Vector2) -> String:
+    var angle := atan2(direction.y, direction.x)
+    var octant := int(round(angle / (PI / 4.0)))
+    match octant:
+        0: return "→"
+        1: return "↘"
+        2: return "↓"
+        3: return "↙"
+        4, -4: return "←"
+        -3: return "↖"
+        -2: return "↑"
+        -1: return "↗"
+        _: return "→"
+
 func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
         var item: Dictionary = items[i] if i < items.size() else {}
@@ -638,6 +1251,38 @@ func show_upgrade(items: Array) -> void:
 func hide_upgrade() -> void:
     upgrade_panel.visible = false
 
+func show_pause_settings() -> void:
+    pause_panel.visible = true
+
+func hide_pause_settings() -> void:
+    pause_panel.visible = false
+
+func show_impact_flash(critical: bool, killed: bool, boss: bool) -> void:
+    if impact_flash == null:
+        return
+    if impact_flash_tween != null and impact_flash_tween.is_valid():
+        impact_flash_tween.kill()
+    var alpha := 0.055
+    var tint := Color(0.68, 0.90, 1.0, alpha)
+    if critical:
+        alpha = 0.10
+        tint = Color(1.0, 0.74, 0.20, alpha)
+    if killed:
+        alpha = maxf(alpha, 0.13)
+        tint = Color(1.0, 0.38, 0.16, alpha)
+    if boss:
+        alpha = maxf(alpha, 0.18)
+        tint = Color(1.0, 0.12, 0.055, alpha)
+    impact_flash.color = tint
+    impact_flash.visible = true
+    impact_flash_tween = create_tween()
+    impact_flash_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    impact_flash_tween.tween_property(impact_flash, "color:a", 0.0, 0.16 if boss else 0.11)
+    impact_flash_tween.tween_callback(func() -> void:
+        if impact_flash != null:
+            impact_flash.visible = false
+    )
+
 func show_game_over(kills: int, level: int, elapsed: float) -> void:
     wave_label.text = "RUN TERMINATED"
     upgrade_panel.visible = false
@@ -645,6 +1290,8 @@ func show_game_over(kills: int, level: int, elapsed: float) -> void:
     var minutes := int(elapsed) / 60
     var seconds := int(elapsed) % 60
     game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]
+    low_health_panel.visible = false
+    threat_panel.visible = false
     game_over_panel.visible = true
 
 func _build() -> void:
@@ -652,25 +1299,76 @@ func _build() -> void:
     root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
     add_child(root)
 
-    var top := VBoxContainer.new()
-    top.position = Vector2(28, 24)
-    top.size = Vector2(500, 100)
-    root.add_child(top)
+    impact_flash = ColorRect.new()
+    impact_flash.name = "ImpactFlash"
+    impact_flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    impact_flash.color = Color(1.0, 1.0, 1.0, 0.0)
+    impact_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    impact_flash.visible = false
+    root.add_child(impact_flash)
+
+    damage_vignette = ColorRect.new()
+    damage_vignette.name = "DamageVignette"
+    damage_vignette.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    damage_vignette.color = Color(0.58, 0.015, 0.0, 0.30)
+    damage_vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    damage_vignette.visible = false
+    root.add_child(damage_vignette)
+
+    var vital_panel := PanelContainer.new()
+    vital_panel.name = "VitalPanel"
+    vital_panel.position = Vector2(28, 24)
+    vital_panel.size = Vector2(500, 108)
+    vital_panel.custom_minimum_size = Vector2(420, 96)
+    vital_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(vital_panel)
+
+    var vital_style := StyleBoxFlat.new()
+    vital_style.bg_color = Color(0.018, 0.032, 0.042, 0.92)
+    vital_style.border_color = Color(0.16, 0.62, 0.82, 0.70)
+    vital_style.set_border_width_all(1)
+    vital_style.border_width_left = 4
+    vital_style.corner_radius_top_left = 8
+    vital_style.corner_radius_top_right = 8
+    vital_style.corner_radius_bottom_left = 8
+    vital_style.corner_radius_bottom_right = 8
+    vital_style.content_margin_left = 16.0
+    vital_style.content_margin_right = 14.0
+    vital_style.content_margin_top = 10.0
+    vital_style.content_margin_bottom = 10.0
+    vital_panel.add_theme_stylebox_override("panel", vital_style)
+
+    var vital_stack := VBoxContainer.new()
+    vital_stack.name = "VitalStack"
+    vital_stack.add_theme_constant_override("separation", 4)
+    vital_panel.add_child(vital_stack)
+
+    var vital_accent := ColorRect.new()
+    vital_accent.name = "VitalAccent"
+    vital_accent.color = Color(0.18, 0.82, 1.0, 0.92)
+    vital_accent.custom_minimum_size = Vector2(120, 3)
+    vital_accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    vital_stack.add_child(vital_accent)
 
     hp_bar = ProgressBar.new()
+    hp_bar.name = "HealthBar"
     hp_bar.custom_minimum_size = Vector2(420, 22)
     hp_bar.show_percentage = false
-    top.add_child(hp_bar)
+    vital_stack.add_child(hp_bar)
+    health_bar = hp_bar
 
     xp_bar = ProgressBar.new()
+    xp_bar.name = "XpBar"
     xp_bar.custom_minimum_size = Vector2(420, 12)
     xp_bar.show_percentage = false
-    top.add_child(xp_bar)
+    vital_stack.add_child(xp_bar)
 
     status_label = Label.new()
+    status_label.name = "CombatStatus"
     status_label.text = "LV 1   KILLS 0"
     status_label.add_theme_font_size_override("font_size", 20)
-    top.add_child(status_label)
+    status_label.modulate = Color(0.88, 0.94, 0.98)
+    vital_stack.add_child(status_label)
 
     wave_label = Label.new()
     wave_label.text = "QUARANTINE YARD"
@@ -681,42 +1379,157 @@ func _build() -> void:
     wave_label.size = Vector2(440, 42)
     root.add_child(wave_label)
 
+    pause_button = Button.new()
+    pause_button.name = "PauseButton"
+    pause_button.text = "Ⅱ"
+    pause_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+    pause_button.position = Vector2(-86, 24)
+    pause_button.size = Vector2(58, 58)
+    pause_button.add_theme_font_size_override("font_size", 22)
+    pause_button.pressed.connect(func() -> void: pause_requested.emit())
+    add_child(pause_button)
+
+    pause_panel = PanelContainer.new()
+    pause_panel.name = "PausePanel"
+    pause_panel.set_anchors_preset(Control.PRESET_CENTER)
+    pause_panel.position = Vector2(-250, -210)
+    pause_panel.size = Vector2(500, 420)
+    pause_panel.visible = false
+    add_child(pause_panel)
+    var pause_box := VBoxContainer.new()
+    pause_box.alignment = BoxContainer.ALIGNMENT_CENTER
+    pause_box.add_theme_constant_override("separation", 18)
+    pause_panel.add_child(pause_box)
+    var pause_title := Label.new()
+    pause_title.text = "SYSTEM PAUSED"
+    pause_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    pause_title.add_theme_font_size_override("font_size", 30)
+    pause_title.modulate = Color(0.72, 0.92, 1.0)
+    pause_box.add_child(pause_title)
+    var master_label := Label.new()
+    master_label.text = "MASTER VOLUME"
+    master_label.add_theme_font_size_override("font_size", 16)
+    pause_box.add_child(master_label)
+    master_volume = HSlider.new()
+    master_volume.name = "MasterVolume"
+    master_volume.min_value = 0.0
+    master_volume.max_value = 1.0
+    master_volume.step = 0.05
+    master_volume.value = 0.85
+    master_volume.custom_minimum_size = Vector2(360, 42)
+    master_volume.value_changed.connect(func(value: float) -> void: master_volume_changed.emit(value))
+    pause_box.add_child(master_volume)
+    var sfx_label := Label.new()
+    sfx_label.text = "SFX VOLUME"
+    sfx_label.add_theme_font_size_override("font_size", 16)
+    pause_box.add_child(sfx_label)
+    sfx_volume = HSlider.new()
+    sfx_volume.name = "SfxVolume"
+    sfx_volume.min_value = 0.0
+    sfx_volume.max_value = 1.0
+    sfx_volume.step = 0.05
+    sfx_volume.value = 0.90
+    sfx_volume.custom_minimum_size = Vector2(360, 42)
+    sfx_volume.value_changed.connect(func(value: float) -> void: sfx_volume_changed.emit(value))
+    pause_box.add_child(sfx_volume)
+    var resume_button := Button.new()
+    resume_button.name = "ResumeButton"
+    resume_button.text = "RESUME"
+    resume_button.custom_minimum_size = Vector2(280, 62)
+    resume_button.add_theme_font_size_override("font_size", 21)
+    resume_button.pressed.connect(func() -> void: resume_requested.emit())
+    pause_box.add_child(resume_button)
+    var pause_style := StyleBoxFlat.new()
+    pause_style.bg_color = Color(0.018, 0.028, 0.038, 0.98)
+    pause_style.border_color = Color(0.20, 0.78, 1.0, 0.72)
+    pause_style.set_border_width_all(2)
+    pause_style.corner_radius_top_left = 12
+    pause_style.corner_radius_top_right = 12
+    pause_style.corner_radius_bottom_left = 12
+    pause_style.corner_radius_bottom_right = 12
+    pause_panel.add_theme_stylebox_override("panel", pause_style)
+
+    low_health_panel = PanelContainer.new()
+    low_health_panel.name = "LowHealthPanel"
+    low_health_panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+    low_health_panel.position = Vector2(-210, -92)
+    low_health_panel.size = Vector2(420, 52)
+    low_health_panel.visible = false
+    low_health_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(low_health_panel)
+    low_health_label = Label.new()
+    low_health_label.name = "LowHealthLabel"
+    low_health_label.text = "CRITICAL INTEGRITY"
+    low_health_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    low_health_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    low_health_label.add_theme_font_size_override("font_size", 19)
+    low_health_label.modulate = Color(1.0, 0.58, 0.44)
+    low_health_panel.add_child(low_health_label)
+    var low_health_style := StyleBoxFlat.new()
+    low_health_style.bg_color = Color(0.16, 0.015, 0.01, 0.96)
+    low_health_style.border_color = Color(1.0, 0.18, 0.08, 0.98)
+    low_health_style.set_border_width_all(2)
+    low_health_style.corner_radius_top_left = 8
+    low_health_style.corner_radius_top_right = 8
+    low_health_style.corner_radius_bottom_left = 8
+    low_health_style.corner_radius_bottom_right = 8
+    low_health_panel.add_theme_stylebox_override("panel", low_health_style)
+
+    threat_panel = PanelContainer.new()
+    threat_panel.name = "ThreatPanel"
+    threat_panel.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
+    threat_panel.position = Vector2(-210, -34)
+    threat_panel.size = Vector2(180, 68)
+    threat_panel.visible = false
+    threat_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(threat_panel)
+    threat_label = Label.new()
+    threat_label.name = "ThreatLabel"
+    threat_label.text = "→  ELITE  18m"
+    threat_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    threat_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    threat_label.add_theme_font_size_override("font_size", 18)
+    threat_label.modulate = Color(1.0, 0.56, 0.22)
+    threat_panel.add_child(threat_label)
+    var threat_style := StyleBoxFlat.new()
+    threat_style.bg_color = Color(0.06, 0.025, 0.01, 0.88)
+    threat_style.border_color = Color(1.0, 0.42, 0.08, 0.86)
+    threat_style.set_border_width_all(2)
+    threat_style.corner_radius_top_left = 8
+    threat_style.corner_radius_top_right = 8
+    threat_style.corner_radius_bottom_left = 8
+    threat_style.corner_radius_bottom_right = 8
+    threat_panel.add_theme_stylebox_override("panel", threat_style)
+
     game_over_panel = PanelContainer.new()
     game_over_panel.set_anchors_preset(Control.PRESET_CENTER)
     game_over_panel.position = Vector2(-270, -120)
     game_over_panel.size = Vector2(540, 240)
     game_over_panel.visible = false
     root.add_child(game_over_panel)
-
     var game_over_box := VBoxContainer.new()
     game_over_box.alignment = BoxContainer.ALIGNMENT_CENTER
     game_over_box.add_theme_constant_override("separation", 16)
     game_over_panel.add_child(game_over_box)
-
     var game_over_title := Label.new()
     game_over_title.text = "SIGNAL LOST"
     game_over_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     game_over_title.add_theme_font_size_override("font_size", 34)
     game_over_title.modulate = Color(1.0, 0.34, 0.20)
     game_over_box.add_child(game_over_title)
-
     game_over_summary = Label.new()
     game_over_summary.text = "LEVEL 1   •   KILLS 0   •   00:00"
     game_over_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     game_over_summary.add_theme_font_size_override("font_size", 18)
     game_over_summary.modulate = Color(0.82, 0.88, 0.92)
     game_over_box.add_child(game_over_summary)
-
     var restart_button := Button.new()
     restart_button.name = "RestartButton"
     restart_button.text = "REDEPLOY"
     restart_button.custom_minimum_size = Vector2(260, 58)
     restart_button.add_theme_font_size_override("font_size", 21)
-    restart_button.pressed.connect(func() -> void:
-        restart_requested.emit()
-    )
+    restart_button.pressed.connect(func() -> void: restart_requested.emit())
     game_over_box.add_child(restart_button)
-
     var game_over_style := StyleBoxFlat.new()
     game_over_style.bg_color = Color(0.018, 0.026, 0.034, 0.97)
     game_over_style.border_color = Color(1.0, 0.22, 0.10, 0.78)
@@ -728,41 +1541,35 @@ func _build() -> void:
     game_over_panel.add_theme_stylebox_override("panel", game_over_style)
 
     boss_panel = PanelContainer.new()
+    boss_panel.name = "BossPanel"
     boss_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
     boss_panel.position = Vector2(-330, 76)
     boss_panel.size = Vector2(660, 78)
     boss_panel.visible = false
     root.add_child(boss_panel)
-
     var boss_box := VBoxContainer.new()
     boss_box.add_theme_constant_override("separation", 3)
     boss_panel.add_child(boss_box)
-
     var boss_header := HBoxContainer.new()
     boss_header.alignment = BoxContainer.ALIGNMENT_CENTER
     boss_box.add_child(boss_header)
-
     boss_name_label = Label.new()
     boss_name_label.text = "REVENANT PRIME"
     boss_name_label.add_theme_font_size_override("font_size", 18)
     boss_name_label.modulate = Color(1.0, 0.82, 0.42)
     boss_header.add_child(boss_name_label)
-
     var spacer := Control.new()
     spacer.custom_minimum_size = Vector2(32, 1)
     boss_header.add_child(spacer)
-
     boss_phase_label = Label.new()
     boss_phase_label.text = "PHASE I // HUNT"
     boss_phase_label.add_theme_font_size_override("font_size", 13)
     boss_phase_label.modulate = Color(1.0, 0.42, 0.26)
     boss_header.add_child(boss_phase_label)
-
     boss_hp_bar = ProgressBar.new()
     boss_hp_bar.custom_minimum_size = Vector2(620, 18)
     boss_hp_bar.show_percentage = false
     boss_box.add_child(boss_hp_bar)
-
     var boss_style := StyleBoxFlat.new()
     boss_style.bg_color = Color(0.025, 0.035, 0.045, 0.96)
     boss_style.border_color = Color(0.92, 0.28, 0.12, 0.72)
@@ -774,41 +1581,36 @@ func _build() -> void:
     boss_panel.add_theme_stylebox_override("panel", boss_style)
 
     upgrade_panel = PanelContainer.new()
+    upgrade_panel.name = "UpgradePanel"
     upgrade_panel.set_anchors_preset(Control.PRESET_CENTER)
     upgrade_panel.position = Vector2(-480, -155)
     upgrade_panel.size = Vector2(960, 310)
     upgrade_panel.visible = false
     root.add_child(upgrade_panel)
-
     var box := VBoxContainer.new()
     box.add_theme_constant_override("separation", 18)
     upgrade_panel.add_child(box)
-
     var title := Label.new()
     title.text = "SELECT COMBAT UPGRADE"
     title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     title.add_theme_font_size_override("font_size", 30)
     box.add_child(title)
-
     var row := HBoxContainer.new()
     row.alignment = BoxContainer.ALIGNMENT_CENTER
     row.add_theme_constant_override("separation", 18)
     box.add_child(row)
-
     for i in range(3):
         var card := VBoxContainer.new()
         card.custom_minimum_size = Vector2(280, 190)
         card.add_theme_constant_override("separation", 5)
         row.add_child(card)
         upgrade_cards.append(card)
-
         var family := Label.new()
         family.text = "UPGRADE"
         family.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
         family.add_theme_font_size_override("font_size", 13)
         card.add_child(family)
         upgrade_family_labels.append(family)
-
         var button := Button.new()
         button.custom_minimum_size = Vector2(280, 82)
         button.text = "◆"
@@ -816,14 +1618,12 @@ func _build() -> void:
         button.pressed.connect(_on_upgrade_pressed.bind(i))
         card.add_child(button)
         upgrade_buttons.append(button)
-
         var upgrade_title := Label.new()
         upgrade_title.text = "UPGRADE"
         upgrade_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
         upgrade_title.add_theme_font_size_override("font_size", 21)
         card.add_child(upgrade_title)
         upgrade_title_labels.append(upgrade_title)
-
         var detail := Label.new()
         detail.text = ""
         detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -840,6 +1640,14 @@ func _upgrade_glyph(id: String) -> String:
         "health": return "+"
         "projectile": return "◆"
         "multishot": return "⋙"
+        "berserker": return "✦"
+        "overclock": return "⚡"
+        "fortress": return "⬢"
+        "scatter_protocol": return "⋰"
+        "rail_protocol": return "━"
+        "inferno_protocol": return "▲"
+        "cryo_protocol": return "◇"
+        "arc_protocol": return "⌁"
         _: return "◆"
 
 func _upgrade_color(id: String) -> Color:
@@ -848,6 +1656,14 @@ func _upgrade_color(id: String) -> Color:
         "rate", "speed": return Color(0.18, 0.86, 1.0)
         "health": return Color(0.32, 0.94, 0.52)
         "projectile": return Color(0.76, 0.82, 1.0)
+        "berserker": return Color(1.0, 0.22, 0.12)
+        "overclock": return Color(1.0, 0.82, 0.18)
+        "fortress": return Color(0.38, 0.86, 0.72)
+        "scatter_protocol": return Color(1.0, 0.56, 0.18)
+        "rail_protocol": return Color(0.72, 0.58, 1.0)
+        "inferno_protocol": return Color(1.0, 0.24, 0.035)
+        "cryo_protocol": return Color(0.30, 0.90, 1.0)
+        "arc_protocol": return Color(0.64, 0.42, 1.0)
         _: return Color(0.58, 0.42, 1.0)
 
 func _style_upgrade_card(index: int, id: String) -> void:
@@ -884,46 +1700,102 @@ var age := 0.0
 var color := Color(0.25, 0.9, 1.0, 1.0)
 var scale_boost := 1.0
 var mesh_instance: MeshInstance3D
-var light: OmniLight3D
+var ring_instance: MeshInstance3D
+var core_material: StandardMaterial3D
+var ring_material: StandardMaterial3D
 
 func _ready() -> void:
     mesh_instance = MeshInstance3D.new()
+    mesh_instance.name = "ImpactCore"
     var sphere := SphereMesh.new()
     sphere.radius = 0.18
     sphere.height = 0.36
     mesh_instance.mesh = sphere
-    var material := StandardMaterial3D.new()
-    material.albedo_color = color
-    material.emission_enabled = true
-    material.emission = color
-    material.emission_energy_multiplier = 3.2
-    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    mesh_instance.material_override = material
+    core_material = _make_material(color, 4.2)
+    mesh_instance.material_override = core_material
     add_child(mesh_instance)
 
-    light = OmniLight3D.new()
-    light.light_color = color
-    light.light_energy = 2.0
-    light.omni_range = 2.5
-    add_child(light)
+    ring_instance = MeshInstance3D.new()
+    ring_instance.name = "ImpactRing"
+    var ring := TorusMesh.new()
+    ring.inner_radius = 0.24
+    ring.outer_radius = 0.34
+    ring_instance.mesh = ring
+    ring_instance.rotation_degrees.x = 90.0
+    ring_material = _make_material(color.lightened(0.18), 3.4)
+    ring_instance.material_override = ring_material
+    add_child(ring_instance)
+
+    var sparks := GPUParticles3D.new()
+    sparks.name = "ImpactSparks"
+    sparks.amount = 8
+    sparks.lifetime = 0.22
+    sparks.one_shot = true
+    sparks.explosiveness = 1.0
+    sparks.randomness = 0.35
+    sparks.local_coords = false
+
+    var particle_material := ParticleProcessMaterial.new()
+    particle_material.direction = Vector3(0.0, 1.0, 0.0)
+    particle_material.spread = 70.0
+    particle_material.initial_velocity_min = 2.2
+    particle_material.initial_velocity_max = 4.2
+    particle_material.gravity = Vector3(0.0, -7.0, 0.0)
+    particle_material.scale_min = 0.45
+    particle_material.scale_max = 1.0
+    particle_material.color = color
+    sparks.process_material = particle_material
+
+    var spark_mesh := QuadMesh.new()
+    spark_mesh.size = Vector2(0.055, 0.16)
+    var spark_material := StandardMaterial3D.new()
+    spark_material.albedo_color = color
+    spark_material.emission_enabled = true
+    spark_material.emission = color
+    spark_material.emission_energy_multiplier = 4.5
+    spark_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    spark_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    spark_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    spark_mesh.material = spark_material
+    sparks.draw_pass_1 = spark_mesh
+    add_child(sparks)
+    sparks.emitting = true
+
+func _make_material(tint: Color, energy: float) -> StandardMaterial3D:
+    var material := StandardMaterial3D.new()
+    material.albedo_color = tint
+    material.emission_enabled = true
+    material.emission = tint
+    material.emission_energy_multiplier = energy
+    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    return material
 
 func _process(delta: float) -> void:
     age += delta
     var t: float = clampf(age / life, 0.0, 1.0)
     scale = Vector3.ONE * lerp(0.55, 2.2 * scale_boost, t)
-    var material := mesh_instance.material_override as StandardMaterial3D
-    if material:
-        var c: Color = color
-        c.a = 1.0 - t
-        material.albedo_color = c
-    light.light_energy = lerp(2.0, 0.0, t)
+    _fade_material(core_material, t)
+    _fade_material(ring_material, t)
+    if ring_instance != null:
+        ring_instance.scale = Vector3.ONE * lerp(0.72, 1.45, t)
     if age >= life:
         queue_free()
+
+func _fade_material(material: StandardMaterial3D, t: float) -> void:
+    if material == null:
+        return
+    var faded := material.albedo_color
+    faded.a = 1.0 - t
+    material.albedo_color = faded
+    material.emission_energy_multiplier = lerp(4.0, 0.5, t)
 ```
 
 ## File: scripts/Main.gd
 ```
 extends Node3D
+
+const HAPTICS := preload("res://scripts/Haptics.gd")
 
 const UPGRADE_POOL := [
     {"id":"damage", "title":"HEAVY PAYLOAD", "detail":"Damage +25%", "family":"OFFENSE"},
@@ -931,7 +1803,15 @@ const UPGRADE_POOL := [
     {"id":"speed", "title":"SCOUT FRAME", "detail":"Move speed +14%", "family":"MOBILITY"},
     {"id":"health", "title":"REACTIVE PLATING", "detail":"Max HP +30", "family":"SURVIVAL"},
     {"id":"projectile", "title":"HYPER VELOCITY", "detail":"Projectile speed +20%", "family":"BALLISTIC"},
-    {"id":"multishot", "title":"MULTISHOT", "detail":"+1 projectile", "family":"BARRAGE"}
+    {"id":"multishot", "title":"MULTISHOT", "detail":"+1 projectile", "family":"BARRAGE"},
+    {"id":"berserker", "title":"BERSERKER CORE", "detail":"+45% damage / -15% max HP", "family":"RISK"},
+    {"id":"overclock", "title":"OVERCLOCK", "detail":"+28% fire speed / -10% damage", "family":"CADENCE"},
+    {"id":"fortress", "title":"FORTRESS FRAME", "detail":"+55 max HP / -6% move speed", "family":"SURVIVAL"},
+    {"id":"scatter_protocol", "title":"SCATTER PROTOCOL", "detail":"+2 projectiles / wider spread", "family":"WEAPON"},
+    {"id":"rail_protocol", "title":"RAIL PROTOCOL", "detail":"Heavy fast rounds / slower cadence", "family":"WEAPON"},
+    {"id":"inferno_protocol", "title":"INFERNO PROTOCOL", "detail":"+20% damage / slower cadence", "family":"ELEMENTAL"},
+    {"id":"cryo_protocol", "title":"CRYO PROTOCOL", "detail":"Faster rounds / tighter cadence", "family":"ELEMENTAL"},
+    {"id":"arc_protocol", "title":"ARC PROTOCOL", "detail":"+1 projectile / tight spread", "family":"ELEMENTAL"}
 ]
 
 var player: DZPlayer
@@ -958,17 +1838,29 @@ var boss_reveal_left := 0.0
 var impact_audio: AudioStreamPlayer
 var boss_audio: AudioStreamPlayer
 var impact_streams := {}
+var enemy_spatial_index := DZSpatialHash.new(4.0)
+var last_player_health := -1.0
+var run_director := DZRunDirector.new()
+var spawn_rng := RandomNumberGenerator.new()
+var director_profile: Dictionary = {}
 
+const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_REVEAL_FOV_DELTA := 5.5
 
 func _ready() -> void:
     randomize()
+    spawn_rng.randomize()
+    director_profile = run_director.profile(elapsed, level)
+    max_enemies = int(director_profile["max_enemies"])
+    _ensure_audio_buses()
     _build_world()
 
     player = DZPlayer.new()
     add_child(player)
+    if player.shot_audio != null:
+        player.shot_audio.bus = "SFX"
     player.global_position = Vector3.ZERO
     player.health_changed.connect(_on_health_changed)
     player.died.connect(_on_player_died)
@@ -984,6 +1876,12 @@ func _ready() -> void:
     add_child(hud)
     hud.upgrade_chosen.connect(_on_upgrade_chosen)
     hud.restart_requested.connect(_on_restart_requested)
+    hud.pause_requested.connect(_on_pause_requested)
+    hud.resume_requested.connect(_on_resume_requested)
+    hud.master_volume_changed.connect(_on_master_volume_changed)
+    hud.sfx_volume_changed.connect(_on_sfx_volume_changed)
+    _load_audio_settings()
+    last_player_health = player.health
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     _build_combat_audio()
@@ -1022,11 +1920,14 @@ func _process(delta: float) -> void:
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.fov = lerpf(camera.fov, target_fov, 1.0 - exp(-delta * 5.5))
         camera.look_at(focus_point, Vector3.UP)
+        _update_offscreen_threat_indicator()
 
 func _physics_process(delta: float) -> void:
     if game_over:
         return
     elapsed += delta
+    director_profile = run_director.profile(elapsed, level)
+    max_enemies = int(director_profile["max_enemies"])
     boss_banner_timer = max(0.0, boss_banner_timer - delta)
     if elapsed >= next_boss_time:
         _spawn_enemy("boss")
@@ -1035,10 +1936,11 @@ func _physics_process(delta: float) -> void:
 
     spawn_clock -= delta
     if spawn_clock <= 0.0:
-        var batch := 1 + int(elapsed / 45.0)
-        for i in range(min(batch, 4)):
+        var batch := int(director_profile["batch_size"])
+        for i in range(batch):
             _spawn_enemy()
-        spawn_clock = max(0.20, 0.82 - elapsed * 0.0035)
+        spawn_clock = float(director_profile["spawn_interval"])
+    enemy_spatial_index.rebuild(get_tree().get_nodes_in_group("enemies"))
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     hud.set_wave(_wave_name())
 
@@ -1059,24 +1961,19 @@ func _unhandled_input(event: InputEvent) -> void:
             var vector := (drag.position - touch_origin) / 90.0
             player.set_touch_move(Vector2(vector.x, vector.y).limit_length(1.0))
 
+func query_enemies_near(position: Vector3, radius: float) -> Array:
+    return enemy_spatial_index.query(position, radius)
+
 func _spawn_enemy(forced_kind: String = "") -> void:
     if player == null or game_over:
         return
     if forced_kind != "boss" and get_tree().get_nodes_in_group("enemies").size() >= max_enemies:
         return
-    var angle := randf() * TAU
-    var radius := randf_range(12.0, 18.0)
+    var angle := spawn_rng.randf() * TAU
+    var radius := spawn_rng.randf_range(12.0, 18.0)
     var pos := player.global_position + Vector3(cos(angle) * radius, 0.0, sin(angle) * radius)
-    var roll := randf()
-    var kind := forced_kind if not forced_kind.is_empty() else "shambler"
-    if forced_kind.is_empty():
-        if elapsed > 25.0 and roll > 0.72:
-            kind = "runner"
-        if elapsed > 55.0 and roll > 0.88:
-            kind = "brute"
-        if elapsed > 100.0 and roll > 0.96:
-            kind = "elite"
-    var difficulty := 1.0 + elapsed / 210.0 + float(level - 1) * 0.035
+    var kind := forced_kind if not forced_kind.is_empty() else run_director.choose_enemy(elapsed, level, spawn_rng)
+    var difficulty := float(director_profile.get("difficulty", 1.0))
     var enemy := DZEnemy.new()
     enemy.configure(kind, difficulty, player)
     enemy.died.connect(_on_enemy_died)
@@ -1097,6 +1994,8 @@ func _on_boss_health_changed(current: float, maximum: float) -> void:
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
     camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
+    if hud:
+        hud.show_impact_flash(critical, killed, boss)
     _play_impact_audio(critical, killed, boss)
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
@@ -1119,9 +2018,13 @@ func _on_xp_collected(amount: int) -> void:
 
 func _offer_upgrade() -> void:
     pending_upgrades.clear()
-    var available := UPGRADE_POOL.duplicate(true)
+    var available: Array = []
+    for upgrade in UPGRADE_POOL:
+        var id := String(upgrade["id"])
+        if player == null or player.can_apply_upgrade(id):
+            available.append(upgrade.duplicate(true))
     available.shuffle()
-    for i in range(3):
+    for i in range(mini(3, available.size())):
         pending_upgrades.append(available[i])
     hud.show_upgrade(pending_upgrades)
     get_tree().paused = true
@@ -1136,13 +2039,82 @@ func _on_upgrade_chosen(index: int) -> void:
 
 func _on_health_changed(current: float, maximum: float) -> void:
     if hud:
+        if last_player_health >= 0.0 and current < last_player_health:
+            hud.pulse_damage_screen()
         hud.set_health(current, maximum)
+    last_player_health = current
+
+func _ensure_audio_buses() -> void:
+    if AudioServer.get_bus_index("SFX") < 0:
+        AudioServer.add_bus()
+        AudioServer.set_bus_name(AudioServer.bus_count - 1, "SFX")
+
+func _set_bus_linear_volume(bus_name: String, value: float) -> void:
+    var bus_index := AudioServer.get_bus_index(bus_name)
+    if bus_index < 0:
+        return
+    var linear := clampf(value, 0.0, 1.0)
+    AudioServer.set_bus_volume_db(bus_index, -80.0 if linear <= 0.0 else linear_to_db(linear))
+
+func _load_audio_settings(path := SETTINGS_PATH) -> void:
+    var settings := DZGameSettings.load_settings(path)
+    var master := float(settings.get("master_volume", 0.85))
+    var sfx := float(settings.get("sfx_volume", 0.90))
+    if hud != null:
+        hud.master_volume.set_value_no_signal(master)
+        hud.sfx_volume.set_value_no_signal(sfx)
+    _set_bus_linear_volume("Master", master)
+    _set_bus_linear_volume("SFX", sfx)
+
+func _save_audio_settings(path := SETTINGS_PATH) -> void:
+    var master := hud.master_volume.value if hud != null else 0.85
+    var sfx := hud.sfx_volume.value if hud != null else 0.90
+    DZGameSettings.save(path, {
+        "master_volume": master,
+        "sfx_volume": sfx
+    })
+
+func _on_master_volume_changed(value: float) -> void:
+    _set_bus_linear_volume("Master", value)
+    _save_audio_settings()
+
+func _on_sfx_volume_changed(value: float) -> void:
+    _set_bus_linear_volume("SFX", value)
+    _save_audio_settings()
+
+func _on_pause_requested() -> void:
+    if game_over or not pending_upgrades.is_empty():
+        return
+    hud.show_pause_settings()
+    get_tree().paused = true
+
+func _on_resume_requested() -> void:
+    hud.hide_pause_settings()
+    if not game_over and pending_upgrades.is_empty():
+        get_tree().paused = false
 
 func _on_player_died() -> void:
     Engine.time_scale = 1.0
     game_over = true
+    _freeze_combat()
     if hud:
         hud.show_game_over(kills, level, elapsed)
+
+func _freeze_combat() -> void:
+    if player != null and is_instance_valid(player):
+        player.set_combat_enabled(false)
+    for node in get_tree().get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy != null:
+            enemy.set_combat_enabled(false)
+    for node in get_tree().get_nodes_in_group("projectiles"):
+        var projectile := node as DZProjectile
+        if projectile != null:
+            projectile.set_combat_enabled(false)
+    for node in get_tree().get_nodes_in_group("hostile_projectiles"):
+        var hostile := node as DZEnemyProjectile
+        if hostile != null:
+            hostile.set_combat_enabled(false)
 
 func _on_restart_requested() -> void:
     Engine.time_scale = 1.0
@@ -1162,90 +2134,159 @@ func _wave_name() -> String:
 
 func _build_world() -> void:
     var environment := WorldEnvironment.new()
+    environment.name = "QuarantineEnvironment"
     var env := Environment.new()
     env.background_mode = Environment.BG_COLOR
-    env.background_color = Color(0.012, 0.020, 0.027)
+    env.background_color = Color(0.008, 0.014, 0.020)
     env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-    env.ambient_light_color = Color(0.22, 0.34, 0.42)
-    env.ambient_light_energy = 0.85
+    env.ambient_light_color = Color(0.16, 0.27, 0.34)
+    env.ambient_light_energy = 0.72
     env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+    env.fog_enabled = true
+    env.fog_light_color = Color(0.08, 0.16, 0.20)
+    env.fog_light_energy = 0.42
+    env.fog_density = 0.010
     environment.environment = env
     add_child(environment)
 
     var sun := DirectionalLight3D.new()
+    sun.name = "ColdKeyLight"
     sun.rotation_degrees = Vector3(-58.0, -28.0, 0.0)
-    sun.light_color = Color(0.76, 0.88, 1.0)
-    sun.light_energy = 1.4
+    sun.light_color = Color(0.70, 0.84, 1.0)
+    sun.light_energy = 1.28
     sun.shadow_enabled = true
     add_child(sun)
 
     var fill := OmniLight3D.new()
-    fill.position = Vector3(0.0, 8.0, 0.0)
-    fill.light_color = Color(0.08, 0.65, 1.0)
-    fill.light_energy = 2.2
-    fill.omni_range = 28.0
+    fill.name = "ContainmentFill"
+    fill.position = Vector3(0.0, 7.5, 0.0)
+    fill.light_color = Color(0.04, 0.52, 0.92)
+    fill.light_energy = 1.7
+    fill.omni_range = 24.0
     add_child(fill)
 
+    for side in [-1.0, 1.0]:
+        var rim := OmniLight3D.new()
+        rim.name = "EmergencyRimL" if side < 0.0 else "EmergencyRimR"
+        rim.position = Vector3(side * 18.0, 3.2, -10.0)
+        rim.light_color = Color(1.0, 0.17, 0.045)
+        rim.light_energy = 3.4
+        rim.omni_range = 13.0
+        add_child(rim)
+
     var floor := MeshInstance3D.new()
+    floor.name = "QuarantineFloor"
     var plane := PlaneMesh.new()
     plane.size = Vector2(72.0, 72.0)
     floor.mesh = plane
     var floor_mat := StandardMaterial3D.new()
-    floor_mat.albedo_color = Color(0.075, 0.09, 0.095)
-    floor_mat.roughness = 0.86
-    floor_mat.metallic = 0.08
+    floor_mat.albedo_color = Color(0.045, 0.055, 0.060)
+    floor_mat.roughness = 0.91
+    floor_mat.metallic = 0.05
     floor.material_override = floor_mat
     add_child(floor)
 
-    for i in range(34):
-        if i < 12:
-            var authored_prop := DZAssetLibrary.barrier()
-            if authored_prop != null:
-                authored_prop.position = Vector3(randf_range(-28.0, 28.0), 0.0, randf_range(-28.0, 28.0))
-                authored_prop.rotation.y = randf_range(0.0, TAU)
-                authored_prop.scale = Vector3.ONE * randf_range(0.85, 1.15)
-                add_child(authored_prop)
-                continue
-        var prop := MeshInstance3D.new()
-        var box := BoxMesh.new()
-        box.size = Vector3(randf_range(0.5, 1.8), randf_range(0.25, 1.1), randf_range(0.5, 1.8))
-        prop.mesh = box
-        prop.position = Vector3(randf_range(-28.0, 28.0), box.size.y * 0.5, randf_range(-28.0, 28.0))
-        var mat := StandardMaterial3D.new()
-        mat.albedo_color = Color(0.11, 0.13, 0.14).lerp(Color(0.22, 0.12, 0.06), randf() * 0.35)
-        mat.roughness = 0.74
-        mat.metallic = 0.35
-        prop.material_override = mat
-        add_child(prop)
+    _build_containment_lanes()
+    _build_authored_barrier_clusters()
+    _build_perimeter_beacons()
 
-    for i in range(18):
-        var stripe := MeshInstance3D.new()
-        var stripe_mesh := BoxMesh.new()
-        stripe_mesh.size = Vector3(randf_range(1.5, 4.0), 0.015, 0.08)
-        stripe.mesh = stripe_mesh
-        stripe.position = Vector3(randf_range(-26.0, 26.0), 0.012, randf_range(-26.0, 26.0))
-        stripe.rotation.y = randf_range(0.0, TAU)
-        var stripe_mat := StandardMaterial3D.new()
-        stripe_mat.albedo_color = Color(0.82, 0.42, 0.06)
-        stripe_mat.emission_enabled = true
-        stripe_mat.emission = Color(0.45, 0.10, 0.01)
-        stripe_mat.emission_energy_multiplier = 0.45
-        stripe.material_override = stripe_mat
-        add_child(stripe)
+func _build_authored_barrier_clusters() -> void:
+    var clusters := [
+        {"center": Vector3(-16.0, 0.0, -11.0), "rotation": 0.18},
+        {"center": Vector3(15.0, 0.0, -9.0), "rotation": -0.28},
+        {"center": Vector3(-14.0, 0.0, 13.0), "rotation": 0.72},
+        {"center": Vector3(17.0, 0.0, 12.0), "rotation": -0.66}
+    ]
+    for cluster_index in range(clusters.size()):
+        var cluster: Dictionary = clusters[cluster_index]
+        var center: Vector3 = cluster["center"]
+        var base_rotation: float = cluster["rotation"]
+        for item_index in range(4):
+            var barrier := DZAssetLibrary.barrier()
+            if barrier == null:
+                continue
+            barrier.name = "AuthoredBarrier_%d_%d" % [cluster_index, item_index]
+            var lateral := (float(item_index) - 1.5) * 1.65
+            barrier.position = center + Vector3(lateral, 0.0, sin(float(item_index) * 1.7) * 0.42)
+            barrier.rotation.y = base_rotation + (0.08 if item_index % 2 == 0 else -0.08)
+            barrier.scale = Vector3.ONE * (0.95 + float(item_index % 3) * 0.05)
+            add_child(barrier)
+
+func _build_containment_lanes() -> void:
+    var lane_material := StandardMaterial3D.new()
+    lane_material.albedo_color = Color(0.84, 0.37, 0.045)
+    lane_material.emission_enabled = true
+    lane_material.emission = Color(0.68, 0.13, 0.015)
+    lane_material.emission_energy_multiplier = 0.72
+    lane_material.roughness = 0.58
+
+    for axis in range(2):
+        for offset in [-8.0, 8.0]:
+            for segment in range(-5, 6):
+                var stripe := MeshInstance3D.new()
+                stripe.name = "ContainmentLane_%d_%d_%d" % [axis, int(offset), segment]
+                var stripe_mesh := BoxMesh.new()
+                stripe_mesh.size = Vector3(2.6, 0.016, 0.10) if axis == 0 else Vector3(0.10, 0.016, 2.6)
+                stripe.mesh = stripe_mesh
+                stripe.position = Vector3(float(segment) * 3.6, 0.014, offset) if axis == 0 else Vector3(offset, 0.014, float(segment) * 3.6)
+                stripe.material_override = lane_material
+                add_child(stripe)
+
+    for ring_index in range(4):
+        var marker := MeshInstance3D.new()
+        marker.name = "ContainmentMarker_%d" % ring_index
+        var marker_mesh := CylinderMesh.new()
+        marker_mesh.top_radius = 2.3 + float(ring_index) * 0.72
+        marker_mesh.bottom_radius = marker_mesh.top_radius
+        marker_mesh.height = 0.012
+        marker.mesh = marker_mesh
+        marker.position.y = 0.010 + float(ring_index) * 0.001
+        var marker_mat := StandardMaterial3D.new()
+        marker_mat.albedo_color = Color(0.04, 0.38, 0.52, 0.045)
+        marker_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+        marker_mat.emission_enabled = true
+        marker_mat.emission = Color(0.02, 0.28, 0.44)
+        marker_mat.emission_energy_multiplier = 0.32 + float(ring_index) * 0.08
+        marker.material_override = marker_mat
+        add_child(marker)
+
+func _build_perimeter_beacons() -> void:
+    var beacon_material := StandardMaterial3D.new()
+    beacon_material.albedo_color = Color(1.0, 0.10, 0.025)
+    beacon_material.emission_enabled = true
+    beacon_material.emission = Color(1.0, 0.045, 0.01)
+    beacon_material.emission_energy_multiplier = 4.0
+
+    for index in range(12):
+        var angle := TAU * float(index) / 12.0
+        var radius := 27.0
+        var beacon := MeshInstance3D.new()
+        beacon.name = "PerimeterBeacon_%02d" % index
+        var mesh := CylinderMesh.new()
+        mesh.top_radius = 0.07
+        mesh.bottom_radius = 0.13
+        mesh.height = 0.72
+        beacon.mesh = mesh
+        beacon.position = Vector3(cos(angle) * radius, 0.36, sin(angle) * radius)
+        beacon.material_override = beacon_material
+        add_child(beacon)
 
 func _build_combat_audio() -> void:
     impact_audio = AudioStreamPlayer.new()
     impact_audio.name = "ImpactAudio"
+    impact_audio.bus = "SFX"
     impact_audio.volume_db = -9.0
     add_child(impact_audio)
 
     boss_audio = AudioStreamPlayer.new()
     boss_audio.name = "BossStinger"
+    boss_audio.bus = "SFX"
     boss_audio.volume_db = -6.0
     boss_audio.stream = DZCombatAudio.boss_stinger()
     add_child(boss_audio)
 
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
+    HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
     if impact_audio == null:
         return
     var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
@@ -1258,6 +2299,45 @@ func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
 func _play_boss_stinger() -> void:
     if boss_audio != null:
         boss_audio.play()
+
+func _update_offscreen_threat_indicator() -> void:
+    if hud == null or camera == null or player == null or game_over:
+        if hud:
+            hud.hide_offscreen_threat()
+        return
+
+    var best: DZEnemy
+    var best_distance := INF
+    for node in get_tree().get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy == null or enemy.dead or (enemy.kind != "elite" and enemy.kind != "boss"):
+            continue
+        var distance := player.global_position.distance_to(enemy.global_position)
+        if distance < best_distance:
+            best_distance = distance
+            best = enemy
+
+    if best == null:
+        hud.hide_offscreen_threat()
+        return
+
+    var viewport_size := get_viewport().get_visible_rect().size
+    var screen_pos := camera.unproject_position(best.global_position + Vector3(0.0, 0.9, 0.0))
+    var margin := Vector2(84.0, 72.0)
+    var inside := not camera.is_position_behind(best.global_position) and screen_pos.x >= margin.x and screen_pos.y >= margin.y and screen_pos.x <= viewport_size.x - margin.x and screen_pos.y <= viewport_size.y - margin.y
+
+    if inside:
+        hud.hide_offscreen_threat()
+        return
+
+    var center := viewport_size * 0.5
+    var direction := screen_pos - center
+    if camera.is_position_behind(best.global_position):
+        direction = -direction
+    if direction.length_squared() < 0.001:
+        direction = Vector2.RIGHT
+
+    hud.set_offscreen_threat(direction.normalized(), best.kind, best_distance)
 ```
 
 ## File: scripts/Player.gd
@@ -1286,6 +2366,9 @@ var authored_anim: AnimationPlayer
 var current_anim := ""
 var shot_audio: AudioStreamPlayer3D
 var shot_streams := {}
+var damage_pulse: MeshInstance3D
+var combat_enabled := true
+var applied_protocols := {}
 
 func _ready() -> void:
     add_to_group("player")
@@ -1294,6 +2377,11 @@ func _ready() -> void:
     health_changed.emit(health, max_health)
 
 func _physics_process(delta: float) -> void:
+    if not combat_enabled or health <= 0.0:
+        velocity = Vector3.ZERO
+        touch_move = Vector2.ZERO
+        return
+
     invulnerability = max(0.0, invulnerability - delta)
     fire_clock -= delta
 
@@ -1325,6 +2413,14 @@ func _physics_process(delta: float) -> void:
             _fire_at(target)
             fire_clock = fire_interval
 
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if enabled:
+        return
+    velocity = Vector3.ZERO
+    touch_move = Vector2.ZERO
+    fire_clock = max(fire_clock, fire_interval)
+
 func set_touch_move(value: Vector2) -> void:
     touch_move = value.limit_length(1.0)
 
@@ -1334,6 +2430,7 @@ func take_damage(amount: float) -> void:
     health = max(0.0, health - amount)
     invulnerability = 0.18
     health_changed.emit(health, max_health)
+    _trigger_damage_feedback()
     if health <= 0.0:
         died.emit()
 
@@ -1341,7 +2438,50 @@ func heal_full() -> void:
     health = max_health
     health_changed.emit(health, max_health)
 
+func can_apply_upgrade(id: String) -> bool:
+    if id == "multishot" and weapon_profile == "rail":
+        return false
+    if not id.ends_with("_protocol"):
+        return true
+    return applied_protocols.is_empty()
+
+func _apply_weapon_profile_data(profile_id: String, data: Dictionary) -> void:
+    weapon_profile = profile_id
+    if data.has("tint"):
+        weapon_tint = data["tint"]
+
+    weapon_damage *= float(data.get("damage_multiplier", 1.0))
+    projectile_speed *= float(data.get("projectile_speed_multiplier", 1.0))
+
+    var interval_multiplier := float(data.get("fire_interval_multiplier", 1.0))
+    fire_interval *= interval_multiplier
+    if data.has("fire_interval_floor"):
+        fire_interval = max(float(data["fire_interval_floor"]), fire_interval)
+    if data.has("fire_interval_cap"):
+        fire_interval = min(float(data["fire_interval_cap"]), fire_interval)
+
+    if data.has("multishot_set"):
+        multishot = int(data["multishot_set"])
+    elif data.has("multishot_add"):
+        multishot = min(
+            multishot + int(data["multishot_add"]),
+            int(data.get("multishot_cap", 5))
+        )
+
+    if data.has("spread_set"):
+        spread_degrees = float(data["spread_set"])
+    if data.has("spread_min"):
+        spread_degrees = max(spread_degrees, float(data["spread_min"]))
+    if data.has("spread_max"):
+        spread_degrees = min(spread_degrees, float(data["spread_max"]))
+
 func apply_upgrade(id: String) -> void:
+    if not can_apply_upgrade(id):
+        return
+    if id.ends_with("_protocol"):
+        if applied_protocols.has(id):
+            return
+        applied_protocols[id] = true
     match id:
         "damage":
             weapon_damage *= 1.25
@@ -1357,6 +2497,29 @@ func apply_upgrade(id: String) -> void:
             projectile_speed *= 1.20
         "multishot":
             multishot = min(multishot + 1, 5)
+        "berserker":
+            weapon_damage *= 1.45
+            max_health = max(40.0, max_health * 0.85)
+            health = min(health, max_health)
+            health_changed.emit(health, max_health)
+        "overclock":
+            fire_interval = max(0.09, fire_interval * 0.72)
+            weapon_damage *= 0.90
+        "fortress":
+            max_health += 55.0
+            health = min(max_health, health + 55.0)
+            move_speed *= 0.94
+            health_changed.emit(health, max_health)
+        "scatter_protocol":
+            _apply_weapon_profile_data("scatter", DZWeaponProfiles.profile("scatter"))
+        "rail_protocol":
+            _apply_weapon_profile_data("rail", DZWeaponProfiles.profile("rail"))
+        "inferno_protocol":
+            _apply_weapon_profile_data("inferno", DZWeaponProfiles.profile("inferno"))
+        "cryo_protocol":
+            _apply_weapon_profile_data("cryo", DZWeaponProfiles.profile("cryo"))
+        "arc_protocol":
+            _apply_weapon_profile_data("arc", DZWeaponProfiles.profile("arc"))
 
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
@@ -1423,6 +2586,7 @@ func _build_visual() -> void:
         ring_mat.emission_energy_multiplier = 1.6
         ring.material_override = ring_mat
         add_child(ring)
+        _build_damage_feedback()
         return
 
     var visual := Node3D.new()
@@ -1463,6 +2627,48 @@ func _build_visual() -> void:
     gun.rotation.x = deg_to_rad(-8.0)
     gun.material_override = body_mat
     visual.add_child(gun)
+    _build_damage_feedback()
+
+func _build_damage_feedback() -> void:
+    damage_pulse = MeshInstance3D.new()
+    damage_pulse.name = "DamagePulse"
+    var pulse_mesh := CylinderMesh.new()
+    pulse_mesh.top_radius = 0.82
+    pulse_mesh.bottom_radius = 0.82
+    pulse_mesh.height = 0.035
+    damage_pulse.mesh = pulse_mesh
+    damage_pulse.position.y = 0.06
+    damage_pulse.visible = false
+
+    var pulse_mat := StandardMaterial3D.new()
+    pulse_mat.albedo_color = Color(1.0, 0.08, 0.035, 0.34)
+    pulse_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    pulse_mat.emission_enabled = true
+    pulse_mat.emission = Color(1.0, 0.035, 0.01)
+    pulse_mat.emission_energy_multiplier = 3.2
+    pulse_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    damage_pulse.material_override = pulse_mat
+    add_child(damage_pulse)
+
+func _trigger_damage_feedback() -> void:
+    if damage_pulse != null and is_instance_valid(damage_pulse):
+        damage_pulse.visible = true
+        damage_pulse.scale = Vector3(0.72, 1.0, 0.72)
+        var pulse_tween: Tween = create_tween()
+        pulse_tween.set_trans(Tween.TRANS_QUAD)
+        pulse_tween.set_ease(Tween.EASE_OUT)
+        pulse_tween.tween_property(damage_pulse, "scale", Vector3(1.42, 1.0, 1.42), 0.16)
+        pulse_tween.tween_callback(func() -> void:
+            if damage_pulse != null and is_instance_valid(damage_pulse):
+                damage_pulse.visible = false
+        )
+
+    var visual := get_node_or_null("Visual") as Node3D
+    if visual != null:
+        var base_scale: Vector3 = visual.scale
+        var recoil_tween: Tween = create_tween()
+        recoil_tween.tween_property(visual, "scale", base_scale * Vector3(1.08, 0.94, 1.08), 0.035)
+        recoil_tween.tween_property(visual, "scale", base_scale, 0.085)
 
 func _update_authored_animation() -> void:
     if authored_anim == null:
@@ -1510,50 +2716,71 @@ var trail_length := 0.55
 var trail_width := 0.055
 var core_radius := 0.11
 var impact_scale := 1.0
+var pierce_remaining := 0
+var splash_radius := 0.0
+var chain_targets := 0
+var slow_multiplier := 1.0
+var slow_duration := 0.0
+var hit_enemy_ids := {}
+var spawn_secondary_fx := true
+var combat_enabled := true
+var configured_origin := Vector3.ZERO
+var has_configured_origin := false
 
 func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color,
         profile := "vanguard") -> void:
-    global_position = origin
+    configured_origin = origin
+    has_configured_origin = true
+    if is_inside_tree():
+        global_position = origin
     velocity = direction.normalized() * speed
     damage = shot_damage
     tint = shot_tint
     visual_profile = profile
     _apply_profile(profile)
 
+static func protocol_pierce_budget(profile: String) -> int:
+    return 2 if profile == "rail" else 0
+
+static func protocol_splash_radius(profile: String) -> float:
+    return 1.85 if profile == "inferno" else 0.0
+
+static func protocol_chain_targets(profile: String) -> int:
+    return 2 if profile == "arc" else 0
+
+static func protocol_slow(profile: String) -> Vector2:
+    return Vector2(0.62, 1.6) if profile == "cryo" else Vector2(1.0, 0.0)
+
 func _apply_profile(profile: String) -> void:
+    var feedback := DZWeaponProfiles.profile(profile)
+    trail_length = float(feedback.get("trail_length", 0.55))
+    impact_scale = float(feedback.get("impact_weight", 1.0))
+    var projectile_scale := float(feedback.get("projectile_scale", 1.0))
+    core_radius = 0.11 * projectile_scale
+    trail_width = 0.055 * projectile_scale
     match profile:
         "scatter":
-            trail_length = 0.32
-            trail_width = 0.09
-            core_radius = 0.13
-            impact_scale = 1.18
+            trail_width *= 1.40
         "rail":
-            trail_length = 1.25
-            trail_width = 0.035
-            core_radius = 0.075
-            impact_scale = 1.34
+            trail_width *= 0.64
+            pierce_remaining = protocol_pierce_budget(profile)
         "inferno":
-            trail_length = 0.72
-            trail_width = 0.075
-            core_radius = 0.12
-            impact_scale = 1.22
+            trail_width *= 1.24
+            splash_radius = protocol_splash_radius(profile)
         "cryo":
-            trail_length = 0.82
-            trail_width = 0.07
-            core_radius = 0.12
-            impact_scale = 1.24
+            trail_width *= 1.18
+            var slow := protocol_slow(profile)
+            slow_multiplier = slow.x
+            slow_duration = slow.y
         "arc":
-            trail_length = 0.94
-            trail_width = 0.045
-            core_radius = 0.09
-            impact_scale = 1.20
-        _:
-            trail_length = 0.55
-            trail_width = 0.055
-            core_radius = 0.11
-            impact_scale = 1.0
+            trail_width *= 0.82
+            chain_targets = protocol_chain_targets(profile)
 
 func _ready() -> void:
+    top_level = true
+    if has_configured_origin:
+        global_position = configured_origin
+    add_to_group("projectiles")
     var glow := MeshInstance3D.new()
     var mesh := SphereMesh.new()
     mesh.radius = core_radius
@@ -1584,7 +2811,7 @@ func _ready() -> void:
     elif visual_profile == "arc":
         _add_arc_accent()
     elif visual_profile == "inferno":
-        _add_flame_core()
+        _add_flame_core(mat)
 
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity.normalized(), Vector3.UP)
@@ -1613,32 +2840,52 @@ func _add_arc_accent() -> void:
     accent.material_override = mat
     add_child(accent)
 
-func _add_flame_core() -> void:
-    var core := OmniLight3D.new()
-    core.light_color = Color(1.0, 0.30, 0.04)
-    core.light_energy = 1.1
-    core.omni_range = 1.35
-    add_child(core)
+func _add_flame_core(base_material: StandardMaterial3D) -> void:
+    var flame := MeshInstance3D.new()
+    var mesh := SphereMesh.new()
+    mesh.radius = core_radius * 0.58
+    mesh.height = core_radius * 1.55
+    flame.mesh = mesh
+    flame.scale = Vector3(0.72, 0.72, 1.42)
+    flame.material_override = base_material
+    add_child(flame)
+
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if not enabled:
+        velocity = Vector3.ZERO
 
 func _physics_process(delta: float) -> void:
+    if not combat_enabled:
+        return
     age += delta
     global_position += velocity * delta
-
-    for node in get_tree().get_nodes_in_group("enemies"):
+    for node in _candidate_enemies():
         if not is_instance_valid(node):
             continue
         var enemy := node as DZEnemy
-        if enemy == null or enemy.dead:
+        if enemy == null or enemy.dead or hit_enemy_ids.has(enemy.get_instance_id()):
             continue
         if global_position.distance_squared_to(enemy.global_position) <= radius * radius:
             var critical := randf() < critical_chance
-            enemy.take_damage(damage * (1.75 if critical else 1.0), critical)
+            var dealt_damage := damage * (1.75 if critical else 1.0)
+            hit_enemy_ids[enemy.get_instance_id()] = true
+            enemy.take_damage(dealt_damage, critical)
+            _apply_protocol_hit(enemy, dealt_damage)
             _impact(critical)
+            if visual_profile == "rail" and pierce_remaining > 0:
+                pierce_remaining -= 1
+                continue
             queue_free()
             return
-
     if age >= lifetime:
         queue_free()
+
+func _candidate_enemies() -> Array:
+    var scene := get_tree().current_scene if get_tree() != null else null
+    if scene != null and scene.has_method("query_enemies_near"):
+        return scene.query_enemies_near(global_position, radius)
+    return get_tree().get_nodes_in_group("enemies") if get_tree() != null else []
 
 func _impact(critical := false) -> void:
     var fx := ImpactFx.new()
@@ -1646,6 +2893,268 @@ func _impact(critical := false) -> void:
     fx.scale_boost = (1.45 if critical else 1.0) * impact_scale
     get_tree().current_scene.add_child(fx)
     fx.global_position = global_position
+
+func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
+    match visual_profile:
+        "inferno":
+            primary.apply_burn(dealt_damage * 0.16, 2.0)
+            _apply_splash(primary, dealt_damage * 0.45, splash_radius)
+        "cryo":
+            primary.apply_slow(slow_multiplier, slow_duration)
+        "arc":
+            primary.apply_shock(0.24)
+            _apply_chain(primary, dealt_damage)
+
+func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) -> void:
+    if range_radius <= 0.0:
+        return
+    for node in get_tree().get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy == null or enemy.dead or enemy == primary:
+            continue
+        if primary.global_position.distance_to(enemy.global_position) <= range_radius:
+            enemy.take_damage(splash_damage, false)
+            if spawn_secondary_fx:
+                var fx := ImpactFx.new()
+                fx.color = Color(1.0, 0.24, 0.035)
+                fx.scale_boost = 0.72
+                get_tree().current_scene.add_child(fx)
+                fx.global_position = enemy.global_position + Vector3(0.0, 0.45, 0.0)
+
+func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
+    if chain_targets <= 0:
+        return
+    var candidates: Array[DZEnemy] = []
+    for node in get_tree().get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy == null or enemy.dead or enemy == primary:
+            continue
+        if primary.global_position.distance_to(enemy.global_position) <= 3.8:
+            candidates.append(enemy)
+    candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
+        return primary.global_position.distance_squared_to(a.global_position) < primary.global_position.distance_squared_to(b.global_position)
+    )
+    var count: int = mini(chain_targets, candidates.size())
+    for i in range(count):
+        var chained := candidates[i]
+        var falloff := 0.56 if i == 0 else 0.38
+        chained.take_damage(dealt_damage * falloff, false)
+        if spawn_secondary_fx:
+            var fx := ImpactFx.new()
+            fx.color = Color(0.64, 0.42, 1.0)
+            fx.scale_boost = 0.78
+            get_tree().current_scene.add_child(fx)
+            fx.global_position = chained.global_position + Vector3(0.0, 0.55, 0.0)
+```
+
+## File: scripts/RunDirector.gd
+```
+class_name DZRunDirector
+extends RefCounted
+
+const PHASES := [
+    {"start": 0.0, "name": "BREACH", "interval": 0.82, "batch": 1, "max_enemies": 78},
+    {"start": 45.0, "name": "SURGE", "interval": 0.68, "batch": 2, "max_enemies": 88},
+    {"start": 90.0, "name": "PRESSURE", "interval": 0.54, "batch": 3, "max_enemies": 98},
+    {"start": 150.0, "name": "OVERRUN", "interval": 0.40, "batch": 4, "max_enemies": 110},
+    {"start": 225.0, "name": "EXTINCTION", "interval": 0.31, "batch": 5, "max_enemies": 118}
+]
+
+func profile(elapsed: float, level: int) -> Dictionary:
+    var phase: Dictionary = PHASES[0]
+    for candidate in PHASES:
+        if elapsed >= float(candidate["start"]):
+            phase = candidate
+        else:
+            break
+    var phase_age: float = maxf(0.0, elapsed - float(phase["start"]))
+    var interval: float = maxf(0.22, float(phase["interval"]) - minf(0.09, phase_age * 0.0009))
+    var difficulty: float = 1.0 + elapsed / 210.0 + float(maxi(level - 1, 0)) * 0.035
+    return {
+        "phase": String(phase["name"]),
+        "spawn_interval": interval,
+        "batch_size": int(phase["batch"]),
+        "difficulty": difficulty,
+        "max_enemies": int(phase["max_enemies"])
+    }
+
+func choose_enemy(elapsed: float, level: int, rng: RandomNumberGenerator) -> String:
+    var weights := _weights(elapsed, level)
+    var total := 0.0
+    for weight in weights.values():
+        total += float(weight)
+    var roll := rng.randf() * total
+    var cursor := 0.0
+    for kind in ["shambler", "runner", "charger", "harrier", "regenerator", "brute", "elite"]:
+        cursor += float(weights.get(kind, 0.0))
+        if roll <= cursor:
+            return kind
+    return "shambler"
+
+func enemy_sequence(elapsed: float, level: int, seed_value: int, count: int) -> Array:
+    var rng := RandomNumberGenerator.new()
+    rng.seed = seed_value
+    var result: Array = []
+    for i in range(maxi(count, 0)):
+        result.append(choose_enemy(elapsed, level, rng))
+    return result
+
+func _weights(elapsed: float, level: int) -> Dictionary:
+    var weights := {
+        "shambler": 1.0,
+        "runner": 0.0,
+        "charger": 0.0,
+        "harrier": 0.0,
+        "regenerator": 0.0,
+        "brute": 0.0,
+        "elite": 0.0
+    }
+    if elapsed >= 25.0:
+        weights["runner"] = 0.38
+    if elapsed >= 45.0:
+        weights["charger"] = 0.22
+    if elapsed >= 65.0:
+        weights["harrier"] = 0.18
+    if elapsed >= 82.0:
+        weights["regenerator"] = 0.14
+    if elapsed >= 100.0:
+        weights["brute"] = 0.12
+    if elapsed >= 125.0:
+        weights["elite"] = 0.08
+    var escalation := clampf((elapsed - 90.0) / 180.0, 0.0, 1.0) + clampf(float(level - 4) * 0.035, 0.0, 0.18)
+    weights["shambler"] = maxf(0.48, 1.0 - escalation * 0.42)
+    weights["charger"] += escalation * 0.08
+    weights["harrier"] += escalation * 0.07
+    weights["brute"] += escalation * 0.06
+    weights["elite"] += escalation * 0.04
+    return weights
+```
+
+## File: scripts/SpatialHash.gd
+```
+class_name DZSpatialHash
+extends RefCounted
+
+var cell_size := 4.0
+var buckets := {}
+
+func _init(size := 4.0) -> void:
+    cell_size = maxf(0.5, float(size))
+
+func rebuild(nodes: Array) -> void:
+    buckets.clear()
+    for node in nodes:
+        if node == null or not is_instance_valid(node) or not node is Node3D:
+            continue
+        var key := _cell((node as Node3D).global_position)
+        if not buckets.has(key):
+            buckets[key] = []
+        buckets[key].append(node)
+
+func query(position: Vector3, radius: float) -> Array:
+    var result: Array = []
+    var safe_radius := maxf(0.0, radius)
+    var min_key := _cell(position - Vector3(safe_radius, 0.0, safe_radius))
+    var max_key := _cell(position + Vector3(safe_radius, 0.0, safe_radius))
+    var radius_sq := safe_radius * safe_radius
+    for x in range(min_key.x, max_key.x + 1):
+        for z in range(min_key.y, max_key.y + 1):
+            var key := Vector2i(x, z)
+            if not buckets.has(key):
+                continue
+            for node in buckets[key]:
+                if node == null or not is_instance_valid(node) or not node is Node3D:
+                    continue
+                var delta := (node as Node3D).global_position - position
+                delta.y = 0.0
+                if delta.length_squared() <= radius_sq:
+                    result.append(node)
+    return result
+
+func _cell(position: Vector3) -> Vector2i:
+    return Vector2i(
+        int(floor(position.x / cell_size)),
+        int(floor(position.z / cell_size))
+    )
+```
+
+## File: scripts/WeaponProfiles.gd
+```
+class_name DZWeaponProfiles
+extends RefCounted
+
+const PROFILES := {
+    "vanguard": {
+        "tint": Color(0.18, 0.90, 1.0),
+        "damage_multiplier": 1.0,
+        "projectile_speed_multiplier": 1.0,
+        "fire_interval_multiplier": 1.0,
+        "projectile_scale": 1.0,
+        "trail_length": 0.55,
+        "impact_weight": 1.0
+    },
+    "scatter": {
+        "tint": Color(1.0, 0.56, 0.18),
+        "damage_multiplier": 0.82,
+        "projectile_speed_multiplier": 1.0,
+        "fire_interval_multiplier": 1.0,
+        "multishot_add": 2,
+        "multishot_cap": 5,
+        "spread_min": 11.0,
+        "projectile_scale": 1.16,
+        "trail_length": 0.32,
+        "impact_weight": 1.18
+    },
+    "rail": {
+        "tint": Color(0.72, 0.58, 1.0),
+        "damage_multiplier": 1.50,
+        "projectile_speed_multiplier": 1.40,
+        "fire_interval_multiplier": 1.22,
+        "fire_interval_cap": 0.80,
+        "multishot_set": 1,
+        "spread_set": 3.0,
+        "projectile_scale": 0.78,
+        "trail_length": 1.25,
+        "impact_weight": 1.34
+    },
+    "inferno": {
+        "tint": Color(1.0, 0.24, 0.035),
+        "damage_multiplier": 1.20,
+        "projectile_speed_multiplier": 1.0,
+        "fire_interval_multiplier": 1.08,
+        "fire_interval_cap": 0.80,
+        "projectile_scale": 1.10,
+        "trail_length": 0.72,
+        "impact_weight": 1.22
+    },
+    "cryo": {
+        "tint": Color(0.30, 0.90, 1.0),
+        "damage_multiplier": 0.95,
+        "projectile_speed_multiplier": 1.12,
+        "fire_interval_multiplier": 0.90,
+        "fire_interval_floor": 0.09,
+        "projectile_scale": 1.08,
+        "trail_length": 0.82,
+        "impact_weight": 1.24
+    },
+    "arc": {
+        "tint": Color(0.64, 0.42, 1.0),
+        "damage_multiplier": 0.90,
+        "projectile_speed_multiplier": 1.0,
+        "fire_interval_multiplier": 0.92,
+        "fire_interval_floor": 0.09,
+        "multishot_add": 1,
+        "multishot_cap": 5,
+        "spread_max": 4.0,
+        "projectile_scale": 0.92,
+        "trail_length": 0.94,
+        "impact_weight": 1.20
+    }
+}
+
+static func profile(id: String) -> Dictionary:
+    var key := id if PROFILES.has(id) else "vanguard"
+    return (PROFILES[key] as Dictionary).duplicate(true)
 ```
 
 ## File: scripts/XpOrb.gd
@@ -1690,6 +3199,68 @@ func _process(delta: float) -> void:
     if distance < 0.55:
         collected.emit(amount)
         queue_free()
+```
+
+## File: tests/attack_telegraph_escalation_test.gd
+```
+extends SceneTree
+
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+
+func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _run_test() -> void:
+    var enemy_source := FileAccess.get_file_as_string("res://scripts/Enemy.gd")
+    var show_start := enemy_source.find("func _show_telegraph")
+    var impact_start := enemy_source.find("func _spawn_attack_impact")
+    var show_block := enemy_source.substr(show_start, impact_start - show_start)
+    var add_index := show_block.find("add_child(telegraph_visual)")
+    var global_index := show_block.find("telegraph_visual.global_position")
+    if add_index < 0 or global_index < 0 or global_index < add_index:
+        push_error("Telegraph global transform must be assigned only after scene insertion")
+        quit(1)
+        return
+
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    await process_frame
+
+    var enemy := ENEMY_SCRIPT.new()
+    root.add_child(enemy)
+    await process_frame
+
+    enemy.kind = "boss"
+    enemy.global_position = Vector3.ZERO
+    enemy.attack_target_position = Vector3(2.0, 0.0, 0.0)
+    enemy._show_telegraph(1.75, 0.40)
+    await process_frame
+
+    if enemy.telegraph_visual == null or enemy.telegraph_material == null:
+        push_error("Telegraph visual/material missing")
+        quit(1)
+        return
+
+    var start_energy := enemy.telegraph_material.emission_energy_multiplier
+    var start_alpha := enemy.telegraph_material.albedo_color.a
+    await create_timer(0.22).timeout
+
+    if enemy.telegraph_material.emission_energy_multiplier <= start_energy:
+        push_error("Telegraph emission did not intensify")
+        quit(1)
+        return
+    if enemy.telegraph_material.albedo_color.a <= start_alpha:
+        push_error("Telegraph opacity did not intensify")
+        quit(1)
+        return
+    if enemy.telegraph_visual.scale.x <= 0.42:
+        push_error("Telegraph scale did not expand")
+        quit(1)
+        return
+
+    print("Deadline Zero attack telegraph escalation: OK")
+    quit(0)
 ```
 
 ## File: tests/authored_asset_validation.gd
@@ -1770,6 +3341,68 @@ func _init() -> void:
     quit()
 ```
 
+## File: tests/boss_phase_runtime_test.gd
+```
+extends SceneTree
+
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var target := Node3D.new()
+    root.add_child(target)
+
+    var boss := ENEMY_SCRIPT.new()
+    boss.configure("boss", 1.0, target)
+    boss.process_mode = Node.PROCESS_MODE_DISABLED
+    boss.spawn_secondary_fx = false
+    root.add_child(boss)
+    await process_frame
+
+    if not boss.has_method("_update_boss_phase"):
+        push_error("Boss runtime phase API is missing")
+        quit(1)
+        return
+
+    var phase1_speed: float = boss.move_speed
+    var phase1_damage: float = boss.contact_damage
+
+    boss.health = boss.max_health * 0.60
+    boss._update_boss_phase()
+    if boss.boss_phase != 2:
+        push_error("Boss did not enter phase II below 65% health")
+        quit(1)
+        return
+    if boss.move_speed <= phase1_speed or boss.contact_damage <= phase1_damage:
+        push_error("Boss phase II did not escalate movement and damage")
+        quit(1)
+        return
+
+    var phase2_speed: float = boss.move_speed
+    var phase2_damage: float = boss.contact_damage
+    boss.health = boss.max_health * 0.25
+    boss._update_boss_phase()
+    if boss.boss_phase != 3:
+        push_error("Boss did not enter phase III below 30% health")
+        quit(1)
+        return
+    if boss.move_speed <= phase2_speed or boss.contact_damage <= phase2_damage:
+        push_error("Boss phase III did not escalate movement and damage")
+        quit(1)
+        return
+
+    if boss._boss_slam_windup() >= 0.68 or boss._boss_slam_cooldown() >= 4.1:
+        push_error("Boss phase III did not accelerate slam cadence")
+        quit(1)
+        return
+
+    print("Deadline Zero boss phase runtime: OK")
+    quit(0)
+```
+
 ## File: tests/boss_reveal_camera_test.gd
 ```
 extends SceneTree
@@ -1832,6 +3465,75 @@ func _init() -> void:
     quit()
 ```
 
+## File: tests/combat_danger_hud_test.gd
+```
+extends SceneTree
+
+const HUD_SCRIPT := preload("res://scripts/Hud.gd")
+
+func _initialize() -> void:
+    var root := Node.new()
+    get_root().add_child(root)
+    var hud := HUD_SCRIPT.new()
+    root.add_child(hud)
+    await process_frame
+
+    var vignette := hud.find_child("DamageVignette", true, false) as ColorRect
+    if vignette == null:
+        push_error("Screen-space damage vignette is missing")
+        quit(1)
+        return
+    if vignette.visible:
+        push_error("Damage vignette should start hidden")
+        quit(1)
+        return
+    hud.pulse_damage_screen()
+    if not vignette.visible:
+        push_error("Damage vignette did not become visible")
+        quit(1)
+        return
+    await create_timer(0.35).timeout
+    if vignette.visible:
+        push_error("Damage vignette did not clear after pulse")
+        quit(1)
+        return
+
+    hud.set_health(30.0, 100.0)
+    if not hud.low_health_panel.visible:
+        push_error("Low-health warning missing at 30 percent")
+        quit(1)
+        return
+    if hud.low_health_label.text != "CRITICAL INTEGRITY  •  30%":
+        push_error("Unexpected low-health label")
+        quit(1)
+        return
+
+    hud.set_health(31.0, 100.0)
+    if hud.low_health_panel.visible:
+        push_error("Low-health warning should clear above threshold")
+        quit(1)
+        return
+
+    hud.set_offscreen_threat(Vector2(-1.0, -1.0), "boss", 27.6)
+    if not hud.threat_panel.visible:
+        push_error("Threat indicator should be visible")
+        quit(1)
+        return
+    if hud.threat_label.text != "↖  BOSS  28m":
+        push_error("Unexpected threat label: %s" % hud.threat_label.text)
+        quit(1)
+        return
+
+    hud.set_offscreen_threat(Vector2.ZERO, "boss", 10.0)
+    if hud.threat_panel.visible:
+        push_error("Zero direction should clear threat indicator")
+        quit(1)
+        return
+
+    print("Deadline Zero combat danger HUD: OK")
+    quit(0)
+```
+
 ## File: tests/combat_feel_test.gd
 ```
 extends SceneTree
@@ -1871,6 +3573,67 @@ func _init() -> void:
     quit()
 ```
 
+## File: tests/enemy_hit_reaction_test.gd
+```
+extends SceneTree
+
+func _initialize() -> void:
+    var source := FileAccess.get_file_as_string("res://scripts/Enemy.gd")
+    var required := {
+        "hit_reaction_profile": "Enemy must expose a hit reaction profile",
+        "_play_hit_reaction": "Enemy damage must trigger a hit reaction",
+        "normal_hit": "Normal enemies need a readable hit reaction",
+        "elite_hit": "Elites need a heavier hit reaction",
+        "boss_hit": "Bosses need a restrained but weighty hit reaction",
+        "hit_flash_material": "Hit reaction must include a material flash without dynamic lights"
+    }
+    for token in required:
+        if not source.contains(token):
+            push_error(required[token])
+            quit(1)
+            return
+    if source.contains("hit_reaction_light"):
+        push_error("Hit reactions must not allocate per-hit dynamic lights")
+        quit(1)
+        return
+    print("enemy_hit_reaction_test: PASS")
+    quit(0)
+```
+
+## File: tests/enemy_projectile_visual_test.gd
+```
+extends SceneTree
+
+const PROJECTILE_SCRIPT := preload("res://scripts/EnemyProjectile.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var projectile := PROJECTILE_SCRIPT.new()
+    root.add_child(projectile)
+    await process_frame
+
+    var light_count := 0
+    var trail := projectile.get_node_or_null("HarrierBoltTrail") as MeshInstance3D
+    for child in projectile.get_children():
+        if child is OmniLight3D:
+            light_count += 1
+
+    if light_count != 0:
+        push_error("Harrier bolt should avoid per-projectile dynamic lights on mobile")
+        quit(1)
+        return
+    if trail == null:
+        push_error("Harrier bolt is missing emissive travel-direction trail")
+        quit(1)
+        return
+
+    print("Deadline Zero enemy projectile visual: OK")
+    quit(0)
+```
+
 ## File: tests/enemy_silhouette_identity_test.gd
 ```
 extends SceneTree
@@ -1906,6 +3669,918 @@ func _initialize() -> void:
     quit(0)
 ```
 
+## File: tests/environment_identity_test.gd
+```
+extends SceneTree
+
+const MAIN_SCENE := preload("res://scenes/Main.tscn")
+
+func _initialize() -> void:
+    var scene := MAIN_SCENE.instantiate()
+    get_root().add_child(scene)
+    current_scene = scene
+    await process_frame
+    await process_frame
+
+    var floor := scene.get_node_or_null("QuarantineFloor")
+    var env := scene.get_node_or_null("QuarantineEnvironment")
+    var fill := scene.get_node_or_null("ContainmentFill")
+    if floor == null or env == null or fill == null:
+        push_error("Authored quarantine environment anchors are missing")
+        quit(1)
+        return
+
+    var barrier_count := 0
+    var lane_count := 0
+    var beacon_count := 0
+    for child in scene.get_children():
+        if child.name.begins_with("AuthoredBarrier_"):
+            barrier_count += 1
+        elif child.name.begins_with("ContainmentLane_"):
+            lane_count += 1
+        elif child.name.begins_with("PerimeterBeacon_"):
+            beacon_count += 1
+
+    if barrier_count < 12:
+        push_error("Expected authored barrier clusters, got %d" % barrier_count)
+        quit(1)
+        return
+    if lane_count < 40:
+        push_error("Expected structured containment lanes, got %d" % lane_count)
+        quit(1)
+        return
+    if beacon_count != 12:
+        push_error("Expected 12 perimeter beacons, got %d" % beacon_count)
+        quit(1)
+        return
+
+    for child in scene.get_children():
+        if child is MeshInstance3D and child.name.begins_with("PrototypeProp"):
+            push_error("Prototype prop remained in production arena")
+            quit(1)
+            return
+
+    print("Deadline Zero environment identity: OK")
+    quit(0)
+```
+
+## File: tests/first_playable_run_path_test.gd
+```
+extends SceneTree
+
+const MAIN_SCENE := preload("res://scenes/Main.tscn")
+const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+
+func _initialize() -> void:
+    var main := MAIN_SCENE.instantiate()
+    get_root().add_child(main)
+    current_scene = main
+    await process_frame
+    await process_frame
+
+    if main.player == null or main.hud == null or main.camera == null:
+        push_error("Run path did not initialize player, HUD and camera")
+        quit(1)
+        return
+    if get_nodes_in_group("enemies").size() < 8:
+        push_error("Run path did not create initial enemy population")
+        quit(1)
+        return
+
+    var pause_button := main.hud.get_node_or_null("PauseButton") as Button
+    var pause_panel := main.hud.get_node_or_null("PausePanel") as PanelContainer
+    if pause_button == null or pause_panel == null:
+        push_error("Pause controls are unavailable in first-playable path")
+        quit(1)
+        return
+    pause_button.pressed.emit()
+    await process_frame
+    if not paused or not pause_panel.visible:
+        push_error("Pause action did not pause gameplay and show settings")
+        quit(1)
+        return
+    var resume_button := pause_panel.find_child("ResumeButton", true, false) as Button
+    resume_button.pressed.emit()
+    await process_frame
+    if paused or pause_panel.visible:
+        push_error("Resume action did not restore gameplay")
+        quit(1)
+        return
+
+    var master_slider := pause_panel.find_child("MasterVolume", true, false) as HSlider
+    var sfx_slider := pause_panel.find_child("SfxVolume", true, false) as HSlider
+    master_slider.value = 0.35
+    sfx_slider.value = 0.45
+    await process_frame
+    var master_bus := AudioServer.get_bus_index("Master")
+    var sfx_bus := AudioServer.get_bus_index("SFX")
+    if sfx_bus < 0:
+        push_error("Pause settings did not create dedicated SFX audio bus")
+        quit(1)
+        return
+    if abs(AudioServer.get_bus_volume_db(master_bus) - linear_to_db(0.35)) > 0.25:
+        push_error("Master volume slider did not update Master bus")
+        quit(1)
+        return
+    if abs(AudioServer.get_bus_volume_db(sfx_bus) - linear_to_db(0.45)) > 0.25:
+        push_error("SFX volume slider did not update SFX bus")
+        quit(1)
+        return
+
+    var previous_level: int = main.level
+    var threshold: int = main.xp_next
+    main._on_xp_collected(threshold)
+    if main.level != previous_level + 1 or main.pending_upgrades.size() != 3:
+        push_error("XP progression did not open a three-choice upgrade")
+        quit(1)
+        return
+    if not main.hud.upgrade_panel.visible or not paused:
+        push_error("Upgrade state did not pause combat and show the upgrade panel")
+        quit(1)
+        return
+
+    main._on_upgrade_chosen(0)
+    if main.pending_upgrades.size() != 0 or main.hud.upgrade_panel.visible or paused:
+        push_error("Upgrade selection did not resume the run cleanly")
+        quit(1)
+        return
+
+    main.player.apply_upgrade("inferno_protocol")
+    seed(424242)
+    for offer_index in range(12):
+        main._offer_upgrade()
+        for upgrade in main.pending_upgrades:
+            if String(upgrade["id"]).ends_with("_protocol"):
+                push_error("Protocol upgrade remained in offer after a protocol was locked")
+                quit(1)
+                return
+        main.pending_upgrades.clear()
+        main.hud.hide_upgrade()
+        paused = false
+
+    var bosses_before := _count_kind("boss")
+    main._spawn_enemy("boss")
+    await process_frame
+    if _count_kind("boss") != bosses_before + 1:
+        push_error("Forced boss spawn failed")
+        quit(1)
+        return
+    if not main.hud.boss_panel.visible or main.boss_reveal_target == null:
+        push_error("Boss spawn did not activate boss HUD/reveal state")
+        quit(1)
+        return
+
+    var projectile := PROJECTILE_SCRIPT.new()
+    main.add_child(projectile)
+    projectile.velocity = Vector3(8.0, 0.0, 0.0)
+    await process_frame
+
+    main._on_player_died()
+    if not main.game_over or not main.hud.game_over_panel.visible:
+        push_error("Player death did not enter visible game-over state")
+        quit(1)
+        return
+    if main.hud.wave_label.text != "RUN TERMINATED":
+        push_error("Run-end HUD did not enter terminated state")
+        quit(1)
+        return
+    if projectile.combat_enabled or projectile.velocity.length_squared() > 0.0:
+        push_error("Active projectile was not frozen at run end")
+        quit(1)
+        return
+
+    var projectiles_after_freeze := get_nodes_in_group("projectiles").size()
+    main.player.fire_clock = 0.0
+    main.player._physics_process(0.016)
+    if get_nodes_in_group("projectiles").size() != projectiles_after_freeze:
+        push_error("Player continued auto-firing after death")
+        quit(1)
+        return
+    for node in get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy != null and enemy.combat_enabled:
+            push_error("Enemy remained combat-enabled after run end")
+            quit(1)
+            return
+
+    var restart_button := main.hud.game_over_panel.find_child("RestartButton", true, false) as Button
+    if restart_button == null or restart_button.disabled:
+        push_error("Run-end restart action is unavailable")
+        quit(1)
+        return
+
+    print("Deadline Zero first-playable run path: OK")
+    quit(0)
+
+func _count_kind(kind: String) -> int:
+    var count := 0
+    for node in get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy != null and enemy.kind == kind:
+            count += 1
+    return count
+```
+
+## File: tests/haptics_service_test.gd
+```
+extends SceneTree
+
+const HAPTICS := preload("res://scripts/Haptics.gd")
+
+func _initialize() -> void:
+    if HAPTICS.pattern_for("hit") <= 0:
+        push_error("Hit haptic pattern is missing")
+        quit(1)
+        return
+    if HAPTICS.pattern_for("critical") <= HAPTICS.pattern_for("hit"):
+        push_error("Critical haptic should be stronger than regular hit")
+        quit(1)
+        return
+    if HAPTICS.pattern_for("boss") <= HAPTICS.pattern_for("critical"):
+        push_error("Boss haptic should be strongest combat pulse")
+        quit(1)
+        return
+    if HAPTICS.pattern_for("none") != 0:
+        push_error("Unknown haptic pattern should be silent")
+        quit(1)
+        return
+
+    if HAPTICS.event_for_impact(false, false, false) != "hit":
+        push_error("Regular impact haptic mapping is incorrect")
+        quit(1)
+        return
+    if HAPTICS.event_for_impact(true, false, false) != "critical":
+        push_error("Critical impact haptic mapping is incorrect")
+        quit(1)
+        return
+    if HAPTICS.event_for_impact(false, true, false) != "critical":
+        push_error("Kill impact haptic mapping is incorrect")
+        quit(1)
+        return
+    if HAPTICS.event_for_impact(false, false, true) != "boss":
+        push_error("Boss impact haptic mapping is incorrect")
+        quit(1)
+        return
+
+    var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    if not main_source.contains("HAPTICS.pulse(HAPTICS.event_for_impact"):
+        push_error("Main impact path is not wired to combat haptics")
+        quit(1)
+        return
+
+    print("Deadline Zero haptics service: OK")
+    quit(0)
+```
+
+## File: tests/hud_readability_hierarchy_test.gd
+```
+extends SceneTree
+
+const HUD_SCRIPT := preload("res://scripts/Hud.gd")
+
+func _initialize() -> void:
+    var root := Node.new()
+    get_root().add_child(root)
+    var hud := HUD_SCRIPT.new()
+    root.add_child(hud)
+    await process_frame
+
+    for node_name in ["VitalPanel", "VitalAccent", "ThreatPanel", "BossPanel", "UpgradePanel"]:
+        if hud.find_child(node_name, true, false) == null:
+            push_error("HUD readability hierarchy missing node: %s" % node_name)
+            quit(1)
+            return
+
+    var vital_panel := hud.find_child("VitalPanel", true, false) as Control
+    if vital_panel == null or vital_panel.size.x < 300.0 or vital_panel.size.y < 82.0:
+        push_error("Vital panel must reserve a readable combat-safe footprint")
+        quit(1)
+        return
+
+    if hud.health_bar == null or hud.health_bar.custom_minimum_size.y < 18.0:
+        push_error("Health bar must remain readable under combat pressure")
+        quit(1)
+        return
+    if hud.xp_bar == null or hud.xp_bar.custom_minimum_size.y < 8.0:
+        push_error("XP bar must retain a distinct secondary hierarchy")
+        quit(1)
+        return
+
+    hud.set_health(24.0, 100.0)
+    if not hud.low_health_panel.visible:
+        push_error("Critical health state must remain immediately visible")
+        quit(1)
+        return
+    if hud.low_health_panel.modulate.a < 0.95:
+        push_error("Critical health warning must not be visually muted")
+        quit(1)
+        return
+
+    hud.set_offscreen_threat(Vector2.RIGHT, "boss", 18.0)
+    if not hud.threat_panel.visible or hud.threat_label == null:
+        push_error("Boss threat must remain readable while off screen")
+        quit(1)
+        return
+    if hud.threat_label.get_theme_font_size("font_size") < 18:
+        push_error("Threat typography is too small for mobile combat")
+        quit(1)
+        return
+
+    print("hud_readability_hierarchy_test: PASS")
+    quit(0)
+```
+
+## File: tests/impact_fx_mobile_test.gd
+```
+extends SceneTree
+
+const IMPACT_SCRIPT := preload("res://scripts/ImpactFx.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var fx := IMPACT_SCRIPT.new()
+    root.add_child(fx)
+    await process_frame
+
+    var light_count := 0
+    var mesh_count := 0
+    var ring_found := false
+    for child in fx.get_children():
+        if child is OmniLight3D:
+            light_count += 1
+        if child is MeshInstance3D:
+            mesh_count += 1
+            if child.name == "ImpactRing":
+                ring_found = true
+
+    if light_count != 0:
+        push_error("Impact FX should avoid per-hit dynamic lights on mobile")
+        quit(1)
+        return
+    if mesh_count < 2 or not ring_found:
+        push_error("Impact FX is missing layered emissive geometry")
+        quit(1)
+        return
+
+    var sparks := fx.get_node_or_null("ImpactSparks") as GPUParticles3D
+    if sparks == null:
+        push_error("Impact FX is missing mobile-safe GPU sparks")
+        quit(1)
+        return
+    if sparks.amount > 12 or sparks.amount < 4:
+        push_error("Impact spark count must stay within mobile budget")
+        quit(1)
+        return
+    if sparks.lifetime > 0.35:
+        push_error("Impact sparks live too long for dense mobile combat")
+        quit(1)
+        return
+
+    print("Deadline Zero mobile-safe impact FX: OK")
+    quit(0)
+```
+
+## File: tests/native_enemy_behavior_test.gd
+```
+extends SceneTree
+
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+
+class DummyTarget:
+    extends Node3D
+    var damage_taken := 0.0
+    func take_damage(amount: float) -> void:
+        damage_taken += amount
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    var target := DummyTarget.new()
+    target.position = Vector3(100.0, 0.0, 0.0)
+    root.add_child(target)
+    await physics_frame
+
+    var charger := ENEMY_SCRIPT.new()
+    charger.configure("charger", 1.0, target)
+    charger.spawn_secondary_fx = false
+    root.add_child(charger)
+    await physics_frame
+    if charger.move_speed <= 2.0 or charger.contact_damage < 12.0 or charger.xp_value < 4:
+        push_error("Charger baseline identity is incorrect")
+        quit(1)
+        return
+
+    var harrier := ENEMY_SCRIPT.new()
+    harrier.configure("harrier", 1.0, target)
+    harrier.process_mode = Node.PROCESS_MODE_DISABLED
+    harrier.spawn_secondary_fx = false
+    root.add_child(harrier)
+    if harrier.move_speed <= charger.move_speed or harrier.max_health >= charger.max_health:
+        push_error("Harrier mobility/risk identity is incorrect")
+        quit(1)
+        return
+
+    var regenerator := ENEMY_SCRIPT.new()
+    regenerator.configure("regenerator", 1.0, target)
+    regenerator.process_mode = Node.PROCESS_MODE_DISABLED
+    regenerator.spawn_secondary_fx = false
+    root.add_child(regenerator)
+    var full_health: float = regenerator.health
+    regenerator.health = full_health * 0.50
+    var before_channel: float = regenerator.health
+    regenerator._begin_regeneration()
+    if regenerator.health != before_channel or regenerator.regeneration_windup <= 0.0:
+        push_error("Regenerator should telegraph healing before restoring health")
+        quit(1)
+        return
+    if regenerator.regeneration_visual == null or not is_instance_valid(regenerator.regeneration_visual):
+        push_error("Regenerator healing telegraph is missing")
+        quit(1)
+        return
+    regenerator._process_regeneration(0.50)
+    if regenerator.health <= before_channel or regenerator.health > full_health:
+        push_error("Regenerator healing resolution is incorrect")
+        quit(1)
+        return
+    regenerator.health = full_health - 1.0
+    regenerator._begin_regeneration()
+    regenerator._process_regeneration(0.50)
+    if regenerator.health > full_health:
+        push_error("Regenerator healing exceeded max health")
+        quit(1)
+        return
+    regenerator.health = full_health * 0.50
+    regenerator._begin_regeneration()
+    regenerator.set_combat_enabled(false)
+    if regenerator.regeneration_windup > 0.0 or regenerator.regeneration_visual != null:
+        push_error("Regenerator healing telegraph was not cancelled with combat")
+        quit(1)
+        return
+    regenerator.set_combat_enabled(true)
+
+    charger.pending_special = "charge"
+    charger.attack_target_position = Vector3(4.0, 0.0, 0.0)
+    charger.global_position = Vector3.ZERO
+    target.global_position = Vector3(3.6, 0.0, 0.0)
+    target.damage_taken = 0.0
+    charger._resolve_telegraphed_attack()
+    if not charger.charge_active or target.damage_taken > 0.0:
+        push_error("Charger special should start a real dash before dealing damage")
+        quit(1)
+        return
+    for i in range(30):
+        await physics_frame
+    if target.damage_taken <= 0.0 or charger.global_position.x <= 2.5:
+        push_error("Charger dash did not advance through and damage its target")
+        quit(1)
+        return
+
+    var dodge_target := DummyTarget.new()
+    dodge_target.position = Vector3(100.0, 0.0, 0.0)
+    root.add_child(dodge_target)
+    await physics_frame
+    var dodge_charger := ENEMY_SCRIPT.new()
+    dodge_charger.configure("charger", 1.0, dodge_target)
+    dodge_charger.spawn_secondary_fx = false
+    root.add_child(dodge_charger)
+    await physics_frame
+    dodge_target.global_position = Vector3(4.0, 0.0, 0.0)
+    dodge_charger.global_position = Vector3.ZERO
+    dodge_charger.attack_target_position = dodge_target.global_position
+    dodge_charger.pending_special = "charge"
+    dodge_charger._resolve_telegraphed_attack()
+    dodge_target.global_position = Vector3(4.0, 0.0, 3.0)
+    for i in range(34):
+        await physics_frame
+    if dodge_target.damage_taken > 0.0:
+        push_error("Charger dash incorrectly tracked a laterally dodging target")
+        quit(1)
+        return
+
+    var harrier_target := DummyTarget.new()
+    root.add_child(harrier_target)
+    await process_frame
+    var shooter := ENEMY_SCRIPT.new()
+    shooter.configure("harrier", 1.0, harrier_target)
+    shooter.process_mode = Node.PROCESS_MODE_DISABLED
+    shooter.spawn_secondary_fx = false
+    root.add_child(shooter)
+    await process_frame
+    shooter.global_position = Vector3.ZERO
+    harrier_target.global_position = Vector3(4.0, 0.0, 0.0)
+    shooter.attack_target_position = harrier_target.global_position
+    shooter.pending_special = "harrier_shot"
+    shooter._resolve_telegraphed_attack()
+    await process_frame
+    var hostile_projectiles := get_nodes_in_group("hostile_projectiles")
+    if hostile_projectiles.size() != 1:
+        push_error("Harrier ranged special did not spawn exactly one hostile projectile")
+        quit(1)
+        return
+    var shot := hostile_projectiles[0] as DZEnemyProjectile
+    for i in range(8):
+        shot._physics_process(0.10)
+    if harrier_target.damage_taken <= 0.0:
+        push_error("Harrier projectile did not damage target on impact")
+        quit(1)
+        return
+
+    var harrier_dodge_target := DummyTarget.new()
+    root.add_child(harrier_dodge_target)
+    harrier_dodge_target.global_position = Vector3(4.0, 0.0, 0.0)
+    await process_frame
+    var dodge_shot := DZEnemyProjectile.new()
+    root.add_child(dodge_shot)
+    dodge_shot.global_position = Vector3.ZERO
+    dodge_shot.configure(harrier_dodge_target.global_position, harrier_dodge_target, 10.0, 8.0)
+    harrier_dodge_target.global_position = Vector3(4.0, 0.0, 3.0)
+    for i in range(10):
+        dodge_shot._physics_process(0.10)
+    if harrier_dodge_target.damage_taken > 0.0:
+        push_error("Harrier projectile incorrectly homed into a dodging target")
+        quit(1)
+        return
+
+    var damage_enemy := ENEMY_SCRIPT.new()
+    damage_enemy.configure("shambler", 1.0, target)
+    damage_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    damage_enemy.spawn_secondary_fx = false
+    root.add_child(damage_enemy)
+    await process_frame
+    damage_enemy.take_damage(12.0, true)
+    await process_frame
+    var damage_number := root.find_child("DamageNumber*", true, false) as Label3D
+    if damage_number == null or not damage_number.text.contains("12"):
+        push_error("Enemy hit did not spawn readable world-space damage number")
+        quit(1)
+        return
+
+    print("Deadline Zero native enemy behaviors: OK")
+    quit(0)
+```
+
+## File: tests/native_upgrade_depth_test.gd
+```
+extends SceneTree
+
+const PLAYER_SCRIPT := preload("res://scripts/Player.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    await process_frame
+
+    var player := PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+
+    var base_damage := player.weapon_damage
+    var base_health := player.max_health
+    var base_speed := player.move_speed
+
+    player.apply_upgrade("berserker")
+    if player.weapon_damage <= base_damage or player.max_health >= base_health:
+        push_error("Berserker tradeoff was not applied")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("fortress")
+    if player.max_health <= base_health or player.move_speed >= base_speed:
+        push_error("Fortress tradeoff was not applied")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("scatter_protocol")
+    if player.weapon_profile != "scatter" or player.multishot < 3 or player.spread_degrees < 11.0:
+        push_error("Scatter protocol identity is incomplete")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("rail_protocol")
+    if player.weapon_profile != "rail" or player.multishot != 1 or player.projectile_speed <= 19.0:
+        push_error("Rail protocol identity is incomplete")
+        quit(1)
+        return
+
+    if player.can_apply_upgrade("multishot"):
+        push_error("Rail protocol must reject multishot upgrades to preserve its single-shot identity")
+        quit(1)
+        return
+    player.apply_upgrade("multishot")
+    if player.multishot != 1:
+        push_error("Rail protocol allowed multishot to bypass its single-shot identity")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("inferno_protocol")
+    if player.weapon_profile != "inferno":
+        push_error("Inferno protocol profile missing")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("cryo_protocol")
+    if player.weapon_profile != "cryo":
+        push_error("Cryo protocol profile missing")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("arc_protocol")
+    if player.weapon_profile != "arc" or player.multishot < 2:
+        push_error("Arc protocol identity is incomplete")
+        quit(1)
+        return
+
+    player = PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    player.apply_upgrade("inferno_protocol")
+    var inferno_damage := player.weapon_damage
+    var inferno_interval := player.fire_interval
+    player.apply_upgrade("inferno_protocol")
+    if not is_equal_approx(player.weapon_damage, inferno_damage) or not is_equal_approx(player.fire_interval, inferno_interval):
+        push_error("Weapon protocols should be idempotent when reapplied")
+        quit(1)
+        return
+
+    player.apply_upgrade("rail_protocol")
+    if player.weapon_profile != "inferno" or not is_equal_approx(player.weapon_damage, inferno_damage) or not is_equal_approx(player.fire_interval, inferno_interval):
+        push_error("Weapon protocols should be mutually exclusive")
+        quit(1)
+        return
+
+    print("Deadline Zero native upgrade depth: OK")
+    quit(0)
+```
+
+## File: tests/player_damage_feedback_test.gd
+```
+extends SceneTree
+
+const PLAYER_SCRIPT := preload("res://scripts/Player.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+
+    var player := PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+
+    var pulse := player.get_node_or_null("DamagePulse") as MeshInstance3D
+    if pulse == null:
+        push_error("Player damage feedback pulse is missing")
+        quit(1)
+        return
+    if pulse.visible:
+        push_error("Damage pulse should start hidden")
+        quit(1)
+        return
+
+    var initial_health: float = player.health
+    player.take_damage(12.0)
+    if not is_equal_approx(player.health, initial_health - 12.0):
+        push_error("Player health did not decrease on first hit")
+        quit(1)
+        return
+    if not pulse.visible:
+        push_error("Damage pulse did not become visible after damage")
+        quit(1)
+        return
+    if player.invulnerability <= 0.0:
+        push_error("Damage hit did not arm invulnerability window")
+        quit(1)
+        return
+
+    var health_after_first_hit: float = player.health
+    player.take_damage(12.0)
+    if not is_equal_approx(player.health, health_after_first_hit):
+        push_error("Invulnerability window failed to reject immediate repeated damage")
+        quit(1)
+        return
+
+    await create_timer(0.20).timeout
+    if pulse.visible:
+        push_error("Damage pulse did not clear after its presentation window")
+        quit(1)
+        return
+
+    print("Deadline Zero player damage feedback: OK")
+    quit(0)
+```
+
+## File: tests/run_director_escalation_test.gd
+```
+extends SceneTree
+
+func _init() -> void:
+    var director_script := load("res://scripts/RunDirector.gd")
+    if director_script == null:
+        push_error("RunDirector must exist")
+        quit(1)
+        return
+
+    var director = director_script.new()
+    var opening: Dictionary = director.profile(0.0, 1)
+    var pressure: Dictionary = director.profile(90.0, 4)
+    var late: Dictionary = director.profile(180.0, 7)
+
+    if not _require_keys(opening):
+        quit(1)
+        return
+    if float(opening["spawn_interval"]) <= float(pressure["spawn_interval"]):
+        push_error("Pressure phase must spawn faster than opening")
+        quit(1)
+        return
+    if int(opening["batch_size"]) >= int(late["batch_size"]):
+        push_error("Late phase must spawn larger batches than opening")
+        quit(1)
+        return
+    if float(opening["difficulty"]) >= float(late["difficulty"]):
+        push_error("Late phase difficulty must exceed opening")
+        quit(1)
+        return
+    if String(opening["phase"]) == String(late["phase"]):
+        push_error("Run phase identity must escalate over time")
+        quit(1)
+        return
+
+    var seed_a: Array = director.enemy_sequence(135.0, 5, 24680, 12)
+    var seed_b: Array = director.enemy_sequence(135.0, 5, 24680, 12)
+    var seed_c: Array = director.enemy_sequence(135.0, 5, 24681, 12)
+    if seed_a != seed_b:
+        push_error("Enemy sequence must be deterministic for a fixed seed")
+        quit(1)
+        return
+    if seed_a == seed_c:
+        push_error("Different seeds must be able to produce different enemy sequences")
+        quit(1)
+        return
+    if not ("brute" in seed_a or "elite" in seed_a or "charger" in seed_a or "harrier" in seed_a or "regenerator" in seed_a):
+        push_error("Escalated sequence must contain a pressure archetype")
+        quit(1)
+        return
+
+    var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    for required in [
+        "var run_director := DZRunDirector.new()",
+        "run_director.profile(elapsed, level)",
+        "run_director.choose_enemy(elapsed, level, spawn_rng)",
+        "director_profile[\"spawn_interval\"]",
+        "director_profile[\"batch_size\"]",
+        "director_profile[\"max_enemies\"]"
+    ]:
+        if main_source.find(required) < 0:
+            push_error("Main runtime is not wired to RunDirector: %s" % required)
+            quit(1)
+            return
+    if main_source.find("director_profile[\"difficulty\"]") < 0 and main_source.find("director_profile.get(\"difficulty\"") < 0:
+        push_error("Main runtime is not wired to RunDirector difficulty")
+        quit(1)
+        return
+    for legacy in ["1 + int(elapsed / 45.0)", "0.82 - elapsed * 0.0035", "if elapsed > 25.0 and roll > 0.72", "var difficulty := 1.0 + elapsed / 210.0"]:
+        if main_source.find(legacy) >= 0:
+            push_error("Legacy hard-coded pacing remains in Main.gd: %s" % legacy)
+            quit(1)
+            return
+
+    print("run_director_escalation_test: PASS")
+    quit(0)
+
+func _require_keys(profile: Dictionary) -> bool:
+    for key in ["phase", "spawn_interval", "batch_size", "difficulty", "max_enemies"]:
+        if not profile.has(key):
+            push_error("Run director profile missing key: %s" % key)
+            return false
+    return true
+```
+
+## File: tests/run_director_runtime_integration_test.gd
+```
+extends SceneTree
+
+func _init() -> void:
+    var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    if main_source.is_empty():
+        push_error("Main.gd must be readable")
+        quit(1)
+        return
+
+    for required in [
+        "var run_director := DZRunDirector.new()",
+        "run_director.profile(elapsed, level)",
+        "run_director.choose_enemy(elapsed, level, spawn_rng)",
+        "director_profile[\"spawn_interval\"]",
+        "director_profile[\"batch_size\"]",
+        "director_profile[\"max_enemies\"]",
+        "director_profile[\"difficulty\"]"
+    ]:
+        if main_source.find(required) < 0:
+            push_error("Main runtime is not wired to RunDirector: %s" % required)
+            quit(1)
+            return
+
+    for legacy in [
+        "1 + int(elapsed / 45.0)",
+        "0.82 - elapsed * 0.0035",
+        "if elapsed > 25.0 and roll > 0.72",
+        "var difficulty := 1.0 + elapsed / 210.0"
+    ]:
+        if main_source.find(legacy) >= 0:
+            push_error("Legacy hard-coded pacing remains in Main.gd: %s" % legacy)
+            quit(1)
+            return
+
+    print("run_director_runtime_integration_test: PASS")
+    quit(0)
+```
+
+## File: tests/run_end_combat_freeze_test.gd
+```
+extends SceneTree
+
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var target := Node3D.new()
+    root.add_child(target)
+
+    var enemy := ENEMY_SCRIPT.new()
+    enemy.configure("charger", 1.0, target)
+    enemy.spawn_secondary_fx = false
+    root.add_child(enemy)
+    enemy.velocity = Vector3(3.0, 0.0, 0.0)
+    enemy.attack_windup = 0.5
+    enemy.pending_special = "charge"
+
+    var telegraph := Node3D.new()
+    root.add_child(telegraph)
+    enemy.telegraph_visual = telegraph
+
+    var projectile := PROJECTILE_SCRIPT.new()
+    root.add_child(projectile)
+    projectile.velocity = Vector3(5.0, 0.0, 0.0)
+
+    enemy.set_combat_enabled(false)
+    projectile.set_combat_enabled(false)
+    await process_frame
+
+    if enemy.combat_enabled:
+        push_error("Enemy combat freeze flag was not disabled")
+        quit(1)
+        return
+    if enemy.velocity.length_squared() > 0.0:
+        push_error("Enemy velocity was not cleared")
+        quit(1)
+        return
+    if enemy.attack_windup > 0.0 or not enemy.pending_special.is_empty():
+        push_error("Enemy telegraphed attack was not cancelled")
+        quit(1)
+        return
+    if enemy.telegraph_visual != null:
+        push_error("Enemy telegraph reference was not cleared")
+        quit(1)
+        return
+    if projectile.combat_enabled:
+        push_error("Projectile combat freeze flag was not disabled")
+        quit(1)
+        return
+    if projectile.velocity.length_squared() > 0.0:
+        push_error("Projectile velocity was not cleared")
+        quit(1)
+        return
+
+    print("Deadline Zero run-end combat freeze: OK")
+    quit(0)
+```
+
 ## File: tests/run_end_ux_test.gd
 ```
 extends SceneTree
@@ -1926,6 +4601,25 @@ func _initialize() -> void:
         return
     if hud.game_over_panel.visible:
         push_error("Game-over panel should start hidden")
+        quit(1)
+        return
+
+    var pause_button := hud.get_node_or_null("PauseButton") as Button
+    var pause_panel := hud.get_node_or_null("PausePanel") as PanelContainer
+    if pause_button == null or pause_panel == null:
+        push_error("Pause/settings controls were not created")
+        quit(1)
+        return
+    if pause_panel.visible:
+        push_error("Pause/settings panel should start hidden")
+        quit(1)
+        return
+    if pause_panel.find_child("ResumeButton", true, false) == null:
+        push_error("Pause/settings panel is missing resume control")
+        quit(1)
+        return
+    if pause_panel.find_child("MasterVolume", true, false) == null or pause_panel.find_child("SfxVolume", true, false) == null:
+        push_error("Pause/settings panel is missing audio sliders")
         quit(1)
         return
 
@@ -1966,6 +4660,114 @@ func _initialize() -> void:
     quit(0)
 ```
 
+## File: tests/screen_space_fx_test.gd
+```
+extends SceneTree
+
+const HUD_SCRIPT := preload("res://scripts/Hud.gd")
+
+func _initialize() -> void:
+    var root := Control.new()
+    get_root().add_child(root)
+    var hud := HUD_SCRIPT.new()
+    root.add_child(hud)
+    await process_frame
+
+    if not hud.has_method("show_impact_flash") or not "impact_flash" in hud:
+        push_error("HUD screen-space impact flash API is missing")
+        quit(1)
+        return
+
+    hud.show_impact_flash(true, false, false)
+    if hud.impact_flash == null or not hud.impact_flash.visible:
+        push_error("Critical enemy hit did not trigger screen-space impact flash")
+        quit(1)
+        return
+    if hud.impact_flash.color.a <= 0.0:
+        push_error("Impact flash alpha was not visible")
+        quit(1)
+        return
+
+    print("Deadline Zero screen-space impact FX: OK")
+    quit(0)
+```
+
+## File: tests/settings_persistence_test.gd
+```
+extends SceneTree
+
+const MAIN_SCENE := preload("res://scenes/Main.tscn")
+
+func _initialize() -> void:
+    var script := load("res://scripts/GameSettings.gd")
+    if script == null:
+        push_error("Game settings persistence service is missing")
+        quit(1)
+        return
+
+    var path := "user://deadline-zero-settings-test.cfg"
+    var expected := {
+        "master_volume": 0.42,
+        "sfx_volume": 0.33
+    }
+    script.save(path, expected)
+    var loaded: Dictionary = script.load_settings(path)
+    if not is_equal_approx(float(loaded.get("master_volume", -1.0)), 0.42):
+        push_error("Master volume setting did not persist")
+        quit(1)
+        return
+    if not is_equal_approx(float(loaded.get("sfx_volume", -1.0)), 0.33):
+        push_error("SFX volume setting did not persist")
+        quit(1)
+        return
+
+    DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+    var integration_path := "user://deadline-zero-settings-integration-test.cfg"
+    script.save(integration_path, {
+        "master_volume": 0.35,
+        "sfx_volume": 0.60
+    })
+
+    var main := MAIN_SCENE.instantiate()
+    get_root().add_child(main)
+    current_scene = main
+    await process_frame
+    await process_frame
+
+    if not main.has_method("_load_audio_settings") or not main.has_method("_save_audio_settings"):
+        push_error("Main settings persistence integration is missing")
+        quit(1)
+        return
+
+    main._load_audio_settings(integration_path)
+    if not is_equal_approx(main.hud.master_volume.value, 0.35):
+        push_error("Persisted master volume was not restored into pause settings")
+        quit(1)
+        return
+    if not is_equal_approx(main.hud.sfx_volume.value, 0.60):
+        push_error("Persisted SFX volume was not restored into pause settings")
+        quit(1)
+        return
+
+    main.hud.master_volume.value = 0.60
+    main.hud.sfx_volume.value = 0.45
+    main._save_audio_settings(integration_path)
+    var round_trip: Dictionary = script.load_settings(integration_path)
+    if not is_equal_approx(float(round_trip.get("master_volume", -1.0)), 0.60):
+        push_error("Updated master volume was not saved from pause settings")
+        quit(1)
+        return
+    if not is_equal_approx(float(round_trip.get("sfx_volume", -1.0)), 0.45):
+        push_error("Updated SFX volume was not saved from pause settings")
+        quit(1)
+        return
+
+    DirAccess.remove_absolute(ProjectSettings.globalize_path(integration_path))
+    print("Deadline Zero settings persistence: OK")
+    quit(0)
+```
+
 ## File: tests/smoke_test.gd
 ```
 extends SceneTree
@@ -1980,6 +4782,11 @@ func _initialize() -> void:
         return
     var game := packed.instantiate()
     root.add_child(game)
+    current_scene = game
+    if current_scene != game:
+        push_error("Smoke test must install Main as current_scene")
+        quit(1)
+        return
 
 func _process(_delta: float) -> bool:
     frames += 1
@@ -1994,9 +4801,169 @@ func _process(_delta: float) -> bool:
     return false
 ```
 
+## File: tests/spatial_hash_test.gd
+```
+extends SceneTree
+
+const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+
+class QueryScene:
+    extends Node3D
+    var query_called := false
+
+    func query_enemies_near(_position: Vector3, _radius: float) -> Array:
+        query_called = true
+        return []
+
+func _initialize() -> void:
+    var script := load("res://scripts/SpatialHash.gd")
+    if script == null:
+        push_error("Spatial hash service is missing")
+        quit(1)
+        return
+
+    var root := Node3D.new()
+    get_root().add_child(root)
+    var index = script.new(4.0)
+    var near_enemy := Node3D.new()
+    near_enemy.position = Vector3(1.0, 0.0, 1.0)
+    root.add_child(near_enemy)
+    var far_enemy := Node3D.new()
+    far_enemy.position = Vector3(12.0, 0.0, 12.0)
+    root.add_child(far_enemy)
+    await process_frame
+
+    index.rebuild([near_enemy, far_enemy])
+    var nearby: Array = index.query(Vector3.ZERO, 3.0)
+    if not nearby.has(near_enemy) or nearby.has(far_enemy):
+        push_error("Spatial hash query did not isolate nearby enemies")
+        quit(1)
+        return
+
+    var query_scene := QueryScene.new()
+    get_root().add_child(query_scene)
+    current_scene = query_scene
+    var projectile := PROJECTILE_SCRIPT.new()
+    query_scene.add_child(projectile)
+    await process_frame
+    if not projectile.has_method("_candidate_enemies"):
+        push_error("Projectile spatial-query integration is missing")
+        quit(1)
+        return
+    projectile._candidate_enemies()
+    if not query_scene.query_called:
+        push_error("Projectile did not consume scene spatial query")
+        quit(1)
+        return
+
+    print("Deadline Zero enemy spatial hash: OK")
+    quit(0)
+```
+
+## File: tests/status_effects_test.gd
+```
+extends SceneTree
+
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var target := Node3D.new()
+    root.add_child(target)
+
+    var enemy := ENEMY_SCRIPT.new()
+    enemy.configure("shambler", 1.0, target)
+    enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    enemy.spawn_secondary_fx = false
+    root.add_child(enemy)
+    await process_frame
+
+    if not enemy.has_method("apply_burn") or not enemy.has_method("_process_status_effects"):
+        push_error("Enemy burn status API is missing")
+        quit(1)
+        return
+
+    var before := enemy.health
+    enemy.apply_burn(8.0, 1.0)
+    enemy._process_status_effects(0.5)
+    if enemy.health >= before or enemy.burn_left <= 0.0:
+        push_error("Burn status did not deal damage over time")
+        quit(1)
+        return
+
+    enemy._process_status_effects(0.6)
+    if enemy.burn_left > 0.0:
+        push_error("Burn status did not expire after its duration")
+        quit(1)
+        return
+
+    var inferno_target := ENEMY_SCRIPT.new()
+    inferno_target.configure("shambler", 1.0, target)
+    inferno_target.process_mode = Node.PROCESS_MODE_DISABLED
+    inferno_target.spawn_secondary_fx = false
+    root.add_child(inferno_target)
+    await process_frame
+
+    var projectile := PROJECTILE_SCRIPT.new()
+    projectile.visual_profile = "inferno"
+    projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    projectile.spawn_secondary_fx = false
+    root.add_child(projectile)
+    await process_frame
+    projectile._apply_profile("inferno")
+    projectile._apply_protocol_hit(inferno_target, 24.0)
+    if inferno_target.burn_left <= 0.0 or inferno_target.burn_dps <= 0.0:
+        push_error("Inferno projectile did not apply persistent burn")
+        quit(1)
+        return
+
+    if not enemy.has_method("apply_shock"):
+        push_error("Enemy shock status API is missing")
+        quit(1)
+        return
+    enemy.velocity = Vector3(3.0, 0.0, 0.0)
+    enemy.apply_shock(0.40)
+    if enemy.shock_left <= 0.0 or enemy.velocity.length_squared() > 0.001:
+        push_error("Shock status did not immediately immobilize enemy")
+        quit(1)
+        return
+
+    var arc_target := ENEMY_SCRIPT.new()
+    arc_target.configure("shambler", 1.0, target)
+    arc_target.process_mode = Node.PROCESS_MODE_DISABLED
+    arc_target.spawn_secondary_fx = false
+    root.add_child(arc_target)
+    await process_frame
+
+    var arc_projectile := PROJECTILE_SCRIPT.new()
+    arc_projectile.visual_profile = "arc"
+    arc_projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    arc_projectile.spawn_secondary_fx = false
+    root.add_child(arc_projectile)
+    await process_frame
+    arc_projectile._apply_profile("arc")
+    arc_projectile.chain_targets = 0
+    arc_projectile._apply_protocol_hit(arc_target, 24.0)
+    if arc_target.shock_left <= 0.0:
+        push_error("Arc projectile did not apply shock control")
+        quit(1)
+        return
+
+    print("Deadline Zero enemy status effects: OK")
+    quit(0)
+```
+
 ## File: tests/upgrade_presentation_test.gd
 ```
 extends SceneTree
+
+func _fail(message: String) -> void:
+    push_error(message)
+    quit(1)
 
 func _init() -> void:
     var main_text := FileAccess.get_file_as_string("res://scripts/Main.gd")
@@ -2004,18 +4971,32 @@ func _init() -> void:
 
     var ids := ["damage", "rate", "speed", "health", "projectile", "multishot"]
     for id in ids:
-        assert(main_text.contains("\"id\":\"" + id + "\""))
-        assert(hud_text.contains("\"" + id + "\""))
+        if not main_text.contains("\"id\":\"" + id + "\""):
+            _fail("Upgrade pool is missing id: %s" % id)
+            return
+        if not hud_text.contains("\"" + id + "\""):
+            _fail("HUD presentation is missing id: %s" % id)
+            return
 
-    assert(main_text.contains("\"family\":\"OFFENSE\""))
-    assert(main_text.contains("\"family\":\"SURVIVAL\""))
-    assert(main_text.contains("\"family\":\"BARRAGE\""))
-    assert(hud_text.contains("func _upgrade_glyph"))
-    assert(hud_text.contains("func _upgrade_color"))
-    assert(hud_text.contains("func _style_upgrade_card"))
-    assert(hud_text.contains("StyleBoxFlat.new()"))
-    assert(hud_text.contains("upgrade_family_labels"))
-    assert(hud_text.contains("upgrade_detail_labels"))
+    var required_main := ["\"family\":\"OFFENSE\"", "\"family\":\"SURVIVAL\"", "\"family\":\"BARRAGE\""]
+    for token in required_main:
+        if not main_text.contains(token):
+            _fail("Upgrade presentation is missing family token: %s" % token)
+            return
+
+    var required_hud := [
+        "func _upgrade_glyph",
+        "func _upgrade_color",
+        "func _style_upgrade_card",
+        "StyleBoxFlat.new()",
+        "upgrade_family_labels",
+        "upgrade_detail_labels"
+    ]
+    for token in required_hud:
+        if not hud_text.contains(token):
+            _fail("HUD upgrade presentation is missing token: %s" % token)
+            return
+
     print("godot upgrade presentation test passed")
     quit(0)
 ```
@@ -2043,4 +5024,186 @@ func _init() -> void:
 
     print("weapon_presentation_test: PASS")
     quit()
+```
+
+## File: tests/weapon_profile_data_test.gd
+```
+extends SceneTree
+
+const PLAYER_SCRIPT := preload("res://scripts/Player.gd")
+
+func _initialize() -> void:
+    var script := load("res://scripts/WeaponProfiles.gd")
+    if script == null:
+        push_error("Data-driven weapon profile catalog is missing")
+        quit(1)
+        return
+
+    var rail: Dictionary = script.profile("rail")
+    if rail.is_empty():
+        push_error("Rail weapon profile data is missing")
+        quit(1)
+        return
+    if float(rail.get("damage_multiplier", 1.0)) <= 1.0:
+        push_error("Rail profile damage multiplier is not represented as data")
+        quit(1)
+        return
+    if int(rail.get("multishot_set", 0)) != 1:
+        push_error("Rail profile multishot rule is not represented as data")
+        quit(1)
+        return
+
+    var cryo: Dictionary = script.profile("cryo")
+    if float(cryo.get("projectile_speed_multiplier", 1.0)) <= 1.0:
+        push_error("Cryo projectile speed rule is not represented as data")
+        quit(1)
+        return
+
+    var root := Node3D.new()
+    get_root().add_child(root)
+    var player := PLAYER_SCRIPT.new()
+    root.add_child(player)
+    await process_frame
+    if not player.has_method("_apply_weapon_profile_data"):
+        push_error("Player generic weapon-profile applicator is missing")
+        quit(1)
+        return
+
+    var base_damage: float = player.weapon_damage
+    var base_speed: float = player.projectile_speed
+    var base_interval: float = player.fire_interval
+    var custom := {
+        "tint": Color(0.9, 0.2, 0.7),
+        "damage_multiplier": 2.0,
+        "projectile_speed_multiplier": 1.5,
+        "fire_interval_multiplier": 0.5,
+        "fire_interval_floor": 0.10,
+        "multishot_add": 1,
+        "multishot_cap": 5,
+        "spread_max": 4.0
+    }
+    player._apply_weapon_profile_data("test_profile", custom)
+    if player.weapon_profile != "test_profile":
+        push_error("Generic profile applicator did not set weapon profile")
+        quit(1)
+        return
+    if not is_equal_approx(player.weapon_damage, base_damage * 2.0):
+        push_error("Generic profile applicator ignored damage data")
+        quit(1)
+        return
+    if not is_equal_approx(player.projectile_speed, base_speed * 1.5):
+        push_error("Generic profile applicator ignored projectile speed data")
+        quit(1)
+        return
+    if not is_equal_approx(player.fire_interval, max(0.10, base_interval * 0.5)):
+        push_error("Generic profile applicator ignored cadence data")
+        quit(1)
+        return
+
+    print("Deadline Zero weapon profile data: OK")
+    quit(0)
+```
+
+## File: tests/weapon_protocol_behavior_test.gd
+```
+extends SceneTree
+
+const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
+const WEAPON_PROFILES := preload("res://scripts/WeaponProfiles.gd")
+
+func _initialize() -> void:
+    if PROJECTILE_SCRIPT.protocol_pierce_budget("rail") != 2:
+        push_error("Rail pierce budget is incorrect")
+        quit(1)
+        return
+    if not is_equal_approx(PROJECTILE_SCRIPT.protocol_splash_radius("inferno"), 1.85):
+        push_error("Inferno splash radius is incorrect")
+        quit(1)
+        return
+    if PROJECTILE_SCRIPT.protocol_chain_targets("arc") != 2:
+        push_error("Arc chain target count is incorrect")
+        quit(1)
+        return
+    var slow := PROJECTILE_SCRIPT.protocol_slow("cryo")
+    if slow.x >= 1.0 or slow.y <= 0.0:
+        push_error("Cryo slow rule is incorrect")
+        quit(1)
+        return
+
+    var signatures := {}
+    for id in ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]:
+        var profile := WEAPON_PROFILES.profile(id)
+        for key in ["projectile_scale", "trail_length", "impact_weight"]:
+            if not profile.has(key):
+                push_error("Weapon profile %s is missing feedback key %s" % [id, key])
+                quit(1)
+                return
+        var signature := "%s|%s|%s" % [profile["projectile_scale"], profile["trail_length"], profile["impact_weight"]]
+        if signatures.has(signature):
+            push_error("Weapon feedback signature is not distinct: %s and %s" % [signatures[signature], id])
+            quit(1)
+            return
+        signatures[signature] = id
+    if float(WEAPON_PROFILES.profile("rail")["impact_weight"]) <= float(WEAPON_PROFILES.profile("vanguard")["impact_weight"]):
+        push_error("Rail impact should read heavier than Vanguard")
+        quit(1)
+        return
+    if float(WEAPON_PROFILES.profile("scatter")["trail_length"]) >= float(WEAPON_PROFILES.profile("rail")["trail_length"]):
+        push_error("Scatter should read shorter-ranged than Rail")
+        quit(1)
+        return
+
+    var target := Node3D.new()
+    var enemy := ENEMY_SCRIPT.new()
+    enemy.configure("shambler", 1.0, target)
+    enemy.apply_slow(slow.x, slow.y)
+    if enemy.slow_multiplier >= 1.0 or enemy.slow_left <= 0.0:
+        push_error("Enemy slow state was not applied")
+        quit(1)
+        return
+
+    var rail := PROJECTILE_SCRIPT.new()
+    rail._apply_profile("rail")
+    if rail.pierce_remaining != 2:
+        push_error("Rail runtime profile did not consume deterministic rule")
+        quit(1)
+        return
+    var inferno := PROJECTILE_SCRIPT.new()
+    inferno._apply_profile("inferno")
+    if not is_equal_approx(inferno.splash_radius, 1.85):
+        push_error("Inferno runtime profile did not consume deterministic rule")
+        quit(1)
+        return
+    var arc := PROJECTILE_SCRIPT.new()
+    arc._apply_profile("arc")
+    if arc.chain_targets != 2:
+        push_error("Arc runtime profile did not consume deterministic rule")
+        quit(1)
+        return
+
+    var parent := Node3D.new()
+    parent.position = Vector3(9.0, 0.0, -4.0)
+    get_root().add_child(parent)
+    await process_frame
+    var spawned := PROJECTILE_SCRIPT.new()
+    spawned.process_mode = Node.PROCESS_MODE_DISABLED
+    var spawn_origin := Vector3(2.0, 0.7, 3.0)
+    spawned.setup(spawn_origin, Vector3.FORWARD, 10.0, 10.0, Color.WHITE, "vanguard")
+    parent.add_child(spawned)
+    await process_frame
+    if spawned.global_position.distance_to(spawn_origin) > 0.001:
+        push_error("Projectile setup did not preserve global spawn origin under a transformed parent")
+        quit(1)
+        return
+
+    parent.queue_free()
+    enemy.free()
+    target.free()
+    rail.free()
+    inferno.free()
+    arc.free()
+    await process_frame
+    print("Deadline Zero weapon protocol behavior: OK")
+    quit(0)
 ```

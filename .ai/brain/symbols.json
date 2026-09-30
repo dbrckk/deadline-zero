@@ -480,22 +480,29 @@
       "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
       "language": "java",
       "kind": "symbol",
-      "name": "activity",
+      "name": "waitForTelemetry",
       "line": 271
     },
     {
       "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
       "language": "java",
       "kind": "symbol",
+      "name": "activity",
+      "line": 287
+    },
+    {
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "language": "java",
+      "kind": "symbol",
       "name": "game",
-      "line": 279
+      "line": 295
     },
     {
       "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
       "language": "java",
       "kind": "symbol",
       "name": "runOnGameThread",
-      "line": 285
+      "line": 301
     },
     {
       "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidProcessPersistenceTest.java",
@@ -16280,133 +16287,301 @@
       "language": "gdscript",
       "kind": "function",
       "name": "configure",
-      "line": 25
+      "line": 48
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_ready",
-      "line": 57
+      "line": 95
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_physics_process",
-      "line": 61
+      "line": 100
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_update_boss_phase",
+      "line": 180
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_boss_slam_windup",
+      "line": 196
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_boss_slam_cooldown",
+      "line": 202
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_process_charge",
+      "line": 208
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "set_combat_enabled",
+      "line": 226
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_begin_telegraphed_attack",
-      "line": 97
+      "line": 245
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_resolve_telegraphed_attack",
-      "line": 105
+      "line": 253
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_show_telegraph",
-      "line": 117
+      "line": 284
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_spawn_attack_impact",
-      "line": 140
+      "line": 310
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_begin_regeneration",
+      "line": 319
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_process_regeneration",
+      "line": 348
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_regenerate",
+      "line": 361
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "apply_slow",
+      "line": 368
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "apply_burn",
+      "line": 372
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "apply_shock",
+      "line": 378
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_process_status_effects",
+      "line": 385
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "take_damage",
-      "line": 147
+      "line": 403
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "hit_reaction_profile",
+      "line": 423
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_play_hit_reaction",
+      "line": 430
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_build_hit_flash",
+      "line": 467
+    },
+    {
+      "file": "godot/scripts/Enemy.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_spawn_damage_number",
+      "line": 490
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_build_visual",
-      "line": 166
+      "line": 513
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_add_archetype_signature",
-      "line": 234
+      "line": 584
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_signature_material",
-      "line": 255
+      "line": 614
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_add_eye_beacon",
-      "line": 265
+      "line": 624
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_add_runner_blades",
-      "line": 276
+      "line": 635
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_add_brute_shoulders",
-      "line": 290
+      "line": 649
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_add_elite_crown",
-      "line": 304
+      "line": 663
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_add_boss_frame",
-      "line": 318
+      "line": 677
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_update_authored_animation",
-      "line": 341
+      "line": 700
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_play_authored",
-      "line": 351
+      "line": 710
     },
     {
       "file": "godot/scripts/Enemy.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_flash",
-      "line": 357
+      "line": 716
+    },
+    {
+      "file": "godot/scripts/EnemyProjectile.gd",
+      "language": "gdscript",
+      "kind": "class",
+      "name": "DZEnemyProjectile",
+      "line": 1
+    },
+    {
+      "file": "godot/scripts/EnemyProjectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "configure",
+      "line": 11
+    },
+    {
+      "file": "godot/scripts/EnemyProjectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_ready",
+      "line": 20
+    },
+    {
+      "file": "godot/scripts/EnemyProjectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_physics_process",
+      "line": 24
+    },
+    {
+      "file": "godot/scripts/EnemyProjectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "set_combat_enabled",
+      "line": 39
+    },
+    {
+      "file": "godot/scripts/EnemyProjectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_hit_target",
+      "line": 44
+    },
+    {
+      "file": "godot/scripts/EnemyProjectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_build_visual",
+      "line": 52
+    },
+    {
+      "file": "godot/scripts/GameSettings.gd",
+      "language": "gdscript",
+      "kind": "class",
+      "name": "DZGameSettings",
+      "line": 1
     },
     {
       "file": "godot/scripts/Hud.gd",
@@ -16420,105 +16595,154 @@
       "language": "gdscript",
       "kind": "function",
       "name": "_ready",
-      "line": 24
+      "line": 41
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "pulse_damage_screen",
+      "line": 45
     },
     {
       "file": "godot/scripts/Hud.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "set_health",
-      "line": 28
+      "line": 61
     },
     {
       "file": "godot/scripts/Hud.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "set_progress",
-      "line": 32
+      "line": 69
     },
     {
       "file": "godot/scripts/Hud.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "set_wave",
-      "line": 37
-    },
-    {
-      "file": "godot/scripts/Hud.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "show_boss",
-      "line": 40
-    },
-    {
-      "file": "godot/scripts/Hud.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "set_boss_health",
-      "line": 48
-    },
-    {
-      "file": "godot/scripts/Hud.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "hide_boss",
-      "line": 57
-    },
-    {
-      "file": "godot/scripts/Hud.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "show_upgrade",
-      "line": 60
-    },
-    {
-      "file": "godot/scripts/Hud.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "hide_upgrade",
-      "line": 71
-    },
-    {
-      "file": "godot/scripts/Hud.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "show_game_over",
       "line": 74
     },
     {
       "file": "godot/scripts/Hud.gd",
       "language": "gdscript",
       "kind": "function",
+      "name": "show_boss",
+      "line": 77
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "set_boss_health",
+      "line": 85
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "hide_boss",
+      "line": 94
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "set_offscreen_threat",
+      "line": 97
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "hide_offscreen_threat",
+      "line": 105
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_direction_arrow",
+      "line": 108
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "show_upgrade",
+      "line": 122
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "hide_upgrade",
+      "line": 133
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "show_pause_settings",
+      "line": 136
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "hide_pause_settings",
+      "line": 139
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "show_impact_flash",
+      "line": 142
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "show_game_over",
+      "line": 168
+    },
+    {
+      "file": "godot/scripts/Hud.gd",
+      "language": "gdscript",
+      "kind": "function",
       "name": "_build",
-      "line": 83
+      "line": 179
     },
     {
       "file": "godot/scripts/Hud.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_upgrade_glyph",
-      "line": 268
+      "line": 517
     },
     {
       "file": "godot/scripts/Hud.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_upgrade_color",
-      "line": 278
+      "line": 535
     },
     {
       "file": "godot/scripts/Hud.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_style_upgrade_card",
-      "line": 286
+      "line": 551
     },
     {
       "file": "godot/scripts/Hud.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_on_upgrade_pressed",
-      "line": 306
+      "line": 571
     },
     {
       "file": "godot/scripts/ImpactFx.gd",
@@ -16532,147 +16756,259 @@
       "language": "gdscript",
       "kind": "function",
       "name": "_ready",
-      "line": 10
+      "line": 12
+    },
+    {
+      "file": "godot/scripts/ImpactFx.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_make_material",
+      "line": 69
     },
     {
       "file": "godot/scripts/ImpactFx.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_process",
-      "line": 31
+      "line": 79
+    },
+    {
+      "file": "godot/scripts/ImpactFx.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_fade_material",
+      "line": 90
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_ready",
-      "line": 40
+      "line": 56
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_process",
-      "line": 68
+      "line": 96
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_physics_process",
-      "line": 100
+      "line": 129
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_unhandled_input",
-      "line": 119
+      "line": 151
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "query_enemies_near",
+      "line": 168
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_spawn_enemy",
-      "line": 136
-    },
-    {
-      "file": "godot/scripts/Main.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "_on_boss_health_changed",
-      "line": 167
-    },
-    {
-      "file": "godot/scripts/Main.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "_on_enemy_impact",
       "line": 171
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
-      "name": "_on_enemy_died",
-      "line": 176
-    },
-    {
-      "file": "godot/scripts/Main.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "_on_xp_collected",
-      "line": 185
-    },
-    {
-      "file": "godot/scripts/Main.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "_offer_upgrade",
+      "name": "_on_boss_health_changed",
       "line": 194
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
+      "name": "_on_enemy_impact",
+      "line": 198
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_on_enemy_died",
+      "line": 205
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_on_xp_collected",
+      "line": 214
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_offer_upgrade",
+      "line": 223
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
       "name": "_on_upgrade_chosen",
-      "line": 203
+      "line": 236
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_on_health_changed",
-      "line": 211
+      "line": 244
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_ensure_audio_buses",
+      "line": 251
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_set_bus_linear_volume",
+      "line": 256
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_load_audio_settings",
+      "line": 263
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_save_audio_settings",
+      "line": 273
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_on_master_volume_changed",
+      "line": 281
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_on_sfx_volume_changed",
+      "line": 285
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_on_pause_requested",
+      "line": 289
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_on_resume_requested",
+      "line": 295
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_on_player_died",
-      "line": 215
+      "line": 300
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_freeze_combat",
+      "line": 307
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_on_restart_requested",
-      "line": 221
+      "line": 323
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_wave_name",
-      "line": 226
+      "line": 328
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_build_world",
-      "line": 237
+      "line": 339
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_build_authored_barrier_clusters",
+      "line": 397
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_build_containment_lanes",
+      "line": 419
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_build_perimeter_beacons",
+      "line": 457
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_build_combat_audio",
-      "line": 310
+      "line": 478
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_play_impact_audio",
-      "line": 322
+      "line": 492
     },
     {
       "file": "godot/scripts/Main.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_play_boss_stinger",
-      "line": 332
+      "line": 503
+    },
+    {
+      "file": "godot/scripts/Main.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_update_offscreen_threat_indicator",
+      "line": 507
     },
     {
       "file": "godot/scripts/Player.gd",
@@ -16686,91 +17022,126 @@
       "language": "gdscript",
       "kind": "function",
       "name": "_ready",
-      "line": 25
+      "line": 28
     },
     {
       "file": "godot/scripts/Player.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_physics_process",
-      "line": 31
+      "line": 34
+    },
+    {
+      "file": "godot/scripts/Player.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "set_combat_enabled",
+      "line": 71
     },
     {
       "file": "godot/scripts/Player.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "set_touch_move",
-      "line": 63
-    },
-    {
-      "file": "godot/scripts/Player.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "take_damage",
-      "line": 66
-    },
-    {
-      "file": "godot/scripts/Player.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "heal_full",
-      "line": 75
-    },
-    {
-      "file": "godot/scripts/Player.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "apply_upgrade",
       "line": 79
     },
     {
       "file": "godot/scripts/Player.gd",
       "language": "gdscript",
       "kind": "function",
-      "name": "_nearest_enemy",
+      "name": "take_damage",
+      "line": 82
+    },
+    {
+      "file": "godot/scripts/Player.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "heal_full",
+      "line": 92
+    },
+    {
+      "file": "godot/scripts/Player.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "can_apply_upgrade",
       "line": 96
     },
     {
       "file": "godot/scripts/Player.gd",
       "language": "gdscript",
       "kind": "function",
+      "name": "_apply_weapon_profile_data",
+      "line": 103
+    },
+    {
+      "file": "godot/scripts/Player.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "apply_upgrade",
+      "line": 133
+    },
+    {
+      "file": "godot/scripts/Player.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_nearest_enemy",
+      "line": 179
+    },
+    {
+      "file": "godot/scripts/Player.gd",
+      "language": "gdscript",
+      "kind": "function",
       "name": "_fire_at",
-      "line": 109
+      "line": 192
     },
     {
       "file": "godot/scripts/Player.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_build_visual",
-      "line": 124
-    },
-    {
-      "file": "godot/scripts/Player.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "_update_authored_animation",
-      "line": 202
-    },
-    {
-      "file": "godot/scripts/Player.gd",
-      "language": "gdscript",
-      "kind": "function",
-      "name": "_play_authored",
       "line": 207
     },
     {
       "file": "godot/scripts/Player.gd",
       "language": "gdscript",
       "kind": "function",
+      "name": "_build_damage_feedback",
+      "line": 287
+    },
+    {
+      "file": "godot/scripts/Player.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_trigger_damage_feedback",
+      "line": 308
+    },
+    {
+      "file": "godot/scripts/Player.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_update_authored_animation",
+      "line": 328
+    },
+    {
+      "file": "godot/scripts/Player.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_play_authored",
+      "line": 333
+    },
+    {
+      "file": "godot/scripts/Player.gd",
+      "language": "gdscript",
+      "kind": "function",
       "name": "_build_audio",
-      "line": 213
+      "line": 339
     },
     {
       "file": "godot/scripts/Player.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_play_shot_audio",
-      "line": 221
+      "line": 347
     },
     {
       "file": "godot/scripts/Projectile.gd",
@@ -16784,56 +17155,168 @@
       "language": "gdscript",
       "kind": "function",
       "name": "setup",
-      "line": 16
+      "line": 26
     },
     {
       "file": "godot/scripts/Projectile.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_apply_profile",
-      "line": 25
+      "line": 50
     },
     {
       "file": "godot/scripts/Projectile.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_ready",
-      "line": 58
+      "line": 75
     },
     {
       "file": "godot/scripts/Projectile.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_add_side_spark",
-      "line": 94
+      "line": 115
     },
     {
       "file": "godot/scripts/Projectile.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_add_arc_accent",
-      "line": 103
+      "line": 124
     },
     {
       "file": "godot/scripts/Projectile.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_add_flame_core",
-      "line": 118
+      "line": 139
+    },
+    {
+      "file": "godot/scripts/Projectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "set_combat_enabled",
+      "line": 149
     },
     {
       "file": "godot/scripts/Projectile.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_physics_process",
-      "line": 125
+      "line": 154
+    },
+    {
+      "file": "godot/scripts/Projectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_candidate_enemies",
+      "line": 180
     },
     {
       "file": "godot/scripts/Projectile.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_impact",
-      "line": 145
+      "line": 186
+    },
+    {
+      "file": "godot/scripts/Projectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_apply_protocol_hit",
+      "line": 193
+    },
+    {
+      "file": "godot/scripts/Projectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_apply_splash",
+      "line": 204
+    },
+    {
+      "file": "godot/scripts/Projectile.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_apply_chain",
+      "line": 220
+    },
+    {
+      "file": "godot/scripts/RunDirector.gd",
+      "language": "gdscript",
+      "kind": "class",
+      "name": "DZRunDirector",
+      "line": 1
+    },
+    {
+      "file": "godot/scripts/RunDirector.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "profile",
+      "line": 11
+    },
+    {
+      "file": "godot/scripts/RunDirector.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "choose_enemy",
+      "line": 29
+    },
+    {
+      "file": "godot/scripts/RunDirector.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "enemy_sequence",
+      "line": 42
+    },
+    {
+      "file": "godot/scripts/RunDirector.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_weights",
+      "line": 50
+    },
+    {
+      "file": "godot/scripts/SpatialHash.gd",
+      "language": "gdscript",
+      "kind": "class",
+      "name": "DZSpatialHash",
+      "line": 1
+    },
+    {
+      "file": "godot/scripts/SpatialHash.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_init",
+      "line": 6
+    },
+    {
+      "file": "godot/scripts/SpatialHash.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "rebuild",
+      "line": 9
+    },
+    {
+      "file": "godot/scripts/SpatialHash.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "query",
+      "line": 19
+    },
+    {
+      "file": "godot/scripts/SpatialHash.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_cell",
+      "line": 39
+    },
+    {
+      "file": "godot/scripts/WeaponProfiles.gd",
+      "language": "gdscript",
+      "kind": "class",
+      "name": "DZWeaponProfiles",
+      "line": 1
     },
     {
       "file": "godot/scripts/XpOrb.gd",
@@ -16855,6 +17338,20 @@
       "kind": "function",
       "name": "_process",
       "line": 24
+    },
+    {
+      "file": "godot/tests/attack_telegraph_escalation_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
+      "file": "godot/tests/attack_telegraph_escalation_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_run_test",
+      "line": 7
     },
     {
       "file": "godot/tests/authored_asset_validation.gd",
@@ -16885,6 +17382,13 @@
       "line": 2
     },
     {
+      "file": "godot/tests/boss_phase_runtime_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
       "file": "godot/tests/boss_reveal_camera_test.gd",
       "language": "gdscript",
       "kind": "function",
@@ -16897,6 +17401,13 @@
       "kind": "function",
       "name": "_init",
       "line": 2
+    },
+    {
+      "file": "godot/tests/combat_danger_hud_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
     },
     {
       "file": "godot/tests/combat_feel_test.gd",
@@ -16920,6 +17431,20 @@
       "line": 2
     },
     {
+      "file": "godot/tests/enemy_hit_reaction_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 2
+    },
+    {
+      "file": "godot/tests/enemy_projectile_visual_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
       "file": "godot/tests/enemy_silhouette_identity_test.gd",
       "language": "gdscript",
       "kind": "function",
@@ -16927,7 +17452,119 @@
       "line": 4
     },
     {
+      "file": "godot/tests/environment_identity_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
+      "file": "godot/tests/first_playable_run_path_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 5
+    },
+    {
+      "file": "godot/tests/first_playable_run_path_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_count_kind",
+      "line": 146
+    },
+    {
+      "file": "godot/tests/haptics_service_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
+      "file": "godot/tests/hud_readability_hierarchy_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
+      "file": "godot/tests/impact_fx_mobile_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
+      "file": "godot/tests/native_enemy_behavior_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "take_damage",
+      "line": 8
+    },
+    {
+      "file": "godot/tests/native_enemy_behavior_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 10
+    },
+    {
+      "file": "godot/tests/native_upgrade_depth_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
+      "file": "godot/tests/player_damage_feedback_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
+      "file": "godot/tests/run_director_escalation_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_init",
+      "line": 2
+    },
+    {
+      "file": "godot/tests/run_director_escalation_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_require_keys",
+      "line": 76
+    },
+    {
+      "file": "godot/tests/run_director_runtime_integration_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_init",
+      "line": 2
+    },
+    {
+      "file": "godot/tests/run_end_combat_freeze_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 5
+    },
+    {
       "file": "godot/tests/run_end_ux_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
+      "file": "godot/tests/screen_space_fx_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
+      "file": "godot/tests/settings_persistence_test.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_initialize",
@@ -16945,14 +17582,42 @@
       "language": "gdscript",
       "kind": "function",
       "name": "_process",
-      "line": 13
+      "line": 18
+    },
+    {
+      "file": "godot/tests/spatial_hash_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "query_enemies_near",
+      "line": 8
+    },
+    {
+      "file": "godot/tests/spatial_hash_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 12
+    },
+    {
+      "file": "godot/tests/status_effects_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 5
+    },
+    {
+      "file": "godot/tests/upgrade_presentation_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_fail",
+      "line": 2
     },
     {
       "file": "godot/tests/upgrade_presentation_test.gd",
       "language": "gdscript",
       "kind": "function",
       "name": "_init",
-      "line": 2
+      "line": 6
     },
     {
       "file": "godot/tests/weapon_presentation_test.gd",
@@ -16960,6 +17625,20 @@
       "kind": "function",
       "name": "_init",
       "line": 2
+    },
+    {
+      "file": "godot/tests/weapon_profile_data_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 4
+    },
+    {
+      "file": "godot/tests/weapon_protocol_behavior_test.gd",
+      "language": "gdscript",
+      "kind": "function",
+      "name": "_initialize",
+      "line": 6
     },
     {
       "file": "tools/android/scan_runtime_log.py",
