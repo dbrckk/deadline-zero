@@ -719,14 +719,15 @@ if (failure.get() != null) throw new AssertionError("Android visual probe failed
 /**
  * Runtime contract for every supported graphics-quality / frame-rate combination.
  *
- * This intentionally validates configuration wiring rather than hardware throughput: emulator CI
- * cannot prove that a device sustains 90/120 FPS, but it can prove that the shipping runtime
- * honors every selectable target and quality ceiling when a run is created.
+ * Emulator CI cannot prove sustained 90/120 FPS throughput, but it can prove that the shipping
+ * runtime honors every selectable target and quality ceiling. The test also writes a machine-
+ * readable matrix so release CI can archive exact evidence for the tested build.
  */
 ⋮----
 public final class AndroidGraphicsProfileProbeTest {
 ⋮----
 public void everyGraphicsProfileAndFrameRateTargetReachesGameScreen() throws Exception {
+⋮----
 try (ActivityScenario<AndroidLauncher> scenario = ActivityScenario.launch(AndroidLauncher.class)) {
 AndroidLauncher activity = activity(scenario);
 ⋮----
@@ -759,6 +760,42 @@ effectiveFx.get() <= quality.fxCeiling + .0001f);
 assertTrue("FX quality fell below runtime minimum for " + quality + "/" + frameRate,
 effectiveFx.get() >= .40f - .0001f);
 ⋮----
+results.add(new Result(
+quality.name(),
+⋮----
+effectiveTarget.get(),
+effectiveFx.get()
+⋮----
+assertEquals("expected complete 4 x 3 graphics matrix", 12, results.size());
+writeMatrix(results);
+⋮----
+private static void writeMatrix(List<Result> results) throws Exception {
+File root = new File(
+androidx.test.platform.app.InstrumentationRegistry.getInstrumentation()
+.getTargetContext().getExternalFilesDir(null),
+⋮----
+assertTrue("unable to create graphics-profile QA output directory",
+root.isDirectory() || root.mkdirs());
+⋮----
+File output = new File(root, "graphics-profile-matrix.json");
+try (FileWriter writer = new FileWriter(output, false)) {
+writer.write("{\n  \"schemaVersion\": 1,\n  \"combinations\": [\n");
+for (int i = 0; i < results.size(); i++) {
+Result result = results.get(i);
+writer.write("    {");
+writer.write("\"quality\":\"" + result.quality + "\",");
+writer.write("\"qualityCeiling\":" + result.qualityCeiling + ",");
+writer.write("\"requestedFps\":" + result.requestedFps + ",");
+writer.write("\"effectiveFps\":" + result.effectiveFps + ",");
+writer.write("\"effectiveFxQuality\":" + result.effectiveFxQuality);
+writer.write("}");
+writer.write(i + 1 < results.size() ? ",\n" : "\n");
+⋮----
+writer.write("  ]\n}\n");
+⋮----
+assertTrue("graphics profile matrix JSON was not written",
+output.isFile() && output.length() > 200L);
+⋮----
 private static AndroidLauncher activity(ActivityScenario<AndroidLauncher> scenario) {
 ⋮----
 scenario.onActivity(reference::set);
@@ -783,6 +820,8 @@ done.countDown();
 assertTrue("Timed out waiting for libGDX game thread", done.await(10, TimeUnit.SECONDS));
 if (failure.get() != null) {
 throw new AssertionError("Android graphics profile probe failed on game thread", failure.get());
+⋮----
+private static final class Result {
 ```
 
 ## File: src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java

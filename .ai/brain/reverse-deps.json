@@ -2,6 +2,7 @@
   "files": {
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunMissionRuntime.java",
@@ -12,7 +13,7 @@
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 7
+      "out_degree": 8
     },
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": {
       "dependencies": [
@@ -53,8 +54,40 @@
         "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
         "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java"
       ],
-      "dependents": [],
-      "in_degree": 0,
+      "dependents": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+        "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
+        "android/src/main/java/com/deadlinezero/game/android/AndroidPlayGamesCloudSaveAdapter.java",
+        "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunResult.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunShareText.java",
+        "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
+        "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
+        "core/src/main/java/com/deadlinezero/game/services/CloudSaveService.java",
+        "core/src/main/java/com/deadlinezero/game/ui/MetaLayout.java",
+        "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java",
+        "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/EquipmentUpgradeSafetyTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/RunRecoveryAdviceTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/RunShareTextTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/ThreatProgressionServiceTest.java",
+        "core/src/test/java/com/deadlinezero/game/services/CloudSaveServiceTest.java",
+        "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java",
+        "tools/android/scan_runtime_log.py",
+        "tools/android/test_scan_runtime_log.py",
+        "tools/environment/test_upsert_environment_atlas.py",
+        "tools/perf/compare_android_benchmark.py",
+        "tools/perf/test_compare_android_benchmark.py",
+        "tools/sprites/test_resolve_actor_actions.py",
+        "tools/verify_final_atlas.py"
+      ],
+      "in_degree": 31,
       "out_degree": 6
     },
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java": {
@@ -97,6 +130,7 @@
     },
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
@@ -117,10 +151,11 @@
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 17
+      "out_degree": 18
     },
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
@@ -135,7 +170,7 @@
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 11
+      "out_degree": 12
     },
     "android/src/main/java/com/deadlinezero/game/android/AndroidAdsService.java": {
       "dependencies": [
@@ -151,6 +186,7 @@
     },
     "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
         "core/src/main/java/com/deadlinezero/game/services/BillingService.java",
         "core/src/main/java/com/deadlinezero/game/services/SingleFlightGate.java"
@@ -159,7 +195,7 @@
         "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java"
       ],
       "in_degree": 1,
-      "out_degree": 3
+      "out_degree": 4
     },
     "android/src/main/java/com/deadlinezero/game/android/AndroidConsentManager.java": {
       "dependencies": [],
@@ -215,6 +251,7 @@
     },
     "android/src/main/java/com/deadlinezero/game/android/AndroidPlayGamesCloudSaveAdapter.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/services/CloudAuthenticationRequiredException.java",
         "core/src/main/java/com/deadlinezero/game/services/CloudProviderConflictException.java",
         "core/src/main/java/com/deadlinezero/game/services/CloudRemoteChangedException.java",
@@ -224,7 +261,7 @@
         "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java"
       ],
       "in_degree": 1,
-      "out_degree": 4
+      "out_degree": 5
     },
     "android/src/main/java/com/deadlinezero/game/android/AndroidPrivacyService.java": {
       "dependencies": [
@@ -273,6 +310,7 @@
     },
     "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/audio/AudioDirector.java",
         "core/src/main/java/com/deadlinezero/game/config/AccessibilitySettings.java",
         "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
@@ -343,7 +381,7 @@
         "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java"
       ],
       "in_degree": 22,
-      "out_degree": 44
+      "out_degree": 45
     },
     "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java": {
       "dependencies": [
@@ -1509,6 +1547,7 @@
     },
     "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
         "core/src/main/java/com/deadlinezero/game/entities/Player.java",
         "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
@@ -1527,10 +1566,11 @@
         "core/src/test/java/com/deadlinezero/game/meta/EndgameMutatorRulesTest.java"
       ],
       "in_degree": 6,
-      "out_degree": 8
+      "out_degree": 9
     },
     "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/meta/BalanceRunSample.java",
         "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java",
         "core/src/main/java/com/deadlinezero/game/meta/EndgameMutatorRules.java",
@@ -1543,7 +1583,7 @@
         "core/src/test/java/com/deadlinezero/game/meta/BalanceTelemetrySegmentsTest.java"
       ],
       "in_degree": 4,
-      "out_degree": 4
+      "out_degree": 5
     },
     "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryStore.java": {
       "dependencies": [
@@ -2139,6 +2179,7 @@
     },
     "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunResult.java",
         "core/src/main/java/com/deadlinezero/game/meta/StageMissionRules.java",
         "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java"
@@ -2151,10 +2192,11 @@
         "core/src/test/java/com/deadlinezero/game/meta/RunRecoveryAdviceTest.java"
       ],
       "in_degree": 5,
-      "out_degree": 3
+      "out_degree": 4
     },
     "core/src/main/java/com/deadlinezero/game/meta/RunResult.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunRewardCalculator.java",
         "core/src/main/java/com/deadlinezero/game/meta/ThreatTierRules.java"
@@ -2169,7 +2211,7 @@
         "core/src/test/java/com/deadlinezero/game/meta/RunShareTextTest.java"
       ],
       "in_degree": 7,
-      "out_degree": 3
+      "out_degree": 4
     },
     "core/src/main/java/com/deadlinezero/game/meta/RunRewardCalculator.java": {
       "dependencies": [
@@ -2218,6 +2260,7 @@
     },
     "core/src/main/java/com/deadlinezero/game/meta/RunShareText.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/config/Localization.java",
         "core/src/main/java/com/deadlinezero/game/meta/ProfileSchema.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunResult.java"
@@ -2228,7 +2271,7 @@
         "core/src/test/java/com/deadlinezero/game/meta/RunShareTextTest.java"
       ],
       "in_degree": 3,
-      "out_degree": 3
+      "out_degree": 4
     },
     "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java": {
       "dependencies": [
@@ -2803,6 +2846,7 @@
     },
     "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/meta/BalanceHealthRules.java",
         "core/src/main/java/com/deadlinezero/game/services/CloudAuthenticationRequiredException.java",
@@ -2825,7 +2869,7 @@
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java"
       ],
       "in_degree": 3,
-      "out_degree": 15
+      "out_degree": 16
     },
     "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": {
       "dependencies": [
@@ -3045,6 +3089,7 @@
     },
     "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java",
         "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java",
@@ -3071,7 +3116,7 @@
         "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java"
       ],
       "in_degree": 5,
-      "out_degree": 17
+      "out_degree": 18
     },
     "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java": {
       "dependencies": [
@@ -3168,6 +3213,7 @@
     },
     "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySummary.java",
         "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java",
@@ -3192,7 +3238,7 @@
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java"
       ],
       "in_degree": 2,
-      "out_degree": 18
+      "out_degree": 19
     },
     "core/src/main/java/com/deadlinezero/game/services/AdsService.java": {
       "dependencies": [
@@ -3290,6 +3336,7 @@
     },
     "core/src/main/java/com/deadlinezero/game/services/CloudSaveService.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
         "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
         "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupSummary.java",
@@ -3304,7 +3351,7 @@
         "core/src/test/java/com/deadlinezero/game/services/CloudSaveServiceTest.java"
       ],
       "in_degree": 3,
-      "out_degree": 7
+      "out_degree": 8
     },
     "core/src/main/java/com/deadlinezero/game/services/GameServices.java": {
       "dependencies": [
@@ -3446,6 +3493,7 @@
     },
     "core/src/main/java/com/deadlinezero/game/ui/MetaLayout.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/ui/UiLayout.java"
       ],
       "dependents": [
@@ -3459,7 +3507,7 @@
         "core/src/test/java/com/deadlinezero/game/screen/MetaScreenLayoutContractTest.java"
       ],
       "in_degree": 8,
-      "out_degree": 1
+      "out_degree": 2
     },
     "core/src/main/java/com/deadlinezero/game/ui/ResponsiveGrid.java": {
       "dependencies": [
@@ -3734,6 +3782,7 @@
     },
     "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
         "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
         "core/src/main/java/com/deadlinezero/game/visual/GameArt.java",
@@ -3744,7 +3793,7 @@
         "core/src/test/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArtTest.java"
       ],
       "in_degree": 2,
-      "out_degree": 4
+      "out_degree": 5
     },
     "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java": {
       "dependencies": [
@@ -5235,6 +5284,7 @@
     },
     "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java",
         "core/src/main/java/com/deadlinezero/game/config/Localization.java",
         "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
@@ -5255,7 +5305,7 @@
         "core/src/test/java/com/deadlinezero/game/services/BillingProductCatalogTest.java"
       ],
       "in_degree": 7,
-      "out_degree": 9
+      "out_degree": 10
     },
     "core/src/test/java/com/deadlinezero/game/config/LocalizationGlyphSanitizerTest.java": {
       "dependencies": [
@@ -5514,6 +5564,7 @@
     },
     "core/src/test/java/com/deadlinezero/game/meta/EquipmentUpgradeSafetyTest.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java",
         "core/src/main/java/com/deadlinezero/game/meta/EquipmentUpgradeService.java",
         "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
@@ -5522,7 +5573,7 @@
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 5
+      "out_degree": 6
     },
     "core/src/test/java/com/deadlinezero/game/meta/InventoryRestoreTest.java": {
       "dependencies": [
@@ -5700,6 +5751,7 @@
     },
     "core/src/test/java/com/deadlinezero/game/meta/RunRecoveryAdviceTest.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunResult.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunRewardCalculator.java",
@@ -5707,7 +5759,7 @@
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 4
+      "out_degree": 5
     },
     "core/src/test/java/com/deadlinezero/game/meta/RunRewardCalculatorTest.java": {
       "dependencies": [
@@ -5720,13 +5772,14 @@
     },
     "core/src/test/java/com/deadlinezero/game/meta/RunShareTextTest.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunResult.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunRewardCalculator.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunShareText.java"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 3
+      "out_degree": 4
     },
     "core/src/test/java/com/deadlinezero/game/meta/SingularityCoreRuntimeTest.java": {
       "dependencies": [
@@ -5761,6 +5814,7 @@
     },
     "core/src/test/java/com/deadlinezero/game/meta/ThreatProgressionServiceTest.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/meta/EquipmentItem.java",
         "core/src/main/java/com/deadlinezero/game/meta/Inventory.java",
         "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java",
@@ -5771,7 +5825,7 @@
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 7
+      "out_degree": 8
     },
     "core/src/test/java/com/deadlinezero/game/meta/ThreatSetBonusRulesTest.java": {
       "dependencies": [
@@ -6018,6 +6072,7 @@
     },
     "core/src/test/java/com/deadlinezero/game/services/CloudSaveServiceTest.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
         "core/src/main/java/com/deadlinezero/game/meta/ProfileBackupCodec.java",
         "core/src/main/java/com/deadlinezero/game/services/CloudSaveAdapter.java",
@@ -6025,7 +6080,7 @@
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 4
+      "out_degree": 5
     },
     "core/src/test/java/com/deadlinezero/game/services/OfferConfigServiceTest.java": {
       "dependencies": [
@@ -6624,6 +6679,7 @@
     },
     "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
         "core/src/main/java/com/deadlinezero/game/meta/ProfileStore.java",
         "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
@@ -6636,7 +6692,7 @@
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 9
+      "out_degree": 10
     },
     "godot/scripts/Enemy.gd": {
       "dependencies": [],
@@ -6792,19 +6848,21 @@
     },
     "tools/android/scan_runtime_log.py": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/ai/BossAttackPatternCatalog.java"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 1
+      "out_degree": 2
     },
     "tools/android/test_scan_runtime_log.py": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 1
+      "out_degree": 2
     },
     "tools/blender/add_rex_rifle.py": {
       "dependencies": [
@@ -6975,12 +7033,13 @@
     },
     "tools/environment/test_upsert_environment_atlas.py": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
         "tools/environment/upsert_environment_atlas.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 2
+      "out_degree": 3
     },
     "tools/environment/test_validate_environment_art_contract.py": {
       "dependencies": [
@@ -7022,21 +7081,23 @@
     },
     "tools/perf/compare_android_benchmark.py": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
         "core/src/main/java/com/deadlinezero/game/ui/UiLayout.java"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 2
+      "out_degree": 3
     },
     "tools/perf/test_compare_android_benchmark.py": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
         "core/src/main/java/com/deadlinezero/game/ui/UiLayout.java"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 2
+      "out_degree": 3
     },
     "tools/slice_sprite_sheet.py": {
       "dependencies": [
@@ -7096,11 +7157,12 @@
     },
     "tools/sprites/test_resolve_actor_actions.py": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "tools/sprites/resolve_actor_actions.py"
       ],
       "dependents": [],
       "in_degree": 0,
-      "out_degree": 1
+      "out_degree": 2
     },
     "tools/sprites/test_validate_actor_production_contracts.py": {
       "dependencies": [
@@ -7183,13 +7245,14 @@
     },
     "tools/verify_final_atlas.py": {
       "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
         "core/src/main/java/com/deadlinezero/game/visual/GameArt.java"
       ],
       "dependents": [
         "tools/test_verify_final_atlas.py"
       ],
       "in_degree": 1,
-      "out_degree": 1
+      "out_degree": 2
     }
   },
   "generated_by": "dbrckk/repo-brain-v7-graph",

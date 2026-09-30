@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T13:00:22Z
+Generated: 2026-09-30T13:14:51Z
 
 ### Git
 - Branch: `main`
-- Head: `634304cb6ef2`
-- Commit date: 2026-09-30T15:00:08+02:00
-- Commit: Exercise all Android graphics runtime profiles
+- Head: `99b7c96b37f9`
+- Commit date: 2026-09-30T15:14:29+02:00
+- Commit: Archive graphics profile runtime evidence
 - Tracked files: 926
 
 ### Recently changed files
+- `.github/workflows/verify.yml`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java`
 - `play/store/RELEASE_READINESS.md`
 - `core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java`
-- `PROJECT_STATUS.txt`
-- `.repomixignore`
 
 ### Project signals
 - `build.gradle`

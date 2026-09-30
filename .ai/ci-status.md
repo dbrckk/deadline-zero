@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 0 success / 0 failure / 6 active
+Summary: 3 success / 0 failure / 5 active
 
-- Android Test APK: in_progress / pending (634304cb)
-- Responsive UI QA: pending / pending (634304cb)
-- Verify: pending / pending (634304cb)
-- Responsive UI QA: in_progress / pending (9dd4392d)
-- Verify: in_progress / pending (9dd4392d)
-- Android Test APK: in_progress / pending (8ecb3d9f)
-- Verify: completed / cancelled (8ecb3d9f)
-- Responsive UI QA: completed / cancelled (8ecb3d9f)
+- Verify: pending / pending (99b7c96b)
+- Responsive UI QA: pending / pending (99b7c96b)
+- Android Test APK: in_progress / pending (2c798124)
+- Verify: in_progress / pending (2c798124)
+- Responsive UI QA: in_progress / pending (2c798124)
+- Android Test APK: completed / success (634304cb)
+- Responsive UI QA: completed / success (634304cb)
+- Verify: completed / success (634304cb)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 866c7430ac08b14c168b595d053aca40b4e6d6a2
-Head: 634304cb6ef2d97f2469fffc0cac8cf094f4f619
+Base: 2c7981245e78e3538a99ca2a9e38ea029027136f
+Head: 99b7c96b37f96ae67e1623723f305db81192bf7b
 
 ## Changed files
-- A android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java
+- M .github/workflows/verify.yml
 
 ## Affected areas
-- android
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
