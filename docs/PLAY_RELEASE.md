@@ -90,12 +90,23 @@ The command refuses to produce a Play bundle when production AdMob IDs, the publ
 
 The resulting signed Android App Bundle is produced under `android/build/outputs/bundle/release/`.
 
+## Runtime release evidence
+
+The `Verify` Android-runtime job produces a machine-readable `runtime-release-evidence.json` artifact that consolidates:
+
+- crash/ANR scan status;
+- loaded gameplay performance telemetry;
+- 160-enemy / 180-projectile stress telemetry;
+- LOW/MEDIUM/HIGH/ULTRA × 60/90/120 FPS runtime-profile coverage.
+
+For any release-candidate commit, archive the `android-runtime-diagnostics-*` and `android-performance-*` workflow artifacts alongside the candidate AAB. The runtime manifest proves repository/emulator gates only; it does not replace physical-device sustained-FPS, thermal, accessibility/readability, Billing, Play services, or Play Console validation.
+
 ## Pre-upload checks
 
 Before Play Console upload:
 
 1. Build with `gradle :android:bundlePlayRelease`; do not bypass this task with a direct `bundleRelease` for a production upload.
-2. Verify `gradle verifyFinalAtlasCoverage` passes on the exact atlas included in the AAB.
+2. Verify `gradle verifyFinalAtlasCoverage` passes on the exact atlas included in the AAB.\4.  Archive the successful Verify run's `runtime-release-evidence.json`, performance JSONs and runtime diagnostics for the exact release-candidate commit.
 3. Verify the AAB is signed with the intended upload key.
 4. Confirm consent/privacy flows on a clean install.
 5. Confirm Settings > Privacy policy opens the exact public URL entered in Play Console.
