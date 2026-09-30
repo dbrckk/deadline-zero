@@ -393,6 +393,7 @@ func _build_world() -> void:
 
     _build_containment_lanes()
     _build_authored_barrier_clusters()
+    _build_authored_world_dressing()
     _build_perimeter_beacons()
 
 func _build_authored_barrier_clusters() -> void:
@@ -416,6 +417,56 @@ func _build_authored_barrier_clusters() -> void:
             barrier.rotation.y = base_rotation + (0.08 if item_index % 2 == 0 else -0.08)
             barrier.scale = Vector3.ONE * (0.95 + float(item_index % 3) * 0.05)
             add_child(barrier)
+
+func _build_authored_world_dressing() -> void:
+    var factories := [
+        Callable(DZAssetLibrary, "barrel"),
+        Callable(DZAssetLibrary, "pallet"),
+        Callable(DZAssetLibrary, "traffic_cone"),
+        Callable(DZAssetLibrary, "trash_bag"),
+        Callable(DZAssetLibrary, "street_lights"),
+    ]
+    var placements := [
+        Vector3(-21.0, 0.0, -5.5), Vector3(-18.5, 0.0, 5.0),
+        Vector3(21.0, 0.0, 5.5), Vector3(18.2, 0.0, -5.4),
+        Vector3(-9.5, 0.0, -16.0), Vector3(9.2, 0.0, 16.0),
+        Vector3(-6.5, 0.0, 15.0), Vector3(6.8, 0.0, -15.2),
+        Vector3(-24.5, 0.0, 11.5), Vector3(24.0, 0.0, -11.2),
+        Vector3(-14.0, 0.0, 17.5), Vector3(14.0, 0.0, -17.5),
+        Vector3(-26.0, 0.0, -14.0), Vector3(26.0, 0.0, 14.0),
+        Vector3(-18.0, 0.0, -18.5), Vector3(18.0, 0.0, 18.5),
+        Vector3(-3.0, 0.0, 19.0), Vector3(3.0, 0.0, -19.0),
+    ]
+
+    for index in range(placements.size()):
+        var factory: Callable = factories[index % factories.size()]
+        var prop := factory.call() as Node3D
+        if prop == null:
+            continue
+        prop.name = "EnvironmentProp_%02d" % index
+        prop.add_to_group("environment_props")
+        prop.position = placements[index]
+        prop.rotation.y = float((index * 37) % 360) * PI / 180.0
+        var scale_factor := 0.90 + float(index % 5) * 0.045
+        prop.scale = Vector3.ONE * scale_factor
+        add_child(prop)
+
+    var crack_positions := [
+        Vector3(-12.0, 0.012, -5.8), Vector3(12.2, 0.012, 5.5),
+        Vector3(-4.5, 0.012, 11.8), Vector3(4.8, 0.012, -11.6),
+        Vector3(-17.0, 0.012, 2.0), Vector3(17.2, 0.012, -2.2),
+        Vector3(-8.0, 0.012, 17.0), Vector3(8.0, 0.012, -17.0),
+    ]
+    for index in range(crack_positions.size()):
+        var crack := DZAssetLibrary.street_crack()
+        if crack == null:
+            continue
+        crack.name = "StreetDamage_%02d" % index
+        crack.add_to_group("environment_ground_detail")
+        crack.position = crack_positions[index]
+        crack.rotation.y = float((index * 53) % 360) * PI / 180.0
+        crack.scale = Vector3.ONE * (0.94 + float(index % 3) * 0.06)
+        add_child(crack)
 
 func _build_containment_lanes() -> void:
     var lane_material := StandardMaterial3D.new()
