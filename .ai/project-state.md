@@ -22,19 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T14:52:49Z
+Generated: 2026-09-30T14:57:25Z
 
 ### Git
 - Branch: `main`
-- Head: `4622becc6af8`
-- Commit date: 2026-09-30T16:52:30+02:00
-- Commit: Reject obstructed Godot Android captures
+- Head: `b34698e39cbc`
+- Commit date: 2026-09-30T16:57:06+02:00
+- Commit: Fix Godot smoke shell execution
 - Tracked files: 938
 
 ### Recently changed files
 - `.github/workflows/godot-android-first-playable.yml`
 - `.github/workflows/godot-verify.yml`
-- `godot/tests/mobile_orientation_test.gd`
 
 ### Project signals
 - `build.gradle`
