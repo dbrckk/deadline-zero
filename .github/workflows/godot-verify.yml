@@ -71,6 +71,10 @@ jobs:
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/screen_space_fx_test.gd
       - name: Validate environment identity
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_identity_test.gd
+      - name: Validate authored environment assets
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_asset_validation_test.gd
+      - name: Validate authored world dressing
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_world_dressing_test.gd
       - name: Validate native upgrade depth
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/native_upgrade_depth_test.gd
       - name: Validate weapon protocol behavior
