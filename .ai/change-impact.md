@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 234a880477f64520d75642d7bf3417192d4af6a9
-Head: 744a31d947e6f68f9f7c6c6f9e86d48ca1b51333
+Base: 744a31d947e6f68f9f7c6c6f9e86d48ca1b51333
+Head: 7c772df714a8183cb1781b9c6104539cf14c42b0
 
 ## Changed files
-- M .github/workflows/godot-verify.yml
+- M .github/workflows/godot-android-first-playable.yml
 
 ## Affected areas
 - .github

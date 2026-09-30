@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T14:43:09Z
+Generated: 2026-09-30T14:44:18Z
 
 ### Git
 - Branch: `main`
-- Head: `744a31d947e6`
-- Commit date: 2026-09-30T16:42:53+02:00
-- Commit: Verify Godot authored world dressing
+- Head: `864e09cdb4b2`
+- Commit date: 2026-09-30T14:44:02Z
+- Commit: chore(ai): refresh unified AI context
 - Tracked files: 937
 
 ### Recently changed files
+- `.github/workflows/godot-android-first-playable.yml`
 - `.github/workflows/godot-verify.yml`
 - `godot/tests/environment_asset_validation_test.gd`
 - `godot/tests/authored_world_dressing_test.gd`
 - `godot/scripts/Main.gd`
-- `godot/scripts/AssetLibrary.gd`
 
 ### Project signals
 - `build.gradle`
