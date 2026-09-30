@@ -12,6 +12,10 @@ on:
       - '.github/workflows/godot-android-first-playable.yml'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-godot-android:
     runs-on: ubuntu-latest
