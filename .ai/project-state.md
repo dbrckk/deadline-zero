@@ -22,20 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T13:14:51Z
+Generated: 2026-09-30T13:17:20Z
 
 ### Git
 - Branch: `main`
-- Head: `99b7c96b37f9`
-- Commit date: 2026-09-30T15:14:29+02:00
-- Commit: Archive graphics profile runtime evidence
+- Head: `5c2660ce5742`
+- Commit date: 2026-09-30T15:16:54+02:00
+- Commit: Archive Quarantine Yard visual evidence
 - Tracked files: 926
 
 ### Recently changed files
 - `.github/workflows/verify.yml`
+- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java`
-- `play/store/RELEASE_READINESS.md`
-- `core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java`
 
 ### Project signals
 - `build.gradle`

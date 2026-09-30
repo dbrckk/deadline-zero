@@ -350,6 +350,27 @@ enemies.add(new Enemy(Enemy.Type.BRUTE, 4.6f, 1.5f, 500_000f, .02f, .62f, 0f, 1)
 ⋮----
 throw new AssertionError("unable to inject FROST COLOSSUS boss for visual QA", exception);
 ⋮----
+public void capturesQuarantineYardGameplay() throws Exception {
+⋮----
+assertTrue("expected GameScreen for QUARANTINE YARD visual probe",
+game.getScreen() instanceof GameScreen);
+⋮----
+assertTrue("stage 1 must route to QUARANTINE YARD",
+com.deadlinezero.game.visual.EnvironmentBiomeRules.forStage(1)
+⋮----
+injectQuarantineYardCrowd((GameScreen) game.getScreen());
+⋮----
+Thread.sleep(1200L);
+capture("quarantine-yard-gameplay.png");
+⋮----
+private static void injectQuarantineYardCrowd(GameScreen screen) {
+⋮----
+enemies.add(new Enemy(Enemy.Type.SHAMBLER, -5.0f, 3.0f, 500_000f, .02f, .50f, 0f, 1));
+enemies.add(new Enemy(Enemy.Type.RUNNER, 0.4f, 4.2f, 500_000f, .02f, .44f, 0f, 1));
+enemies.add(new Enemy(Enemy.Type.RANGED, 5.1f, 2.7f, 500_000f, .02f, .46f, 0f, 1));
+⋮----
+throw new AssertionError("unable to inject QUARANTINE YARD crowd for visual QA", exception);
+⋮----
 public void capturesCryogenicDepthsGameplay() throws Exception {
 ⋮----
 assertTrue("expected GameScreen for CRYOGENIC DEPTHS visual probe", game.getScreen() instanceof GameScreen);
@@ -359,7 +380,6 @@ com.deadlinezero.game.visual.EnvironmentBiomeRules.forStage(40)
 ⋮----
 injectCryogenicDepthsCrowd((GameScreen) game.getScreen());
 ⋮----
-Thread.sleep(1200L);
 capture("cryogenic-depths-gameplay.png");
 ⋮----
 private static void injectCryogenicDepthsCrowd(GameScreen screen) {

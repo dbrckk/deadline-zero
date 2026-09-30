@@ -4403,9 +4403,12 @@ jobs:
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/performance-stress.json build/android-performance/performance-stress.json
             test -s build/android-performance/performance-stress.json
             python3 -c 'import json; from pathlib import Path; p=Path("build/android-performance/performance-stress.json"); data=json.loads(p.read_text()); required={"scenario","targetFps","averageFps","p95FrameMs","p99FrameMs","jankRatio","stable","thermalLevel","effectiveFxQuality","activeEnemies","activeProjectiles","activeSpatialBuckets","retainedSpatialBuckets"}; assert required <= data.keys(), data; assert data["scenario"] == "horde-160-projectile-180", data; assert data["targetFps"] in (60,90,120), data; assert data["averageFps"] > 5, data; assert 0 < data["p95FrameMs"] <= 250, data; assert data["p99FrameMs"] >= data["p95FrameMs"], data; assert 0 <= data["jankRatio"] <= 1, data; assert data["activeEnemies"] >= 140, data; assert data["activeProjectiles"] >= 140, data; assert data["activeSpatialBuckets"] > 0, data; print("PERF_STRESS", json.dumps(data, sort_keys=True))'
-            timeout 8m adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesForgeHoundGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCinderGunnerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesSlagGuardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesPhaseStalkerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesStaticSeerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesNullWardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesWeeklyMissionsScreen,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCloudSaveScreen,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesGraphicsQualitySettings,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCryoVaultGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCryogenicDepthsGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesExpandedUpgradePoolOverlay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesFrostColossusGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesChampionVariantCrowd,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesBossRevealCameraFraming com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/production-roster-visual-probe.txt
-            grep -q 'OK (15 tests)' /tmp/production-roster-visual-probe.txt
+            timeout 8m adb shell am instrument -w -e class com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesForgeHoundGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCinderGunnerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesSlagGuardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesPhaseStalkerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesStaticSeerGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesNullWardGameplayAndAttackFrames,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesQuarantineYardGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesWeeklyMissionsScreen,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCloudSaveScreen,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesGraphicsQualitySettings,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCryoVaultGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesCryogenicDepthsGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesExpandedUpgradePoolOverlay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesFrostColossusGameplay,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesChampionVariantCrowd,com.deadlinezero.game.android.AndroidGameplayVisualProbeTest#capturesBossRevealCameraFraming com.deadlinezero.game.test/androidx.test.runner.AndroidJUnitRunner | tee /tmp/production-roster-visual-probe.txt
+            grep -q 'OK (16 tests)' /tmp/production-roster-visual-probe.txt
             mkdir -p build/android-visual-qa
+            adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/quarantine-yard-gameplay.png
+            adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/quarantine-yard-gameplay.png build/android-visual-qa/quarantine-yard-gameplay.png
+            test -s build/android-visual-qa/quarantine-yard-gameplay.png
             adb shell ls -l /sdcard/Android/data/com.deadlinezero.game/files/qa/forge-hound-gameplay.png
             adb pull /sdcard/Android/data/com.deadlinezero.game/files/qa/forge-hound-gameplay.png build/android-visual-qa/forge-hound-gameplay.png
             test -s build/android-visual-qa/forge-hound-gameplay.png
@@ -4888,6 +4891,27 @@ enemies.add(new Enemy(Enemy.Type.BRUTE, 4.6f, 1.5f, 500_000f, .02f, .62f, 0f, 1)
 ⋮----
 throw new AssertionError("unable to inject FROST COLOSSUS boss for visual QA", exception);
 ⋮----
+public void capturesQuarantineYardGameplay() throws Exception {
+⋮----
+assertTrue("expected GameScreen for QUARANTINE YARD visual probe",
+game.getScreen() instanceof GameScreen);
+⋮----
+assertTrue("stage 1 must route to QUARANTINE YARD",
+com.deadlinezero.game.visual.EnvironmentBiomeRules.forStage(1)
+⋮----
+injectQuarantineYardCrowd((GameScreen) game.getScreen());
+⋮----
+Thread.sleep(1200L);
+capture("quarantine-yard-gameplay.png");
+⋮----
+private static void injectQuarantineYardCrowd(GameScreen screen) {
+⋮----
+enemies.add(new Enemy(Enemy.Type.SHAMBLER, -5.0f, 3.0f, 500_000f, .02f, .50f, 0f, 1));
+enemies.add(new Enemy(Enemy.Type.RUNNER, 0.4f, 4.2f, 500_000f, .02f, .44f, 0f, 1));
+enemies.add(new Enemy(Enemy.Type.RANGED, 5.1f, 2.7f, 500_000f, .02f, .46f, 0f, 1));
+⋮----
+throw new AssertionError("unable to inject QUARANTINE YARD crowd for visual QA", exception);
+⋮----
 public void capturesCryogenicDepthsGameplay() throws Exception {
 ⋮----
 assertTrue("expected GameScreen for CRYOGENIC DEPTHS visual probe", game.getScreen() instanceof GameScreen);
@@ -4897,7 +4921,6 @@ com.deadlinezero.game.visual.EnvironmentBiomeRules.forStage(40)
 ⋮----
 injectCryogenicDepthsCrowd((GameScreen) game.getScreen());
 ⋮----
-Thread.sleep(1200L);
 capture("cryogenic-depths-gameplay.png");
 ⋮----
 private static void injectCryogenicDepthsCrowd(GameScreen screen) {

@@ -1,7 +1,7 @@
 {
   "files": [
     {
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
       "reasons": [
         "changed",
         "changed-source",
@@ -9,7 +9,7 @@
         "selected-test",
         "symbol-indexed"
       ],
-      "score": 405
+      "score": 645
     },
     {
       "path": ".github/workflows/verify.yml",
@@ -21,13 +21,19 @@
     {
       "path": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
       "reasons": [
-        "dependency-neighbor",
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 80
+      "score": 50
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+      "path": "core/src/main/java/com/deadlinezero/game/ai/EnemyState.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 50
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
       "reasons": [
         "dependency-neighbor"
       ],
@@ -41,7 +47,56 @@
       "score": 50
     },
     {
+      "path": "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 50
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/meta/SurvivorCatalog.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 50
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 50
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 50
+    },
+    {
       "path": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 50
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 50
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java",
+      "reasons": [
+        "dependency-neighbor"
+      ],
+      "score": 50
+    },
+    {
+      "path": "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java",
       "reasons": [
         "dependency-neighbor"
       ],
@@ -55,179 +110,81 @@
       "score": 40
     },
     {
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+      "path": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
+      "score": 25
     },
     {
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
+      "score": 25
     },
     {
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+      "path": "core/src/main/java/com/deadlinezero/game/ai/BossIdentity.java",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
+      "score": 25
     },
     {
-      "path": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
+      "path": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
+      "score": 25
     },
     {
-      "path": "android/src/main/java/com/deadlinezero/game/android/AndroidPlayGamesCloudSaveAdapter.java",
+      "path": "core/src/main/java/com/deadlinezero/game/meta/AchievementService.java",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
+      "score": 25
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java",
+      "path": "core/src/main/java/com/deadlinezero/game/meta/MasteryProgress.java",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
+      "score": 25
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetrySegments.java",
+      "path": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
+      "score": 25
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java",
+      "path": "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
+      "score": 25
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/meta/RunResult.java",
+      "path": "core/src/main/java/com/deadlinezero/game/visual/EnvironmentBiomeRules.java",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
+      "score": 25
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/meta/RunShareText.java",
+      "path": "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
+      "score": 25
     },
     {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+      "path": "godot/scripts/Enemy.gd",
       "reasons": [
-        "reverse-dependency-neighbor"
+        "dependency-neighbor"
       ],
-      "score": 30
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/services/CloudSaveService.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/ui/MetaLayout.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/main/java/com/deadlinezero/game/visual/AuthoredCoreDirectionalArt.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/test/java/com/deadlinezero/game/config/LocalizationCatalogGuardTest.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/test/java/com/deadlinezero/game/meta/EquipmentUpgradeSafetyTest.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/test/java/com/deadlinezero/game/meta/RunRecoveryAdviceTest.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/test/java/com/deadlinezero/game/meta/RunShareTextTest.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/test/java/com/deadlinezero/game/meta/ThreatProgressionServiceTest.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "core/src/test/java/com/deadlinezero/game/services/CloudSaveServiceTest.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "tools/android/scan_runtime_log.py",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
-    },
-    {
-      "path": "tools/android/test_scan_runtime_log.py",
-      "reasons": [
-        "reverse-dependency-neighbor"
-      ],
-      "score": 30
+      "score": 25
     }
   ],
   "generated_by": "dbrckk/repo-brain-v6",
