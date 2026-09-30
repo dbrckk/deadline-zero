@@ -5,19 +5,19 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "AccessibilityReleaseContractTest": {
+    "AndroidGraphicsProfileProbeTest": {
       "source": {
-        "file": "core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java",
-        "start": 14,
-        "end": 72
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+        "start": 26,
+        "end": 100
       },
       "symbol_dependencies": [
         {
-          "symbol": "AccessibilityColorVisionTest",
+          "symbol": "AndroidLauncher",
           "definitions": [
             {
-              "file": "core/src/test/java/com/deadlinezero/game/config/AccessibilityColorVisionTest.java",
-              "line": 8,
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
               "kind": "class",
               "language": "java"
             }
@@ -25,35 +25,487 @@
           "relation": "class_like"
         },
         {
-          "symbol": "AccessibilitySettings",
+          "symbol": "DeadlineZeroGame",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/config/AccessibilitySettings.java",
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "FrameRate",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 28,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 65,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GraphicsSettings",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
               "line": 7,
               "kind": "class",
               "language": "java"
             }
           ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "Quality",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 9,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+              "line": 68,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "effectiveFrameRateTarget",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 149,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "effectiveFxQuality",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 157,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "everyGraphicsProfileAndFrameRateTargetReachesGameScreen",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+              "line": 29,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "frameRate",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 67,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "fxCeiling",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 84,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+              "line": 82,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 68,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "setFrameRate",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 72,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 20
+    },
+    "everyGraphicsProfileAndFrameRateTargetReachesGameScreen": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+        "start": 28,
+        "end": 67
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
           "relation": "class_like"
         },
         {
-          "symbol": "AccessibilitySettingsTest",
+          "symbol": "DeadlineZeroGame",
           "definitions": [
             {
-              "file": "core/src/test/java/com/deadlinezero/game/config/AccessibilitySettingsTest.java",
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "FrameRate",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 28,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GameScreen",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 65,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "GraphicsSettings",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
               "line": 7,
               "kind": "class",
               "language": "java"
             }
           ],
-          "relation": "class_like"
+          "relation": "imported_module"
         },
         {
-          "symbol": "SettingsScreen",
+          "symbol": "Quality",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java",
-              "line": 26,
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 9,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "RunModifierContext",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 4,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+              "line": 68,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "effectiveFrameRateTarget",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 149,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "effectiveFxQuality",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+              "line": 157,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "frameRate",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 67,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "fxCeiling",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 84,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "offers",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "runOnGameThread",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+              "line": 82,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 68,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "setFrameRate",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 72,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRun",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 106,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "startRunWithContract",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 116,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 19
+    },
+    "activity": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+        "start": 69,
+        "end": 75
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
               "kind": "class",
               "language": "java"
             }
@@ -61,11 +513,57 @@
           "relation": "class_like"
         },
         {
-          "symbol": "repositoryRoot",
+          "symbol": "set",
           "definitions": [
             {
-              "file": "core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java",
-              "line": 61,
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 68,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "game": {
+      "source": {
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+        "start": 77,
+        "end": 81
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DeadlineZeroGame",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+              "line": 46,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+              "line": 68,
               "kind": "symbol",
               "language": "java"
             }
@@ -73,16 +571,65 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 3
     },
-    "repositoryRoot": {
+    "runOnGameThread": {
       "source": {
-        "file": "core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java",
-        "start": 62,
-        "end": 71
+        "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+        "start": 83,
+        "end": 99
       },
-      "symbol_dependencies": [],
-      "dependency_count": 0
+      "symbol_dependencies": [
+        {
+          "symbol": "AndroidLauncher",
+          "definitions": [
+            {
+              "file": "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java",
+              "line": 11,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "activity",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+              "line": 68,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "game",
+          "definitions": [
+            {
+              "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+              "line": 76,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+              "line": 68,
+              "kind": "symbol",
+              "language": "java"
+            }
+          ],
+          "relation": "imported_module"
+        }
+      ],
+      "dependency_count": 4
     }
   }
 }

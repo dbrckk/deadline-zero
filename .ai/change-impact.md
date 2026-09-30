@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 8ecb3d9fba1add178de1c016a5645987f82798b8
-Head: 9dd4392d8eb8314ec4061b26c82cc3c17da2a8e3
+Base: 866c7430ac08b14c168b595d053aca40b4e6d6a2
+Head: 634304cb6ef2d97f2469fffc0cac8cf094f4f619
 
 ## Changed files
-- M play/store/RELEASE_READINESS.md
+- A android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java
 
 ## Affected areas
-- play
+- android
 
 ## Related test candidates
 - No direct filename-based test match detected.

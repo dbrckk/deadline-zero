@@ -22,22 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T12:59:27Z
+Generated: 2026-09-30T13:00:22Z
 
 ### Git
 - Branch: `main`
-- Head: `9dd4392d8eb8`
-- Commit date: 2026-09-30T14:59:03+02:00
-- Commit: Track accessibility and localization release gates
-- Tracked files: 925
+- Head: `634304cb6ef2`
+- Commit date: 2026-09-30T15:00:08+02:00
+- Commit: Exercise all Android graphics runtime profiles
+- Tracked files: 926
 
 ### Recently changed files
+- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java`
 - `play/store/RELEASE_READINESS.md`
 - `core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java`
 - `PROJECT_STATUS.txt`
 - `.repomixignore`
-- `godot/scripts/Player.gd`
-- `godot/tests/native_upgrade_depth_test.gd`
 
 ### Project signals
 - `build.gradle`
