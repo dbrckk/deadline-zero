@@ -1,13 +1,15 @@
 # Change impact
 
-Base: 8fa6f5c7b4a10700ba2f92b36d3eebfbaa53e761
-Head: 8f33076b86627d3b683a52c9df35c48a28749caa
+Base: a767a2e59a33018f87c88bd94de76f95b85af5c0
+Head: e950f3fcc81b04a39f7ef0cf319f9bc303153e57
 
 ## Changed files
 - M .github/workflows/godot-android-first-playable.yml
+- M godot/export_presets.cfg
 
 ## Affected areas
 - .github
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

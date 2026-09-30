@@ -22,17 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T19:49:16Z
+Generated: 2026-09-30T19:54:35Z
 
 ### Git
 - Branch: `main`
-- Head: `8f33076b8662`
-- Commit date: 2026-09-30T21:49:05+02:00
-- Commit: Make Godot Android smoke launch deterministic
+- Head: `e950f3fcc81b`
+- Commit date: 2026-09-30T21:54:22+02:00
+- Commit: Restore launchable Godot Android app
 - Tracked files: 938
 
 ### Recently changed files
 - `.github/workflows/godot-android-first-playable.yml`
+- `godot/export_presets.cfg`
 - `godot/tests/mobile_orientation_test.gd`
 - `godot/project.godot`
 
