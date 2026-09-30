@@ -450,7 +450,9 @@ godot/
     weapon_protocol_behavior_test.gd
 tools/
   android/
+    build_runtime_release_evidence.py
     scan_runtime_log.py
+    test_build_runtime_release_evidence.py
     test_scan_runtime_log.py
   blender/
     add_rex_rifle.py
@@ -4291,7 +4293,7 @@ jobs:
           gradle-version: '8.11.1'
       - name: Validate final sprite production layout
         run: |
-          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/assemble_actor_sheet.py tools/sprites/audit_final_art_status.py tools/sprites/validate_final_art_promotion_consistency.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py tools/environment/validate_environment_art_contract.py tools/environment/test_validate_environment_art_contract.py tools/environment/pack_environment_art.py tools/environment/upsert_environment_atlas.py tools/environment/test_upsert_environment_atlas.py
+          python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/assemble_actor_sheet.py tools/sprites/audit_final_art_status.py tools/sprites/validate_final_art_promotion_consistency.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py tools/android/build_runtime_release_evidence.py tools/android/test_build_runtime_release_evidence.py tools/environment/validate_environment_art_contract.py tools/environment/test_validate_environment_art_contract.py tools/environment/pack_environment_art.py tools/environment/upsert_environment_atlas.py tools/environment/test_upsert_environment_atlas.py
           python3 tools/validate_final_sprite_layout.py
           python3 tools/validate_rex_reference.py
           mkdir -p build
@@ -4304,6 +4306,7 @@ jobs:
           python3 -m unittest discover -s tools/sprites -p 'test_validate_actor_production_contracts.py'
           python3 -m unittest discover -s tools/perf -p 'test_compare_android_benchmark.py'
           python3 -m unittest discover -s tools/android -p 'test_scan_runtime_log.py'
+          python3 -m unittest discover -s tools/android -p 'test_build_runtime_release_evidence.py'
           PYTHONPATH=tools/environment python3 -m unittest discover -s tools/environment -p 'test_validate_environment_art_contract.py'
           PYTHONPATH=tools/environment python3 -m unittest discover -s tools/environment -p 'test_upsert_environment_atlas.py'
           python3 tools/environment/validate_environment_art_contract.py
@@ -4511,6 +4514,16 @@ jobs:
           test -s build/android-runtime/logcat.txt
           python3 tools/android/scan_runtime_log.py             build/android-runtime/logcat.txt             --package com.deadlinezero.game             --json-out build/android-runtime/crash-anr-report.json
 
+      - name: Build Android runtime release evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          test -s build/android-runtime/crash-anr-report.json
+          test -s build/android-performance/performance-probe.json
+          test -s build/android-performance/performance-stress.json
+          test -s build/android-performance/graphics-profile-matrix.json
+          python3 tools/android/build_runtime_release_evidence.py             --crash-anr build/android-runtime/crash-anr-report.json             --probe build/android-performance/performance-probe.json             --stress build/android-performance/performance-stress.json             --profiles build/android-performance/graphics-profile-matrix.json             --commit "$GITHUB_SHA"             --json-out build/android-runtime/runtime-release-evidence.json
+
       - name: Upload Android runtime diagnostics
         uses: actions/upload-artifact@v4
         if: always()
@@ -4519,6 +4532,7 @@ jobs:
           path: |
             build/android-runtime/logcat.txt
             build/android-runtime/crash-anr-report.json
+            build/android-runtime/runtime-release-evidence.json
           if-no-files-found: warn
           retention-days: 30
 
@@ -28913,6 +28927,34 @@ func _initialize() -> void:
     quit(0)
 ````
 
+## File: tools/android/build_runtime_release_evidence.py
+````python
+#!/usr/bin/env python3
+⋮----
+REQUIRED_PROFILE_COMBINATIONS = {
+⋮----
+def load(path: str) -> dict
+⋮----
+def build_evidence(crash: dict, probe: dict, stress: dict, profiles: dict, commit: str = "") -> dict
+⋮----
+errors = []
+⋮----
+rows = profiles.get("combinations", [])
+actual = {
+⋮----
+fx = row.get("effectiveFxQuality")
+ceiling = row.get("qualityCeiling")
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+⋮----
+evidence = build_evidence(
+rendered = json.dumps(evidence, indent=2, sort_keys=True)
+````
+
 ## File: tools/android/scan_runtime_log.py
 ````python
 #!/usr/bin/env python3
@@ -28949,6 +28991,34 @@ args = parser.parse_args()
 ⋮----
 result = scan(Path(args.logcat).read_text(errors="replace"), args.package)
 rendered = json.dumps(result, indent=2, sort_keys=True)
+````
+
+## File: tools/android/test_build_runtime_release_evidence.py
+````python
+MODULE_PATH = Path(__file__).with_name("build_runtime_release_evidence.py")
+SPEC = importlib.util.spec_from_file_location("build_runtime_release_evidence", MODULE_PATH)
+MODULE = importlib.util.module_from_spec(SPEC)
+⋮----
+def performance(scenario)
+⋮----
+def profiles()
+⋮----
+rows = []
+ceilings = {"LOW": 0.50, "MEDIUM": 0.68, "HIGH": 0.86, "ULTRA": 1.0}
+⋮----
+class RuntimeReleaseEvidenceTest(unittest.TestCase)
+⋮----
+def test_complete_clean_evidence_passes(self)
+⋮----
+result = MODULE.build_evidence(
+⋮----
+def test_missing_profile_combination_fails(self)
+⋮----
+profile_data = profiles()
+⋮----
+def test_crash_finding_fails(self)
+⋮----
+def test_fx_ceiling_violation_fails(self)
 ````
 
 ## File: tools/android/test_scan_runtime_log.py

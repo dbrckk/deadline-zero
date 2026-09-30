@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T14:36:45Z
+Generated: 2026-09-30T14:40:09Z
 
 ### Git
 - Branch: `main`
-- Head: `ba2e8e6ccbd4`
-- Commit date: 2026-09-30T16:36:31+02:00
-- Commit: Preserve graphics profile evidence after Android tests
-- Tracked files: 926
+- Head: `bd98a2e4412b`
+- Commit date: 2026-09-30T16:39:43+02:00
+- Commit: Fix release checklist numbering
+- Tracked files: 928
 
 ### Recently changed files
+- `docs/PLAY_RELEASE.md`
 - `.github/workflows/verify.yml`
-- `core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java`
-- `docs/PREMIUM_ENVIRONMENT_ART_CONTRACT.md`
-- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java`
+- `tools/android/test_build_runtime_release_evidence.py`
+- `tools/android/build_runtime_release_evidence.py`
 
 ### Project signals
 - `build.gradle`

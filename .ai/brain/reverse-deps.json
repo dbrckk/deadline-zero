@@ -80,6 +80,7 @@
         "core/src/test/java/com/deadlinezero/game/services/CloudSaveServiceTest.java",
         "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java",
         "tools/android/scan_runtime_log.py",
+        "tools/android/test_build_runtime_release_evidence.py",
         "tools/android/test_scan_runtime_log.py",
         "tools/environment/test_upsert_environment_atlas.py",
         "tools/perf/compare_android_benchmark.py",
@@ -87,7 +88,7 @@
         "tools/sprites/test_resolve_actor_actions.py",
         "tools/verify_final_atlas.py"
       ],
-      "in_degree": 31,
+      "in_degree": 32,
       "out_degree": 6
     },
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java": {
@@ -1085,10 +1086,12 @@
         "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
         "core/src/test/java/com/deadlinezero/game/config/GraphicsSettingsTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/AdaptiveFxBudgetTest.java",
+        "tools/android/build_runtime_release_evidence.py",
+        "tools/android/test_build_runtime_release_evidence.py",
         "tools/blender/validate_rig.py",
         "tools/perf/compare_android_benchmark.py"
       ],
-      "in_degree": 17,
+      "in_degree": 19,
       "out_degree": 0
     },
     "core/src/main/java/com/deadlinezero/game/config/Localization.java": {
@@ -1358,9 +1361,10 @@
         "core/src/test/java/com/deadlinezero/game/entities/EnemyProjectileStyleTest.java",
         "core/src/test/java/com/deadlinezero/game/meta/SingularityCoreRuntimeTest.java",
         "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
+        "tools/android/test_build_runtime_release_evidence.py",
         "tools/perf/test_compare_android_benchmark.py"
       ],
-      "in_degree": 21,
+      "in_degree": 22,
       "out_degree": 5
     },
     "core/src/main/java/com/deadlinezero/game/fx/ArcFx.java": {
@@ -6846,6 +6850,14 @@
       "in_degree": 2,
       "out_degree": 0
     },
+    "tools/android/build_runtime_release_evidence.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
     "tools/android/scan_runtime_log.py": {
       "dependencies": [
         "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
@@ -6854,6 +6866,16 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 2
+    },
+    "tools/android/test_build_runtime_release_evidence.py": {
+      "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+        "core/src/main/java/com/deadlinezero/game/config/GraphicsSettings.java",
+        "core/src/main/java/com/deadlinezero/game/entities/Projectile.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 3
     },
     "tools/android/test_scan_runtime_log.py": {
       "dependencies": [

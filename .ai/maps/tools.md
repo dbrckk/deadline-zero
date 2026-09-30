@@ -39,7 +39,9 @@ The content is organized as follows:
 # Directory Structure
 ```
 android/
+  build_runtime_release_evidence.py
   scan_runtime_log.py
+  test_build_runtime_release_evidence.py
   test_scan_runtime_log.py
 blender/
   add_rex_rifle.py
@@ -97,6 +99,34 @@ verify_final_atlas.py
 
 # Files
 
+## File: android/build_runtime_release_evidence.py
+```python
+#!/usr/bin/env python3
+⋮----
+REQUIRED_PROFILE_COMBINATIONS = {
+⋮----
+def load(path: str) -> dict
+⋮----
+def build_evidence(crash: dict, probe: dict, stress: dict, profiles: dict, commit: str = "") -> dict
+⋮----
+errors = []
+⋮----
+rows = profiles.get("combinations", [])
+actual = {
+⋮----
+fx = row.get("effectiveFxQuality")
+ceiling = row.get("qualityCeiling")
+⋮----
+def main() -> int
+⋮----
+parser = argparse.ArgumentParser()
+⋮----
+args = parser.parse_args()
+⋮----
+evidence = build_evidence(
+rendered = json.dumps(evidence, indent=2, sort_keys=True)
+```
+
 ## File: android/scan_runtime_log.py
 ```python
 #!/usr/bin/env python3
@@ -133,6 +163,34 @@ args = parser.parse_args()
 ⋮----
 result = scan(Path(args.logcat).read_text(errors="replace"), args.package)
 rendered = json.dumps(result, indent=2, sort_keys=True)
+```
+
+## File: android/test_build_runtime_release_evidence.py
+```python
+MODULE_PATH = Path(__file__).with_name("build_runtime_release_evidence.py")
+SPEC = importlib.util.spec_from_file_location("build_runtime_release_evidence", MODULE_PATH)
+MODULE = importlib.util.module_from_spec(SPEC)
+⋮----
+def performance(scenario)
+⋮----
+def profiles()
+⋮----
+rows = []
+ceilings = {"LOW": 0.50, "MEDIUM": 0.68, "HIGH": 0.86, "ULTRA": 1.0}
+⋮----
+class RuntimeReleaseEvidenceTest(unittest.TestCase)
+⋮----
+def test_complete_clean_evidence_passes(self)
+⋮----
+result = MODULE.build_evidence(
+⋮----
+def test_missing_profile_combination_fails(self)
+⋮----
+profile_data = profiles()
+⋮----
+def test_crash_finding_fails(self)
+⋮----
+def test_fx_ceiling_violation_fails(self)
 ```
 
 ## File: android/test_scan_runtime_log.py

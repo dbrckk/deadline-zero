@@ -1,17 +1,98 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "0286b6554613d81c8a67c1322ef480abca0e27d3",
-  "head": "ba2e8e6ccbd4641654e2664969f112456396a16c",
+  "base": "ba2e8e6ccbd4641654e2664969f112456396a16c",
+  "head": "bd98a2e4412b343d4b42e7a05bd306e67dc6a163",
   "index_mode": "incremental",
   "changed_files": [
     {
       "path": ".github/workflows/verify.yml",
       "status": "M"
+    },
+    {
+      "path": "docs/PLAY_RELEASE.md",
+      "status": "M"
+    },
+    {
+      "path": "tools/android/build_runtime_release_evidence.py",
+      "status": "A"
+    },
+    {
+      "path": "tools/android/test_build_runtime_release_evidence.py",
+      "status": "A"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
-  "selected_tests": []
+  "changed_source_files": [
+    "tools/android/build_runtime_release_evidence.py",
+    "tools/android/test_build_runtime_release_evidence.py"
+  ],
+  "impacted_files": [
+    "tools/android/build_runtime_release_evidence.py",
+    "tools/android/test_build_runtime_release_evidence.py"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "load",
+      "kind": "function",
+      "file": "tools/android/build_runtime_release_evidence.py",
+      "line": 14
+    },
+    {
+      "name": "build_evidence",
+      "kind": "function",
+      "file": "tools/android/build_runtime_release_evidence.py",
+      "line": 18
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "tools/android/build_runtime_release_evidence.py",
+      "line": 110
+    },
+    {
+      "name": "performance",
+      "kind": "function",
+      "file": "tools/android/test_build_runtime_release_evidence.py",
+      "line": 11
+    },
+    {
+      "name": "profiles",
+      "kind": "function",
+      "file": "tools/android/test_build_runtime_release_evidence.py",
+      "line": 24
+    },
+    {
+      "name": "RuntimeReleaseEvidenceTest",
+      "kind": "class",
+      "file": "tools/android/test_build_runtime_release_evidence.py",
+      "line": 39
+    },
+    {
+      "name": "test_complete_clean_evidence_passes",
+      "kind": "function",
+      "file": "tools/android/test_build_runtime_release_evidence.py",
+      "line": 40
+    },
+    {
+      "name": "test_missing_profile_combination_fails",
+      "kind": "function",
+      "file": "tools/android/test_build_runtime_release_evidence.py",
+      "line": 53
+    },
+    {
+      "name": "test_crash_finding_fails",
+      "kind": "function",
+      "file": "tools/android/test_build_runtime_release_evidence.py",
+      "line": 65
+    },
+    {
+      "name": "test_fx_ceiling_violation_fails",
+      "kind": "function",
+      "file": "tools/android/test_build_runtime_release_evidence.py",
+      "line": 75
+    }
+  ],
+  "selected_tests": [
+    "tools/android/test_build_runtime_release_evidence.py"
+  ]
 }

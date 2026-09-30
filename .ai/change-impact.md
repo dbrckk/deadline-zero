@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 09b7a97adf91e930638402790cb81b11a88c227f
-Head: ba2e8e6ccbd4641654e2664969f112456396a16c
+Base: 58501a52b894d6e0a79010526bf87e8220bcfece
+Head: bd98a2e4412b343d4b42e7a05bd306e67dc6a163
 
 ## Changed files
-- M .github/workflows/verify.yml
+- M docs/PLAY_RELEASE.md
 
 ## Affected areas
-- .github
+- docs
 
 ## Related test candidates
 - No direct filename-based test match detected.
