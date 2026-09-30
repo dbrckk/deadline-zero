@@ -2099,14 +2099,7 @@ jobs:
             adb shell am start -W -a android.intent.action.MAIN -p com.deadlinezero.godot | tee build/godot-android-smoke/am-start.txt
             grep -Eq 'Status: ok|Complete' build/godot-android-smoke/am-start.txt
 
-            timeout 30s bash -c '
-              while true; do
-                resumed="$(adb shell dumpsys activity activities 2>/dev/null | grep -m1 "mResumedActivity" || true)"
-                printf "%s\n" "$resumed"
-                printf "%s\n" "$resumed" | grep -q "com.deadlinezero.godot" && exit 0
-                sleep 1
-              done
-            '
+            timeout 30s sh -c 'until adb shell dumpsys activity activities 2>/dev/null | grep -m1 "mResumedActivity" | grep -q "com.deadlinezero.godot"; do sleep 1; done'
             adb shell pidof com.deadlinezero.godot | grep -q .
             sleep 5
 

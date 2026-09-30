@@ -1,15 +1,15 @@
 # CI status
 
-Summary: 1 success / 1 failure / 4 active
+Summary: 2 success / 1 failure / 3 active
 
-- Godot Android First Playable: in_progress / pending (22cd6204)
-- Responsive UI QA: in_progress / pending (22cd6204)
-- Verify: pending / pending (22cd6204)
+- Verify: in_progress / pending (b9bad68d)
+- Godot Android First Playable: in_progress / pending (b9bad68d)
+- Responsive UI QA: in_progress / pending (b9bad68d)
+- Godot Android First Playable: completed / failure (22cd6204)
+- Responsive UI QA: completed / success (22cd6204)
+- Verify: completed / cancelled (22cd6204)
 - Responsive UI QA: completed / success (c084ec47)
-- Verify: in_progress / pending (c084ec47)
-- Godot Android First Playable: completed / failure (c084ec47)
-- Verify: completed / cancelled (e950f3fc)
-- Responsive UI QA: completed / cancelled (e950f3fc)
+- Verify: completed / cancelled (c084ec47)
 
 ## Latest failed run structure
 - Job: smoke-godot-android

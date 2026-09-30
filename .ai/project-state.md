@@ -22,19 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T20:00:40Z
+Generated: 2026-09-30T20:04:42Z
 
 ### Git
 - Branch: `main`
-- Head: `22cd620491e6`
-- Commit date: 2026-09-30T22:00:27+02:00
-- Commit: Resolve Godot Android main activity by intent
+- Head: `b9bad68d2214`
+- Commit date: 2026-09-30T22:04:14+02:00
+- Commit: Fix Godot smoke resumed-activity wait
 - Tracked files: 938
 
 ### Recently changed files
 - `.github/workflows/godot-android-first-playable.yml`
 - `godot/export_presets.cfg`
-- `godot/tests/mobile_orientation_test.gd`
 
 ### Project signals
 - `build.gradle`
