@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 58501a52b894d6e0a79010526bf87e8220bcfece
-Head: bd98a2e4412b343d4b42e7a05bd306e67dc6a163
+Base: 234a880477f64520d75642d7bf3417192d4af6a9
+Head: 744a31d947e6f68f9f7c6c6f9e86d48ca1b51333
 
 ## Changed files
-- M docs/PLAY_RELEASE.md
+- M .github/workflows/godot-verify.yml
 
 ## Affected areas
-- docs
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

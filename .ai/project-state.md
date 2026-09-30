@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T14:40:09Z
+Generated: 2026-09-30T14:43:09Z
 
 ### Git
 - Branch: `main`
-- Head: `bd98a2e4412b`
-- Commit date: 2026-09-30T16:39:43+02:00
-- Commit: Fix release checklist numbering
-- Tracked files: 928
+- Head: `744a31d947e6`
+- Commit date: 2026-09-30T16:42:53+02:00
+- Commit: Verify Godot authored world dressing
+- Tracked files: 937
 
 ### Recently changed files
-- `docs/PLAY_RELEASE.md`
-- `.github/workflows/verify.yml`
-- `tools/android/test_build_runtime_release_evidence.py`
-- `tools/android/build_runtime_release_evidence.py`
+- `.github/workflows/godot-verify.yml`
+- `godot/tests/environment_asset_validation_test.gd`
+- `godot/tests/authored_world_dressing_test.gd`
+- `godot/scripts/Main.gd`
+- `godot/scripts/AssetLibrary.gd`
 
 ### Project signals
 - `build.gradle`

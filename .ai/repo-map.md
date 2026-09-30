@@ -417,6 +417,7 @@ godot/
   tests/
     attack_telegraph_escalation_test.gd
     authored_asset_validation.gd
+    authored_world_dressing_test.gd
     boss_hud_identity_test.gd
     boss_phase_runtime_test.gd
     boss_reveal_camera_test.gd
@@ -427,6 +428,7 @@ godot/
     enemy_hit_reaction_test.gd
     enemy_projectile_visual_test.gd
     enemy_silhouette_identity_test.gd
+    environment_asset_validation_test.gd
     environment_identity_test.gd
     first_playable_run_path_test.gd
     haptics_service_test.gd
@@ -2183,6 +2185,10 @@ jobs:
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/screen_space_fx_test.gd
       - name: Validate environment identity
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_identity_test.gd
+      - name: Validate authored environment assets
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_asset_validation_test.gd
+      - name: Validate authored world dressing
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_world_dressing_test.gd
       - name: Validate native upgrade depth
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/native_upgrade_depth_test.gd
       - name: Validate weapon protocol behavior
@@ -23822,6 +23828,12 @@ const ZOMBIE_BASIC := "res://assets/third_party/quaternius/zombie_apocalypse/zom
 const ZOMBIE_CHUBBY := "res://assets/third_party/quaternius/zombie_apocalypse/zombie_chubby.gltf"
 const RIFLE := "res://assets/third_party/quaternius/zombie_apocalypse/rifle.gltf"
 const BARRIER := "res://assets/third_party/quaternius/zombie_apocalypse/plastic_barrier.gltf"
+const BARREL := "res://assets/third_party/quaternius/zombie_apocalypse/barrel.gltf"
+const PALLET := "res://assets/third_party/quaternius/zombie_apocalypse/pallet.gltf"
+const STREET_LIGHTS := "res://assets/third_party/quaternius/zombie_apocalypse/streetlights.gltf"
+const TRAFFIC_CONE := "res://assets/third_party/quaternius/zombie_apocalypse/trafficcone-1.gltf"
+const TRASH_BAG := "res://assets/third_party/quaternius/zombie_apocalypse/trashbag-1.gltf"
+const STREET_CRACK := "res://assets/third_party/quaternius/zombie_apocalypse/street-straight-crack1.gltf"
 
 static func instantiate_scene(path: String) -> Node3D:
     if not ResourceLoader.exists(path):
@@ -23842,6 +23854,24 @@ static func rifle() -> Node3D:
 
 static func barrier() -> Node3D:
     return instantiate_scene(BARRIER)
+
+static func barrel() -> Node3D:
+    return instantiate_scene(BARREL)
+
+static func pallet() -> Node3D:
+    return instantiate_scene(PALLET)
+
+static func street_lights() -> Node3D:
+    return instantiate_scene(STREET_LIGHTS)
+
+static func traffic_cone() -> Node3D:
+    return instantiate_scene(TRAFFIC_CONE)
+
+static func trash_bag() -> Node3D:
+    return instantiate_scene(TRASH_BAG)
+
+static func street_crack() -> Node3D:
+    return instantiate_scene(STREET_CRACK)
 
 static func animation_player(root: Node) -> AnimationPlayer:
     if root == null:
@@ -25907,6 +25937,7 @@ func _build_world() -> void:
 
     _build_containment_lanes()
     _build_authored_barrier_clusters()
+    _build_authored_world_dressing()
     _build_perimeter_beacons()
 
 func _build_authored_barrier_clusters() -> void:
@@ -25930,6 +25961,56 @@ func _build_authored_barrier_clusters() -> void:
             barrier.rotation.y = base_rotation + (0.08 if item_index % 2 == 0 else -0.08)
             barrier.scale = Vector3.ONE * (0.95 + float(item_index % 3) * 0.05)
             add_child(barrier)
+
+func _build_authored_world_dressing() -> void:
+    var factories := [
+        Callable(DZAssetLibrary, "barrel"),
+        Callable(DZAssetLibrary, "pallet"),
+        Callable(DZAssetLibrary, "traffic_cone"),
+        Callable(DZAssetLibrary, "trash_bag"),
+        Callable(DZAssetLibrary, "street_lights"),
+    ]
+    var placements := [
+        Vector3(-21.0, 0.0, -5.5), Vector3(-18.5, 0.0, 5.0),
+        Vector3(21.0, 0.0, 5.5), Vector3(18.2, 0.0, -5.4),
+        Vector3(-9.5, 0.0, -16.0), Vector3(9.2, 0.0, 16.0),
+        Vector3(-6.5, 0.0, 15.0), Vector3(6.8, 0.0, -15.2),
+        Vector3(-24.5, 0.0, 11.5), Vector3(24.0, 0.0, -11.2),
+        Vector3(-14.0, 0.0, 17.5), Vector3(14.0, 0.0, -17.5),
+        Vector3(-26.0, 0.0, -14.0), Vector3(26.0, 0.0, 14.0),
+        Vector3(-18.0, 0.0, -18.5), Vector3(18.0, 0.0, 18.5),
+        Vector3(-3.0, 0.0, 19.0), Vector3(3.0, 0.0, -19.0),
+    ]
+
+    for index in range(placements.size()):
+        var factory: Callable = factories[index % factories.size()]
+        var prop := factory.call() as Node3D
+        if prop == null:
+            continue
+        prop.name = "EnvironmentProp_%02d" % index
+        prop.add_to_group("environment_props")
+        prop.position = placements[index]
+        prop.rotation.y = float((index * 37) % 360) * PI / 180.0
+        var scale_factor := 0.90 + float(index % 5) * 0.045
+        prop.scale = Vector3.ONE * scale_factor
+        add_child(prop)
+
+    var crack_positions := [
+        Vector3(-12.0, 0.012, -5.8), Vector3(12.2, 0.012, 5.5),
+        Vector3(-4.5, 0.012, 11.8), Vector3(4.8, 0.012, -11.6),
+        Vector3(-17.0, 0.012, 2.0), Vector3(17.2, 0.012, -2.2),
+        Vector3(-8.0, 0.012, 17.0), Vector3(8.0, 0.012, -17.0),
+    ]
+    for index in range(crack_positions.size()):
+        var crack := DZAssetLibrary.street_crack()
+        if crack == null:
+            continue
+        crack.name = "StreetDamage_%02d" % index
+        crack.add_to_group("environment_ground_detail")
+        crack.position = crack_positions[index]
+        crack.rotation.y = float((index * 53) % 360) * PI / 180.0
+        crack.scale = Vector3.ONE * (0.94 + float(index % 3) * 0.06)
+        add_child(crack)
 
 func _build_containment_lanes() -> void:
     var lane_material := StandardMaterial3D.new()
@@ -27037,6 +27118,57 @@ func _find_animation_player(node: Node) -> AnimationPlayer:
     return null
 ````
 
+## File: godot/tests/authored_world_dressing_test.gd
+````
+extends SceneTree
+
+func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _run_test() -> void:
+    var scene := load("res://scenes/Main.tscn") as PackedScene
+    if scene == null:
+        push_error("Main scene failed to load")
+        quit(1)
+        return
+
+    var main := scene.instantiate()
+    get_root().add_child(main)
+    current_scene = main
+    await process_frame
+    await process_frame
+
+    var props := get_nodes_in_group("environment_props")
+    var ground_details := get_nodes_in_group("environment_ground_detail")
+
+    if props.size() != 18:
+        push_error("Expected 18 authored environment props, got %d" % props.size())
+        quit(1)
+        return
+    if ground_details.size() != 8:
+        push_error("Expected 8 authored street-damage details, got %d" % ground_details.size())
+        quit(1)
+        return
+
+    for node in props:
+        if not node is Node3D:
+            push_error("Environment prop is not a Node3D")
+            quit(1)
+            return
+        if not str(node.name).begins_with("EnvironmentProp_"):
+            push_error("Unexpected environment prop name: %s" % node.name)
+            quit(1)
+            return
+        var flat_distance := Vector2(node.position.x, node.position.z).length()
+        if flat_distance < 9.0:
+            push_error("Environment prop intrudes into central combat lane: %s" % node.name)
+            quit(1)
+            return
+
+    print("Deadline Zero authored world dressing: OK")
+    quit(0)
+````
+
 ## File: godot/tests/boss_hud_identity_test.gd
 ````
 extends SceneTree
@@ -27385,6 +27517,49 @@ func _initialize() -> void:
         enemy.queue_free()
 
     print("Deadline Zero enemy silhouette identity: OK")
+    quit(0)
+````
+
+## File: godot/tests/environment_asset_validation_test.gd
+````
+extends SceneTree
+
+const ASSETS := preload("res://scripts/AssetLibrary.gd")
+
+func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _run_test() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    await process_frame
+
+    var factories := {
+        "barrel": Callable(ASSETS, "barrel"),
+        "pallet": Callable(ASSETS, "pallet"),
+        "street_lights": Callable(ASSETS, "street_lights"),
+        "traffic_cone": Callable(ASSETS, "traffic_cone"),
+        "trash_bag": Callable(ASSETS, "trash_bag"),
+        "street_crack": Callable(ASSETS, "street_crack"),
+    }
+
+    for name in factories:
+        var node := factories[name].call() as Node3D
+        if node == null:
+            push_error("Environment asset failed to instantiate: %s" % name)
+            quit(1)
+            return
+        root.add_child(node)
+        await process_frame
+        if node.get_child_count() == 0:
+            push_error("Environment asset has no imported scene content: %s" % name)
+            quit(1)
+            return
+        node.queue_free()
+        await process_frame
+
+    print("Deadline Zero authored environment assets: OK")
     quit(0)
 ````
 

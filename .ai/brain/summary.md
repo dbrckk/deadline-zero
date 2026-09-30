@@ -1,17 +1,17 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 522
-- Files reparsed this run: 2
-- Symbols: 2892
+- Files indexed: 524
+- Files reparsed this run: 4
+- Symbols: 2897
 - Internal import edges: 808
-- Impacted files: 2
-- Selected tests: 1
+- Impacted files: 4
+- Selected tests: 2
 
 ## Languages
 - java: 422 files
+- gdscript: 51 files
 - python: 51 files
-- gdscript: 49 files
 
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
@@ -21,7 +21,7 @@
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
 - godot/scripts/Enemy.gd: 36 symbols
 - core/src/main/java/com/deadlinezero/game/visual/GameArt.java: 34 symbols
-- godot/scripts/Main.gd: 33 symbols
+- godot/scripts/Main.gd: 34 symbols
 - core/src/main/java/com/deadlinezero/game/entities/Enemy.java: 31 symbols
 - core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java: 31 symbols
 - core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java: 29 symbols
@@ -44,7 +44,7 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 2
+- AST files reparsed this run: 0
 - outline files retained: 471
 - top-level items retained: 3018
 - direct members retained: 3472

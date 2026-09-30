@@ -1,98 +1,309 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "ba2e8e6ccbd4641654e2664969f112456396a16c",
-  "head": "bd98a2e4412b343d4b42e7a05bd306e67dc6a163",
+  "base": "bd98a2e4412b343d4b42e7a05bd306e67dc6a163",
+  "head": "744a31d947e6f68f9f7c6c6f9e86d48ca1b51333",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": ".github/workflows/verify.yml",
+      "path": ".github/workflows/godot-verify.yml",
       "status": "M"
     },
     {
-      "path": "docs/PLAY_RELEASE.md",
-      "status": "M"
-    },
-    {
-      "path": "tools/android/build_runtime_release_evidence.py",
+      "path": "godot/assets/third_party/quaternius/zombie_apocalypse/SOURCE.md",
       "status": "A"
     },
     {
-      "path": "tools/android/test_build_runtime_release_evidence.py",
+      "path": "godot/assets/third_party/quaternius/zombie_apocalypse/barrel.gltf",
+      "status": "A"
+    },
+    {
+      "path": "godot/assets/third_party/quaternius/zombie_apocalypse/pallet.gltf",
+      "status": "A"
+    },
+    {
+      "path": "godot/assets/third_party/quaternius/zombie_apocalypse/street-straight-crack1.gltf",
+      "status": "A"
+    },
+    {
+      "path": "godot/assets/third_party/quaternius/zombie_apocalypse/streetlights.gltf",
+      "status": "A"
+    },
+    {
+      "path": "godot/assets/third_party/quaternius/zombie_apocalypse/trafficcone-1.gltf",
+      "status": "A"
+    },
+    {
+      "path": "godot/assets/third_party/quaternius/zombie_apocalypse/trashbag-1.gltf",
+      "status": "A"
+    },
+    {
+      "path": "godot/scripts/AssetLibrary.gd",
+      "status": "M"
+    },
+    {
+      "path": "godot/scripts/Main.gd",
+      "status": "M"
+    },
+    {
+      "path": "godot/tests/authored_world_dressing_test.gd",
+      "status": "A"
+    },
+    {
+      "path": "godot/tests/environment_asset_validation_test.gd",
       "status": "A"
     }
   ],
   "changed_source_files": [
-    "tools/android/build_runtime_release_evidence.py",
-    "tools/android/test_build_runtime_release_evidence.py"
+    "godot/scripts/AssetLibrary.gd",
+    "godot/scripts/Main.gd",
+    "godot/tests/authored_world_dressing_test.gd",
+    "godot/tests/environment_asset_validation_test.gd"
   ],
   "impacted_files": [
-    "tools/android/build_runtime_release_evidence.py",
-    "tools/android/test_build_runtime_release_evidence.py"
+    "godot/scripts/AssetLibrary.gd",
+    "godot/scripts/Main.gd",
+    "godot/tests/authored_world_dressing_test.gd",
+    "godot/tests/environment_asset_validation_test.gd"
   ],
   "impacted_symbols": [
     {
-      "name": "load",
-      "kind": "function",
-      "file": "tools/android/build_runtime_release_evidence.py",
-      "line": 14
-    },
-    {
-      "name": "build_evidence",
-      "kind": "function",
-      "file": "tools/android/build_runtime_release_evidence.py",
-      "line": 18
-    },
-    {
-      "name": "main",
-      "kind": "function",
-      "file": "tools/android/build_runtime_release_evidence.py",
-      "line": 110
-    },
-    {
-      "name": "performance",
-      "kind": "function",
-      "file": "tools/android/test_build_runtime_release_evidence.py",
-      "line": 11
-    },
-    {
-      "name": "profiles",
-      "kind": "function",
-      "file": "tools/android/test_build_runtime_release_evidence.py",
-      "line": 24
-    },
-    {
-      "name": "RuntimeReleaseEvidenceTest",
+      "name": "DZAssetLibrary",
       "kind": "class",
-      "file": "tools/android/test_build_runtime_release_evidence.py",
-      "line": 39
+      "file": "godot/scripts/AssetLibrary.gd",
+      "line": 1
     },
     {
-      "name": "test_complete_clean_evidence_passes",
+      "name": "_ready",
       "kind": "function",
-      "file": "tools/android/test_build_runtime_release_evidence.py",
-      "line": 40
+      "file": "godot/scripts/Main.gd",
+      "line": 56
     },
     {
-      "name": "test_missing_profile_combination_fails",
+      "name": "_process",
       "kind": "function",
-      "file": "tools/android/test_build_runtime_release_evidence.py",
-      "line": 53
+      "file": "godot/scripts/Main.gd",
+      "line": 96
     },
     {
-      "name": "test_crash_finding_fails",
+      "name": "_physics_process",
       "kind": "function",
-      "file": "tools/android/test_build_runtime_release_evidence.py",
-      "line": 65
+      "file": "godot/scripts/Main.gd",
+      "line": 129
     },
     {
-      "name": "test_fx_ceiling_violation_fails",
+      "name": "_unhandled_input",
       "kind": "function",
-      "file": "tools/android/test_build_runtime_release_evidence.py",
-      "line": 75
+      "file": "godot/scripts/Main.gd",
+      "line": 151
+    },
+    {
+      "name": "query_enemies_near",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 168
+    },
+    {
+      "name": "_spawn_enemy",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 171
+    },
+    {
+      "name": "_on_boss_health_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 194
+    },
+    {
+      "name": "_on_enemy_impact",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 198
+    },
+    {
+      "name": "_on_enemy_died",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 205
+    },
+    {
+      "name": "_on_xp_collected",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 214
+    },
+    {
+      "name": "_offer_upgrade",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 223
+    },
+    {
+      "name": "_on_upgrade_chosen",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 236
+    },
+    {
+      "name": "_on_health_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 244
+    },
+    {
+      "name": "_ensure_audio_buses",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 251
+    },
+    {
+      "name": "_set_bus_linear_volume",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 256
+    },
+    {
+      "name": "_load_audio_settings",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 263
+    },
+    {
+      "name": "_save_audio_settings",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 273
+    },
+    {
+      "name": "_on_master_volume_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 281
+    },
+    {
+      "name": "_on_sfx_volume_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 285
+    },
+    {
+      "name": "_on_pause_requested",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 289
+    },
+    {
+      "name": "_on_resume_requested",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 295
+    },
+    {
+      "name": "_on_player_died",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 300
+    },
+    {
+      "name": "_freeze_combat",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 307
+    },
+    {
+      "name": "_on_restart_requested",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 323
+    },
+    {
+      "name": "_wave_name",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 328
+    },
+    {
+      "name": "_build_world",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 339
+    },
+    {
+      "name": "_build_authored_barrier_clusters",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 398
+    },
+    {
+      "name": "_build_authored_world_dressing",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 420
+    },
+    {
+      "name": "_build_containment_lanes",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 470
+    },
+    {
+      "name": "_build_perimeter_beacons",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 508
+    },
+    {
+      "name": "_build_combat_audio",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 529
+    },
+    {
+      "name": "_play_impact_audio",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 543
+    },
+    {
+      "name": "_play_boss_stinger",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 554
+    },
+    {
+      "name": "_update_offscreen_threat_indicator",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 558
+    },
+    {
+      "name": "_initialize",
+      "kind": "function",
+      "file": "godot/tests/authored_world_dressing_test.gd",
+      "line": 2
+    },
+    {
+      "name": "_run_test",
+      "kind": "function",
+      "file": "godot/tests/authored_world_dressing_test.gd",
+      "line": 5
+    },
+    {
+      "name": "_initialize",
+      "kind": "function",
+      "file": "godot/tests/environment_asset_validation_test.gd",
+      "line": 4
+    },
+    {
+      "name": "_run_test",
+      "kind": "function",
+      "file": "godot/tests/environment_asset_validation_test.gd",
+      "line": 7
     }
   ],
   "selected_tests": [
-    "tools/android/test_build_runtime_release_evidence.py"
+    "godot/tests/authored_world_dressing_test.gd",
+    "godot/tests/environment_asset_validation_test.gd"
   ]
 }
