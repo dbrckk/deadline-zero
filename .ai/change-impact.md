@@ -1,12 +1,10 @@
 # Change impact
 
-Base: c497897998eb564fe203ba3faf208ab2baa85b2e
-Head: 72e9a6d9fe401d78975d4f869f6d8907c86cd429
+Base: ccc31a5c09f0dd27e89f57357bbbd4cd33a53486
+Head: 9d7ecde4d3632f1201ae70be5ca33ce291ca7c23
 
 ## Changed files
 - M godot/scripts/Hud.gd
-- M godot/scripts/Main.gd
-- M godot/tests/hud_readability_hierarchy_test.gd
 
 ## Affected areas
 - godot

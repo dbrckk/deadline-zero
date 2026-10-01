@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T21:07:40Z
+Generated: 2026-10-01T21:08:24Z
 
 ### Git
 - Branch: `main`
-- Head: `72e9a6d9fe40`
-- Commit date: 2026-10-01T23:07:26+02:00
-- Commit: Polish Godot combat HUD and center markings
+- Head: `9d7ecde4d363`
+- Commit date: 2026-10-01T23:08:11+02:00
+- Commit: Preserve combat HUD readability
 - Tracked files: 939
 
 ### Recently changed files
@@ -37,10 +37,6 @@ Generated: 2026-10-01T21:07:40Z
 - `godot/tests/hud_readability_hierarchy_test.gd`
 - `godot/tests/environment_identity_test.gd`
 - `godot/tests/rendered_frame_smoke_test.gd`
-- `.github/workflows/godot-android-first-playable.yml`
-- `.github/workflows/godot-verify.yml`
-- `godot/project.godot`
-- `godot/tests/mobile_orientation_test.gd`
 
 ### Project signals
 - `build.gradle`

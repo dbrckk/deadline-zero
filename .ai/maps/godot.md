@@ -1402,7 +1402,7 @@ func _build() -> void:
 
     hp_bar = ProgressBar.new()
     hp_bar.name = "HealthBar"
-    hp_bar.custom_minimum_size = Vector2(320, 16)
+    hp_bar.custom_minimum_size = Vector2(320, 18)
     hp_bar.show_percentage = false
     var hp_bg := StyleBoxFlat.new()
     hp_bg.bg_color = Color(0.06, 0.075, 0.085, 0.94)
@@ -1423,7 +1423,7 @@ func _build() -> void:
 
     xp_bar = ProgressBar.new()
     xp_bar.name = "XpBar"
-    xp_bar.custom_minimum_size = Vector2(320, 7)
+    xp_bar.custom_minimum_size = Vector2(320, 8)
     xp_bar.show_percentage = false
     var xp_bg := StyleBoxFlat.new()
     xp_bg.bg_color = Color(0.045, 0.055, 0.065, 0.90)

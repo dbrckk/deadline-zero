@@ -2,23 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "ui(combat): premiumize game-over and revive overlay (#248)",
-      "terms": [
-        "248",
-        "combat",
-        "game-over",
-        "overlay",
-        "premiumize",
-        "revive",
-        "ui"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "ui(boss): strengthen warning and phase HUD presentation (#249)",
       "terms": [
         "249",
@@ -1228,6 +1211,20 @@
         "godot/scripts/Main.gd",
         "godot/tests/hud_readability_hierarchy_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Preserve combat HUD readability",
+      "terms": [
+        "combat",
+        "hud",
+        "preserve",
+        "readability"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Hud.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -2055,7 +2052,7 @@
       "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 8,
+      "godot/scripts/Hud.gd": 12,
       "godot/scripts/Main.gd": 12,
       "godot/scripts/Player.gd": 4,
       "godot/tests/combat_audio_feedback_test.gd": 4,
@@ -2618,7 +2615,7 @@
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 12,
+      "godot/scripts/Hud.gd": 16,
       "godot/scripts/Main.gd": 12,
       "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
@@ -3068,6 +3065,9 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4
     },
+    "preserve": {
+      "godot/scripts/Hud.gd": 4
+    },
     "priority": {
       "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java": 4,
@@ -3170,7 +3170,8 @@
       "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java": 8,
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java": 4,
+      "godot/scripts/Hud.gd": 4
     },
     "real-time": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java": 4,
