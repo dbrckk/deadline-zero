@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 7456f8a2f2370804a2044d98508f2c278912880b
-Head: 73774b7f06dbe94e063ff646a27e76a1f5fdbe82
+Base: e1bf0de71e8e1bdd111b4b6bfa7238f55068943f
+Head: f701aed7a757d5065bdde2a51aa0487a47777c71
 
 ## Changed files
 - M godot/scripts/AssetLibrary.gd

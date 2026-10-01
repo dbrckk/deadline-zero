@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T22:37:31Z
+Generated: 2026-10-01T22:38:42Z
 
 ### Git
 - Branch: `main`
-- Head: `73774b7f06db`
-- Commit date: 2026-10-02T00:37:18+02:00
-- Commit: Integrate authored barriers into quarantine palette
+- Head: `f701aed7a757`
+- Commit date: 2026-10-02T00:38:29+02:00
+- Commit: Grade root authored barrier meshes
 - Tracked files: 939
 
 ### Recently changed files
@@ -39,7 +39,6 @@ Generated: 2026-10-01T22:37:31Z
 - `godot/tests/enemy_silhouette_identity_test.gd`
 - `godot/scripts/RunDirector.gd`
 - `godot/tests/run_director_escalation_test.gd`
-- `godot/scripts/Hud.gd`
 
 ### Project signals
 - `build.gradle`
