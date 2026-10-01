@@ -17,8 +17,8 @@ func _run_test() -> void:
         push_error("Godot handheld orientation must be SCREEN_SENSOR_LANDSCAPE, got %d" % orientation)
         quit(1)
         return
-    if mobile_renderer != "mobile":
-        push_error("Godot Android renderer must remain mobile, got %s" % mobile_renderer)
+    if mobile_renderer != "gl_compatibility":
+        push_error("Godot Android renderer must remain gl_compatibility, got %s" % mobile_renderer)
         quit(1)
         return
 
