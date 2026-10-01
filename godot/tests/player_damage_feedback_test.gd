@@ -19,6 +19,15 @@ func _initialize() -> void:
         push_error("Damage pulse should start hidden")
         quit(1)
         return
+    if not pulse.mesh is TorusMesh:
+        push_error("Damage pulse must remain a thin ring, not a filled floor disc")
+        quit(1)
+        return
+    var ring := pulse.mesh as TorusMesh
+    if ring.outer_radius - ring.inner_radius > 0.20:
+        push_error("Damage pulse ring is too visually heavy")
+        quit(1)
+        return
 
     var initial_health: float = player.health
     player.take_damage(12.0)
