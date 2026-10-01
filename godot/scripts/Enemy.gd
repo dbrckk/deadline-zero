@@ -517,7 +517,7 @@ func _build_visual() -> void:
         authored_visual.name = "Visual"
         var scale_factor := 1.0
         match kind:
-            "runner": scale_factor = 0.92
+            "runner": scale_factor = 0.86
             "brute": scale_factor = 1.22
             "elite": scale_factor = 1.15
             "charger": scale_factor = 1.18
@@ -634,18 +634,20 @@ func _add_eye_beacon(color: Color, at: Vector3, size: float) -> void:
     add_child(beacon)
 
 func _add_runner_blades(color: Color) -> void:
-    var mat := _signature_material(color, 2.8)
+    var mat := _signature_material(color, 3.0)
     for side in [-1.0, 1.0]:
         var blade := MeshInstance3D.new()
         var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.055, 0.34, 0.16)
+        # Extend the signature in the ground plane so it reads from the gameplay camera,
+        # rather than relying on vertical geometry that collapses in top-down projection.
+        mesh.size = Vector3(0.085, 0.30, 0.38)
         blade.mesh = mesh
         blade.name = "RunnerBladeL" if side < 0.0 else "RunnerBladeR"
-        blade.position = Vector3(side * 0.38, 0.84, 0.04)
-        blade.rotation_degrees = Vector3(0.0, 0.0, side * -24.0)
+        blade.position = Vector3(side * 0.43, 0.82, 0.02)
+        blade.rotation_degrees = Vector3(0.0, side * 18.0, side * -20.0)
         blade.material_override = mat
         add_child(blade)
-    _add_eye_beacon(color, Vector3(0.0, 1.58, -0.30), 0.050)
+    _add_eye_beacon(color, Vector3(0.0, 1.54, -0.30), 0.060)
 
 func _add_brute_shoulders(color: Color) -> void:
     var mat := _signature_material(color, 2.1)

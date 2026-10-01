@@ -25,6 +25,13 @@ func _initialize() -> void:
                 push_error("Missing %s signature node %s" % [kind, node_name])
                 quit(1)
                 return
+        if kind == "runner":
+            var blade := enemy.get_node_or_null("RunnerBladeL") as MeshInstance3D
+            var blade_mesh := blade.mesh as BoxMesh if blade != null else null
+            if blade_mesh == null or blade_mesh.size.z < 0.35 or absf(blade.position.x) < 0.40:
+                push_error("Runner signature must remain wide and readable in top-down projection")
+                quit(1)
+                return
         enemy.queue_free()
 
     print("Deadline Zero enemy silhouette identity: OK")
