@@ -15,7 +15,8 @@ func _initialize() -> void:
             return
         var mesh_instance := visual as MeshInstance3D
         if mesh_instance == null:
-            mesh_instance = visual.find_child("*", true, false) as MeshInstance3D
+            var meshes := visual.find_children("*", "MeshInstance3D", true, false)
+            mesh_instance = meshes[0] as MeshInstance3D if not meshes.is_empty() else null
         if mesh_instance == null or not mesh_instance.material_override is BaseMaterial3D:
             push_error("Enemy palette grading missing for %s" % palette_kind)
             quit(1)
@@ -26,13 +27,17 @@ func _initialize() -> void:
             quit(1)
             return
         palette_samples[palette_kind] = material.albedo_color
-        visual.queue_free()
+        visual.free()
 
-    if (palette_samples["runner"] as Color).is_equal_approx(palette_samples["charger"] as Color):
+    var runner_color: Color = palette_samples["runner"]
+    var charger_color: Color = palette_samples["charger"]
+    var harrier_color: Color = palette_samples["harrier"]
+    var brute_color: Color = palette_samples["brute"]
+    if runner_color.is_equal_approx(charger_color):
         push_error("Runner and charger must not collapse to the same authored palette")
         quit(1)
         return
-    if (palette_samples["harrier"] as Color).is_equal_approx(palette_samples["brute"] as Color):
+    if harrier_color.is_equal_approx(brute_color):
         push_error("Harrier and brute must retain distinct authored palettes")
         quit(1)
         return
