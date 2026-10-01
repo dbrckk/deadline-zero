@@ -1,12 +1,11 @@
 # Change impact
 
-Base: 1d66774b07397a4ab35b5b2cf117ccdb5787c13e
-Head: 9bb06363deefe7ade99308ac885b8fcead61f464
+Base: 6b07dae5b36a9ba3fae24eb04cdfa423a71a78ff
+Head: 6fcf59a52b5e101a8c970edece6952ba676e971d
 
 ## Changed files
-- M godot/scripts/Main.gd
-- M godot/scripts/RunDirector.gd
-- M godot/tests/run_director_escalation_test.gd
+- M godot/scripts/Enemy.gd
+- M godot/tests/enemy_silhouette_identity_test.gd
 
 ## Affected areas
 - godot

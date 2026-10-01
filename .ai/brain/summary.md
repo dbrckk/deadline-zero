@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 526
-- Files reparsed this run: 3
+- Files reparsed this run: 2
 - Symbols: 2904
 - Internal import edges: 808
-- Impacted files: 3
-- Selected tests: 1
+- Impacted files: 56
+- Selected tests: 34
 
 ## Languages
 - java: 422 files

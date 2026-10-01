@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T21:12:16Z
+Generated: 2026-10-01T21:14:43Z
 
 ### Git
 - Branch: `main`
-- Head: `9bb06363deef`
-- Commit date: 2026-10-01T23:12:02+02:00
-- Commit: Give opening wave immediate combat contrast
+- Head: `6fcf59a52b5e`
+- Commit date: 2026-10-01T23:14:29+02:00
+- Commit: Strengthen runner top-down silhouette
 - Tracked files: 939
 
 ### Recently changed files
+- `godot/scripts/Enemy.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
 - `godot/scripts/Main.gd`
 - `godot/scripts/RunDirector.gd`
 - `godot/tests/run_director_escalation_test.gd`
