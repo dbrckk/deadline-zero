@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-09-30T20:16:34Z
+Generated: 2026-10-01T05:32:37Z
 
 ### Git
 - Branch: `main`
-- Head: `b1af3108a3e7`
-- Commit date: 2026-09-30T22:16:22+02:00
-- Commit: Apply Godot OpenGL light budgets correctly
+- Head: `c06d84f27bf8`
+- Commit date: 2026-10-01T07:32:23+02:00
+- Commit: Restore GLES3-safe Godot shader configuration
 - Tracked files: 938
 
 ### Recently changed files
 - `godot/project.godot`
-- `.github/workflows/godot-android-first-playable.yml`
 - `godot/tests/mobile_orientation_test.gd`
+- `.github/workflows/godot-android-first-playable.yml`
 
 ### Project signals
 - `build.gradle`

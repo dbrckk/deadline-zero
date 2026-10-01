@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 0 success / 1 failure / 7 active
+Summary: 4 success / 0 failure / 4 active
 
-- Godot 3D Verify: in_progress / pending (b1af3108)
-- Verify: pending / pending (b1af3108)
-- Godot Android First Playable: pending / pending (b1af3108)
-- Responsive UI QA: pending / pending (b1af3108)
-- Godot Android First Playable: in_progress / pending (80bb2ed0)
-- Verify: in_progress / pending (80bb2ed0)
-- Responsive UI QA: in_progress / pending (80bb2ed0)
-- Godot 3D Verify: completed / failure (80bb2ed0)
-
-## Latest failed run structure
-- Job: verify
-  - Failed step: Validate mobile landscape contract
+- Godot 3D Verify: in_progress / pending (c06d84f2)
+- Verify: in_progress / pending (c06d84f2)
+- Godot Android First Playable: in_progress / pending (c06d84f2)
+- Responsive UI QA: in_progress / pending (c06d84f2)
+- Deadline Zero Work Watch: completed / success (5b47dd9b)
+- Deadline Zero Work Watch: completed / success (5b47dd9b)
+- Godot 3D Verify: completed / success (b1af3108)
+- Verify: completed / success (b1af3108)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

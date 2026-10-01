@@ -1,10 +1,11 @@
 # Change impact
 
-Base: 076fa7b0abe21a93f13f5bc46c966ebbbbe6a4d7
-Head: b1af3108a3e76dcbbe6ad2233c5b647eec1b89a8
+Base: 5b47dd9b34c4da81b0768e7b99f83f31161978e6
+Head: c06d84f27bf86a399a936120c38ea46e5c7d2c2c
 
 ## Changed files
 - M godot/project.godot
+- M godot/tests/mobile_orientation_test.gd
 
 ## Affected areas
 - godot
