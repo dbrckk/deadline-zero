@@ -2661,6 +2661,7 @@ var current_anim := ""
 var shot_audio: AudioStreamPlayer3D
 var shot_streams := {}
 var damage_pulse: MeshInstance3D
+var damage_pulse_material: StandardMaterial3D
 var muzzle_flash: MeshInstance3D
 var muzzle_flash_material: StandardMaterial3D
 var muzzle_flash_tween: Tween
@@ -2988,33 +2989,41 @@ func _trigger_muzzle_flash() -> void:
 func _build_damage_feedback() -> void:
     damage_pulse = MeshInstance3D.new()
     damage_pulse.name = "DamagePulse"
-    var pulse_mesh := CylinderMesh.new()
-    pulse_mesh.top_radius = 0.82
-    pulse_mesh.bottom_radius = 0.82
-    pulse_mesh.height = 0.035
+    var pulse_mesh := TorusMesh.new()
+    pulse_mesh.inner_radius = 0.68
+    pulse_mesh.outer_radius = 0.82
+    pulse_mesh.rings = 40
+    pulse_mesh.ring_segments = 8
     damage_pulse.mesh = pulse_mesh
-    damage_pulse.position.y = 0.06
+    damage_pulse.position.y = 0.055
     damage_pulse.visible = false
 
-    var pulse_mat := StandardMaterial3D.new()
-    pulse_mat.albedo_color = Color(1.0, 0.08, 0.035, 0.34)
-    pulse_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    pulse_mat.emission_enabled = true
-    pulse_mat.emission = Color(1.0, 0.035, 0.01)
-    pulse_mat.emission_energy_multiplier = 3.2
-    pulse_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    damage_pulse.material_override = pulse_mat
+    damage_pulse_material = StandardMaterial3D.new()
+    damage_pulse_material.albedo_color = Color(1.0, 0.08, 0.035, 0.52)
+    damage_pulse_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    damage_pulse_material.emission_enabled = true
+    damage_pulse_material.emission = Color(1.0, 0.035, 0.01)
+    damage_pulse_material.emission_energy_multiplier = 4.2
+    damage_pulse_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    damage_pulse.material_override = damage_pulse_material
     add_child(damage_pulse)
 
 func _trigger_damage_feedback() -> void:
     if damage_pulse != null and is_instance_valid(damage_pulse):
         damage_pulse.visible = true
-        damage_pulse.scale = Vector3(0.72, 1.0, 0.72)
+        damage_pulse.scale = Vector3(0.76, 1.0, 0.76)
+        if damage_pulse_material != null:
+            damage_pulse_material.albedo_color.a = 0.52
+            damage_pulse_material.emission_energy_multiplier = 4.2
         var pulse_tween: Tween = create_tween()
+        pulse_tween.set_parallel(true)
         pulse_tween.set_trans(Tween.TRANS_QUAD)
         pulse_tween.set_ease(Tween.EASE_OUT)
-        pulse_tween.tween_property(damage_pulse, "scale", Vector3(1.42, 1.0, 1.42), 0.16)
-        pulse_tween.tween_callback(func() -> void:
+        pulse_tween.tween_property(damage_pulse, "scale", Vector3(1.56, 1.0, 1.56), 0.16)
+        if damage_pulse_material != null:
+            pulse_tween.tween_property(damage_pulse_material, "albedo_color:a", 0.0, 0.16)
+            pulse_tween.tween_property(damage_pulse_material, "emission_energy_multiplier", 0.8, 0.16)
+        pulse_tween.chain().tween_callback(func() -> void:
             if damage_pulse != null and is_instance_valid(damage_pulse):
                 damage_pulse.visible = false
         )
@@ -4904,6 +4913,15 @@ func _initialize() -> void:
         return
     if pulse.visible:
         push_error("Damage pulse should start hidden")
+        quit(1)
+        return
+    if not pulse.mesh is TorusMesh:
+        push_error("Damage pulse must remain a thin ring, not a filled floor disc")
+        quit(1)
+        return
+    var ring := pulse.mesh as TorusMesh
+    if ring.outer_radius - ring.inner_radius > 0.20:
+        push_error("Damage pulse ring is too visually heavy")
         quit(1)
         return
 

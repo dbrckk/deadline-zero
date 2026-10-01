@@ -1,11 +1,11 @@
 # Change impact
 
-Base: 7525bd45b0e7257a8e2216ca2b4b2f912336ba23
-Head: 2743e77160f07c0e8e39c3797774c490a8f2fc0f
+Base: 401041a36cc8a43c308bffc316478a4cbdc99f25
+Head: 71b6e7e3c4962b4ecb28a0d4ef65913f7ce23083
 
 ## Changed files
-- M godot/scripts/AssetLibrary.gd
-- M godot/tests/environment_identity_test.gd
+- M godot/scripts/Player.gd
+- M godot/tests/player_damage_feedback_test.gd
 
 ## Affected areas
 - godot
