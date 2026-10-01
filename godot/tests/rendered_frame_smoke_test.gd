@@ -19,10 +19,19 @@ func _run_capture() -> void:
     var scene := packed.instantiate()
     get_root().add_child(scene)
 
-    # Give imports, materials, HUD, camera and the first combat actors enough real render frames
-    # to settle before sampling the viewport.
-    for _frame in range(120):
+    # Capture early enough to prove active combat rather than the run-end overlay, while still
+    # giving imported meshes, materials, HUD and camera enough real render frames to settle.
+    for _frame in range(30):
         await process_frame
+
+    if bool(scene.get("game_over")):
+        push_error("Rendered-frame smoke reached game over before active-combat capture")
+        quit(1)
+        return
+    if get_nodes_in_group("enemies").is_empty():
+        push_error("Rendered-frame smoke has no active enemies")
+        quit(1)
+        return
 
     var texture := get_root().get_texture()
     if texture == null:
