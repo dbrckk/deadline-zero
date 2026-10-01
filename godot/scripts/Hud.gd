@@ -200,9 +200,9 @@ func _build() -> void:
 
     var vital_panel := PanelContainer.new()
     vital_panel.name = "VitalPanel"
-    vital_panel.position = Vector2(28, 24)
-    vital_panel.size = Vector2(500, 108)
-    vital_panel.custom_minimum_size = Vector2(420, 96)
+    vital_panel.position = Vector2(24, 20)
+    vital_panel.size = Vector2(390, 88)
+    vital_panel.custom_minimum_size = Vector2(350, 82)
     vital_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
     root.add_child(vital_panel)
 
@@ -215,10 +215,10 @@ func _build() -> void:
     vital_style.corner_radius_top_right = 8
     vital_style.corner_radius_bottom_left = 8
     vital_style.corner_radius_bottom_right = 8
-    vital_style.content_margin_left = 16.0
-    vital_style.content_margin_right = 14.0
-    vital_style.content_margin_top = 10.0
-    vital_style.content_margin_bottom = 10.0
+    vital_style.content_margin_left = 13.0
+    vital_style.content_margin_right = 12.0
+    vital_style.content_margin_top = 7.0
+    vital_style.content_margin_bottom = 7.0
     vital_panel.add_theme_stylebox_override("panel", vital_style)
 
     var vital_stack := VBoxContainer.new()
@@ -229,46 +229,46 @@ func _build() -> void:
     var vital_accent := ColorRect.new()
     vital_accent.name = "VitalAccent"
     vital_accent.color = Color(0.18, 0.82, 1.0, 0.92)
-    vital_accent.custom_minimum_size = Vector2(120, 3)
+    vital_accent.custom_minimum_size = Vector2(96, 3)
     vital_accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
     vital_stack.add_child(vital_accent)
 
     hp_bar = ProgressBar.new()
     hp_bar.name = "HealthBar"
-    hp_bar.custom_minimum_size = Vector2(420, 22)
+    hp_bar.custom_minimum_size = Vector2(350, 18)
     hp_bar.show_percentage = false
     vital_stack.add_child(hp_bar)
     health_bar = hp_bar
 
     xp_bar = ProgressBar.new()
     xp_bar.name = "XpBar"
-    xp_bar.custom_minimum_size = Vector2(420, 12)
+    xp_bar.custom_minimum_size = Vector2(350, 9)
     xp_bar.show_percentage = false
     vital_stack.add_child(xp_bar)
 
     status_label = Label.new()
     status_label.name = "CombatStatus"
     status_label.text = "LV 1   KILLS 0"
-    status_label.add_theme_font_size_override("font_size", 20)
+    status_label.add_theme_font_size_override("font_size", 17)
     status_label.modulate = Color(0.88, 0.94, 0.98)
     vital_stack.add_child(status_label)
 
     wave_label = Label.new()
     wave_label.text = "QUARANTINE YARD"
     wave_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-    wave_label.add_theme_font_size_override("font_size", 28)
+    wave_label.add_theme_font_size_override("font_size", 23)
     wave_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
-    wave_label.position = Vector2(-220, 24)
-    wave_label.size = Vector2(440, 42)
+    wave_label.position = Vector2(-180, 20)
+    wave_label.size = Vector2(360, 36)
     root.add_child(wave_label)
 
     pause_button = Button.new()
     pause_button.name = "PauseButton"
     pause_button.text = "Ⅱ"
     pause_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-    pause_button.position = Vector2(-86, 24)
-    pause_button.size = Vector2(58, 58)
-    pause_button.add_theme_font_size_override("font_size", 22)
+    pause_button.position = Vector2(-72, 20)
+    pause_button.size = Vector2(50, 50)
+    pause_button.add_theme_font_size_override("font_size", 20)
     pause_button.pressed.connect(func() -> void: pause_requested.emit())
     add_child(pause_button)
 

@@ -20,6 +20,7 @@ func _initialize() -> void:
     var barrier_count := 0
     var lane_count := 0
     var beacon_count := 0
+    var floor_plate_count := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -27,6 +28,8 @@ func _initialize() -> void:
             lane_count += 1
         elif child.name.begins_with("PerimeterBeacon_"):
             beacon_count += 1
+        elif child.name.begins_with("FloorPlate_"):
+            floor_plate_count += 1
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
@@ -38,6 +41,10 @@ func _initialize() -> void:
         return
     if beacon_count != 12:
         push_error("Expected 12 perimeter beacons, got %d" % beacon_count)
+        quit(1)
+        return
+    if floor_plate_count < 8:
+        push_error("Expected midfield floor variation plates, got %d" % floor_plate_count)
         quit(1)
         return
 

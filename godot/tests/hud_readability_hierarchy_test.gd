@@ -21,12 +21,22 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if vital_panel.size.x > 410.0 or vital_panel.size.y > 94.0:
+        push_error("Vital panel regressed into an oversized combat-obscuring footprint")
+        quit(1)
+        return
+
     if hud.health_bar == null or hud.health_bar.custom_minimum_size.y < 18.0:
         push_error("Health bar must remain readable under combat pressure")
         quit(1)
         return
     if hud.xp_bar == null or hud.xp_bar.custom_minimum_size.y < 8.0:
         push_error("XP bar must retain a distinct secondary hierarchy")
+        quit(1)
+        return
+
+    if hud.wave_label == null or hud.wave_label.get_theme_font_size("font_size") > 24:
+        push_error("Wave label must not dominate the active combat frame")
         quit(1)
         return
 

@@ -391,10 +391,43 @@ func _build_world() -> void:
     floor.material_override = floor_mat
     add_child(floor)
 
+    _build_floor_panels()
     _build_containment_lanes()
     _build_authored_barrier_clusters()
     _build_authored_world_dressing()
     _build_perimeter_beacons()
+
+func _build_floor_panels() -> void:
+    # Low-profile industrial plates break the large flat center without adding collision or
+    # competing with enemies/projectiles. Their low contrast keeps the combat lane readable.
+    var plate_material := StandardMaterial3D.new()
+    plate_material.albedo_color = Color(0.065, 0.083, 0.092)
+    plate_material.metallic = 0.18
+    plate_material.roughness = 0.78
+
+    var edge_material := StandardMaterial3D.new()
+    edge_material.albedo_color = Color(0.035, 0.22, 0.27)
+    edge_material.emission_enabled = true
+    edge_material.emission = Color(0.015, 0.16, 0.21)
+    edge_material.emission_energy_multiplier = 0.34
+    edge_material.roughness = 0.70
+
+    var placements := [
+        Vector3(-10.0, 0.010, -4.8), Vector3(-6.2, 0.010, -8.8),
+        Vector3(  6.4, 0.010, -8.5), Vector3(10.2, 0.010, -4.4),
+        Vector3(-10.4, 0.010,  4.7), Vector3(-6.0, 0.010,  8.7),
+        Vector3(  6.2, 0.010,  8.9), Vector3(10.5, 0.010,  4.5),
+    ]
+    for index in range(placements.size()):
+        var plate := MeshInstance3D.new()
+        plate.name = "FloorPlate_%02d" % index
+        var mesh := BoxMesh.new()
+        mesh.size = Vector3(3.2 if index % 2 == 0 else 2.6, 0.018, 1.45)
+        plate.mesh = mesh
+        plate.position = placements[index]
+        plate.rotation.y = deg_to_rad(float((index * 23) % 35 - 17))
+        plate.material_override = plate_material if index % 3 else edge_material
+        add_child(plate)
 
 func _build_authored_barrier_clusters() -> void:
     var clusters := [
@@ -424,7 +457,6 @@ func _build_authored_world_dressing() -> void:
         Callable(DZAssetLibrary, "pallet"),
         Callable(DZAssetLibrary, "traffic_cone"),
         Callable(DZAssetLibrary, "trash_bag"),
-        Callable(DZAssetLibrary, "street_lights"),
     ]
     var placements := [
         Vector3(-21.0, 0.0, -5.5), Vector3(-18.5, 0.0, 5.0),
