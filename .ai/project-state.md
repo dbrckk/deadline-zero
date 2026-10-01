@@ -22,19 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T16:51:53Z
+Generated: 2026-10-01T16:58:46Z
 
 ### Git
 - Branch: `main`
-- Head: `c77f495c032b`
-- Commit date: 2026-10-01T18:51:36+02:00
-- Commit: Run Godot compatibility renderer on SwANGLE
-- Tracked files: 938
+- Head: `beef17bde297`
+- Commit date: 2026-10-01T18:58:33+02:00
+- Commit: Separate Android startup from visual render QA
+- Tracked files: 939
 
 ### Recently changed files
+- `.github/workflows/godot-android-first-playable.yml`
+- `.github/workflows/godot-verify.yml`
 - `godot/project.godot`
 - `godot/tests/mobile_orientation_test.gd`
-- `.github/workflows/godot-android-first-playable.yml`
+- `godot/tests/rendered_frame_smoke_test.gd`
 
 ### Project signals
 - `build.gradle`

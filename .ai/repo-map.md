@@ -438,6 +438,7 @@ godot/
     native_enemy_behavior_test.gd
     native_upgrade_depth_test.gd
     player_damage_feedback_test.gd
+    rendered_frame_smoke_test.gd
     run_director_escalation_test.gd
     run_director_runtime_integration_test.gd
     run_end_combat_freeze_test.gd
@@ -2145,9 +2146,13 @@ jobs:
             adb shell dumpsys activity top > build/godot-android-smoke/activity-top.txt || true
             grep -m1 'ACTIVITY com.deadlinezero.godot/com.godot.game.GodotApp' build/godot-android-smoke/activity-top.txt
             ! grep -Eq 'FATAL EXCEPTION|ANR in com\\.deadlinezero\\.godot|Process: com\\.deadlinezero\\.godot.*has died' build/godot-android-smoke/startup-logcat.txt
-            ! grep -Eq 'SceneShaderGLES3: Program linking failed|CanvasShaderGLES3: Program linking failed|Couldn.t present to Vulkan queue' build/godot-android-smoke/startup-logcat.txt
-            test "$(stat -c%s build/godot-android-smoke/first-playable.png)" -ge 20000
-            python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape screenshot, got {w}x{h}"; print(f"GODOT_SCREENSHOT {w}x{h} bytes={len(b)}")'
+            # Android emulator software backends are not a reliable visual oracle for Godot 4.7:
+            # Compatibility can hit upstream uniform-vector limits and Mobile/Vulkan may return
+            # VK_INCOMPLETE from the headless emulator surface. This job therefore proves native
+            # Android startup/lifecycle/foreground health, while Godot 3D Verify owns rendered-frame QA.
+            grep -q 'Godot Engine v4.7.2' build/godot-android-smoke/startup-logcat.txt
+            grep -Eq 'Forward Mobile|Vulkan .* Mobile' build/godot-android-smoke/startup-logcat.txt
+            python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape diagnostic screenshot, got {w}x{h}"; print(f"GODOT_ANDROID_DIAGNOSTIC_SCREENSHOT {w}x{h} bytes={len(b)}")'
 
       - name: Upload native Godot startup diagnostics
         uses: actions/upload-artifact@v4
@@ -2262,6 +2267,34 @@ jobs:
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/first_playable_run_path_test.gd
       - name: Run Godot smoke test
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/smoke_test.gd
+
+      - name: Install rendered-frame smoke dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+
+      - name: Render and validate real first-playable frame
+        run: |
+          set -euo pipefail
+          rm -f /tmp/deadline-zero-rendered-frame.png
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a \
+            /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --path godot \
+            --rendering-method gl_compatibility \
+            --audio-driver Dummy \
+            --script res://tests/rendered_frame_smoke_test.gd
+          test -s /tmp/deadline-zero-rendered-frame.png
+          mkdir -p build/godot-visual-smoke
+          cp /tmp/deadline-zero-rendered-frame.png build/godot-visual-smoke/first-playable-rendered.png
+
+      - name: Upload rendered first-playable evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-rendered-first-playable-${{ github.sha }}
+          path: build/godot-visual-smoke/first-playable-rendered.png
+          if-no-files-found: error
+          retention-days: 14
 ````
 
 ## File: .github/workflows/integrate-environment-candidates.yml
@@ -28013,8 +28046,8 @@ func _run_test() -> void:
         push_error("Godot handheld orientation must be SCREEN_SENSOR_LANDSCAPE, got %d" % orientation)
         quit(1)
         return
-    if mobile_renderer != "gl_compatibility":
-        push_error("Godot Android renderer must remain gl_compatibility, got %s" % mobile_renderer)
+    if mobile_renderer != "mobile":
+        push_error("Godot Android renderer must remain mobile, got %s" % mobile_renderer)
         quit(1)
         return
 
@@ -28367,6 +28400,98 @@ func _initialize() -> void:
         return
 
     print("Deadline Zero player damage feedback: OK")
+    quit(0)
+````
+
+## File: godot/tests/rendered_frame_smoke_test.gd
+````
+extends SceneTree
+
+const OUTPUT_PATH := "/tmp/deadline-zero-rendered-frame.png"
+const SAMPLE_STEP := 8
+const MIN_BRIGHT_FRACTION := 0.008
+const MIN_AVERAGE_LUMA := 0.006
+const MIN_LUMA_RANGE := 0.04
+
+func _initialize() -> void:
+    call_deferred("_run_capture")
+
+func _run_capture() -> void:
+    var packed := load("res://scenes/Main.tscn") as PackedScene
+    if packed == null:
+        push_error("Unable to load Main.tscn for rendered-frame smoke")
+        quit(1)
+        return
+
+    var scene := packed.instantiate()
+    get_root().add_child(scene)
+
+    # Give imports, materials, HUD, camera and the first combat actors enough real render frames
+    # to settle before sampling the viewport.
+    for _frame in range(120):
+        await process_frame
+
+    var texture := get_root().get_texture()
+    if texture == null:
+        push_error("Root viewport has no render texture")
+        quit(1)
+        return
+
+    var image := texture.get_image()
+    if image == null or image.is_empty():
+        push_error("Rendered-frame smoke produced no image")
+        quit(1)
+        return
+
+    var width := image.get_width()
+    var height := image.get_height()
+    if width <= height or width < 640 or height < 360:
+        push_error("Rendered frame must be landscape and at least 640x360, got %dx%d" % [width, height])
+        quit(1)
+        return
+
+    var total := 0
+    var bright := 0
+    var sum_luma := 0.0
+    var min_luma := 1.0
+    var max_luma := 0.0
+    for y in range(0, height, SAMPLE_STEP):
+        for x in range(0, width, SAMPLE_STEP):
+            var color := image.get_pixel(x, y)
+            var luma := color.r * 0.2126 + color.g * 0.7152 + color.b * 0.0722
+            total += 1
+            sum_luma += luma
+            min_luma = minf(min_luma, luma)
+            max_luma = maxf(max_luma, luma)
+            if luma > 0.045:
+                bright += 1
+
+    var bright_fraction := float(bright) / float(maxi(total, 1))
+    var average_luma := sum_luma / float(maxi(total, 1))
+    var luma_range := max_luma - min_luma
+
+    if bright_fraction < MIN_BRIGHT_FRACTION:
+        push_error("Rendered frame is effectively black: bright_fraction=%.5f" % bright_fraction)
+        quit(1)
+        return
+    if average_luma < MIN_AVERAGE_LUMA:
+        push_error("Rendered frame average luminance is too low: %.5f" % average_luma)
+        quit(1)
+        return
+    if luma_range < MIN_LUMA_RANGE:
+        push_error("Rendered frame lacks visual range: %.5f" % luma_range)
+        quit(1)
+        return
+
+    var save_error := image.save_png(OUTPUT_PATH)
+    if save_error != OK:
+        push_error("Unable to save rendered-frame artifact: %s" % error_string(save_error))
+        quit(1)
+        return
+
+    print("GODOT_RENDERED_FRAME_OK %dx%d bright=%.5f avg=%.5f range=%.5f" % [
+        width, height, bright_fraction, average_luma, luma_range
+    ])
     quit(0)
 ````
 

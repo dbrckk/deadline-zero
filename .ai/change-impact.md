@@ -1,13 +1,17 @@
 # Change impact
 
-Base: c5d1fa7840a87b32300852f49a3400ca66e803bf
-Head: c77f495c032b6e79259144f2ff358efa52a209db
+Base: 7611a84bff5ee6afb1186c87e7e3b7ac40335fb2
+Head: beef17bde2975d7555dea5919ccab20e3b1faebd
 
 ## Changed files
+- M .github/workflows/godot-android-first-playable.yml
+- M .github/workflows/godot-verify.yml
 - M godot/project.godot
 - M godot/tests/mobile_orientation_test.gd
+- A godot/tests/rendered_frame_smoke_test.gd
 
 ## Affected areas
+- .github
 - godot
 
 ## Related test candidates

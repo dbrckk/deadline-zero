@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Add Cryo Vault environment candidate pack (#241)",
-      "terms": [
-        "241",
-        "add",
-        "candidate",
-        "cryo",
-        "environment",
-        "pack",
-        "vault"
-      ],
-      "tests": [],
-      "useful": [
-        "tools/environment/generate_cryo_vault_candidate.py",
-        "tools/environment/generate_cryogenic_depths_candidate.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Integrate all 70 biome environment regions into runtime atlas (#243)",
       "terms": [
         "243",
@@ -1240,6 +1222,24 @@
       "useful": [
         "godot/tests/mobile_orientation_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Separate Android startup from visual render QA",
+      "terms": [
+        "android",
+        "from",
+        "qa",
+        "render",
+        "separate",
+        "startup",
+        "visual"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/tests/mobile_orientation_test.gd",
+        "godot/tests/rendered_frame_smoke_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1686,7 +1686,8 @@
       "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 4,
-      "godot/tests/mobile_orientation_test.gd": 8
+      "godot/tests/mobile_orientation_test.gd": 12,
+      "godot/tests/rendered_frame_smoke_test.gd": 4
     },
     "announce": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java": 4,
@@ -2440,6 +2441,8 @@
       "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4,
+      "godot/tests/mobile_orientation_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
       "tools/sprites/validate_final_art_promotion_consistency.py": 4
     },
     "full-health": {
@@ -3104,6 +3107,8 @@
       "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 4,
+      "godot/tests/mobile_orientation_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
       "tools/environment/candidate_utils.py": 4,
       "tools/environment/generate_cinder_foundry_candidate.py": 4,
       "tools/environment/generate_cryo_vault_candidate.py": 4,
@@ -3184,6 +3189,10 @@
       "core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java": 4,
       "tools/android/build_runtime_release_evidence.py": 4,
       "tools/android/test_build_runtime_release_evidence.py": 4
+    },
+    "render": {
+      "godot/tests/mobile_orientation_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4
     },
     "renderer": {
       "godot/tests/mobile_orientation_test.gd": 12
@@ -3415,6 +3424,10 @@
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4
     },
+    "separate": {
+      "godot/tests/mobile_orientation_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4
+    },
     "set": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4
     },
@@ -3507,6 +3520,10 @@
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/smoke_test.gd": 4
+    },
+    "startup": {
+      "godot/tests/mobile_orientation_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4
     },
     "stat": {
       "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java": 4
@@ -3707,6 +3724,8 @@
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4,
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/Main.gd": 4,
+      "godot/tests/mobile_orientation_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4
     },
     "visuals": {
