@@ -25,7 +25,7 @@ static func player() -> Node3D:
     return instantiate_scene(PLAYER)
 
 static func enemy(kind: String) -> Node3D:
-    var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite"] else ZOMBIE_BASIC)
+    var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite", "boss"] else ZOMBIE_BASIC)
     var tint := Color(0.82, 0.92, 0.80)
     match kind:
         "runner": tint = Color(0.72, 1.00, 0.74)
@@ -34,7 +34,7 @@ static func enemy(kind: String) -> Node3D:
         "regenerator": tint = Color(0.58, 1.00, 0.68)
         "brute": tint = Color(0.92, 0.56, 0.46)
         "elite": tint = Color(0.78, 0.58, 1.00)
-        "boss": tint = Color(1.00, 0.72, 0.44)
+        "boss": tint = Color(0.96, 0.62, 0.40)
     _grade_mesh_tree(root, tint, 0.74, 0.0)
     return root
 

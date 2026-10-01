@@ -47,7 +47,7 @@ func _initialize() -> void:
         "runner": ["RunnerBladeL", "RunnerBladeR", "SignatureBeacon"],
         "brute": ["BrutePlateL", "BrutePlateR", "SignatureBeacon"],
         "elite": ["EliteFinL", "EliteFinR", "SignatureBeacon"],
-        "boss": ["BossHornL", "BossHornR", "BossCore", "SignatureBeacon"]
+        "boss": ["BossWingL", "BossWingR", "BossHornL", "BossHornR", "BossCore", "SignatureBeacon"]
     }
 
     for kind in expected.keys():
@@ -66,6 +66,13 @@ func _initialize() -> void:
             var blade_mesh := blade.mesh as BoxMesh if blade != null else null
             if blade_mesh == null or blade_mesh.size.z < 0.35 or absf(blade.position.x) < 0.40:
                 push_error("Runner signature must remain wide and readable in top-down projection")
+                quit(1)
+                return
+        if kind == "boss":
+            var wing := enemy.get_node_or_null("BossWingL") as MeshInstance3D
+            var wing_mesh := wing.mesh as BoxMesh if wing != null else null
+            if wing_mesh == null or wing_mesh.size.z < 0.50 or absf(wing.position.x) < 0.65:
+                push_error("Boss signature must remain broad and dominant in top-down projection")
                 quit(1)
                 return
         enemy.queue_free()
