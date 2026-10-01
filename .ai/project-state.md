@@ -22,23 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T22:38:42Z
+Generated: 2026-10-01T22:40:18Z
 
 ### Git
 - Branch: `main`
-- Head: `f701aed7a757`
-- Commit date: 2026-10-02T00:38:29+02:00
-- Commit: Grade root authored barrier meshes
+- Head: `98979eaf285b`
+- Commit date: 2026-10-02T00:40:03+02:00
+- Commit: Fix authored barrier grading assertion
 - Tracked files: 939
 
 ### Recently changed files
-- `godot/scripts/AssetLibrary.gd`
 - `godot/tests/environment_identity_test.gd`
+- `godot/scripts/AssetLibrary.gd`
 - `godot/scripts/Main.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
-- `godot/scripts/RunDirector.gd`
-- `godot/tests/run_director_escalation_test.gd`
 
 ### Project signals
 - `build.gradle`

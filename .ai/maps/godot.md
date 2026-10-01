@@ -165,10 +165,10 @@ static func _grade_environment_mesh(root: Node3D, tint: Color, roughness: float,
 static func _grade_mesh_instance(mesh_instance: MeshInstance3D, tint: Color, roughness: float, metallic: float) -> void:
     if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
         return
-    var source := mesh_instance.get_active_material(0)
-    if not source is StandardMaterial3D:
+    var source := mesh_instance.mesh.surface_get_material(0)
+    if not source is BaseMaterial3D:
         return
-    var graded := source.duplicate(true) as StandardMaterial3D
+    var graded := source.duplicate(true) as BaseMaterial3D
     graded.albedo_color = Color(
         graded.albedo_color.r * tint.r,
         graded.albedo_color.g * tint.g,
@@ -4082,17 +4082,6 @@ func _initialize() -> void:
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
-        elif child.name.begins_with("ContainmentLane_"):
-            lane_count += 1
-        elif child.name.begins_with("PerimeterBeacon_"):
-            beacon_count += 1
-        elif child.name.begins_with("FloorPlate_"):
-            floor_plate_count += 1
-        elif child.name.begins_with("FloorSeam_"):
-            floor_seam_count += 1
-        elif child.name.begins_with("ContainmentRing_"):
-            containment_ring_count += 1
-        elif child.name.begins_with("AuthoredBarrier_"):
             var barrier_meshes: Array[MeshInstance3D] = []
             if child is MeshInstance3D:
                 barrier_meshes.append(child as MeshInstance3D)
@@ -4103,6 +4092,16 @@ func _initialize() -> void:
                     var material := mesh_instance.material_override as StandardMaterial3D
                     if material.roughness >= 0.88 and material.albedo_color.get_luminance() < 0.62:
                         graded_barrier_meshes += 1
+        elif child.name.begins_with("ContainmentLane_"):
+            lane_count += 1
+        elif child.name.begins_with("PerimeterBeacon_"):
+            beacon_count += 1
+        elif child.name.begins_with("FloorPlate_"):
+            floor_plate_count += 1
+        elif child.name.begins_with("FloorSeam_"):
+            floor_seam_count += 1
+        elif child.name.begins_with("ContainmentRing_"):
+            containment_ring_count += 1
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
