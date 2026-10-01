@@ -38,8 +38,12 @@ func _initialize() -> void:
         elif child.name.begins_with("ContainmentRing_"):
             containment_ring_count += 1
         elif child.name.begins_with("AuthoredBarrier_"):
+            var barrier_meshes: Array[MeshInstance3D] = []
+            if child is MeshInstance3D:
+                barrier_meshes.append(child as MeshInstance3D)
             for mesh_node in child.find_children("*", "MeshInstance3D", true, false):
-                var mesh_instance := mesh_node as MeshInstance3D
+                barrier_meshes.append(mesh_node as MeshInstance3D)
+            for mesh_instance in barrier_meshes:
                 if mesh_instance != null and mesh_instance.material_override is StandardMaterial3D:
                     var material := mesh_instance.material_override as StandardMaterial3D
                     if material.roughness >= 0.88 and material.albedo_color.get_luminance() < 0.62:

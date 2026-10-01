@@ -56,23 +56,27 @@ static func street_crack() -> Node3D:
 static func _grade_environment_mesh(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
     if root == null:
         return
+    if root is MeshInstance3D:
+        _grade_mesh_instance(root as MeshInstance3D, tint, roughness, metallic)
     for node in root.find_children("*", "MeshInstance3D", true, false):
-        var mesh_instance := node as MeshInstance3D
-        if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
-            continue
-        var source := mesh_instance.get_active_material(0)
-        if not source is StandardMaterial3D:
-            continue
-        var graded := source.duplicate(true) as StandardMaterial3D
-        graded.albedo_color = Color(
-            graded.albedo_color.r * tint.r,
-            graded.albedo_color.g * tint.g,
-            graded.albedo_color.b * tint.b,
-            graded.albedo_color.a
-        )
-        graded.roughness = maxf(graded.roughness, roughness)
-        graded.metallic = maxf(graded.metallic, metallic)
-        mesh_instance.material_override = graded
+        _grade_mesh_instance(node as MeshInstance3D, tint, roughness, metallic)
+
+static func _grade_mesh_instance(mesh_instance: MeshInstance3D, tint: Color, roughness: float, metallic: float) -> void:
+    if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
+        return
+    var source := mesh_instance.get_active_material(0)
+    if not source is StandardMaterial3D:
+        return
+    var graded := source.duplicate(true) as StandardMaterial3D
+    graded.albedo_color = Color(
+        graded.albedo_color.r * tint.r,
+        graded.albedo_color.g * tint.g,
+        graded.albedo_color.b * tint.b,
+        graded.albedo_color.a
+    )
+    graded.roughness = maxf(graded.roughness, roughness)
+    graded.metallic = maxf(graded.metallic, metallic)
+    mesh_instance.material_override = graded
 
 static func animation_player(root: Node) -> AnimationPlayer:
     if root == null:
