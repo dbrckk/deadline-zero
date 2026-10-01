@@ -2,29 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Add semantic QA gate for 70 environment candidates (#244)",
-      "terms": [
-        "244",
-        "70",
-        "add",
-        "candidates",
-        "environment",
-        "gate",
-        "qa",
-        "semantic"
-      ],
-      "tests": [],
-      "useful": [
-        "tools/environment/candidate_utils.py",
-        "tools/environment/generate_cinder_foundry_candidate.py",
-        "tools/environment/generate_cryo_vault_candidate.py",
-        "tools/environment/generate_cryogenic_depths_candidate.py",
-        "tools/environment/generate_null_sector_candidate.py",
-        "tools/environment/qa_environment_candidates.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "ui(combat): add premium HUD rail and dash treatment (#245)",
       "terms": [
         "245",
@@ -1235,6 +1212,25 @@
       "useful": [
         "godot/tests/rendered_frame_smoke_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Refine Godot combat framing and HUD hierarchy",
+      "terms": [
+        "combat",
+        "framing",
+        "godot",
+        "hierarchy",
+        "hud",
+        "refine"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Hud.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/environment_identity_test.gd",
+        "godot/tests/hud_readability_hierarchy_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -2053,10 +2049,13 @@
       "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 4,
       "godot/tests/combat_audio_feedback_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4
     },
     "comparison": {
@@ -2430,8 +2429,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 16,
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 8,
-      "godot/scripts/Main.gd": 4,
-      "godot/tests/boss_reveal_camera_test.gd": 4
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 8,
+      "godot/tests/boss_reveal_camera_test.gd": 4,
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4
     },
     "from": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 8,
@@ -2538,15 +2540,17 @@
     "godot": {
       "godot/scripts/AssetLibrary.gd": 8,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Hud.gd": 8,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 8,
+      "godot/scripts/Main.gd": 12,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/authored_world_dressing_test.gd": 4,
       "godot/tests/environment_asset_validation_test.gd": 4,
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4,
       "godot/tests/mobile_orientation_test.gd": 24,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/smoke_test.gd": 4
@@ -2575,7 +2579,11 @@
       "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java": 8,
-      "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java": 4
+      "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4
     },
     "hints": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java": 4,
@@ -2604,9 +2612,11 @@
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 4,
-      "godot/scripts/Main.gd": 4,
-      "godot/tests/boss_hud_identity_test.gd": 4
+      "godot/scripts/Hud.gd": 8,
+      "godot/scripts/Main.gd": 8,
+      "godot/tests/boss_hud_identity_test.gd": 4,
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4
     },
     "hunter": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java": 4,
@@ -3183,7 +3193,11 @@
     },
     "refine": {
       "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java": 4,
-      "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java": 4
+      "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4
     },
     "regions": {
       "tools/environment/install_all_environment_candidates.py": 4

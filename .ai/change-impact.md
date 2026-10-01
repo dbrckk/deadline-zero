@@ -1,10 +1,13 @@
 # Change impact
 
-Base: 4fd5963af2de113c3f992dc717665c7390507232
-Head: 14eb84572249d11c81ad4c92648db746afb91c5d
+Base: 4f99d87357903633dbe7ade04055447727a3a10d
+Head: 671f9da14afe38ed993715f5adaf0df8490c24bf
 
 ## Changed files
-- M godot/tests/rendered_frame_smoke_test.gd
+- M godot/scripts/Hud.gd
+- M godot/scripts/Main.gd
+- M godot/tests/environment_identity_test.gd
+- M godot/tests/hud_readability_hierarchy_test.gd
 
 ## Affected areas
 - godot

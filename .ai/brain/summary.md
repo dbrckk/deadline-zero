@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 526
-- Files reparsed this run: 1
-- Symbols: 2901
+- Files reparsed this run: 4
+- Symbols: 2902
 - Internal import edges: 808
-- Impacted files: 1
-- Selected tests: 2
+- Impacted files: 4
+- Selected tests: 3
 
 ## Languages
 - java: 422 files
@@ -20,8 +20,8 @@
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
 - godot/scripts/Enemy.gd: 36 symbols
+- godot/scripts/Main.gd: 35 symbols
 - core/src/main/java/com/deadlinezero/game/visual/GameArt.java: 34 symbols
-- godot/scripts/Main.gd: 34 symbols
 - core/src/main/java/com/deadlinezero/game/entities/Enemy.java: 31 symbols
 - core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java: 31 symbols
 - core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java: 29 symbols

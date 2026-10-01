@@ -25154,9 +25154,9 @@ func _build() -> void:
 
     var vital_panel := PanelContainer.new()
     vital_panel.name = "VitalPanel"
-    vital_panel.position = Vector2(28, 24)
-    vital_panel.size = Vector2(500, 108)
-    vital_panel.custom_minimum_size = Vector2(420, 96)
+    vital_panel.position = Vector2(24, 20)
+    vital_panel.size = Vector2(390, 88)
+    vital_panel.custom_minimum_size = Vector2(350, 82)
     vital_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
     root.add_child(vital_panel)
 
@@ -25169,10 +25169,10 @@ func _build() -> void:
     vital_style.corner_radius_top_right = 8
     vital_style.corner_radius_bottom_left = 8
     vital_style.corner_radius_bottom_right = 8
-    vital_style.content_margin_left = 16.0
-    vital_style.content_margin_right = 14.0
-    vital_style.content_margin_top = 10.0
-    vital_style.content_margin_bottom = 10.0
+    vital_style.content_margin_left = 13.0
+    vital_style.content_margin_right = 12.0
+    vital_style.content_margin_top = 7.0
+    vital_style.content_margin_bottom = 7.0
     vital_panel.add_theme_stylebox_override("panel", vital_style)
 
     var vital_stack := VBoxContainer.new()
@@ -25183,46 +25183,46 @@ func _build() -> void:
     var vital_accent := ColorRect.new()
     vital_accent.name = "VitalAccent"
     vital_accent.color = Color(0.18, 0.82, 1.0, 0.92)
-    vital_accent.custom_minimum_size = Vector2(120, 3)
+    vital_accent.custom_minimum_size = Vector2(96, 3)
     vital_accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
     vital_stack.add_child(vital_accent)
 
     hp_bar = ProgressBar.new()
     hp_bar.name = "HealthBar"
-    hp_bar.custom_minimum_size = Vector2(420, 22)
+    hp_bar.custom_minimum_size = Vector2(350, 18)
     hp_bar.show_percentage = false
     vital_stack.add_child(hp_bar)
     health_bar = hp_bar
 
     xp_bar = ProgressBar.new()
     xp_bar.name = "XpBar"
-    xp_bar.custom_minimum_size = Vector2(420, 12)
+    xp_bar.custom_minimum_size = Vector2(350, 9)
     xp_bar.show_percentage = false
     vital_stack.add_child(xp_bar)
 
     status_label = Label.new()
     status_label.name = "CombatStatus"
     status_label.text = "LV 1   KILLS 0"
-    status_label.add_theme_font_size_override("font_size", 20)
+    status_label.add_theme_font_size_override("font_size", 17)
     status_label.modulate = Color(0.88, 0.94, 0.98)
     vital_stack.add_child(status_label)
 
     wave_label = Label.new()
     wave_label.text = "QUARANTINE YARD"
     wave_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-    wave_label.add_theme_font_size_override("font_size", 28)
+    wave_label.add_theme_font_size_override("font_size", 23)
     wave_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
-    wave_label.position = Vector2(-220, 24)
-    wave_label.size = Vector2(440, 42)
+    wave_label.position = Vector2(-180, 20)
+    wave_label.size = Vector2(360, 36)
     root.add_child(wave_label)
 
     pause_button = Button.new()
     pause_button.name = "PauseButton"
     pause_button.text = "Ⅱ"
     pause_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-    pause_button.position = Vector2(-86, 24)
-    pause_button.size = Vector2(58, 58)
-    pause_button.add_theme_font_size_override("font_size", 22)
+    pause_button.position = Vector2(-72, 20)
+    pause_button.size = Vector2(50, 50)
+    pause_button.add_theme_font_size_override("font_size", 20)
     pause_button.pressed.connect(func() -> void: pause_requested.emit())
     add_child(pause_button)
 
@@ -26023,10 +26023,43 @@ func _build_world() -> void:
     floor.material_override = floor_mat
     add_child(floor)
 
+    _build_floor_panels()
     _build_containment_lanes()
     _build_authored_barrier_clusters()
     _build_authored_world_dressing()
     _build_perimeter_beacons()
+
+func _build_floor_panels() -> void:
+    # Low-profile industrial plates break the large flat center without adding collision or
+    # competing with enemies/projectiles. Their low contrast keeps the combat lane readable.
+    var plate_material := StandardMaterial3D.new()
+    plate_material.albedo_color = Color(0.065, 0.083, 0.092)
+    plate_material.metallic = 0.18
+    plate_material.roughness = 0.78
+
+    var edge_material := StandardMaterial3D.new()
+    edge_material.albedo_color = Color(0.035, 0.22, 0.27)
+    edge_material.emission_enabled = true
+    edge_material.emission = Color(0.015, 0.16, 0.21)
+    edge_material.emission_energy_multiplier = 0.34
+    edge_material.roughness = 0.70
+
+    var placements := [
+        Vector3(-10.0, 0.010, -4.8), Vector3(-6.2, 0.010, -8.8),
+        Vector3(  6.4, 0.010, -8.5), Vector3(10.2, 0.010, -4.4),
+        Vector3(-10.4, 0.010,  4.7), Vector3(-6.0, 0.010,  8.7),
+        Vector3(  6.2, 0.010,  8.9), Vector3(10.5, 0.010,  4.5),
+    ]
+    for index in range(placements.size()):
+        var plate := MeshInstance3D.new()
+        plate.name = "FloorPlate_%02d" % index
+        var mesh := BoxMesh.new()
+        mesh.size = Vector3(3.2 if index % 2 == 0 else 2.6, 0.018, 1.45)
+        plate.mesh = mesh
+        plate.position = placements[index]
+        plate.rotation.y = deg_to_rad(float((index * 23) % 35 - 17))
+        plate.material_override = plate_material if index % 3 else edge_material
+        add_child(plate)
 
 func _build_authored_barrier_clusters() -> void:
     var clusters := [
@@ -26056,7 +26089,6 @@ func _build_authored_world_dressing() -> void:
         Callable(DZAssetLibrary, "pallet"),
         Callable(DZAssetLibrary, "traffic_cone"),
         Callable(DZAssetLibrary, "trash_bag"),
-        Callable(DZAssetLibrary, "street_lights"),
     ]
     var placements := [
         Vector3(-21.0, 0.0, -5.5), Vector3(-18.5, 0.0, 5.0),
@@ -27675,6 +27707,7 @@ func _initialize() -> void:
     var barrier_count := 0
     var lane_count := 0
     var beacon_count := 0
+    var floor_plate_count := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -27682,6 +27715,8 @@ func _initialize() -> void:
             lane_count += 1
         elif child.name.begins_with("PerimeterBeacon_"):
             beacon_count += 1
+        elif child.name.begins_with("FloorPlate_"):
+            floor_plate_count += 1
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
@@ -27693,6 +27728,10 @@ func _initialize() -> void:
         return
     if beacon_count != 12:
         push_error("Expected 12 perimeter beacons, got %d" % beacon_count)
+        quit(1)
+        return
+    if floor_plate_count < 8:
+        push_error("Expected midfield floor variation plates, got %d" % floor_plate_count)
         quit(1)
         return
 
@@ -27939,12 +27978,22 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if vital_panel.size.x > 410.0 or vital_panel.size.y > 94.0:
+        push_error("Vital panel regressed into an oversized combat-obscuring footprint")
+        quit(1)
+        return
+
     if hud.health_bar == null or hud.health_bar.custom_minimum_size.y < 18.0:
         push_error("Health bar must remain readable under combat pressure")
         quit(1)
         return
     if hud.xp_bar == null or hud.xp_bar.custom_minimum_size.y < 8.0:
         push_error("XP bar must retain a distinct secondary hierarchy")
+        quit(1)
+        return
+
+    if hud.wave_label == null or hud.wave_label.get_theme_font_size("font_size") > 24:
+        push_error("Wave label must not dominate the active combat frame")
         quit(1)
         return
 
