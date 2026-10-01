@@ -1,10 +1,12 @@
 # Change impact
 
-Base: ccc31a5c09f0dd27e89f57357bbbd4cd33a53486
-Head: 9d7ecde4d3632f1201ae70be5ca33ce291ca7c23
+Base: 1d66774b07397a4ab35b5b2cf117ccdb5787c13e
+Head: 9bb06363deefe7ade99308ac885b8fcead61f464
 
 ## Changed files
-- M godot/scripts/Hud.gd
+- M godot/scripts/Main.gd
+- M godot/scripts/RunDirector.gd
+- M godot/tests/run_director_escalation_test.gd
 
 ## Affected areas
 - godot

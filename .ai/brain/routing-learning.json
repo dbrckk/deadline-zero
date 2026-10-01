@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "ui(boss): strengthen warning and phase HUD presentation (#249)",
-      "terms": [
-        "249",
-        "boss",
-        "hud",
-        "phase",
-        "presentation",
-        "strengthen",
-        "ui",
-        "warning"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "ui(missions): strengthen claimable and completed states (#251)",
       "terms": [
         "251",
@@ -1225,6 +1207,24 @@
       "useful": [
         "godot/scripts/Hud.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Give opening wave immediate combat contrast",
+      "terms": [
+        "combat",
+        "contrast",
+        "give",
+        "immediate",
+        "opening",
+        "wave"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Main.gd",
+        "godot/scripts/RunDirector.gd",
+        "godot/tests/run_director_escalation_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -2053,13 +2053,15 @@
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 12,
-      "godot/scripts/Main.gd": 12,
+      "godot/scripts/Main.gd": 16,
       "godot/scripts/Player.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
       "godot/tests/combat_audio_feedback_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/hud_readability_hierarchy_test.gd": 8,
-      "godot/tests/rendered_frame_smoke_test.gd": 4
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4
     },
     "comparison": {
       "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java": 4
@@ -2117,6 +2119,11 @@
     },
     "contract": {
       "core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java": 4
+    },
+    "contrast": {
+      "godot/scripts/Main.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4
     },
     "critical": {
       "godot/scripts/CombatFeel.gd": 4,
@@ -2528,12 +2535,14 @@
       "godot/scripts/Enemy.gd": 12,
       "godot/scripts/Hud.gd": 8,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 12,
+      "godot/scripts/Main.gd": 16,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
@@ -2666,6 +2675,11 @@
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/Main.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 4
+    },
+    "immediate": {
+      "godot/scripts/Main.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4
     },
     "impacts": {
       "godot/scripts/CombatFeel.gd": 4,
@@ -2942,6 +2956,11 @@
     "opaque": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4
+    },
+    "opening": {
+      "godot/scripts/Main.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4
     },
     "outline": {
       "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java": 4,
@@ -3775,6 +3794,11 @@
     },
     "warning": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 4
+    },
+    "wave": {
+      "godot/scripts/Main.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4
     },
     "waves": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java": 4,

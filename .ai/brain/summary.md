@@ -2,10 +2,10 @@
 
 - Index mode: incremental
 - Files indexed: 526
-- Files reparsed this run: 1
-- Symbols: 2903
+- Files reparsed this run: 3
+- Symbols: 2904
 - Internal import edges: 808
-- Impacted files: 1
+- Impacted files: 3
 - Selected tests: 1
 
 ## Languages

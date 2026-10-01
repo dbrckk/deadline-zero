@@ -22,21 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T21:08:24Z
+Generated: 2026-10-01T21:12:16Z
 
 ### Git
 - Branch: `main`
-- Head: `9d7ecde4d363`
-- Commit date: 2026-10-01T23:08:11+02:00
-- Commit: Preserve combat HUD readability
+- Head: `9bb06363deef`
+- Commit date: 2026-10-01T23:12:02+02:00
+- Commit: Give opening wave immediate combat contrast
 - Tracked files: 939
 
 ### Recently changed files
-- `godot/scripts/Hud.gd`
 - `godot/scripts/Main.gd`
+- `godot/scripts/RunDirector.gd`
+- `godot/tests/run_director_escalation_test.gd`
+- `godot/scripts/Hud.gd`
 - `godot/tests/hud_readability_hierarchy_test.gd`
 - `godot/tests/environment_identity_test.gd`
-- `godot/tests/rendered_frame_smoke_test.gd`
 
 ### Project signals
 - `build.gradle`

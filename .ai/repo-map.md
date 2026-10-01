@@ -25803,8 +25803,8 @@ func _ready() -> void:
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     _build_combat_audio()
 
-    for i in range(8):
-        _spawn_enemy()
+    for opening_kind in run_director.opening_roster():
+        _spawn_enemy(String(opening_kind))
 
 func _process(delta: float) -> void:
     if hit_freeze_left > 0.0:
@@ -27003,6 +27003,14 @@ const PHASES := [
     {"start": 150.0, "name": "OVERRUN", "interval": 0.40, "batch": 4, "max_enemies": 110},
     {"start": 225.0, "name": "EXTINCTION", "interval": 0.31, "batch": 5, "max_enemies": 118}
 ]
+
+func opening_roster() -> Array:
+    # Establish immediate silhouette and movement contrast without introducing ranged or
+    # high-pressure specials before the player has settled into the controls.
+    return [
+        "shambler", "runner", "shambler", "shambler",
+        "runner", "shambler", "shambler", "shambler"
+    ]
 
 func profile(elapsed: float, level: int) -> Dictionary:
     var phase: Dictionary = PHASES[0]
@@ -28703,6 +28711,16 @@ func _init() -> void:
         return
 
     var director = director_script.new()
+    var opening_roster: Array = director.opening_roster()
+    if opening_roster.size() != 8:
+        push_error("Opening roster must contain exactly 8 enemies")
+        quit(1)
+        return
+    if opening_roster.count("runner") != 2 or opening_roster.count("shambler") != 6:
+        push_error("Opening roster must establish 6 shambler / 2 runner combat contrast")
+        quit(1)
+        return
+
     var opening: Dictionary = director.profile(0.0, 1)
     var pressure: Dictionary = director.profile(90.0, 4)
     var late: Dictionary = director.profile(180.0, 7)
@@ -28747,6 +28765,7 @@ func _init() -> void:
     for required in [
         "var run_director := DZRunDirector.new()",
         "run_director.profile(elapsed, level)",
+        "run_director.opening_roster()",
         "run_director.choose_enemy(elapsed, level, spawn_rng)",
         "director_profile[\"spawn_interval\"]",
         "director_profile[\"batch_size\"]",
