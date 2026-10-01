@@ -64,10 +64,10 @@ static func _grade_environment_mesh(root: Node3D, tint: Color, roughness: float,
 static func _grade_mesh_instance(mesh_instance: MeshInstance3D, tint: Color, roughness: float, metallic: float) -> void:
     if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
         return
-    var source := mesh_instance.get_active_material(0)
-    if not source is StandardMaterial3D:
+    var source := mesh_instance.mesh.surface_get_material(0)
+    if not source is BaseMaterial3D:
         return
-    var graded := source.duplicate(true) as StandardMaterial3D
+    var graded := source.duplicate(true) as BaseMaterial3D
     graded.albedo_color = Color(
         graded.albedo_color.r * tint.r,
         graded.albedo_color.g * tint.g,
