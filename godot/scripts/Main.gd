@@ -91,8 +91,8 @@ func _ready() -> void:
     hud.set_progress(xp, xp_next, level, kills, elapsed)
     _build_combat_audio()
 
-    for i in range(8):
-        _spawn_enemy()
+    for opening_kind in run_director.opening_roster():
+        _spawn_enemy(String(opening_kind))
 
 func _process(delta: float) -> void:
     if hit_freeze_left > 0.0:

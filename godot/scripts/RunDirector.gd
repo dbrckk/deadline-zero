@@ -9,6 +9,14 @@ const PHASES := [
     {"start": 225.0, "name": "EXTINCTION", "interval": 0.31, "batch": 5, "max_enemies": 118}
 ]
 
+func opening_roster() -> Array:
+    # Establish immediate silhouette and movement contrast without introducing ranged or
+    # high-pressure specials before the player has settled into the controls.
+    return [
+        "shambler", "runner", "shambler", "shambler",
+        "runner", "shambler", "shambler", "shambler"
+    ]
+
 func profile(elapsed: float, level: int) -> Dictionary:
     var phase: Dictionary = PHASES[0]
     for candidate in PHASES:
