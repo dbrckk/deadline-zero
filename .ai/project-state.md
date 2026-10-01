@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T08:49:34Z
+Generated: 2026-10-01T16:51:53Z
 
 ### Git
 - Branch: `main`
-- Head: `31522aefa6a4`
-- Commit date: 2026-10-01T10:49:23+02:00
-- Commit: Use Android emulator software GPU selection
+- Head: `c77f495c032b`
+- Commit date: 2026-10-01T18:51:36+02:00
+- Commit: Run Godot compatibility renderer on SwANGLE
 - Tracked files: 938
 
 ### Recently changed files
-- `.github/workflows/godot-android-first-playable.yml`
 - `godot/project.godot`
 - `godot/tests/mobile_orientation_test.gd`
+- `.github/workflows/godot-android-first-playable.yml`
 
 ### Project signals
 - `build.gradle`
