@@ -22,24 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T21:14:43Z
+Generated: 2026-10-01T21:17:58Z
 
 ### Git
 - Branch: `main`
-- Head: `6fcf59a52b5e`
-- Commit date: 2026-10-01T23:14:29+02:00
-- Commit: Strengthen runner top-down silhouette
+- Head: `e811e161ec46`
+- Commit date: 2026-10-01T23:17:45+02:00
+- Commit: Break up central containment markings
 - Tracked files: 939
 
 ### Recently changed files
+- `godot/scripts/Main.gd`
 - `godot/scripts/Enemy.gd`
 - `godot/tests/enemy_silhouette_identity_test.gd`
-- `godot/scripts/Main.gd`
 - `godot/scripts/RunDirector.gd`
 - `godot/tests/run_director_escalation_test.gd`
 - `godot/scripts/Hud.gd`
 - `godot/tests/hud_readability_hierarchy_test.gd`
-- `godot/tests/environment_identity_test.gd`
 
 ### Project signals
 - `build.gradle`

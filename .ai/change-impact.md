@@ -1,11 +1,10 @@
 # Change impact
 
-Base: 6b07dae5b36a9ba3fae24eb04cdfa423a71a78ff
-Head: 6fcf59a52b5e101a8c970edece6952ba676e971d
+Base: 4a421cbbb05dfef7a9d87e229ce0b1b7fd039d03
+Head: e811e161ec4680a40f82605c635bae1f6ca6af2d
 
 ## Changed files
-- M godot/scripts/Enemy.gd
-- M godot/tests/enemy_silhouette_identity_test.gd
+- M godot/scripts/Main.gd
 
 ## Affected areas
 - godot

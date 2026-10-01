@@ -26264,18 +26264,27 @@ func _build_containment_lanes() -> void:
     ring_material.roughness = 0.52
 
     for ring_index in range(2):
-        var marker := MeshInstance3D.new()
-        marker.name = "ContainmentRing_%d" % ring_index
-        var torus := TorusMesh.new()
-        var radius := 3.15 + float(ring_index) * 1.55
-        torus.inner_radius = radius - 0.055
-        torus.outer_radius = radius + 0.055
-        torus.rings = 48
-        torus.ring_segments = 8
-        marker.mesh = torus
-        marker.position.y = 0.035 + float(ring_index) * 0.003
-        marker.material_override = ring_material
-        add_child(marker)
+        var ring_root := Node3D.new()
+        ring_root.name = "ContainmentRing_%d" % ring_index
+        add_child(ring_root)
+        var radius := 3.35 + float(ring_index) * 1.48
+        var segment_count := 8
+        var segment_length := 1.10 if ring_index == 0 else 1.34
+        for segment_index in range(segment_count):
+            # Broken arcs read as worn industrial guidance rather than a perfect target reticle.
+            # Stagger every second arc so the two rings never form a continuous bullseye.
+            if (segment_index + ring_index) % 4 == 1:
+                continue
+            var angle := TAU * float(segment_index) / float(segment_count) + float(ring_index) * 0.17
+            var arc := MeshInstance3D.new()
+            arc.name = "Arc_%02d" % segment_index
+            var arc_mesh := BoxMesh.new()
+            arc_mesh.size = Vector3(segment_length, 0.012, 0.050)
+            arc.mesh = arc_mesh
+            arc.position = Vector3(cos(angle) * radius, 0.030 + float(ring_index) * 0.003, sin(angle) * radius)
+            arc.rotation.y = -angle + PI * 0.5
+            arc.material_override = ring_material
+            ring_root.add_child(arc)
 
     var marker_material := StandardMaterial3D.new()
     marker_material.albedo_color = Color(0.035, 0.24, 0.31)
