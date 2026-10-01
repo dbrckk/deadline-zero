@@ -26194,6 +26194,7 @@ func _build_world() -> void:
     _build_containment_lanes()
     _build_authored_barrier_clusters()
     _build_authored_world_dressing()
+    _build_perimeter_street_lights()
     _build_perimeter_beacons()
 
 func _build_floor_panels() -> void:
@@ -26388,6 +26389,53 @@ func _build_containment_lanes() -> void:
         tick.rotation.y = -angle
         tick.material_override = marker_material
         add_child(tick)
+
+func _build_perimeter_street_lights() -> void:
+    # Tall authored fixtures restore vertical scale without introducing gameplay collision.
+    # Each fixture owns one modest, shadowless pool light to stay inside the mobile light budget.
+    var placements := [
+        {"position": Vector3(-18.5, 0.0, -12.8), "rotation": 0.42},
+        {"position": Vector3(18.5, 0.0, -12.8), "rotation": -0.42},
+        {"position": Vector3(-18.5, 0.0, 12.8), "rotation": PI - 0.42},
+        {"position": Vector3(18.5, 0.0, 12.8), "rotation": PI + 0.42},
+    ]
+
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var fixture := DZAssetLibrary.street_lights()
+        if fixture == null:
+            continue
+        fixture.name = "AuthoredStreetLight_%02d" % index
+        fixture.add_to_group("environment_vertical_prop")
+        fixture.position = placement["position"]
+        fixture.rotation.y = float(placement["rotation"])
+        fixture.scale = Vector3.ONE * 0.76
+        add_child(fixture)
+
+        var pool := OmniLight3D.new()
+        pool.name = "StreetLightPool"
+        pool.position = Vector3(0.0, 6.05, 2.28)
+        pool.light_color = Color(0.42, 0.68, 0.86)
+        pool.light_energy = 0.92
+        pool.omni_range = 8.0
+        pool.shadow_enabled = false
+        fixture.add_child(pool)
+
+        var lamp_core := MeshInstance3D.new()
+        lamp_core.name = "StreetLightCore"
+        var core_mesh := SphereMesh.new()
+        core_mesh.radius = 0.12
+        core_mesh.height = 0.24
+        lamp_core.mesh = core_mesh
+        lamp_core.position = Vector3(0.0, 6.18, 2.38)
+        var core_material := StandardMaterial3D.new()
+        core_material.albedo_color = Color(0.56, 0.82, 1.0)
+        core_material.emission_enabled = true
+        core_material.emission = Color(0.24, 0.62, 0.92)
+        core_material.emission_energy_multiplier = 2.6
+        core_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+        lamp_core.material_override = core_material
+        fixture.add_child(lamp_core)
 
 func _build_perimeter_beacons() -> void:
     var beacon_material := StandardMaterial3D.new()
@@ -28173,6 +28221,8 @@ func _initialize() -> void:
     var floor_plate_count := 0
     var floor_seam_count := 0
     var containment_ring_count := 0
+    var street_light_count := 0
+    var street_light_pool_count := 0
     var graded_barrier_meshes := 0
     var hazard_strip_count := 0
     for child in scene.get_children():
@@ -28200,6 +28250,19 @@ func _initialize() -> void:
             floor_seam_count += 1
         elif child.name.begins_with("ContainmentRing_"):
             containment_ring_count += 1
+        elif child.name.begins_with("AuthoredStreetLight_"):
+            street_light_count += 1
+            var pool := child.get_node_or_null("StreetLightPool") as OmniLight3D
+            if pool != null:
+                if pool.shadow_enabled:
+                    push_error("Street-light pool must remain shadowless for mobile budget")
+                    quit(1)
+                    return
+                if pool.omni_range > 8.5 or pool.light_energy > 1.0:
+                    push_error("Street-light pool exceeded mobile-safe range/energy budget")
+                    quit(1)
+                    return
+                street_light_pool_count += 1
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
@@ -28223,6 +28286,10 @@ func _initialize() -> void:
         return
     if containment_ring_count != 2:
         push_error("Expected 2 thin containment rings, got %d" % containment_ring_count)
+        quit(1)
+        return
+    if street_light_count != 4 or street_light_pool_count != 4:
+        push_error("Expected 4 authored vertical light fixtures with safe pools, got %d/%d" % [street_light_count, street_light_pool_count])
         quit(1)
         return
     if graded_barrier_meshes < 12:
