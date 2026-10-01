@@ -2,23 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "ui(victory): strengthen celebration and reward hierarchy (#261)",
-      "terms": [
-        "261",
-        "celebration",
-        "hierarchy",
-        "reward",
-        "strengthen",
-        "ui",
-        "victory"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Rework home and missions from Android visual QA (#265)",
       "terms": [
         "265",
@@ -1214,6 +1197,23 @@
         "godot/scripts/Player.gd",
         "godot/tests/player_damage_feedback_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Harden enemy palette grading regression test",
+      "terms": [
+        "enemy",
+        "grading",
+        "harden",
+        "palette",
+        "regression",
+        "test"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/AssetLibrary.gd",
+        "godot/tests/enemy_silhouette_identity_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -2294,10 +2294,11 @@
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4,
+      "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 4
+      "godot/tests/enemy_silhouette_identity_test.gd": 8
     },
     "environment": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
@@ -2595,7 +2596,8 @@
       "godot/tests/environment_identity_test.gd": 4
     },
     "grading": {
-      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/AssetLibrary.gd": 8,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
     },
     "graphics": {
@@ -2603,6 +2605,10 @@
     },
     "guard": {
       "godot/tests/mobile_orientation_test.gd": 4
+    },
+    "harden": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
     "hazard": {
       "godot/scripts/AssetLibrary.gd": 4,
@@ -3043,7 +3049,8 @@
       "tools/environment/generate_quarantine_yard_candidate.py": 4
     },
     "palette": {
-      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/AssetLibrary.gd": 8,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
     },
     "pass": {
@@ -3308,6 +3315,10 @@
     },
     "regions": {
       "tools/environment/install_all_environment_candidates.py": 4
+    },
+    "regression": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
     "release": {
       "core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java": 4,
@@ -3746,6 +3757,10 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4
+    },
+    "test": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
     "tiles": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,

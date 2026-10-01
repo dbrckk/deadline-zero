@@ -1,11 +1,10 @@
 # Change impact
 
-Base: 401041a36cc8a43c308bffc316478a4cbdc99f25
-Head: 71b6e7e3c4962b4ecb28a0d4ef65913f7ce23083
+Base: b10a4915452eb8fc5578e743545ba901db252859
+Head: dd4e73da5c5304a70705a4a4767f12cdaf93f9ce
 
 ## Changed files
-- M godot/scripts/Player.gd
-- M godot/tests/player_damage_feedback_test.gd
+- M godot/tests/enemy_silhouette_identity_test.gd
 
 ## Affected areas
 - godot

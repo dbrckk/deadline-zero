@@ -23935,14 +23935,25 @@ static func player() -> Node3D:
     return instantiate_scene(PLAYER)
 
 static func enemy(kind: String) -> Node3D:
-    return instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite"] else ZOMBIE_BASIC)
+    var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite"] else ZOMBIE_BASIC)
+    var tint := Color(0.82, 0.92, 0.80)
+    match kind:
+        "runner": tint = Color(0.72, 1.00, 0.74)
+        "charger": tint = Color(1.00, 0.68, 0.48)
+        "harrier": tint = Color(0.58, 0.88, 1.00)
+        "regenerator": tint = Color(0.58, 1.00, 0.68)
+        "brute": tint = Color(0.92, 0.56, 0.46)
+        "elite": tint = Color(0.78, 0.58, 1.00)
+        "boss": tint = Color(1.00, 0.72, 0.44)
+    _grade_mesh_tree(root, tint, 0.74, 0.0)
+    return root
 
 static func rifle() -> Node3D:
     return instantiate_scene(RIFLE)
 
 static func barrier() -> Node3D:
     var root := instantiate_scene(BARRIER)
-    _grade_environment_mesh(root, Color(0.22, 0.28, 0.32), 0.92, 0.06)
+    _grade_mesh_tree(root, Color(0.22, 0.28, 0.32), 0.92, 0.06)
     _add_barrier_hazard_signature(root)
     return root
 
@@ -23984,7 +23995,7 @@ static func _add_barrier_hazard_signature(root: Node3D) -> void:
         strip.material_override = material
         root.add_child(strip)
 
-static func _grade_environment_mesh(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
+static func _grade_mesh_tree(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
     if root == null:
         return
     if root is MeshInstance3D:
@@ -27876,6 +27887,42 @@ const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
 func _initialize() -> void:
     var root := Node3D.new()
     get_root().add_child(root)
+
+    var palette_samples := {}
+    for palette_kind in ["runner", "charger", "harrier", "regenerator", "brute", "elite", "boss"]:
+        var visual := DZAssetLibrary.enemy(palette_kind)
+        if visual == null:
+            push_error("Missing authored visual for palette kind %s" % palette_kind)
+            quit(1)
+            return
+        var mesh_instance := visual as MeshInstance3D
+        if mesh_instance == null:
+            var meshes := visual.find_children("*", "MeshInstance3D", true, false)
+            mesh_instance = meshes[0] as MeshInstance3D if not meshes.is_empty() else null
+        if mesh_instance == null or not mesh_instance.material_override is BaseMaterial3D:
+            push_error("Enemy palette grading missing for %s" % palette_kind)
+            quit(1)
+            return
+        var material := mesh_instance.material_override as BaseMaterial3D
+        if material.albedo_texture == null:
+            push_error("Enemy palette grading must preserve authored atlas for %s" % palette_kind)
+            quit(1)
+            return
+        palette_samples[palette_kind] = material.albedo_color
+        visual.free()
+
+    var runner_color: Color = palette_samples["runner"]
+    var charger_color: Color = palette_samples["charger"]
+    var harrier_color: Color = palette_samples["harrier"]
+    var brute_color: Color = palette_samples["brute"]
+    if runner_color.is_equal_approx(charger_color):
+        push_error("Runner and charger must not collapse to the same authored palette")
+        quit(1)
+        return
+    if harrier_color.is_equal_approx(brute_color):
+        push_error("Harrier and brute must retain distinct authored palettes")
+        quit(1)
+        return
 
     var expected := {
         "shambler": ["SignatureBeacon"],
