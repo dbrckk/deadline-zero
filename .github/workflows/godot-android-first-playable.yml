@@ -151,6 +151,14 @@ jobs:
             mkdir -p build/godot-android-smoke
             adb wait-for-device
             timeout 300s bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 2; done'
+            # sys.boot_completed can flip before Launcher/overlay/display configuration has
+            # finished settling on a cold API-35 emulator. Launching the forced-landscape
+            # Godot activity during that window causes Android to destroy it when the final
+            # portrait home-display configuration is published a few seconds later.
+            adb shell input keyevent 3 || true
+            adb shell wm dismiss-keyguard || true
+            sleep 12
+            timeout 30s sh -c 'until adb shell dumpsys activity top 2>/dev/null | grep -E "ACTIVITY com.android.launcher3|mResumedActivity.*com.android.launcher3" >/dev/null; do sleep 1; done' || true
             adb shell input keyevent 82 || true
             adb install -r build/godot-android/deadline-zero-godot-debug.apk
             adb shell pm path com.deadlinezero.godot | grep -q 'package:'
