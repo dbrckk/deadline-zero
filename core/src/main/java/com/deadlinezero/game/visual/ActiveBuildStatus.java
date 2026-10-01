@@ -21,7 +21,17 @@ public final class ActiveBuildStatus {
         else if (doctrine == DroneDoctrine.SENTINEL) out[index++] = "hud.build.sentinel";
 
         String synergy = primarySynergy(a);
-        if (synergy != null && index < out.length) out[index] = synergy;
+        if (synergy != null && index < out.length) out[index++] = synergy;
+
+        String protocol = primaryEvolvedProtocol(player);
+        if (protocol != null && index < out.length) out[index] = protocol;
+    }
+
+    static String primaryEvolvedProtocol(Player player) {
+        if (player.protocols.rhythmEvolved()) return "hud.build.rhythmAccelerator";
+        if (player.protocols.killchainEvolved()) return "hud.build.killchainOvercharge";
+        if (player.protocols.reactionEvolved()) return "hud.build.reactionCascade";
+        return null;
     }
 
     static String primarySynergy(AbilityLoadout a) {
