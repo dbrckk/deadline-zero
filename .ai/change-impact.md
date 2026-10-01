@@ -1,11 +1,12 @@
 # Change impact
 
-Base: 2a6e1961a6c6a4ba05f6d7914db390e3ae9bda31
-Head: deaa50676c62db18b37650b6098bd65865952156
+Base: c497897998eb564fe203ba3faf208ab2baa85b2e
+Head: 72e9a6d9fe401d78975d4f869f6d8907c86cd429
 
 ## Changed files
+- M godot/scripts/Hud.gd
 - M godot/scripts/Main.gd
-- M godot/tests/environment_identity_test.gd
+- M godot/tests/hud_readability_hierarchy_test.gd
 
 ## Affected areas
 - godot

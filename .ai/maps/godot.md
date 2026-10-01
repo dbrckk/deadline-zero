@@ -1345,75 +1345,155 @@ func _build() -> void:
 
     var vital_panel := PanelContainer.new()
     vital_panel.name = "VitalPanel"
-    vital_panel.position = Vector2(24, 20)
-    vital_panel.size = Vector2(390, 88)
-    vital_panel.custom_minimum_size = Vector2(350, 82)
+    vital_panel.position = Vector2(22, 18)
+    vital_panel.size = Vector2(360, 86)
+    vital_panel.custom_minimum_size = Vector2(340, 82)
     vital_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
     root.add_child(vital_panel)
 
     var vital_style := StyleBoxFlat.new()
-    vital_style.bg_color = Color(0.018, 0.032, 0.042, 0.92)
-    vital_style.border_color = Color(0.16, 0.62, 0.82, 0.70)
+    vital_style.bg_color = Color(0.010, 0.020, 0.028, 0.94)
+    vital_style.border_color = Color(0.12, 0.52, 0.72, 0.62)
     vital_style.set_border_width_all(1)
-    vital_style.border_width_left = 4
-    vital_style.corner_radius_top_left = 8
-    vital_style.corner_radius_top_right = 8
-    vital_style.corner_radius_bottom_left = 8
-    vital_style.corner_radius_bottom_right = 8
-    vital_style.content_margin_left = 13.0
-    vital_style.content_margin_right = 12.0
-    vital_style.content_margin_top = 7.0
-    vital_style.content_margin_bottom = 7.0
+    vital_style.border_width_left = 3
+    vital_style.corner_radius_top_left = 6
+    vital_style.corner_radius_top_right = 6
+    vital_style.corner_radius_bottom_left = 6
+    vital_style.corner_radius_bottom_right = 6
+    vital_style.content_margin_left = 12.0
+    vital_style.content_margin_right = 11.0
+    vital_style.content_margin_top = 6.0
+    vital_style.content_margin_bottom = 6.0
     vital_panel.add_theme_stylebox_override("panel", vital_style)
 
     var vital_stack := VBoxContainer.new()
     vital_stack.name = "VitalStack"
-    vital_stack.add_theme_constant_override("separation", 4)
+    vital_stack.add_theme_constant_override("separation", 3)
     vital_panel.add_child(vital_stack)
+
+    var header_row := HBoxContainer.new()
+    header_row.name = "CombatHeader"
+    vital_stack.add_child(header_row)
+
+    var combat_link := Label.new()
+    combat_link.name = "CombatLinkLabel"
+    combat_link.text = "SURVIVOR // COMBAT LINK"
+    combat_link.add_theme_font_size_override("font_size", 11)
+    combat_link.modulate = Color(0.28, 0.78, 0.96)
+    header_row.add_child(combat_link)
+
+    var header_spacer := Control.new()
+    header_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    header_row.add_child(header_spacer)
+
+    var signal_label := Label.new()
+    signal_label.name = "SignalLabel"
+    signal_label.text = "ONLINE"
+    signal_label.add_theme_font_size_override("font_size", 10)
+    signal_label.modulate = Color(0.48, 0.92, 0.68)
+    header_row.add_child(signal_label)
 
     var vital_accent := ColorRect.new()
     vital_accent.name = "VitalAccent"
-    vital_accent.color = Color(0.18, 0.82, 1.0, 0.92)
-    vital_accent.custom_minimum_size = Vector2(96, 3)
+    vital_accent.color = Color(0.10, 0.58, 0.80, 0.90)
+    vital_accent.custom_minimum_size = Vector2(74, 2)
     vital_accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
     vital_stack.add_child(vital_accent)
 
     hp_bar = ProgressBar.new()
     hp_bar.name = "HealthBar"
-    hp_bar.custom_minimum_size = Vector2(350, 18)
+    hp_bar.custom_minimum_size = Vector2(320, 16)
     hp_bar.show_percentage = false
+    var hp_bg := StyleBoxFlat.new()
+    hp_bg.bg_color = Color(0.06, 0.075, 0.085, 0.94)
+    hp_bg.corner_radius_top_left = 3
+    hp_bg.corner_radius_top_right = 3
+    hp_bg.corner_radius_bottom_left = 3
+    hp_bg.corner_radius_bottom_right = 3
+    var hp_fill := StyleBoxFlat.new()
+    hp_fill.bg_color = Color(0.16, 0.72, 0.88, 0.98)
+    hp_fill.corner_radius_top_left = 3
+    hp_fill.corner_radius_top_right = 3
+    hp_fill.corner_radius_bottom_left = 3
+    hp_fill.corner_radius_bottom_right = 3
+    hp_bar.add_theme_stylebox_override("background", hp_bg)
+    hp_bar.add_theme_stylebox_override("fill", hp_fill)
     vital_stack.add_child(hp_bar)
     health_bar = hp_bar
 
     xp_bar = ProgressBar.new()
     xp_bar.name = "XpBar"
-    xp_bar.custom_minimum_size = Vector2(350, 9)
+    xp_bar.custom_minimum_size = Vector2(320, 7)
     xp_bar.show_percentage = false
+    var xp_bg := StyleBoxFlat.new()
+    xp_bg.bg_color = Color(0.045, 0.055, 0.065, 0.90)
+    xp_bg.corner_radius_top_left = 2
+    xp_bg.corner_radius_top_right = 2
+    xp_bg.corner_radius_bottom_left = 2
+    xp_bg.corner_radius_bottom_right = 2
+    var xp_fill := StyleBoxFlat.new()
+    xp_fill.bg_color = Color(0.52, 0.36, 0.92, 0.96)
+    xp_fill.corner_radius_top_left = 2
+    xp_fill.corner_radius_top_right = 2
+    xp_fill.corner_radius_bottom_left = 2
+    xp_fill.corner_radius_bottom_right = 2
+    xp_bar.add_theme_stylebox_override("background", xp_bg)
+    xp_bar.add_theme_stylebox_override("fill", xp_fill)
     vital_stack.add_child(xp_bar)
 
     status_label = Label.new()
     status_label.name = "CombatStatus"
     status_label.text = "LV 1   KILLS 0"
-    status_label.add_theme_font_size_override("font_size", 17)
-    status_label.modulate = Color(0.88, 0.94, 0.98)
+    status_label.add_theme_font_size_override("font_size", 15)
+    status_label.modulate = Color(0.82, 0.90, 0.94)
     vital_stack.add_child(status_label)
 
+    var wave_panel := PanelContainer.new()
+    wave_panel.name = "WavePanel"
+    wave_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
+    wave_panel.position = Vector2(-170, 18)
+    wave_panel.size = Vector2(340, 42)
+    wave_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(wave_panel)
+    var wave_style := StyleBoxFlat.new()
+    wave_style.bg_color = Color(0.010, 0.020, 0.028, 0.76)
+    wave_style.border_color = Color(0.16, 0.56, 0.72, 0.46)
+    wave_style.border_width_bottom = 2
+    wave_style.corner_radius_bottom_left = 7
+    wave_style.corner_radius_bottom_right = 7
+    wave_panel.add_theme_stylebox_override("panel", wave_style)
+
     wave_label = Label.new()
+    wave_label.name = "WaveLabel"
     wave_label.text = "QUARANTINE YARD"
     wave_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-    wave_label.add_theme_font_size_override("font_size", 23)
-    wave_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
-    wave_label.position = Vector2(-180, 20)
-    wave_label.size = Vector2(360, 36)
-    root.add_child(wave_label)
+    wave_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    wave_label.add_theme_font_size_override("font_size", 21)
+    wave_label.modulate = Color(0.90, 0.95, 0.98)
+    wave_panel.add_child(wave_label)
 
     pause_button = Button.new()
     pause_button.name = "PauseButton"
     pause_button.text = "Ⅱ"
     pause_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-    pause_button.position = Vector2(-72, 20)
-    pause_button.size = Vector2(50, 50)
-    pause_button.add_theme_font_size_override("font_size", 20)
+    pause_button.position = Vector2(-68, 18)
+    pause_button.size = Vector2(46, 46)
+    pause_button.add_theme_font_size_override("font_size", 18)
+    var pause_normal := StyleBoxFlat.new()
+    pause_normal.bg_color = Color(0.010, 0.020, 0.028, 0.90)
+    pause_normal.border_color = Color(0.16, 0.56, 0.72, 0.46)
+    pause_normal.set_border_width_all(1)
+    pause_normal.corner_radius_top_left = 6
+    pause_normal.corner_radius_top_right = 6
+    pause_normal.corner_radius_bottom_left = 6
+    pause_normal.corner_radius_bottom_right = 6
+    var pause_hover := pause_normal.duplicate()
+    pause_hover.bg_color = Color(0.025, 0.075, 0.10, 0.96)
+    pause_hover.border_color = Color(0.24, 0.78, 1.0, 0.78)
+    pause_button.add_theme_stylebox_override("normal", pause_normal)
+    pause_button.add_theme_stylebox_override("hover", pause_hover)
+    pause_button.add_theme_stylebox_override("pressed", pause_hover)
+    pause_button.add_theme_color_override("font_color", Color(0.78, 0.90, 0.96))
     pause_button.pressed.connect(func() -> void: pause_requested.emit())
     add_child(pause_button)
 
@@ -2365,10 +2445,10 @@ func _build_containment_lanes() -> void:
                 add_child(stripe)
 
     var ring_material := StandardMaterial3D.new()
-    ring_material.albedo_color = Color(0.035, 0.34, 0.48)
+    ring_material.albedo_color = Color(0.025, 0.17, 0.23)
     ring_material.emission_enabled = true
-    ring_material.emission = Color(0.02, 0.22, 0.34)
-    ring_material.emission_energy_multiplier = 0.38
+    ring_material.emission = Color(0.008, 0.075, 0.12)
+    ring_material.emission_energy_multiplier = 0.20
     ring_material.metallic = 0.16
     ring_material.roughness = 0.52
 
@@ -2387,10 +2467,10 @@ func _build_containment_lanes() -> void:
         add_child(marker)
 
     var marker_material := StandardMaterial3D.new()
-    marker_material.albedo_color = Color(0.06, 0.48, 0.60)
+    marker_material.albedo_color = Color(0.035, 0.24, 0.31)
     marker_material.emission_enabled = true
-    marker_material.emission = Color(0.025, 0.30, 0.42)
-    marker_material.emission_energy_multiplier = 0.34
+    marker_material.emission = Color(0.01, 0.10, 0.15)
+    marker_material.emission_energy_multiplier = 0.18
     marker_material.roughness = 0.62
 
     for index in range(8):
@@ -4215,7 +4295,7 @@ func _initialize() -> void:
     root.add_child(hud)
     await process_frame
 
-    for node_name in ["VitalPanel", "VitalAccent", "ThreatPanel", "BossPanel", "UpgradePanel"]:
+    for node_name in ["VitalPanel", "VitalAccent", "CombatLinkLabel", "SignalLabel", "WavePanel", "ThreatPanel", "BossPanel", "UpgradePanel"]:
         if hud.find_child(node_name, true, false) == null:
             push_error("HUD readability hierarchy missing node: %s" % node_name)
             quit(1)
@@ -4241,7 +4321,7 @@ func _initialize() -> void:
         quit(1)
         return
 
-    if hud.wave_label == null or hud.wave_label.get_theme_font_size("font_size") > 24:
+    if hud.wave_label == null or hud.wave_label.get_theme_font_size("font_size") > 22:
         push_error("Wave label must not dominate the active combat frame")
         quit(1)
         return

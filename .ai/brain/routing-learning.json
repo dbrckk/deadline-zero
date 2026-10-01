@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "ui(combat): premiumize upgrade and legendary choice overlays (#246)",
-      "terms": [
-        "246",
-        "choice",
-        "combat",
-        "legendary",
-        "overlays",
-        "premiumize",
-        "ui",
-        "upgrade"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "ui(combat): premiumize game-over and revive overlay (#248)",
       "terms": [
         "248",
@@ -1228,6 +1210,24 @@
         "godot/scripts/Main.gd",
         "godot/tests/environment_identity_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Polish Godot combat HUD and center markings",
+      "terms": [
+        "center",
+        "combat",
+        "godot",
+        "hud",
+        "markings",
+        "polish"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Hud.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/hud_readability_hierarchy_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1937,6 +1937,11 @@
     "celebration": {
       "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java": 4
     },
+    "center": {
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4
+    },
     "champion": {
       "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/ChampionVariantPresentation.java": 4,
@@ -2050,13 +2055,13 @@
       "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 4,
-      "godot/scripts/Main.gd": 8,
+      "godot/scripts/Hud.gd": 8,
+      "godot/scripts/Main.gd": 12,
       "godot/scripts/Player.gd": 4,
       "godot/tests/combat_audio_feedback_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
-      "godot/tests/hud_readability_hierarchy_test.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 8,
       "godot/tests/rendered_frame_smoke_test.gd": 4
     },
     "comparison": {
@@ -2541,9 +2546,9 @@
     "godot": {
       "godot/scripts/AssetLibrary.gd": 8,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 8,
+      "godot/scripts/Hud.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 12,
+      "godot/scripts/Main.gd": 16,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
       "godot/scripts/XpOrb.gd": 4,
@@ -2551,7 +2556,7 @@
       "godot/tests/authored_world_dressing_test.gd": 4,
       "godot/tests/environment_asset_validation_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
-      "godot/tests/hud_readability_hierarchy_test.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 8,
       "godot/tests/mobile_orientation_test.gd": 24,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/smoke_test.gd": 4
@@ -2613,11 +2618,11 @@
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 8,
-      "godot/scripts/Main.gd": 8,
+      "godot/scripts/Hud.gd": 12,
+      "godot/scripts/Main.gd": 12,
       "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
-      "godot/tests/hud_readability_hierarchy_test.gd": 4
+      "godot/tests/hud_readability_hierarchy_test.gd": 8
     },
     "hunter": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilityLoadout.java": 4,
@@ -2801,6 +2806,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java": 4
+    },
+    "markings": {
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4
     },
     "material": {
       "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java": 4,
@@ -3019,7 +3029,10 @@
       "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
-      "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4
+      "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4
     },
     "premium": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java": 4,

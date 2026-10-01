@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T21:04:21Z
+Generated: 2026-10-01T21:07:40Z
 
 ### Git
 - Branch: `main`
-- Head: `deaa50676c62`
-- Commit date: 2026-10-01T23:04:08+02:00
-- Commit: Refine quarantine arena visual language
+- Head: `72e9a6d9fe40`
+- Commit date: 2026-10-01T23:07:26+02:00
+- Commit: Polish Godot combat HUD and center markings
 - Tracked files: 939
 
 ### Recently changed files
-- `godot/scripts/Main.gd`
-- `godot/tests/environment_identity_test.gd`
 - `godot/scripts/Hud.gd`
+- `godot/scripts/Main.gd`
 - `godot/tests/hud_readability_hierarchy_test.gd`
+- `godot/tests/environment_identity_test.gd`
 - `godot/tests/rendered_frame_smoke_test.gd`
 - `.github/workflows/godot-android-first-playable.yml`
 - `.github/workflows/godot-verify.yml`
