@@ -22,19 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T22:40:18Z
+Generated: 2026-10-01T22:42:37Z
 
 ### Git
 - Branch: `main`
-- Head: `98979eaf285b`
-- Commit date: 2026-10-02T00:40:03+02:00
-- Commit: Fix authored barrier grading assertion
+- Head: `12ec03d62eca`
+- Commit date: 2026-10-02T00:42:24+02:00
+- Commit: Clarify player aim and muzzle feedback
 - Tracked files: 939
 
 ### Recently changed files
+- `godot/scripts/Player.gd`
+- `godot/tests/weapon_presentation_test.gd`
 - `godot/tests/environment_identity_test.gd`
 - `godot/scripts/AssetLibrary.gd`
-- `godot/scripts/Main.gd`
 
 ### Project signals
 - `build.gradle`
