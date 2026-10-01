@@ -25,14 +25,25 @@ static func player() -> Node3D:
     return instantiate_scene(PLAYER)
 
 static func enemy(kind: String) -> Node3D:
-    return instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite"] else ZOMBIE_BASIC)
+    var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite"] else ZOMBIE_BASIC)
+    var tint := Color(0.82, 0.92, 0.80)
+    match kind:
+        "runner": tint = Color(0.72, 1.00, 0.74)
+        "charger": tint = Color(1.00, 0.68, 0.48)
+        "harrier": tint = Color(0.58, 0.88, 1.00)
+        "regenerator": tint = Color(0.58, 1.00, 0.68)
+        "brute": tint = Color(0.92, 0.56, 0.46)
+        "elite": tint = Color(0.78, 0.58, 1.00)
+        "boss": tint = Color(1.00, 0.72, 0.44)
+    _grade_mesh_tree(root, tint, 0.74, 0.0)
+    return root
 
 static func rifle() -> Node3D:
     return instantiate_scene(RIFLE)
 
 static func barrier() -> Node3D:
     var root := instantiate_scene(BARRIER)
-    _grade_environment_mesh(root, Color(0.22, 0.28, 0.32), 0.92, 0.06)
+    _grade_mesh_tree(root, Color(0.22, 0.28, 0.32), 0.92, 0.06)
     _add_barrier_hazard_signature(root)
     return root
 
@@ -74,7 +85,7 @@ static func _add_barrier_hazard_signature(root: Node3D) -> void:
         strip.material_override = material
         root.add_child(strip)
 
-static func _grade_environment_mesh(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
+static func _grade_mesh_tree(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
     if root == null:
         return
     if root is MeshInstance3D:
