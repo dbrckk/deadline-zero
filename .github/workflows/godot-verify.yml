@@ -99,3 +99,31 @@ jobs:
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/first_playable_run_path_test.gd
       - name: Run Godot smoke test
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/smoke_test.gd
+
+      - name: Install rendered-frame smoke dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+
+      - name: Render and validate real first-playable frame
+        run: |
+          set -euo pipefail
+          rm -f /tmp/deadline-zero-rendered-frame.png
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a \
+            /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --path godot \
+            --rendering-method gl_compatibility \
+            --audio-driver Dummy \
+            --script res://tests/rendered_frame_smoke_test.gd
+          test -s /tmp/deadline-zero-rendered-frame.png
+          mkdir -p build/godot-visual-smoke
+          cp /tmp/deadline-zero-rendered-frame.png build/godot-visual-smoke/first-playable-rendered.png
+
+      - name: Upload rendered first-playable evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-rendered-first-playable-${{ github.sha }}
+          path: build/godot-visual-smoke/first-playable-rendered.png
+          if-no-files-found: error
+          retention-days: 14
