@@ -120,10 +120,23 @@ jobs:
           mkdir -p build/godot-visual-smoke
           cp /tmp/deadline-zero-rendered-frame.png build/godot-visual-smoke/first-playable-rendered.png
 
-      - name: Upload rendered first-playable evidence
+      - name: Render enemy archetype roster evidence
+        run: |
+          set -euo pipefail
+          rm -f /tmp/deadline-zero-archetype-roster.png
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a \
+            /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --path godot \
+            --rendering-method gl_compatibility \
+            --audio-driver Dummy \
+            --script res://tests/archetype_roster_render_test.gd
+          test -s /tmp/deadline-zero-archetype-roster.png
+          cp /tmp/deadline-zero-archetype-roster.png build/godot-visual-smoke/archetype-roster-rendered.png
+
+      - name: Upload rendered Godot visual evidence
         uses: actions/upload-artifact@v4
         with:
-          name: godot-rendered-first-playable-${{ github.sha }}
-          path: build/godot-visual-smoke/first-playable-rendered.png
+          name: godot-rendered-visual-qa-${{ github.sha }}
+          path: build/godot-visual-smoke/*.png
           if-no-files-found: error
           retention-days: 14
