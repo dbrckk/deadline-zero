@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T17:10:34Z
+Generated: 2026-10-01T21:04:21Z
 
 ### Git
 - Branch: `main`
-- Head: `671f9da14afe`
-- Commit date: 2026-10-01T19:10:18+02:00
-- Commit: Refine Godot combat framing and HUD hierarchy
+- Head: `deaa50676c62`
+- Commit date: 2026-10-01T23:04:08+02:00
+- Commit: Refine quarantine arena visual language
 - Tracked files: 939
 
 ### Recently changed files
-- `godot/scripts/Hud.gd`
 - `godot/scripts/Main.gd`
 - `godot/tests/environment_identity_test.gd`
+- `godot/scripts/Hud.gd`
 - `godot/tests/hud_readability_hierarchy_test.gd`
 - `godot/tests/rendered_frame_smoke_test.gd`
 - `.github/workflows/godot-android-first-playable.yml`
