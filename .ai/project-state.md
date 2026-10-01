@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T08:44:06Z
+Generated: 2026-10-01T08:49:34Z
 
 ### Git
 - Branch: `main`
-- Head: `9153fe233f16`
-- Commit date: 2026-10-01T10:43:56+02:00
-- Commit: Start Godot Android smoke in landscape
+- Head: `31522aefa6a4`
+- Commit date: 2026-10-01T10:49:23+02:00
+- Commit: Use Android emulator software GPU selection
 - Tracked files: 938
 
 ### Recently changed files
