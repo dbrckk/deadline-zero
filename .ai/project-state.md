@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T05:34:19Z
+Generated: 2026-10-01T05:38:07Z
 
 ### Git
 - Branch: `main`
-- Head: `00ebc9610411`
-- Commit date: 2026-10-01T07:34:06+02:00
-- Commit: Use Godot mobile renderer on Android
+- Head: `aa93aac22fa7`
+- Commit date: 2026-10-01T07:37:56+02:00
+- Commit: Use supported Android emulator SwiftShader mode
 - Tracked files: 938
 
 ### Recently changed files
+- `.github/workflows/godot-android-first-playable.yml`
 - `godot/project.godot`
 - `godot/tests/mobile_orientation_test.gd`
-- `.github/workflows/godot-android-first-playable.yml`
 
 ### Project signals
 - `build.gradle`
