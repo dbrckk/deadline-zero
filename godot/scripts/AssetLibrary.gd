@@ -32,7 +32,8 @@ static func rifle() -> Node3D:
 
 static func barrier() -> Node3D:
     var root := instantiate_scene(BARRIER)
-    _grade_environment_mesh(root, Color(0.42, 0.50, 0.55), 0.88, 0.04)
+    _grade_environment_mesh(root, Color(0.22, 0.28, 0.32), 0.92, 0.06)
+    _add_barrier_hazard_signature(root)
     return root
 
 static func barrel() -> Node3D:
@@ -52,6 +53,26 @@ static func trash_bag() -> Node3D:
 
 static func street_crack() -> Node3D:
     return instantiate_scene(STREET_CRACK)
+
+static func _add_barrier_hazard_signature(root: Node3D) -> void:
+    if root == null:
+        return
+    var material := StandardMaterial3D.new()
+    material.albedo_color = Color(0.92, 0.26, 0.035)
+    material.emission_enabled = true
+    material.emission = Color(0.68, 0.10, 0.01)
+    material.emission_energy_multiplier = 0.72
+    material.roughness = 0.54
+
+    for side in [-1.0, 1.0]:
+        var strip := MeshInstance3D.new()
+        strip.name = "BarrierHazardFront" if side < 0.0 else "BarrierHazardRear"
+        var mesh := BoxMesh.new()
+        mesh.size = Vector3(0.74, 0.075, 0.018)
+        strip.mesh = mesh
+        strip.position = Vector3(0.0, 0.42, side * 0.176)
+        strip.material_override = material
+        root.add_child(strip)
 
 static func _grade_environment_mesh(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
     if root == null:

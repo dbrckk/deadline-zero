@@ -24,6 +24,7 @@ func _initialize() -> void:
     var floor_seam_count := 0
     var containment_ring_count := 0
     var graded_barrier_meshes := 0
+    var hazard_strip_count := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -37,6 +38,8 @@ func _initialize() -> void:
                     var material := mesh_instance.material_override as StandardMaterial3D
                     if material.roughness >= 0.88 and material.albedo_color.get_luminance() < 0.62:
                         graded_barrier_meshes += 1
+            hazard_strip_count += int(child.find_child("BarrierHazardFront", true, false) != null)
+            hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
         elif child.name.begins_with("ContainmentLane_"):
             lane_count += 1
         elif child.name.begins_with("PerimeterBeacon_"):
@@ -74,6 +77,10 @@ func _initialize() -> void:
         return
     if graded_barrier_meshes < 12:
         push_error("Authored barriers must receive dark industrial material grading, got %d graded meshes" % graded_barrier_meshes)
+        quit(1)
+        return
+    if hazard_strip_count < 24:
+        push_error("Authored barriers must expose hazard signatures, got %d strips" % hazard_strip_count)
         quit(1)
         return
 
