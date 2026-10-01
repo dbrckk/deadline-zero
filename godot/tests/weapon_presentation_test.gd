@@ -16,6 +16,10 @@ func _init() -> void:
     assert(player.contains("weapon_profile"))
     assert(player.contains("weapon_tint"))
     assert(player.contains("weapon_profile)"))
+    assert(player.contains("PlayerMarkerRing"))
+    assert(player.contains("PlayerAimTick"))
+    assert(player.contains("MuzzleFlash"))
+    assert(player.contains("_trigger_muzzle_flash()"))
 
     print("weapon_presentation_test: PASS")
     quit()

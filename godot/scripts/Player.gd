@@ -23,6 +23,9 @@ var current_anim := ""
 var shot_audio: AudioStreamPlayer3D
 var shot_streams := {}
 var damage_pulse: MeshInstance3D
+var muzzle_flash: MeshInstance3D
+var muzzle_flash_material: StandardMaterial3D
+var muzzle_flash_tween: Tween
 var combat_enabled := true
 var applied_protocols := {}
 
@@ -192,6 +195,7 @@ func _nearest_enemy() -> DZEnemy:
 
 func _fire_at(enemy: DZEnemy) -> void:
     _play_shot_audio()
+    _trigger_muzzle_flash()
     var base_dir := global_position.direction_to(enemy.global_position)
     base_dir.y = 0.0
     base_dir = base_dir.normalized()
@@ -227,21 +231,8 @@ func _build_visual() -> void:
             rifle.scale = Vector3.ONE * 0.92
             add_child(rifle)
 
-        var ring := MeshInstance3D.new()
-        var ring_mesh := CylinderMesh.new()
-        ring_mesh.top_radius = 0.54
-        ring_mesh.bottom_radius = 0.54
-        ring_mesh.height = 0.025
-        ring.mesh = ring_mesh
-        ring.position.y = 0.02
-        var ring_mat := StandardMaterial3D.new()
-        ring_mat.albedo_color = Color(0.04, 0.78, 1.0, 0.26)
-        ring_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-        ring_mat.emission_enabled = true
-        ring_mat.emission = Color(0.02, 0.42, 0.70)
-        ring_mat.emission_energy_multiplier = 1.6
-        ring.material_override = ring_mat
-        add_child(ring)
+        _build_player_marker()
+        _build_muzzle_flash()
         _build_damage_feedback()
         return
 
@@ -283,7 +274,78 @@ func _build_visual() -> void:
     gun.rotation.x = deg_to_rad(-8.0)
     gun.material_override = body_mat
     visual.add_child(gun)
+    _build_player_marker()
+    _build_muzzle_flash()
     _build_damage_feedback()
+
+func _build_player_marker() -> void:
+    var marker_mat := StandardMaterial3D.new()
+    marker_mat.albedo_color = Color(0.05, 0.72, 1.0, 0.78)
+    marker_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    marker_mat.emission_enabled = true
+    marker_mat.emission = Color(0.025, 0.42, 0.72)
+    marker_mat.emission_energy_multiplier = 1.9
+    marker_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+
+    var ring := MeshInstance3D.new()
+    ring.name = "PlayerMarkerRing"
+    var ring_mesh := TorusMesh.new()
+    ring_mesh.inner_radius = 0.53
+    ring_mesh.outer_radius = 0.60
+    ring_mesh.rings = 40
+    ring_mesh.ring_segments = 8
+    ring.mesh = ring_mesh
+    ring.position.y = 0.045
+    ring.material_override = marker_mat
+    add_child(ring)
+
+    var aim_tick := MeshInstance3D.new()
+    aim_tick.name = "PlayerAimTick"
+    var tick_mesh := BoxMesh.new()
+    tick_mesh.size = Vector3(0.10, 0.018, 0.34)
+    aim_tick.mesh = tick_mesh
+    aim_tick.position = Vector3(0.0, 0.055, -0.73)
+    aim_tick.material_override = marker_mat
+    add_child(aim_tick)
+
+func _build_muzzle_flash() -> void:
+    muzzle_flash = MeshInstance3D.new()
+    muzzle_flash.name = "MuzzleFlash"
+    var flash_mesh := SphereMesh.new()
+    flash_mesh.radius = 0.105
+    flash_mesh.height = 0.21
+    muzzle_flash.mesh = flash_mesh
+    muzzle_flash.position = Vector3(0.33, 0.98, -0.90)
+    muzzle_flash.scale = Vector3(1.0, 0.70, 1.55)
+    muzzle_flash.visible = false
+
+    muzzle_flash_material = StandardMaterial3D.new()
+    muzzle_flash_material.albedo_color = Color(1.0, 0.74, 0.18)
+    muzzle_flash_material.emission_enabled = true
+    muzzle_flash_material.emission = Color(1.0, 0.42, 0.035)
+    muzzle_flash_material.emission_energy_multiplier = 5.6
+    muzzle_flash_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    muzzle_flash.material_override = muzzle_flash_material
+    add_child(muzzle_flash)
+
+func _trigger_muzzle_flash() -> void:
+    if muzzle_flash == null or not is_instance_valid(muzzle_flash):
+        return
+    if muzzle_flash_tween != null and muzzle_flash_tween.is_valid():
+        muzzle_flash_tween.kill()
+    muzzle_flash.visible = true
+    muzzle_flash.scale = Vector3(0.58, 0.42, 0.82)
+    if muzzle_flash_material != null:
+        muzzle_flash_material.emission_energy_multiplier = 6.2
+    muzzle_flash_tween = create_tween()
+    muzzle_flash_tween.set_parallel(true)
+    muzzle_flash_tween.tween_property(muzzle_flash, "scale", Vector3(1.22, 0.76, 1.72), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    if muzzle_flash_material != null:
+        muzzle_flash_tween.tween_property(muzzle_flash_material, "emission_energy_multiplier", 1.0, 0.055)
+    muzzle_flash_tween.chain().tween_callback(func() -> void:
+        if muzzle_flash != null and is_instance_valid(muzzle_flash):
+            muzzle_flash.visible = false
+    )
 
 func _build_damage_feedback() -> void:
     damage_pulse = MeshInstance3D.new()
