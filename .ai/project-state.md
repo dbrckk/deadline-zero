@@ -22,22 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T22:50:26Z
+Generated: 2026-10-01T22:53:51Z
 
 ### Git
 - Branch: `main`
-- Head: `dd4e73da5c53`
-- Commit date: 2026-10-02T00:50:03+02:00
-- Commit: Harden enemy palette grading regression test
-- Tracked files: 939
+- Head: `cafd390012b3`
+- Commit date: 2026-10-02T00:53:36+02:00
+- Commit: Archive rendered Godot archetype roster evidence
+- Tracked files: 940
 
 ### Recently changed files
+- `.github/workflows/godot-verify.yml`
+- `godot/tests/archetype_roster_render_test.gd`
 - `godot/tests/enemy_silhouette_identity_test.gd`
 - `godot/scripts/AssetLibrary.gd`
 - `godot/scripts/Player.gd`
 - `godot/tests/player_damage_feedback_test.gd`
 - `godot/tests/environment_identity_test.gd`
-- `godot/tests/weapon_presentation_test.gd`
 
 ### Project signals
 - `build.gradle`

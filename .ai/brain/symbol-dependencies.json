@@ -5,27 +5,30 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "DZAssetLibrary": {
-      "source": {
-        "file": "godot/scripts/AssetLibrary.gd",
-        "start": 1,
-        "end": 121
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
     "_initialize": {
       "source": {
-        "file": "godot/tests/enemy_silhouette_identity_test.gd",
-        "start": 4,
-        "end": 124
+        "file": "godot/tests/archetype_roster_render_test.gd",
+        "start": 15,
+        "end": 135
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZAssetLibrary",
+          "symbol": "Archetype",
           "definitions": [
             {
-              "file": "godot/scripts/AssetLibrary.gd",
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 7,
+              "kind": "enum",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DZEnemy",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
               "line": 1,
               "kind": "class",
               "language": "gdscript"
@@ -34,13 +37,47 @@
           "relation": "class_like"
         },
         {
-          "symbol": "Enemy",
+          "symbol": "_run_capture",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "file": "godot/tests/archetype_roster_render_test.gd",
               "line": 18,
-              "kind": "class",
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "_run_capture": {
+      "source": {
+        "file": "godot/tests/archetype_roster_render_test.gd",
+        "start": 18,
+        "end": 138
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Archetype",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java",
+              "line": 7,
+              "kind": "enum",
               "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DZEnemy",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
             }
           ],
           "relation": "class_like"

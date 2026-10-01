@@ -1,12 +1,14 @@
 # Change impact
 
-Base: b10a4915452eb8fc5578e743545ba901db252859
-Head: dd4e73da5c5304a70705a4a4767f12cdaf93f9ce
+Base: fc1e31e44caf33a2addbba35518c45c558d34cda
+Head: cafd390012b35a9716b6b81841f4f64410950234
 
 ## Changed files
-- M godot/tests/enemy_silhouette_identity_test.gd
+- M .github/workflows/godot-verify.yml
+- A godot/tests/archetype_roster_render_test.gd
 
 ## Affected areas
+- .github
 - godot
 
 ## Related test candidates
