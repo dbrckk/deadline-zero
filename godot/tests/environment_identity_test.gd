@@ -27,17 +27,6 @@ func _initialize() -> void:
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
-        elif child.name.begins_with("ContainmentLane_"):
-            lane_count += 1
-        elif child.name.begins_with("PerimeterBeacon_"):
-            beacon_count += 1
-        elif child.name.begins_with("FloorPlate_"):
-            floor_plate_count += 1
-        elif child.name.begins_with("FloorSeam_"):
-            floor_seam_count += 1
-        elif child.name.begins_with("ContainmentRing_"):
-            containment_ring_count += 1
-        elif child.name.begins_with("AuthoredBarrier_"):
             var barrier_meshes: Array[MeshInstance3D] = []
             if child is MeshInstance3D:
                 barrier_meshes.append(child as MeshInstance3D)
@@ -48,6 +37,16 @@ func _initialize() -> void:
                     var material := mesh_instance.material_override as StandardMaterial3D
                     if material.roughness >= 0.88 and material.albedo_color.get_luminance() < 0.62:
                         graded_barrier_meshes += 1
+        elif child.name.begins_with("ContainmentLane_"):
+            lane_count += 1
+        elif child.name.begins_with("PerimeterBeacon_"):
+            beacon_count += 1
+        elif child.name.begins_with("FloorPlate_"):
+            floor_plate_count += 1
+        elif child.name.begins_with("FloorSeam_"):
+            floor_seam_count += 1
+        elif child.name.begins_with("ContainmentRing_"):
+            containment_ring_count += 1
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
