@@ -23949,7 +23949,7 @@ static func player() -> Node3D:
     return instantiate_scene(PLAYER)
 
 static func enemy(kind: String) -> Node3D:
-    var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite"] else ZOMBIE_BASIC)
+    var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite", "boss"] else ZOMBIE_BASIC)
     var tint := Color(0.82, 0.92, 0.80)
     match kind:
         "runner": tint = Color(0.72, 1.00, 0.74)
@@ -23958,7 +23958,7 @@ static func enemy(kind: String) -> Node3D:
         "regenerator": tint = Color(0.58, 1.00, 0.68)
         "brute": tint = Color(0.92, 0.56, 0.46)
         "elite": tint = Color(0.78, 0.58, 1.00)
-        "boss": tint = Color(1.00, 0.72, 0.44)
+        "boss": tint = Color(0.96, 0.62, 0.40)
     _grade_mesh_tree(root, tint, 0.74, 0.0)
     return root
 
@@ -24658,7 +24658,7 @@ func _build_visual() -> void:
             "charger": scale_factor = 1.18
             "harrier": scale_factor = 0.94
             "regenerator": scale_factor = 1.10
-            "boss": scale_factor = 1.72
+            "boss": scale_factor = 1.62
         authored_visual.scale = Vector3.ONE * scale_factor
         add_child(authored_visual)
         authored_anim = DZAssetLibrary.animation_player(authored_visual)
@@ -24813,27 +24813,38 @@ func _add_elite_crown(color: Color) -> void:
     _add_eye_beacon(color, Vector3(0.0, 1.70, -0.34), 0.075)
 
 func _add_boss_frame(color: Color) -> void:
-    var mat := _signature_material(color, 3.2)
+    var mat := _signature_material(color, 3.4)
     for side in [-1.0, 1.0]:
+        var wing := MeshInstance3D.new()
+        var wing_mesh := BoxMesh.new()
+        wing_mesh.size = Vector3(0.16, 0.30, 0.58)
+        wing.mesh = wing_mesh
+        wing.name = "BossWingL" if side < 0.0 else "BossWingR"
+        wing.position = Vector3(side * 0.72, 1.16, 0.04)
+        wing.rotation_degrees = Vector3(0.0, side * 18.0, side * -16.0)
+        wing.material_override = mat
+        add_child(wing)
+
         var horn := MeshInstance3D.new()
-        var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.10, 0.58, 0.18)
-        horn.mesh = mesh
+        var horn_mesh := BoxMesh.new()
+        horn_mesh.size = Vector3(0.12, 0.62, 0.22)
+        horn.mesh = horn_mesh
         horn.name = "BossHornL" if side < 0.0 else "BossHornR"
-        horn.position = Vector3(side * 0.46, 1.76, 0.08)
-        horn.rotation_degrees.z = side * -34.0
+        horn.position = Vector3(side * 0.52, 1.80, 0.06)
+        horn.rotation_degrees.z = side * -32.0
         horn.material_override = mat
         add_child(horn)
+
     var core := MeshInstance3D.new()
     var core_mesh := SphereMesh.new()
-    core_mesh.radius = 0.10
-    core_mesh.height = 0.20
+    core_mesh.radius = 0.145
+    core_mesh.height = 0.29
     core.mesh = core_mesh
     core.name = "BossCore"
-    core.position = Vector3(0.0, 1.30, -0.42)
-    core.material_override = mat
+    core.position = Vector3(0.0, 1.32, -0.48)
+    core.material_override = _signature_material(Color(1.0, 0.30, 0.04), 4.6)
     add_child(core)
-    _add_eye_beacon(color, Vector3(0.0, 1.78, -0.42), 0.090)
+    _add_eye_beacon(color, Vector3(0.0, 1.82, -0.46), 0.105)
 
 func _update_authored_animation(distance: float) -> void:
     if authored_anim == null or dead:
@@ -28058,7 +28069,7 @@ func _initialize() -> void:
         "runner": ["RunnerBladeL", "RunnerBladeR", "SignatureBeacon"],
         "brute": ["BrutePlateL", "BrutePlateR", "SignatureBeacon"],
         "elite": ["EliteFinL", "EliteFinR", "SignatureBeacon"],
-        "boss": ["BossHornL", "BossHornR", "BossCore", "SignatureBeacon"]
+        "boss": ["BossWingL", "BossWingR", "BossHornL", "BossHornR", "BossCore", "SignatureBeacon"]
     }
 
     for kind in expected.keys():
@@ -28077,6 +28088,13 @@ func _initialize() -> void:
             var blade_mesh := blade.mesh as BoxMesh if blade != null else null
             if blade_mesh == null or blade_mesh.size.z < 0.35 or absf(blade.position.x) < 0.40:
                 push_error("Runner signature must remain wide and readable in top-down projection")
+                quit(1)
+                return
+        if kind == "boss":
+            var wing := enemy.get_node_or_null("BossWingL") as MeshInstance3D
+            var wing_mesh := wing.mesh as BoxMesh if wing != null else null
+            if wing_mesh == null or wing_mesh.size.z < 0.50 or absf(wing.position.x) < 0.65:
+                push_error("Boss signature must remain broad and dominant in top-down projection")
                 quit(1)
                 return
         enemy.queue_free()
