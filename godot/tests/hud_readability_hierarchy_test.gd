@@ -9,7 +9,7 @@ func _initialize() -> void:
     root.add_child(hud)
     await process_frame
 
-    for node_name in ["VitalPanel", "VitalAccent", "ThreatPanel", "BossPanel", "UpgradePanel"]:
+    for node_name in ["VitalPanel", "VitalAccent", "CombatLinkLabel", "SignalLabel", "WavePanel", "ThreatPanel", "BossPanel", "UpgradePanel"]:
         if hud.find_child(node_name, true, false) == null:
             push_error("HUD readability hierarchy missing node: %s" % node_name)
             quit(1)
@@ -35,7 +35,7 @@ func _initialize() -> void:
         quit(1)
         return
 
-    if hud.wave_label == null or hud.wave_label.get_theme_font_size("font_size") > 24:
+    if hud.wave_label == null or hud.wave_label.get_theme_font_size("font_size") > 22:
         push_error("Wave label must not dominate the active combat frame")
         quit(1)
         return

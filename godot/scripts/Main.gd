@@ -542,10 +542,10 @@ func _build_containment_lanes() -> void:
                 add_child(stripe)
 
     var ring_material := StandardMaterial3D.new()
-    ring_material.albedo_color = Color(0.035, 0.34, 0.48)
+    ring_material.albedo_color = Color(0.025, 0.17, 0.23)
     ring_material.emission_enabled = true
-    ring_material.emission = Color(0.02, 0.22, 0.34)
-    ring_material.emission_energy_multiplier = 0.38
+    ring_material.emission = Color(0.008, 0.075, 0.12)
+    ring_material.emission_energy_multiplier = 0.20
     ring_material.metallic = 0.16
     ring_material.roughness = 0.52
 
@@ -564,10 +564,10 @@ func _build_containment_lanes() -> void:
         add_child(marker)
 
     var marker_material := StandardMaterial3D.new()
-    marker_material.albedo_color = Color(0.06, 0.48, 0.60)
+    marker_material.albedo_color = Color(0.035, 0.24, 0.31)
     marker_material.emission_enabled = true
-    marker_material.emission = Color(0.025, 0.30, 0.42)
-    marker_material.emission_energy_multiplier = 0.34
+    marker_material.emission = Color(0.01, 0.10, 0.15)
+    marker_material.emission_energy_multiplier = 0.18
     marker_material.roughness = 0.62
 
     for index in range(8):
