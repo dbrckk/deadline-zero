@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T16:58:46Z
+Generated: 2026-10-01T17:03:05Z
 
 ### Git
 - Branch: `main`
-- Head: `beef17bde297`
-- Commit date: 2026-10-01T18:58:33+02:00
-- Commit: Separate Android startup from visual render QA
+- Head: `14eb84572249`
+- Commit date: 2026-10-01T19:02:44+02:00
+- Commit: Capture active Godot combat frame
 - Tracked files: 939
 
 ### Recently changed files
+- `godot/tests/rendered_frame_smoke_test.gd`
 - `.github/workflows/godot-android-first-playable.yml`
 - `.github/workflows/godot-verify.yml`
 - `godot/project.godot`
 - `godot/tests/mobile_orientation_test.gd`
-- `godot/tests/rendered_frame_smoke_test.gd`
 
 ### Project signals
 - `build.gradle`
