@@ -15,6 +15,30 @@ func _initialize() -> void:
         push_error("Player damage feedback pulse is missing")
         quit(1)
         return
+
+    var muzzle := player.get_node_or_null("MuzzleFlash") as MeshInstance3D
+    if muzzle == null:
+        push_error("Player muzzle flash is missing")
+        quit(1)
+        return
+    if muzzle.visible:
+        push_error("Player muzzle flash should start hidden")
+        quit(1)
+        return
+    if not player.has_method("_trigger_muzzle_flash"):
+        push_error("Player muzzle flash trigger is missing")
+        quit(1)
+        return
+    player._trigger_muzzle_flash()
+    if not muzzle.visible:
+        push_error("Player muzzle flash did not become visible")
+        quit(1)
+        return
+    await create_timer(0.10).timeout
+    if muzzle.visible:
+        push_error("Player muzzle flash did not clear quickly")
+        quit(1)
+        return
     if pulse.visible:
         push_error("Damage pulse should start hidden")
         quit(1)
