@@ -392,6 +392,7 @@ func _build_world() -> void:
     add_child(floor)
 
     _build_floor_panels()
+    _build_floor_seams()
     _build_containment_lanes()
     _build_authored_barrier_clusters()
     _build_authored_world_dressing()
@@ -430,11 +431,13 @@ func _build_floor_panels() -> void:
         add_child(plate)
 
 func _build_authored_barrier_clusters() -> void:
+    # Keep authored cover visible at the arena edge without letting the large source meshes
+    # dominate the phone framing. The clusters now read as perimeter fortification, not walls.
     var clusters := [
-        {"center": Vector3(-16.0, 0.0, -11.0), "rotation": 0.18},
-        {"center": Vector3(15.0, 0.0, -9.0), "rotation": -0.28},
-        {"center": Vector3(-14.0, 0.0, 13.0), "rotation": 0.72},
-        {"center": Vector3(17.0, 0.0, 12.0), "rotation": -0.66}
+        {"center": Vector3(-18.8, 0.0, -12.6), "rotation": 0.18},
+        {"center": Vector3(18.2, 0.0, -11.8), "rotation": -0.28},
+        {"center": Vector3(-18.0, 0.0, 13.6), "rotation": 0.72},
+        {"center": Vector3(19.0, 0.0, 13.0), "rotation": -0.66}
     ]
     for cluster_index in range(clusters.size()):
         var cluster: Dictionary = clusters[cluster_index]
@@ -445,10 +448,10 @@ func _build_authored_barrier_clusters() -> void:
             if barrier == null:
                 continue
             barrier.name = "AuthoredBarrier_%d_%d" % [cluster_index, item_index]
-            var lateral := (float(item_index) - 1.5) * 1.65
-            barrier.position = center + Vector3(lateral, 0.0, sin(float(item_index) * 1.7) * 0.42)
+            var lateral := (float(item_index) - 1.5) * 1.45
+            barrier.position = center + Vector3(lateral, 0.0, sin(float(item_index) * 1.7) * 0.34)
             barrier.rotation.y = base_rotation + (0.08 if item_index % 2 == 0 else -0.08)
-            barrier.scale = Vector3.ONE * (0.95 + float(item_index % 3) * 0.05)
+            barrier.scale = Vector3.ONE * (0.68 + float(item_index % 3) * 0.045)
             add_child(barrier)
 
 func _build_authored_world_dressing() -> void:
@@ -459,15 +462,15 @@ func _build_authored_world_dressing() -> void:
         Callable(DZAssetLibrary, "trash_bag"),
     ]
     var placements := [
-        Vector3(-21.0, 0.0, -5.5), Vector3(-18.5, 0.0, 5.0),
-        Vector3(21.0, 0.0, 5.5), Vector3(18.2, 0.0, -5.4),
+        Vector3(-12.8, 0.0, -6.6), Vector3(-12.2, 0.0, 6.4),
+        Vector3(12.9, 0.0, 6.8), Vector3(12.4, 0.0, -6.2),
+        Vector3(-7.2, 0.0, -12.2), Vector3(7.4, 0.0, 12.4),
+        Vector3(-6.8, 0.0, 12.8), Vector3(7.0, 0.0, -12.5),
+        Vector3(-20.5, 0.0, -5.5), Vector3(-18.5, 0.0, 5.0),
+        Vector3(20.5, 0.0, 5.5), Vector3(18.2, 0.0, -5.4),
         Vector3(-9.5, 0.0, -16.0), Vector3(9.2, 0.0, 16.0),
         Vector3(-6.5, 0.0, 15.0), Vector3(6.8, 0.0, -15.2),
-        Vector3(-24.5, 0.0, 11.5), Vector3(24.0, 0.0, -11.2),
-        Vector3(-14.0, 0.0, 17.5), Vector3(14.0, 0.0, -17.5),
-        Vector3(-26.0, 0.0, -14.0), Vector3(26.0, 0.0, 14.0),
-        Vector3(-18.0, 0.0, -18.5), Vector3(18.0, 0.0, 18.5),
-        Vector3(-3.0, 0.0, 19.0), Vector3(3.0, 0.0, -19.0),
+        Vector3(-22.5, 0.0, 11.5), Vector3(22.0, 0.0, -11.2),
     ]
 
     for index in range(placements.size()):
@@ -479,7 +482,7 @@ func _build_authored_world_dressing() -> void:
         prop.add_to_group("environment_props")
         prop.position = placements[index]
         prop.rotation.y = float((index * 37) % 360) * PI / 180.0
-        var scale_factor := 0.90 + float(index % 5) * 0.045
+        var scale_factor := 0.74 + float(index % 5) * 0.045
         prop.scale = Vector3.ONE * scale_factor
         add_child(prop)
 
@@ -500,43 +503,84 @@ func _build_authored_world_dressing() -> void:
         crack.scale = Vector3.ONE * (0.94 + float(index % 3) * 0.06)
         add_child(crack)
 
+func _build_floor_seams() -> void:
+    var seam_material := StandardMaterial3D.new()
+    seam_material.albedo_color = Color(0.018, 0.028, 0.034)
+    seam_material.roughness = 0.96
+
+    # Large slab seams create believable scale and break the single-plane look while staying
+    # safely below gameplay silhouettes.
+    for axis in range(2):
+        for offset in [-12.0, -4.0, 4.0, 12.0]:
+            var seam := MeshInstance3D.new()
+            seam.name = "FloorSeam_%d_%d" % [axis, int(offset)]
+            var mesh := BoxMesh.new()
+            mesh.size = Vector3(34.0, 0.008, 0.055) if axis == 0 else Vector3(0.055, 0.008, 34.0)
+            seam.mesh = mesh
+            seam.position = Vector3(0.0, 0.006, offset) if axis == 0 else Vector3(offset, 0.006, 0.0)
+            seam.material_override = seam_material
+            add_child(seam)
+
 func _build_containment_lanes() -> void:
     var lane_material := StandardMaterial3D.new()
-    lane_material.albedo_color = Color(0.84, 0.37, 0.045)
+    lane_material.albedo_color = Color(0.78, 0.29, 0.035)
     lane_material.emission_enabled = true
-    lane_material.emission = Color(0.68, 0.13, 0.015)
-    lane_material.emission_energy_multiplier = 0.72
-    lane_material.roughness = 0.58
+    lane_material.emission = Color(0.46, 0.075, 0.008)
+    lane_material.emission_energy_multiplier = 0.54
+    lane_material.roughness = 0.64
 
     for axis in range(2):
-        for offset in [-8.0, 8.0]:
+        for offset in [-9.6, 9.6]:
             for segment in range(-5, 6):
                 var stripe := MeshInstance3D.new()
                 stripe.name = "ContainmentLane_%d_%d_%d" % [axis, int(offset), segment]
                 var stripe_mesh := BoxMesh.new()
-                stripe_mesh.size = Vector3(2.6, 0.016, 0.10) if axis == 0 else Vector3(0.10, 0.016, 2.6)
+                stripe_mesh.size = Vector3(2.45, 0.014, 0.075) if axis == 0 else Vector3(0.075, 0.014, 2.45)
                 stripe.mesh = stripe_mesh
-                stripe.position = Vector3(float(segment) * 3.6, 0.014, offset) if axis == 0 else Vector3(offset, 0.014, float(segment) * 3.6)
+                stripe.position = Vector3(float(segment) * 3.55, 0.012, offset) if axis == 0 else Vector3(offset, 0.012, float(segment) * 3.55)
                 stripe.material_override = lane_material
                 add_child(stripe)
 
-    for ring_index in range(4):
+    var ring_material := StandardMaterial3D.new()
+    ring_material.albedo_color = Color(0.035, 0.34, 0.48)
+    ring_material.emission_enabled = true
+    ring_material.emission = Color(0.02, 0.22, 0.34)
+    ring_material.emission_energy_multiplier = 0.38
+    ring_material.metallic = 0.16
+    ring_material.roughness = 0.52
+
+    for ring_index in range(2):
         var marker := MeshInstance3D.new()
-        marker.name = "ContainmentMarker_%d" % ring_index
-        var marker_mesh := CylinderMesh.new()
-        marker_mesh.top_radius = 2.3 + float(ring_index) * 0.72
-        marker_mesh.bottom_radius = marker_mesh.top_radius
-        marker_mesh.height = 0.012
-        marker.mesh = marker_mesh
-        marker.position.y = 0.010 + float(ring_index) * 0.001
-        var marker_mat := StandardMaterial3D.new()
-        marker_mat.albedo_color = Color(0.04, 0.38, 0.52, 0.045)
-        marker_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-        marker_mat.emission_enabled = true
-        marker_mat.emission = Color(0.02, 0.28, 0.44)
-        marker_mat.emission_energy_multiplier = 0.32 + float(ring_index) * 0.08
-        marker.material_override = marker_mat
+        marker.name = "ContainmentRing_%d" % ring_index
+        var torus := TorusMesh.new()
+        var radius := 3.15 + float(ring_index) * 1.55
+        torus.inner_radius = radius - 0.055
+        torus.outer_radius = radius + 0.055
+        torus.rings = 48
+        torus.ring_segments = 8
+        marker.mesh = torus
+        marker.position.y = 0.035 + float(ring_index) * 0.003
+        marker.material_override = ring_material
         add_child(marker)
+
+    var marker_material := StandardMaterial3D.new()
+    marker_material.albedo_color = Color(0.06, 0.48, 0.60)
+    marker_material.emission_enabled = true
+    marker_material.emission = Color(0.025, 0.30, 0.42)
+    marker_material.emission_energy_multiplier = 0.34
+    marker_material.roughness = 0.62
+
+    for index in range(8):
+        var angle := TAU * float(index) / 8.0
+        var tick := MeshInstance3D.new()
+        tick.name = "ContainmentTick_%02d" % index
+        var tick_mesh := BoxMesh.new()
+        tick_mesh.size = Vector3(0.58, 0.014, 0.075)
+        tick.mesh = tick_mesh
+        tick.position = Vector3(cos(angle) * 5.65, 0.018, sin(angle) * 5.65)
+        tick.rotation.y = -angle
+        tick.material_override = marker_material
+        add_child(tick)
 
 func _build_perimeter_beacons() -> void:
     var beacon_material := StandardMaterial3D.new()

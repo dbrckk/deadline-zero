@@ -21,6 +21,8 @@ func _initialize() -> void:
     var lane_count := 0
     var beacon_count := 0
     var floor_plate_count := 0
+    var floor_seam_count := 0
+    var containment_ring_count := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -30,6 +32,10 @@ func _initialize() -> void:
             beacon_count += 1
         elif child.name.begins_with("FloorPlate_"):
             floor_plate_count += 1
+        elif child.name.begins_with("FloorSeam_"):
+            floor_seam_count += 1
+        elif child.name.begins_with("ContainmentRing_"):
+            containment_ring_count += 1
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
@@ -45,6 +51,14 @@ func _initialize() -> void:
         return
     if floor_plate_count < 8:
         push_error("Expected midfield floor variation plates, got %d" % floor_plate_count)
+        quit(1)
+        return
+    if floor_seam_count < 8:
+        push_error("Expected industrial floor seam structure, got %d" % floor_seam_count)
+        quit(1)
+        return
+    if containment_ring_count != 2:
+        push_error("Expected 2 thin containment rings, got %d" % containment_ring_count)
         quit(1)
         return
 
