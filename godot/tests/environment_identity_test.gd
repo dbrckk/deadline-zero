@@ -23,6 +23,8 @@ func _initialize() -> void:
     var floor_plate_count := 0
     var floor_seam_count := 0
     var containment_ring_count := 0
+    var street_light_count := 0
+    var street_light_pool_count := 0
     var graded_barrier_meshes := 0
     var hazard_strip_count := 0
     for child in scene.get_children():
@@ -50,6 +52,19 @@ func _initialize() -> void:
             floor_seam_count += 1
         elif child.name.begins_with("ContainmentRing_"):
             containment_ring_count += 1
+        elif child.name.begins_with("AuthoredStreetLight_"):
+            street_light_count += 1
+            var pool := child.get_node_or_null("StreetLightPool") as OmniLight3D
+            if pool != null:
+                if pool.shadow_enabled:
+                    push_error("Street-light pool must remain shadowless for mobile budget")
+                    quit(1)
+                    return
+                if pool.omni_range > 8.5 or pool.light_energy > 1.0:
+                    push_error("Street-light pool exceeded mobile-safe range/energy budget")
+                    quit(1)
+                    return
+                street_light_pool_count += 1
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
@@ -73,6 +88,10 @@ func _initialize() -> void:
         return
     if containment_ring_count != 2:
         push_error("Expected 2 thin containment rings, got %d" % containment_ring_count)
+        quit(1)
+        return
+    if street_light_count != 4 or street_light_pool_count != 4:
+        push_error("Expected 4 authored vertical light fixtures with safe pools, got %d/%d" % [street_light_count, street_light_pool_count])
         quit(1)
         return
     if graded_barrier_meshes < 12:

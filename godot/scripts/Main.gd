@@ -396,6 +396,7 @@ func _build_world() -> void:
     _build_containment_lanes()
     _build_authored_barrier_clusters()
     _build_authored_world_dressing()
+    _build_perimeter_street_lights()
     _build_perimeter_beacons()
 
 func _build_floor_panels() -> void:
@@ -590,6 +591,53 @@ func _build_containment_lanes() -> void:
         tick.rotation.y = -angle
         tick.material_override = marker_material
         add_child(tick)
+
+func _build_perimeter_street_lights() -> void:
+    # Tall authored fixtures restore vertical scale without introducing gameplay collision.
+    # Each fixture owns one modest, shadowless pool light to stay inside the mobile light budget.
+    var placements := [
+        {"position": Vector3(-18.5, 0.0, -12.8), "rotation": 0.42},
+        {"position": Vector3(18.5, 0.0, -12.8), "rotation": -0.42},
+        {"position": Vector3(-18.5, 0.0, 12.8), "rotation": PI - 0.42},
+        {"position": Vector3(18.5, 0.0, 12.8), "rotation": PI + 0.42},
+    ]
+
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var fixture := DZAssetLibrary.street_lights()
+        if fixture == null:
+            continue
+        fixture.name = "AuthoredStreetLight_%02d" % index
+        fixture.add_to_group("environment_vertical_prop")
+        fixture.position = placement["position"]
+        fixture.rotation.y = float(placement["rotation"])
+        fixture.scale = Vector3.ONE * 0.76
+        add_child(fixture)
+
+        var pool := OmniLight3D.new()
+        pool.name = "StreetLightPool"
+        pool.position = Vector3(0.0, 6.05, 2.28)
+        pool.light_color = Color(0.42, 0.68, 0.86)
+        pool.light_energy = 0.92
+        pool.omni_range = 8.0
+        pool.shadow_enabled = false
+        fixture.add_child(pool)
+
+        var lamp_core := MeshInstance3D.new()
+        lamp_core.name = "StreetLightCore"
+        var core_mesh := SphereMesh.new()
+        core_mesh.radius = 0.12
+        core_mesh.height = 0.24
+        lamp_core.mesh = core_mesh
+        lamp_core.position = Vector3(0.0, 6.18, 2.38)
+        var core_material := StandardMaterial3D.new()
+        core_material.albedo_color = Color(0.56, 0.82, 1.0)
+        core_material.emission_enabled = true
+        core_material.emission = Color(0.24, 0.62, 0.92)
+        core_material.emission_energy_multiplier = 2.6
+        core_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+        lamp_core.material_override = core_material
+        fixture.add_child(lamp_core)
 
 func _build_perimeter_beacons() -> void:
     var beacon_material := StandardMaterial3D.new()
