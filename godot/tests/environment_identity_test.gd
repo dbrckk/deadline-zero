@@ -23,6 +23,7 @@ func _initialize() -> void:
     var floor_plate_count := 0
     var floor_seam_count := 0
     var containment_ring_count := 0
+    var graded_barrier_meshes := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -36,6 +37,13 @@ func _initialize() -> void:
             floor_seam_count += 1
         elif child.name.begins_with("ContainmentRing_"):
             containment_ring_count += 1
+        elif child.name.begins_with("AuthoredBarrier_"):
+            for mesh_node in child.find_children("*", "MeshInstance3D", true, false):
+                var mesh_instance := mesh_node as MeshInstance3D
+                if mesh_instance != null and mesh_instance.material_override is StandardMaterial3D:
+                    var material := mesh_instance.material_override as StandardMaterial3D
+                    if material.roughness >= 0.88 and material.albedo_color.get_luminance() < 0.62:
+                        graded_barrier_meshes += 1
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
@@ -59,6 +67,10 @@ func _initialize() -> void:
         return
     if containment_ring_count != 2:
         push_error("Expected 2 thin containment rings, got %d" % containment_ring_count)
+        quit(1)
+        return
+    if graded_barrier_meshes < 12:
+        push_error("Authored barriers must receive dark industrial material grading, got %d graded meshes" % graded_barrier_meshes)
         quit(1)
         return
 

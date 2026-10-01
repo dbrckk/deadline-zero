@@ -31,7 +31,9 @@ static func rifle() -> Node3D:
     return instantiate_scene(RIFLE)
 
 static func barrier() -> Node3D:
-    return instantiate_scene(BARRIER)
+    var root := instantiate_scene(BARRIER)
+    _grade_environment_mesh(root, Color(0.42, 0.50, 0.55), 0.88, 0.04)
+    return root
 
 static func barrel() -> Node3D:
     return instantiate_scene(BARREL)
@@ -50,6 +52,27 @@ static func trash_bag() -> Node3D:
 
 static func street_crack() -> Node3D:
     return instantiate_scene(STREET_CRACK)
+
+static func _grade_environment_mesh(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
+    if root == null:
+        return
+    for node in root.find_children("*", "MeshInstance3D", true, false):
+        var mesh_instance := node as MeshInstance3D
+        if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
+            continue
+        var source := mesh_instance.get_active_material(0)
+        if not source is StandardMaterial3D:
+            continue
+        var graded := source.duplicate(true) as StandardMaterial3D
+        graded.albedo_color = Color(
+            graded.albedo_color.r * tint.r,
+            graded.albedo_color.g * tint.g,
+            graded.albedo_color.b * tint.b,
+            graded.albedo_color.a
+        )
+        graded.roughness = maxf(graded.roughness, roughness)
+        graded.metallic = maxf(graded.metallic, metallic)
+        mesh_instance.material_override = graded
 
 static func animation_player(root: Node) -> AnimationPlayer:
     if root == null:
