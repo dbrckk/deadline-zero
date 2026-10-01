@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T05:38:07Z
+Generated: 2026-10-01T05:43:59Z
 
 ### Git
 - Branch: `main`
-- Head: `aa93aac22fa7`
-- Commit date: 2026-10-01T07:37:56+02:00
-- Commit: Use supported Android emulator SwiftShader mode
+- Head: `b4d2359f414b`
+- Commit date: 2026-10-01T07:43:48+02:00
+- Commit: Wait for Android display stabilization before Godot smoke
 - Tracked files: 938
 
 ### Recently changed files
