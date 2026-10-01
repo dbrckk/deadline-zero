@@ -1,11 +1,11 @@
 # Change impact
 
-Base: f0d4d329ffff541a6bd80fba10784263dcb70607
-Head: 12ec03d62ecafbaa65d8b84389eb7f45b30bcf05
+Base: 7525bd45b0e7257a8e2216ca2b4b2f912336ba23
+Head: 2743e77160f07c0e8e39c3797774c490a8f2fc0f
 
 ## Changed files
-- M godot/scripts/Player.gd
-- M godot/tests/weapon_presentation_test.gd
+- M godot/scripts/AssetLibrary.gd
+- M godot/tests/environment_identity_test.gd
 
 ## Affected areas
 - godot

@@ -133,7 +133,8 @@ static func rifle() -> Node3D:
 
 static func barrier() -> Node3D:
     var root := instantiate_scene(BARRIER)
-    _grade_environment_mesh(root, Color(0.42, 0.50, 0.55), 0.88, 0.04)
+    _grade_environment_mesh(root, Color(0.22, 0.28, 0.32), 0.92, 0.06)
+    _add_barrier_hazard_signature(root)
     return root
 
 static func barrel() -> Node3D:
@@ -153,6 +154,26 @@ static func trash_bag() -> Node3D:
 
 static func street_crack() -> Node3D:
     return instantiate_scene(STREET_CRACK)
+
+static func _add_barrier_hazard_signature(root: Node3D) -> void:
+    if root == null:
+        return
+    var material := StandardMaterial3D.new()
+    material.albedo_color = Color(0.92, 0.26, 0.035)
+    material.emission_enabled = true
+    material.emission = Color(0.68, 0.10, 0.01)
+    material.emission_energy_multiplier = 0.72
+    material.roughness = 0.54
+
+    for side in [-1.0, 1.0]:
+        var strip := MeshInstance3D.new()
+        strip.name = "BarrierHazardFront" if side < 0.0 else "BarrierHazardRear"
+        var mesh := BoxMesh.new()
+        mesh.size = Vector3(0.74, 0.075, 0.018)
+        strip.mesh = mesh
+        strip.position = Vector3(0.0, 0.42, side * 0.176)
+        strip.material_override = material
+        root.add_child(strip)
 
 static func _grade_environment_mesh(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
     if root == null:
@@ -4141,6 +4162,7 @@ func _initialize() -> void:
     var floor_seam_count := 0
     var containment_ring_count := 0
     var graded_barrier_meshes := 0
+    var hazard_strip_count := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -4154,6 +4176,8 @@ func _initialize() -> void:
                     var material := mesh_instance.material_override as StandardMaterial3D
                     if material.roughness >= 0.88 and material.albedo_color.get_luminance() < 0.62:
                         graded_barrier_meshes += 1
+            hazard_strip_count += int(child.find_child("BarrierHazardFront", true, false) != null)
+            hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
         elif child.name.begins_with("ContainmentLane_"):
             lane_count += 1
         elif child.name.begins_with("PerimeterBeacon_"):
@@ -4191,6 +4215,10 @@ func _initialize() -> void:
         return
     if graded_barrier_meshes < 12:
         push_error("Authored barriers must receive dark industrial material grading, got %d graded meshes" % graded_barrier_meshes)
+        quit(1)
+        return
+    if hazard_strip_count < 24:
+        push_error("Authored barriers must expose hazard signatures, got %d strips" % hazard_strip_count)
         quit(1)
         return
 
