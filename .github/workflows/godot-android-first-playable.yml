@@ -160,6 +160,16 @@ jobs:
             sleep 12
             timeout 30s sh -c 'until adb shell dumpsys activity top 2>/dev/null | grep -E "ACTIVITY com.android.launcher3|mResumedActivity.*com.android.launcher3" >/dev/null; do sleep 1; done' || true
             adb shell input keyevent 82 || true
+
+            # Boot the test display in landscape before Godot starts. Launching from the emulator's
+            # portrait home screen makes Android recreate the activity during rotation; on SwiftShader
+            # that teardown can exceed Godot's renderer shutdown timeout and kill an otherwise healthy app.
+            adb shell settings put system accelerometer_rotation 0
+            adb shell settings put system user_rotation 1
+            timeout 20s sh -c 'until adb shell dumpsys display 2>/dev/null | grep -Eq "mCurrentOrientation=1|orientation=1|ROTATION_90"; do sleep 1; done' || true
+            adb shell wm size > build/godot-android-smoke/display-before-launch.txt || true
+            adb shell dumpsys display >> build/godot-android-smoke/display-before-launch.txt || true
+
             adb install -r build/godot-android/deadline-zero-godot-debug.apk
             adb shell pm path com.deadlinezero.godot | grep -q 'package:'
             adb shell dumpsys package com.deadlinezero.godot > build/godot-android-smoke/package-before-launch.txt || true
