@@ -30,6 +30,8 @@ func _initialize() -> void:
     var graded_street_light_meshes := 0
     var graded_barrier_meshes := 0
     var hazard_strip_count := 0
+    var service_grate_count := 0
+    var service_grate_slat_count := 0
     var oversized_barrier_count := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
@@ -56,6 +58,11 @@ func _initialize() -> void:
             floor_plate_count += 1
         elif child.name.begins_with("FloorSeam_"):
             floor_seam_count += 1
+        elif child.name.begins_with("ServiceGrate_"):
+            service_grate_count += 1
+            for slat in child.find_children("Slat_*", "MeshInstance3D", true, false):
+                if slat is MeshInstance3D:
+                    service_grate_slat_count += 1
         elif child.name.begins_with("FloorWear_"):
             floor_wear_count += 1
         elif child.name.begins_with("FloorChip_"):
@@ -106,6 +113,10 @@ func _initialize() -> void:
         return
     if floor_seam_count < 8:
         push_error("Expected industrial floor seam structure, got %d" % floor_seam_count)
+        quit(1)
+        return
+    if service_grate_count != 4 or service_grate_slat_count < 36:
+        push_error("Expected 4 detailed service grates with at least 36 slats, got %d grates / %d slats" % [service_grate_count, service_grate_slat_count])
         quit(1)
         return
     if floor_wear_count < 12 or floor_chip_count < 12:

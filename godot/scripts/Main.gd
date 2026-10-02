@@ -392,6 +392,7 @@ func _build_world() -> void:
     add_child(floor)
 
     _build_floor_panels()
+    _build_floor_service_grates()
     _build_floor_wear()
     _build_floor_seams()
     _build_containment_lanes()
@@ -431,6 +432,68 @@ func _build_floor_panels() -> void:
         plate.rotation.y = deg_to_rad(float((index * 23) % 35 - 17))
         plate.material_override = plate_material if index % 3 else edge_material
         add_child(plate)
+
+func _build_floor_service_grates() -> void:
+    # Recessed utility grates give the arena functional industrial detail and a second material
+    # frequency without introducing collision or stealing contrast from combat silhouettes.
+    var frame_material := StandardMaterial3D.new()
+    frame_material.albedo_color = Color(0.055, 0.075, 0.085)
+    frame_material.metallic = 0.58
+    frame_material.roughness = 0.48
+
+    var recess_material := StandardMaterial3D.new()
+    recess_material.albedo_color = Color(0.012, 0.018, 0.022)
+    recess_material.metallic = 0.12
+    recess_material.roughness = 0.94
+
+    var slat_material := StandardMaterial3D.new()
+    slat_material.albedo_color = Color(0.10, 0.14, 0.16)
+    slat_material.metallic = 0.72
+    slat_material.roughness = 0.40
+
+    var placements := [
+        {"position": Vector3(-10.8, 0.012, -8.1), "rotation": 0.18},
+        {"position": Vector3(10.7, 0.012, -8.0), "rotation": -0.16},
+        {"position": Vector3(-10.6, 0.012, 8.2), "rotation": -0.20},
+        {"position": Vector3(10.9, 0.012, 8.0), "rotation": 0.15},
+    ]
+
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var grate := Node3D.new()
+        grate.name = "ServiceGrate_%02d" % index
+        grate.position = placement["position"]
+        grate.rotation.y = float(placement["rotation"])
+        add_child(grate)
+
+        var recess := MeshInstance3D.new()
+        recess.name = "Recess"
+        var recess_mesh := BoxMesh.new()
+        recess_mesh.size = Vector3(2.65, 0.012, 0.92)
+        recess.mesh = recess_mesh
+        recess.position.y = -0.004
+        recess.material_override = recess_material
+        grate.add_child(recess)
+
+        for rail_index in range(2):
+            var rail := MeshInstance3D.new()
+            rail.name = "FrameRail_%d" % rail_index
+            var rail_mesh := BoxMesh.new()
+            rail_mesh.size = Vector3(2.78, 0.026, 0.075)
+            rail.mesh = rail_mesh
+            rail.position = Vector3(0.0, 0.012, -0.49 if rail_index == 0 else 0.49)
+            rail.material_override = frame_material
+            grate.add_child(rail)
+
+        for slat_index in range(9):
+            var slat := MeshInstance3D.new()
+            slat.name = "Slat_%02d" % slat_index
+            var slat_mesh := BoxMesh.new()
+            slat_mesh.size = Vector3(0.075, 0.024, 0.80)
+            slat.mesh = slat_mesh
+            slat.position = Vector3(-1.12 + float(slat_index) * 0.28, 0.014, 0.0)
+            slat.material_override = slat_material
+            grate.add_child(slat)
 
 func _build_floor_wear() -> void:
     # Deterministic, collision-free wear breaks the broad uniform floor without competing
