@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T18:42:04Z
+Generated: 2026-10-02T18:45:52Z
 
 ### Git
 - Branch: `main`
-- Head: `48eaca09ee60`
-- Commit date: 2026-10-02T20:41:51+02:00
-- Commit: Add midfield industrial inspection detail
-- Tracked files: 940
+- Head: `203328f7a4a1`
+- Commit date: 2026-10-02T20:45:32+02:00
+- Commit: Capture real mid-run combat pressure
+- Tracked files: 941
 
 ### Recently changed files
+- `.github/workflows/godot-verify.yml`
+- `godot/tests/pressure_frame_render_test.gd`
 - `godot/scripts/Main.gd`
 - `godot/tests/environment_identity_test.gd`
 - `godot/scripts/AssetLibrary.gd`
