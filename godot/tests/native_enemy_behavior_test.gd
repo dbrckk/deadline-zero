@@ -158,6 +158,28 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var separation_a := ENEMY_SCRIPT.new()
+    separation_a.configure("shambler", 1.0, target)
+    separation_a.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(separation_a)
+    var separation_b := ENEMY_SCRIPT.new()
+    separation_b.configure("shambler", 1.0, target)
+    separation_b.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(separation_b)
+    await process_frame
+    separation_a.global_position = Vector3.ZERO
+    separation_b.global_position = Vector3(0.35, 0.0, 0.0)
+    var separation_direction: Vector3 = separation_a.separation_vector([separation_a, separation_b], 1.18)
+    if separation_direction.x >= -0.80 or absf(separation_direction.z) > 0.25:
+        push_error("Enemy separation steering did not push away from a close neighbor")
+        quit(1)
+        return
+    separation_b.dead = true
+    if separation_a.separation_vector([separation_b], 1.18) != Vector3.ZERO:
+        push_error("Enemy separation steering must ignore dead neighbors")
+        quit(1)
+        return
+
     var damage_enemy := ENEMY_SCRIPT.new()
     damage_enemy.configure("shambler", 1.0, target)
     damage_enemy.process_mode = Node.PROCESS_MODE_DISABLED

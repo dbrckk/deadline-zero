@@ -169,6 +169,15 @@ func _physics_process(delta: float) -> void:
                 movement_direction = -movement_direction
             elif distance <= 6.6:
                 movement_direction = Vector3(-movement_direction.z, 0.0, movement_direction.x)
+
+        # Local separation keeps the swarm readable and prevents every body from collapsing
+        # onto the same target point. Main.gd serves this from its spatial hash in production.
+        var separation_radius := 1.55 if kind in ["boss", "brute", "charger"] else 1.18
+        var separation := separation_vector(_nearby_enemies_for_separation(separation_radius), separation_radius)
+        if separation.length_squared() > 0.001:
+            var separation_weight := 0.50 if kind == "boss" else (0.92 if kind == "harrier" else 0.72)
+            movement_direction = (movement_direction + separation * separation_weight).normalized()
+
         velocity = movement_direction * move_speed * slow_multiplier
         move_and_slide()
         if velocity.length_squared() > 0.01:
@@ -177,6 +186,42 @@ func _physics_process(delta: float) -> void:
     if distance < 0.85 and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _nearby_enemies_for_separation(radius: float) -> Array:
+    var scene := get_tree().current_scene if get_tree() != null else null
+    if scene != null and scene.has_method("query_enemies_near"):
+        return scene.query_enemies_near(global_position, radius)
+    return get_tree().get_nodes_in_group("enemies") if get_tree() != null else []
+
+func separation_vector(neighbors: Array, radius: float) -> Vector3:
+    if radius <= 0.0:
+        return Vector3.ZERO
+    var separation := Vector3.ZERO
+    var contributions := 0
+    for node in neighbors:
+        var other := node as DZEnemy
+        if other == null or other == self or other.dead:
+            continue
+        var away := global_position - other.global_position
+        away.y = 0.0
+        var distance_sq := away.length_squared()
+        if distance_sq >= radius * radius:
+            continue
+
+        # Resolve near-perfect overlap deterministically instead of leaving a permanent stack.
+        if distance_sq < 0.0004:
+            var phase := float(int(get_instance_id() + other.get_instance_id()) % 16) / 16.0 * TAU
+            away = Vector3(cos(phase), 0.0, sin(phase))
+            distance_sq = 0.0004
+
+        var distance := sqrt(distance_sq)
+        var pressure := clampf((radius - distance) / radius, 0.0, 1.0)
+        separation += away / distance * pressure * pressure
+        contributions += 1
+
+    if contributions == 0 or separation.length_squared() < 0.0001:
+        return Vector3.ZERO
+    return separation.normalized()
 
 func _update_boss_phase() -> void:
     if kind != "boss" or max_health <= 0.0:
