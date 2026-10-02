@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Fix HiDPI combat overlays clipping off-screen (#284)",
-      "terms": [
-        "284",
-        "clipping",
-        "combat",
-        "hidpi",
-        "off-screen",
-        "overlays"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java",
-        "core/src/test/java/com/deadlinezero/game/visual/CombatOverlayViewportTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Reduce combat clutter from full-health enemy bars (#287)",
       "terms": [
         "287",
@@ -1140,6 +1122,21 @@
       "useful": [
         "godot/scripts/Enemy.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Refine ballistic tracer readability",
+      "terms": [
+        "ballistic",
+        "readability",
+        "refine",
+        "tracer"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Projectile.gd",
+        "godot/tests/weapon_presentation_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1688,6 +1685,10 @@
       "core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4
+    },
+    "ballistic": {
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "barrier": {
       "godot/scripts/AssetLibrary.gd": 12,
@@ -3300,7 +3301,9 @@
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java": 4,
-      "godot/scripts/Hud.gd": 4
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "readable": {
       "godot/scripts/Enemy.gd": 8,
@@ -3356,9 +3359,11 @@
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
       "godot/tests/environment_identity_test.gd": 8,
       "godot/tests/hud_readability_hierarchy_test.gd": 4,
-      "godot/tests/player_damage_feedback_test.gd": 4
+      "godot/tests/player_damage_feedback_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "regions": {
       "tools/environment/install_all_environment_candidates.py": 4
@@ -3853,6 +3858,10 @@
     "top-down": {
       "godot/scripts/Enemy.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4
+    },
+    "tracer": {
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "track": {
       "core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java": 4

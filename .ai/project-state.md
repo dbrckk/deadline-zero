@@ -22,22 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T18:54:42Z
+Generated: 2026-10-02T18:57:46Z
 
 ### Git
 - Branch: `main`
-- Head: `75c381cca8a9`
-- Commit date: 2026-10-02T20:54:30+02:00
-- Commit: Replace filled attack telegraphs with danger rings
+- Head: `f601bd8af824`
+- Commit date: 2026-10-02T20:57:34+02:00
+- Commit: Refine ballistic tracer readability
 - Tracked files: 941
 
 ### Recently changed files
+- `godot/scripts/Projectile.gd`
+- `godot/tests/weapon_presentation_test.gd`
 - `godot/scripts/Enemy.gd`
 - `godot/tests/native_enemy_behavior_test.gd`
 - `.github/workflows/godot-verify.yml`
 - `godot/tests/pressure_frame_render_test.gd`
-- `godot/scripts/Main.gd`
-- `godot/tests/environment_identity_test.gd`
 
 ### Project signals
 - `build.gradle`

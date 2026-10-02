@@ -1,10 +1,11 @@
 # Change impact
 
-Base: 3bf1a206c8edb47e149dc21be231927d1fd5ef21
-Head: 75c381cca8a99b973e6062a8ec84c15a488ea3cc
+Base: 680f4965b6ef6ae7f50457a64b4eb9a773ed9e09
+Head: f601bd8af824298eb7f32f25ebcaef1639ad8c7a
 
 ## Changed files
-- M godot/scripts/Enemy.gd
+- M godot/scripts/Projectile.gd
+- M godot/tests/weapon_presentation_test.gd
 
 ## Affected areas
 - godot
