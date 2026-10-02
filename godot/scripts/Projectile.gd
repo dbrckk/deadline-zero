@@ -114,8 +114,8 @@ func _ready() -> void:
         glow.scale = Vector3(0.62, 1.55, 0.62)
         glow.rotation_degrees.z = 45.0
     elif visual_profile == "scatter":
-        _add_side_spark(mat, -1.0)
-        _add_side_spark(mat, 1.0)
+        _add_side_spark(core_mat, -1.0)
+        _add_side_spark(core_mat, 1.0)
     elif visual_profile == "arc":
         _add_arc_accent()
     elif visual_profile == "inferno":
