@@ -21,6 +21,8 @@ func _initialize() -> void:
     var lane_count := 0
     var beacon_count := 0
     var floor_plate_count := 0
+    var floor_plate_accent_count := 0
+    var dark_floor_plate_count := 0
     var floor_seam_count := 0
     var floor_wear_count := 0
     var floor_chip_count := 0
@@ -59,6 +61,11 @@ func _initialize() -> void:
             beacon_count += 1
         elif child.name.begins_with("FloorPlate_"):
             floor_plate_count += 1
+            if child is MeshInstance3D and (child as MeshInstance3D).material_override is StandardMaterial3D:
+                var plate_material := (child as MeshInstance3D).material_override as StandardMaterial3D
+                if plate_material.albedo_color.get_luminance() < 0.08 and plate_material.roughness >= 0.88:
+                    dark_floor_plate_count += 1
+            floor_plate_accent_count += child.find_children("FloorPlateAccent_*", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("FloorSeam_"):
             floor_seam_count += 1
         elif child.name.begins_with("ServiceGrate_"):
@@ -117,6 +124,14 @@ func _initialize() -> void:
         return
     if floor_plate_count < 8:
         push_error("Expected midfield floor variation plates, got %d" % floor_plate_count)
+        quit(1)
+        return
+    if dark_floor_plate_count != floor_plate_count:
+        push_error("All floor plates must remain dark under combat lighting, got %d/%d" % [dark_floor_plate_count, floor_plate_count])
+        quit(1)
+        return
+    if floor_plate_accent_count != 3:
+        push_error("Expected exactly 3 restrained floor-plate accents, got %d" % floor_plate_accent_count)
         quit(1)
         return
     if floor_seam_count < 8:
