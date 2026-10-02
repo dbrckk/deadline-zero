@@ -22,24 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T06:17:28Z
+Generated: 2026-10-02T09:01:19Z
 
 ### Git
 - Branch: `main`
-- Head: `0f0c2129d709`
-- Commit date: 2026-10-02T08:17:16+02:00
-- Commit: Integrate perimeter lights into arena palette
+- Head: `0ef7d8023b44`
+- Commit date: 2026-10-02T11:01:05+02:00
+- Commit: Add restrained arena floor wear
 - Tracked files: 940
 
 ### Recently changed files
-- `godot/scripts/AssetLibrary.gd`
-- `godot/tests/environment_identity_test.gd`
 - `godot/scripts/Main.gd`
+- `godot/tests/environment_identity_test.gd`
+- `godot/scripts/AssetLibrary.gd`
 - `godot/tests/authored_world_dressing_test.gd`
 - `godot/scripts/Enemy.gd`
 - `godot/tests/enemy_silhouette_identity_test.gd`
-- `.github/workflows/godot-verify.yml`
-- `godot/tests/archetype_roster_render_test.gd`
 
 ### Project signals
 - `build.gradle`
