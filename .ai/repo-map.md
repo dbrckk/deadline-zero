@@ -26192,6 +26192,7 @@ func _build_world() -> void:
     add_child(floor)
 
     _build_floor_panels()
+    _build_floor_service_grates()
     _build_floor_wear()
     _build_floor_seams()
     _build_containment_lanes()
@@ -26231,6 +26232,68 @@ func _build_floor_panels() -> void:
         plate.rotation.y = deg_to_rad(float((index * 23) % 35 - 17))
         plate.material_override = plate_material if index % 3 else edge_material
         add_child(plate)
+
+func _build_floor_service_grates() -> void:
+    # Recessed utility grates give the arena functional industrial detail and a second material
+    # frequency without introducing collision or stealing contrast from combat silhouettes.
+    var frame_material := StandardMaterial3D.new()
+    frame_material.albedo_color = Color(0.055, 0.075, 0.085)
+    frame_material.metallic = 0.58
+    frame_material.roughness = 0.48
+
+    var recess_material := StandardMaterial3D.new()
+    recess_material.albedo_color = Color(0.012, 0.018, 0.022)
+    recess_material.metallic = 0.12
+    recess_material.roughness = 0.94
+
+    var slat_material := StandardMaterial3D.new()
+    slat_material.albedo_color = Color(0.10, 0.14, 0.16)
+    slat_material.metallic = 0.72
+    slat_material.roughness = 0.40
+
+    var placements := [
+        {"position": Vector3(-10.8, 0.012, -8.1), "rotation": 0.18},
+        {"position": Vector3(10.7, 0.012, -8.0), "rotation": -0.16},
+        {"position": Vector3(-10.6, 0.012, 8.2), "rotation": -0.20},
+        {"position": Vector3(10.9, 0.012, 8.0), "rotation": 0.15},
+    ]
+
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var grate := Node3D.new()
+        grate.name = "ServiceGrate_%02d" % index
+        grate.position = placement["position"]
+        grate.rotation.y = float(placement["rotation"])
+        add_child(grate)
+
+        var recess := MeshInstance3D.new()
+        recess.name = "Recess"
+        var recess_mesh := BoxMesh.new()
+        recess_mesh.size = Vector3(2.65, 0.012, 0.92)
+        recess.mesh = recess_mesh
+        recess.position.y = -0.004
+        recess.material_override = recess_material
+        grate.add_child(recess)
+
+        for rail_index in range(2):
+            var rail := MeshInstance3D.new()
+            rail.name = "FrameRail_%d" % rail_index
+            var rail_mesh := BoxMesh.new()
+            rail_mesh.size = Vector3(2.78, 0.026, 0.075)
+            rail.mesh = rail_mesh
+            rail.position = Vector3(0.0, 0.012, -0.49 if rail_index == 0 else 0.49)
+            rail.material_override = frame_material
+            grate.add_child(rail)
+
+        for slat_index in range(9):
+            var slat := MeshInstance3D.new()
+            slat.name = "Slat_%02d" % slat_index
+            var slat_mesh := BoxMesh.new()
+            slat_mesh.size = Vector3(0.075, 0.024, 0.80)
+            slat.mesh = slat_mesh
+            slat.position = Vector3(-1.12 + float(slat_index) * 0.28, 0.014, 0.0)
+            slat.material_override = slat_material
+            grate.add_child(slat)
 
 func _build_floor_wear() -> void:
     # Deterministic, collision-free wear breaks the broad uniform floor without competing
@@ -28287,6 +28350,8 @@ func _initialize() -> void:
     var graded_street_light_meshes := 0
     var graded_barrier_meshes := 0
     var hazard_strip_count := 0
+    var service_grate_count := 0
+    var service_grate_slat_count := 0
     var oversized_barrier_count := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
@@ -28313,6 +28378,11 @@ func _initialize() -> void:
             floor_plate_count += 1
         elif child.name.begins_with("FloorSeam_"):
             floor_seam_count += 1
+        elif child.name.begins_with("ServiceGrate_"):
+            service_grate_count += 1
+            for slat in child.find_children("Slat_*", "MeshInstance3D", true, false):
+                if slat is MeshInstance3D:
+                    service_grate_slat_count += 1
         elif child.name.begins_with("FloorWear_"):
             floor_wear_count += 1
         elif child.name.begins_with("FloorChip_"):
@@ -28363,6 +28433,10 @@ func _initialize() -> void:
         return
     if floor_seam_count < 8:
         push_error("Expected industrial floor seam structure, got %d" % floor_seam_count)
+        quit(1)
+        return
+    if service_grate_count != 4 or service_grate_slat_count < 36:
+        push_error("Expected 4 detailed service grates with at least 36 slats, got %d grates / %d slats" % [service_grate_count, service_grate_slat_count])
         quit(1)
         return
     if floor_wear_count < 12 or floor_chip_count < 12:
