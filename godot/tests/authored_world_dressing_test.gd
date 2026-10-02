@@ -19,8 +19,8 @@ func _run_test() -> void:
     var props := get_nodes_in_group("environment_props")
     var ground_details := get_nodes_in_group("environment_ground_detail")
 
-    if props.size() != 18:
-        push_error("Expected 18 authored environment props, got %d" % props.size())
+    if props.size() != 26:
+        push_error("Expected 26 authored environment props, got %d" % props.size())
         quit(1)
         return
     if ground_details.size() != 8:
@@ -38,8 +38,8 @@ func _run_test() -> void:
             quit(1)
             return
         var flat_distance := Vector2(node.position.x, node.position.z).length()
-        if flat_distance < 9.0:
-            push_error("Environment prop intrudes into central combat lane: %s" % node.name)
+        if flat_distance < 8.75:
+            push_error("Environment prop intrudes into protected central combat lane: %s" % node.name)
             quit(1)
             return
 

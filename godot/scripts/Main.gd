@@ -472,6 +472,12 @@ func _build_authored_world_dressing() -> void:
         Vector3(-9.5, 0.0, -16.0), Vector3(9.2, 0.0, 16.0),
         Vector3(-6.5, 0.0, 15.0), Vector3(6.8, 0.0, -15.2),
         Vector3(-22.5, 0.0, 11.5), Vector3(22.0, 0.0, -11.2),
+        # Midfield service debris adds real authored volume inside the camera's normal combat
+        # framing while preserving an unobstructed ~8.8 m central fighting lane.
+        Vector3(-8.9, 0.0, -3.0), Vector3(8.9, 0.0, 3.0),
+        Vector3(-3.1, 0.0, 8.9), Vector3(3.0, 0.0, -8.9),
+        Vector3(-7.1, 0.0, 5.8), Vector3(7.0, 0.0, -5.9),
+        Vector3(-5.9, 0.0, -7.0), Vector3(5.8, 0.0, 7.1),
     ]
 
     for index in range(placements.size()):
@@ -483,7 +489,8 @@ func _build_authored_world_dressing() -> void:
         prop.add_to_group("environment_props")
         prop.position = placements[index]
         prop.rotation.y = float((index * 37) % 360) * PI / 180.0
-        var scale_factor := 0.74 + float(index % 5) * 0.045
+        var midfield := index >= 18
+        var scale_factor := (0.58 + float(index % 4) * 0.035) if midfield else (0.74 + float(index % 5) * 0.045)
         prop.scale = Vector3.ONE * scale_factor
         add_child(prop)
 
