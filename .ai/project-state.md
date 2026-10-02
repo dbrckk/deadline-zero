@@ -22,19 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T14:53:41Z
+Generated: 2026-10-02T17:11:24Z
 
 ### Git
 - Branch: `main`
-- Head: `3bf162cdca3d`
-- Commit date: 2026-10-02T16:53:25+02:00
-- Commit: Replace bright barrier skins with dark industrial metal
+- Head: `1723a6774bc1`
+- Commit date: 2026-10-02T19:11:11+02:00
+- Commit: Fix service pylon GDScript parse
 - Tracked files: 940
 
 ### Recently changed files
-- `godot/scripts/AssetLibrary.gd`
-- `godot/tests/environment_identity_test.gd`
 - `godot/scripts/Main.gd`
+- `godot/tests/environment_identity_test.gd`
+- `godot/scripts/AssetLibrary.gd`
 
 ### Project signals
 - `build.gradle`
