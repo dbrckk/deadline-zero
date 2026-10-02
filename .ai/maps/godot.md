@@ -2389,6 +2389,7 @@ func _build_world() -> void:
 
     _build_floor_panels()
     _build_floor_service_grates()
+    _build_midfield_inspection_panels()
     _build_service_pylons()
     _build_floor_wear()
     _build_floor_seams()
@@ -2491,6 +2492,72 @@ func _build_floor_service_grates() -> void:
             slat.position = Vector3(-1.12 + float(slat_index) * 0.28, 0.014, 0.0)
             slat.material_override = slat_material
             grate.add_child(slat)
+
+func _build_midfield_inspection_panels() -> void:
+    # Small recessed access panels fill the otherwise empty midfield with believable service
+    # detail while remaining flat, non-colliding, and lower contrast than actors/projectiles.
+    var recess_material := StandardMaterial3D.new()
+    recess_material.albedo_color = Color(0.020, 0.028, 0.033)
+    recess_material.metallic = 0.20
+    recess_material.roughness = 0.90
+
+    var frame_material := StandardMaterial3D.new()
+    frame_material.albedo_color = Color(0.085, 0.105, 0.115)
+    frame_material.metallic = 0.56
+    frame_material.roughness = 0.46
+
+    var service_material := StandardMaterial3D.new()
+    service_material.albedo_color = Color(0.42, 0.16, 0.025)
+    service_material.emission_enabled = true
+    service_material.emission = Color(0.30, 0.055, 0.006)
+    service_material.emission_energy_multiplier = 0.24
+    service_material.roughness = 0.68
+
+    var placements := [
+        {"position": Vector3(-6.6, 0.010, -2.4), "rotation": -0.18},
+        {"position": Vector3( 6.7, 0.010,  2.2), "rotation":  0.16},
+        {"position": Vector3(-2.5, 0.010,  6.6), "rotation":  1.42},
+        {"position": Vector3( 2.4, 0.010, -6.7), "rotation": -1.39},
+        {"position": Vector3(-6.0, 0.010,  5.8), "rotation":  0.72},
+        {"position": Vector3( 6.1, 0.010, -5.9), "rotation": -0.74},
+    ]
+
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var root := Node3D.new()
+        root.name = "InspectionPanel_%02d" % index
+        root.position = placement["position"]
+        root.rotation.y = float(placement["rotation"])
+        add_child(root)
+
+        var recess := MeshInstance3D.new()
+        recess.name = "Recess"
+        var recess_mesh := BoxMesh.new()
+        recess_mesh.size = Vector3(1.42, 0.010, 0.72)
+        recess.mesh = recess_mesh
+        recess.position.y = -0.004
+        recess.material_override = recess_material
+        root.add_child(recess)
+
+        for side in [-1.0, 1.0]:
+            var rail := MeshInstance3D.new()
+            rail.name = "FrameRailL" if side < 0.0 else "FrameRailR"
+            var rail_mesh := BoxMesh.new()
+            rail_mesh.size = Vector3(0.055, 0.018, 0.78)
+            rail.mesh = rail_mesh
+            rail.position = Vector3(side * 0.70, 0.004, 0.0)
+            rail.material_override = frame_material
+            root.add_child(rail)
+
+        for stripe_index in range(2):
+            var stripe := MeshInstance3D.new()
+            stripe.name = "ServiceStripe_%d" % stripe_index
+            var stripe_mesh := BoxMesh.new()
+            stripe_mesh.size = Vector3(0.28, 0.014, 0.042)
+            stripe.mesh = stripe_mesh
+            stripe.position = Vector3(-0.42 + float(stripe_index) * 0.84, 0.009, 0.0)
+            stripe.material_override = service_material
+            root.add_child(stripe)
 
 func _build_service_pylons() -> void:
     # Low service pylons add vertical depth and local shadow anchors without introducing
@@ -4619,6 +4686,8 @@ func _initialize() -> void:
     var hazard_strip_count := 0
     var service_pylon_count := 0
     var service_grate_count := 0
+    var inspection_panel_count := 0
+    var inspection_service_stripe_count := 0
     var service_grate_slat_count := 0
     var oversized_barrier_count := 0
     for child in scene.get_children():
@@ -4651,6 +4720,9 @@ func _initialize() -> void:
             for slat in child.find_children("Slat_*", "MeshInstance3D", true, false):
                 if slat is MeshInstance3D:
                     service_grate_slat_count += 1
+        elif child.name.begins_with("InspectionPanel_"):
+            inspection_panel_count += 1
+            inspection_service_stripe_count += child.find_children("ServiceStripe_*", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("FloorWear_"):
             floor_wear_count += 1
         elif child.name.begins_with("FloorChip_"):
@@ -4707,6 +4779,10 @@ func _initialize() -> void:
         return
     if service_grate_count != 4 or service_grate_slat_count < 36:
         push_error("Expected 4 detailed service grates with at least 36 slats, got %d grates / %d slats" % [service_grate_count, service_grate_slat_count])
+        quit(1)
+        return
+    if inspection_panel_count != 6 or inspection_service_stripe_count != 12:
+        push_error("Expected 6 midfield inspection panels / 12 service stripes, got %d/%d" % [inspection_panel_count, inspection_service_stripe_count])
         quit(1)
         return
     if floor_wear_count < 12 or floor_chip_count < 12:
