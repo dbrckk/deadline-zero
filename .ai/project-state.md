@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T18:49:51Z
+Generated: 2026-10-02T18:52:39Z
 
 ### Git
 - Branch: `main`
-- Head: `dd7f55cfc5fd`
-- Commit date: 2026-10-02T20:49:01+02:00
-- Commit: Keep enemy swarms spatially readable
+- Head: `b732e4807ed1`
+- Commit date: 2026-10-02T20:51:45+02:00
+- Commit: Form readable melee pressure rings
 - Tracked files: 941
 
 ### Recently changed files
