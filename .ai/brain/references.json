@@ -5,10 +5,105 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
+    "DZAssetLibrary": {
+      "definition": {
+        "file": "godot/scripts/AssetLibrary.gd",
+        "line": 1,
+        "kind": "class",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/AssetLibrary.gd",
+          "line": 1,
+          "preview": "class_name DZAssetLibrary",
+          "definition_candidate": true
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 588,
+          "preview": "authored_visual = DZAssetLibrary.enemy(kind)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 602,
+          "preview": "authored_anim = DZAssetLibrary.animation_player(authored_visual)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 699,
+          "preview": "var barrier := DZAssetLibrary.barrier()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 711,
+          "preview": "Callable(DZAssetLibrary, \"barrel\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 712,
+          "preview": "Callable(DZAssetLibrary, \"pallet\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 713,
+          "preview": "Callable(DZAssetLibrary, \"traffic_cone\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 714,
+          "preview": "Callable(DZAssetLibrary, \"trash_bag\"),",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 755,
+          "preview": "var crack := DZAssetLibrary.street_crack()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 865,
+          "preview": "var fixture := DZAssetLibrary.street_lights()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 214,
+          "preview": "authored_visual = DZAssetLibrary.player()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 219,
+          "preview": "authored_anim = DZAssetLibrary.animation_player(authored_visual)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 227,
+          "preview": "var rifle := DZAssetLibrary.rifle()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_silhouette_identity_test.gd",
+          "line": 11,
+          "preview": "var visual := DZAssetLibrary.enemy(palette_kind)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 14
+    },
     "_initialize": {
       "definition": {
-        "file": "godot/tests/projectile_profile_runtime_visual_test.gd",
-        "line": 5,
+        "file": "godot/tests/environment_identity_test.gd",
+        "line": 4,
         "kind": "function",
         "language": "gdscript"
       },
@@ -207,77 +302,6 @@
         }
       ],
       "occurrence_count": 32
-    },
-    "_run_test": {
-      "definition": {
-        "file": "godot/tests/projectile_profile_runtime_visual_test.gd",
-        "line": 8,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/tests/attack_telegraph_escalation_test.gd",
-          "line": 6,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/attack_telegraph_escalation_test.gd",
-          "line": 8,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/authored_world_dressing_test.gd",
-          "line": 4,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/authored_world_dressing_test.gd",
-          "line": 6,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/environment_asset_validation_test.gd",
-          "line": 6,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/environment_asset_validation_test.gd",
-          "line": 8,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/mobile_orientation_test.gd",
-          "line": 4,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/mobile_orientation_test.gd",
-          "line": 6,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/projectile_profile_runtime_visual_test.gd",
-          "line": 7,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/projectile_profile_runtime_visual_test.gd",
-          "line": 9,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 10
     }
   }
 }

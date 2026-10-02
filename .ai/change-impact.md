@@ -1,14 +1,13 @@
 # Change impact
 
-Base: def9dad3cd94bffde4ec87ab0d4a2916b13067ff
-Head: 472c6d22d83c28a35b493ecd2870949c9960f879
+Base: 103339b703963c3bf85f63d9577675026c543f4d
+Head: a3edd1fbcc0626dda4f9bbd8388a58233d843fe3
 
 ## Changed files
-- M .github/workflows/godot-verify.yml
-- A godot/tests/projectile_profile_runtime_visual_test.gd
+- M godot/scripts/AssetLibrary.gd
+- M godot/tests/environment_identity_test.gd
 
 ## Affected areas
-- .github
 - godot
 
 ## Related test candidates

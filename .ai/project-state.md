@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T19:04:25Z
+Generated: 2026-10-02T19:06:48Z
 
 ### Git
 - Branch: `main`
-- Head: `472c6d22d83c`
-- Commit date: 2026-10-02T21:04:11+02:00
-- Commit: Exercise all projectile visuals at runtime
+- Head: `a3edd1fbcc06`
+- Commit date: 2026-10-02T21:06:35+02:00
+- Commit: Integrate street lights into dark arena palette
 - Tracked files: 942
 
 ### Recently changed files
+- `godot/scripts/AssetLibrary.gd`
+- `godot/tests/environment_identity_test.gd`
 - `.github/workflows/godot-verify.yml`
 - `godot/tests/projectile_profile_runtime_visual_test.gd`
 - `godot/scripts/Projectile.gd`
