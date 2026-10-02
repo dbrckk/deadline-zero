@@ -1,10 +1,10 @@
 # Change impact
 
-Base: d57ef89fd521244cc4d591bee9482af4075b8aa4
-Head: 51e267cf3e575585b82241842a11c410c8c79fd6
+Base: 75b7e8eb794c234a497aa1e37d600b02f69f72c9
+Head: 3bf162cdca3d87078e72ef1d1094d84a28e45aac
 
 ## Changed files
-- M godot/scripts/Main.gd
+- M godot/scripts/AssetLibrary.gd
 - M godot/tests/environment_identity_test.gd
 
 ## Affected areas

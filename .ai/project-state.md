@@ -22,20 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T13:48:02Z
+Generated: 2026-10-02T14:53:41Z
 
 ### Git
 - Branch: `main`
-- Head: `51e267cf3e57`
-- Commit date: 2026-10-02T15:47:38+02:00
-- Commit: Add industrial service grates to quarantine floor
+- Head: `3bf162cdca3d`
+- Commit date: 2026-10-02T16:53:25+02:00
+- Commit: Replace bright barrier skins with dark industrial metal
 - Tracked files: 940
 
 ### Recently changed files
-- `godot/scripts/Main.gd`
-- `godot/tests/environment_identity_test.gd`
 - `godot/scripts/AssetLibrary.gd`
-- `godot/tests/authored_world_dressing_test.gd`
+- `godot/tests/environment_identity_test.gd`
+- `godot/scripts/Main.gd`
 
 ### Project signals
 - `build.gradle`
