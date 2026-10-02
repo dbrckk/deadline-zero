@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T09:01:19Z
+Generated: 2026-10-02T12:47:52Z
 
 ### Git
 - Branch: `main`
-- Head: `0ef7d8023b44`
-- Commit date: 2026-10-02T11:01:05+02:00
-- Commit: Add restrained arena floor wear
+- Head: `cc49e1dbf04d`
+- Commit date: 2026-10-02T14:47:39+02:00
+- Commit: Reduce authored barrier dominance in combat frame
 - Tracked files: 940
 
 ### Recently changed files
@@ -36,8 +36,6 @@ Generated: 2026-10-02T09:01:19Z
 - `godot/tests/environment_identity_test.gd`
 - `godot/scripts/AssetLibrary.gd`
 - `godot/tests/authored_world_dressing_test.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
 
 ### Project signals
 - `build.gradle`
