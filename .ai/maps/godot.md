@@ -675,26 +675,44 @@ func _show_telegraph(radius: float, duration: float) -> void:
     if telegraph_visual != null and is_instance_valid(telegraph_visual):
         telegraph_visual.queue_free()
     telegraph_visual = MeshInstance3D.new()
-    var mesh := CylinderMesh.new()
-    mesh.top_radius = radius
-    mesh.bottom_radius = radius
-    mesh.height = 0.018
+    telegraph_visual.name = "AttackTelegraphRing"
+    var mesh := TorusMesh.new()
+    mesh.inner_radius = radius * (0.82 if kind == "boss" else 0.86)
+    mesh.outer_radius = radius
+    mesh.rings = 40 if kind == "boss" else 32
+    mesh.ring_segments = 8
     telegraph_visual.mesh = mesh
     get_tree().current_scene.add_child(telegraph_visual)
-    telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.025, 0.0)
+    telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.035, 0.0)
     telegraph_material = StandardMaterial3D.new()
-    telegraph_material.albedo_color = Color(1.0, 0.16, 0.04, 0.16)
+    telegraph_material.albedo_color = Color(1.0, 0.22, 0.025, 0.42)
     telegraph_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
     telegraph_material.emission_enabled = true
-    telegraph_material.emission = Color(1.0, 0.08, 0.01)
-    telegraph_material.emission_energy_multiplier = 1.4
+    telegraph_material.emission = Color(1.0, 0.075, 0.006)
+    telegraph_material.emission_energy_multiplier = 1.7
+    telegraph_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     telegraph_visual.material_override = telegraph_material
+
+    # Four short ticks make the danger radius readable under bodies/projectiles without filling
+    # the entire floor area with an opaque disk.
+    for tick_index in range(4):
+        var angle := TAU * float(tick_index) / 4.0
+        var tick := MeshInstance3D.new()
+        tick.name = "TelegraphTick_%d" % tick_index
+        var tick_mesh := BoxMesh.new()
+        tick_mesh.size = Vector3(radius * 0.24, 0.012, maxf(0.035, radius * 0.045))
+        tick.mesh = tick_mesh
+        tick.position = Vector3(cos(angle) * radius * 0.72, 0.0, sin(angle) * radius * 0.72)
+        tick.rotation.y = -angle
+        tick.material_override = telegraph_material
+        telegraph_visual.add_child(tick)
+
     var tween := telegraph_visual.create_tween()
     tween.set_parallel(true)
     telegraph_visual.scale = Vector3(0.42, 1.0, 0.42)
     tween.tween_property(telegraph_visual, "scale", Vector3.ONE, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-    tween.tween_property(telegraph_material, "emission_energy_multiplier", 5.2 if kind == "boss" else 4.2, duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
-    tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.08, 0.015, 0.48 if kind == "boss" else 0.40), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.tween_property(telegraph_material, "emission_energy_multiplier", 5.8 if kind == "boss" else 4.6, duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.07, 0.008, 0.92 if kind == "boss" else 0.78), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.chain().tween_callback(telegraph_visual.queue_free)
 
 func _spawn_attack_impact(at: Vector3, radius: float) -> void:

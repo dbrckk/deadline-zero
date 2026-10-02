@@ -1,7 +1,7 @@
 # Change impact
 
-Base: 0c91ca3679f87c8533769f199baeca9f0fd94edd
-Head: b732e4807ed1852daddf42f9f7dd0376641946a0
+Base: 3bf1a206c8edb47e149dc21be231927d1fd5ef21
+Head: 75c381cca8a99b973e6062a8ec84c15a488ea3cc
 
 ## Changed files
 - M godot/scripts/Enemy.gd

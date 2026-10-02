@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T18:52:39Z
+Generated: 2026-10-02T18:54:42Z
 
 ### Git
 - Branch: `main`
-- Head: `b732e4807ed1`
-- Commit date: 2026-10-02T20:51:45+02:00
-- Commit: Form readable melee pressure rings
+- Head: `75c381cca8a9`
+- Commit date: 2026-10-02T20:54:30+02:00
+- Commit: Replace filled attack telegraphs with danger rings
 - Tracked files: 941
 
 ### Recently changed files
