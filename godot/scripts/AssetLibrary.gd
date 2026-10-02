@@ -54,7 +54,9 @@ static func pallet() -> Node3D:
     return instantiate_scene(PALLET)
 
 static func street_lights() -> Node3D:
-    return instantiate_scene(STREET_LIGHTS)
+    var root := instantiate_scene(STREET_LIGHTS)
+    _grade_mesh_tree(root, Color(0.20, 0.27, 0.32), 0.86, 0.18)
+    return root
 
 static func traffic_cone() -> Node3D:
     return instantiate_scene(TRAFFIC_CONE)
