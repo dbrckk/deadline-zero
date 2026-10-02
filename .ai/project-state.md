@@ -22,23 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T19:06:48Z
+Generated: 2026-10-02T19:14:17Z
 
 ### Git
 - Branch: `main`
-- Head: `a3edd1fbcc06`
-- Commit date: 2026-10-02T21:06:35+02:00
-- Commit: Integrate street lights into dark arena palette
+- Head: `7e0fc21ac59f`
+- Commit date: 2026-10-02T21:14:01+02:00
+- Commit: Stop floor plates from overpowering combat
 - Tracked files: 942
 
 ### Recently changed files
-- `godot/scripts/AssetLibrary.gd`
+- `godot/scripts/Main.gd`
 - `godot/tests/environment_identity_test.gd`
+- `godot/scripts/AssetLibrary.gd`
 - `.github/workflows/godot-verify.yml`
 - `godot/tests/projectile_profile_runtime_visual_test.gd`
 - `godot/scripts/Projectile.gd`
 - `godot/tests/weapon_presentation_test.gd`
-- `godot/scripts/Enemy.gd`
 
 ### Project signals
 - `build.gradle`

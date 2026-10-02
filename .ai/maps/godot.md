@@ -2494,19 +2494,20 @@ func _build_world() -> void:
     _build_perimeter_beacons()
 
 func _build_floor_panels() -> void:
-    # Low-profile industrial plates break the large flat center without adding collision or
-    # competing with enemies/projectiles. Their low contrast keeps the combat lane readable.
+    # Broad panels stay dark so the arena floor supports combat silhouettes instead of competing
+    # with them. Small edge accents carry the quarantine identity without overexposing whole slabs.
     var plate_material := StandardMaterial3D.new()
-    plate_material.albedo_color = Color(0.065, 0.083, 0.092)
-    plate_material.metallic = 0.18
-    plate_material.roughness = 0.78
+    plate_material.albedo_color = Color(0.032, 0.045, 0.052)
+    plate_material.metallic = 0.30
+    plate_material.roughness = 0.90
 
-    var edge_material := StandardMaterial3D.new()
-    edge_material.albedo_color = Color(0.035, 0.22, 0.27)
-    edge_material.emission_enabled = true
-    edge_material.emission = Color(0.015, 0.16, 0.21)
-    edge_material.emission_energy_multiplier = 0.34
-    edge_material.roughness = 0.70
+    var accent_material := StandardMaterial3D.new()
+    accent_material.albedo_color = Color(0.035, 0.24, 0.30)
+    accent_material.emission_enabled = true
+    accent_material.emission = Color(0.012, 0.11, 0.16)
+    accent_material.emission_energy_multiplier = 0.24
+    accent_material.roughness = 0.72
+    accent_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 
     var placements := [
         Vector3(-10.0, 0.010, -4.8), Vector3(-6.2, 0.010, -8.8),
@@ -2518,12 +2519,24 @@ func _build_floor_panels() -> void:
         var plate := MeshInstance3D.new()
         plate.name = "FloorPlate_%02d" % index
         var mesh := BoxMesh.new()
-        mesh.size = Vector3(3.2 if index % 2 == 0 else 2.6, 0.018, 1.45)
+        var plate_width := 3.0 if index % 2 == 0 else 2.5
+        mesh.size = Vector3(plate_width, 0.014, 1.28)
         plate.mesh = mesh
         plate.position = placements[index]
         plate.rotation.y = deg_to_rad(float((index * 23) % 35 - 17))
-        plate.material_override = plate_material if index % 3 else edge_material
+        plate.material_override = plate_material
         add_child(plate)
+
+        if index % 3 == 0:
+            var accent := MeshInstance3D.new()
+            accent.name = "FloorPlateAccent_%02d" % index
+            var accent_mesh := BoxMesh.new()
+            accent_mesh.size = Vector3(plate_width * 0.58, 0.010, 0.045)
+            accent.mesh = accent_mesh
+            accent.position = Vector3(0.0, 0.014, -0.50)
+            accent.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+            accent.material_override = accent_material
+            plate.add_child(accent)
 
 func _build_floor_service_grates() -> void:
     # Recessed utility grates give the arena functional industrial detail and a second material
@@ -4784,6 +4797,8 @@ func _initialize() -> void:
     var lane_count := 0
     var beacon_count := 0
     var floor_plate_count := 0
+    var floor_plate_accent_count := 0
+    var dark_floor_plate_count := 0
     var floor_seam_count := 0
     var floor_wear_count := 0
     var floor_chip_count := 0
@@ -4822,6 +4837,11 @@ func _initialize() -> void:
             beacon_count += 1
         elif child.name.begins_with("FloorPlate_"):
             floor_plate_count += 1
+            if child is MeshInstance3D and (child as MeshInstance3D).material_override is StandardMaterial3D:
+                var plate_material := (child as MeshInstance3D).material_override as StandardMaterial3D
+                if plate_material.albedo_color.get_luminance() < 0.08 and plate_material.roughness >= 0.88:
+                    dark_floor_plate_count += 1
+            floor_plate_accent_count += child.find_children("FloorPlateAccent_*", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("FloorSeam_"):
             floor_seam_count += 1
         elif child.name.begins_with("ServiceGrate_"):
@@ -4880,6 +4900,14 @@ func _initialize() -> void:
         return
     if floor_plate_count < 8:
         push_error("Expected midfield floor variation plates, got %d" % floor_plate_count)
+        quit(1)
+        return
+    if dark_floor_plate_count != floor_plate_count:
+        push_error("All floor plates must remain dark under combat lighting, got %d/%d" % [dark_floor_plate_count, floor_plate_count])
+        quit(1)
+        return
+    if floor_plate_accent_count != 3:
+        push_error("Expected exactly 3 restrained floor-plate accents, got %d" % floor_plate_accent_count)
         quit(1)
         return
     if floor_seam_count < 8:
