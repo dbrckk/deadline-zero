@@ -192,13 +192,13 @@
         {
           "file": "godot/scripts/Projectile.gd",
           "line": 117,
-          "preview": "_add_side_spark(mat, -1.0)",
+          "preview": "_add_side_spark(core_mat, -1.0)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Projectile.gd",
           "line": 118,
-          "preview": "_add_side_spark(mat, 1.0)",
+          "preview": "_add_side_spark(core_mat, 1.0)",
           "definition_candidate": false
         },
         {
@@ -212,9 +212,27 @@
           "line": 13,
           "preview": "assert(projectile.contains(\"_add_side_spark\"))",
           "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_presentation_test.gd",
+          "line": 20,
+          "preview": "assert(projectile.contains(\"_add_side_spark(core_mat, -1.0)\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_presentation_test.gd",
+          "line": 21,
+          "preview": "assert(projectile.contains(\"_add_side_spark(core_mat, 1.0)\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_presentation_test.gd",
+          "line": 22,
+          "preview": "assert(not projectile.contains(\"_add_side_spark(mat,\"))",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 4
+      "occurrence_count": 7
     },
     "_add_arc_accent": {
       "definition": {

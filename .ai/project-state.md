@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T18:57:46Z
+Generated: 2026-10-02T19:02:02Z
 
 ### Git
 - Branch: `main`
-- Head: `f601bd8af824`
-- Commit date: 2026-10-02T20:57:34+02:00
-- Commit: Refine ballistic tracer readability
+- Head: `71a6c24bc6d6`
+- Commit date: 2026-10-02T21:01:47+02:00
+- Commit: Fix scatter tracer material binding
 - Tracked files: 941
 
 ### Recently changed files
@@ -36,8 +36,6 @@ Generated: 2026-10-02T18:57:46Z
 - `godot/tests/weapon_presentation_test.gd`
 - `godot/scripts/Enemy.gd`
 - `godot/tests/native_enemy_behavior_test.gd`
-- `.github/workflows/godot-verify.yml`
-- `godot/tests/pressure_frame_render_test.gd`
 
 ### Project signals
 - `build.gradle`

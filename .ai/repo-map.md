@@ -27440,8 +27440,8 @@ func _ready() -> void:
         glow.scale = Vector3(0.62, 1.55, 0.62)
         glow.rotation_degrees.z = 45.0
     elif visual_profile == "scatter":
-        _add_side_spark(mat, -1.0)
-        _add_side_spark(mat, 1.0)
+        _add_side_spark(core_mat, -1.0)
+        _add_side_spark(core_mat, 1.0)
     elif visual_profile == "arc":
         _add_arc_accent()
     elif visual_profile == "inferno":
@@ -30369,6 +30369,9 @@ func _init() -> void:
     assert(projectile.contains("ProjectileTrail"))
     assert(projectile.contains("SHADOW_CASTING_SETTING_OFF"))
     assert(projectile.contains("trail_mat.emission_energy_multiplier = 1.65"))
+    assert(projectile.contains("_add_side_spark(core_mat, -1.0)"))
+    assert(projectile.contains("_add_side_spark(core_mat, 1.0)"))
+    assert(not projectile.contains("_add_side_spark(mat,"))
     assert(player.contains("weapon_profile"))
     assert(player.contains("weapon_tint"))
     assert(player.contains("weapon_profile)"))
