@@ -30,6 +30,7 @@ func _initialize() -> void:
     var graded_street_light_meshes := 0
     var graded_barrier_meshes := 0
     var hazard_strip_count := 0
+    var service_pylon_count := 0
     var service_grate_count := 0
     var service_grate_slat_count := 0
     var oversized_barrier_count := 0
@@ -69,6 +70,8 @@ func _initialize() -> void:
             floor_chip_count += 1
         elif child.name.begins_with("ContainmentRing_"):
             containment_ring_count += 1
+        elif child.name.begins_with("ServicePylon_"):
+            service_pylon_count += 1
         elif child.name.begins_with("AuthoredStreetLight_"):
             street_light_count += 1
             var light_meshes: Array[MeshInstance3D] = []
@@ -125,6 +128,10 @@ func _initialize() -> void:
         return
     if containment_ring_count != 2:
         push_error("Expected 2 thin containment rings, got %d" % containment_ring_count)
+        quit(1)
+        return
+    if service_pylon_count != 6:
+        push_error("Expected 6 low service pylons, got %d" % service_pylon_count)
         quit(1)
         return
     if street_light_count != 4 or street_light_pool_count != 4:

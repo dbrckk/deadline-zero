@@ -393,6 +393,7 @@ func _build_world() -> void:
 
     _build_floor_panels()
     _build_floor_service_grates()
+    _build_service_pylons()
     _build_floor_wear()
     _build_floor_seams()
     _build_containment_lanes()
@@ -494,6 +495,76 @@ func _build_floor_service_grates() -> void:
             slat.position = Vector3(-1.12 + float(slat_index) * 0.28, 0.014, 0.0)
             slat.material_override = slat_material
             grate.add_child(slat)
+
+func _build_service_pylons() -> void:
+    # Low service pylons add vertical depth and local shadow anchors without introducing
+    # collision or narrowing the central combat lane.
+    var body_material := StandardMaterial3D.new()
+    body_material.albedo_color = Color(0.045, 0.065, 0.075)
+    body_material.metallic = 0.62
+    body_material.roughness = 0.48
+
+    var cap_material := StandardMaterial3D.new()
+    cap_material.albedo_color = Color(0.10, 0.15, 0.17)
+    cap_material.metallic = 0.72
+    cap_material.roughness = 0.38
+
+    var signal_material := StandardMaterial3D.new()
+    signal_material.albedo_color = Color(0.05, 0.46, 0.62)
+    signal_material.emission_enabled = true
+    signal_material.emission = Color(0.015, 0.22, 0.34)
+    signal_material.emission_energy_multiplier = 0.62
+    signal_material.roughness = 0.52
+
+    var placements := [
+        Vector3(-12.2, 0.0, -3.9), Vector3(12.3, 0.0, 4.0),
+        Vector3(-4.0, 0.0, 12.1), Vector3(4.1, 0.0, -12.0),
+        Vector3(-11.0, 0.0, 8.6), Vector3(11.1, 0.0, -8.5),
+    ]
+    for index in range(placements.size()):
+        var pylon := Node3D.new()
+        pylon.name = "ServicePylon_%02d" % index
+        pylon.position = placements[index]
+        pylon.rotation.y = deg_to_rad(float((index * 41 + 9) % 90 - 45))
+        add_child(pylon)
+
+        var base := MeshInstance3D.new()
+        base.name = "Base"
+        var base_mesh := CylinderMesh.new()
+        base_mesh.top_radius = 0.42
+        base_mesh.bottom_radius = 0.50
+        base_mesh.height = 0.16
+        base.mesh = base_mesh
+        base.position.y = 0.08
+        base.material_override = body_material
+        pylon.add_child(base)
+
+        var body := MeshInstance3D.new()
+        body.name = "Body"
+        var body_mesh := BoxMesh.new()
+        body_mesh.size = Vector3(0.52, 0.58, 0.40)
+        body.mesh = body_mesh
+        body.position.y = 0.43
+        body.material_override = body_material
+        pylon.add_child(body)
+
+        var cap := MeshInstance3D.new()
+        cap.name = "Cap"
+        var cap_mesh := BoxMesh.new()
+        cap_mesh.size = Vector3(0.62, 0.09, 0.48)
+        cap.mesh = cap_mesh
+        cap.position.y = 0.765
+        cap.material_override = cap_material
+        pylon.add_child(cap)
+
+        var signal := MeshInstance3D.new()
+        signal.name = "Signal"
+        var signal_mesh := BoxMesh.new()
+        signal_mesh.size = Vector3(0.34, 0.055, 0.025)
+        signal.mesh = signal_mesh
+        signal.position = Vector3(0.0, 0.62, -0.215)
+        signal.material_override = signal_material
+        pylon.add_child(signal)
 
 func _build_floor_wear() -> void:
     # Deterministic, collision-free wear breaks the broad uniform floor without competing
