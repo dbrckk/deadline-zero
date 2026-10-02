@@ -22,17 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-01T23:00:44Z
+Generated: 2026-10-02T06:15:16Z
 
 ### Git
 - Branch: `main`
-- Head: `abeeb686d82f`
-- Commit date: 2026-10-02T01:00:28+02:00
-- Commit: Add authored vertical lighting to quarantine arena
+- Head: `9695010297d6`
+- Commit date: 2026-10-02T08:15:04+02:00
+- Commit: Bring authored dressing into combat framing
 - Tracked files: 940
 
 ### Recently changed files
 - `godot/scripts/Main.gd`
+- `godot/tests/authored_world_dressing_test.gd`
 - `godot/tests/environment_identity_test.gd`
 - `godot/scripts/AssetLibrary.gd`
 - `godot/scripts/Enemy.gd`

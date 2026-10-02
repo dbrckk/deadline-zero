@@ -26270,6 +26270,12 @@ func _build_authored_world_dressing() -> void:
         Vector3(-9.5, 0.0, -16.0), Vector3(9.2, 0.0, 16.0),
         Vector3(-6.5, 0.0, 15.0), Vector3(6.8, 0.0, -15.2),
         Vector3(-22.5, 0.0, 11.5), Vector3(22.0, 0.0, -11.2),
+        # Midfield service debris adds real authored volume inside the camera's normal combat
+        # framing while preserving an unobstructed ~8.8 m central fighting lane.
+        Vector3(-8.9, 0.0, -3.0), Vector3(8.9, 0.0, 3.0),
+        Vector3(-3.1, 0.0, 8.9), Vector3(3.0, 0.0, -8.9),
+        Vector3(-7.1, 0.0, 5.8), Vector3(7.0, 0.0, -5.9),
+        Vector3(-5.9, 0.0, -7.0), Vector3(5.8, 0.0, 7.1),
     ]
 
     for index in range(placements.size()):
@@ -26281,7 +26287,8 @@ func _build_authored_world_dressing() -> void:
         prop.add_to_group("environment_props")
         prop.position = placements[index]
         prop.rotation.y = float((index * 37) % 360) * PI / 180.0
-        var scale_factor := 0.74 + float(index % 5) * 0.045
+        var midfield := index >= 18
+        var scale_factor := (0.58 + float(index % 4) * 0.035) if midfield else (0.74 + float(index % 5) * 0.045)
         prop.scale = Vector3.ONE * scale_factor
         add_child(prop)
 
@@ -27722,8 +27729,8 @@ func _run_test() -> void:
     var props := get_nodes_in_group("environment_props")
     var ground_details := get_nodes_in_group("environment_ground_detail")
 
-    if props.size() != 18:
-        push_error("Expected 18 authored environment props, got %d" % props.size())
+    if props.size() != 26:
+        push_error("Expected 26 authored environment props, got %d" % props.size())
         quit(1)
         return
     if ground_details.size() != 8:
@@ -27741,8 +27748,8 @@ func _run_test() -> void:
             quit(1)
             return
         var flat_distance := Vector2(node.position.x, node.position.z).length()
-        if flat_distance < 9.0:
-            push_error("Environment prop intrudes into central combat lane: %s" % node.name)
+        if flat_distance < 8.75:
+            push_error("Environment prop intrudes into protected central combat lane: %s" % node.name)
             quit(1)
             return
 
