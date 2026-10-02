@@ -557,14 +557,14 @@ func _build_service_pylons() -> void:
         cap.material_override = cap_material
         pylon.add_child(cap)
 
-        var signal := MeshInstance3D.new()
-        signal.name = "Signal"
+        var signal_mesh_instance := MeshInstance3D.new()
+        signal_mesh_instance.name = "Signal"
         var signal_mesh := BoxMesh.new()
         signal_mesh.size = Vector3(0.34, 0.055, 0.025)
-        signal.mesh = signal_mesh
-        signal.position = Vector3(0.0, 0.62, -0.215)
-        signal.material_override = signal_material
-        pylon.add_child(signal)
+        signal_mesh_instance.mesh = signal_mesh
+        signal_mesh_instance.position = Vector3(0.0, 0.62, -0.215)
+        signal_mesh_instance.material_override = signal_material
+        pylon.add_child(signal_mesh_instance)
 
 func _build_floor_wear() -> void:
     # Deterministic, collision-free wear breaks the broad uniform floor without competing
