@@ -22,21 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T18:45:52Z
+Generated: 2026-10-02T18:49:51Z
 
 ### Git
 - Branch: `main`
-- Head: `203328f7a4a1`
-- Commit date: 2026-10-02T20:45:32+02:00
-- Commit: Capture real mid-run combat pressure
+- Head: `dd7f55cfc5fd`
+- Commit date: 2026-10-02T20:49:01+02:00
+- Commit: Keep enemy swarms spatially readable
 - Tracked files: 941
 
 ### Recently changed files
+- `godot/scripts/Enemy.gd`
+- `godot/tests/native_enemy_behavior_test.gd`
 - `.github/workflows/godot-verify.yml`
 - `godot/tests/pressure_frame_render_test.gd`
 - `godot/scripts/Main.gd`
 - `godot/tests/environment_identity_test.gd`
-- `godot/scripts/AssetLibrary.gd`
 
 ### Project signals
 - `build.gradle`

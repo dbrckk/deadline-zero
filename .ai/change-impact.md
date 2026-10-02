@@ -1,14 +1,13 @@
 # Change impact
 
-Base: 438c1d3da89c970392ef5693c1aa8515a160b14f
-Head: 203328f7a4a13777a8ece0d4aa8db9215ad5ec82
+Base: b8ee7b685ed4234ecb826550944cbd40598313cf
+Head: dd7f55cfc5fdbb9cf02e37a2c8adb4df08bf5f82
 
 ## Changed files
-- M .github/workflows/godot-verify.yml
-- A godot/tests/pressure_frame_render_test.gd
+- M godot/scripts/Enemy.gd
+- M godot/tests/native_enemy_behavior_test.gd
 
 ## Affected areas
-- .github
 - godot
 
 ## Related test candidates

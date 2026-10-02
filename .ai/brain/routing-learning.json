@@ -2,26 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Make combat onboarding hints temporary and non-blocking (#278)",
-      "terms": [
-        "278",
-        "combat",
-        "hints",
-        "make",
-        "non-blocking",
-        "onboarding",
-        "temporary"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java",
-        "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Add non-blocking boss reveal camera framing (#281)",
       "terms": [
         "281",
@@ -1152,6 +1132,22 @@
       "useful": [
         "godot/tests/pressure_frame_render_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Keep enemy swarms spatially readable",
+      "terms": [
+        "enemy",
+        "keep",
+        "readable",
+        "spatially",
+        "swarms"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/tests/native_enemy_behavior_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -2268,10 +2264,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4,
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 8
+      "godot/tests/enemy_silhouette_identity_test.gd": 8,
+      "godot/tests/native_enemy_behavior_test.gd": 4
     },
     "environment": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
@@ -2782,7 +2779,9 @@
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4
     },
     "language": {
       "godot/scripts/Main.gd": 4,
@@ -3295,6 +3294,10 @@
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java": 4,
       "godot/scripts/Hud.gd": 4
     },
+    "readable": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4
+    },
     "real": {
       "godot/tests/pressure_frame_render_test.gd": 4
     },
@@ -3710,6 +3713,10 @@
       "tools/sprites/audit_final_art_status.py": 4,
       "tools/sprites/normalize_actor_frames.py": 4
     },
+    "spatially": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4
+    },
     "staging": {
       "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java": 4,
@@ -3790,6 +3797,10 @@
     },
     "swangle": {
       "godot/tests/mobile_orientation_test.gd": 4
+    },
+    "swarms": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4
     },
     "synergies": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java": 4,
