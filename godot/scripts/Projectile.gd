@@ -79,24 +79,35 @@ func _ready() -> void:
         global_position = configured_origin
     add_to_group("projectiles")
     var glow := MeshInstance3D.new()
+    glow.name = "ProjectileCore"
     var mesh := SphereMesh.new()
-    mesh.radius = core_radius
-    mesh.height = core_radius * 2.0
+    mesh.radius = core_radius * 0.82
+    mesh.height = core_radius * 1.64
     glow.mesh = mesh
-    var mat := StandardMaterial3D.new()
-    mat.albedo_color = tint
-    mat.emission_enabled = true
-    mat.emission = tint
-    mat.emission_energy_multiplier = 5.0
-    glow.material_override = mat
+    glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    var core_mat := StandardMaterial3D.new()
+    core_mat.albedo_color = tint
+    core_mat.emission_enabled = true
+    core_mat.emission = tint
+    core_mat.emission_energy_multiplier = 3.2
+    core_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    glow.material_override = core_mat
     add_child(glow)
 
     var trail := MeshInstance3D.new()
+    trail.name = "ProjectileTrail"
     var trail_mesh := BoxMesh.new()
-    trail_mesh.size = Vector3(trail_width, trail_width, trail_length)
+    trail_mesh.size = Vector3(trail_width, trail_width * 0.72, trail_length)
     trail.mesh = trail_mesh
     trail.position.z = trail_length * 0.52
-    trail.material_override = mat
+    trail.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    var trail_mat := StandardMaterial3D.new()
+    trail_mat.albedo_color = Color(tint.r * 0.68, tint.g * 0.68, tint.b * 0.68)
+    trail_mat.emission_enabled = true
+    trail_mat.emission = Color(tint.r * 0.74, tint.g * 0.74, tint.b * 0.74)
+    trail_mat.emission_energy_multiplier = 1.65
+    trail_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    trail.material_override = trail_mat
     add_child(trail)
 
     if visual_profile == "cryo":
@@ -108,7 +119,7 @@ func _ready() -> void:
     elif visual_profile == "arc":
         _add_arc_accent()
     elif visual_profile == "inferno":
-        _add_flame_core(mat)
+        _add_flame_core(core_mat)
 
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity.normalized(), Vector3.UP)
@@ -119,6 +130,7 @@ func _add_side_spark(mat: StandardMaterial3D, side: float) -> void:
     mesh.size = Vector3(0.025, 0.025, trail_length * 0.62)
     spark.mesh = mesh
     spark.position = Vector3(side * 0.10, 0.0, trail_length * 0.30)
+    spark.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     spark.material_override = mat
     add_child(spark)
 
@@ -129,11 +141,13 @@ func _add_arc_accent() -> void:
     mesh.outer_radius = core_radius * 1.45
     accent.mesh = mesh
     accent.rotation_degrees.x = 90.0
+    accent.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     var mat := StandardMaterial3D.new()
     mat.albedo_color = Color(0.58, 0.36, 1.0)
     mat.emission_enabled = true
     mat.emission = mat.albedo_color
-    mat.emission_energy_multiplier = 4.0
+    mat.emission_energy_multiplier = 2.8
+    mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     accent.material_override = mat
     add_child(accent)
 
@@ -144,6 +158,7 @@ func _add_flame_core(base_material: StandardMaterial3D) -> void:
     mesh.height = core_radius * 1.55
     flame.mesh = mesh
     flame.scale = Vector3(0.72, 0.72, 1.42)
+    flame.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     flame.material_override = base_material
     add_child(flame)
 
