@@ -46,7 +46,7 @@ func _initialize() -> void:
             for mesh_instance in barrier_meshes:
                 if mesh_instance != null and mesh_instance.material_override is StandardMaterial3D:
                     var material := mesh_instance.material_override as StandardMaterial3D
-                    if material.roughness >= 0.88 and material.albedo_color.get_luminance() < 0.62:
+                    if material.roughness >= 0.80 and material.metallic >= 0.30 and material.albedo_color.get_luminance() < 0.16 and material.albedo_texture == null:
                         graded_barrier_meshes += 1
             hazard_strip_count += int(child.find_child("BarrierHazardFront", true, false) != null)
             hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
@@ -136,7 +136,7 @@ func _initialize() -> void:
         quit(1)
         return
     if graded_barrier_meshes < 12:
-        push_error("Authored barriers must receive dark industrial material grading, got %d graded meshes" % graded_barrier_meshes)
+        push_error("Authored barriers must use the dedicated dark industrial material, got %d graded meshes" % graded_barrier_meshes)
         quit(1)
         return
     if hazard_strip_count < 24:

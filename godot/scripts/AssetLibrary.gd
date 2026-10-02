@@ -43,7 +43,7 @@ static func rifle() -> Node3D:
 
 static func barrier() -> Node3D:
     var root := instantiate_scene(BARRIER)
-    _grade_mesh_tree(root, Color(0.22, 0.28, 0.32), 0.92, 0.06)
+    _apply_barrier_industrial_material(root)
     _add_barrier_hazard_signature(root)
     return root
 
@@ -66,6 +66,24 @@ static func trash_bag() -> Node3D:
 
 static func street_crack() -> Node3D:
     return instantiate_scene(STREET_CRACK)
+
+static func _apply_barrier_industrial_material(root: Node3D) -> void:
+    if root == null:
+        return
+    var meshes: Array[MeshInstance3D] = []
+    if root is MeshInstance3D:
+        meshes.append(root as MeshInstance3D)
+    for node in root.find_children("*", "MeshInstance3D", true, false):
+        meshes.append(node as MeshInstance3D)
+
+    for mesh_instance in meshes:
+        if mesh_instance == null or mesh_instance.mesh == null:
+            continue
+        var material := StandardMaterial3D.new()
+        material.albedo_color = Color(0.075, 0.105, 0.125)
+        material.metallic = 0.34
+        material.roughness = 0.82
+        mesh_instance.material_override = material
 
 static func _add_barrier_hazard_signature(root: Node3D) -> void:
     if root == null:
