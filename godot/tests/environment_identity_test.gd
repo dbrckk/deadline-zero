@@ -22,6 +22,8 @@ func _initialize() -> void:
     var beacon_count := 0
     var floor_plate_count := 0
     var floor_seam_count := 0
+    var floor_wear_count := 0
+    var floor_chip_count := 0
     var containment_ring_count := 0
     var street_light_count := 0
     var street_light_pool_count := 0
@@ -51,6 +53,10 @@ func _initialize() -> void:
             floor_plate_count += 1
         elif child.name.begins_with("FloorSeam_"):
             floor_seam_count += 1
+        elif child.name.begins_with("FloorWear_"):
+            floor_wear_count += 1
+        elif child.name.begins_with("FloorChip_"):
+            floor_chip_count += 1
         elif child.name.begins_with("ContainmentRing_"):
             containment_ring_count += 1
         elif child.name.begins_with("AuthoredStreetLight_"):
@@ -97,6 +103,10 @@ func _initialize() -> void:
         return
     if floor_seam_count < 8:
         push_error("Expected industrial floor seam structure, got %d" % floor_seam_count)
+        quit(1)
+        return
+    if floor_wear_count < 12 or floor_chip_count < 12:
+        push_error("Expected deterministic floor wear/chip dressing, got %d/%d" % [floor_wear_count, floor_chip_count])
         quit(1)
         return
     if containment_ring_count != 2:

@@ -392,6 +392,7 @@ func _build_world() -> void:
     add_child(floor)
 
     _build_floor_panels()
+    _build_floor_wear()
     _build_floor_seams()
     _build_containment_lanes()
     _build_authored_barrier_clusters()
@@ -430,6 +431,55 @@ func _build_floor_panels() -> void:
         plate.rotation.y = deg_to_rad(float((index * 23) % 35 - 17))
         plate.material_override = plate_material if index % 3 else edge_material
         add_child(plate)
+
+func _build_floor_wear() -> void:
+    # Deterministic, collision-free wear breaks the broad uniform floor without competing
+    # with enemy silhouettes. Marks stay low-contrast and outside the immediate player halo.
+    var scuff_material := StandardMaterial3D.new()
+    scuff_material.albedo_color = Color(0.030, 0.040, 0.046, 0.82)
+    scuff_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    scuff_material.roughness = 0.98
+
+    var stain_material := StandardMaterial3D.new()
+    stain_material.albedo_color = Color(0.075, 0.050, 0.036, 0.54)
+    stain_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    stain_material.roughness = 1.0
+
+    var scuffs := [
+        Vector3(-8.2, 0.016, -1.8), Vector3(-5.7, 0.016, 5.4),
+        Vector3(7.8, 0.016, 1.9), Vector3(5.5, 0.016, -5.6),
+        Vector3(-11.8, 0.016, 7.4), Vector3(11.5, 0.016, -7.6),
+        Vector3(-2.4, 0.016, 10.6), Vector3(2.7, 0.016, -10.8),
+        Vector3(-13.2, 0.016, -2.8), Vector3(13.0, 0.016, 3.1),
+        Vector3(-7.8, 0.016, -10.8), Vector3(8.0, 0.016, 10.5),
+    ]
+    for index in range(scuffs.size()):
+        var scuff := MeshInstance3D.new()
+        scuff.name = "FloorWear_%02d" % index
+        var mesh := BoxMesh.new()
+        var long_mark := index % 3 != 0
+        mesh.size = Vector3(1.35 if long_mark else 0.72, 0.006, 0.055 if long_mark else 0.16)
+        scuff.mesh = mesh
+        scuff.position = scuffs[index]
+        scuff.rotation.y = deg_to_rad(float((index * 47 + 13) % 170))
+        scuff.material_override = scuff_material if index % 4 else stain_material
+        add_child(scuff)
+
+    # Small paired marks suggest dragged equipment and old impact paths rather than decorative
+    # stripes. Their asymmetry is intentional so the arena does not read as a tiled test grid.
+    for cluster_index in range(6):
+        var angle := float(cluster_index) * 1.047 + 0.31
+        var center := Vector3(cos(angle) * 7.1, 0.017, sin(angle) * 7.1)
+        for mark_index in range(2):
+            var chip := MeshInstance3D.new()
+            chip.name = "FloorChip_%02d_%d" % [cluster_index, mark_index]
+            var chip_mesh := BoxMesh.new()
+            chip_mesh.size = Vector3(0.24 + float(mark_index) * 0.10, 0.006, 0.07)
+            chip.mesh = chip_mesh
+            chip.position = center + Vector3(float(mark_index) * 0.32 - 0.16, 0.0, float(mark_index) * 0.13)
+            chip.rotation.y = -angle + float(mark_index) * 0.28
+            chip.material_override = scuff_material
+            add_child(chip)
 
 func _build_authored_barrier_clusters() -> void:
     # Keep authored cover visible at the arena edge without letting the large source meshes
