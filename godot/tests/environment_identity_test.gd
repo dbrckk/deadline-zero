@@ -32,6 +32,8 @@ func _initialize() -> void:
     var hazard_strip_count := 0
     var service_pylon_count := 0
     var service_grate_count := 0
+    var inspection_panel_count := 0
+    var inspection_service_stripe_count := 0
     var service_grate_slat_count := 0
     var oversized_barrier_count := 0
     for child in scene.get_children():
@@ -64,6 +66,9 @@ func _initialize() -> void:
             for slat in child.find_children("Slat_*", "MeshInstance3D", true, false):
                 if slat is MeshInstance3D:
                     service_grate_slat_count += 1
+        elif child.name.begins_with("InspectionPanel_"):
+            inspection_panel_count += 1
+            inspection_service_stripe_count += child.find_children("ServiceStripe_*", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("FloorWear_"):
             floor_wear_count += 1
         elif child.name.begins_with("FloorChip_"):
@@ -120,6 +125,10 @@ func _initialize() -> void:
         return
     if service_grate_count != 4 or service_grate_slat_count < 36:
         push_error("Expected 4 detailed service grates with at least 36 slats, got %d grates / %d slats" % [service_grate_count, service_grate_slat_count])
+        quit(1)
+        return
+    if inspection_panel_count != 6 or inspection_service_stripe_count != 12:
+        push_error("Expected 6 midfield inspection panels / 12 service stripes, got %d/%d" % [inspection_panel_count, inspection_service_stripe_count])
         quit(1)
         return
     if floor_wear_count < 12 or floor_chip_count < 12:
