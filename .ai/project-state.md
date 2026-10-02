@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T19:02:02Z
+Generated: 2026-10-02T19:04:25Z
 
 ### Git
 - Branch: `main`
-- Head: `71a6c24bc6d6`
-- Commit date: 2026-10-02T21:01:47+02:00
-- Commit: Fix scatter tracer material binding
-- Tracked files: 941
+- Head: `472c6d22d83c`
+- Commit date: 2026-10-02T21:04:11+02:00
+- Commit: Exercise all projectile visuals at runtime
+- Tracked files: 942
 
 ### Recently changed files
+- `.github/workflows/godot-verify.yml`
+- `godot/tests/projectile_profile_runtime_visual_test.gd`
 - `godot/scripts/Projectile.gd`
 - `godot/tests/weapon_presentation_test.gd`
 - `godot/scripts/Enemy.gd`
-- `godot/tests/native_enemy_behavior_test.gd`
 
 ### Project signals
 - `build.gradle`

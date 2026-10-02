@@ -1,13 +1,14 @@
 # Change impact
 
-Base: 0671fa665f50ac88a00b40de3eafcb15b18a1024
-Head: 71a6c24bc6d6ee2b42f48023c77a340387f2f7b5
+Base: def9dad3cd94bffde4ec87ab0d4a2916b13067ff
+Head: 472c6d22d83c28a35b493ecd2870949c9960f879
 
 ## Changed files
-- M godot/scripts/Projectile.gd
-- M godot/tests/weapon_presentation_test.gd
+- M .github/workflows/godot-verify.yml
+- A godot/tests/projectile_profile_runtime_visual_test.gd
 
 ## Affected areas
+- .github
 - godot
 
 ## Related test candidates
