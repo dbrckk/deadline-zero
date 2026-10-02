@@ -485,10 +485,10 @@ func _build_authored_barrier_clusters() -> void:
     # Keep authored cover visible at the arena edge without letting the large source meshes
     # dominate the phone framing. The clusters now read as perimeter fortification, not walls.
     var clusters := [
-        {"center": Vector3(-18.8, 0.0, -12.6), "rotation": 0.18},
-        {"center": Vector3(18.2, 0.0, -11.8), "rotation": -0.28},
-        {"center": Vector3(-18.0, 0.0, 13.6), "rotation": 0.72},
-        {"center": Vector3(19.0, 0.0, 13.0), "rotation": -0.66}
+        {"center": Vector3(-21.0, 0.0, -14.2), "rotation": 0.18},
+        {"center": Vector3(20.6, 0.0, -13.8), "rotation": -0.28},
+        {"center": Vector3(-20.2, 0.0, 15.0), "rotation": 0.72},
+        {"center": Vector3(21.2, 0.0, 14.6), "rotation": -0.66}
     ]
     for cluster_index in range(clusters.size()):
         var cluster: Dictionary = clusters[cluster_index]
@@ -499,10 +499,10 @@ func _build_authored_barrier_clusters() -> void:
             if barrier == null:
                 continue
             barrier.name = "AuthoredBarrier_%d_%d" % [cluster_index, item_index]
-            var lateral := (float(item_index) - 1.5) * 1.45
-            barrier.position = center + Vector3(lateral, 0.0, sin(float(item_index) * 1.7) * 0.34)
+            var lateral := (float(item_index) - 1.5) * 1.28
+            barrier.position = center + Vector3(lateral, 0.0, sin(float(item_index) * 1.7) * 0.28)
             barrier.rotation.y = base_rotation + (0.08 if item_index % 2 == 0 else -0.08)
-            barrier.scale = Vector3.ONE * (0.68 + float(item_index % 3) * 0.045)
+            barrier.scale = Vector3.ONE * (0.48 + float(item_index % 3) * 0.035)
             add_child(barrier)
 
 func _build_authored_world_dressing() -> void:

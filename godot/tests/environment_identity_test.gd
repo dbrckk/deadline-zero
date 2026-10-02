@@ -30,9 +30,12 @@ func _initialize() -> void:
     var graded_street_light_meshes := 0
     var graded_barrier_meshes := 0
     var hazard_strip_count := 0
+    var oversized_barrier_count := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
+            if child.scale.x > 0.56 or Vector2(child.position.x, child.position.z).length() < 22.0:
+                oversized_barrier_count += 1
             var barrier_meshes: Array[MeshInstance3D] = []
             if child is MeshInstance3D:
                 barrier_meshes.append(child as MeshInstance3D)
@@ -127,6 +130,10 @@ func _initialize() -> void:
         return
     if hazard_strip_count < 24:
         push_error("Authored barriers must expose hazard signatures, got %d strips" % hazard_strip_count)
+        quit(1)
+        return
+    if oversized_barrier_count != 0:
+        push_error("Authored barriers must stay compact and perimeter-biased, got %d violations" % oversized_barrier_count)
         quit(1)
         return
 
