@@ -23978,7 +23978,9 @@ static func pallet() -> Node3D:
     return instantiate_scene(PALLET)
 
 static func street_lights() -> Node3D:
-    return instantiate_scene(STREET_LIGHTS)
+    var root := instantiate_scene(STREET_LIGHTS)
+    _grade_mesh_tree(root, Color(0.20, 0.27, 0.32), 0.86, 0.18)
+    return root
 
 static func traffic_cone() -> Node3D:
     return instantiate_scene(TRAFFIC_CONE)
@@ -28230,6 +28232,7 @@ func _initialize() -> void:
     var containment_ring_count := 0
     var street_light_count := 0
     var street_light_pool_count := 0
+    var graded_street_light_meshes := 0
     var graded_barrier_meshes := 0
     var hazard_strip_count := 0
     for child in scene.get_children():
@@ -28259,6 +28262,18 @@ func _initialize() -> void:
             containment_ring_count += 1
         elif child.name.begins_with("AuthoredStreetLight_"):
             street_light_count += 1
+            var light_meshes: Array[MeshInstance3D] = []
+            if child is MeshInstance3D:
+                light_meshes.append(child as MeshInstance3D)
+            for mesh_node in child.find_children("*", "MeshInstance3D", true, false):
+                var mesh_instance := mesh_node as MeshInstance3D
+                if mesh_instance != null and mesh_instance.name != "StreetLightCore":
+                    light_meshes.append(mesh_instance)
+            for mesh_instance in light_meshes:
+                if mesh_instance.material_override is BaseMaterial3D:
+                    var material := mesh_instance.material_override as BaseMaterial3D
+                    if material.roughness >= 0.86 and material.albedo_color.get_luminance() < 0.55:
+                        graded_street_light_meshes += 1
             var pool := child.get_node_or_null("StreetLightPool") as OmniLight3D
             if pool != null:
                 if pool.shadow_enabled:
@@ -28297,6 +28312,10 @@ func _initialize() -> void:
         return
     if street_light_count != 4 or street_light_pool_count != 4:
         push_error("Expected 4 authored vertical light fixtures with safe pools, got %d/%d" % [street_light_count, street_light_pool_count])
+        quit(1)
+        return
+    if graded_street_light_meshes < 4:
+        push_error("Authored street lights must receive dark steel grading, got %d graded meshes" % graded_street_light_meshes)
         quit(1)
         return
     if graded_barrier_meshes < 12:

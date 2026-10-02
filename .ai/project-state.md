@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T06:15:16Z
+Generated: 2026-10-02T06:17:28Z
 
 ### Git
 - Branch: `main`
-- Head: `9695010297d6`
-- Commit date: 2026-10-02T08:15:04+02:00
-- Commit: Bring authored dressing into combat framing
+- Head: `0f0c2129d709`
+- Commit date: 2026-10-02T08:17:16+02:00
+- Commit: Integrate perimeter lights into arena palette
 - Tracked files: 940
 
 ### Recently changed files
+- `godot/scripts/AssetLibrary.gd`
+- `godot/tests/environment_identity_test.gd`
 - `godot/scripts/Main.gd`
 - `godot/tests/authored_world_dressing_test.gd`
-- `godot/tests/environment_identity_test.gd`
-- `godot/scripts/AssetLibrary.gd`
 - `godot/scripts/Enemy.gd`
 - `godot/tests/enemy_silhouette_identity_test.gd`
 - `.github/workflows/godot-verify.yml`
