@@ -55,7 +55,7 @@ static func pallet() -> Node3D:
 
 static func street_lights() -> Node3D:
     var root := instantiate_scene(STREET_LIGHTS)
-    _grade_mesh_tree(root, Color(0.20, 0.27, 0.32), 0.86, 0.18)
+    _apply_street_light_industrial_material(root)
     return root
 
 static func traffic_cone() -> Node3D:
@@ -66,6 +66,25 @@ static func trash_bag() -> Node3D:
 
 static func street_crack() -> Node3D:
     return instantiate_scene(STREET_CRACK)
+
+static func _apply_street_light_industrial_material(root: Node3D) -> void:
+    if root == null:
+        return
+    var meshes: Array[MeshInstance3D] = []
+    if root is MeshInstance3D:
+        meshes.append(root as MeshInstance3D)
+    for node in root.find_children("*", "MeshInstance3D", true, false):
+        meshes.append(node as MeshInstance3D)
+
+    for mesh_instance in meshes:
+        if mesh_instance == null or mesh_instance.mesh == null:
+            continue
+        var material := StandardMaterial3D.new()
+        material.albedo_color = Color(0.040, 0.058, 0.068)
+        material.metallic = 0.46
+        material.roughness = 0.78
+        mesh_instance.material_override = material
+        mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 
 static func _apply_barrier_industrial_material(root: Node3D) -> void:
     if root == null:

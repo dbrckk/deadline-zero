@@ -89,7 +89,7 @@ func _initialize() -> void:
             for mesh_instance in light_meshes:
                 if mesh_instance.material_override is BaseMaterial3D:
                     var material := mesh_instance.material_override as BaseMaterial3D
-                    if material.roughness >= 0.86 and material.albedo_color.get_luminance() < 0.55:
+                    if material.roughness >= 0.76 and material.metallic >= 0.40 and material.albedo_color.get_luminance() < 0.09 and material.albedo_texture == null:
                         graded_street_light_meshes += 1
             var pool := child.get_node_or_null("StreetLightPool") as OmniLight3D
             if pool != null:
