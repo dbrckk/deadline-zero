@@ -45,6 +45,7 @@ var charge_hit := false
 var hit_flash_visual: MeshInstance3D
 var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
+static var _shared_contact_shadow_material: StandardMaterial3D
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -96,6 +97,7 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
 func _ready() -> void:
     add_to_group("enemies")
     _build_visual()
+    _build_contact_shadow()
     _build_hit_flash()
 
 func _physics_process(delta: float) -> void:
@@ -571,6 +573,46 @@ func _play_hit_reaction(critical: bool, killed: bool) -> void:
         if hit_flash_visual != null:
             hit_flash_visual.visible = false
     )
+
+func _build_contact_shadow() -> void:
+    var shadow := MeshInstance3D.new()
+    shadow.name = "EnemyContactShadow"
+    var mesh := CylinderMesh.new()
+    var radius := 0.42
+    match kind:
+        "runner":
+            radius = 0.36
+        "charger":
+            radius = 0.50
+        "harrier":
+            radius = 0.40
+        "regenerator":
+            radius = 0.47
+        "brute":
+            radius = 0.58
+        "elite":
+            radius = 0.54
+        "boss":
+            radius = 0.78
+    mesh.top_radius = radius
+    mesh.bottom_radius = radius * 1.04
+    mesh.height = 0.008
+    mesh.radial_segments = 16
+    shadow.mesh = mesh
+    shadow.position.y = 0.010
+    shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    shadow.material_override = _enemy_contact_shadow_material()
+    add_child(shadow)
+
+static func _enemy_contact_shadow_material() -> StandardMaterial3D:
+    if _shared_contact_shadow_material != null:
+        return _shared_contact_shadow_material
+    _shared_contact_shadow_material = StandardMaterial3D.new()
+    _shared_contact_shadow_material.albedo_color = Color(0.005, 0.008, 0.010, 0.34)
+    _shared_contact_shadow_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    _shared_contact_shadow_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    _shared_contact_shadow_material.roughness = 1.0
+    return _shared_contact_shadow_material
 
 func _build_hit_flash() -> void:
     hit_flash_visual = MeshInstance3D.new()
