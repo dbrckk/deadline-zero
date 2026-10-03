@@ -44,6 +44,7 @@ var target_refresh_clock := 0.0
 
 const TARGET_REFRESH_INTERVAL := 0.08
 const TARGET_SWITCH_RATIO := 0.78
+const TARGET_ACQUIRE_RADIUS := 18.0
 const ARENA_HALF_EXTENT := 30.0
 
 func _ready() -> void:
@@ -277,13 +278,13 @@ func _combat_target() -> DZEnemy:
 
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
-    var best_d2 := INF
+    var best_d2 := TARGET_ACQUIRE_RADIUS * TARGET_ACQUIRE_RADIUS
     for node in get_tree().get_nodes_in_group("enemies"):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead:
             continue
         var d2 := global_position.distance_squared_to(enemy.global_position)
-        if d2 < best_d2:
+        if d2 <= best_d2:
             best_d2 = d2
             best = enemy
     return best

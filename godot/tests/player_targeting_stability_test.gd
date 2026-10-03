@@ -20,6 +20,14 @@ func _initialize() -> void:
     first.configure("shambler", 1.0, player)
     first.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(first)
+    first.global_position = Vector3(DZPlayer.TARGET_ACQUIRE_RADIUS + 4.0, 0.0, 0.0)
+
+    player.target_refresh_clock = 0.0
+    if player._combat_target() != null:
+        push_error("Auto-aim acquired an enemy beyond the gameplay camera engagement radius")
+        quit(1)
+        return
+
     first.global_position = Vector3(4.0, 0.0, 0.0)
 
     var second := DZEnemy.new()
