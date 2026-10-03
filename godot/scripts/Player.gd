@@ -34,6 +34,7 @@ var weapon_accent_material: StandardMaterial3D
 var player_marker_ring: MeshInstance3D
 var player_marker_material: StandardMaterial3D
 var player_marker_pressure := false
+var hit_reaction_left := 0.0
 var combat_enabled := true
 var applied_protocols := {}
 
@@ -50,6 +51,7 @@ func _physics_process(delta: float) -> void:
         return
 
     invulnerability = max(0.0, invulnerability - delta)
+    hit_reaction_left = maxf(0.0, hit_reaction_left - maxf(delta, 0.0))
     fire_clock -= delta
 
     var input := Vector2.ZERO
@@ -68,7 +70,8 @@ func _physics_process(delta: float) -> void:
 
     velocity = Vector3(input.x, 0.0, input.y) * move_speed
     move_and_slide()
-    _update_authored_animation()
+    if hit_reaction_left <= 0.0:
+        _update_authored_animation()
 
     var target := _nearest_enemy()
     _update_player_marker_pressure(target)
@@ -118,9 +121,13 @@ func take_damage(amount: float) -> void:
     health_changed.emit(health, max_health)
     _trigger_damage_feedback()
     if health <= 0.0:
+        hit_reaction_left = 0.0
         if authored_anim != null and authored_anim.has_animation("Death"):
             _play_authored("Death")
         died.emit()
+    elif authored_anim != null and authored_anim.has_animation("HitReact"):
+        hit_reaction_left = 0.12
+        _play_authored("HitReact")
 
 func heal_full() -> void:
     health = max_health
