@@ -40,6 +40,7 @@ var camera_kick_phase := 0.0
 var hit_freeze_left := 0.0
 var boss_reveal_target: DZEnemy
 var boss_reveal_left := 0.0
+var current_boss: DZEnemy
 var impact_audio: AudioStreamPlayer
 var boss_audio: AudioStreamPlayer
 var impact_streams := {}
@@ -150,10 +151,10 @@ func _physics_process(delta: float) -> void:
         director_profile = run_director.profile(elapsed, level)
         max_enemies = int(director_profile["max_enemies"])
     boss_banner_timer = max(0.0, boss_banner_timer - delta)
-    if elapsed >= next_boss_time:
+    if elapsed >= next_boss_time and not _has_active_boss():
         _spawn_enemy("boss")
         boss_banner_timer = 3.2
-        next_boss_time += 75.0
+        next_boss_time = elapsed + 75.0
 
     spawn_clock -= delta
     if spawn_clock <= 0.0:
@@ -204,6 +205,9 @@ func _touch_input_vector(current_position: Vector2) -> Vector2:
     )
     return delta.normalized() * strength
 
+func _has_active_boss() -> bool:
+    return current_boss != null and is_instance_valid(current_boss) and not current_boss.dead
+
 func query_enemies_near(position: Vector3, radius: float) -> Array:
     return enemy_spatial_index.query(position, radius)
 
@@ -244,6 +248,7 @@ func _spawn_enemy(forced_kind: String = "") -> void:
     add_child(enemy)
     enemy.global_position = pos
     if kind == "boss":
+        current_boss = enemy
         _play_boss_stinger()
         boss_reveal_target = enemy
         boss_reveal_left = BOSS_REVEAL_DURATION

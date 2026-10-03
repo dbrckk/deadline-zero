@@ -314,6 +314,22 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if main.current_boss == null or main.current_boss.dead:
+        push_error("Boss spawn did not register the active boss singleton")
+        quit(1)
+        return
+    var boss_count_before_deferred_spawn := _count_kind("boss")
+    main.next_boss_time = main.elapsed
+    main._physics_process(0.016)
+    if _count_kind("boss") != boss_count_before_deferred_spawn:
+        push_error("Boss scheduler spawned a second boss while one was still active")
+        quit(1)
+        return
+    if main.next_boss_time > main.elapsed:
+        push_error("Active boss should defer, not consume, the next boss schedule")
+        quit(1)
+        return
+
     var projectile := PROJECTILE_SCRIPT.new()
     main.add_child(projectile)
     projectile.velocity = Vector3(8.0, 0.0, 0.0)
