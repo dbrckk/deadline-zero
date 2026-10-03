@@ -48,6 +48,7 @@ var last_player_health := -1.0
 var run_director := DZRunDirector.new()
 var spawn_rng := RandomNumberGenerator.new()
 var director_profile: Dictionary = {}
+var hud_refresh_clock := 0.0
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -55,6 +56,7 @@ const TOUCH_STICK_DEADZONE := 10.0
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_REVEAL_FOV_DELTA := 5.5
+const HUD_REFRESH_INTERVAL := 0.10
 
 func _ready() -> void:
     randomize()
@@ -147,9 +149,13 @@ func _physics_process(delta: float) -> void:
         for i in range(batch):
             _spawn_enemy()
         spawn_clock = float(director_profile["spawn_interval"])
-    enemy_spatial_index.rebuild(get_tree().get_nodes_in_group("enemies"))
-    hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
-    hud.set_wave(_wave_name())
+    var enemies := get_tree().get_nodes_in_group("enemies")
+    enemy_spatial_index.rebuild(enemies)
+    hud_refresh_clock -= delta
+    if hud_refresh_clock <= 0.0:
+        hud_refresh_clock = HUD_REFRESH_INTERVAL
+        hud.set_progress(xp, xp_next, level, kills, elapsed, enemies.size())
+        hud.set_wave(_wave_name())
 
 func _unhandled_input(event: InputEvent) -> void:
     if player == null:
