@@ -232,19 +232,22 @@ static func _grade_mesh_tree(root: Node3D, tint: Color, roughness: float, metall
 static func _grade_mesh_instance(mesh_instance: MeshInstance3D, tint: Color, roughness: float, metallic: float) -> void:
     if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
         return
-    var source := mesh_instance.mesh.surface_get_material(0)
-    if not source is BaseMaterial3D:
-        return
-    var graded := source.duplicate(true) as BaseMaterial3D
-    graded.albedo_color = Color(
-        graded.albedo_color.r * tint.r,
-        graded.albedo_color.g * tint.g,
-        graded.albedo_color.b * tint.b,
-        graded.albedo_color.a
-    )
-    graded.roughness = maxf(graded.roughness, roughness)
-    graded.metallic = maxf(graded.metallic, metallic)
-    mesh_instance.material_override = graded
+
+    mesh_instance.material_override = null
+    for surface_index in range(mesh_instance.mesh.get_surface_count()):
+        var source := mesh_instance.get_active_material(surface_index)
+        if not source is BaseMaterial3D:
+            continue
+        var graded := (source as BaseMaterial3D).duplicate(true) as BaseMaterial3D
+        graded.albedo_color = Color(
+            graded.albedo_color.r * tint.r,
+            graded.albedo_color.g * tint.g,
+            graded.albedo_color.b * tint.b,
+            graded.albedo_color.a
+        )
+        graded.roughness = maxf(graded.roughness, roughness)
+        graded.metallic = maxf(graded.metallic, metallic)
+        mesh_instance.set_surface_override_material(surface_index, graded)
 
 static func animation_player(root: Node) -> AnimationPlayer:
     if root == null:
