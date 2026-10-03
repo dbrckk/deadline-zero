@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T12:09:48Z
+Generated: 2026-10-03T12:12:10Z
 
 ### Git
 - Branch: `main`
-- Head: `fdc5a8a70ad5`
-- Commit date: 2026-10-03T14:09:36+02:00
-- Commit: Make player marker react to close pressure
+- Head: `757e9d97dbbb`
+- Commit date: 2026-10-03T14:11:57+02:00
+- Commit: Lift close-pressure locator above melee
 - Tracked files: 942
 
 ### Recently changed files
@@ -38,7 +38,6 @@ Generated: 2026-10-03T12:09:48Z
 - `godot/scripts/Main.gd`
 - `godot/tests/hud_readability_hierarchy_test.gd`
 - `godot/tests/environment_identity_test.gd`
-- `godot/scripts/AssetLibrary.gd`
 
 ### Project signals
 - `build.gradle`
