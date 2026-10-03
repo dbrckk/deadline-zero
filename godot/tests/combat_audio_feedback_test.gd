@@ -9,7 +9,7 @@ func _init() -> void:
     for profile in profiles:
         var stream := DZCombatAudio.shot_stream(profile)
         assert(stream != null)
-        assert(stream.mix_rate == 22050)
+        assert(stream.mix_rate == 44100)
         assert(stream.format == AudioStreamWAV.FORMAT_16_BITS)
         assert(not stream.stereo)
         assert(stream.get_length() > 0.04)
@@ -24,7 +24,7 @@ func _init() -> void:
 
     for stream in [hit, critical, killed, boss_hit, boss]:
         assert(stream != null)
-        assert(stream.mix_rate == 22050)
+        assert(stream.mix_rate == 44100)
         assert(stream.format == AudioStreamWAV.FORMAT_16_BITS)
         assert(not stream.stereo)
 
