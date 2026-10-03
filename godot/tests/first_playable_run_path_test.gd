@@ -40,6 +40,25 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main.player.global_position = Vector3(42.0, 0.0, -44.0)
+    main.player.velocity = Vector3(3.0, 0.0, -2.0)
+    main.player._constrain_to_arena()
+    if absf(main.player.global_position.x) > DZPlayer.ARENA_HALF_EXTENT + 0.001 or absf(main.player.global_position.z) > DZPlayer.ARENA_HALF_EXTENT + 0.001:
+        push_error("Player escaped the authored arena floor bounds")
+        quit(1)
+        return
+    if absf(main.player.velocity.x) > 0.001 or absf(main.player.velocity.z) > 0.001:
+        push_error("Arena clamp did not cancel outward player velocity")
+        quit(1)
+        return
+    main.player.global_position = Vector3.ZERO
+
+    var clamped_spawn := main._clamp_spawn_position(Vector3(60.0, 0.0, -60.0))
+    if absf(clamped_spawn.x) > main.SPAWN_ARENA_HALF_EXTENT + 0.001 or absf(clamped_spawn.z) > main.SPAWN_ARENA_HALF_EXTENT + 0.001:
+        push_error("Enemy spawn position can escape the authored arena floor")
+        quit(1)
+        return
+
     var tactical_rig := main.player.get_node_or_null("TacticalRig") as Node3D
     var tactical_backplate := main.player.get_node_or_null("TacticalRig/TacticalBackplate") as MeshInstance3D
     var weapon_accent := main.player.get_node_or_null("WeaponAccent") as MeshInstance3D

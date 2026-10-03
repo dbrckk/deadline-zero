@@ -43,6 +43,7 @@ var target_refresh_clock := 0.0
 
 const TARGET_REFRESH_INTERVAL := 0.08
 const TARGET_SWITCH_RATIO := 0.78
+const ARENA_HALF_EXTENT := 30.0
 
 func _ready() -> void:
     add_to_group("player")
@@ -77,6 +78,7 @@ func _physics_process(delta: float) -> void:
 
     velocity = Vector3(input.x, 0.0, input.y) * move_speed
     move_and_slide()
+    _constrain_to_arena()
     if hit_reaction_left <= 0.0:
         _update_authored_animation()
 
@@ -119,6 +121,16 @@ func _clear_player_marker_pressure() -> void:
     var locator := get_node_or_null("PlayerPressureLocator") as Node3D
     if locator != null:
         locator.visible = false
+
+func _constrain_to_arena() -> void:
+    var clamped_x := clampf(global_position.x, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
+    var clamped_z := clampf(global_position.z, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
+    if not is_equal_approx(clamped_x, global_position.x):
+        velocity.x = 0.0
+    if not is_equal_approx(clamped_z, global_position.z):
+        velocity.z = 0.0
+    global_position.x = clamped_x
+    global_position.z = clamped_z
 
 func set_touch_move(value: Vector2) -> void:
     touch_move = value.limit_length(1.0)

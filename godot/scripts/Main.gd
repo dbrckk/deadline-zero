@@ -59,6 +59,7 @@ const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_REVEAL_FOV_DELTA := 5.5
 const HUD_REFRESH_INTERVAL := 0.10
+const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
 const DIRECTOR_REFRESH_INTERVAL := 0.25
 
@@ -206,6 +207,13 @@ func _touch_input_vector(current_position: Vector2) -> Vector2:
 func query_enemies_near(position: Vector3, radius: float) -> Array:
     return enemy_spatial_index.query(position, radius)
 
+func _clamp_spawn_position(position: Vector3) -> Vector3:
+    return Vector3(
+        clampf(position.x, -SPAWN_ARENA_HALF_EXTENT, SPAWN_ARENA_HALF_EXTENT),
+        position.y,
+        clampf(position.z, -SPAWN_ARENA_HALF_EXTENT, SPAWN_ARENA_HALF_EXTENT)
+    )
+
 func _spawn_enemy(forced_kind: String = "") -> void:
     if player == null or game_over:
         return
@@ -213,7 +221,7 @@ func _spawn_enemy(forced_kind: String = "") -> void:
         return
     var angle := spawn_rng.randf() * TAU
     var radius := spawn_rng.randf_range(12.0, 18.0)
-    var pos := player.global_position + Vector3(cos(angle) * radius, 0.0, sin(angle) * radius)
+    var pos := _clamp_spawn_position(player.global_position + Vector3(cos(angle) * radius, 0.0, sin(angle) * radius))
     var kind := forced_kind if not forced_kind.is_empty() else run_director.choose_enemy(elapsed, level, spawn_rng)
     var difficulty := float(director_profile.get("difficulty", 1.0))
     var enemy := DZEnemy.new()
