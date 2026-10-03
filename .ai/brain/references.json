@@ -86,18 +86,30 @@
           "definition_candidate": false
         },
         {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 15,
+          "preview": "_assert_surface_preservation(DZAssetLibrary.player(), \"player\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 16,
+          "preview": "_assert_surface_preservation(DZAssetLibrary.rifle(), \"rifle\")",
+          "definition_candidate": false
+        },
+        {
           "file": "godot/tests/enemy_silhouette_identity_test.gd",
-          "line": 11,
+          "line": 12,
           "preview": "var visual := DZAssetLibrary.enemy(palette_kind)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 13
+      "occurrence_count": 15
     },
     "_initialize": {
       "definition": {
-        "file": "godot/tests/enemy_silhouette_identity_test.gd",
-        "line": 4,
+        "file": "godot/tests/authored_asset_validation.gd",
+        "line": 8,
         "kind": "function",
         "language": "gdscript"
       },
@@ -296,6 +308,111 @@
         }
       ],
       "occurrence_count": 32
+    },
+    "_assert_scene": {
+      "definition": {
+        "file": "godot/tests/authored_asset_validation.gd",
+        "line": 19,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 10,
+          "preview": "_assert_scene(PLAYER_PATH, [\"Idle_Gun\", \"Run_Gun\", \"HitReact\", \"Death\"])",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 11,
+          "preview": "_assert_scene(ZOMBIE_PATH, [\"Walk\", \"Run_Arms\", \"HitReact\", \"Death\"])",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 12,
+          "preview": "_assert_scene(BRUTE_PATH, [\"Walk\", \"Run_Arms\", \"Death\"])",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 13,
+          "preview": "_assert_scene(RIFLE_PATH, [])",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 14,
+          "preview": "_assert_scene(BARRIER_PATH, [])",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 20,
+          "preview": "func _assert_scene(path: String, required_animations: Array[String]) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "_assert_surface_preservation": {
+      "definition": {
+        "file": "godot/tests/authored_asset_validation.gd",
+        "line": 45,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 15,
+          "preview": "_assert_surface_preservation(DZAssetLibrary.player(), \"player\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 16,
+          "preview": "_assert_surface_preservation(DZAssetLibrary.rifle(), \"rifle\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 47,
+          "preview": "func _assert_surface_preservation(instance: Node3D, label: String) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_find_animation_player": {
+      "definition": {
+        "file": "godot/tests/authored_asset_validation.gd",
+        "line": 90,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 32,
+          "preview": "var player := _find_animation_player(instance)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 91,
+          "preview": "func _find_animation_player(node: Node) -> AnimationPlayer:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_asset_validation.gd",
+          "line": 95,
+          "preview": "var found := _find_animation_player(child)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
     }
   }
 }

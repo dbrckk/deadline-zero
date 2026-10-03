@@ -16,9 +16,9 @@
     },
     "_initialize": {
       "source": {
-        "file": "godot/tests/enemy_silhouette_identity_test.gd",
-        "start": 4,
-        "end": 124
+        "file": "godot/tests/authored_asset_validation.gd",
+        "start": 8,
+        "end": 128
       },
       "symbol_dependencies": [
         {
@@ -34,19 +34,108 @@
           "relation": "class_like"
         },
         {
-          "symbol": "Enemy",
+          "symbol": "_assert_scene",
           "definitions": [
             {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 18,
-              "kind": "class",
-              "language": "java"
+              "file": "godot/tests/authored_asset_validation.gd",
+              "line": 19,
+              "kind": "function",
+              "language": "gdscript"
             }
           ],
-          "relation": "class_like"
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_assert_surface_preservation",
+          "definitions": [
+            {
+              "file": "godot/tests/authored_asset_validation.gd",
+              "line": 45,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_find_animation_player",
+          "definitions": [
+            {
+              "file": "godot/tests/authored_asset_validation.gd",
+              "line": 90,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "_assert_scene": {
+      "source": {
+        "file": "godot/tests/authored_asset_validation.gd",
+        "start": 19,
+        "end": 139
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_assert_surface_preservation",
+          "definitions": [
+            {
+              "file": "godot/tests/authored_asset_validation.gd",
+              "line": 45,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_find_animation_player",
+          "definitions": [
+            {
+              "file": "godot/tests/authored_asset_validation.gd",
+              "line": 90,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
       "dependency_count": 2
+    },
+    "_assert_surface_preservation": {
+      "source": {
+        "file": "godot/tests/authored_asset_validation.gd",
+        "start": 45,
+        "end": 165
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_find_animation_player",
+          "definitions": [
+            {
+              "file": "godot/tests/authored_asset_validation.gd",
+              "line": 90,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "_find_animation_player": {
+      "source": {
+        "file": "godot/tests/authored_asset_validation.gd",
+        "start": 90,
+        "end": 210
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
     }
   }
 }

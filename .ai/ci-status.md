@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 0 success / 1 failure / 7 active
+Summary: 0 success / 0 failure / 5 active
 
-- Godot Android First Playable: pending / pending (b4f5f128)
-- Responsive UI QA: pending / pending (b4f5f128)
-- Verify: pending / pending (b4f5f128)
-- Godot 3D Verify: in_progress / pending (b4f5f128)
-- Verify: in_progress / pending (cdc3c3e6)
-- Responsive UI QA: in_progress / pending (cdc3c3e6)
-- Godot Android First Playable: in_progress / pending (cdc3c3e6)
-- Godot 3D Verify: completed / failure (cdc3c3e6)
-
-## Latest failed run structure
-- Job: verify
-  - Failed step: Validate enemy silhouette identities
+- Godot 3D Verify: in_progress / pending (8de53c7e)
+- Godot Android First Playable: in_progress / pending (8de53c7e)
+- Responsive UI QA: pending / pending (8de53c7e)
+- Verify: pending / pending (8de53c7e)
+- Godot 3D Verify: in_progress / pending (1f8ccd14)
+- Responsive UI QA: completed / cancelled (1f8ccd14)
+- Godot Android First Playable: completed / cancelled (1f8ccd14)
+- Verify: completed / cancelled (1f8ccd14)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

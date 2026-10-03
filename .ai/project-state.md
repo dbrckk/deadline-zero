@@ -22,21 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T17:36:19Z
+Generated: 2026-10-03T18:39:34Z
 
 ### Git
 - Branch: `main`
-- Head: `b4f5f1281bf1`
-- Commit date: 2026-10-03T19:35:59+02:00
-- Commit: Test per-surface enemy material grading
+- Head: `8de53c7ed37f`
+- Commit date: 2026-10-03T20:39:09+02:00
+- Commit: Test player and weapon material preservation
 - Tracked files: 942
 
 ### Recently changed files
-- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/tests/authored_asset_validation.gd`
 - `godot/scripts/AssetLibrary.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/native_enemy_behavior_test.gd`
-- `godot/tests/enemy_hit_reaction_test.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
 
 ### Project signals
 - `build.gradle`
