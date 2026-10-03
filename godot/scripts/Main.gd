@@ -62,6 +62,8 @@ const TOUCH_STICK_RADIUS := 90.0
 const TOUCH_STICK_DEADZONE := 10.0
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
+const BOSS_INTERVAL := 75.0
+const BOSS_RETRY_DELAY := 15.0
 const BOSS_REVEAL_FOV_DELTA := 5.5
 const HUD_REFRESH_INTERVAL := 0.10
 const SPAWN_ARENA_HALF_EXTENT := 34.0
@@ -159,10 +161,13 @@ func _physics_process(delta: float) -> void:
         director_profile = run_director.profile(elapsed, level)
         max_enemies = int(director_profile["max_enemies"])
     boss_banner_timer = max(0.0, boss_banner_timer - delta)
-    if elapsed >= next_boss_time and not _has_active_boss():
-        _spawn_enemy("boss")
-        boss_banner_timer = 3.2
-        next_boss_time = elapsed + 75.0
+    if elapsed >= next_boss_time:
+        if _has_active_boss():
+            next_boss_time = elapsed + BOSS_RETRY_DELAY
+        else:
+            _spawn_enemy("boss")
+            boss_banner_timer = 3.2
+            next_boss_time = elapsed + BOSS_INTERVAL
 
     spawn_clock -= delta
     if spawn_clock <= 0.0:

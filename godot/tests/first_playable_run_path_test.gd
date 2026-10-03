@@ -358,8 +358,8 @@ func _initialize() -> void:
         push_error("Boss scheduler spawned a second boss while one was still active")
         quit(1)
         return
-    if main.next_boss_time > main.elapsed:
-        push_error("Active boss should defer, not consume, the next boss schedule")
+    if main.next_boss_time < main.elapsed + main.BOSS_RETRY_DELAY - 0.05:
+        push_error("Active boss did not create a recovery window before the next boss check")
         quit(1)
         return
 
