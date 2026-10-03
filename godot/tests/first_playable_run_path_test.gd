@@ -18,6 +18,11 @@ func _initialize() -> void:
         push_error("Player weapon audio did not initialize bounded 3-voice polyphony")
         quit(1)
         return
+    for voice in main.player.shot_audio_voices:
+        if voice.bus != "SFX":
+            push_error("Player weapon audio voice escaped the SFX bus")
+            quit(1)
+            return
     if main.impact_audio_voices.size() != 4:
         push_error("Combat impacts did not initialize bounded 4-voice polyphony")
         quit(1)

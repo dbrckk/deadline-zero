@@ -638,6 +638,7 @@ func _build_audio() -> void:
         voice.max_distance = 28.0
         voice.unit_size = 5.0
         voice.volume_db = -12.5
+        voice.bus = "SFX"
         add_child(voice)
         shot_audio_voices.append(voice)
     shot_audio = shot_audio_voices[0]
