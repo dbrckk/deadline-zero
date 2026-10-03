@@ -1,16 +1,16 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 529
-- Files reparsed this run: 3
-- Symbols: 2927
+- Files indexed: 530
+- Files reparsed this run: 4
+- Symbols: 2929
 - Internal import edges: 808
-- Impacted files: 3
-- Selected tests: 2
+- Impacted files: 37
+- Selected tests: 14
 
 ## Languages
 - java: 422 files
-- gdscript: 56 files
+- gdscript: 57 files
 - python: 51 files
 
 ## Highest-density symbol files
@@ -29,8 +29,8 @@
 - core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java: 28 symbols
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java: 26 symbols
+- godot/scripts/Player.gd: 26 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 25 symbols
-- godot/scripts/Player.gd: 25 symbols
 - core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java: 24 symbols

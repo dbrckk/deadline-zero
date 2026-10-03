@@ -22,19 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T18:39:34Z
+Generated: 2026-10-03T19:01:43Z
 
 ### Git
 - Branch: `main`
-- Head: `8de53c7ed37f`
-- Commit date: 2026-10-03T20:39:09+02:00
-- Commit: Test player and weapon material preservation
-- Tracked files: 942
+- Head: `6c6aafd57263`
+- Commit date: 2026-10-03T21:01:13+02:00
+- Commit: Test pause overlay pressure cleanup
+- Tracked files: 943
 
 ### Recently changed files
-- `godot/tests/authored_asset_validation.gd`
-- `godot/scripts/AssetLibrary.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/tests/first_playable_run_path_test.gd`
+- `godot/scripts/Main.gd`
+- `.github/workflows/godot-verify.yml`
+- `godot/tests/player_pressure_marker_test.gd`
+- `godot/scripts/Player.gd`
 
 ### Project signals
 - `build.gradle`

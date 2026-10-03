@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 1f8ccd14e19a9e91ee9d5f7b455ed9584373da02
-Head: 8de53c7ed37fdd8db639b85a6ed5ba680dfd0679
+Base: 18d6cb63cfb15669d5661077bc37c6fa365ba63e
+Head: 6c6aafd572633f9ba33b8397b5534c2da1e98eb0
 
 ## Changed files
-- M godot/tests/authored_asset_validation.gd
+- M godot/tests/first_playable_run_path_test.gd
 
 ## Affected areas
 - godot

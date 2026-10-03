@@ -439,6 +439,7 @@ godot/
     native_enemy_behavior_test.gd
     native_upgrade_depth_test.gd
     player_damage_feedback_test.gd
+    player_pressure_marker_test.gd
     pressure_frame_render_test.gd
     projectile_profile_runtime_visual_test.gd
     rendered_frame_smoke_test.gd
@@ -2216,6 +2217,8 @@ jobs:
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_silhouette_identity_test.gd
       - name: Validate weapon presentation identities
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_presentation_test.gd
+      - name: Validate player pressure marker lifecycle
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/player_pressure_marker_test.gd
       - name: Validate weapon profile data
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_profile_data_test.gd
       - name: Validate projectile profile runtime visuals
@@ -26388,6 +26391,8 @@ func _on_sfx_volume_changed(value: float) -> void:
 func _on_pause_requested() -> void:
     if game_over or not pending_upgrades.is_empty():
         return
+    if player != null and is_instance_valid(player):
+        player._clear_player_marker_pressure()
     hud.show_pause_settings()
     get_tree().paused = true
 
@@ -27419,6 +27424,24 @@ func set_combat_enabled(enabled: bool) -> void:
     velocity = Vector3.ZERO
     touch_move = Vector2.ZERO
     fire_clock = max(fire_clock, fire_interval)
+    _clear_player_marker_pressure()
+
+func _clear_player_marker_pressure() -> void:
+    if not player_marker_pressure:
+        var idle_locator := get_node_or_null("PlayerPressureLocator") as Node3D
+        if idle_locator != null:
+            idle_locator.visible = false
+        return
+    player_marker_pressure = false
+    if player_marker_material != null:
+        player_marker_material.albedo_color = Color(0.05, 0.72, 1.0, 0.78)
+        player_marker_material.emission = Color(0.025, 0.42, 0.72)
+        player_marker_material.emission_energy_multiplier = 1.9
+    if player_marker_ring != null:
+        player_marker_ring.scale = Vector3.ONE
+    var locator := get_node_or_null("PlayerPressureLocator") as Node3D
+    if locator != null:
+        locator.visible = false
 
 func set_touch_move(value: Vector2) -> void:
     touch_move = value.limit_length(1.0)
@@ -29527,10 +29550,33 @@ func _initialize() -> void:
         push_error("Pause controls are unavailable in first-playable path")
         quit(1)
         return
+
+    var pressure_enemy: DZEnemy
+    for node in get_nodes_in_group("enemies"):
+        var candidate := node as DZEnemy
+        if candidate != null:
+            pressure_enemy = candidate
+            break
+    if pressure_enemy == null:
+        push_error("Pause pressure-cleanup test has no enemy")
+        quit(1)
+        return
+    pressure_enemy.global_position = main.player.global_position + Vector3(1.6, 0.0, 0.0)
+    main.player._update_player_marker_pressure(pressure_enemy)
+    var pressure_locator := main.player.get_node_or_null("PlayerPressureLocator") as Node3D
+    if pressure_locator == null or not pressure_locator.visible:
+        push_error("First-playable pressure locator did not activate before pause")
+        quit(1)
+        return
+
     pause_button.pressed.emit()
     await process_frame
     if not paused or not pause_panel.visible:
         push_error("Pause action did not pause gameplay and show settings")
+        quit(1)
+        return
+    if main.player.player_marker_pressure or pressure_locator.visible:
+        push_error("Pause overlay must clear stale combat pressure feedback")
         quit(1)
         return
     var resume_button := pause_panel.find_child("ResumeButton", true, false) as Button
@@ -30261,6 +30307,75 @@ func _initialize() -> void:
         return
 
     print("Deadline Zero player damage feedback: OK")
+    quit(0)
+````
+
+## File: godot/tests/player_pressure_marker_test.gd
+````
+extends SceneTree
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var player := DZPlayer.new()
+    root.add_child(player)
+    await process_frame
+
+    var enemy := DZEnemy.new()
+    enemy.configure("shambler", 1.0, player)
+    enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(enemy)
+    await process_frame
+
+    player.global_position = Vector3.ZERO
+    enemy.global_position = Vector3(1.6, 0.0, 0.0)
+    player._update_player_marker_pressure(enemy)
+
+    var locator := player.get_node_or_null("PlayerPressureLocator") as Node3D
+    if locator == null or not locator.visible:
+        push_error("Close melee pressure must show the elevated player locator")
+        quit(1)
+        return
+    if not player.player_marker_pressure:
+        push_error("Player pressure state was not activated")
+        quit(1)
+        return
+    if player.player_marker_ring == null or player.player_marker_ring.scale.x < 1.09:
+        push_error("Player pressure ring did not expand")
+        quit(1)
+        return
+
+    player.set_combat_enabled(false)
+    if player.player_marker_pressure:
+        push_error("Combat shutdown must clear stale player pressure state")
+        quit(1)
+        return
+    if locator.visible:
+        push_error("Combat shutdown must hide the player pressure locator")
+        quit(1)
+        return
+    if player.player_marker_ring == null or not player.player_marker_ring.scale.is_equal_approx(Vector3.ONE):
+        push_error("Combat shutdown must restore the player marker ring scale")
+        quit(1)
+        return
+
+    player.set_combat_enabled(true)
+    player._update_player_marker_pressure(enemy)
+    if not player.player_marker_pressure or not locator.visible:
+        push_error("Player pressure feedback must recover when combat resumes")
+        quit(1)
+        return
+
+    enemy.global_position = Vector3(4.0, 0.0, 0.0)
+    player._update_player_marker_pressure(enemy)
+    if player.player_marker_pressure or locator.visible:
+        push_error("Distant enemies must not keep the pressure locator active")
+        quit(1)
+        return
+
+    print("Deadline Zero player pressure marker: OK")
     quit(0)
 ````
 
