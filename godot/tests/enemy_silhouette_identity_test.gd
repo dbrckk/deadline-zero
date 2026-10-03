@@ -173,5 +173,28 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var runner_a := ENEMY_SCRIPT.new()
+    runner_a.kind = "runner"
+    root.add_child(runner_a)
+    var runner_b := ENEMY_SCRIPT.new()
+    runner_b.kind = "runner"
+    root.add_child(runner_b)
+    await process_frame
+
+    var runner_shadow_a := runner_a.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    var runner_shadow_b := runner_b.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    if runner_shadow_a == null or runner_shadow_b == null:
+        push_error("Runner contact shadow reuse fixture is incomplete")
+        quit(1)
+        return
+    if runner_shadow_a.mesh != runner_shadow_b.mesh:
+        push_error("Same-kind enemy contact shadows must reuse one mesh resource")
+        quit(1)
+        return
+    if runner_shadow_a.material_override != runner_shadow_b.material_override:
+        push_error("Same-kind enemy contact shadows must reuse one material resource")
+        quit(1)
+        return
+
     print("Deadline Zero enemy silhouette identity: OK")
     quit(0)
