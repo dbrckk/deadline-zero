@@ -19,6 +19,15 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var tactical_rig := main.player.get_node_or_null("TacticalRig") as Node3D
+    var tactical_backplate := main.player.get_node_or_null("TacticalRig/TacticalBackplate") as MeshInstance3D
+    var weapon_accent := main.player.get_node_or_null("WeaponAccent") as MeshInstance3D
+    var authored_rifle := main.player.get_node_or_null("Rifle") as Node3D
+    if tactical_rig == null or tactical_backplate == null or weapon_accent == null or authored_rifle == null:
+        push_error("Player production presentation is missing tactical rig/rifle identity")
+        quit(1)
+        return
+
     var pause_button := main.hud.get_node_or_null("PauseButton") as Button
     var pause_panel := main.hud.get_node_or_null("PausePanel") as PanelContainer
     if pause_button == null or pause_panel == null:

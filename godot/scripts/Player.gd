@@ -27,6 +27,10 @@ var damage_pulse_material: StandardMaterial3D
 var muzzle_flash: MeshInstance3D
 var muzzle_flash_material: StandardMaterial3D
 var muzzle_flash_tween: Tween
+var rifle_visual: Node3D
+var rifle_rest_position := Vector3.ZERO
+var rifle_recoil_tween: Tween
+var weapon_accent_material: StandardMaterial3D
 var player_marker_ring: MeshInstance3D
 var player_marker_material: StandardMaterial3D
 var player_marker_pressure := false
@@ -113,6 +117,9 @@ func _apply_weapon_profile_data(profile_id: String, data: Dictionary) -> void:
     weapon_profile = profile_id
     if data.has("tint"):
         weapon_tint = data["tint"]
+        if weapon_accent_material != null:
+            weapon_accent_material.albedo_color = weapon_tint
+            weapon_accent_material.emission = weapon_tint
 
     weapon_damage *= float(data.get("damage_multiplier", 1.0))
     projectile_speed *= float(data.get("projectile_speed_multiplier", 1.0))
@@ -201,6 +208,7 @@ func _nearest_enemy() -> DZEnemy:
 func _fire_at(enemy: DZEnemy) -> void:
     _play_shot_audio()
     _trigger_muzzle_flash()
+    _trigger_rifle_recoil()
     var base_dir := global_position.direction_to(enemy.global_position)
     base_dir.y = 0.0
     base_dir = base_dir.normalized()
@@ -228,14 +236,16 @@ func _build_visual() -> void:
             if hidden is GeometryInstance3D:
                 (hidden as GeometryInstance3D).visible = false
 
-        var rifle := DZAssetLibrary.rifle()
-        if rifle != null:
-            rifle.name = "Rifle"
-            rifle.position = Vector3(0.33, 0.93, -0.38)
-            rifle.rotation_degrees = Vector3(-8.0, 180.0, -4.0)
-            rifle.scale = Vector3.ONE * 0.92
-            add_child(rifle)
+        rifle_visual = DZAssetLibrary.rifle()
+        if rifle_visual != null:
+            rifle_visual.name = "Rifle"
+            rifle_rest_position = Vector3(0.33, 0.93, -0.38)
+            rifle_visual.position = rifle_rest_position
+            rifle_visual.rotation_degrees = Vector3(-8.0, 180.0, -4.0)
+            rifle_visual.scale = Vector3.ONE * 0.92
+            add_child(rifle_visual)
 
+        _build_tactical_rig()
         _build_player_marker()
         _build_muzzle_flash()
         _build_damage_feedback()
@@ -279,9 +289,91 @@ func _build_visual() -> void:
     gun.rotation.x = deg_to_rad(-8.0)
     gun.material_override = body_mat
     visual.add_child(gun)
+    _build_tactical_rig()
     _build_player_marker()
     _build_muzzle_flash()
     _build_damage_feedback()
+
+func _build_tactical_rig() -> void:
+    var rig := Node3D.new()
+    rig.name = "TacticalRig"
+    add_child(rig)
+
+    var armor_material := StandardMaterial3D.new()
+    armor_material.albedo_color = Color(0.045, 0.080, 0.105)
+    armor_material.metallic = 0.72
+    armor_material.roughness = 0.34
+
+    var armor_edge_material := StandardMaterial3D.new()
+    armor_edge_material.albedo_color = Color(0.12, 0.20, 0.24)
+    armor_edge_material.metallic = 0.82
+    armor_edge_material.roughness = 0.26
+
+    weapon_accent_material = StandardMaterial3D.new()
+    weapon_accent_material.albedo_color = weapon_tint
+    weapon_accent_material.emission_enabled = true
+    weapon_accent_material.emission = weapon_tint
+    weapon_accent_material.emission_energy_multiplier = 1.85
+    weapon_accent_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+
+    var backplate := MeshInstance3D.new()
+    backplate.name = "TacticalBackplate"
+    var backplate_mesh := BoxMesh.new()
+    backplate_mesh.size = Vector3(0.48, 0.075, 0.34)
+    backplate.mesh = backplate_mesh
+    backplate.position = Vector3(0.0, 1.17, 0.10)
+    backplate.rotation_degrees.x = -7.0
+    backplate.material_override = armor_material
+    rig.add_child(backplate)
+
+    var spine := MeshInstance3D.new()
+    spine.name = "TacticalSpine"
+    var spine_mesh := BoxMesh.new()
+    spine_mesh.size = Vector3(0.12, 0.055, 0.42)
+    spine.mesh = spine_mesh
+    spine.position = Vector3(0.0, 1.22, 0.12)
+    spine.material_override = armor_edge_material
+    rig.add_child(spine)
+
+    for side in [-1.0, 1.0]:
+        var shoulder := MeshInstance3D.new()
+        shoulder.name = "TacticalShoulderL" if side < 0.0 else "TacticalShoulderR"
+        var shoulder_mesh := BoxMesh.new()
+        shoulder_mesh.size = Vector3(0.23, 0.09, 0.31)
+        shoulder.mesh = shoulder_mesh
+        shoulder.position = Vector3(side * 0.33, 1.12, 0.035)
+        shoulder.rotation_degrees = Vector3(-5.0, side * -8.0, side * -13.0)
+        shoulder.material_override = armor_material
+        rig.add_child(shoulder)
+
+    var core := MeshInstance3D.new()
+    core.name = "TacticalCore"
+    var core_mesh := BoxMesh.new()
+    core_mesh.size = Vector3(0.24, 0.025, 0.055)
+    core.mesh = core_mesh
+    core.position = Vector3(0.0, 1.225, -0.085)
+    core.material_override = weapon_accent_material
+    rig.add_child(core)
+
+    var weapon_accent := MeshInstance3D.new()
+    weapon_accent.name = "WeaponAccent"
+    var accent_mesh := BoxMesh.new()
+    accent_mesh.size = Vector3(0.038, 0.030, 0.44)
+    weapon_accent.mesh = accent_mesh
+    weapon_accent.position = Vector3(0.33, 1.015, -0.59)
+    weapon_accent.rotation_degrees.x = -8.0
+    weapon_accent.material_override = weapon_accent_material
+    add_child(weapon_accent)
+
+func _trigger_rifle_recoil() -> void:
+    if rifle_visual == null or not is_instance_valid(rifle_visual):
+        return
+    if rifle_recoil_tween != null and rifle_recoil_tween.is_valid():
+        rifle_recoil_tween.kill()
+    rifle_visual.position = rifle_rest_position
+    rifle_recoil_tween = create_tween()
+    rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position + Vector3(0.0, 0.015, 0.085), 0.035).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position, 0.075).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _build_player_marker() -> void:
     player_marker_material = StandardMaterial3D.new()

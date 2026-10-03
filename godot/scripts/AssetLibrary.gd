@@ -22,7 +22,9 @@ static func instantiate_scene(path: String) -> Node3D:
     return packed.instantiate() as Node3D
 
 static func player() -> Node3D:
-    return instantiate_scene(PLAYER)
+    var root := instantiate_scene(PLAYER)
+    _grade_mesh_tree(root, Color(0.74, 0.82, 0.86), 0.78, 0.02)
+    return root
 
 static func enemy(kind: String) -> Node3D:
     var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite", "boss"] else ZOMBIE_BASIC)
@@ -39,7 +41,9 @@ static func enemy(kind: String) -> Node3D:
     return root
 
 static func rifle() -> Node3D:
-    return instantiate_scene(RIFLE)
+    var root := instantiate_scene(RIFLE)
+    _grade_mesh_tree(root, Color(0.34, 0.40, 0.44), 0.60, 0.34)
+    return root
 
 static func barrier() -> Node3D:
     var root := instantiate_scene(BARRIER)

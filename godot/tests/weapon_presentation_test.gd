@@ -31,6 +31,13 @@ func _init() -> void:
     assert(player.contains("PlayerPressureChevron_"))
     assert(player.contains("_update_player_marker_pressure(target)"))
     assert(player.contains("distance_squared_to(target.global_position) <= 8.41"))
+    assert(player.contains("TacticalRig"))
+    assert(player.contains("TacticalBackplate"))
+    assert(player.contains("TacticalShoulderL"))
+    assert(player.contains("TacticalShoulderR"))
+    assert(player.contains("TacticalCore"))
+    assert(player.contains("WeaponAccent"))
+    assert(player.contains("_trigger_rifle_recoil()"))
 
     print("weapon_presentation_test: PASS")
     quit()
