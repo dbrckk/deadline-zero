@@ -34,10 +34,33 @@ func _initialize() -> void:
         push_error("Pause controls are unavailable in first-playable path")
         quit(1)
         return
+
+    var pressure_enemy: DZEnemy
+    for node in get_nodes_in_group("enemies"):
+        var candidate := node as DZEnemy
+        if candidate != null:
+            pressure_enemy = candidate
+            break
+    if pressure_enemy == null:
+        push_error("Pause pressure-cleanup test has no enemy")
+        quit(1)
+        return
+    pressure_enemy.global_position = main.player.global_position + Vector3(1.6, 0.0, 0.0)
+    main.player._update_player_marker_pressure(pressure_enemy)
+    var pressure_locator := main.player.get_node_or_null("PlayerPressureLocator") as Node3D
+    if pressure_locator == null or not pressure_locator.visible:
+        push_error("First-playable pressure locator did not activate before pause")
+        quit(1)
+        return
+
     pause_button.pressed.emit()
     await process_frame
     if not paused or not pause_panel.visible:
         push_error("Pause action did not pause gameplay and show settings")
+        quit(1)
+        return
+    if main.player.player_marker_pressure or pressure_locator.visible:
+        push_error("Pause overlay must clear stale combat pressure feedback")
         quit(1)
         return
     var resume_button := pause_panel.find_child("ResumeButton", true, false) as Button
