@@ -32,6 +32,14 @@ func _initialize() -> void:
         quit(1)
         return
 
+    Engine.time_scale = 0.12
+    main.hit_freeze_left = 0.020
+    main._process(0.020 * 0.12)
+    if main.hit_freeze_left > 0.0001 or not is_equal_approx(Engine.time_scale, 1.0):
+        push_error("Hit-freeze duration remained coupled to slowed Engine.time_scale")
+        quit(1)
+        return
+
     var tactical_rig := main.player.get_node_or_null("TacticalRig") as Node3D
     var tactical_backplate := main.player.get_node_or_null("TacticalRig/TacticalBackplate") as MeshInstance3D
     var weapon_accent := main.player.get_node_or_null("WeaponAccent") as MeshInstance3D
