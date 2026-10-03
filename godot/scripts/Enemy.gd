@@ -46,6 +46,7 @@ var hit_flash_visual: MeshInstance3D
 var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
 static var _shared_contact_shadow_material: StandardMaterial3D
+static var _contact_shadow_mesh_cache := {}
 static var _telegraph_tick_mesh_cache := {}
 
 const MAX_DAMAGE_NUMBERS := 18
@@ -589,7 +590,6 @@ func _play_hit_reaction(critical: bool, killed: bool) -> void:
 func _build_contact_shadow() -> void:
     var shadow := MeshInstance3D.new()
     shadow.name = "EnemyContactShadow"
-    var mesh := CylinderMesh.new()
     var radius := 0.42
     match kind:
         "runner":
@@ -606,15 +606,23 @@ func _build_contact_shadow() -> void:
             radius = 0.54
         "boss":
             radius = 0.78
-    mesh.top_radius = radius
-    mesh.bottom_radius = radius * 1.04
-    mesh.height = 0.008
-    mesh.radial_segments = 16
-    shadow.mesh = mesh
+    shadow.mesh = _contact_shadow_mesh(radius)
     shadow.position.y = 0.010
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     shadow.material_override = _enemy_contact_shadow_material()
     add_child(shadow)
+
+static func _contact_shadow_mesh(radius: float) -> CylinderMesh:
+    var key := "%.3f" % radius
+    if _contact_shadow_mesh_cache.has(key):
+        return _contact_shadow_mesh_cache[key] as CylinderMesh
+    var mesh := CylinderMesh.new()
+    mesh.top_radius = radius
+    mesh.bottom_radius = radius * 1.04
+    mesh.height = 0.008
+    mesh.radial_segments = 16
+    _contact_shadow_mesh_cache[key] = mesh
+    return mesh
 
 static func _enemy_contact_shadow_material() -> StandardMaterial3D:
     if _shared_contact_shadow_material != null:
