@@ -886,7 +886,10 @@ game.startRunWithContract(RunModifierContext.offers()[0]);
 assertTrue("expected GameScreen for performance probe", game.getScreen() instanceof GameScreen);
 injectLoad((GameScreen) game.getScreen());
 ⋮----
-waitForTelemetry(activity, 8000L);
+// Loaded gameplay can hit the same transient emulator color-buffer stalls as the
+// stress scene. Preserve every telemetry assertion, but allow enough acquisition
+// time for a representative sample after a delayed graphics start.
+waitForTelemetry(activity, 20000L);
 ⋮----
 GameScreen screen = (GameScreen) game(activity).getScreen();
 snapshotRef.set(screen.performanceSnapshot());
@@ -929,7 +932,6 @@ injectStressLoad((GameScreen) game.getScreen());
 // deterministic 160-enemy/180-projectile scene is being established. Keep every
 // telemetry quality assertion unchanged, but allow the renderer enough time to
 // produce a representative sample after a delayed graphics start.
-waitForTelemetry(activity, 20000L);
 ⋮----
 assertNotNull("stress performance snapshot missing", snapshot);
 assertTrue("stress probe did not collect enough frames", snapshot.averageFps() > 5f);
