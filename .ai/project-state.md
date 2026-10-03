@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-02T19:14:17Z
+Generated: 2026-10-03T09:34:41Z
 
 ### Git
 - Branch: `main`
-- Head: `7e0fc21ac59f`
-- Commit date: 2026-10-02T21:14:01+02:00
-- Commit: Stop floor plates from overpowering combat
+- Head: `429f2ab2206e`
+- Commit date: 2026-10-03T11:34:29+02:00
+- Commit: Keep perimeter fortifications out of combat focus
 - Tracked files: 942
 
 ### Recently changed files

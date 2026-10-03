@@ -2789,10 +2789,10 @@ func _build_authored_barrier_clusters() -> void:
     # Keep authored cover visible at the arena edge without letting the large source meshes
     # dominate the phone framing. The clusters now read as perimeter fortification, not walls.
     var clusters := [
-        {"center": Vector3(-21.0, 0.0, -14.2), "rotation": 0.18},
-        {"center": Vector3(20.6, 0.0, -13.8), "rotation": -0.28},
-        {"center": Vector3(-20.2, 0.0, 15.0), "rotation": 0.72},
-        {"center": Vector3(21.2, 0.0, 14.6), "rotation": -0.66}
+        {"center": Vector3(-23.2, 0.0, -15.8), "rotation": 0.18},
+        {"center": Vector3(22.9, 0.0, -15.4), "rotation": -0.28},
+        {"center": Vector3(-22.6, 0.0, 16.4), "rotation": 0.72},
+        {"center": Vector3(23.3, 0.0, 16.0), "rotation": -0.66}
     ]
     for cluster_index in range(clusters.size()):
         var cluster: Dictionary = clusters[cluster_index]
@@ -2806,7 +2806,7 @@ func _build_authored_barrier_clusters() -> void:
             var lateral := (float(item_index) - 1.5) * 1.28
             barrier.position = center + Vector3(lateral, 0.0, sin(float(item_index) * 1.7) * 0.28)
             barrier.rotation.y = base_rotation + (0.08 if item_index % 2 == 0 else -0.08)
-            barrier.scale = Vector3.ONE * (0.48 + float(item_index % 3) * 0.035)
+            barrier.scale = Vector3.ONE * (0.34 + float(item_index % 3) * 0.025)
             add_child(barrier)
 
 func _build_authored_world_dressing() -> void:
@@ -4817,7 +4817,7 @@ func _initialize() -> void:
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
-            if child.scale.x > 0.56 or Vector2(child.position.x, child.position.z).length() < 22.0:
+            if child.scale.x > 0.40 or Vector2(child.position.x, child.position.z).length() < 24.0:
                 oversized_barrier_count += 1
             var barrier_meshes: Array[MeshInstance3D] = []
             if child is MeshInstance3D:
@@ -4951,7 +4951,7 @@ func _initialize() -> void:
         quit(1)
         return
     if oversized_barrier_count != 0:
-        push_error("Authored barriers must stay compact and perimeter-biased, got %d violations" % oversized_barrier_count)
+        push_error("Authored barriers must stay compact beyond the active combat frame, got %d violations" % oversized_barrier_count)
         quit(1)
         return
 
