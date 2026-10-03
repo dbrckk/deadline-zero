@@ -14,6 +14,14 @@ func _initialize() -> void:
         push_error("Run path did not initialize player, HUD and camera")
         quit(1)
         return
+    if main.player.shot_audio_voices.size() != 3:
+        push_error("Player weapon audio did not initialize bounded 3-voice polyphony")
+        quit(1)
+        return
+    if main.impact_audio_voices.size() != 4:
+        push_error("Combat impacts did not initialize bounded 4-voice polyphony")
+        quit(1)
+        return
     if get_nodes_in_group("enemies").size() < 8:
         push_error("Run path did not create initial enemy population")
         quit(1)

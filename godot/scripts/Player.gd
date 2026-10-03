@@ -21,6 +21,8 @@ var authored_visual: Node3D
 var authored_anim: AnimationPlayer
 var current_anim := ""
 var shot_audio: AudioStreamPlayer3D
+var shot_audio_voices: Array[AudioStreamPlayer3D] = []
+var shot_voice_index := 0
 var shot_streams := {}
 var damage_pulse: MeshInstance3D
 var damage_pulse_material: StandardMaterial3D
@@ -629,18 +631,24 @@ func _play_authored(name: String) -> void:
     authored_anim.play(name, 0.12)
 
 func _build_audio() -> void:
-    shot_audio = AudioStreamPlayer3D.new()
-    shot_audio.name = "ShotAudio"
-    shot_audio.max_distance = 28.0
-    shot_audio.unit_size = 5.0
-    shot_audio.volume_db = -11.0
-    add_child(shot_audio)
+    shot_audio_voices.clear()
+    for voice_index in range(3):
+        var voice := AudioStreamPlayer3D.new()
+        voice.name = "ShotAudio" if voice_index == 0 else "ShotAudio_%d" % voice_index
+        voice.max_distance = 28.0
+        voice.unit_size = 5.0
+        voice.volume_db = -12.5
+        add_child(voice)
+        shot_audio_voices.append(voice)
+    shot_audio = shot_audio_voices[0]
 
 func _play_shot_audio() -> void:
-    if shot_audio == null:
+    if shot_audio_voices.is_empty():
         return
     if not shot_streams.has(weapon_profile):
         shot_streams[weapon_profile] = DZCombatAudio.shot_stream(weapon_profile)
-    shot_audio.stream = shot_streams[weapon_profile]
-    shot_audio.pitch_scale = randf_range(0.97, 1.03)
-    shot_audio.play()
+    var voice := shot_audio_voices[shot_voice_index % shot_audio_voices.size()]
+    shot_voice_index = (shot_voice_index + 1) % shot_audio_voices.size()
+    voice.stream = shot_streams[weapon_profile]
+    voice.pitch_scale = randf_range(0.965, 1.035)
+    voice.play()

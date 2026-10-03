@@ -42,6 +42,8 @@ var boss_reveal_target: DZEnemy
 var boss_reveal_left := 0.0
 var current_boss: DZEnemy
 var impact_audio: AudioStreamPlayer
+var impact_audio_voices: Array[AudioStreamPlayer] = []
+var impact_voice_index := 0
 var boss_audio: AudioStreamPlayer
 var impact_streams := {}
 var enemy_spatial_index := DZSpatialHash.new(4.0)
@@ -1336,11 +1338,15 @@ func _build_perimeter_beacons() -> void:
         add_child(beacon)
 
 func _build_combat_audio() -> void:
-    impact_audio = AudioStreamPlayer.new()
-    impact_audio.name = "ImpactAudio"
-    impact_audio.bus = "SFX"
-    impact_audio.volume_db = -9.0
-    add_child(impact_audio)
+    impact_audio_voices.clear()
+    for voice_index in range(4):
+        var voice := AudioStreamPlayer.new()
+        voice.name = "ImpactAudio" if voice_index == 0 else "ImpactAudio_%d" % voice_index
+        voice.bus = "SFX"
+        voice.volume_db = -11.0
+        add_child(voice)
+        impact_audio_voices.append(voice)
+    impact_audio = impact_audio_voices[0]
 
     boss_audio = AudioStreamPlayer.new()
     boss_audio.name = "BossStinger"
@@ -1352,14 +1358,16 @@ func _build_combat_audio() -> void:
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
     if haptics_enabled:
         HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
-    if impact_audio == null:
+    if impact_audio_voices.is_empty():
         return
     var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
     if not impact_streams.has(key):
         impact_streams[key] = DZCombatAudio.impact_stream(critical, killed, boss)
-    impact_audio.stream = impact_streams[key]
-    impact_audio.pitch_scale = randf_range(0.96, 1.04)
-    impact_audio.play()
+    var voice := impact_audio_voices[impact_voice_index % impact_audio_voices.size()]
+    impact_voice_index = (impact_voice_index + 1) % impact_audio_voices.size()
+    voice.stream = impact_streams[key]
+    voice.pitch_scale = randf_range(0.95, 1.05)
+    voice.play()
 
 func _play_boss_stinger() -> void:
     if boss_audio != null:
