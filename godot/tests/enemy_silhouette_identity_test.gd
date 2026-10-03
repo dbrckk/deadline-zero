@@ -203,6 +203,11 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if runner_blade_a.mesh != runner_blade_b.mesh:
+        push_error("Same-kind runner signatures must reuse mesh resources")
+        quit(1)
+        return
+
     var brute_a := ENEMY_SCRIPT.new()
     brute_a.kind = "brute"
     root.add_child(brute_a)
@@ -214,6 +219,11 @@ func _initialize() -> void:
     var brute_plate_b := brute_b.get_node_or_null("BrutePlateL") as MeshInstance3D
     if brute_plate_a == null or brute_plate_b == null or brute_plate_a.material_override != brute_plate_b.material_override:
         push_error("Brute armor plates must reuse one dark armor material")
+        quit(1)
+        return
+
+    if brute_plate_a.mesh != brute_plate_b.mesh:
+        push_error("Brute armor plates must reuse one mesh resource")
         quit(1)
         return
 
