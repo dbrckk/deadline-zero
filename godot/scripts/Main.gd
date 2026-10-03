@@ -260,6 +260,7 @@ func _on_xp_collected(amount: int) -> void:
         break
 
 func _offer_upgrade() -> void:
+    _clear_hit_freeze()
     pending_upgrades.clear()
     touch_id = -1
     if player != null and is_instance_valid(player):
@@ -334,9 +335,14 @@ func _on_sfx_volume_changed(value: float) -> void:
     _set_bus_linear_volume("SFX", value)
     _save_audio_settings()
 
+func _clear_hit_freeze() -> void:
+    hit_freeze_left = 0.0
+    Engine.time_scale = 1.0
+
 func _on_pause_requested() -> void:
     if game_over or not pending_upgrades.is_empty():
         return
+    _clear_hit_freeze()
     if player != null and is_instance_valid(player):
         player._clear_player_marker_pressure()
         player.set_touch_move(Vector2.ZERO)
@@ -352,7 +358,7 @@ func _on_resume_requested() -> void:
         get_tree().paused = false
 
 func _on_player_died() -> void:
-    Engine.time_scale = 1.0
+    _clear_hit_freeze()
     game_over = true
     touch_id = -1
     if hud != null:
@@ -378,7 +384,7 @@ func _freeze_combat() -> void:
             hostile.set_combat_enabled(false)
 
 func _on_restart_requested() -> void:
-    Engine.time_scale = 1.0
+    _clear_hit_freeze()
     get_tree().paused = false
     get_tree().reload_current_scene()
 
