@@ -22,26 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T17:04:02Z
+Generated: 2026-10-03T17:08:07Z
 
 ### Git
 - Branch: `main`
-- Head: `9ae0355d0f32`
-- Commit date: 2026-10-03T19:03:42+02:00
-- Commit: Refine enemy readability under melee pressure
+- Head: `125f113436c1`
+- Commit date: 2026-10-03T19:07:40+02:00
+- Commit: Compress authored enemy atlas highlights
 - Tracked files: 942
 
 ### Recently changed files
 - `godot/scripts/AssetLibrary.gd`
-- `godot/scripts/Enemy.gd`
 - `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/scripts/Enemy.gd`
 - `godot/tests/native_enemy_behavior_test.gd`
 - `godot/tests/enemy_hit_reaction_test.gd`
 - `godot/scripts/Player.gd`
 - `godot/tests/first_playable_run_path_test.gd`
 - `godot/tests/weapon_presentation_test.gd`
-- `godot/scripts/Main.gd`
-- `godot/tests/authored_world_dressing_test.gd`
 
 ### Project signals
 - `build.gradle`

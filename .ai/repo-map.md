@@ -23984,7 +23984,7 @@ static func enemy(kind: String) -> Node3D:
         "brute": tint = Color(0.62, 0.34, 0.30)
         "elite": tint = Color(0.54, 0.42, 0.70)
         "boss": tint = Color(0.68, 0.42, 0.26)
-    _grade_mesh_tree(root, tint, 0.82, 0.02)
+    _grade_enemy_mesh_tree(root, tint)
     return root
 
 static func rifle() -> Node3D:
@@ -24074,6 +24074,56 @@ static func _add_barrier_hazard_signature(root: Node3D) -> void:
         strip.position = Vector3(0.0, 0.42, side * 0.176)
         strip.material_override = material
         root.add_child(strip)
+
+static func _grade_enemy_mesh_tree(root: Node3D, tint: Color) -> void:
+    if root == null:
+        return
+    if root is MeshInstance3D:
+        _grade_enemy_mesh_instance(root as MeshInstance3D, tint)
+    for node in root.find_children("*", "MeshInstance3D", true, false):
+        _grade_enemy_mesh_instance(node as MeshInstance3D, tint)
+
+static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Color) -> void:
+    if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
+        return
+    var source := mesh_instance.mesh.surface_get_material(0)
+    if not source is BaseMaterial3D:
+        return
+    var source_material := source as BaseMaterial3D
+    if source_material.albedo_texture == null:
+        _grade_mesh_instance(mesh_instance, tint, 0.82, 0.02)
+        return
+
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode diffuse_burley, specular_schlick_ggx;
+
+uniform sampler2D albedo_tex : source_color, filter_linear_mipmap_anisotropic;
+uniform vec4 body_tint : source_color = vec4(0.5, 0.6, 0.5, 1.0);
+uniform float highlight_start = 0.34;
+uniform float highlight_end = 0.82;
+uniform float highlight_floor = 0.46;
+
+void fragment() {
+    vec4 authored = texture(albedo_tex, UV);
+    vec3 base = authored.rgb * body_tint.rgb;
+    float luma = dot(base, vec3(0.2126, 0.7152, 0.0722));
+    float compression = mix(1.0, highlight_floor, smoothstep(highlight_start, highlight_end, luma));
+    ALBEDO = base * compression;
+    ROUGHNESS = 0.84;
+    METALLIC = 0.02;
+    ALPHA = authored.a * body_tint.a;
+}
+"""
+    var material := ShaderMaterial.new()
+    material.shader = shader
+    material.set_shader_parameter("albedo_tex", source_material.albedo_texture)
+    material.set_shader_parameter("body_tint", tint)
+    material.set_shader_parameter("highlight_start", 0.30)
+    material.set_shader_parameter("highlight_end", 0.72)
+    material.set_shader_parameter("highlight_floor", 0.42)
+    mesh_instance.material_override = material
 
 static func _grade_mesh_tree(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
     if root == null:
@@ -28967,16 +29017,21 @@ func _initialize() -> void:
         if mesh_instance == null:
             var meshes := visual.find_children("*", "MeshInstance3D", true, false)
             mesh_instance = meshes[0] as MeshInstance3D if not meshes.is_empty() else null
-        if mesh_instance == null or not mesh_instance.material_override is BaseMaterial3D:
-            push_error("Enemy palette grading missing for %s" % palette_kind)
+        if mesh_instance == null or not mesh_instance.material_override is ShaderMaterial:
+            push_error("Enemy palette grading shader missing for %s" % palette_kind)
             quit(1)
             return
-        var material := mesh_instance.material_override as BaseMaterial3D
-        if material.albedo_texture == null:
+        var material := mesh_instance.material_override as ShaderMaterial
+        if material.get_shader_parameter("albedo_tex") == null:
             push_error("Enemy palette grading must preserve authored atlas for %s" % palette_kind)
             quit(1)
             return
-        palette_samples[palette_kind] = material.albedo_color
+        var highlight_floor := float(material.get_shader_parameter("highlight_floor"))
+        if highlight_floor > 0.50:
+            push_error("Enemy authored highlights are not compressed enough for %s" % palette_kind)
+            quit(1)
+            return
+        palette_samples[palette_kind] = material.get_shader_parameter("body_tint") as Color
         visual.free()
 
     var runner_color: Color = palette_samples["runner"]
