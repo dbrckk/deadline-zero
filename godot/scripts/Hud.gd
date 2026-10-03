@@ -39,6 +39,8 @@ var impact_flash: ColorRect
 var impact_flash_tween: Tween
 var damage_vignette: ColorRect
 var damage_vignette_tween: Tween
+var touch_stick_root: Control
+var touch_stick_knob: Control
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -123,6 +125,25 @@ func _direction_arrow(direction: Vector2) -> String:
         -1: return "↗"
         _: return "→"
 
+func show_touch_stick(origin: Vector2) -> void:
+    if touch_stick_root == null or touch_stick_knob == null:
+        return
+    touch_stick_root.position = origin - touch_stick_root.size * 0.5
+    touch_stick_knob.position = (touch_stick_root.size - touch_stick_knob.size) * 0.5
+    touch_stick_root.visible = true
+
+func update_touch_stick(origin: Vector2, current: Vector2) -> void:
+    if touch_stick_root == null or touch_stick_knob == null:
+        return
+    if not touch_stick_root.visible:
+        show_touch_stick(origin)
+    var displacement := (current - origin).limit_length(54.0)
+    touch_stick_knob.position = (touch_stick_root.size - touch_stick_knob.size) * 0.5 + displacement
+
+func hide_touch_stick() -> void:
+    if touch_stick_root != null:
+        touch_stick_root.visible = false
+
 func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
         var item: Dictionary = items[i] if i < items.size() else {}
@@ -200,6 +221,45 @@ func _build() -> void:
     damage_vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
     damage_vignette.visible = false
     root.add_child(damage_vignette)
+
+    touch_stick_root = Control.new()
+    touch_stick_root.name = "TouchStick"
+    touch_stick_root.size = Vector2(112.0, 112.0)
+    touch_stick_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    touch_stick_root.visible = false
+    root.add_child(touch_stick_root)
+
+    var stick_base := Panel.new()
+    stick_base.name = "TouchStickBase"
+    stick_base.position = Vector2.ZERO
+    stick_base.size = touch_stick_root.size
+    stick_base.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    var stick_base_style := StyleBoxFlat.new()
+    stick_base_style.bg_color = Color(0.015, 0.035, 0.045, 0.34)
+    stick_base_style.border_color = Color(0.18, 0.78, 1.0, 0.52)
+    stick_base_style.set_border_width_all(2)
+    stick_base_style.corner_radius_top_left = 56
+    stick_base_style.corner_radius_top_right = 56
+    stick_base_style.corner_radius_bottom_left = 56
+    stick_base_style.corner_radius_bottom_right = 56
+    stick_base.add_theme_stylebox_override("panel", stick_base_style)
+    touch_stick_root.add_child(stick_base)
+
+    touch_stick_knob = Panel.new()
+    touch_stick_knob.name = "TouchStickKnob"
+    touch_stick_knob.size = Vector2(42.0, 42.0)
+    touch_stick_knob.position = (touch_stick_root.size - touch_stick_knob.size) * 0.5
+    touch_stick_knob.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    var stick_knob_style := StyleBoxFlat.new()
+    stick_knob_style.bg_color = Color(0.10, 0.62, 0.88, 0.74)
+    stick_knob_style.border_color = Color(0.54, 0.92, 1.0, 0.88)
+    stick_knob_style.set_border_width_all(2)
+    stick_knob_style.corner_radius_top_left = 21
+    stick_knob_style.corner_radius_top_right = 21
+    stick_knob_style.corner_radius_bottom_left = 21
+    stick_knob_style.corner_radius_bottom_right = 21
+    touch_stick_knob.add_theme_stylebox_override("panel", stick_knob_style)
+    touch_stick_root.add_child(touch_stick_knob)
 
     var vital_panel := PanelContainer.new()
     vital_panel.name = "VitalPanel"
