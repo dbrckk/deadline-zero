@@ -243,6 +243,12 @@ func _on_xp_collected(amount: int) -> void:
 
 func _offer_upgrade() -> void:
     pending_upgrades.clear()
+    touch_id = -1
+    if player != null and is_instance_valid(player):
+        player.set_touch_move(Vector2.ZERO)
+        player._clear_player_marker_pressure()
+    if hud != null:
+        hud.hide_touch_stick()
     var available: Array = []
     for upgrade in UPGRADE_POOL:
         var id := String(upgrade["id"])
