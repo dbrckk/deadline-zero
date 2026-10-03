@@ -49,6 +49,7 @@ var run_director := DZRunDirector.new()
 var spawn_rng := RandomNumberGenerator.new()
 var director_profile: Dictionary = {}
 var hud_refresh_clock := 0.0
+var threat_indicator_refresh_clock := 0.0
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -57,6 +58,7 @@ const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_REVEAL_FOV_DELTA := 5.5
 const HUD_REFRESH_INTERVAL := 0.10
+const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
 
 func _ready() -> void:
     randomize()
@@ -129,7 +131,10 @@ func _process(delta: float) -> void:
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.fov = lerpf(camera.fov, target_fov, 1.0 - exp(-delta * 5.5))
         camera.look_at(focus_point, Vector3.UP)
-        _update_offscreen_threat_indicator()
+        threat_indicator_refresh_clock -= delta
+        if threat_indicator_refresh_clock <= 0.0:
+            threat_indicator_refresh_clock = THREAT_INDICATOR_REFRESH_INTERVAL
+            _update_offscreen_threat_indicator()
 
 func _physics_process(delta: float) -> void:
     if game_over:
