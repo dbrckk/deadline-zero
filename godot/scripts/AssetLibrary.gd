@@ -13,6 +13,8 @@ const TRAFFIC_CONE := "res://assets/third_party/quaternius/zombie_apocalypse/tra
 const TRASH_BAG := "res://assets/third_party/quaternius/zombie_apocalypse/trashbag-1.gltf"
 const STREET_CRACK := "res://assets/third_party/quaternius/zombie_apocalypse/street-straight-crack1.gltf"
 
+static var _enemy_grade_shader: Shader
+
 static func instantiate_scene(path: String) -> Node3D:
     if not ResourceLoader.exists(path):
         return null
@@ -167,8 +169,27 @@ static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Colo
         )
 
 static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color) -> ShaderMaterial:
-    var shader := Shader.new()
-    shader.code = """
+    var material := ShaderMaterial.new()
+    material.shader = _get_enemy_grade_shader()
+    material.set_shader_parameter("albedo_tex", source_material.albedo_texture)
+    material.set_shader_parameter("body_tint", tint)
+    material.set_shader_parameter("highlight_start", 0.30)
+    material.set_shader_parameter("highlight_end", 0.72)
+    material.set_shader_parameter("highlight_floor", 0.42)
+    material.set_shader_parameter("authored_roughness", source_material.roughness)
+    material.set_shader_parameter("authored_metallic", source_material.metallic)
+    if source_material.normal_enabled and source_material.normal_texture != null:
+        material.set_shader_parameter("use_normal_map", true)
+        material.set_shader_parameter("normal_tex", source_material.normal_texture)
+        material.set_shader_parameter("normal_scale", source_material.normal_scale)
+    return material
+
+static func _get_enemy_grade_shader() -> Shader:
+    if _enemy_grade_shader != null:
+        return _enemy_grade_shader
+
+    _enemy_grade_shader = Shader.new()
+    _enemy_grade_shader.code = """
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx;
 
@@ -198,20 +219,7 @@ void fragment() {
     }
 }
 """
-    var material := ShaderMaterial.new()
-    material.shader = shader
-    material.set_shader_parameter("albedo_tex", source_material.albedo_texture)
-    material.set_shader_parameter("body_tint", tint)
-    material.set_shader_parameter("highlight_start", 0.30)
-    material.set_shader_parameter("highlight_end", 0.72)
-    material.set_shader_parameter("highlight_floor", 0.42)
-    material.set_shader_parameter("authored_roughness", source_material.roughness)
-    material.set_shader_parameter("authored_metallic", source_material.metallic)
-    if source_material.normal_enabled and source_material.normal_texture != null:
-        material.set_shader_parameter("use_normal_map", true)
-        material.set_shader_parameter("normal_tex", source_material.normal_texture)
-        material.set_shader_parameter("normal_scale", source_material.normal_scale)
-    return material
+    return _enemy_grade_shader
 
 static func _grade_mesh_tree(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
     if root == null:
