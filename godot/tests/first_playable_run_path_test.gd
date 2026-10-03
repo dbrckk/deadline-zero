@@ -32,6 +32,21 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main._on_camera_shake_changed(false)
+    main.camera_kick = 0.0
+    main.player.invulnerability = 0.0
+    var no_shake_health: float = main.player.health
+    main.player.take_damage(5.0)
+    if not is_equal_approx(main.player.health, no_shake_health - 5.0):
+        push_error("Camera-shake-off damage probe did not reduce player health")
+        quit(1)
+        return
+    if main.camera_kick > 0.0001:
+        push_error("Received damage bypassed disabled camera-shake setting")
+        quit(1)
+        return
+    main._on_camera_shake_changed(true)
+
     Engine.time_scale = 0.12
     main.hit_freeze_left = 0.020
     main._process(0.020 * 0.12)

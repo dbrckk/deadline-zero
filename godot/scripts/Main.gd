@@ -332,7 +332,8 @@ func _on_upgrade_chosen(index: int) -> void:
 func _on_health_changed(current: float, maximum: float) -> void:
     if last_player_health >= 0.0 and current < last_player_health:
         var damage_taken := last_player_health - current
-        camera_kick = max(camera_kick, DZCombatFeel.damage_received_camera_kick(damage_taken, maximum))
+        if camera_shake_enabled:
+            camera_kick = max(camera_kick, DZCombatFeel.damage_received_camera_kick(damage_taken, maximum))
         if hud:
             hud.pulse_damage_screen()
     if hud:
