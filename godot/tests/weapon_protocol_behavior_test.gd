@@ -91,14 +91,14 @@ func _initialize() -> void:
     var sweep_enemy := ENEMY_SCRIPT.new()
     sweep_enemy.configure("shambler", 1.0, target)
     sweep_enemy.process_mode = Node.PROCESS_MODE_DISABLED
-    root.add_child(sweep_enemy)
+    parent.add_child(sweep_enemy)
     sweep_enemy.global_position = Vector3(0.0, 0.0, -0.55)
     await process_frame
 
     var swept_projectile := PROJECTILE_SCRIPT.new()
     swept_projectile.process_mode = Node.PROCESS_MODE_DISABLED
-    swept_projectile.setup(Vector3.ZERO, Vector3.FORWARD * -1.0, 40.0, 10.0, Color.WHITE, "rail")
-    root.add_child(swept_projectile)
+    swept_projectile.setup(Vector3.ZERO, Vector3.FORWARD, 40.0, 10.0, Color.WHITE, "rail")
+    parent.add_child(swept_projectile)
     await process_frame
     var swept_hits := swept_projectile._swept_hit_candidates(Vector3.ZERO, Vector3(0.0, 0.0, -0.80))
     if not swept_hits.has(sweep_enemy):
