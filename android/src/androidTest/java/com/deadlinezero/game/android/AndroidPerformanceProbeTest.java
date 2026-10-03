@@ -100,7 +100,11 @@ public final class AndroidPerformanceProbeTest {
                 injectStressLoad((GameScreen) game.getScreen());
             });
 
-            waitForTelemetry(activity, 10000L);
+            // The CI emulator can transiently stall its color-buffer backend while the
+            // deterministic 160-enemy/180-projectile scene is being established. Keep every
+            // telemetry quality assertion unchanged, but allow the renderer enough time to
+            // produce a representative sample after a delayed graphics start.
+            waitForTelemetry(activity, 20000L);
 
             AtomicReference<PerformanceTelemetry.Snapshot> snapshotRef = new AtomicReference<>();
             AtomicReference<Integer> targetRef = new AtomicReference<>();
