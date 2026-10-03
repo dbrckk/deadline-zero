@@ -38,6 +38,7 @@ var hit_reaction_left := 0.0
 var combat_enabled := true
 var applied_protocols := {}
 var current_target: DZEnemy
+var nearest_threat: DZEnemy
 var target_refresh_clock := 0.0
 
 const TARGET_REFRESH_INTERVAL := 0.08
@@ -80,7 +81,7 @@ func _physics_process(delta: float) -> void:
         _update_authored_animation()
 
     var target := _combat_target()
-    _update_player_marker_pressure(target)
+    _update_player_marker_pressure(nearest_threat if nearest_threat != null else target)
     if target != null:
         var facing := target.global_position
         facing.y = global_position.y
@@ -98,6 +99,7 @@ func set_combat_enabled(enabled: bool) -> void:
     touch_move = Vector2.ZERO
     fire_clock = max(fire_clock, fire_interval)
     current_target = null
+    nearest_threat = null
     target_refresh_clock = 0.0
     _clear_player_marker_pressure()
 
@@ -231,12 +233,16 @@ func _combat_target() -> DZEnemy:
     if current_target != null and (not is_instance_valid(current_target) or current_target.dead):
         current_target = null
         target_refresh_clock = 0.0
+    if nearest_threat != null and (not is_instance_valid(nearest_threat) or nearest_threat.dead):
+        nearest_threat = null
+        target_refresh_clock = 0.0
 
     if target_refresh_clock > 0.0 and current_target != null:
         return current_target
 
     target_refresh_clock = TARGET_REFRESH_INTERVAL
     var nearest := _nearest_enemy()
+    nearest_threat = nearest
     if nearest == null:
         current_target = null
         return null
