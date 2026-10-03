@@ -56,6 +56,7 @@ static var _hit_flash_mesh_cache := {}
 static var _shared_regeneration_pulse_mesh: CylinderMesh
 
 const MAX_DAMAGE_NUMBERS := 18
+const ARENA_HALF_EXTENT := 34.0
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -218,12 +219,23 @@ func _physics_process(delta: float) -> void:
 
         velocity = movement_direction * move_speed * slow_multiplier * movement_speed_scale
         move_and_slide()
+        _constrain_to_arena()
         if velocity.length_squared() > 0.01:
             look_at(global_position + velocity, Vector3.UP)
     _update_authored_animation(distance)
     if distance < _contact_attack_range() and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _constrain_to_arena() -> void:
+    var clamped_x := clampf(global_position.x, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
+    var clamped_z := clampf(global_position.z, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
+    if not is_equal_approx(clamped_x, global_position.x):
+        velocity.x = 0.0
+    if not is_equal_approx(clamped_z, global_position.z):
+        velocity.z = 0.0
+    global_position.x = clamped_x
+    global_position.z = clamped_z
 
 func _melee_standoff_distance() -> float:
     match kind:
@@ -311,6 +323,7 @@ func _process_charge(delta: float) -> void:
     charge_left = max(0.0, charge_left - delta)
     velocity = charge_direction * 9.4
     move_and_slide()
+    _constrain_to_arena()
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity, Vector3.UP)
     if not charge_hit and target != null and is_instance_valid(target):

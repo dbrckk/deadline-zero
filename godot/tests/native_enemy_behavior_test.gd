@@ -210,6 +210,18 @@ func _initialize() -> void:
         quit(1)
         return
 
+    separation_a.global_position = Vector3(40.0, 0.0, -41.0)
+    separation_a.velocity = Vector3(3.0, 0.0, -2.0)
+    separation_a._constrain_to_arena()
+    if absf(separation_a.global_position.x) > DZEnemy.ARENA_HALF_EXTENT + 0.001 or absf(separation_a.global_position.z) > DZEnemy.ARENA_HALF_EXTENT + 0.001:
+        push_error("Enemy escaped authored arena bounds")
+        quit(1)
+        return
+    if absf(separation_a.velocity.x) > 0.001 or absf(separation_a.velocity.z) > 0.001:
+        push_error("Enemy arena clamp did not cancel outward velocity")
+        quit(1)
+        return
+
     var damage_enemy := ENEMY_SCRIPT.new()
     damage_enemy.configure("shambler", 1.0, target)
     damage_enemy.process_mode = Node.PROCESS_MODE_DISABLED
