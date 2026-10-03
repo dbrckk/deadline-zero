@@ -28,6 +28,8 @@ static var _core_mesh_cache := {}
 static var _trail_mesh_cache := {}
 static var _core_material_cache := {}
 static var _trail_material_cache := {}
+static var _accent_mesh_cache := {}
+static var _shared_arc_accent_material: StandardMaterial3D
 
 func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color,
         profile := "vanguard") -> void:
@@ -170,11 +172,52 @@ func _cached_trail_material() -> StandardMaterial3D:
     _trail_material_cache[key] = material
     return material
 
+func _cached_accent_box_mesh(key: String, size: Vector3) -> BoxMesh:
+    if _accent_mesh_cache.has(key):
+        return _accent_mesh_cache[key] as BoxMesh
+    var mesh := BoxMesh.new()
+    mesh.size = size
+    _accent_mesh_cache[key] = mesh
+    return mesh
+
+func _cached_accent_sphere_mesh(key: String, radius: float, height: float) -> SphereMesh:
+    if _accent_mesh_cache.has(key):
+        return _accent_mesh_cache[key] as SphereMesh
+    var mesh := SphereMesh.new()
+    mesh.radius = radius
+    mesh.height = height
+    mesh.radial_segments = 10
+    mesh.rings = 5
+    _accent_mesh_cache[key] = mesh
+    return mesh
+
+func _cached_arc_accent_mesh() -> TorusMesh:
+    var key := "arc|%.4f" % core_radius
+    if _accent_mesh_cache.has(key):
+        return _accent_mesh_cache[key] as TorusMesh
+    var mesh := TorusMesh.new()
+    mesh.inner_radius = core_radius * 0.85
+    mesh.outer_radius = core_radius * 1.45
+    mesh.rings = 12
+    mesh.ring_segments = 6
+    _accent_mesh_cache[key] = mesh
+    return mesh
+
+static func _arc_accent_material() -> StandardMaterial3D:
+    if _shared_arc_accent_material != null:
+        return _shared_arc_accent_material
+    _shared_arc_accent_material = StandardMaterial3D.new()
+    _shared_arc_accent_material.albedo_color = Color(0.58, 0.36, 1.0)
+    _shared_arc_accent_material.emission_enabled = true
+    _shared_arc_accent_material.emission = _shared_arc_accent_material.albedo_color
+    _shared_arc_accent_material.emission_energy_multiplier = 2.8
+    _shared_arc_accent_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    return _shared_arc_accent_material
+
 func _add_side_spark(mat: StandardMaterial3D, side: float) -> void:
     var spark := MeshInstance3D.new()
-    var mesh := BoxMesh.new()
-    mesh.size = Vector3(0.025, 0.025, trail_length * 0.62)
-    spark.mesh = mesh
+    var key := "scatter_spark|%.4f" % trail_length
+    spark.mesh = _cached_accent_box_mesh(key, Vector3(0.025, 0.025, trail_length * 0.62))
     spark.position = Vector3(side * 0.10, 0.0, trail_length * 0.30)
     spark.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     spark.material_override = mat
@@ -182,27 +225,16 @@ func _add_side_spark(mat: StandardMaterial3D, side: float) -> void:
 
 func _add_arc_accent() -> void:
     var accent := MeshInstance3D.new()
-    var mesh := TorusMesh.new()
-    mesh.inner_radius = core_radius * 0.85
-    mesh.outer_radius = core_radius * 1.45
-    accent.mesh = mesh
+    accent.mesh = _cached_arc_accent_mesh()
     accent.rotation_degrees.x = 90.0
     accent.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    var mat := StandardMaterial3D.new()
-    mat.albedo_color = Color(0.58, 0.36, 1.0)
-    mat.emission_enabled = true
-    mat.emission = mat.albedo_color
-    mat.emission_energy_multiplier = 2.8
-    mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    accent.material_override = mat
+    accent.material_override = _arc_accent_material()
     add_child(accent)
 
 func _add_flame_core(base_material: StandardMaterial3D) -> void:
     var flame := MeshInstance3D.new()
-    var mesh := SphereMesh.new()
-    mesh.radius = core_radius * 0.58
-    mesh.height = core_radius * 1.55
-    flame.mesh = mesh
+    var key := "inferno_flame|%.4f" % core_radius
+    flame.mesh = _cached_accent_sphere_mesh(key, core_radius * 0.58, core_radius * 1.55)
     flame.scale = Vector3(0.72, 0.72, 1.42)
     flame.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     flame.material_override = base_material

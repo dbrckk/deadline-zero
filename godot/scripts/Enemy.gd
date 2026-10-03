@@ -52,6 +52,8 @@ static var _signature_mesh_cache := {}
 static var _shared_brute_armor_material: StandardMaterial3D
 static var _telegraph_ring_mesh_cache := {}
 static var _telegraph_tick_mesh_cache := {}
+static var _hit_flash_mesh_cache := {}
+static var _shared_regeneration_pulse_mesh: CylinderMesh
 
 const MAX_DAMAGE_NUMBERS := 18
 
@@ -450,6 +452,16 @@ func _spawn_attack_impact(at: Vector3, radius: float) -> void:
     get_tree().current_scene.add_child(fx)
     fx.global_position = at + Vector3(0.0, 0.10, 0.0)
 
+static func _regeneration_pulse_mesh() -> CylinderMesh:
+    if _shared_regeneration_pulse_mesh != null:
+        return _shared_regeneration_pulse_mesh
+    _shared_regeneration_pulse_mesh = CylinderMesh.new()
+    _shared_regeneration_pulse_mesh.top_radius = 0.88
+    _shared_regeneration_pulse_mesh.bottom_radius = 0.88
+    _shared_regeneration_pulse_mesh.height = 0.022
+    _shared_regeneration_pulse_mesh.radial_segments = 16
+    return _shared_regeneration_pulse_mesh
+
 func _begin_regeneration() -> void:
     if dead or not combat_enabled or health <= 0.0 or health >= max_health:
         return
@@ -458,11 +470,8 @@ func _begin_regeneration() -> void:
         regeneration_visual.queue_free()
     var pulse := MeshInstance3D.new()
     pulse.name = "RegenerationPulse"
-    var mesh := CylinderMesh.new()
-    mesh.top_radius = 0.88
-    mesh.bottom_radius = 0.88
-    mesh.height = 0.022
-    pulse.mesh = mesh
+    pulse.mesh = _regeneration_pulse_mesh()
+    pulse.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     pulse.position = Vector3(0.0, 0.035, 0.0)
     regeneration_material = StandardMaterial3D.new()
     regeneration_material.albedo_color = Color(0.12, 1.0, 0.42, 0.18)
@@ -645,17 +654,26 @@ static func _enemy_contact_shadow_material() -> StandardMaterial3D:
     _shared_contact_shadow_material.roughness = 1.0
     return _shared_contact_shadow_material
 
-func _build_hit_flash() -> void:
-    hit_flash_visual = MeshInstance3D.new()
-    hit_flash_visual.name = "HitFlash"
+static func _hit_flash_mesh(scale_factor: float) -> CylinderMesh:
+    var key := "%.3f" % scale_factor
+    if _hit_flash_mesh_cache.has(key):
+        return _hit_flash_mesh_cache[key] as CylinderMesh
     var mesh := CylinderMesh.new()
-    var scale_factor := 1.0
-    if kind == "boss": scale_factor = 1.62
-    elif kind in ["elite", "brute", "charger"]: scale_factor = 1.18
     mesh.top_radius = 0.46 * scale_factor
     mesh.bottom_radius = 0.52 * scale_factor
     mesh.height = 1.28 * scale_factor
-    hit_flash_visual.mesh = mesh
+    mesh.radial_segments = 12
+    _hit_flash_mesh_cache[key] = mesh
+    return mesh
+
+func _build_hit_flash() -> void:
+    hit_flash_visual = MeshInstance3D.new()
+    hit_flash_visual.name = "HitFlash"
+    var scale_factor := 1.0
+    if kind == "boss": scale_factor = 1.62
+    elif kind in ["elite", "brute", "charger"]: scale_factor = 1.18
+    hit_flash_visual.mesh = _hit_flash_mesh(scale_factor)
+    hit_flash_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     hit_flash_visual.position.y = 0.66 * scale_factor
     hit_flash_material = StandardMaterial3D.new()
     hit_flash_material.albedo_color = Color(1.0, 0.86, 0.58, 0.0)

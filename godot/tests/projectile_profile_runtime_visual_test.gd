@@ -70,19 +70,26 @@ func _run_test() -> void:
             push_error("%s projectile visuals must reuse cached material resources" % profile)
             quit(1)
             return
-        duplicate.queue_free()
-        await process_frame
-
         match profile:
             "scatter":
-                var sparks := 0
+                var sparks: Array[MeshInstance3D] = []
+                var duplicate_sparks: Array[MeshInstance3D] = []
                 for child in projectile.get_children():
                     if child is MeshInstance3D and child != core and child != trail:
                         var mesh_instance := child as MeshInstance3D
                         if mesh_instance.mesh is BoxMesh:
-                            sparks += 1
-                if sparks < 2:
+                            sparks.append(mesh_instance)
+                for child in duplicate.get_children():
+                    if child is MeshInstance3D and child != duplicate_core and child != duplicate_trail:
+                        var mesh_instance := child as MeshInstance3D
+                        if mesh_instance.mesh is BoxMesh:
+                            duplicate_sparks.append(mesh_instance)
+                if sparks.size() < 2 or duplicate_sparks.size() < 2:
                     push_error("Scatter projectile must build two side-spark accents")
+                    quit(1)
+                    return
+                if sparks[0].mesh != duplicate_sparks[0].mesh:
+                    push_error("Scatter projectile side sparks must reuse cached mesh resources")
                     quit(1)
                     return
             "cryo":
@@ -91,34 +98,54 @@ func _run_test() -> void:
                     quit(1)
                     return
             "arc":
-                var torus_found := false
+                var arc_accent: MeshInstance3D
+                var duplicate_arc_accent: MeshInstance3D
                 for child in projectile.get_children():
                     if child is MeshInstance3D and (child as MeshInstance3D).mesh is TorusMesh:
-                        torus_found = true
-                        if (child as MeshInstance3D).cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
-                            push_error("Arc accent must not cast shadows")
-                            quit(1)
-                            return
-                if not torus_found:
+                        arc_accent = child as MeshInstance3D
+                for child in duplicate.get_children():
+                    if child is MeshInstance3D and (child as MeshInstance3D).mesh is TorusMesh:
+                        duplicate_arc_accent = child as MeshInstance3D
+                if arc_accent == null or duplicate_arc_accent == null:
                     push_error("Arc projectile runtime accent is missing")
                     quit(1)
                     return
+                if arc_accent.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    push_error("Arc accent must not cast shadows")
+                    quit(1)
+                    return
+                if arc_accent.mesh != duplicate_arc_accent.mesh or arc_accent.material_override != duplicate_arc_accent.material_override:
+                    push_error("Arc accents must reuse cached mesh/material resources")
+                    quit(1)
+                    return
             "inferno":
-                var flame_found := false
+                var flame: MeshInstance3D
+                var duplicate_flame: MeshInstance3D
                 for child in projectile.get_children():
                     if child is MeshInstance3D and child != core and child != trail:
                         var mesh_instance := child as MeshInstance3D
                         if mesh_instance.mesh is SphereMesh and mesh_instance.scale.z > mesh_instance.scale.x:
-                            flame_found = true
-                            if mesh_instance.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
-                                push_error("Inferno flame core must not cast shadows")
-                                quit(1)
-                                return
-                if not flame_found:
+                            flame = mesh_instance
+                for child in duplicate.get_children():
+                    if child is MeshInstance3D and child != duplicate_core and child != duplicate_trail:
+                        var mesh_instance := child as MeshInstance3D
+                        if mesh_instance.mesh is SphereMesh and mesh_instance.scale.z > mesh_instance.scale.x:
+                            duplicate_flame = mesh_instance
+                if flame == null or duplicate_flame == null:
                     push_error("Inferno projectile runtime flame identity is missing")
                     quit(1)
                     return
+                if flame.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    push_error("Inferno flame core must not cast shadows")
+                    quit(1)
+                    return
+                if flame.mesh != duplicate_flame.mesh:
+                    push_error("Inferno flame cores must reuse cached mesh resources")
+                    quit(1)
+                    return
 
+        duplicate.queue_free()
+        await process_frame
         projectile.queue_free()
         await process_frame
 

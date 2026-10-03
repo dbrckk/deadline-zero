@@ -89,5 +89,37 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var regenerator_a := ENEMY_SCRIPT.new()
+    regenerator_a.configure("regenerator", 1.0, target)
+    regenerator_a.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(regenerator_a)
+    var regenerator_b := ENEMY_SCRIPT.new()
+    regenerator_b.configure("regenerator", 1.0, target)
+    regenerator_b.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(regenerator_b)
+    await process_frame
+    regenerator_a.health = regenerator_a.max_health * 0.5
+    regenerator_b.health = regenerator_b.max_health * 0.5
+    regenerator_a._begin_regeneration()
+    regenerator_b._begin_regeneration()
+    var pulse_a := regenerator_a.regeneration_visual as MeshInstance3D
+    var pulse_b := regenerator_b.regeneration_visual as MeshInstance3D
+    if pulse_a == null or pulse_b == null:
+        push_error("Regenerator pulse visual is missing")
+        quit(1)
+        return
+    if pulse_a.mesh != pulse_b.mesh:
+        push_error("Regenerator pulses must reuse one mesh resource")
+        quit(1)
+        return
+    if pulse_a.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Regenerator pulse must not cast dynamic shadows")
+        quit(1)
+        return
+    if regenerator_a.regeneration_material == regenerator_b.regeneration_material:
+        push_error("Regenerator pulse materials must stay instance-local for independent animation")
+        quit(1)
+        return
+
     print("Deadline Zero enemy status effects: OK")
     quit(0)
