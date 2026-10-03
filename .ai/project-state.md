@@ -22,19 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T19:13:58Z
+Generated: 2026-10-03T19:15:07Z
 
 ### Git
 - Branch: `main`
-- Head: `19532a88d408`
-- Commit date: 2026-10-03T21:13:25+02:00
-- Commit: Exercise real archetype setup in silhouette QA
+- Head: `f13e56999665`
+- Commit date: 2026-10-03T21:14:50+02:00
+- Commit: Test melee animation range against damage envelope
 - Tracked files: 943
 
 ### Recently changed files
+- `godot/tests/native_enemy_behavior_test.gd`
+- `godot/scripts/Enemy.gd`
 - `godot/tests/enemy_silhouette_identity_test.gd`
 - `godot/tests/pressure_frame_render_test.gd`
-- `godot/scripts/Enemy.gd`
 
 ### Project signals
 - `build.gradle`

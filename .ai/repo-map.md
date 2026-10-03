@@ -25174,10 +25174,13 @@ func _add_boss_frame(color: Color) -> void:
     add_child(core)
     _add_eye_beacon(color, Vector3(0.0, 1.82, -0.46), 0.105)
 
+func _melee_attack_animation_range() -> float:
+    return _contact_attack_range() + 0.08
+
 func _update_authored_animation(distance: float) -> void:
     if authored_anim == null or dead:
         return
-    if distance < 1.05 and authored_anim.has_animation("Idle_Attack"):
+    if kind != "harrier" and distance <= _melee_attack_animation_range() and authored_anim.has_animation("Idle_Attack"):
         _play_authored("Idle_Attack")
     elif kind in ["runner", "elite", "boss"] and authored_anim.has_animation("Run_Arms"):
         _play_authored("Run_Arms")
@@ -30198,6 +30201,19 @@ func _initialize() -> void:
         return
     if separation_a._contact_attack_range() <= separation_a._melee_standoff_distance():
         push_error("Enemies must remain able to attack from the visual standoff envelope")
+        quit(1)
+        return
+
+    if separation_a._melee_attack_animation_range() < separation_a._contact_attack_range():
+        push_error("Shambler attack animation range must cover contact damage range")
+        quit(1)
+        return
+    if melee_brute._melee_attack_animation_range() < melee_brute._contact_attack_range():
+        push_error("Brute attack animation range must cover heavy contact damage range")
+        quit(1)
+        return
+    if melee_brute._melee_attack_animation_range() <= separation_a._melee_attack_animation_range():
+        push_error("Heavy melee animation range must scale with the larger standoff envelope")
         quit(1)
         return
 

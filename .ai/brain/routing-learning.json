@@ -2,20 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Fix release checklist numbering",
-      "terms": [
-        "checklist",
-        "numbering",
-        "release"
-      ],
-      "tests": [],
-      "useful": [
-        "tools/android/build_runtime_release_evidence.py",
-        "tools/android/test_build_runtime_release_evidence.py"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Verify Godot authored world dressing",
       "terms": [
         "authored",
@@ -1046,6 +1032,24 @@
         "godot/tests/enemy_silhouette_identity_test.gd",
         "godot/tests/pressure_frame_render_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Test melee animation range against damage envelope",
+      "terms": [
+        "against",
+        "animation",
+        "damage",
+        "envelope",
+        "melee",
+        "range",
+        "test"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/tests/native_enemy_behavior_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1483,6 +1487,10 @@
       "core/src/main/java/com/deadlinezero/game/services/ReviewService.java": 4,
       "core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java": 4
     },
+    "against": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4
+    },
     "aim": {
       "godot/scripts/Player.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
@@ -1513,6 +1521,10 @@
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 4,
       "godot/tests/mobile_orientation_test.gd": 12,
       "godot/tests/rendered_frame_smoke_test.gd": 4
+    },
+    "animation": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4
     },
     "announce": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java": 4,
@@ -2092,7 +2104,9 @@
       "core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java": 4
     },
     "damage": {
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Player.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/player_damage_feedback_test.gd": 4
     },
     "danger": {
@@ -2243,6 +2257,10 @@
       "godot/scripts/Main.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 20,
       "godot/tests/native_enemy_behavior_test.gd": 8
+    },
+    "envelope": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4
     },
     "environment": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
@@ -2945,11 +2963,11 @@
     },
     "melee": {
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/scripts/Enemy.gd": 16,
+      "godot/scripts/Enemy.gd": 20,
       "godot/scripts/Player.gd": 4,
       "godot/tests/enemy_hit_reaction_test.gd": 8,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
-      "godot/tests/native_enemy_behavior_test.gd": 8,
+      "godot/tests/native_enemy_behavior_test.gd": 12,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "merge": {
@@ -3387,6 +3405,10 @@
     },
     "rail": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 4
+    },
+    "range": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4
     },
     "rarity": {
       "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java": 4
@@ -4016,11 +4038,13 @@
     },
     "test": {
       "godot/scripts/AssetLibrary.gd": 12,
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Main.gd": 4,
       "godot/scripts/Player.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 12,
       "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/player_pressure_marker_test.gd": 4
     },
     "threats": {
