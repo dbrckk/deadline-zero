@@ -41,7 +41,7 @@ func _initialize() -> void:
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
-            if child.scale.x > 0.56 or Vector2(child.position.x, child.position.z).length() < 22.0:
+            if child.scale.x > 0.40 or Vector2(child.position.x, child.position.z).length() < 24.0:
                 oversized_barrier_count += 1
             var barrier_meshes: Array[MeshInstance3D] = []
             if child is MeshInstance3D:
@@ -175,7 +175,7 @@ func _initialize() -> void:
         quit(1)
         return
     if oversized_barrier_count != 0:
-        push_error("Authored barriers must stay compact and perimeter-biased, got %d violations" % oversized_barrier_count)
+        push_error("Authored barriers must stay compact beyond the active combat frame, got %d violations" % oversized_barrier_count)
         quit(1)
         return
 
