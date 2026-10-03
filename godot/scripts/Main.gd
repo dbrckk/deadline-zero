@@ -273,6 +273,8 @@ func _spawn_enemy(forced_kind: String = "") -> void:
 func _on_boss_health_changed(current: float, maximum: float) -> void:
     if hud:
         hud.set_boss_health(current, maximum)
+    if current <= 0.0:
+        next_boss_time = maxf(next_boss_time, elapsed + BOSS_RETRY_DELAY)
 
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     if hit_stop_enabled:

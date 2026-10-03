@@ -376,6 +376,13 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main.next_boss_time = main.elapsed + 0.5
+    main._on_boss_health_changed(0.0, 100.0)
+    if main.next_boss_time < main.elapsed + main.BOSS_RETRY_DELAY - 0.05:
+        push_error("Boss death did not guarantee a full post-kill recovery window")
+        quit(1)
+        return
+
     var projectile := PROJECTILE_SCRIPT.new()
     main.add_child(projectile)
     projectile.velocity = Vector3(8.0, 0.0, 0.0)
