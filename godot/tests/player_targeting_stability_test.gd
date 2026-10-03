@@ -9,6 +9,12 @@ func _initialize() -> void:
     root.add_child(player)
     await process_frame
 
+    player.target_refresh_clock = 0.0
+    if player._combat_target() != null or player.target_refresh_clock <= 0.0:
+        push_error("Auto-aim did not arm a no-target refresh cooldown")
+        quit(1)
+        return
+
     var first := DZEnemy.new()
     first.configure("shambler", 1.0, player)
     first.process_mode = Node.PROCESS_MODE_DISABLED
@@ -23,6 +29,10 @@ func _initialize() -> void:
     await process_frame
 
     player.global_position = Vector3.ZERO
+    if player._combat_target() != null:
+        push_error("Auto-aim bypassed its no-target refresh window")
+        quit(1)
+        return
     player.target_refresh_clock = 0.0
     var selected := player._combat_target()
     if selected != first:

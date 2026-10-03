@@ -169,7 +169,7 @@ func _physics_process(delta: float) -> void:
         hud.set_wave(_wave_name())
 
 func _unhandled_input(event: InputEvent) -> void:
-    if player == null:
+    if player == null or game_over or not pending_upgrades.is_empty() or get_tree().paused:
         return
     if event is InputEventScreenTouch:
         var touch := event as InputEventScreenTouch

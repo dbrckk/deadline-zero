@@ -237,7 +237,7 @@ func _combat_target() -> DZEnemy:
         nearest_threat = null
         target_refresh_clock = 0.0
 
-    if target_refresh_clock > 0.0 and current_target != null:
+    if target_refresh_clock > 0.0:
         return current_target
 
     target_refresh_clock = TARGET_REFRESH_INTERVAL

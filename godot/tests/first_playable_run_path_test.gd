@@ -277,6 +277,16 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var game_over_touch := InputEventScreenTouch.new()
+    game_over_touch.index = 12
+    game_over_touch.position = Vector2(180.0, 520.0)
+    game_over_touch.pressed = true
+    main._unhandled_input(game_over_touch)
+    if main.touch_id != -1 or main.hud.touch_stick_root.visible:
+        push_error("Game-over input leaked into the mobile movement stick")
+        quit(1)
+        return
+
     var projectiles_after_freeze := get_nodes_in_group("projectiles").size()
     main.player.fire_clock = 0.0
     main.player._physics_process(0.016)
