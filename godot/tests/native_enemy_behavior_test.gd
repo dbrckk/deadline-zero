@@ -197,6 +197,19 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if separation_a._melee_attack_animation_range() < separation_a._contact_attack_range():
+        push_error("Shambler attack animation range must cover contact damage range")
+        quit(1)
+        return
+    if melee_brute._melee_attack_animation_range() < melee_brute._contact_attack_range():
+        push_error("Brute attack animation range must cover heavy contact damage range")
+        quit(1)
+        return
+    if melee_brute._melee_attack_animation_range() <= separation_a._melee_attack_animation_range():
+        push_error("Heavy melee animation range must scale with the larger standoff envelope")
+        quit(1)
+        return
+
     var damage_enemy := ENEMY_SCRIPT.new()
     damage_enemy.configure("shambler", 1.0, target)
     damage_enemy.process_mode = Node.PROCESS_MODE_DISABLED
