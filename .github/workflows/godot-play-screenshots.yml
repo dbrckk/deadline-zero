@@ -82,3 +82,50 @@ jobs:
           path: build/play-store-candidates/*.png
           if-no-files-found: error
           retention-days: 14
+
+      - name: Render authored Play branding candidates
+        run: |
+          set -euo pipefail
+          mkdir -p build/play-branding-candidates
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a --server-args="-screen 0 1280x720x24" \
+            /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --path godot \
+            --rendering-method gl_compatibility \
+            --audio-driver Dummy \
+            --script res://tests/play_icon_render_test.gd
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a --server-args="-screen 0 1280x720x24" \
+            /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --path godot \
+            --rendering-method gl_compatibility \
+            --audio-driver Dummy \
+            --script res://tests/play_feature_graphic_render_test.gd
+          cp /tmp/deadline-zero-play-icon-candidate.png build/play-branding-candidates/icon-candidate.png
+          cp /tmp/deadline-zero-feature-graphic-candidate.png build/play-branding-candidates/feature-graphic-candidate.png
+
+      - name: Validate branding candidate dimensions
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+          expected = {
+              "icon-candidate.png": (512, 512),
+              "feature-graphic-candidate.png": (1024, 500),
+          }
+          for name, dims in expected.items():
+              path = Path("build/play-branding-candidates") / name
+              data = path.read_bytes()
+              assert data[:8] == b"\x89PNG\r\n\x1a\n", f"{path} is not PNG"
+              width, height = struct.unpack(">II", data[16:24])
+              assert (width, height) == dims, f"{path} is {width}x{height}, expected {dims[0]}x{dims[1]}"
+              print(f"PLAY_BRANDING_CANDIDATE_OK {name} {width}x{height} bytes={len(data)}")
+          PY
+
+      - name: Upload Play branding candidates
+        uses: actions/upload-artifact@v4
+        with:
+          name: deadline-zero-play-branding-candidates-${{ github.sha }}
+          path: build/play-branding-candidates/*.png
+          if-no-files-found: error
+          retention-days: 14
+
