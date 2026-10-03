@@ -27,6 +27,9 @@ func _init() -> void:
     assert(player.contains("PlayerAimTick"))
     assert(player.contains("MuzzleFlash"))
     assert(player.contains("_trigger_muzzle_flash()"))
+    assert(player.contains("PlayerPressureChevron_"))
+    assert(player.contains("_update_player_marker_pressure(target)"))
+    assert(player.contains("distance_squared_to(target.global_position) <= 8.41"))
 
     print("weapon_presentation_test: PASS")
     quit()
