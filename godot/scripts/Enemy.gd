@@ -48,6 +48,7 @@ var hit_reaction_tween: Tween
 static var _shared_contact_shadow_material: StandardMaterial3D
 static var _contact_shadow_mesh_cache := {}
 static var _signature_material_cache := {}
+static var _signature_mesh_cache := {}
 static var _shared_brute_armor_material: StandardMaterial3D
 static var _telegraph_tick_mesh_cache := {}
 
@@ -787,6 +788,25 @@ func _add_archetype_signature() -> void:
         _:
             _add_eye_beacon(accent, Vector3(0.0, 1.62, -0.28), 0.055)
 
+static func _signature_box_mesh(key: String, size: Vector3) -> BoxMesh:
+    if _signature_mesh_cache.has(key):
+        return _signature_mesh_cache[key] as BoxMesh
+    var mesh := BoxMesh.new()
+    mesh.size = size
+    _signature_mesh_cache[key] = mesh
+    return mesh
+
+static func _signature_sphere_mesh(key: String, radius: float, height: float) -> SphereMesh:
+    if _signature_mesh_cache.has(key):
+        return _signature_mesh_cache[key] as SphereMesh
+    var mesh := SphereMesh.new()
+    mesh.radius = radius
+    mesh.height = height
+    mesh.radial_segments = 10
+    mesh.rings = 5
+    _signature_mesh_cache[key] = mesh
+    return mesh
+
 func _signature_material(color: Color, energy := 2.2) -> StandardMaterial3D:
     var key := "%s|%.3f" % [color.to_html(true), energy]
     if _signature_material_cache.has(key):
@@ -803,10 +823,7 @@ func _signature_material(color: Color, energy := 2.2) -> StandardMaterial3D:
 
 func _add_eye_beacon(color: Color, at: Vector3, size: float) -> void:
     var beacon := MeshInstance3D.new()
-    var mesh := SphereMesh.new()
-    mesh.radius = size
-    mesh.height = size * 2.0
-    beacon.mesh = mesh
+    beacon.mesh = _signature_sphere_mesh("beacon_%.3f" % size, size, size * 2.0)
     beacon.name = "SignatureBeacon"
     beacon.position = at
     beacon.material_override = _signature_material(color, 3.2)
@@ -816,11 +833,9 @@ func _add_runner_blades(color: Color) -> void:
     var mat := _signature_material(color, 1.85)
     for side in [-1.0, 1.0]:
         var blade := MeshInstance3D.new()
-        var mesh := BoxMesh.new()
         # Extend the signature in the ground plane so it reads from the gameplay camera,
         # rather than relying on vertical geometry that collapses in top-down projection.
-        mesh.size = Vector3(0.060, 0.22, 0.42)
-        blade.mesh = mesh
+        blade.mesh = _signature_box_mesh("runner_blade", Vector3(0.060, 0.22, 0.42))
         blade.name = "RunnerBladeL" if side < 0.0 else "RunnerBladeR"
         blade.position = Vector3(side * 0.43, 0.82, 0.02)
         blade.rotation_degrees = Vector3(0.0, side * 18.0, side * -20.0)
@@ -842,9 +857,7 @@ func _add_brute_shoulders(color: Color) -> void:
     var accent := _signature_material(color, 1.55)
     for side in [-1.0, 1.0]:
         var plate := MeshInstance3D.new()
-        var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.28, 0.12, 0.34)
-        plate.mesh = mesh
+        plate.mesh = _signature_box_mesh("brute_plate", Vector3(0.28, 0.12, 0.34))
         plate.name = "BrutePlateL" if side < 0.0 else "BrutePlateR"
         plate.position = Vector3(side * 0.47, 1.12, 0.03)
         plate.rotation_degrees = Vector3(-4.0, side * 7.0, side * -12.0)
@@ -852,9 +865,7 @@ func _add_brute_shoulders(color: Color) -> void:
         add_child(plate)
 
         var edge := MeshInstance3D.new()
-        var edge_mesh := BoxMesh.new()
-        edge_mesh.size = Vector3(0.045, 0.045, 0.26)
-        edge.mesh = edge_mesh
+        edge.mesh = _signature_box_mesh("brute_edge", Vector3(0.045, 0.045, 0.26))
         edge.name = "BruteEdgeL" if side < 0.0 else "BruteEdgeR"
         edge.position = Vector3(side * 0.57, 1.14, -0.02)
         edge.rotation_degrees = plate.rotation_degrees
@@ -866,9 +877,7 @@ func _add_elite_crown(color: Color) -> void:
     var mat := _signature_material(color, 1.95)
     for side in [-1.0, 1.0]:
         var fin := MeshInstance3D.new()
-        var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.055, 0.38, 0.10)
-        fin.mesh = mesh
+        fin.mesh = _signature_box_mesh("elite_fin", Vector3(0.055, 0.38, 0.10))
         fin.name = "EliteFinL" if side < 0.0 else "EliteFinR"
         fin.position = Vector3(side * 0.31, 1.62, 0.06)
         fin.rotation_degrees.z = side * -28.0
@@ -880,9 +889,7 @@ func _add_boss_frame(color: Color) -> void:
     var mat := _signature_material(color, 3.4)
     for side in [-1.0, 1.0]:
         var wing := MeshInstance3D.new()
-        var wing_mesh := BoxMesh.new()
-        wing_mesh.size = Vector3(0.16, 0.30, 0.58)
-        wing.mesh = wing_mesh
+        wing.mesh = _signature_box_mesh("boss_wing", Vector3(0.16, 0.30, 0.58))
         wing.name = "BossWingL" if side < 0.0 else "BossWingR"
         wing.position = Vector3(side * 0.72, 1.16, 0.04)
         wing.rotation_degrees = Vector3(0.0, side * 18.0, side * -16.0)
@@ -890,9 +897,7 @@ func _add_boss_frame(color: Color) -> void:
         add_child(wing)
 
         var horn := MeshInstance3D.new()
-        var horn_mesh := BoxMesh.new()
-        horn_mesh.size = Vector3(0.12, 0.62, 0.22)
-        horn.mesh = horn_mesh
+        horn.mesh = _signature_box_mesh("boss_horn", Vector3(0.12, 0.62, 0.22))
         horn.name = "BossHornL" if side < 0.0 else "BossHornR"
         horn.position = Vector3(side * 0.52, 1.80, 0.06)
         horn.rotation_degrees.z = side * -32.0
@@ -900,10 +905,7 @@ func _add_boss_frame(color: Color) -> void:
         add_child(horn)
 
     var core := MeshInstance3D.new()
-    var core_mesh := SphereMesh.new()
-    core_mesh.radius = 0.145
-    core_mesh.height = 0.29
-    core.mesh = core_mesh
+    core.mesh = _signature_sphere_mesh("boss_core", 0.145, 0.29)
     core.name = "BossCore"
     core.position = Vector3(0.0, 1.32, -0.48)
     core.material_override = _signature_material(Color(1.0, 0.30, 0.04), 4.6)
