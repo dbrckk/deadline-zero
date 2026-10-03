@@ -26940,17 +26940,18 @@ func _build_containment_lanes() -> void:
         add_child(tick)
 
 func _build_perimeter_street_lights() -> void:
-    # Tall authored fixtures restore vertical scale without introducing gameplay collision.
-    # Each fixture owns one modest, shadowless pool light to stay inside the mobile light budget.
-    var placements := [
-        {"position": Vector3(-18.5, 0.0, -12.8), "rotation": 0.42},
-        {"position": Vector3(18.5, 0.0, -12.8), "rotation": -0.42},
-        {"position": Vector3(-18.5, 0.0, 12.8), "rotation": PI - 0.42},
-        {"position": Vector3(18.5, 0.0, 12.8), "rotation": PI + 0.42},
+    # Keep the licensed authored fixture in the production scene, but outside normal phone
+    # framing: its tall dual-arm silhouette reads as bright geometry from the gameplay camera.
+    # Compact procedural masts carry the visible perimeter-light identity instead.
+    var authored_placements := [
+        {"position": Vector3(-28.0, 0.0, -21.0), "rotation": 0.42},
+        {"position": Vector3(28.0, 0.0, -21.0), "rotation": -0.42},
+        {"position": Vector3(-28.0, 0.0, 21.0), "rotation": PI - 0.42},
+        {"position": Vector3(28.0, 0.0, 21.0), "rotation": PI + 0.42},
     ]
 
-    for index in range(placements.size()):
-        var placement: Dictionary = placements[index]
+    for index in range(authored_placements.size()):
+        var placement: Dictionary = authored_placements[index]
         var fixture := DZAssetLibrary.street_lights()
         if fixture == null:
             continue
@@ -26958,33 +26959,102 @@ func _build_perimeter_street_lights() -> void:
         fixture.add_to_group("environment_vertical_prop")
         fixture.position = placement["position"]
         fixture.rotation.y = float(placement["rotation"])
-        fixture.scale = Vector3.ONE * 0.76
+        fixture.scale = Vector3.ONE * 0.36
         add_child(fixture)
 
         var pool := OmniLight3D.new()
         pool.name = "StreetLightPool"
         pool.position = Vector3(0.0, 6.05, 2.28)
-        pool.light_color = Color(0.42, 0.68, 0.86)
-        pool.light_energy = 0.92
-        pool.omni_range = 8.0
+        pool.light_color = Color(0.32, 0.56, 0.74)
+        pool.light_energy = 0.48
+        pool.omni_range = 6.0
         pool.shadow_enabled = false
         fixture.add_child(pool)
 
-        var lamp_core := MeshInstance3D.new()
-        lamp_core.name = "StreetLightCore"
-        var core_mesh := SphereMesh.new()
-        core_mesh.radius = 0.12
-        core_mesh.height = 0.24
-        lamp_core.mesh = core_mesh
-        lamp_core.position = Vector3(0.0, 6.18, 2.38)
-        var core_material := StandardMaterial3D.new()
-        core_material.albedo_color = Color(0.56, 0.82, 1.0)
-        core_material.emission_enabled = true
-        core_material.emission = Color(0.24, 0.62, 0.92)
-        core_material.emission_energy_multiplier = 2.6
-        core_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-        lamp_core.material_override = core_material
-        fixture.add_child(lamp_core)
+    var pole_material := StandardMaterial3D.new()
+    pole_material.albedo_color = Color(0.018, 0.030, 0.036)
+    pole_material.metallic = 0.74
+    pole_material.roughness = 0.40
+
+    var collar_material := StandardMaterial3D.new()
+    collar_material.albedo_color = Color(0.52, 0.12, 0.015)
+    collar_material.emission_enabled = true
+    collar_material.emission = Color(0.20, 0.025, 0.003)
+    collar_material.emission_energy_multiplier = 0.28
+    collar_material.roughness = 0.58
+
+    var lamp_material := StandardMaterial3D.new()
+    lamp_material.albedo_color = Color(0.30, 0.72, 0.92)
+    lamp_material.emission_enabled = true
+    lamp_material.emission = Color(0.08, 0.50, 0.82)
+    lamp_material.emission_energy_multiplier = 2.25
+    lamp_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+
+    var mast_placements := [
+        {"position": Vector3(-17.8, 0.0, -12.1), "rotation": 0.58},
+        {"position": Vector3(17.8, 0.0, -12.1), "rotation": -0.58},
+        {"position": Vector3(-17.8, 0.0, 12.1), "rotation": PI - 0.58},
+        {"position": Vector3(17.8, 0.0, 12.1), "rotation": PI + 0.58},
+    ]
+
+    for index in range(mast_placements.size()):
+        var placement: Dictionary = mast_placements[index]
+        var mast := Node3D.new()
+        mast.name = "QuarantineMast_%02d" % index
+        mast.position = placement["position"]
+        mast.rotation.y = float(placement["rotation"])
+        add_child(mast)
+
+        var base := MeshInstance3D.new()
+        base.name = "Base"
+        var base_mesh := CylinderMesh.new()
+        base_mesh.top_radius = 0.30
+        base_mesh.bottom_radius = 0.36
+        base_mesh.height = 0.16
+        base.mesh = base_mesh
+        base.position.y = 0.08
+        base.material_override = pole_material
+        mast.add_child(base)
+
+        var pole := MeshInstance3D.new()
+        pole.name = "Pole"
+        var pole_mesh := CylinderMesh.new()
+        pole_mesh.top_radius = 0.075
+        pole_mesh.bottom_radius = 0.095
+        pole_mesh.height = 3.25
+        pole.mesh = pole_mesh
+        pole.position.y = 1.70
+        pole.material_override = pole_material
+        mast.add_child(pole)
+
+        var collar := MeshInstance3D.new()
+        collar.name = "HazardCollar"
+        var collar_mesh := CylinderMesh.new()
+        collar_mesh.top_radius = 0.115
+        collar_mesh.bottom_radius = 0.115
+        collar_mesh.height = 0.11
+        collar.mesh = collar_mesh
+        collar.position.y = 0.62
+        collar.material_override = collar_material
+        mast.add_child(collar)
+
+        var arm := MeshInstance3D.new()
+        arm.name = "Arm"
+        var arm_mesh := BoxMesh.new()
+        arm_mesh.size = Vector3(0.62, 0.085, 0.10)
+        arm.mesh = arm_mesh
+        arm.position = Vector3(0.0, 3.28, -0.25)
+        arm.material_override = pole_material
+        mast.add_child(arm)
+
+        var lamp := MeshInstance3D.new()
+        lamp.name = "Lamp"
+        var lamp_mesh := BoxMesh.new()
+        lamp_mesh.size = Vector3(0.34, 0.10, 0.16)
+        lamp.mesh = lamp_mesh
+        lamp.position = Vector3(0.0, 3.24, -0.55)
+        lamp.material_override = lamp_material
+        mast.add_child(lamp)
 
 func _build_perimeter_beacons() -> void:
     var beacon_material := StandardMaterial3D.new()
@@ -28837,6 +28907,9 @@ func _initialize() -> void:
     var street_light_count := 0
     var street_light_pool_count := 0
     var graded_street_light_meshes := 0
+    var offscreen_authored_street_light_count := 0
+    var quarantine_mast_count := 0
+    var quarantine_mast_lamp_count := 0
     var graded_barrier_meshes := 0
     var hazard_strip_count := 0
     var service_pylon_count := 0
@@ -28898,8 +28971,13 @@ func _initialize() -> void:
             containment_ring_count += 1
         elif child.name.begins_with("ServicePylon_"):
             service_pylon_count += 1
+        elif child.name.begins_with("QuarantineMast_"):
+            quarantine_mast_count += 1
+            quarantine_mast_lamp_count += child.find_children("Lamp", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("AuthoredStreetLight_"):
             street_light_count += 1
+            if Vector2(child.position.x, child.position.z).length() > 32.0 and child.scale.x <= 0.40:
+                offscreen_authored_street_light_count += 1
             var light_meshes: Array[MeshInstance3D] = []
             if child is MeshInstance3D:
                 light_meshes.append(child as MeshInstance3D)
@@ -28978,6 +29056,14 @@ func _initialize() -> void:
         return
     if street_light_count != 4 or street_light_pool_count != 4:
         push_error("Expected 4 authored vertical light fixtures with safe pools, got %d/%d" % [street_light_count, street_light_pool_count])
+        quit(1)
+        return
+    if offscreen_authored_street_light_count != 4:
+        push_error("Authored street lights must stay outside normal combat framing, got %d/4 compliant" % offscreen_authored_street_light_count)
+        quit(1)
+        return
+    if quarantine_mast_count != 4 or quarantine_mast_lamp_count != 4:
+        push_error("Expected 4 compact visible quarantine masts with emissive lamps, got %d/%d" % [quarantine_mast_count, quarantine_mast_lamp_count])
         quit(1)
         return
     if graded_street_light_meshes < 4:

@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T16:40:34Z
+Generated: 2026-10-03T16:43:56Z
 
 ### Git
 - Branch: `main`
-- Head: `94fff350afba`
-- Commit date: 2026-10-03T18:40:01+02:00
-- Commit: Fix quarantine bulkhead GDScript parse
+- Head: `b65712f98a0c`
+- Commit date: 2026-10-03T18:43:42+02:00
+- Commit: Replace intrusive street lights with compact quarantine masts
 - Tracked files: 942
 
 ### Recently changed files
