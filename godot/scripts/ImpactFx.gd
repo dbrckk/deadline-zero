@@ -12,6 +12,8 @@ var ring_material: StandardMaterial3D
 
 static var _shared_core_mesh: SphereMesh
 static var _shared_ring_mesh: TorusMesh
+static var _spark_process_cache := {}
+static var _spark_mesh_cache := {}
 
 func _ready() -> void:
     mesh_instance = MeshInstance3D.new()
@@ -40,29 +42,8 @@ func _ready() -> void:
     sparks.randomness = 0.35
     sparks.local_coords = false
 
-    var particle_material := ParticleProcessMaterial.new()
-    particle_material.direction = Vector3(0.0, 1.0, 0.0)
-    particle_material.spread = 70.0
-    particle_material.initial_velocity_min = 2.2
-    particle_material.initial_velocity_max = 4.2
-    particle_material.gravity = Vector3(0.0, -7.0, 0.0)
-    particle_material.scale_min = 0.45
-    particle_material.scale_max = 1.0
-    particle_material.color = color
-    sparks.process_material = particle_material
-
-    var spark_mesh := QuadMesh.new()
-    spark_mesh.size = Vector2(0.055, 0.16)
-    var spark_material := StandardMaterial3D.new()
-    spark_material.albedo_color = color
-    spark_material.emission_enabled = true
-    spark_material.emission = color
-    spark_material.emission_energy_multiplier = 4.5
-    spark_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    spark_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    spark_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
-    spark_mesh.material = spark_material
-    sparks.draw_pass_1 = spark_mesh
+    sparks.process_material = _spark_process_material(color)
+    sparks.draw_pass_1 = _spark_mesh(color)
     add_child(sparks)
     sparks.emitting = true
 
@@ -85,6 +66,43 @@ static func _ring_mesh() -> TorusMesh:
     _shared_ring_mesh.rings = 16
     _shared_ring_mesh.ring_segments = 6
     return _shared_ring_mesh
+
+static func _spark_cache_key(tint: Color) -> String:
+    return tint.to_html(true)
+
+static func _spark_process_material(tint: Color) -> ParticleProcessMaterial:
+    var key := _spark_cache_key(tint)
+    if _spark_process_cache.has(key):
+        return _spark_process_cache[key] as ParticleProcessMaterial
+    var material := ParticleProcessMaterial.new()
+    material.direction = Vector3(0.0, 1.0, 0.0)
+    material.spread = 70.0
+    material.initial_velocity_min = 2.2
+    material.initial_velocity_max = 4.2
+    material.gravity = Vector3(0.0, -7.0, 0.0)
+    material.scale_min = 0.45
+    material.scale_max = 1.0
+    material.color = tint
+    _spark_process_cache[key] = material
+    return material
+
+static func _spark_mesh(tint: Color) -> QuadMesh:
+    var key := _spark_cache_key(tint)
+    if _spark_mesh_cache.has(key):
+        return _spark_mesh_cache[key] as QuadMesh
+    var mesh := QuadMesh.new()
+    mesh.size = Vector2(0.055, 0.16)
+    var material := StandardMaterial3D.new()
+    material.albedo_color = tint
+    material.emission_enabled = true
+    material.emission = tint
+    material.emission_energy_multiplier = 4.5
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    mesh.material = material
+    _spark_mesh_cache[key] = mesh
+    return mesh
 
 func _make_material(tint: Color, energy: float) -> StandardMaterial3D:
     var material := StandardMaterial3D.new()
