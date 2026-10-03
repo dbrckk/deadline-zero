@@ -7,6 +7,7 @@ var amount := 1
 var target: Node3D
 var velocity := Vector3.ZERO
 var age := 0.0
+var combat_enabled := true
 
 const MAGNET_RADIUS := 5.0
 const FORCED_MAGNET_AGE := 5.0
@@ -17,6 +18,7 @@ static var _shared_mesh: SphereMesh
 static var _shared_material: StandardMaterial3D
 
 func _ready() -> void:
+    add_to_group("xp_orbs")
     var orb := MeshInstance3D.new()
     orb.name = "XpOrbVisual"
     orb.mesh = _orb_mesh()
@@ -45,7 +47,14 @@ static func _orb_material() -> StandardMaterial3D:
     _shared_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     return _shared_material
 
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if not enabled:
+        velocity = Vector3.ZERO
+
 func _process(delta: float) -> void:
+    if not combat_enabled:
+        return
     age += delta
     rotation.y += delta * 4.0
     position.y = 0.18 + sin(age * 5.0) * 0.05

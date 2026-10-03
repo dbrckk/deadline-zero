@@ -473,6 +473,10 @@ func _freeze_combat() -> void:
         var hostile := node as DZEnemyProjectile
         if hostile != null:
             hostile.set_combat_enabled(false)
+    for node in get_tree().get_nodes_in_group("xp_orbs"):
+        var orb := node as DZXpOrb
+        if orb != null:
+            orb.set_combat_enabled(false)
 
 func _on_restart_requested() -> void:
     _clear_hit_freeze()
