@@ -22,21 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T19:01:43Z
+Generated: 2026-10-03T19:13:58Z
 
 ### Git
 - Branch: `main`
-- Head: `6c6aafd57263`
-- Commit date: 2026-10-03T21:01:13+02:00
-- Commit: Test pause overlay pressure cleanup
+- Head: `19532a88d408`
+- Commit date: 2026-10-03T21:13:25+02:00
+- Commit: Exercise real archetype setup in silhouette QA
 - Tracked files: 943
 
 ### Recently changed files
-- `godot/tests/first_playable_run_path_test.gd`
-- `godot/scripts/Main.gd`
-- `.github/workflows/godot-verify.yml`
-- `godot/tests/player_pressure_marker_test.gd`
-- `godot/scripts/Player.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/tests/pressure_frame_render_test.gd`
+- `godot/scripts/Enemy.gd`
 
 ### Project signals
 - `build.gradle`

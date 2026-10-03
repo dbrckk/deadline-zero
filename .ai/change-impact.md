@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 18d6cb63cfb15669d5661077bc37c6fa365ba63e
-Head: 6c6aafd572633f9ba33b8397b5534c2da1e98eb0
+Base: e34e13dd8c778cb8c5365de940f619a6ada7b711
+Head: 19532a88d4085e6888c0c452d895abef7b3e9ea1
 
 ## Changed files
-- M godot/tests/first_playable_run_path_test.gd
+- M godot/tests/enemy_silhouette_identity_test.gd
 
 ## Affected areas
 - godot

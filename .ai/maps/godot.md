@@ -500,6 +500,7 @@ var charge_hit := false
 var hit_flash_visual: MeshInstance3D
 var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
+static var _shared_contact_shadow_material: StandardMaterial3D
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -551,6 +552,7 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
 func _ready() -> void:
     add_to_group("enemies")
     _build_visual()
+    _build_contact_shadow()
     _build_hit_flash()
 
 func _physics_process(delta: float) -> void:
@@ -1026,6 +1028,46 @@ func _play_hit_reaction(critical: bool, killed: bool) -> void:
         if hit_flash_visual != null:
             hit_flash_visual.visible = false
     )
+
+func _build_contact_shadow() -> void:
+    var shadow := MeshInstance3D.new()
+    shadow.name = "EnemyContactShadow"
+    var mesh := CylinderMesh.new()
+    var radius := 0.42
+    match kind:
+        "runner":
+            radius = 0.36
+        "charger":
+            radius = 0.50
+        "harrier":
+            radius = 0.40
+        "regenerator":
+            radius = 0.47
+        "brute":
+            radius = 0.58
+        "elite":
+            radius = 0.54
+        "boss":
+            radius = 0.78
+    mesh.top_radius = radius
+    mesh.bottom_radius = radius * 1.04
+    mesh.height = 0.008
+    mesh.radial_segments = 16
+    shadow.mesh = mesh
+    shadow.position.y = 0.010
+    shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    shadow.material_override = _enemy_contact_shadow_material()
+    add_child(shadow)
+
+static func _enemy_contact_shadow_material() -> StandardMaterial3D:
+    if _shared_contact_shadow_material != null:
+        return _shared_contact_shadow_material
+    _shared_contact_shadow_material = StandardMaterial3D.new()
+    _shared_contact_shadow_material.albedo_color = Color(0.005, 0.008, 0.010, 0.34)
+    _shared_contact_shadow_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    _shared_contact_shadow_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    _shared_contact_shadow_material.roughness = 1.0
+    return _shared_contact_shadow_material
 
 func _build_hit_flash() -> void:
     hit_flash_visual = MeshInstance3D.new()
@@ -5355,22 +5397,57 @@ func _initialize() -> void:
     var expected := {
         "shambler": ["SignatureBeacon"],
         "runner": ["RunnerBladeL", "RunnerBladeR", "SignatureBeacon"],
+        "charger": ["SignatureBeacon"],
+        "harrier": ["SignatureBeacon"],
+        "regenerator": ["SignatureBeacon"],
         "brute": ["BrutePlateL", "BrutePlateR", "BruteEdgeL", "BruteEdgeR", "SignatureBeacon"],
         "elite": ["EliteFinL", "EliteFinR", "SignatureBeacon"],
         "boss": ["BossWingL", "BossWingR", "BossHornL", "BossHornR", "BossCore", "SignatureBeacon"]
     }
 
+    var shared_shadow_material: Material
+    var shadow_radii := {}
     for kind in expected.keys():
         var enemy := ENEMY_SCRIPT.new()
-        root.add_child(enemy)
         enemy.kind = kind
-        enemy.call_deferred("_add_archetype_signature")
+        root.add_child(enemy)
         await process_frame
         for node_name in expected[kind]:
             if enemy.get_node_or_null(node_name) == null:
                 push_error("Missing %s signature node %s" % [kind, node_name])
                 quit(1)
                 return
+        var shadow := enemy.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+        var shadow_mesh := shadow.mesh as CylinderMesh if shadow != null else null
+        if shadow == null or shadow_mesh == null:
+            push_error("Missing mobile-safe contact shadow for %s" % kind)
+            quit(1)
+            return
+        if shadow.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+            push_error("Contact shadow must not cast dynamic shadows for %s" % kind)
+            quit(1)
+            return
+        if shadow_mesh.radial_segments > 16:
+            push_error("Contact shadow geometry budget regressed for %s" % kind)
+            quit(1)
+            return
+        var shadow_material := shadow.material_override
+        if shadow_material == null or not shadow_material is BaseMaterial3D:
+            push_error("Contact shadow material missing for %s" % kind)
+            quit(1)
+            return
+        var base_shadow_material := shadow_material as BaseMaterial3D
+        if base_shadow_material.transparency != BaseMaterial3D.TRANSPARENCY_ALPHA:
+            push_error("Contact shadow must remain alpha blended for %s" % kind)
+            quit(1)
+            return
+        if shared_shadow_material == null:
+            shared_shadow_material = shadow_material
+        elif shadow_material != shared_shadow_material:
+            push_error("Enemy contact shadows must share one material instance")
+            quit(1)
+            return
+        shadow_radii[kind] = shadow_mesh.top_radius
         if kind == "runner":
             var blade := enemy.get_node_or_null("RunnerBladeL") as MeshInstance3D
             var blade_mesh := blade.mesh as BoxMesh if blade != null else null
@@ -5399,6 +5476,15 @@ func _initialize() -> void:
                 quit(1)
                 return
         enemy.queue_free()
+
+    if float(shadow_radii.get("boss", 0.0)) <= float(shadow_radii.get("brute", 0.0)):
+        push_error("Boss contact shadow must preserve larger ground mass than brute")
+        quit(1)
+        return
+    if float(shadow_radii.get("brute", 0.0)) <= float(shadow_radii.get("runner", 0.0)):
+        push_error("Heavy enemy contact shadow must read broader than runner")
+        quit(1)
+        return
 
     print("Deadline Zero enemy silhouette identity: OK")
     quit(0)
@@ -6621,6 +6707,53 @@ func _run_capture() -> void:
         quit(1)
         return
 
+    var pressure_locator := player.get_node_or_null("PlayerPressureLocator") as Node3D
+    if not player.player_marker_pressure or pressure_locator == null or not pressure_locator.visible:
+        push_error("Pressure-frame QA did not capture active close-pressure player feedback")
+        quit(1)
+        return
+
+    # Validate phone-scale readability in screen space, not just world-space spacing.
+    # A visually black/non-black image gate cannot catch actors collapsing into one blob.
+    var viewport_size := get_root().get_visible_rect().size
+    var player_screen := scene.camera.unproject_position(player.global_position + Vector3(0.0, 0.9, 0.0))
+    var projected_enemies: Array[Dictionary] = []
+    for node in get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy == null or enemy.dead or not active_kinds.has(enemy.kind):
+            continue
+        if scene.camera.is_position_behind(enemy.global_position):
+            continue
+        var screen_pos := scene.camera.unproject_position(enemy.global_position + Vector3(0.0, 0.9, 0.0))
+        if screen_pos.x < 28.0 or screen_pos.y < 28.0 or screen_pos.x > viewport_size.x - 28.0 or screen_pos.y > viewport_size.y - 28.0:
+            continue
+        projected_enemies.append({"kind": enemy.kind, "screen": screen_pos})
+
+    if projected_enemies.size() < 4:
+        push_error("Pressure-frame QA has too few readable on-screen archetypes: %d" % projected_enemies.size())
+        quit(1)
+        return
+
+    var min_player_distance := INF
+    var min_enemy_distance := INF
+    for index in range(projected_enemies.size()):
+        var sample: Dictionary = projected_enemies[index]
+        var sample_screen: Vector2 = sample["screen"]
+        min_player_distance = minf(min_player_distance, sample_screen.distance_to(player_screen))
+        for other_index in range(index + 1, projected_enemies.size()):
+            var other: Dictionary = projected_enemies[other_index]
+            var other_screen: Vector2 = other["screen"]
+            min_enemy_distance = minf(min_enemy_distance, sample_screen.distance_to(other_screen))
+
+    if min_player_distance < 36.0:
+        push_error("Pressure-frame actor overlap hides the player silhouette: min_player_px=%.2f" % min_player_distance)
+        quit(1)
+        return
+    if min_enemy_distance < 28.0:
+        push_error("Pressure-frame enemy silhouettes collapse together: min_enemy_px=%.2f" % min_enemy_distance)
+        quit(1)
+        return
+
     var texture := get_root().get_texture()
     if texture == null:
         push_error("Pressure-frame QA has no viewport texture")
@@ -6640,21 +6773,38 @@ func _run_capture() -> void:
         return
 
     var bright := 0
+    var clipped := 0
     var total := 0
     var sum_luma := 0.0
+    var min_luma := 1.0
+    var max_luma := 0.0
     for y in range(0, height, 8):
         for x in range(0, width, 8):
             var color := image.get_pixel(x, y)
             var luma := color.r * 0.2126 + color.g * 0.7152 + color.b * 0.0722
             total += 1
             sum_luma += luma
+            min_luma = minf(min_luma, luma)
+            max_luma = maxf(max_luma, luma)
             if luma > 0.045:
                 bright += 1
+            if luma > 0.96:
+                clipped += 1
 
     var bright_fraction := float(bright) / float(maxi(total, 1))
+    var clipped_fraction := float(clipped) / float(maxi(total, 1))
     var average_luma := sum_luma / float(maxi(total, 1))
+    var luma_range := max_luma - min_luma
     if bright_fraction < 0.008 or average_luma < 0.006:
         push_error("Pressure frame is effectively black: bright=%.5f avg=%.5f" % [bright_fraction, average_luma])
+        quit(1)
+        return
+    if luma_range < 0.05:
+        push_error("Pressure frame lacks enough tonal separation: range=%.5f" % luma_range)
+        quit(1)
+        return
+    if clipped_fraction > 0.18:
+        push_error("Pressure frame is excessively clipped: clipped=%.5f" % clipped_fraction)
         quit(1)
         return
 
@@ -6664,8 +6814,8 @@ func _run_capture() -> void:
         quit(1)
         return
 
-    print("GODOT_PRESSURE_FRAME_OK %dx%d kinds=%d bright=%.5f avg=%.5f" % [
-        width, height, active_kinds.size(), bright_fraction, average_luma
+    print("GODOT_PRESSURE_FRAME_OK %dx%d kinds=%d onscreen=%d player_px=%.2f enemy_px=%.2f bright=%.5f avg=%.5f range=%.5f clipped=%.5f" % [
+        width, height, active_kinds.size(), projected_enemies.size(), min_player_distance, min_enemy_distance, bright_fraction, average_luma, luma_range, clipped_fraction
     ])
     quit(0)
 ```
