@@ -465,7 +465,7 @@ func _build() -> void:
     add_child(pause_panel)
     var pause_box := VBoxContainer.new()
     pause_box.alignment = BoxContainer.ALIGNMENT_CENTER
-    pause_box.add_theme_constant_override("separation", 18)
+    pause_box.add_theme_constant_override("separation", 12)
     pause_panel.add_child(pause_box)
     var pause_title := Label.new()
     pause_title.text = "SYSTEM PAUSED"
@@ -483,7 +483,7 @@ func _build() -> void:
     master_volume.max_value = 1.0
     master_volume.step = 0.05
     master_volume.value = 0.85
-    master_volume.custom_minimum_size = Vector2(360, 42)
+    master_volume.custom_minimum_size = Vector2(360, 48)
     master_volume.value_changed.connect(func(value: float) -> void: master_volume_changed.emit(value))
     pause_box.add_child(master_volume)
     var sfx_label := Label.new()
@@ -496,14 +496,14 @@ func _build() -> void:
     sfx_volume.max_value = 1.0
     sfx_volume.step = 0.05
     sfx_volume.value = 0.90
-    sfx_volume.custom_minimum_size = Vector2(360, 42)
+    sfx_volume.custom_minimum_size = Vector2(360, 48)
     sfx_volume.value_changed.connect(func(value: float) -> void: sfx_volume_changed.emit(value))
     pause_box.add_child(sfx_volume)
     haptics_toggle = CheckButton.new()
     haptics_toggle.name = "HapticsToggle"
     haptics_toggle.text = "HAPTICS"
     haptics_toggle.button_pressed = true
-    haptics_toggle.custom_minimum_size = Vector2(360, 46)
+    haptics_toggle.custom_minimum_size = Vector2(360, 48)
     haptics_toggle.add_theme_font_size_override("font_size", 16)
     haptics_toggle.toggled.connect(func(enabled: bool) -> void: haptics_changed.emit(enabled))
     pause_box.add_child(haptics_toggle)
@@ -512,7 +512,7 @@ func _build() -> void:
     reduced_flashes_toggle.name = "ReducedFlashesToggle"
     reduced_flashes_toggle.text = "REDUCED FLASHES"
     reduced_flashes_toggle.button_pressed = false
-    reduced_flashes_toggle.custom_minimum_size = Vector2(360, 46)
+    reduced_flashes_toggle.custom_minimum_size = Vector2(360, 48)
     reduced_flashes_toggle.add_theme_font_size_override("font_size", 16)
     reduced_flashes_toggle.toggled.connect(func(enabled: bool) -> void:
         reduced_flashes = enabled
@@ -524,7 +524,7 @@ func _build() -> void:
     camera_shake_toggle.name = "CameraShakeToggle"
     camera_shake_toggle.text = "CAMERA SHAKE"
     camera_shake_toggle.button_pressed = true
-    camera_shake_toggle.custom_minimum_size = Vector2(360, 46)
+    camera_shake_toggle.custom_minimum_size = Vector2(360, 48)
     camera_shake_toggle.add_theme_font_size_override("font_size", 16)
     camera_shake_toggle.toggled.connect(func(enabled: bool) -> void: camera_shake_changed.emit(enabled))
     pause_box.add_child(camera_shake_toggle)
@@ -533,7 +533,7 @@ func _build() -> void:
     hit_stop_toggle.name = "HitStopToggle"
     hit_stop_toggle.text = "HIT STOP"
     hit_stop_toggle.button_pressed = true
-    hit_stop_toggle.custom_minimum_size = Vector2(360, 46)
+    hit_stop_toggle.custom_minimum_size = Vector2(360, 48)
     hit_stop_toggle.add_theme_font_size_override("font_size", 16)
     hit_stop_toggle.toggled.connect(func(enabled: bool) -> void: hit_stop_changed.emit(enabled))
     pause_box.add_child(hit_stop_toggle)
