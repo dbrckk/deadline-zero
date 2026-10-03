@@ -807,14 +807,14 @@ func _build_perimeter_bulkheads() -> void:
             stripe.material_override = hazard_material
             bulkhead.add_child(stripe)
 
-        var signal := MeshInstance3D.new()
-        signal.name = "Signal"
+        var service_signal := MeshInstance3D.new()
+        service_signal.name = "Signal"
         var signal_mesh := BoxMesh.new()
         signal_mesh.size = Vector3(0.42, 0.055, 0.028)
-        signal.mesh = signal_mesh
-        signal.position = Vector3(0.77 if index % 2 == 0 else -0.77, 0.79, -0.285)
-        signal.material_override = signal_material
-        bulkhead.add_child(signal)
+        service_signal.mesh = signal_mesh
+        service_signal.position = Vector3(0.77 if index % 2 == 0 else -0.77, 0.79, -0.285)
+        service_signal.material_override = signal_material
+        bulkhead.add_child(service_signal)
 
 func _build_authored_barrier_clusters() -> void:
     # Keep authored cover visible at the arena edge without letting the large source meshes
