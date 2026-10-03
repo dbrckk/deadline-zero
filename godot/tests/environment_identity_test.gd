@@ -30,6 +30,9 @@ func _initialize() -> void:
     var street_light_count := 0
     var street_light_pool_count := 0
     var graded_street_light_meshes := 0
+    var offscreen_authored_street_light_count := 0
+    var quarantine_mast_count := 0
+    var quarantine_mast_lamp_count := 0
     var graded_barrier_meshes := 0
     var hazard_strip_count := 0
     var service_pylon_count := 0
@@ -91,8 +94,13 @@ func _initialize() -> void:
             containment_ring_count += 1
         elif child.name.begins_with("ServicePylon_"):
             service_pylon_count += 1
+        elif child.name.begins_with("QuarantineMast_"):
+            quarantine_mast_count += 1
+            quarantine_mast_lamp_count += child.find_children("Lamp", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("AuthoredStreetLight_"):
             street_light_count += 1
+            if Vector2(child.position.x, child.position.z).length() > 32.0 and child.scale.x <= 0.40:
+                offscreen_authored_street_light_count += 1
             var light_meshes: Array[MeshInstance3D] = []
             if child is MeshInstance3D:
                 light_meshes.append(child as MeshInstance3D)
@@ -171,6 +179,14 @@ func _initialize() -> void:
         return
     if street_light_count != 4 or street_light_pool_count != 4:
         push_error("Expected 4 authored vertical light fixtures with safe pools, got %d/%d" % [street_light_count, street_light_pool_count])
+        quit(1)
+        return
+    if offscreen_authored_street_light_count != 4:
+        push_error("Authored street lights must stay outside normal combat framing, got %d/4 compliant" % offscreen_authored_street_light_count)
+        quit(1)
+        return
+    if quarantine_mast_count != 4 or quarantine_mast_lamp_count != 4:
+        push_error("Expected 4 compact visible quarantine masts with emissive lamps, got %d/%d" % [quarantine_mast_count, quarantine_mast_lamp_count])
         quit(1)
         return
     if graded_street_light_meshes < 4:
