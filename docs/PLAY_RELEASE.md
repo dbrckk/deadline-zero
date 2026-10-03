@@ -1,121 +1,88 @@
 # Google Play release procedure
 
-Use this path only for a bundle intended for Play Console upload. Normal CI verification intentionally uses test AdMob IDs and does not require an upload keystore.
+Use this procedure only for a Godot bundle intended for Play Console upload.
 
-## Required production values
+## Current production path
 
-Set production AdMob IDs with Gradle properties:
+The shipping Android runtime is the Godot project under `godot/`.
 
-- `admobAppId` using the app-ID form `ca-app-pub-################~##########`
-- `admobRewardedId` using the ad-unit form `ca-app-pub-################/##########`
+Use the `Android Play Release` export preset. It is configured for:
 
-Set the public privacy-policy URL with:
+- package `com.deadlinezero.game`
+- app name `Deadline: Zero`
+- AAB output
+- arm64-v8a only
+- min SDK 26
+- target SDK 36
+- version code 1 / version name 0.1.0
 
-- `privacyPolicyUrl` using the real public HTTPS URL configured in Play Console
+The `Godot Play AAB Verify` workflow proves the mechanical Gradle/AAB path using an ephemeral CI-only keystore. That CI key is never a production credential.
 
-The same URL is compiled into the Android app and exposed from the Settings screen. Placeholder, `example.com`, non-HTTPS and blank values are rejected by the Play release gate.
+## Production signing
 
-Set upload signing with either Gradle properties or the equivalent environment variables:
+Never commit the Play upload keystore or passwords.
 
-- `releaseStoreFile` / `DEADLINE_ZERO_KEYSTORE`
-- `releaseStorePassword` / `DEADLINE_ZERO_STORE_PASSWORD`
-- `releaseKeyAlias` / `DEADLINE_ZERO_KEY_ALIAS`
-- `releaseKeyPassword` / `DEADLINE_ZERO_KEY_PASSWORD`
+For a production Godot export, supply:
 
-Never commit keystores, passwords, aliases, production ad IDs, or generated credential files.
+- `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`
+- `GODOT_ANDROID_KEYSTORE_RELEASE_USER`
+- `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD`
 
-## Final runtime art
+The keystore password and key password must satisfy Godot/Android signing requirements for the exact release toolchain.
 
-`assets/art/game.atlas` must be the complete production atlas, not a bootstrap or partial replacement. `verifyProductionAssets` now depends on the root `verifyFinalAtlasCoverage` gate, which reads `art_sources/final-sprite-layout.json` and requires every contracted actor/direction/motion plus every indexed frame.
+## Build environment
 
-The current contract contains 24 actors, 8 directions and 5 motion groups per actor: 960 directional animation keys and 5,896 indexed frames in total, including the 10-frame fast-run overrides.
-
-You can audit a packed atlas independently with either:
-
-```bash
-gradle verifyFinalAtlasCoverage
-```
-
-or the artist-side diagnostic:
+Godot AAB export requires the Gradle Android build template. Install it before release export:
 
 ```bash
-python3 tools/verify_final_atlas.py --atlas assets/art/game.atlas
+godot --headless --path godot --editor --install-android-build-template --quit
 ```
 
-The source-sheet layout, runtime `FinalArtContract`, batch cutter and TexturePacker profile are also cross-checked in normal core CI. See `art_sources/README.md` for the complete source-sheet workflow.
-
-## Play Store graphics
-
-Place final authored listing exports under `play/store/` as defined in `docs/STORE_RELEASE.md` and `play/store/README.md`.
-
-You can validate only the listing graphics with:
+Then export:
 
 ```bash
-gradle :android:verifyPlayStoreAssets
+godot --headless --path godot \
+  --export-release "Android Play Release" \
+  build/godot-play/deadline-zero-play-release.aab
 ```
 
-The production gate requires the Play icon, feature graphic and at least three recommendation-grade 16:9 gameplay screenshots. Temporary mockups must not use the final filenames.
+The build machine must provide Android 16 / API 36 platform support and the Java/Android SDK versions required by Godot 4.7.2.
+
+## Store graphics
+
+Final authored listing assets are defined in `docs/STORE_RELEASE.md` and `play/store/README.md`.
+
+The `Godot Play Screenshots` workflow generates:
+
+- three 1920×1080 gameplay screenshot candidates;
+- a 512×512 authored 3D icon candidate;
+- a 1024×500 authored 3D feature-graphic candidate.
+
+These outputs are candidates only until visual review. Do not promote temporary/mock content to the final Store filenames.
+
+## Current services/data scope
+
+The current Godot release candidate contains no advertising, consent SDK, Play Billing, Play Games Services, In-App Review, analytics, account, cloud-save, or developer-operated backend integration.
+
+Use `play/store/DATA_SAFETY.md` and `play/store/PLAY_CONSOLE.md` for the exact current declaration scope. Do not reuse legacy libGDX monetization/service assumptions for the Godot AAB.
 
 ## Versioning
 
-Update `appVersion` and increment `appVersionCode` in `gradle.properties` before every Play upload. Google Play requires every uploaded artifact to use a version code greater than the previous uploaded version. The release gate accepts version codes from `1` through `2100000000`.
+Increment the Godot preset `version/code` before every Play upload. Google Play requires each uploaded artifact for the same package to use a strictly newer version code.
 
-## Build command
-
-From the repository root, run:
-
-```bash
-gradle :android:bundlePlayRelease \
-  -PadmobAppId=ca-app-pub-################~########## \
-  -PadmobRewardedId=ca-app-pub-################/########## \
-  -PprivacyPolicyUrl=https://your-domain.example/privacy
-```
-
-Replace the example privacy URL above with the real production URL. The signing values may be supplied through the environment variables above instead of command-line properties.
-
-`bundlePlayRelease` is the single production gate. It automatically runs:
-
-1. `:core:test`
-2. `:android:lintRelease`
-3. authored runtime production-asset validation
-4. complete final-atlas directional animation/frame validation
-5. Play Store icon / feature graphic / screenshot validation
-6. AdMob production-ID validation
-7. public HTTPS privacy-policy validation
-8. upload-keystore/signing validation
-9. Play version metadata validation
-10. `:android:bundleRelease`
-
-The command refuses to produce a Play bundle when production AdMob IDs, the public privacy-policy URL, complete authored runtime assets, final Store graphics, upload signing, or valid version metadata are missing.
-
-The resulting signed Android App Bundle is produced under `android/build/outputs/bundle/release/`.
-
-## Runtime release evidence
-
-The `Verify` Android-runtime job produces a machine-readable `runtime-release-evidence.json` artifact that consolidates:
-
-- crash/ANR scan status;
-- loaded gameplay performance telemetry;
-- 160-enemy / 180-projectile stress telemetry;
-- LOW/MEDIUM/HIGH/ULTRA × 60/90/120 FPS runtime-profile coverage.
-
-For any release-candidate commit, archive the `android-runtime-diagnostics-*` and `android-performance-*` workflow artifacts alongside the candidate AAB. The runtime manifest proves repository/emulator gates only; it does not replace physical-device sustained-FPS, thermal, accessibility/readability, Billing, Play services, or Play Console validation.
+Keep `version/name`, `play/store/RELEASE_NOTES.md`, and release evidence synchronized with the exact AAB.
 
 ## Pre-upload checks
 
 Before Play Console upload:
 
-1. Build with `gradle :android:bundlePlayRelease`; do not bypass this task with a direct `bundleRelease` for a production upload.
-2. Verify `gradle verifyFinalAtlasCoverage` passes on the exact atlas included in the AAB.
-3. Archive the successful Verify run's `runtime-release-evidence.json`, performance JSONs and runtime diagnostics for the exact release-candidate commit.
-4. Verify the AAB is signed with the intended upload key.
-5. Confirm consent/privacy flows on a clean install.
-6. Confirm Settings > Privacy policy opens the exact public URL entered in Play Console.
-7. Confirm rewarded ads use production placement IDs on an internal-test build.
-8. Confirm Remove Ads purchase, restore, acknowledgement, and app restart behavior through a Play license-test account.
-9. Confirm Starter Pack and gem consumables deliver exactly once across process death and retry.
-10. Confirm pause/resume, audio focus, background/foreground, rotation lock, fullscreen-ad lifecycle, and process recreation behavior on physical Android hardware.
-11. Confirm the four Play Billing products match the source catalog exactly: `remove_ads_lifetime`, `starter_pack_01`, `gems_250`, `gems_1200`.
-12. Confirm the Play listing privacy-policy URL matches the in-app privacy destination and the Data safety declaration covers production SDK behavior.
-13. Confirm all graphics and listing metadata satisfy `docs/STORE_RELEASE.md`.
-14. Keep the upload keystore backed up securely outside the repository.
+1. Require green Godot runtime, rendered-frame, Android emulator, and Play AAB verification workflows for the exact commit.
+2. Review and promote only visually approved icon, feature graphic, and screenshots.
+3. Verify the AAB package ID, target SDK, ABI, checksum, and signing certificate.
+4. Run a complete player-controlled session on representative physical Android hardware.
+5. Validate background/foreground lifecycle, audio, rotation lock, and process recreation.
+6. Confirm the public privacy policy matches the current no-SDK/no-backend Godot data flows.
+7. Complete Play Data Safety, app access, target audience, and IARC declarations from the exact shipping build.
+8. Upload to the intended testing track and review Play pre-launch findings.
+9. Increment the version code for every subsequent artifact.
+10. Back up the upload keystore securely outside the repository.

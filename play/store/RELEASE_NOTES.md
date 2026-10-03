@@ -1,13 +1,13 @@
 # Deadline: Zero — Release notes
 
-Versioned source for Google Play release notes. Keep the section matching `appVersion` synchronized with the exact submitted AAB.
+Versioned source for Google Play release notes. Keep the section matching the Godot Play preset version synchronized with the exact submitted AAB.
 
 ## 0.1.0
 
-Initial closed-test candidate.
+Initial Godot closed-test candidate.
 
-- Core survival-shooter run loop with escalating enemy pressure.
-- Multiple survivors, weapons, upgrades, biomes and multi-phase bosses.
-- Persistent progression, contracts and difficulty progression.
-- Android performance telemetry and adaptive visual-effects quality.
-- Rewarded-ad, purchase, privacy and Play Games integration prepared for production configuration.
+- Mobile survival run with five escalating pressure phases.
+- 8 enemy archetypes including ranged, charging, regenerating, elite, and three-phase boss threats.
+- 6 weapon profiles/protocols and 14 in-run upgrades.
+- Touch controls, stable auto-aim, boss telegraphs, haptics, and combat readability feedback.
+- Mobile-focused performance safeguards for dense enemies, projectiles, impacts, XP, and damage-number effects.
