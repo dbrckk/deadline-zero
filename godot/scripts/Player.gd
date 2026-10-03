@@ -118,6 +118,8 @@ func take_damage(amount: float) -> void:
     health_changed.emit(health, max_health)
     _trigger_damage_feedback()
     if health <= 0.0:
+        if authored_anim != null and authored_anim.has_animation("Death"):
+            _play_authored("Death")
         died.emit()
 
 func heal_full() -> void:
