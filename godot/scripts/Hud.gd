@@ -137,7 +137,9 @@ func update_touch_stick(origin: Vector2, current: Vector2) -> void:
         return
     if not touch_stick_root.visible:
         show_touch_stick(origin)
-    var displacement := (current - origin).limit_length(54.0)
+    var input_vector := ((current - origin) / 90.0).limit_length(1.0)
+    var travel_radius := (touch_stick_root.size.x - touch_stick_knob.size.x) * 0.5 - 4.0
+    var displacement := input_vector * maxf(travel_radius, 0.0)
     touch_stick_knob.position = (touch_stick_root.size - touch_stick_knob.size) * 0.5 + displacement
 
 func hide_touch_stick() -> void:
