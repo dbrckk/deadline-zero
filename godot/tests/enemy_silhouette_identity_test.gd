@@ -13,25 +13,52 @@ func _initialize() -> void:
             push_error("Missing authored visual for palette kind %s" % palette_kind)
             quit(1)
             return
-        var mesh_instance := visual as MeshInstance3D
-        if mesh_instance == null:
-            var meshes := visual.find_children("*", "MeshInstance3D", true, false)
-            mesh_instance = meshes[0] as MeshInstance3D if not meshes.is_empty() else null
-        if mesh_instance == null or not mesh_instance.material_override is ShaderMaterial:
-            push_error("Enemy palette grading shader missing for %s" % palette_kind)
+        var mesh_nodes: Array[MeshInstance3D] = []
+        if visual is MeshInstance3D:
+            mesh_nodes.append(visual as MeshInstance3D)
+        for node in visual.find_children("*", "MeshInstance3D", true, false):
+            mesh_nodes.append(node as MeshInstance3D)
+        if mesh_nodes.is_empty():
+            push_error("Enemy authored visual has no meshes for %s" % palette_kind)
             quit(1)
             return
-        var material := mesh_instance.material_override as ShaderMaterial
-        if material.get_shader_parameter("albedo_tex") == null:
-            push_error("Enemy palette grading must preserve authored atlas for %s" % palette_kind)
+
+        var palette_material: ShaderMaterial
+        var textured_surfaces := 0
+        for mesh_instance in mesh_nodes:
+            if mesh_instance == null or mesh_instance.mesh == null:
+                continue
+            if mesh_instance.material_override != null:
+                push_error("Enemy grading must not flatten authored multi-surface materials for %s" % palette_kind)
+                quit(1)
+                return
+            for surface_index in range(mesh_instance.mesh.get_surface_count()):
+                var source := mesh_instance.mesh.surface_get_material(surface_index) as BaseMaterial3D
+                if source == null or source.albedo_texture == null:
+                    continue
+                textured_surfaces += 1
+                var graded := mesh_instance.get_surface_override_material(surface_index)
+                if not graded is ShaderMaterial:
+                    push_error("Enemy surface grading shader missing for %s surface %d" % [palette_kind, surface_index])
+                    quit(1)
+                    return
+                var material := graded as ShaderMaterial
+                if material.get_shader_parameter("albedo_tex") != source.albedo_texture:
+                    push_error("Enemy grading replaced an authored atlas for %s surface %d" % [palette_kind, surface_index])
+                    quit(1)
+                    return
+                var highlight_floor := float(material.get_shader_parameter("highlight_floor"))
+                if highlight_floor > 0.50:
+                    push_error("Enemy authored highlights are not compressed enough for %s" % palette_kind)
+                    quit(1)
+                    return
+                if palette_material == null:
+                    palette_material = material
+        if textured_surfaces == 0 or palette_material == null:
+            push_error("Enemy palette grading found no authored textured surfaces for %s" % palette_kind)
             quit(1)
             return
-        var highlight_floor := float(material.get_shader_parameter("highlight_floor"))
-        if highlight_floor > 0.50:
-            push_error("Enemy authored highlights are not compressed enough for %s" % palette_kind)
-            quit(1)
-            return
-        palette_samples[palette_kind] = material.get_shader_parameter("body_tint") as Color
+        palette_samples[palette_kind] = palette_material.get_shader_parameter("body_tint") as Color
         visual.free()
 
     var runner_color: Color = palette_samples["runner"]
