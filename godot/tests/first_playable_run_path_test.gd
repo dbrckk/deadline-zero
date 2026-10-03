@@ -41,6 +41,20 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main.hud.show_touch_stick(Vector2(4.0, 716.0))
+    var edge_pos := main.hud.touch_stick_root.position
+    var edge_size := main.hud.touch_stick_root.size
+    var viewport_size := main.get_viewport().get_visible_rect().size
+    if edge_pos.x < 7.5 or edge_pos.y < 7.5:
+        push_error("Touch stick can clip beyond top/left phone bounds")
+        quit(1)
+        return
+    if edge_pos.x + edge_size.x > viewport_size.x - 7.5 or edge_pos.y + edge_size.y > viewport_size.y - 7.5:
+        push_error("Touch stick can clip beyond bottom/right phone bounds")
+        quit(1)
+        return
+    main.hud.hide_touch_stick()
+
     var touch_press := InputEventScreenTouch.new()
     touch_press.index = 7
     touch_press.position = Vector2(180.0, 520.0)
