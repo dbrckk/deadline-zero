@@ -84,11 +84,16 @@ func _initialize() -> void:
     var expected := {
         "shambler": ["SignatureBeacon"],
         "runner": ["RunnerBladeL", "RunnerBladeR", "SignatureBeacon"],
+        "charger": ["SignatureBeacon"],
+        "harrier": ["SignatureBeacon"],
+        "regenerator": ["SignatureBeacon"],
         "brute": ["BrutePlateL", "BrutePlateR", "BruteEdgeL", "BruteEdgeR", "SignatureBeacon"],
         "elite": ["EliteFinL", "EliteFinR", "SignatureBeacon"],
         "boss": ["BossWingL", "BossWingR", "BossHornL", "BossHornR", "BossCore", "SignatureBeacon"]
     }
 
+    var shared_shadow_material: Material
+    var shadow_radii := {}
     for kind in expected.keys():
         var enemy := ENEMY_SCRIPT.new()
         root.add_child(enemy)
@@ -100,6 +105,37 @@ func _initialize() -> void:
                 push_error("Missing %s signature node %s" % [kind, node_name])
                 quit(1)
                 return
+        var shadow := enemy.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+        var shadow_mesh := shadow.mesh as CylinderMesh if shadow != null else null
+        if shadow == null or shadow_mesh == null:
+            push_error("Missing mobile-safe contact shadow for %s" % kind)
+            quit(1)
+            return
+        if shadow.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+            push_error("Contact shadow must not cast dynamic shadows for %s" % kind)
+            quit(1)
+            return
+        if shadow_mesh.radial_segments > 16:
+            push_error("Contact shadow geometry budget regressed for %s" % kind)
+            quit(1)
+            return
+        var shadow_material := shadow.material_override
+        if shadow_material == null or not shadow_material is BaseMaterial3D:
+            push_error("Contact shadow material missing for %s" % kind)
+            quit(1)
+            return
+        var base_shadow_material := shadow_material as BaseMaterial3D
+        if base_shadow_material.transparency != BaseMaterial3D.TRANSPARENCY_ALPHA:
+            push_error("Contact shadow must remain alpha blended for %s" % kind)
+            quit(1)
+            return
+        if shared_shadow_material == null:
+            shared_shadow_material = shadow_material
+        elif shadow_material != shared_shadow_material:
+            push_error("Enemy contact shadows must share one material instance")
+            quit(1)
+            return
+        shadow_radii[kind] = shadow_mesh.top_radius
         if kind == "runner":
             var blade := enemy.get_node_or_null("RunnerBladeL") as MeshInstance3D
             var blade_mesh := blade.mesh as BoxMesh if blade != null else null
@@ -128,6 +164,15 @@ func _initialize() -> void:
                 quit(1)
                 return
         enemy.queue_free()
+
+    if float(shadow_radii.get("boss", 0.0)) <= float(shadow_radii.get("brute", 0.0)):
+        push_error("Boss contact shadow must preserve larger ground mass than brute")
+        quit(1)
+        return
+    if float(shadow_radii.get("brute", 0.0)) <= float(shadow_radii.get("runner", 0.0)):
+        push_error("Heavy enemy contact shadow must read broader than runner")
+        quit(1)
+        return
 
     print("Deadline Zero enemy silhouette identity: OK")
     quit(0)
