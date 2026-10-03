@@ -1,14 +1,18 @@
 # CI status
 
-Summary: 4 success / 0 failure / 4 active
+Summary: 0 success / 1 failure / 6 active
 
-- Godot Android First Playable: in_progress / pending (66d83325)
-- Godot 3D Verify: in_progress / pending (66d83325)
+- Responsive UI QA: pending / pending (94fff350)
+- Godot 3D Verify: in_progress / pending (94fff350)
+- Verify: pending / pending (94fff350)
+- Godot Android First Playable: queued / pending (94fff350)
+- Godot Android First Playable: completed / cancelled (66d83325)
+- Godot 3D Verify: completed / failure (66d83325)
 - Verify: in_progress / pending (66d83325)
 - Responsive UI QA: in_progress / pending (66d83325)
-- Responsive UI QA: completed / success (347ce12e)
-- Verify: completed / success (347ce12e)
-- Android Test APK: completed / success (347ce12e)
-- Godot Android First Playable: completed / success (c759246a)
+
+## Latest failed run structure
+- Job: verify
+  - Failed step: Validate environment identity
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

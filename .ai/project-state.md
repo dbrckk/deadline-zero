@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T16:39:11Z
+Generated: 2026-10-03T16:40:34Z
 
 ### Git
 - Branch: `main`
-- Head: `66d8332531ea`
-- Commit date: 2026-10-03T18:38:59+02:00
-- Commit: Replace combat-frame barriers with quarantine bulkheads
+- Head: `94fff350afba`
+- Commit date: 2026-10-03T18:40:01+02:00
+- Commit: Fix quarantine bulkhead GDScript parse
 - Tracked files: 942
 
 ### Recently changed files
@@ -37,8 +37,6 @@ Generated: 2026-10-03T16:39:11Z
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java`
 - `godot/scripts/Enemy.gd`
 - `godot/tests/enemy_hit_reaction_test.gd`
-- `godot/scripts/Player.gd`
-- `godot/tests/weapon_presentation_test.gd`
 
 ### Project signals
 - `build.gradle`
