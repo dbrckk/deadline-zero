@@ -84,6 +84,22 @@ func _initialize() -> void:
         quit(1)
         return
 
+    first.global_position = Vector3(DZPlayer.TARGET_ACQUIRE_RADIUS + 0.5, 0.0, 0.0)
+    player.target_refresh_clock = DZPlayer.TARGET_REFRESH_INTERVAL
+    selected = player._combat_target()
+    if selected == first:
+        push_error("Cached auto-aim target remained locked after leaving engagement radius")
+        quit(1)
+        return
+
+    first.global_position = Vector3(1.5, 0.0, 0.0)
+    player.target_refresh_clock = 0.0
+    selected = player._combat_target()
+    if selected != first:
+        push_error("Auto-aim failed to reacquire target after returning inside engagement radius")
+        quit(1)
+        return
+
     first.dead = true
     selected = player._combat_target()
     if selected != second:

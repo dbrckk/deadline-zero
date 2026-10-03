@@ -249,10 +249,19 @@ func apply_upgrade(id: String) -> void:
             _apply_weapon_profile_data("arc", DZWeaponProfiles.profile("arc"))
 
 func _combat_target() -> DZEnemy:
-    if current_target != null and (not is_instance_valid(current_target) or current_target.dead):
+    var max_target_d2 := TARGET_ACQUIRE_RADIUS * TARGET_ACQUIRE_RADIUS
+    if current_target != null and (
+        not is_instance_valid(current_target)
+        or current_target.dead
+        or global_position.distance_squared_to(current_target.global_position) > max_target_d2
+    ):
         current_target = null
         target_refresh_clock = 0.0
-    if nearest_threat != null and (not is_instance_valid(nearest_threat) or nearest_threat.dead):
+    if nearest_threat != null and (
+        not is_instance_valid(nearest_threat)
+        or nearest_threat.dead
+        or global_position.distance_squared_to(nearest_threat.global_position) > max_target_d2
+    ):
         nearest_threat = null
         target_refresh_clock = 0.0
 
