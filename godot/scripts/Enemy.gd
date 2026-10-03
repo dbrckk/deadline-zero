@@ -47,6 +47,8 @@ var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
 static var _shared_contact_shadow_material: StandardMaterial3D
 static var _contact_shadow_mesh_cache := {}
+static var _signature_material_cache := {}
+static var _shared_brute_armor_material: StandardMaterial3D
 static var _telegraph_tick_mesh_cache := {}
 
 const MAX_DAMAGE_NUMBERS := 18
@@ -786,6 +788,9 @@ func _add_archetype_signature() -> void:
             _add_eye_beacon(accent, Vector3(0.0, 1.62, -0.28), 0.055)
 
 func _signature_material(color: Color, energy := 2.2) -> StandardMaterial3D:
+    var key := "%s|%.3f" % [color.to_html(true), energy]
+    if _signature_material_cache.has(key):
+        return _signature_material_cache[key] as StandardMaterial3D
     var mat := StandardMaterial3D.new()
     mat.albedo_color = color
     mat.metallic = 0.24
@@ -793,6 +798,7 @@ func _signature_material(color: Color, energy := 2.2) -> StandardMaterial3D:
     mat.emission_enabled = true
     mat.emission = color
     mat.emission_energy_multiplier = energy
+    _signature_material_cache[key] = mat
     return mat
 
 func _add_eye_beacon(color: Color, at: Vector3, size: float) -> void:
@@ -822,11 +828,17 @@ func _add_runner_blades(color: Color) -> void:
         add_child(blade)
     _add_eye_beacon(color, Vector3(0.0, 1.54, -0.30), 0.060)
 
+static func _brute_armor_material() -> StandardMaterial3D:
+    if _shared_brute_armor_material != null:
+        return _shared_brute_armor_material
+    _shared_brute_armor_material = StandardMaterial3D.new()
+    _shared_brute_armor_material.albedo_color = Color(0.055, 0.072, 0.080)
+    _shared_brute_armor_material.metallic = 0.54
+    _shared_brute_armor_material.roughness = 0.56
+    return _shared_brute_armor_material
+
 func _add_brute_shoulders(color: Color) -> void:
-    var armor := StandardMaterial3D.new()
-    armor.albedo_color = Color(0.055, 0.072, 0.080)
-    armor.metallic = 0.54
-    armor.roughness = 0.56
+    var armor := _brute_armor_material()
     var accent := _signature_material(color, 1.55)
     for side in [-1.0, 1.0]:
         var plate := MeshInstance3D.new()
