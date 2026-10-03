@@ -2,29 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Add 3D hit-stop, critical impacts and camera feedback (#306)",
-      "terms": [
-        "306",
-        "3d",
-        "add",
-        "camera",
-        "critical",
-        "feedback",
-        "hit-stop",
-        "impacts"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/CombatFeel.gd",
-        "godot/scripts/Enemy.gd",
-        "godot/scripts/ImpactFx.gd",
-        "godot/scripts/Main.gd",
-        "godot/scripts/Projectile.gd",
-        "godot/tests/combat_feel_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Give 3D elites and bosses telegraphed combat identities (#307)",
       "terms": [
         "307",
@@ -1105,6 +1082,22 @@
       "tests": [],
       "useful": [
         "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "Keep melee pressure visually separated",
+      "terms": [
+        "keep",
+        "melee",
+        "pressure",
+        "separated",
+        "visually"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/tests/enemy_hit_reaction_test.gd"
       ]
     }
   ],
@@ -2798,8 +2791,9 @@
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_hit_reaction_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 4
     },
@@ -2931,8 +2925,9 @@
       "core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java": 4
     },
     "melee": {
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Player.gd": 4,
+      "godot/tests/enemy_hit_reaction_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "merge": {
@@ -3234,8 +3229,9 @@
       "godot/scripts/Hud.gd": 4
     },
     "pressure": {
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Player.gd": 4,
+      "godot/tests/enemy_hit_reaction_test.gd": 4,
       "godot/tests/pressure_frame_render_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
@@ -3696,6 +3692,10 @@
       "godot/tests/mobile_orientation_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4
     },
+    "separated": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/enemy_hit_reaction_test.gd": 4
+    },
     "service": {
       "godot/scripts/Main.gd": 8,
       "godot/tests/environment_identity_test.gd": 8
@@ -4067,6 +4067,10 @@
       "godot/tests/mobile_orientation_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4
+    },
+    "visually": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/enemy_hit_reaction_test.gd": 4
     },
     "visuals": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,

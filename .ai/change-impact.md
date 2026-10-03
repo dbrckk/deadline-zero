@@ -1,13 +1,14 @@
 # Change impact
 
-Base: 271ae372bafff0774e723f3c10b5fee04ca9bd46
-Head: d3008d713fe284ffbc5a64b2c6c8b686994cc801
+Base: a129ce32944cd028dea4bab685ddd687d0eeec43
+Head: c759246a4878e0ff66326c448464730802050ef7
 
 ## Changed files
-- M android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java
+- M godot/scripts/Enemy.gd
+- M godot/tests/enemy_hit_reaction_test.gd
 
 ## Affected areas
-- android
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

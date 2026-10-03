@@ -22,23 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T12:58:14Z
+Generated: 2026-10-03T15:51:48Z
 
 ### Git
 - Branch: `main`
-- Head: `d3008d713fe2`
-- Commit date: 2026-10-03T14:58:02+02:00
-- Commit: Stabilize Android stress telemetry acquisition
+- Head: `c759246a4878`
+- Commit date: 2026-10-03T17:51:12+02:00
+- Commit: Keep melee pressure visually separated
 - Tracked files: 942
 
 ### Recently changed files
+- `godot/scripts/Enemy.gd`
+- `godot/tests/enemy_hit_reaction_test.gd`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java`
 - `godot/scripts/Player.gd`
 - `godot/tests/weapon_presentation_test.gd`
 - `godot/scripts/Hud.gd`
 - `godot/scripts/Main.gd`
 - `godot/tests/hud_readability_hierarchy_test.gd`
-- `godot/tests/environment_identity_test.gd`
 
 ### Project signals
 - `build.gradle`
