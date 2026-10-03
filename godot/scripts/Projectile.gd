@@ -264,7 +264,7 @@ func _physics_process(delta: float) -> void:
         hit_enemy_ids[enemy.get_instance_id()] = true
         enemy.take_damage(dealt_damage, critical)
         _apply_protocol_hit(enemy, dealt_damage)
-        _impact(critical)
+        _impact(critical, enemy.global_position + Vector3(0.0, 0.55, 0.0))
         if visual_profile == "rail" and pierce_remaining > 0:
             pierce_remaining -= 1
             continue
@@ -307,12 +307,12 @@ func _enemies_near(position: Vector3, range_radius: float) -> Array:
         return scene.query_enemies_near(position, range_radius)
     return get_tree().get_nodes_in_group("enemies") if get_tree() != null else []
 
-func _impact(critical := false) -> void:
+func _impact(critical := false, at := Vector3.INF) -> void:
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.76, 0.18) if critical else tint
     fx.scale_boost = (1.45 if critical else 1.0) * impact_scale
     get_tree().current_scene.add_child(fx)
-    fx.global_position = global_position
+    fx.global_position = global_position if at == Vector3.INF else at
 
 func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
     match visual_profile:

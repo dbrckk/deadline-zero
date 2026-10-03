@@ -106,6 +106,12 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var impact_anchor := sweep_enemy.global_position + Vector3(0.0, 0.55, 0.0)
+    if impact_anchor.distance_to(sweep_enemy.global_position) < 0.50:
+        push_error("Swept hit impact anchor lost its readable vertical offset")
+        quit(1)
+        return
+
     var spawned := PROJECTILE_SCRIPT.new()
     spawned.process_mode = Node.PROCESS_MODE_DISABLED
     var spawn_origin := Vector3(2.0, 0.7, 3.0)
