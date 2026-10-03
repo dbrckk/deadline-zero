@@ -2510,6 +2510,7 @@ func _build_world() -> void:
     _build_floor_wear()
     _build_floor_seams()
     _build_containment_lanes()
+    _build_perimeter_bulkheads()
     _build_authored_barrier_clusters()
     _build_authored_world_dressing()
     _build_perimeter_street_lights()
@@ -2807,14 +2808,134 @@ func _build_floor_wear() -> void:
             chip.material_override = scuff_material
             add_child(chip)
 
+func _build_perimeter_bulkheads() -> void:
+    # Layered quarantine bulkheads replace bright kit silhouettes in the active camera frame.
+    # They are collision-free set dressing: readable industrial mass, restrained hazard identity,
+    # and small emissive service signals without adding dynamic-light cost.
+    var shell_material := StandardMaterial3D.new()
+    shell_material.albedo_color = Color(0.022, 0.034, 0.041)
+    shell_material.metallic = 0.68
+    shell_material.roughness = 0.43
+
+    var inset_material := StandardMaterial3D.new()
+    inset_material.albedo_color = Color(0.008, 0.013, 0.017)
+    inset_material.metallic = 0.24
+    inset_material.roughness = 0.91
+
+    var trim_material := StandardMaterial3D.new()
+    trim_material.albedo_color = Color(0.075, 0.105, 0.115)
+    trim_material.metallic = 0.78
+    trim_material.roughness = 0.34
+
+    var hazard_material := StandardMaterial3D.new()
+    hazard_material.albedo_color = Color(0.66, 0.15, 0.018)
+    hazard_material.emission_enabled = true
+    hazard_material.emission = Color(0.30, 0.035, 0.004)
+    hazard_material.emission_energy_multiplier = 0.34
+    hazard_material.roughness = 0.58
+
+    var signal_material := StandardMaterial3D.new()
+    signal_material.albedo_color = Color(0.035, 0.40, 0.56)
+    signal_material.emission_enabled = true
+    signal_material.emission = Color(0.015, 0.23, 0.38)
+    signal_material.emission_energy_multiplier = 1.15
+    signal_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+
+    var placements := [
+        {"position": Vector3(-17.4, 0.0, -9.5), "rotation": PI * 0.5},
+        {"position": Vector3(-17.4, 0.0, 0.0), "rotation": PI * 0.5},
+        {"position": Vector3(-17.4, 0.0, 9.5), "rotation": PI * 0.5},
+        {"position": Vector3(17.4, 0.0, -9.5), "rotation": -PI * 0.5},
+        {"position": Vector3(17.4, 0.0, 0.0), "rotation": -PI * 0.5},
+        {"position": Vector3(17.4, 0.0, 9.5), "rotation": -PI * 0.5},
+        {"position": Vector3(-10.5, 0.0, -13.7), "rotation": 0.0},
+        {"position": Vector3(10.5, 0.0, -13.7), "rotation": 0.0},
+        {"position": Vector3(-10.5, 0.0, 13.7), "rotation": PI},
+        {"position": Vector3(10.5, 0.0, 13.7), "rotation": PI},
+    ]
+
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var bulkhead := Node3D.new()
+        bulkhead.name = "PerimeterBulkhead_%02d" % index
+        bulkhead.position = placement["position"]
+        bulkhead.rotation.y = float(placement["rotation"])
+        add_child(bulkhead)
+
+        var foundation := MeshInstance3D.new()
+        foundation.name = "Foundation"
+        var foundation_mesh := BoxMesh.new()
+        foundation_mesh.size = Vector3(3.05, 0.16, 0.86)
+        foundation.mesh = foundation_mesh
+        foundation.position = Vector3(0.0, 0.08, 0.0)
+        foundation.material_override = inset_material
+        bulkhead.add_child(foundation)
+
+        var shell := MeshInstance3D.new()
+        shell.name = "Shell"
+        var shell_mesh := BoxMesh.new()
+        shell_mesh.size = Vector3(2.72, 0.78, 0.48)
+        shell.mesh = shell_mesh
+        shell.position = Vector3(0.0, 0.53, 0.03)
+        shell.material_override = shell_material
+        bulkhead.add_child(shell)
+
+        for side in [-1.0, 1.0]:
+            var post := MeshInstance3D.new()
+            post.name = "PostL" if side < 0.0 else "PostR"
+            var post_mesh := BoxMesh.new()
+            post_mesh.size = Vector3(0.18, 1.02, 0.60)
+            post.mesh = post_mesh
+            post.position = Vector3(side * 1.39, 0.55, 0.04)
+            post.material_override = trim_material
+            bulkhead.add_child(post)
+
+        var top_rail := MeshInstance3D.new()
+        top_rail.name = "TopRail"
+        var top_mesh := BoxMesh.new()
+        top_mesh.size = Vector3(2.92, 0.13, 0.57)
+        top_rail.mesh = top_mesh
+        top_rail.position = Vector3(0.0, 0.98, 0.03)
+        top_rail.material_override = trim_material
+        bulkhead.add_child(top_rail)
+
+        var inset := MeshInstance3D.new()
+        inset.name = "InsetPanel"
+        var inset_mesh := BoxMesh.new()
+        inset_mesh.size = Vector3(1.32, 0.39, 0.035)
+        inset.mesh = inset_mesh
+        inset.position = Vector3(0.0, 0.56, -0.258)
+        inset.material_override = inset_material
+        bulkhead.add_child(inset)
+
+        for stripe_index in range(3):
+            var stripe := MeshInstance3D.new()
+            stripe.name = "HazardStripe_%d" % stripe_index
+            var stripe_mesh := BoxMesh.new()
+            stripe_mesh.size = Vector3(0.36, 0.045, 0.020)
+            stripe.mesh = stripe_mesh
+            stripe.position = Vector3(-0.46 + float(stripe_index) * 0.46, 0.30, -0.282)
+            stripe.rotation.z = deg_to_rad(-18.0)
+            stripe.material_override = hazard_material
+            bulkhead.add_child(stripe)
+
+        var signal := MeshInstance3D.new()
+        signal.name = "Signal"
+        var signal_mesh := BoxMesh.new()
+        signal_mesh.size = Vector3(0.42, 0.055, 0.028)
+        signal.mesh = signal_mesh
+        signal.position = Vector3(0.77 if index % 2 == 0 else -0.77, 0.79, -0.285)
+        signal.material_override = signal_material
+        bulkhead.add_child(signal)
+
 func _build_authored_barrier_clusters() -> void:
     # Keep authored cover visible at the arena edge without letting the large source meshes
     # dominate the phone framing. The clusters now read as perimeter fortification, not walls.
     var clusters := [
-        {"center": Vector3(-23.2, 0.0, -15.8), "rotation": 0.18},
-        {"center": Vector3(22.9, 0.0, -15.4), "rotation": -0.28},
-        {"center": Vector3(-22.6, 0.0, 16.4), "rotation": 0.72},
-        {"center": Vector3(23.3, 0.0, 16.0), "rotation": -0.66}
+        {"center": Vector3(-29.2, 0.0, -20.4), "rotation": 0.18},
+        {"center": Vector3(28.9, 0.0, -20.0), "rotation": -0.28},
+        {"center": Vector3(-28.6, 0.0, 20.6), "rotation": 0.72},
+        {"center": Vector3(29.3, 0.0, 20.2), "rotation": -0.66}
     ]
     for cluster_index in range(clusters.size()):
         var cluster: Dictionary = clusters[cluster_index]
@@ -2828,7 +2949,7 @@ func _build_authored_barrier_clusters() -> void:
             var lateral := (float(item_index) - 1.5) * 1.28
             barrier.position = center + Vector3(lateral, 0.0, sin(float(item_index) * 1.7) * 0.28)
             barrier.rotation.y = base_rotation + (0.08 if item_index % 2 == 0 else -0.08)
-            barrier.scale = Vector3.ONE * (0.34 + float(item_index % 3) * 0.025)
+            barrier.scale = Vector3.ONE * (0.22 + float(item_index % 3) * 0.018)
             add_child(barrier)
 
 func _build_authored_world_dressing() -> void:
@@ -4881,6 +5002,9 @@ func _initialize() -> void:
     var inspection_service_stripe_count := 0
     var service_grate_slat_count := 0
     var oversized_barrier_count := 0
+    var perimeter_bulkhead_count := 0
+    var bulkhead_hazard_stripe_count := 0
+    var bulkhead_signal_count := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -4898,6 +5022,10 @@ func _initialize() -> void:
                         graded_barrier_meshes += 1
             hazard_strip_count += int(child.find_child("BarrierHazardFront", true, false) != null)
             hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
+        elif child.name.begins_with("PerimeterBulkhead_"):
+            perimeter_bulkhead_count += 1
+            bulkhead_hazard_stripe_count += child.find_children("HazardStripe_*", "MeshInstance3D", true, false).size()
+            bulkhead_signal_count += child.find_children("Signal", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("ContainmentLane_"):
             lane_count += 1
         elif child.name.begins_with("PerimeterBeacon_"):
@@ -4955,6 +5083,10 @@ func _initialize() -> void:
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
+        quit(1)
+        return
+    if perimeter_bulkhead_count != 10 or bulkhead_hazard_stripe_count != 30 or bulkhead_signal_count != 10:
+        push_error("Expected 10 layered perimeter bulkheads with 30 hazard stripes / 10 signals, got %d/%d/%d" % [perimeter_bulkhead_count, bulkhead_hazard_stripe_count, bulkhead_signal_count])
         quit(1)
         return
     if lane_count < 40:

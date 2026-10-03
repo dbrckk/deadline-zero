@@ -2,10 +2,10 @@
 
 - Index mode: incremental
 - Files indexed: 529
-- Files reparsed this run: 1
-- Symbols: 2921
+- Files reparsed this run: 2
+- Symbols: 2922
 - Internal import edges: 808
-- Impacted files: 1
+- Impacted files: 2
 - Selected tests: 1
 
 ## Languages
@@ -17,7 +17,7 @@
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
 - android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 55 symbols
 - core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 45 symbols
-- godot/scripts/Main.gd: 41 symbols
+- godot/scripts/Main.gd: 42 symbols
 - godot/scripts/Enemy.gd: 38 symbols
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
@@ -44,7 +44,7 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 1
+- AST files reparsed this run: 0
 - outline files retained: 471
 - top-level items retained: 3018
 - direct members retained: 3472
