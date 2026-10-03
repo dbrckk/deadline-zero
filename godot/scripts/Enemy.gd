@@ -50,6 +50,7 @@ static var _contact_shadow_mesh_cache := {}
 static var _signature_material_cache := {}
 static var _signature_mesh_cache := {}
 static var _shared_brute_armor_material: StandardMaterial3D
+static var _telegraph_ring_mesh_cache := {}
 static var _telegraph_tick_mesh_cache := {}
 
 const MAX_DAMAGE_NUMBERS := 18
@@ -385,12 +386,7 @@ func _show_telegraph(radius: float, duration: float) -> void:
         telegraph_visual.queue_free()
     telegraph_visual = MeshInstance3D.new()
     telegraph_visual.name = "AttackTelegraphRing"
-    var mesh := TorusMesh.new()
-    mesh.inner_radius = radius * (0.82 if kind == "boss" else 0.86)
-    mesh.outer_radius = radius
-    mesh.rings = 40 if kind == "boss" else 32
-    mesh.ring_segments = 8
-    telegraph_visual.mesh = mesh
+    telegraph_visual.mesh = _telegraph_ring_mesh(radius, kind == "boss")
     telegraph_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     get_tree().current_scene.add_child(telegraph_visual)
     telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.035, 0.0)
@@ -423,6 +419,18 @@ func _show_telegraph(radius: float, duration: float) -> void:
     tween.tween_property(telegraph_material, "emission_energy_multiplier", 5.8 if kind == "boss" else 4.6, duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.07, 0.008, 0.92 if kind == "boss" else 0.78), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.chain().tween_callback(telegraph_visual.queue_free)
+
+static func _telegraph_ring_mesh(radius: float, boss: bool) -> TorusMesh:
+    var key := "%.3f|%s" % [radius, "boss" if boss else "normal"]
+    if _telegraph_ring_mesh_cache.has(key):
+        return _telegraph_ring_mesh_cache[key] as TorusMesh
+    var mesh := TorusMesh.new()
+    mesh.inner_radius = radius * (0.82 if boss else 0.86)
+    mesh.outer_radius = radius
+    mesh.rings = 40 if boss else 32
+    mesh.ring_segments = 8
+    _telegraph_ring_mesh_cache[key] = mesh
+    return mesh
 
 static func _telegraph_tick_mesh(radius: float) -> BoxMesh:
     var key := "%.3f" % radius
