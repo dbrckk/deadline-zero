@@ -128,7 +128,13 @@ func _direction_arrow(direction: Vector2) -> String:
 func show_touch_stick(origin: Vector2) -> void:
     if touch_stick_root == null or touch_stick_knob == null:
         return
-    touch_stick_root.position = origin - touch_stick_root.size * 0.5
+    var viewport_size := get_viewport().get_visible_rect().size
+    var half_size := touch_stick_root.size * 0.5
+    var safe_center := Vector2(
+        clampf(origin.x, half_size.x + 8.0, maxf(half_size.x + 8.0, viewport_size.x - half_size.x - 8.0)),
+        clampf(origin.y, half_size.y + 8.0, maxf(half_size.y + 8.0, viewport_size.y - half_size.y - 8.0))
+    )
+    touch_stick_root.position = safe_center - half_size
     touch_stick_knob.position = (touch_stick_root.size - touch_stick_knob.size) * 0.5
     touch_stick_root.visible = true
 
