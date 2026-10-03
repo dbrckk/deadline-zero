@@ -44,6 +44,12 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if player.authored_anim != null and player.authored_anim.has_animation("HitReact"):
+        if player.current_anim != "HitReact" or player.hit_reaction_left <= 0.0:
+            push_error("Non-lethal player damage did not enter authored HitReact presentation")
+            quit(1)
+            return
+
     var health_after_first_hit: float = player.health
     player.take_damage(12.0)
     if not is_equal_approx(player.health, health_after_first_hit):
@@ -54,6 +60,15 @@ func _initialize() -> void:
     await create_timer(0.20).timeout
     if pulse.visible:
         push_error("Damage pulse did not clear after its presentation window")
+        quit(1)
+        return
+
+    if player.hit_reaction_left > 0.0:
+        push_error("Player HitReact presentation did not release after its short lock window")
+        quit(1)
+        return
+    if player.authored_anim != null and player.authored_anim.has_animation("Idle_Gun") and player.current_anim == "HitReact":
+        push_error("Player remained stuck in HitReact after the presentation window")
         quit(1)
         return
 
