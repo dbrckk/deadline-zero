@@ -30,3 +30,8 @@ static func damage_received_camera_kick(damage: float, max_health: float) -> flo
         return 0.0
     var severity := clampf(damage / max_health, 0.0, 0.35)
     return clampf(0.045 + severity * 0.22, 0.045, 0.115)
+
+static func unscaled_delta(scaled_delta: float, time_scale: float) -> float:
+    if scaled_delta <= 0.0:
+        return 0.0
+    return scaled_delta / maxf(time_scale, 0.01)
