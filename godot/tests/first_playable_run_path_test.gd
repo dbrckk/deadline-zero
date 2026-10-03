@@ -47,8 +47,14 @@ func _initialize() -> void:
         quit(1)
         return
     var knob_center := (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5
-    if main.hud.touch_stick_knob.position.distance_to(knob_center) < 8.0:
+    var knob_distance := main.hud.touch_stick_knob.position.distance_to(knob_center)
+    var max_knob_travel := (main.hud.touch_stick_root.size.x - main.hud.touch_stick_knob.size.x) * 0.5 - 4.0
+    if knob_distance < 8.0:
         push_error("Touch drag did not move floating stick knob")
+        quit(1)
+        return
+    if knob_distance > max_knob_travel + 0.5:
+        push_error("Touch stick knob escaped its visual base")
         quit(1)
         return
 
