@@ -157,14 +157,20 @@ func _unhandled_input(event: InputEvent) -> void:
         if touch.pressed and touch.position.x < get_viewport().get_visible_rect().size.x * 0.55 and touch_id < 0:
             touch_id = touch.index
             touch_origin = touch.position
+            if hud != null:
+                hud.show_touch_stick(touch_origin)
         elif not touch.pressed and touch.index == touch_id:
             touch_id = -1
             player.set_touch_move(Vector2.ZERO)
+            if hud != null:
+                hud.hide_touch_stick()
     elif event is InputEventScreenDrag:
         var drag := event as InputEventScreenDrag
         if drag.index == touch_id:
             var vector := (drag.position - touch_origin) / 90.0
             player.set_touch_move(Vector2(vector.x, vector.y).limit_length(1.0))
+            if hud != null:
+                hud.update_touch_stick(touch_origin, drag.position)
 
 func query_enemies_near(position: Vector3, radius: float) -> Array:
     return enemy_spatial_index.query(position, radius)
@@ -292,7 +298,11 @@ func _on_pause_requested() -> void:
         return
     if player != null and is_instance_valid(player):
         player._clear_player_marker_pressure()
-    hud.show_pause_settings()
+        player.set_touch_move(Vector2.ZERO)
+    touch_id = -1
+    if hud != null:
+        hud.hide_touch_stick()
+        hud.show_pause_settings()
     get_tree().paused = true
 
 func _on_resume_requested() -> void:
@@ -303,6 +313,9 @@ func _on_resume_requested() -> void:
 func _on_player_died() -> void:
     Engine.time_scale = 1.0
     game_over = true
+    touch_id = -1
+    if hud != null:
+        hud.hide_touch_stick()
     _freeze_combat()
     if hud:
         hud.show_game_over(kills, level, elapsed)
