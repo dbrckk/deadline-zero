@@ -88,7 +88,7 @@ func _ready() -> void:
     _load_audio_settings()
     last_player_health = player.health
     hud.set_health(player.health, player.max_health)
-    hud.set_progress(xp, xp_next, level, kills, elapsed)
+    hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
     _build_combat_audio()
 
     for opening_kind in run_director.opening_roster():
@@ -146,7 +146,7 @@ func _physics_process(delta: float) -> void:
             _spawn_enemy()
         spawn_clock = float(director_profile["spawn_interval"])
     enemy_spatial_index.rebuild(get_tree().get_nodes_in_group("enemies"))
-    hud.set_progress(xp, xp_next, level, kills, elapsed)
+    hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
     hud.set_wave(_wave_name())
 
 func _unhandled_input(event: InputEvent) -> void:

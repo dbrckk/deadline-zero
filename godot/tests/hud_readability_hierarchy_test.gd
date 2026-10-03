@@ -9,7 +9,7 @@ func _initialize() -> void:
     root.add_child(hud)
     await process_frame
 
-    for node_name in ["VitalPanel", "VitalAccent", "CombatLinkLabel", "SignalLabel", "WavePanel", "ThreatPanel", "BossPanel", "UpgradePanel"]:
+    for node_name in ["VitalPanel", "VitalAccent", "CombatLinkLabel", "SignalLabel", "HealthValueLabel", "WavePanel", "ThreatPanel", "BossPanel", "UpgradePanel"]:
         if hud.find_child(node_name, true, false) == null:
             push_error("HUD readability hierarchy missing node: %s" % node_name)
             quit(1)
@@ -32,6 +32,17 @@ func _initialize() -> void:
         return
     if hud.xp_bar == null or hud.xp_bar.custom_minimum_size.y < 8.0:
         push_error("XP bar must retain a distinct secondary hierarchy")
+        quit(1)
+        return
+
+    hud.set_health(73.0, 100.0)
+    if hud.health_value_label == null or hud.health_value_label.text != "HP 73 / 100":
+        push_error("Health value label must expose exact current/max integrity")
+        quit(1)
+        return
+    hud.set_progress(5, 10, 3, 12, 65.0, 7)
+    if not hud.status_label.text.contains("THREATS 7"):
+        push_error("Combat status must expose active threat count")
         quit(1)
         return
 
