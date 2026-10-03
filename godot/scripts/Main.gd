@@ -290,6 +290,8 @@ func _on_sfx_volume_changed(value: float) -> void:
 func _on_pause_requested() -> void:
     if game_over or not pending_upgrades.is_empty():
         return
+    if player != null and is_instance_valid(player):
+        player._clear_player_marker_pressure()
     hud.show_pause_settings()
     get_tree().paused = true
 
