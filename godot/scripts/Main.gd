@@ -50,6 +50,7 @@ var spawn_rng := RandomNumberGenerator.new()
 var director_profile: Dictionary = {}
 var hud_refresh_clock := 0.0
 var threat_indicator_refresh_clock := 0.0
+var director_refresh_clock := 0.0
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -59,6 +60,7 @@ const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_REVEAL_FOV_DELTA := 5.5
 const HUD_REFRESH_INTERVAL := 0.10
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
+const DIRECTOR_REFRESH_INTERVAL := 0.25
 
 func _ready() -> void:
     randomize()
@@ -140,8 +142,11 @@ func _physics_process(delta: float) -> void:
     if game_over:
         return
     elapsed += delta
-    director_profile = run_director.profile(elapsed, level)
-    max_enemies = int(director_profile["max_enemies"])
+    director_refresh_clock -= delta
+    if director_refresh_clock <= 0.0:
+        director_refresh_clock = DIRECTOR_REFRESH_INTERVAL
+        director_profile = run_director.profile(elapsed, level)
+        max_enemies = int(director_profile["max_enemies"])
     boss_banner_timer = max(0.0, boss_banner_timer - delta)
     if elapsed >= next_boss_time:
         _spawn_enemy("boss")
@@ -248,6 +253,7 @@ func _on_xp_collected(amount: int) -> void:
     while xp >= xp_next:
         xp -= xp_next
         level += 1
+        director_refresh_clock = 0.0
         xp_next = int(round(float(xp_next) * 1.24 + 4.0))
         _offer_upgrade()
         break
