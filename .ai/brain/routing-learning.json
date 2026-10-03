@@ -2,58 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Fix repository map context budget",
-      "terms": [
-        "budget",
-        "context",
-        "map",
-        "repository"
-      ],
-      "tests": [],
-      "useful": [
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
-        "godot/scripts/Enemy.gd",
-        "godot/scripts/EnemyProjectile.gd",
-        "godot/scripts/GameSettings.gd",
-        "godot/scripts/Haptics.gd",
-        "godot/scripts/Hud.gd",
-        "godot/scripts/ImpactFx.gd",
-        "godot/scripts/Main.gd",
-        "godot/scripts/Player.gd",
-        "godot/scripts/Projectile.gd",
-        "godot/scripts/RunDirector.gd",
-        "godot/scripts/SpatialHash.gd",
-        "godot/scripts/WeaponProfiles.gd",
-        "godot/tests/attack_telegraph_escalation_test.gd",
-        "godot/tests/boss_phase_runtime_test.gd",
-        "godot/tests/combat_danger_hud_test.gd",
-        "godot/tests/enemy_hit_reaction_test.gd",
-        "godot/tests/enemy_projectile_visual_test.gd",
-        "godot/tests/environment_identity_test.gd",
-        "godot/tests/first_playable_run_path_test.gd",
-        "godot/tests/haptics_service_test.gd",
-        "godot/tests/hud_readability_hierarchy_test.gd",
-        "godot/tests/impact_fx_mobile_test.gd",
-        "godot/tests/native_enemy_behavior_test.gd",
-        "godot/tests/native_upgrade_depth_test.gd",
-        "godot/tests/player_damage_feedback_test.gd",
-        "godot/tests/run_director_escalation_test.gd",
-        "godot/tests/run_director_runtime_integration_test.gd",
-        "godot/tests/run_end_combat_freeze_test.gd",
-        "godot/tests/run_end_ux_test.gd",
-        "godot/tests/screen_space_fx_test.gd",
-        "godot/tests/settings_persistence_test.gd",
-        "godot/tests/smoke_test.gd",
-        "godot/tests/spatial_hash_test.gd",
-        "godot/tests/status_effects_test.gd",
-        "godot/tests/upgrade_presentation_test.gd",
-        "godot/tests/weapon_profile_data_test.gd",
-        "godot/tests/weapon_protocol_behavior_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Track accessibility and localization release gates",
       "terms": [
         "accessibility",
@@ -1069,6 +1017,25 @@
       "tests": [],
       "useful": [
         "godot/tests/enemy_hit_reaction_test.gd"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "Refine enemy readability under melee pressure",
+      "terms": [
+        "enemy",
+        "melee",
+        "pressure",
+        "readability",
+        "refine",
+        "under"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/AssetLibrary.gd",
+        "godot/scripts/Enemy.gd",
+        "godot/tests/enemy_silhouette_identity_test.gd",
+        "godot/tests/native_enemy_behavior_test.gd"
       ]
     }
   ],
@@ -2246,12 +2213,12 @@
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4,
-      "godot/scripts/AssetLibrary.gd": 4,
-      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/AssetLibrary.gd": 8,
+      "godot/scripts/Enemy.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 8,
-      "godot/tests/native_enemy_behavior_test.gd": 4
+      "godot/tests/enemy_silhouette_identity_test.gd": 12,
+      "godot/tests/native_enemy_behavior_test.gd": 8
     },
     "environment": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
@@ -2943,10 +2910,12 @@
       "core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java": 4
     },
     "melee": {
-      "godot/scripts/Enemy.gd": 12,
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Enemy.gd": 16,
       "godot/scripts/Player.gd": 4,
       "godot/tests/enemy_hit_reaction_test.gd": 8,
-      "godot/tests/native_enemy_behavior_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 8,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "merge": {
@@ -3252,9 +3221,12 @@
       "godot/scripts/Hud.gd": 4
     },
     "pressure": {
-      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Enemy.gd": 12,
       "godot/scripts/Player.gd": 4,
       "godot/tests/enemy_hit_reaction_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/pressure_frame_render_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
@@ -3371,9 +3343,13 @@
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java": 4,
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/enemy_hit_reaction_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "readable": {
@@ -3429,12 +3405,16 @@
     "refine": {
       "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java": 4,
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 8,
       "godot/tests/hud_readability_hierarchy_test.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/player_damage_feedback_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
@@ -4037,6 +4017,12 @@
       "core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 12,
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 12
+    },
+    "under": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4
     },
     "unify": {
       "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java": 4,

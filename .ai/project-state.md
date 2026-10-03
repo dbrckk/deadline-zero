@@ -22,26 +22,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T16:58:35Z
+Generated: 2026-10-03T17:04:02Z
 
 ### Git
 - Branch: `main`
-- Head: `54e2d0ae5f55`
-- Commit date: 2026-10-03T18:58:23+02:00
-- Commit: Align melee readability contract with standoff steering
+- Head: `9ae0355d0f32`
+- Commit date: 2026-10-03T19:03:42+02:00
+- Commit: Refine enemy readability under melee pressure
 - Tracked files: 942
 
 ### Recently changed files
-- `godot/tests/enemy_hit_reaction_test.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/native_enemy_behavior_test.gd`
 - `godot/scripts/AssetLibrary.gd`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/tests/native_enemy_behavior_test.gd`
+- `godot/tests/enemy_hit_reaction_test.gd`
 - `godot/scripts/Player.gd`
 - `godot/tests/first_playable_run_path_test.gd`
 - `godot/tests/weapon_presentation_test.gd`
 - `godot/scripts/Main.gd`
 - `godot/tests/authored_world_dressing_test.gd`
-- `godot/tests/environment_identity_test.gd`
 
 ### Project signals
 - `build.gradle`

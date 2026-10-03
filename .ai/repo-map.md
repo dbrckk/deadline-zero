@@ -23975,16 +23975,16 @@ static func player() -> Node3D:
 
 static func enemy(kind: String) -> Node3D:
     var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite", "boss"] else ZOMBIE_BASIC)
-    var tint := Color(0.82, 0.92, 0.80)
+    var tint := Color(0.46, 0.58, 0.48)
     match kind:
-        "runner": tint = Color(0.72, 1.00, 0.74)
-        "charger": tint = Color(1.00, 0.68, 0.48)
-        "harrier": tint = Color(0.58, 0.88, 1.00)
-        "regenerator": tint = Color(0.58, 1.00, 0.68)
-        "brute": tint = Color(0.92, 0.56, 0.46)
-        "elite": tint = Color(0.78, 0.58, 1.00)
-        "boss": tint = Color(0.96, 0.62, 0.40)
-    _grade_mesh_tree(root, tint, 0.74, 0.0)
+        "runner": tint = Color(0.46, 0.72, 0.48)
+        "charger": tint = Color(0.68, 0.42, 0.28)
+        "harrier": tint = Color(0.36, 0.62, 0.74)
+        "regenerator": tint = Color(0.40, 0.72, 0.48)
+        "brute": tint = Color(0.62, 0.34, 0.30)
+        "elite": tint = Color(0.54, 0.42, 0.70)
+        "boss": tint = Color(0.68, 0.42, 0.26)
+    _grade_mesh_tree(root, tint, 0.82, 0.02)
     return root
 
 static func rifle() -> Node3D:
@@ -24417,20 +24417,20 @@ func _physics_process(delta: float) -> void:
 func _melee_standoff_distance() -> float:
     match kind:
         "boss":
-            return 1.42
+            return 1.64
         "brute":
-            return 1.24
+            return 1.42
         "charger":
-            return 1.12
+            return 1.28
         "elite":
-            return 1.08
+            return 1.22
         "regenerator":
-            return 1.00
+            return 1.16
         _:
-            return 0.92
+            return 1.08
 
 func _contact_attack_range() -> float:
-    return _melee_standoff_distance() + (0.18 if kind in ["boss", "brute"] else 0.14)
+    return _melee_standoff_distance() + (0.24 if kind in ["boss", "brute"] else 0.20)
 
 func _nearby_enemies_for_separation(radius: float) -> Array:
     var scene := get_tree().current_scene if get_tree() != null else null
@@ -24942,13 +24942,13 @@ func _add_eye_beacon(color: Color, at: Vector3, size: float) -> void:
     add_child(beacon)
 
 func _add_runner_blades(color: Color) -> void:
-    var mat := _signature_material(color, 3.0)
+    var mat := _signature_material(color, 1.85)
     for side in [-1.0, 1.0]:
         var blade := MeshInstance3D.new()
         var mesh := BoxMesh.new()
         # Extend the signature in the ground plane so it reads from the gameplay camera,
         # rather than relying on vertical geometry that collapses in top-down projection.
-        mesh.size = Vector3(0.085, 0.30, 0.38)
+        mesh.size = Vector3(0.060, 0.22, 0.42)
         blade.mesh = mesh
         blade.name = "RunnerBladeL" if side < 0.0 else "RunnerBladeR"
         blade.position = Vector3(side * 0.43, 0.82, 0.02)
@@ -24958,25 +24958,39 @@ func _add_runner_blades(color: Color) -> void:
     _add_eye_beacon(color, Vector3(0.0, 1.54, -0.30), 0.060)
 
 func _add_brute_shoulders(color: Color) -> void:
-    var mat := _signature_material(color, 2.1)
+    var armor := StandardMaterial3D.new()
+    armor.albedo_color = Color(0.055, 0.072, 0.080)
+    armor.metallic = 0.54
+    armor.roughness = 0.56
+    var accent := _signature_material(color, 1.55)
     for side in [-1.0, 1.0]:
         var plate := MeshInstance3D.new()
         var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.32, 0.16, 0.36)
+        mesh.size = Vector3(0.28, 0.12, 0.34)
         plate.mesh = mesh
         plate.name = "BrutePlateL" if side < 0.0 else "BrutePlateR"
-        plate.position = Vector3(side * 0.48, 1.12, 0.02)
-        plate.rotation_degrees.z = side * -12.0
-        plate.material_override = mat
+        plate.position = Vector3(side * 0.47, 1.12, 0.03)
+        plate.rotation_degrees = Vector3(-4.0, side * 7.0, side * -12.0)
+        plate.material_override = armor
         add_child(plate)
-    _add_eye_beacon(color, Vector3(0.0, 1.72, -0.34), 0.070)
+
+        var edge := MeshInstance3D.new()
+        var edge_mesh := BoxMesh.new()
+        edge_mesh.size = Vector3(0.045, 0.045, 0.26)
+        edge.mesh = edge_mesh
+        edge.name = "BruteEdgeL" if side < 0.0 else "BruteEdgeR"
+        edge.position = Vector3(side * 0.57, 1.14, -0.02)
+        edge.rotation_degrees = plate.rotation_degrees
+        edge.material_override = accent
+        add_child(edge)
+    _add_eye_beacon(color, Vector3(0.0, 1.72, -0.34), 0.060)
 
 func _add_elite_crown(color: Color) -> void:
-    var mat := _signature_material(color, 3.0)
+    var mat := _signature_material(color, 1.95)
     for side in [-1.0, 1.0]:
         var fin := MeshInstance3D.new()
         var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.08, 0.44, 0.12)
+        mesh.size = Vector3(0.055, 0.38, 0.10)
         fin.mesh = mesh
         fin.name = "EliteFinL" if side < 0.0 else "EliteFinR"
         fin.position = Vector3(side * 0.31, 1.62, 0.06)
@@ -28981,7 +28995,7 @@ func _initialize() -> void:
     var expected := {
         "shambler": ["SignatureBeacon"],
         "runner": ["RunnerBladeL", "RunnerBladeR", "SignatureBeacon"],
-        "brute": ["BrutePlateL", "BrutePlateR", "SignatureBeacon"],
+        "brute": ["BrutePlateL", "BrutePlateR", "BruteEdgeL", "BruteEdgeR", "SignatureBeacon"],
         "elite": ["EliteFinL", "EliteFinR", "SignatureBeacon"],
         "boss": ["BossWingL", "BossWingR", "BossHornL", "BossHornR", "BossCore", "SignatureBeacon"]
     }
@@ -29002,6 +29016,19 @@ func _initialize() -> void:
             var blade_mesh := blade.mesh as BoxMesh if blade != null else null
             if blade_mesh == null or blade_mesh.size.z < 0.35 or absf(blade.position.x) < 0.40:
                 push_error("Runner signature must remain wide and readable in top-down projection")
+                quit(1)
+                return
+        if kind == "brute":
+            var plate := enemy.get_node_or_null("BrutePlateL") as MeshInstance3D
+            var edge := enemy.get_node_or_null("BruteEdgeL") as MeshInstance3D
+            var plate_material := plate.material_override as BaseMaterial3D if plate != null else null
+            var edge_material := edge.material_override as BaseMaterial3D if edge != null else null
+            if plate_material == null or plate_material.emission_enabled:
+                push_error("Brute armor plate must remain dark/non-emissive")
+                quit(1)
+                return
+            if edge_material == null or not edge_material.emission_enabled:
+                push_error("Brute identity must move to a narrow emissive edge")
                 quit(1)
                 return
         if kind == "boss":
@@ -29847,7 +29874,7 @@ func _initialize() -> void:
     melee_brute.configure("brute", 1.0, target)
     melee_brute.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(melee_brute)
-    if separation_a._melee_standoff_distance() < 0.90:
+    if separation_a._melee_standoff_distance() < 1.05:
         push_error("Shambler melee standoff is too small to preserve player readability")
         quit(1)
         return
