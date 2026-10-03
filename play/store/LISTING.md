@@ -1,6 +1,6 @@
 # Deadline: Zero — Google Play listing copy
 
-Canonical release-listing copy for Play Console. Keep this file synchronized with the shipping build and `docs/STORE_RELEASE.md`.
+Canonical release-listing copy for the current Godot shipping runtime. Keep this file synchronized with the exact production AAB.
 
 ## App name
 
@@ -8,35 +8,31 @@ Deadline: Zero
 
 ## Short description
 
-Survive escalating hordes, forge weapon synergies, and defeat evolving bosses.
+Survive escalating hordes, forge weapon protocols, and defeat a three-phase boss.
 
 ## Full description
 
 Deadline: Zero is a fast-paced survival shooter built for focused mobile runs.
 
-Enter hostile sectors, keep moving through escalating hordes, collect upgrades during each run, and shape your build around weapons, abilities, elemental effects, and synergies.
+Enter a quarantined industrial arena, keep moving through escalating hordes, collect XP, and choose upgrades that reshape your weapon and survivability as pressure rises.
 
-Choose a survivor and contract, then adapt as enemy pressure increases. Different enemy archetypes demand different positioning, while elite variants and multi-phase bosses force you to react instead of relying on a single build.
+The current release includes:
+- A complete mobile survival arena with five escalating pressure phases
+- 8 enemy archetypes, including runners, chargers, ranged harriers, regenerators, brutes, elites, and a three-phase boss
+- 6 weapon profiles and protocols: Vanguard, Scatter, Rail, Inferno, Cryo, and Arc
+- 14 run upgrades spanning damage, cadence, mobility, survival, risk/reward, and elemental weapon changes
+- Touch movement with a floating deadzone-aware stick and stable auto-aim
+- Boss telegraphs, pressure warnings, hit reactions, damage feedback, haptics, and readable off-screen threat guidance
+- Mobile-first performance safeguards for dense combat, projectiles, impact effects, XP orbs, and damage-number clutter
 
-Progress between runs to expand your arsenal, improve your loadout, unlock new options, and take on increasingly dangerous Threat levels.
+Every run starts clean. Build around the threats in front of you, adapt your weapon protocol, and survive as long as possible while the arena escalates toward extinction pressure.
 
-Features:
-- Fast survival-shooter combat designed for mobile
-- Multiple survivors with distinct production character art
-- 12+ weapons and 50+ run upgrades
-- Ability evolutions and cross-build synergies
-- 5 biomes with distinct combat environments
-- 20+ enemy gameplay profiles and 8+ champion variants
-- 6 multi-phase bosses
-- Contracts, encounter events and endgame mutators
-- Persistent progression and configurable difficulty
-- Performance profiles and adaptive visual effects
-
-Build for the horde. Adapt to the sector. Survive the deadline.
+Build for the horde. Adapt under pressure. Survive the deadline.
 
 ## Release-copy rules
 
-- Do not add ranking, award, download-count, price or scarcity claims.
-- Do not describe unreleased features.
-- Update numerical feature counts only when the corresponding production contract changes.
+- Do not add ranking, award, download-count, price, or scarcity claims.
+- Do not describe features that are not present in the exact Godot shipping AAB.
+- Update numerical feature counts only when runtime tests and production content change together.
 - Keep screenshots representative of the exact shipping gameplay.
+- Do not reuse legacy libGDX feature counts after the Godot migration.

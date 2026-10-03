@@ -53,6 +53,8 @@ jobs:
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/player_targeting_stability_test.gd
       - name: Validate Android Play export contract
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/android_play_export_contract_test.gd
+      - name: Validate Godot Play Store claims
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/play_store_claims_test.gd
       - name: Validate weapon profile data
         run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_profile_data_test.gd
       - name: Validate projectile profile runtime visuals
