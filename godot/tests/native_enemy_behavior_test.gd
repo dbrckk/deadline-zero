@@ -184,7 +184,7 @@ func _initialize() -> void:
     melee_brute.configure("brute", 1.0, target)
     melee_brute.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(melee_brute)
-    if separation_a._melee_standoff_distance() < 0.90:
+    if separation_a._melee_standoff_distance() < 1.05:
         push_error("Shambler melee standoff is too small to preserve player readability")
         quit(1)
         return

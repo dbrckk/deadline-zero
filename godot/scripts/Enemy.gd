@@ -216,20 +216,20 @@ func _physics_process(delta: float) -> void:
 func _melee_standoff_distance() -> float:
     match kind:
         "boss":
-            return 1.42
+            return 1.64
         "brute":
-            return 1.24
+            return 1.42
         "charger":
-            return 1.12
+            return 1.28
         "elite":
-            return 1.08
+            return 1.22
         "regenerator":
-            return 1.00
+            return 1.16
         _:
-            return 0.92
+            return 1.08
 
 func _contact_attack_range() -> float:
-    return _melee_standoff_distance() + (0.18 if kind in ["boss", "brute"] else 0.14)
+    return _melee_standoff_distance() + (0.24 if kind in ["boss", "brute"] else 0.20)
 
 func _nearby_enemies_for_separation(radius: float) -> Array:
     var scene := get_tree().current_scene if get_tree() != null else null
@@ -741,13 +741,13 @@ func _add_eye_beacon(color: Color, at: Vector3, size: float) -> void:
     add_child(beacon)
 
 func _add_runner_blades(color: Color) -> void:
-    var mat := _signature_material(color, 3.0)
+    var mat := _signature_material(color, 1.85)
     for side in [-1.0, 1.0]:
         var blade := MeshInstance3D.new()
         var mesh := BoxMesh.new()
         # Extend the signature in the ground plane so it reads from the gameplay camera,
         # rather than relying on vertical geometry that collapses in top-down projection.
-        mesh.size = Vector3(0.085, 0.30, 0.38)
+        mesh.size = Vector3(0.060, 0.22, 0.42)
         blade.mesh = mesh
         blade.name = "RunnerBladeL" if side < 0.0 else "RunnerBladeR"
         blade.position = Vector3(side * 0.43, 0.82, 0.02)
@@ -757,25 +757,39 @@ func _add_runner_blades(color: Color) -> void:
     _add_eye_beacon(color, Vector3(0.0, 1.54, -0.30), 0.060)
 
 func _add_brute_shoulders(color: Color) -> void:
-    var mat := _signature_material(color, 2.1)
+    var armor := StandardMaterial3D.new()
+    armor.albedo_color = Color(0.055, 0.072, 0.080)
+    armor.metallic = 0.54
+    armor.roughness = 0.56
+    var accent := _signature_material(color, 1.55)
     for side in [-1.0, 1.0]:
         var plate := MeshInstance3D.new()
         var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.32, 0.16, 0.36)
+        mesh.size = Vector3(0.28, 0.12, 0.34)
         plate.mesh = mesh
         plate.name = "BrutePlateL" if side < 0.0 else "BrutePlateR"
-        plate.position = Vector3(side * 0.48, 1.12, 0.02)
-        plate.rotation_degrees.z = side * -12.0
-        plate.material_override = mat
+        plate.position = Vector3(side * 0.47, 1.12, 0.03)
+        plate.rotation_degrees = Vector3(-4.0, side * 7.0, side * -12.0)
+        plate.material_override = armor
         add_child(plate)
-    _add_eye_beacon(color, Vector3(0.0, 1.72, -0.34), 0.070)
+
+        var edge := MeshInstance3D.new()
+        var edge_mesh := BoxMesh.new()
+        edge_mesh.size = Vector3(0.045, 0.045, 0.26)
+        edge.mesh = edge_mesh
+        edge.name = "BruteEdgeL" if side < 0.0 else "BruteEdgeR"
+        edge.position = Vector3(side * 0.57, 1.14, -0.02)
+        edge.rotation_degrees = plate.rotation_degrees
+        edge.material_override = accent
+        add_child(edge)
+    _add_eye_beacon(color, Vector3(0.0, 1.72, -0.34), 0.060)
 
 func _add_elite_crown(color: Color) -> void:
-    var mat := _signature_material(color, 3.0)
+    var mat := _signature_material(color, 1.95)
     for side in [-1.0, 1.0]:
         var fin := MeshInstance3D.new()
         var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.08, 0.44, 0.12)
+        mesh.size = Vector3(0.055, 0.38, 0.10)
         fin.mesh = mesh
         fin.name = "EliteFinL" if side < 0.0 else "EliteFinR"
         fin.position = Vector3(side * 0.31, 1.62, 0.06)

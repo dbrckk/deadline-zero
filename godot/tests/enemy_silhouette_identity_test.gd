@@ -45,7 +45,7 @@ func _initialize() -> void:
     var expected := {
         "shambler": ["SignatureBeacon"],
         "runner": ["RunnerBladeL", "RunnerBladeR", "SignatureBeacon"],
-        "brute": ["BrutePlateL", "BrutePlateR", "SignatureBeacon"],
+        "brute": ["BrutePlateL", "BrutePlateR", "BruteEdgeL", "BruteEdgeR", "SignatureBeacon"],
         "elite": ["EliteFinL", "EliteFinR", "SignatureBeacon"],
         "boss": ["BossWingL", "BossWingR", "BossHornL", "BossHornR", "BossCore", "SignatureBeacon"]
     }
@@ -66,6 +66,19 @@ func _initialize() -> void:
             var blade_mesh := blade.mesh as BoxMesh if blade != null else null
             if blade_mesh == null or blade_mesh.size.z < 0.35 or absf(blade.position.x) < 0.40:
                 push_error("Runner signature must remain wide and readable in top-down projection")
+                quit(1)
+                return
+        if kind == "brute":
+            var plate := enemy.get_node_or_null("BrutePlateL") as MeshInstance3D
+            var edge := enemy.get_node_or_null("BruteEdgeL") as MeshInstance3D
+            var plate_material := plate.material_override as BaseMaterial3D if plate != null else null
+            var edge_material := edge.material_override as BaseMaterial3D if edge != null else null
+            if plate_material == null or plate_material.emission_enabled:
+                push_error("Brute armor plate must remain dark/non-emissive")
+                quit(1)
+                return
+            if edge_material == null or not edge_material.emission_enabled:
+                push_error("Brute identity must move to a narrow emissive edge")
                 quit(1)
                 return
         if kind == "boss":
