@@ -38,6 +38,9 @@ func _initialize() -> void:
     var inspection_service_stripe_count := 0
     var service_grate_slat_count := 0
     var oversized_barrier_count := 0
+    var perimeter_bulkhead_count := 0
+    var bulkhead_hazard_stripe_count := 0
+    var bulkhead_signal_count := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -55,6 +58,10 @@ func _initialize() -> void:
                         graded_barrier_meshes += 1
             hazard_strip_count += int(child.find_child("BarrierHazardFront", true, false) != null)
             hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
+        elif child.name.begins_with("PerimeterBulkhead_"):
+            perimeter_bulkhead_count += 1
+            bulkhead_hazard_stripe_count += child.find_children("HazardStripe_*", "MeshInstance3D", true, false).size()
+            bulkhead_signal_count += child.find_children("Signal", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("ContainmentLane_"):
             lane_count += 1
         elif child.name.begins_with("PerimeterBeacon_"):
@@ -112,6 +119,10 @@ func _initialize() -> void:
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
+        quit(1)
+        return
+    if perimeter_bulkhead_count != 10 or bulkhead_hazard_stripe_count != 30 or bulkhead_signal_count != 10:
+        push_error("Expected 10 layered perimeter bulkheads with 30 hazard stripes / 10 signals, got %d/%d/%d" % [perimeter_bulkhead_count, bulkhead_hazard_stripe_count, bulkhead_signal_count])
         quit(1)
         return
     if lane_count < 40:
