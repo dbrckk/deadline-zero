@@ -519,7 +519,7 @@ func take_damage(amount: float, critical := false) -> void:
     health_changed.emit(max(0.0, health), max_health)
     var killed := health <= 0.0
     impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
-    _spawn_damage_number(amount, critical)
+    _spawn_damage_number(amount, critical, killed)
     _play_hit_reaction(critical, killed)
     if killed:
         dead = true
@@ -639,19 +639,19 @@ func _build_hit_flash() -> void:
     hit_flash_visual.visible = false
     add_child(hit_flash_visual)
 
-func _spawn_damage_number(amount: float, critical: bool) -> void:
+func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     if get_tree() == null or get_tree().current_scene == null:
         return
     var active_numbers := get_tree().get_nodes_in_group("damage_numbers").size()
-    if active_numbers >= MAX_DAMAGE_NUMBERS and not critical:
+    if active_numbers >= MAX_DAMAGE_NUMBERS and not critical and not killed:
         return
     var number := Label3D.new()
     number.name = "DamageNumber_%d" % Time.get_ticks_usec()
     number.add_to_group("damage_numbers")
     number.text = "%d" % int(round(amount))
-    number.font_size = 34 if critical else 26
-    number.outline_size = 8 if critical else 6
-    number.modulate = Color(1.0, 0.72, 0.12) if critical else Color(0.92, 0.97, 1.0)
+    number.font_size = 34 if critical else (30 if killed else 26)
+    number.outline_size = 8 if critical or killed else 6
+    number.modulate = Color(1.0, 0.72, 0.12) if critical else (Color(1.0, 0.42, 0.16) if killed else Color(0.92, 0.97, 1.0))
     number.outline_modulate = Color(0.02, 0.03, 0.05, 0.96)
     number.billboard = BaseMaterial3D.BILLBOARD_ENABLED
     number.no_depth_test = true
