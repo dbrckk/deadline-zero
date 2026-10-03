@@ -50,6 +50,8 @@ var spawn_rng := RandomNumberGenerator.new()
 var director_profile: Dictionary = {}
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
+const TOUCH_STICK_RADIUS := 90.0
+const TOUCH_STICK_DEADZONE := 10.0
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_REVEAL_FOV_DELTA := 5.5
@@ -167,10 +169,22 @@ func _unhandled_input(event: InputEvent) -> void:
     elif event is InputEventScreenDrag:
         var drag := event as InputEventScreenDrag
         if drag.index == touch_id:
-            var vector := (drag.position - touch_origin) / 90.0
-            player.set_touch_move(Vector2(vector.x, vector.y).limit_length(1.0))
+            var vector := _touch_input_vector(drag.position)
+            player.set_touch_move(vector)
             if hud != null:
-                hud.update_touch_stick(touch_origin, drag.position)
+                hud.update_touch_stick(touch_origin, vector)
+
+func _touch_input_vector(current_position: Vector2) -> Vector2:
+    var delta := current_position - touch_origin
+    var distance := delta.length()
+    if distance <= TOUCH_STICK_DEADZONE:
+        return Vector2.ZERO
+    var strength := clampf(
+        (distance - TOUCH_STICK_DEADZONE) / maxf(TOUCH_STICK_RADIUS - TOUCH_STICK_DEADZONE, 0.001),
+        0.0,
+        1.0
+    )
+    return delta.normalized() * strength
 
 func query_enemies_near(position: Vector3, radius: float) -> Array:
     return enemy_spatial_index.query(position, radius)
