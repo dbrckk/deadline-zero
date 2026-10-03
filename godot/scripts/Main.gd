@@ -1055,6 +1055,30 @@ func _build_containment_lanes() -> void:
                 stripe.material_override = lane_material
                 add_child(stripe)
 
+    var boundary_material := StandardMaterial3D.new()
+    boundary_material.albedo_color = Color(0.50, 0.12, 0.018)
+    boundary_material.emission_enabled = true
+    boundary_material.emission = Color(0.18, 0.025, 0.003)
+    boundary_material.emission_energy_multiplier = 0.22
+    boundary_material.roughness = 0.72
+    boundary_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+
+    var horizontal_boundary_mesh := BoxMesh.new()
+    horizontal_boundary_mesh.size = Vector3(3.25, 0.010, 0.070)
+    var vertical_boundary_mesh := BoxMesh.new()
+    vertical_boundary_mesh.size = Vector3(0.070, 0.010, 3.25)
+
+    for axis in range(2):
+        for side in [-1.0, 1.0]:
+            for segment in range(-5, 6):
+                var boundary := MeshInstance3D.new()
+                boundary.name = "ArenaBoundary_%d_%d_%d" % [axis, int(side), segment]
+                boundary.mesh = horizontal_boundary_mesh if axis == 0 else vertical_boundary_mesh
+                boundary.position = Vector3(float(segment) * 5.35, 0.016, side * DZPlayer.ARENA_HALF_EXTENT) if axis == 0 else Vector3(side * DZPlayer.ARENA_HALF_EXTENT, 0.016, float(segment) * 5.35)
+                boundary.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+                boundary.material_override = boundary_material
+                add_child(boundary)
+
     var ring_material := StandardMaterial3D.new()
     ring_material.albedo_color = Color(0.025, 0.17, 0.23)
     ring_material.emission_enabled = true

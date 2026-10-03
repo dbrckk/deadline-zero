@@ -19,6 +19,8 @@ func _initialize() -> void:
 
     var barrier_count := 0
     var lane_count := 0
+    var arena_boundary_count := 0
+    var arena_boundary_shadow_violations := 0
     var beacon_count := 0
     var floor_plate_count := 0
     var floor_plate_accent_count := 0
@@ -67,6 +69,10 @@ func _initialize() -> void:
             bulkhead_signal_count += child.find_children("Signal", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("ContainmentLane_"):
             lane_count += 1
+        elif child.name.begins_with("ArenaBoundary_"):
+            arena_boundary_count += 1
+            if child is MeshInstance3D and (child as MeshInstance3D).cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                arena_boundary_shadow_violations += 1
         elif child.name.begins_with("PerimeterBeacon_"):
             beacon_count += 1
         elif child.name.begins_with("FloorPlate_"):
@@ -135,6 +141,10 @@ func _initialize() -> void:
         return
     if lane_count < 40:
         push_error("Expected structured containment lanes, got %d" % lane_count)
+        quit(1)
+        return
+    if arena_boundary_count != 44 or arena_boundary_shadow_violations != 0:
+        push_error("Expected 44 shadow-free arena boundary markers, got %d with %d shadow violations" % [arena_boundary_count, arena_boundary_shadow_violations])
         quit(1)
         return
     if beacon_count != 12:
