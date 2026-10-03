@@ -1,12 +1,11 @@
 # Change impact
 
-Base: 260987775e96e4fa546f7f73a4bbb295f7716048
-Head: 5c3aa6e12accee6640a2096823f85654bf2084a3
+Base: 95cdccc14a21aeb2d24286e40555327c792acb6d
+Head: fdc5a8a70ad5f6c705e9e037e5667767d8ace981
 
 ## Changed files
-- M godot/scripts/Hud.gd
-- M godot/scripts/Main.gd
-- M godot/tests/hud_readability_hierarchy_test.gd
+- M godot/scripts/Player.gd
+- M godot/tests/weapon_presentation_test.gd
 
 ## Affected areas
 - godot

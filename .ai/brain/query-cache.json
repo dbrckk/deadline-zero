@@ -3038,6 +3038,81 @@
       },
       "task": "privacy consent"
     },
+    "2d1659cd870ece501c0d0a13ccfa85e06e32d27fbcd35728ca39c88a230f69af": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 8,
+          "tier": "narrow",
+          "top_score": 39
+        },
+        "candidate_count": 42,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "consent",
+              "privacy"
+            ],
+            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidPrivacyService.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 39,
+            "symbols": [
+              "AndroidPrivacyService"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "consent",
+              "privacy"
+            ],
+            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidConsentManager.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 31,
+            "symbols": [
+              "AndroidConsentManager",
+              "canRequestAds",
+              "completeOnce",
+              "gatherConsent",
+              "privacyOptionsRequired",
+              "showPrivacyOptions"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "privacy"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "PrivacyService",
+              "noOp"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "privacy consent",
+        "terms": [
+          "privacy",
+          "consent"
+        ]
+      },
+      "task": "privacy consent"
+    },
     "2f94e7ffbcefa3060099d36c70a5abb7fc5a4b5a8ec37091abe0bde6d62012c1": {
       "route": {
         "budget": {
@@ -5013,6 +5088,165 @@
       },
       "task": "game engine"
     },
+    "4a191075676c22671edcf0d39fe5609e89d7bd49f7dd65302c9bb93d943b1796": {
+      "route": {
+        "budget": {
+          "confidence": "medium",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "bounded",
+          "top_score": 33
+        },
+        "candidate_count": 61,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progression"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 33,
+            "symbols": [
+              "LegendaryChoice",
+              "apply",
+              "available",
+              "descriptionKey",
+              "eligible",
+              "titleKey",
+              "weapon"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progression"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 33,
+            "symbols": [
+              "LegendaryEffects",
+              "applyApex",
+              "applyArcOverload",
+              "applyBreacherRupture",
+              "applyCinderFurnace",
+              "applyCryoPrism",
+              "applyInfernoPyroclasm",
+              "applyIonCascade",
+              "applyOverdrive",
+              "applyRailPhaseLance",
+              "applyScatterMaelstrom",
+              "applySingularity",
+              "applyVanguardProtocol"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progression"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/progression/LegendarySelector.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 33,
+            "symbols": [
+              "LegendarySelector",
+              "fillChoices",
+              "shouldOffer"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progression"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidance.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 33,
+            "symbols": [
+              "ProtocolUpgradeGuidance",
+              "key"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progression"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 33,
+            "symbols": [
+              "Upgrade",
+              "apply",
+              "critChance",
+              "critMultiplier",
+              "damage",
+              "dashCooldown",
+              "descriptionKey",
+              "fireInterval",
+              "increaseMaxHp",
+              "knockback",
+              "moveSpeed",
+              "projectileSpeed",
+              "reduceMaxHp",
+              "spread",
+              "titleKey"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progression"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/progression/UpgradeDraftPolicy.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 33,
+            "symbols": [
+              "UpgradeDraftPolicy",
+              "abilityAffinity",
+              "abilityType",
+              "affinityMultiplier",
+              "elementFamily",
+              "elementalAffinity",
+              "hasEstablishedBuild",
+              "isFocusedCandidate",
+              "partnerBoost",
+              "protocolAffinity"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "income progression",
+        "terms": [
+          "income",
+          "progression"
+        ]
+      },
+      "task": "income progression"
+    },
     "4bfc9051fd7208f081d2145a724e4beb8ecacfbc89bad5c456f876ae915d8fe3": {
       "route": {
         "budget": {
@@ -6481,6 +6715,88 @@
       },
       "task": "game engine"
     },
+    "623ba5c0c9f55536b2c222ff5604b7fe4a1b626d2e90ddc9fbb3f0d45c21bfb4": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "narrow",
+          "top_score": 43
+        },
+        "candidate_count": 52,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "billing",
+              "purchase"
+            ],
+            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "AndroidBillingService",
+              "beginPurchase",
+              "clearPending",
+              "containsConsumable",
+              "containsDurable",
+              "failPending",
+              "firstConsumable",
+              "firstKnownProduct",
+              "grantDurableProducts",
+              "processPurchase",
+              "succeedPending"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "billing",
+              "purchase"
+            ],
+            "path": "core/src/test/java/com/deadlinezero/game/meta/ConsumablePurchaseDeliveryTest.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "ConsumablePurchaseDeliveryTest",
+              "RecordingBilling"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "billing",
+              "purchase"
+            ],
+            "path": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "FakeBilling",
+              "PurchaseGrantServiceTest"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "purchase billing",
+        "terms": [
+          "purchase",
+          "billing"
+        ]
+      },
+      "task": "purchase billing"
+    },
     "68d1802bf0676269dc0a96db7cf0549e9bd94b5490511474817f456039dda4c0": {
       "route": {
         "budget": {
@@ -6639,214 +6955,6 @@
         ]
       },
       "task": "income progression"
-    },
-    "6c00cc810393855c5a7037a6ca4b1a54d769ceb6653bc4c69fbbdb42a075b7e8": {
-      "route": {
-        "budget": {
-          "confidence": "medium",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "bounded",
-          "top_score": 27
-        },
-        "candidate_count": 72,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "LevelProgress",
-              "SurvivorProgression",
-              "addXp",
-              "advance",
-              "level",
-              "levelPowerMultiplier",
-              "refreshUnlocks",
-              "setState",
-              "unlock",
-              "unlocked",
-              "xp",
-              "xpCost",
-              "xpForLevel",
-              "xpForNext"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
-            "reasons": [
-              "impact",
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "CombatHudRenderer",
-              "bossColor",
-              "bossIdentity",
-              "bossName",
-              "drawBars",
-              "drawBossPhaseChrome",
-              "drawBossWarningChrome",
-              "drawBuildStatus",
-              "drawCuePlate",
-              "drawDamageVignette",
-              "drawEventCueChrome",
-              "drawMobileControls",
-              "drawOnboardingHint",
-              "drawProgressTicks",
-              "drawProtocolCue",
-              "drawRailChrome",
-              "drawSentinelIntercept",
-              "drawSynergyUnlock",
-              "drawText",
-              "f"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
-            "reasons": [
-              "impact",
-              "search-index"
-            ],
-            "score": 23,
-            "symbols": [
-              "AbilitySystem",
-              "Listener",
-              "arc",
-              "currentLeaperChance",
-              "damageEnemy",
-              "explode",
-              "impact",
-              "interceptHostileProjectile",
-              "nearest",
-              "onEnemySpawned",
-              "runtime",
-              "update",
-              "updateCryo",
-              "updateDrone",
-              "updateHomingMissiles",
-              "updateLeapers",
-              "updateMissiles",
-              "updateOrbital",
-              "updateTesla"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
-            "reasons": [
-              "impact",
-              "search-index"
-            ],
-            "score": 23,
-            "symbols": [
-              "AuthoredVfxRenderer",
-              "classify",
-              "draw",
-              "drawBossDeath",
-              "drawDash",
-              "drawImpacts",
-              "drawLegendary",
-              "drawLegendaryLayer",
-              "drawLevelUp",
-              "drawMuzzle",
-              "drawNullArchon",
-              "nearest"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
-            "reasons": [
-              "impact",
-              "search-index"
-            ],
-            "score": 23,
-            "symbols": [
-              "CombatPolishController",
-              "applyCameraRecoil",
-              "collectRenderEnemySubsets",
-              "currentPools",
-              "drawAuthoredDeaths",
-              "drawBossPeripheralRing",
-              "drawBossPhaseTransitions",
-              "drawElementReactionFx",
-              "drawFoundryHazard",
-              "drawLeaperTelegraphs",
-              "drawNullHazard",
-              "drawPlayerEventFx",
-              "drawRevenantIdentity",
-              "drawWardenIdentity",
-              "drawWorldUnderlay",
-              "fxQuality",
-              "onEnemyKilled",
-              "onProjectileHit",
-              "onShot",
-              "simulationScale"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progress"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
-            "reasons": [
-              "impact",
-              "search-index"
-            ],
-            "score": 23,
-            "symbols": [
-              "WorldFxRenderer",
-              "drawAbilityEvolutionAura",
-              "drawBracketCorners",
-              "drawChampionAuras",
-              "drawChargeArrows",
-              "drawElectricArcs",
-              "drawGroundShadows",
-              "drawHarvesterSummonTelegraph",
-              "drawPeripheralRing",
-              "drawPlayerProjectileAccent",
-              "drawProjectileTrails",
-              "drawSpecialistTelegraph",
-              "fxQuality",
-              "smoothedFps",
-              "timeDeg"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "offline progress",
-        "terms": [
-          "offline",
-          "progress"
-        ]
-      },
-      "task": "offline progress"
     },
     "6f5924b68570c3fa4e09637c600dd699c17a49b9d6e90b69447c395abc9480c2": {
       "route": {
@@ -7418,81 +7526,6 @@
         ]
       },
       "task": "purchase billing"
-    },
-    "73c8a560052697f03aceeb717c8749f453daee6592f7e6f1fea621131b774fa1": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 8,
-          "tier": "narrow",
-          "top_score": 39
-        },
-        "candidate_count": 42,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "consent",
-              "privacy"
-            ],
-            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidPrivacyService.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 39,
-            "symbols": [
-              "AndroidPrivacyService"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "consent",
-              "privacy"
-            ],
-            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidConsentManager.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 31,
-            "symbols": [
-              "AndroidConsentManager",
-              "canRequestAds",
-              "completeOnce",
-              "gatherConsent",
-              "privacyOptionsRequired",
-              "showPrivacyOptions"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "privacy"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "PrivacyService",
-              "noOp"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "privacy consent",
-        "terms": [
-          "privacy",
-          "consent"
-        ]
-      },
-      "task": "privacy consent"
     },
     "7839198d45642c9768c9861f547728d56fbe3211a6345cf774d9fbcec394f74c": {
       "route": {
@@ -9671,6 +9704,170 @@
       },
       "task": "game engine"
     },
+    "9fbef23c6af68c2e7b780f65fde7adee1881c812d365558ac081628c04c02e50": {
+      "route": {
+        "budget": {
+          "confidence": "medium",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "bounded",
+          "top_score": 33
+        },
+        "candidate_count": 429,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "game"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 33,
+            "symbols": [
+              "AbilitySystem",
+              "Listener",
+              "arc",
+              "currentLeaperChance",
+              "damageEnemy",
+              "explode",
+              "impact",
+              "interceptHostileProjectile",
+              "nearest",
+              "onEnemySpawned",
+              "runtime",
+              "update",
+              "updateCryo",
+              "updateDrone",
+              "updateHomingMissiles",
+              "updateLeapers",
+              "updateMissiles",
+              "updateOrbital",
+              "updateTesla"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "game"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 33,
+            "symbols": [
+              "AbilityUpgradeGuidance",
+              "abilityType",
+              "activatingSynergy",
+              "key"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "game"
+            ],
+            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "AndroidFirstPlayableJourneyTest",
+              "activity",
+              "game",
+              "run",
+              "traversesContractCombatDefeatAndVictorySettlement"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "game"
+            ],
+            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "AndroidGameplayVisualProbeTest",
+              "activity",
+              "armBossReveal",
+              "capture",
+              "capturesBossRevealCameraFraming",
+              "capturesChampionVariantCrowd",
+              "capturesCinderGunnerGameplayAndAttackFrames",
+              "capturesCloudSaveScreen",
+              "capturesCryoVaultGameplay",
+              "capturesCryogenicDepthsGameplay",
+              "capturesExpandedUpgradePoolOverlay",
+              "capturesForgeHoundGameplayAndAttackFrames",
+              "capturesFrostColossusGameplay",
+              "capturesGraphicsQualitySettings",
+              "capturesHarvesterGameplayAndAttackFrames",
+              "capturesNullArchonGameplayAndAttackFrames",
+              "capturesNullWardGameplayAndAttackFrames",
+              "capturesPhaseStalkerGameplayAndAttackFrames",
+              "capturesQuarantineYardGameplay",
+              "capturesRevenantGameplayAndAttackFrames"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "game"
+            ],
+            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "AndroidGraphicsProfileProbeTest",
+              "Result",
+              "activity",
+              "everyGraphicsProfileAndFrameRateTargetReachesGameScreen",
+              "game",
+              "runOnGameThread",
+              "writeMatrix"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "game"
+            ],
+            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "AndroidLauncherSmokeTest",
+              "assertAttachedAndAlive",
+              "launcherCreatesRealLibgdxSurfaceAndStaysAlive",
+              "launcherSurvivesBackgroundForegroundAndActivityRecreation"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "game engine",
+        "terms": [
+          "game",
+          "engine"
+        ]
+      },
+      "task": "game engine"
+    },
     "a16ed1edfce7bde58abef5bf5dfc2fd281381431a1c1a2a5490d676485569f48": {
       "route": {
         "budget": {
@@ -10629,88 +10826,6 @@
         ]
       },
       "task": "income progression"
-    },
-    "adce0c60944a90a4832a2a1f9cbe9a3d158bcbc6c4b20392e66b2b5ce7ecfc1c": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "narrow",
-          "top_score": 43
-        },
-        "candidate_count": 19,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "billing",
-              "purchase"
-            ],
-            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "AndroidBillingService",
-              "beginPurchase",
-              "clearPending",
-              "containsConsumable",
-              "containsDurable",
-              "failPending",
-              "firstConsumable",
-              "firstKnownProduct",
-              "grantDurableProducts",
-              "processPurchase",
-              "succeedPending"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "billing",
-              "purchase"
-            ],
-            "path": "core/src/test/java/com/deadlinezero/game/meta/ConsumablePurchaseDeliveryTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "ConsumablePurchaseDeliveryTest",
-              "RecordingBilling"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "billing",
-              "purchase"
-            ],
-            "path": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "FakeBilling",
-              "PurchaseGrantServiceTest"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "purchase billing",
-        "terms": [
-          "purchase",
-          "billing"
-        ]
-      },
-      "task": "purchase billing"
     },
     "b0243c09ffe426c642a6216f0e46070e827ee108db8269f3b2ce2bc0ed88bc7a": {
       "route": {
@@ -15365,170 +15480,6 @@
       },
       "task": "purchase billing"
     },
-    "ea6b365a266d5fd165875ea598b8fd471c67d6c97a8227a15bfbfa56eec45861": {
-      "route": {
-        "budget": {
-          "confidence": "medium",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "bounded",
-          "top_score": 33
-        },
-        "candidate_count": 429,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
-            "reasons": [
-              "impact",
-              "search-index"
-            ],
-            "score": 33,
-            "symbols": [
-              "AbilitySystem",
-              "Listener",
-              "arc",
-              "currentLeaperChance",
-              "damageEnemy",
-              "explode",
-              "impact",
-              "interceptHostileProjectile",
-              "nearest",
-              "onEnemySpawned",
-              "runtime",
-              "update",
-              "updateCryo",
-              "updateDrone",
-              "updateHomingMissiles",
-              "updateLeapers",
-              "updateMissiles",
-              "updateOrbital",
-              "updateTesla"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
-            "reasons": [
-              "impact",
-              "search-index"
-            ],
-            "score": 33,
-            "symbols": [
-              "AbilityUpgradeGuidance",
-              "abilityType",
-              "activatingSynergy",
-              "key"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "AndroidFirstPlayableJourneyTest",
-              "activity",
-              "game",
-              "run",
-              "traversesContractCombatDefeatAndVictorySettlement"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "AndroidGameplayVisualProbeTest",
-              "activity",
-              "armBossReveal",
-              "capture",
-              "capturesBossRevealCameraFraming",
-              "capturesChampionVariantCrowd",
-              "capturesCinderGunnerGameplayAndAttackFrames",
-              "capturesCloudSaveScreen",
-              "capturesCryoVaultGameplay",
-              "capturesCryogenicDepthsGameplay",
-              "capturesExpandedUpgradePoolOverlay",
-              "capturesForgeHoundGameplayAndAttackFrames",
-              "capturesFrostColossusGameplay",
-              "capturesGraphicsQualitySettings",
-              "capturesHarvesterGameplayAndAttackFrames",
-              "capturesNullArchonGameplayAndAttackFrames",
-              "capturesNullWardGameplayAndAttackFrames",
-              "capturesPhaseStalkerGameplayAndAttackFrames",
-              "capturesQuarantineYardGameplay",
-              "capturesRevenantGameplayAndAttackFrames"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "AndroidGraphicsProfileProbeTest",
-              "Result",
-              "activity",
-              "everyGraphicsProfileAndFrameRateTargetReachesGameScreen",
-              "game",
-              "runOnGameThread",
-              "writeMatrix"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "AndroidLauncherSmokeTest",
-              "assertAttachedAndAlive",
-              "launcherCreatesRealLibgdxSurfaceAndStaysAlive",
-              "launcherSurvivesBackgroundForegroundAndActivityRecreation"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "game engine",
-        "terms": [
-          "game",
-          "engine"
-        ]
-      },
-      "task": "game engine"
-    },
     "eb9b1d4e58564d0e227f8c0ec242d05b31ae199594c1d443866cb5ade44126a8": {
       "route": {
         "budget": {
@@ -15791,157 +15742,6 @@
         ]
       },
       "task": "privacy consent"
-    },
-    "f340b3ee226acd3fcc8387e6c57e9b61c05ae8561af562d62961b1ba0e66a54a": {
-      "route": {
-        "budget": {
-          "confidence": "medium",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "bounded",
-          "top_score": 27
-        },
-        "candidate_count": 45,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progression"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/meta/ThreatProgressionService.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "ThreatProgressionService",
-              "UnlockResult",
-              "applyBossClear",
-              "none"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progression"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/meta/WeaponProgression.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "WeaponProgression",
-              "unlockAccountLevel",
-              "unlocked"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progression"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/progression/CombatProtocolState.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "CombatProtocolState",
-              "VolleyModifier",
-              "enableKillchain",
-              "enableReactionCore",
-              "enableRhythm",
-              "evolveKillchain",
-              "evolveReactionCore",
-              "evolveRhythm",
-              "killchainArmed",
-              "killchainEnabled",
-              "killchainEvolved",
-              "onKill",
-              "onVolley",
-              "reactionBonus",
-              "reactionEnabled",
-              "reactionEvolved",
-              "rhythmEnabled",
-              "rhythmEvolved"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progression"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/progression/LegendaryChoice.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "LegendaryChoice",
-              "apply",
-              "available",
-              "descriptionKey",
-              "eligible",
-              "titleKey",
-              "weapon"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progression"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/progression/LegendaryEffects.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "LegendaryEffects",
-              "applyApex",
-              "applyArcOverload",
-              "applyBreacherRupture",
-              "applyCinderFurnace",
-              "applyCryoPrism",
-              "applyInfernoPyroclasm",
-              "applyIonCascade",
-              "applyOverdrive",
-              "applyRailPhaseLance",
-              "applyScatterMaelstrom",
-              "applySingularity",
-              "applyVanguardProtocol"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "progression"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/progression/LegendarySelector.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "LegendarySelector",
-              "fillChoices",
-              "shouldOffer"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "income progression",
-        "terms": [
-          "income",
-          "progression"
-        ]
-      },
-      "task": "income progression"
     },
     "f453bd126e1b4c1e03c3cb9e2929cd8a34272f6a11720ca87db504911b0d0671": {
       "route": {
@@ -16257,6 +16057,214 @@
         ]
       },
       "task": "income progression"
+    },
+    "f5abfbe6f95203c494dfe54838cf298a15c7035ce232fd034917ec98d2cb6a9e": {
+      "route": {
+        "budget": {
+          "confidence": "medium",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "bounded",
+          "top_score": 27
+        },
+        "candidate_count": 72,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "LevelProgress",
+              "SurvivorProgression",
+              "addXp",
+              "advance",
+              "level",
+              "levelPowerMultiplier",
+              "refreshUnlocks",
+              "setState",
+              "unlock",
+              "unlocked",
+              "xp",
+              "xpCost",
+              "xpForLevel",
+              "xpForNext"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "CombatHudRenderer",
+              "bossColor",
+              "bossIdentity",
+              "bossName",
+              "drawBars",
+              "drawBossPhaseChrome",
+              "drawBossWarningChrome",
+              "drawBuildStatus",
+              "drawCuePlate",
+              "drawDamageVignette",
+              "drawEventCueChrome",
+              "drawMobileControls",
+              "drawOnboardingHint",
+              "drawProgressTicks",
+              "drawProtocolCue",
+              "drawRailChrome",
+              "drawSentinelIntercept",
+              "drawSynergyUnlock",
+              "drawText",
+              "f"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 23,
+            "symbols": [
+              "AbilitySystem",
+              "Listener",
+              "arc",
+              "currentLeaperChance",
+              "damageEnemy",
+              "explode",
+              "impact",
+              "interceptHostileProjectile",
+              "nearest",
+              "onEnemySpawned",
+              "runtime",
+              "update",
+              "updateCryo",
+              "updateDrone",
+              "updateHomingMissiles",
+              "updateLeapers",
+              "updateMissiles",
+              "updateOrbital",
+              "updateTesla"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 23,
+            "symbols": [
+              "AuthoredVfxRenderer",
+              "classify",
+              "draw",
+              "drawBossDeath",
+              "drawDash",
+              "drawImpacts",
+              "drawLegendary",
+              "drawLegendaryLayer",
+              "drawLevelUp",
+              "drawMuzzle",
+              "drawNullArchon",
+              "nearest"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 23,
+            "symbols": [
+              "CombatPolishController",
+              "applyCameraRecoil",
+              "collectRenderEnemySubsets",
+              "currentPools",
+              "drawAuthoredDeaths",
+              "drawBossPeripheralRing",
+              "drawBossPhaseTransitions",
+              "drawElementReactionFx",
+              "drawFoundryHazard",
+              "drawLeaperTelegraphs",
+              "drawNullHazard",
+              "drawPlayerEventFx",
+              "drawRevenantIdentity",
+              "drawWardenIdentity",
+              "drawWorldUnderlay",
+              "fxQuality",
+              "onEnemyKilled",
+              "onProjectileHit",
+              "onShot",
+              "simulationScale"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+            "reasons": [
+              "impact",
+              "search-index"
+            ],
+            "score": 23,
+            "symbols": [
+              "WorldFxRenderer",
+              "drawAbilityEvolutionAura",
+              "drawBracketCorners",
+              "drawChampionAuras",
+              "drawChargeArrows",
+              "drawElectricArcs",
+              "drawGroundShadows",
+              "drawHarvesterSummonTelegraph",
+              "drawPeripheralRing",
+              "drawPlayerProjectileAccent",
+              "drawProjectileTrails",
+              "drawSpecialistTelegraph",
+              "fxQuality",
+              "smoothedFps",
+              "timeDeg"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "offline progress",
+        "terms": [
+          "offline",
+          "progress"
+        ]
+      },
+      "task": "offline progress"
     },
     "f97f9e267bef3f0dce2d43312937e8a9b8c5534786dfaf105dd3dc1f51620334": {
       "route": {
@@ -16908,11 +16916,6 @@
   },
   "generated_by": "dbrckk/repo-brain-query-cache-v2",
   "order": [
-    "73c8a560052697f03aceeb717c8749f453daee6592f7e6f1fea621131b774fa1",
-    "6c00cc810393855c5a7037a6ca4b1a54d769ceb6653bc4c69fbbdb42a075b7e8",
-    "ea6b365a266d5fd165875ea598b8fd471c67d6c97a8227a15bfbfa56eec45861",
-    "adce0c60944a90a4832a2a1f9cbe9a3d158bcbc6c4b20392e66b2b5ce7ecfc1c",
-    "f340b3ee226acd3fcc8387e6c57e9b61c05ae8561af562d62961b1ba0e66a54a",
     "34b878e8817cba967b79a3c87a826e6a3a97449f65887f8ef64cc839eeedcd0a",
     "83131b4b6802270ec2793e9a0cee24ca582efecbb815d1b29770a22c008f06ad",
     "da1979aca3813cb2147951104be1243cc98a5aea3860eee3bc12d46921aba972",
@@ -17035,7 +17038,12 @@
     "8e8c08dce1ed42a5bb1f8de104095df035574636ef95450188ce2e0f63373ac1",
     "4c178a9bb5a4b68989f16815622fec475b53585305bc1a6fa47a415e038c2440",
     "7dd770c8513c95723a28e4efb6d794b21d88aab496dbc704027fb7d03380b942",
-    "bfd259e8f971b172b8fe2e91cd002cda1abdc2fb194ae4d146ee0f9aa83acce0"
+    "bfd259e8f971b172b8fe2e91cd002cda1abdc2fb194ae4d146ee0f9aa83acce0",
+    "623ba5c0c9f55536b2c222ff5604b7fe4a1b626d2e90ddc9fbb3f0d45c21bfb4",
+    "4a191075676c22671edcf0d39fe5609e89d7bd49f7dd65302c9bb93d943b1796",
+    "2d1659cd870ece501c0d0a13ccfa85e06e32d27fbcd35728ca39c88a230f69af",
+    "f5abfbe6f95203c494dfe54838cf298a15c7035ce232fd034917ec98d2cb6a9e",
+    "9fbef23c6af68c2e7b780f65fde7adee1881c812d365558ac081628c04c02e50"
   ],
   "schema_version": 1
 }

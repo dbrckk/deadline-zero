@@ -22,23 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T09:38:03Z
+Generated: 2026-10-03T12:09:48Z
 
 ### Git
 - Branch: `main`
-- Head: `5c3aa6e12acc`
-- Commit date: 2026-10-03T11:37:50+02:00
-- Commit: Expose combat integrity and active threats
+- Head: `fdc5a8a70ad5`
+- Commit date: 2026-10-03T14:09:36+02:00
+- Commit: Make player marker react to close pressure
 - Tracked files: 942
 
 ### Recently changed files
+- `godot/scripts/Player.gd`
+- `godot/tests/weapon_presentation_test.gd`
 - `godot/scripts/Hud.gd`
 - `godot/scripts/Main.gd`
 - `godot/tests/hud_readability_hierarchy_test.gd`
 - `godot/tests/environment_identity_test.gd`
 - `godot/scripts/AssetLibrary.gd`
-- `.github/workflows/godot-verify.yml`
-- `godot/tests/projectile_profile_runtime_visual_test.gd`
 
 ### Project signals
 - `build.gradle`

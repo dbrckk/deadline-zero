@@ -2,26 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Keep boss reveal framing clear of the top HUD (#299)",
-      "terms": [
-        "299",
-        "boss",
-        "clear",
-        "framing",
-        "hud",
-        "keep",
-        "reveal",
-        "top"
-      ],
-      "tests": [],
-      "useful": [
-        "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-        "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java",
-        "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Start native Godot 3D survivor-shooter migration (#302)",
       "terms": [
         "302",
@@ -1122,6 +1102,23 @@
         "godot/scripts/Main.gd",
         "godot/tests/hud_readability_hierarchy_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Make player marker react to close pressure",
+      "terms": [
+        "close",
+        "make",
+        "marker",
+        "player",
+        "pressure",
+        "react"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Player.gd",
+        "godot/tests/weapon_presentation_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1960,6 +1957,8 @@
       "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudLayout.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4,
       "tools/blender/build_rex_actions.py": 4,
       "tools/sprites/assemble_actor_sheet.py": 4,
       "tools/sprites/audit_final_art_status.py": 4
@@ -2847,7 +2846,9 @@
       "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "map": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 4,
@@ -2889,6 +2890,10 @@
       "godot/tests/upgrade_presentation_test.gd": 4,
       "godot/tests/weapon_profile_data_test.gd": 4,
       "godot/tests/weapon_protocol_behavior_test.gd": 4
+    },
+    "marker": {
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "markers": {
       "core/src/main/java/com/deadlinezero/game/visual/ChampionBadgeRenderer.java": 4,
@@ -3166,9 +3171,9 @@
       "core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java": 4
     },
     "player": {
-      "godot/scripts/Player.gd": 8,
+      "godot/scripts/Player.gd": 12,
       "godot/tests/player_damage_feedback_test.gd": 4,
-      "godot/tests/weapon_presentation_test.gd": 4
+      "godot/tests/weapon_presentation_test.gd": 8
     },
     "polish": {
       "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java": 4,
@@ -3221,7 +3226,9 @@
     },
     "pressure": {
       "godot/scripts/Enemy.gd": 4,
-      "godot/tests/pressure_frame_render_test.gd": 4
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "priority": {
       "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java": 4,
@@ -3321,6 +3328,10 @@
     },
     "rarity": {
       "core/src/main/java/com/deadlinezero/game/screen/GearScreen.java": 4
+    },
+    "react": {
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "reaction": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4

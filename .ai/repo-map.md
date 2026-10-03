@@ -26975,6 +26975,9 @@ var damage_pulse_material: StandardMaterial3D
 var muzzle_flash: MeshInstance3D
 var muzzle_flash_material: StandardMaterial3D
 var muzzle_flash_tween: Tween
+var player_marker_ring: MeshInstance3D
+var player_marker_material: StandardMaterial3D
+var player_marker_pressure := false
 var combat_enabled := true
 var applied_protocols := {}
 
@@ -27012,6 +27015,7 @@ func _physics_process(delta: float) -> void:
     _update_authored_animation()
 
     var target := _nearest_enemy()
+    _update_player_marker_pressure(target)
     if target != null:
         var facing := target.global_position
         facing.y = global_position.y
@@ -27228,13 +27232,13 @@ func _build_visual() -> void:
     _build_damage_feedback()
 
 func _build_player_marker() -> void:
-    var marker_mat := StandardMaterial3D.new()
-    marker_mat.albedo_color = Color(0.05, 0.72, 1.0, 0.78)
-    marker_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    marker_mat.emission_enabled = true
-    marker_mat.emission = Color(0.025, 0.42, 0.72)
-    marker_mat.emission_energy_multiplier = 1.9
-    marker_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    player_marker_material = StandardMaterial3D.new()
+    player_marker_material.albedo_color = Color(0.05, 0.72, 1.0, 0.78)
+    player_marker_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    player_marker_material.emission_enabled = true
+    player_marker_material.emission = Color(0.025, 0.42, 0.72)
+    player_marker_material.emission_energy_multiplier = 1.9
+    player_marker_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 
     var ring := MeshInstance3D.new()
     ring.name = "PlayerMarkerRing"
@@ -27245,8 +27249,9 @@ func _build_player_marker() -> void:
     ring_mesh.ring_segments = 8
     ring.mesh = ring_mesh
     ring.position.y = 0.045
-    ring.material_override = marker_mat
+    ring.material_override = player_marker_material
     add_child(ring)
+    player_marker_ring = ring
 
     var aim_tick := MeshInstance3D.new()
     aim_tick.name = "PlayerAimTick"
@@ -27254,8 +27259,43 @@ func _build_player_marker() -> void:
     tick_mesh.size = Vector3(0.10, 0.018, 0.34)
     aim_tick.mesh = tick_mesh
     aim_tick.position = Vector3(0.0, 0.055, -0.73)
-    aim_tick.material_override = marker_mat
+    aim_tick.material_override = player_marker_material
     add_child(aim_tick)
+
+    for index in range(3):
+        var chevron := MeshInstance3D.new()
+        chevron.name = "PlayerPressureChevron_%d" % index
+        var chevron_mesh := BoxMesh.new()
+        chevron_mesh.size = Vector3(0.16, 0.016, 0.045)
+        chevron.mesh = chevron_mesh
+        var angle := TAU * float(index) / 3.0
+        chevron.position = Vector3(cos(angle) * 0.76, 0.058, sin(angle) * 0.76)
+        chevron.rotation.y = -angle
+        chevron.material_override = player_marker_material
+        chevron.visible = false
+        add_child(chevron)
+
+func _update_player_marker_pressure(target: DZEnemy) -> void:
+    if player_marker_ring == null or player_marker_material == null:
+        return
+    var pressured := target != null and global_position.distance_squared_to(target.global_position) <= 8.41
+    if pressured == player_marker_pressure:
+        return
+    player_marker_pressure = pressured
+    if pressured:
+        player_marker_material.albedo_color = Color(1.0, 0.52, 0.08, 0.92)
+        player_marker_material.emission = Color(0.90, 0.20, 0.015)
+        player_marker_material.emission_energy_multiplier = 2.65
+        player_marker_ring.scale = Vector3(1.10, 1.0, 1.10)
+    else:
+        player_marker_material.albedo_color = Color(0.05, 0.72, 1.0, 0.78)
+        player_marker_material.emission = Color(0.025, 0.42, 0.72)
+        player_marker_material.emission_energy_multiplier = 1.9
+        player_marker_ring.scale = Vector3.ONE
+    for index in range(3):
+        var chevron := get_node_or_null("PlayerPressureChevron_%d" % index) as MeshInstance3D
+        if chevron != null:
+            chevron.visible = pressured
 
 func _build_muzzle_flash() -> void:
     muzzle_flash = MeshInstance3D.new()
@@ -30557,6 +30597,9 @@ func _init() -> void:
     assert(player.contains("PlayerAimTick"))
     assert(player.contains("MuzzleFlash"))
     assert(player.contains("_trigger_muzzle_flash()"))
+    assert(player.contains("PlayerPressureChevron_"))
+    assert(player.contains("_update_player_marker_pressure(target)"))
+    assert(player.contains("distance_squared_to(target.global_position) <= 8.41"))
 
     print("weapon_presentation_test: PASS")
     quit()
