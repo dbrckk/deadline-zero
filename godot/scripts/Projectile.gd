@@ -24,6 +24,11 @@ var combat_enabled := true
 var configured_origin := Vector3.ZERO
 var has_configured_origin := false
 
+static var _core_mesh_cache := {}
+static var _trail_mesh_cache := {}
+static var _core_material_cache := {}
+static var _trail_material_cache := {}
+
 func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color,
         profile := "vanguard") -> void:
     configured_origin = origin
@@ -80,33 +85,18 @@ func _ready() -> void:
     add_to_group("projectiles")
     var glow := MeshInstance3D.new()
     glow.name = "ProjectileCore"
-    var mesh := SphereMesh.new()
-    mesh.radius = core_radius * 0.82
-    mesh.height = core_radius * 1.64
-    glow.mesh = mesh
+    glow.mesh = _cached_core_mesh()
     glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    var core_mat := StandardMaterial3D.new()
-    core_mat.albedo_color = tint
-    core_mat.emission_enabled = true
-    core_mat.emission = tint
-    core_mat.emission_energy_multiplier = 3.2
-    core_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    var core_mat := _cached_core_material()
     glow.material_override = core_mat
     add_child(glow)
 
     var trail := MeshInstance3D.new()
     trail.name = "ProjectileTrail"
-    var trail_mesh := BoxMesh.new()
-    trail_mesh.size = Vector3(trail_width, trail_width * 0.72, trail_length)
-    trail.mesh = trail_mesh
+    trail.mesh = _cached_trail_mesh()
     trail.position.z = trail_length * 0.52
     trail.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    var trail_mat := StandardMaterial3D.new()
-    trail_mat.albedo_color = Color(tint.r * 0.68, tint.g * 0.68, tint.b * 0.68)
-    trail_mat.emission_enabled = true
-    trail_mat.emission = Color(tint.r * 0.74, tint.g * 0.74, tint.b * 0.74)
-    trail_mat.emission_energy_multiplier = 1.65
-    trail_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    var trail_mat := _cached_trail_material()
     trail.material_override = trail_mat
     add_child(trail)
 
@@ -123,6 +113,62 @@ func _ready() -> void:
 
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity.normalized(), Vector3.UP)
+
+func _visual_cache_key() -> String:
+    return "%s|%s|%.4f|%.4f|%.4f" % [
+        visual_profile,
+        tint.to_html(true),
+        core_radius,
+        trail_width,
+        trail_length
+    ]
+
+func _cached_core_mesh() -> SphereMesh:
+    var key := _visual_cache_key()
+    if _core_mesh_cache.has(key):
+        return _core_mesh_cache[key] as SphereMesh
+    var mesh := SphereMesh.new()
+    mesh.radius = core_radius * 0.82
+    mesh.height = core_radius * 1.64
+    mesh.radial_segments = 10
+    mesh.rings = 5
+    _core_mesh_cache[key] = mesh
+    return mesh
+
+func _cached_trail_mesh() -> BoxMesh:
+    var key := _visual_cache_key()
+    if _trail_mesh_cache.has(key):
+        return _trail_mesh_cache[key] as BoxMesh
+    var mesh := BoxMesh.new()
+    mesh.size = Vector3(trail_width, trail_width * 0.72, trail_length)
+    _trail_mesh_cache[key] = mesh
+    return mesh
+
+func _cached_core_material() -> StandardMaterial3D:
+    var key := _visual_cache_key()
+    if _core_material_cache.has(key):
+        return _core_material_cache[key] as StandardMaterial3D
+    var material := StandardMaterial3D.new()
+    material.albedo_color = tint
+    material.emission_enabled = true
+    material.emission = tint
+    material.emission_energy_multiplier = 3.2
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    _core_material_cache[key] = material
+    return material
+
+func _cached_trail_material() -> StandardMaterial3D:
+    var key := _visual_cache_key()
+    if _trail_material_cache.has(key):
+        return _trail_material_cache[key] as StandardMaterial3D
+    var material := StandardMaterial3D.new()
+    material.albedo_color = Color(tint.r * 0.68, tint.g * 0.68, tint.b * 0.68)
+    material.emission_enabled = true
+    material.emission = Color(tint.r * 0.74, tint.g * 0.74, tint.b * 0.74)
+    material.emission_energy_multiplier = 1.65
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    _trail_material_cache[key] = material
+    return material
 
 func _add_side_spark(mat: StandardMaterial3D, side: float) -> void:
     var spark := MeshInstance3D.new()
