@@ -38,6 +38,11 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if player.nearest_threat != second:
+        push_error("Close-threat tracking must follow the actual nearest enemy independently of aim lock")
+        quit(1)
+        return
+
     second.global_position = Vector3(2.8, 0.0, 0.0)
     player.target_refresh_clock = 0.0
     selected = player._combat_target()
@@ -68,8 +73,8 @@ func _initialize() -> void:
         return
 
     player.set_combat_enabled(false)
-    if player.current_target != null or player.target_refresh_clock > 0.0:
-        push_error("Combat shutdown did not clear auto-aim target state")
+    if player.current_target != null or player.nearest_threat != null or player.target_refresh_clock > 0.0:
+        push_error("Combat shutdown did not clear auto-aim/threat target state")
         quit(1)
         return
 
