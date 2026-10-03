@@ -24,3 +24,9 @@ static func camera_kick(critical: bool, killed: bool, boss: bool) -> float:
     if boss:
         kick += 0.050
     return min(kick, 0.16)
+
+static func damage_received_camera_kick(damage: float, max_health: float) -> float:
+    if damage <= 0.0 or max_health <= 0.0:
+        return 0.0
+    var severity := clampf(damage / max_health, 0.0, 0.35)
+    return clampf(0.045 + severity * 0.22, 0.045, 0.115)
