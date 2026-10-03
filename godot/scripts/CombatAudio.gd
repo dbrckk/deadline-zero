@@ -29,19 +29,43 @@ static func boss_stinger() -> AudioStreamWAV:
 
 static func _chirp(start_hz: float, end_hz: float, seconds: float, noise_mix: float,
         gain: float) -> AudioStreamWAV:
-    var rate: int = 22050
-    var frames: int = maxi(64, int(seconds * rate))
+    # Short cached one-shots can afford full-band 44.1 kHz. A deterministic layered transient
+    # avoids the thin single-sine character of the first-playable fallback without adding
+    # runtime DSP cost or per-shot allocations.
+    var rate: int = 44100
+    var frames: int = maxi(128, int(seconds * rate))
     var bytes := PackedByteArray()
     bytes.resize(frames * 2)
     var phase: float = 0.0
+    var sub_phase: float = 0.0
+    var noise_state: int = int(absf(start_hz * 131.0 + end_hz * 47.0 + seconds * 100000.0)) | 1
+
     for i in range(frames):
         var t: float = float(i) / float(maxi(1, frames - 1))
-        var hz: float = lerpf(start_hz, end_hz, t)
+        var hz_curve := t * t * (3.0 - 2.0 * t)
+        var hz: float = lerpf(start_hz, end_hz, hz_curve)
         phase += TAU * hz / float(rate)
-        var envelope: float = pow(1.0 - t, 2.15)
-        var tone: float = sin(phase) * (1.0 - noise_mix)
-        var noise: float = (randf() * 2.0 - 1.0) * noise_mix
-        var sample: float = clampf((tone + noise) * envelope * gain, -1.0, 1.0)
+        sub_phase += TAU * maxf(48.0, hz * 0.47) / float(rate)
+
+        noise_state = int((1103515245 * noise_state + 12345) & 0x7fffffff)
+        var noise := (float(noise_state) / 1073741823.5 - 1.0)
+
+        var attack := clampf(t / 0.018, 0.0, 1.0)
+        var decay := pow(maxf(0.0, 1.0 - t), 2.05)
+        var envelope := attack * decay
+
+        var fundamental := sin(phase)
+        var harmonic := sin(phase * 2.03 + 0.35) * 0.24
+        var body := sin(sub_phase) * 0.32
+        var transient_window := pow(maxf(0.0, 1.0 - t / 0.16), 4.0)
+        var transient := noise * transient_window * minf(0.62, noise_mix + 0.18)
+        var texture := noise * noise_mix * 0.34
+
+        var tonal_mix := fundamental * 0.72 + harmonic + body
+        var raw := (tonal_mix * (1.0 - noise_mix * 0.46) + texture + transient) * envelope * gain
+        var sample := tanh(raw * 1.28) / tanh(1.28)
+        sample = clampf(sample, -0.985, 0.985)
+
         var value: int = int(sample * 32767.0)
         if value < 0:
             value += 65536
