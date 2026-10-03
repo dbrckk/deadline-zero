@@ -2,27 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Give native 3D enemy archetypes distinct silhouettes (#312)",
-      "terms": [
-        "312",
-        "3d",
-        "archetypes",
-        "distinct",
-        "enemy",
-        "give",
-        "native",
-        "silhouettes"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Enemy.gd",
-        "godot/scripts/ImpactFx.gd",
-        "godot/scripts/Main.gd",
-        "godot/tests/enemy_silhouette_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Add semantic combat audio feedback to native 3D (#313)",
       "terms": [
         "313",
@@ -1080,6 +1059,24 @@
       "useful": [
         "godot/scripts/Main.gd",
         "godot/tests/authored_world_dressing_test.gd"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "Give survivor a tactical top-down identity",
+      "terms": [
+        "give",
+        "identity",
+        "survivor",
+        "tactical",
+        "top-down"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/AssetLibrary.gd",
+        "godot/scripts/Player.gd",
+        "godot/tests/first_playable_run_path_test.gd",
+        "godot/tests/weapon_presentation_test.gd"
       ]
     }
   ],
@@ -2547,21 +2544,22 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CompanionRendererTest.java": 4,
-      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/AssetLibrary.gd": 8,
       "godot/scripts/Enemy.gd": 12,
       "godot/scripts/Hud.gd": 8,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 16,
-      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 4,
       "godot/scripts/RunDirector.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/run_director_escalation_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4,
-      "godot/tests/weapon_presentation_test.gd": 4
+      "godot/tests/weapon_presentation_test.gd": 8
     },
     "gles3-safe": {
       "godot/tests/mobile_orientation_test.gd": 4
@@ -2711,13 +2709,16 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
-      "godot/scripts/AssetLibrary.gd": 8,
+      "godot/scripts/AssetLibrary.gd": 12,
       "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/Main.gd": 4,
+      "godot/scripts/Player.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
-      "godot/tests/environment_identity_test.gd": 4
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "immediate": {
       "godot/scripts/Main.gd": 4,
@@ -3891,7 +3892,11 @@
       "godot/tests/run_end_ux_test.gd": 4
     },
     "survivor": {
-      "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java": 4
+      "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java": 4,
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "survivor-shooter": {
       "godot/scripts/AssetLibrary.gd": 4,
@@ -3919,6 +3924,12 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java": 4,
       "core/src/test/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetectorTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4
+    },
+    "tactical": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "telegraph": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
@@ -3961,8 +3972,12 @@
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4
     },
     "top-down": {
+      "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 4
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4
     },
     "tracer": {
       "godot/scripts/Projectile.gd": 8,

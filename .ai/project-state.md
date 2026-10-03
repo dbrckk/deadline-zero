@@ -22,20 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T16:48:28Z
+Generated: 2026-10-03T16:53:21Z
 
 ### Git
 - Branch: `main`
-- Head: `f2362be5a630`
-- Commit date: 2026-10-03T18:48:08+02:00
-- Commit: Replace full street tiles with real floor cracks
+- Head: `2e18da8d4af1`
+- Commit date: 2026-10-03T18:53:09+02:00
+- Commit: Give survivor a tactical top-down identity
 - Tracked files: 942
 
 ### Recently changed files
+- `godot/scripts/AssetLibrary.gd`
+- `godot/scripts/Player.gd`
+- `godot/tests/first_playable_run_path_test.gd`
+- `godot/tests/weapon_presentation_test.gd`
 - `godot/scripts/Main.gd`
 - `godot/tests/authored_world_dressing_test.gd`
 - `godot/tests/environment_identity_test.gd`
-- `android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java`
 
 ### Project signals
 - `build.gradle`

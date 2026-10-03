@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 529
-- Files reparsed this run: 2
-- Symbols: 2922
+- Files reparsed this run: 4
+- Symbols: 2924
 - Internal import edges: 808
-- Impacted files: 2
-- Selected tests: 1
+- Impacted files: 37
+- Selected tests: 14
 
 ## Languages
 - java: 422 files
@@ -30,10 +30,10 @@
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 25 symbols
+- godot/scripts/Player.gd: 25 symbols
 - core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java: 24 symbols
-- core/src/main/java/com/deadlinezero/game/screen/SettingsScreen.java: 23 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.

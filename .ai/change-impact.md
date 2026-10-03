@@ -1,11 +1,13 @@
 # Change impact
 
-Base: 5d718945ef230f6bd81e8d2ff8a4973eafac5d96
-Head: f2362be5a630d82a55aad3847f45586b98acca04
+Base: 5d87758ab59eefd699cc7827fa7cc3cb42c25e0b
+Head: 2e18da8d4af134c07e42b46fc75af2bff8fde77d
 
 ## Changed files
-- M godot/scripts/Main.gd
-- M godot/tests/authored_world_dressing_test.gd
+- M godot/scripts/AssetLibrary.gd
+- M godot/scripts/Player.gd
+- M godot/tests/first_playable_run_path_test.gd
+- M godot/tests/weapon_presentation_test.gd
 
 ## Affected areas
 - godot
