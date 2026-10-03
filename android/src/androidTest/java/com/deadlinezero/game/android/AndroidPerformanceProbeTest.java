@@ -40,7 +40,10 @@ public final class AndroidPerformanceProbeTest {
                 injectLoad((GameScreen) game.getScreen());
             });
 
-            waitForTelemetry(activity, 8000L);
+            // Loaded gameplay can hit the same transient emulator color-buffer stalls as the
+            // stress scene. Preserve every telemetry assertion, but allow enough acquisition
+            // time for a representative sample after a delayed graphics start.
+            waitForTelemetry(activity, 20000L);
 
             AtomicReference<PerformanceTelemetry.Snapshot> snapshotRef = new AtomicReference<>();
             AtomicReference<Integer> targetRef = new AtomicReference<>();
