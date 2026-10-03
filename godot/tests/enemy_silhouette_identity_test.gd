@@ -96,9 +96,8 @@ func _initialize() -> void:
     var shadow_radii := {}
     for kind in expected.keys():
         var enemy := ENEMY_SCRIPT.new()
-        root.add_child(enemy)
         enemy.kind = kind
-        enemy.call_deferred("_add_archetype_signature")
+        root.add_child(enemy)
         await process_frame
         for node_name in expected[kind]:
             if enemy.get_node_or_null(node_name) == null:
