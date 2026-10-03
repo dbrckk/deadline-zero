@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T16:53:21Z
+Generated: 2026-10-03T16:57:27Z
 
 ### Git
 - Branch: `main`
-- Head: `2e18da8d4af1`
-- Commit date: 2026-10-03T18:53:09+02:00
-- Commit: Give survivor a tactical top-down identity
+- Head: `7c779398f6f3`
+- Commit date: 2026-10-03T18:57:14+02:00
+- Commit: Keep melee bodies off the survivor silhouette
 - Tracked files: 942
 
 ### Recently changed files
+- `godot/scripts/Enemy.gd`
+- `godot/tests/native_enemy_behavior_test.gd`
 - `godot/scripts/AssetLibrary.gd`
 - `godot/scripts/Player.gd`
 - `godot/tests/first_playable_run_path_test.gd`

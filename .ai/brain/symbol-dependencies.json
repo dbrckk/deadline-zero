@@ -5,40 +5,19 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "DZAssetLibrary": {
+    "DZEnemy": {
       "source": {
-        "file": "godot/scripts/AssetLibrary.gd",
-        "start": 1,
-        "end": 121
-      },
-      "symbol_dependencies": [],
-      "dependency_count": 0
-    },
-    "DZPlayer": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
+        "file": "godot/scripts/Enemy.gd",
         "start": 1,
         "end": 121
       },
       "symbol_dependencies": [
         {
-          "symbol": "_apply_weapon_profile_data",
+          "symbol": "_build_hit_flash",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 115,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 544,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
               "kind": "function",
               "language": "gdscript"
             }
@@ -49,32 +28,8 @@
           "symbol": "_build_visual",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 224,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_nearest_enemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 194,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 620,
               "kind": "function",
               "language": "gdscript"
             }
@@ -85,8 +40,20 @@
           "symbol": "_physics_process",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 45,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 100,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_status_effects",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
               "kind": "function",
               "language": "gdscript"
             }
@@ -97,8 +64,8 @@
           "symbol": "_ready",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 39,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 95,
               "kind": "function",
               "language": "gdscript"
             }
@@ -106,11 +73,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_damage_feedback",
+          "symbol": "_update_boss_phase",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 506,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 269,
               "kind": "function",
               "language": "gdscript"
             }
@@ -118,83 +85,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_update_authored_animation",
+          "symbol": "configure",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 533,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_update_player_marker_pressure",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 424,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "can_apply_upgrade",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 108,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "heal_full",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 104,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "set_combat_enabled",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 83,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "set_touch_move",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 91,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "take_damage",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 94,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 48,
               "kind": "function",
               "language": "gdscript"
             }
@@ -202,21 +97,21 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 15
+      "dependency_count": 7
     },
-    "_ready": {
+    "configure": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 39,
-        "end": 159
+        "file": "godot/scripts/Enemy.gd",
+        "start": 48,
+        "end": 168
       },
       "symbol_dependencies": [
         {
-          "symbol": "_apply_weapon_profile_data",
+          "symbol": "_begin_regeneration",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 115,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 426,
               "kind": "function",
               "language": "gdscript"
             }
@@ -224,11 +119,47 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_build_audio",
+          "symbol": "_begin_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 544,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 334,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_boss_slam_cooldown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 291,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_boss_slam_windup",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 285,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_hit_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
               "kind": "function",
               "language": "gdscript"
             }
@@ -239,32 +170,8 @@
           "symbol": "_build_visual",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 224,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_nearest_enemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 194,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 620,
               "kind": "function",
               "language": "gdscript"
             }
@@ -275,8 +182,8 @@
           "symbol": "_physics_process",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 45,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 100,
               "kind": "function",
               "language": "gdscript"
             }
@@ -284,11 +191,249 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_damage_feedback",
+          "symbol": "_process_charge",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 506,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 297,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_regeneration",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 455,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_status_effects",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_ready",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 95,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_resolve_telegraphed_attack",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_update_boss_phase",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 269,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 13
+    },
+    "_ready": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 95,
+        "end": 215
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_begin_regeneration",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 426,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_begin_telegraphed_attack",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 334,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_boss_slam_cooldown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 291,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_boss_slam_windup",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 285,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_hit_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_visual",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 620,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_contact_attack_range",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 230,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_melee_standoff_distance",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 215,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_nearby_enemies_for_separation",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 233,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_physics_process",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 100,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_charge",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 297,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_regeneration",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 455,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_status_effects",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_resolve_telegraphed_attack",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
               "kind": "function",
               "language": "gdscript"
             }
@@ -299,8 +444,8 @@
           "symbol": "_update_authored_animation",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 533,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 820,
               "kind": "function",
               "language": "gdscript"
             }
@@ -308,11 +453,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_update_player_marker_pressure",
+          "symbol": "_update_boss_phase",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 424,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 269,
               "kind": "function",
               "language": "gdscript"
             }
@@ -320,59 +465,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "apply_upgrade",
+          "symbol": "separation_vector",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 148,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "can_apply_upgrade",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 108,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "heal_full",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 104,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "set_combat_enabled",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 83,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "set_touch_move",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 91,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 239,
               "kind": "function",
               "language": "gdscript"
             }
@@ -383,8 +480,198 @@
           "symbol": "take_damage",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 94,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 18
+    },
+    "_physics_process": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 100,
+        "end": 220
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_begin_regeneration",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 426,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_begin_telegraphed_attack",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 334,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_boss_slam_cooldown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 291,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_boss_slam_windup",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 285,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_contact_attack_range",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 230,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_melee_standoff_distance",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 215,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_nearby_enemies_for_separation",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 233,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_charge",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 297,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_regeneration",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 455,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_status_effects",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_resolve_telegraphed_attack",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_update_authored_animation",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 820,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_update_boss_phase",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 269,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "separation_vector",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 239,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -394,19 +681,31 @@
       ],
       "dependency_count": 15
     },
-    "_physics_process": {
+    "_melee_standoff_distance": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 45,
-        "end": 165
+        "file": "godot/scripts/Enemy.gd",
+        "start": 215,
+        "end": 335
       },
       "symbol_dependencies": [
         {
-          "symbol": "_apply_weapon_profile_data",
+          "symbol": "DZEnemy",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 115,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_begin_telegraphed_attack",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 334,
               "kind": "function",
               "language": "gdscript"
             }
@@ -414,11 +713,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_fire_at",
+          "symbol": "_boss_slam_cooldown",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 291,
               "kind": "function",
               "language": "gdscript"
             }
@@ -426,11 +725,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_nearest_enemy",
+          "symbol": "_boss_slam_windup",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 194,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 285,
               "kind": "function",
               "language": "gdscript"
             }
@@ -438,11 +737,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_damage_feedback",
+          "symbol": "_contact_attack_range",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 506,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 230,
               "kind": "function",
               "language": "gdscript"
             }
@@ -450,11 +749,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_update_authored_animation",
+          "symbol": "_nearby_enemies_for_separation",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 533,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 233,
               "kind": "function",
               "language": "gdscript"
             }
@@ -462,11 +761,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_update_player_marker_pressure",
+          "symbol": "_process_charge",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 424,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 297,
               "kind": "function",
               "language": "gdscript"
             }
@@ -474,11 +773,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "apply_upgrade",
+          "symbol": "_spawn_attack_impact",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 148,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
               "kind": "function",
               "language": "gdscript"
             }
@@ -486,11 +785,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "can_apply_upgrade",
+          "symbol": "_update_boss_phase",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 108,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 269,
               "kind": "function",
               "language": "gdscript"
             }
@@ -498,11 +797,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "heal_full",
+          "symbol": "separation_vector",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 104,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 239,
               "kind": "function",
               "language": "gdscript"
             }
@@ -513,20 +812,8 @@
           "symbol": "set_combat_enabled",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 83,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "set_touch_move",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 91,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 315,
               "kind": "function",
               "language": "gdscript"
             }
@@ -537,8 +824,8 @@
           "symbol": "take_damage",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 94,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -548,11 +835,11 @@
       ],
       "dependency_count": 12
     },
-    "set_combat_enabled": {
+    "_contact_attack_range": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 83,
-        "end": 203
+        "file": "godot/scripts/Enemy.gd",
+        "start": 230,
+        "end": 350
       },
       "symbol_dependencies": [
         {
@@ -565,26 +852,14 @@
               "language": "gdscript"
             }
           ],
-          "relation": "class_like"
+          "relation": "same_file"
         },
         {
-          "symbol": "DZWeaponProfiles",
+          "symbol": "_begin_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/WeaponProfiles.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_apply_weapon_profile_data",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 115,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 334,
               "kind": "function",
               "language": "gdscript"
             }
@@ -592,11 +867,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_nearest_enemy",
+          "symbol": "_boss_slam_cooldown",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 194,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 291,
               "kind": "function",
               "language": "gdscript"
             }
@@ -604,11 +879,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_damage_feedback",
+          "symbol": "_boss_slam_windup",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 506,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 285,
               "kind": "function",
               "language": "gdscript"
             }
@@ -616,11 +891,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "apply_upgrade",
+          "symbol": "_melee_standoff_distance",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 148,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 215,
               "kind": "function",
               "language": "gdscript"
             }
@@ -628,11 +903,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "can_apply_upgrade",
+          "symbol": "_nearby_enemies_for_separation",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 108,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 233,
               "kind": "function",
               "language": "gdscript"
             }
@@ -640,11 +915,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "heal_full",
+          "symbol": "_play_authored",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 104,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
               "kind": "function",
               "language": "gdscript"
             }
@@ -652,11 +927,83 @@
           "relation": "same_file"
         },
         {
-          "symbol": "set_touch_move",
+          "symbol": "_process_charge",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 91,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 297,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_resolve_telegraphed_attack",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_show_telegraph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 373,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_attack_impact",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_update_boss_phase",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 269,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "separation_vector",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 239,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_combat_enabled",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 315,
               "kind": "function",
               "language": "gdscript"
             }
@@ -667,8 +1014,8 @@
           "symbol": "take_damage",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 94,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -676,13 +1023,13 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 10
+      "dependency_count": 15
     },
-    "set_touch_move": {
+    "_nearby_enemies_for_separation": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 91,
-        "end": 211
+        "file": "godot/scripts/Enemy.gd",
+        "start": 233,
+        "end": 353
       },
       "symbol_dependencies": [
         {
@@ -695,26 +1042,14 @@
               "language": "gdscript"
             }
           ],
-          "relation": "class_like"
+          "relation": "same_file"
         },
         {
-          "symbol": "DZWeaponProfiles",
+          "symbol": "_begin_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/WeaponProfiles.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_apply_weapon_profile_data",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 115,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 334,
               "kind": "function",
               "language": "gdscript"
             }
@@ -722,11 +1057,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_fire_at",
+          "symbol": "_boss_slam_cooldown",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 291,
               "kind": "function",
               "language": "gdscript"
             }
@@ -734,11 +1069,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_nearest_enemy",
+          "symbol": "_boss_slam_windup",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 194,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 285,
               "kind": "function",
               "language": "gdscript"
             }
@@ -746,11 +1081,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_play_authored",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
               "kind": "function",
               "language": "gdscript"
             }
@@ -758,11 +1093,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_damage_feedback",
+          "symbol": "_process_charge",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 506,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 297,
               "kind": "function",
               "language": "gdscript"
             }
@@ -770,11 +1105,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_muzzle_flash",
+          "symbol": "_resolve_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
               "kind": "function",
               "language": "gdscript"
             }
@@ -782,11 +1117,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_rifle_recoil",
+          "symbol": "_show_telegraph",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 367,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 373,
               "kind": "function",
               "language": "gdscript"
             }
@@ -794,11 +1129,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "apply_upgrade",
+          "symbol": "_spawn_attack_impact",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 148,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
               "kind": "function",
               "language": "gdscript"
             }
@@ -806,11 +1141,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "can_apply_upgrade",
+          "symbol": "_update_boss_phase",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 108,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 269,
               "kind": "function",
               "language": "gdscript"
             }
@@ -818,11 +1153,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "heal_full",
+          "symbol": "separation_vector",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 104,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 239,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_combat_enabled",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 315,
               "kind": "function",
               "language": "gdscript"
             }
@@ -833,8 +1180,8 @@
           "symbol": "take_damage",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 94,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -844,11 +1191,11 @@
       ],
       "dependency_count": 13
     },
-    "take_damage": {
+    "separation_vector": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 94,
-        "end": 214
+        "file": "godot/scripts/Enemy.gd",
+        "start": 239,
+        "end": 359
       },
       "symbol_dependencies": [
         {
@@ -861,13 +1208,13 @@
               "language": "gdscript"
             }
           ],
-          "relation": "class_like"
+          "relation": "same_file"
         },
         {
-          "symbol": "DZWeaponProfiles",
+          "symbol": "DZEnemyProjectile",
           "definitions": [
             {
-              "file": "godot/scripts/WeaponProfiles.gd",
+              "file": "godot/scripts/EnemyProjectile.gd",
               "line": 1,
               "kind": "class",
               "language": "gdscript"
@@ -876,11 +1223,11 @@
           "relation": "class_like"
         },
         {
-          "symbol": "_apply_weapon_profile_data",
+          "symbol": "_begin_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 115,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 334,
               "kind": "function",
               "language": "gdscript"
             }
@@ -888,11 +1235,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_fire_at",
+          "symbol": "_boss_slam_cooldown",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 291,
               "kind": "function",
               "language": "gdscript"
             }
@@ -900,11 +1247,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_nearest_enemy",
+          "symbol": "_boss_slam_windup",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 194,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 285,
               "kind": "function",
               "language": "gdscript"
             }
@@ -912,11 +1259,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_play_authored",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
               "kind": "function",
               "language": "gdscript"
             }
@@ -924,11 +1271,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_damage_feedback",
+          "symbol": "_process_charge",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 506,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 297,
               "kind": "function",
               "language": "gdscript"
             }
@@ -936,11 +1283,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_muzzle_flash",
+          "symbol": "_resolve_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
               "kind": "function",
               "language": "gdscript"
             }
@@ -948,11 +1295,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_rifle_recoil",
+          "symbol": "_show_telegraph",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 367,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 373,
               "kind": "function",
               "language": "gdscript"
             }
@@ -960,11 +1307,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "apply_upgrade",
+          "symbol": "_spawn_attack_impact",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 148,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
               "kind": "function",
               "language": "gdscript"
             }
@@ -972,11 +1319,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "can_apply_upgrade",
+          "symbol": "_update_boss_phase",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 108,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 269,
               "kind": "function",
               "language": "gdscript"
             }
@@ -984,11 +1331,177 @@
           "relation": "same_file"
         },
         {
-          "symbol": "heal_full",
+          "symbol": "set_combat_enabled",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 104,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 315,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 13
+    },
+    "_update_boss_phase": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 269,
+        "end": 389
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZEnemyProjectile",
+          "definitions": [
+            {
+              "file": "godot/scripts/EnemyProjectile.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_begin_telegraphed_attack",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 334,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_boss_slam_cooldown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 291,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_boss_slam_windup",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 285,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_charge",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 297,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_resolve_telegraphed_attack",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_show_telegraph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 373,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_attack_impact",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "configure",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 48,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_combat_enabled",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 315,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -998,55 +1511,31 @@
       ],
       "dependency_count": 12
     },
-    "heal_full": {
+    "_boss_slam_windup": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 104,
-        "end": 224
+        "file": "godot/scripts/Enemy.gd",
+        "start": 285,
+        "end": 405
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZEnemy",
+          "symbol": "DZEnemyProjectile",
+          "definitions": [
+            {
+              "file": "godot/scripts/EnemyProjectile.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_begin_telegraphed_attack",
           "definitions": [
             {
               "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZWeaponProfiles",
-          "definitions": [
-            {
-              "file": "godot/scripts/WeaponProfiles.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_apply_weapon_profile_data",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 115,
+              "line": 334,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1054,11 +1543,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_fire_at",
+          "symbol": "_boss_slam_cooldown",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 291,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1066,11 +1555,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_nearest_enemy",
+          "symbol": "_play_authored",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 194,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1078,11 +1567,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_process_charge",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 297,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1090,11 +1579,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_muzzle_flash",
+          "symbol": "_resolve_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1102,11 +1591,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_rifle_recoil",
+          "symbol": "_show_telegraph",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 367,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 373,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1114,11 +1603,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "apply_upgrade",
+          "symbol": "_spawn_attack_impact",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 148,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1126,11 +1615,35 @@
           "relation": "same_file"
         },
         {
-          "symbol": "can_apply_upgrade",
+          "symbol": "configure",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 108,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 48,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_combat_enabled",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 315,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1140,18 +1653,18 @@
       ],
       "dependency_count": 11
     },
-    "can_apply_upgrade": {
+    "_boss_slam_cooldown": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 108,
-        "end": 228
+        "file": "godot/scripts/Enemy.gd",
+        "start": 291,
+        "end": 411
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZAssetLibrary",
+          "symbol": "DZEnemyProjectile",
           "definitions": [
             {
-              "file": "godot/scripts/AssetLibrary.gd",
+              "file": "godot/scripts/EnemyProjectile.gd",
               "line": 1,
               "kind": "class",
               "language": "gdscript"
@@ -1160,225 +1673,11 @@
           "relation": "class_like"
         },
         {
-          "symbol": "DZEnemy",
+          "symbol": "_begin_telegraphed_attack",
           "definitions": [
             {
               "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZWeaponProfiles",
-          "definitions": [
-            {
-              "file": "godot/scripts/WeaponProfiles.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_apply_weapon_profile_data",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 115,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 224,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_nearest_enemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 194,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trigger_muzzle_flash",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trigger_rifle_recoil",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 367,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "apply_upgrade",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 148,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "_apply_weapon_profile_data": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 115,
-        "end": 235
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZEnemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZWeaponProfiles",
-          "definitions": [
-            {
-              "file": "godot/scripts/WeaponProfiles.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 224,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_nearest_enemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 194,
+              "line": 334,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1389,8 +1688,8 @@
           "symbol": "_play_authored",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1398,11 +1697,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_process_charge",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 297,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1410,11 +1709,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_muzzle_flash",
+          "symbol": "_resolve_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1422,11 +1721,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_rifle_recoil",
+          "symbol": "_show_telegraph",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 367,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 373,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1434,11 +1733,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "apply_upgrade",
+          "symbol": "_spawn_attack_impact",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 148,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1446,11 +1745,35 @@
           "relation": "same_file"
         },
         {
-          "symbol": "can_apply_upgrade",
+          "symbol": "configure",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 108,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 48,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_combat_enabled",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 315,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1458,20 +1781,20 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 13
+      "dependency_count": 10
     },
-    "apply_upgrade": {
+    "_process_charge": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 148,
-        "end": 268
+        "file": "godot/scripts/Enemy.gd",
+        "start": 297,
+        "end": 417
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZAssetLibrary",
+          "symbol": "DZEnemyProjectile",
           "definitions": [
             {
-              "file": "godot/scripts/AssetLibrary.gd",
+              "file": "godot/scripts/EnemyProjectile.gd",
               "line": 1,
               "kind": "class",
               "language": "gdscript"
@@ -1480,131 +1803,11 @@
           "relation": "class_like"
         },
         {
-          "symbol": "DZEnemy",
+          "symbol": "_begin_telegraphed_attack",
           "definitions": [
             {
               "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZWeaponProfiles",
-          "definitions": [
-            {
-              "file": "godot/scripts/WeaponProfiles.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_apply_weapon_profile_data",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 115,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_damage_feedback",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 484,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_muzzle_flash",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 445,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_player_marker",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 377,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_tactical_rig",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 296,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 224,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_nearest_enemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 194,
+              "line": 334,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1615,8 +1818,8 @@
           "symbol": "_play_authored",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1624,11 +1827,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_resolve_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1636,11 +1839,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_muzzle_flash",
+          "symbol": "_show_telegraph",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 373,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1648,11 +1851,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_rifle_recoil",
+          "symbol": "_spawn_attack_impact",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 367,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1660,11 +1863,35 @@
           "relation": "same_file"
         },
         {
-          "symbol": "can_apply_upgrade",
+          "symbol": "configure",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 108,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 48,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_combat_enabled",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 315,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1672,20 +1899,20 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 17
+      "dependency_count": 9
     },
-    "_nearest_enemy": {
+    "set_combat_enabled": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 194,
-        "end": 314
+        "file": "godot/scripts/Enemy.gd",
+        "start": 315,
+        "end": 435
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZAssetLibrary",
+          "symbol": "DZEnemyProjectile",
           "definitions": [
             {
-              "file": "godot/scripts/AssetLibrary.gd",
+              "file": "godot/scripts/EnemyProjectile.gd",
               "line": 1,
               "kind": "class",
               "language": "gdscript"
@@ -1694,35 +1921,29 @@
           "relation": "class_like"
         },
         {
-          "symbol": "DZEnemy",
+          "symbol": "ImpactFx",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/fx/ImpactFx.java",
+              "line": 5,
+              "kind": "class",
+              "language": "java"
+            },
+            {
+              "file": "godot/scripts/ImpactFx.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_begin_regeneration",
           "definitions": [
             {
               "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_damage_feedback",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 484,
+              "line": 426,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1730,59 +1951,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_build_muzzle_flash",
+          "symbol": "_begin_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 445,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_player_marker",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 377,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_tactical_rig",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 296,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 224,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_fire_at",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 207,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 334,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1793,8 +1966,8 @@
           "symbol": "_play_authored",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1802,11 +1975,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_resolve_telegraphed_attack",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 342,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1814,11 +1987,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_muzzle_flash",
+          "symbol": "_show_telegraph",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 373,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1826,11 +1999,35 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_rifle_recoil",
+          "symbol": "_spawn_attack_impact",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 367,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "configure",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 48,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1838,20 +2035,20 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 13
+      "dependency_count": 10
     },
-    "_fire_at": {
+    "_begin_telegraphed_attack": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 207,
-        "end": 327
+        "file": "godot/scripts/Enemy.gd",
+        "start": 334,
+        "end": 454
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZAssetLibrary",
+          "symbol": "DZEnemyProjectile",
           "definitions": [
             {
-              "file": "godot/scripts/AssetLibrary.gd",
+              "file": "godot/scripts/EnemyProjectile.gd",
               "line": 1,
               "kind": "class",
               "language": "gdscript"
@@ -1860,83 +2057,29 @@
           "relation": "class_like"
         },
         {
-          "symbol": "DZEnemy",
+          "symbol": "ImpactFx",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/fx/ImpactFx.java",
+              "line": 5,
+              "kind": "class",
+              "language": "java"
+            },
+            {
+              "file": "godot/scripts/ImpactFx.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_begin_regeneration",
           "definitions": [
             {
               "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZProjectile",
-          "definitions": [
-            {
-              "file": "godot/scripts/Projectile.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_damage_feedback",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 484,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_muzzle_flash",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 445,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_player_marker",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 377,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_tactical_rig",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 296,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_visual",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 224,
+              "line": 426,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1947,8 +2090,8 @@
           "symbol": "_play_authored",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
               "kind": "function",
               "language": "gdscript"
             }
@@ -1956,185 +2099,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trigger_muzzle_flash",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trigger_rifle_recoil",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 367,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 12
-    },
-    "_build_visual": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 224,
-        "end": 344
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZAssetLibrary",
-          "definitions": [
-            {
-              "file": "godot/scripts/AssetLibrary.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_damage_feedback",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 484,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_muzzle_flash",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 445,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_player_marker",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 377,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_tactical_rig",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 296,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_play_authored",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "_build_tactical_rig": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 296,
-        "end": 416
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "_build_player_marker",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 377,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trigger_rifle_recoil",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 367,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 2
-    },
-    "_trigger_rifle_recoil": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 367,
-        "end": 487
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZEnemy",
+          "symbol": "_resolve_telegraphed_attack",
           "definitions": [
             {
               "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_damage_feedback",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 484,
+              "line": 342,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2142,81 +2111,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_build_muzzle_flash",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 445,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_build_player_marker",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 377,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trigger_muzzle_flash",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_update_player_marker_pressure",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 424,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 6
-    },
-    "_build_player_marker": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 377,
-        "end": 497
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZEnemy",
+          "symbol": "_show_telegraph",
           "definitions": [
             {
               "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_damage_feedback",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 484,
+              "line": 373,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2224,69 +2123,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_build_muzzle_flash",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 445,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trigger_muzzle_flash",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_update_player_marker_pressure",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 424,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 5
-    },
-    "_update_player_marker_pressure": {
-      "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 424,
-        "end": 544
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZEnemy",
+          "symbol": "_spawn_attack_impact",
           "definitions": [
             {
               "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_damage_feedback",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 484,
+              "line": 417,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2294,11 +2135,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_build_muzzle_flash",
+          "symbol": "configure",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 445,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 48,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2306,47 +2147,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_authored",
+          "symbol": "take_damage",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trigger_damage_feedback",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 506,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_trigger_muzzle_flash",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_update_authored_animation",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 533,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2354,20 +2159,20 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 7
+      "dependency_count": 9
     },
-    "_build_muzzle_flash": {
+    "_resolve_telegraphed_attack": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 445,
-        "end": 565
+        "file": "godot/scripts/Enemy.gd",
+        "start": 342,
+        "end": 462
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZCombatAudio",
+          "symbol": "DZEnemyProjectile",
           "definitions": [
             {
-              "file": "godot/scripts/CombatAudio.gd",
+              "file": "godot/scripts/EnemyProjectile.gd",
               "line": 1,
               "kind": "class",
               "language": "gdscript"
@@ -2376,11 +2181,29 @@
           "relation": "class_like"
         },
         {
-          "symbol": "_build_audio",
+          "symbol": "ImpactFx",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 544,
+              "file": "core/src/main/java/com/deadlinezero/game/fx/ImpactFx.java",
+              "line": 5,
+              "kind": "class",
+              "language": "java"
+            },
+            {
+              "file": "godot/scripts/ImpactFx.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_begin_regeneration",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 426,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2388,11 +2211,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_build_damage_feedback",
+          "symbol": "_process_regeneration",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 484,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 455,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2400,11 +2223,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_authored",
+          "symbol": "_show_telegraph",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 373,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2412,11 +2235,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_spawn_attack_impact",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2424,11 +2247,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_damage_feedback",
+          "symbol": "configure",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 506,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 48,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2436,23 +2259,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_muzzle_flash",
+          "symbol": "take_damage",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 465,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "_update_authored_animation",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 533,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2462,18 +2273,24 @@
       ],
       "dependency_count": 8
     },
-    "_trigger_muzzle_flash": {
+    "_show_telegraph": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 465,
-        "end": 585
+        "file": "godot/scripts/Enemy.gd",
+        "start": 373,
+        "end": 493
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZCombatAudio",
+          "symbol": "ImpactFx",
           "definitions": [
             {
-              "file": "godot/scripts/CombatAudio.gd",
+              "file": "core/src/main/java/com/deadlinezero/game/fx/ImpactFx.java",
+              "line": 5,
+              "kind": "class",
+              "language": "java"
+            },
+            {
+              "file": "godot/scripts/ImpactFx.gd",
               "line": 1,
               "kind": "class",
               "language": "gdscript"
@@ -2482,11 +2299,11 @@
           "relation": "class_like"
         },
         {
-          "symbol": "_build_audio",
+          "symbol": "_begin_regeneration",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 544,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 426,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2494,11 +2311,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_build_damage_feedback",
+          "symbol": "_process_regeneration",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 484,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 455,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2506,11 +2323,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_authored",
+          "symbol": "_process_status_effects",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2518,11 +2335,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_regenerate",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 468,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2530,11 +2347,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_damage_feedback",
+          "symbol": "_spawn_attack_impact",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 506,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 417,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2542,11 +2359,773 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_update_authored_animation",
+          "symbol": "apply_burn",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 533,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 479,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_shock",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 485,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_slow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 475,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "_spawn_attack_impact": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 417,
+        "end": 537
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "ImpactFx",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/fx/ImpactFx.java",
+              "line": 5,
+              "kind": "class",
+              "language": "java"
+            },
+            {
+              "file": "godot/scripts/ImpactFx.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_begin_regeneration",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 426,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_regeneration",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 455,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_status_effects",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_regenerate",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 468,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_burn",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 479,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_shock",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 485,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_slow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 475,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hit_reaction_profile",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 530,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 12
+    },
+    "_begin_regeneration": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 426,
+        "end": 546
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_regeneration",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 455,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_status_effects",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_regenerate",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 468,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_burn",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 479,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_shock",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 485,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_slow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 475,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hit_reaction_profile",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 530,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 10
+    },
+    "_process_regeneration": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 455,
+        "end": 575
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build_hit_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_status_effects",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_regenerate",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 468,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_burn",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 479,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_shock",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 485,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_slow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 475,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hit_reaction_profile",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 530,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 10
+    },
+    "_regenerate": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 468,
+        "end": 588
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build_hit_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_status_effects",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_burn",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 479,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_shock",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 485,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_slow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 475,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hit_reaction_profile",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 530,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "apply_slow": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 475,
+        "end": 595
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build_hit_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_status_effects",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_burn",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 479,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_shock",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 485,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hit_reaction_profile",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 530,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "apply_burn": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 479,
+        "end": 599
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build_hit_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_process_status_effects",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "apply_shock",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 485,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hit_reaction_profile",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 530,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2556,31 +3135,19 @@
       ],
       "dependency_count": 7
     },
-    "_build_damage_feedback": {
+    "apply_shock": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 484,
-        "end": 604
+        "file": "godot/scripts/Enemy.gd",
+        "start": 485,
+        "end": 605
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZCombatAudio",
+          "symbol": "_build_hit_flash",
           "definitions": [
             {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 544,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2588,11 +3155,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_authored",
+          "symbol": "_play_hit_reaction",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2600,11 +3167,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_process_status_effects",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 492,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2612,11 +3179,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_trigger_damage_feedback",
+          "symbol": "_spawn_damage_number",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 506,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2624,11 +3191,23 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_update_authored_animation",
+          "symbol": "hit_reaction_profile",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 533,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 530,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2638,18 +3217,88 @@
       ],
       "dependency_count": 6
     },
-    "_trigger_damage_feedback": {
+    "_process_status_effects": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 506,
-        "end": 626
+        "file": "godot/scripts/Enemy.gd",
+        "start": 492,
+        "end": 612
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZCombatAudio",
+          "symbol": "_build_hit_flash",
           "definitions": [
             {
-              "file": "godot/scripts/CombatAudio.gd",
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hit_reaction_profile",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 530,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "take_damage",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 510,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "take_damage": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 510,
+        "end": 630
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
               "line": 1,
               "kind": "class",
               "language": "gdscript"
@@ -2658,11 +3307,117 @@
           "relation": "class_like"
         },
         {
-          "symbol": "_build_audio",
+          "symbol": "_build_hit_flash",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 544,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_visual",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 620,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hit_reaction_profile",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 530,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "hit_reaction_profile": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 530,
+        "end": 650
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_add_archetype_signature",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 691,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_hit_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_visual",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 620,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2673,8 +3428,8 @@
           "symbol": "_play_authored",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2682,11 +3437,587 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_play_hit_reaction",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "_play_hit_reaction": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 537,
+        "end": 657
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_add_archetype_signature",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 691,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_hit_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 574,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_visual",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 620,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hit_reaction_profile",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 530,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "_build_hit_flash": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 574,
+        "end": 694
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_add_archetype_signature",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 691,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_visual",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 620,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_spawn_damage_number",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 597,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "_spawn_damage_number": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 597,
+        "end": 717
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_add_archetype_signature",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 691,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_brute_shoulders",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 758,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_elite_crown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 772,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_runner_blades",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 742,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_build_visual",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 620,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "_build_visual": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 620,
+        "end": 740
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_add_archetype_signature",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 691,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_boss_frame",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 786,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_brute_shoulders",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 758,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_elite_crown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 772,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_eye_beacon",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 731,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_runner_blades",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 742,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_signature_material",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 721,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "_add_archetype_signature": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 691,
+        "end": 811
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_add_boss_frame",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 786,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_brute_shoulders",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 758,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_elite_crown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 772,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_eye_beacon",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 731,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_runner_blades",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 742,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_signature_material",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 721,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "_signature_material": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 721,
+        "end": 841
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_add_boss_frame",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 786,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_brute_shoulders",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 758,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_elite_crown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 772,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_eye_beacon",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 731,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_runner_blades",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 742,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 836,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2697,8 +4028,8 @@
           "symbol": "_update_authored_animation",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 533,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 820,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2706,33 +4037,69 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 5
+      "dependency_count": 9
     },
-    "_update_authored_animation": {
+    "_add_eye_beacon": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 533,
-        "end": 653
+        "file": "godot/scripts/Enemy.gd",
+        "start": 731,
+        "end": 851
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZCombatAudio",
+          "symbol": "_add_boss_frame",
           "definitions": [
             {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
+              "file": "godot/scripts/Enemy.gd",
+              "line": 786,
+              "kind": "function",
               "language": "gdscript"
             }
           ],
-          "relation": "class_like"
+          "relation": "same_file"
         },
         {
-          "symbol": "_build_audio",
+          "symbol": "_add_brute_shoulders",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 544,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 758,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_elite_crown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 772,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_runner_blades",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 742,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 836,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2743,8 +4110,8 @@
           "symbol": "_play_authored",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 538,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2752,11 +4119,35 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_play_hit_reaction",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_signature_material",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 721,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_update_authored_animation",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 820,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2764,33 +4155,21 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 4
+      "dependency_count": 9
     },
-    "_play_authored": {
+    "_add_runner_blades": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 538,
-        "end": 658
+        "file": "godot/scripts/Enemy.gd",
+        "start": 742,
+        "end": 862
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZCombatAudio",
+          "symbol": "_add_boss_frame",
           "definitions": [
             {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 544,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 786,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2798,11 +4177,423 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_add_brute_shoulders",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 758,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_elite_crown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 772,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_eye_beacon",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 731,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 836,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_signature_material",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 721,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_update_authored_animation",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 820,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "_add_brute_shoulders": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 758,
+        "end": 878
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_add_boss_frame",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 786,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_elite_crown",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 772,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_eye_beacon",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 731,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 836,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_signature_material",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 721,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_update_authored_animation",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 820,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "_add_elite_crown": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 772,
+        "end": 892
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_add_boss_frame",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 786,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_add_eye_beacon",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 731,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 836,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_signature_material",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 721,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_update_authored_animation",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 820,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 7
+    },
+    "_add_boss_frame": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 786,
+        "end": 906
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_add_eye_beacon",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 731,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 836,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_signature_material",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 721,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_update_authored_animation",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 820,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 6
+    },
+    "_update_authored_animation": {
+      "source": {
+        "file": "godot/scripts/Enemy.gd",
+        "start": 820,
+        "end": 940
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 836,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_authored",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 830,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_play_hit_reaction",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2812,31 +4603,31 @@
       ],
       "dependency_count": 3
     },
-    "_build_audio": {
+    "_play_authored": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 544,
-        "end": 664
+        "file": "godot/scripts/Enemy.gd",
+        "start": 830,
+        "end": 950
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZCombatAudio",
+          "symbol": "_flash",
           "definitions": [
             {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
+              "file": "godot/scripts/Enemy.gd",
+              "line": 836,
+              "kind": "function",
               "language": "gdscript"
             }
           ],
-          "relation": "class_like"
+          "relation": "same_file"
         },
         {
-          "symbol": "_play_shot_audio",
+          "symbol": "_play_hit_reaction",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
-              "line": 552,
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
               "kind": "function",
               "language": "gdscript"
             }
@@ -2846,129 +4637,36 @@
       ],
       "dependency_count": 2
     },
-    "_play_shot_audio": {
+    "_flash": {
       "source": {
-        "file": "godot/scripts/Player.gd",
-        "start": 552,
-        "end": 672
+        "file": "godot/scripts/Enemy.gd",
+        "start": 836,
+        "end": 956
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZCombatAudio",
+          "symbol": "_play_hit_reaction",
           "definitions": [
             {
-              "file": "godot/scripts/CombatAudio.gd",
-              "line": 1,
-              "kind": "class",
+              "file": "godot/scripts/Enemy.gd",
+              "line": 537,
+              "kind": "function",
               "language": "gdscript"
             }
           ],
-          "relation": "class_like"
+          "relation": "same_file"
         }
       ],
       "dependency_count": 1
     },
     "_initialize": {
       "source": {
-        "file": "godot/tests/first_playable_run_path_test.gd",
-        "start": 5,
-        "end": 125
+        "file": "godot/tests/native_enemy_behavior_test.gd",
+        "start": 10,
+        "end": 130
       },
-      "symbol_dependencies": [
-        {
-          "symbol": "Player",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-              "line": 16,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Upgrade",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/progression/Upgrade.java",
-              "line": 14,
-              "kind": "enum",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_count_kind",
-          "definitions": [
-            {
-              "file": "godot/tests/first_playable_run_path_test.gd",
-              "line": 155,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "_count_kind": {
-      "source": {
-        "file": "godot/tests/first_playable_run_path_test.gd",
-        "start": 155,
-        "end": 275
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "DZEnemy",
-          "definitions": [
-            {
-              "file": "godot/scripts/Enemy.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 1
-    },
-    "_init": {
-      "source": {
-        "file": "godot/tests/weapon_presentation_test.gd",
-        "start": 2,
-        "end": 122
-      },
-      "symbol_dependencies": [
-        {
-          "symbol": "Player",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-              "line": 16,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Projectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 2
+      "symbol_dependencies": [],
+      "dependency_count": 0
     }
   }
 }

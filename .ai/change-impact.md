@@ -1,13 +1,11 @@
 # Change impact
 
-Base: 5d87758ab59eefd699cc7827fa7cc3cb42c25e0b
-Head: 2e18da8d4af134c07e42b46fc75af2bff8fde77d
+Base: 3133ad966198669f0f9d37285e0af0da3355911b
+Head: 7c779398f6f3e545fd728331566d4ec816caeb31
 
 ## Changed files
-- M godot/scripts/AssetLibrary.gd
-- M godot/scripts/Player.gd
-- M godot/tests/first_playable_run_path_test.gd
-- M godot/tests/weapon_presentation_test.gd
+- M godot/scripts/Enemy.gd
+- M godot/tests/native_enemy_behavior_test.gd
 
 ## Affected areas
 - godot

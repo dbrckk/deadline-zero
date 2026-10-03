@@ -24365,6 +24365,7 @@ func _physics_process(delta: float) -> void:
 
     if distance > 0.05:
         var movement_direction: Vector3 = delta_pos.normalized()
+        var movement_speed_scale := 1.0
         if kind == "harrier":
             if distance < 4.4:
                 movement_direction = -movement_direction
@@ -24379,9 +24380,10 @@ func _physics_process(delta: float) -> void:
             var separation_weight := 0.88 if kind == "boss" else (1.62 if kind == "harrier" else 1.56)
             movement_direction = (movement_direction + separation * separation_weight).normalized()
 
-        # Melee bodies now fan around the survivor instead of collapsing into one visual stack.
-        # The tangent is deterministic per enemy, so the ring stays stable rather than jittering.
-        if kind != "harrier" and distance < 1.48:
+        # Maintain a visible melee envelope around the survivor instead of letting bodies
+        # occupy the same screen-space footprint. Enemies can still attack from this envelope.
+        if kind != "harrier":
+            var standoff := _melee_standoff_distance()
             var outward := global_position - target.global_position
             outward.y = 0.0
             if outward.length_squared() > 0.001:
@@ -24389,19 +24391,46 @@ func _physics_process(delta: float) -> void:
                 var tangent := Vector3(-radial.z, 0.0, radial.x)
                 if int(get_instance_id()) % 2 == 0:
                     tangent = -tangent
-                var crowd_pressure := clampf((1.48 - distance) / 0.72, 0.0, 1.0)
-                var radial_weight := crowd_pressure * (1.18 if distance < 0.92 else 0.52)
-                var tangent_weight := crowd_pressure * 0.72
-                movement_direction = (movement_direction + radial * radial_weight + tangent * tangent_weight).normalized()
 
-        velocity = movement_direction * move_speed * slow_multiplier
+                if distance < standoff:
+                    var penetration := clampf((standoff - distance) / maxf(standoff, 0.01), 0.0, 1.0)
+                    movement_direction = (
+                        radial * (1.42 + penetration * 1.05)
+                        + tangent * 0.58
+                        + separation * 0.72
+                    ).normalized()
+                    movement_speed_scale = lerpf(0.44, 0.90, penetration)
+                elif distance < standoff + 0.62:
+                    var settle := 1.0 - clampf((distance - standoff) / 0.62, 0.0, 1.0)
+                    movement_direction = (movement_direction + tangent * settle * 0.24 + separation * settle * 0.32).normalized()
+                    movement_speed_scale = lerpf(0.70, 1.0, 1.0 - settle)
+
+        velocity = movement_direction * move_speed * slow_multiplier * movement_speed_scale
         move_and_slide()
         if velocity.length_squared() > 0.01:
             look_at(global_position + velocity, Vector3.UP)
     _update_authored_animation(distance)
-    if distance < 0.85 and attack_cooldown <= 0.0 and target.has_method("take_damage"):
+    if distance < _contact_attack_range() and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _melee_standoff_distance() -> float:
+    match kind:
+        "boss":
+            return 1.42
+        "brute":
+            return 1.24
+        "charger":
+            return 1.12
+        "elite":
+            return 1.08
+        "regenerator":
+            return 1.00
+        _:
+            return 0.92
+
+func _contact_attack_range() -> float:
+    return _melee_standoff_distance() + (0.18 if kind in ["boss", "brute"] else 0.14)
 
 func _nearby_enemies_for_separation(radius: float) -> Array:
     var scene := get_tree().current_scene if get_tree() != null else null
@@ -29809,6 +29838,23 @@ func _initialize() -> void:
     separation_b.dead = true
     if separation_a.separation_vector([separation_b], 1.18) != Vector3.ZERO:
         push_error("Enemy separation steering must ignore dead neighbors")
+        quit(1)
+        return
+
+    var melee_brute := ENEMY_SCRIPT.new()
+    melee_brute.configure("brute", 1.0, target)
+    melee_brute.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(melee_brute)
+    if separation_a._melee_standoff_distance() < 0.90:
+        push_error("Shambler melee standoff is too small to preserve player readability")
+        quit(1)
+        return
+    if melee_brute._melee_standoff_distance() <= separation_a._melee_standoff_distance():
+        push_error("Large melee archetypes must keep a wider visual standoff")
+        quit(1)
+        return
+    if separation_a._contact_attack_range() <= separation_a._melee_standoff_distance():
+        push_error("Enemies must remain able to attack from the visual standoff envelope")
         quit(1)
         return
 
