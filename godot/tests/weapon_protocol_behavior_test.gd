@@ -1,5 +1,15 @@
 extends SceneTree
 
+class SpatialProbe:
+    extends Node3D
+    var query_calls := 0
+    var last_radius := 0.0
+
+    func query_enemies_near(_position: Vector3, radius: float) -> Array:
+        query_calls += 1
+        last_radius = radius
+        return []
+
 const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
 const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
 const WEAPON_PROFILES := preload("res://scripts/WeaponProfiles.gd")
@@ -96,5 +106,18 @@ func _initialize() -> void:
     inferno.free()
     arc.free()
     await process_frame
+
+    var spatial_probe := SpatialProbe.new()
+    get_root().add_child(spatial_probe)
+    current_scene = spatial_probe
+    var spatial_projectile := PROJECTILE_SCRIPT.new()
+    spatial_projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    spatial_probe.add_child(spatial_projectile)
+    await process_frame
+    spatial_projectile._enemies_near(Vector3.ZERO, 3.8)
+    if spatial_probe.query_calls != 1 or not is_equal_approx(spatial_probe.last_radius, 3.8):
+        push_error("Weapon protocol neighborhood queries did not route through scene spatial hash")
+        quit(1)
+        return
     print("Deadline Zero weapon protocol behavior: OK")
     quit(0)
