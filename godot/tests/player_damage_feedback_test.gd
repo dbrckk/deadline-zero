@@ -57,5 +57,18 @@ func _initialize() -> void:
         quit(1)
         return
 
+    player.invulnerability = 0.0
+    var died_emitted := false
+    player.died.connect(func() -> void: died_emitted = true)
+    player.take_damage(player.health + 1000.0)
+    if player.health > 0.0 or not died_emitted:
+        push_error("Lethal player damage did not enter death state")
+        quit(1)
+        return
+    if player.authored_anim != null and player.authored_anim.has_animation("Death") and player.current_anim != "Death":
+        push_error("Lethal player damage did not play authored Death animation")
+        quit(1)
+        return
+
     print("Deadline Zero player damage feedback: OK")
     quit(0)
