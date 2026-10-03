@@ -43,6 +43,36 @@ func _run_test() -> void:
             quit(1)
             return
 
+        var duplicate := PROJECTILE_SCRIPT.new()
+        duplicate.name = "Projectile_%s_duplicate" % profile
+        duplicate.process_mode = Node.PROCESS_MODE_DISABLED
+        duplicate.setup(
+            Vector3(float(index) * 1.5, 0.7, 1.2),
+            Vector3.FORWARD,
+            10.0,
+            10.0,
+            Color(0.18, 0.90, 1.0),
+            profile
+        )
+        root.add_child(duplicate)
+        await process_frame
+        var duplicate_core := duplicate.get_node_or_null("ProjectileCore") as MeshInstance3D
+        var duplicate_trail := duplicate.get_node_or_null("ProjectileTrail") as MeshInstance3D
+        if duplicate_core == null or duplicate_trail == null:
+            push_error("%s duplicate projectile did not build cached visuals" % profile)
+            quit(1)
+            return
+        if duplicate_core.mesh != core.mesh or duplicate_trail.mesh != trail.mesh:
+            push_error("%s projectile visuals must reuse cached mesh resources" % profile)
+            quit(1)
+            return
+        if duplicate_core.material_override != core.material_override or duplicate_trail.material_override != trail.material_override:
+            push_error("%s projectile visuals must reuse cached material resources" % profile)
+            quit(1)
+            return
+        duplicate.queue_free()
+        await process_frame
+
         match profile:
             "scatter":
                 var sparks := 0
