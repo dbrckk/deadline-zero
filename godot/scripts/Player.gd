@@ -88,6 +88,24 @@ func set_combat_enabled(enabled: bool) -> void:
     velocity = Vector3.ZERO
     touch_move = Vector2.ZERO
     fire_clock = max(fire_clock, fire_interval)
+    _clear_player_marker_pressure()
+
+func _clear_player_marker_pressure() -> void:
+    if not player_marker_pressure:
+        var idle_locator := get_node_or_null("PlayerPressureLocator") as Node3D
+        if idle_locator != null:
+            idle_locator.visible = false
+        return
+    player_marker_pressure = false
+    if player_marker_material != null:
+        player_marker_material.albedo_color = Color(0.05, 0.72, 1.0, 0.78)
+        player_marker_material.emission = Color(0.025, 0.42, 0.72)
+        player_marker_material.emission_energy_multiplier = 1.9
+    if player_marker_ring != null:
+        player_marker_ring.scale = Vector3.ONE
+    var locator := get_node_or_null("PlayerPressureLocator") as Node3D
+    if locator != null:
+        locator.visible = false
 
 func set_touch_move(value: Vector2) -> void:
     touch_move = value.limit_length(1.0)
