@@ -28,6 +28,28 @@ func _run_test() -> void:
         quit(1)
         return
 
+    for node in ground_details:
+        if not node is Node3D or not str(node.name).begins_with("StreetDamage_"):
+            push_error("Unexpected ground-detail node: %s" % node.name)
+            quit(1)
+            return
+        var segments := node.find_children("CrackSegment_*", "MeshInstance3D", true, false)
+        if segments.size() != 4:
+            push_error("Street damage must use 4 procedural crack segments, got %d on %s" % [segments.size(), node.name])
+            quit(1)
+            return
+        for segment in segments:
+            var mesh_instance := segment as MeshInstance3D
+            if mesh_instance == null or not mesh_instance.mesh is BoxMesh:
+                push_error("Street damage segment is not procedural BoxMesh")
+                quit(1)
+                return
+            var size := (mesh_instance.mesh as BoxMesh).size
+            if size.x > 1.0 or size.z > 0.05:
+                push_error("Street damage segment exceeded decal-scale geometry: %s" % size)
+                quit(1)
+                return
+
     for node in props:
         if not node is Node3D:
             push_error("Environment prop is not a Node3D")

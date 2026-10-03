@@ -879,6 +879,19 @@ func _build_authored_world_dressing() -> void:
         prop.scale = Vector3.ONE * scale_factor
         add_child(prop)
 
+    # The Quaternius asset named street-straight-crack1 is an entire 8x8 m street tile,
+    # not a crack decal. Repeating it as ground damage created the bright white road strips that
+    # dominated the combat frame. Build actual low-profile crack geometry instead.
+    var crack_material := StandardMaterial3D.new()
+    crack_material.albedo_color = Color(0.008, 0.012, 0.014)
+    crack_material.metallic = 0.04
+    crack_material.roughness = 1.0
+
+    var crack_edge_material := StandardMaterial3D.new()
+    crack_edge_material.albedo_color = Color(0.065, 0.034, 0.018, 0.52)
+    crack_edge_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    crack_edge_material.roughness = 1.0
+
     var crack_positions := [
         Vector3(-12.0, 0.012, -5.8), Vector3(12.2, 0.012, 5.5),
         Vector3(-4.5, 0.012, 11.8), Vector3(4.8, 0.012, -11.6),
@@ -886,15 +899,40 @@ func _build_authored_world_dressing() -> void:
         Vector3(-8.0, 0.012, 17.0), Vector3(8.0, 0.012, -17.0),
     ]
     for index in range(crack_positions.size()):
-        var crack := DZAssetLibrary.street_crack()
-        if crack == null:
-            continue
-        crack.name = "StreetDamage_%02d" % index
-        crack.add_to_group("environment_ground_detail")
-        crack.position = crack_positions[index]
-        crack.rotation.y = float((index * 53) % 360) * PI / 180.0
-        crack.scale = Vector3.ONE * (0.94 + float(index % 3) * 0.06)
-        add_child(crack)
+        var crack_root := Node3D.new()
+        crack_root.name = "StreetDamage_%02d" % index
+        crack_root.add_to_group("environment_ground_detail")
+        crack_root.position = crack_positions[index]
+        crack_root.rotation.y = float((index * 53) % 360) * PI / 180.0
+        add_child(crack_root)
+
+        var segments := [
+            {"offset": Vector3(-0.28, 0.0, -0.03), "length": 0.78, "angle": 0.08},
+            {"offset": Vector3(0.28, 0.0, 0.08), "length": 0.60, "angle": 0.54},
+            {"offset": Vector3(0.48, 0.0, -0.18), "length": 0.42, "angle": -0.42},
+            {"offset": Vector3(-0.08, 0.0, 0.25), "length": 0.36, "angle": 1.02},
+        ]
+        for segment_index in range(segments.size()):
+            var segment_data: Dictionary = segments[segment_index]
+            var segment := MeshInstance3D.new()
+            segment.name = "CrackSegment_%d" % segment_index
+            var segment_mesh := BoxMesh.new()
+            segment_mesh.size = Vector3(float(segment_data["length"]), 0.006, 0.030)
+            segment.mesh = segment_mesh
+            segment.position = segment_data["offset"] + Vector3(0.0, 0.006, 0.0)
+            segment.rotation.y = float(segment_data["angle"])
+            segment.material_override = crack_material
+            crack_root.add_child(segment)
+
+            if segment_index < 2:
+                var edge := MeshInstance3D.new()
+                edge.name = "CrackEdge_%d" % segment_index
+                var edge_mesh := BoxMesh.new()
+                edge_mesh.size = Vector3(float(segment_data["length"]) * 0.72, 0.004, 0.010)
+                edge.mesh = edge_mesh
+                edge.position = Vector3(0.0, 0.005, 0.026 if segment_index == 0 else -0.026)
+                edge.material_override = crack_edge_material
+                segment.add_child(edge)
 
 func _build_floor_seams() -> void:
     var seam_material := StandardMaterial3D.new()
