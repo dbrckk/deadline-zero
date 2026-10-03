@@ -9,6 +9,8 @@ signal master_volume_changed(value: float)
 signal sfx_volume_changed(value: float)
 signal haptics_changed(enabled: bool)
 signal reduced_flashes_changed(enabled: bool)
+signal camera_shake_changed(enabled: bool)
+signal hit_stop_changed(enabled: bool)
 
 var hp_bar: ProgressBar
 var health_bar: ProgressBar
@@ -39,6 +41,8 @@ var master_volume: HSlider
 var sfx_volume: HSlider
 var haptics_toggle: CheckButton
 var reduced_flashes_toggle: CheckButton
+var camera_shake_toggle: CheckButton
+var hit_stop_toggle: CheckButton
 var reduced_flashes := false
 var impact_flash: ColorRect
 var impact_flash_tween: Tween
@@ -455,8 +459,8 @@ func _build() -> void:
     pause_panel = PanelContainer.new()
     pause_panel.name = "PausePanel"
     pause_panel.set_anchors_preset(Control.PRESET_CENTER)
-    pause_panel.position = Vector2(-250, -255)
-    pause_panel.size = Vector2(500, 510)
+    pause_panel.position = Vector2(-250, -310)
+    pause_panel.size = Vector2(500, 620)
     pause_panel.visible = false
     add_child(pause_panel)
     var pause_box := VBoxContainer.new()
@@ -515,6 +519,25 @@ func _build() -> void:
         reduced_flashes_changed.emit(enabled)
     )
     pause_box.add_child(reduced_flashes_toggle)
+
+    camera_shake_toggle = CheckButton.new()
+    camera_shake_toggle.name = "CameraShakeToggle"
+    camera_shake_toggle.text = "CAMERA SHAKE"
+    camera_shake_toggle.button_pressed = true
+    camera_shake_toggle.custom_minimum_size = Vector2(360, 46)
+    camera_shake_toggle.add_theme_font_size_override("font_size", 16)
+    camera_shake_toggle.toggled.connect(func(enabled: bool) -> void: camera_shake_changed.emit(enabled))
+    pause_box.add_child(camera_shake_toggle)
+
+    hit_stop_toggle = CheckButton.new()
+    hit_stop_toggle.name = "HitStopToggle"
+    hit_stop_toggle.text = "HIT STOP"
+    hit_stop_toggle.button_pressed = true
+    hit_stop_toggle.custom_minimum_size = Vector2(360, 46)
+    hit_stop_toggle.add_theme_font_size_override("font_size", 16)
+    hit_stop_toggle.toggled.connect(func(enabled: bool) -> void: hit_stop_changed.emit(enabled))
+    pause_box.add_child(hit_stop_toggle)
+
     var resume_button := Button.new()
     resume_button.name = "ResumeButton"
     resume_button.text = "RESUME"

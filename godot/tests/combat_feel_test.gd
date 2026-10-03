@@ -17,6 +17,15 @@ func _initialize() -> void:
         "hit-freeze timing must recover real delta under time scaling")
     _assert(DZCombatFeel.unscaled_delta(0.0, 0.12) == 0.0,
         "zero scaled delta must remain zero")
+    var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    _assert(main_source.contains("if hit_stop_enabled:"),
+        "combat impact path must respect hit-stop comfort setting")
+    _assert(main_source.contains("if camera_shake_enabled:"),
+        "combat impact path must respect camera-shake comfort setting")
+    _assert(main_source.contains("camera_kick = 0.0"),
+        "disabling camera shake must clear active camera kick")
+    _assert(main_source.contains("_clear_hit_freeze()"),
+        "disabling hit stop must clear active freeze")
     print("Deadline Zero Godot combat-feel profile: OK")
     quit(0)
 

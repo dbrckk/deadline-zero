@@ -9,7 +9,9 @@ The in-game pause/settings panel currently exposes persistent controls for:
 - master volume;
 - SFX volume;
 - haptics on/off;
-- reduced flashes on/off.
+- reduced flashes on/off;
+- camera shake on/off;
+- hit stop on/off.
 
 Reduced flashes currently lowers the intensity/duration of screen-space impact flashes and the player damage vignette. Haptics can be disabled completely for combat impact events.
 
@@ -19,8 +21,7 @@ The runtime also provides non-configurable readability aids including boss teleg
 
 The following comfort controls existed in historical release planning but are **not yet user-configurable in the current Godot runtime**:
 
-- screen shake on/off and shake strength;
-- hit-stop toggle;
+- camera shake strength slider;
 - high-contrast telegraphs toggle;
 - reduced-motion comfort preset;
 - UI scale;
@@ -38,6 +39,8 @@ Before production rollout, verify on representative physical Android hardware:
 - [ ] Every implemented setting persists after app restart.
 - [ ] Reduced flashes materially suppresses avoidable full-screen flashing effects.
 - [ ] Haptics can be disabled completely.
+- [ ] Camera shake can be disabled completely and clears any active kick.
+- [ ] Hit stop can be disabled completely and clears any active freeze.
 - [ ] Master and SFX audio can be reduced or muted without blocking gameplay.
 - [ ] Boss/attack telegraphs remain readable in dense combat.
 - [ ] Close-pressure and off-screen threat indicators remain readable without relying only on color.

@@ -54,6 +54,8 @@ var threat_indicator_refresh_clock := 0.0
 var director_refresh_clock := 0.0
 var haptics_enabled := true
 var reduced_flashes := false
+var camera_shake_enabled := true
+var hit_stop_enabled := true
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -99,6 +101,8 @@ func _ready() -> void:
     hud.sfx_volume_changed.connect(_on_sfx_volume_changed)
     hud.haptics_changed.connect(_on_haptics_changed)
     hud.reduced_flashes_changed.connect(_on_reduced_flashes_changed)
+    hud.camera_shake_changed.connect(_on_camera_shake_changed)
+    hud.hit_stop_changed.connect(_on_hit_stop_changed)
     _load_audio_settings()
     last_player_health = player.health
     hud.set_health(player.health, player.max_health)
@@ -264,8 +268,10 @@ func _on_boss_health_changed(current: float, maximum: float) -> void:
         hud.set_boss_health(current, maximum)
 
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
-    hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
-    camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
+    if hit_stop_enabled:
+        hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
+    if camera_shake_enabled:
+        camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
     if hud:
         hud.show_impact_flash(critical, killed, boss)
     _play_impact_audio(critical, killed, boss)
@@ -351,11 +357,15 @@ func _load_audio_settings(path := SETTINGS_PATH) -> void:
     var sfx := float(settings.get("sfx_volume", 0.90))
     haptics_enabled = bool(settings.get("haptics_enabled", true))
     reduced_flashes = bool(settings.get("reduced_flashes", false))
+    camera_shake_enabled = bool(settings.get("camera_shake_enabled", true))
+    hit_stop_enabled = bool(settings.get("hit_stop_enabled", true))
     if hud != null:
         hud.master_volume.set_value_no_signal(master)
         hud.sfx_volume.set_value_no_signal(sfx)
         hud.haptics_toggle.set_pressed_no_signal(haptics_enabled)
         hud.set_reduced_flashes(reduced_flashes)
+        hud.camera_shake_toggle.set_pressed_no_signal(camera_shake_enabled)
+        hud.hit_stop_toggle.set_pressed_no_signal(hit_stop_enabled)
     if player != null:
         player.set_reduced_flashes(reduced_flashes)
     _set_bus_linear_volume("Master", master)
@@ -368,7 +378,9 @@ func _save_audio_settings(path := SETTINGS_PATH) -> void:
         "master_volume": master,
         "sfx_volume": sfx,
         "haptics_enabled": haptics_enabled,
-        "reduced_flashes": reduced_flashes
+        "reduced_flashes": reduced_flashes,
+        "camera_shake_enabled": camera_shake_enabled,
+        "hit_stop_enabled": hit_stop_enabled
     })
 
 func _on_master_volume_changed(value: float) -> void:
@@ -389,6 +401,18 @@ func _on_reduced_flashes_changed(enabled: bool) -> void:
         hud.set_reduced_flashes(enabled)
     if player != null:
         player.set_reduced_flashes(enabled)
+    _save_audio_settings()
+
+func _on_camera_shake_changed(enabled: bool) -> void:
+    camera_shake_enabled = enabled
+    if not enabled:
+        camera_kick = 0.0
+    _save_audio_settings()
+
+func _on_hit_stop_changed(enabled: bool) -> void:
+    hit_stop_enabled = enabled
+    if not enabled:
+        _clear_hit_freeze()
     _save_audio_settings()
 
 func _clear_hit_freeze() -> void:

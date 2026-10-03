@@ -14,7 +14,9 @@ func _initialize() -> void:
         "master_volume": 0.42,
         "sfx_volume": 0.33,
         "haptics_enabled": false,
-        "reduced_flashes": true
+        "reduced_flashes": true,
+        "camera_shake_enabled": false,
+        "hit_stop_enabled": false
     }
     script.save(path, expected)
     var loaded: Dictionary = script.load_settings(path)
@@ -36,6 +38,11 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if bool(loaded.get("camera_shake_enabled", true)) or bool(loaded.get("hit_stop_enabled", true)):
+        push_error("Camera-shake/hit-stop settings did not persist")
+        quit(1)
+        return
+
     DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
     var integration_path := "user://deadline-zero-settings-integration-test.cfg"
@@ -43,7 +50,9 @@ func _initialize() -> void:
         "master_volume": 0.35,
         "sfx_volume": 0.60,
         "haptics_enabled": false,
-        "reduced_flashes": true
+        "reduced_flashes": true,
+        "camera_shake_enabled": false,
+        "hit_stop_enabled": false
     })
 
     var main := MAIN_SCENE.instantiate()
@@ -76,10 +85,21 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if main.camera_shake_enabled or main.hit_stop_enabled:
+        push_error("Persisted camera-shake/hit-stop state was not restored into Main")
+        quit(1)
+        return
+    if main.hud.camera_shake_toggle.button_pressed or main.hud.hit_stop_toggle.button_pressed:
+        push_error("Persisted camera-shake/hit-stop toggles were not restored into pause settings")
+        quit(1)
+        return
+
     main.hud.master_volume.value = 0.60
     main.hud.sfx_volume.value = 0.45
     main._on_haptics_changed(true)
     main._on_reduced_flashes_changed(false)
+    main._on_camera_shake_changed(true)
+    main._on_hit_stop_changed(true)
     main._save_audio_settings(integration_path)
     var round_trip: Dictionary = script.load_settings(integration_path)
     if not is_equal_approx(float(round_trip.get("master_volume", -1.0)), 0.60):
@@ -93,6 +113,11 @@ func _initialize() -> void:
 
     if not bool(round_trip.get("haptics_enabled", false)) or bool(round_trip.get("reduced_flashes", true)):
         push_error("Updated comfort settings were not saved from pause settings")
+        quit(1)
+        return
+
+    if not bool(round_trip.get("camera_shake_enabled", false)) or not bool(round_trip.get("hit_stop_enabled", false)):
+        push_error("Updated camera-shake/hit-stop settings were not saved")
         quit(1)
         return
 
