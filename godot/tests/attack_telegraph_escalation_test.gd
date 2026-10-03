@@ -37,6 +37,35 @@ func _run_test() -> void:
         quit(1)
         return
 
+    var telegraph_mesh := enemy.telegraph_visual as MeshInstance3D
+    if telegraph_mesh == null or telegraph_mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Attack telegraph ring must not cast dynamic shadows")
+        quit(1)
+        return
+    var tick_mesh_resource: Mesh
+    var tick_count := 0
+    for child in enemy.telegraph_visual.get_children():
+        if not child is MeshInstance3D:
+            continue
+        var tick := child as MeshInstance3D
+        if not tick.name.begins_with("TelegraphTick_"):
+            continue
+        tick_count += 1
+        if tick.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+            push_error("Telegraph ticks must not cast dynamic shadows")
+            quit(1)
+            return
+        if tick_mesh_resource == null:
+            tick_mesh_resource = tick.mesh
+        elif tick.mesh != tick_mesh_resource:
+            push_error("Telegraph ticks must reuse shared geometry for one attack radius")
+            quit(1)
+            return
+    if tick_count != 4:
+        push_error("Attack telegraph must retain four directional ticks")
+        quit(1)
+        return
+
     var start_energy := enemy.telegraph_material.emission_energy_multiplier
     var start_alpha := enemy.telegraph_material.albedo_color.a
     await create_timer(0.22).timeout
