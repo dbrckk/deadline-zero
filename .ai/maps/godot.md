@@ -6515,6 +6515,8 @@ func _initialize() -> void:
 ```
 extends SceneTree
 
+var died_emitted := false
+
 const PLAYER_SCRIPT := preload("res://scripts/Player.gd")
 
 func _initialize() -> void:
@@ -6572,7 +6574,9 @@ func _initialize() -> void:
         quit(1)
         return
 
-    await create_timer(0.20).timeout
+    for _tick in range(14):
+        await physics_frame
+    await process_frame
     if pulse.visible:
         push_error("Damage pulse did not clear after its presentation window")
         quit(1)
@@ -6588,8 +6592,7 @@ func _initialize() -> void:
         return
 
     player.invulnerability = 0.0
-    var died_emitted := false
-    player.died.connect(func() -> void: died_emitted = true)
+    player.died.connect(_on_player_died)
     player.take_damage(player.health + 1000.0)
     if player.health > 0.0 or not died_emitted:
         push_error("Lethal player damage did not enter death state")
@@ -6602,6 +6605,9 @@ func _initialize() -> void:
 
     print("Deadline Zero player damage feedback: OK")
     quit(0)
+
+func _on_player_died() -> void:
+    died_emitted = true
 ```
 
 ## File: tests/player_pressure_marker_test.gd

@@ -22,19 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T19:17:59Z
+Generated: 2026-10-03T19:32:30Z
 
 ### Git
 - Branch: `main`
-- Head: `1c833a66ba80`
-- Commit date: 2026-10-03T21:17:20+02:00
-- Commit: Test player hit-reaction animation lifecycle
+- Head: `ea4b025811d7`
+- Commit date: 2026-10-03T21:32:14+02:00
+- Commit: Use deterministic death signal assertion
 - Tracked files: 943
 
 ### Recently changed files
 - `godot/tests/player_damage_feedback_test.gd`
 - `godot/scripts/Player.gd`
-- `godot/tests/pressure_frame_render_test.gd`
 
 ### Project signals
 - `build.gradle`

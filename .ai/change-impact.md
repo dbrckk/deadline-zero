@@ -1,7 +1,7 @@
 # Change impact
 
-Base: f179c2784a52c65825a54854b862e44658c5a521
-Head: 1c833a66ba809667bd8e968ac001598d5dc31721
+Base: bb36be434059bd007cb6426372a8559384fe7df3
+Head: ea4b025811d76d11eb48bb9b6e99fea1ed520cf7
 
 ## Changed files
 - M godot/tests/player_damage_feedback_test.gd
