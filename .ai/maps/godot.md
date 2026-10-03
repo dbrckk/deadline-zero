@@ -5038,7 +5038,9 @@ func _initialize() -> void:
         "hit_flash_material": "Hit reaction must include a material flash without dynamic lights",
         "separation_radius := 2.05": "Heavy melee bodies need a wider anti-stack separation radius",
         "separation_radius := 2.05 if kind in": "Enemy movement must retain archetype-aware separation",
-        "tangent_weight := crowd_pressure * 0.72": "Close melee pressure must fan bodies around the survivor"
+        "_melee_standoff_distance": "Close melee pressure must preserve a player-readable standoff envelope",
+        "_contact_attack_range": "Melee enemies must remain dangerous from the standoff envelope",
+        "movement_speed_scale": "Close melee correction must settle rather than jitter at full chase speed"
     }
     for token in required:
         if not source.contains(token):

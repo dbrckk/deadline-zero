@@ -1,11 +1,10 @@
 # Change impact
 
-Base: 3133ad966198669f0f9d37285e0af0da3355911b
-Head: 7c779398f6f3e545fd728331566d4ec816caeb31
+Base: 33280a7acd5b48042451e464621d7f2231a5b028
+Head: 54e2d0ae5f55bf981e58626352901c9ed7e8a54f
 
 ## Changed files
-- M godot/scripts/Enemy.gd
-- M godot/tests/native_enemy_behavior_test.gd
+- M godot/tests/enemy_hit_reaction_test.gd
 
 ## Affected areas
 - godot

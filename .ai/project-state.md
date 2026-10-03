@@ -22,16 +22,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T16:57:27Z
+Generated: 2026-10-03T16:58:35Z
 
 ### Git
 - Branch: `main`
-- Head: `7c779398f6f3`
-- Commit date: 2026-10-03T18:57:14+02:00
-- Commit: Keep melee bodies off the survivor silhouette
+- Head: `54e2d0ae5f55`
+- Commit date: 2026-10-03T18:58:23+02:00
+- Commit: Align melee readability contract with standoff steering
 - Tracked files: 942
 
 ### Recently changed files
+- `godot/tests/enemy_hit_reaction_test.gd`
 - `godot/scripts/Enemy.gd`
 - `godot/tests/native_enemy_behavior_test.gd`
 - `godot/scripts/AssetLibrary.gd`
