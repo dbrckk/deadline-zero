@@ -1,7 +1,8 @@
 extends SceneTree
 
 func _initialize() -> void:
-    var listing := FileAccess.get_file_as_string("../play/store/LISTING.md")
+    var listing_path := ProjectSettings.globalize_path("res://../play/store/LISTING.md")
+    var listing := FileAccess.get_file_as_string(listing_path)
     if listing.is_empty():
         push_error("Godot Play listing contract is missing")
         quit(1)
@@ -35,7 +36,8 @@ func _initialize() -> void:
             quit(1)
             return
 
-    var data_safety := FileAccess.get_file_as_string("../play/store/DATA_SAFETY.md")
+    var data_safety_path := ProjectSettings.globalize_path("res://../play/store/DATA_SAFETY.md")
+    var data_safety := FileAccess.get_file_as_string(data_safety_path)
     if not data_safety.contains("not present in the current Godot release candidate"):
         push_error("Data Safety contract does not distinguish legacy SDKs from Godot release")
         quit(1)
