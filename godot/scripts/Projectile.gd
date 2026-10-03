@@ -240,9 +240,12 @@ func _physics_process(delta: float) -> void:
         queue_free()
 
 func _candidate_enemies() -> Array:
+    return _enemies_near(global_position, radius)
+
+func _enemies_near(position: Vector3, range_radius: float) -> Array:
     var scene := get_tree().current_scene if get_tree() != null else null
     if scene != null and scene.has_method("query_enemies_near"):
-        return scene.query_enemies_near(global_position, radius)
+        return scene.query_enemies_near(position, range_radius)
     return get_tree().get_nodes_in_group("enemies") if get_tree() != null else []
 
 func _impact(critical := false) -> void:
@@ -266,29 +269,27 @@ func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
 func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) -> void:
     if range_radius <= 0.0:
         return
-    for node in get_tree().get_nodes_in_group("enemies"):
+    for node in _enemies_near(primary.global_position, range_radius):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
             continue
-        if primary.global_position.distance_to(enemy.global_position) <= range_radius:
-            enemy.take_damage(splash_damage, false)
-            if spawn_secondary_fx:
-                var fx := ImpactFx.new()
-                fx.color = Color(1.0, 0.24, 0.035)
-                fx.scale_boost = 0.72
-                get_tree().current_scene.add_child(fx)
-                fx.global_position = enemy.global_position + Vector3(0.0, 0.45, 0.0)
+        enemy.take_damage(splash_damage, false)
+        if spawn_secondary_fx:
+            var fx := ImpactFx.new()
+            fx.color = Color(1.0, 0.24, 0.035)
+            fx.scale_boost = 0.72
+            get_tree().current_scene.add_child(fx)
+            fx.global_position = enemy.global_position + Vector3(0.0, 0.45, 0.0)
 
 func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
     if chain_targets <= 0:
         return
     var candidates: Array[DZEnemy] = []
-    for node in get_tree().get_nodes_in_group("enemies"):
+    for node in _enemies_near(primary.global_position, 3.8):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
             continue
-        if primary.global_position.distance_to(enemy.global_position) <= 3.8:
-            candidates.append(enemy)
+        candidates.append(enemy)
     candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
         return primary.global_position.distance_squared_to(a.global_position) < primary.global_position.distance_squared_to(b.global_position)
     )
