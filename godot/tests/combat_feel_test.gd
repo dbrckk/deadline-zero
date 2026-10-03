@@ -13,6 +13,10 @@ func _initialize() -> void:
     _assert(heavy_damage_kick > light_damage_kick, "heavier received damage must read stronger")
     _assert(heavy_damage_kick <= 0.115, "received damage kick must remain mobile-safe")
     _assert(DZCombatFeel.damage_received_camera_kick(0.0, 100.0) == 0.0, "zero damage must not kick camera")
+    _assert(is_equal_approx(DZCombatFeel.unscaled_delta(0.012, 0.12), 0.10),
+        "hit-freeze timing must recover real delta under time scaling")
+    _assert(DZCombatFeel.unscaled_delta(0.0, 0.12) == 0.0,
+        "zero scaled delta must remain zero")
     print("Deadline Zero Godot combat-feel profile: OK")
     quit(0)
 
