@@ -180,6 +180,23 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var melee_brute := ENEMY_SCRIPT.new()
+    melee_brute.configure("brute", 1.0, target)
+    melee_brute.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(melee_brute)
+    if separation_a._melee_standoff_distance() < 0.90:
+        push_error("Shambler melee standoff is too small to preserve player readability")
+        quit(1)
+        return
+    if melee_brute._melee_standoff_distance() <= separation_a._melee_standoff_distance():
+        push_error("Large melee archetypes must keep a wider visual standoff")
+        quit(1)
+        return
+    if separation_a._contact_attack_range() <= separation_a._melee_standoff_distance():
+        push_error("Enemies must remain able to attack from the visual standoff envelope")
+        quit(1)
+        return
+
     var damage_enemy := ENEMY_SCRIPT.new()
     damage_enemy.configure("shambler", 1.0, target)
     damage_enemy.process_mode = Node.PROCESS_MODE_DISABLED
