@@ -1,14 +1,13 @@
 # Change impact
 
-Base: 8a22ee2cac46b5c1ccb61f8da00b6281e538847a
-Head: 757e9d97dbbb433b3933bc5606805fa4dbc0d100
+Base: 271ae372bafff0774e723f3c10b5fee04ca9bd46
+Head: d3008d713fe284ffbc5a64b2c6c8b686994cc801
 
 ## Changed files
-- M godot/scripts/Player.gd
-- M godot/tests/weapon_presentation_test.gd
+- M android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java
 
 ## Affected areas
-- godot
+- android
 
 ## Related test candidates
 - No direct filename-based test match detected.

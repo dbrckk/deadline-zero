@@ -4,15 +4,15 @@
     "expand_to": 12,
     "max_files": 6,
     "requested_max_files": 12,
-    "score_margin": 0,
+    "score_margin": 9,
     "tier": "bounded",
-    "top_score": 33
+    "top_score": 36
   },
   "cache": {
-    "fingerprint": "f7c02a0b2bde11dcdaf16b4c1797b727b819638a9b4ad2e61236a4fdf491506d",
+    "fingerprint": "26dd911aab86d2b460db1eff2d1a9cefdbd834cd46357a88c0110eaa7074a112",
     "hit": false
   },
-  "candidate_count": 429,
+  "candidate_count": 427,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,50 +20,24 @@
       "matched_terms": [
         "game"
       ],
-      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
       "reasons": [
         "impact",
+        "recently-changed",
         "search-index"
       ],
-      "score": 33,
+      "score": 36,
       "symbols": [
-        "AbilitySystem",
-        "Listener",
-        "arc",
-        "currentLeaperChance",
-        "damageEnemy",
-        "explode",
-        "impact",
-        "interceptHostileProjectile",
-        "nearest",
-        "onEnemySpawned",
-        "runtime",
-        "update",
-        "updateCryo",
-        "updateDrone",
-        "updateHomingMissiles",
-        "updateLeapers",
-        "updateMissiles",
-        "updateOrbital",
-        "updateTesla"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilityUpgradeGuidance.java",
-      "reasons": [
-        "impact",
-        "search-index"
-      ],
-      "score": 33,
-      "symbols": [
-        "AbilityUpgradeGuidance",
-        "abilityType",
-        "activatingSynergy",
-        "key"
+        "AndroidPerformanceProbeTest",
+        "activity",
+        "game",
+        "injectLoad",
+        "injectStressLoad",
+        "recordsHordeProjectileStressTelemetry",
+        "recordsLoadedGameplayPerformanceTelemetry",
+        "runOnGameThread",
+        "waitForTelemetry",
+        "writeBenchmarkJson"
       ]
     },
     {
@@ -152,6 +126,26 @@
         "assertAttachedAndAlive",
         "launcherCreatesRealLibgdxSurfaceAndStaysAlive",
         "launcherSurvivesBackgroundForegroundAndActivityRecreation"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidProcessPersistenceTest.java",
+      "reasons": [
+        "search-index"
+      ],
+      "score": 27,
+      "symbols": [
+        "AndroidProcessPersistenceTest",
+        "activity",
+        "game",
+        "phase",
+        "runOnGameThread",
+        "seedProfileBeforeExternalProcessDeath",
+        "verifyProfileAfterExternalProcessRestart"
       ]
     }
   ],
