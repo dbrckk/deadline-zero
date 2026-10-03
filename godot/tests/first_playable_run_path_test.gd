@@ -19,6 +19,19 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main.camera_kick = 0.0
+    main.player.invulnerability = 0.0
+    var health_before_camera_feedback: float = main.player.health
+    main.player.take_damage(5.0)
+    if not is_equal_approx(main.player.health, health_before_camera_feedback - 5.0):
+        push_error("First-playable damage probe did not reduce player health")
+        quit(1)
+        return
+    if main.camera_kick <= 0.0 or main.camera_kick > 0.115:
+        push_error("Received player damage did not produce bounded camera feedback")
+        quit(1)
+        return
+
     var tactical_rig := main.player.get_node_or_null("TacticalRig") as Node3D
     var tactical_backplate := main.player.get_node_or_null("TacticalRig/TacticalBackplate") as MeshInstance3D
     var weapon_accent := main.player.get_node_or_null("WeaponAccent") as MeshInstance3D
