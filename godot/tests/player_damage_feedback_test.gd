@@ -57,7 +57,9 @@ func _initialize() -> void:
         quit(1)
         return
 
-    await create_timer(0.20).timeout
+    for _tick in range(14):
+        await physics_frame
+    await process_frame
     if pulse.visible:
         push_error("Damage pulse did not clear after its presentation window")
         quit(1)
@@ -73,10 +75,10 @@ func _initialize() -> void:
         return
 
     player.invulnerability = 0.0
-    var died_emitted := false
-    player.died.connect(func() -> void: died_emitted = true)
+    var death_state := {"emitted": false}
+    player.died.connect(func() -> void: death_state["emitted"] = true)
     player.take_damage(player.health + 1000.0)
-    if player.health > 0.0 or not died_emitted:
+    if player.health > 0.0 or not bool(death_state["emitted"]):
         push_error("Lethal player damage did not enter death state")
         quit(1)
         return
