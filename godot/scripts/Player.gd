@@ -314,18 +314,21 @@ func _build_player_marker() -> void:
     aim_tick.material_override = player_marker_material
     add_child(aim_tick)
 
-    for index in range(3):
+    var locator := Node3D.new()
+    locator.name = "PlayerPressureLocator"
+    locator.position = Vector3(0.0, 1.88, 0.0)
+    locator.visible = false
+    add_child(locator)
+    for side in [-1.0, 1.0]:
         var chevron := MeshInstance3D.new()
-        chevron.name = "PlayerPressureChevron_%d" % index
+        chevron.name = "PlayerPressureChevron_%s" % ("L" if side < 0.0 else "R")
         var chevron_mesh := BoxMesh.new()
-        chevron_mesh.size = Vector3(0.16, 0.016, 0.045)
+        chevron_mesh.size = Vector3(0.24, 0.045, 0.055)
         chevron.mesh = chevron_mesh
-        var angle := TAU * float(index) / 3.0
-        chevron.position = Vector3(cos(angle) * 0.76, 0.058, sin(angle) * 0.76)
-        chevron.rotation.y = -angle
+        chevron.position = Vector3(side * 0.11, 0.0, 0.0)
+        chevron.rotation.z = deg_to_rad(side * 32.0)
         chevron.material_override = player_marker_material
-        chevron.visible = false
-        add_child(chevron)
+        locator.add_child(chevron)
 
 func _update_player_marker_pressure(target: DZEnemy) -> void:
     if player_marker_ring == null or player_marker_material == null:
@@ -344,10 +347,9 @@ func _update_player_marker_pressure(target: DZEnemy) -> void:
         player_marker_material.emission = Color(0.025, 0.42, 0.72)
         player_marker_material.emission_energy_multiplier = 1.9
         player_marker_ring.scale = Vector3.ONE
-    for index in range(3):
-        var chevron := get_node_or_null("PlayerPressureChevron_%d" % index) as MeshInstance3D
-        if chevron != null:
-            chevron.visible = pressured
+    var locator := get_node_or_null("PlayerPressureLocator") as Node3D
+    if locator != null:
+        locator.visible = pressured
 
 func _build_muzzle_flash() -> void:
     muzzle_flash = MeshInstance3D.new()
