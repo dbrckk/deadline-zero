@@ -17,16 +17,21 @@ func _initialize() -> void:
         if mesh_instance == null:
             var meshes := visual.find_children("*", "MeshInstance3D", true, false)
             mesh_instance = meshes[0] as MeshInstance3D if not meshes.is_empty() else null
-        if mesh_instance == null or not mesh_instance.material_override is BaseMaterial3D:
-            push_error("Enemy palette grading missing for %s" % palette_kind)
+        if mesh_instance == null or not mesh_instance.material_override is ShaderMaterial:
+            push_error("Enemy palette grading shader missing for %s" % palette_kind)
             quit(1)
             return
-        var material := mesh_instance.material_override as BaseMaterial3D
-        if material.albedo_texture == null:
+        var material := mesh_instance.material_override as ShaderMaterial
+        if material.get_shader_parameter("albedo_tex") == null:
             push_error("Enemy palette grading must preserve authored atlas for %s" % palette_kind)
             quit(1)
             return
-        palette_samples[palette_kind] = material.albedo_color
+        var highlight_floor := float(material.get_shader_parameter("highlight_floor"))
+        if highlight_floor > 0.50:
+            push_error("Enemy authored highlights are not compressed enough for %s" % palette_kind)
+            quit(1)
+            return
+        palette_samples[palette_kind] = material.get_shader_parameter("body_tint") as Color
         visual.free()
 
     var runner_color: Color = palette_samples["runner"]
