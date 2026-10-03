@@ -194,6 +194,10 @@ func _initialize() -> void:
         push_error("XP progression did not open a three-choice upgrade")
         quit(1)
         return
+    if main.director_refresh_clock > 0.0:
+        push_error("Level-up must force the run director to refresh on the next physics tick")
+        quit(1)
+        return
     if main.touch_id != -1 or main.player.touch_move.length_squared() > 0.0001 or main.hud.touch_stick_root.visible:
         push_error("Upgrade overlay retained stale mobile movement state")
         quit(1)
