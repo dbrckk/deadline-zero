@@ -172,11 +172,30 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var upgrade_touch_press := InputEventScreenTouch.new()
+    upgrade_touch_press.index = 9
+    upgrade_touch_press.position = Vector2(190.0, 525.0)
+    upgrade_touch_press.pressed = true
+    main._unhandled_input(upgrade_touch_press)
+
+    var upgrade_touch_drag := InputEventScreenDrag.new()
+    upgrade_touch_drag.index = 9
+    upgrade_touch_drag.position = Vector2(260.0, 460.0)
+    main._unhandled_input(upgrade_touch_drag)
+    if main.player.touch_move.length_squared() <= 0.01 or not main.hud.touch_stick_root.visible:
+        push_error("Upgrade transition test could not establish active touch movement")
+        quit(1)
+        return
+
     var previous_level: int = main.level
     var threshold: int = main.xp_next
     main._on_xp_collected(threshold)
     if main.level != previous_level + 1 or main.pending_upgrades.size() != 3:
         push_error("XP progression did not open a three-choice upgrade")
+        quit(1)
+        return
+    if main.touch_id != -1 or main.player.touch_move.length_squared() > 0.0001 or main.hud.touch_stick_root.visible:
+        push_error("Upgrade overlay retained stale mobile movement state")
         quit(1)
         return
     if not main.hud.upgrade_panel.visible or not paused:
