@@ -10,23 +10,22 @@ var ring_instance: MeshInstance3D
 var core_material: StandardMaterial3D
 var ring_material: StandardMaterial3D
 
+static var _shared_core_mesh: SphereMesh
+static var _shared_ring_mesh: TorusMesh
+
 func _ready() -> void:
     mesh_instance = MeshInstance3D.new()
     mesh_instance.name = "ImpactCore"
-    var sphere := SphereMesh.new()
-    sphere.radius = 0.18
-    sphere.height = 0.36
-    mesh_instance.mesh = sphere
+    mesh_instance.mesh = _core_mesh()
+    mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     core_material = _make_material(color, 4.2)
     mesh_instance.material_override = core_material
     add_child(mesh_instance)
 
     ring_instance = MeshInstance3D.new()
     ring_instance.name = "ImpactRing"
-    var ring := TorusMesh.new()
-    ring.inner_radius = 0.24
-    ring.outer_radius = 0.34
-    ring_instance.mesh = ring
+    ring_instance.mesh = _ring_mesh()
+    ring_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     ring_instance.rotation_degrees.x = 90.0
     ring_material = _make_material(color.lightened(0.18), 3.4)
     ring_instance.material_override = ring_material
@@ -66,6 +65,26 @@ func _ready() -> void:
     sparks.draw_pass_1 = spark_mesh
     add_child(sparks)
     sparks.emitting = true
+
+static func _core_mesh() -> SphereMesh:
+    if _shared_core_mesh != null:
+        return _shared_core_mesh
+    _shared_core_mesh = SphereMesh.new()
+    _shared_core_mesh.radius = 0.18
+    _shared_core_mesh.height = 0.36
+    _shared_core_mesh.radial_segments = 12
+    _shared_core_mesh.rings = 6
+    return _shared_core_mesh
+
+static func _ring_mesh() -> TorusMesh:
+    if _shared_ring_mesh != null:
+        return _shared_ring_mesh
+    _shared_ring_mesh = TorusMesh.new()
+    _shared_ring_mesh.inner_radius = 0.24
+    _shared_ring_mesh.outer_radius = 0.34
+    _shared_ring_mesh.rings = 16
+    _shared_ring_mesh.ring_segments = 6
+    return _shared_ring_mesh
 
 func _make_material(tint: Color, energy: float) -> StandardMaterial3D:
     var material := StandardMaterial3D.new()
