@@ -104,8 +104,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
     if hit_freeze_left > 0.0:
-        hit_freeze_left = max(0.0, hit_freeze_left - delta)
-        Engine.time_scale = 0.12
+        var real_delta := DZCombatFeel.unscaled_delta(delta, Engine.time_scale)
+        hit_freeze_left = maxf(0.0, hit_freeze_left - real_delta)
+        Engine.time_scale = 0.12 if hit_freeze_left > 0.0 else 1.0
     else:
         Engine.time_scale = 1.0
 
