@@ -55,6 +55,24 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main._on_hit_stop_changed(false)
+    main._on_camera_shake_changed(false)
+    main._on_haptics_changed(false)
+    main.hit_freeze_left = 0.0
+    main.camera_kick = 0.0
+    main._on_enemy_impact(Vector3.ZERO, true, true, false)
+    if main.hit_freeze_left > 0.0001:
+        push_error("Enemy impact bypassed disabled hit-stop setting")
+        quit(1)
+        return
+    if main.camera_kick > 0.0001:
+        push_error("Enemy impact bypassed disabled camera-shake setting")
+        quit(1)
+        return
+    main._on_hit_stop_changed(true)
+    main._on_camera_shake_changed(true)
+    main._on_haptics_changed(true)
+
     main.player.global_position = Vector3(42.0, 0.0, -44.0)
     main.player.velocity = Vector3(3.0, 0.0, -2.0)
     main.player._constrain_to_arena()
