@@ -266,6 +266,29 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var chain_start_level := main.level
+    var chain_first_threshold := main.xp_next
+    var chain_second_threshold := int(round(float(chain_first_threshold) * 1.24 + 4.0))
+    main._on_xp_collected(chain_first_threshold + chain_second_threshold + 3)
+    if main.level != chain_start_level + 1 or main.pending_upgrades.size() != 3 or not paused:
+        push_error("Banked multi-level XP did not open the first upgrade choice")
+        quit(1)
+        return
+    main._on_upgrade_chosen(0)
+    if main.level != chain_start_level + 2 or main.pending_upgrades.size() != 3 or not main.hud.upgrade_panel.visible or not paused:
+        push_error("Banked XP did not immediately chain the next level-up choice")
+        quit(1)
+        return
+    if main.xp != 3:
+        push_error("Multi-level XP chain did not preserve overflow XP")
+        quit(1)
+        return
+    main._on_upgrade_chosen(0)
+    if not main.pending_upgrades.is_empty() or main.hud.upgrade_panel.visible or paused:
+        push_error("Final chained upgrade did not resume gameplay cleanly")
+        quit(1)
+        return
+
     main.player.apply_upgrade("inferno_protocol")
     seed(424242)
     for offer_index in range(12):

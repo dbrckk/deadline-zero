@@ -272,13 +272,17 @@ func _on_enemy_died(xp_value: int, at: Vector3) -> void:
 
 func _on_xp_collected(amount: int) -> void:
     xp += amount
-    while xp >= xp_next:
-        xp -= xp_next
-        level += 1
-        director_refresh_clock = 0.0
-        xp_next = int(round(float(xp_next) * 1.24 + 4.0))
-        _offer_upgrade()
-        break
+    _try_offer_banked_level_up()
+
+func _try_offer_banked_level_up() -> bool:
+    if game_over or not pending_upgrades.is_empty() or xp < xp_next:
+        return false
+    xp -= xp_next
+    level += 1
+    director_refresh_clock = 0.0
+    xp_next = int(round(float(xp_next) * 1.24 + 4.0))
+    _offer_upgrade()
+    return true
 
 func _offer_upgrade() -> void:
     _clear_hit_freeze()
@@ -306,6 +310,8 @@ func _on_upgrade_chosen(index: int) -> void:
     player.apply_upgrade(pending_upgrades[index]["id"])
     pending_upgrades.clear()
     hud.hide_upgrade()
+    if _try_offer_banked_level_up():
+        return
     get_tree().paused = false
 
 func _on_health_changed(current: float, maximum: float) -> void:
