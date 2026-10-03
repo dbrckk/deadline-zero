@@ -8,6 +8,7 @@ func _initialize() -> void:
     current_scene = root
 
     var fx := IMPACT_SCRIPT.new()
+    fx.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(fx)
     await process_frame
 
@@ -53,6 +54,7 @@ func _initialize() -> void:
         return
 
     var duplicate := IMPACT_SCRIPT.new()
+    duplicate.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(duplicate)
     await process_frame
     var duplicate_core := duplicate.get_node_or_null("ImpactCore") as MeshInstance3D

@@ -6,6 +6,7 @@ func _initialize() -> void:
     current_scene = root
 
     var player := DZPlayer.new()
+    player.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(player)
     await process_frame
 

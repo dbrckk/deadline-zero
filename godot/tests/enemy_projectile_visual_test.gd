@@ -8,6 +8,7 @@ func _initialize() -> void:
     current_scene = root
 
     var projectile := PROJECTILE_SCRIPT.new()
+    projectile.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(projectile)
     await process_frame
 
@@ -49,6 +50,7 @@ func _initialize() -> void:
         return
 
     var duplicate := PROJECTILE_SCRIPT.new()
+    duplicate.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(duplicate)
     await process_frame
     var duplicate_core := duplicate.get_node_or_null("HarrierBoltCore") as MeshInstance3D
