@@ -356,6 +356,8 @@ func _load_audio_settings(path := SETTINGS_PATH) -> void:
         hud.sfx_volume.set_value_no_signal(sfx)
         hud.haptics_toggle.set_pressed_no_signal(haptics_enabled)
         hud.set_reduced_flashes(reduced_flashes)
+    if player != null:
+        player.set_reduced_flashes(reduced_flashes)
     _set_bus_linear_volume("Master", master)
     _set_bus_linear_volume("SFX", sfx)
 
@@ -385,6 +387,8 @@ func _on_reduced_flashes_changed(enabled: bool) -> void:
     reduced_flashes = enabled
     if hud != null:
         hud.set_reduced_flashes(enabled)
+    if player != null:
+        player.set_reduced_flashes(enabled)
     _save_audio_settings()
 
 func _clear_hit_freeze() -> void:

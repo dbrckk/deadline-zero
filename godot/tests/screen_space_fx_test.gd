@@ -1,6 +1,7 @@
 extends SceneTree
 
 const HUD_SCRIPT := preload("res://scripts/Hud.gd")
+const PLAYER_SCRIPT := preload("res://scripts/Player.gd")
 
 func _initialize() -> void:
     var root := Control.new()
@@ -34,6 +35,21 @@ func _initialize() -> void:
     hud.pulse_damage_screen()
     if hud.damage_vignette.modulate.a > 0.40:
         push_error("Reduced-flashes mode did not lower damage vignette intensity")
+        quit(1)
+        return
+
+    var player := PLAYER_SCRIPT.new()
+    player.process_mode = Node.PROCESS_MODE_DISABLED
+    get_root().add_child(player)
+    await process_frame
+    player.set_reduced_flashes(true)
+    player._trigger_muzzle_flash()
+    if player.muzzle_flash_material == null or player.muzzle_flash_material.emission_energy_multiplier > 2.3:
+        push_error("Reduced-flashes mode did not lower player muzzle-flash emission")
+        quit(1)
+        return
+    if player.muzzle_flash.scale.x > 0.50:
+        push_error("Reduced-flashes mode did not reduce player muzzle-flash footprint")
         quit(1)
         return
 

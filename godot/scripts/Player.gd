@@ -35,6 +35,7 @@ var player_marker_ring: MeshInstance3D
 var player_marker_material: StandardMaterial3D
 var player_marker_pressure := false
 var hit_reaction_left := 0.0
+var reduced_flashes := false
 var combat_enabled := true
 var applied_protocols := {}
 var current_target: DZEnemy
@@ -134,6 +135,9 @@ func _constrain_to_arena() -> void:
 
 func set_touch_move(value: Vector2) -> void:
     touch_move = value.limit_length(1.0)
+
+func set_reduced_flashes(enabled: bool) -> void:
+    reduced_flashes = enabled
 
 func take_damage(amount: float) -> void:
     if invulnerability > 0.0 or health <= 0.0:
@@ -548,14 +552,16 @@ func _trigger_muzzle_flash() -> void:
     if muzzle_flash_tween != null and muzzle_flash_tween.is_valid():
         muzzle_flash_tween.kill()
     muzzle_flash.visible = true
-    muzzle_flash.scale = Vector3(0.58, 0.42, 0.82)
+    muzzle_flash.scale = Vector3(0.42, 0.30, 0.58) if reduced_flashes else Vector3(0.58, 0.42, 0.82)
     if muzzle_flash_material != null:
-        muzzle_flash_material.emission_energy_multiplier = 6.2
+        muzzle_flash_material.emission_energy_multiplier = 2.2 if reduced_flashes else 6.2
+    var flash_duration := 0.032 if reduced_flashes else 0.055
+    var target_scale := Vector3(0.72, 0.48, 1.02) if reduced_flashes else Vector3(1.22, 0.76, 1.72)
     muzzle_flash_tween = create_tween()
     muzzle_flash_tween.set_parallel(true)
-    muzzle_flash_tween.tween_property(muzzle_flash, "scale", Vector3(1.22, 0.76, 1.72), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    muzzle_flash_tween.tween_property(muzzle_flash, "scale", target_scale, flash_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     if muzzle_flash_material != null:
-        muzzle_flash_tween.tween_property(muzzle_flash_material, "emission_energy_multiplier", 1.0, 0.055)
+        muzzle_flash_tween.tween_property(muzzle_flash_material, "emission_energy_multiplier", 0.7 if reduced_flashes else 1.0, flash_duration)
     muzzle_flash_tween.chain().tween_callback(func() -> void:
         if muzzle_flash != null and is_instance_valid(muzzle_flash):
             muzzle_flash.visible = false
