@@ -83,6 +83,12 @@ func _run_capture() -> void:
         quit(1)
         return
 
+    var pressure_locator := player.get_node_or_null("PlayerPressureLocator") as Node3D
+    if not player.player_marker_pressure or pressure_locator == null or not pressure_locator.visible:
+        push_error("Pressure-frame QA did not capture active close-pressure player feedback")
+        quit(1)
+        return
+
     # Validate phone-scale readability in screen space, not just world-space spacing.
     # A visually black/non-black image gate cannot catch actors collapsing into one blob.
     var viewport_size := get_root().get_visible_rect().size
@@ -143,21 +149,38 @@ func _run_capture() -> void:
         return
 
     var bright := 0
+    var clipped := 0
     var total := 0
     var sum_luma := 0.0
+    var min_luma := 1.0
+    var max_luma := 0.0
     for y in range(0, height, 8):
         for x in range(0, width, 8):
             var color := image.get_pixel(x, y)
             var luma := color.r * 0.2126 + color.g * 0.7152 + color.b * 0.0722
             total += 1
             sum_luma += luma
+            min_luma = minf(min_luma, luma)
+            max_luma = maxf(max_luma, luma)
             if luma > 0.045:
                 bright += 1
+            if luma > 0.96:
+                clipped += 1
 
     var bright_fraction := float(bright) / float(maxi(total, 1))
+    var clipped_fraction := float(clipped) / float(maxi(total, 1))
     var average_luma := sum_luma / float(maxi(total, 1))
+    var luma_range := max_luma - min_luma
     if bright_fraction < 0.008 or average_luma < 0.006:
         push_error("Pressure frame is effectively black: bright=%.5f avg=%.5f" % [bright_fraction, average_luma])
+        quit(1)
+        return
+    if luma_range < 0.05:
+        push_error("Pressure frame lacks enough tonal separation: range=%.5f" % luma_range)
+        quit(1)
+        return
+    if clipped_fraction > 0.18:
+        push_error("Pressure frame is excessively clipped: clipped=%.5f" % clipped_fraction)
         quit(1)
         return
 
@@ -167,7 +190,7 @@ func _run_capture() -> void:
         quit(1)
         return
 
-    print("GODOT_PRESSURE_FRAME_OK %dx%d kinds=%d onscreen=%d player_px=%.2f enemy_px=%.2f bright=%.5f avg=%.5f" % [
-        width, height, active_kinds.size(), projected_enemies.size(), min_player_distance, min_enemy_distance, bright_fraction, average_luma
+    print("GODOT_PRESSURE_FRAME_OK %dx%d kinds=%d onscreen=%d player_px=%.2f enemy_px=%.2f bright=%.5f avg=%.5f range=%.5f clipped=%.5f" % [
+        width, height, active_kinds.size(), projected_enemies.size(), min_player_distance, min_enemy_distance, bright_fraction, average_luma, luma_range, clipped_fraction
     ])
     quit(0)
