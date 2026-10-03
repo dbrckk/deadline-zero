@@ -38,6 +38,20 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var micro_drag := InputEventScreenDrag.new()
+    micro_drag.index = 7
+    micro_drag.position = Vector2(186.0, 524.0)
+    main._unhandled_input(micro_drag)
+    var initial_knob_center := (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5
+    if main.player.touch_move.length_squared() > 0.0001:
+        push_error("Touch-stick deadzone allowed unintended player drift")
+        quit(1)
+        return
+    if main.hud.touch_stick_knob.position.distance_to(initial_knob_center) > 0.5:
+        push_error("Touch-stick visual moved inside control deadzone")
+        quit(1)
+        return
+
     var touch_drag := InputEventScreenDrag.new()
     touch_drag.index = 7
     touch_drag.position = Vector2(250.0, 455.0)
