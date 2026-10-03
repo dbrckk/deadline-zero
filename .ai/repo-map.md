@@ -24086,24 +24086,49 @@ static func _grade_enemy_mesh_tree(root: Node3D, tint: Color) -> void:
 static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Color) -> void:
     if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
         return
-    var source := mesh_instance.mesh.surface_get_material(0)
-    if not source is BaseMaterial3D:
-        return
-    var source_material := source as BaseMaterial3D
-    if source_material.albedo_texture == null:
-        _grade_mesh_instance(mesh_instance, tint, 0.82, 0.02)
-        return
 
+    # Imported characters may contain several authored surfaces. A single material_override
+    # would repaint all of them with surface 0's atlas, so grade each surface independently.
+    mesh_instance.material_override = null
+    for surface_index in range(mesh_instance.mesh.get_surface_count()):
+        var source := mesh_instance.get_active_material(surface_index)
+        if not source is BaseMaterial3D:
+            continue
+        var source_material := source as BaseMaterial3D
+        if source_material.albedo_texture == null:
+            var fallback := source_material.duplicate(true) as BaseMaterial3D
+            fallback.albedo_color = Color(
+                fallback.albedo_color.r * tint.r,
+                fallback.albedo_color.g * tint.g,
+                fallback.albedo_color.b * tint.b,
+                fallback.albedo_color.a
+            )
+            fallback.roughness = maxf(fallback.roughness, 0.82)
+            fallback.metallic = maxf(fallback.metallic, 0.02)
+            mesh_instance.set_surface_override_material(surface_index, fallback)
+            continue
+
+        mesh_instance.set_surface_override_material(
+            surface_index,
+            _enemy_surface_material(source_material, tint)
+        )
+
+static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color) -> ShaderMaterial:
     var shader := Shader.new()
     shader.code = """
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx;
 
 uniform sampler2D albedo_tex : source_color, filter_linear_mipmap_anisotropic;
+uniform sampler2D normal_tex : hint_normal, filter_linear_mipmap_anisotropic;
+uniform bool use_normal_map = false;
+uniform float normal_scale = 1.0;
 uniform vec4 body_tint : source_color = vec4(0.5, 0.6, 0.5, 1.0);
 uniform float highlight_start = 0.34;
 uniform float highlight_end = 0.82;
 uniform float highlight_floor = 0.46;
+uniform float authored_roughness = 0.84;
+uniform float authored_metallic = 0.02;
 
 void fragment() {
     vec4 authored = texture(albedo_tex, UV);
@@ -24111,9 +24136,13 @@ void fragment() {
     float luma = dot(base, vec3(0.2126, 0.7152, 0.0722));
     float compression = mix(1.0, highlight_floor, smoothstep(highlight_start, highlight_end, luma));
     ALBEDO = base * compression;
-    ROUGHNESS = 0.84;
-    METALLIC = 0.02;
+    ROUGHNESS = max(authored_roughness, 0.82);
+    METALLIC = max(authored_metallic, 0.02);
     ALPHA = authored.a * body_tint.a;
+    if (use_normal_map) {
+        NORMAL_MAP = texture(normal_tex, UV).rgb;
+        NORMAL_MAP_DEPTH = normal_scale;
+    }
 }
 """
     var material := ShaderMaterial.new()
@@ -24123,7 +24152,13 @@ void fragment() {
     material.set_shader_parameter("highlight_start", 0.30)
     material.set_shader_parameter("highlight_end", 0.72)
     material.set_shader_parameter("highlight_floor", 0.42)
-    mesh_instance.material_override = material
+    material.set_shader_parameter("authored_roughness", source_material.roughness)
+    material.set_shader_parameter("authored_metallic", source_material.metallic)
+    if source_material.normal_enabled and source_material.normal_texture != null:
+        material.set_shader_parameter("use_normal_map", true)
+        material.set_shader_parameter("normal_tex", source_material.normal_texture)
+        material.set_shader_parameter("normal_scale", source_material.normal_scale)
+    return material
 
 static func _grade_mesh_tree(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
     if root == null:
@@ -29013,25 +29048,52 @@ func _initialize() -> void:
             push_error("Missing authored visual for palette kind %s" % palette_kind)
             quit(1)
             return
-        var mesh_instance := visual as MeshInstance3D
-        if mesh_instance == null:
-            var meshes := visual.find_children("*", "MeshInstance3D", true, false)
-            mesh_instance = meshes[0] as MeshInstance3D if not meshes.is_empty() else null
-        if mesh_instance == null or not mesh_instance.material_override is ShaderMaterial:
-            push_error("Enemy palette grading shader missing for %s" % palette_kind)
+        var mesh_nodes: Array[MeshInstance3D] = []
+        if visual is MeshInstance3D:
+            mesh_nodes.append(visual as MeshInstance3D)
+        for node in visual.find_children("*", "MeshInstance3D", true, false):
+            mesh_nodes.append(node as MeshInstance3D)
+        if mesh_nodes.is_empty():
+            push_error("Enemy authored visual has no meshes for %s" % palette_kind)
             quit(1)
             return
-        var material := mesh_instance.material_override as ShaderMaterial
-        if material.get_shader_parameter("albedo_tex") == null:
-            push_error("Enemy palette grading must preserve authored atlas for %s" % palette_kind)
+
+        var palette_material: ShaderMaterial
+        var textured_surfaces := 0
+        for mesh_instance in mesh_nodes:
+            if mesh_instance == null or mesh_instance.mesh == null:
+                continue
+            if mesh_instance.material_override != null:
+                push_error("Enemy grading must not flatten authored multi-surface materials for %s" % palette_kind)
+                quit(1)
+                return
+            for surface_index in range(mesh_instance.mesh.get_surface_count()):
+                var source := mesh_instance.mesh.surface_get_material(surface_index) as BaseMaterial3D
+                if source == null or source.albedo_texture == null:
+                    continue
+                textured_surfaces += 1
+                var graded := mesh_instance.get_surface_override_material(surface_index)
+                if not graded is ShaderMaterial:
+                    push_error("Enemy surface grading shader missing for %s surface %d" % [palette_kind, surface_index])
+                    quit(1)
+                    return
+                var material := graded as ShaderMaterial
+                if material.get_shader_parameter("albedo_tex") != source.albedo_texture:
+                    push_error("Enemy grading replaced an authored atlas for %s surface %d" % [palette_kind, surface_index])
+                    quit(1)
+                    return
+                var highlight_floor := float(material.get_shader_parameter("highlight_floor"))
+                if highlight_floor > 0.50:
+                    push_error("Enemy authored highlights are not compressed enough for %s" % palette_kind)
+                    quit(1)
+                    return
+                if palette_material == null:
+                    palette_material = material
+        if textured_surfaces == 0 or palette_material == null:
+            push_error("Enemy palette grading found no authored textured surfaces for %s" % palette_kind)
             quit(1)
             return
-        var highlight_floor := float(material.get_shader_parameter("highlight_floor"))
-        if highlight_floor > 0.50:
-            push_error("Enemy authored highlights are not compressed enough for %s" % palette_kind)
-            quit(1)
-            return
-        palette_samples[palette_kind] = material.get_shader_parameter("body_tint") as Color
+        palette_samples[palette_kind] = palette_material.get_shader_parameter("body_tint") as Color
         visual.free()
 
     var runner_color: Color = palette_samples["runner"]
