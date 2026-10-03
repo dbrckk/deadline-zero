@@ -319,9 +319,15 @@ func _initialize() -> void:
     projectile.velocity = Vector3(8.0, 0.0, 0.0)
     await process_frame
 
+    var active_boss: DZEnemy
+    for node in get_nodes_in_group("enemies"):
+        var candidate_boss := node as DZEnemy
+        if candidate_boss != null and candidate_boss.kind == "boss" and not candidate_boss.dead:
+            active_boss = candidate_boss
+            break
     main.camera_kick = 0.12
     main.boss_reveal_left = 0.8
-    main.boss_reveal_target = main.player
+    main.boss_reveal_target = active_boss
     main.hud.impact_flash.visible = true
     main.hud.damage_vignette.visible = true
     main._on_player_died()
