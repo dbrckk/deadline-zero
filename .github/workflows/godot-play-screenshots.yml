@@ -1,0 +1,84 @@
+name: Godot Play Screenshots
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'godot/**'
+      - '.github/workflows/godot-play-screenshots.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Download Godot 4.7.2
+        run: |
+          set -euo pipefail
+          curl -fL --retry 4 https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o /tmp/godot.zip
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+
+      - name: Import project and install software render dependencies
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --editor --quit
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+
+      - name: Capture 1920x1080 gameplay candidates
+        run: |
+          set -euo pipefail
+          mkdir -p build/play-store-candidates
+
+          capture() {
+            script="$1"
+            source_png="$2"
+            target_png="$3"
+            rm -f "$source_png"
+            LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a --server-args="-screen 0 1920x1080x24" \
+              /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+              --path godot \
+              --resolution 1920x1080 \
+              --rendering-method gl_compatibility \
+              --audio-driver Dummy \
+              --script "$script"
+            test -s "$source_png"
+            cp "$source_png" "build/play-store-candidates/$target_png"
+          }
+
+          capture res://tests/rendered_frame_smoke_test.gd /tmp/deadline-zero-rendered-frame.png 01-first-playable.png
+          capture res://tests/pressure_frame_render_test.gd /tmp/deadline-zero-pressure-frame.png 02-midrun-pressure.png
+          capture res://tests/boss_encounter_render_test.gd /tmp/deadline-zero-boss-encounter.png 03-boss-encounter.png
+
+      - name: Validate Play screenshot dimensions
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+
+          shots = sorted(Path("build/play-store-candidates").glob("*.png"))
+          assert len(shots) == 3, f"expected 3 screenshots, got {len(shots)}"
+          for path in shots:
+              data = path.read_bytes()
+              assert data[:8] == b"\x89PNG\r\n\x1a\n", f"{path} is not PNG"
+              width, height = struct.unpack(">II", data[16:24])
+              assert (width, height) == (1920, 1080), f"{path} is {width}x{height}, expected 1920x1080"
+              print(f"PLAY_SCREENSHOT_OK {path.name} {width}x{height} bytes={len(data)}")
+          PY
+
+      - name: Upload Play screenshot candidates
+        uses: actions/upload-artifact@v4
+        with:
+          name: deadline-zero-play-screenshot-candidates-${{ github.sha }}
+          path: build/play-store-candidates/*.png
+          if-no-files-found: error
+          retention-days: 14
