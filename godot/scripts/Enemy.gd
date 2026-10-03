@@ -46,6 +46,7 @@ var hit_flash_visual: MeshInstance3D
 var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
 static var _shared_contact_shadow_material: StandardMaterial3D
+static var _telegraph_tick_mesh_cache := {}
 
 const MAX_DAMAGE_NUMBERS := 18
 
@@ -386,6 +387,7 @@ func _show_telegraph(radius: float, duration: float) -> void:
     mesh.rings = 40 if kind == "boss" else 32
     mesh.ring_segments = 8
     telegraph_visual.mesh = mesh
+    telegraph_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     get_tree().current_scene.add_child(telegraph_visual)
     telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.035, 0.0)
     telegraph_material = StandardMaterial3D.new()
@@ -403,12 +405,11 @@ func _show_telegraph(radius: float, duration: float) -> void:
         var angle := TAU * float(tick_index) / 4.0
         var tick := MeshInstance3D.new()
         tick.name = "TelegraphTick_%d" % tick_index
-        var tick_mesh := BoxMesh.new()
-        tick_mesh.size = Vector3(radius * 0.24, 0.012, maxf(0.035, radius * 0.045))
-        tick.mesh = tick_mesh
+        tick.mesh = _telegraph_tick_mesh(radius)
         tick.position = Vector3(cos(angle) * radius * 0.72, 0.0, sin(angle) * radius * 0.72)
         tick.rotation.y = -angle
         tick.material_override = telegraph_material
+        tick.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         telegraph_visual.add_child(tick)
 
     var tween := telegraph_visual.create_tween()
@@ -418,6 +419,15 @@ func _show_telegraph(radius: float, duration: float) -> void:
     tween.tween_property(telegraph_material, "emission_energy_multiplier", 5.8 if kind == "boss" else 4.6, duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.07, 0.008, 0.92 if kind == "boss" else 0.78), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.chain().tween_callback(telegraph_visual.queue_free)
+
+static func _telegraph_tick_mesh(radius: float) -> BoxMesh:
+    var key := "%.3f" % radius
+    if _telegraph_tick_mesh_cache.has(key):
+        return _telegraph_tick_mesh_cache[key] as BoxMesh
+    var mesh := BoxMesh.new()
+    mesh.size = Vector3(radius * 0.24, 0.012, maxf(0.035, radius * 0.045))
+    _telegraph_tick_mesh_cache[key] = mesh
+    return mesh
 
 func _spawn_attack_impact(at: Vector3, radius: float) -> void:
     if not spawn_secondary_fx:
