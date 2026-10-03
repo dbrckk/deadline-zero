@@ -196,5 +196,26 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var runner_blade_a := runner_a.get_node_or_null("RunnerBladeL") as MeshInstance3D
+    var runner_blade_b := runner_b.get_node_or_null("RunnerBladeL") as MeshInstance3D
+    if runner_blade_a == null or runner_blade_b == null or runner_blade_a.material_override != runner_blade_b.material_override:
+        push_error("Same-kind runner signatures must reuse emissive material resources")
+        quit(1)
+        return
+
+    var brute_a := ENEMY_SCRIPT.new()
+    brute_a.kind = "brute"
+    root.add_child(brute_a)
+    var brute_b := ENEMY_SCRIPT.new()
+    brute_b.kind = "brute"
+    root.add_child(brute_b)
+    await process_frame
+    var brute_plate_a := brute_a.get_node_or_null("BrutePlateL") as MeshInstance3D
+    var brute_plate_b := brute_b.get_node_or_null("BrutePlateL") as MeshInstance3D
+    if brute_plate_a == null or brute_plate_b == null or brute_plate_a.material_override != brute_plate_b.material_override:
+        push_error("Brute armor plates must reuse one dark armor material")
+        quit(1)
+        return
+
     print("Deadline Zero enemy silhouette identity: OK")
     quit(0)
