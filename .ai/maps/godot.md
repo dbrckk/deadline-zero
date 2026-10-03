@@ -1344,6 +1344,7 @@ var hp_bar: ProgressBar
 var health_bar: ProgressBar
 var xp_bar: ProgressBar
 var status_label: Label
+var health_value_label: Label
 var wave_label: Label
 var upgrade_panel: PanelContainer
 var upgrade_buttons: Array[Button] = []
@@ -1394,15 +1395,17 @@ func pulse_damage_screen() -> void:
 func set_health(value: float, maximum: float) -> void:
     hp_bar.max_value = max(1.0, maximum)
     hp_bar.value = value
+    if health_value_label != null:
+        health_value_label.text = "HP %d / %d" % [int(round(value)), int(round(maximum))]
     var ratio: float = clampf(value / max(1.0, maximum), 0.0, 1.0)
     low_health_panel.visible = value > 0.0 and ratio <= 0.30
     if low_health_panel.visible:
         low_health_label.text = "CRITICAL INTEGRITY  •  %d%%" % int(round(ratio * 100.0))
 
-func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float) -> void:
+func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float, threats := 0) -> void:
     xp_bar.max_value = max(1, next_xp)
     xp_bar.value = xp
-    status_label.text = "LV %d   KILLS %d   %02d:%02d" % [level, kills, int(elapsed) / 60, int(elapsed) % 60]
+    status_label.text = "LV %d   KILLS %d   THREATS %d   %02d:%02d" % [level, kills, threats, int(elapsed) / 60, int(elapsed) % 60]
 
 func set_wave(text: String) -> void:
     wave_label.text = text
@@ -1607,6 +1610,20 @@ func _build() -> void:
     hp_bar.add_theme_stylebox_override("fill", hp_fill)
     vital_stack.add_child(hp_bar)
     health_bar = hp_bar
+
+    health_value_label = Label.new()
+    health_value_label.name = "HealthValueLabel"
+    health_value_label.text = "HP 100 / 100"
+    health_value_label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    health_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    health_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    health_value_label.add_theme_font_size_override("font_size", 10)
+    health_value_label.add_theme_color_override("font_color", Color(0.94, 0.98, 1.0))
+    health_value_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.82))
+    health_value_label.add_theme_constant_override("shadow_offset_x", 1)
+    health_value_label.add_theme_constant_override("shadow_offset_y", 1)
+    health_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    hp_bar.add_child(health_value_label)
 
     xp_bar = ProgressBar.new()
     xp_bar.name = "XpBar"
@@ -2178,7 +2195,7 @@ func _ready() -> void:
     _load_audio_settings()
     last_player_health = player.health
     hud.set_health(player.health, player.max_health)
-    hud.set_progress(xp, xp_next, level, kills, elapsed)
+    hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
     _build_combat_audio()
 
     for opening_kind in run_director.opening_roster():
@@ -2236,7 +2253,7 @@ func _physics_process(delta: float) -> void:
             _spawn_enemy()
         spawn_clock = float(director_profile["spawn_interval"])
     enemy_spatial_index.rebuild(get_tree().get_nodes_in_group("enemies"))
-    hud.set_progress(xp, xp_next, level, kills, elapsed)
+    hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
     hud.set_wave(_wave_name())
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -5186,7 +5203,7 @@ func _initialize() -> void:
     root.add_child(hud)
     await process_frame
 
-    for node_name in ["VitalPanel", "VitalAccent", "CombatLinkLabel", "SignalLabel", "WavePanel", "ThreatPanel", "BossPanel", "UpgradePanel"]:
+    for node_name in ["VitalPanel", "VitalAccent", "CombatLinkLabel", "SignalLabel", "HealthValueLabel", "WavePanel", "ThreatPanel", "BossPanel", "UpgradePanel"]:
         if hud.find_child(node_name, true, false) == null:
             push_error("HUD readability hierarchy missing node: %s" % node_name)
             quit(1)
@@ -5209,6 +5226,17 @@ func _initialize() -> void:
         return
     if hud.xp_bar == null or hud.xp_bar.custom_minimum_size.y < 8.0:
         push_error("XP bar must retain a distinct secondary hierarchy")
+        quit(1)
+        return
+
+    hud.set_health(73.0, 100.0)
+    if hud.health_value_label == null or hud.health_value_label.text != "HP 73 / 100":
+        push_error("Health value label must expose exact current/max integrity")
+        quit(1)
+        return
+    hud.set_progress(5, 10, 3, 12, 65.0, 7)
+    if not hud.status_label.text.contains("THREATS 7"):
+        push_error("Combat status must expose active threat count")
         quit(1)
         return
 

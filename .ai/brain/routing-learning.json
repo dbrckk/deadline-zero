@@ -2,26 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Strengthen combat actor readability and boss reveal framing (#298)",
-      "terms": [
-        "298",
-        "actor",
-        "boss",
-        "combat",
-        "framing",
-        "readability",
-        "reveal",
-        "strengthen"
-      ],
-      "tests": [],
-      "useful": [
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-        "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java",
-        "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Keep boss reveal framing clear of the top HUD (#299)",
       "terms": [
         "299",
@@ -1125,6 +1105,23 @@
         "godot/scripts/Main.gd",
         "godot/tests/environment_identity_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Expose combat integrity and active threats",
+      "terms": [
+        "active",
+        "combat",
+        "expose",
+        "integrity",
+        "threats"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Hud.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/hud_readability_hierarchy_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1473,6 +1470,9 @@
       "core/src/main/java/com/deadlinezero/game/visual/ActiveBuildStatus.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4
     },
     "actor": {
@@ -2011,15 +2011,15 @@
       "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Hud.gd": 12,
-      "godot/scripts/Main.gd": 32,
+      "godot/scripts/Hud.gd": 16,
+      "godot/scripts/Main.gd": 36,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/RunDirector.gd": 4,
       "godot/tests/authored_world_dressing_test.gd": 4,
       "godot/tests/combat_audio_feedback_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 16,
-      "godot/tests/hud_readability_hierarchy_test.gd": 8,
+      "godot/tests/hud_readability_hierarchy_test.gd": 12,
       "godot/tests/pressure_frame_render_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/run_director_escalation_test.gd": 4
@@ -2346,6 +2346,9 @@
       "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4
     },
     "expose": {
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4,
       "tools/sprites/audit_final_art_status.py": 4
     },
     "family": {
@@ -2764,6 +2767,11 @@
       "godot/scripts/AssetLibrary.gd": 12,
       "godot/tests/environment_identity_test.gd": 12,
       "tools/environment/install_all_environment_candidates.py": 4
+    },
+    "integrity": {
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4
     },
     "into": {
       "core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java": 4,
@@ -3881,6 +3889,11 @@
     "test": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4
+    },
+    "threats": {
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4
     },
     "tiles": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,

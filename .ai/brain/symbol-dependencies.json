@@ -5,43 +5,19 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "_ready": {
+    "DZHud": {
       "source": {
-        "file": "godot/scripts/Main.gd",
-        "start": 56,
-        "end": 176
+        "file": "godot/scripts/Hud.gd",
+        "start": 1,
+        "end": 121
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZHud",
+          "symbol": "_build",
           "definitions": [
             {
               "file": "godot/scripts/Hud.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "DZPlayer",
-          "definitions": [
-            {
-              "file": "godot/scripts/Player.gd",
-              "line": 1,
-              "kind": "class",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_build_combat_audio",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 933,
+              "line": 182,
               "kind": "function",
               "language": "gdscript"
             }
@@ -49,11 +25,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_build_world",
+          "symbol": "_direction_arrow",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 339,
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
               "kind": "function",
               "language": "gdscript"
             }
@@ -61,11 +37,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_ensure_audio_buses",
+          "symbol": "_ready",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 251,
+              "file": "godot/scripts/Hud.gd",
+              "line": 42,
               "kind": "function",
               "language": "gdscript"
             }
@@ -73,11 +49,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_load_audio_settings",
+          "symbol": "hide_boss",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 263,
+              "file": "godot/scripts/Hud.gd",
+              "line": 97,
               "kind": "function",
               "language": "gdscript"
             }
@@ -85,11 +61,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_health_changed",
+          "symbol": "hide_offscreen_threat",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 244,
+              "file": "godot/scripts/Hud.gd",
+              "line": 108,
               "kind": "function",
               "language": "gdscript"
             }
@@ -97,11 +73,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_master_volume_changed",
+          "symbol": "pulse_damage_screen",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 281,
+              "file": "godot/scripts/Hud.gd",
+              "line": 46,
               "kind": "function",
               "language": "gdscript"
             }
@@ -109,11 +85,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_pause_requested",
+          "symbol": "set_boss_health",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 289,
+              "file": "godot/scripts/Hud.gd",
+              "line": 88,
               "kind": "function",
               "language": "gdscript"
             }
@@ -121,11 +97,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_player_died",
+          "symbol": "set_health",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 300,
+              "file": "godot/scripts/Hud.gd",
+              "line": 62,
               "kind": "function",
               "language": "gdscript"
             }
@@ -133,11 +109,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_restart_requested",
+          "symbol": "set_offscreen_threat",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 323,
+              "file": "godot/scripts/Hud.gd",
+              "line": 100,
               "kind": "function",
               "language": "gdscript"
             }
@@ -145,11 +121,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_resume_requested",
+          "symbol": "set_progress",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 295,
+              "file": "godot/scripts/Hud.gd",
+              "line": 72,
               "kind": "function",
               "language": "gdscript"
             }
@@ -157,11 +133,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_sfx_volume_changed",
+          "symbol": "set_wave",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 285,
+              "file": "godot/scripts/Hud.gd",
+              "line": 77,
               "kind": "function",
               "language": "gdscript"
             }
@@ -169,11 +145,33 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_on_upgrade_chosen",
+          "symbol": "show_boss",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 236,
+              "file": "godot/scripts/Hud.gd",
+              "line": 80,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 12
+    },
+    "_ready": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 42,
+        "end": 162
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
               "kind": "function",
               "language": "gdscript"
             }
@@ -181,11 +179,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_physics_process",
+          "symbol": "_direction_arrow",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 129,
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
               "kind": "function",
               "language": "gdscript"
             }
@@ -193,11 +191,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_process",
+          "symbol": "_style_upgrade_card",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 96,
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
               "kind": "function",
               "language": "gdscript"
             }
@@ -205,10 +203,546 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_spawn_enemy",
+          "symbol": "_upgrade_glyph",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 97,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 108,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "pulse_damage_screen",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 46,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 88,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 62,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 100,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_progress",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 72,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_wave",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 77,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 80,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 18
+    },
+    "pulse_damage_screen": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 46,
+        "end": 166
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_direction_arrow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 97,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 108,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 88,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 62,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 100,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_progress",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 72,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_wave",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 77,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 80,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "set_health": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 62,
+        "end": 182
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_direction_arrow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 97,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 108,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 88,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 100,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_progress",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 72,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_wave",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 77,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 80,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
               "line": 171,
               "kind": "function",
               "language": "gdscript"
@@ -217,11 +751,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_unhandled_input",
+          "symbol": "show_impact_flash",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 151,
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
               "kind": "function",
               "language": "gdscript"
             }
@@ -229,11 +763,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_update_offscreen_threat_indicator",
+          "symbol": "show_pause_settings",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 962,
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
               "kind": "function",
               "language": "gdscript"
             }
@@ -241,23 +775,11 @@
           "relation": "same_file"
         },
         {
-          "symbol": "_wave_name",
+          "symbol": "show_upgrade",
           "definitions": [
             {
-              "file": "godot/scripts/Main.gd",
-              "line": 328,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
-        },
-        {
-          "symbol": "query_enemies_near",
-          "definitions": [
-            {
-              "file": "godot/scripts/Main.gd",
-              "line": 168,
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
               "kind": "function",
               "language": "gdscript"
             }
@@ -265,7 +787,1755 @@
           "relation": "same_file"
         }
       ],
-      "dependency_count": 21
+      "dependency_count": 16
+    },
+    "set_progress": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 72,
+        "end": 192
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_direction_arrow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 97,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 108,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 88,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 100,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_wave",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 77,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 80,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 16
+    },
+    "set_wave": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 77,
+        "end": 197
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_direction_arrow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 97,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 108,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 88,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 100,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 80,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 15
+    },
+    "show_boss": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 80,
+        "end": 200
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_direction_arrow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 97,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 108,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_boss_health",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 88,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 100,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 14
+    },
+    "set_boss_health": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 88,
+        "end": 208
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_direction_arrow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_boss",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 97,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 108,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 100,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 13
+    },
+    "hide_boss": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 97,
+        "end": 217
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_direction_arrow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 108,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "set_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 100,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 12
+    },
+    "set_offscreen_threat": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 100,
+        "end": 220
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_direction_arrow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_offscreen_threat",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 108,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 11
+    },
+    "hide_offscreen_threat": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 108,
+        "end": 228
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_direction_arrow",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 111,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 10
+    },
+    "_direction_arrow": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 111,
+        "end": 231
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 125,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 9
+    },
+    "show_upgrade": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 125,
+        "end": 245
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_glyph",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 614,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_upgrade",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 136,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 8
+    },
+    "hide_upgrade": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 136,
+        "end": 256
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 139,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 5
+    },
+    "show_pause_settings": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 139,
+        "end": 259
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "hide_pause_settings",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 142,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "hide_pause_settings": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 142,
+        "end": 262
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_impact_flash",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 145,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "show_impact_flash": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 145,
+        "end": 265
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "show_game_over",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 171,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "show_game_over": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 171,
+        "end": 291
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_build",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 182,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 1
+    },
+    "_build": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 182,
+        "end": 302
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
+    },
+    "_upgrade_glyph": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 614,
+        "end": 734
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_on_upgrade_pressed",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 668,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_color",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 632,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "_upgrade_color": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 632,
+        "end": 752
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_on_upgrade_pressed",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 668,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_style_upgrade_card",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 648,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "_style_upgrade_card": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 648,
+        "end": 768
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "_on_upgrade_pressed",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 668,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        },
+        {
+          "symbol": "_upgrade_color",
+          "definitions": [
+            {
+              "file": "godot/scripts/Hud.gd",
+              "line": 632,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 2
+    },
+    "_on_upgrade_pressed": {
+      "source": {
+        "file": "godot/scripts/Hud.gd",
+        "start": 668,
+        "end": 788
+      },
+      "symbol_dependencies": [],
+      "dependency_count": 0
     },
     "_process": {
       "source": {
@@ -6501,7 +8771,7 @@
     },
     "_initialize": {
       "source": {
-        "file": "godot/tests/environment_identity_test.gd",
+        "file": "godot/tests/hud_readability_hierarchy_test.gd",
         "start": 4,
         "end": 124
       },

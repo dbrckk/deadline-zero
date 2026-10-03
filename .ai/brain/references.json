@@ -5,10 +5,39 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
+    "DZHud": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 1,
+        "kind": "class",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 1,
+          "preview": "class_name DZHud",
+          "definition_candidate": true
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 24,
+          "preview": "var hud: DZHud",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 80,
+          "preview": "hud = DZHud.new()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
     "_ready": {
       "definition": {
-        "file": "godot/scripts/Main.gd",
-        "line": 56,
+        "file": "godot/scripts/Hud.gd",
+        "line": 42,
         "kind": "function",
         "language": "gdscript"
       },
@@ -27,7 +56,7 @@
         },
         {
           "file": "godot/scripts/Hud.gd",
-          "line": 42,
+          "line": 43,
           "preview": "func _ready() -> void:",
           "definition_candidate": false
         },
@@ -63,6 +92,627 @@
         }
       ],
       "occurrence_count": 8
+    },
+    "pulse_damage_screen": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 46,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 47,
+          "preview": "func pulse_damage_screen() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 248,
+          "preview": "hud.pulse_damage_screen()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/combat_danger_hud_test.gd",
+          "line": 21,
+          "preview": "hud.pulse_damage_screen()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "set_health": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 62,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 63,
+          "preview": "func set_health(value: float, maximum: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 90,
+          "preview": "hud.set_health(player.health, player.max_health)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 249,
+          "preview": "hud.set_health(current, maximum)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/combat_danger_hud_test.gd",
+          "line": 32,
+          "preview": "hud.set_health(30.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/combat_danger_hud_test.gd",
+          "line": 42,
+          "preview": "hud.set_health(31.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/hud_readability_hierarchy_test.gd",
+          "line": 38,
+          "preview": "hud.set_health(73.0, 100.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/hud_readability_hierarchy_test.gd",
+          "line": 54,
+          "preview": "hud.set_health(24.0, 100.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "set_progress": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 72,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 73,
+          "preview": "func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float, threats := 0) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 91,
+          "preview": "hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group(\"enemies\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 149,
+          "preview": "hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group(\"enemies\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/hud_readability_hierarchy_test.gd",
+          "line": 43,
+          "preview": "hud.set_progress(5, 10, 3, 12, 65.0, 7)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "set_wave": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 77,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 78,
+          "preview": "func set_wave(text: String) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 150,
+          "preview": "hud.set_wave(_wave_name())",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "show_boss": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 80,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 81,
+          "preview": "func show_boss(name: String, maximum: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 193,
+          "preview": "hud.show_boss(\"REVENANT PRIME\", enemy.max_health)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_hud_identity_test.gd",
+          "line": 8,
+          "preview": "assert(hud_source.contains(\"func show_boss(\"))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_hud_identity_test.gd",
+          "line": 16,
+          "preview": "assert(main_source.contains(\"hud.show_boss(\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "set_boss_health": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 88,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 89,
+          "preview": "func set_boss_health(value: float, maximum: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 197,
+          "preview": "hud.set_boss_health(current, maximum)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_hud_identity_test.gd",
+          "line": 9,
+          "preview": "assert(hud_source.contains(\"func set_boss_health(\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "hide_boss": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 97,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 98,
+          "preview": "func hide_boss() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 1
+    },
+    "set_offscreen_threat": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 100,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 101,
+          "preview": "func set_offscreen_threat(direction: Vector2, threat_kind: String, distance: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 1000,
+          "preview": "hud.set_offscreen_threat(direction.normalized(), best.kind, best_distance)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/combat_danger_hud_test.gd",
+          "line": 48,
+          "preview": "hud.set_offscreen_threat(Vector2(-1.0, -1.0), \"boss\", 27.6)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/combat_danger_hud_test.gd",
+          "line": 58,
+          "preview": "hud.set_offscreen_threat(Vector2.ZERO, \"boss\", 10.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/hud_readability_hierarchy_test.gd",
+          "line": 64,
+          "preview": "hud.set_offscreen_threat(Vector2.RIGHT, \"boss\", 18.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "hide_offscreen_threat": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 108,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 103,
+          "preview": "hide_offscreen_threat()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 109,
+          "preview": "func hide_offscreen_threat() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 966,
+          "preview": "hud.hide_offscreen_threat()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 981,
+          "preview": "hud.hide_offscreen_threat()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 990,
+          "preview": "hud.hide_offscreen_threat()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_direction_arrow": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 111,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 105,
+          "preview": "var arrow := _direction_arrow(direction.normalized())",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 112,
+          "preview": "func _direction_arrow(direction: Vector2) -> String:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "show_upgrade": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 125,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 126,
+          "preview": "func show_upgrade(items: Array) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 234,
+          "preview": "hud.show_upgrade(pending_upgrades)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "hide_upgrade": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 136,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 137,
+          "preview": "func hide_upgrade() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 242,
+          "preview": "hud.hide_upgrade()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/first_playable_run_path_test.gd",
+          "line": 90,
+          "preview": "main.hud.hide_upgrade()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "show_pause_settings": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 139,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 140,
+          "preview": "func show_pause_settings() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 293,
+          "preview": "hud.show_pause_settings()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "hide_pause_settings": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 142,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 143,
+          "preview": "func hide_pause_settings() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 297,
+          "preview": "hud.hide_pause_settings()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "show_impact_flash": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 145,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 146,
+          "preview": "func show_impact_flash(critical: bool, killed: bool, boss: bool) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 203,
+          "preview": "hud.show_impact_flash(critical, killed, boss)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/screen_space_fx_test.gd",
+          "line": 12,
+          "preview": "if not hud.has_method(\"show_impact_flash\") or not \"impact_flash\" in hud:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/screen_space_fx_test.gd",
+          "line": 17,
+          "preview": "hud.show_impact_flash(true, false, false)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "show_game_over": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 171,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 172,
+          "preview": "func show_game_over(kills: int, level: int, elapsed: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 306,
+          "preview": "hud.show_game_over(kills, level, elapsed)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/run_end_ux_test.gd",
+          "line": 41,
+          "preview": "hud.show_game_over(37, 8, 154.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_build": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 182,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 45,
+          "preview": "_build()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 183,
+          "preview": "func _build() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_upgrade_glyph": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 614,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 133,
+          "preview": "upgrade_buttons[i].text = _upgrade_glyph(id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 615,
+          "preview": "func _upgrade_glyph(id: String) -> String:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/upgrade_presentation_test.gd",
+          "line": 27,
+          "preview": "\"func _upgrade_glyph\",",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_upgrade_color": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 632,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 633,
+          "preview": "func _upgrade_color(id: String) -> Color:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 650,
+          "preview": "var accent := _upgrade_color(id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/upgrade_presentation_test.gd",
+          "line": 28,
+          "preview": "\"func _upgrade_color\",",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_style_upgrade_card": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 648,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 134,
+          "preview": "_style_upgrade_card(i, id)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 649,
+          "preview": "func _style_upgrade_card(index: int, id: String) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/upgrade_presentation_test.gd",
+          "line": 29,
+          "preview": "\"func _style_upgrade_card\",",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_on_upgrade_pressed": {
+      "definition": {
+        "file": "godot/scripts/Hud.gd",
+        "line": 668,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 598,
+          "preview": "button.pressed.connect(_on_upgrade_pressed.bind(i))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Hud.gd",
+          "line": 669,
+          "preview": "func _on_upgrade_pressed(index: int) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
     },
     "_process": {
       "definition": {
@@ -1154,7 +1804,7 @@
     },
     "_initialize": {
       "definition": {
-        "file": "godot/tests/environment_identity_test.gd",
+        "file": "godot/tests/hud_readability_hierarchy_test.gd",
         "line": 4,
         "kind": "function",
         "language": "gdscript"
