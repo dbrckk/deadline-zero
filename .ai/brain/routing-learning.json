@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Verify Godot authored world dressing",
-      "terms": [
-        "authored",
-        "dressing",
-        "godot",
-        "verify",
-        "world"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/AssetLibrary.gd",
-        "godot/scripts/Main.gd",
-        "godot/tests/authored_world_dressing_test.gd",
-        "godot/tests/environment_asset_validation_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Cancel stale Godot Android builds",
       "terms": [
         "android",
@@ -1050,6 +1032,23 @@
         "godot/scripts/Enemy.gd",
         "godot/tests/native_enemy_behavior_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Test player hit-reaction animation lifecycle",
+      "terms": [
+        "animation",
+        "hit-reaction",
+        "lifecycle",
+        "player",
+        "test"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Player.gd",
+        "godot/tests/player_damage_feedback_test.gd",
+        "godot/tests/pressure_frame_render_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1524,7 +1523,10 @@
     },
     "animation": {
       "godot/scripts/Enemy.gd": 4,
-      "godot/tests/native_enemy_behavior_test.gd": 4
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4,
+      "godot/tests/player_damage_feedback_test.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4
     },
     "announce": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java": 4,
@@ -2655,6 +2657,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4
     },
+    "hit-reaction": {
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/player_damage_feedback_test.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4
+    },
     "hit-stop": {
       "godot/scripts/CombatFeel.gd": 4,
       "godot/scripts/Enemy.gd": 4,
@@ -2833,6 +2840,11 @@
     "level-up": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4
+    },
+    "lifecycle": {
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/player_damage_feedback_test.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4
     },
     "lift": {
       "godot/scripts/Player.gd": 4,
@@ -3234,10 +3246,11 @@
     },
     "player": {
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/scripts/Player.gd": 12,
+      "godot/scripts/Player.gd": 16,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
-      "godot/tests/player_damage_feedback_test.gd": 4,
+      "godot/tests/player_damage_feedback_test.gd": 8,
+      "godot/tests/pressure_frame_render_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 8
     },
     "polish": {
@@ -4040,12 +4053,14 @@
       "godot/scripts/AssetLibrary.gd": 12,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Main.gd": 4,
-      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Player.gd": 8,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 12,
       "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 4,
-      "godot/tests/player_pressure_marker_test.gd": 4
+      "godot/tests/player_damage_feedback_test.gd": 4,
+      "godot/tests/player_pressure_marker_test.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4
     },
     "threats": {
       "godot/scripts/Hud.gd": 4,

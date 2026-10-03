@@ -22,19 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T19:15:07Z
+Generated: 2026-10-03T19:17:59Z
 
 ### Git
 - Branch: `main`
-- Head: `f13e56999665`
-- Commit date: 2026-10-03T21:14:50+02:00
-- Commit: Test melee animation range against damage envelope
+- Head: `1c833a66ba80`
+- Commit date: 2026-10-03T21:17:20+02:00
+- Commit: Test player hit-reaction animation lifecycle
 - Tracked files: 943
 
 ### Recently changed files
-- `godot/tests/native_enemy_behavior_test.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/tests/player_damage_feedback_test.gd`
+- `godot/scripts/Player.gd`
 - `godot/tests/pressure_frame_render_test.gd`
 
 ### Project signals

@@ -27415,6 +27415,7 @@ var weapon_accent_material: StandardMaterial3D
 var player_marker_ring: MeshInstance3D
 var player_marker_material: StandardMaterial3D
 var player_marker_pressure := false
+var hit_reaction_left := 0.0
 var combat_enabled := true
 var applied_protocols := {}
 
@@ -27431,6 +27432,7 @@ func _physics_process(delta: float) -> void:
         return
 
     invulnerability = max(0.0, invulnerability - delta)
+    hit_reaction_left = maxf(0.0, hit_reaction_left - maxf(delta, 0.0))
     fire_clock -= delta
 
     var input := Vector2.ZERO
@@ -27449,7 +27451,8 @@ func _physics_process(delta: float) -> void:
 
     velocity = Vector3(input.x, 0.0, input.y) * move_speed
     move_and_slide()
-    _update_authored_animation()
+    if hit_reaction_left <= 0.0:
+        _update_authored_animation()
 
     var target := _nearest_enemy()
     _update_player_marker_pressure(target)
@@ -27499,7 +27502,13 @@ func take_damage(amount: float) -> void:
     health_changed.emit(health, max_health)
     _trigger_damage_feedback()
     if health <= 0.0:
+        hit_reaction_left = 0.0
+        if authored_anim != null and authored_anim.has_animation("Death"):
+            _play_authored("Death")
         died.emit()
+    elif authored_anim != null and authored_anim.has_animation("HitReact"):
+        hit_reaction_left = 0.12
+        _play_authored("HitReact")
 
 func heal_full() -> void:
     health = max_health
@@ -30395,6 +30404,12 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if player.authored_anim != null and player.authored_anim.has_animation("HitReact"):
+        if player.current_anim != "HitReact" or player.hit_reaction_left <= 0.0:
+            push_error("Non-lethal player damage did not enter authored HitReact presentation")
+            quit(1)
+            return
+
     var health_after_first_hit: float = player.health
     player.take_damage(12.0)
     if not is_equal_approx(player.health, health_after_first_hit):
@@ -30405,6 +30420,28 @@ func _initialize() -> void:
     await create_timer(0.20).timeout
     if pulse.visible:
         push_error("Damage pulse did not clear after its presentation window")
+        quit(1)
+        return
+
+    if player.hit_reaction_left > 0.0:
+        push_error("Player HitReact presentation did not release after its short lock window")
+        quit(1)
+        return
+    if player.authored_anim != null and player.authored_anim.has_animation("Idle_Gun") and player.current_anim == "HitReact":
+        push_error("Player remained stuck in HitReact after the presentation window")
+        quit(1)
+        return
+
+    player.invulnerability = 0.0
+    var died_emitted := false
+    player.died.connect(func() -> void: died_emitted = true)
+    player.take_damage(player.health + 1000.0)
+    if player.health > 0.0 or not died_emitted:
+        push_error("Lethal player damage did not enter death state")
+        quit(1)
+        return
+    if player.authored_anim != null and player.authored_anim.has_animation("Death") and player.current_anim != "Death":
+        push_error("Lethal player damage did not play authored Death animation")
         quit(1)
         return
 
@@ -30549,8 +30586,12 @@ func _run_capture() -> void:
             quit(1)
             return
 
-    # Let the real combat loop produce movement, targeting, projectiles and telegraph states.
-    for _frame in range(72):
+    # Drive a deterministic number of real physics ticks so movement, targeting,
+    # projectile cadence and melee standoff settle identically on fast and slow CI runners.
+    for _tick in range(72):
+        await physics_frame
+    # Give the renderer a few frames to present the settled simulation state.
+    for _frame in range(4):
         await process_frame
 
     if bool(scene.get("game_over")):
