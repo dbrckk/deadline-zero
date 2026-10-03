@@ -28,6 +28,40 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var touch_press := InputEventScreenTouch.new()
+    touch_press.index = 7
+    touch_press.position = Vector2(180.0, 520.0)
+    touch_press.pressed = true
+    main._unhandled_input(touch_press)
+    if main.touch_id != 7 or main.hud.touch_stick_root == null or not main.hud.touch_stick_root.visible:
+        push_error("Touch press did not activate floating movement stick")
+        quit(1)
+        return
+
+    var touch_drag := InputEventScreenDrag.new()
+    touch_drag.index = 7
+    touch_drag.position = Vector2(250.0, 455.0)
+    main._unhandled_input(touch_drag)
+    if main.player.touch_move.length() < 0.50:
+        push_error("Touch drag did not drive player movement vector")
+        quit(1)
+        return
+    var knob_center := (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5
+    if main.hud.touch_stick_knob.position.distance_to(knob_center) < 8.0:
+        push_error("Touch drag did not move floating stick knob")
+        quit(1)
+        return
+
+    var touch_release := InputEventScreenTouch.new()
+    touch_release.index = 7
+    touch_release.position = touch_drag.position
+    touch_release.pressed = false
+    main._unhandled_input(touch_release)
+    if main.touch_id != -1 or main.player.touch_move.length_squared() > 0.0001 or main.hud.touch_stick_root.visible:
+        push_error("Touch release did not reset movement stick state")
+        quit(1)
+        return
+
     var pause_button := main.hud.get_node_or_null("PauseButton") as Button
     var pause_panel := main.hud.get_node_or_null("PausePanel") as PanelContainer
     if pause_button == null or pause_panel == null:
