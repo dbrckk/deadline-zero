@@ -66,20 +66,6 @@ func _initialize() -> void:
         quit(1)
         return
 
-    var duplicate_sparks := duplicate.get_node_or_null("ImpactSparks") as GPUParticles3D
-    if duplicate_sparks == null:
-        push_error("Duplicate impact FX is missing GPU sparks")
-        quit(1)
-        return
-    if duplicate_sparks.process_material != sparks.process_material:
-        push_error("Impact FX instances must reuse spark process materials for identical colors")
-        quit(1)
-        return
-    if duplicate_sparks.draw_pass_1 != sparks.draw_pass_1:
-        push_error("Impact FX instances must reuse spark draw meshes for identical colors")
-        quit(1)
-        return
-
     var sparks := fx.get_node_or_null("ImpactSparks") as GPUParticles3D
     if sparks == null:
         push_error("Impact FX is missing mobile-safe GPU sparks")
@@ -91,6 +77,20 @@ func _initialize() -> void:
         return
     if sparks.lifetime > 0.35:
         push_error("Impact sparks live too long for dense mobile combat")
+        quit(1)
+        return
+
+    var duplicate_sparks := duplicate.get_node_or_null("ImpactSparks") as GPUParticles3D
+    if duplicate_sparks == null:
+        push_error("Duplicate impact FX is missing GPU sparks")
+        quit(1)
+        return
+    if duplicate_sparks.process_material != sparks.process_material:
+        push_error("Impact FX instances must reuse spark process materials for identical colors")
+        quit(1)
+        return
+    if duplicate_sparks.draw_pass_1 != sparks.draw_pass_1:
+        push_error("Impact FX instances must reuse spark draw meshes for identical colors")
         quit(1)
         return
 
