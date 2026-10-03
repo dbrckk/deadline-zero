@@ -201,6 +201,9 @@ func show_game_over(kills: int, level: int, elapsed: float) -> void:
     wave_label.text = "RUN TERMINATED"
     upgrade_panel.visible = false
     boss_panel.visible = false
+    pause_panel.visible = false
+    impact_flash.visible = false
+    damage_vignette.visible = false
     var minutes := int(elapsed) / 60
     var seconds := int(elapsed) % 60
     game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]

@@ -319,9 +319,22 @@ func _initialize() -> void:
     projectile.velocity = Vector3(8.0, 0.0, 0.0)
     await process_frame
 
+    main.camera_kick = 0.12
+    main.boss_reveal_left = 0.8
+    main.boss_reveal_target = main.player
+    main.hud.impact_flash.visible = true
+    main.hud.damage_vignette.visible = true
     main._on_player_died()
     if not main.game_over or not main.hud.game_over_panel.visible:
         push_error("Player death did not enter visible game-over state")
+        quit(1)
+        return
+    if main.camera_kick > 0.0 or main.boss_reveal_left > 0.0 or main.boss_reveal_target != null:
+        push_error("Run end retained transient camera combat state")
+        quit(1)
+        return
+    if main.hud.impact_flash.visible or main.hud.damage_vignette.visible or main.hud.boss_panel.visible:
+        push_error("Run end retained transient combat HUD overlays")
         quit(1)
         return
     if main.hud.wave_label.text != "RUN TERMINATED":

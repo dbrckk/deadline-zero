@@ -386,6 +386,9 @@ func _on_resume_requested() -> void:
 
 func _on_player_died() -> void:
     _clear_hit_freeze()
+    camera_kick = 0.0
+    boss_reveal_left = 0.0
+    boss_reveal_target = null
     game_over = true
     touch_id = -1
     if hud != null:
