@@ -54,10 +54,24 @@ func _initialize() -> void:
     main.player.global_position = Vector3.ZERO
 
     var clamped_spawn := main._clamp_spawn_position(Vector3(60.0, 0.0, -60.0))
-    if absf(clamped_spawn.x) > main.SPAWN_ARENA_HALF_EXTENT + 0.001 or absf(clamped_spawn.z) > main.SPAWN_ARENA_HALF_EXTENT + 0.001:
+    if absf(clamped_spawn.x) > 34.001 or absf(clamped_spawn.z) > 34.001:
         push_error("Enemy spawn position can escape the authored arena floor")
         quit(1)
         return
+
+    main.player.global_position = Vector3(30.0, 0.0, 30.0)
+    main.spawn_rng.seed = 777
+    var edge_spawn := main._spawn_position_around_player(18.0)
+    var edge_spawn_distance := main.player.global_position.distance_to(edge_spawn)
+    if absf(edge_spawn.x) > 34.001 or absf(edge_spawn.z) > 34.001:
+        push_error("Edge-player spawn escaped arena-safe bounds")
+        quit(1)
+        return
+    if edge_spawn_distance < 11.99 or edge_spawn_distance > 18.01:
+        push_error("Arena-safe spawn collapsed the intended enemy spawn distance")
+        quit(1)
+        return
+    main.player.global_position = Vector3.ZERO
 
     var tactical_rig := main.player.get_node_or_null("TacticalRig") as Node3D
     var tactical_backplate := main.player.get_node_or_null("TacticalRig/TacticalBackplate") as MeshInstance3D

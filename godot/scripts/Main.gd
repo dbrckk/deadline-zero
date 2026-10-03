@@ -214,14 +214,27 @@ func _clamp_spawn_position(position: Vector3) -> Vector3:
         clampf(position.z, -SPAWN_ARENA_HALF_EXTENT, SPAWN_ARENA_HALF_EXTENT)
     )
 
+func _spawn_position_around_player(radius: float) -> Vector3:
+    var safe_radius := clampf(radius, 12.0, 18.0)
+    for _attempt in range(8):
+        var angle := spawn_rng.randf() * TAU
+        var candidate := player.global_position + Vector3(cos(angle) * safe_radius, 0.0, sin(angle) * safe_radius)
+        if absf(candidate.x) <= SPAWN_ARENA_HALF_EXTENT and absf(candidate.z) <= SPAWN_ARENA_HALF_EXTENT:
+            return candidate
+
+    var toward_center := -player.global_position
+    toward_center.y = 0.0
+    if toward_center.length_squared() < 0.001:
+        toward_center = Vector3.FORWARD
+    return _clamp_spawn_position(player.global_position + toward_center.normalized() * safe_radius)
+
 func _spawn_enemy(forced_kind: String = "") -> void:
     if player == null or game_over:
         return
     if forced_kind != "boss" and get_tree().get_nodes_in_group("enemies").size() >= max_enemies:
         return
-    var angle := spawn_rng.randf() * TAU
     var radius := spawn_rng.randf_range(12.0, 18.0)
-    var pos := _clamp_spawn_position(player.global_position + Vector3(cos(angle) * radius, 0.0, sin(angle) * radius))
+    var pos := _spawn_position_around_player(radius)
     var kind := forced_kind if not forced_kind.is_empty() else run_director.choose_enemy(elapsed, level, spawn_rng)
     var difficulty := float(director_profile.get("difficulty", 1.0))
     var enemy := DZEnemy.new()
