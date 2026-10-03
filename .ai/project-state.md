@@ -22,18 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T19:32:30Z
+Generated: 2026-10-03T19:36:43Z
 
 ### Git
 - Branch: `main`
-- Head: `ea4b025811d7`
-- Commit date: 2026-10-03T21:32:14+02:00
-- Commit: Use deterministic death signal assertion
+- Head: `9a8b81716742`
+- Commit date: 2026-10-03T21:36:29+02:00
+- Commit: Test received-damage camera feedback integration
 - Tracked files: 943
 
 ### Recently changed files
-- `godot/tests/player_damage_feedback_test.gd`
-- `godot/scripts/Player.gd`
+- `godot/tests/first_playable_run_path_test.gd`
+- `godot/tests/combat_feel_test.gd`
+- `godot/scripts/Main.gd`
+- `godot/scripts/CombatFeel.gd`
 
 ### Project signals
 - `build.gradle`

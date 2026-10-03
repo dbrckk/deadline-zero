@@ -24294,6 +24294,12 @@ static func camera_kick(critical: bool, killed: bool, boss: bool) -> float:
     if boss:
         kick += 0.050
     return min(kick, 0.16)
+
+static func damage_received_camera_kick(damage: float, max_health: float) -> float:
+    if damage <= 0.0 or max_health <= 0.0:
+        return 0.0
+    var severity := clampf(damage / max_health, 0.0, 0.35)
+    return clampf(0.045 + severity * 0.22, 0.045, 0.115)
 ````
 
 ## File: godot/scripts/Enemy.gd
@@ -25410,6 +25416,8 @@ var impact_flash: ColorRect
 var impact_flash_tween: Tween
 var damage_vignette: ColorRect
 var damage_vignette_tween: Tween
+var touch_stick_root: Control
+var touch_stick_knob: Control
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -25494,6 +25502,26 @@ func _direction_arrow(direction: Vector2) -> String:
         -1: return "↗"
         _: return "→"
 
+func show_touch_stick(origin: Vector2) -> void:
+    if touch_stick_root == null or touch_stick_knob == null:
+        return
+    touch_stick_root.position = origin - touch_stick_root.size * 0.5
+    touch_stick_knob.position = (touch_stick_root.size - touch_stick_knob.size) * 0.5
+    touch_stick_root.visible = true
+
+func update_touch_stick(origin: Vector2, input_vector: Vector2) -> void:
+    if touch_stick_root == null or touch_stick_knob == null:
+        return
+    if not touch_stick_root.visible:
+        show_touch_stick(origin)
+    var travel_radius := (touch_stick_root.size.x - touch_stick_knob.size.x) * 0.5 - 4.0
+    var displacement := input_vector.limit_length(1.0) * maxf(travel_radius, 0.0)
+    touch_stick_knob.position = (touch_stick_root.size - touch_stick_knob.size) * 0.5 + displacement
+
+func hide_touch_stick() -> void:
+    if touch_stick_root != null:
+        touch_stick_root.visible = false
+
 func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
         var item: Dictionary = items[i] if i < items.size() else {}
@@ -25571,6 +25599,45 @@ func _build() -> void:
     damage_vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
     damage_vignette.visible = false
     root.add_child(damage_vignette)
+
+    touch_stick_root = Control.new()
+    touch_stick_root.name = "TouchStick"
+    touch_stick_root.size = Vector2(112.0, 112.0)
+    touch_stick_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    touch_stick_root.visible = false
+    root.add_child(touch_stick_root)
+
+    var stick_base := Panel.new()
+    stick_base.name = "TouchStickBase"
+    stick_base.position = Vector2.ZERO
+    stick_base.size = touch_stick_root.size
+    stick_base.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    var stick_base_style := StyleBoxFlat.new()
+    stick_base_style.bg_color = Color(0.015, 0.035, 0.045, 0.34)
+    stick_base_style.border_color = Color(0.18, 0.78, 1.0, 0.52)
+    stick_base_style.set_border_width_all(2)
+    stick_base_style.corner_radius_top_left = 56
+    stick_base_style.corner_radius_top_right = 56
+    stick_base_style.corner_radius_bottom_left = 56
+    stick_base_style.corner_radius_bottom_right = 56
+    stick_base.add_theme_stylebox_override("panel", stick_base_style)
+    touch_stick_root.add_child(stick_base)
+
+    touch_stick_knob = Panel.new()
+    touch_stick_knob.name = "TouchStickKnob"
+    touch_stick_knob.size = Vector2(42.0, 42.0)
+    touch_stick_knob.position = (touch_stick_root.size - touch_stick_knob.size) * 0.5
+    touch_stick_knob.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    var stick_knob_style := StyleBoxFlat.new()
+    stick_knob_style.bg_color = Color(0.10, 0.62, 0.88, 0.74)
+    stick_knob_style.border_color = Color(0.54, 0.92, 1.0, 0.88)
+    stick_knob_style.set_border_width_all(2)
+    stick_knob_style.corner_radius_top_left = 21
+    stick_knob_style.corner_radius_top_right = 21
+    stick_knob_style.corner_radius_bottom_left = 21
+    stick_knob_style.corner_radius_bottom_right = 21
+    touch_stick_knob.add_theme_stylebox_override("panel", stick_knob_style)
+    touch_stick_root.add_child(touch_stick_knob)
 
     var vital_panel := PanelContainer.new()
     vital_panel.name = "VitalPanel"
@@ -26196,6 +26263,8 @@ var spawn_rng := RandomNumberGenerator.new()
 var director_profile: Dictionary = {}
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
+const TOUCH_STICK_RADIUS := 90.0
+const TOUCH_STICK_DEADZONE := 10.0
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_REVEAL_FOV_DELTA := 5.5
@@ -26303,14 +26372,32 @@ func _unhandled_input(event: InputEvent) -> void:
         if touch.pressed and touch.position.x < get_viewport().get_visible_rect().size.x * 0.55 and touch_id < 0:
             touch_id = touch.index
             touch_origin = touch.position
+            if hud != null:
+                hud.show_touch_stick(touch_origin)
         elif not touch.pressed and touch.index == touch_id:
             touch_id = -1
             player.set_touch_move(Vector2.ZERO)
+            if hud != null:
+                hud.hide_touch_stick()
     elif event is InputEventScreenDrag:
         var drag := event as InputEventScreenDrag
         if drag.index == touch_id:
-            var vector := (drag.position - touch_origin) / 90.0
-            player.set_touch_move(Vector2(vector.x, vector.y).limit_length(1.0))
+            var vector := _touch_input_vector(drag.position)
+            player.set_touch_move(vector)
+            if hud != null:
+                hud.update_touch_stick(touch_origin, vector)
+
+func _touch_input_vector(current_position: Vector2) -> Vector2:
+    var delta := current_position - touch_origin
+    var distance := delta.length()
+    if distance <= TOUCH_STICK_DEADZONE:
+        return Vector2.ZERO
+    var strength := clampf(
+        (distance - TOUCH_STICK_DEADZONE) / maxf(TOUCH_STICK_RADIUS - TOUCH_STICK_DEADZONE, 0.001),
+        0.0,
+        1.0
+    )
+    return delta.normalized() * strength
 
 func query_enemies_near(position: Vector3, radius: float) -> Array:
     return enemy_spatial_index.query(position, radius)
@@ -26389,9 +26476,12 @@ func _on_upgrade_chosen(index: int) -> void:
     get_tree().paused = false
 
 func _on_health_changed(current: float, maximum: float) -> void:
-    if hud:
-        if last_player_health >= 0.0 and current < last_player_health:
+    if last_player_health >= 0.0 and current < last_player_health:
+        var damage_taken := last_player_health - current
+        camera_kick = max(camera_kick, DZCombatFeel.damage_received_camera_kick(damage_taken, maximum))
+        if hud:
             hud.pulse_damage_screen()
+    if hud:
         hud.set_health(current, maximum)
     last_player_health = current
 
@@ -26438,7 +26528,11 @@ func _on_pause_requested() -> void:
         return
     if player != null and is_instance_valid(player):
         player._clear_player_marker_pressure()
-    hud.show_pause_settings()
+        player.set_touch_move(Vector2.ZERO)
+    touch_id = -1
+    if hud != null:
+        hud.hide_touch_stick()
+        hud.show_pause_settings()
     get_tree().paused = true
 
 func _on_resume_requested() -> void:
@@ -26449,6 +26543,9 @@ func _on_resume_requested() -> void:
 func _on_player_died() -> void:
     Engine.time_scale = 1.0
     game_over = true
+    touch_id = -1
+    if hud != null:
+        hud.hide_touch_stick()
     _freeze_combat()
     if hud:
         hud.show_game_over(kills, level, elapsed)
@@ -29072,6 +29169,12 @@ func _initialize() -> void:
     _assert(DZCombatFeel.camera_kick(false, false, false) < DZCombatFeel.camera_kick(true, true, true),
         "important impacts must produce stronger camera feedback")
     _assert(DZCombatFeel.camera_kick(true, true, true) <= 0.16, "camera kick comfort bound")
+    var light_damage_kick := DZCombatFeel.damage_received_camera_kick(5.0, 100.0)
+    var heavy_damage_kick := DZCombatFeel.damage_received_camera_kick(30.0, 100.0)
+    _assert(light_damage_kick > 0.0, "received damage must produce camera feedback")
+    _assert(heavy_damage_kick > light_damage_kick, "heavier received damage must read stronger")
+    _assert(heavy_damage_kick <= 0.115, "received damage kick must remain mobile-safe")
+    _assert(DZCombatFeel.damage_received_camera_kick(0.0, 100.0) == 0.0, "zero damage must not kick camera")
     print("Deadline Zero Godot combat-feel profile: OK")
     quit(0)
 
@@ -29633,12 +29736,79 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main.camera_kick = 0.0
+    main.player.invulnerability = 0.0
+    var health_before_camera_feedback: float = main.player.health
+    main.player.take_damage(5.0)
+    if not is_equal_approx(main.player.health, health_before_camera_feedback - 5.0):
+        push_error("First-playable damage probe did not reduce player health")
+        quit(1)
+        return
+    if main.camera_kick <= 0.0 or main.camera_kick > 0.115:
+        push_error("Received player damage did not produce bounded camera feedback")
+        quit(1)
+        return
+
     var tactical_rig := main.player.get_node_or_null("TacticalRig") as Node3D
     var tactical_backplate := main.player.get_node_or_null("TacticalRig/TacticalBackplate") as MeshInstance3D
     var weapon_accent := main.player.get_node_or_null("WeaponAccent") as MeshInstance3D
     var authored_rifle := main.player.get_node_or_null("Rifle") as Node3D
     if tactical_rig == null or tactical_backplate == null or weapon_accent == null or authored_rifle == null:
         push_error("Player production presentation is missing tactical rig/rifle identity")
+        quit(1)
+        return
+
+    var touch_press := InputEventScreenTouch.new()
+    touch_press.index = 7
+    touch_press.position = Vector2(180.0, 520.0)
+    touch_press.pressed = true
+    main._unhandled_input(touch_press)
+    if main.touch_id != 7 or main.hud.touch_stick_root == null or not main.hud.touch_stick_root.visible:
+        push_error("Touch press did not activate floating movement stick")
+        quit(1)
+        return
+
+    var micro_drag := InputEventScreenDrag.new()
+    micro_drag.index = 7
+    micro_drag.position = Vector2(186.0, 524.0)
+    main._unhandled_input(micro_drag)
+    var initial_knob_center := (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5
+    if main.player.touch_move.length_squared() > 0.0001:
+        push_error("Touch-stick deadzone allowed unintended player drift")
+        quit(1)
+        return
+    if main.hud.touch_stick_knob.position.distance_to(initial_knob_center) > 0.5:
+        push_error("Touch-stick visual moved inside control deadzone")
+        quit(1)
+        return
+
+    var touch_drag := InputEventScreenDrag.new()
+    touch_drag.index = 7
+    touch_drag.position = Vector2(250.0, 455.0)
+    main._unhandled_input(touch_drag)
+    if main.player.touch_move.length() < 0.50:
+        push_error("Touch drag did not drive player movement vector")
+        quit(1)
+        return
+    var knob_center := (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5
+    var knob_distance := main.hud.touch_stick_knob.position.distance_to(knob_center)
+    var max_knob_travel := (main.hud.touch_stick_root.size.x - main.hud.touch_stick_knob.size.x) * 0.5 - 4.0
+    if knob_distance < 8.0:
+        push_error("Touch drag did not move floating stick knob")
+        quit(1)
+        return
+    if knob_distance > max_knob_travel + 0.5:
+        push_error("Touch stick knob escaped its visual base")
+        quit(1)
+        return
+
+    var touch_release := InputEventScreenTouch.new()
+    touch_release.index = 7
+    touch_release.position = touch_drag.position
+    touch_release.pressed = false
+    main._unhandled_input(touch_release)
+    if main.touch_id != -1 or main.player.touch_move.length_squared() > 0.0001 or main.hud.touch_stick_root.visible:
+        push_error("Touch release did not reset movement stick state")
         quit(1)
         return
 

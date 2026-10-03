@@ -2,21 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Guard Godot mobile compatibility renderer",
-      "terms": [
-        "compatibility",
-        "godot",
-        "guard",
-        "mobile",
-        "renderer"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/tests/mobile_orientation_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Fit Godot compatibility shaders to mobile limits",
       "terms": [
         "compatibility",
@@ -1049,6 +1034,25 @@
       "useful": [
         "godot/tests/player_damage_feedback_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Test received-damage camera feedback integration",
+      "terms": [
+        "camera",
+        "feedback",
+        "integration",
+        "received-damage",
+        "test"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/CombatFeel.gd",
+        "godot/scripts/Hud.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/combat_feel_test.gd",
+        "godot/tests/first_playable_run_path_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1800,13 +1804,15 @@
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
-      "godot/scripts/CombatFeel.gd": 4,
+      "godot/scripts/CombatFeel.gd": 8,
       "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Hud.gd": 4,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 8,
+      "godot/scripts/Main.gd": 12,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/boss_reveal_camera_test.gd": 4,
-      "godot/tests/combat_feel_test.gd": 4
+      "godot/tests/combat_feel_test.gd": 8,
+      "godot/tests/first_playable_run_path_test.gd": 4
     },
     "cancel": {
       "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java": 4,
@@ -2373,14 +2379,16 @@
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 8,
       "godot/scripts/CombatAudio.gd": 4,
-      "godot/scripts/CombatFeel.gd": 4,
+      "godot/scripts/CombatFeel.gd": 8,
       "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Hud.gd": 4,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 8,
+      "godot/scripts/Main.gd": 12,
       "godot/scripts/Player.gd": 12,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/combat_audio_feedback_test.gd": 4,
-      "godot/tests/combat_feel_test.gd": 4,
+      "godot/tests/combat_feel_test.gd": 8,
+      "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/player_damage_feedback_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
@@ -2794,6 +2802,13 @@
       "godot/scripts/AssetLibrary.gd": 12,
       "godot/tests/environment_identity_test.gd": 12,
       "tools/environment/install_all_environment_candidates.py": 4
+    },
+    "integration": {
+      "godot/scripts/CombatFeel.gd": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/combat_feel_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4
     },
     "integrity": {
       "godot/scripts/Hud.gd": 4,
@@ -3484,6 +3499,13 @@
       "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4
     },
+    "received-damage": {
+      "godot/scripts/CombatFeel.gd": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/combat_feel_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4
+    },
     "reconcile": {
       "tools/sprites/audit_final_art_status.py": 4
     },
@@ -4061,12 +4083,15 @@
     },
     "test": {
       "godot/scripts/AssetLibrary.gd": 12,
+      "godot/scripts/CombatFeel.gd": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 8,
       "godot/tests/authored_asset_validation.gd": 4,
+      "godot/tests/combat_feel_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 12,
-      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 8,
       "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/player_damage_feedback_test.gd": 4,
       "godot/tests/player_pressure_marker_test.gd": 4,

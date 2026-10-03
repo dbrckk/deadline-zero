@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 530
-- Files reparsed this run: 1
-- Symbols: 2932
+- Files reparsed this run: 5
+- Symbols: 2936
 - Internal import edges: 808
-- Impacted files: 1
-- Selected tests: 1
+- Impacted files: 5
+- Selected tests: 3
 
 ## Languages
 - java: 422 files
@@ -17,8 +17,8 @@
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
 - android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 55 symbols
 - core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 45 symbols
+- godot/scripts/Main.gd: 43 symbols
 - godot/scripts/Enemy.gd: 42 symbols
-- godot/scripts/Main.gd: 42 symbols
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/visual/GameArt.java: 34 symbols
@@ -29,11 +29,11 @@
 - core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java: 28 symbols
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java: 26 symbols
+- godot/scripts/Hud.gd: 26 symbols
 - godot/scripts/Player.gd: 26 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 25 symbols
 - core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java: 24 symbols
-- core/src/main/java/com/deadlinezero/game/visual/CombatVisualEvents.java: 24 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.
