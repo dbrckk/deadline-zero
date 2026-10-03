@@ -172,21 +172,26 @@ func _physics_process(delta: float) -> void:
 
         # Local separation keeps the swarm readable and prevents every body from collapsing
         # onto the same target point. Main.gd serves this from its spatial hash in production.
-        var separation_radius := 1.85 if kind in ["boss", "brute", "charger"] else 1.42
+        var separation_radius := 2.05 if kind in ["boss", "brute", "charger"] else 1.62
         var separation := separation_vector(_nearby_enemies_for_separation(separation_radius), separation_radius)
         if separation.length_squared() > 0.001:
-            var separation_weight := 0.78 if kind == "boss" else (1.55 if kind == "harrier" else 1.32)
+            var separation_weight := 0.88 if kind == "boss" else (1.62 if kind == "harrier" else 1.56)
             movement_direction = (movement_direction + separation * separation_weight).normalized()
 
-        # Once enemies enter melee distance, bias them toward a contact ring instead of the
-        # player's exact origin. They can still cross the attack threshold, but do not remain
-        # stacked on the same point after contact.
-        if kind != "harrier" and distance < 1.08:
+        # Melee bodies now fan around the survivor instead of collapsing into one visual stack.
+        # The tangent is deterministic per enemy, so the ring stays stable rather than jittering.
+        if kind != "harrier" and distance < 1.48:
             var outward := global_position - target.global_position
             outward.y = 0.0
             if outward.length_squared() > 0.001:
-                var crowd_pressure := clampf((1.08 - distance) / 0.38, 0.0, 1.0)
-                movement_direction = (movement_direction + outward.normalized() * crowd_pressure * 1.45).normalized()
+                var radial := outward.normalized()
+                var tangent := Vector3(-radial.z, 0.0, radial.x)
+                if int(get_instance_id()) % 2 == 0:
+                    tangent = -tangent
+                var crowd_pressure := clampf((1.48 - distance) / 0.72, 0.0, 1.0)
+                var radial_weight := crowd_pressure * (1.18 if distance < 0.92 else 0.52)
+                var tangent_weight := crowd_pressure * 0.72
+                movement_direction = (movement_direction + radial * radial_weight + tangent * tangent_weight).normalized()
 
         velocity = movement_direction * move_speed * slow_multiplier
         move_and_slide()
