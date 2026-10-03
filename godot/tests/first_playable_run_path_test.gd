@@ -142,10 +142,16 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main.hit_freeze_left = 0.030
+    Engine.time_scale = 0.12
     pause_button.pressed.emit()
     await process_frame
     if not paused or not pause_panel.visible:
         push_error("Pause action did not pause gameplay and show settings")
+        quit(1)
+        return
+    if main.hit_freeze_left > 0.0 or not is_equal_approx(Engine.time_scale, 1.0):
+        push_error("Pause transition retained global hit-freeze state")
         quit(1)
         return
     if main.player.player_marker_pressure or pressure_locator.visible:
@@ -195,6 +201,8 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main.hit_freeze_left = 0.030
+    Engine.time_scale = 0.12
     var previous_level: int = main.level
     var threshold: int = main.xp_next
     main._on_xp_collected(threshold)
@@ -208,6 +216,10 @@ func _initialize() -> void:
         return
     if main.touch_id != -1 or main.player.touch_move.length_squared() > 0.0001 or main.hud.touch_stick_root.visible:
         push_error("Upgrade overlay retained stale mobile movement state")
+        quit(1)
+        return
+    if main.hit_freeze_left > 0.0 or not is_equal_approx(Engine.time_scale, 1.0):
+        push_error("Upgrade overlay retained global hit-freeze state")
         quit(1)
         return
     if not main.hud.upgrade_panel.visible or not paused:
