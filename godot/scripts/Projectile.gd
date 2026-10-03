@@ -249,27 +249,54 @@ func _physics_process(delta: float) -> void:
     if not combat_enabled:
         return
     age += delta
+    var previous_position := global_position
     global_position += velocity * delta
-    for node in _candidate_enemies():
+    var hit_candidates := _swept_hit_candidates(previous_position, global_position)
+    if hit_candidates.size() > 1:
+        hit_candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
+            return previous_position.distance_squared_to(a.global_position) < previous_position.distance_squared_to(b.global_position)
+        )
+    for enemy in hit_candidates:
+        if enemy == null or enemy.dead or hit_enemy_ids.has(enemy.get_instance_id()):
+            continue
+        var critical := randf() < critical_chance
+        var dealt_damage := damage * (1.75 if critical else 1.0)
+        hit_enemy_ids[enemy.get_instance_id()] = true
+        enemy.take_damage(dealt_damage, critical)
+        _apply_protocol_hit(enemy, dealt_damage)
+        _impact(critical)
+        if visual_profile == "rail" and pierce_remaining > 0:
+            pierce_remaining -= 1
+            continue
+        queue_free()
+        return
+    if age >= lifetime:
+        queue_free()
+
+func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
+    var segment := to - from
+    segment.y = 0.0
+    var travel := segment.length()
+    var midpoint := from.lerp(to, 0.5)
+    var query_radius := radius + travel * 0.5
+    var result: Array[DZEnemy] = []
+    for node in _enemies_near(midpoint, query_radius):
         if not is_instance_valid(node):
             continue
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or hit_enemy_ids.has(enemy.get_instance_id()):
             continue
-        if global_position.distance_squared_to(enemy.global_position) <= radius * radius:
-            var critical := randf() < critical_chance
-            var dealt_damage := damage * (1.75 if critical else 1.0)
-            hit_enemy_ids[enemy.get_instance_id()] = true
-            enemy.take_damage(dealt_damage, critical)
-            _apply_protocol_hit(enemy, dealt_damage)
-            _impact(critical)
-            if visual_profile == "rail" and pierce_remaining > 0:
-                pierce_remaining -= 1
-                continue
-            queue_free()
-            return
-    if age >= lifetime:
-        queue_free()
+        var offset := enemy.global_position - from
+        offset.y = 0.0
+        var t := 0.0
+        if segment.length_squared() > 0.000001:
+            t = clampf(offset.dot(segment) / segment.length_squared(), 0.0, 1.0)
+        var closest := from + segment * t
+        var miss := enemy.global_position - closest
+        miss.y = 0.0
+        if miss.length_squared() <= radius * radius:
+            result.append(enemy)
+    return result
 
 func _candidate_enemies() -> Array:
     return _enemies_near(global_position, radius)

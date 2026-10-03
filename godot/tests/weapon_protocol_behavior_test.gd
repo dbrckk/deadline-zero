@@ -88,6 +88,24 @@ func _initialize() -> void:
     parent.position = Vector3(9.0, 0.0, -4.0)
     get_root().add_child(parent)
     await process_frame
+    var sweep_enemy := ENEMY_SCRIPT.new()
+    sweep_enemy.configure("shambler", 1.0, target)
+    sweep_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(sweep_enemy)
+    sweep_enemy.global_position = Vector3(0.0, 0.0, -0.55)
+    await process_frame
+
+    var swept_projectile := PROJECTILE_SCRIPT.new()
+    swept_projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    swept_projectile.setup(Vector3.ZERO, Vector3.FORWARD * -1.0, 40.0, 10.0, Color.WHITE, "rail")
+    root.add_child(swept_projectile)
+    await process_frame
+    var swept_hits := swept_projectile._swept_hit_candidates(Vector3.ZERO, Vector3(0.0, 0.0, -0.80))
+    if not swept_hits.has(sweep_enemy):
+        push_error("Fast projectile swept collision missed an enemy crossed between physics samples")
+        quit(1)
+        return
+
     var spawned := PROJECTILE_SCRIPT.new()
     spawned.process_mode = Node.PROCESS_MODE_DISABLED
     var spawn_origin := Vector3(2.0, 0.7, 3.0)
