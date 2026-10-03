@@ -37,6 +37,11 @@ var player_marker_pressure := false
 var hit_reaction_left := 0.0
 var combat_enabled := true
 var applied_protocols := {}
+var current_target: DZEnemy
+var target_refresh_clock := 0.0
+
+const TARGET_REFRESH_INTERVAL := 0.08
+const TARGET_SWITCH_RATIO := 0.78
 
 func _ready() -> void:
     add_to_group("player")
@@ -53,6 +58,7 @@ func _physics_process(delta: float) -> void:
     invulnerability = max(0.0, invulnerability - delta)
     hit_reaction_left = maxf(0.0, hit_reaction_left - maxf(delta, 0.0))
     fire_clock -= delta
+    target_refresh_clock = maxf(0.0, target_refresh_clock - maxf(delta, 0.0))
 
     var input := Vector2.ZERO
     if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT):
@@ -73,7 +79,7 @@ func _physics_process(delta: float) -> void:
     if hit_reaction_left <= 0.0:
         _update_authored_animation()
 
-    var target := _nearest_enemy()
+    var target := _combat_target()
     _update_player_marker_pressure(target)
     if target != null:
         var facing := target.global_position
@@ -91,6 +97,8 @@ func set_combat_enabled(enabled: bool) -> void:
     velocity = Vector3.ZERO
     touch_move = Vector2.ZERO
     fire_clock = max(fire_clock, fire_interval)
+    current_target = null
+    target_refresh_clock = 0.0
     _clear_player_marker_pressure()
 
 func _clear_player_marker_pressure() -> void:
@@ -218,6 +226,32 @@ func apply_upgrade(id: String) -> void:
             _apply_weapon_profile_data("cryo", DZWeaponProfiles.profile("cryo"))
         "arc_protocol":
             _apply_weapon_profile_data("arc", DZWeaponProfiles.profile("arc"))
+
+func _combat_target() -> DZEnemy:
+    if current_target != null and (not is_instance_valid(current_target) or current_target.dead):
+        current_target = null
+        target_refresh_clock = 0.0
+
+    if target_refresh_clock > 0.0 and current_target != null:
+        return current_target
+
+    target_refresh_clock = TARGET_REFRESH_INTERVAL
+    var nearest := _nearest_enemy()
+    if nearest == null:
+        current_target = null
+        return null
+    if current_target == null:
+        current_target = nearest
+        return current_target
+    if nearest == current_target:
+        return current_target
+
+    var current_d2 := global_position.distance_squared_to(current_target.global_position)
+    var nearest_d2 := global_position.distance_squared_to(nearest.global_position)
+    var switch_threshold := current_d2 * TARGET_SWITCH_RATIO * TARGET_SWITCH_RATIO
+    if nearest_d2 < switch_threshold:
+        current_target = nearest
+    return current_target
 
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
