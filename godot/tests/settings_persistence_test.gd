@@ -12,7 +12,9 @@ func _initialize() -> void:
     var path := "user://deadline-zero-settings-test.cfg"
     var expected := {
         "master_volume": 0.42,
-        "sfx_volume": 0.33
+        "sfx_volume": 0.33,
+        "haptics_enabled": false,
+        "reduced_flashes": true
     }
     script.save(path, expected)
     var loaded: Dictionary = script.load_settings(path)
@@ -25,12 +27,23 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if bool(loaded.get("haptics_enabled", true)):
+        push_error("Haptics setting did not persist")
+        quit(1)
+        return
+    if not bool(loaded.get("reduced_flashes", false)):
+        push_error("Reduced-flashes setting did not persist")
+        quit(1)
+        return
+
     DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
     var integration_path := "user://deadline-zero-settings-integration-test.cfg"
     script.save(integration_path, {
         "master_volume": 0.35,
-        "sfx_volume": 0.60
+        "sfx_volume": 0.60,
+        "haptics_enabled": false,
+        "reduced_flashes": true
     })
 
     var main := MAIN_SCENE.instantiate()
@@ -54,8 +67,19 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if main.hud.haptics_toggle.button_pressed or not main.hud.reduced_flashes_toggle.button_pressed:
+        push_error("Persisted comfort toggles were not restored into pause settings")
+        quit(1)
+        return
+    if main.haptics_enabled or not main.reduced_flashes:
+        push_error("Persisted comfort state was not restored into Main")
+        quit(1)
+        return
+
     main.hud.master_volume.value = 0.60
     main.hud.sfx_volume.value = 0.45
+    main._on_haptics_changed(true)
+    main._on_reduced_flashes_changed(false)
     main._save_audio_settings(integration_path)
     var round_trip: Dictionary = script.load_settings(integration_path)
     if not is_equal_approx(float(round_trip.get("master_volume", -1.0)), 0.60):
@@ -64,6 +88,11 @@ func _initialize() -> void:
         return
     if not is_equal_approx(float(round_trip.get("sfx_volume", -1.0)), 0.45):
         push_error("Updated SFX volume was not saved from pause settings")
+        quit(1)
+        return
+
+    if not bool(round_trip.get("haptics_enabled", false)) or bool(round_trip.get("reduced_flashes", true)):
+        push_error("Updated comfort settings were not saved from pause settings")
         quit(1)
         return
 

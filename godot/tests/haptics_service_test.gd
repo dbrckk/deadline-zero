@@ -38,8 +38,8 @@ func _initialize() -> void:
         return
 
     var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
-    if not main_source.contains("HAPTICS.pulse(HAPTICS.event_for_impact"):
-        push_error("Main impact path is not wired to combat haptics")
+    if not main_source.contains("if haptics_enabled:") or not main_source.contains("HAPTICS.pulse(HAPTICS.event_for_impact"):
+        push_error("Main impact path is not wired to user-controllable combat haptics")
         quit(1)
         return
 

@@ -52,6 +52,8 @@ var director_profile: Dictionary = {}
 var hud_refresh_clock := 0.0
 var threat_indicator_refresh_clock := 0.0
 var director_refresh_clock := 0.0
+var haptics_enabled := true
+var reduced_flashes := false
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -95,6 +97,8 @@ func _ready() -> void:
     hud.resume_requested.connect(_on_resume_requested)
     hud.master_volume_changed.connect(_on_master_volume_changed)
     hud.sfx_volume_changed.connect(_on_sfx_volume_changed)
+    hud.haptics_changed.connect(_on_haptics_changed)
+    hud.reduced_flashes_changed.connect(_on_reduced_flashes_changed)
     _load_audio_settings()
     last_player_health = player.health
     hud.set_health(player.health, player.max_health)
@@ -345,9 +349,13 @@ func _load_audio_settings(path := SETTINGS_PATH) -> void:
     var settings := DZGameSettings.load_settings(path)
     var master := float(settings.get("master_volume", 0.85))
     var sfx := float(settings.get("sfx_volume", 0.90))
+    haptics_enabled = bool(settings.get("haptics_enabled", true))
+    reduced_flashes = bool(settings.get("reduced_flashes", false))
     if hud != null:
         hud.master_volume.set_value_no_signal(master)
         hud.sfx_volume.set_value_no_signal(sfx)
+        hud.haptics_toggle.set_pressed_no_signal(haptics_enabled)
+        hud.set_reduced_flashes(reduced_flashes)
     _set_bus_linear_volume("Master", master)
     _set_bus_linear_volume("SFX", sfx)
 
@@ -356,7 +364,9 @@ func _save_audio_settings(path := SETTINGS_PATH) -> void:
     var sfx := hud.sfx_volume.value if hud != null else 0.90
     DZGameSettings.save(path, {
         "master_volume": master,
-        "sfx_volume": sfx
+        "sfx_volume": sfx,
+        "haptics_enabled": haptics_enabled,
+        "reduced_flashes": reduced_flashes
     })
 
 func _on_master_volume_changed(value: float) -> void:
@@ -365,6 +375,16 @@ func _on_master_volume_changed(value: float) -> void:
 
 func _on_sfx_volume_changed(value: float) -> void:
     _set_bus_linear_volume("SFX", value)
+    _save_audio_settings()
+
+func _on_haptics_changed(enabled: bool) -> void:
+    haptics_enabled = enabled
+    _save_audio_settings()
+
+func _on_reduced_flashes_changed(enabled: bool) -> void:
+    reduced_flashes = enabled
+    if hud != null:
+        hud.set_reduced_flashes(enabled)
     _save_audio_settings()
 
 func _clear_hit_freeze() -> void:
@@ -1296,7 +1316,8 @@ func _build_combat_audio() -> void:
     add_child(boss_audio)
 
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
-    HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
+    if haptics_enabled:
+        HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
     if impact_audio == null:
         return
     var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))

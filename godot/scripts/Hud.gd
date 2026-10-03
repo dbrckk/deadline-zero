@@ -7,6 +7,8 @@ signal pause_requested
 signal resume_requested
 signal master_volume_changed(value: float)
 signal sfx_volume_changed(value: float)
+signal haptics_changed(enabled: bool)
+signal reduced_flashes_changed(enabled: bool)
 
 var hp_bar: ProgressBar
 var health_bar: ProgressBar
@@ -35,6 +37,9 @@ var pause_panel: PanelContainer
 var pause_button: Button
 var master_volume: HSlider
 var sfx_volume: HSlider
+var haptics_toggle: CheckButton
+var reduced_flashes_toggle: CheckButton
+var reduced_flashes := false
 var impact_flash: ColorRect
 var impact_flash_tween: Tween
 var damage_vignette: ColorRect
@@ -52,10 +57,10 @@ func pulse_damage_screen() -> void:
     if damage_vignette_tween != null and damage_vignette_tween.is_valid():
         damage_vignette_tween.kill()
     damage_vignette.visible = true
-    damage_vignette.modulate.a = 1.0
+    damage_vignette.modulate.a = 0.32 if reduced_flashes else 1.0
     damage_vignette_tween = damage_vignette.create_tween()
     damage_vignette_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-    damage_vignette_tween.tween_property(damage_vignette, "modulate:a", 0.0, 0.26).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    damage_vignette_tween.tween_property(damage_vignette, "modulate:a", 0.0, 0.12 if reduced_flashes else 0.26).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     damage_vignette_tween.tween_callback(func() -> void:
         if damage_vignette != null:
             damage_vignette.visible = false
@@ -151,6 +156,11 @@ func hide_touch_stick() -> void:
     if touch_stick_root != null:
         touch_stick_root.visible = false
 
+func set_reduced_flashes(enabled: bool) -> void:
+    reduced_flashes = enabled
+    if reduced_flashes_toggle != null:
+        reduced_flashes_toggle.set_pressed_no_signal(enabled)
+
 func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
         var item: Dictionary = items[i] if i < items.size() else {}
@@ -187,11 +197,14 @@ func show_impact_flash(critical: bool, killed: bool, boss: bool) -> void:
     if boss:
         alpha = maxf(alpha, 0.18)
         tint = Color(1.0, 0.12, 0.055, alpha)
+    if reduced_flashes:
+        tint.a *= 0.32
     impact_flash.color = tint
     impact_flash.visible = true
     impact_flash_tween = create_tween()
     impact_flash_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-    impact_flash_tween.tween_property(impact_flash, "color:a", 0.0, 0.16 if boss else 0.11)
+    var flash_duration := (0.07 if boss else 0.055) if reduced_flashes else (0.16 if boss else 0.11)
+    impact_flash_tween.tween_property(impact_flash, "color:a", 0.0, flash_duration)
     impact_flash_tween.tween_callback(func() -> void:
         if impact_flash != null:
             impact_flash.visible = false
@@ -442,8 +455,8 @@ func _build() -> void:
     pause_panel = PanelContainer.new()
     pause_panel.name = "PausePanel"
     pause_panel.set_anchors_preset(Control.PRESET_CENTER)
-    pause_panel.position = Vector2(-250, -210)
-    pause_panel.size = Vector2(500, 420)
+    pause_panel.position = Vector2(-250, -255)
+    pause_panel.size = Vector2(500, 510)
     pause_panel.visible = false
     add_child(pause_panel)
     var pause_box := VBoxContainer.new()
@@ -482,6 +495,26 @@ func _build() -> void:
     sfx_volume.custom_minimum_size = Vector2(360, 42)
     sfx_volume.value_changed.connect(func(value: float) -> void: sfx_volume_changed.emit(value))
     pause_box.add_child(sfx_volume)
+    haptics_toggle = CheckButton.new()
+    haptics_toggle.name = "HapticsToggle"
+    haptics_toggle.text = "HAPTICS"
+    haptics_toggle.button_pressed = true
+    haptics_toggle.custom_minimum_size = Vector2(360, 46)
+    haptics_toggle.add_theme_font_size_override("font_size", 16)
+    haptics_toggle.toggled.connect(func(enabled: bool) -> void: haptics_changed.emit(enabled))
+    pause_box.add_child(haptics_toggle)
+
+    reduced_flashes_toggle = CheckButton.new()
+    reduced_flashes_toggle.name = "ReducedFlashesToggle"
+    reduced_flashes_toggle.text = "REDUCED FLASHES"
+    reduced_flashes_toggle.button_pressed = false
+    reduced_flashes_toggle.custom_minimum_size = Vector2(360, 46)
+    reduced_flashes_toggle.add_theme_font_size_override("font_size", 16)
+    reduced_flashes_toggle.toggled.connect(func(enabled: bool) -> void:
+        reduced_flashes = enabled
+        reduced_flashes_changed.emit(enabled)
+    )
+    pause_box.add_child(reduced_flashes_toggle)
     var resume_button := Button.new()
     resume_button.name = "ResumeButton"
     resume_button.text = "RESUME"

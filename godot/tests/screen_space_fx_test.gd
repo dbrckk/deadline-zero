@@ -24,5 +24,18 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var normal_alpha := hud.impact_flash.color.a
+    hud.set_reduced_flashes(true)
+    hud.show_impact_flash(true, false, false)
+    if hud.impact_flash.color.a <= 0.0 or hud.impact_flash.color.a >= normal_alpha * 0.5:
+        push_error("Reduced-flashes mode did not substantially lower impact flash intensity")
+        quit(1)
+        return
+    hud.pulse_damage_screen()
+    if hud.damage_vignette.modulate.a > 0.40:
+        push_error("Reduced-flashes mode did not lower damage vignette intensity")
+        quit(1)
+        return
+
     print("Deadline Zero screen-space impact FX: OK")
     quit(0)
