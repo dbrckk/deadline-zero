@@ -66,6 +66,15 @@ func _run_test() -> void:
         quit(1)
         return
 
+    var first_ring_mesh := telegraph_mesh.mesh
+    enemy._show_telegraph(1.75, 0.40)
+    await process_frame
+    var replacement_telegraph := enemy.telegraph_visual as MeshInstance3D
+    if replacement_telegraph == null or replacement_telegraph.mesh != first_ring_mesh:
+        push_error("Same-radius attack telegraphs must reuse ring mesh resources")
+        quit(1)
+        return
+
     var start_energy := enemy.telegraph_material.emission_energy_multiplier
     var start_alpha := enemy.telegraph_material.albedo_color.a
     await create_timer(0.22).timeout
