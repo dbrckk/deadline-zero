@@ -1,11 +1,11 @@
 # Change impact
 
-Base: b37ac65850e3cbc84757b0dbed4f0dc3d7baf011
-Head: b65712f98a0c511311f2792d53a8321e4883a566
+Base: 5d718945ef230f6bd81e8d2ff8a4973eafac5d96
+Head: f2362be5a630d82a55aad3847f45586b98acca04
 
 ## Changed files
 - M godot/scripts/Main.gd
-- M godot/tests/environment_identity_test.gd
+- M godot/tests/authored_world_dressing_test.gd
 
 ## Affected areas
 - godot

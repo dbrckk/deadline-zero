@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T16:43:56Z
+Generated: 2026-10-03T16:48:28Z
 
 ### Git
 - Branch: `main`
-- Head: `b65712f98a0c`
-- Commit date: 2026-10-03T18:43:42+02:00
-- Commit: Replace intrusive street lights with compact quarantine masts
+- Head: `f2362be5a630`
+- Commit date: 2026-10-03T18:48:08+02:00
+- Commit: Replace full street tiles with real floor cracks
 - Tracked files: 942
 
 ### Recently changed files
 - `godot/scripts/Main.gd`
+- `godot/tests/authored_world_dressing_test.gd`
 - `godot/tests/environment_identity_test.gd`
 - `android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_hit_reaction_test.gd`
 
 ### Project signals
 - `build.gradle`
