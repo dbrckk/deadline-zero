@@ -64,8 +64,12 @@ func _run_capture() -> void:
             quit(1)
             return
 
-    # Let the real combat loop produce movement, targeting, projectiles and telegraph states.
-    for _frame in range(72):
+    # Drive a deterministic number of real physics ticks so movement, targeting,
+    # projectile cadence and melee standoff settle identically on fast and slow CI runners.
+    for _tick in range(72):
+        await physics_frame
+    # Give the renderer a few frames to present the settled simulation state.
+    for _frame in range(4):
         await process_frame
 
     if bool(scene.get("game_over")):
