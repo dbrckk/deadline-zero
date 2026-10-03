@@ -47,6 +47,8 @@ var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
 static var _shared_contact_shadow_material: StandardMaterial3D
 
+const MAX_DAMAGE_NUMBERS := 18
+
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
     target = chase_target
@@ -640,8 +642,12 @@ func _build_hit_flash() -> void:
 func _spawn_damage_number(amount: float, critical: bool) -> void:
     if get_tree() == null or get_tree().current_scene == null:
         return
+    var active_numbers := get_tree().get_nodes_in_group("damage_numbers").size()
+    if active_numbers >= MAX_DAMAGE_NUMBERS and not critical:
+        return
     var number := Label3D.new()
     number.name = "DamageNumber_%d" % Time.get_ticks_usec()
+    number.add_to_group("damage_numbers")
     number.text = "%d" % int(round(amount))
     number.font_size = 34 if critical else 26
     number.outline_size = 8 if critical else 6
