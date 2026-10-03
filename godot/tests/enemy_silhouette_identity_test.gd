@@ -7,6 +7,7 @@ func _initialize() -> void:
     get_root().add_child(root)
 
     var palette_samples := {}
+    var shared_grade_shader: Shader
     for palette_kind in ["runner", "charger", "harrier", "regenerator", "brute", "elite", "boss"]:
         var visual := DZAssetLibrary.enemy(palette_kind)
         if visual == null:
@@ -45,6 +46,12 @@ func _initialize() -> void:
                 var material := graded as ShaderMaterial
                 if material.get_shader_parameter("albedo_tex") != source.albedo_texture:
                     push_error("Enemy grading replaced an authored atlas for %s surface %d" % [palette_kind, surface_index])
+                    quit(1)
+                    return
+                if shared_grade_shader == null:
+                    shared_grade_shader = material.shader
+                elif material.shader != shared_grade_shader:
+                    push_error("Enemy grading must reuse one compiled shader across all authored surfaces")
                     quit(1)
                     return
                 var highlight_floor := float(material.get_shader_parameter("highlight_floor"))
