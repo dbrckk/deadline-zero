@@ -12,7 +12,8 @@ const EXPECTED := [
     "res://assets/audio/authored/impact_kill.wav",
     "res://assets/audio/authored/impact_boss.wav",
     "res://assets/audio/authored/boss_stinger.wav",
-    "res://assets/audio/authored/music_run_loop.wav"
+    "res://assets/audio/authored/music_run_loop.wav",
+    "res://assets/audio/authored/music_pressure_layer.wav"
 ]
 
 func _init() -> void:
@@ -34,6 +35,12 @@ func _init() -> void:
         return
     if music is AudioStreamWAV and (music as AudioStreamWAV).loop_mode != AudioStreamWAV.LOOP_FORWARD:
         push_error("Authored run music is not configured for forward looping")
+        quit(1)
+        return
+
+    var pressure := DZCombatAudio.pressure_music_stream()
+    if pressure == null or pressure.get_length() < 11.5:
+        push_error("Authored pressure music is missing or too short")
         quit(1)
         return
 
