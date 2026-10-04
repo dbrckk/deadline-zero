@@ -1,25 +1,27 @@
 class_name DZCombatAudio
 extends RefCounted
 
-# Authored one-shots are generated in-repo from deterministic original synthesis.
-# The 44.1 kHz procedural generator below remains a resilience fallback if an import is missing.
+# Production audio is generated deterministically from original project synthesis.
+# The in-engine chirp remains a resilience fallback when local generated assets are absent.
 
 const AUTHORED_AUDIO_ROOT := "res://assets/audio/authored/"
+const RUN_MUSIC_PATH := AUTHORED_AUDIO_ROOT + "music_run_loop.wav"
+const BOSS_STINGER_PATH := AUTHORED_AUDIO_ROOT + "boss_stinger.wav"
 
 const SHOT_PATHS := {
-    "vanguard": AUTHORED_AUDIO_ROOT + "weapon_vanguard.ogg",
-    "scatter": AUTHORED_AUDIO_ROOT + "weapon_scatter.ogg",
-    "rail": AUTHORED_AUDIO_ROOT + "weapon_rail.ogg",
-    "inferno": AUTHORED_AUDIO_ROOT + "weapon_inferno.ogg",
-    "cryo": AUTHORED_AUDIO_ROOT + "weapon_cryo.ogg",
-    "arc": AUTHORED_AUDIO_ROOT + "weapon_arc.ogg"
+    "vanguard": AUTHORED_AUDIO_ROOT + "weapon_vanguard.wav",
+    "scatter": AUTHORED_AUDIO_ROOT + "weapon_scatter.wav",
+    "rail": AUTHORED_AUDIO_ROOT + "weapon_rail.wav",
+    "inferno": AUTHORED_AUDIO_ROOT + "weapon_inferno.wav",
+    "cryo": AUTHORED_AUDIO_ROOT + "weapon_cryo.wav",
+    "arc": AUTHORED_AUDIO_ROOT + "weapon_arc.wav"
 }
 
 const IMPACT_PATHS := {
-    "hit": AUTHORED_AUDIO_ROOT + "impact_hit.ogg",
-    "critical": AUTHORED_AUDIO_ROOT + "impact_critical.ogg",
-    "kill": AUTHORED_AUDIO_ROOT + "impact_kill.ogg",
-    "boss": AUTHORED_AUDIO_ROOT + "impact_boss.ogg"
+    "hit": AUTHORED_AUDIO_ROOT + "impact_hit.wav",
+    "critical": AUTHORED_AUDIO_ROOT + "impact_critical.wav",
+    "kill": AUTHORED_AUDIO_ROOT + "impact_kill.wav",
+    "boss": AUTHORED_AUDIO_ROOT + "impact_boss.wav"
 }
 
 static var _authored_cache := {}
@@ -68,14 +70,26 @@ static func impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStre
         return _chirp(980.0, 420.0, 0.082, 0.24, 0.88)
     return _chirp(640.0, 260.0, 0.052, 0.18, 0.72)
 
-static func boss_stinger() -> AudioStreamWAV:
-    return _chirp(170.0, 72.0, 0.240, 0.50, 0.94)
+static func boss_stinger() -> AudioStream:
+    var authored := _authored_stream(BOSS_STINGER_PATH)
+    if authored != null:
+        return authored
+    return _chirp(170.0, 52.0, 1.45, 0.50, 0.94)
+
+static func run_music_stream() -> AudioStream:
+    var authored := _authored_stream(RUN_MUSIC_PATH)
+    if authored == null:
+        return null
+    if authored is AudioStreamWAV:
+        var looped := authored.duplicate(true) as AudioStreamWAV
+        looped.loop_mode = AudioStreamWAV.LOOP_FORWARD
+        looped.loop_begin = 0
+        looped.loop_end = maxi(1, int(round(looped.get_length() * float(looped.mix_rate))))
+        return looped
+    return authored
 
 static func _chirp(start_hz: float, end_hz: float, seconds: float, noise_mix: float,
         gain: float) -> AudioStreamWAV:
-    # Short cached one-shots can afford full-band 44.1 kHz. A deterministic layered transient
-    # avoids the thin single-sine character of the first-playable fallback without adding
-    # runtime DSP cost or per-shot allocations.
     var rate: int = 44100
     var frames: int = maxi(128, int(seconds * rate))
     var bytes := PackedByteArray()
