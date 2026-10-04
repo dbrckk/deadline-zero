@@ -46,6 +46,7 @@ var impact_audio_voices: Array[AudioStreamPlayer] = []
 var impact_voice_index := 0
 var boss_audio: AudioStreamPlayer
 var music_audio: AudioStreamPlayer
+var music_pressure_audio: AudioStreamPlayer
 var music_duck_tween: Tween
 var impact_streams := {}
 var enemy_spatial_index := DZSpatialHash.new(4.0)
@@ -72,6 +73,8 @@ const BOSS_REVEAL_FOV_DELTA := 5.5
 const HUD_REFRESH_INTERVAL := 0.10
 const MUSIC_BASE_DB := -20.0
 const MUSIC_DUCK_DB := -27.0
+const MUSIC_PRESSURE_BREACH_DB := -48.0
+const MUSIC_PRESSURE_BOSS_DB := -11.0
 const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
 const DIRECTOR_REFRESH_INTERVAL := 0.25
@@ -168,6 +171,7 @@ func _physics_process(delta: float) -> void:
         director_profile = run_director.profile(elapsed, level)
         max_enemies = int(director_profile["max_enemies"])
     boss_banner_timer = max(0.0, boss_banner_timer - delta)
+    _update_music_pressure(delta)
     if elapsed >= next_boss_time:
         if _has_active_boss():
             next_boss_time = elapsed + BOSS_RETRY_DELAY
@@ -224,6 +228,30 @@ func _touch_input_vector(current_position: Vector2) -> Vector2:
         1.0
     )
     return delta.normalized() * strength
+
+func _music_pressure_target_db() -> float:
+    if _has_active_boss():
+        return MUSIC_PRESSURE_BOSS_DB
+    match String(director_profile.get("phase", "BREACH")):
+        "SURGE":
+            return -31.0
+        "PRESSURE":
+            return -24.0
+        "OVERRUN":
+            return -18.0
+        "EXTINCTION":
+            return -13.0
+        _:
+            return MUSIC_PRESSURE_BREACH_DB
+
+func _update_music_pressure(delta: float) -> void:
+    if music_pressure_audio == null or music_pressure_audio.stream == null:
+        return
+    music_pressure_audio.volume_db = move_toward(
+        music_pressure_audio.volume_db,
+        _music_pressure_target_db(),
+        maxf(delta, 0.0) * 8.0
+    )
 
 func _has_active_boss() -> bool:
     return current_boss != null and is_instance_valid(current_boss) and not current_boss.dead
@@ -1386,6 +1414,15 @@ func _build_combat_audio() -> void:
     add_child(music_audio)
     if music_audio.stream != null:
         music_audio.play()
+
+    music_pressure_audio = AudioStreamPlayer.new()
+    music_pressure_audio.name = "PressureMusic"
+    music_pressure_audio.bus = "Music"
+    music_pressure_audio.volume_db = MUSIC_PRESSURE_BREACH_DB
+    music_pressure_audio.stream = DZCombatAudio.pressure_music_stream()
+    add_child(music_pressure_audio)
+    if music_pressure_audio.stream != null:
+        music_pressure_audio.play()
 
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
     if haptics_enabled:
