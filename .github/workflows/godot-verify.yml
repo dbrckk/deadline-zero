@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "godot/**"
+      - "tools/audio/**"
+      - "tools/audio/**"
       - ".github/workflows/godot-verify.yml"
   push:
     branches: [main]
@@ -16,6 +18,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
+
+      - name: Generate original authored audio
+        run: python3 tools/audio/generate_deadline_zero_audio.py
 
       - name: Download Godot 4.7.2
         run: |
