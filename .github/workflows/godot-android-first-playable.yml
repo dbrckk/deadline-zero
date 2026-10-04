@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'godot/**'
+      - 'tools/audio/**'
+      - 'tools/audio/**'
       - '.github/workflows/godot-android-first-playable.yml'
   push:
     branches: [main]
@@ -22,6 +24,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+
+      - name: Generate original authored audio
+        run: python3 tools/audio/generate_deadline_zero_audio.py
 
       - uses: actions/setup-java@v5
         with:
