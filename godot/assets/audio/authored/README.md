@@ -1,18 +1,22 @@
 # Deadline: Zero authored audio
 
-These combat one-shots are original project assets generated from deterministic synthesis authored for Deadline: Zero.
+The production audio pack is original project work generated deterministically from source code.
 
 - Generator: `tools/audio/generate_deadline_zero_audio.py`
 - Deterministic seed: `20261004`
 - Source sample rate: 44.1 kHz
-- Delivery format: Ogg Vorbis
+- Generated delivery format: 16-bit WAV; Godot imports WAV using its normal asset pipeline.
 - No third-party samples, loops, recordings, or copyrighted source audio are used.
-- No external attribution is required for these files because they are created specifically for this project.
+- No external attribution is required because these files are created specifically for Deadline: Zero.
 
-## Current authored set
+## Generated production set
 
 Weapons: Vanguard, Scatter, Rail, Inferno, Cryo, Arc.
 
 Combat impacts: standard hit, critical hit, kill, boss hit.
 
-The runtime keeps its deterministic procedural WAV generator as a fallback if an authored import is unavailable. Authored OGG streams are the normal production path.
+Music: a 12-second loopable dark-industrial run score.
+
+Boss: a 2.4-second authored encounter stinger.
+
+The generated WAV files are build artifacts and are intentionally git-ignored. Official Godot CI/release workflows run the generator before the first Godot import so the exact deterministic audio is packaged into APK/AAB builds.
