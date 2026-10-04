@@ -32,9 +32,13 @@ func _init() -> void:
 
     var boss := DZCombatAudio.boss_stinger()
     assert(boss != null)
-    assert(boss.mix_rate == 44100)
-    assert(boss.format == AudioStreamWAV.FORMAT_16_BITS)
-    assert(not boss.stereo)
+    assert(boss.get_length() >= 2.0)
+
+    var music := DZCombatAudio.run_music_stream()
+    assert(music != null)
+    assert(music.get_length() >= 11.5)
+    if music is AudioStreamWAV:
+        assert((music as AudioStreamWAV).loop_mode == AudioStreamWAV.LOOP_FORWARD)
 
     var player_source := FileAccess.get_file_as_string("res://scripts/Player.gd")
     var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
@@ -42,5 +46,6 @@ func _init() -> void:
     assert(player_source.contains("shot_audio_voices"))
     assert(main_source.contains("for voice_index in range(4)"))
     assert(main_source.contains("impact_audio_voices"))
+    assert(main_source.contains("RunMusic"))
     print("combat audio authored routing test passed")
     quit()
