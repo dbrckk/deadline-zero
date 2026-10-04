@@ -107,6 +107,7 @@ func _ready() -> void:
     hud.resume_requested.connect(_on_resume_requested)
     hud.master_volume_changed.connect(_on_master_volume_changed)
     hud.sfx_volume_changed.connect(_on_sfx_volume_changed)
+    hud.music_volume_changed.connect(_on_music_volume_changed)
     hud.haptics_changed.connect(_on_haptics_changed)
     hud.reduced_flashes_changed.connect(_on_reduced_flashes_changed)
     hud.camera_shake_changed.connect(_on_camera_shake_changed)
@@ -357,6 +358,9 @@ func _ensure_audio_buses() -> void:
     if AudioServer.get_bus_index("SFX") < 0:
         AudioServer.add_bus()
         AudioServer.set_bus_name(AudioServer.bus_count - 1, "SFX")
+    if AudioServer.get_bus_index("Music") < 0:
+        AudioServer.add_bus()
+        AudioServer.set_bus_name(AudioServer.bus_count - 1, "Music")
 
 func _set_bus_linear_volume(bus_name: String, value: float) -> void:
     var bus_index := AudioServer.get_bus_index(bus_name)
@@ -369,6 +373,7 @@ func _load_audio_settings(path := SETTINGS_PATH) -> void:
     var settings := DZGameSettings.load_settings(path)
     var master := float(settings.get("master_volume", 0.85))
     var sfx := float(settings.get("sfx_volume", 0.90))
+    var music := float(settings.get("music_volume", 0.62))
     haptics_enabled = bool(settings.get("haptics_enabled", true))
     reduced_flashes = bool(settings.get("reduced_flashes", false))
     camera_shake_enabled = bool(settings.get("camera_shake_enabled", true))
@@ -376,6 +381,7 @@ func _load_audio_settings(path := SETTINGS_PATH) -> void:
     if hud != null:
         hud.master_volume.set_value_no_signal(master)
         hud.sfx_volume.set_value_no_signal(sfx)
+        hud.music_volume.set_value_no_signal(music)
         hud.haptics_toggle.set_pressed_no_signal(haptics_enabled)
         hud.set_reduced_flashes(reduced_flashes)
         hud.camera_shake_toggle.set_pressed_no_signal(camera_shake_enabled)
@@ -384,13 +390,16 @@ func _load_audio_settings(path := SETTINGS_PATH) -> void:
         player.set_reduced_flashes(reduced_flashes)
     _set_bus_linear_volume("Master", master)
     _set_bus_linear_volume("SFX", sfx)
+    _set_bus_linear_volume("Music", music)
 
 func _save_audio_settings(path := SETTINGS_PATH) -> void:
     var master := hud.master_volume.value if hud != null else 0.85
     var sfx := hud.sfx_volume.value if hud != null else 0.90
+    var music := hud.music_volume.value if hud != null else 0.62
     DZGameSettings.save(path, {
         "master_volume": master,
         "sfx_volume": sfx,
+        "music_volume": music,
         "haptics_enabled": haptics_enabled,
         "reduced_flashes": reduced_flashes,
         "camera_shake_enabled": camera_shake_enabled,
@@ -403,6 +412,10 @@ func _on_master_volume_changed(value: float) -> void:
 
 func _on_sfx_volume_changed(value: float) -> void:
     _set_bus_linear_volume("SFX", value)
+    _save_audio_settings()
+
+func _on_music_volume_changed(value: float) -> void:
+    _set_bus_linear_volume("Music", value)
     _save_audio_settings()
 
 func _on_haptics_changed(enabled: bool) -> void:
@@ -1367,7 +1380,7 @@ func _build_combat_audio() -> void:
 
     music_audio = AudioStreamPlayer.new()
     music_audio.name = "RunMusic"
-    music_audio.bus = "Master"
+    music_audio.bus = "Music"
     music_audio.volume_db = MUSIC_BASE_DB
     music_audio.stream = DZCombatAudio.run_music_stream()
     add_child(music_audio)
