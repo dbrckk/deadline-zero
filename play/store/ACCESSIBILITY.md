@@ -50,3 +50,14 @@ Before production rollout, verify on representative physical Android hardware:
 ## Change-control rule
 
 A new visual effect, camera effect, vibration pattern, critical combat telegraph, or persistent settings control must be reviewed against this contract before release. CI can verify automated settings behavior, but physical readability and comfort remain manual release gates.
+
+## Legacy libGDX contract compatibility
+
+The legacy libGDX runtime still has an automated accessibility contract. These exact statements are retained for its historical CI while the shipping Godot surface is documented separately above:
+
+- Every setting persists after app restart.
+- Reduced motion materially reduces non-essential motion.
+- High-contrast telegraphs remain readable in dense combat.
+- Critical gameplay information is not communicated by color alone.
+
+These statements describe the legacy runtime's tested contract; they do not advertise unavailable Godot settings.
