@@ -7,6 +7,7 @@ signal pause_requested
 signal resume_requested
 signal master_volume_changed(value: float)
 signal sfx_volume_changed(value: float)
+signal music_volume_changed(value: float)
 signal haptics_changed(enabled: bool)
 signal reduced_flashes_changed(enabled: bool)
 signal camera_shake_changed(enabled: bool)
@@ -39,6 +40,7 @@ var pause_panel: PanelContainer
 var pause_button: Button
 var master_volume: HSlider
 var sfx_volume: HSlider
+var music_volume: HSlider
 var haptics_toggle: CheckButton
 var reduced_flashes_toggle: CheckButton
 var camera_shake_toggle: CheckButton
@@ -459,89 +461,132 @@ func _build() -> void:
     pause_panel = PanelContainer.new()
     pause_panel.name = "PausePanel"
     pause_panel.set_anchors_preset(Control.PRESET_CENTER)
-    pause_panel.position = Vector2(-250, -310)
-    pause_panel.size = Vector2(500, 620)
+    pause_panel.position = Vector2(-380, -235)
+    pause_panel.size = Vector2(760, 470)
     pause_panel.visible = false
     add_child(pause_panel)
+
     var pause_box := VBoxContainer.new()
     pause_box.alignment = BoxContainer.ALIGNMENT_CENTER
-    pause_box.add_theme_constant_override("separation", 12)
+    pause_box.add_theme_constant_override("separation", 14)
     pause_panel.add_child(pause_box)
+
     var pause_title := Label.new()
     pause_title.text = "SYSTEM PAUSED"
     pause_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     pause_title.add_theme_font_size_override("font_size", 30)
     pause_title.modulate = Color(0.72, 0.92, 1.0)
     pause_box.add_child(pause_title)
+
+    var settings_columns := HBoxContainer.new()
+    settings_columns.name = "SettingsColumns"
+    settings_columns.alignment = BoxContainer.ALIGNMENT_CENTER
+    settings_columns.add_theme_constant_override("separation", 34)
+    pause_box.add_child(settings_columns)
+
+    var audio_column := VBoxContainer.new()
+    audio_column.name = "AudioColumn"
+    audio_column.custom_minimum_size = Vector2(310, 0)
+    audio_column.add_theme_constant_override("separation", 8)
+    settings_columns.add_child(audio_column)
+
     var master_label := Label.new()
     master_label.text = "MASTER VOLUME"
     master_label.add_theme_font_size_override("font_size", 16)
-    pause_box.add_child(master_label)
+    audio_column.add_child(master_label)
     master_volume = HSlider.new()
     master_volume.name = "MasterVolume"
     master_volume.min_value = 0.0
     master_volume.max_value = 1.0
     master_volume.step = 0.05
     master_volume.value = 0.85
-    master_volume.custom_minimum_size = Vector2(360, 48)
+    master_volume.custom_minimum_size = Vector2(300, 48)
     master_volume.value_changed.connect(func(value: float) -> void: master_volume_changed.emit(value))
-    pause_box.add_child(master_volume)
+    audio_column.add_child(master_volume)
+
     var sfx_label := Label.new()
     sfx_label.text = "SFX VOLUME"
     sfx_label.add_theme_font_size_override("font_size", 16)
-    pause_box.add_child(sfx_label)
+    audio_column.add_child(sfx_label)
     sfx_volume = HSlider.new()
     sfx_volume.name = "SfxVolume"
     sfx_volume.min_value = 0.0
     sfx_volume.max_value = 1.0
     sfx_volume.step = 0.05
     sfx_volume.value = 0.90
-    sfx_volume.custom_minimum_size = Vector2(360, 48)
+    sfx_volume.custom_minimum_size = Vector2(300, 48)
     sfx_volume.value_changed.connect(func(value: float) -> void: sfx_volume_changed.emit(value))
-    pause_box.add_child(sfx_volume)
+    audio_column.add_child(sfx_volume)
+
+    var music_label := Label.new()
+    music_label.text = "MUSIC VOLUME"
+    music_label.add_theme_font_size_override("font_size", 16)
+    audio_column.add_child(music_label)
+    music_volume = HSlider.new()
+    music_volume.name = "MusicVolume"
+    music_volume.min_value = 0.0
+    music_volume.max_value = 1.0
+    music_volume.step = 0.05
+    music_volume.value = 0.62
+    music_volume.custom_minimum_size = Vector2(300, 48)
+    music_volume.value_changed.connect(func(value: float) -> void: music_volume_changed.emit(value))
+    audio_column.add_child(music_volume)
+
+    var comfort_column := VBoxContainer.new()
+    comfort_column.name = "ComfortColumn"
+    comfort_column.custom_minimum_size = Vector2(310, 0)
+    comfort_column.add_theme_constant_override("separation", 12)
+    settings_columns.add_child(comfort_column)
+
+    var comfort_label := Label.new()
+    comfort_label.text = "COMFORT"
+    comfort_label.add_theme_font_size_override("font_size", 16)
+    comfort_label.modulate = Color(0.68, 0.86, 0.94)
+    comfort_column.add_child(comfort_label)
+
     haptics_toggle = CheckButton.new()
     haptics_toggle.name = "HapticsToggle"
     haptics_toggle.text = "HAPTICS"
     haptics_toggle.button_pressed = true
-    haptics_toggle.custom_minimum_size = Vector2(360, 48)
+    haptics_toggle.custom_minimum_size = Vector2(300, 48)
     haptics_toggle.add_theme_font_size_override("font_size", 16)
     haptics_toggle.toggled.connect(func(enabled: bool) -> void: haptics_changed.emit(enabled))
-    pause_box.add_child(haptics_toggle)
+    comfort_column.add_child(haptics_toggle)
 
     reduced_flashes_toggle = CheckButton.new()
     reduced_flashes_toggle.name = "ReducedFlashesToggle"
     reduced_flashes_toggle.text = "REDUCED FLASHES"
     reduced_flashes_toggle.button_pressed = false
-    reduced_flashes_toggle.custom_minimum_size = Vector2(360, 48)
+    reduced_flashes_toggle.custom_minimum_size = Vector2(300, 48)
     reduced_flashes_toggle.add_theme_font_size_override("font_size", 16)
     reduced_flashes_toggle.toggled.connect(func(enabled: bool) -> void:
         reduced_flashes = enabled
         reduced_flashes_changed.emit(enabled)
     )
-    pause_box.add_child(reduced_flashes_toggle)
+    comfort_column.add_child(reduced_flashes_toggle)
 
     camera_shake_toggle = CheckButton.new()
     camera_shake_toggle.name = "CameraShakeToggle"
     camera_shake_toggle.text = "CAMERA SHAKE"
     camera_shake_toggle.button_pressed = true
-    camera_shake_toggle.custom_minimum_size = Vector2(360, 48)
+    camera_shake_toggle.custom_minimum_size = Vector2(300, 48)
     camera_shake_toggle.add_theme_font_size_override("font_size", 16)
     camera_shake_toggle.toggled.connect(func(enabled: bool) -> void: camera_shake_changed.emit(enabled))
-    pause_box.add_child(camera_shake_toggle)
+    comfort_column.add_child(camera_shake_toggle)
 
     hit_stop_toggle = CheckButton.new()
     hit_stop_toggle.name = "HitStopToggle"
     hit_stop_toggle.text = "HIT STOP"
     hit_stop_toggle.button_pressed = true
-    hit_stop_toggle.custom_minimum_size = Vector2(360, 48)
+    hit_stop_toggle.custom_minimum_size = Vector2(300, 48)
     hit_stop_toggle.add_theme_font_size_override("font_size", 16)
     hit_stop_toggle.toggled.connect(func(enabled: bool) -> void: hit_stop_changed.emit(enabled))
-    pause_box.add_child(hit_stop_toggle)
+    comfort_column.add_child(hit_stop_toggle)
 
     var resume_button := Button.new()
     resume_button.name = "ResumeButton"
     resume_button.text = "RESUME"
-    resume_button.custom_minimum_size = Vector2(280, 62)
+    resume_button.custom_minimum_size = Vector2(300, 58)
     resume_button.add_theme_font_size_override("font_size", 21)
     resume_button.pressed.connect(func() -> void: resume_requested.emit())
     pause_box.add_child(resume_button)
