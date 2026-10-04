@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'godot/**'
+      - 'tools/audio/**'
+      - 'tools/audio/**'
       - '.github/workflows/godot-play-screenshots.yml'
   workflow_dispatch:
 
@@ -18,6 +20,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+
+      - name: Generate original authored audio
+        run: python3 tools/audio/generate_deadline_zero_audio.py
 
       - name: Download Godot 4.7.2
         run: |
