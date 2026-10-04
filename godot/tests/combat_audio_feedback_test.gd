@@ -40,6 +40,10 @@ func _init() -> void:
     if music is AudioStreamWAV:
         assert((music as AudioStreamWAV).loop_mode == AudioStreamWAV.LOOP_FORWARD)
 
+    var pressure_music := DZCombatAudio.pressure_music_stream()
+    assert(pressure_music != null)
+    assert(pressure_music.get_length() >= 11.5)
+
     var player_source := FileAccess.get_file_as_string("res://scripts/Player.gd")
     var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
     assert(player_source.contains("for voice_index in range(3)"))
@@ -47,5 +51,7 @@ func _init() -> void:
     assert(main_source.contains("for voice_index in range(4)"))
     assert(main_source.contains("impact_audio_voices"))
     assert(main_source.contains("RunMusic"))
+    assert(main_source.contains("PressureMusic"))
+    assert(main_source.contains("_music_pressure_target_db"))
     print("combat audio authored routing test passed")
     quit()
