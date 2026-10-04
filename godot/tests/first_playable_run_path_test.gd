@@ -27,6 +27,18 @@ func _initialize() -> void:
         push_error("Combat impacts did not initialize bounded 4-voice polyphony")
         quit(1)
         return
+    if main.music_audio == null or main.music_audio.stream == null:
+        push_error("Run path did not initialize authored background music")
+        quit(1)
+        return
+    if main.music_audio.stream.get_length() < 11.5 or not main.music_audio.playing:
+        push_error("Authored background music did not enter looping playback")
+        quit(1)
+        return
+    if main.boss_audio == null or main.boss_audio.stream == null or main.boss_audio.stream.get_length() < 2.0:
+        push_error("Run path did not initialize authored boss stinger")
+        quit(1)
+        return
     if get_nodes_in_group("enemies").size() < 8:
         push_error("Run path did not create initial enemy population")
         quit(1)
