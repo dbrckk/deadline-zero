@@ -13,6 +13,7 @@ func _initialize() -> void:
     var expected := {
         "master_volume": 0.42,
         "sfx_volume": 0.33,
+        "music_volume": 0.27,
         "haptics_enabled": false,
         "reduced_flashes": true,
         "camera_shake_enabled": false,
@@ -26,6 +27,10 @@ func _initialize() -> void:
         return
     if not is_equal_approx(float(loaded.get("sfx_volume", -1.0)), 0.33):
         push_error("SFX volume setting did not persist")
+        quit(1)
+        return
+    if not is_equal_approx(float(loaded.get("music_volume", -1.0)), 0.27):
+        push_error("Music volume setting did not persist")
         quit(1)
         return
 
@@ -49,6 +54,7 @@ func _initialize() -> void:
     script.save(integration_path, {
         "master_volume": 0.35,
         "sfx_volume": 0.60,
+        "music_volume": 0.40,
         "haptics_enabled": false,
         "reduced_flashes": true,
         "camera_shake_enabled": false,
@@ -75,6 +81,10 @@ func _initialize() -> void:
         push_error("Persisted SFX volume was not restored into pause settings")
         quit(1)
         return
+    if not is_equal_approx(main.hud.music_volume.value, 0.40):
+        push_error("Persisted music volume was not restored into pause settings")
+        quit(1)
+        return
 
     if main.hud.haptics_toggle.button_pressed or not main.hud.reduced_flashes_toggle.button_pressed:
         push_error("Persisted comfort toggles were not restored into pause settings")
@@ -96,6 +106,7 @@ func _initialize() -> void:
 
     main.hud.master_volume.value = 0.60
     main.hud.sfx_volume.value = 0.45
+    main.hud.music_volume.value = 0.50
     main._on_haptics_changed(true)
     main._on_reduced_flashes_changed(false)
     main._on_camera_shake_changed(true)
@@ -108,6 +119,10 @@ func _initialize() -> void:
         return
     if not is_equal_approx(float(round_trip.get("sfx_volume", -1.0)), 0.45):
         push_error("Updated SFX volume was not saved from pause settings")
+        quit(1)
+        return
+    if not is_equal_approx(float(round_trip.get("music_volume", -1.0)), 0.50):
+        push_error("Updated music volume was not saved from pause settings")
         quit(1)
         return
 
