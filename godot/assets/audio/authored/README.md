@@ -15,7 +15,7 @@ Weapons: Vanguard, Scatter, Rail, Inferno, Cryo, Arc.
 
 Combat impacts: standard hit, critical hit, kill, boss hit.
 
-Music: a 12-second loopable dark-industrial run score.
+Music: a 12-second loopable dark-industrial base score plus a synchronized 12-second pressure layer that rises across run phases.
 
 Boss: a 2.4-second authored encounter stinger.
 
