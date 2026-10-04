@@ -95,8 +95,8 @@ func _run_capture() -> void:
 
     # Validate phone-scale readability in screen space, not just world-space spacing.
     # A visually black/non-black image gate cannot catch actors collapsing into one blob.
-    var viewport_size := get_root().get_visible_rect().size
-    var player_screen := scene.camera.unproject_position(player.global_position + Vector3(0.0, 0.9, 0.0))
+    var viewport_size: Vector2 = get_root().get_visible_rect().size
+    var player_screen: Vector2 = scene.camera.unproject_position(player.global_position + Vector3(0.0, 0.9, 0.0))
     var projected_enemies: Array[Dictionary] = []
     for node in get_nodes_in_group("enemies"):
         var enemy := node as DZEnemy
@@ -104,7 +104,7 @@ func _run_capture() -> void:
             continue
         if scene.camera.is_position_behind(enemy.global_position):
             continue
-        var screen_pos := scene.camera.unproject_position(enemy.global_position + Vector3(0.0, 0.9, 0.0))
+        var screen_pos: Vector2 = scene.camera.unproject_position(enemy.global_position + Vector3(0.0, 0.9, 0.0))
         if screen_pos.x < 28.0 or screen_pos.y < 28.0 or screen_pos.x > viewport_size.x - 28.0 or screen_pos.y > viewport_size.y - 28.0:
             continue
         projected_enemies.append({"kind": enemy.kind, "screen": screen_pos})
