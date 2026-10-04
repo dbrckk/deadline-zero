@@ -29,6 +29,7 @@ func _initialize() -> void:
     var required_controls := [
         hud.master_volume,
         hud.sfx_volume,
+        hud.music_volume,
         hud.haptics_toggle,
         hud.reduced_flashes_toggle,
         hud.camera_shake_toggle,
