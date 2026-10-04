@@ -35,6 +35,20 @@ func _initialize() -> void:
         push_error("Authored background music did not enter looping playback")
         quit(1)
         return
+    if main.music_pressure_audio == null or main.music_pressure_audio.stream == null:
+        push_error("Run path did not initialize adaptive pressure music")
+        quit(1)
+        return
+    if main.music_pressure_audio.stream.get_length() < 11.5 or not main.music_pressure_audio.playing:
+        push_error("Adaptive pressure music did not enter synchronized playback")
+        quit(1)
+        return
+    main.director_profile["phase"] = "EXTINCTION"
+    main._update_music_pressure(1.0)
+    if main.music_pressure_audio.volume_db <= main.MUSIC_PRESSURE_BREACH_DB:
+        push_error("Adaptive music layer did not rise with run pressure")
+        quit(1)
+        return
     if main.boss_audio == null or main.boss_audio.stream == null or main.boss_audio.stream.get_length() < 2.0:
         push_error("Run path did not initialize authored boss stinger")
         quit(1)
