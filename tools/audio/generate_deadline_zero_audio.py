@@ -149,6 +149,50 @@ def run_music() -> None:
     save_stereo("music_run_loop", left, right)
 
 
+def pressure_music() -> None:
+    seconds = 12.0
+    frames = int(seconds * SR)
+    beat = 0.5
+    left: list[float] = []
+    right: list[float] = []
+
+    for i in range(frames):
+        t = i / SR
+        beat_index = int(t / beat)
+        local_beat = t - beat_index * beat
+        eighth = 0.25
+        step_index = int(t / eighth)
+        local_step = t - step_index * eighth
+
+        pulse = 0.0
+        if local_step < 0.12:
+            pulse_freq = 176.0 if step_index % 4 in (0, 3) else 132.0
+            pulse = math.sin(math.tau * pulse_freq * t) * math.exp(-local_step * 19.0) * 0.22
+
+        metal = 0.0
+        if beat_index % 2 == 0 and local_beat < 0.10:
+            metal = (
+                math.sin(math.tau * 2310.0 * local_beat)
+                + 0.55 * math.sin(math.tau * 3470.0 * local_beat + 0.7)
+                + 0.24 * math.sin(math.tau * 4810.0 * local_beat + 1.1)
+            ) * math.exp(-local_beat * 38.0) * 0.065
+
+        rotor = (
+            math.sin(math.tau * 4.0 * t / seconds + 0.3)
+            * math.sin(math.tau * 17.0 * t / seconds + 1.2)
+            * 0.050
+        )
+        alarm = math.sin(math.tau * snap_loop_frequency(219.5, seconds) * t) * (
+            0.5 + 0.5 * math.sin(math.tau * 3.0 * t / seconds)
+        ) * 0.032
+
+        mono = pulse + metal + rotor + alarm
+        left.append(mono + math.sin(math.tau * snap_loop_frequency(88.0, seconds) * t) * 0.018)
+        right.append(mono * 0.95 + math.sin(math.tau * snap_loop_frequency(92.0, seconds) * t + 0.55) * 0.019)
+
+    save_stereo("music_pressure_layer", left, right)
+
+
 def boss_stinger() -> None:
     seconds = 2.4
     frames = int(seconds * SR)
@@ -200,4 +244,5 @@ for index, (name, spec) in enumerate(IMPACTS.items()):
 
 boss_stinger()
 run_music()
-print("Generated 12 original Deadline: Zero WAV assets in", OUT)
+pressure_music()
+print("Generated 13 original Deadline: Zero WAV assets in", OUT)
