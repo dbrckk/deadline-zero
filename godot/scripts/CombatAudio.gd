@@ -1,10 +1,51 @@
 class_name DZCombatAudio
 extends RefCounted
 
-# Procedural one-shot synthesis keeps the native 3D combat lane self-contained while authored
-# weapon/enemy audio is still being produced. Each cue is intentionally short and phone-safe.
+# Authored one-shots are generated in-repo from deterministic original synthesis.
+# The 44.1 kHz procedural generator below remains a resilience fallback if an import is missing.
 
-static func shot_stream(profile: String) -> AudioStreamWAV:
+const AUTHORED_AUDIO_ROOT := "res://assets/audio/authored/"
+
+const SHOT_PATHS := {
+    "vanguard": AUTHORED_AUDIO_ROOT + "weapon_vanguard.ogg",
+    "scatter": AUTHORED_AUDIO_ROOT + "weapon_scatter.ogg",
+    "rail": AUTHORED_AUDIO_ROOT + "weapon_rail.ogg",
+    "inferno": AUTHORED_AUDIO_ROOT + "weapon_inferno.ogg",
+    "cryo": AUTHORED_AUDIO_ROOT + "weapon_cryo.ogg",
+    "arc": AUTHORED_AUDIO_ROOT + "weapon_arc.ogg"
+}
+
+const IMPACT_PATHS := {
+    "hit": AUTHORED_AUDIO_ROOT + "impact_hit.ogg",
+    "critical": AUTHORED_AUDIO_ROOT + "impact_critical.ogg",
+    "kill": AUTHORED_AUDIO_ROOT + "impact_kill.ogg",
+    "boss": AUTHORED_AUDIO_ROOT + "impact_boss.ogg"
+}
+
+static var _authored_cache := {}
+
+static func _authored_stream(path: String) -> AudioStream:
+    if _authored_cache.has(path):
+        return _authored_cache[path] as AudioStream
+    if not ResourceLoader.exists(path):
+        return null
+    var stream := load(path) as AudioStream
+    if stream != null:
+        _authored_cache[path] = stream
+    return stream
+
+static func authored_shot_stream(profile: String) -> AudioStream:
+    var path := String(SHOT_PATHS.get(profile, SHOT_PATHS["vanguard"]))
+    return _authored_stream(path)
+
+static func authored_impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStream:
+    var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
+    return _authored_stream(String(IMPACT_PATHS[key]))
+
+static func shot_stream(profile: String) -> AudioStream:
+    var authored := authored_shot_stream(profile)
+    if authored != null:
+        return authored
     var spec: Array = {
         "vanguard": [1180.0, 720.0, 0.055, 0.20],
         "scatter": [520.0, 220.0, 0.085, 0.34],
@@ -15,7 +56,10 @@ static func shot_stream(profile: String) -> AudioStreamWAV:
     }.get(profile, [1180.0, 720.0, 0.055, 0.20]) as Array
     return _chirp(float(spec[0]), float(spec[1]), float(spec[2]), float(spec[3]), 0.82)
 
-static func impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStreamWAV:
+static func impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStream:
+    var authored := authored_impact_stream(critical, killed, boss)
+    if authored != null:
+        return authored
     if boss:
         return _chirp(210.0, 92.0, 0.120, 0.42, 0.92)
     if killed:
