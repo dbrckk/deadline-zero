@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'godot/**'
+      - 'tools/audio/**'
+      - 'tools/audio/**'
       - '.github/workflows/godot-play-aab-verify.yml'
   push:
     branches: [main]
@@ -23,6 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Generate original authored audio
+        run: python3 tools/audio/generate_deadline_zero_audio.py
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -35,7 +40,7 @@ jobs:
       - name: Install Android 16 SDK for current Play target policy
         run: |
           set -euo pipefail
-          sdkmanager "platform-tools" "platforms;android-36" "build-tools;35.0.1" "cmdline-tools;latest"
+          sdkmanager "platform-tools" "platforms;android-36" "build-tools;35.0.1" "cmdline-tools;latest" "cmake;3.10.2.4988404" "ndk;28.1.13356709"
 
       - name: Download Godot 4.7.2 editor and export templates
         run: |
@@ -81,14 +86,11 @@ jobs:
           grep -F 'package/unique_name="com.deadlinezero.game"' godot/export_presets.cfg
           grep -F 'package/name="Deadline: Zero"' godot/export_presets.cfg
 
-      - name: Import project and install Gradle Android template
+      - name: Import project
         run: |
           set -euo pipefail
           /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --headless --path godot --editor --quit
-          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
-            --headless --path godot --editor --install-android-build-template --quit
-          test -f godot/android/build/build.gradle
 
       - name: Create ephemeral release keystore
         run: |
@@ -111,9 +113,11 @@ jobs:
           mkdir -p build/godot-play
           /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --headless --path godot \
+            --install-android-build-template \
             --export-release "Android Play Release" \
             "$(pwd)/build/godot-play/deadline-zero-play-release.aab"
           test -s build/godot-play/deadline-zero-play-release.aab
+          test -f godot/android/build/build.gradle
 
       - name: Validate AAB package, signature and native ABI
         run: |
