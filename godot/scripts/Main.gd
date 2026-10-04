@@ -45,6 +45,8 @@ var impact_audio: AudioStreamPlayer
 var impact_audio_voices: Array[AudioStreamPlayer] = []
 var impact_voice_index := 0
 var boss_audio: AudioStreamPlayer
+var music_audio: AudioStreamPlayer
+var music_duck_tween: Tween
 var impact_streams := {}
 var enemy_spatial_index := DZSpatialHash.new(4.0)
 var last_player_health := -1.0
@@ -68,6 +70,8 @@ const BOSS_INTERVAL := 75.0
 const BOSS_RETRY_DELAY := 15.0
 const BOSS_REVEAL_FOV_DELTA := 5.5
 const HUD_REFRESH_INTERVAL := 0.10
+const MUSIC_BASE_DB := -20.0
+const MUSIC_DUCK_DB := -27.0
 const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
 const DIRECTOR_REFRESH_INTERVAL := 0.25
@@ -1361,6 +1365,15 @@ func _build_combat_audio() -> void:
     boss_audio.stream = DZCombatAudio.boss_stinger()
     add_child(boss_audio)
 
+    music_audio = AudioStreamPlayer.new()
+    music_audio.name = "RunMusic"
+    music_audio.bus = "Master"
+    music_audio.volume_db = MUSIC_BASE_DB
+    music_audio.stream = DZCombatAudio.run_music_stream()
+    add_child(music_audio)
+    if music_audio.stream != null:
+        music_audio.play()
+
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
     if haptics_enabled:
         HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
@@ -1376,8 +1389,16 @@ func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
     voice.play()
 
 func _play_boss_stinger() -> void:
-    if boss_audio != null:
+    if boss_audio != null and boss_audio.stream != null:
         boss_audio.play()
+    if music_audio != null and music_audio.playing:
+        if music_duck_tween != null and music_duck_tween.is_valid():
+            music_duck_tween.kill()
+        music_duck_tween = create_tween()
+        music_duck_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+        music_duck_tween.tween_property(music_audio, "volume_db", MUSIC_DUCK_DB, 0.08)
+        music_duck_tween.tween_interval(1.55)
+        music_duck_tween.tween_property(music_audio, "volume_db", MUSIC_BASE_DB, 0.70).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _update_offscreen_threat_indicator() -> void:
     if hud == null or camera == null or player == null or game_over:
