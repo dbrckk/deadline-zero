@@ -6,6 +6,7 @@ extends RefCounted
 
 const AUTHORED_AUDIO_ROOT := "res://assets/audio/authored/"
 const RUN_MUSIC_PATH := AUTHORED_AUDIO_ROOT + "music_run_loop.wav"
+const PRESSURE_MUSIC_PATH := AUTHORED_AUDIO_ROOT + "music_pressure_layer.wav"
 const BOSS_STINGER_PATH := AUTHORED_AUDIO_ROOT + "boss_stinger.wav"
 
 const SHOT_PATHS := {
@@ -78,6 +79,18 @@ static func boss_stinger() -> AudioStream:
 
 static func run_music_stream() -> AudioStream:
     var authored := _authored_stream(RUN_MUSIC_PATH)
+    if authored == null:
+        return null
+    if authored is AudioStreamWAV:
+        var looped := authored.duplicate(true) as AudioStreamWAV
+        looped.loop_mode = AudioStreamWAV.LOOP_FORWARD
+        looped.loop_begin = 0
+        looped.loop_end = maxi(1, int(round(looped.get_length() * float(looped.mix_rate))))
+        return looped
+    return authored
+
+static func pressure_music_stream() -> AudioStream:
+    var authored := _authored_stream(PRESSURE_MUSIC_PATH)
     if authored == null:
         return null
     if authored is AudioStreamWAV:
