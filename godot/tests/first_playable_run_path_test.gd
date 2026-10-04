@@ -259,13 +259,16 @@ func _initialize() -> void:
 
     var master_slider := pause_panel.find_child("MasterVolume", true, false) as HSlider
     var sfx_slider := pause_panel.find_child("SfxVolume", true, false) as HSlider
+    var music_slider := pause_panel.find_child("MusicVolume", true, false) as HSlider
     master_slider.value = 0.35
     sfx_slider.value = 0.45
+    music_slider.value = 0.40
     await process_frame
     var master_bus := AudioServer.get_bus_index("Master")
     var sfx_bus := AudioServer.get_bus_index("SFX")
-    if sfx_bus < 0:
-        push_error("Pause settings did not create dedicated SFX audio bus")
+    var music_bus := AudioServer.get_bus_index("Music")
+    if sfx_bus < 0 or music_bus < 0:
+        push_error("Pause settings did not create dedicated SFX/Music audio buses")
         quit(1)
         return
     if abs(AudioServer.get_bus_volume_db(master_bus) - linear_to_db(0.35)) > 0.25:
@@ -274,6 +277,10 @@ func _initialize() -> void:
         return
     if abs(AudioServer.get_bus_volume_db(sfx_bus) - linear_to_db(0.45)) > 0.25:
         push_error("SFX volume slider did not update SFX bus")
+        quit(1)
+        return
+    if abs(AudioServer.get_bus_volume_db(music_bus) - linear_to_db(0.40)) > 0.25:
+        push_error("Music volume slider did not update Music bus")
         quit(1)
         return
 
