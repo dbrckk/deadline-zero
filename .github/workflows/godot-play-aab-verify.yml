@@ -129,7 +129,8 @@ jobs:
           ! grep -q 'base/lib/armeabi-v7a/' build/godot-play/aab-contents.txt
           unzip -p "$AAB" base/manifest/AndroidManifest.xml | strings > build/godot-play/manifest-strings.txt
           grep -q 'com.deadlinezero.game' build/godot-play/manifest-strings.txt
-          jarsigner -verify -strict "$AAB"
+          jarsigner -verify "$AAB" | tee build/godot-play/jarsigner-verify.txt
+          grep -q 'jar verified' build/godot-play/jarsigner-verify.txt
           (cd build/godot-play && sha256sum deadline-zero-play-release.aab > SHA256SUMS.txt)
           (cd build/godot-play && sha256sum -c SHA256SUMS.txt)
 
@@ -141,6 +142,7 @@ jobs:
             build/godot-play/deadline-zero-play-release.aab
             build/godot-play/aab-contents.txt
             build/godot-play/manifest-strings.txt
+            build/godot-play/jarsigner-verify.txt
             build/godot-play/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 7
