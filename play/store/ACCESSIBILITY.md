@@ -8,6 +8,7 @@ The in-game pause/settings panel currently exposes persistent controls for:
 
 - master volume;
 - SFX volume;
+- music volume;
 - haptics on/off;
 - reduced flashes on/off;
 - camera shake on/off;
@@ -25,7 +26,6 @@ The following comfort controls existed in historical release planning but are **
 - high-contrast telegraphs toggle;
 - reduced-motion comfort preset;
 - UI scale;
-- music volume;
 - graphics quality;
 - frame-rate target.
 
@@ -41,7 +41,7 @@ Before production rollout, verify on representative physical Android hardware:
 - [ ] Haptics can be disabled completely.
 - [ ] Camera shake can be disabled completely and clears any active kick.
 - [ ] Hit stop can be disabled completely and clears any active freeze.
-- [ ] Master and SFX audio can be reduced or muted without blocking gameplay.
+- [ ] Master, SFX, and music audio can be reduced or muted independently without blocking gameplay.
 - [ ] Boss/attack telegraphs remain readable in dense combat.
 - [ ] Close-pressure and off-screen threat indicators remain readable without relying only on color.
 - [ ] Settings remain usable on the smallest supported representative display.
