@@ -315,7 +315,13 @@ func _fire_at(enemy: DZEnemy) -> void:
         var projectile := DZProjectile.new()
         projectile.setup(global_position + Vector3(0.0, 0.72, 0.0) + dir * 0.5,
             dir, projectile_speed, weapon_damage, weapon_tint, weapon_profile)
-        get_tree().current_scene.add_child(projectile)
+        var projectile_parent: Node = get_tree().current_scene
+        if projectile_parent == null:
+            projectile_parent = get_parent()
+        if projectile_parent == null:
+            projectile.queue_free()
+            return
+        projectile_parent.add_child(projectile)
 
 func _build_visual() -> void:
     authored_visual = DZAssetLibrary.player()
