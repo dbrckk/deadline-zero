@@ -82,13 +82,14 @@
         "tools/android/scan_runtime_log.py",
         "tools/android/test_build_runtime_release_evidence.py",
         "tools/android/test_scan_runtime_log.py",
+        "tools/audio/generate_deadline_zero_audio.py",
         "tools/environment/test_upsert_environment_atlas.py",
         "tools/perf/compare_android_benchmark.py",
         "tools/perf/test_compare_android_benchmark.py",
         "tools/sprites/test_resolve_actor_actions.py",
         "tools/verify_final_atlas.py"
       ],
-      "in_degree": 32,
+      "in_degree": 33,
       "out_degree": 6
     },
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java": {
@@ -4564,9 +4565,10 @@
         "core/src/main/java/com/deadlinezero/game/util/Pools.java",
         "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java",
         "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
-        "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java"
+        "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
+        "tools/audio/generate_deadline_zero_audio.py"
       ],
-      "in_degree": 8,
+      "in_degree": 9,
       "out_degree": 2
     },
     "core/src/main/java/com/deadlinezero/game/visual/UpgradeIconRenderer.java": {
@@ -4731,9 +4733,10 @@
         "core/src/test/java/com/deadlinezero/game/world/BiomeEnemyBehaviorRulesTest.java",
         "core/src/test/java/com/deadlinezero/game/world/FoundryHazardActivationCueTest.java",
         "core/src/test/java/com/deadlinezero/game/world/StageCombatPressureAuditTest.java",
-        "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java"
+        "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java",
+        "tools/audio/generate_deadline_zero_audio.py"
       ],
-      "in_degree": 36,
+      "in_degree": 37,
       "out_degree": 6
     },
     "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyBehaviorRules.java": {
@@ -6887,6 +6890,16 @@
       "dependents": [],
       "in_degree": 0,
       "out_degree": 2
+    },
+    "tools/audio/generate_deadline_zero_audio.py": {
+      "dependencies": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+        "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+        "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 3
     },
     "tools/blender/add_rex_rifle.py": {
       "dependencies": [

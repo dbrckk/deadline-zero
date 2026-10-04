@@ -43,6 +43,8 @@ android/
   scan_runtime_log.py
   test_build_runtime_release_evidence.py
   test_scan_runtime_log.py
+audio/
+  generate_deadline_zero_audio.py
 blender/
   add_rex_rifle.py
   build_rex_actions.py
@@ -230,6 +232,142 @@ def test_detects_native_crash_when_package_is_in_context(self)
 log = """I DEBUG: Cmdline: com.deadlinezero.game
 ⋮----
 def test_ignores_intentional_force_stop(self)
+```
+
+## File: audio/generate_deadline_zero_audio.py
+```python
+#!/usr/bin/env python3
+"""Generate Deadline: Zero's original deterministic audio pack.
+
+No third-party samples or Python packages are required.
+The generated WAV files are build artifacts consumed by Godot's importer.
+"""
+⋮----
+SR = 44_100
+SEED = 20_261_004
+OUT = Path(__file__).resolve().parents[2] / "godot" / "assets" / "audio" / "authored"
+⋮----
+def clamp(x: float, lo: float = -0.985, hi: float = 0.985) -> float
+⋮----
+def softclip(x: float) -> float
+⋮----
+def save_mono(name: str, samples: list[float]) -> None
+⋮----
+peak = max(1e-9, max(abs(v) for v in samples))
+pcm = array("h", (int(clamp(softclip(v / peak * 0.84)) * 32767.0) for v in samples))
+⋮----
+def save_stereo(name: str, left: list[float], right: list[float]) -> None
+⋮----
+peak = max(1e-9, max(max(abs(v) for v in left), max(abs(v) for v in right)))
+pcm = array("h")
+⋮----
+def exp_chirp(f0: float, f1: float, seconds: float, noise_mix: float, body: float, seed: int) -> list[float]
+⋮----
+rng = random.Random(seed)
+frames = max(128, int(seconds * SR))
+phase = 0.0
+sub_phase = 0.0
+prev_noise = 0.0
+result: list[float] = []
+ratio = max(1e-6, f1 / max(f0, 1e-6))
+⋮----
+t = i / max(1, frames - 1)
+freq = f0 * (ratio ** t)
+⋮----
+attack = min(1.0, t / 0.012)
+decay = max(0.0, 1.0 - t) ** 2.15
+envelope = attack * decay
+raw_noise = rng.uniform(-1.0, 1.0)
+bright_noise = raw_noise - prev_noise * 0.72
+prev_noise = raw_noise
+transient = bright_noise * (max(0.0, 1.0 - t / 0.18) ** 4.0)
+tonal = math.sin(phase) * 0.66 + math.sin(phase * 2.01 + 0.31) * 0.18
+sub = math.sin(sub_phase) * body
+⋮----
+def weapon(name: str, spec: tuple[float, float, float, float, float], seed: int) -> None
+⋮----
+def impact(name: str, spec: tuple[float, float, float, float, float], seed: int) -> None
+⋮----
+samples = exp_chirp(f0, f1, seconds, noise_mix, body, seed)
+⋮----
+t = i / SR
+⋮----
+def snap_loop_frequency(freq: float, seconds: float) -> float
+⋮----
+def run_music() -> None
+⋮----
+seconds = 12.0
+frames = int(seconds * SR)
+bpm = 120.0
+beat = 60.0 / bpm
+half_step = beat * 0.5
+notes = [55.0, 55.0, 65.406, 55.0, 73.416, 65.406, 49.0, 55.0]
+drone_freqs = [snap_loop_frequency(v, seconds) for v in (55.0, 82.5, 110.0)]
+left: list[float] = []
+right: list[float] = []
+⋮----
+drone = sum(
+step_index = int(t / half_step)
+local_step = t - step_index * half_step
+bass_f = snap_loop_frequency(notes[step_index % len(notes)], seconds)
+bass_env = math.exp(-local_step * 5.6)
+bass = (
+⋮----
+beat_index = int(t / beat)
+local_beat = t - beat_index * beat
+kick = 0.0
+⋮----
+kick_phase = math.tau * (42.0 * local_beat + 4.8 * (1.0 - math.exp(-15.0 * local_beat)))
+kick = math.sin(kick_phase) * math.exp(-local_beat * 18.0) * 0.42
+⋮----
+metal = 0.0
+⋮----
+metal = (
+⋮----
+air = (
+sweep_local = t % 4.0
+sweep_env = math.sin(math.pi * sweep_local / 4.0) ** 2
+sweep = math.sin(math.tau * (410.0 + 95.0 * sweep_local) * t) * sweep_env * 0.022
+⋮----
+mono = drone + bass + kick + metal + air + sweep
+⋮----
+def pressure_music() -> None
+⋮----
+beat = 0.5
+⋮----
+eighth = 0.25
+step_index = int(t / eighth)
+local_step = t - step_index * eighth
+⋮----
+pulse = 0.0
+⋮----
+pulse_freq = 176.0 if step_index % 4 in (0, 3) else 132.0
+pulse = math.sin(math.tau * pulse_freq * t) * math.exp(-local_step * 19.0) * 0.22
+⋮----
+rotor = (
+alarm = math.sin(math.tau * snap_loop_frequency(219.5, seconds) * t) * (
+⋮----
+mono = pulse + metal + rotor + alarm
+⋮----
+def boss_stinger() -> None
+⋮----
+seconds = 2.4
+⋮----
+rng = random.Random(SEED + 800)
+⋮----
+progress = t / seconds
+freq = 128.0 * math.exp(-t * 1.25) + 30.0
+⋮----
+envelope = min(1.0, t / 0.010) * (max(0.0, 1.0 - progress) ** 1.35)
+sub = math.sin(phase) * 0.48
+horn = (
+noise = rng.uniform(-1.0, 1.0) * math.exp(-t * 8.5) * 0.13
+clang = math.sin(math.tau * 1470.0 * t) * math.exp(-t * 7.0) * 0.10
+rise = math.sin(math.tau * (235.0 + 410.0 * progress * progress) * t) * (progress ** 1.4) * 0.075
+mono = (sub + horn + noise + clang + rise) * envelope
+⋮----
+WEAPONS = {
+IMPACTS = {
 ```
 
 ## File: blender/add_rex_rifle.py

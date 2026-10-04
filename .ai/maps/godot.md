@@ -56,16 +56,20 @@ scripts/
   WeaponProfiles.gd
   XpOrb.gd
 tests/
+  android_play_export_contract_test.gd
   archetype_roster_render_test.gd
   attack_telegraph_escalation_test.gd
   authored_asset_validation.gd
+  authored_audio_asset_test.gd
   authored_world_dressing_test.gd
+  boss_encounter_render_test.gd
   boss_hud_identity_test.gd
   boss_phase_runtime_test.gd
   boss_reveal_camera_test.gd
   combat_audio_feedback_test.gd
   combat_danger_hud_test.gd
   combat_feel_test.gd
+  damage_number_budget_test.gd
   enemy_archetype_combat_test.gd
   enemy_hit_reaction_test.gd
   enemy_projectile_visual_test.gd
@@ -79,8 +83,13 @@ tests/
   mobile_orientation_test.gd
   native_enemy_behavior_test.gd
   native_upgrade_depth_test.gd
+  pause_settings_layout_test.gd
+  play_feature_graphic_render_test.gd
+  play_icon_render_test.gd
+  play_store_claims_test.gd
   player_damage_feedback_test.gd
   player_pressure_marker_test.gd
+  player_targeting_stability_test.gd
   pressure_frame_render_test.gd
   projectile_profile_runtime_visual_test.gd
   rendered_frame_smoke_test.gd
@@ -97,6 +106,7 @@ tests/
   weapon_presentation_test.gd
   weapon_profile_data_test.gd
   weapon_protocol_behavior_test.gd
+  xp_orb_runtime_test.gd
 ```
 
 # Files
@@ -366,10 +376,54 @@ static func animation_player(root: Node) -> AnimationPlayer:
 class_name DZCombatAudio
 extends RefCounted
 
-# Procedural one-shot synthesis keeps the native 3D combat lane self-contained while authored
-# weapon/enemy audio is still being produced. Each cue is intentionally short and phone-safe.
+# Production audio is generated deterministically from original project synthesis.
+# The in-engine chirp remains a resilience fallback when local generated assets are absent.
 
-static func shot_stream(profile: String) -> AudioStreamWAV:
+const AUTHORED_AUDIO_ROOT := "res://assets/audio/authored/"
+const RUN_MUSIC_PATH := AUTHORED_AUDIO_ROOT + "music_run_loop.wav"
+const PRESSURE_MUSIC_PATH := AUTHORED_AUDIO_ROOT + "music_pressure_layer.wav"
+const BOSS_STINGER_PATH := AUTHORED_AUDIO_ROOT + "boss_stinger.wav"
+
+const SHOT_PATHS := {
+    "vanguard": AUTHORED_AUDIO_ROOT + "weapon_vanguard.wav",
+    "scatter": AUTHORED_AUDIO_ROOT + "weapon_scatter.wav",
+    "rail": AUTHORED_AUDIO_ROOT + "weapon_rail.wav",
+    "inferno": AUTHORED_AUDIO_ROOT + "weapon_inferno.wav",
+    "cryo": AUTHORED_AUDIO_ROOT + "weapon_cryo.wav",
+    "arc": AUTHORED_AUDIO_ROOT + "weapon_arc.wav"
+}
+
+const IMPACT_PATHS := {
+    "hit": AUTHORED_AUDIO_ROOT + "impact_hit.wav",
+    "critical": AUTHORED_AUDIO_ROOT + "impact_critical.wav",
+    "kill": AUTHORED_AUDIO_ROOT + "impact_kill.wav",
+    "boss": AUTHORED_AUDIO_ROOT + "impact_boss.wav"
+}
+
+static var _authored_cache := {}
+
+static func _authored_stream(path: String) -> AudioStream:
+    if _authored_cache.has(path):
+        return _authored_cache[path] as AudioStream
+    if not ResourceLoader.exists(path):
+        return null
+    var stream := load(path) as AudioStream
+    if stream != null:
+        _authored_cache[path] = stream
+    return stream
+
+static func authored_shot_stream(profile: String) -> AudioStream:
+    var path := String(SHOT_PATHS.get(profile, SHOT_PATHS["vanguard"]))
+    return _authored_stream(path)
+
+static func authored_impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStream:
+    var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
+    return _authored_stream(String(IMPACT_PATHS[key]))
+
+static func shot_stream(profile: String) -> AudioStream:
+    var authored := authored_shot_stream(profile)
+    if authored != null:
+        return authored
     var spec: Array = {
         "vanguard": [1180.0, 720.0, 0.055, 0.20],
         "scatter": [520.0, 220.0, 0.085, 0.34],
@@ -380,7 +434,10 @@ static func shot_stream(profile: String) -> AudioStreamWAV:
     }.get(profile, [1180.0, 720.0, 0.055, 0.20]) as Array
     return _chirp(float(spec[0]), float(spec[1]), float(spec[2]), float(spec[3]), 0.82)
 
-static func impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStreamWAV:
+static func impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStream:
+    var authored := authored_impact_stream(critical, killed, boss)
+    if authored != null:
+        return authored
     if boss:
         return _chirp(210.0, 92.0, 0.120, 0.42, 0.92)
     if killed:
@@ -389,24 +446,72 @@ static func impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStre
         return _chirp(980.0, 420.0, 0.082, 0.24, 0.88)
     return _chirp(640.0, 260.0, 0.052, 0.18, 0.72)
 
-static func boss_stinger() -> AudioStreamWAV:
-    return _chirp(170.0, 72.0, 0.240, 0.50, 0.94)
+static func boss_stinger() -> AudioStream:
+    var authored := _authored_stream(BOSS_STINGER_PATH)
+    if authored != null:
+        return authored
+    return _chirp(170.0, 52.0, 1.45, 0.50, 0.94)
+
+static func run_music_stream() -> AudioStream:
+    var authored := _authored_stream(RUN_MUSIC_PATH)
+    if authored == null:
+        return null
+    if authored is AudioStreamWAV:
+        var looped := authored.duplicate(true) as AudioStreamWAV
+        looped.loop_mode = AudioStreamWAV.LOOP_FORWARD
+        looped.loop_begin = 0
+        looped.loop_end = maxi(1, int(round(looped.get_length() * float(looped.mix_rate))))
+        return looped
+    return authored
+
+static func pressure_music_stream() -> AudioStream:
+    var authored := _authored_stream(PRESSURE_MUSIC_PATH)
+    if authored == null:
+        return null
+    if authored is AudioStreamWAV:
+        var looped := authored.duplicate(true) as AudioStreamWAV
+        looped.loop_mode = AudioStreamWAV.LOOP_FORWARD
+        looped.loop_begin = 0
+        looped.loop_end = maxi(1, int(round(looped.get_length() * float(looped.mix_rate))))
+        return looped
+    return authored
 
 static func _chirp(start_hz: float, end_hz: float, seconds: float, noise_mix: float,
         gain: float) -> AudioStreamWAV:
-    var rate: int = 22050
-    var frames: int = maxi(64, int(seconds * rate))
+    var rate: int = 44100
+    var frames: int = maxi(128, int(seconds * rate))
     var bytes := PackedByteArray()
     bytes.resize(frames * 2)
     var phase: float = 0.0
+    var sub_phase: float = 0.0
+    var noise_state: int = int(absf(start_hz * 131.0 + end_hz * 47.0 + seconds * 100000.0)) | 1
+
     for i in range(frames):
         var t: float = float(i) / float(maxi(1, frames - 1))
-        var hz: float = lerpf(start_hz, end_hz, t)
+        var hz_curve := t * t * (3.0 - 2.0 * t)
+        var hz: float = lerpf(start_hz, end_hz, hz_curve)
         phase += TAU * hz / float(rate)
-        var envelope: float = pow(1.0 - t, 2.15)
-        var tone: float = sin(phase) * (1.0 - noise_mix)
-        var noise: float = (randf() * 2.0 - 1.0) * noise_mix
-        var sample: float = clampf((tone + noise) * envelope * gain, -1.0, 1.0)
+        sub_phase += TAU * maxf(48.0, hz * 0.47) / float(rate)
+
+        noise_state = int((1103515245 * noise_state + 12345) & 0x7fffffff)
+        var noise := (float(noise_state) / 1073741823.5 - 1.0)
+
+        var attack := clampf(t / 0.018, 0.0, 1.0)
+        var decay := pow(maxf(0.0, 1.0 - t), 2.05)
+        var envelope := attack * decay
+
+        var fundamental := sin(phase)
+        var harmonic := sin(phase * 2.03 + 0.35) * 0.24
+        var body := sin(sub_phase) * 0.32
+        var transient_window := pow(maxf(0.0, 1.0 - t / 0.16), 4.0)
+        var transient := noise * transient_window * minf(0.62, noise_mix + 0.18)
+        var texture := noise * noise_mix * 0.34
+
+        var tonal_mix := fundamental * 0.72 + harmonic + body
+        var raw := (tonal_mix * (1.0 - noise_mix * 0.46) + texture + transient) * envelope * gain
+        var sample := tanh(raw * 1.28) / tanh(1.28)
+        sample = clampf(sample, -0.985, 0.985)
+
         var value: int = int(sample * 32767.0)
         if value < 0:
             value += 65536
@@ -455,6 +560,11 @@ static func damage_received_camera_kick(damage: float, max_health: float) -> flo
         return 0.0
     var severity := clampf(damage / max_health, 0.0, 0.35)
     return clampf(0.045 + severity * 0.22, 0.045, 0.115)
+
+static func unscaled_delta(scaled_delta: float, time_scale: float) -> float:
+    if scaled_delta <= 0.0:
+        return 0.0
+    return scaled_delta / maxf(time_scale, 0.01)
 ```
 
 ## File: scripts/Enemy.gd
@@ -507,6 +617,17 @@ var hit_flash_visual: MeshInstance3D
 var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
 static var _shared_contact_shadow_material: StandardMaterial3D
+static var _contact_shadow_mesh_cache := {}
+static var _signature_material_cache := {}
+static var _signature_mesh_cache := {}
+static var _shared_brute_armor_material: StandardMaterial3D
+static var _telegraph_ring_mesh_cache := {}
+static var _telegraph_tick_mesh_cache := {}
+static var _hit_flash_mesh_cache := {}
+static var _shared_regeneration_pulse_mesh: CylinderMesh
+
+const MAX_DAMAGE_NUMBERS := 18
+const ARENA_HALF_EXTENT := 34.0
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -669,12 +790,23 @@ func _physics_process(delta: float) -> void:
 
         velocity = movement_direction * move_speed * slow_multiplier * movement_speed_scale
         move_and_slide()
+        _constrain_to_arena()
         if velocity.length_squared() > 0.01:
             look_at(global_position + velocity, Vector3.UP)
     _update_authored_animation(distance)
     if distance < _contact_attack_range() and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _constrain_to_arena() -> void:
+    var clamped_x := clampf(global_position.x, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
+    var clamped_z := clampf(global_position.z, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
+    if not is_equal_approx(clamped_x, global_position.x):
+        velocity.x = 0.0
+    if not is_equal_approx(clamped_z, global_position.z):
+        velocity.z = 0.0
+    global_position.x = clamped_x
+    global_position.z = clamped_z
 
 func _melee_standoff_distance() -> float:
     match kind:
@@ -762,6 +894,7 @@ func _process_charge(delta: float) -> void:
     charge_left = max(0.0, charge_left - delta)
     velocity = charge_direction * 9.4
     move_and_slide()
+    _constrain_to_arena()
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity, Vector3.UP)
     if not charge_hit and target != null and is_instance_valid(target):
@@ -839,12 +972,8 @@ func _show_telegraph(radius: float, duration: float) -> void:
         telegraph_visual.queue_free()
     telegraph_visual = MeshInstance3D.new()
     telegraph_visual.name = "AttackTelegraphRing"
-    var mesh := TorusMesh.new()
-    mesh.inner_radius = radius * (0.82 if kind == "boss" else 0.86)
-    mesh.outer_radius = radius
-    mesh.rings = 40 if kind == "boss" else 32
-    mesh.ring_segments = 8
-    telegraph_visual.mesh = mesh
+    telegraph_visual.mesh = _telegraph_ring_mesh(radius, kind == "boss")
+    telegraph_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     get_tree().current_scene.add_child(telegraph_visual)
     telegraph_visual.global_position = global_position.lerp(attack_target_position, 0.58) + Vector3(0.0, 0.035, 0.0)
     telegraph_material = StandardMaterial3D.new()
@@ -862,12 +991,11 @@ func _show_telegraph(radius: float, duration: float) -> void:
         var angle := TAU * float(tick_index) / 4.0
         var tick := MeshInstance3D.new()
         tick.name = "TelegraphTick_%d" % tick_index
-        var tick_mesh := BoxMesh.new()
-        tick_mesh.size = Vector3(radius * 0.24, 0.012, maxf(0.035, radius * 0.045))
-        tick.mesh = tick_mesh
+        tick.mesh = _telegraph_tick_mesh(radius)
         tick.position = Vector3(cos(angle) * radius * 0.72, 0.0, sin(angle) * radius * 0.72)
         tick.rotation.y = -angle
         tick.material_override = telegraph_material
+        tick.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         telegraph_visual.add_child(tick)
 
     var tween := telegraph_visual.create_tween()
@@ -878,6 +1006,27 @@ func _show_telegraph(radius: float, duration: float) -> void:
     tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.07, 0.008, 0.92 if kind == "boss" else 0.78), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.chain().tween_callback(telegraph_visual.queue_free)
 
+static func _telegraph_ring_mesh(radius: float, boss: bool) -> TorusMesh:
+    var key := "%.3f|%s" % [radius, "boss" if boss else "normal"]
+    if _telegraph_ring_mesh_cache.has(key):
+        return _telegraph_ring_mesh_cache[key] as TorusMesh
+    var mesh := TorusMesh.new()
+    mesh.inner_radius = radius * (0.82 if boss else 0.86)
+    mesh.outer_radius = radius
+    mesh.rings = 40 if boss else 32
+    mesh.ring_segments = 8
+    _telegraph_ring_mesh_cache[key] = mesh
+    return mesh
+
+static func _telegraph_tick_mesh(radius: float) -> BoxMesh:
+    var key := "%.3f" % radius
+    if _telegraph_tick_mesh_cache.has(key):
+        return _telegraph_tick_mesh_cache[key] as BoxMesh
+    var mesh := BoxMesh.new()
+    mesh.size = Vector3(radius * 0.24, 0.012, maxf(0.035, radius * 0.045))
+    _telegraph_tick_mesh_cache[key] = mesh
+    return mesh
+
 func _spawn_attack_impact(at: Vector3, radius: float) -> void:
     if not spawn_secondary_fx:
         return
@@ -887,6 +1036,16 @@ func _spawn_attack_impact(at: Vector3, radius: float) -> void:
     get_tree().current_scene.add_child(fx)
     fx.global_position = at + Vector3(0.0, 0.10, 0.0)
 
+static func _regeneration_pulse_mesh() -> CylinderMesh:
+    if _shared_regeneration_pulse_mesh != null:
+        return _shared_regeneration_pulse_mesh
+    _shared_regeneration_pulse_mesh = CylinderMesh.new()
+    _shared_regeneration_pulse_mesh.top_radius = 0.88
+    _shared_regeneration_pulse_mesh.bottom_radius = 0.88
+    _shared_regeneration_pulse_mesh.height = 0.022
+    _shared_regeneration_pulse_mesh.radial_segments = 16
+    return _shared_regeneration_pulse_mesh
+
 func _begin_regeneration() -> void:
     if dead or not combat_enabled or health <= 0.0 or health >= max_health:
         return
@@ -895,11 +1054,8 @@ func _begin_regeneration() -> void:
         regeneration_visual.queue_free()
     var pulse := MeshInstance3D.new()
     pulse.name = "RegenerationPulse"
-    var mesh := CylinderMesh.new()
-    mesh.top_radius = 0.88
-    mesh.bottom_radius = 0.88
-    mesh.height = 0.022
-    pulse.mesh = mesh
+    pulse.mesh = _regeneration_pulse_mesh()
+    pulse.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     pulse.position = Vector3(0.0, 0.035, 0.0)
     regeneration_material = StandardMaterial3D.new()
     regeneration_material.albedo_color = Color(0.12, 1.0, 0.42, 0.18)
@@ -978,7 +1134,7 @@ func take_damage(amount: float, critical := false) -> void:
     health_changed.emit(max(0.0, health), max_health)
     var killed := health <= 0.0
     impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
-    _spawn_damage_number(amount, critical)
+    _spawn_damage_number(amount, critical, killed)
     _play_hit_reaction(critical, killed)
     if killed:
         dead = true
@@ -1038,7 +1194,6 @@ func _play_hit_reaction(critical: bool, killed: bool) -> void:
 func _build_contact_shadow() -> void:
     var shadow := MeshInstance3D.new()
     shadow.name = "EnemyContactShadow"
-    var mesh := CylinderMesh.new()
     var radius := 0.42
     match kind:
         "runner":
@@ -1055,15 +1210,23 @@ func _build_contact_shadow() -> void:
             radius = 0.54
         "boss":
             radius = 0.78
-    mesh.top_radius = radius
-    mesh.bottom_radius = radius * 1.04
-    mesh.height = 0.008
-    mesh.radial_segments = 16
-    shadow.mesh = mesh
+    shadow.mesh = _contact_shadow_mesh(radius)
     shadow.position.y = 0.010
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     shadow.material_override = _enemy_contact_shadow_material()
     add_child(shadow)
+
+static func _contact_shadow_mesh(radius: float) -> CylinderMesh:
+    var key := "%.3f" % radius
+    if _contact_shadow_mesh_cache.has(key):
+        return _contact_shadow_mesh_cache[key] as CylinderMesh
+    var mesh := CylinderMesh.new()
+    mesh.top_radius = radius
+    mesh.bottom_radius = radius * 1.04
+    mesh.height = 0.008
+    mesh.radial_segments = 16
+    _contact_shadow_mesh_cache[key] = mesh
+    return mesh
 
 static func _enemy_contact_shadow_material() -> StandardMaterial3D:
     if _shared_contact_shadow_material != null:
@@ -1075,17 +1238,26 @@ static func _enemy_contact_shadow_material() -> StandardMaterial3D:
     _shared_contact_shadow_material.roughness = 1.0
     return _shared_contact_shadow_material
 
-func _build_hit_flash() -> void:
-    hit_flash_visual = MeshInstance3D.new()
-    hit_flash_visual.name = "HitFlash"
+static func _hit_flash_mesh(scale_factor: float) -> CylinderMesh:
+    var key := "%.3f" % scale_factor
+    if _hit_flash_mesh_cache.has(key):
+        return _hit_flash_mesh_cache[key] as CylinderMesh
     var mesh := CylinderMesh.new()
-    var scale_factor := 1.0
-    if kind == "boss": scale_factor = 1.62
-    elif kind in ["elite", "brute", "charger"]: scale_factor = 1.18
     mesh.top_radius = 0.46 * scale_factor
     mesh.bottom_radius = 0.52 * scale_factor
     mesh.height = 1.28 * scale_factor
-    hit_flash_visual.mesh = mesh
+    mesh.radial_segments = 12
+    _hit_flash_mesh_cache[key] = mesh
+    return mesh
+
+func _build_hit_flash() -> void:
+    hit_flash_visual = MeshInstance3D.new()
+    hit_flash_visual.name = "HitFlash"
+    var scale_factor := 1.0
+    if kind == "boss": scale_factor = 1.62
+    elif kind in ["elite", "brute", "charger"]: scale_factor = 1.18
+    hit_flash_visual.mesh = _hit_flash_mesh(scale_factor)
+    hit_flash_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     hit_flash_visual.position.y = 0.66 * scale_factor
     hit_flash_material = StandardMaterial3D.new()
     hit_flash_material.albedo_color = Color(1.0, 0.86, 0.58, 0.0)
@@ -1098,15 +1270,19 @@ func _build_hit_flash() -> void:
     hit_flash_visual.visible = false
     add_child(hit_flash_visual)
 
-func _spawn_damage_number(amount: float, critical: bool) -> void:
+func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     if get_tree() == null or get_tree().current_scene == null:
+        return
+    var active_numbers := get_tree().get_nodes_in_group("damage_numbers").size()
+    if active_numbers >= MAX_DAMAGE_NUMBERS and not critical and not killed:
         return
     var number := Label3D.new()
     number.name = "DamageNumber_%d" % Time.get_ticks_usec()
+    number.add_to_group("damage_numbers")
     number.text = "%d" % int(round(amount))
-    number.font_size = 34 if critical else 26
-    number.outline_size = 8 if critical else 6
-    number.modulate = Color(1.0, 0.72, 0.12) if critical else Color(0.92, 0.97, 1.0)
+    number.font_size = 34 if critical else (30 if killed else 26)
+    number.outline_size = 8 if critical or killed else 6
+    number.modulate = Color(1.0, 0.72, 0.12) if critical else (Color(1.0, 0.42, 0.16) if killed else Color(0.92, 0.97, 1.0))
     number.outline_modulate = Color(0.02, 0.03, 0.05, 0.96)
     number.billboard = BaseMaterial3D.BILLBOARD_ENABLED
     number.no_depth_test = true
@@ -1222,7 +1398,29 @@ func _add_archetype_signature() -> void:
         _:
             _add_eye_beacon(accent, Vector3(0.0, 1.62, -0.28), 0.055)
 
+static func _signature_box_mesh(key: String, size: Vector3) -> BoxMesh:
+    if _signature_mesh_cache.has(key):
+        return _signature_mesh_cache[key] as BoxMesh
+    var mesh := BoxMesh.new()
+    mesh.size = size
+    _signature_mesh_cache[key] = mesh
+    return mesh
+
+static func _signature_sphere_mesh(key: String, radius: float, height: float) -> SphereMesh:
+    if _signature_mesh_cache.has(key):
+        return _signature_mesh_cache[key] as SphereMesh
+    var mesh := SphereMesh.new()
+    mesh.radius = radius
+    mesh.height = height
+    mesh.radial_segments = 10
+    mesh.rings = 5
+    _signature_mesh_cache[key] = mesh
+    return mesh
+
 func _signature_material(color: Color, energy := 2.2) -> StandardMaterial3D:
+    var key := "%s|%.3f" % [color.to_html(true), energy]
+    if _signature_material_cache.has(key):
+        return _signature_material_cache[key] as StandardMaterial3D
     var mat := StandardMaterial3D.new()
     mat.albedo_color = color
     mat.metallic = 0.24
@@ -1230,14 +1428,12 @@ func _signature_material(color: Color, energy := 2.2) -> StandardMaterial3D:
     mat.emission_enabled = true
     mat.emission = color
     mat.emission_energy_multiplier = energy
+    _signature_material_cache[key] = mat
     return mat
 
 func _add_eye_beacon(color: Color, at: Vector3, size: float) -> void:
     var beacon := MeshInstance3D.new()
-    var mesh := SphereMesh.new()
-    mesh.radius = size
-    mesh.height = size * 2.0
-    beacon.mesh = mesh
+    beacon.mesh = _signature_sphere_mesh("beacon_%.3f" % size, size, size * 2.0)
     beacon.name = "SignatureBeacon"
     beacon.position = at
     beacon.material_override = _signature_material(color, 3.2)
@@ -1247,11 +1443,9 @@ func _add_runner_blades(color: Color) -> void:
     var mat := _signature_material(color, 1.85)
     for side in [-1.0, 1.0]:
         var blade := MeshInstance3D.new()
-        var mesh := BoxMesh.new()
         # Extend the signature in the ground plane so it reads from the gameplay camera,
         # rather than relying on vertical geometry that collapses in top-down projection.
-        mesh.size = Vector3(0.060, 0.22, 0.42)
-        blade.mesh = mesh
+        blade.mesh = _signature_box_mesh("runner_blade", Vector3(0.060, 0.22, 0.42))
         blade.name = "RunnerBladeL" if side < 0.0 else "RunnerBladeR"
         blade.position = Vector3(side * 0.43, 0.82, 0.02)
         blade.rotation_degrees = Vector3(0.0, side * 18.0, side * -20.0)
@@ -1259,17 +1453,21 @@ func _add_runner_blades(color: Color) -> void:
         add_child(blade)
     _add_eye_beacon(color, Vector3(0.0, 1.54, -0.30), 0.060)
 
+static func _brute_armor_material() -> StandardMaterial3D:
+    if _shared_brute_armor_material != null:
+        return _shared_brute_armor_material
+    _shared_brute_armor_material = StandardMaterial3D.new()
+    _shared_brute_armor_material.albedo_color = Color(0.055, 0.072, 0.080)
+    _shared_brute_armor_material.metallic = 0.54
+    _shared_brute_armor_material.roughness = 0.56
+    return _shared_brute_armor_material
+
 func _add_brute_shoulders(color: Color) -> void:
-    var armor := StandardMaterial3D.new()
-    armor.albedo_color = Color(0.055, 0.072, 0.080)
-    armor.metallic = 0.54
-    armor.roughness = 0.56
+    var armor := _brute_armor_material()
     var accent := _signature_material(color, 1.55)
     for side in [-1.0, 1.0]:
         var plate := MeshInstance3D.new()
-        var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.28, 0.12, 0.34)
-        plate.mesh = mesh
+        plate.mesh = _signature_box_mesh("brute_plate", Vector3(0.28, 0.12, 0.34))
         plate.name = "BrutePlateL" if side < 0.0 else "BrutePlateR"
         plate.position = Vector3(side * 0.47, 1.12, 0.03)
         plate.rotation_degrees = Vector3(-4.0, side * 7.0, side * -12.0)
@@ -1277,9 +1475,7 @@ func _add_brute_shoulders(color: Color) -> void:
         add_child(plate)
 
         var edge := MeshInstance3D.new()
-        var edge_mesh := BoxMesh.new()
-        edge_mesh.size = Vector3(0.045, 0.045, 0.26)
-        edge.mesh = edge_mesh
+        edge.mesh = _signature_box_mesh("brute_edge", Vector3(0.045, 0.045, 0.26))
         edge.name = "BruteEdgeL" if side < 0.0 else "BruteEdgeR"
         edge.position = Vector3(side * 0.57, 1.14, -0.02)
         edge.rotation_degrees = plate.rotation_degrees
@@ -1291,9 +1487,7 @@ func _add_elite_crown(color: Color) -> void:
     var mat := _signature_material(color, 1.95)
     for side in [-1.0, 1.0]:
         var fin := MeshInstance3D.new()
-        var mesh := BoxMesh.new()
-        mesh.size = Vector3(0.055, 0.38, 0.10)
-        fin.mesh = mesh
+        fin.mesh = _signature_box_mesh("elite_fin", Vector3(0.055, 0.38, 0.10))
         fin.name = "EliteFinL" if side < 0.0 else "EliteFinR"
         fin.position = Vector3(side * 0.31, 1.62, 0.06)
         fin.rotation_degrees.z = side * -28.0
@@ -1305,9 +1499,7 @@ func _add_boss_frame(color: Color) -> void:
     var mat := _signature_material(color, 3.4)
     for side in [-1.0, 1.0]:
         var wing := MeshInstance3D.new()
-        var wing_mesh := BoxMesh.new()
-        wing_mesh.size = Vector3(0.16, 0.30, 0.58)
-        wing.mesh = wing_mesh
+        wing.mesh = _signature_box_mesh("boss_wing", Vector3(0.16, 0.30, 0.58))
         wing.name = "BossWingL" if side < 0.0 else "BossWingR"
         wing.position = Vector3(side * 0.72, 1.16, 0.04)
         wing.rotation_degrees = Vector3(0.0, side * 18.0, side * -16.0)
@@ -1315,9 +1507,7 @@ func _add_boss_frame(color: Color) -> void:
         add_child(wing)
 
         var horn := MeshInstance3D.new()
-        var horn_mesh := BoxMesh.new()
-        horn_mesh.size = Vector3(0.12, 0.62, 0.22)
-        horn.mesh = horn_mesh
+        horn.mesh = _signature_box_mesh("boss_horn", Vector3(0.12, 0.62, 0.22))
         horn.name = "BossHornL" if side < 0.0 else "BossHornR"
         horn.position = Vector3(side * 0.52, 1.80, 0.06)
         horn.rotation_degrees.z = side * -32.0
@@ -1325,10 +1515,7 @@ func _add_boss_frame(color: Color) -> void:
         add_child(horn)
 
     var core := MeshInstance3D.new()
-    var core_mesh := SphereMesh.new()
-    core_mesh.radius = 0.145
-    core_mesh.height = 0.29
-    core.mesh = core_mesh
+    core.mesh = _signature_sphere_mesh("boss_core", 0.145, 0.29)
     core.name = "BossCore"
     core.position = Vector3(0.0, 1.32, -0.48)
     core.material_override = _signature_material(Color(1.0, 0.30, 0.04), 4.6)
@@ -1371,6 +1558,13 @@ var hit_radius := 0.72
 var combat_enabled := true
 var resolved := false
 
+static var _core_mesh: SphereMesh
+static var _halo_mesh: SphereMesh
+static var _trail_mesh: BoxMesh
+static var _core_material: StandardMaterial3D
+static var _halo_material: StandardMaterial3D
+static var _trail_material: StandardMaterial3D
+
 func configure(target_position: Vector3, chase_target: Node3D, amount: float, speed := 8.6) -> void:
     target = chase_target
     damage = amount
@@ -1412,50 +1606,89 @@ func _hit_target() -> void:
         target.take_damage(damage)
     queue_free()
 
+static func _shared_core_mesh() -> SphereMesh:
+    if _core_mesh != null:
+        return _core_mesh
+    _core_mesh = SphereMesh.new()
+    _core_mesh.radius = 0.13
+    _core_mesh.height = 0.26
+    _core_mesh.radial_segments = 10
+    _core_mesh.rings = 5
+    return _core_mesh
+
+static func _shared_halo_mesh() -> SphereMesh:
+    if _halo_mesh != null:
+        return _halo_mesh
+    _halo_mesh = SphereMesh.new()
+    _halo_mesh.radius = 0.24
+    _halo_mesh.height = 0.48
+    _halo_mesh.radial_segments = 10
+    _halo_mesh.rings = 5
+    return _halo_mesh
+
+static func _shared_trail_mesh() -> BoxMesh:
+    if _trail_mesh != null:
+        return _trail_mesh
+    _trail_mesh = BoxMesh.new()
+    _trail_mesh.size = Vector3(0.07, 0.07, 0.78)
+    return _trail_mesh
+
+static func _shared_core_material() -> StandardMaterial3D:
+    if _core_material != null:
+        return _core_material
+    _core_material = StandardMaterial3D.new()
+    _core_material.albedo_color = Color(0.08, 0.78, 1.0)
+    _core_material.emission_enabled = true
+    _core_material.emission = Color(0.04, 0.66, 1.0)
+    _core_material.emission_energy_multiplier = 5.2
+    _core_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    return _core_material
+
+static func _shared_halo_material() -> StandardMaterial3D:
+    if _halo_material != null:
+        return _halo_material
+    _halo_material = StandardMaterial3D.new()
+    _halo_material.albedo_color = Color(0.08, 0.72, 1.0, 0.18)
+    _halo_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    _halo_material.emission_enabled = true
+    _halo_material.emission = Color(0.04, 0.55, 1.0)
+    _halo_material.emission_energy_multiplier = 2.6
+    _halo_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    return _halo_material
+
+static func _shared_trail_material() -> StandardMaterial3D:
+    if _trail_material != null:
+        return _trail_material
+    _trail_material = StandardMaterial3D.new()
+    _trail_material.albedo_color = Color(0.05, 0.64, 1.0, 0.42)
+    _trail_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    _trail_material.emission_enabled = true
+    _trail_material.emission = Color(0.04, 0.58, 1.0)
+    _trail_material.emission_energy_multiplier = 3.8
+    _trail_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    return _trail_material
+
 func _build_visual() -> void:
     var core := MeshInstance3D.new()
     core.name = "HarrierBoltCore"
-    var core_mesh := SphereMesh.new()
-    core_mesh.radius = 0.13
-    core_mesh.height = 0.26
-    core.mesh = core_mesh
-    var core_mat := StandardMaterial3D.new()
-    core_mat.albedo_color = Color(0.08, 0.78, 1.0)
-    core_mat.emission_enabled = true
-    core_mat.emission = Color(0.04, 0.66, 1.0)
-    core_mat.emission_energy_multiplier = 5.2
-    core.material_override = core_mat
+    core.mesh = _shared_core_mesh()
+    core.material_override = _shared_core_material()
+    core.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     add_child(core)
 
     var halo := MeshInstance3D.new()
     halo.name = "HarrierBoltHalo"
-    var halo_mesh := SphereMesh.new()
-    halo_mesh.radius = 0.24
-    halo_mesh.height = 0.48
-    halo.mesh = halo_mesh
-    var halo_mat := StandardMaterial3D.new()
-    halo_mat.albedo_color = Color(0.08, 0.72, 1.0, 0.18)
-    halo_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    halo_mat.emission_enabled = true
-    halo_mat.emission = Color(0.04, 0.55, 1.0)
-    halo_mat.emission_energy_multiplier = 2.6
-    halo.material_override = halo_mat
+    halo.mesh = _shared_halo_mesh()
+    halo.material_override = _shared_halo_material()
+    halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     add_child(halo)
 
     var trail := MeshInstance3D.new()
     trail.name = "HarrierBoltTrail"
-    var trail_mesh := BoxMesh.new()
-    trail_mesh.size = Vector3(0.07, 0.07, 0.78)
-    trail.mesh = trail_mesh
+    trail.mesh = _shared_trail_mesh()
     trail.position = Vector3(0.0, 0.0, 0.42)
-    var trail_mat := StandardMaterial3D.new()
-    trail_mat.albedo_color = Color(0.05, 0.64, 1.0, 0.42)
-    trail_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    trail_mat.emission_enabled = true
-    trail_mat.emission = Color(0.04, 0.58, 1.0)
-    trail_mat.emission_energy_multiplier = 3.8
-    trail_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    trail.material_override = trail_mat
+    trail.material_override = _shared_trail_material()
+    trail.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     add_child(trail)
 
     if velocity.length_squared() > 0.01:
@@ -1469,13 +1702,23 @@ extends RefCounted
 
 const DEFAULTS := {
     "master_volume": 0.85,
-    "sfx_volume": 0.90
+    "sfx_volume": 0.90,
+    "music_volume": 0.62,
+    "haptics_enabled": true,
+    "reduced_flashes": false,
+    "camera_shake_enabled": true,
+    "hit_stop_enabled": true
 }
 
 static func save(path: String, settings: Dictionary) -> Error:
     var config := ConfigFile.new()
     config.set_value("audio", "master_volume", clampf(float(settings.get("master_volume", DEFAULTS["master_volume"])), 0.0, 1.0))
     config.set_value("audio", "sfx_volume", clampf(float(settings.get("sfx_volume", DEFAULTS["sfx_volume"])), 0.0, 1.0))
+    config.set_value("audio", "music_volume", clampf(float(settings.get("music_volume", DEFAULTS["music_volume"])), 0.0, 1.0))
+    config.set_value("comfort", "haptics_enabled", bool(settings.get("haptics_enabled", DEFAULTS["haptics_enabled"])))
+    config.set_value("comfort", "reduced_flashes", bool(settings.get("reduced_flashes", DEFAULTS["reduced_flashes"])))
+    config.set_value("comfort", "camera_shake_enabled", bool(settings.get("camera_shake_enabled", DEFAULTS["camera_shake_enabled"])))
+    config.set_value("comfort", "hit_stop_enabled", bool(settings.get("hit_stop_enabled", DEFAULTS["hit_stop_enabled"])))
     return config.save(path)
 
 static func load_settings(path: String) -> Dictionary:
@@ -1485,6 +1728,11 @@ static func load_settings(path: String) -> Dictionary:
         return result
     result["master_volume"] = clampf(float(config.get_value("audio", "master_volume", DEFAULTS["master_volume"])), 0.0, 1.0)
     result["sfx_volume"] = clampf(float(config.get_value("audio", "sfx_volume", DEFAULTS["sfx_volume"])), 0.0, 1.0)
+    result["music_volume"] = clampf(float(config.get_value("audio", "music_volume", DEFAULTS["music_volume"])), 0.0, 1.0)
+    result["haptics_enabled"] = bool(config.get_value("comfort", "haptics_enabled", DEFAULTS["haptics_enabled"]))
+    result["reduced_flashes"] = bool(config.get_value("comfort", "reduced_flashes", DEFAULTS["reduced_flashes"]))
+    result["camera_shake_enabled"] = bool(config.get_value("comfort", "camera_shake_enabled", DEFAULTS["camera_shake_enabled"]))
+    result["hit_stop_enabled"] = bool(config.get_value("comfort", "hit_stop_enabled", DEFAULTS["hit_stop_enabled"]))
     return result
 ```
 
@@ -1539,6 +1787,11 @@ signal pause_requested
 signal resume_requested
 signal master_volume_changed(value: float)
 signal sfx_volume_changed(value: float)
+signal music_volume_changed(value: float)
+signal haptics_changed(enabled: bool)
+signal reduced_flashes_changed(enabled: bool)
+signal camera_shake_changed(enabled: bool)
+signal hit_stop_changed(enabled: bool)
 
 var hp_bar: ProgressBar
 var health_bar: ProgressBar
@@ -1567,6 +1820,12 @@ var pause_panel: PanelContainer
 var pause_button: Button
 var master_volume: HSlider
 var sfx_volume: HSlider
+var music_volume: HSlider
+var haptics_toggle: CheckButton
+var reduced_flashes_toggle: CheckButton
+var camera_shake_toggle: CheckButton
+var hit_stop_toggle: CheckButton
+var reduced_flashes := false
 var impact_flash: ColorRect
 var impact_flash_tween: Tween
 var damage_vignette: ColorRect
@@ -1584,10 +1843,10 @@ func pulse_damage_screen() -> void:
     if damage_vignette_tween != null and damage_vignette_tween.is_valid():
         damage_vignette_tween.kill()
     damage_vignette.visible = true
-    damage_vignette.modulate.a = 1.0
+    damage_vignette.modulate.a = 0.32 if reduced_flashes else 1.0
     damage_vignette_tween = damage_vignette.create_tween()
     damage_vignette_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-    damage_vignette_tween.tween_property(damage_vignette, "modulate:a", 0.0, 0.26).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    damage_vignette_tween.tween_property(damage_vignette, "modulate:a", 0.0, 0.12 if reduced_flashes else 0.26).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     damage_vignette_tween.tween_callback(func() -> void:
         if damage_vignette != null:
             damage_vignette.visible = false
@@ -1660,7 +1919,13 @@ func _direction_arrow(direction: Vector2) -> String:
 func show_touch_stick(origin: Vector2) -> void:
     if touch_stick_root == null or touch_stick_knob == null:
         return
-    touch_stick_root.position = origin - touch_stick_root.size * 0.5
+    var viewport_size := get_viewport().get_visible_rect().size
+    var half_size := touch_stick_root.size * 0.5
+    var safe_center := Vector2(
+        clampf(origin.x, half_size.x + 8.0, maxf(half_size.x + 8.0, viewport_size.x - half_size.x - 8.0)),
+        clampf(origin.y, half_size.y + 8.0, maxf(half_size.y + 8.0, viewport_size.y - half_size.y - 8.0))
+    )
+    touch_stick_root.position = safe_center - half_size
     touch_stick_knob.position = (touch_stick_root.size - touch_stick_knob.size) * 0.5
     touch_stick_root.visible = true
 
@@ -1676,6 +1941,11 @@ func update_touch_stick(origin: Vector2, input_vector: Vector2) -> void:
 func hide_touch_stick() -> void:
     if touch_stick_root != null:
         touch_stick_root.visible = false
+
+func set_reduced_flashes(enabled: bool) -> void:
+    reduced_flashes = enabled
+    if reduced_flashes_toggle != null:
+        reduced_flashes_toggle.set_pressed_no_signal(enabled)
 
 func show_upgrade(items: Array) -> void:
     for i in range(upgrade_buttons.size()):
@@ -1713,11 +1983,14 @@ func show_impact_flash(critical: bool, killed: bool, boss: bool) -> void:
     if boss:
         alpha = maxf(alpha, 0.18)
         tint = Color(1.0, 0.12, 0.055, alpha)
+    if reduced_flashes:
+        tint.a *= 0.32
     impact_flash.color = tint
     impact_flash.visible = true
     impact_flash_tween = create_tween()
     impact_flash_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-    impact_flash_tween.tween_property(impact_flash, "color:a", 0.0, 0.16 if boss else 0.11)
+    var flash_duration := (0.07 if boss else 0.055) if reduced_flashes else (0.16 if boss else 0.11)
+    impact_flash_tween.tween_property(impact_flash, "color:a", 0.0, flash_duration)
     impact_flash_tween.tween_callback(func() -> void:
         if impact_flash != null:
             impact_flash.visible = false
@@ -1727,6 +2000,9 @@ func show_game_over(kills: int, level: int, elapsed: float) -> void:
     wave_label.text = "RUN TERMINATED"
     upgrade_panel.visible = false
     boss_panel.visible = false
+    pause_panel.visible = false
+    impact_flash.visible = false
+    damage_vignette.visible = false
     var minutes := int(elapsed) / 60
     var seconds := int(elapsed) % 60
     game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]
@@ -1965,50 +2241,132 @@ func _build() -> void:
     pause_panel = PanelContainer.new()
     pause_panel.name = "PausePanel"
     pause_panel.set_anchors_preset(Control.PRESET_CENTER)
-    pause_panel.position = Vector2(-250, -210)
-    pause_panel.size = Vector2(500, 420)
+    pause_panel.position = Vector2(-380, -235)
+    pause_panel.size = Vector2(760, 470)
     pause_panel.visible = false
     add_child(pause_panel)
+
     var pause_box := VBoxContainer.new()
     pause_box.alignment = BoxContainer.ALIGNMENT_CENTER
-    pause_box.add_theme_constant_override("separation", 18)
+    pause_box.add_theme_constant_override("separation", 14)
     pause_panel.add_child(pause_box)
+
     var pause_title := Label.new()
     pause_title.text = "SYSTEM PAUSED"
     pause_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     pause_title.add_theme_font_size_override("font_size", 30)
     pause_title.modulate = Color(0.72, 0.92, 1.0)
     pause_box.add_child(pause_title)
+
+    var settings_columns := HBoxContainer.new()
+    settings_columns.name = "SettingsColumns"
+    settings_columns.alignment = BoxContainer.ALIGNMENT_CENTER
+    settings_columns.add_theme_constant_override("separation", 34)
+    pause_box.add_child(settings_columns)
+
+    var audio_column := VBoxContainer.new()
+    audio_column.name = "AudioColumn"
+    audio_column.custom_minimum_size = Vector2(310, 0)
+    audio_column.add_theme_constant_override("separation", 8)
+    settings_columns.add_child(audio_column)
+
     var master_label := Label.new()
     master_label.text = "MASTER VOLUME"
     master_label.add_theme_font_size_override("font_size", 16)
-    pause_box.add_child(master_label)
+    audio_column.add_child(master_label)
     master_volume = HSlider.new()
     master_volume.name = "MasterVolume"
     master_volume.min_value = 0.0
     master_volume.max_value = 1.0
     master_volume.step = 0.05
     master_volume.value = 0.85
-    master_volume.custom_minimum_size = Vector2(360, 42)
+    master_volume.custom_minimum_size = Vector2(300, 48)
     master_volume.value_changed.connect(func(value: float) -> void: master_volume_changed.emit(value))
-    pause_box.add_child(master_volume)
+    audio_column.add_child(master_volume)
+
     var sfx_label := Label.new()
     sfx_label.text = "SFX VOLUME"
     sfx_label.add_theme_font_size_override("font_size", 16)
-    pause_box.add_child(sfx_label)
+    audio_column.add_child(sfx_label)
     sfx_volume = HSlider.new()
     sfx_volume.name = "SfxVolume"
     sfx_volume.min_value = 0.0
     sfx_volume.max_value = 1.0
     sfx_volume.step = 0.05
     sfx_volume.value = 0.90
-    sfx_volume.custom_minimum_size = Vector2(360, 42)
+    sfx_volume.custom_minimum_size = Vector2(300, 48)
     sfx_volume.value_changed.connect(func(value: float) -> void: sfx_volume_changed.emit(value))
-    pause_box.add_child(sfx_volume)
+    audio_column.add_child(sfx_volume)
+
+    var music_label := Label.new()
+    music_label.text = "MUSIC VOLUME"
+    music_label.add_theme_font_size_override("font_size", 16)
+    audio_column.add_child(music_label)
+    music_volume = HSlider.new()
+    music_volume.name = "MusicVolume"
+    music_volume.min_value = 0.0
+    music_volume.max_value = 1.0
+    music_volume.step = 0.05
+    music_volume.value = 0.62
+    music_volume.custom_minimum_size = Vector2(300, 48)
+    music_volume.value_changed.connect(func(value: float) -> void: music_volume_changed.emit(value))
+    audio_column.add_child(music_volume)
+
+    var comfort_column := VBoxContainer.new()
+    comfort_column.name = "ComfortColumn"
+    comfort_column.custom_minimum_size = Vector2(310, 0)
+    comfort_column.add_theme_constant_override("separation", 12)
+    settings_columns.add_child(comfort_column)
+
+    var comfort_label := Label.new()
+    comfort_label.text = "COMFORT"
+    comfort_label.add_theme_font_size_override("font_size", 16)
+    comfort_label.modulate = Color(0.68, 0.86, 0.94)
+    comfort_column.add_child(comfort_label)
+
+    haptics_toggle = CheckButton.new()
+    haptics_toggle.name = "HapticsToggle"
+    haptics_toggle.text = "HAPTICS"
+    haptics_toggle.button_pressed = true
+    haptics_toggle.custom_minimum_size = Vector2(300, 48)
+    haptics_toggle.add_theme_font_size_override("font_size", 16)
+    haptics_toggle.toggled.connect(func(enabled: bool) -> void: haptics_changed.emit(enabled))
+    comfort_column.add_child(haptics_toggle)
+
+    reduced_flashes_toggle = CheckButton.new()
+    reduced_flashes_toggle.name = "ReducedFlashesToggle"
+    reduced_flashes_toggle.text = "REDUCED FLASHES"
+    reduced_flashes_toggle.button_pressed = false
+    reduced_flashes_toggle.custom_minimum_size = Vector2(300, 48)
+    reduced_flashes_toggle.add_theme_font_size_override("font_size", 16)
+    reduced_flashes_toggle.toggled.connect(func(enabled: bool) -> void:
+        reduced_flashes = enabled
+        reduced_flashes_changed.emit(enabled)
+    )
+    comfort_column.add_child(reduced_flashes_toggle)
+
+    camera_shake_toggle = CheckButton.new()
+    camera_shake_toggle.name = "CameraShakeToggle"
+    camera_shake_toggle.text = "CAMERA SHAKE"
+    camera_shake_toggle.button_pressed = true
+    camera_shake_toggle.custom_minimum_size = Vector2(300, 48)
+    camera_shake_toggle.add_theme_font_size_override("font_size", 16)
+    camera_shake_toggle.toggled.connect(func(enabled: bool) -> void: camera_shake_changed.emit(enabled))
+    comfort_column.add_child(camera_shake_toggle)
+
+    hit_stop_toggle = CheckButton.new()
+    hit_stop_toggle.name = "HitStopToggle"
+    hit_stop_toggle.text = "HIT STOP"
+    hit_stop_toggle.button_pressed = true
+    hit_stop_toggle.custom_minimum_size = Vector2(300, 48)
+    hit_stop_toggle.add_theme_font_size_override("font_size", 16)
+    hit_stop_toggle.toggled.connect(func(enabled: bool) -> void: hit_stop_changed.emit(enabled))
+    comfort_column.add_child(hit_stop_toggle)
+
     var resume_button := Button.new()
     resume_button.name = "ResumeButton"
     resume_button.text = "RESUME"
-    resume_button.custom_minimum_size = Vector2(280, 62)
+    resume_button.custom_minimum_size = Vector2(300, 58)
     resume_button.add_theme_font_size_override("font_size", 21)
     resume_button.pressed.connect(func() -> void: resume_requested.emit())
     pause_box.add_child(resume_button)
@@ -2277,23 +2635,24 @@ var ring_instance: MeshInstance3D
 var core_material: StandardMaterial3D
 var ring_material: StandardMaterial3D
 
+static var _shared_core_mesh: SphereMesh
+static var _shared_ring_mesh: TorusMesh
+static var _spark_process_cache := {}
+static var _spark_mesh_cache := {}
+
 func _ready() -> void:
     mesh_instance = MeshInstance3D.new()
     mesh_instance.name = "ImpactCore"
-    var sphere := SphereMesh.new()
-    sphere.radius = 0.18
-    sphere.height = 0.36
-    mesh_instance.mesh = sphere
+    mesh_instance.mesh = _core_mesh()
+    mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     core_material = _make_material(color, 4.2)
     mesh_instance.material_override = core_material
     add_child(mesh_instance)
 
     ring_instance = MeshInstance3D.new()
     ring_instance.name = "ImpactRing"
-    var ring := TorusMesh.new()
-    ring.inner_radius = 0.24
-    ring.outer_radius = 0.34
-    ring_instance.mesh = ring
+    ring_instance.mesh = _ring_mesh()
+    ring_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     ring_instance.rotation_degrees.x = 90.0
     ring_material = _make_material(color.lightened(0.18), 3.4)
     ring_instance.material_override = ring_material
@@ -2308,31 +2667,67 @@ func _ready() -> void:
     sparks.randomness = 0.35
     sparks.local_coords = false
 
-    var particle_material := ParticleProcessMaterial.new()
-    particle_material.direction = Vector3(0.0, 1.0, 0.0)
-    particle_material.spread = 70.0
-    particle_material.initial_velocity_min = 2.2
-    particle_material.initial_velocity_max = 4.2
-    particle_material.gravity = Vector3(0.0, -7.0, 0.0)
-    particle_material.scale_min = 0.45
-    particle_material.scale_max = 1.0
-    particle_material.color = color
-    sparks.process_material = particle_material
-
-    var spark_mesh := QuadMesh.new()
-    spark_mesh.size = Vector2(0.055, 0.16)
-    var spark_material := StandardMaterial3D.new()
-    spark_material.albedo_color = color
-    spark_material.emission_enabled = true
-    spark_material.emission = color
-    spark_material.emission_energy_multiplier = 4.5
-    spark_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    spark_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    spark_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
-    spark_mesh.material = spark_material
-    sparks.draw_pass_1 = spark_mesh
+    sparks.process_material = _spark_process_material(color)
+    sparks.draw_pass_1 = _spark_mesh(color)
     add_child(sparks)
     sparks.emitting = true
+
+static func _core_mesh() -> SphereMesh:
+    if _shared_core_mesh != null:
+        return _shared_core_mesh
+    _shared_core_mesh = SphereMesh.new()
+    _shared_core_mesh.radius = 0.18
+    _shared_core_mesh.height = 0.36
+    _shared_core_mesh.radial_segments = 12
+    _shared_core_mesh.rings = 6
+    return _shared_core_mesh
+
+static func _ring_mesh() -> TorusMesh:
+    if _shared_ring_mesh != null:
+        return _shared_ring_mesh
+    _shared_ring_mesh = TorusMesh.new()
+    _shared_ring_mesh.inner_radius = 0.24
+    _shared_ring_mesh.outer_radius = 0.34
+    _shared_ring_mesh.rings = 16
+    _shared_ring_mesh.ring_segments = 6
+    return _shared_ring_mesh
+
+static func _spark_cache_key(tint: Color) -> String:
+    return tint.to_html(true)
+
+static func _spark_process_material(tint: Color) -> ParticleProcessMaterial:
+    var key := _spark_cache_key(tint)
+    if _spark_process_cache.has(key):
+        return _spark_process_cache[key] as ParticleProcessMaterial
+    var material := ParticleProcessMaterial.new()
+    material.direction = Vector3(0.0, 1.0, 0.0)
+    material.spread = 70.0
+    material.initial_velocity_min = 2.2
+    material.initial_velocity_max = 4.2
+    material.gravity = Vector3(0.0, -7.0, 0.0)
+    material.scale_min = 0.45
+    material.scale_max = 1.0
+    material.color = tint
+    _spark_process_cache[key] = material
+    return material
+
+static func _spark_mesh(tint: Color) -> QuadMesh:
+    var key := _spark_cache_key(tint)
+    if _spark_mesh_cache.has(key):
+        return _spark_mesh_cache[key] as QuadMesh
+    var mesh := QuadMesh.new()
+    mesh.size = Vector2(0.055, 0.16)
+    var material := StandardMaterial3D.new()
+    material.albedo_color = tint
+    material.emission_enabled = true
+    material.emission = tint
+    material.emission_energy_multiplier = 4.5
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    mesh.material = material
+    _spark_mesh_cache[key] = mesh
+    return mesh
 
 func _make_material(tint: Color, energy: float) -> StandardMaterial3D:
     var material := StandardMaterial3D.new()
@@ -2408,21 +2803,44 @@ var camera_kick_phase := 0.0
 var hit_freeze_left := 0.0
 var boss_reveal_target: DZEnemy
 var boss_reveal_left := 0.0
+var current_boss: DZEnemy
 var impact_audio: AudioStreamPlayer
+var impact_audio_voices: Array[AudioStreamPlayer] = []
+var impact_voice_index := 0
 var boss_audio: AudioStreamPlayer
+var music_audio: AudioStreamPlayer
+var music_pressure_audio: AudioStreamPlayer
+var music_duck_tween: Tween
 var impact_streams := {}
 var enemy_spatial_index := DZSpatialHash.new(4.0)
 var last_player_health := -1.0
 var run_director := DZRunDirector.new()
 var spawn_rng := RandomNumberGenerator.new()
 var director_profile: Dictionary = {}
+var hud_refresh_clock := 0.0
+var threat_indicator_refresh_clock := 0.0
+var director_refresh_clock := 0.0
+var haptics_enabled := true
+var reduced_flashes := false
+var camera_shake_enabled := true
+var hit_stop_enabled := true
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
 const TOUCH_STICK_DEADZONE := 10.0
 const BOSS_REVEAL_DURATION := 1.15
 const BOSS_REVEAL_FOCUS := 0.58
+const BOSS_INTERVAL := 75.0
+const BOSS_RETRY_DELAY := 15.0
 const BOSS_REVEAL_FOV_DELTA := 5.5
+const HUD_REFRESH_INTERVAL := 0.10
+const MUSIC_BASE_DB := -20.0
+const MUSIC_DUCK_DB := -27.0
+const MUSIC_PRESSURE_BREACH_DB := -48.0
+const MUSIC_PRESSURE_BOSS_DB := -11.0
+const SPAWN_ARENA_HALF_EXTENT := 34.0
+const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
+const DIRECTOR_REFRESH_INTERVAL := 0.25
 
 func _ready() -> void:
     randomize()
@@ -2455,6 +2873,11 @@ func _ready() -> void:
     hud.resume_requested.connect(_on_resume_requested)
     hud.master_volume_changed.connect(_on_master_volume_changed)
     hud.sfx_volume_changed.connect(_on_sfx_volume_changed)
+    hud.music_volume_changed.connect(_on_music_volume_changed)
+    hud.haptics_changed.connect(_on_haptics_changed)
+    hud.reduced_flashes_changed.connect(_on_reduced_flashes_changed)
+    hud.camera_shake_changed.connect(_on_camera_shake_changed)
+    hud.hit_stop_changed.connect(_on_hit_stop_changed)
     _load_audio_settings()
     last_player_health = player.health
     hud.set_health(player.health, player.max_health)
@@ -2466,8 +2889,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
     if hit_freeze_left > 0.0:
-        hit_freeze_left = max(0.0, hit_freeze_left - delta)
-        Engine.time_scale = 0.12
+        var real_delta := DZCombatFeel.unscaled_delta(delta, Engine.time_scale)
+        hit_freeze_left = maxf(0.0, hit_freeze_left - real_delta)
+        Engine.time_scale = 0.12 if hit_freeze_left > 0.0 else 1.0
     else:
         Engine.time_scale = 1.0
 
@@ -2495,19 +2919,29 @@ func _process(delta: float) -> void:
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.fov = lerpf(camera.fov, target_fov, 1.0 - exp(-delta * 5.5))
         camera.look_at(focus_point, Vector3.UP)
-        _update_offscreen_threat_indicator()
+        threat_indicator_refresh_clock -= delta
+        if threat_indicator_refresh_clock <= 0.0:
+            threat_indicator_refresh_clock = THREAT_INDICATOR_REFRESH_INTERVAL
+            _update_offscreen_threat_indicator()
 
 func _physics_process(delta: float) -> void:
     if game_over:
         return
     elapsed += delta
-    director_profile = run_director.profile(elapsed, level)
-    max_enemies = int(director_profile["max_enemies"])
+    director_refresh_clock -= delta
+    if director_refresh_clock <= 0.0:
+        director_refresh_clock = DIRECTOR_REFRESH_INTERVAL
+        director_profile = run_director.profile(elapsed, level)
+        max_enemies = int(director_profile["max_enemies"])
     boss_banner_timer = max(0.0, boss_banner_timer - delta)
+    _update_music_pressure(delta)
     if elapsed >= next_boss_time:
-        _spawn_enemy("boss")
-        boss_banner_timer = 3.2
-        next_boss_time += 75.0
+        if _has_active_boss():
+            next_boss_time = elapsed + BOSS_RETRY_DELAY
+        else:
+            _spawn_enemy("boss")
+            boss_banner_timer = 3.2
+            next_boss_time = elapsed + BOSS_INTERVAL
 
     spawn_clock -= delta
     if spawn_clock <= 0.0:
@@ -2515,12 +2949,16 @@ func _physics_process(delta: float) -> void:
         for i in range(batch):
             _spawn_enemy()
         spawn_clock = float(director_profile["spawn_interval"])
-    enemy_spatial_index.rebuild(get_tree().get_nodes_in_group("enemies"))
-    hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
-    hud.set_wave(_wave_name())
+    var enemies := get_tree().get_nodes_in_group("enemies")
+    enemy_spatial_index.rebuild(enemies)
+    hud_refresh_clock -= delta
+    if hud_refresh_clock <= 0.0:
+        hud_refresh_clock = HUD_REFRESH_INTERVAL
+        hud.set_progress(xp, xp_next, level, kills, elapsed, enemies.size())
+        hud.set_wave(_wave_name())
 
 func _unhandled_input(event: InputEvent) -> void:
-    if player == null:
+    if player == null or game_over or not pending_upgrades.is_empty() or get_tree().paused:
         return
     if event is InputEventScreenTouch:
         var touch := event as InputEventScreenTouch
@@ -2554,17 +2992,64 @@ func _touch_input_vector(current_position: Vector2) -> Vector2:
     )
     return delta.normalized() * strength
 
+func _music_pressure_target_db() -> float:
+    if _has_active_boss():
+        return MUSIC_PRESSURE_BOSS_DB
+    match String(director_profile.get("phase", "BREACH")):
+        "SURGE":
+            return -31.0
+        "PRESSURE":
+            return -24.0
+        "OVERRUN":
+            return -18.0
+        "EXTINCTION":
+            return -13.0
+        _:
+            return MUSIC_PRESSURE_BREACH_DB
+
+func _update_music_pressure(delta: float) -> void:
+    if music_pressure_audio == null or music_pressure_audio.stream == null:
+        return
+    music_pressure_audio.volume_db = move_toward(
+        music_pressure_audio.volume_db,
+        _music_pressure_target_db(),
+        maxf(delta, 0.0) * 8.0
+    )
+
+func _has_active_boss() -> bool:
+    return current_boss != null and is_instance_valid(current_boss) and not current_boss.dead
+
 func query_enemies_near(position: Vector3, radius: float) -> Array:
     return enemy_spatial_index.query(position, radius)
+
+func _clamp_spawn_position(position: Vector3) -> Vector3:
+    return Vector3(
+        clampf(position.x, -SPAWN_ARENA_HALF_EXTENT, SPAWN_ARENA_HALF_EXTENT),
+        position.y,
+        clampf(position.z, -SPAWN_ARENA_HALF_EXTENT, SPAWN_ARENA_HALF_EXTENT)
+    )
+
+func _spawn_position_around_player(radius: float) -> Vector3:
+    var safe_radius := clampf(radius, 12.0, 18.0)
+    for _attempt in range(8):
+        var angle := spawn_rng.randf() * TAU
+        var candidate := player.global_position + Vector3(cos(angle) * safe_radius, 0.0, sin(angle) * safe_radius)
+        if absf(candidate.x) <= SPAWN_ARENA_HALF_EXTENT and absf(candidate.z) <= SPAWN_ARENA_HALF_EXTENT:
+            return candidate
+
+    var toward_center := -player.global_position
+    toward_center.y = 0.0
+    if toward_center.length_squared() < 0.001:
+        toward_center = Vector3.FORWARD
+    return _clamp_spawn_position(player.global_position + toward_center.normalized() * safe_radius)
 
 func _spawn_enemy(forced_kind: String = "") -> void:
     if player == null or game_over:
         return
     if forced_kind != "boss" and get_tree().get_nodes_in_group("enemies").size() >= max_enemies:
         return
-    var angle := spawn_rng.randf() * TAU
     var radius := spawn_rng.randf_range(12.0, 18.0)
-    var pos := player.global_position + Vector3(cos(angle) * radius, 0.0, sin(angle) * radius)
+    var pos := _spawn_position_around_player(radius)
     var kind := forced_kind if not forced_kind.is_empty() else run_director.choose_enemy(elapsed, level, spawn_rng)
     var difficulty := float(director_profile.get("difficulty", 1.0))
     var enemy := DZEnemy.new()
@@ -2574,6 +3059,7 @@ func _spawn_enemy(forced_kind: String = "") -> void:
     add_child(enemy)
     enemy.global_position = pos
     if kind == "boss":
+        current_boss = enemy
         _play_boss_stinger()
         boss_reveal_target = enemy
         boss_reveal_left = BOSS_REVEAL_DURATION
@@ -2583,10 +3069,14 @@ func _spawn_enemy(forced_kind: String = "") -> void:
 func _on_boss_health_changed(current: float, maximum: float) -> void:
     if hud:
         hud.set_boss_health(current, maximum)
+    if current <= 0.0:
+        next_boss_time = maxf(next_boss_time, elapsed + BOSS_RETRY_DELAY)
 
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
-    hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
-    camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
+    if hit_stop_enabled:
+        hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
+    if camera_shake_enabled:
+        camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
     if hud:
         hud.show_impact_flash(critical, killed, boss)
     _play_impact_audio(critical, killed, boss)
@@ -2602,15 +3092,27 @@ func _on_enemy_died(xp_value: int, at: Vector3) -> void:
 
 func _on_xp_collected(amount: int) -> void:
     xp += amount
-    while xp >= xp_next:
-        xp -= xp_next
-        level += 1
-        xp_next = int(round(float(xp_next) * 1.24 + 4.0))
-        _offer_upgrade()
-        break
+    _try_offer_banked_level_up()
+
+func _try_offer_banked_level_up() -> bool:
+    if game_over or not pending_upgrades.is_empty() or xp < xp_next:
+        return false
+    xp -= xp_next
+    level += 1
+    director_refresh_clock = 0.0
+    xp_next = int(round(float(xp_next) * 1.24 + 4.0))
+    _offer_upgrade()
+    return true
 
 func _offer_upgrade() -> void:
+    _clear_hit_freeze()
     pending_upgrades.clear()
+    touch_id = -1
+    if player != null and is_instance_valid(player):
+        player.set_touch_move(Vector2.ZERO)
+        player._clear_player_marker_pressure()
+    if hud != null:
+        hud.hide_touch_stick()
     var available: Array = []
     for upgrade in UPGRADE_POOL:
         var id := String(upgrade["id"])
@@ -2628,12 +3130,15 @@ func _on_upgrade_chosen(index: int) -> void:
     player.apply_upgrade(pending_upgrades[index]["id"])
     pending_upgrades.clear()
     hud.hide_upgrade()
+    if _try_offer_banked_level_up():
+        return
     get_tree().paused = false
 
 func _on_health_changed(current: float, maximum: float) -> void:
     if last_player_health >= 0.0 and current < last_player_health:
         var damage_taken := last_player_health - current
-        camera_kick = max(camera_kick, DZCombatFeel.damage_received_camera_kick(damage_taken, maximum))
+        if camera_shake_enabled:
+            camera_kick = max(camera_kick, DZCombatFeel.damage_received_camera_kick(damage_taken, maximum))
         if hud:
             hud.pulse_damage_screen()
     if hud:
@@ -2644,6 +3149,9 @@ func _ensure_audio_buses() -> void:
     if AudioServer.get_bus_index("SFX") < 0:
         AudioServer.add_bus()
         AudioServer.set_bus_name(AudioServer.bus_count - 1, "SFX")
+    if AudioServer.get_bus_index("Music") < 0:
+        AudioServer.add_bus()
+        AudioServer.set_bus_name(AudioServer.bus_count - 1, "Music")
 
 func _set_bus_linear_volume(bus_name: String, value: float) -> void:
     var bus_index := AudioServer.get_bus_index(bus_name)
@@ -2656,18 +3164,37 @@ func _load_audio_settings(path := SETTINGS_PATH) -> void:
     var settings := DZGameSettings.load_settings(path)
     var master := float(settings.get("master_volume", 0.85))
     var sfx := float(settings.get("sfx_volume", 0.90))
+    var music := float(settings.get("music_volume", 0.62))
+    haptics_enabled = bool(settings.get("haptics_enabled", true))
+    reduced_flashes = bool(settings.get("reduced_flashes", false))
+    camera_shake_enabled = bool(settings.get("camera_shake_enabled", true))
+    hit_stop_enabled = bool(settings.get("hit_stop_enabled", true))
     if hud != null:
         hud.master_volume.set_value_no_signal(master)
         hud.sfx_volume.set_value_no_signal(sfx)
+        hud.music_volume.set_value_no_signal(music)
+        hud.haptics_toggle.set_pressed_no_signal(haptics_enabled)
+        hud.set_reduced_flashes(reduced_flashes)
+        hud.camera_shake_toggle.set_pressed_no_signal(camera_shake_enabled)
+        hud.hit_stop_toggle.set_pressed_no_signal(hit_stop_enabled)
+    if player != null:
+        player.set_reduced_flashes(reduced_flashes)
     _set_bus_linear_volume("Master", master)
     _set_bus_linear_volume("SFX", sfx)
+    _set_bus_linear_volume("Music", music)
 
 func _save_audio_settings(path := SETTINGS_PATH) -> void:
     var master := hud.master_volume.value if hud != null else 0.85
     var sfx := hud.sfx_volume.value if hud != null else 0.90
+    var music := hud.music_volume.value if hud != null else 0.62
     DZGameSettings.save(path, {
         "master_volume": master,
-        "sfx_volume": sfx
+        "sfx_volume": sfx,
+        "music_volume": music,
+        "haptics_enabled": haptics_enabled,
+        "reduced_flashes": reduced_flashes,
+        "camera_shake_enabled": camera_shake_enabled,
+        "hit_stop_enabled": hit_stop_enabled
     })
 
 func _on_master_volume_changed(value: float) -> void:
@@ -2678,9 +3205,42 @@ func _on_sfx_volume_changed(value: float) -> void:
     _set_bus_linear_volume("SFX", value)
     _save_audio_settings()
 
+func _on_music_volume_changed(value: float) -> void:
+    _set_bus_linear_volume("Music", value)
+    _save_audio_settings()
+
+func _on_haptics_changed(enabled: bool) -> void:
+    haptics_enabled = enabled
+    _save_audio_settings()
+
+func _on_reduced_flashes_changed(enabled: bool) -> void:
+    reduced_flashes = enabled
+    if hud != null:
+        hud.set_reduced_flashes(enabled)
+    if player != null:
+        player.set_reduced_flashes(enabled)
+    _save_audio_settings()
+
+func _on_camera_shake_changed(enabled: bool) -> void:
+    camera_shake_enabled = enabled
+    if not enabled:
+        camera_kick = 0.0
+    _save_audio_settings()
+
+func _on_hit_stop_changed(enabled: bool) -> void:
+    hit_stop_enabled = enabled
+    if not enabled:
+        _clear_hit_freeze()
+    _save_audio_settings()
+
+func _clear_hit_freeze() -> void:
+    hit_freeze_left = 0.0
+    Engine.time_scale = 1.0
+
 func _on_pause_requested() -> void:
     if game_over or not pending_upgrades.is_empty():
         return
+    _clear_hit_freeze()
     if player != null and is_instance_valid(player):
         player._clear_player_marker_pressure()
         player.set_touch_move(Vector2.ZERO)
@@ -2696,7 +3256,10 @@ func _on_resume_requested() -> void:
         get_tree().paused = false
 
 func _on_player_died() -> void:
-    Engine.time_scale = 1.0
+    _clear_hit_freeze()
+    camera_kick = 0.0
+    boss_reveal_left = 0.0
+    boss_reveal_target = null
     game_over = true
     touch_id = -1
     if hud != null:
@@ -2720,9 +3283,13 @@ func _freeze_combat() -> void:
         var hostile := node as DZEnemyProjectile
         if hostile != null:
             hostile.set_combat_enabled(false)
+    for node in get_tree().get_nodes_in_group("xp_orbs"):
+        var orb := node as DZXpOrb
+        if orb != null:
+            orb.set_combat_enabled(false)
 
 func _on_restart_requested() -> void:
-    Engine.time_scale = 1.0
+    _clear_hit_freeze()
     get_tree().paused = false
     get_tree().reload_current_scene()
 
@@ -3372,6 +3939,30 @@ func _build_containment_lanes() -> void:
                 stripe.material_override = lane_material
                 add_child(stripe)
 
+    var boundary_material := StandardMaterial3D.new()
+    boundary_material.albedo_color = Color(0.50, 0.12, 0.018)
+    boundary_material.emission_enabled = true
+    boundary_material.emission = Color(0.18, 0.025, 0.003)
+    boundary_material.emission_energy_multiplier = 0.22
+    boundary_material.roughness = 0.72
+    boundary_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+
+    var horizontal_boundary_mesh := BoxMesh.new()
+    horizontal_boundary_mesh.size = Vector3(3.25, 0.010, 0.070)
+    var vertical_boundary_mesh := BoxMesh.new()
+    vertical_boundary_mesh.size = Vector3(0.070, 0.010, 3.25)
+
+    for axis in range(2):
+        for side in [-1.0, 1.0]:
+            for segment in range(-5, 6):
+                var boundary := MeshInstance3D.new()
+                boundary.name = "ArenaBoundary_%d_%d_%d" % [axis, int(side), segment]
+                boundary.mesh = horizontal_boundary_mesh if axis == 0 else vertical_boundary_mesh
+                boundary.position = Vector3(float(segment) * 5.35, 0.016, side * DZPlayer.ARENA_HALF_EXTENT) if axis == 0 else Vector3(side * DZPlayer.ARENA_HALF_EXTENT, 0.016, float(segment) * 5.35)
+                boundary.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+                boundary.material_override = boundary_material
+                add_child(boundary)
+
     var ring_material := StandardMaterial3D.new()
     ring_material.albedo_color = Color(0.025, 0.17, 0.23)
     ring_material.emission_enabled = true
@@ -3561,11 +4152,15 @@ func _build_perimeter_beacons() -> void:
         add_child(beacon)
 
 func _build_combat_audio() -> void:
-    impact_audio = AudioStreamPlayer.new()
-    impact_audio.name = "ImpactAudio"
-    impact_audio.bus = "SFX"
-    impact_audio.volume_db = -9.0
-    add_child(impact_audio)
+    impact_audio_voices.clear()
+    for voice_index in range(4):
+        var voice := AudioStreamPlayer.new()
+        voice.name = "ImpactAudio" if voice_index == 0 else "ImpactAudio_%d" % voice_index
+        voice.bus = "SFX"
+        voice.volume_db = -11.0
+        add_child(voice)
+        impact_audio_voices.append(voice)
+    impact_audio = impact_audio_voices[0]
 
     boss_audio = AudioStreamPlayer.new()
     boss_audio.name = "BossStinger"
@@ -3574,20 +4169,49 @@ func _build_combat_audio() -> void:
     boss_audio.stream = DZCombatAudio.boss_stinger()
     add_child(boss_audio)
 
+    music_audio = AudioStreamPlayer.new()
+    music_audio.name = "RunMusic"
+    music_audio.bus = "Music"
+    music_audio.volume_db = MUSIC_BASE_DB
+    music_audio.stream = DZCombatAudio.run_music_stream()
+    add_child(music_audio)
+    if music_audio.stream != null:
+        music_audio.play()
+
+    music_pressure_audio = AudioStreamPlayer.new()
+    music_pressure_audio.name = "PressureMusic"
+    music_pressure_audio.bus = "Music"
+    music_pressure_audio.volume_db = MUSIC_PRESSURE_BREACH_DB
+    music_pressure_audio.stream = DZCombatAudio.pressure_music_stream()
+    add_child(music_pressure_audio)
+    if music_pressure_audio.stream != null:
+        music_pressure_audio.play()
+
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
-    HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
-    if impact_audio == null:
+    if haptics_enabled:
+        HAPTICS.pulse(HAPTICS.event_for_impact(critical, killed, boss))
+    if impact_audio_voices.is_empty():
         return
     var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
     if not impact_streams.has(key):
         impact_streams[key] = DZCombatAudio.impact_stream(critical, killed, boss)
-    impact_audio.stream = impact_streams[key]
-    impact_audio.pitch_scale = randf_range(0.96, 1.04)
-    impact_audio.play()
+    var voice := impact_audio_voices[impact_voice_index % impact_audio_voices.size()]
+    impact_voice_index = (impact_voice_index + 1) % impact_audio_voices.size()
+    voice.stream = impact_streams[key]
+    voice.pitch_scale = randf_range(0.95, 1.05)
+    voice.play()
 
 func _play_boss_stinger() -> void:
-    if boss_audio != null:
+    if boss_audio != null and boss_audio.stream != null:
         boss_audio.play()
+    if music_audio != null and music_audio.playing:
+        if music_duck_tween != null and music_duck_tween.is_valid():
+            music_duck_tween.kill()
+        music_duck_tween = create_tween()
+        music_duck_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+        music_duck_tween.tween_property(music_audio, "volume_db", MUSIC_DUCK_DB, 0.08)
+        music_duck_tween.tween_interval(1.55)
+        music_duck_tween.tween_property(music_audio, "volume_db", MUSIC_BASE_DB, 0.70).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _update_offscreen_threat_indicator() -> void:
     if hud == null or camera == null or player == null or game_over:
@@ -3654,6 +4278,8 @@ var authored_visual: Node3D
 var authored_anim: AnimationPlayer
 var current_anim := ""
 var shot_audio: AudioStreamPlayer3D
+var shot_audio_voices: Array[AudioStreamPlayer3D] = []
+var shot_voice_index := 0
 var shot_streams := {}
 var damage_pulse: MeshInstance3D
 var damage_pulse_material: StandardMaterial3D
@@ -3668,8 +4294,17 @@ var player_marker_ring: MeshInstance3D
 var player_marker_material: StandardMaterial3D
 var player_marker_pressure := false
 var hit_reaction_left := 0.0
+var reduced_flashes := false
 var combat_enabled := true
 var applied_protocols := {}
+var current_target: DZEnemy
+var nearest_threat: DZEnemy
+var target_refresh_clock := 0.0
+
+const TARGET_REFRESH_INTERVAL := 0.08
+const TARGET_SWITCH_RATIO := 0.78
+const TARGET_ACQUIRE_RADIUS := 18.0
+const ARENA_HALF_EXTENT := 30.0
 
 func _ready() -> void:
     add_to_group("player")
@@ -3686,6 +4321,7 @@ func _physics_process(delta: float) -> void:
     invulnerability = max(0.0, invulnerability - delta)
     hit_reaction_left = maxf(0.0, hit_reaction_left - maxf(delta, 0.0))
     fire_clock -= delta
+    target_refresh_clock = maxf(0.0, target_refresh_clock - maxf(delta, 0.0))
 
     var input := Vector2.ZERO
     if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT):
@@ -3703,11 +4339,12 @@ func _physics_process(delta: float) -> void:
 
     velocity = Vector3(input.x, 0.0, input.y) * move_speed
     move_and_slide()
+    _constrain_to_arena()
     if hit_reaction_left <= 0.0:
         _update_authored_animation()
 
-    var target := _nearest_enemy()
-    _update_player_marker_pressure(target)
+    var target := _combat_target()
+    _update_player_marker_pressure(nearest_threat if nearest_threat != null else target)
     if target != null:
         var facing := target.global_position
         facing.y = global_position.y
@@ -3724,6 +4361,9 @@ func set_combat_enabled(enabled: bool) -> void:
     velocity = Vector3.ZERO
     touch_move = Vector2.ZERO
     fire_clock = max(fire_clock, fire_interval)
+    current_target = null
+    nearest_threat = null
+    target_refresh_clock = 0.0
     _clear_player_marker_pressure()
 
 func _clear_player_marker_pressure() -> void:
@@ -3743,8 +4383,21 @@ func _clear_player_marker_pressure() -> void:
     if locator != null:
         locator.visible = false
 
+func _constrain_to_arena() -> void:
+    var clamped_x := clampf(global_position.x, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
+    var clamped_z := clampf(global_position.z, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
+    if not is_equal_approx(clamped_x, global_position.x):
+        velocity.x = 0.0
+    if not is_equal_approx(clamped_z, global_position.z):
+        velocity.z = 0.0
+    global_position.x = clamped_x
+    global_position.z = clamped_z
+
 func set_touch_move(value: Vector2) -> void:
     touch_move = value.limit_length(1.0)
+
+func set_reduced_flashes(enabled: bool) -> void:
+    reduced_flashes = enabled
 
 func take_damage(amount: float) -> void:
     if invulnerability > 0.0 or health <= 0.0:
@@ -3852,15 +4505,54 @@ func apply_upgrade(id: String) -> void:
         "arc_protocol":
             _apply_weapon_profile_data("arc", DZWeaponProfiles.profile("arc"))
 
+func _combat_target() -> DZEnemy:
+    var max_target_d2 := TARGET_ACQUIRE_RADIUS * TARGET_ACQUIRE_RADIUS
+    if current_target != null and (
+        not is_instance_valid(current_target)
+        or current_target.dead
+        or global_position.distance_squared_to(current_target.global_position) > max_target_d2
+    ):
+        current_target = null
+        target_refresh_clock = 0.0
+    if nearest_threat != null and (
+        not is_instance_valid(nearest_threat)
+        or nearest_threat.dead
+        or global_position.distance_squared_to(nearest_threat.global_position) > max_target_d2
+    ):
+        nearest_threat = null
+        target_refresh_clock = 0.0
+
+    if target_refresh_clock > 0.0:
+        return current_target
+
+    target_refresh_clock = TARGET_REFRESH_INTERVAL
+    var nearest := _nearest_enemy()
+    nearest_threat = nearest
+    if nearest == null:
+        current_target = null
+        return null
+    if current_target == null:
+        current_target = nearest
+        return current_target
+    if nearest == current_target:
+        return current_target
+
+    var current_d2 := global_position.distance_squared_to(current_target.global_position)
+    var nearest_d2 := global_position.distance_squared_to(nearest.global_position)
+    var switch_threshold := current_d2 * TARGET_SWITCH_RATIO * TARGET_SWITCH_RATIO
+    if nearest_d2 < switch_threshold:
+        current_target = nearest
+    return current_target
+
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
-    var best_d2 := INF
+    var best_d2 := TARGET_ACQUIRE_RADIUS * TARGET_ACQUIRE_RADIUS
     for node in get_tree().get_nodes_in_group("enemies"):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead:
             continue
         var d2 := global_position.distance_squared_to(enemy.global_position)
-        if d2 < best_d2:
+        if d2 <= best_d2:
             best_d2 = d2
             best = enemy
     return best
@@ -3880,7 +4572,13 @@ func _fire_at(enemy: DZEnemy) -> void:
         var projectile := DZProjectile.new()
         projectile.setup(global_position + Vector3(0.0, 0.72, 0.0) + dir * 0.5,
             dir, projectile_speed, weapon_damage, weapon_tint, weapon_profile)
-        get_tree().current_scene.add_child(projectile)
+        var projectile_parent: Node = get_tree().current_scene
+        if projectile_parent == null:
+            projectile_parent = get_parent()
+        if projectile_parent == null:
+            projectile.queue_free()
+            return
+        projectile_parent.add_child(projectile)
 
 func _build_visual() -> void:
     authored_visual = DZAssetLibrary.player()
@@ -4129,14 +4827,16 @@ func _trigger_muzzle_flash() -> void:
     if muzzle_flash_tween != null and muzzle_flash_tween.is_valid():
         muzzle_flash_tween.kill()
     muzzle_flash.visible = true
-    muzzle_flash.scale = Vector3(0.58, 0.42, 0.82)
+    muzzle_flash.scale = Vector3(0.42, 0.30, 0.58) if reduced_flashes else Vector3(0.58, 0.42, 0.82)
     if muzzle_flash_material != null:
-        muzzle_flash_material.emission_energy_multiplier = 6.2
+        muzzle_flash_material.emission_energy_multiplier = 2.2 if reduced_flashes else 6.2
+    var flash_duration := 0.032 if reduced_flashes else 0.055
+    var target_scale := Vector3(0.72, 0.48, 1.02) if reduced_flashes else Vector3(1.22, 0.76, 1.72)
     muzzle_flash_tween = create_tween()
     muzzle_flash_tween.set_parallel(true)
-    muzzle_flash_tween.tween_property(muzzle_flash, "scale", Vector3(1.22, 0.76, 1.72), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    muzzle_flash_tween.tween_property(muzzle_flash, "scale", target_scale, flash_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     if muzzle_flash_material != null:
-        muzzle_flash_tween.tween_property(muzzle_flash_material, "emission_energy_multiplier", 1.0, 0.055)
+        muzzle_flash_tween.tween_property(muzzle_flash_material, "emission_energy_multiplier", 0.7 if reduced_flashes else 1.0, flash_duration)
     muzzle_flash_tween.chain().tween_callback(func() -> void:
         if muzzle_flash != null and is_instance_valid(muzzle_flash):
             muzzle_flash.visible = false
@@ -4203,21 +4903,28 @@ func _play_authored(name: String) -> void:
     authored_anim.play(name, 0.12)
 
 func _build_audio() -> void:
-    shot_audio = AudioStreamPlayer3D.new()
-    shot_audio.name = "ShotAudio"
-    shot_audio.max_distance = 28.0
-    shot_audio.unit_size = 5.0
-    shot_audio.volume_db = -11.0
-    add_child(shot_audio)
+    shot_audio_voices.clear()
+    for voice_index in range(3):
+        var voice := AudioStreamPlayer3D.new()
+        voice.name = "ShotAudio" if voice_index == 0 else "ShotAudio_%d" % voice_index
+        voice.max_distance = 28.0
+        voice.unit_size = 5.0
+        voice.volume_db = -12.5
+        voice.bus = "SFX"
+        add_child(voice)
+        shot_audio_voices.append(voice)
+    shot_audio = shot_audio_voices[0]
 
 func _play_shot_audio() -> void:
-    if shot_audio == null:
+    if shot_audio_voices.is_empty():
         return
     if not shot_streams.has(weapon_profile):
         shot_streams[weapon_profile] = DZCombatAudio.shot_stream(weapon_profile)
-    shot_audio.stream = shot_streams[weapon_profile]
-    shot_audio.pitch_scale = randf_range(0.97, 1.03)
-    shot_audio.play()
+    var voice := shot_audio_voices[shot_voice_index % shot_audio_voices.size()]
+    shot_voice_index = (shot_voice_index + 1) % shot_audio_voices.size()
+    voice.stream = shot_streams[weapon_profile]
+    voice.pitch_scale = randf_range(0.965, 1.035)
+    voice.play()
 ```
 
 ## File: scripts/Projectile.gd
@@ -4247,6 +4954,13 @@ var spawn_secondary_fx := true
 var combat_enabled := true
 var configured_origin := Vector3.ZERO
 var has_configured_origin := false
+
+static var _core_mesh_cache := {}
+static var _trail_mesh_cache := {}
+static var _core_material_cache := {}
+static var _trail_material_cache := {}
+static var _accent_mesh_cache := {}
+static var _shared_arc_accent_material: StandardMaterial3D
 
 func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color,
         profile := "vanguard") -> void:
@@ -4304,33 +5018,18 @@ func _ready() -> void:
     add_to_group("projectiles")
     var glow := MeshInstance3D.new()
     glow.name = "ProjectileCore"
-    var mesh := SphereMesh.new()
-    mesh.radius = core_radius * 0.82
-    mesh.height = core_radius * 1.64
-    glow.mesh = mesh
+    glow.mesh = _cached_core_mesh()
     glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    var core_mat := StandardMaterial3D.new()
-    core_mat.albedo_color = tint
-    core_mat.emission_enabled = true
-    core_mat.emission = tint
-    core_mat.emission_energy_multiplier = 3.2
-    core_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    var core_mat := _cached_core_material()
     glow.material_override = core_mat
     add_child(glow)
 
     var trail := MeshInstance3D.new()
     trail.name = "ProjectileTrail"
-    var trail_mesh := BoxMesh.new()
-    trail_mesh.size = Vector3(trail_width, trail_width * 0.72, trail_length)
-    trail.mesh = trail_mesh
+    trail.mesh = _cached_trail_mesh()
     trail.position.z = trail_length * 0.52
     trail.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    var trail_mat := StandardMaterial3D.new()
-    trail_mat.albedo_color = Color(tint.r * 0.68, tint.g * 0.68, tint.b * 0.68)
-    trail_mat.emission_enabled = true
-    trail_mat.emission = Color(tint.r * 0.74, tint.g * 0.74, tint.b * 0.74)
-    trail_mat.emission_energy_multiplier = 1.65
-    trail_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    var trail_mat := _cached_trail_material()
     trail.material_override = trail_mat
     add_child(trail)
 
@@ -4348,11 +5047,108 @@ func _ready() -> void:
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity.normalized(), Vector3.UP)
 
+func _visual_cache_key() -> String:
+    return "%s|%s|%.4f|%.4f|%.4f" % [
+        visual_profile,
+        tint.to_html(true),
+        core_radius,
+        trail_width,
+        trail_length
+    ]
+
+func _cached_core_mesh() -> SphereMesh:
+    var key := _visual_cache_key()
+    if _core_mesh_cache.has(key):
+        return _core_mesh_cache[key] as SphereMesh
+    var mesh := SphereMesh.new()
+    mesh.radius = core_radius * 0.82
+    mesh.height = core_radius * 1.64
+    mesh.radial_segments = 10
+    mesh.rings = 5
+    _core_mesh_cache[key] = mesh
+    return mesh
+
+func _cached_trail_mesh() -> BoxMesh:
+    var key := _visual_cache_key()
+    if _trail_mesh_cache.has(key):
+        return _trail_mesh_cache[key] as BoxMesh
+    var mesh := BoxMesh.new()
+    mesh.size = Vector3(trail_width, trail_width * 0.72, trail_length)
+    _trail_mesh_cache[key] = mesh
+    return mesh
+
+func _cached_core_material() -> StandardMaterial3D:
+    var key := _visual_cache_key()
+    if _core_material_cache.has(key):
+        return _core_material_cache[key] as StandardMaterial3D
+    var material := StandardMaterial3D.new()
+    material.albedo_color = tint
+    material.emission_enabled = true
+    material.emission = tint
+    material.emission_energy_multiplier = 3.2
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    _core_material_cache[key] = material
+    return material
+
+func _cached_trail_material() -> StandardMaterial3D:
+    var key := _visual_cache_key()
+    if _trail_material_cache.has(key):
+        return _trail_material_cache[key] as StandardMaterial3D
+    var material := StandardMaterial3D.new()
+    material.albedo_color = Color(tint.r * 0.68, tint.g * 0.68, tint.b * 0.68)
+    material.emission_enabled = true
+    material.emission = Color(tint.r * 0.74, tint.g * 0.74, tint.b * 0.74)
+    material.emission_energy_multiplier = 1.65
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    _trail_material_cache[key] = material
+    return material
+
+func _cached_accent_box_mesh(key: String, size: Vector3) -> BoxMesh:
+    if _accent_mesh_cache.has(key):
+        return _accent_mesh_cache[key] as BoxMesh
+    var mesh := BoxMesh.new()
+    mesh.size = size
+    _accent_mesh_cache[key] = mesh
+    return mesh
+
+func _cached_accent_sphere_mesh(key: String, radius: float, height: float) -> SphereMesh:
+    if _accent_mesh_cache.has(key):
+        return _accent_mesh_cache[key] as SphereMesh
+    var mesh := SphereMesh.new()
+    mesh.radius = radius
+    mesh.height = height
+    mesh.radial_segments = 10
+    mesh.rings = 5
+    _accent_mesh_cache[key] = mesh
+    return mesh
+
+func _cached_arc_accent_mesh() -> TorusMesh:
+    var key := "arc|%.4f" % core_radius
+    if _accent_mesh_cache.has(key):
+        return _accent_mesh_cache[key] as TorusMesh
+    var mesh := TorusMesh.new()
+    mesh.inner_radius = core_radius * 0.85
+    mesh.outer_radius = core_radius * 1.45
+    mesh.rings = 12
+    mesh.ring_segments = 6
+    _accent_mesh_cache[key] = mesh
+    return mesh
+
+static func _arc_accent_material() -> StandardMaterial3D:
+    if _shared_arc_accent_material != null:
+        return _shared_arc_accent_material
+    _shared_arc_accent_material = StandardMaterial3D.new()
+    _shared_arc_accent_material.albedo_color = Color(0.58, 0.36, 1.0)
+    _shared_arc_accent_material.emission_enabled = true
+    _shared_arc_accent_material.emission = _shared_arc_accent_material.albedo_color
+    _shared_arc_accent_material.emission_energy_multiplier = 2.8
+    _shared_arc_accent_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    return _shared_arc_accent_material
+
 func _add_side_spark(mat: StandardMaterial3D, side: float) -> void:
     var spark := MeshInstance3D.new()
-    var mesh := BoxMesh.new()
-    mesh.size = Vector3(0.025, 0.025, trail_length * 0.62)
-    spark.mesh = mesh
+    var key := "scatter_spark|%.4f" % trail_length
+    spark.mesh = _cached_accent_box_mesh(key, Vector3(0.025, 0.025, trail_length * 0.62))
     spark.position = Vector3(side * 0.10, 0.0, trail_length * 0.30)
     spark.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     spark.material_override = mat
@@ -4360,27 +5156,16 @@ func _add_side_spark(mat: StandardMaterial3D, side: float) -> void:
 
 func _add_arc_accent() -> void:
     var accent := MeshInstance3D.new()
-    var mesh := TorusMesh.new()
-    mesh.inner_radius = core_radius * 0.85
-    mesh.outer_radius = core_radius * 1.45
-    accent.mesh = mesh
+    accent.mesh = _cached_arc_accent_mesh()
     accent.rotation_degrees.x = 90.0
     accent.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    var mat := StandardMaterial3D.new()
-    mat.albedo_color = Color(0.58, 0.36, 1.0)
-    mat.emission_enabled = true
-    mat.emission = mat.albedo_color
-    mat.emission_energy_multiplier = 2.8
-    mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    accent.material_override = mat
+    accent.material_override = _arc_accent_material()
     add_child(accent)
 
 func _add_flame_core(base_material: StandardMaterial3D) -> void:
     var flame := MeshInstance3D.new()
-    var mesh := SphereMesh.new()
-    mesh.radius = core_radius * 0.58
-    mesh.height = core_radius * 1.55
-    flame.mesh = mesh
+    var key := "inferno_flame|%.4f" % core_radius
+    flame.mesh = _cached_accent_sphere_mesh(key, core_radius * 0.58, core_radius * 1.55)
     flame.scale = Vector3(0.72, 0.72, 1.42)
     flame.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     flame.material_override = base_material
@@ -4395,40 +5180,70 @@ func _physics_process(delta: float) -> void:
     if not combat_enabled:
         return
     age += delta
+    var previous_position := global_position
     global_position += velocity * delta
-    for node in _candidate_enemies():
+    var hit_candidates := _swept_hit_candidates(previous_position, global_position)
+    if hit_candidates.size() > 1:
+        hit_candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
+            return previous_position.distance_squared_to(a.global_position) < previous_position.distance_squared_to(b.global_position)
+        )
+    for enemy in hit_candidates:
+        if enemy == null or enemy.dead or hit_enemy_ids.has(enemy.get_instance_id()):
+            continue
+        var critical := randf() < critical_chance
+        var dealt_damage := damage * (1.75 if critical else 1.0)
+        hit_enemy_ids[enemy.get_instance_id()] = true
+        enemy.take_damage(dealt_damage, critical)
+        _apply_protocol_hit(enemy, dealt_damage)
+        _impact(critical, enemy.global_position + Vector3(0.0, 0.55, 0.0))
+        if visual_profile == "rail" and pierce_remaining > 0:
+            pierce_remaining -= 1
+            continue
+        queue_free()
+        return
+    if age >= lifetime:
+        queue_free()
+
+func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
+    var segment := to - from
+    segment.y = 0.0
+    var travel := segment.length()
+    var midpoint := from.lerp(to, 0.5)
+    var query_radius := radius + travel * 0.5
+    var result: Array[DZEnemy] = []
+    for node in _enemies_near(midpoint, query_radius):
         if not is_instance_valid(node):
             continue
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or hit_enemy_ids.has(enemy.get_instance_id()):
             continue
-        if global_position.distance_squared_to(enemy.global_position) <= radius * radius:
-            var critical := randf() < critical_chance
-            var dealt_damage := damage * (1.75 if critical else 1.0)
-            hit_enemy_ids[enemy.get_instance_id()] = true
-            enemy.take_damage(dealt_damage, critical)
-            _apply_protocol_hit(enemy, dealt_damage)
-            _impact(critical)
-            if visual_profile == "rail" and pierce_remaining > 0:
-                pierce_remaining -= 1
-                continue
-            queue_free()
-            return
-    if age >= lifetime:
-        queue_free()
+        var offset := enemy.global_position - from
+        offset.y = 0.0
+        var t := 0.0
+        if segment.length_squared() > 0.000001:
+            t = clampf(offset.dot(segment) / segment.length_squared(), 0.0, 1.0)
+        var closest := from + segment * t
+        var miss := enemy.global_position - closest
+        miss.y = 0.0
+        if miss.length_squared() <= radius * radius:
+            result.append(enemy)
+    return result
 
 func _candidate_enemies() -> Array:
+    return _enemies_near(global_position, radius)
+
+func _enemies_near(position: Vector3, range_radius: float) -> Array:
     var scene := get_tree().current_scene if get_tree() != null else null
     if scene != null and scene.has_method("query_enemies_near"):
-        return scene.query_enemies_near(global_position, radius)
+        return scene.query_enemies_near(position, range_radius)
     return get_tree().get_nodes_in_group("enemies") if get_tree() != null else []
 
-func _impact(critical := false) -> void:
+func _impact(critical := false, at := Vector3.INF) -> void:
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.76, 0.18) if critical else tint
     fx.scale_boost = (1.45 if critical else 1.0) * impact_scale
     get_tree().current_scene.add_child(fx)
-    fx.global_position = global_position
+    fx.global_position = global_position if at == Vector3.INF else at
 
 func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
     match visual_profile:
@@ -4444,29 +5259,27 @@ func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
 func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) -> void:
     if range_radius <= 0.0:
         return
-    for node in get_tree().get_nodes_in_group("enemies"):
+    for node in _enemies_near(primary.global_position, range_radius):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
             continue
-        if primary.global_position.distance_to(enemy.global_position) <= range_radius:
-            enemy.take_damage(splash_damage, false)
-            if spawn_secondary_fx:
-                var fx := ImpactFx.new()
-                fx.color = Color(1.0, 0.24, 0.035)
-                fx.scale_boost = 0.72
-                get_tree().current_scene.add_child(fx)
-                fx.global_position = enemy.global_position + Vector3(0.0, 0.45, 0.0)
+        enemy.take_damage(splash_damage, false)
+        if spawn_secondary_fx:
+            var fx := ImpactFx.new()
+            fx.color = Color(1.0, 0.24, 0.035)
+            fx.scale_boost = 0.72
+            get_tree().current_scene.add_child(fx)
+            fx.global_position = enemy.global_position + Vector3(0.0, 0.45, 0.0)
 
 func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
     if chain_targets <= 0:
         return
     var candidates: Array[DZEnemy] = []
-    for node in get_tree().get_nodes_in_group("enemies"):
+    for node in _enemies_near(primary.global_position, 3.8):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
             continue
-        if primary.global_position.distance_to(enemy.global_position) <= 3.8:
-            candidates.append(enemy)
+        candidates.append(enemy)
     candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
         return primary.global_position.distance_squared_to(a.global_position) < primary.global_position.distance_squared_to(b.global_position)
     )
@@ -4712,22 +5525,54 @@ var amount := 1
 var target: Node3D
 var velocity := Vector3.ZERO
 var age := 0.0
+var combat_enabled := true
+
+const MAGNET_RADIUS := 5.0
+const FORCED_MAGNET_AGE := 5.0
+const MAGNET_SPEED := 10.0
+const FORCED_MAGNET_SPEED := 14.0
+
+static var _shared_mesh: SphereMesh
+static var _shared_material: StandardMaterial3D
 
 func _ready() -> void:
+    add_to_group("xp_orbs")
     var orb := MeshInstance3D.new()
-    var mesh := SphereMesh.new()
-    mesh.radius = 0.12
-    mesh.height = 0.24
-    orb.mesh = mesh
-    var mat := StandardMaterial3D.new()
-    mat.albedo_color = Color(0.18, 0.95, 0.75)
-    mat.emission_enabled = true
-    mat.emission = Color(0.1, 1.0, 0.7)
-    mat.emission_energy_multiplier = 3.0
-    orb.material_override = mat
+    orb.name = "XpOrbVisual"
+    orb.mesh = _orb_mesh()
+    orb.material_override = _orb_material()
+    orb.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     add_child(orb)
 
+static func _orb_mesh() -> SphereMesh:
+    if _shared_mesh != null:
+        return _shared_mesh
+    _shared_mesh = SphereMesh.new()
+    _shared_mesh.radius = 0.12
+    _shared_mesh.height = 0.24
+    _shared_mesh.radial_segments = 12
+    _shared_mesh.rings = 6
+    return _shared_mesh
+
+static func _orb_material() -> StandardMaterial3D:
+    if _shared_material != null:
+        return _shared_material
+    _shared_material = StandardMaterial3D.new()
+    _shared_material.albedo_color = Color(0.18, 0.95, 0.75)
+    _shared_material.emission_enabled = true
+    _shared_material.emission = Color(0.1, 1.0, 0.7)
+    _shared_material.emission_energy_multiplier = 3.0
+    _shared_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    return _shared_material
+
+func set_combat_enabled(enabled: bool) -> void:
+    combat_enabled = enabled
+    if not enabled:
+        velocity = Vector3.ZERO
+
 func _process(delta: float) -> void:
+    if not combat_enabled:
+        return
     age += delta
     rotation.y += delta * 4.0
     position.y = 0.18 + sin(age * 5.0) * 0.05
@@ -4736,13 +5581,67 @@ func _process(delta: float) -> void:
     var flat_target := target.global_position
     flat_target.y = global_position.y
     var distance := global_position.distance_to(flat_target)
-    if distance < 5.0:
+    var forced_magnet := age >= FORCED_MAGNET_AGE
+    if distance < MAGNET_RADIUS or forced_magnet:
         var dir := global_position.direction_to(flat_target)
-        velocity = velocity.lerp(dir * 10.0, 1.0 - exp(-delta * 7.0))
+        var target_speed := FORCED_MAGNET_SPEED if forced_magnet else MAGNET_SPEED
+        velocity = velocity.lerp(dir * target_speed, 1.0 - exp(-delta * 7.0))
         global_position += velocity * delta
     if distance < 0.55:
         collected.emit(amount)
         queue_free()
+```
+
+## File: tests/android_play_export_contract_test.gd
+```
+extends SceneTree
+
+func _initialize() -> void:
+    var project_source := FileAccess.get_file_as_string("res://project.godot")
+    var preset_source := FileAccess.get_file_as_string("res://export_presets.cfg")
+
+    var required_project := [
+        'config/name="Deadline: Zero"',
+        'window/handheld/orientation=4',
+        'renderer/rendering_method="mobile"'
+    ]
+    for token in required_project:
+        if not project_source.contains(token):
+            push_error("Android Play project contract missing: %s" % token)
+            quit(1)
+            return
+
+    var required_release := [
+        'name="Android Play Release"',
+        'gradle_build/use_gradle_build=true',
+        'gradle_build/export_format=1',
+        'gradle_build/min_sdk="26"',
+        'gradle_build/target_sdk="36"',
+        'architectures/armeabi-v7a=false',
+        'architectures/arm64-v8a=true',
+        'architectures/x86=false',
+        'architectures/x86_64=false',
+        'version/code=1',
+        'version/name="0.1.0"',
+        'package/unique_name="com.deadlinezero.game"',
+        'package/name="Deadline: Zero"',
+        'package/signed=true',
+        'package/show_as_launcher_app=true',
+        'user_data_backup/allow=false'
+    ]
+    for token in required_release:
+        if not preset_source.contains(token):
+            push_error("Android Play export contract missing: %s" % token)
+            quit(1)
+            return
+
+    if not preset_source.contains('name="Android Debug"') or not preset_source.contains('package/unique_name="com.deadlinezero.godot"'):
+        push_error("Debug package must remain isolated from final Play application ID")
+        quit(1)
+        return
+
+    print("Deadline Zero Android Play export contract: OK")
+    quit(0)
 ```
 
 ## File: tests/archetype_roster_render_test.gd
@@ -4901,6 +5800,44 @@ func _run_test() -> void:
         quit(1)
         return
 
+    var telegraph_mesh := enemy.telegraph_visual as MeshInstance3D
+    if telegraph_mesh == null or telegraph_mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Attack telegraph ring must not cast dynamic shadows")
+        quit(1)
+        return
+    var tick_mesh_resource: Mesh
+    var tick_count := 0
+    for child in enemy.telegraph_visual.get_children():
+        if not child is MeshInstance3D:
+            continue
+        var tick := child as MeshInstance3D
+        if not tick.name.begins_with("TelegraphTick_"):
+            continue
+        tick_count += 1
+        if tick.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+            push_error("Telegraph ticks must not cast dynamic shadows")
+            quit(1)
+            return
+        if tick_mesh_resource == null:
+            tick_mesh_resource = tick.mesh
+        elif tick.mesh != tick_mesh_resource:
+            push_error("Telegraph ticks must reuse shared geometry for one attack radius")
+            quit(1)
+            return
+    if tick_count != 4:
+        push_error("Attack telegraph must retain four directional ticks")
+        quit(1)
+        return
+
+    var first_ring_mesh := telegraph_mesh.mesh
+    enemy._show_telegraph(1.75, 0.40)
+    await process_frame
+    var replacement_telegraph := enemy.telegraph_visual as MeshInstance3D
+    if replacement_telegraph == null or replacement_telegraph.mesh != first_ring_mesh:
+        push_error("Same-radius attack telegraphs must reuse ring mesh resources")
+        quit(1)
+        return
+
     var start_energy := enemy.telegraph_material.emission_energy_multiplier
     var start_alpha := enemy.telegraph_material.albedo_color.a
     await create_timer(0.22).timeout
@@ -5024,6 +5961,70 @@ func _find_animation_player(node: Node) -> AnimationPlayer:
     return null
 ```
 
+## File: tests/authored_audio_asset_test.gd
+```
+extends SceneTree
+
+const EXPECTED := [
+    "res://assets/audio/authored/weapon_vanguard.wav",
+    "res://assets/audio/authored/weapon_scatter.wav",
+    "res://assets/audio/authored/weapon_rail.wav",
+    "res://assets/audio/authored/weapon_inferno.wav",
+    "res://assets/audio/authored/weapon_cryo.wav",
+    "res://assets/audio/authored/weapon_arc.wav",
+    "res://assets/audio/authored/impact_hit.wav",
+    "res://assets/audio/authored/impact_critical.wav",
+    "res://assets/audio/authored/impact_kill.wav",
+    "res://assets/audio/authored/impact_boss.wav",
+    "res://assets/audio/authored/boss_stinger.wav",
+    "res://assets/audio/authored/music_run_loop.wav",
+    "res://assets/audio/authored/music_pressure_layer.wav"
+]
+
+func _init() -> void:
+    for path in EXPECTED:
+        if not ResourceLoader.exists(path):
+            push_error("Missing generated authored audio asset: %s" % path)
+            quit(1)
+            return
+        var stream := load(path) as AudioStream
+        if stream == null or stream.get_length() <= 0.10:
+            push_error("Invalid generated authored audio stream: %s" % path)
+            quit(1)
+            return
+
+    var music := DZCombatAudio.run_music_stream()
+    if music == null or music.get_length() < 11.5:
+        push_error("Authored run music is missing or too short")
+        quit(1)
+        return
+    if music is AudioStreamWAV and (music as AudioStreamWAV).loop_mode != AudioStreamWAV.LOOP_FORWARD:
+        push_error("Authored run music is not configured for forward looping")
+        quit(1)
+        return
+
+    var pressure := DZCombatAudio.pressure_music_stream()
+    if pressure == null or pressure.get_length() < 11.5:
+        push_error("Authored pressure music is missing or too short")
+        quit(1)
+        return
+
+    var boss := DZCombatAudio.boss_stinger()
+    if boss == null or boss.get_length() < 2.0:
+        push_error("Authored boss stinger is missing or too short")
+        quit(1)
+        return
+
+    var readme := FileAccess.get_file_as_string("res://assets/audio/authored/README.md")
+    if not readme.contains("No third-party samples") or not readme.contains("20261004"):
+        push_error("Authored audio provenance contract is incomplete")
+        quit(1)
+        return
+
+    print("Deadline Zero generated authored audio assets: OK")
+    quit(0)
+```
+
 ## File: tests/authored_world_dressing_test.gd
 ```
 extends SceneTree
@@ -5094,6 +6095,154 @@ func _run_test() -> void:
             return
 
     print("Deadline Zero authored world dressing: OK")
+    quit(0)
+```
+
+## File: tests/boss_encounter_render_test.gd
+```
+extends SceneTree
+
+const OUTPUT_PATH := "/tmp/deadline-zero-boss-encounter.png"
+const MAIN_SCENE := preload("res://scenes/Main.tscn")
+
+func _initialize() -> void:
+    call_deferred("_run_capture")
+
+func _run_capture() -> void:
+    var scene := MAIN_SCENE.instantiate()
+    get_root().add_child(scene)
+    current_scene = scene
+    await process_frame
+    await process_frame
+
+    for node in get_nodes_in_group("enemies"):
+        node.queue_free()
+    await process_frame
+
+    scene.elapsed = 150.0
+    scene.spawn_clock = 999.0
+    scene.next_boss_time = 9999.0
+    scene.director_profile = scene.run_director.profile(scene.elapsed, 8)
+    scene.max_enemies = 24
+
+    var player := scene.player as DZPlayer
+    if player == null:
+        push_error("Boss capture has no player")
+        quit(1)
+        return
+    player.max_health = 5000.0
+    player.health = 5000.0
+    player.invulnerability = 20.0
+    player.weapon_damage = 8.0
+    player.fire_interval = 0.22
+
+    scene._spawn_enemy("boss")
+    scene._spawn_enemy("runner")
+    scene._spawn_enemy("elite")
+    await process_frame
+
+    var boss: DZEnemy
+    var runner: DZEnemy
+    var elite: DZEnemy
+    for node in get_nodes_in_group("enemies"):
+        var enemy := node as DZEnemy
+        if enemy == null:
+            continue
+        match enemy.kind:
+            "boss":
+                boss = enemy
+            "runner":
+                runner = enemy
+            "elite":
+                elite = enemy
+
+    if boss == null or runner == null or elite == null:
+        push_error("Boss capture failed to stage the encounter roster")
+        quit(1)
+        return
+
+    boss.global_position = Vector3(0.0, 0.0, -6.6)
+    runner.global_position = Vector3(-4.6, 0.0, -1.6)
+    elite.global_position = Vector3(4.7, 0.0, -1.8)
+    boss.health = boss.max_health * 0.72
+    boss.health_changed.emit(boss.health, boss.max_health)
+
+    scene.current_boss = boss
+    scene.boss_reveal_target = boss
+    scene.boss_reveal_left = scene.BOSS_REVEAL_DURATION
+    scene.hud.show_boss("REVENANT PRIME", boss.max_health)
+    scene.hud.set_boss_health(boss.health, boss.max_health)
+
+    for _tick in range(24):
+        await physics_frame
+    for _frame in range(8):
+        await process_frame
+
+    if boss.dead or not scene.hud.boss_panel.visible:
+        push_error("Boss capture lost active boss presentation before capture")
+        quit(1)
+        return
+
+    var boss_screen := scene.camera.unproject_position(boss.global_position + Vector3(0.0, 1.0, 0.0))
+    var viewport_size := get_root().get_visible_rect().size
+    if scene.camera.is_position_behind(boss.global_position):
+        push_error("Boss capture camera placed the boss behind the camera")
+        quit(1)
+        return
+    if boss_screen.x < viewport_size.x * 0.20 or boss_screen.x > viewport_size.x * 0.80:
+        push_error("Boss capture framing pushed the boss outside the central readable zone")
+        quit(1)
+        return
+    if boss_screen.y < viewport_size.y * 0.18 or boss_screen.y > viewport_size.y * 0.82:
+        push_error("Boss capture framing pushed the boss outside the vertical readable zone")
+        quit(1)
+        return
+
+    var texture := get_root().get_texture()
+    if texture == null:
+        push_error("Boss capture has no viewport texture")
+        quit(1)
+        return
+    var image := texture.get_image()
+    if image == null or image.is_empty():
+        push_error("Boss capture produced no image")
+        quit(1)
+        return
+
+    var width := image.get_width()
+    var height := image.get_height()
+    if width <= height or width < 1280 or height < 720:
+        push_error("Boss capture must be landscape and at least 1280x720, got %dx%d" % [width, height])
+        quit(1)
+        return
+
+    var bright := 0
+    var total := 0
+    var min_luma := 1.0
+    var max_luma := 0.0
+    for y in range(0, height, 10):
+        for x in range(0, width, 10):
+            var color := image.get_pixel(x, y)
+            var luma := color.r * 0.2126 + color.g * 0.7152 + color.b * 0.0722
+            total += 1
+            min_luma = minf(min_luma, luma)
+            max_luma = maxf(max_luma, luma)
+            if luma > 0.045:
+                bright += 1
+
+    var bright_fraction := float(bright) / float(maxi(total, 1))
+    if bright_fraction < 0.008 or max_luma - min_luma < 0.05:
+        push_error("Boss capture lacks readable tonal separation")
+        quit(1)
+        return
+
+    var save_error := image.save_png(OUTPUT_PATH)
+    if save_error != OK:
+        push_error("Unable to save boss encounter capture: %s" % error_string(save_error))
+        quit(1)
+        return
+
+    print("GODOT_BOSS_CAPTURE_OK %dx%d boss_screen=(%.1f,%.1f)" % [width, height, boss_screen.x, boss_screen.y])
     quit(0)
 ```
 
@@ -5208,39 +6357,59 @@ func _init() -> void:
 extends SceneTree
 
 func _init() -> void:
-    # Validate synthesis metadata only. Reading AudioStreamWAV.data from a headless
-    # Godot process has proven disproportionately slow in CI and does not add
-    # meaningful coverage over construction + duration/profile checks.
     var profiles := ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]
-    var durations := []
     for profile in profiles:
-        var stream := DZCombatAudio.shot_stream(profile)
-        assert(stream != null)
-        assert(stream.mix_rate == 22050)
-        assert(stream.format == AudioStreamWAV.FORMAT_16_BITS)
-        assert(not stream.stereo)
-        assert(stream.get_length() > 0.04)
-        assert(stream.get_length() < 0.12)
-        durations.append(stream.get_length())
+        var authored := DZCombatAudio.authored_shot_stream(profile)
+        var routed := DZCombatAudio.shot_stream(profile)
+        assert(authored != null)
+        assert(routed == authored)
+        assert(routed.get_length() > 0.15)
+        assert(routed.get_length() < 0.60)
 
-    var hit := DZCombatAudio.impact_stream(false, false, false)
-    var critical := DZCombatAudio.impact_stream(true, false, false)
-    var killed := DZCombatAudio.impact_stream(false, true, false)
-    var boss_hit := DZCombatAudio.impact_stream(false, false, true)
+    var impact_cases := [
+        [false, false, false],
+        [true, false, false],
+        [false, true, false],
+        [false, false, true]
+    ]
+    var impact_lengths := []
+    for case in impact_cases:
+        var authored := DZCombatAudio.authored_impact_stream(bool(case[0]), bool(case[1]), bool(case[2]))
+        var routed := DZCombatAudio.impact_stream(bool(case[0]), bool(case[1]), bool(case[2]))
+        assert(authored != null)
+        assert(routed == authored)
+        assert(routed.get_length() > 0.12)
+        assert(routed.get_length() < 0.75)
+        impact_lengths.append(routed.get_length())
+
+    assert(impact_lengths[0] < impact_lengths[1])
+    assert(impact_lengths[1] < impact_lengths[2])
+    assert(impact_lengths[2] < impact_lengths[3])
+
     var boss := DZCombatAudio.boss_stinger()
+    assert(boss != null)
+    assert(boss.get_length() >= 2.0)
 
-    for stream in [hit, critical, killed, boss_hit, boss]:
-        assert(stream != null)
-        assert(stream.mix_rate == 22050)
-        assert(stream.format == AudioStreamWAV.FORMAT_16_BITS)
-        assert(not stream.stereo)
+    var music := DZCombatAudio.run_music_stream()
+    assert(music != null)
+    assert(music.get_length() >= 11.5)
+    if music is AudioStreamWAV:
+        assert((music as AudioStreamWAV).loop_mode == AudioStreamWAV.LOOP_FORWARD)
 
-    assert(hit.get_length() < critical.get_length())
-    assert(critical.get_length() < killed.get_length())
-    assert(killed.get_length() < boss_hit.get_length())
-    assert(boss_hit.get_length() < boss.get_length())
-    assert(durations[1] > durations[0])
-    print("combat audio feedback test passed")
+    var pressure_music := DZCombatAudio.pressure_music_stream()
+    assert(pressure_music != null)
+    assert(pressure_music.get_length() >= 11.5)
+
+    var player_source := FileAccess.get_file_as_string("res://scripts/Player.gd")
+    var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    assert(player_source.contains("for voice_index in range(3)"))
+    assert(player_source.contains("shot_audio_voices"))
+    assert(main_source.contains("for voice_index in range(4)"))
+    assert(main_source.contains("impact_audio_voices"))
+    assert(main_source.contains("RunMusic"))
+    assert(main_source.contains("PressureMusic"))
+    assert(main_source.contains("_music_pressure_target_db"))
+    print("combat audio authored routing test passed")
     quit()
 ```
 
@@ -5330,6 +6499,19 @@ func _initialize() -> void:
     _assert(heavy_damage_kick > light_damage_kick, "heavier received damage must read stronger")
     _assert(heavy_damage_kick <= 0.115, "received damage kick must remain mobile-safe")
     _assert(DZCombatFeel.damage_received_camera_kick(0.0, 100.0) == 0.0, "zero damage must not kick camera")
+    _assert(is_equal_approx(DZCombatFeel.unscaled_delta(0.012, 0.12), 0.10),
+        "hit-freeze timing must recover real delta under time scaling")
+    _assert(DZCombatFeel.unscaled_delta(0.0, 0.12) == 0.0,
+        "zero scaled delta must remain zero")
+    var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    _assert(main_source.contains("if hit_stop_enabled:"),
+        "combat impact path must respect hit-stop comfort setting")
+    _assert(main_source.contains("if camera_shake_enabled:"),
+        "combat impact path must respect camera-shake comfort setting")
+    _assert(main_source.contains("camera_kick = 0.0"),
+        "disabling camera shake must clear active camera kick")
+    _assert(main_source.contains("_clear_hit_freeze()"),
+        "disabling hit stop must clear active freeze")
     print("Deadline Zero Godot combat-feel profile: OK")
     quit(0)
 
@@ -5338,6 +6520,54 @@ func _assert(condition: bool, message: String) -> void:
         return
     push_error(message)
     quit(1)
+```
+
+## File: tests/damage_number_budget_test.gd
+```
+extends SceneTree
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var enemy := DZEnemy.new()
+    enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(enemy)
+    await process_frame
+
+    for index in range(DZEnemy.MAX_DAMAGE_NUMBERS):
+        var filler := Label3D.new()
+        filler.name = "DamageNumberBudgetFiller_%d" % index
+        filler.add_to_group("damage_numbers")
+        root.add_child(filler)
+
+    var baseline := get_nodes_in_group("damage_numbers").size()
+    if baseline != DZEnemy.MAX_DAMAGE_NUMBERS:
+        push_error("Damage number budget fixture did not reach configured cap")
+        quit(1)
+        return
+
+    enemy._spawn_damage_number(12.0, false, false)
+    if get_nodes_in_group("damage_numbers").size() != baseline:
+        push_error("Ordinary damage number bypassed mobile clutter budget")
+        quit(1)
+        return
+
+    enemy._spawn_damage_number(24.0, true, false)
+    if get_nodes_in_group("damage_numbers").size() != baseline + 1:
+        push_error("Critical damage number was incorrectly dropped at budget cap")
+        quit(1)
+        return
+
+    enemy._spawn_damage_number(60.0, false, true)
+    if get_nodes_in_group("damage_numbers").size() != baseline + 2:
+        push_error("Kill damage number was incorrectly dropped at budget cap")
+        quit(1)
+        return
+
+    print("Deadline Zero damage-number budget: OK")
+    quit(0)
 ```
 
 ## File: tests/enemy_archetype_combat_test.gd
@@ -5386,6 +6616,37 @@ func _initialize() -> void:
         push_error("Hit reactions must not allocate per-hit dynamic lights")
         quit(1)
         return
+
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    var target := Node3D.new()
+    root.add_child(target)
+    var first := DZEnemy.new()
+    first.configure("shambler", 1.0, target)
+    first.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(first)
+    var second := DZEnemy.new()
+    second.configure("shambler", 1.0, target)
+    second.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(second)
+    await process_frame
+    if first.hit_flash_visual == null or second.hit_flash_visual == null:
+        push_error("Enemy hit-flash visual is missing")
+        quit(1)
+        return
+    if first.hit_flash_visual.mesh != second.hit_flash_visual.mesh:
+        push_error("Same-scale enemy hit flashes must reuse one mesh resource")
+        quit(1)
+        return
+    if first.hit_flash_visual.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Enemy hit-flash geometry must not cast dynamic shadows")
+        quit(1)
+        return
+    if first.hit_flash_material == second.hit_flash_material:
+        push_error("Enemy hit-flash materials must stay instance-local for independent animation")
+        quit(1)
+        return
     print("enemy_hit_reaction_test: PASS")
     quit(0)
 ```
@@ -5402,6 +6663,7 @@ func _initialize() -> void:
     current_scene = root
 
     var projectile := PROJECTILE_SCRIPT.new()
+    projectile.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(projectile)
     await process_frame
 
@@ -5417,6 +6679,48 @@ func _initialize() -> void:
         return
     if trail == null:
         push_error("Harrier bolt is missing emissive travel-direction trail")
+        quit(1)
+        return
+
+    var core := projectile.get_node_or_null("HarrierBoltCore") as MeshInstance3D
+    var halo := projectile.get_node_or_null("HarrierBoltHalo") as MeshInstance3D
+    if core == null or halo == null:
+        push_error("Harrier bolt core/halo visual is missing")
+        quit(1)
+        return
+    for mesh_instance in [core, halo, trail]:
+        if (mesh_instance as MeshInstance3D).cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+            push_error("Harrier bolt visuals must not cast mobile-costly shadows")
+            quit(1)
+            return
+    var core_mesh := core.mesh as SphereMesh
+    var halo_mesh := halo.mesh as SphereMesh
+    if core_mesh == null or core_mesh.radial_segments > 10 or core_mesh.rings > 5:
+        push_error("Harrier bolt core geometry budget regressed")
+        quit(1)
+        return
+    if halo_mesh == null or halo_mesh.radial_segments > 10 or halo_mesh.rings > 5:
+        push_error("Harrier bolt halo geometry budget regressed")
+        quit(1)
+        return
+
+    var duplicate := PROJECTILE_SCRIPT.new()
+    duplicate.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(duplicate)
+    await process_frame
+    var duplicate_core := duplicate.get_node_or_null("HarrierBoltCore") as MeshInstance3D
+    var duplicate_halo := duplicate.get_node_or_null("HarrierBoltHalo") as MeshInstance3D
+    var duplicate_trail := duplicate.get_node_or_null("HarrierBoltTrail") as MeshInstance3D
+    if duplicate_core == null or duplicate_halo == null or duplicate_trail == null:
+        push_error("Duplicate harrier bolt visual is incomplete")
+        quit(1)
+        return
+    if duplicate_core.mesh != core.mesh or duplicate_halo.mesh != halo.mesh or duplicate_trail.mesh != trail.mesh:
+        push_error("Harrier bolt instances must reuse shared mesh resources")
+        quit(1)
+        return
+    if duplicate_core.material_override != core.material_override or duplicate_halo.material_override != halo.material_override or duplicate_trail.material_override != trail.material_override:
+        push_error("Harrier bolt instances must reuse shared materials")
         quit(1)
         return
 
@@ -5601,6 +6905,60 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var runner_a := ENEMY_SCRIPT.new()
+    runner_a.kind = "runner"
+    root.add_child(runner_a)
+    var runner_b := ENEMY_SCRIPT.new()
+    runner_b.kind = "runner"
+    root.add_child(runner_b)
+    await process_frame
+
+    var runner_shadow_a := runner_a.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    var runner_shadow_b := runner_b.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    if runner_shadow_a == null or runner_shadow_b == null:
+        push_error("Runner contact shadow reuse fixture is incomplete")
+        quit(1)
+        return
+    if runner_shadow_a.mesh != runner_shadow_b.mesh:
+        push_error("Same-kind enemy contact shadows must reuse one mesh resource")
+        quit(1)
+        return
+    if runner_shadow_a.material_override != runner_shadow_b.material_override:
+        push_error("Same-kind enemy contact shadows must reuse one material resource")
+        quit(1)
+        return
+
+    var runner_blade_a := runner_a.get_node_or_null("RunnerBladeL") as MeshInstance3D
+    var runner_blade_b := runner_b.get_node_or_null("RunnerBladeL") as MeshInstance3D
+    if runner_blade_a == null or runner_blade_b == null or runner_blade_a.material_override != runner_blade_b.material_override:
+        push_error("Same-kind runner signatures must reuse emissive material resources")
+        quit(1)
+        return
+
+    if runner_blade_a.mesh != runner_blade_b.mesh:
+        push_error("Same-kind runner signatures must reuse mesh resources")
+        quit(1)
+        return
+
+    var brute_a := ENEMY_SCRIPT.new()
+    brute_a.kind = "brute"
+    root.add_child(brute_a)
+    var brute_b := ENEMY_SCRIPT.new()
+    brute_b.kind = "brute"
+    root.add_child(brute_b)
+    await process_frame
+    var brute_plate_a := brute_a.get_node_or_null("BrutePlateL") as MeshInstance3D
+    var brute_plate_b := brute_b.get_node_or_null("BrutePlateL") as MeshInstance3D
+    if brute_plate_a == null or brute_plate_b == null or brute_plate_a.material_override != brute_plate_b.material_override:
+        push_error("Brute armor plates must reuse one dark armor material")
+        quit(1)
+        return
+
+    if brute_plate_a.mesh != brute_plate_b.mesh:
+        push_error("Brute armor plates must reuse one mesh resource")
+        quit(1)
+        return
+
     print("Deadline Zero enemy silhouette identity: OK")
     quit(0)
 ```
@@ -5671,6 +7029,8 @@ func _initialize() -> void:
 
     var barrier_count := 0
     var lane_count := 0
+    var arena_boundary_count := 0
+    var arena_boundary_shadow_violations := 0
     var beacon_count := 0
     var floor_plate_count := 0
     var floor_plate_accent_count := 0
@@ -5719,6 +7079,10 @@ func _initialize() -> void:
             bulkhead_signal_count += child.find_children("Signal", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("ContainmentLane_"):
             lane_count += 1
+        elif child.name.begins_with("ArenaBoundary_"):
+            arena_boundary_count += 1
+            if child is MeshInstance3D and (child as MeshInstance3D).cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                arena_boundary_shadow_violations += 1
         elif child.name.begins_with("PerimeterBeacon_"):
             beacon_count += 1
         elif child.name.begins_with("FloorPlate_"):
@@ -5787,6 +7151,10 @@ func _initialize() -> void:
         return
     if lane_count < 40:
         push_error("Expected structured containment lanes, got %d" % lane_count)
+        quit(1)
+        return
+    if arena_boundary_count != 44 or arena_boundary_shadow_violations != 0:
+        push_error("Expected 44 shadow-free arena boundary markers, got %d with %d shadow violations" % [arena_boundary_count, arena_boundary_shadow_violations])
         quit(1)
         return
     if beacon_count != 12:
@@ -5886,6 +7254,45 @@ func _initialize() -> void:
         push_error("Run path did not initialize player, HUD and camera")
         quit(1)
         return
+    if main.player.shot_audio_voices.size() != 3:
+        push_error("Player weapon audio did not initialize bounded 3-voice polyphony")
+        quit(1)
+        return
+    for voice in main.player.shot_audio_voices:
+        if voice.bus != "SFX":
+            push_error("Player weapon audio voice escaped the SFX bus")
+            quit(1)
+            return
+    if main.impact_audio_voices.size() != 4:
+        push_error("Combat impacts did not initialize bounded 4-voice polyphony")
+        quit(1)
+        return
+    if main.music_audio == null or main.music_audio.stream == null:
+        push_error("Run path did not initialize authored background music")
+        quit(1)
+        return
+    if main.music_audio.stream.get_length() < 11.5 or not main.music_audio.playing:
+        push_error("Authored background music did not enter looping playback")
+        quit(1)
+        return
+    if main.music_pressure_audio == null or main.music_pressure_audio.stream == null:
+        push_error("Run path did not initialize adaptive pressure music")
+        quit(1)
+        return
+    if main.music_pressure_audio.stream.get_length() < 11.5 or not main.music_pressure_audio.playing:
+        push_error("Adaptive pressure music did not enter synchronized playback")
+        quit(1)
+        return
+    main.director_profile["phase"] = "EXTINCTION"
+    main._update_music_pressure(1.0)
+    if main.music_pressure_audio.volume_db <= main.MUSIC_PRESSURE_BREACH_DB:
+        push_error("Adaptive music layer did not rise with run pressure")
+        quit(1)
+        return
+    if main.boss_audio == null or main.boss_audio.stream == null or main.boss_audio.stream.get_length() < 2.0:
+        push_error("Run path did not initialize authored boss stinger")
+        quit(1)
+        return
     if get_nodes_in_group("enemies").size() < 8:
         push_error("Run path did not create initial enemy population")
         quit(1)
@@ -5904,6 +7311,80 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main._on_camera_shake_changed(false)
+    main.camera_kick = 0.0
+    main.player.invulnerability = 0.0
+    var no_shake_health: float = main.player.health
+    main.player.take_damage(5.0)
+    if not is_equal_approx(main.player.health, no_shake_health - 5.0):
+        push_error("Camera-shake-off damage probe did not reduce player health")
+        quit(1)
+        return
+    if main.camera_kick > 0.0001:
+        push_error("Received damage bypassed disabled camera-shake setting")
+        quit(1)
+        return
+    main._on_camera_shake_changed(true)
+
+    Engine.time_scale = 0.12
+    main.hit_freeze_left = 0.020
+    main._process(0.020 * 0.12)
+    if main.hit_freeze_left > 0.0001 or not is_equal_approx(Engine.time_scale, 1.0):
+        push_error("Hit-freeze duration remained coupled to slowed Engine.time_scale")
+        quit(1)
+        return
+
+    main._on_hit_stop_changed(false)
+    main._on_camera_shake_changed(false)
+    main._on_haptics_changed(false)
+    main.hit_freeze_left = 0.0
+    main.camera_kick = 0.0
+    main._on_enemy_impact(Vector3.ZERO, true, true, false)
+    if main.hit_freeze_left > 0.0001:
+        push_error("Enemy impact bypassed disabled hit-stop setting")
+        quit(1)
+        return
+    if main.camera_kick > 0.0001:
+        push_error("Enemy impact bypassed disabled camera-shake setting")
+        quit(1)
+        return
+    main._on_hit_stop_changed(true)
+    main._on_camera_shake_changed(true)
+    main._on_haptics_changed(true)
+
+    main.player.global_position = Vector3(42.0, 0.0, -44.0)
+    main.player.velocity = Vector3(3.0, 0.0, -2.0)
+    main.player._constrain_to_arena()
+    if absf(main.player.global_position.x) > DZPlayer.ARENA_HALF_EXTENT + 0.001 or absf(main.player.global_position.z) > DZPlayer.ARENA_HALF_EXTENT + 0.001:
+        push_error("Player escaped the authored arena floor bounds")
+        quit(1)
+        return
+    if absf(main.player.velocity.x) > 0.001 or absf(main.player.velocity.z) > 0.001:
+        push_error("Arena clamp did not cancel outward player velocity")
+        quit(1)
+        return
+    main.player.global_position = Vector3.ZERO
+
+    var clamped_spawn := main._clamp_spawn_position(Vector3(60.0, 0.0, -60.0))
+    if absf(clamped_spawn.x) > 34.001 or absf(clamped_spawn.z) > 34.001:
+        push_error("Enemy spawn position can escape the authored arena floor")
+        quit(1)
+        return
+
+    main.player.global_position = Vector3(30.0, 0.0, 30.0)
+    main.spawn_rng.seed = 777
+    var edge_spawn := main._spawn_position_around_player(18.0)
+    var edge_spawn_distance := main.player.global_position.distance_to(edge_spawn)
+    if absf(edge_spawn.x) > 34.001 or absf(edge_spawn.z) > 34.001:
+        push_error("Edge-player spawn escaped arena-safe bounds")
+        quit(1)
+        return
+    if edge_spawn_distance < 11.99 or edge_spawn_distance > 18.01:
+        push_error("Arena-safe spawn collapsed the intended enemy spawn distance")
+        quit(1)
+        return
+    main.player.global_position = Vector3.ZERO
+
     var tactical_rig := main.player.get_node_or_null("TacticalRig") as Node3D
     var tactical_backplate := main.player.get_node_or_null("TacticalRig/TacticalBackplate") as MeshInstance3D
     var weapon_accent := main.player.get_node_or_null("WeaponAccent") as MeshInstance3D
@@ -5912,6 +7393,20 @@ func _initialize() -> void:
         push_error("Player production presentation is missing tactical rig/rifle identity")
         quit(1)
         return
+
+    main.hud.show_touch_stick(Vector2(4.0, 716.0))
+    var edge_pos := main.hud.touch_stick_root.position
+    var edge_size := main.hud.touch_stick_root.size
+    var viewport_size := main.get_viewport().get_visible_rect().size
+    if edge_pos.x < 7.5 or edge_pos.y < 7.5:
+        push_error("Touch stick can clip beyond top/left phone bounds")
+        quit(1)
+        return
+    if edge_pos.x + edge_size.x > viewport_size.x - 7.5 or edge_pos.y + edge_size.y > viewport_size.y - 7.5:
+        push_error("Touch stick can clip beyond bottom/right phone bounds")
+        quit(1)
+        return
+    main.hud.hide_touch_stick()
 
     var touch_press := InputEventScreenTouch.new()
     touch_press.index = 7
@@ -5992,10 +7487,16 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main.hit_freeze_left = 0.030
+    Engine.time_scale = 0.12
     pause_button.pressed.emit()
     await process_frame
     if not paused or not pause_panel.visible:
         push_error("Pause action did not pause gameplay and show settings")
+        quit(1)
+        return
+    if main.hit_freeze_left > 0.0 or not is_equal_approx(Engine.time_scale, 1.0):
+        push_error("Pause transition retained global hit-freeze state")
         quit(1)
         return
     if main.player.player_marker_pressure or pressure_locator.visible:
@@ -6012,13 +7513,16 @@ func _initialize() -> void:
 
     var master_slider := pause_panel.find_child("MasterVolume", true, false) as HSlider
     var sfx_slider := pause_panel.find_child("SfxVolume", true, false) as HSlider
+    var music_slider := pause_panel.find_child("MusicVolume", true, false) as HSlider
     master_slider.value = 0.35
     sfx_slider.value = 0.45
+    music_slider.value = 0.40
     await process_frame
     var master_bus := AudioServer.get_bus_index("Master")
     var sfx_bus := AudioServer.get_bus_index("SFX")
-    if sfx_bus < 0:
-        push_error("Pause settings did not create dedicated SFX audio bus")
+    var music_bus := AudioServer.get_bus_index("Music")
+    if sfx_bus < 0 or music_bus < 0:
+        push_error("Pause settings did not create dedicated SFX/Music audio buses")
         quit(1)
         return
     if abs(AudioServer.get_bus_volume_db(master_bus) - linear_to_db(0.35)) > 0.25:
@@ -6029,12 +7533,45 @@ func _initialize() -> void:
         push_error("SFX volume slider did not update SFX bus")
         quit(1)
         return
+    if abs(AudioServer.get_bus_volume_db(music_bus) - linear_to_db(0.40)) > 0.25:
+        push_error("Music volume slider did not update Music bus")
+        quit(1)
+        return
 
+    var upgrade_touch_press := InputEventScreenTouch.new()
+    upgrade_touch_press.index = 9
+    upgrade_touch_press.position = Vector2(190.0, 525.0)
+    upgrade_touch_press.pressed = true
+    main._unhandled_input(upgrade_touch_press)
+
+    var upgrade_touch_drag := InputEventScreenDrag.new()
+    upgrade_touch_drag.index = 9
+    upgrade_touch_drag.position = Vector2(260.0, 460.0)
+    main._unhandled_input(upgrade_touch_drag)
+    if main.player.touch_move.length_squared() <= 0.01 or not main.hud.touch_stick_root.visible:
+        push_error("Upgrade transition test could not establish active touch movement")
+        quit(1)
+        return
+
+    main.hit_freeze_left = 0.030
+    Engine.time_scale = 0.12
     var previous_level: int = main.level
     var threshold: int = main.xp_next
     main._on_xp_collected(threshold)
     if main.level != previous_level + 1 or main.pending_upgrades.size() != 3:
         push_error("XP progression did not open a three-choice upgrade")
+        quit(1)
+        return
+    if main.director_refresh_clock > 0.0:
+        push_error("Level-up must force the run director to refresh on the next physics tick")
+        quit(1)
+        return
+    if main.touch_id != -1 or main.player.touch_move.length_squared() > 0.0001 or main.hud.touch_stick_root.visible:
+        push_error("Upgrade overlay retained stale mobile movement state")
+        quit(1)
+        return
+    if main.hit_freeze_left > 0.0 or not is_equal_approx(Engine.time_scale, 1.0):
+        push_error("Upgrade overlay retained global hit-freeze state")
         quit(1)
         return
     if not main.hud.upgrade_panel.visible or not paused:
@@ -6045,6 +7582,29 @@ func _initialize() -> void:
     main._on_upgrade_chosen(0)
     if main.pending_upgrades.size() != 0 or main.hud.upgrade_panel.visible or paused:
         push_error("Upgrade selection did not resume the run cleanly")
+        quit(1)
+        return
+
+    var chain_start_level := main.level
+    var chain_first_threshold := main.xp_next
+    var chain_second_threshold := int(round(float(chain_first_threshold) * 1.24 + 4.0))
+    main._on_xp_collected(chain_first_threshold + chain_second_threshold + 3)
+    if main.level != chain_start_level + 1 or main.pending_upgrades.size() != 3 or not paused:
+        push_error("Banked multi-level XP did not open the first upgrade choice")
+        quit(1)
+        return
+    main._on_upgrade_chosen(0)
+    if main.level != chain_start_level + 2 or main.pending_upgrades.size() != 3 or not main.hud.upgrade_panel.visible or not paused:
+        push_error("Banked XP did not immediately chain the next level-up choice")
+        quit(1)
+        return
+    if main.xp != 3:
+        push_error("Multi-level XP chain did not preserve overflow XP")
+        quit(1)
+        return
+    main._on_upgrade_chosen(0)
+    if not main.pending_upgrades.is_empty() or main.hud.upgrade_panel.visible or paused:
+        push_error("Final chained upgrade did not resume gameplay cleanly")
         quit(1)
         return
 
@@ -6073,14 +7633,56 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if main.current_boss == null or main.current_boss.dead:
+        push_error("Boss spawn did not register the active boss singleton")
+        quit(1)
+        return
+    var boss_count_before_deferred_spawn := _count_kind("boss")
+    main.next_boss_time = main.elapsed
+    main._physics_process(0.016)
+    if _count_kind("boss") != boss_count_before_deferred_spawn:
+        push_error("Boss scheduler spawned a second boss while one was still active")
+        quit(1)
+        return
+    if main.next_boss_time < main.elapsed + main.BOSS_RETRY_DELAY - 0.05:
+        push_error("Active boss did not create a recovery window before the next boss check")
+        quit(1)
+        return
+
+    main.next_boss_time = main.elapsed + 0.5
+    main._on_boss_health_changed(0.0, 100.0)
+    if main.next_boss_time < main.elapsed + main.BOSS_RETRY_DELAY - 0.05:
+        push_error("Boss death did not guarantee a full post-kill recovery window")
+        quit(1)
+        return
+
     var projectile := PROJECTILE_SCRIPT.new()
     main.add_child(projectile)
     projectile.velocity = Vector3(8.0, 0.0, 0.0)
     await process_frame
 
+    var active_boss: DZEnemy
+    for node in get_nodes_in_group("enemies"):
+        var candidate_boss := node as DZEnemy
+        if candidate_boss != null and candidate_boss.kind == "boss" and not candidate_boss.dead:
+            active_boss = candidate_boss
+            break
+    main.camera_kick = 0.12
+    main.boss_reveal_left = 0.8
+    main.boss_reveal_target = active_boss
+    main.hud.impact_flash.visible = true
+    main.hud.damage_vignette.visible = true
     main._on_player_died()
     if not main.game_over or not main.hud.game_over_panel.visible:
         push_error("Player death did not enter visible game-over state")
+        quit(1)
+        return
+    if main.camera_kick > 0.0 or main.boss_reveal_left > 0.0 or main.boss_reveal_target != null:
+        push_error("Run end retained transient camera combat state")
+        quit(1)
+        return
+    if main.hud.impact_flash.visible or main.hud.damage_vignette.visible or main.hud.boss_panel.visible:
+        push_error("Run end retained transient combat HUD overlays")
         quit(1)
         return
     if main.hud.wave_label.text != "RUN TERMINATED":
@@ -6089,6 +7691,16 @@ func _initialize() -> void:
         return
     if projectile.combat_enabled or projectile.velocity.length_squared() > 0.0:
         push_error("Active projectile was not frozen at run end")
+        quit(1)
+        return
+
+    var game_over_touch := InputEventScreenTouch.new()
+    game_over_touch.index = 12
+    game_over_touch.position = Vector2(180.0, 520.0)
+    game_over_touch.pressed = true
+    main._unhandled_input(game_over_touch)
+    if main.touch_id != -1 or main.hud.touch_stick_root.visible:
+        push_error("Game-over input leaked into the mobile movement stick")
         quit(1)
         return
 
@@ -6166,8 +7778,8 @@ func _initialize() -> void:
         return
 
     var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
-    if not main_source.contains("HAPTICS.pulse(HAPTICS.event_for_impact"):
-        push_error("Main impact path is not wired to combat haptics")
+    if not main_source.contains("if haptics_enabled:") or not main_source.contains("HAPTICS.pulse(HAPTICS.event_for_impact"):
+        push_error("Main impact path is not wired to user-controllable combat haptics")
         quit(1)
         return
 
@@ -6266,6 +7878,7 @@ func _initialize() -> void:
     current_scene = root
 
     var fx := IMPACT_SCRIPT.new()
+    fx.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(fx)
     await process_frame
 
@@ -6289,6 +7902,42 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var core := fx.get_node_or_null("ImpactCore") as MeshInstance3D
+    var ring := fx.get_node_or_null("ImpactRing") as MeshInstance3D
+    if core == null or ring == null:
+        push_error("Impact FX core/ring nodes are missing")
+        quit(1)
+        return
+    if core.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or ring.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Impact FX emissive geometry must not cast dynamic shadows")
+        quit(1)
+        return
+    var core_mesh := core.mesh as SphereMesh
+    var ring_mesh := ring.mesh as TorusMesh
+    if core_mesh == null or core_mesh.radial_segments > 12 or core_mesh.rings > 6:
+        push_error("Impact core geometry budget regressed")
+        quit(1)
+        return
+    if ring_mesh == null or ring_mesh.rings > 16 or ring_mesh.ring_segments > 6:
+        push_error("Impact ring geometry budget regressed")
+        quit(1)
+        return
+
+    var duplicate := IMPACT_SCRIPT.new()
+    duplicate.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(duplicate)
+    await process_frame
+    var duplicate_core := duplicate.get_node_or_null("ImpactCore") as MeshInstance3D
+    var duplicate_ring := duplicate.get_node_or_null("ImpactRing") as MeshInstance3D
+    if duplicate_core == null or duplicate_ring == null:
+        push_error("Duplicate impact FX did not build geometry")
+        quit(1)
+        return
+    if duplicate_core.mesh != core.mesh or duplicate_ring.mesh != ring.mesh:
+        push_error("Impact FX instances must reuse shared mesh resources")
+        quit(1)
+        return
+
     var sparks := fx.get_node_or_null("ImpactSparks") as GPUParticles3D
     if sparks == null:
         push_error("Impact FX is missing mobile-safe GPU sparks")
@@ -6300,6 +7949,20 @@ func _initialize() -> void:
         return
     if sparks.lifetime > 0.35:
         push_error("Impact sparks live too long for dense mobile combat")
+        quit(1)
+        return
+
+    var duplicate_sparks := duplicate.get_node_or_null("ImpactSparks") as GPUParticles3D
+    if duplicate_sparks == null:
+        push_error("Duplicate impact FX is missing GPU sparks")
+        quit(1)
+        return
+    if duplicate_sparks.process_material != sparks.process_material:
+        push_error("Impact FX instances must reuse spark process materials for identical colors")
+        quit(1)
+        return
+    if duplicate_sparks.draw_pass_1 != sparks.draw_pass_1:
+        push_error("Impact FX instances must reuse spark draw meshes for identical colors")
         quit(1)
         return
 
@@ -6551,6 +8214,18 @@ func _initialize() -> void:
         quit(1)
         return
 
+    separation_a.global_position = Vector3(40.0, 0.0, -41.0)
+    separation_a.velocity = Vector3(3.0, 0.0, -2.0)
+    separation_a._constrain_to_arena()
+    if absf(separation_a.global_position.x) > DZEnemy.ARENA_HALF_EXTENT + 0.001 or absf(separation_a.global_position.z) > DZEnemy.ARENA_HALF_EXTENT + 0.001:
+        push_error("Enemy escaped authored arena bounds")
+        quit(1)
+        return
+    if absf(separation_a.velocity.x) > 0.001 or absf(separation_a.velocity.z) > 0.001:
+        push_error("Enemy arena clamp did not cancel outward velocity")
+        quit(1)
+        return
+
     var damage_enemy := ENEMY_SCRIPT.new()
     damage_enemy.configure("shambler", 1.0, target)
     damage_enemy.process_mode = Node.PROCESS_MODE_DISABLED
@@ -6681,6 +8356,391 @@ func _initialize() -> void:
     quit(0)
 ```
 
+## File: tests/pause_settings_layout_test.gd
+```
+extends SceneTree
+
+const HUD_SCRIPT := preload("res://scripts/Hud.gd")
+
+func _initialize() -> void:
+    var hud := HUD_SCRIPT.new()
+    get_root().add_child(hud)
+    await process_frame
+    await process_frame
+
+    var panel := hud.pause_panel
+    if panel == null:
+        push_error("Pause/settings panel is missing")
+        quit(1)
+        return
+
+    var viewport_size := get_root().get_visible_rect().size
+    var panel_rect := panel.get_global_rect()
+    var safe_margin := 40.0
+    if panel_rect.position.x < safe_margin or panel_rect.position.y < safe_margin:
+        push_error("Pause/settings panel violates top/left mobile safe margin")
+        quit(1)
+        return
+    if panel_rect.end.x > viewport_size.x - safe_margin or panel_rect.end.y > viewport_size.y - safe_margin:
+        push_error("Pause/settings panel clips beyond mobile safe viewport margin")
+        quit(1)
+        return
+
+    var required_controls := [
+        hud.master_volume,
+        hud.sfx_volume,
+        hud.music_volume,
+        hud.haptics_toggle,
+        hud.reduced_flashes_toggle,
+        hud.camera_shake_toggle,
+        hud.hit_stop_toggle,
+        panel.find_child("ResumeButton", true, false)
+    ]
+    for control in required_controls:
+        if control == null or not control is Control:
+            push_error("Pause/settings control is missing")
+            quit(1)
+            return
+        var ui := control as Control
+        if ui.size.y < 47.5:
+            push_error("Pause/settings touch target is below 48px: %s %.1fpx" % [ui.name, ui.size.y])
+            quit(1)
+            return
+        var rect := ui.get_global_rect()
+        if rect.position.x < panel_rect.position.x - 1.0 or rect.end.x > panel_rect.end.x + 1.0:
+            push_error("Pause/settings control escapes panel horizontally: %s" % ui.name)
+            quit(1)
+            return
+        if rect.position.y < panel_rect.position.y - 1.0 or rect.end.y > panel_rect.end.y + 1.0:
+            push_error("Pause/settings control escapes panel vertically: %s" % ui.name)
+            quit(1)
+            return
+
+    print("Deadline Zero Godot pause/settings layout: OK")
+    quit(0)
+```
+
+## File: tests/play_feature_graphic_render_test.gd
+```
+extends SceneTree
+
+const OUTPUT_PATH := "/tmp/deadline-zero-feature-graphic-candidate.png"
+
+func _initialize() -> void:
+    call_deferred("_capture")
+
+func _capture() -> void:
+    var viewport := SubViewport.new()
+    viewport.size = Vector2i(1024, 500)
+    viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+    viewport.msaa_3d = Viewport.MSAA_4X
+    get_root().add_child(viewport)
+
+    var world := Node3D.new()
+    viewport.add_child(world)
+
+    var environment_node := WorldEnvironment.new()
+    var environment := Environment.new()
+    environment.background_mode = Environment.BG_COLOR
+    environment.background_color = Color(0.006, 0.012, 0.018)
+    environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+    environment.ambient_light_color = Color(0.09, 0.15, 0.19)
+    environment.ambient_light_energy = 0.72
+    environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+    environment_node.environment = environment
+    world.add_child(environment_node)
+
+    var key := DirectionalLight3D.new()
+    key.rotation_degrees = Vector3(-48.0, -28.0, 0.0)
+    key.light_color = Color(0.62, 0.90, 1.0)
+    key.light_energy = 2.0
+    key.shadow_enabled = true
+    world.add_child(key)
+
+    var warm := OmniLight3D.new()
+    warm.position = Vector3(4.8, 2.4, 0.0)
+    warm.light_color = Color(1.0, 0.16, 0.025)
+    warm.light_energy = 8.5
+    warm.omni_range = 10.0
+    warm.shadow_enabled = false
+    world.add_child(warm)
+
+    var cool := OmniLight3D.new()
+    cool.position = Vector3(-4.8, 2.3, 1.0)
+    cool.light_color = Color(0.08, 0.72, 1.0)
+    cool.light_energy = 6.5
+    cool.omni_range = 10.0
+    cool.shadow_enabled = false
+    world.add_child(cool)
+
+    var floor := MeshInstance3D.new()
+    var floor_mesh := PlaneMesh.new()
+    floor_mesh.size = Vector2(18.0, 9.0)
+    floor.mesh = floor_mesh
+    var floor_mat := StandardMaterial3D.new()
+    floor_mat.albedo_color = Color(0.016, 0.025, 0.032)
+    floor_mat.metallic = 0.30
+    floor_mat.roughness = 0.84
+    floor.material_override = floor_mat
+    world.add_child(floor)
+
+    for index in range(5):
+        var barrier := DZAssetLibrary.barrier()
+        if barrier == null:
+            continue
+        barrier.position = Vector3(-6.4 + float(index) * 3.2, 0.0, -3.0 + absf(float(index) - 2.0) * 0.16)
+        barrier.rotation.y = 0.08 * float(index - 2)
+        barrier.scale = Vector3.ONE * 0.34
+        world.add_child(barrier)
+
+    var target := Node3D.new()
+    world.add_child(target)
+
+    var boss := DZEnemy.new()
+    boss.configure("boss", 1.0, target)
+    boss.process_mode = Node.PROCESS_MODE_DISABLED
+    boss.spawn_secondary_fx = false
+    world.add_child(boss)
+    boss.position = Vector3(3.6, 0.0, -1.25)
+    boss.rotation.y = deg_to_rad(150.0)
+    boss.scale = Vector3.ONE * 1.22
+
+    var elite := DZEnemy.new()
+    elite.configure("elite", 1.0, target)
+    elite.process_mode = Node.PROCESS_MODE_DISABLED
+    elite.spawn_secondary_fx = false
+    world.add_child(elite)
+    elite.position = Vector3(1.6, 0.0, -1.85)
+    elite.rotation.y = deg_to_rad(160.0)
+
+    var player := DZAssetLibrary.player()
+    if player == null:
+        push_error("Feature graphic capture could not load authored player")
+        quit(1)
+        return
+    player.position = Vector3(-3.3, 0.0, 0.25)
+    player.rotation.y = deg_to_rad(-22.0)
+    player.scale = Vector3.ONE * 1.45
+    world.add_child(player)
+
+    var rifle := DZAssetLibrary.rifle()
+    if rifle != null:
+        rifle.position = Vector3(0.33, 0.93, -0.38)
+        rifle.rotation_degrees = Vector3(-8.0, 180.0, -4.0)
+        rifle.scale = Vector3.ONE * 0.92
+        player.add_child(rifle)
+
+    var camera := Camera3D.new()
+    camera.position = Vector3(0.0, 3.2, 9.5)
+    camera.fov = 39.0
+    world.add_child(camera)
+    camera.current = true
+    camera.look_at(Vector3(0.1, 0.9, -0.75), Vector3.UP)
+
+    for _frame in range(8):
+        await process_frame
+
+    var image := viewport.get_texture().get_image()
+    if image == null or image.is_empty() or image.get_width() != 1024 or image.get_height() != 500:
+        push_error("Feature graphic capture did not render exact 1024x500")
+        quit(1)
+        return
+
+    var save_error := image.save_png(OUTPUT_PATH)
+    if save_error != OK:
+        push_error("Unable to save feature graphic candidate: %s" % error_string(save_error))
+        quit(1)
+        return
+
+    print("GODOT_FEATURE_GRAPHIC_CANDIDATE_OK 1024x500")
+    quit(0)
+```
+
+## File: tests/play_icon_render_test.gd
+```
+extends SceneTree
+
+const OUTPUT_PATH := "/tmp/deadline-zero-play-icon-candidate.png"
+
+func _initialize() -> void:
+    call_deferred("_capture")
+
+func _capture() -> void:
+    var viewport := SubViewport.new()
+    viewport.size = Vector2i(512, 512)
+    viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+    viewport.msaa_3d = Viewport.MSAA_4X
+    get_root().add_child(viewport)
+
+    var world := Node3D.new()
+    viewport.add_child(world)
+
+    var environment_node := WorldEnvironment.new()
+    var environment := Environment.new()
+    environment.background_mode = Environment.BG_COLOR
+    environment.background_color = Color(0.008, 0.014, 0.020)
+    environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+    environment.ambient_light_color = Color(0.10, 0.16, 0.20)
+    environment.ambient_light_energy = 0.78
+    environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+    environment_node.environment = environment
+    world.add_child(environment_node)
+
+    var key := DirectionalLight3D.new()
+    key.rotation_degrees = Vector3(-42.0, -32.0, 0.0)
+    key.light_color = Color(0.58, 0.88, 1.0)
+    key.light_energy = 2.1
+    key.shadow_enabled = true
+    world.add_child(key)
+
+    var rim := OmniLight3D.new()
+    rim.position = Vector3(2.2, 2.4, 1.8)
+    rim.light_color = Color(1.0, 0.22, 0.035)
+    rim.light_energy = 7.0
+    rim.omni_range = 8.0
+    rim.shadow_enabled = false
+    world.add_child(rim)
+
+    var floor := MeshInstance3D.new()
+    var floor_mesh := PlaneMesh.new()
+    floor_mesh.size = Vector2(8.0, 8.0)
+    floor.mesh = floor_mesh
+    var floor_mat := StandardMaterial3D.new()
+    floor_mat.albedo_color = Color(0.018, 0.027, 0.034)
+    floor_mat.metallic = 0.26
+    floor_mat.roughness = 0.82
+    floor.material_override = floor_mat
+    world.add_child(floor)
+
+    var boss_target := Node3D.new()
+    boss_target.position = Vector3.ZERO
+    world.add_child(boss_target)
+
+    var boss := DZEnemy.new()
+    boss.configure("boss", 1.0, boss_target)
+    boss.process_mode = Node.PROCESS_MODE_DISABLED
+    boss.spawn_secondary_fx = false
+    world.add_child(boss)
+    boss.position = Vector3(0.85, 0.0, -1.45)
+    boss.rotation.y = deg_to_rad(158.0)
+    boss.scale = Vector3.ONE * 1.10
+
+    var player := DZAssetLibrary.player()
+    if player == null:
+        push_error("Brand icon capture could not load authored player")
+        quit(1)
+        return
+    player.position = Vector3(-0.48, 0.0, 0.30)
+    player.rotation.y = deg_to_rad(18.0)
+    player.scale = Vector3.ONE * 1.46
+    world.add_child(player)
+
+    var rifle := DZAssetLibrary.rifle()
+    if rifle != null:
+        rifle.position = Vector3(0.33, 0.93, -0.38)
+        rifle.rotation_degrees = Vector3(-8.0, 180.0, -4.0)
+        rifle.scale = Vector3.ONE * 0.92
+        player.add_child(rifle)
+
+    var hazard_ring := MeshInstance3D.new()
+    var ring_mesh := TorusMesh.new()
+    ring_mesh.inner_radius = 2.28
+    ring_mesh.outer_radius = 2.36
+    ring_mesh.rings = 32
+    ring_mesh.ring_segments = 6
+    hazard_ring.mesh = ring_mesh
+    hazard_ring.position = Vector3(0.0, 0.035, -0.20)
+    var ring_mat := StandardMaterial3D.new()
+    ring_mat.albedo_color = Color(0.80, 0.12, 0.018)
+    ring_mat.emission_enabled = true
+    ring_mat.emission = Color(0.62, 0.055, 0.004)
+    ring_mat.emission_energy_multiplier = 1.2
+    ring_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    hazard_ring.material_override = ring_mat
+    hazard_ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    world.add_child(hazard_ring)
+
+    var camera := Camera3D.new()
+    camera.position = Vector3(0.0, 2.15, 5.8)
+    camera.fov = 35.0
+    world.add_child(camera)
+    camera.current = true
+    camera.look_at(Vector3(0.0, 1.02, -0.25), Vector3.UP)
+
+    for _frame in range(8):
+        await process_frame
+
+    var image := viewport.get_texture().get_image()
+    if image == null or image.is_empty() or image.get_width() != 512 or image.get_height() != 512:
+        push_error("Brand icon capture did not render exact 512x512")
+        quit(1)
+        return
+
+    var save_error := image.save_png(OUTPUT_PATH)
+    if save_error != OK:
+        push_error("Unable to save brand icon candidate: %s" % error_string(save_error))
+        quit(1)
+        return
+
+    print("GODOT_PLAY_ICON_CANDIDATE_OK 512x512")
+    quit(0)
+```
+
+## File: tests/play_store_claims_test.gd
+```
+extends SceneTree
+
+func _initialize() -> void:
+    var listing_path := ProjectSettings.globalize_path("res://../play/store/LISTING.md")
+    var listing := FileAccess.get_file_as_string(listing_path)
+    if listing.is_empty():
+        push_error("Godot Play listing contract is missing")
+        quit(1)
+        return
+
+    var required := [
+        "8 enemy archetypes",
+        "three-phase boss",
+        "6 weapon profiles and protocols",
+        "14 run upgrades",
+        "Vanguard, Scatter, Rail, Inferno, Cryo, and Arc"
+    ]
+    for token in required:
+        if not listing.contains(token):
+            push_error("Godot Play listing is missing verified runtime claim: %s" % token)
+            quit(1)
+            return
+
+    var forbidden := [
+        "Multiple survivors",
+        "12+ weapons",
+        "50+ run upgrades",
+        "5 biomes",
+        "20+ enemy gameplay profiles",
+        "6 multi-phase bosses",
+        "Persistent progression"
+    ]
+    for token in forbidden:
+        if listing.contains(token):
+            push_error("Godot Play listing still contains unsupported legacy claim: %s" % token)
+            quit(1)
+            return
+
+    var data_safety_path := ProjectSettings.globalize_path("res://../play/store/DATA_SAFETY.md")
+    var data_safety := FileAccess.get_file_as_string(data_safety_path)
+    if not data_safety.contains("not present in the current Godot release candidate"):
+        push_error("Data Safety contract does not distinguish legacy SDKs from Godot release")
+        quit(1)
+        return
+    if not data_safety.contains("no Google Mobile Ads") and not data_safety.contains("No Google Mobile Ads"):
+        push_error("Data Safety contract does not state the current no-ads SDK state")
+        quit(1)
+        return
+
+    print("Deadline Zero Godot Play Store claims: OK")
+    quit(0)
+```
+
 ## File: tests/player_damage_feedback_test.gd
 ```
 extends SceneTree
@@ -6790,6 +8850,7 @@ func _initialize() -> void:
     current_scene = root
 
     var player := DZPlayer.new()
+    player.process_mode = Node.PROCESS_MODE_DISABLED
     root.add_child(player)
     await process_frame
 
@@ -6846,6 +8907,127 @@ func _initialize() -> void:
         return
 
     print("Deadline Zero player pressure marker: OK")
+    quit(0)
+```
+
+## File: tests/player_targeting_stability_test.gd
+```
+extends SceneTree
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var player := DZPlayer.new()
+    player.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(player)
+    await process_frame
+
+    player.target_refresh_clock = 0.0
+    if player._combat_target() != null or player.target_refresh_clock <= 0.0:
+        push_error("Auto-aim did not arm a no-target refresh cooldown")
+        quit(1)
+        return
+
+    var first := DZEnemy.new()
+    first.configure("shambler", 1.0, player)
+    first.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(first)
+    first.global_position = Vector3(DZPlayer.TARGET_ACQUIRE_RADIUS + 4.0, 0.0, 0.0)
+
+    player.target_refresh_clock = 0.0
+    if player._combat_target() != null:
+        push_error("Auto-aim acquired an enemy beyond the gameplay camera engagement radius")
+        quit(1)
+        return
+
+    first.global_position = Vector3(4.0, 0.0, 0.0)
+
+    var second := DZEnemy.new()
+    second.configure("runner", 1.0, player)
+    second.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(second)
+    second.global_position = Vector3(4.5, 0.0, 0.0)
+    await process_frame
+
+    player.global_position = Vector3.ZERO
+    if player._combat_target() != null:
+        push_error("Auto-aim bypassed its no-target refresh window")
+        quit(1)
+        return
+    player.target_refresh_clock = 0.0
+    var selected := player._combat_target()
+    if selected != first:
+        push_error("Auto-aim did not select the nearest initial target")
+        quit(1)
+        return
+
+    second.global_position = Vector3(3.5, 0.0, 0.0)
+    player.target_refresh_clock = 0.0
+    selected = player._combat_target()
+    if selected != first:
+        push_error("Auto-aim switched targets for an insignificant distance gain")
+        quit(1)
+        return
+
+    if player.nearest_threat != second:
+        push_error("Close-threat tracking must follow the actual nearest enemy independently of aim lock")
+        quit(1)
+        return
+
+    second.global_position = Vector3(2.8, 0.0, 0.0)
+    player.target_refresh_clock = 0.0
+    selected = player._combat_target()
+    if selected != second:
+        push_error("Auto-aim did not switch to a materially closer threat")
+        quit(1)
+        return
+
+    first.global_position = Vector3(1.5, 0.0, 0.0)
+    selected = player._combat_target()
+    if selected != second:
+        push_error("Auto-aim ignored its target refresh window")
+        quit(1)
+        return
+
+    player.target_refresh_clock = 0.0
+    selected = player._combat_target()
+    if selected != first:
+        push_error("Auto-aim did not reconsider targets after refresh interval")
+        quit(1)
+        return
+
+    first.global_position = Vector3(DZPlayer.TARGET_ACQUIRE_RADIUS + 0.5, 0.0, 0.0)
+    player.target_refresh_clock = DZPlayer.TARGET_REFRESH_INTERVAL
+    selected = player._combat_target()
+    if selected == first:
+        push_error("Cached auto-aim target remained locked after leaving engagement radius")
+        quit(1)
+        return
+
+    first.global_position = Vector3(1.5, 0.0, 0.0)
+    player.target_refresh_clock = 0.0
+    selected = player._combat_target()
+    if selected != first:
+        push_error("Auto-aim failed to reacquire target after returning inside engagement radius")
+        quit(1)
+        return
+
+    first.dead = true
+    selected = player._combat_target()
+    if selected != second:
+        push_error("Auto-aim did not immediately abandon a dead target")
+        quit(1)
+        return
+
+    player.set_combat_enabled(false)
+    if player.current_target != null or player.nearest_threat != null or player.target_refresh_clock > 0.0:
+        push_error("Combat shutdown did not clear auto-aim/threat target state")
+        quit(1)
+        return
+
+    print("Deadline Zero player targeting stability: OK")
     quit(0)
 ```
 
@@ -6948,8 +9130,8 @@ func _run_capture() -> void:
 
     # Validate phone-scale readability in screen space, not just world-space spacing.
     # A visually black/non-black image gate cannot catch actors collapsing into one blob.
-    var viewport_size := get_root().get_visible_rect().size
-    var player_screen := scene.camera.unproject_position(player.global_position + Vector3(0.0, 0.9, 0.0))
+    var viewport_size: Vector2 = get_root().get_visible_rect().size
+    var player_screen: Vector2 = scene.camera.unproject_position(player.global_position + Vector3(0.0, 0.9, 0.0))
     var projected_enemies: Array[Dictionary] = []
     for node in get_nodes_in_group("enemies"):
         var enemy := node as DZEnemy
@@ -6957,7 +9139,7 @@ func _run_capture() -> void:
             continue
         if scene.camera.is_position_behind(enemy.global_position):
             continue
-        var screen_pos := scene.camera.unproject_position(enemy.global_position + Vector3(0.0, 0.9, 0.0))
+        var screen_pos: Vector2 = scene.camera.unproject_position(enemy.global_position + Vector3(0.0, 0.9, 0.0))
         if screen_pos.x < 28.0 or screen_pos.y < 28.0 or screen_pos.x > viewport_size.x - 28.0 or screen_pos.y > viewport_size.y - 28.0:
             continue
         projected_enemies.append({"kind": enemy.kind, "screen": screen_pos})
@@ -7100,16 +9282,53 @@ func _run_test() -> void:
             quit(1)
             return
 
+        var duplicate := PROJECTILE_SCRIPT.new()
+        duplicate.name = "Projectile_%s_duplicate" % profile
+        duplicate.process_mode = Node.PROCESS_MODE_DISABLED
+        duplicate.setup(
+            Vector3(float(index) * 1.5, 0.7, 1.2),
+            Vector3.FORWARD,
+            10.0,
+            10.0,
+            Color(0.18, 0.90, 1.0),
+            profile
+        )
+        root.add_child(duplicate)
+        await process_frame
+        var duplicate_core := duplicate.get_node_or_null("ProjectileCore") as MeshInstance3D
+        var duplicate_trail := duplicate.get_node_or_null("ProjectileTrail") as MeshInstance3D
+        if duplicate_core == null or duplicate_trail == null:
+            push_error("%s duplicate projectile did not build cached visuals" % profile)
+            quit(1)
+            return
+        if duplicate_core.mesh != core.mesh or duplicate_trail.mesh != trail.mesh:
+            push_error("%s projectile visuals must reuse cached mesh resources" % profile)
+            quit(1)
+            return
+        if duplicate_core.material_override != core.material_override or duplicate_trail.material_override != trail.material_override:
+            push_error("%s projectile visuals must reuse cached material resources" % profile)
+            quit(1)
+            return
         match profile:
             "scatter":
-                var sparks := 0
+                var sparks: Array[MeshInstance3D] = []
+                var duplicate_sparks: Array[MeshInstance3D] = []
                 for child in projectile.get_children():
                     if child is MeshInstance3D and child != core and child != trail:
                         var mesh_instance := child as MeshInstance3D
                         if mesh_instance.mesh is BoxMesh:
-                            sparks += 1
-                if sparks < 2:
+                            sparks.append(mesh_instance)
+                for child in duplicate.get_children():
+                    if child is MeshInstance3D and child != duplicate_core and child != duplicate_trail:
+                        var mesh_instance := child as MeshInstance3D
+                        if mesh_instance.mesh is BoxMesh:
+                            duplicate_sparks.append(mesh_instance)
+                if sparks.size() < 2 or duplicate_sparks.size() < 2:
                     push_error("Scatter projectile must build two side-spark accents")
+                    quit(1)
+                    return
+                if sparks[0].mesh != duplicate_sparks[0].mesh:
+                    push_error("Scatter projectile side sparks must reuse cached mesh resources")
                     quit(1)
                     return
             "cryo":
@@ -7118,34 +9337,54 @@ func _run_test() -> void:
                     quit(1)
                     return
             "arc":
-                var torus_found := false
+                var arc_accent: MeshInstance3D
+                var duplicate_arc_accent: MeshInstance3D
                 for child in projectile.get_children():
                     if child is MeshInstance3D and (child as MeshInstance3D).mesh is TorusMesh:
-                        torus_found = true
-                        if (child as MeshInstance3D).cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
-                            push_error("Arc accent must not cast shadows")
-                            quit(1)
-                            return
-                if not torus_found:
+                        arc_accent = child as MeshInstance3D
+                for child in duplicate.get_children():
+                    if child is MeshInstance3D and (child as MeshInstance3D).mesh is TorusMesh:
+                        duplicate_arc_accent = child as MeshInstance3D
+                if arc_accent == null or duplicate_arc_accent == null:
                     push_error("Arc projectile runtime accent is missing")
                     quit(1)
                     return
+                if arc_accent.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    push_error("Arc accent must not cast shadows")
+                    quit(1)
+                    return
+                if arc_accent.mesh != duplicate_arc_accent.mesh or arc_accent.material_override != duplicate_arc_accent.material_override:
+                    push_error("Arc accents must reuse cached mesh/material resources")
+                    quit(1)
+                    return
             "inferno":
-                var flame_found := false
+                var flame: MeshInstance3D
+                var duplicate_flame: MeshInstance3D
                 for child in projectile.get_children():
                     if child is MeshInstance3D and child != core and child != trail:
                         var mesh_instance := child as MeshInstance3D
                         if mesh_instance.mesh is SphereMesh and mesh_instance.scale.z > mesh_instance.scale.x:
-                            flame_found = true
-                            if mesh_instance.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
-                                push_error("Inferno flame core must not cast shadows")
-                                quit(1)
-                                return
-                if not flame_found:
+                            flame = mesh_instance
+                for child in duplicate.get_children():
+                    if child is MeshInstance3D and child != duplicate_core and child != duplicate_trail:
+                        var mesh_instance := child as MeshInstance3D
+                        if mesh_instance.mesh is SphereMesh and mesh_instance.scale.z > mesh_instance.scale.x:
+                            duplicate_flame = mesh_instance
+                if flame == null or duplicate_flame == null:
                     push_error("Inferno projectile runtime flame identity is missing")
                     quit(1)
                     return
+                if flame.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    push_error("Inferno flame core must not cast shadows")
+                    quit(1)
+                    return
+                if flame.mesh != duplicate_flame.mesh:
+                    push_error("Inferno flame cores must reuse cached mesh resources")
+                    quit(1)
+                    return
 
+        duplicate.queue_free()
+        await process_frame
         projectile.queue_free()
         await process_frame
 
@@ -7397,6 +9636,7 @@ extends SceneTree
 
 const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
 const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
+const XP_ORB_SCRIPT := preload("res://scripts/XpOrb.gd")
 
 func _initialize() -> void:
     var root := Node3D.new()
@@ -7421,6 +9661,12 @@ func _initialize() -> void:
     var projectile := PROJECTILE_SCRIPT.new()
     root.add_child(projectile)
     projectile.velocity = Vector3(5.0, 0.0, 0.0)
+
+    var orb := XP_ORB_SCRIPT.new()
+    orb.target = target
+    root.add_child(orb)
+    orb.global_position = Vector3(1.0, 0.18, 0.0)
+    orb.velocity = Vector3(-6.0, 0.0, 0.0)
 
     enemy.set_combat_enabled(false)
     projectile.set_combat_enabled(false)
@@ -7448,6 +9694,22 @@ func _initialize() -> void:
         return
     if projectile.velocity.length_squared() > 0.0:
         push_error("Projectile velocity was not cleared")
+        quit(1)
+        return
+
+    var orb_before := orb.global_position
+    orb.set_combat_enabled(false)
+    orb._process(0.5)
+    if orb.combat_enabled:
+        push_error("XP orb combat freeze flag was not disabled")
+        quit(1)
+        return
+    if orb.velocity.length_squared() > 0.0:
+        push_error("XP orb velocity was not cleared")
+        quit(1)
+        return
+    if orb.global_position.distance_to(orb_before) > 0.0001:
+        push_error("XP orb moved after run-end combat freeze")
         quit(1)
         return
 
@@ -7539,6 +9801,7 @@ func _initialize() -> void:
 extends SceneTree
 
 const HUD_SCRIPT := preload("res://scripts/Hud.gd")
+const PLAYER_SCRIPT := preload("res://scripts/Player.gd")
 
 func _initialize() -> void:
     var root := Control.new()
@@ -7562,6 +9825,34 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var normal_alpha := hud.impact_flash.color.a
+    hud.set_reduced_flashes(true)
+    hud.show_impact_flash(true, false, false)
+    if hud.impact_flash.color.a <= 0.0 or hud.impact_flash.color.a >= normal_alpha * 0.5:
+        push_error("Reduced-flashes mode did not substantially lower impact flash intensity")
+        quit(1)
+        return
+    hud.pulse_damage_screen()
+    if hud.damage_vignette.modulate.a > 0.40:
+        push_error("Reduced-flashes mode did not lower damage vignette intensity")
+        quit(1)
+        return
+
+    var player := PLAYER_SCRIPT.new()
+    player.process_mode = Node.PROCESS_MODE_DISABLED
+    get_root().add_child(player)
+    await process_frame
+    player.set_reduced_flashes(true)
+    player._trigger_muzzle_flash()
+    if player.muzzle_flash_material == null or player.muzzle_flash_material.emission_energy_multiplier > 2.3:
+        push_error("Reduced-flashes mode did not lower player muzzle-flash emission")
+        quit(1)
+        return
+    if player.muzzle_flash.scale.x > 0.50:
+        push_error("Reduced-flashes mode did not reduce player muzzle-flash footprint")
+        quit(1)
+        return
+
     print("Deadline Zero screen-space impact FX: OK")
     quit(0)
 ```
@@ -7582,7 +9873,12 @@ func _initialize() -> void:
     var path := "user://deadline-zero-settings-test.cfg"
     var expected := {
         "master_volume": 0.42,
-        "sfx_volume": 0.33
+        "sfx_volume": 0.33,
+        "music_volume": 0.27,
+        "haptics_enabled": false,
+        "reduced_flashes": true,
+        "camera_shake_enabled": false,
+        "hit_stop_enabled": false
     }
     script.save(path, expected)
     var loaded: Dictionary = script.load_settings(path)
@@ -7594,13 +9890,36 @@ func _initialize() -> void:
         push_error("SFX volume setting did not persist")
         quit(1)
         return
+    if not is_equal_approx(float(loaded.get("music_volume", -1.0)), 0.27):
+        push_error("Music volume setting did not persist")
+        quit(1)
+        return
+
+    if bool(loaded.get("haptics_enabled", true)):
+        push_error("Haptics setting did not persist")
+        quit(1)
+        return
+    if not bool(loaded.get("reduced_flashes", false)):
+        push_error("Reduced-flashes setting did not persist")
+        quit(1)
+        return
+
+    if bool(loaded.get("camera_shake_enabled", true)) or bool(loaded.get("hit_stop_enabled", true)):
+        push_error("Camera-shake/hit-stop settings did not persist")
+        quit(1)
+        return
 
     DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
     var integration_path := "user://deadline-zero-settings-integration-test.cfg"
     script.save(integration_path, {
         "master_volume": 0.35,
-        "sfx_volume": 0.60
+        "sfx_volume": 0.60,
+        "music_volume": 0.40,
+        "haptics_enabled": false,
+        "reduced_flashes": true,
+        "camera_shake_enabled": false,
+        "hit_stop_enabled": false
     })
 
     var main := MAIN_SCENE.instantiate()
@@ -7623,9 +9942,36 @@ func _initialize() -> void:
         push_error("Persisted SFX volume was not restored into pause settings")
         quit(1)
         return
+    if not is_equal_approx(main.hud.music_volume.value, 0.40):
+        push_error("Persisted music volume was not restored into pause settings")
+        quit(1)
+        return
+
+    if main.hud.haptics_toggle.button_pressed or not main.hud.reduced_flashes_toggle.button_pressed:
+        push_error("Persisted comfort toggles were not restored into pause settings")
+        quit(1)
+        return
+    if main.haptics_enabled or not main.reduced_flashes:
+        push_error("Persisted comfort state was not restored into Main")
+        quit(1)
+        return
+
+    if main.camera_shake_enabled or main.hit_stop_enabled:
+        push_error("Persisted camera-shake/hit-stop state was not restored into Main")
+        quit(1)
+        return
+    if main.hud.camera_shake_toggle.button_pressed or main.hud.hit_stop_toggle.button_pressed:
+        push_error("Persisted camera-shake/hit-stop toggles were not restored into pause settings")
+        quit(1)
+        return
 
     main.hud.master_volume.value = 0.60
     main.hud.sfx_volume.value = 0.45
+    main.hud.music_volume.value = 0.50
+    main._on_haptics_changed(true)
+    main._on_reduced_flashes_changed(false)
+    main._on_camera_shake_changed(true)
+    main._on_hit_stop_changed(true)
     main._save_audio_settings(integration_path)
     var round_trip: Dictionary = script.load_settings(integration_path)
     if not is_equal_approx(float(round_trip.get("master_volume", -1.0)), 0.60):
@@ -7634,6 +9980,20 @@ func _initialize() -> void:
         return
     if not is_equal_approx(float(round_trip.get("sfx_volume", -1.0)), 0.45):
         push_error("Updated SFX volume was not saved from pause settings")
+        quit(1)
+        return
+    if not is_equal_approx(float(round_trip.get("music_volume", -1.0)), 0.50):
+        push_error("Updated music volume was not saved from pause settings")
+        quit(1)
+        return
+
+    if not bool(round_trip.get("haptics_enabled", false)) or bool(round_trip.get("reduced_flashes", true)):
+        push_error("Updated comfort settings were not saved from pause settings")
+        quit(1)
+        return
+
+    if not bool(round_trip.get("camera_shake_enabled", false)) or not bool(round_trip.get("hit_stop_enabled", false)):
+        push_error("Updated camera-shake/hit-stop settings were not saved")
         quit(1)
         return
 
@@ -7827,6 +10187,38 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var regenerator_a := ENEMY_SCRIPT.new()
+    regenerator_a.configure("regenerator", 1.0, target)
+    regenerator_a.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(regenerator_a)
+    var regenerator_b := ENEMY_SCRIPT.new()
+    regenerator_b.configure("regenerator", 1.0, target)
+    regenerator_b.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(regenerator_b)
+    await process_frame
+    regenerator_a.health = regenerator_a.max_health * 0.5
+    regenerator_b.health = regenerator_b.max_health * 0.5
+    regenerator_a._begin_regeneration()
+    regenerator_b._begin_regeneration()
+    var pulse_a := regenerator_a.regeneration_visual as MeshInstance3D
+    var pulse_b := regenerator_b.regeneration_visual as MeshInstance3D
+    if pulse_a == null or pulse_b == null:
+        push_error("Regenerator pulse visual is missing")
+        quit(1)
+        return
+    if pulse_a.mesh != pulse_b.mesh:
+        push_error("Regenerator pulses must reuse one mesh resource")
+        quit(1)
+        return
+    if pulse_a.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Regenerator pulse must not cast dynamic shadows")
+        quit(1)
+        return
+    if regenerator_a.regeneration_material == regenerator_b.regeneration_material:
+        push_error("Regenerator pulse materials must stay instance-local for independent animation")
+        quit(1)
+        return
+
     print("Deadline Zero enemy status effects: OK")
     quit(0)
 ```
@@ -8004,6 +10396,16 @@ func _initialize() -> void:
 ```
 extends SceneTree
 
+class SpatialProbe:
+    extends Node3D
+    var query_calls := 0
+    var last_radius := 0.0
+
+    func query_enemies_near(_position: Vector3, radius: float) -> Array:
+        query_calls += 1
+        last_radius = radius
+        return []
+
 const PROJECTILE_SCRIPT := preload("res://scripts/Projectile.gd")
 const ENEMY_SCRIPT := preload("res://scripts/Enemy.gd")
 const WEAPON_PROFILES := preload("res://scripts/WeaponProfiles.gd")
@@ -8082,6 +10484,30 @@ func _initialize() -> void:
     parent.position = Vector3(9.0, 0.0, -4.0)
     get_root().add_child(parent)
     await process_frame
+    var sweep_enemy := ENEMY_SCRIPT.new()
+    sweep_enemy.configure("shambler", 1.0, target)
+    sweep_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    parent.add_child(sweep_enemy)
+    sweep_enemy.global_position = Vector3(0.0, 0.0, -0.55)
+    await process_frame
+
+    var swept_projectile := PROJECTILE_SCRIPT.new()
+    swept_projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    swept_projectile.setup(Vector3.ZERO, Vector3.FORWARD, 40.0, 10.0, Color.WHITE, "rail")
+    parent.add_child(swept_projectile)
+    await process_frame
+    var swept_hits := swept_projectile._swept_hit_candidates(Vector3.ZERO, Vector3(0.0, 0.0, -0.80))
+    if not swept_hits.has(sweep_enemy):
+        push_error("Fast projectile swept collision missed an enemy crossed between physics samples")
+        quit(1)
+        return
+
+    var impact_anchor := sweep_enemy.global_position + Vector3(0.0, 0.55, 0.0)
+    if impact_anchor.distance_to(sweep_enemy.global_position) < 0.50:
+        push_error("Swept hit impact anchor lost its readable vertical offset")
+        quit(1)
+        return
+
     var spawned := PROJECTILE_SCRIPT.new()
     spawned.process_mode = Node.PROCESS_MODE_DISABLED
     var spawn_origin := Vector3(2.0, 0.7, 3.0)
@@ -8100,6 +10526,91 @@ func _initialize() -> void:
     inferno.free()
     arc.free()
     await process_frame
+
+    var spatial_probe := SpatialProbe.new()
+    get_root().add_child(spatial_probe)
+    current_scene = spatial_probe
+    var spatial_projectile := PROJECTILE_SCRIPT.new()
+    spatial_projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    spatial_probe.add_child(spatial_projectile)
+    await process_frame
+    spatial_projectile._enemies_near(Vector3.ZERO, 3.8)
+    if spatial_probe.query_calls != 1 or not is_equal_approx(spatial_probe.last_radius, 3.8):
+        push_error("Weapon protocol neighborhood queries did not route through scene spatial hash")
+        quit(1)
+        return
     print("Deadline Zero weapon protocol behavior: OK")
+    quit(0)
+```
+
+## File: tests/xp_orb_runtime_test.gd
+```
+extends SceneTree
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var target := Node3D.new()
+    target.global_position = Vector3.ZERO
+    root.add_child(target)
+
+    var first := DZXpOrb.new()
+    first.target = target
+    first.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(first)
+    first.global_position = Vector3(12.0, 0.18, 0.0)
+
+    var second := DZXpOrb.new()
+    second.target = target
+    second.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(second)
+    second.global_position = Vector3(14.0, 0.18, 0.0)
+    await process_frame
+
+    var first_visual := first.get_node_or_null("XpOrbVisual") as MeshInstance3D
+    var second_visual := second.get_node_or_null("XpOrbVisual") as MeshInstance3D
+    if first_visual == null or second_visual == null:
+        push_error("XP orb production visual is missing")
+        quit(1)
+        return
+    if first_visual.mesh != second_visual.mesh:
+        push_error("XP orbs must reuse one shared mesh resource")
+        quit(1)
+        return
+    if first_visual.material_override != second_visual.material_override:
+        push_error("XP orbs must reuse one shared material resource")
+        quit(1)
+        return
+    if first_visual.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("XP orb visual must not cast mobile-costly dynamic shadows")
+        quit(1)
+        return
+
+    var mesh := first_visual.mesh as SphereMesh
+    if mesh == null or mesh.radial_segments > 12 or mesh.rings > 6:
+        push_error("XP orb geometry budget regressed")
+        quit(1)
+        return
+
+    var initial_distance := first.global_position.distance_to(target.global_position)
+    first.age = DZXpOrb.FORCED_MAGNET_AGE
+    first._process(0.20)
+    var forced_distance := first.global_position.distance_to(target.global_position)
+    if forced_distance >= initial_distance:
+        push_error("Old XP orb did not force-magnet toward the player")
+        quit(1)
+        return
+
+    second.age = 0.0
+    var second_initial := second.global_position
+    second._process(0.20)
+    if second.global_position.distance_to(second_initial) > 0.05:
+        push_error("Fresh distant XP orb should remain parked until magnet range/age threshold")
+        quit(1)
+        return
+
+    print("Deadline Zero XP orb runtime: OK")
     quit(0)
 ```

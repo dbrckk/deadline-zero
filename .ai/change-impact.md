@@ -1,10 +1,10 @@
 # Change impact
 
-Base: c4325ea9bebf2c5df4518a265c38f8c9a578543a
-Head: 9a8b8171674271d09c7c0ea7dac95b183dbcca2c
+Base: db904a2f6f85c516d5afa0b385853d7d305c864d
+Head: 3c2290beac8f5d34f0348fc05091fb078b049332
 
 ## Changed files
-- M godot/tests/first_playable_run_path_test.gd
+- M godot/assets/audio/authored/README.md
 
 ## Affected areas
 - godot

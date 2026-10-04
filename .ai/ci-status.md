@@ -2,13 +2,13 @@
 
 Summary: 0 success / 0 failure / 6 active
 
-- Godot Android First Playable: pending / pending (9a8b8171)
-- Godot 3D Verify: in_progress / pending (9a8b8171)
-- Responsive UI QA: pending / pending (9a8b8171)
-- Verify: pending / pending (9a8b8171)
-- Responsive UI QA: completed / cancelled (c4325ea9)
-- Verify: completed / cancelled (c4325ea9)
-- Godot 3D Verify: in_progress / pending (c4325ea9)
-- Godot Android First Playable: in_progress / pending (c4325ea9)
+- Verify: queued / pending (3c2290be)
+- Godot 3D Verify: queued / pending (3c2290be)
+- Responsive UI QA: queued / pending (3c2290be)
+- Godot Play Screenshots: in_progress / pending (3c2290be)
+- Godot Play AAB Verify: in_progress / pending (3c2290be)
+- Godot Android First Playable: in_progress / pending (3c2290be)
+- Godot Android First Playable: completed / cancelled (db904a2f)
+- Verify: completed / cancelled (db904a2f)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

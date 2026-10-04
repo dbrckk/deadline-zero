@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-03T19:36:43Z
+Generated: 2026-10-04T12:29:03Z
 
 ### Git
 - Branch: `main`
-- Head: `9a8b81716742`
-- Commit date: 2026-10-03T21:36:29+02:00
-- Commit: Test received-damage camera feedback integration
-- Tracked files: 943
+- Head: `3c2290beac8f`
+- Commit date: 2026-10-04T13:22:20+02:00
+- Commit: Document adaptive authored soundtrack
+- Tracked files: 959
 
 ### Recently changed files
+- `godot/assets/audio/authored/README.md`
 - `godot/tests/first_playable_run_path_test.gd`
-- `godot/tests/combat_feel_test.gd`
+- `godot/tests/combat_audio_feedback_test.gd`
+- `godot/tests/authored_audio_asset_test.gd`
 - `godot/scripts/Main.gd`
-- `godot/scripts/CombatFeel.gd`
 
 ### Project signals
 - `build.gradle`

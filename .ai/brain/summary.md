@@ -1,36 +1,36 @@
 # Repo Brain
 
-- Index mode: incremental
-- Files indexed: 530
-- Files reparsed this run: 5
-- Symbols: 2936
+- Index mode: full
+- Files indexed: 541
+- Files reparsed this run: 541
+- Symbols: 2989
 - Internal import edges: 808
-- Impacted files: 5
-- Selected tests: 3
+- Impacted files: 0
+- Selected tests: 0
 
 ## Languages
 - java: 422 files
-- gdscript: 57 files
-- python: 51 files
+- gdscript: 67 files
+- python: 52 files
 
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
 - android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 55 symbols
+- godot/scripts/Main.gd: 55 symbols
 - core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 45 symbols
-- godot/scripts/Main.gd: 43 symbols
-- godot/scripts/Enemy.gd: 42 symbols
+- godot/scripts/Enemy.gd: 43 symbols
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/visual/GameArt.java: 34 symbols
 - core/src/main/java/com/deadlinezero/game/entities/Enemy.java: 31 symbols
 - core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java: 31 symbols
 - core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java: 29 symbols
+- godot/scripts/Player.gd: 29 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java: 28 symbols
 - core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java: 28 symbols
+- godot/scripts/Hud.gd: 27 symbols
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java: 26 symbols
-- godot/scripts/Hud.gd: 26 symbols
-- godot/scripts/Player.gd: 26 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 25 symbols
 - core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java: 24 symbols
 - core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java: 24 symbols
@@ -43,10 +43,10 @@
 
 ## ast-grep enrichment
 - ast-grep outline: available
-- AST index mode: incremental
-- AST files reparsed this run: 0
-- outline files retained: 471
-- top-level items retained: 3018
+- AST index mode: full
+- AST files reparsed this run: 472
+- outline files retained: 472
+- top-level items retained: 3039
 - direct members retained: 3472
 - symbol shards: 27
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard
