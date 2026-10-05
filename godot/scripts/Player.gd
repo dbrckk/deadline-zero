@@ -33,6 +33,7 @@ var rifle_visual: Node3D
 var rifle_rest_position := Vector3.ZERO
 var rifle_recoil_tween: Tween
 var weapon_accent_material: StandardMaterial3D
+var weapon_accent_tween: Tween
 var player_marker_ring: MeshInstance3D
 var player_marker_material: StandardMaterial3D
 var player_marker_pressure := false
@@ -489,6 +490,7 @@ func _build_tactical_rig() -> void:
     add_child(weapon_accent)
 
 func _trigger_rifle_recoil() -> void:
+    _trigger_weapon_accent_pulse()
     if rifle_visual == null or not is_instance_valid(rifle_visual):
         return
     if rifle_recoil_tween != null and rifle_recoil_tween.is_valid():
@@ -497,6 +499,15 @@ func _trigger_rifle_recoil() -> void:
     rifle_recoil_tween = create_tween()
     rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position + Vector3(0.0, 0.015, 0.085), 0.035).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position, 0.075).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _trigger_weapon_accent_pulse() -> void:
+    if weapon_accent_material == null:
+        return
+    if weapon_accent_tween != null and weapon_accent_tween.is_valid():
+        weapon_accent_tween.kill()
+    weapon_accent_material.emission_energy_multiplier = 4.6
+    weapon_accent_tween = create_tween()
+    weapon_accent_tween.tween_property(weapon_accent_material, "emission_energy_multiplier", 1.85, 0.085).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _build_player_marker() -> void:
     player_marker_material = StandardMaterial3D.new()
