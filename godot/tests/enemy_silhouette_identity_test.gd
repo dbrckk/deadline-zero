@@ -227,5 +227,11 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var source := FileAccess.get_file_as_string("res://scripts/AssetLibrary.gd")
+    if not source.contains("uniform float rim_strength = 0.11") or not source.contains("EMISSION = body_tint.rgb * rim"):
+        push_error("Enemy shared grading shader lost subtle silhouette rim lighting")
+        quit(1)
+        return
+
     print("Deadline Zero enemy silhouette identity: OK")
     quit(0)
