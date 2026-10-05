@@ -4,5 +4,132 @@
   "scope": "symbols defined in changed source files",
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
-  "symbols": {}
+  "symbols": {
+    "_initialize": {
+      "source": {
+        "file": "godot/tests/boss_encounter_render_test.gd",
+        "start": 5,
+        "end": 125
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZEnemy",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DZPlayer",
+          "definitions": [
+            {
+              "file": "godot/scripts/Player.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Store",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileSchema.java",
+              "line": 12,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_run_capture",
+          "definitions": [
+            {
+              "file": "godot/tests/boss_encounter_render_test.gd",
+              "line": 8,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
+        }
+      ],
+      "dependency_count": 4
+    },
+    "_run_capture": {
+      "source": {
+        "file": "godot/tests/boss_encounter_render_test.gd",
+        "start": 8,
+        "end": 128
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZEnemy",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DZPlayer",
+          "definitions": [
+            {
+              "file": "godot/scripts/Player.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Store",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/meta/ProfileSchema.java",
+              "line": 12,
+              "kind": "interface",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 3
+    },
+    "_capture": {
+      "source": {
+        "file": "godot/tests/play_feature_graphic_render_test.gd",
+        "start": 7,
+        "end": 127
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "Viewport",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java",
+              "line": 12,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 1
+    }
+  }
 }

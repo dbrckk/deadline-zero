@@ -22,16 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T13:19:00Z
+Generated: 2026-10-05T13:21:34Z
 
 ### Git
 - Branch: `main`
-- Head: `be967e92f5ca`
-- Commit date: 2026-10-05T15:18:35+02:00
-- Commit: Allow privacy workflow to enable GitHub Pages
+- Head: `91a4c42c756f`
+- Commit date: 2026-10-05T15:21:15+02:00
+- Commit: Export opaque RGB Play listing graphics
 - Tracked files: 979
 
 ### Recently changed files
+- `.github/workflows/godot-play-screenshots.yml`
+- `godot/tests/boss_encounter_render_test.gd`
+- `godot/tests/game_over_render_test.gd`
+- `godot/tests/play_feature_graphic_render_test.gd`
+- `godot/tests/pressure_frame_render_test.gd`
+- `godot/tests/rendered_frame_smoke_test.gd`
+- `godot/tests/upgrade_choice_render_test.gd`
 - `.github/workflows/privacy-pages.yml`
 - `.github/workflows/godot-android-first-playable.yml`
 - `play/store/PLAY_CONSOLE.md`

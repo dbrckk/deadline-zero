@@ -6567,6 +6567,7 @@ func _run_capture() -> void:
         quit(1)
         return
 
+    image.convert(Image.FORMAT_RGB8)
     var save_error := image.save_png(OUTPUT_PATH)
     if save_error != OK:
         push_error("Unable to save boss encounter capture: %s" % error_string(save_error))
@@ -8249,6 +8250,7 @@ func _run_capture() -> void:
         quit(1)
         return
 
+    image.convert(Image.FORMAT_RGB8)
     var save_error := image.save_png(OUTPUT_PATH)
     if save_error != OK:
         push_error("Unable to save game-over render artifact: %s" % error_string(save_error))
@@ -9249,6 +9251,7 @@ void fragment() {
         quit(1)
         return
 
+    image.convert(Image.FORMAT_RGB8)
     var save_error := image.save_png(OUTPUT_PATH)
     if save_error != OK:
         push_error("Unable to save feature graphic candidate: %s" % error_string(save_error))
@@ -9880,6 +9883,7 @@ func _run_capture() -> void:
         quit(1)
         return
 
+    image.convert(Image.FORMAT_RGB8)
     var save_error := image.save_png(OUTPUT_PATH)
     if save_error != OK:
         push_error("Unable to save pressure-frame artifact: %s" % error_string(save_error))
@@ -10142,6 +10146,7 @@ func _run_capture() -> void:
         quit(1)
         return
 
+    image.convert(Image.FORMAT_RGB8)
     var save_error := image.save_png(OUTPUT_PATH)
     if save_error != OK:
         push_error("Unable to save rendered-frame artifact: %s" % error_string(save_error))
@@ -10962,6 +10967,7 @@ func _run_capture() -> void:
         quit(1)
         return
 
+    image.convert(Image.FORMAT_RGB8)
     var save_error := image.save_png(OUTPUT_PATH)
     if save_error != OK:
         push_error("Unable to save upgrade Store capture: %s" % error_string(save_error))

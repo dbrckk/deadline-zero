@@ -1,13 +1,20 @@
 # Change impact
 
-Base: 1f2883fbff2c20b34148b0504191592721100efe
-Head: be967e92f5caef846331096e59406d7d2e215281
+Base: 5aa92918e724e65f90df9e46858b01f91dd92f73
+Head: 91a4c42c756f9cdf10a6a4f1dd4ae83f701717f4
 
 ## Changed files
-- M .github/workflows/privacy-pages.yml
+- M .github/workflows/godot-play-screenshots.yml
+- M godot/tests/boss_encounter_render_test.gd
+- M godot/tests/game_over_render_test.gd
+- M godot/tests/play_feature_graphic_render_test.gd
+- M godot/tests/pressure_frame_render_test.gd
+- M godot/tests/rendered_frame_smoke_test.gd
+- M godot/tests/upgrade_choice_render_test.gd
 
 ## Affected areas
 - .github
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

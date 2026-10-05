@@ -2,23 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Harden enemy palette grading regression test",
-      "terms": [
-        "enemy",
-        "grading",
-        "harden",
-        "palette",
-        "regression",
-        "test"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/AssetLibrary.gd",
-        "godot/tests/enemy_silhouette_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Archive rendered Godot archetype roster evidence",
       "terms": [
         "archetype",
@@ -1069,6 +1052,27 @@
         "godot/scripts/Main.gd",
         "godot/tests/boss_encounter_render_test.gd",
         "godot/tests/first_playable_run_path_test.gd",
+        "godot/tests/pressure_frame_render_test.gd",
+        "godot/tests/rendered_frame_smoke_test.gd",
+        "godot/tests/upgrade_choice_render_test.gd"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "Export opaque RGB Play listing graphics",
+      "terms": [
+        "export",
+        "graphics",
+        "listing",
+        "opaque",
+        "play",
+        "rgb"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/tests/boss_encounter_render_test.gd",
+        "godot/tests/game_over_render_test.gd",
+        "godot/tests/play_feature_graphic_render_test.gd",
         "godot/tests/pressure_frame_render_test.gd",
         "godot/tests/rendered_frame_smoke_test.gd",
         "godot/tests/upgrade_choice_render_test.gd"
@@ -2463,6 +2467,14 @@
       "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4,
       "godot/tests/first_playable_run_path_test.gd": 4
     },
+    "export": {
+      "godot/tests/boss_encounter_render_test.gd": 4,
+      "godot/tests/game_over_render_test.gd": 4,
+      "godot/tests/play_feature_graphic_render_test.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
+      "godot/tests/upgrade_choice_render_test.gd": 4
+    },
     "expose": {
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/Main.gd": 4,
@@ -2766,7 +2778,13 @@
       "godot/tests/play_icon_render_test.gd": 4
     },
     "graphics": {
-      "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java": 8
+      "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java": 8,
+      "godot/tests/boss_encounter_render_test.gd": 4,
+      "godot/tests/game_over_render_test.gd": 4,
+      "godot/tests/play_feature_graphic_render_test.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
+      "godot/tests/upgrade_choice_render_test.gd": 4
     },
     "grates": {
       "godot/scripts/Main.gd": 4,
@@ -3049,6 +3067,14 @@
     },
     "limits": {
       "godot/tests/mobile_orientation_test.gd": 4
+    },
+    "listing": {
+      "godot/tests/boss_encounter_render_test.gd": 4,
+      "godot/tests/game_over_render_test.gd": 4,
+      "godot/tests/play_feature_graphic_render_test.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
+      "godot/tests/upgrade_choice_render_test.gd": 4
     },
     "loaded": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java": 4
@@ -3356,7 +3382,13 @@
     },
     "opaque": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
-      "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4
+      "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4,
+      "godot/tests/boss_encounter_render_test.gd": 4,
+      "godot/tests/game_over_render_test.gd": 4,
+      "godot/tests/play_feature_graphic_render_test.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
+      "godot/tests/upgrade_choice_render_test.gd": 4
     },
     "opening": {
       "godot/scripts/Main.gd": 4,
@@ -3485,11 +3517,14 @@
       "core/src/main/java/com/deadlinezero/game/services/ReviewService.java": 4,
       "core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/tests/boss_encounter_render_test.gd": 4,
+      "godot/tests/boss_encounter_render_test.gd": 8,
       "godot/tests/damage_number_budget_test.gd": 4,
-      "godot/tests/play_feature_graphic_render_test.gd": 12,
+      "godot/tests/game_over_render_test.gd": 4,
+      "godot/tests/play_feature_graphic_render_test.gd": 16,
       "godot/tests/play_icon_render_test.gd": 12,
-      "godot/tests/upgrade_choice_render_test.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
+      "godot/tests/upgrade_choice_render_test.gd": 8,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "player": {
@@ -3966,6 +4001,14 @@
       "tools/blender/build_rex_actions.py": 4,
       "tools/sprites/assemble_actor_sheet.py": 4,
       "tools/sprites/audit_final_art_status.py": 4
+    },
+    "rgb": {
+      "godot/tests/boss_encounter_render_test.gd": 4,
+      "godot/tests/game_over_render_test.gd": 4,
+      "godot/tests/play_feature_graphic_render_test.gd": 4,
+      "godot/tests/pressure_frame_render_test.gd": 4,
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
+      "godot/tests/upgrade_choice_render_test.gd": 4
     },
     "rim-light": {
       "godot/scripts/AssetLibrary.gd": 4,
