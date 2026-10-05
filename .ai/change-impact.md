@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 015c7f2ee35f89307b58177390a5041b8a7c607f
-Head: cc458d0fddb1653b15250b5ebe4960712c4df647
+Base: facdaf937bb5791df902101535ef56847461fe17
+Head: 0e2366d3e6bab8991679211b223af438bb8f205c
 
 ## Changed files
-- M godot/tests/player_targeting_stability_test.gd
+- M .github/workflows/godot-play-screenshots.yml
 
 ## Affected areas
-- godot
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
