@@ -22,6 +22,12 @@ var attack_target_position := Vector3.ZERO
 var elite_burst_clock := 2.4
 var boss_slam_clock := 3.6
 var boss_phase := 1
+var boss_presence_clock := 0.0
+var boss_aura_root: Node3D
+var boss_aura_inner: MeshInstance3D
+var boss_aura_outer: MeshInstance3D
+var boss_aura_inner_material: StandardMaterial3D
+var boss_aura_outer_material: StandardMaterial3D
 var telegraph_visual: Node3D
 var telegraph_material: StandardMaterial3D
 var slow_multiplier := 1.0
@@ -124,6 +130,7 @@ func _physics_process(delta: float) -> void:
         return
     if kind == "boss":
         _update_boss_phase()
+        _update_boss_presence(delta)
     attack_cooldown = max(0.0, attack_cooldown - delta)
     elite_burst_clock = max(0.0, elite_burst_clock - delta)
     boss_slam_clock = max(0.0, boss_slam_clock - delta)
@@ -295,7 +302,12 @@ func _update_boss_phase() -> void:
     if kind != "boss" or max_health <= 0.0:
         return
     var ratio := clampf(health / max_health, 0.0, 1.0)
-    boss_phase = 3 if ratio <= 0.30 else (2 if ratio <= 0.65 else 1)
+    var next_phase := 3 if ratio <= 0.30 else (2 if ratio <= 0.65 else 1)
+    if next_phase != boss_phase:
+        boss_phase = next_phase
+        _refresh_boss_presence_style()
+    else:
+        boss_phase = next_phase
     match boss_phase:
         2:
             move_speed = 1.55
@@ -950,6 +962,91 @@ func _add_boss_frame(color: Color) -> void:
     core.material_override = _signature_material(Color(1.0, 0.30, 0.04), 5.0)
     add_child(core)
     _add_eye_beacon(color, Vector3(0.0, 1.96, -0.50), 0.125)
+    _build_boss_presence()
+
+func _build_boss_presence() -> void:
+    boss_aura_root = Node3D.new()
+    boss_aura_root.name = "BossThreatAura"
+    boss_aura_root.position.y = 0.032
+    add_child(boss_aura_root)
+
+    boss_aura_inner_material = StandardMaterial3D.new()
+    boss_aura_inner_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    boss_aura_inner_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    boss_aura_inner_material.emission_enabled = true
+
+    boss_aura_outer_material = StandardMaterial3D.new()
+    boss_aura_outer_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    boss_aura_outer_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    boss_aura_outer_material.emission_enabled = true
+
+    boss_aura_inner = MeshInstance3D.new()
+    boss_aura_inner.name = "BossAuraInner"
+    boss_aura_inner.mesh = _telegraph_ring_mesh(1.20, true)
+    boss_aura_inner.rotation_degrees.x = 90.0
+    boss_aura_inner.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    boss_aura_inner.material_override = boss_aura_inner_material
+    boss_aura_root.add_child(boss_aura_inner)
+
+    boss_aura_outer = MeshInstance3D.new()
+    boss_aura_outer.name = "BossAuraOuter"
+    boss_aura_outer.mesh = _telegraph_ring_mesh(1.68, true)
+    boss_aura_outer.rotation_degrees.x = 90.0
+    boss_aura_outer.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    boss_aura_outer.material_override = boss_aura_outer_material
+    boss_aura_root.add_child(boss_aura_outer)
+
+    var tick_mesh := _signature_box_mesh("boss_aura_tick", Vector3(0.080, 0.018, 0.36))
+    for index in range(4):
+        var tick := MeshInstance3D.new()
+        tick.name = "BossAuraTick_%d" % index
+        tick.mesh = tick_mesh
+        var angle := float(index) * PI * 0.5
+        tick.position = Vector3(sin(angle) * 1.68, 0.006, cos(angle) * 1.68)
+        tick.rotation.y = angle
+        tick.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        tick.material_override = boss_aura_inner_material
+        boss_aura_root.add_child(tick)
+
+    _refresh_boss_presence_style()
+
+func _refresh_boss_presence_style() -> void:
+    if boss_aura_inner_material == null or boss_aura_outer_material == null:
+        return
+    var phase_color := Color(1.0, 0.52, 0.06)
+    if boss_phase == 2:
+        phase_color = Color(1.0, 0.24, 0.035)
+    elif boss_phase >= 3:
+        phase_color = Color(1.0, 0.055, 0.12)
+
+    var inner_color := phase_color
+    inner_color.a = 0.78
+    boss_aura_inner_material.albedo_color = inner_color
+    boss_aura_inner_material.emission = phase_color
+    boss_aura_inner_material.emission_energy_multiplier = 2.8 + float(boss_phase) * 0.55
+
+    var outer_color := phase_color.lightened(0.12)
+    outer_color.a = 0.32
+    boss_aura_outer_material.albedo_color = outer_color
+    boss_aura_outer_material.emission = phase_color
+    boss_aura_outer_material.emission_energy_multiplier = 1.25 + float(boss_phase) * 0.38
+
+func _update_boss_presence(delta: float) -> void:
+    if boss_aura_root == null:
+        return
+    boss_presence_clock += maxf(delta, 0.0)
+    boss_aura_root.rotation.y += delta * (0.42 + float(boss_phase) * 0.10)
+    var pulse := 0.5 + 0.5 * sin(boss_presence_clock * (2.8 + float(boss_phase) * 0.35))
+    if boss_aura_inner != null:
+        var inner_scale := 0.96 + pulse * 0.075
+        boss_aura_inner.scale = Vector3.ONE * inner_scale
+    if boss_aura_outer != null:
+        var outer_scale := 1.035 - pulse * 0.035
+        boss_aura_outer.scale = Vector3.ONE * outer_scale
+    if boss_aura_inner_material != null:
+        boss_aura_inner_material.emission_energy_multiplier = 2.8 + float(boss_phase) * 0.55 + pulse * 0.55
+    if boss_aura_outer_material != null:
+        boss_aura_outer_material.emission_energy_multiplier = 1.25 + float(boss_phase) * 0.38 + pulse * 0.22
 
 func _melee_attack_animation_range() -> float:
     return _contact_attack_range() + 0.08
