@@ -39,7 +39,7 @@ static func enemy(kind: String) -> Node3D:
         "brute": tint = Color(0.62, 0.34, 0.30)
         "elite": tint = Color(0.54, 0.42, 0.70)
         "boss": tint = Color(0.68, 0.42, 0.26)
-    _grade_enemy_mesh_tree(root, tint)
+    _grade_enemy_mesh_tree(root, tint, kind)
     return root
 
 static func rifle() -> Node3D:
@@ -130,15 +130,15 @@ static func _add_barrier_hazard_signature(root: Node3D) -> void:
         strip.material_override = material
         root.add_child(strip)
 
-static func _grade_enemy_mesh_tree(root: Node3D, tint: Color) -> void:
+static func _grade_enemy_mesh_tree(root: Node3D, tint: Color, kind := "shambler") -> void:
     if root == null:
         return
     if root is MeshInstance3D:
-        _grade_enemy_mesh_instance(root as MeshInstance3D, tint)
+        _grade_enemy_mesh_instance(root as MeshInstance3D, tint, kind)
     for node in root.find_children("*", "MeshInstance3D", true, false):
-        _grade_enemy_mesh_instance(node as MeshInstance3D, tint)
+        _grade_enemy_mesh_instance(node as MeshInstance3D, tint, kind)
 
-static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Color) -> void:
+static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Color, kind := "shambler") -> void:
     if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
         return
 
@@ -165,10 +165,10 @@ static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Colo
 
         mesh_instance.set_surface_override_material(
             surface_index,
-            _enemy_surface_material(source_material, tint)
+            _enemy_surface_material(source_material, tint, kind)
         )
 
-static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color) -> ShaderMaterial:
+static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color, kind := "shambler") -> ShaderMaterial:
     var material := ShaderMaterial.new()
     material.shader = _get_enemy_grade_shader()
     material.set_shader_parameter("albedo_tex", source_material.albedo_texture)
@@ -178,8 +178,23 @@ static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color
     material.set_shader_parameter("highlight_floor", 0.42)
     material.set_shader_parameter("authored_roughness", source_material.roughness)
     material.set_shader_parameter("authored_metallic", source_material.metallic)
-    material.set_shader_parameter("rim_strength", 0.11)
-    material.set_shader_parameter("rim_power", 3.4)
+    var rim_strength := 0.13
+    var rim_power := 3.25
+    match kind:
+        "runner", "harrier":
+            rim_strength = 0.16
+            rim_power = 3.10
+        "charger", "brute":
+            rim_strength = 0.17
+            rim_power = 3.05
+        "regenerator", "elite":
+            rim_strength = 0.21
+            rim_power = 2.95
+        "boss":
+            rim_strength = 0.30
+            rim_power = 2.65
+    material.set_shader_parameter("rim_strength", rim_strength)
+    material.set_shader_parameter("rim_power", rim_power)
     if source_material.normal_enabled and source_material.normal_texture != null:
         material.set_shader_parameter("use_normal_map", true)
         material.set_shader_parameter("normal_tex", source_material.normal_texture)
