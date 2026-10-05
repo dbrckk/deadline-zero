@@ -25,6 +25,7 @@ var hud: DZHud
 var spawn_clock := 0.0
 var next_boss_time := 75.0
 var boss_banner_timer := 0.0
+var boss_defeat_relief_left := 0.0
 var max_enemies := 110
 var elapsed := 0.0
 var kills := 0
@@ -89,6 +90,8 @@ const MUSIC_BASE_DB := -20.0
 const MUSIC_DUCK_DB := -27.0
 const MUSIC_PRESSURE_BREACH_DB := -48.0
 const MUSIC_PRESSURE_BOSS_DB := -11.0
+const MUSIC_PRESSURE_RELIEF_DB := -34.0
+const BOSS_DEFEAT_RELIEF_DURATION := 2.2
 const MUSIC_GAME_OVER_DB := -32.0
 const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
@@ -236,6 +239,7 @@ func _physics_process(delta: float) -> void:
         director_profile = run_director.profile(elapsed, level)
         max_enemies = int(director_profile["max_enemies"])
     boss_banner_timer = max(0.0, boss_banner_timer - delta)
+    boss_defeat_relief_left = maxf(0.0, boss_defeat_relief_left - delta)
     _update_music_pressure(delta)
     if elapsed >= next_boss_time:
         if _has_active_boss():
@@ -305,6 +309,8 @@ func _touch_input_vector(current_position: Vector2) -> Vector2:
     return delta.normalized() * strength
 
 func _music_pressure_target_db() -> float:
+    if boss_defeat_relief_left > 0.0:
+        return MUSIC_PRESSURE_RELIEF_DB
     if _has_active_boss():
         return MUSIC_PRESSURE_BOSS_DB
     match String(director_profile.get("phase", "BREACH")):
@@ -408,6 +414,9 @@ func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> 
         hud.show_impact_flash(critical, killed, boss)
     if killed:
         _spawn_kill_confirmation_fx(at, boss)
+        if boss:
+            boss_defeat_relief_left = BOSS_DEFEAT_RELIEF_DURATION
+            boss_banner_timer = 0.0
     _play_impact_audio(critical, killed, boss)
 
 func _spawn_kill_confirmation_fx(at: Vector3, boss: bool) -> void:
@@ -660,6 +669,8 @@ func _on_restart_requested() -> void:
     get_tree().reload_current_scene()
 
 func _wave_name() -> String:
+    if boss_defeat_relief_left > 0.0:
+        return "THREAT NEUTRALIZED // PRESSURE DROPPING"
     if boss_banner_timer > 0.0:
         return "BOSS INBOUND // ELIMINATE THE THREAT"
     if elapsed < 45.0:
