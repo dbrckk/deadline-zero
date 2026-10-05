@@ -61,26 +61,19 @@ func _capture() -> void:
     boss.process_mode = Node.PROCESS_MODE_DISABLED
     boss.spawn_secondary_fx = false
     world.add_child(boss)
-    boss.position = Vector3(0.88, 0.0, -1.22)
-    boss.rotation.y = deg_to_rad(-20.0)
-    boss.scale = Vector3.ONE * 1.18
+    boss.position = Vector3(0.92, 0.0, -1.34)
+    boss.rotation.y = deg_to_rad(-18.0)
+    boss.scale = Vector3.ONE * 1.10
 
     var player := DZAssetLibrary.player()
     if player == null:
         push_error("Brand icon capture could not load authored player")
         quit(1)
         return
-    player.position = Vector3(-0.68, 0.0, 0.24)
-    player.rotation.y = deg_to_rad(12.0)
-    player.scale = Vector3.ONE * 1.58
+    player.position = Vector3(-0.70, 0.0, 0.24)
+    player.rotation.y = deg_to_rad(10.0)
+    player.scale = Vector3.ONE * 1.54
     world.add_child(player)
-
-    var rifle := DZAssetLibrary.rifle()
-    if rifle != null:
-        rifle.position = Vector3(0.44, 0.80, -0.30)
-        rifle.rotation_degrees = Vector3(-12.0, 166.0, -10.0)
-        rifle.scale = Vector3.ONE * 0.82
-        player.add_child(rifle)
 
     var hazard_ring := MeshInstance3D.new()
     var ring_mesh := TorusMesh.new()
@@ -101,8 +94,8 @@ func _capture() -> void:
     world.add_child(hazard_ring)
 
     var camera := Camera3D.new()
-    camera.position = Vector3(0.0, 2.05, 5.35)
-    camera.fov = 32.0
+    camera.position = Vector3(0.0, 2.08, 5.55)
+    camera.fov = 32.5
     world.add_child(camera)
     camera.current = true
     camera.look_at(Vector3(0.0, 1.04, -0.18), Vector3.UP)
