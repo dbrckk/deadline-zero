@@ -1,13 +1,13 @@
 # Change impact
 
-Base: a7d1f5a86df52eb18652a91978d693a04309ff48
-Head: 7e5ba7f5a0d764be81cf6b24c7794a73dbb4a7f4
+Base: 449052cf477a2f4daa26f3cf966133ab5218899e
+Head: 81194a71b0a8d19acbc737c72e00f82f7da3d696
 
 ## Changed files
-- M .github/workflows/godot-android-first-playable.yml
+- M play/store/RELEASE_READINESS.md
 
 ## Affected areas
-- .github
+- play
 
 ## Related test candidates
 - No direct filename-based test match detected.
