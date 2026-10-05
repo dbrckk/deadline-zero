@@ -240,6 +240,8 @@ func show_game_over(kills: int, level: int, elapsed: float) -> void:
     game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]
     low_health_panel.visible = false
     threat_panel.visible = false
+    if game_over_scrim != null:
+        game_over_scrim.visible = true
     game_over_panel.visible = true
 
 func _build() -> void:
