@@ -311,7 +311,13 @@ func _impact(critical := false, at := Vector3.INF) -> void:
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.76, 0.18) if critical else tint
     fx.scale_boost = (1.45 if critical else 1.0) * impact_scale
-    get_tree().current_scene.add_child(fx)
+    var fx_parent: Node = get_tree().current_scene if get_tree() != null else null
+    if fx_parent == null:
+        fx_parent = get_parent()
+    if fx_parent == null:
+        fx.queue_free()
+        return
+    fx_parent.add_child(fx)
     fx.global_position = global_position if at == Vector3.INF else at
 
 func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
