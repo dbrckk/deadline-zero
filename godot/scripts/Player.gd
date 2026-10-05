@@ -87,7 +87,7 @@ func _physics_process(delta: float) -> void:
         _update_authored_animation()
 
     var target := _combat_target()
-    _update_player_marker_pressure(nearest_threat if nearest_threat != null else target)
+    _update_player_marker_pressure(_pressure_target(target))
     if target != null:
         var facing := target.global_position
         facing.y = global_position.y
@@ -96,6 +96,15 @@ func _physics_process(delta: float) -> void:
         if fire_clock <= 0.0:
             _fire_at(target)
             fire_clock = fire_interval
+
+func _pressure_target(fallback: DZEnemy) -> DZEnemy:
+    if nearest_threat != null:
+        if is_instance_valid(nearest_threat) and not nearest_threat.dead:
+            return nearest_threat
+        nearest_threat = null
+    if fallback != null and is_instance_valid(fallback) and not fallback.dead:
+        return fallback
+    return null
 
 func set_combat_enabled(enabled: bool) -> void:
     combat_enabled = enabled
