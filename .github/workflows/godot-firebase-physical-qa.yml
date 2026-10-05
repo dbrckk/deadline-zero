@@ -4,13 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       device_model:
-        description: Firebase Test Lab physical MODEL_ID
+        description: Firebase Test Lab physical MODEL_ID (query the live catalog first)
         required: true
-        default: "shiba"
       android_version:
-        description: Test Lab OS_VERSION_ID supported by the selected model
+        description: Test Lab OS_VERSION_ID supported by the selected physical model
         required: true
-        default: "35"
       timeout:
         description: Robo smoke timeout
         required: true
@@ -116,14 +114,31 @@ jobs:
             "$(pwd)/build/firebase-physical/deadline-zero-physical-qa.apk"
           test -s build/firebase-physical/deadline-zero-physical-qa.apk
 
-      - name: Record selected Test Lab device
+      - name: Validate selected physical Test Lab device
         env:
           MODEL: ${{ inputs.device_model }}
+          VERSION: ${{ inputs.android_version }}
         run: |
           set -euo pipefail
           gcloud firebase test android models describe "$MODEL" --format=json \
             > build/firebase-physical/device-model.json
           test -s build/firebase-physical/device-model.json
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          data = json.loads(Path("build/firebase-physical/device-model.json").read_text())
+          blob = json.dumps(data).upper()
+          model = os.environ["MODEL"]
+          version = os.environ["VERSION"]
+          assert "PHYSICAL" in blob, f"{model} is not reported as a physical Test Lab device"
+          versions = data.get("supportedVersionIds") or data.get("supported_version_ids") or []
+          assert str(version) in {str(v) for v in versions}, (
+              f"Android version {version} is not supported by {model}; supported={versions}"
+          )
+          print(f"FIREBASE_PHYSICAL_DEVICE_OK model={model} version={version}")
+          PY
           cat build/firebase-physical/device-model.json
 
       - name: Run no-cost physical Robo smoke
