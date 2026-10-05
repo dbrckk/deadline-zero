@@ -14,6 +14,14 @@ func _initialize() -> void:
         push_error("Run path did not initialize player, HUD and camera")
         quit(1)
         return
+    if main.hud.onboarding_panel == null or not main.hud.onboarding_panel.visible:
+        push_error("First-playable did not expose the non-blocking movement hint")
+        quit(1)
+        return
+    if main.hud.onboarding_label == null or not main.hud.onboarding_label.text.contains("AUTO-FIRE"):
+        push_error("First-playable movement hint did not explain auto-fire")
+        quit(1)
+        return
     if main.player.shot_audio_voices.size() != 3:
         push_error("Player weapon audio did not initialize bounded 3-voice polyphony")
         quit(1)
@@ -200,6 +208,10 @@ func _initialize() -> void:
         push_error("Touch-stick visual moved inside control deadzone")
         quit(1)
         return
+    if not main.hud.onboarding_panel.visible:
+        push_error("Movement hint disappeared before meaningful touch movement")
+        quit(1)
+        return
 
     var touch_drag := InputEventScreenDrag.new()
     touch_drag.index = 7
@@ -207,6 +219,10 @@ func _initialize() -> void:
     main._unhandled_input(touch_drag)
     if main.player.touch_move.length() < 0.50:
         push_error("Touch drag did not drive player movement vector")
+        quit(1)
+        return
+    if main.onboarding_hint_active or main.hud.onboarding_panel.visible:
+        push_error("Movement hint did not dismiss after meaningful touch drag")
         quit(1)
         return
     var knob_center: Vector2 = (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5

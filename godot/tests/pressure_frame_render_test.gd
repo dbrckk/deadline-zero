@@ -14,6 +14,9 @@ func _run_capture() -> void:
     await process_frame
     await process_frame
 
+    if scene.hud != null:
+        scene.hud.hide_onboarding_hint()
+
     # Remove the opening roster so this evidence isolates real mid-run archetype readability.
     for node in get_nodes_in_group("enemies"):
         node.queue_free()

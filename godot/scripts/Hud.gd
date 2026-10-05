@@ -54,6 +54,8 @@ var damage_vignette: ColorRect
 var damage_vignette_tween: Tween
 var touch_stick_root: Control
 var touch_stick_knob: Control
+var onboarding_panel: PanelContainer
+var onboarding_label: Label
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -174,6 +176,14 @@ func hide_touch_stick() -> void:
     if touch_stick_root != null:
         touch_stick_root.visible = false
 
+func show_onboarding_hint() -> void:
+    if onboarding_panel != null:
+        onboarding_panel.visible = true
+
+func hide_onboarding_hint() -> void:
+    if onboarding_panel != null:
+        onboarding_panel.visible = false
+
 func set_reduced_flashes(enabled: bool) -> void:
     reduced_flashes = enabled
     if reduced_flashes_toggle != null:
@@ -235,6 +245,7 @@ func show_game_over(kills: int, level: int, elapsed: float) -> void:
     pause_panel.visible = false
     impact_flash.visible = false
     damage_vignette.visible = false
+    hide_onboarding_hint()
     var minutes := int(elapsed) / 60
     var seconds := int(elapsed) % 60
     game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]
@@ -303,6 +314,38 @@ func _build() -> void:
     stick_knob_style.corner_radius_bottom_right = 21
     touch_stick_knob.add_theme_stylebox_override("panel", stick_knob_style)
     touch_stick_root.add_child(touch_stick_knob)
+
+    onboarding_panel = PanelContainer.new()
+    onboarding_panel.name = "OnboardingHint"
+    onboarding_panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+    onboarding_panel.position = Vector2(-285.0, -166.0)
+    onboarding_panel.size = Vector2(570.0, 54.0)
+    onboarding_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    onboarding_panel.visible = false
+    root.add_child(onboarding_panel)
+
+    var onboarding_style := StyleBoxFlat.new()
+    onboarding_style.bg_color = Color(0.008, 0.022, 0.030, 0.92)
+    onboarding_style.border_color = Color(0.12, 0.70, 0.90, 0.74)
+    onboarding_style.set_border_width_all(1)
+    onboarding_style.border_width_left = 4
+    onboarding_style.corner_radius_top_left = 7
+    onboarding_style.corner_radius_top_right = 7
+    onboarding_style.corner_radius_bottom_left = 7
+    onboarding_style.corner_radius_bottom_right = 7
+    onboarding_style.content_margin_left = 16.0
+    onboarding_style.content_margin_right = 16.0
+    onboarding_panel.add_theme_stylebox_override("panel", onboarding_style)
+
+    onboarding_label = Label.new()
+    onboarding_label.name = "OnboardingLabel"
+    onboarding_label.text = "DRAG LEFT SIDE TO MOVE   •   AUTO-FIRE ONLINE"
+    onboarding_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    onboarding_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    onboarding_label.add_theme_font_size_override("font_size", 16)
+    onboarding_label.add_theme_color_override("font_color", Color(0.78, 0.93, 0.98))
+    onboarding_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    onboarding_panel.add_child(onboarding_label)
 
     var vital_panel := PanelContainer.new()
     vital_panel.name = "VitalPanel"

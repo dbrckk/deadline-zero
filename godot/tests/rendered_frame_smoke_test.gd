@@ -19,6 +19,10 @@ func _run_capture() -> void:
     var scene := packed.instantiate()
     get_root().add_child(scene)
 
+    await process_frame
+    if scene.hud != null:
+        scene.hud.hide_onboarding_hint()
+
     # Capture early enough to prove active combat rather than the run-end overlay, while still
     # giving imported meshes, materials, HUD and camera enough real render frames to settle.
     for _frame in range(30):

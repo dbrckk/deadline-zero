@@ -65,6 +65,8 @@ var haptics_enabled := true
 var reduced_flashes := false
 var camera_shake_enabled := true
 var hit_stop_enabled := true
+var onboarding_hint_active := true
+var onboarding_hint_left := 4.8
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -129,6 +131,7 @@ func _ready() -> void:
     last_player_health = player.health
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
+    hud.show_onboarding_hint()
     _build_combat_audio()
 
     for opening_kind in run_director.opening_roster():
@@ -144,6 +147,11 @@ func _process(delta: float) -> void:
 
     camera_kick = move_toward(camera_kick, 0.0, delta * 0.95)
     camera_kick_phase += delta * 38.0
+
+    if onboarding_hint_active and not game_over:
+        onboarding_hint_left = maxf(0.0, onboarding_hint_left - maxf(delta, 0.0))
+        if onboarding_hint_left <= 0.0 or (player != null and player.velocity.length_squared() > 0.16):
+            _dismiss_onboarding_hint()
 
     if player and is_instance_valid(player):
         var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0)
@@ -204,6 +212,14 @@ func _physics_process(delta: float) -> void:
         hud.set_progress(xp, xp_next, level, kills, elapsed, enemies.size())
         hud.set_wave(_wave_name())
 
+func _dismiss_onboarding_hint() -> void:
+    if not onboarding_hint_active:
+        return
+    onboarding_hint_active = false
+    onboarding_hint_left = 0.0
+    if hud != null:
+        hud.hide_onboarding_hint()
+
 func _unhandled_input(event: InputEvent) -> void:
     if player == null or game_over or not pending_upgrades.is_empty() or get_tree().paused:
         return
@@ -224,6 +240,8 @@ func _unhandled_input(event: InputEvent) -> void:
         if drag.index == touch_id:
             var vector := _touch_input_vector(drag.position)
             player.set_touch_move(vector)
+            if vector.length_squared() > 0.04:
+                _dismiss_onboarding_hint()
             if hud != null:
                 hud.update_touch_stick(touch_origin, vector)
 
@@ -369,6 +387,7 @@ func _offer_upgrade() -> void:
     available.shuffle()
     for i in range(mini(3, available.size())):
         pending_upgrades.append(available[i])
+    _dismiss_onboarding_hint()
     hud.show_upgrade(pending_upgrades)
     get_tree().paused = true
 
@@ -496,7 +515,8 @@ func _on_pause_requested() -> void:
     touch_id = -1
     if hud != null:
         hud.hide_touch_stick()
-        hud.show_pause_settings()
+        _dismiss_onboarding_hint()
+    hud.show_pause_settings()
     _play_ui_audio("pause_toggle", 0.92)
     get_tree().paused = true
 

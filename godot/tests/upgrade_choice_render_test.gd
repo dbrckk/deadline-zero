@@ -13,6 +13,9 @@ func _run_capture() -> void:
     await process_frame
     await process_frame
 
+    if scene.hud != null:
+        scene.hud.hide_onboarding_hint()
+
     scene.elapsed = 82.0
     scene.kills = 46
     scene.level = 4
