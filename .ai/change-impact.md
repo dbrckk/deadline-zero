@@ -1,20 +1,13 @@
 # Change impact
 
-Base: 5aa92918e724e65f90df9e46858b01f91dd92f73
-Head: 91a4c42c756f9cdf10a6a4f1dd4ae83f701717f4
+Base: a7d1f5a86df52eb18652a91978d693a04309ff48
+Head: 7e5ba7f5a0d764be81cf6b24c7794a73dbb4a7f4
 
 ## Changed files
-- M .github/workflows/godot-play-screenshots.yml
-- M godot/tests/boss_encounter_render_test.gd
-- M godot/tests/game_over_render_test.gd
-- M godot/tests/play_feature_graphic_render_test.gd
-- M godot/tests/pressure_frame_render_test.gd
-- M godot/tests/rendered_frame_smoke_test.gd
-- M godot/tests/upgrade_choice_render_test.gd
+- M .github/workflows/godot-android-first-playable.yml
 
 ## Affected areas
 - .github
-- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -22,16 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T13:21:34Z
+Generated: 2026-10-05T17:17:55Z
 
 ### Git
 - Branch: `main`
-- Head: `91a4c42c756f`
-- Commit date: 2026-10-05T15:21:15+02:00
-- Commit: Export opaque RGB Play listing graphics
+- Head: `7e5ba7f5a0d7`
+- Commit date: 2026-10-05T19:17:06+02:00
+- Commit: Fix Android process relaunch smoke shell
 - Tracked files: 979
 
 ### Recently changed files
+- `.github/workflows/godot-android-first-playable.yml`
+- `play/store/feature-graphic.png`
+- `play/store/phone-screenshots/01-first-playable.png`
+- `play/store/phone-screenshots/02-midrun-pressure.png`
+- `play/store/phone-screenshots/03-boss-encounter.png`
+- `play/store/phone-screenshots/04-upgrade-choice.png`
+- `play/store/phone-screenshots/05-run-end.png`
 - `.github/workflows/godot-play-screenshots.yml`
 - `godot/tests/boss_encounter_render_test.gd`
 - `godot/tests/game_over_render_test.gd`
@@ -40,9 +47,6 @@ Generated: 2026-10-05T13:21:34Z
 - `godot/tests/rendered_frame_smoke_test.gd`
 - `godot/tests/upgrade_choice_render_test.gd`
 - `.github/workflows/privacy-pages.yml`
-- `.github/workflows/godot-android-first-playable.yml`
-- `play/store/PLAY_CONSOLE.md`
-- `play/store/RELEASE_READINESS.md`
 
 ### Project signals
 - `build.gradle`
