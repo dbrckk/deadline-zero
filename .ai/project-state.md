@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T12:01:17Z
+Generated: 2026-10-05T12:03:12Z
 
 ### Git
 - Branch: `main`
-- Head: `d89689e5bb83`
-- Commit date: 2026-10-05T14:00:59+02:00
-- Commit: Test enemy rim-light readability contract
+- Head: `5648eb6b4f49`
+- Commit date: 2026-10-05T14:02:44+02:00
+- Commit: Test critical damage number screen scale
 - Tracked files: 960
 
 ### Recently changed files
+- `godot/tests/damage_number_budget_test.gd`
+- `godot/scripts/Enemy.gd`
 - `godot/tests/enemy_silhouette_identity_test.gd`
 - `godot/scripts/AssetLibrary.gd`
 - `godot/tests/first_playable_run_path_test.gd`
-- `godot/scripts/Main.gd`
-- `godot/tests/play_icon_render_test.gd`
 
 ### Project signals
 - `build.gradle`

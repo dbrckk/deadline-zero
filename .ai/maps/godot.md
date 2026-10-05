@@ -1293,7 +1293,7 @@ func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     number.outline_modulate = Color(0.02, 0.03, 0.05, 0.96)
     number.billboard = BaseMaterial3D.BILLBOARD_ENABLED
     number.no_depth_test = true
-    number.pixel_size = 0.0038 if critical else 0.0032
+    number.pixel_size = 0.0045 if critical else (0.0041 if killed else 0.0038)
     get_tree().current_scene.add_child(number)
     number.global_position = global_position + Vector3(0.0, 1.28, 0.0)
 
@@ -6692,6 +6692,16 @@ func _initialize() -> void:
     enemy._spawn_damage_number(24.0, true, false)
     if get_nodes_in_group("damage_numbers").size() != baseline + 1:
         push_error("Critical damage number was incorrectly dropped at budget cap")
+        quit(1)
+        return
+
+    var readable_critical: Label3D
+    for node in get_nodes_in_group("damage_numbers"):
+        if node is Label3D and str(node.name).begins_with("DamageNumber_"):
+            readable_critical = node as Label3D
+            break
+    if readable_critical == null or readable_critical.pixel_size < 0.0044:
+        push_error("Critical damage number is below phone-scale readability contract")
         quit(1)
         return
 

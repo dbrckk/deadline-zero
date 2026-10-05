@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Polish Godot combat HUD and center markings",
-      "terms": [
-        "center",
-        "combat",
-        "godot",
-        "hud",
-        "markings",
-        "polish"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Hud.gd",
-        "godot/scripts/Main.gd",
-        "godot/tests/hud_readability_hierarchy_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Preserve combat HUD readability",
       "terms": [
         "combat",
@@ -1056,6 +1038,23 @@
         "godot/scripts/Main.gd",
         "godot/tests/enemy_silhouette_identity_test.gd",
         "godot/tests/first_playable_run_path_test.gd"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "Test critical damage number screen scale",
+      "terms": [
+        "critical",
+        "damage",
+        "number",
+        "scale",
+        "screen",
+        "test"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/tests/damage_number_budget_test.gd"
       ]
     }
   ],
@@ -2117,11 +2116,12 @@
     },
     "critical": {
       "godot/scripts/CombatFeel.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 4,
       "godot/scripts/Projectile.gd": 4,
-      "godot/tests/combat_feel_test.gd": 4
+      "godot/tests/combat_feel_test.gd": 4,
+      "godot/tests/damage_number_budget_test.gd": 4
     },
     "cryo": {
       "tools/environment/generate_cryo_vault_candidate.py": 4,
@@ -2139,8 +2139,9 @@
       "core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java": 4
     },
     "damage": {
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Player.gd": 4,
+      "godot/tests/damage_number_budget_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/player_damage_feedback_test.gd": 4
     },
@@ -3174,6 +3175,10 @@
       "tools/environment/generate_cinder_foundry_candidate.py": 4,
       "tools/environment/generate_null_sector_candidate.py": 4
     },
+    "number": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/damage_number_budget_test.gd": 4
+    },
     "numbering": {
       "tools/android/build_runtime_release_evidence.py": 4,
       "tools/android/test_build_runtime_release_evidence.py": 4
@@ -3862,6 +3867,10 @@
       "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java": 4
     },
+    "scale": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/damage_number_budget_test.gd": 4
+    },
     "scatter": {
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
@@ -3870,7 +3879,9 @@
       "core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java": 4
     },
     "screen": {
-      "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java": 4
+      "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/damage_number_budget_test.gd": 4
     },
     "screenshot": {
       "godot/tests/weapon_presentation_test.gd": 4
@@ -4184,7 +4195,7 @@
     "test": {
       "godot/scripts/AssetLibrary.gd": 16,
       "godot/scripts/CombatFeel.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/Main.gd": 16,
       "godot/scripts/Player.gd": 12,
@@ -4192,6 +4203,7 @@
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/boss_encounter_render_test.gd": 4,
       "godot/tests/combat_feel_test.gd": 4,
+      "godot/tests/damage_number_budget_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 16,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/first_playable_run_path_test.gd": 12,
