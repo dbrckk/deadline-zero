@@ -22,13 +22,13 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T17:49:48Z
+Generated: 2026-10-05T18:26:13Z
 
 ### Git
 - Branch: `main`
-- Head: `294dc6d29af4`
-- Commit date: 2026-10-05T19:49:34+02:00
-- Commit: Stabilize Android emulator smoke infrastructure
+- Head: `4887eadade10`
+- Commit date: 2026-10-05T20:25:48+02:00
+- Commit: Persist Android smoke toolchain diagnostics
 - Tracked files: 981
 
 ### Recently changed files
@@ -39,7 +39,6 @@ Generated: 2026-10-05T17:49:48Z
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
 - `godot/tests/first_playable_run_path_test.gd`
-- `godot/scripts/Main.gd`
 
 ### Project signals
 - `build.gradle`

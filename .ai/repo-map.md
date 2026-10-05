@@ -2035,12 +2035,21 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      - name: Set up Android SDK for smoke job
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+
       - name: Prepare pinned Android emulator
         run: |
           set -euo pipefail
+          command -v sdkmanager
+          command -v adb
           yes | sdkmanager --licenses >/dev/null
           sdkmanager "platform-tools" "platforms;android-35" "emulator" "system-images;android-35;default;x86_64"
+          command -v emulator
           emulator -version | tee /tmp/deadline-zero-emulator-version.txt
+          adb version | tee /tmp/deadline-zero-adb-version.txt
 
       - name: Smoke-test native Godot APK
         uses: reactivecircus/android-emulator-runner@v2
@@ -2054,6 +2063,8 @@ jobs:
           script: |
             set -eu
             mkdir -p build/godot-android-smoke
+            cp /tmp/deadline-zero-emulator-version.txt build/godot-android-smoke/emulator-version.txt 2>/dev/null || true
+            cp /tmp/deadline-zero-adb-version.txt build/godot-android-smoke/adb-version.txt 2>/dev/null || true
             adb wait-for-device
             timeout 300s bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 2; done'
             # sys.boot_completed can flip before Launcher/overlay/display configuration has
