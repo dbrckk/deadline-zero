@@ -335,6 +335,55 @@ func _boss_slam_cooldown() -> float:
         3: return 2.8
         _: return 4.1
 
+func _boss_aftershock_count() -> int:
+    return 2 if boss_phase >= 3 else (1 if boss_phase >= 2 else 0)
+
+func _schedule_boss_aftershocks(at: Vector3) -> void:
+    var count := _boss_aftershock_count()
+    for index in range(count):
+        var delay := (0.30 + float(index) * 0.28) if boss_phase >= 3 else 0.36
+        var radius := 2.50 + float(index) * 0.66
+        var damage_scale := 0.42 if index == 0 else 0.32
+        _show_boss_aftershock(at, radius, delay, damage_scale)
+
+func _show_boss_aftershock(at: Vector3, radius: float, delay: float, damage_scale: float) -> void:
+    var scene := get_tree().current_scene if get_tree() != null else null
+    if scene == null:
+        return
+    var warning := MeshInstance3D.new()
+    warning.name = "BossAftershockWarning"
+    warning.mesh = _telegraph_ring_mesh(radius, true)
+    warning.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    scene.add_child(warning)
+    warning.global_position = at + Vector3(0.0, 0.040, 0.0)
+
+    var material := StandardMaterial3D.new()
+    material.albedo_color = Color(1.0, 0.10, 0.025, 0.30)
+    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.emission_enabled = true
+    material.emission = Color(1.0, 0.055, 0.008)
+    material.emission_energy_multiplier = 2.0
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    warning.material_override = material
+    warning.scale = Vector3(0.58, 1.0, 0.58)
+
+    var tween := warning.create_tween()
+    tween.set_parallel(true)
+    tween.tween_property(warning, "scale", Vector3.ONE, delay).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(material, "emission_energy_multiplier", 5.2, delay).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.tween_property(material, "albedo_color", Color(1.0, 0.045, 0.006, 0.82), delay).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.chain().tween_callback(_resolve_boss_aftershock.bind(at, radius, contact_damage * damage_scale, warning))
+
+func _resolve_boss_aftershock(at: Vector3, radius: float, damage: float, warning: MeshInstance3D) -> void:
+    if warning != null and is_instance_valid(warning):
+        warning.queue_free()
+    if target != null and is_instance_valid(target) and target.has_method("take_damage"):
+        var flat_delta := target.global_position - at
+        flat_delta.y = 0.0
+        if flat_delta.length() <= radius:
+            target.take_damage(damage)
+    _spawn_attack_impact(at, radius * 0.72)
+
 func _process_charge(delta: float) -> void:
     charge_left = max(0.0, charge_left - delta)
     velocity = charge_direction * 9.4
@@ -410,6 +459,8 @@ func _resolve_telegraphed_attack() -> void:
     if target.global_position.distance_to(impact_point) <= radius and target.has_method("take_damage"):
         target.take_damage(damage)
     _spawn_attack_impact(impact_point, radius)
+    if kind == "boss" and boss_phase >= 2:
+        _schedule_boss_aftershocks(impact_point)
     attack_cooldown = 0.88 if kind == "boss" else 0.64
 
 func _show_telegraph(radius: float, duration: float) -> void:
