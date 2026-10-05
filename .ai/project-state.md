@@ -22,25 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T17:44:53Z
+Generated: 2026-10-05T17:49:48Z
 
 ### Git
 - Branch: `main`
-- Head: `500444d4cb01`
-- Commit date: 2026-10-05T19:44:40+02:00
-- Commit: Type debug performance snapshot in first-playable test
+- Head: `294dc6d29af4`
+- Commit date: 2026-10-05T19:49:34+02:00
+- Commit: Stabilize Android emulator smoke infrastructure
 - Tracked files: 981
 
 ### Recently changed files
-- `godot/tests/first_playable_run_path_test.gd`
+- `.github/workflows/godot-android-first-playable.yml`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
+- `godot/tests/first_playable_run_path_test.gd`
 - `godot/scripts/Main.gd`
-- `.github/workflows/privacy-pages.yml`
-- `.github/workflows/godot-firebase-physical-qa.yml`
 
 ### Project signals
 - `build.gradle`
