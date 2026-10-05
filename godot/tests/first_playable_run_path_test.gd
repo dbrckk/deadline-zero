@@ -125,7 +125,7 @@ func _initialize() -> void:
         return
     main.player.global_position = Vector3.ZERO
 
-    var clamped_spawn := main._clamp_spawn_position(Vector3(60.0, 0.0, -60.0))
+    var clamped_spawn: Vector3 = main._clamp_spawn_position(Vector3(60.0, 0.0, -60.0))
     if absf(clamped_spawn.x) > 34.001 or absf(clamped_spawn.z) > 34.001:
         push_error("Enemy spawn position can escape the authored arena floor")
         quit(1)
@@ -133,8 +133,8 @@ func _initialize() -> void:
 
     main.player.global_position = Vector3(30.0, 0.0, 30.0)
     main.spawn_rng.seed = 777
-    var edge_spawn := main._spawn_position_around_player(18.0)
-    var edge_spawn_distance := main.player.global_position.distance_to(edge_spawn)
+    var edge_spawn: Vector3 = main._spawn_position_around_player(18.0)
+    var edge_spawn_distance: float = main.player.global_position.distance_to(edge_spawn)
     if absf(edge_spawn.x) > 34.001 or absf(edge_spawn.z) > 34.001:
         push_error("Edge-player spawn escaped arena-safe bounds")
         quit(1)
@@ -155,9 +155,9 @@ func _initialize() -> void:
         return
 
     main.hud.show_touch_stick(Vector2(4.0, 716.0))
-    var edge_pos := main.hud.touch_stick_root.position
-    var edge_size := main.hud.touch_stick_root.size
-    var viewport_size := main.get_viewport().get_visible_rect().size
+    var edge_pos: Vector2 = main.hud.touch_stick_root.position
+    var edge_size: Vector2 = main.hud.touch_stick_root.size
+    var viewport_size: Vector2 = main.get_viewport().get_visible_rect().size
     if edge_pos.x < 7.5 or edge_pos.y < 7.5:
         push_error("Touch stick can clip beyond top/left phone bounds")
         quit(1)
@@ -182,7 +182,7 @@ func _initialize() -> void:
     micro_drag.index = 7
     micro_drag.position = Vector2(186.0, 524.0)
     main._unhandled_input(micro_drag)
-    var initial_knob_center := (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5
+    var initial_knob_center: Vector2 = (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5
     if main.player.touch_move.length_squared() > 0.0001:
         push_error("Touch-stick deadzone allowed unintended player drift")
         quit(1)
@@ -200,9 +200,9 @@ func _initialize() -> void:
         push_error("Touch drag did not drive player movement vector")
         quit(1)
         return
-    var knob_center := (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5
-    var knob_distance := main.hud.touch_stick_knob.position.distance_to(knob_center)
-    var max_knob_travel := (main.hud.touch_stick_root.size.x - main.hud.touch_stick_knob.size.x) * 0.5 - 4.0
+    var knob_center: Vector2 = (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5
+    var knob_distance: float = main.hud.touch_stick_knob.position.distance_to(knob_center)
+    var max_knob_travel: float = (main.hud.touch_stick_root.size.x - main.hud.touch_stick_knob.size.x) * 0.5 - 4.0
     if knob_distance < 8.0:
         push_error("Touch drag did not move floating stick knob")
         quit(1)
@@ -345,8 +345,8 @@ func _initialize() -> void:
         quit(1)
         return
 
-    var chain_start_level := main.level
-    var chain_first_threshold := main.xp_next
+    var chain_start_level: int = int(main.level)
+    var chain_first_threshold: int = int(main.xp_next)
     var chain_second_threshold := int(round(float(chain_first_threshold) * 1.24 + 4.0))
     main._on_xp_collected(chain_first_threshold + chain_second_threshold + 3)
     if main.level != chain_start_level + 1 or main.pending_upgrades.size() != 3 or not paused:
