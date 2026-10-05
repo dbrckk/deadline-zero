@@ -77,41 +77,90 @@ func _capture() -> void:
     boss.process_mode = Node.PROCESS_MODE_DISABLED
     boss.spawn_secondary_fx = false
     world.add_child(boss)
-    boss.position = Vector3(3.6, 0.0, -1.25)
-    boss.rotation.y = deg_to_rad(150.0)
-    boss.scale = Vector3.ONE * 1.22
+    boss.position = Vector3(3.15, 0.0, -1.02)
+    boss.rotation.y = deg_to_rad(-18.0)
+    boss.scale = Vector3.ONE * 1.38
 
     var elite := DZEnemy.new()
     elite.configure("elite", 1.0, target)
     elite.process_mode = Node.PROCESS_MODE_DISABLED
     elite.spawn_secondary_fx = false
     world.add_child(elite)
-    elite.position = Vector3(1.6, 0.0, -1.85)
-    elite.rotation.y = deg_to_rad(160.0)
+    elite.position = Vector3(1.35, 0.0, -1.42)
+    elite.rotation.y = deg_to_rad(12.0)
+    elite.scale = Vector3.ONE * 1.08
 
     var player := DZAssetLibrary.player()
     if player == null:
         push_error("Feature graphic capture could not load authored player")
         quit(1)
         return
-    player.position = Vector3(-3.3, 0.0, 0.25)
-    player.rotation.y = deg_to_rad(-22.0)
-    player.scale = Vector3.ONE * 1.45
+    player.position = Vector3(-3.05, 0.0, 0.14)
+    player.rotation.y = deg_to_rad(12.0)
+    player.scale = Vector3.ONE * 1.72
     world.add_child(player)
 
     var rifle := DZAssetLibrary.rifle()
     if rifle != null:
-        rifle.position = Vector3(0.33, 0.93, -0.38)
-        rifle.rotation_degrees = Vector3(-8.0, 180.0, -4.0)
-        rifle.scale = Vector3.ONE * 0.92
+        rifle.position = Vector3(0.42, 0.83, -0.30)
+        rifle.rotation_degrees = Vector3(-11.0, 166.0, -9.0)
+        rifle.scale = Vector3.ONE * 0.84
         player.add_child(rifle)
 
     var camera := Camera3D.new()
-    camera.position = Vector3(0.0, 3.2, 9.5)
-    camera.fov = 39.0
+    camera.position = Vector3(0.0, 2.95, 8.65)
+    camera.fov = 36.0
     world.add_child(camera)
     camera.current = true
-    camera.look_at(Vector3(0.1, 0.9, -0.75), Vector3.UP)
+    camera.look_at(Vector3(0.10, 0.98, -0.58), Vector3.UP)
+
+    var brand_layer := CanvasLayer.new()
+    brand_layer.layer = 4
+    viewport.add_child(brand_layer)
+
+    var title_backdrop := ColorRect.new()
+    title_backdrop.position = Vector2(40.0, 34.0)
+    title_backdrop.size = Vector2(520.0, 132.0)
+    title_backdrop.color = Color(0.005, 0.010, 0.014, 0.84)
+    brand_layer.add_child(title_backdrop)
+
+    var cyan_rule := ColorRect.new()
+    cyan_rule.position = Vector2(40.0, 34.0)
+    cyan_rule.size = Vector2(7.0, 132.0)
+    cyan_rule.color = Color(0.08, 0.82, 1.0, 0.95)
+    brand_layer.add_child(cyan_rule)
+
+    var orange_rule := ColorRect.new()
+    orange_rule.position = Vector2(47.0, 158.0)
+    orange_rule.size = Vector2(238.0, 8.0)
+    orange_rule.color = Color(1.0, 0.26, 0.035, 0.92)
+    brand_layer.add_child(orange_rule)
+
+    var title := Label.new()
+    title.position = Vector2(70.0, 50.0)
+    title.size = Vector2(470.0, 64.0)
+    title.text = "DEADLINE: ZERO"
+    title.add_theme_font_size_override("font_size", 48)
+    title.add_theme_color_override("font_color", Color(0.92, 0.97, 1.0))
+    title.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.86))
+    title.add_theme_constant_override("outline_size", 4)
+    brand_layer.add_child(title)
+
+    var subtitle := Label.new()
+    subtitle.position = Vector2(72.0, 111.0)
+    subtitle.size = Vector2(460.0, 38.0)
+    subtitle.text = "SURVIVE THE QUARANTINE"
+    subtitle.add_theme_font_size_override("font_size", 18)
+    subtitle.add_theme_color_override("font_color", Color(0.35, 0.86, 1.0))
+    brand_layer.add_child(subtitle)
+
+    var emblem := TextureRect.new()
+    emblem.position = Vector2(902.0, 26.0)
+    emblem.size = Vector2(86.0, 86.0)
+    emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+    emblem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+    emblem.texture = load("res://assets/ui/deadline_zero_icon.svg") as Texture2D
+    brand_layer.add_child(emblem)
 
     for _frame in range(8):
         await process_frame
