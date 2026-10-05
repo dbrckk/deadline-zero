@@ -75,6 +75,8 @@ func _initialize() -> void:
     var perimeter_bulkhead_count := 0
     var bulkhead_hazard_stripe_count := 0
     var bulkhead_signal_count := 0
+    var arena_light_pool_count := 0
+    var arena_light_pool_violations := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -102,6 +104,16 @@ func _initialize() -> void:
             arena_boundary_count += 1
             if child is MeshInstance3D and (child as MeshInstance3D).cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
                 arena_boundary_shadow_violations += 1
+        elif child.name.begins_with("ArenaLightPool_"):
+            arena_light_pool_count += 1
+            if not child is MeshInstance3D:
+                arena_light_pool_violations += 1
+            else:
+                var pool_mesh := child as MeshInstance3D
+                if pool_mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or not pool_mesh.material_override is ShaderMaterial:
+                    arena_light_pool_violations += 1
+                elif not (pool_mesh.material_override as ShaderMaterial).shader.code.contains("blend_add"):
+                    arena_light_pool_violations += 1
         elif child.name.begins_with("PerimeterBeacon_"):
             beacon_count += 1
         elif child.name.begins_with("FloorPlate_"):
@@ -174,6 +186,10 @@ func _initialize() -> void:
         return
     if arena_boundary_count != 44 or arena_boundary_shadow_violations != 0:
         push_error("Expected 44 shadow-free arena boundary markers, got %d with %d shadow violations" % [arena_boundary_count, arena_boundary_shadow_violations])
+        quit(1)
+        return
+    if arena_light_pool_count != 6 or arena_light_pool_violations != 0:
+        push_error("Expected 6 mobile-safe additive arena light pools, got %d with %d violations" % [arena_light_pool_count, arena_light_pool_violations])
         quit(1)
         return
     if beacon_count != 12:
