@@ -37,7 +37,7 @@ func _initialize() -> void:
         push_error("Pause/settings panel is missing resume control")
         quit(1)
         return
-    if pause_panel.find_child("MasterVolume", true, false) == null or pause_panel.find_child("SfxVolume", true, false) == null:
+    if pause_panel.find_child("MasterVolume", true, false) == null or pause_panel.find_child("SfxVolume", true, false) == null or pause_panel.find_child("MusicVolume", true, false) == null:
         push_error("Pause/settings panel is missing audio sliders")
         quit(1)
         return
