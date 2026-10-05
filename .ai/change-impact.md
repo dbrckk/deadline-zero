@@ -1,13 +1,13 @@
 # Change impact
 
-Base: facdaf937bb5791df902101535ef56847461fe17
-Head: 0e2366d3e6bab8991679211b223af438bb8f205c
+Base: ef1d39ff9847189141c4c649013fd0d4121be7d7
+Head: 7de7f15ccf3ec59833f9d095f9b76f46493677df
 
 ## Changed files
-- M .github/workflows/godot-play-screenshots.yml
+- M godot/tests/first_playable_run_path_test.gd
 
 ## Affected areas
-- .github
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

@@ -5,13 +5,37 @@
   "semantic": false,
   "note": "Dependencies are known symbol names lexically present inside the symbol's AST/source range.",
   "symbols": {
-    "_init": {
+    "_initialize": {
       "source": {
-        "file": "godot/tests/weapon_presentation_test.gd",
-        "start": 2,
-        "end": 122
+        "file": "godot/tests/first_playable_run_path_test.gd",
+        "start": 5,
+        "end": 125
       },
       "symbol_dependencies": [
+        {
+          "symbol": "DZPlayer",
+          "definitions": [
+            {
+              "file": "godot/scripts/Player.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Enemy",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
+              "line": 18,
+              "kind": "class",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
         {
           "symbol": "Player",
           "definitions": [
@@ -23,42 +47,31 @@
             }
           ],
           "relation": "class_like"
-        },
-        {
-          "symbol": "Projectile",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java",
-              "line": 8,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "_require",
-          "definitions": [
-            {
-              "file": "godot/tests/weapon_presentation_test.gd",
-              "line": 58,
-              "kind": "function",
-              "language": "gdscript"
-            }
-          ],
-          "relation": "same_file"
         }
       ],
       "dependency_count": 3
     },
-    "_require": {
+    "_count_kind": {
       "source": {
-        "file": "godot/tests/weapon_presentation_test.gd",
-        "start": 58,
-        "end": 178
+        "file": "godot/tests/first_playable_run_path_test.gd",
+        "start": 489,
+        "end": 609
       },
-      "symbol_dependencies": [],
-      "dependency_count": 0
+      "symbol_dependencies": [
+        {
+          "symbol": "DZEnemy",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 1
     }
   }
 }

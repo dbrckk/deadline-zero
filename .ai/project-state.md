@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T11:48:12Z
+Generated: 2026-10-05T11:49:13Z
 
 ### Git
 - Branch: `main`
-- Head: `0e2366d3e6ba`
-- Commit date: 2026-10-05T13:47:52+02:00
-- Commit: Bound Play screenshot render runtime
+- Head: `7de7f15ccf3e`
+- Commit date: 2026-10-05T13:48:50+02:00
+- Commit: Make first-playable QA types explicit
 - Tracked files: 960
 
 ### Recently changed files
+- `godot/tests/first_playable_run_path_test.gd`
 - `.github/workflows/godot-play-screenshots.yml`
 - `.github/workflows/godot-verify.yml`
 - `godot/tests/weapon_presentation_test.gd`
 - `godot/tests/player_targeting_stability_test.gd`
-- `godot/tests/impact_fx_mobile_test.gd`
 
 ### Project signals
 - `build.gradle`
