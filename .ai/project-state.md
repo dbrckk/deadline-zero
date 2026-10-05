@@ -22,33 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T12:58:52Z
+Generated: 2026-10-05T13:01:09Z
 
 ### Git
 - Branch: `main`
-- Head: `291dd523d8cd`
-- Commit date: 2026-10-05T14:58:37+02:00
-- Commit: Expand Play Store visual evidence to five real scenes
+- Head: `84db34d138b0`
+- Commit date: 2026-10-05T15:00:54+02:00
+- Commit: Polish Play feature graphic composition
 - Tracked files: 965
 
 ### Recently changed files
-- `.github/workflows/godot-play-screenshots.yml`
-- `godot/tests/boss_encounter_render_test.gd`
-- `godot/tests/upgrade_choice_render_test.gd`
 - `godot/tests/play_feature_graphic_render_test.gd`
-- `godot/assets/ui/deadline_zero_adaptive_background.svg`
-- `godot/assets/ui/deadline_zero_adaptive_foreground.svg`
-- `godot/assets/ui/deadline_zero_adaptive_monochrome.svg`
-- `godot/export_presets.cfg`
-- `godot/tests/android_play_export_contract_test.gd`
-- `godot/assets/audio/authored/README.md`
-- `godot/scripts/CombatAudio.gd`
-- `godot/scripts/Main.gd`
-- `godot/tests/authored_audio_asset_test.gd`
-- `godot/tests/combat_audio_feedback_test.gd`
-- `godot/tests/first_playable_run_path_test.gd`
-- `tools/audio/generate_deadline_zero_audio.py`
-- `godot/tests/run_end_ux_test.gd`
+- `docs/STORE_RELEASE.md`
+- `play/store/RELEASE_READINESS.md`
+- `play/store/README.md`
+- `godot/PLAY_RELEASE.md`
 
 ### Project signals
 - `build.gradle`
