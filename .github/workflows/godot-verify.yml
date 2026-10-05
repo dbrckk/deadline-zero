@@ -170,6 +170,19 @@ jobs:
           test -s /tmp/deadline-zero-pressure-frame.png
           cp /tmp/deadline-zero-pressure-frame.png build/godot-visual-smoke/midrun-pressure-rendered.png
 
+      - name: Render run-end presentation evidence
+        run: |
+          set -euo pipefail
+          rm -f /tmp/deadline-zero-game-over-frame.png
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a \
+            /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --path godot \
+            --rendering-method gl_compatibility \
+            --audio-driver Dummy \
+            --script res://tests/game_over_render_test.gd
+          test -s /tmp/deadline-zero-game-over-frame.png
+          cp /tmp/deadline-zero-game-over-frame.png build/godot-visual-smoke/run-end-rendered.png
+
       - name: Upload rendered Godot visual evidence
         uses: actions/upload-artifact@v4
         with:
