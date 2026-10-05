@@ -22,20 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T17:39:07Z
+Generated: 2026-10-05T17:40:08Z
 
 ### Git
 - Branch: `main`
-- Head: `af1a32218f60`
-- Commit date: 2026-10-05T19:38:20+02:00
-- Commit: Require live physical Firebase Test Lab targets
+- Head: `ba84163be86d`
+- Commit date: 2026-10-05T19:39:33+02:00
+- Commit: Publish privacy policy automatically on site changes
 - Tracked files: 981
 
 ### Recently changed files
+- `.github/workflows/privacy-pages.yml`
 - `.github/workflows/godot-firebase-physical-qa.yml`
 - `play/store/RELEASE_READINESS.md`
 - `docs/FREE_ANDROID_DEVICE_QA.md`
-- `.github/workflows/godot-android-first-playable.yml`
 
 ### Project signals
 - `build.gradle`

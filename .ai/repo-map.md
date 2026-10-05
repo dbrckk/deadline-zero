@@ -3265,6 +3265,12 @@ name: Privacy Policy Pages
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'public/**'
+      - 'play/store/PRIVACY_POLICY.md'
+      - '.github/workflows/privacy-pages.yml'
 
 permissions:
   contents: read

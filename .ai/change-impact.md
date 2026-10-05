@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 958eb9a695d12c76f837b38fe2ba163840cb0937
-Head: af1a32218f6000228784039a6a92207bd3bac3e9
+Base: 105c61a815dc8143f9fdf2a03d7b61f3d321f406
+Head: ba84163be86dedcdae970d89f07ec46817558174
 
 ## Changed files
-- M .github/workflows/godot-firebase-physical-qa.yml
+- M .github/workflows/privacy-pages.yml
 
 ## Affected areas
 - .github
