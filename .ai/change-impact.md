@@ -1,12 +1,15 @@
 # Change impact
 
-Base: 260bf2572d3eb591862fd69830fa91e34468a8c4
-Head: 68baf41fa92a03c9758e46a5fe179f7efb89b306
+Base: 410bfff36fe625e3ac30d09ab15586c665596410
+Head: 291dd523d8cd7320067293f3a185ed0275b229da
 
 ## Changed files
-- M godot/tests/play_feature_graphic_render_test.gd
+- M .github/workflows/godot-play-screenshots.yml
+- M godot/tests/boss_encounter_render_test.gd
+- A godot/tests/upgrade_choice_render_test.gd
 
 ## Affected areas
+- .github
 - godot
 
 ## Related test candidates

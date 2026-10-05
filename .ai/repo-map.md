@@ -2283,7 +2283,6 @@ on:
     paths:
       - 'godot/**'
       - 'tools/audio/**'
-      - 'tools/audio/**'
       - '.github/workflows/godot-play-screenshots.yml'
   workflow_dispatch:
 
@@ -2339,6 +2338,8 @@ jobs:
           capture res://tests/rendered_frame_smoke_test.gd /tmp/deadline-zero-rendered-frame.png 01-first-playable.png
           capture res://tests/pressure_frame_render_test.gd /tmp/deadline-zero-pressure-frame.png 02-midrun-pressure.png
           capture res://tests/boss_encounter_render_test.gd /tmp/deadline-zero-boss-encounter.png 03-boss-encounter.png
+          capture res://tests/upgrade_choice_render_test.gd /tmp/deadline-zero-upgrade-choice.png 04-upgrade-choice.png
+          capture res://tests/game_over_render_test.gd /tmp/deadline-zero-game-over-frame.png 05-run-end.png
 
       - name: Validate Play screenshot dimensions
         run: |
@@ -2348,7 +2349,7 @@ jobs:
           from pathlib import Path
 
           shots = sorted(Path("build/play-store-candidates").glob("*.png"))
-          assert len(shots) == 3, f"expected 3 screenshots, got {len(shots)}"
+          assert len(shots) == 5, f"expected 5 screenshots, got {len(shots)}"
           for path in shots:
               data = path.read_bytes()
               assert data[:8] == b"\x89PNG\r\n\x1a\n", f"{path} is not PNG"

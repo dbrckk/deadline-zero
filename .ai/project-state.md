@@ -22,16 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T12:57:19Z
+Generated: 2026-10-05T12:58:52Z
 
 ### Git
 - Branch: `main`
-- Head: `68baf41fa92a`
-- Commit date: 2026-10-05T14:57:07+02:00
-- Commit: Elevate Play feature graphic with authored cinematic staging
-- Tracked files: 964
+- Head: `291dd523d8cd`
+- Commit date: 2026-10-05T14:58:37+02:00
+- Commit: Expand Play Store visual evidence to five real scenes
+- Tracked files: 965
 
 ### Recently changed files
+- `.github/workflows/godot-play-screenshots.yml`
+- `godot/tests/boss_encounter_render_test.gd`
+- `godot/tests/upgrade_choice_render_test.gd`
 - `godot/tests/play_feature_graphic_render_test.gd`
 - `godot/assets/ui/deadline_zero_adaptive_background.svg`
 - `godot/assets/ui/deadline_zero_adaptive_foreground.svg`
@@ -46,7 +49,6 @@ Generated: 2026-10-05T12:57:19Z
 - `godot/tests/first_playable_run_path_test.gd`
 - `tools/audio/generate_deadline_zero_audio.py`
 - `godot/tests/run_end_ux_test.gd`
-- `godot/scripts/Hud.gd`
 
 ### Project signals
 - `build.gradle`

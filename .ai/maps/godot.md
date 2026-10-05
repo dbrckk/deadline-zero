@@ -103,6 +103,7 @@ tests/
   smoke_test.gd
   spatial_hash_test.gd
   status_effects_test.gd
+  upgrade_choice_render_test.gd
   upgrade_presentation_test.gd
   weapon_presentation_test.gd
   weapon_profile_data_test.gd
@@ -6423,9 +6424,11 @@ func _run_capture() -> void:
         quit(1)
         return
 
-    boss.global_position = Vector3(0.0, 0.0, -6.6)
-    runner.global_position = Vector3(-4.6, 0.0, -1.6)
-    elite.global_position = Vector3(4.7, 0.0, -1.8)
+    # Keep the encounter hero readable below the boss HUD instead of hiding its face/body
+    # directly behind the health panel in Store captures.
+    boss.global_position = Vector3(3.2, 0.0, 2.6)
+    runner.global_position = Vector3(-4.4, 0.0, 2.2)
+    elite.global_position = Vector3(-3.3, 0.0, -2.0)
     boss.health = boss.max_health * 0.72
     boss.health_changed.emit(boss.health, boss.max_health)
 
@@ -6455,8 +6458,8 @@ func _run_capture() -> void:
         push_error("Boss capture framing pushed the boss outside the central readable zone")
         quit(1)
         return
-    if boss_screen.y < viewport_size.y * 0.18 or boss_screen.y > viewport_size.y * 0.82:
-        push_error("Boss capture framing pushed the boss outside the vertical readable zone")
+    if boss_screen.y < viewport_size.y * 0.32 or boss_screen.y > viewport_size.y * 0.82:
+        push_error("Boss capture framing must keep the boss below its HUD and inside the readable zone")
         quit(1)
         return
 
@@ -10801,6 +10804,79 @@ func _initialize() -> void:
         return
 
     print("Deadline Zero enemy status effects: OK")
+    quit(0)
+```
+
+## File: tests/upgrade_choice_render_test.gd
+```
+extends SceneTree
+
+const OUTPUT_PATH := "/tmp/deadline-zero-upgrade-choice.png"
+const MAIN_SCENE := preload("res://scenes/Main.tscn")
+
+func _initialize() -> void:
+    call_deferred("_run_capture")
+
+func _run_capture() -> void:
+    var scene := MAIN_SCENE.instantiate()
+    get_root().add_child(scene)
+    current_scene = scene
+    await process_frame
+    await process_frame
+
+    scene.elapsed = 82.0
+    scene.kills = 46
+    scene.level = 4
+    scene.xp = 0
+    scene.xp_next = 92
+    scene.director_profile = scene.run_director.profile(scene.elapsed, scene.level)
+    scene.hud.set_progress(scene.xp, scene.xp_next, scene.level, scene.kills, scene.elapsed, get_nodes_in_group("enemies").size())
+
+    seed(20261005)
+    scene._on_xp_collected(scene.xp_next)
+    for _frame in range(6):
+        await process_frame
+
+    if scene.pending_upgrades.size() != 3:
+        push_error("Upgrade Store capture did not produce three choices")
+        quit(1)
+        return
+    if not scene.hud.upgrade_panel.visible or not paused:
+        push_error("Upgrade Store capture did not enter paused upgrade presentation")
+        quit(1)
+        return
+
+    var texture := get_root().get_texture()
+    if texture == null:
+        push_error("Upgrade Store capture has no viewport texture")
+        quit(1)
+        return
+    var image := texture.get_image()
+    if image == null or image.is_empty():
+        push_error("Upgrade Store capture produced no image")
+        quit(1)
+        return
+
+    var width := image.get_width()
+    var height := image.get_height()
+    if width <= height or width < 1280 or height < 720:
+        push_error("Upgrade Store capture must remain landscape and at least 1280x720, got %dx%d" % [width, height])
+        quit(1)
+        return
+
+    var center := image.get_pixel(width / 2, height / 2)
+    if center.get_luminance() < 0.02:
+        push_error("Upgrade Store capture center rendered effectively black")
+        quit(1)
+        return
+
+    var save_error := image.save_png(OUTPUT_PATH)
+    if save_error != OK:
+        push_error("Unable to save upgrade Store capture: %s" % error_string(save_error))
+        quit(1)
+        return
+
+    print("GODOT_UPGRADE_STORE_FRAME_OK %dx%d choices=%d" % [width, height, scene.pending_upgrades.size()])
     quit(0)
 ```
 
