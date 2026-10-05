@@ -48,6 +48,10 @@ func _initialize() -> void:
         push_error("Boss phase II transition event was not emitted exactly once")
         quit(1)
         return
+    if boss._boss_aftershock_count() != 1:
+        push_error("Boss phase II did not unlock one telegraphed aftershock")
+        quit(1)
+        return
 
     var phase2_speed: float = boss.move_speed
     var phase2_damage: float = boss.contact_damage
@@ -63,6 +67,10 @@ func _initialize() -> void:
         return
     if phase_events != [2, 3]:
         push_error("Boss phase III transition event was not emitted exactly once")
+        quit(1)
+        return
+    if boss._boss_aftershock_count() != 2:
+        push_error("Boss phase III did not escalate to two telegraphed aftershocks")
         quit(1)
         return
 
