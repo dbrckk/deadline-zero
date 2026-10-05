@@ -26,6 +26,14 @@ func _initialize() -> void:
         push_error("Boss premium threat aura did not initialize")
         quit(1)
         return
+    if boss.boss_aura_inner == null or boss.boss_aura_outer == null:
+        push_error("Boss threat aura ring layers are missing")
+        quit(1)
+        return
+    if absf(boss.boss_aura_inner.rotation_degrees.x) > 0.01 or absf(boss.boss_aura_outer.rotation_degrees.x) > 0.01:
+        push_error("Boss threat aura rings must remain aligned with the arena floor")
+        quit(1)
+        return
     var phase1_aura_color: Color = boss.boss_aura_inner_material.emission
 
     var phase_events: Array[int] = []
