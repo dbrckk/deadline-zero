@@ -15,6 +15,7 @@ func _initialize() -> void:
     var light_count := 0
     var mesh_count := 0
     var ring_found := false
+    var flare_found := false
     for child in fx.get_children():
         if child is OmniLight3D:
             light_count += 1
@@ -22,23 +23,26 @@ func _initialize() -> void:
             mesh_count += 1
             if child.name == "ImpactRing":
                 ring_found = true
+            elif child.name == "ImpactFlare":
+                flare_found = true
 
     if light_count != 0:
         push_error("Impact FX should avoid per-hit dynamic lights on mobile")
         quit(1)
         return
-    if mesh_count < 2 or not ring_found:
-        push_error("Impact FX is missing layered emissive geometry")
+    if mesh_count < 3 or not ring_found or not flare_found:
+        push_error("Impact FX is missing premium layered core/ring/flare geometry")
         quit(1)
         return
 
     var core := fx.get_node_or_null("ImpactCore") as MeshInstance3D
     var ring := fx.get_node_or_null("ImpactRing") as MeshInstance3D
-    if core == null or ring == null:
-        push_error("Impact FX core/ring nodes are missing")
+    var flare := fx.get_node_or_null("ImpactFlare") as MeshInstance3D
+    if core == null or ring == null or flare == null:
+        push_error("Impact FX core/ring/flare nodes are missing")
         quit(1)
         return
-    if core.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or ring.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+    if core.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or ring.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or flare.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
         push_error("Impact FX emissive geometry must not cast dynamic shadows")
         quit(1)
         return
@@ -59,12 +63,13 @@ func _initialize() -> void:
     await process_frame
     var duplicate_core := duplicate.get_node_or_null("ImpactCore") as MeshInstance3D
     var duplicate_ring := duplicate.get_node_or_null("ImpactRing") as MeshInstance3D
-    if duplicate_core == null or duplicate_ring == null:
+    var duplicate_flare := duplicate.get_node_or_null("ImpactFlare") as MeshInstance3D
+    if duplicate_core == null or duplicate_ring == null or duplicate_flare == null:
         push_error("Duplicate impact FX did not build geometry")
         quit(1)
         return
-    if duplicate_core.mesh != core.mesh or duplicate_ring.mesh != ring.mesh:
-        push_error("Impact FX instances must reuse shared mesh resources")
+    if duplicate_core.mesh != core.mesh or duplicate_ring.mesh != ring.mesh or duplicate_flare.mesh != flare.mesh:
+        push_error("Impact FX instances must reuse shared core/ring/flare mesh resources")
         quit(1)
         return
 

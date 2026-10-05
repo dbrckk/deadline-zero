@@ -240,7 +240,7 @@ func _constrain_to_arena() -> void:
 func _melee_standoff_distance() -> float:
     match kind:
         "boss":
-            return 1.64
+            return 1.82
         "brute":
             return 1.42
         "charger":
@@ -638,7 +638,7 @@ func _build_contact_shadow() -> void:
         "elite":
             radius = 0.54
         "boss":
-            radius = 0.78
+            radius = 0.90
     shadow.mesh = _contact_shadow_mesh(radius)
     shadow.position.y = 0.010
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -683,7 +683,7 @@ func _build_hit_flash() -> void:
     hit_flash_visual = MeshInstance3D.new()
     hit_flash_visual.name = "HitFlash"
     var scale_factor := 1.0
-    if kind == "boss": scale_factor = 1.62
+    if kind == "boss": scale_factor = 1.84
     elif kind in ["elite", "brute", "charger"]: scale_factor = 1.18
     hit_flash_visual.mesh = _hit_flash_mesh(scale_factor)
     hit_flash_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -709,17 +709,17 @@ func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     number.name = "DamageNumber_%d" % Time.get_ticks_usec()
     number.add_to_group("damage_numbers")
     number.text = "%d" % int(round(amount))
-    number.font_size = 44 if critical else (38 if killed else 32)
-    number.outline_size = 8 if critical or killed else 6
+    number.font_size = 52 if critical else (44 if killed else 34)
+    number.outline_size = 9 if critical or killed else 7
     number.modulate = Color(1.0, 0.72, 0.12) if critical else (Color(1.0, 0.42, 0.16) if killed else Color(0.92, 0.97, 1.0))
     number.outline_modulate = Color(0.02, 0.03, 0.05, 0.96)
     number.billboard = BaseMaterial3D.BILLBOARD_ENABLED
     number.no_depth_test = true
-    number.pixel_size = 0.0068 if critical else (0.0064 if killed else 0.0060)
+    number.pixel_size = 0.0074 if critical else (0.0069 if killed else 0.0062)
     get_tree().current_scene.add_child(number)
     number.global_position = global_position + Vector3(0.0, 1.28, 0.0)
 
-    var rise := 0.82 if critical else 0.62
+    var rise := 0.96 if critical else (0.78 if killed else 0.66)
     var tween := number.create_tween()
     tween.set_parallel(true)
     tween.tween_property(number, "global_position", number.global_position + Vector3(0.0, rise, 0.0), 0.58).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
@@ -738,7 +738,7 @@ func _build_visual() -> void:
             "charger": scale_factor = 1.18
             "harrier": scale_factor = 0.94
             "regenerator": scale_factor = 1.10
-            "boss": scale_factor = 1.62
+            "boss": scale_factor = 1.82
         authored_visual.scale = Vector3.ONE * scale_factor
         add_child(authored_visual)
         authored_anim = DZAssetLibrary.animation_player(authored_visual)
@@ -925,31 +925,31 @@ func _add_elite_crown(color: Color) -> void:
     _add_eye_beacon(color, Vector3(0.0, 1.70, -0.34), 0.075)
 
 func _add_boss_frame(color: Color) -> void:
-    var mat := _signature_material(color, 3.4)
+    var mat := _signature_material(color, 3.7)
     for side in [-1.0, 1.0]:
         var wing := MeshInstance3D.new()
-        wing.mesh = _signature_box_mesh("boss_wing", Vector3(0.16, 0.30, 0.58))
+        wing.mesh = _signature_box_mesh("boss_wing_premium", Vector3(0.20, 0.34, 0.72))
         wing.name = "BossWingL" if side < 0.0 else "BossWingR"
-        wing.position = Vector3(side * 0.72, 1.16, 0.04)
-        wing.rotation_degrees = Vector3(0.0, side * 18.0, side * -16.0)
+        wing.position = Vector3(side * 0.84, 1.22, 0.04)
+        wing.rotation_degrees = Vector3(0.0, side * 20.0, side * -17.0)
         wing.material_override = mat
         add_child(wing)
 
         var horn := MeshInstance3D.new()
-        horn.mesh = _signature_box_mesh("boss_horn", Vector3(0.12, 0.62, 0.22))
+        horn.mesh = _signature_box_mesh("boss_horn_premium", Vector3(0.14, 0.72, 0.25))
         horn.name = "BossHornL" if side < 0.0 else "BossHornR"
-        horn.position = Vector3(side * 0.52, 1.80, 0.06)
-        horn.rotation_degrees.z = side * -32.0
+        horn.position = Vector3(side * 0.60, 1.92, 0.05)
+        horn.rotation_degrees.z = side * -34.0
         horn.material_override = mat
         add_child(horn)
 
     var core := MeshInstance3D.new()
-    core.mesh = _signature_sphere_mesh("boss_core", 0.145, 0.29)
+    core.mesh = _signature_sphere_mesh("boss_core_premium", 0.18, 0.36)
     core.name = "BossCore"
-    core.position = Vector3(0.0, 1.32, -0.48)
-    core.material_override = _signature_material(Color(1.0, 0.30, 0.04), 4.6)
+    core.position = Vector3(0.0, 1.40, -0.52)
+    core.material_override = _signature_material(Color(1.0, 0.30, 0.04), 5.0)
     add_child(core)
-    _add_eye_beacon(color, Vector3(0.0, 1.82, -0.46), 0.105)
+    _add_eye_beacon(color, Vector3(0.0, 1.96, -0.50), 0.125)
 
 func _melee_attack_animation_range() -> float:
     return _contact_attack_range() + 0.08

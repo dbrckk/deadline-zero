@@ -637,6 +637,10 @@ func _build_world() -> void:
     env.ambient_light_color = Color(0.16, 0.27, 0.34)
     env.ambient_light_energy = 0.72
     env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+    env.adjustment_enabled = true
+    env.adjustment_brightness = 1.02
+    env.adjustment_contrast = 1.08
+    env.adjustment_saturation = 1.06
     env.fog_enabled = true
     env.fog_light_color = Color(0.08, 0.16, 0.20)
     env.fog_light_energy = 0.42
@@ -720,17 +724,25 @@ void fragment() {
 
     float panel_variation = hash21(panel_cell);
     float micro_variation = hash21(floor(UV * 240.0));
-    float center_lift = 1.0 - smoothstep(0.12, 0.72, distance(UV, vec2(0.5)));
+    float macro_a = hash21(floor(UV * 11.0) + vec2(17.0, 9.0));
+    float macro_b = hash21(floor(UV * 23.0) + vec2(7.0, 19.0));
+    float macro_variation = macro_a * 0.68 + macro_b * 0.32;
+    float radial = distance(UV, vec2(0.5));
+    float center_lift = 1.0 - smoothstep(0.12, 0.72, radial);
+    float perimeter_heat = smoothstep(0.34, 0.70, radial);
+    float grime = smoothstep(0.70, 0.96, macro_variation + micro_variation * 0.10);
 
     vec3 tone = base_tone;
     tone *= 0.94 + panel_variation * 0.075;
     tone *= 0.965 + micro_variation * 0.055;
     tone *= 1.0 - panel_edge * 0.055;
-    tone += vec3(0.004, 0.009, 0.013) * center_lift;
+    tone *= 1.0 - grime * 0.055;
+    tone += vec3(0.005, 0.011, 0.015) * center_lift;
+    tone += vec3(0.010, 0.0025, 0.0010) * perimeter_heat;
 
     ALBEDO = tone;
-    ROUGHNESS = clamp(0.84 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05, 0.76, 0.96);
-    METALLIC = 0.055 + panel_variation * 0.045;
+    ROUGHNESS = clamp(0.83 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05 + grime * 0.04, 0.75, 0.97);
+    METALLIC = 0.055 + panel_variation * 0.045 - grime * 0.012;
 }
 """
     var material := ShaderMaterial.new()

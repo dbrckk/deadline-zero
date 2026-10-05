@@ -310,7 +310,7 @@ func _enemies_near(position: Vector3, range_radius: float) -> Array:
 func _impact(critical := false, at := Vector3.INF) -> void:
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.76, 0.18) if critical else tint
-    fx.scale_boost = (1.45 if critical else 1.0) * impact_scale
+    fx.scale_boost = (1.70 if critical else 1.0) * impact_scale
     var fx_parent: Node = get_tree().current_scene if get_tree() != null else null
     if fx_parent == null:
         fx_parent = get_parent()

@@ -27,10 +27,20 @@ func _initialize() -> void:
         quit(1)
         return
     var floor_shader := (floor_mesh.material_override as ShaderMaterial).shader
-    if floor_shader == null or not floor_shader.code.contains("panel_variation") or not floor_shader.code.contains("micro_variation"):
+    if floor_shader == null or not floor_shader.code.contains("panel_variation") or not floor_shader.code.contains("micro_variation") or not floor_shader.code.contains("macro_variation") or not floor_shader.code.contains("perimeter_heat"):
         push_error("Quarantine floor procedural surface hierarchy regressed")
         quit(1)
         return
+    var world_environment := env as WorldEnvironment
+    if world_environment.environment == null or not world_environment.environment.adjustment_enabled:
+        push_error("Quarantine environment lost lightweight cinematic color grading")
+        quit(1)
+        return
+    if world_environment.environment.adjustment_contrast < 1.06 or world_environment.environment.adjustment_saturation < 1.04:
+        push_error("Quarantine environment color grading is too flat for premium combat readability")
+        quit(1)
+        return
+
     if floor_mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
         push_error("Broad quarantine floor must not waste shadow-caster budget")
         quit(1)

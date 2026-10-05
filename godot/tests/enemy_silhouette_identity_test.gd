@@ -158,12 +158,21 @@ func _initialize() -> void:
         if kind == "boss":
             var wing := enemy.get_node_or_null("BossWingL") as MeshInstance3D
             var wing_mesh := wing.mesh as BoxMesh if wing != null else null
-            if wing_mesh == null or wing_mesh.size.z < 0.50 or absf(wing.position.x) < 0.65:
+            var boss_visual := enemy.get_node_or_null("Visual") as Node3D
+            if wing_mesh == null or wing_mesh.size.z < 0.68 or absf(wing.position.x) < 0.80:
                 push_error("Boss signature must remain broad and dominant in top-down projection")
+                quit(1)
+                return
+            if boss_visual == null or boss_visual.scale.x < 1.78:
+                push_error("Boss authored body lost premium screen-space mass")
                 quit(1)
                 return
         enemy.queue_free()
 
+    if float(shadow_radii.get("boss", 0.0)) < 0.86:
+        push_error("Boss contact shadow is too small for its premium ground mass")
+        quit(1)
+        return
     if float(shadow_radii.get("boss", 0.0)) <= float(shadow_radii.get("brute", 0.0)):
         push_error("Boss contact shadow must preserve larger ground mass than brute")
         quit(1)
