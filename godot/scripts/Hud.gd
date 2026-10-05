@@ -29,6 +29,7 @@ var boss_panel: PanelContainer
 var boss_name_label: Label
 var boss_hp_bar: ProgressBar
 var boss_phase_label: Label
+var boss_hp_fill_style: StyleBoxFlat
 var boss_hp_max := 1.0
 var game_over_panel: PanelContainer
 var game_over_summary: Label
@@ -105,6 +106,16 @@ func set_boss_health(value: float, maximum: float) -> void:
     boss_hp_bar.value = clamp(value, 0.0, boss_hp_max)
     var ratio := boss_hp_bar.value / boss_hp_max
     boss_phase_label.text = "PHASE III // EXECUTE" if ratio <= 0.30 else ("PHASE II // ENRAGED" if ratio <= 0.65 else "PHASE I // HUNT")
+    if boss_hp_fill_style != null:
+        if ratio <= 0.30:
+            boss_hp_fill_style.bg_color = Color(0.96, 0.16, 0.055, 0.98)
+            boss_hp_fill_style.border_color = Color(1.0, 0.44, 0.16, 0.90)
+        elif ratio <= 0.65:
+            boss_hp_fill_style.bg_color = Color(0.98, 0.34, 0.075, 0.98)
+            boss_hp_fill_style.border_color = Color(1.0, 0.62, 0.18, 0.88)
+        else:
+            boss_hp_fill_style.bg_color = Color(0.96, 0.58, 0.12, 0.98)
+            boss_hp_fill_style.border_color = Color(1.0, 0.80, 0.30, 0.86)
     if boss_hp_bar.value <= 0.0:
         boss_panel.visible = false
 
@@ -718,8 +729,27 @@ func _build() -> void:
     boss_phase_label.modulate = Color(1.0, 0.42, 0.26)
     boss_header.add_child(boss_phase_label)
     boss_hp_bar = ProgressBar.new()
-    boss_hp_bar.custom_minimum_size = Vector2(620, 18)
+    boss_hp_bar.name = "BossHealthBar"
+    boss_hp_bar.custom_minimum_size = Vector2(620, 20)
     boss_hp_bar.show_percentage = false
+    var boss_hp_background := StyleBoxFlat.new()
+    boss_hp_background.bg_color = Color(0.012, 0.017, 0.022, 0.98)
+    boss_hp_background.border_color = Color(0.24, 0.10, 0.06, 0.88)
+    boss_hp_background.set_border_width_all(2)
+    boss_hp_background.corner_radius_top_left = 4
+    boss_hp_background.corner_radius_top_right = 4
+    boss_hp_background.corner_radius_bottom_left = 4
+    boss_hp_background.corner_radius_bottom_right = 4
+    boss_hp_fill_style = StyleBoxFlat.new()
+    boss_hp_fill_style.bg_color = Color(0.96, 0.58, 0.12, 0.98)
+    boss_hp_fill_style.border_color = Color(1.0, 0.80, 0.30, 0.86)
+    boss_hp_fill_style.set_border_width_all(1)
+    boss_hp_fill_style.corner_radius_top_left = 3
+    boss_hp_fill_style.corner_radius_top_right = 3
+    boss_hp_fill_style.corner_radius_bottom_left = 3
+    boss_hp_fill_style.corner_radius_bottom_right = 3
+    boss_hp_bar.add_theme_stylebox_override("background", boss_hp_background)
+    boss_hp_bar.add_theme_stylebox_override("fill", boss_hp_fill_style)
     boss_box.add_child(boss_hp_bar)
     var boss_style := StyleBoxFlat.new()
     boss_style.bg_color = Color(0.025, 0.035, 0.045, 0.96)
