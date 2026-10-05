@@ -25,6 +25,7 @@ These can be proven by repository CI/build tooling:
 - [x] Authored Store icon and 3D feature-graphic candidate workflow.
 - [x] Store listing copy aligned with current Godot runtime scope.
 - [x] Godot-specific Data Safety and Play Console declaration contracts.
+- [x] Privacy-policy source and static HTTPS-ready site are versioned in the repository.
 - [x] Mobile combat performance safeguards and deterministic runtime tests.
 
 Legacy libGDX release tooling remains in the repository but does not prove the contents of the Godot AAB.
@@ -37,10 +38,10 @@ These require real account state, visual approval, licensed Play state, or physi
 - [ ] Physical lifecycle/background/foreground/process-death matrix.
 - [ ] Low/mid/high device performance and thermal calibration.
 - [ ] Physical accessibility/readability pass across touch targets and combat readability.
-- [ ] Public production privacy-policy URL reviewed in browser.
+- [ ] Public production privacy-policy URL reviewed in browser. The static site is ready under `public/`; GitHub Pages still requires one-time repository enablement, or an authenticated alternative host.
 - [ ] Play Data Safety form completed against the exact Godot AAB.
 - [ ] App access, ads, target audience, and IARC content-rating declarations completed in Play Console.
-- [ ] Final authored icon, feature graphic, and representative screenshots reviewed visually and promoted from candidates.
+- [x] Final authored icon, feature graphic, and five representative screenshots reviewed visually and promoted from validated runtime candidates.
 - [ ] Production upload keystore configured through protected release secrets.
 - [ ] Signed production AAB uploaded to the intended testing track.
 - [ ] Play pre-launch report reviewed with no unresolved release blocker.
