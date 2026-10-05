@@ -107,6 +107,16 @@ func _initialize() -> void:
         quit(1)
         return
 
+    first.dead = false
+    first.global_position = Vector3(1.5, 0.0, 0.0)
+    player.nearest_threat = second
+    second.free()
+    var pressure_target := player._pressure_target(first)
+    if pressure_target != first or player.nearest_threat != null:
+        push_error("Pressure targeting retained a freed nearest-threat reference")
+        quit(1)
+        return
+
     player.set_combat_enabled(false)
     if player.current_target != null or player.nearest_threat != null or player.target_refresh_clock > 0.0:
         push_error("Combat shutdown did not clear auto-aim/threat target state")
