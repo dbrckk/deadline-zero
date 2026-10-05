@@ -22,13 +22,23 @@ The `Godot Play AAB Verify` workflow installs the Godot Gradle build template at
 
 The real Play upload keystore must never be committed to this repository. Production export must supply the release keystore path, alias and password through protected release secrets/environment variables.
 
+## Launcher identity
+
+The Play preset now uses authored project-controlled launcher assets:
+
+- main launcher icon;
+- adaptive foreground;
+- adaptive background;
+- adaptive monochrome.
+
+The Android launcher identity is therefore part of the automated export contract rather than a manual release blocker.
+
 ## Remaining visual release gate
 
-Do **not** publish the Godot AAB as a final Play release until authored premium launcher assets are present and wired into `export_presets.cfg`:
+Do **not** publish the AAB as a final Play release until the separate Google Play listing assets have been visually reviewed and promoted:
 
-- main launcher icon, 192x192 source
-- adaptive foreground, 432x432
-- adaptive background, 432x432
-- adaptive monochrome, 432x432
+- 512×512 Store icon;
+- 1024×500 feature graphic;
+- final 1920×1080 gameplay screenshots.
 
-Godot can fall back to project/default icons, but that fallback is acceptable only for mechanical CI verification, not for the production store build.
+These Store-listing graphics are intentionally reviewed separately from the Android launcher resources.
