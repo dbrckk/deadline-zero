@@ -220,44 +220,44 @@ void fragment() {
     brand_layer.add_child(cinematic_overlay)
 
     var title_backdrop := ColorRect.new()
-    title_backdrop.position = Vector2(38.0, 32.0)
-    title_backdrop.size = Vector2(500.0, 136.0)
+    title_backdrop.position = Vector2(38.0, 20.0)
+    title_backdrop.size = Vector2(478.0, 122.0)
     title_backdrop.color = Color(0.004, 0.009, 0.013, 0.90)
     brand_layer.add_child(title_backdrop)
 
     var cyan_rule := ColorRect.new()
-    cyan_rule.position = Vector2(38.0, 32.0)
-    cyan_rule.size = Vector2(7.0, 136.0)
+    cyan_rule.position = Vector2(38.0, 20.0)
+    cyan_rule.size = Vector2(7.0, 122.0)
     cyan_rule.color = Color(0.08, 0.82, 1.0, 0.95)
     brand_layer.add_child(cyan_rule)
 
     var orange_rule := ColorRect.new()
-    orange_rule.position = Vector2(45.0, 160.0)
-    orange_rule.size = Vector2(255.0, 8.0)
+    orange_rule.position = Vector2(45.0, 136.0)
+    orange_rule.size = Vector2(238.0, 7.0)
     orange_rule.color = Color(1.0, 0.26, 0.035, 0.92)
     brand_layer.add_child(orange_rule)
 
     var title := Label.new()
-    title.position = Vector2(68.0, 49.0)
-    title.size = Vector2(470.0, 64.0)
+    title.position = Vector2(68.0, 35.0)
+    title.size = Vector2(440.0, 58.0)
     title.text = "DEADLINE: ZERO"
-    title.add_theme_font_size_override("font_size", 48)
+    title.add_theme_font_size_override("font_size", 45)
     title.add_theme_color_override("font_color", Color(0.92, 0.97, 1.0))
     title.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.86))
     title.add_theme_constant_override("outline_size", 4)
     brand_layer.add_child(title)
 
     var subtitle := Label.new()
-    subtitle.position = Vector2(70.0, 113.0)
-    subtitle.size = Vector2(460.0, 38.0)
+    subtitle.position = Vector2(70.0, 93.0)
+    subtitle.size = Vector2(430.0, 34.0)
     subtitle.text = "SURVIVE THE QUARANTINE"
-    subtitle.add_theme_font_size_override("font_size", 18)
+    subtitle.add_theme_font_size_override("font_size", 17)
     subtitle.add_theme_color_override("font_color", Color(0.35, 0.86, 1.0))
     brand_layer.add_child(subtitle)
 
     var emblem := TextureRect.new()
-    emblem.position = Vector2(902.0, 26.0)
-    emblem.size = Vector2(86.0, 86.0)
+    emblem.position = Vector2(924.0, 22.0)
+    emblem.size = Vector2(72.0, 72.0)
     emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
     emblem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
     emblem.texture = load("res://assets/ui/deadline_zero_icon.svg") as Texture2D
