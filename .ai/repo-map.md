@@ -27181,7 +27181,7 @@ func _physics_process(delta: float) -> void:
         _update_authored_animation()
 
     var target := _combat_target()
-    _update_player_marker_pressure(nearest_threat if nearest_threat != null else target)
+    _update_player_marker_pressure(_pressure_target(target))
     if target != null:
         var facing := target.global_position
         facing.y = global_position.y
@@ -27190,6 +27190,15 @@ func _physics_process(delta: float) -> void:
         if fire_clock <= 0.0:
             _fire_at(target)
             fire_clock = fire_interval
+
+func _pressure_target(fallback: DZEnemy) -> DZEnemy:
+    if nearest_threat != null:
+        if is_instance_valid(nearest_threat) and not nearest_threat.dead:
+            return nearest_threat
+        nearest_threat = null
+    if fallback != null and is_instance_valid(fallback) and not fallback.dead:
+        return fallback
+    return null
 
 func set_combat_enabled(enabled: bool) -> void:
     combat_enabled = enabled
@@ -28079,7 +28088,13 @@ func _impact(critical := false, at := Vector3.INF) -> void:
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.76, 0.18) if critical else tint
     fx.scale_boost = (1.45 if critical else 1.0) * impact_scale
-    get_tree().current_scene.add_child(fx)
+    var fx_parent: Node = get_tree().current_scene if get_tree() != null else null
+    if fx_parent == null:
+        fx_parent = get_parent()
+    if fx_parent == null:
+        fx.queue_free()
+        return
+    fx_parent.add_child(fx)
     fx.global_position = global_position if at == Vector3.INF else at
 
 func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:

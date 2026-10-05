@@ -1,12 +1,12 @@
 # Repo Brain
 
-- Index mode: full
+- Index mode: incremental
 - Files indexed: 541
-- Files reparsed this run: 541
-- Symbols: 2989
+- Files reparsed this run: 5
+- Symbols: 2990
 - Internal import edges: 808
-- Impacted files: 0
-- Selected tests: 0
+- Impacted files: 45
+- Selected tests: 21
 
 ## Languages
 - java: 422 files
@@ -24,8 +24,8 @@
 - core/src/main/java/com/deadlinezero/game/visual/GameArt.java: 34 symbols
 - core/src/main/java/com/deadlinezero/game/entities/Enemy.java: 31 symbols
 - core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java: 31 symbols
+- godot/scripts/Player.gd: 30 symbols
 - core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java: 29 symbols
-- godot/scripts/Player.gd: 29 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java: 28 symbols
 - core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java: 28 symbols
 - godot/scripts/Hud.gd: 27 symbols
@@ -43,8 +43,8 @@
 
 ## ast-grep enrichment
 - ast-grep outline: available
-- AST index mode: full
-- AST files reparsed this run: 472
+- AST index mode: incremental
+- AST files reparsed this run: 0
 - outline files retained: 472
 - top-level items retained: 3039
 - direct members retained: 3472

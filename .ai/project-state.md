@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-04T12:29:03Z
+Generated: 2026-10-05T11:45:51Z
 
 ### Git
 - Branch: `main`
-- Head: `3c2290beac8f`
-- Commit date: 2026-10-04T13:22:20+02:00
-- Commit: Document adaptive authored soundtrack
-- Tracked files: 959
+- Head: `cc458d0fddb1`
+- Commit date: 2026-10-05T13:45:27+02:00
+- Commit: Test freed pressure-target cleanup
+- Tracked files: 960
 
 ### Recently changed files
-- `godot/assets/audio/authored/README.md`
-- `godot/tests/first_playable_run_path_test.gd`
-- `godot/tests/combat_audio_feedback_test.gd`
-- `godot/tests/authored_audio_asset_test.gd`
-- `godot/scripts/Main.gd`
+- `godot/tests/player_targeting_stability_test.gd`
+- `godot/tests/impact_fx_mobile_test.gd`
+- `godot/tests/boss_encounter_render_test.gd`
+- `godot/scripts/Player.gd`
+- `godot/scripts/Projectile.gd`
 
 ### Project signals
 - `build.gradle`

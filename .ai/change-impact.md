@@ -1,10 +1,10 @@
 # Change impact
 
-Base: db904a2f6f85c516d5afa0b385853d7d305c864d
-Head: 3c2290beac8f5d34f0348fc05091fb078b049332
+Base: 015c7f2ee35f89307b58177390a5041b8a7c607f
+Head: cc458d0fddb1653b15250b5ebe4960712c4df647
 
 ## Changed files
-- M godot/assets/audio/authored/README.md
+- M godot/tests/player_targeting_stability_test.gd
 
 ## Affected areas
 - godot

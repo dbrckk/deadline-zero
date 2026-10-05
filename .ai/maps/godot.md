@@ -4344,7 +4344,7 @@ func _physics_process(delta: float) -> void:
         _update_authored_animation()
 
     var target := _combat_target()
-    _update_player_marker_pressure(nearest_threat if nearest_threat != null else target)
+    _update_player_marker_pressure(_pressure_target(target))
     if target != null:
         var facing := target.global_position
         facing.y = global_position.y
@@ -4353,6 +4353,15 @@ func _physics_process(delta: float) -> void:
         if fire_clock <= 0.0:
             _fire_at(target)
             fire_clock = fire_interval
+
+func _pressure_target(fallback: DZEnemy) -> DZEnemy:
+    if nearest_threat != null:
+        if is_instance_valid(nearest_threat) and not nearest_threat.dead:
+            return nearest_threat
+        nearest_threat = null
+    if fallback != null and is_instance_valid(fallback) and not fallback.dead:
+        return fallback
+    return null
 
 func set_combat_enabled(enabled: bool) -> void:
     combat_enabled = enabled
@@ -5242,7 +5251,13 @@ func _impact(critical := false, at := Vector3.INF) -> void:
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.76, 0.18) if critical else tint
     fx.scale_boost = (1.45 if critical else 1.0) * impact_scale
-    get_tree().current_scene.add_child(fx)
+    var fx_parent: Node = get_tree().current_scene if get_tree() != null else null
+    if fx_parent == null:
+        fx_parent = get_parent()
+    if fx_parent == null:
+        fx.queue_free()
+        return
+    fx_parent.add_child(fx)
     fx.global_position = global_position if at == Vector3.INF else at
 
 func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
@@ -6183,8 +6198,8 @@ func _run_capture() -> void:
         quit(1)
         return
 
-    var boss_screen := scene.camera.unproject_position(boss.global_position + Vector3(0.0, 1.0, 0.0))
-    var viewport_size := get_root().get_visible_rect().size
+    var boss_screen: Vector2 = scene.camera.unproject_position(boss.global_position + Vector3(0.0, 1.0, 0.0))
+    var viewport_size: Vector2 = get_root().get_visible_rect().size
     if scene.camera.is_position_behind(boss.global_position):
         push_error("Boss capture camera placed the boss behind the camera")
         quit(1)
@@ -7966,6 +7981,19 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var projectile := DZProjectile.new()
+    projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(projectile)
+    current_scene = null
+    var children_before := root.get_child_count()
+    projectile._impact(false, projectile.global_position)
+    await process_frame
+    if root.get_child_count() <= children_before:
+        push_error("Projectile impact FX did not fall back to projectile parent without current_scene")
+        quit(1)
+        return
+    current_scene = root
+
     print("Deadline Zero mobile-safe impact FX: OK")
     quit(0)
 ```
@@ -9018,6 +9046,16 @@ func _initialize() -> void:
     selected = player._combat_target()
     if selected != second:
         push_error("Auto-aim did not immediately abandon a dead target")
+        quit(1)
+        return
+
+    first.dead = false
+    first.global_position = Vector3(1.5, 0.0, 0.0)
+    player.nearest_threat = second
+    second.free()
+    var pressure_target := player._pressure_target(first)
+    if pressure_target != first or player.nearest_threat != null:
+        push_error("Pressure targeting retained a freed nearest-threat reference")
         quit(1)
         return
 
