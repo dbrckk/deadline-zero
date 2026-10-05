@@ -62,6 +62,32 @@ func _run_capture() -> void:
         quit(1)
         return
 
+    var panel_min_luma := 1.0
+    var panel_max_luma := 0.0
+    var accent_pixels := 0
+    var sampled_pixels := 0
+    var x_start := int(width * 0.23)
+    var x_end := int(width * 0.77)
+    var y_start := int(height * 0.30)
+    var y_end := int(height * 0.72)
+    for y in range(y_start, y_end, 6):
+        for x in range(x_start, x_end, 6):
+            var pixel := image.get_pixel(x, y)
+            var luma := pixel.get_luminance()
+            panel_min_luma = minf(panel_min_luma, luma)
+            panel_max_luma = maxf(panel_max_luma, luma)
+            if pixel.b > pixel.r * 1.10 or pixel.r > pixel.b * 1.18:
+                accent_pixels += 1
+            sampled_pixels += 1
+    if panel_max_luma - panel_min_luma < 0.08:
+        push_error("Upgrade Store lacks premium tonal separation")
+        quit(1)
+        return
+    if accent_pixels < maxi(18, int(sampled_pixels * 0.006)):
+        push_error("Upgrade Store lacks readable accent-color hierarchy")
+        quit(1)
+        return
+
     image.convert(Image.FORMAT_RGB8)
     var save_error := image.save_png(OUTPUT_PATH)
     if save_error != OK:
