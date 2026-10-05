@@ -752,8 +752,10 @@ func _build() -> void:
     game_over_box.add_child(restart_button)
 
     var game_over_style := StyleBoxFlat.new()
-    game_over_style.bg_color = Color(0.010, 0.018, 0.025, 0.985)
-    game_over_style.border_color = Color(1.0, 0.24, 0.09, 0.82)
+    game_over_style.bg_color = Color(0.024, 0.038, 0.050, 0.985)
+    game_over_style.border_color = Color(1.0, 0.28, 0.10, 0.90)
+    game_over_style.shadow_color = Color(0.0, 0.0, 0.0, 0.68)
+    game_over_style.shadow_size = 12
     game_over_style.set_border_width_all(2)
     game_over_style.corner_radius_top_left = 12
     game_over_style.corner_radius_top_right = 12
