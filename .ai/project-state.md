@@ -22,20 +22,30 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T13:08:22Z
+Generated: 2026-10-05T13:11:12Z
 
 ### Git
 - Branch: `main`
-- Head: `186a31e19c30`
-- Commit date: 2026-10-05T15:08:08+02:00
-- Commit: Fix safe Store asset promotion filter
-- Tracked files: 967
+- Head: `efc096bbeb03`
+- Commit date: 2026-10-05T15:10:57+02:00
+- Commit: Add free hosted privacy policy site
+- Tracked files: 978
 
 ### Recently changed files
+- `.github/workflows/privacy-pages.yml`
+- `play/store/PRIVACY_POLICY.md`
+- `public/index.html`
+- `public/privacy/index.html`
+- `play/store/feature-graphic.png`
+- `play/store/icon.png`
+- `play/store/phone-screenshots/01-first-playable.png`
+- `play/store/phone-screenshots/02-midrun-pressure.png`
+- `play/store/phone-screenshots/03-boss-encounter.png`
+- `play/store/phone-screenshots/04-upgrade-choice.png`
+- `play/store/phone-screenshots/05-run-end.png`
 - `.github/workflows/godot-play-screenshots.yml`
 - `godot/PLAY_RELEASE.md`
 - `.github/workflows/godot-play-signed-release.yml`
-- `play/store/VISUAL_APPROVAL.md`
 
 ### Project signals
 - `build.gradle`

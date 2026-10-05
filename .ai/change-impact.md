@@ -1,13 +1,18 @@
 # Change impact
 
-Base: dd43a9f9dc72980ebfe8ecf8ee9a119d17ee7f79
-Head: 186a31e19c30b0b0a12db445ba1b232d20395cf3
+Base: 144df591903fdb8c551fff8714c2f0ca50fab6be
+Head: efc096bbeb0321d30d84902717aa300c519c8411
 
 ## Changed files
-- M .github/workflows/godot-play-screenshots.yml
+- A .github/workflows/privacy-pages.yml
+- A play/store/PRIVACY_POLICY.md
+- A public/index.html
+- A public/privacy/index.html
 
 ## Affected areas
 - .github
+- play
+- public
 
 ## Related test candidates
 - No direct filename-based test match detected.

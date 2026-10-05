@@ -59,6 +59,7 @@ The content is organized as follows:
     godot-verify.yml
     integrate-environment-candidates.yml
     null-sector-candidate.yml
+    privacy-pages.yml
     quarantine-yard-candidate.yml
     responsive-ui-qa.yml
     rex-android-acceptance.yml
@@ -3033,6 +3034,46 @@ jobs:
           fi
           git commit -m "art(environment): add Null Sector candidate masters"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+````
+
+## File: .github/workflows/privacy-pages.yml
+````yaml
+name: Privacy Policy Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/**'
+      - '.github/workflows/privacy-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: privacy-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload privacy site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: public
+      - name: Deploy privacy site
+        id: deployment
+        uses: actions/deploy-pages@v4
 ````
 
 ## File: .github/workflows/quarantine-yard-candidate.yml
