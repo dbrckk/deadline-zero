@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 542
-- Files reparsed this run: 2
-- Symbols: 2997
+- Files reparsed this run: 6
+- Symbols: 2999
 - Internal import edges: 808
-- Impacted files: 2
-- Selected tests: 2
+- Impacted files: 6
+- Selected tests: 3
 
 ## Languages
 - java: 422 files
@@ -15,7 +15,7 @@
 
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
-- godot/scripts/Main.gd: 57 symbols
+- godot/scripts/Main.gd: 58 symbols
 - android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 55 symbols
 - core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 45 symbols
 - godot/scripts/Enemy.gd: 43 symbols
@@ -44,9 +44,9 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 0
+- AST files reparsed this run: 1
 - outline files retained: 472
-- top-level items retained: 3039
+- top-level items retained: 3040
 - direct members retained: 3472
 - symbol shards: 27
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard

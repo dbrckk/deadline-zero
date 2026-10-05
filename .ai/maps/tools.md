@@ -349,6 +349,8 @@ alarm = math.sin(math.tau * snap_loop_frequency(219.5, seconds) * t) * (
 ⋮----
 mono = pulse + metal + rotor + alarm
 ⋮----
+def ui_cue(name: str, f0: float, f1: float, seconds: float, noise_mix: float, body: float, seed: int) -> None
+⋮----
 def boss_stinger() -> None
 ⋮----
 seconds = 2.4

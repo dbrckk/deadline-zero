@@ -392,6 +392,13 @@ const RUN_MUSIC_PATH := AUTHORED_AUDIO_ROOT + "music_run_loop.wav"
 const PRESSURE_MUSIC_PATH := AUTHORED_AUDIO_ROOT + "music_pressure_layer.wav"
 const BOSS_STINGER_PATH := AUTHORED_AUDIO_ROOT + "boss_stinger.wav"
 
+const UI_PATHS := {
+    "level_up": AUTHORED_AUDIO_ROOT + "ui_level_up.wav",
+    "upgrade_confirm": AUTHORED_AUDIO_ROOT + "ui_upgrade_confirm.wav",
+    "pause_toggle": AUTHORED_AUDIO_ROOT + "ui_pause_toggle.wav",
+    "game_over": AUTHORED_AUDIO_ROOT + "ui_game_over.wav"
+}
+
 const SHOT_PATHS := {
     "vanguard": AUTHORED_AUDIO_ROOT + "weapon_vanguard.wav",
     "scatter": AUTHORED_AUDIO_ROOT + "weapon_scatter.wav",
@@ -427,6 +434,22 @@ static func authored_shot_stream(profile: String) -> AudioStream:
 static func authored_impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStream:
     var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
     return _authored_stream(String(IMPACT_PATHS[key]))
+
+static func ui_stream(key: String) -> AudioStream:
+    var path := String(UI_PATHS.get(key, ""))
+    if not path.is_empty():
+        var authored := _authored_stream(path)
+        if authored != null:
+            return authored
+    match key:
+        "level_up":
+            return _chirp(520.0, 1540.0, 0.28, 0.08, 0.72)
+        "upgrade_confirm":
+            return _chirp(980.0, 1260.0, 0.16, 0.06, 0.62)
+        "game_over":
+            return _chirp(260.0, 52.0, 0.62, 0.24, 0.78)
+        _:
+            return _chirp(420.0, 260.0, 0.10, 0.05, 0.52)
 
 static func shot_stream(profile: String) -> AudioStream:
     var authored := authored_shot_stream(profile)
@@ -2907,6 +2930,9 @@ var impact_audio: AudioStreamPlayer
 var impact_audio_voices: Array[AudioStreamPlayer] = []
 var impact_voice_index := 0
 var boss_audio: AudioStreamPlayer
+var ui_audio_voices: Array[AudioStreamPlayer] = []
+var ui_audio_index := 0
+var ui_audio_streams := {}
 var music_audio: AudioStreamPlayer
 var music_pressure_audio: AudioStreamPlayer
 var music_duck_tween: Tween
@@ -3206,6 +3232,7 @@ func _try_offer_banked_level_up() -> bool:
     xp -= xp_next
     level += 1
     director_refresh_clock = 0.0
+    _play_ui_audio("level_up")
     xp_next = int(round(float(xp_next) * 1.24 + 4.0))
     _offer_upgrade()
     return true
@@ -3234,6 +3261,7 @@ func _on_upgrade_chosen(index: int) -> void:
     if index < 0 or index >= pending_upgrades.size():
         return
     player.apply_upgrade(pending_upgrades[index]["id"])
+    _play_ui_audio("upgrade_confirm")
     pending_upgrades.clear()
     hud.hide_upgrade()
     if _try_offer_banked_level_up():
@@ -3354,12 +3382,14 @@ func _on_pause_requested() -> void:
     if hud != null:
         hud.hide_touch_stick()
         hud.show_pause_settings()
+    _play_ui_audio("pause_toggle", 0.92)
     get_tree().paused = true
 
 func _on_resume_requested() -> void:
     hud.hide_pause_settings()
     if not game_over and pending_upgrades.is_empty():
         get_tree().paused = false
+        _play_ui_audio("pause_toggle", 1.08)
 
 func _on_player_died() -> void:
     _clear_hit_freeze()
@@ -3367,6 +3397,7 @@ func _on_player_died() -> void:
     boss_reveal_left = 0.0
     boss_reveal_target = null
     game_over = true
+    _play_ui_audio("game_over")
     touch_id = -1
     if hud != null:
         hud.hide_touch_stick()
@@ -4328,6 +4359,16 @@ func _build_combat_audio() -> void:
         impact_audio_voices.append(voice)
     impact_audio = impact_audio_voices[0]
 
+    ui_audio_voices.clear()
+    for voice_index in range(2):
+        var ui_voice := AudioStreamPlayer.new()
+        ui_voice.name = "UiAudio" if voice_index == 0 else "UiAudio_%d" % voice_index
+        ui_voice.bus = "SFX"
+        ui_voice.volume_db = -8.5
+        ui_voice.process_mode = Node.PROCESS_MODE_ALWAYS
+        add_child(ui_voice)
+        ui_audio_voices.append(ui_voice)
+
     boss_audio = AudioStreamPlayer.new()
     boss_audio.name = "BossStinger"
     boss_audio.bus = "SFX"
@@ -4352,6 +4393,20 @@ func _build_combat_audio() -> void:
     add_child(music_pressure_audio)
     if music_pressure_audio.stream != null:
         music_pressure_audio.play()
+
+func _play_ui_audio(key: String, pitch_scale := 1.0) -> void:
+    if ui_audio_voices.is_empty():
+        return
+    if not ui_audio_streams.has(key):
+        ui_audio_streams[key] = DZCombatAudio.ui_stream(key)
+    var stream := ui_audio_streams.get(key) as AudioStream
+    if stream == null:
+        return
+    var voice := ui_audio_voices[ui_audio_index % ui_audio_voices.size()]
+    ui_audio_index = (ui_audio_index + 1) % ui_audio_voices.size()
+    voice.stream = stream
+    voice.pitch_scale = pitch_scale
+    voice.play()
 
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
     if haptics_enabled:
@@ -6159,7 +6214,11 @@ const EXPECTED := [
     "res://assets/audio/authored/impact_boss.wav",
     "res://assets/audio/authored/boss_stinger.wav",
     "res://assets/audio/authored/music_run_loop.wav",
-    "res://assets/audio/authored/music_pressure_layer.wav"
+    "res://assets/audio/authored/music_pressure_layer.wav",
+    "res://assets/audio/authored/ui_level_up.wav",
+    "res://assets/audio/authored/ui_upgrade_confirm.wav",
+    "res://assets/audio/authored/ui_pause_toggle.wav",
+    "res://assets/audio/authored/ui_game_over.wav"
 ]
 
 func _init() -> void:
@@ -6189,6 +6248,13 @@ func _init() -> void:
         push_error("Authored pressure music is missing or too short")
         quit(1)
         return
+
+    for key in ["level_up", "upgrade_confirm", "pause_toggle", "game_over"]:
+        var cue := DZCombatAudio.ui_stream(key)
+        if cue == null or cue.get_length() < 0.14:
+            push_error("Authored UI/progression cue is missing or too short: %s" % key)
+            quit(1)
+            return
 
     var boss := DZCombatAudio.boss_stinger()
     if boss == null or boss.get_length() < 2.0:
@@ -6624,12 +6690,19 @@ func _init() -> void:
     assert(pressure_music != null)
     assert(pressure_music.get_length() >= 11.5)
 
+    for key in ["level_up", "upgrade_confirm", "pause_toggle", "game_over"]:
+        var cue := DZCombatAudio.ui_stream(key)
+        assert(cue != null)
+        assert(cue.get_length() >= 0.14)
+
     var player_source := FileAccess.get_file_as_string("res://scripts/Player.gd")
     var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
     assert(player_source.contains("for voice_index in range(3)"))
     assert(player_source.contains("shot_audio_voices"))
     assert(main_source.contains("for voice_index in range(4)"))
     assert(main_source.contains("impact_audio_voices"))
+    assert(main_source.contains("ui_audio_voices"))
+    assert(main_source.contains("PROCESS_MODE_ALWAYS"))
     assert(main_source.contains("RunMusic"))
     assert(main_source.contains("PressureMusic"))
     assert(main_source.contains("_music_pressure_target_db"))
@@ -7526,6 +7599,15 @@ func _initialize() -> void:
         push_error("Combat impacts did not initialize bounded 4-voice polyphony")
         quit(1)
         return
+    if main.ui_audio_voices.size() != 2:
+        push_error("UI/progression audio did not initialize bounded 2-voice polyphony")
+        quit(1)
+        return
+    for voice in main.ui_audio_voices:
+        if voice.bus != "SFX" or voice.process_mode != Node.PROCESS_MODE_ALWAYS:
+            push_error("UI audio voice must stay on SFX and continue through paused overlays")
+            quit(1)
+            return
     if main.music_audio == null or main.music_audio.stream == null:
         push_error("Run path did not initialize authored background music")
         quit(1)

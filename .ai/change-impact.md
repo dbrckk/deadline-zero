@@ -1,13 +1,20 @@
 # Change impact
 
-Base: 84f61d6af2fac9d2b5c50c9fef3082116009cad5
-Head: 0ba5adafa3bf7b031d99b0efc8387446ed390461
+Base: 3316187805bba16993325cd1804ba872ba7e02f5
+Head: 700861a13efaf3f3d078417ec7b178e481b0e0c5
 
 ## Changed files
-- M godot/tests/run_end_ux_test.gd
+- M godot/assets/audio/authored/README.md
+- M godot/scripts/CombatAudio.gd
+- M godot/scripts/Main.gd
+- M godot/tests/authored_audio_asset_test.gd
+- M godot/tests/combat_audio_feedback_test.gd
+- M godot/tests/first_playable_run_path_test.gd
+- M tools/audio/generate_deadline_zero_audio.py
 
 ## Affected areas
 - godot
+- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

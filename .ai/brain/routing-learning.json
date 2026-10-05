@@ -2,23 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Integrate authored barriers into quarantine palette",
-      "terms": [
-        "authored",
-        "barriers",
-        "integrate",
-        "into",
-        "palette",
-        "quarantine"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/AssetLibrary.gd",
-        "godot/tests/environment_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Grade root authored barrier meshes",
       "terms": [
         "authored",
@@ -1062,6 +1045,27 @@
         "godot/scripts/Hud.gd",
         "godot/tests/run_end_ux_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "Add original UI and progression audio cues",
+      "terms": [
+        "add",
+        "audio",
+        "cues",
+        "original",
+        "progression",
+        "ui"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/CombatAudio.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/authored_audio_asset_test.gd",
+        "godot/tests/combat_audio_feedback_test.gd",
+        "godot/tests/first_playable_run_path_test.gd",
+        "tools/audio/generate_deadline_zero_audio.py"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1468,21 +1472,24 @@
       "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java": 4,
-      "godot/scripts/CombatAudio.gd": 4,
+      "godot/scripts/CombatAudio.gd": 8,
       "godot/scripts/CombatFeel.gd": 4,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 32,
+      "godot/scripts/Main.gd": 36,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
+      "godot/tests/authored_audio_asset_test.gd": 4,
       "godot/tests/boss_reveal_camera_test.gd": 4,
-      "godot/tests/combat_audio_feedback_test.gd": 4,
+      "godot/tests/combat_audio_feedback_test.gd": 8,
       "godot/tests/combat_feel_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 16,
+      "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/play_feature_graphic_render_test.gd": 4,
       "godot/tests/play_icon_render_test.gd": 4,
       "godot/tests/run_end_ux_test.gd": 4,
+      "tools/audio/generate_deadline_zero_audio.py": 4,
       "tools/environment/candidate_utils.py": 4,
       "tools/environment/generate_cinder_foundry_candidate.py": 8,
       "tools/environment/generate_cryo_vault_candidate.py": 8,
@@ -1618,10 +1625,13 @@
       "godot/scripts/Enemy.gd": 4
     },
     "audio": {
-      "godot/scripts/CombatAudio.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/CombatAudio.gd": 8,
+      "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 4,
-      "godot/tests/combat_audio_feedback_test.gd": 4
+      "godot/tests/authored_audio_asset_test.gd": 4,
+      "godot/tests/combat_audio_feedback_test.gd": 8,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "tools/audio/generate_deadline_zero_audio.py": 4
     },
     "audit": {
       "tools/sprites/audit_final_art_status.py": 4
@@ -2158,7 +2168,13 @@
     },
     "cues": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
-      "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4
+      "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4,
+      "godot/scripts/CombatAudio.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/authored_audio_asset_test.gd": 4,
+      "godot/tests/combat_audio_feedback_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "tools/audio/generate_deadline_zero_audio.py": 4
     },
     "current": {
       "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java": 4,
@@ -3271,6 +3287,14 @@
       "godot/scripts/RunDirector.gd": 4,
       "godot/tests/run_director_escalation_test.gd": 4
     },
+    "original": {
+      "godot/scripts/CombatAudio.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/authored_audio_asset_test.gd": 4,
+      "godot/tests/combat_audio_feedback_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "tools/audio/generate_deadline_zero_audio.py": 4
+    },
     "out": {
       "godot/scripts/Main.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
@@ -3505,6 +3529,14 @@
     },
     "profiles": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java": 4
+    },
+    "progression": {
+      "godot/scripts/CombatAudio.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/authored_audio_asset_test.gd": 4,
+      "godot/tests/combat_audio_feedback_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "tools/audio/generate_deadline_zero_audio.py": 4
     },
     "projectile": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java": 4,
@@ -4346,7 +4378,13 @@
       "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java": 8,
       "core/src/main/java/com/deadlinezero/game/ui/UiIconRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 12,
-      "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 12
+      "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 12,
+      "godot/scripts/CombatAudio.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/authored_audio_asset_test.gd": 4,
+      "godot/tests/combat_audio_feedback_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "tools/audio/generate_deadline_zero_audio.py": 4
     },
     "under": {
       "godot/scripts/AssetLibrary.gd": 4,

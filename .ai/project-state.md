@@ -22,16 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T12:48:50Z
+Generated: 2026-10-05T12:52:00Z
 
 ### Git
 - Branch: `main`
-- Head: `0ba5adafa3bf`
-- Commit date: 2026-10-05T14:48:36+02:00
-- Commit: Cover music volume in run-end settings contract
+- Head: `700861a13efa`
+- Commit date: 2026-10-05T14:51:21+02:00
+- Commit: Add original UI and progression audio cues
 - Tracked files: 961
 
 ### Recently changed files
+- `godot/assets/audio/authored/README.md`
+- `godot/scripts/CombatAudio.gd`
+- `godot/scripts/Main.gd`
+- `godot/tests/authored_audio_asset_test.gd`
+- `godot/tests/combat_audio_feedback_test.gd`
+- `godot/tests/first_playable_run_path_test.gd`
+- `tools/audio/generate_deadline_zero_audio.py`
 - `godot/tests/run_end_ux_test.gd`
 - `godot/scripts/Hud.gd`
 - `.github/workflows/godot-verify.yml`
