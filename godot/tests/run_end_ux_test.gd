@@ -18,6 +18,10 @@ func _initialize() -> void:
         push_error("Game-over panel should start hidden")
         quit(1)
         return
+    if hud.game_over_scrim == null or hud.game_over_scrim.visible:
+        push_error("Game-over scrim should exist and start hidden")
+        quit(1)
+        return
 
     var pause_button := hud.get_node_or_null("PauseButton") as Button
     var pause_panel := hud.get_node_or_null("PausePanel") as PanelContainer
@@ -42,6 +46,14 @@ func _initialize() -> void:
 
     if not hud.game_over_panel.visible:
         push_error("Game-over panel did not become visible")
+        quit(1)
+        return
+    if hud.game_over_scrim == null or not hud.game_over_scrim.visible:
+        push_error("Game-over transition did not dim the combat scene")
+        quit(1)
+        return
+    if hud.game_over_panel.find_child("GameOverKicker", true, false) == null or hud.game_over_panel.find_child("GameOverBreak", true, false) == null:
+        push_error("Game-over presentation hierarchy is incomplete")
         quit(1)
         return
     if hud.game_over_summary == null:
