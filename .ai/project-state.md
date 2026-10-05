@@ -22,22 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T17:41:47Z
+Generated: 2026-10-05T17:44:53Z
 
 ### Git
 - Branch: `main`
-- Head: `177117fe6e6a`
-- Commit date: 2026-10-05T19:41:18+02:00
-- Commit: Add debug performance telemetry for physical QA
+- Head: `500444d4cb01`
+- Commit date: 2026-10-05T19:44:40+02:00
+- Commit: Type debug performance snapshot in first-playable test
 - Tracked files: 981
 
 ### Recently changed files
-- `godot/scripts/Main.gd`
 - `godot/tests/first_playable_run_path_test.gd`
+- `play/store/phone-screenshots/01-first-playable.png`
+- `play/store/phone-screenshots/02-midrun-pressure.png`
+- `play/store/phone-screenshots/03-boss-encounter.png`
+- `play/store/phone-screenshots/04-upgrade-choice.png`
+- `play/store/phone-screenshots/05-run-end.png`
+- `godot/scripts/Main.gd`
 - `.github/workflows/privacy-pages.yml`
 - `.github/workflows/godot-firebase-physical-qa.yml`
-- `play/store/RELEASE_READINESS.md`
-- `docs/FREE_ANDROID_DEVICE_QA.md`
 
 ### Project signals
 - `build.gradle`

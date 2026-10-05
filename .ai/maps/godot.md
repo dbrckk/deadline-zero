@@ -7705,7 +7705,7 @@ func _initialize() -> void:
         push_error("Run path did not initialize player, HUD and camera")
         quit(1)
         return
-    var perf_snapshot := main._performance_snapshot()
+    var perf_snapshot: Dictionary = main._performance_snapshot()
     for key in ["fps", "memory_bytes", "enemies", "projectiles", "hostile_projectiles", "xp_orbs", "elapsed"]:
         if not perf_snapshot.has(key):
             push_error("Debug performance snapshot is missing key: %s" % key)

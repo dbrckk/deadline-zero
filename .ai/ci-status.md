@@ -1,18 +1,14 @@
 # CI status
 
-Summary: 0 success / 1 failure / 7 active
+Summary: 1 success / 0 failure / 7 active
 
-- Godot Play Screenshots: in_progress / pending (177117fe)
-- Verify: pending / pending (177117fe)
-- Responsive UI QA: pending / pending (177117fe)
-- Godot Android First Playable: in_progress / pending (177117fe)
-- Godot Play AAB Verify: in_progress / pending (177117fe)
-- Godot 3D Verify: in_progress / pending (177117fe)
-- Responsive UI QA: in_progress / pending (ba84163b)
-- Privacy Policy Pages: completed / failure (ba84163b)
-
-## Latest failed run structure
-- Job: deploy
-  - Failed step: Configure or enable Pages
+- Godot Play AAB Verify: in_progress / pending (500444d4)
+- Godot Play Screenshots: in_progress / pending (500444d4)
+- Responsive UI QA: pending / pending (500444d4)
+- Godot 3D Verify: in_progress / pending (500444d4)
+- Verify: pending / pending (500444d4)
+- Godot Android First Playable: pending / pending (500444d4)
+- Godot Play Screenshots: completed / success (177117fe)
+- Verify: in_progress / pending (177117fe)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.
