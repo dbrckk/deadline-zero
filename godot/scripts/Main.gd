@@ -376,6 +376,7 @@ func _spawn_enemy(forced_kind: String = "") -> void:
         boss_reveal_target = enemy
         boss_reveal_left = BOSS_REVEAL_DURATION
         enemy.health_changed.connect(_on_boss_health_changed)
+        enemy.boss_phase_changed.connect(_on_boss_phase_changed)
         hud.show_boss("REVENANT PRIME", enemy.max_health)
 
 func _on_boss_health_changed(current: float, maximum: float) -> void:
@@ -383,6 +384,19 @@ func _on_boss_health_changed(current: float, maximum: float) -> void:
         hud.set_boss_health(current, maximum)
     if current <= 0.0:
         next_boss_time = maxf(next_boss_time, elapsed + BOSS_RETRY_DELAY)
+
+func _on_boss_phase_changed(phase: int, at: Vector3) -> void:
+    if hud != null:
+        hud.pulse_boss_phase(phase)
+    var fx := ImpactFx.new()
+    fx.name = "BossPhaseBurst_%d" % phase
+    fx.color = Color(1.0, 0.24, 0.035) if phase == 2 else Color(1.0, 0.055, 0.12)
+    fx.scale_boost = 1.55 if phase == 2 else 1.95
+    add_child(fx)
+    fx.global_position = at
+    if camera_shake_enabled:
+        impact_fov_pulse = maxf(impact_fov_pulse, 0.82 if phase == 2 else 1.15)
+        camera_kick = maxf(camera_kick, 0.095 if phase == 2 else 0.125)
 
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     if hit_stop_enabled:
