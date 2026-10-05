@@ -39,7 +39,7 @@ func _initialize() -> void:
         if node is Label3D and str(node.name).begins_with("DamageNumber_"):
             readable_critical = node as Label3D
             break
-    if readable_critical == null or readable_critical.pixel_size < 0.0044:
+    if readable_critical == null or readable_critical.pixel_size < 0.0067 or readable_critical.font_size < 44:
         push_error("Critical damage number is below phone-scale readability contract")
         quit(1)
         return
