@@ -80,8 +80,10 @@ jobs:
               data = path.read_bytes()
               assert data[:8] == b"\x89PNG\r\n\x1a\n", f"{path} is not PNG"
               width, height = struct.unpack(">II", data[16:24])
+              color_type = data[25]
               assert (width, height) == (1920, 1080), f"{path} is {width}x{height}, expected 1920x1080"
-              print(f"PLAY_SCREENSHOT_OK {path.name} {width}x{height} bytes={len(data)}")
+              assert color_type == 2, f"{path} must be opaque RGB PNG (color type 2), got {color_type}"
+              print(f"PLAY_SCREENSHOT_OK {path.name} {width}x{height} rgb=1 bytes={len(data)}")
           PY
 
       - name: Upload Play screenshot candidates
@@ -126,8 +128,13 @@ jobs:
               data = path.read_bytes()
               assert data[:8] == b"\x89PNG\r\n\x1a\n", f"{path} is not PNG"
               width, height = struct.unpack(">II", data[16:24])
+              color_type = data[25]
               assert (width, height) == dims, f"{path} is {width}x{height}, expected {dims[0]}x{dims[1]}"
-              print(f"PLAY_BRANDING_CANDIDATE_OK {name} {width}x{height} bytes={len(data)}")
+              if name == "feature-graphic-candidate.png":
+                  assert color_type == 2, f"{path} must be opaque RGB PNG (color type 2), got {color_type}"
+              else:
+                  assert color_type in (2, 6), f"{path} has unsupported PNG color type {color_type}"
+              print(f"PLAY_BRANDING_CANDIDATE_OK {name} {width}x{height} color_type={color_type} bytes={len(data)}")
           PY
 
       - name: Upload Play branding candidates
@@ -161,14 +168,19 @@ jobs:
               data = path.read_bytes()
               assert data[:8] == b"\x89PNG\r\n\x1a\n", f"{path} is not PNG"
               width, height = struct.unpack(">II", data[16:24])
+              color_type = data[25]
               assert (width, height) == dims, f"{path} has unexpected dimensions {width}x{height}"
+              if path.name == "feature-graphic.png":
+                  assert color_type == 2, f"{path} must be opaque RGB PNG, got color type {color_type}"
 
           shots = sorted(Path("play/store/phone-screenshots").glob("*.png"))
           assert len(shots) == 5, f"expected 5 promoted screenshots, got {len(shots)}"
           for path in shots:
               data = path.read_bytes()
               width, height = struct.unpack(">II", data[16:24])
+              color_type = data[25]
               assert (width, height) == (1920, 1080), f"{path} is {width}x{height}"
+              assert color_type == 2, f"{path} must be opaque RGB PNG, got color type {color_type}"
           PY
 
           git config user.name "deadline-zero-ci"
