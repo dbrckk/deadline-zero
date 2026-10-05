@@ -1,0 +1,157 @@
+name: Godot Firebase Physical QA
+
+on:
+  workflow_dispatch:
+    inputs:
+      device_model:
+        description: Firebase Test Lab physical MODEL_ID
+        required: true
+        default: "shiba"
+      android_version:
+        description: Test Lab OS_VERSION_ID supported by the selected model
+        required: true
+        default: "35"
+      timeout:
+        description: Robo smoke timeout
+        required: true
+        default: "120s"
+
+concurrency:
+  group: godot-firebase-physical-qa
+  cancel-in-progress: false
+
+jobs:
+  physical-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Require Firebase physical-QA configuration
+        env:
+          PROJECT_ID: ${{ secrets.FIREBASE_TEST_LAB_PROJECT_ID }}
+          SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_TEST_LAB_SERVICE_ACCOUNT_JSON }}
+        run: |
+          set -euo pipefail
+          test -n "$PROJECT_ID" || { echo "::error::Missing FIREBASE_TEST_LAB_PROJECT_ID"; exit 1; }
+          test -n "$SERVICE_ACCOUNT_JSON" || { echo "::error::Missing FIREBASE_TEST_LAB_SERVICE_ACCOUNT_JSON"; exit 1; }
+
+      - name: Authenticate Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.FIREBASE_TEST_LAB_SERVICE_ACCOUNT_JSON }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v3
+        with:
+          project_id: ${{ secrets.FIREBASE_TEST_LAB_PROJECT_ID }}
+
+      - name: Generate original authored audio
+        run: python3 tools/audio/generate_deadline_zero_audio.py
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+
+      - name: Install Android SDK components
+        run: |
+          set -euo pipefail
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.1"
+
+      - name: Download Godot editor and Android templates
+        run: |
+          set -euo pipefail
+          curl -fL --retry 4 \
+            https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip \
+            -o /tmp/godot.zip
+          curl -fL --retry 4 \
+            https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz \
+            -o /tmp/godot-templates.tpz
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+          rm -rf /tmp/godot-template-unpack
+          mkdir -p /tmp/godot-template-unpack
+          unzip -q /tmp/godot-templates.tpz -d /tmp/godot-template-unpack
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp -R /tmp/godot-template-unpack/templates/. "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+
+      - name: Configure Godot Android export
+        run: |
+          set -euo pipefail
+          keytool -genkeypair -v \
+            -keystore /tmp/deadline-zero-debug.keystore \
+            -storepass android \
+            -alias androiddebugkey \
+            -keypass android \
+            -dname "CN=Deadline Zero Firebase QA,O=Deadline Zero,C=FR" \
+            -keyalg RSA -keysize 2048 -validity 10000
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<EOF
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/android_sdk_path = "${ANDROID_HOME}"
+          export/android/java_sdk_path = "${JAVA_HOME}"
+          export/android/debug_keystore = "/tmp/deadline-zero-debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
+          EOF
+
+      - name: Build native Godot QA APK
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --editor --quit
+          mkdir -p build/firebase-physical
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --headless --path godot \
+            --export-debug "Android Debug" \
+            "$(pwd)/build/firebase-physical/deadline-zero-physical-qa.apk"
+          test -s build/firebase-physical/deadline-zero-physical-qa.apk
+
+      - name: Record selected Test Lab device
+        env:
+          MODEL: ${{ inputs.device_model }}
+        run: |
+          set -euo pipefail
+          gcloud firebase test android models describe "$MODEL" --format=json \
+            > build/firebase-physical/device-model.json
+          test -s build/firebase-physical/device-model.json
+          cat build/firebase-physical/device-model.json
+
+      - name: Run no-cost physical Robo smoke
+        env:
+          MODEL: ${{ inputs.device_model }}
+          VERSION: ${{ inputs.android_version }}
+          TEST_TIMEOUT: ${{ inputs.timeout }}
+        run: |
+          set -euo pipefail
+          gcloud firebase test android run \
+            --type=robo \
+            --app build/firebase-physical/deadline-zero-physical-qa.apk \
+            --device "model=${MODEL},version=${VERSION},locale=en,orientation=landscape" \
+            --timeout "$TEST_TIMEOUT" \
+            --client-details "matrixLabel=DeadlineZero-${GITHUB_SHA::8}" \
+            --results-history-name "Deadline Zero Physical QA" \
+            --format=json \
+            | tee build/firebase-physical/test-lab-result.json
+          test -s build/firebase-physical/test-lab-result.json
+
+      - name: Upload physical QA evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deadline-zero-firebase-physical-qa-${{ github.sha }}
+          path: |
+            build/firebase-physical/deadline-zero-physical-qa.apk
+            build/firebase-physical/device-model.json
+            build/firebase-physical/test-lab-result.json
+          if-no-files-found: warn
+          retention-days: 30
