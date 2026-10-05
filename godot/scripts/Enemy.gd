@@ -52,6 +52,7 @@ var charge_hit := false
 var hit_flash_visual: MeshInstance3D
 var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
+var spawn_reveal_tween: Tween
 static var _shared_contact_shadow_material: StandardMaterial3D
 static var _contact_shadow_mesh_cache := {}
 static var _signature_material_cache := {}
@@ -117,6 +118,7 @@ func _ready() -> void:
     _build_visual()
     _build_contact_shadow()
     _build_hit_flash()
+    _play_spawn_reveal()
 
 func _physics_process(delta: float) -> void:
     if not combat_enabled:
@@ -697,6 +699,25 @@ func _build_contact_shadow() -> void:
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     shadow.material_override = _enemy_contact_shadow_material()
     add_child(shadow)
+
+func _play_spawn_reveal() -> void:
+    var visual := get_node_or_null("Visual") as Node3D
+    var shadow := get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    if visual == null or shadow == null:
+        return
+    if spawn_reveal_tween != null and spawn_reveal_tween.is_valid():
+        spawn_reveal_tween.kill()
+
+    var final_visual_position := visual.position
+    var final_shadow_scale := shadow.scale
+    visual.position = final_visual_position + Vector3(0.0, -0.12 if kind == "boss" else -0.075, 0.0)
+    shadow.scale = final_shadow_scale * (0.46 if kind == "boss" else 0.62)
+
+    var duration := 0.30 if kind == "boss" else 0.18
+    spawn_reveal_tween = create_tween()
+    spawn_reveal_tween.set_parallel(true)
+    spawn_reveal_tween.tween_property(visual, "position", final_visual_position, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    spawn_reveal_tween.tween_property(shadow, "scale", final_shadow_scale, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 static func _contact_shadow_mesh(radius: float) -> CylinderMesh:
     var key := "%.3f" % radius
