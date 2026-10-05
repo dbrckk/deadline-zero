@@ -27,6 +27,7 @@ var upgrade_card_panels: Array[PanelContainer] = []
 var upgrade_family_labels: Array[Label] = []
 var upgrade_title_labels: Array[Label] = []
 var upgrade_detail_labels: Array[Label] = []
+var upgrade_entry_tween: Tween
 var boss_panel: PanelContainer
 var boss_name_label: Label
 var boss_hp_bar: ProgressBar
@@ -229,6 +230,8 @@ func set_reduced_flashes(enabled: bool) -> void:
         reduced_flashes_toggle.set_pressed_no_signal(enabled)
 
 func show_upgrade(items: Array) -> void:
+    if upgrade_entry_tween != null and upgrade_entry_tween.is_valid():
+        upgrade_entry_tween.kill()
     for i in range(upgrade_buttons.size()):
         var item: Dictionary = items[i] if i < items.size() else {}
         var id := str(item.get("id", "damage"))
@@ -237,10 +240,34 @@ func show_upgrade(items: Array) -> void:
         upgrade_detail_labels[i].text = str(item.get("detail", ""))
         upgrade_buttons[i].text = _upgrade_glyph(id)
         _style_upgrade_card(i, id)
+
     upgrade_panel.visible = true
+    upgrade_panel.pivot_offset = upgrade_panel.size * 0.5
+    upgrade_panel.scale = Vector2(0.965, 0.965)
+    upgrade_panel.modulate = Color(1.0, 1.0, 1.0, 0.0)
+
+    for card in upgrade_card_panels:
+        card.pivot_offset = card.size * 0.5
+        card.scale = Vector2(0.94, 0.94)
+        card.modulate = Color(1.0, 1.0, 1.0, 0.0)
+
+    upgrade_entry_tween = upgrade_panel.create_tween()
+    upgrade_entry_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    upgrade_entry_tween.set_parallel(true)
+    upgrade_entry_tween.tween_property(upgrade_panel, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    upgrade_entry_tween.tween_property(upgrade_panel, "modulate:a", 1.0, 0.10).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    for i in range(upgrade_card_panels.size()):
+        var card := upgrade_card_panels[i]
+        var delay := 0.035 + float(i) * 0.040
+        upgrade_entry_tween.tween_property(card, "scale", Vector2.ONE, 0.16).set_delay(delay).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+        upgrade_entry_tween.tween_property(card, "modulate:a", 1.0, 0.11).set_delay(delay).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func hide_upgrade() -> void:
+    if upgrade_entry_tween != null and upgrade_entry_tween.is_valid():
+        upgrade_entry_tween.kill()
     upgrade_panel.visible = false
+    upgrade_panel.scale = Vector2.ONE
+    upgrade_panel.modulate = Color.WHITE
 
 func show_pause_settings() -> void:
     pause_panel.visible = true
