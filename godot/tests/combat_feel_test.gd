@@ -28,6 +28,10 @@ func _initialize() -> void:
         "combat impact path must respect hit-stop comfort setting")
     _assert(main_source.contains("if camera_shake_enabled:"),
         "combat impact path must respect camera-shake comfort setting")
+    _assert(main_source.contains("_spawn_kill_confirmation_fx"),
+        "kill impacts must have a distinct world-space confirmation burst")
+    _assert(main_source.contains("fx.scale_boost = 2.15 if boss else 1.42"),
+        "boss and normal kill bursts must preserve different visual mass")
     _assert(main_source.contains("camera_kick = 0.0"),
         "disabling camera shake must clear active camera kick")
     _assert(main_source.contains("_clear_hit_freeze()"),

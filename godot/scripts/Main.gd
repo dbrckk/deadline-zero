@@ -383,7 +383,17 @@ func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> 
         impact_fov_pulse = maxf(impact_fov_pulse, DZCombatFeel.impact_fov_pulse(critical, killed, boss))
     if hud:
         hud.show_impact_flash(critical, killed, boss)
+    if killed:
+        _spawn_kill_confirmation_fx(at, boss)
     _play_impact_audio(critical, killed, boss)
+
+func _spawn_kill_confirmation_fx(at: Vector3, boss: bool) -> void:
+    var fx := ImpactFx.new()
+    fx.name = "BossKillBurst" if boss else "KillBurst"
+    fx.color = Color(1.0, 0.18, 0.035) if boss else Color(1.0, 0.50, 0.10)
+    fx.scale_boost = 2.15 if boss else 1.42
+    add_child(fx)
+    fx.global_position = at
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
     kills += 1
