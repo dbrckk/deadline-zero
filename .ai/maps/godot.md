@@ -2871,6 +2871,11 @@ const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_INTERVAL := 75.0
 const BOSS_RETRY_DELAY := 15.0
 const BOSS_REVEAL_FOV_DELTA := 5.5
+const CAMERA_BASE_HEIGHT := 12.8
+const CAMERA_BASE_TRAIL := 9.15
+const CAMERA_BASE_FOV := 46.0
+const CAMERA_REVEAL_HEIGHT := 14.0
+const CAMERA_REVEAL_TRAIL := 10.4
 const HUD_REFRESH_INTERVAL := 0.10
 const MUSIC_BASE_DB := -20.0
 const MUSIC_DUCK_DB := -27.0
@@ -2899,9 +2904,9 @@ func _ready() -> void:
 
     camera = Camera3D.new()
     camera.current = true
-    camera.fov = 48.0
+    camera.fov = CAMERA_BASE_FOV
     add_child(camera)
-    camera.global_position = Vector3(0.0, 14.0, 10.0)
+    camera.global_position = Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL)
     camera.look_at(Vector3(0.0, 0.6, 0.0), Vector3.UP)
 
     hud = DZHud.new()
@@ -2939,8 +2944,8 @@ func _process(delta: float) -> void:
 
     if player and is_instance_valid(player):
         var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0)
-        var desired := player.global_position + Vector3(0.0, 14.0, 10.0)
-        var target_fov := 48.0
+        var desired := player.global_position + Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL)
+        var target_fov := CAMERA_BASE_FOV
 
         if boss_reveal_left > 0.0 and boss_reveal_target != null and is_instance_valid(boss_reveal_target) and not boss_reveal_target.dead:
             boss_reveal_left = max(0.0, boss_reveal_left - delta)
@@ -2948,8 +2953,8 @@ func _process(delta: float) -> void:
             var envelope: float = sin((1.0 - normalized) * PI)
             var midpoint: Vector3 = player.global_position.lerp(boss_reveal_target.global_position, BOSS_REVEAL_FOCUS)
             focus_point = focus_point.lerp(midpoint + Vector3(0.0, 0.78, 0.0), envelope)
-            desired = desired.lerp(midpoint + Vector3(0.0, 15.0, 11.2), envelope * 0.72)
-            target_fov = 48.0 + BOSS_REVEAL_FOV_DELTA * envelope
+            desired = desired.lerp(midpoint + Vector3(0.0, CAMERA_REVEAL_HEIGHT, CAMERA_REVEAL_TRAIL), envelope * 0.72)
+            target_fov = CAMERA_BASE_FOV + BOSS_REVEAL_FOV_DELTA * envelope
         else:
             boss_reveal_left = 0.0
             boss_reveal_target = null
@@ -6472,19 +6477,41 @@ extends SceneTree
 
 func _init() -> void:
     var source := FileAccess.get_file_as_string("res://scripts/Main.gd")
-    assert(source.contains("BOSS_REVEAL_DURATION := 1.15"))
-    assert(source.contains("BOSS_REVEAL_FOCUS := 0.58"))
-    assert(source.contains("BOSS_REVEAL_FOV_DELTA := 5.5"))
-    assert(source.contains("boss_reveal_target = enemy"))
-    assert(source.contains("target_fov = 48.0 + BOSS_REVEAL_FOV_DELTA * envelope"))
-    assert(source.contains("camera.look_at(focus_point, Vector3.UP)"))
+    var required := [
+        ["BOSS_REVEAL_DURATION := 1.15", "Boss reveal duration contract regressed"],
+        ["BOSS_REVEAL_FOCUS := 0.58", "Boss reveal focus contract regressed"],
+        ["BOSS_REVEAL_FOV_DELTA := 5.5", "Boss reveal FOV delta contract regressed"],
+        ["CAMERA_BASE_HEIGHT := 12.8", "Base camera height contract regressed"],
+        ["CAMERA_BASE_TRAIL := 9.15", "Base camera trail contract regressed"],
+        ["CAMERA_BASE_FOV := 46.0", "Base camera FOV contract regressed"],
+        ["CAMERA_REVEAL_HEIGHT := 14.0", "Boss reveal camera height contract regressed"],
+        ["CAMERA_REVEAL_TRAIL := 10.4", "Boss reveal camera trail contract regressed"],
+        ["boss_reveal_target = enemy", "Boss spawn no longer arms reveal target"],
+        ["target_fov = CAMERA_BASE_FOV + BOSS_REVEAL_FOV_DELTA * envelope", "Boss reveal no longer widens field of view"],
+        ["camera.look_at(focus_point, Vector3.UP)", "Camera focus contract is missing"]
+    ]
+    for item in required:
+        if not _require(source.contains(String(item[0])), String(item[1])):
+            return
 
-    # Mobile comfort bounds: the reveal must stay short and widen the view rather than punch in.
-    assert(1.15 <= 1.25)
-    assert(5.5 <= 7.0)
-    assert(0.58 >= 0.45 and 0.58 <= 0.68)
+    if not _require(1.15 <= 1.25, "Boss reveal duration exceeds mobile comfort bound"):
+        return
+    if not _require(5.5 <= 7.0, "Boss reveal FOV delta exceeds mobile comfort bound"):
+        return
+    if not _require(0.58 >= 0.45 and 0.58 <= 0.68, "Boss reveal focus leaves validated framing range"):
+        return
+    if not _require(46.0 >= 44.0 and 46.0 <= 49.0, "Base camera FOV leaves readability range"):
+        return
+
     print("godot boss reveal camera validation passed")
-    quit()
+    quit(0)
+
+func _require(condition: bool, message: String) -> bool:
+    if condition:
+        return true
+    push_error(message)
+    quit(1)
+    return false
 ```
 
 ## File: tests/combat_audio_feedback_test.gd

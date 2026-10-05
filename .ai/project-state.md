@@ -22,20 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T12:08:08Z
+Generated: 2026-10-05T12:09:48Z
 
 ### Git
 - Branch: `main`
-- Head: `d5b7fda7f973`
-- Commit date: 2026-10-05T14:07:50+02:00
-- Commit: Align release matrix with vector Play icon
+- Head: `f31338227fe2`
+- Commit date: 2026-10-05T14:09:14+02:00
+- Commit: Lock premium camera framing contract
 - Tracked files: 960
 
 ### Recently changed files
+- `godot/tests/boss_reveal_camera_test.gd`
+- `godot/scripts/Main.gd`
 - `play/store/RELEASE_READINESS.md`
 - `godot/tests/play_icon_render_test.gd`
 - `godot/tests/damage_number_budget_test.gd`
-- `godot/scripts/Enemy.gd`
 
 ### Project signals
 - `build.gradle`

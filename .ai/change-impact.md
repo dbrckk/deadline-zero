@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 25db63f89477c7aeee0a8ae22e303b65a1b80299
-Head: d5b7fda7f97307115ef9eacc0f6b1ab908cc08cc
+Base: abcb4c89780c7e6524165fea7a879df1533687b5
+Head: f31338227fe27f438902119a9308e4d8ccd89b4d
 
 ## Changed files
-- M play/store/RELEASE_READINESS.md
+- M godot/tests/boss_reveal_camera_test.gd
 
 ## Affected areas
-- play
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.
