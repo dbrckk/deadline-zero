@@ -48,6 +48,7 @@ var boss_audio: AudioStreamPlayer
 var music_audio: AudioStreamPlayer
 var music_pressure_audio: AudioStreamPlayer
 var music_duck_tween: Tween
+var music_end_tween: Tween
 var impact_streams := {}
 var enemy_spatial_index := DZSpatialHash.new(4.0)
 var last_player_health := -1.0
@@ -75,6 +76,7 @@ const MUSIC_BASE_DB := -20.0
 const MUSIC_DUCK_DB := -27.0
 const MUSIC_PRESSURE_BREACH_DB := -48.0
 const MUSIC_PRESSURE_BOSS_DB := -11.0
+const MUSIC_GAME_OVER_DB := -32.0
 const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
 const DIRECTOR_REFRESH_INTERVAL := 0.25
@@ -501,9 +503,26 @@ func _on_player_died() -> void:
     touch_id = -1
     if hud != null:
         hud.hide_touch_stick()
+    _fade_music_for_run_end()
     _freeze_combat()
     if hud:
         hud.show_game_over(kills, level, elapsed)
+
+func _fade_music_for_run_end() -> void:
+    if boss_audio != null:
+        boss_audio.stop()
+    if music_duck_tween != null and music_duck_tween.is_valid():
+        music_duck_tween.kill()
+    if music_end_tween != null and music_end_tween.is_valid():
+        music_end_tween.kill()
+
+    music_end_tween = create_tween()
+    music_end_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    music_end_tween.set_parallel(true)
+    if music_audio != null and music_audio.playing:
+        music_end_tween.tween_property(music_audio, "volume_db", MUSIC_GAME_OVER_DB, 0.55).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    if music_pressure_audio != null and music_pressure_audio.playing:
+        music_end_tween.tween_property(music_pressure_audio, "volume_db", MUSIC_PRESSURE_BREACH_DB, 0.36).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _freeze_combat() -> void:
     if player != null and is_instance_valid(player):
