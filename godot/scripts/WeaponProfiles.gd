@@ -8,8 +8,8 @@ const PROFILES := {
         "projectile_speed_multiplier": 1.0,
         "fire_interval_multiplier": 1.0,
         "projectile_scale": 1.0,
-        "trail_length": 0.55,
-        "impact_weight": 1.0
+        "trail_length": 0.72,
+        "impact_weight": 1.06
     },
     "scatter": {
         "tint": Color(1.0, 0.56, 0.18),
@@ -20,8 +20,8 @@ const PROFILES := {
         "multishot_cap": 5,
         "spread_min": 11.0,
         "projectile_scale": 1.16,
-        "trail_length": 0.32,
-        "impact_weight": 1.18
+        "trail_length": 0.42,
+        "impact_weight": 1.24
     },
     "rail": {
         "tint": Color(0.72, 0.58, 1.0),
@@ -32,8 +32,8 @@ const PROFILES := {
         "multishot_set": 1,
         "spread_set": 3.0,
         "projectile_scale": 0.78,
-        "trail_length": 1.25,
-        "impact_weight": 1.34
+        "trail_length": 1.55,
+        "impact_weight": 1.42
     },
     "inferno": {
         "tint": Color(1.0, 0.24, 0.035),
@@ -42,8 +42,8 @@ const PROFILES := {
         "fire_interval_multiplier": 1.08,
         "fire_interval_cap": 0.80,
         "projectile_scale": 1.10,
-        "trail_length": 0.72,
-        "impact_weight": 1.22
+        "trail_length": 0.92,
+        "impact_weight": 1.30
     },
     "cryo": {
         "tint": Color(0.30, 0.90, 1.0),
@@ -52,8 +52,8 @@ const PROFILES := {
         "fire_interval_multiplier": 0.90,
         "fire_interval_floor": 0.09,
         "projectile_scale": 1.08,
-        "trail_length": 0.82,
-        "impact_weight": 1.24
+        "trail_length": 1.00,
+        "impact_weight": 1.30
     },
     "arc": {
         "tint": Color(0.64, 0.42, 1.0),
@@ -65,8 +65,8 @@ const PROFILES := {
         "multishot_cap": 5,
         "spread_max": 4.0,
         "projectile_scale": 0.92,
-        "trail_length": 0.94,
-        "impact_weight": 1.20
+        "trail_length": 1.10,
+        "impact_weight": 1.28
     }
 }
 
