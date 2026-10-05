@@ -101,5 +101,38 @@ func _run_test() -> void:
         quit(1)
         return
 
+    enemy.kind = "charger"
+    enemy.pending_special = "charge"
+    enemy.global_position = Vector3.ZERO
+    enemy.attack_target_position = Vector3(4.4, 0.0, 0.0)
+    enemy._show_telegraph(1.05, 0.40)
+    await process_frame
+    var charge_lane := enemy.telegraph_visual.get_node_or_null("ChargeLane") as MeshInstance3D
+    var charge_mesh := charge_lane.mesh as BoxMesh if charge_lane != null else null
+    if charge_lane == null or charge_mesh == null or charge_mesh.size.z < 4.2:
+        push_error("Charger telegraph is missing readable directional corridor")
+        quit(1)
+        return
+    if charge_lane.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or charge_mesh.size.x < 0.26:
+        push_error("Charger telegraph corridor lost mobile-safe width/shadow contract")
+        quit(1)
+        return
+
+    enemy.kind = "harrier"
+    enemy.pending_special = "harrier_shot"
+    enemy.attack_target_position = Vector3(-5.2, 0.0, 1.2)
+    enemy._show_telegraph(1.05, 0.40)
+    await process_frame
+    var aim_lane := enemy.telegraph_visual.get_node_or_null("HarrierAimLane") as MeshInstance3D
+    var aim_mesh := aim_lane.mesh as BoxMesh if aim_lane != null else null
+    if aim_lane == null or aim_mesh == null or aim_mesh.size.z < 5.0:
+        push_error("Harrier telegraph is missing long-range aim lane")
+        quit(1)
+        return
+    if aim_mesh.size.x > 0.14 or aim_lane.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Harrier aim lane lost precision/mobile-safe contract")
+        quit(1)
+        return
+
     print("Deadline Zero attack telegraph escalation: OK")
     quit(0)
