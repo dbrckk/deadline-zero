@@ -61,7 +61,7 @@ func _apply_profile(profile: String) -> void:
     impact_scale = float(feedback.get("impact_weight", 1.0))
     var projectile_scale := float(feedback.get("projectile_scale", 1.0))
     core_radius = 0.11 * projectile_scale
-    trail_width = 0.055 * projectile_scale
+    trail_width = 0.062 * projectile_scale
     match profile:
         "scatter":
             trail_width *= 1.40
@@ -154,7 +154,7 @@ func _cached_core_material() -> StandardMaterial3D:
     material.albedo_color = tint
     material.emission_enabled = true
     material.emission = tint
-    material.emission_energy_multiplier = 3.2
+    material.emission_energy_multiplier = 3.8
     material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     _core_material_cache[key] = material
     return material
@@ -164,10 +164,10 @@ func _cached_trail_material() -> StandardMaterial3D:
     if _trail_material_cache.has(key):
         return _trail_material_cache[key] as StandardMaterial3D
     var material := StandardMaterial3D.new()
-    material.albedo_color = Color(tint.r * 0.68, tint.g * 0.68, tint.b * 0.68)
+    material.albedo_color = Color(tint.r * 0.76, tint.g * 0.76, tint.b * 0.76)
     material.emission_enabled = true
-    material.emission = Color(tint.r * 0.74, tint.g * 0.74, tint.b * 0.74)
-    material.emission_energy_multiplier = 1.65
+    material.emission = Color(tint.r * 0.86, tint.g * 0.86, tint.b * 0.86)
+    material.emission_energy_multiplier = 2.15
     material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     _trail_material_cache[key] = material
     return material
