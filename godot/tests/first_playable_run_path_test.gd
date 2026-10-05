@@ -432,6 +432,10 @@ func _initialize() -> void:
     main.boss_reveal_target = active_boss
     main.hud.impact_flash.visible = true
     main.hud.damage_vignette.visible = true
+    if main.boss_audio != null and main.boss_audio.stream != null:
+        main.boss_audio.play()
+    if main.music_pressure_audio != null:
+        main.music_pressure_audio.volume_db = main.MUSIC_PRESSURE_BOSS_DB
     main._on_player_died()
     if not main.game_over or not main.hud.game_over_panel.visible:
         push_error("Player death did not enter visible game-over state")
@@ -439,6 +443,14 @@ func _initialize() -> void:
         return
     if main.camera_kick > 0.0 or main.boss_reveal_left > 0.0 or main.boss_reveal_target != null:
         push_error("Run end retained transient camera combat state")
+        quit(1)
+        return
+    if main.boss_audio != null and main.boss_audio.playing:
+        push_error("Run end retained active boss stinger audio")
+        quit(1)
+        return
+    if main.music_end_tween == null or not main.music_end_tween.is_valid():
+        push_error("Run end did not start adaptive music de-escalation")
         quit(1)
         return
     if main.hud.impact_flash.visible or main.hud.damage_vignette.visible or main.hud.boss_panel.visible:
