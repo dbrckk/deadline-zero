@@ -429,6 +429,9 @@ func _on_enemy_died(xp_value: int, at: Vector3) -> void:
 
 func _on_xp_collected(amount: int) -> void:
     xp += amount
+    if hud != null:
+        hud.pulse_xp_collection(amount)
+    _play_ui_audio("xp_collect", clampf(0.98 + float(mini(amount, 10)) * 0.018, 0.98, 1.16))
     _try_offer_banked_level_up()
 
 func _try_offer_banked_level_up() -> bool:
