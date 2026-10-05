@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 596df21314f345a3a704539deeb6bd3ffaf8d84d
-Head: 9bf1a26a50daa581cb269133b978bb407f4dfcc6
+Base: 1f2883fbff2c20b34148b0504191592721100efe
+Head: be967e92f5caef846331096e59406d7d2e215281
 
 ## Changed files
-- M play/store/PLAY_CONSOLE.md
+- M .github/workflows/privacy-pages.yml
 
 ## Affected areas
-- play
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

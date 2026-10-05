@@ -22,31 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T13:17:10Z
+Generated: 2026-10-05T13:19:00Z
 
 ### Git
 - Branch: `main`
-- Head: `9bf1a26a50da`
-- Commit date: 2026-10-05T15:16:48+02:00
-- Commit: Document remaining privacy hosting gate
+- Head: `be967e92f5ca`
+- Commit date: 2026-10-05T15:18:35+02:00
+- Commit: Allow privacy workflow to enable GitHub Pages
 - Tracked files: 979
 
 ### Recently changed files
+- `.github/workflows/privacy-pages.yml`
+- `.github/workflows/godot-android-first-playable.yml`
 - `play/store/PLAY_CONSOLE.md`
 - `play/store/RELEASE_READINESS.md`
-- `.github/workflows/privacy-pages.yml`
-- `play/store/phone-screenshots/01-first-playable.png`
-- `play/store/phone-screenshots/02-midrun-pressure.png`
-- `play/store/phone-screenshots/03-boss-encounter.png`
-- `play/store/phone-screenshots/04-upgrade-choice.png`
-- `play/store/phone-screenshots/05-run-end.png`
-- `godot/scripts/Hud.gd`
-- `godot/scripts/Main.gd`
-- `godot/tests/boss_encounter_render_test.gd`
-- `godot/tests/first_playable_run_path_test.gd`
-- `godot/tests/pressure_frame_render_test.gd`
-- `godot/tests/rendered_frame_smoke_test.gd`
-- `godot/tests/upgrade_choice_render_test.gd`
 
 ### Project signals
 - `build.gradle`
