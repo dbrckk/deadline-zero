@@ -27,7 +27,7 @@ Repository-side checklist for Play Console declarations that cannot be inferred 
 ## Data Safety and privacy
 
 - [ ] Complete Play Data Safety using `play/store/DATA_SAFETY.md` and the exact Godot AAB dependency/manifest evidence.
-- [ ] Confirm the public privacy-policy URL is valid, HTTPS, and matches the current Godot data flows.
+- [ ] Confirm the public privacy-policy URL is valid, HTTPS, and matches the current Godot data flows. Source is ready in `public/privacy/`; hosting still requires one-time GitHub Pages enablement or another connected host.
 - [ ] Do not reuse legacy Ads/Billing/Play Games declarations for the Godot AAB unless those SDKs are actually reintroduced.
 
 ## Monetization
