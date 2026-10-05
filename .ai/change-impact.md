@@ -1,10 +1,10 @@
 # Change impact
 
-Base: ee1e583be007902c8302a25daebe4ea90fd17871
-Head: 10339fc5c3d4502dcbafafb87b4c2e18143b2d5f
+Base: 0832ccfbe9f23e5678571c03be1b4aecd87709b5
+Head: 6392eb255c87df7c2316e1c441ffae730f35e1d5
 
 ## Changed files
-- M godot/tests/boss_hud_identity_test.gd
+- M godot/tests/play_icon_render_test.gd
 
 ## Affected areas
 - godot

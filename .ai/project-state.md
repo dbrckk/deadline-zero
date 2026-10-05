@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T11:58:22Z
+Generated: 2026-10-05T11:59:29Z
 
 ### Git
 - Branch: `main`
-- Head: `10339fc5c3d4`
-- Commit date: 2026-10-05T13:57:32+02:00
-- Commit: Make boss HUD identity QA fail fast
+- Head: `6392eb255c87`
+- Commit date: 2026-10-05T13:59:18+02:00
+- Commit: Simplify Play icon hero composition
 - Tracked files: 960
 
 ### Recently changed files
+- `godot/tests/play_icon_render_test.gd`
 - `godot/tests/boss_hud_identity_test.gd`
 - `godot/scripts/Hud.gd`
 - `godot/tests/environment_identity_test.gd`
 - `godot/scripts/Main.gd`
-- `godot/tests/play_feature_graphic_render_test.gd`
 
 ### Project signals
 - `build.gradle`
