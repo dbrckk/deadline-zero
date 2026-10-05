@@ -240,9 +240,8 @@ jobs:
             # force-stop/relaunch contract, not a claim that an in-progress run is restored.
             adb shell am force-stop com.deadlinezero.godot
             sleep 2
-            if adb shell pidof com.deadlinezero.godot > build/godot-android-smoke/pid-after-force-stop.txt 2>/dev/null; then
-              test ! -s build/godot-android-smoke/pid-after-force-stop.txt
-            fi
+            adb shell pidof com.deadlinezero.godot > build/godot-android-smoke/pid-after-force-stop.txt 2>/dev/null || true
+            test ! -s build/godot-android-smoke/pid-after-force-stop.txt
             adb logcat -c
             adb shell am start -W -a android.intent.action.MAIN -p com.deadlinezero.godot | tee build/godot-android-smoke/am-relaunch.txt
             grep -Eq 'Status: ok|Complete' build/godot-android-smoke/am-relaunch.txt
