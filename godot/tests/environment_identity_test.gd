@@ -17,6 +17,25 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if not floor is MeshInstance3D:
+        push_error("Quarantine floor is not a mesh")
+        quit(1)
+        return
+    var floor_mesh := floor as MeshInstance3D
+    if not floor_mesh.material_override is ShaderMaterial:
+        push_error("Quarantine floor lost its procedural industrial material")
+        quit(1)
+        return
+    var floor_shader := (floor_mesh.material_override as ShaderMaterial).shader
+    if floor_shader == null or not floor_shader.code.contains("panel_variation") or not floor_shader.code.contains("micro_variation"):
+        push_error("Quarantine floor procedural surface hierarchy regressed")
+        quit(1)
+        return
+    if floor_mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Broad quarantine floor must not waste shadow-caster budget")
+        quit(1)
+        return
+
     var barrier_count := 0
     var lane_count := 0
     var arena_boundary_count := 0
