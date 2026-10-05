@@ -732,12 +732,54 @@ func _build_world() -> void:
     _build_floor_wear()
     _build_floor_seams()
     _build_light_pool_decals()
+    _build_ambient_motes()
     _build_containment_lanes()
     _build_perimeter_bulkheads()
     _build_authored_barrier_clusters()
     _build_authored_world_dressing()
     _build_perimeter_street_lights()
     _build_perimeter_beacons()
+
+func _build_ambient_motes() -> void:
+    var particles := GPUParticles3D.new()
+    particles.name = "AmbientMotes"
+    particles.amount = 32
+    particles.lifetime = 6.0
+    particles.preprocess = 6.0
+    particles.randomness = 0.34
+    particles.local_coords = false
+    particles.position = Vector3(0.0, 0.35, 0.0)
+    particles.visibility_aabb = AABB(Vector3(-20.0, -0.5, -20.0), Vector3(40.0, 5.0, 40.0))
+    particles.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+    var process := ParticleProcessMaterial.new()
+    process.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+    process.emission_box_extents = Vector3(18.0, 0.75, 18.0)
+    process.direction = Vector3(0.0, 1.0, 0.0)
+    process.spread = 82.0
+    process.initial_velocity_min = 0.06
+    process.initial_velocity_max = 0.24
+    process.gravity = Vector3(0.0, 0.035, 0.0)
+    process.scale_min = 0.55
+    process.scale_max = 1.45
+    process.angle_min = -180.0
+    process.angle_max = 180.0
+    process.color = Color(0.24, 0.66, 0.78, 0.16)
+    particles.process_material = process
+
+    var mote_mesh := QuadMesh.new()
+    mote_mesh.size = Vector2(0.028, 0.090)
+    var mote_material := StandardMaterial3D.new()
+    mote_material.albedo_color = Color(0.30, 0.72, 0.82, 0.16)
+    mote_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    mote_material.emission_enabled = true
+    mote_material.emission = Color(0.10, 0.32, 0.38)
+    mote_material.emission_energy_multiplier = 0.55
+    mote_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    mote_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    mote_mesh.material = mote_material
+    particles.draw_pass_1 = mote_mesh
+    add_child(particles)
 
 func _build_quarantine_floor_material() -> ShaderMaterial:
     # One lightweight procedural material gives the broad arena plane real surface hierarchy
