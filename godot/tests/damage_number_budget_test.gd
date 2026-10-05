@@ -34,6 +34,16 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var readable_critical: Label3D
+    for node in get_nodes_in_group("damage_numbers"):
+        if node is Label3D and str(node.name).begins_with("DamageNumber_"):
+            readable_critical = node as Label3D
+            break
+    if readable_critical == null or readable_critical.pixel_size < 0.0044:
+        push_error("Critical damage number is below phone-scale readability contract")
+        quit(1)
+        return
+
     enemy._spawn_damage_number(60.0, false, true)
     if get_nodes_in_group("damage_numbers").size() != baseline + 2:
         push_error("Kill damage number was incorrectly dropped at budget cap")
