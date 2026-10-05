@@ -15,6 +15,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: godot-play-signed-release
+  cancel-in-progress: false
+
 jobs:
   build-signed-aab:
     runs-on: ubuntu-latest
