@@ -24,9 +24,9 @@ Store final, authored exports under `play/store/` before publication:
 
 - `icon.png`: 512×512 PNG, <= 1 MiB.
 - `feature-graphic.png`: 1024×500 PNG without alpha.
-- `phone-screenshots/`: at least three final gameplay screenshots, each PNG/JPEG without alpha, <= 8 MiB, exact 16:9 landscape, at least 1920×1080, with no dimension above 3840 px.
+- `phone-screenshots/`: final gameplay screenshots, each PNG/JPEG without alpha, <= 8 MiB, exact 16:9 landscape, at least 1920×1080, with no dimension above 3840 px. The automated candidate set currently contains five representative runtime scenes.
 
-The `Godot Play Screenshots` workflow generates real-runtime screenshot candidates plus authored 3D branding candidates. Review them visually before copying approved outputs into the final Store paths.
+The `Godot Play Screenshots` workflow generates five real-runtime screenshot candidates plus authored branding candidates. Review them visually before copying approved outputs into the final Store paths.
 
 Do not use ranking claims, price claims, fake awards, download-count claims, or misleading UI in Store graphics. Screenshots must show the real shipped game experience.
 
