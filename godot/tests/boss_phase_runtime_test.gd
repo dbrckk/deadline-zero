@@ -22,6 +22,12 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if boss.boss_aura_root == null or boss.boss_aura_inner_material == null or boss.boss_aura_outer_material == null:
+        push_error("Boss premium threat aura did not initialize")
+        quit(1)
+        return
+    var phase1_aura_color: Color = boss.boss_aura_inner_material.emission
+
     var phase1_speed: float = boss.move_speed
     var phase1_damage: float = boss.contact_damage
 
@@ -46,6 +52,17 @@ func _initialize() -> void:
         return
     if boss.move_speed <= phase2_speed or boss.contact_damage <= phase2_damage:
         push_error("Boss phase III did not escalate movement and damage")
+        quit(1)
+        return
+
+    var phase3_aura_color: Color = boss.boss_aura_inner_material.emission
+    if phase3_aura_color.is_equal_approx(phase1_aura_color):
+        push_error("Boss phase escalation did not recolor threat aura")
+        quit(1)
+        return
+    boss._update_boss_presence(0.16)
+    if boss.boss_aura_root.rotation.y <= 0.0:
+        push_error("Boss threat aura is not rotating")
         quit(1)
         return
 
