@@ -1,10 +1,10 @@
 # Change impact
 
-Base: c19040d90b501dcb0698ed96378dbbdab44404a7
-Head: d07919ab82960e3652d95784fdeef2258fd7652b
+Base: 84f61d6af2fac9d2b5c50c9fef3082116009cad5
+Head: 0ba5adafa3bf7b031d99b0efc8387446ed390461
 
 ## Changed files
-- M godot/scripts/Hud.gd
+- M godot/tests/run_end_ux_test.gd
 
 ## Affected areas
 - godot

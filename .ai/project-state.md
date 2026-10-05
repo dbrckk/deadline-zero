@@ -22,20 +22,19 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T12:12:16Z
+Generated: 2026-10-05T12:48:50Z
 
 ### Git
 - Branch: `main`
-- Head: `d07919ab8296`
-- Commit date: 2026-10-05T14:12:01+02:00
-- Commit: Activate game-over backdrop on run end
+- Head: `0ba5adafa3bf`
+- Commit date: 2026-10-05T14:48:36+02:00
+- Commit: Cover music volume in run-end settings contract
 - Tracked files: 961
 
 ### Recently changed files
+- `godot/tests/run_end_ux_test.gd`
 - `godot/scripts/Hud.gd`
 - `.github/workflows/godot-verify.yml`
-- `godot/tests/run_end_ux_test.gd`
-- `godot/tests/game_over_render_test.gd`
 
 ### Project signals
 - `build.gradle`
