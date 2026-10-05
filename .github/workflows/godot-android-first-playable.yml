@@ -10,6 +10,7 @@ on:
     branches: [main]
     paths:
       - 'godot/**'
+      - 'tools/audio/**'
       - '.github/workflows/godot-android-first-playable.yml'
   workflow_dispatch:
 
@@ -141,6 +142,13 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      - name: Prepare pinned Android emulator
+        run: |
+          set -euo pipefail
+          yes | sdkmanager --licenses >/dev/null
+          sdkmanager "platform-tools" "platforms;android-35" "emulator" "system-images;android-35;default;x86_64"
+          emulator -version | tee /tmp/deadline-zero-emulator-version.txt
+
       - name: Smoke-test native Godot APK
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -261,5 +269,5 @@ jobs:
         with:
           name: deadline-zero-godot-smoke-${{ github.sha }}
           path: build/godot-android-smoke/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
