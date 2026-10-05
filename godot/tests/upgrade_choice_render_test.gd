@@ -26,7 +26,7 @@ func _run_capture() -> void:
 
     seed(20261005)
     scene._on_xp_collected(scene.xp_next)
-    for _frame in range(6):
+    for _frame in range(18):
         await process_frame
 
     if scene.pending_upgrades.size() != 3:
