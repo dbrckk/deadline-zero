@@ -24988,6 +24988,8 @@ var damage_vignette: ColorRect
 var damage_vignette_tween: Tween
 var touch_stick_root: Control
 var touch_stick_knob: Control
+var onboarding_panel: PanelContainer
+var onboarding_label: Label
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -25108,6 +25110,14 @@ func hide_touch_stick() -> void:
     if touch_stick_root != null:
         touch_stick_root.visible = false
 
+func show_onboarding_hint() -> void:
+    if onboarding_panel != null:
+        onboarding_panel.visible = true
+
+func hide_onboarding_hint() -> void:
+    if onboarding_panel != null:
+        onboarding_panel.visible = false
+
 func set_reduced_flashes(enabled: bool) -> void:
     reduced_flashes = enabled
     if reduced_flashes_toggle != null:
@@ -25169,6 +25179,7 @@ func show_game_over(kills: int, level: int, elapsed: float) -> void:
     pause_panel.visible = false
     impact_flash.visible = false
     damage_vignette.visible = false
+    hide_onboarding_hint()
     var minutes := int(elapsed) / 60
     var seconds := int(elapsed) % 60
     game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]
@@ -25237,6 +25248,38 @@ func _build() -> void:
     stick_knob_style.corner_radius_bottom_right = 21
     touch_stick_knob.add_theme_stylebox_override("panel", stick_knob_style)
     touch_stick_root.add_child(touch_stick_knob)
+
+    onboarding_panel = PanelContainer.new()
+    onboarding_panel.name = "OnboardingHint"
+    onboarding_panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+    onboarding_panel.position = Vector2(-285.0, -166.0)
+    onboarding_panel.size = Vector2(570.0, 54.0)
+    onboarding_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    onboarding_panel.visible = false
+    root.add_child(onboarding_panel)
+
+    var onboarding_style := StyleBoxFlat.new()
+    onboarding_style.bg_color = Color(0.008, 0.022, 0.030, 0.92)
+    onboarding_style.border_color = Color(0.12, 0.70, 0.90, 0.74)
+    onboarding_style.set_border_width_all(1)
+    onboarding_style.border_width_left = 4
+    onboarding_style.corner_radius_top_left = 7
+    onboarding_style.corner_radius_top_right = 7
+    onboarding_style.corner_radius_bottom_left = 7
+    onboarding_style.corner_radius_bottom_right = 7
+    onboarding_style.content_margin_left = 16.0
+    onboarding_style.content_margin_right = 16.0
+    onboarding_panel.add_theme_stylebox_override("panel", onboarding_style)
+
+    onboarding_label = Label.new()
+    onboarding_label.name = "OnboardingLabel"
+    onboarding_label.text = "DRAG LEFT SIDE TO MOVE   •   AUTO-FIRE ONLINE"
+    onboarding_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    onboarding_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    onboarding_label.add_theme_font_size_override("font_size", 16)
+    onboarding_label.add_theme_color_override("font_color", Color(0.78, 0.93, 0.98))
+    onboarding_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    onboarding_panel.add_child(onboarding_label)
 
     var vital_panel := PanelContainer.new()
     vital_panel.name = "VitalPanel"
@@ -26073,6 +26116,8 @@ var haptics_enabled := true
 var reduced_flashes := false
 var camera_shake_enabled := true
 var hit_stop_enabled := true
+var onboarding_hint_active := true
+var onboarding_hint_left := 4.8
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -26137,6 +26182,7 @@ func _ready() -> void:
     last_player_health = player.health
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
+    hud.show_onboarding_hint()
     _build_combat_audio()
 
     for opening_kind in run_director.opening_roster():
@@ -26152,6 +26198,11 @@ func _process(delta: float) -> void:
 
     camera_kick = move_toward(camera_kick, 0.0, delta * 0.95)
     camera_kick_phase += delta * 38.0
+
+    if onboarding_hint_active and not game_over:
+        onboarding_hint_left = maxf(0.0, onboarding_hint_left - maxf(delta, 0.0))
+        if onboarding_hint_left <= 0.0 or (player != null and player.velocity.length_squared() > 0.16):
+            _dismiss_onboarding_hint()
 
     if player and is_instance_valid(player):
         var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0)
@@ -26212,6 +26263,14 @@ func _physics_process(delta: float) -> void:
         hud.set_progress(xp, xp_next, level, kills, elapsed, enemies.size())
         hud.set_wave(_wave_name())
 
+func _dismiss_onboarding_hint() -> void:
+    if not onboarding_hint_active:
+        return
+    onboarding_hint_active = false
+    onboarding_hint_left = 0.0
+    if hud != null:
+        hud.hide_onboarding_hint()
+
 func _unhandled_input(event: InputEvent) -> void:
     if player == null or game_over or not pending_upgrades.is_empty() or get_tree().paused:
         return
@@ -26232,6 +26291,8 @@ func _unhandled_input(event: InputEvent) -> void:
         if drag.index == touch_id:
             var vector := _touch_input_vector(drag.position)
             player.set_touch_move(vector)
+            if vector.length_squared() > 0.04:
+                _dismiss_onboarding_hint()
             if hud != null:
                 hud.update_touch_stick(touch_origin, vector)
 
@@ -26377,6 +26438,7 @@ func _offer_upgrade() -> void:
     available.shuffle()
     for i in range(mini(3, available.size())):
         pending_upgrades.append(available[i])
+    _dismiss_onboarding_hint()
     hud.show_upgrade(pending_upgrades)
     get_tree().paused = true
 
@@ -26504,7 +26566,8 @@ func _on_pause_requested() -> void:
     touch_id = -1
     if hud != null:
         hud.hide_touch_stick()
-        hud.show_pause_settings()
+        _dismiss_onboarding_hint()
+    hud.show_pause_settings()
     _play_ui_audio("pause_toggle", 0.92)
     get_tree().paused = true
 

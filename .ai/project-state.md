@@ -22,16 +22,23 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T13:11:12Z
+Generated: 2026-10-05T13:15:21Z
 
 ### Git
 - Branch: `main`
-- Head: `efc096bbeb03`
-- Commit date: 2026-10-05T15:10:57+02:00
-- Commit: Add free hosted privacy policy site
-- Tracked files: 978
+- Head: `ac60d154a02a`
+- Commit date: 2026-10-05T15:15:06+02:00
+- Commit: Add non-blocking mobile first-run movement hint
+- Tracked files: 979
 
 ### Recently changed files
+- `godot/scripts/Hud.gd`
+- `godot/scripts/Main.gd`
+- `godot/tests/boss_encounter_render_test.gd`
+- `godot/tests/first_playable_run_path_test.gd`
+- `godot/tests/pressure_frame_render_test.gd`
+- `godot/tests/rendered_frame_smoke_test.gd`
+- `godot/tests/upgrade_choice_render_test.gd`
 - `.github/workflows/privacy-pages.yml`
 - `play/store/PRIVACY_POLICY.md`
 - `public/index.html`
@@ -45,7 +52,6 @@ Generated: 2026-10-05T13:11:12Z
 - `play/store/phone-screenshots/05-run-end.png`
 - `.github/workflows/godot-play-screenshots.yml`
 - `godot/PLAY_RELEASE.md`
-- `.github/workflows/godot-play-signed-release.yml`
 
 ### Project signals
 - `build.gradle`

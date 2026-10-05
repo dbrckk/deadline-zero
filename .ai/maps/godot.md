@@ -1866,6 +1866,8 @@ var damage_vignette: ColorRect
 var damage_vignette_tween: Tween
 var touch_stick_root: Control
 var touch_stick_knob: Control
+var onboarding_panel: PanelContainer
+var onboarding_label: Label
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
@@ -1986,6 +1988,14 @@ func hide_touch_stick() -> void:
     if touch_stick_root != null:
         touch_stick_root.visible = false
 
+func show_onboarding_hint() -> void:
+    if onboarding_panel != null:
+        onboarding_panel.visible = true
+
+func hide_onboarding_hint() -> void:
+    if onboarding_panel != null:
+        onboarding_panel.visible = false
+
 func set_reduced_flashes(enabled: bool) -> void:
     reduced_flashes = enabled
     if reduced_flashes_toggle != null:
@@ -2047,6 +2057,7 @@ func show_game_over(kills: int, level: int, elapsed: float) -> void:
     pause_panel.visible = false
     impact_flash.visible = false
     damage_vignette.visible = false
+    hide_onboarding_hint()
     var minutes := int(elapsed) / 60
     var seconds := int(elapsed) % 60
     game_over_summary.text = "LEVEL %d   •   KILLS %d   •   %02d:%02d" % [level, kills, minutes, seconds]
@@ -2115,6 +2126,38 @@ func _build() -> void:
     stick_knob_style.corner_radius_bottom_right = 21
     touch_stick_knob.add_theme_stylebox_override("panel", stick_knob_style)
     touch_stick_root.add_child(touch_stick_knob)
+
+    onboarding_panel = PanelContainer.new()
+    onboarding_panel.name = "OnboardingHint"
+    onboarding_panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+    onboarding_panel.position = Vector2(-285.0, -166.0)
+    onboarding_panel.size = Vector2(570.0, 54.0)
+    onboarding_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    onboarding_panel.visible = false
+    root.add_child(onboarding_panel)
+
+    var onboarding_style := StyleBoxFlat.new()
+    onboarding_style.bg_color = Color(0.008, 0.022, 0.030, 0.92)
+    onboarding_style.border_color = Color(0.12, 0.70, 0.90, 0.74)
+    onboarding_style.set_border_width_all(1)
+    onboarding_style.border_width_left = 4
+    onboarding_style.corner_radius_top_left = 7
+    onboarding_style.corner_radius_top_right = 7
+    onboarding_style.corner_radius_bottom_left = 7
+    onboarding_style.corner_radius_bottom_right = 7
+    onboarding_style.content_margin_left = 16.0
+    onboarding_style.content_margin_right = 16.0
+    onboarding_panel.add_theme_stylebox_override("panel", onboarding_style)
+
+    onboarding_label = Label.new()
+    onboarding_label.name = "OnboardingLabel"
+    onboarding_label.text = "DRAG LEFT SIDE TO MOVE   •   AUTO-FIRE ONLINE"
+    onboarding_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    onboarding_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    onboarding_label.add_theme_font_size_override("font_size", 16)
+    onboarding_label.add_theme_color_override("font_color", Color(0.78, 0.93, 0.98))
+    onboarding_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    onboarding_panel.add_child(onboarding_label)
 
     var vital_panel := PanelContainer.new()
     vital_panel.name = "VitalPanel"
@@ -2951,6 +2994,8 @@ var haptics_enabled := true
 var reduced_flashes := false
 var camera_shake_enabled := true
 var hit_stop_enabled := true
+var onboarding_hint_active := true
+var onboarding_hint_left := 4.8
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -3015,6 +3060,7 @@ func _ready() -> void:
     last_player_health = player.health
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
+    hud.show_onboarding_hint()
     _build_combat_audio()
 
     for opening_kind in run_director.opening_roster():
@@ -3030,6 +3076,11 @@ func _process(delta: float) -> void:
 
     camera_kick = move_toward(camera_kick, 0.0, delta * 0.95)
     camera_kick_phase += delta * 38.0
+
+    if onboarding_hint_active and not game_over:
+        onboarding_hint_left = maxf(0.0, onboarding_hint_left - maxf(delta, 0.0))
+        if onboarding_hint_left <= 0.0 or (player != null and player.velocity.length_squared() > 0.16):
+            _dismiss_onboarding_hint()
 
     if player and is_instance_valid(player):
         var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0)
@@ -3090,6 +3141,14 @@ func _physics_process(delta: float) -> void:
         hud.set_progress(xp, xp_next, level, kills, elapsed, enemies.size())
         hud.set_wave(_wave_name())
 
+func _dismiss_onboarding_hint() -> void:
+    if not onboarding_hint_active:
+        return
+    onboarding_hint_active = false
+    onboarding_hint_left = 0.0
+    if hud != null:
+        hud.hide_onboarding_hint()
+
 func _unhandled_input(event: InputEvent) -> void:
     if player == null or game_over or not pending_upgrades.is_empty() or get_tree().paused:
         return
@@ -3110,6 +3169,8 @@ func _unhandled_input(event: InputEvent) -> void:
         if drag.index == touch_id:
             var vector := _touch_input_vector(drag.position)
             player.set_touch_move(vector)
+            if vector.length_squared() > 0.04:
+                _dismiss_onboarding_hint()
             if hud != null:
                 hud.update_touch_stick(touch_origin, vector)
 
@@ -3255,6 +3316,7 @@ func _offer_upgrade() -> void:
     available.shuffle()
     for i in range(mini(3, available.size())):
         pending_upgrades.append(available[i])
+    _dismiss_onboarding_hint()
     hud.show_upgrade(pending_upgrades)
     get_tree().paused = true
 
@@ -3382,7 +3444,8 @@ func _on_pause_requested() -> void:
     touch_id = -1
     if hud != null:
         hud.hide_touch_stick()
-        hud.show_pause_settings()
+        _dismiss_onboarding_hint()
+    hud.show_pause_settings()
     _play_ui_audio("pause_toggle", 0.92)
     get_tree().paused = true
 
@@ -6378,6 +6441,9 @@ func _run_capture() -> void:
     await process_frame
     await process_frame
 
+    if scene.hud != null:
+        scene.hud.hide_onboarding_hint()
+
     for node in get_nodes_in_group("enemies"):
         node.queue_free()
     await process_frame
@@ -7604,6 +7670,14 @@ func _initialize() -> void:
         push_error("Run path did not initialize player, HUD and camera")
         quit(1)
         return
+    if main.hud.onboarding_panel == null or not main.hud.onboarding_panel.visible:
+        push_error("First-playable did not expose the non-blocking movement hint")
+        quit(1)
+        return
+    if main.hud.onboarding_label == null or not main.hud.onboarding_label.text.contains("AUTO-FIRE"):
+        push_error("First-playable movement hint did not explain auto-fire")
+        quit(1)
+        return
     if main.player.shot_audio_voices.size() != 3:
         push_error("Player weapon audio did not initialize bounded 3-voice polyphony")
         quit(1)
@@ -7790,6 +7864,10 @@ func _initialize() -> void:
         push_error("Touch-stick visual moved inside control deadzone")
         quit(1)
         return
+    if not main.hud.onboarding_panel.visible:
+        push_error("Movement hint disappeared before meaningful touch movement")
+        quit(1)
+        return
 
     var touch_drag := InputEventScreenDrag.new()
     touch_drag.index = 7
@@ -7797,6 +7875,10 @@ func _initialize() -> void:
     main._unhandled_input(touch_drag)
     if main.player.touch_move.length() < 0.50:
         push_error("Touch drag did not drive player movement vector")
+        quit(1)
+        return
+    if main.onboarding_hint_active or main.hud.onboarding_panel.visible:
+        push_error("Movement hint did not dismiss after meaningful touch drag")
         quit(1)
         return
     var knob_center: Vector2 = (main.hud.touch_stick_root.size - main.hud.touch_stick_knob.size) * 0.5
@@ -9621,6 +9703,9 @@ func _run_capture() -> void:
     await process_frame
     await process_frame
 
+    if scene.hud != null:
+        scene.hud.hide_onboarding_hint()
+
     # Remove the opening roster so this evidence isolates real mid-run archetype readability.
     for node in get_nodes_in_group("enemies"):
         node.queue_free()
@@ -9986,6 +10071,10 @@ func _run_capture() -> void:
 
     var scene := packed.instantiate()
     get_root().add_child(scene)
+
+    await process_frame
+    if scene.hud != null:
+        scene.hud.hide_onboarding_hint()
 
     # Capture early enough to prove active combat rather than the run-end overlay, while still
     # giving imported meshes, materials, HUD and camera enough real render frames to settle.
@@ -10823,6 +10912,9 @@ func _run_capture() -> void:
     current_scene = scene
     await process_frame
     await process_frame
+
+    if scene.hud != null:
+        scene.hud.hide_onboarding_hint()
 
     scene.elapsed = 82.0
     scene.kills = 46

@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 543
-- Files reparsed this run: 0
-- Symbols: 3001
+- Files reparsed this run: 7
+- Symbols: 3004
 - Internal import edges: 808
-- Impacted files: 0
-- Selected tests: 0
+- Impacted files: 7
+- Selected tests: 7
 
 ## Languages
 - java: 422 files
@@ -15,7 +15,7 @@
 
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
-- godot/scripts/Main.gd: 58 symbols
+- godot/scripts/Main.gd: 59 symbols
 - android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 55 symbols
 - core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 45 symbols
 - godot/scripts/Enemy.gd: 43 symbols
@@ -26,9 +26,9 @@
 - core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java: 31 symbols
 - godot/scripts/Player.gd: 30 symbols
 - core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java: 29 symbols
+- godot/scripts/Hud.gd: 29 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java: 28 symbols
 - core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java: 28 symbols
-- godot/scripts/Hud.gd: 27 symbols
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 25 symbols

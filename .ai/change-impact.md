@@ -1,18 +1,19 @@
 # Change impact
 
-Base: 144df591903fdb8c551fff8714c2f0ca50fab6be
-Head: efc096bbeb0321d30d84902717aa300c519c8411
+Base: 5deb4ffed9e572e190cdd0245d27a48516d051c8
+Head: ac60d154a02a0a91e26d3a3a91ad8d2a8567c48a
 
 ## Changed files
-- A .github/workflows/privacy-pages.yml
-- A play/store/PRIVACY_POLICY.md
-- A public/index.html
-- A public/privacy/index.html
+- M godot/scripts/Hud.gd
+- M godot/scripts/Main.gd
+- M godot/tests/boss_encounter_render_test.gd
+- M godot/tests/first_playable_run_path_test.gd
+- M godot/tests/pressure_frame_render_test.gd
+- M godot/tests/rendered_frame_smoke_test.gd
+- M godot/tests/upgrade_choice_render_test.gd
 
 ## Affected areas
-- .github
-- play
-- public
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

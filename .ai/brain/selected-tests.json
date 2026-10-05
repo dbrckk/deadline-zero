@@ -1,7 +1,25 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "selected_test_files": [],
-  "commands": [],
+  "selected_test_files": [
+    "core/src/test/java/com/deadlinezero/game/visual/CombatHudLayoutTest.java",
+    "godot/tests/boss_encounter_render_test.gd",
+    "godot/tests/first_playable_run_path_test.gd",
+    "godot/tests/pressure_frame_render_test.gd",
+    "godot/tests/rendered_frame_smoke_test.gd",
+    "godot/tests/smoke_test.gd",
+    "godot/tests/upgrade_choice_render_test.gd"
+  ],
+  "commands": [
+    {
+      "command": "./gradlew test",
+      "purpose": "targeted area fallback",
+      "confidence": "medium",
+      "files": [
+        "core/src/test/java/com/deadlinezero/game/visual/CombatHudLayoutTest.java"
+      ],
+      "note": "Exact Gradle test filters are project-specific; inspect these test files first."
+    }
+  ],
   "fallback": "Use .ai/commands.json or the repository's canonical full validation when no targeted test is selected."
 }
