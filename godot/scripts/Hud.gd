@@ -16,6 +16,7 @@ signal hit_stop_changed(enabled: bool)
 var hp_bar: ProgressBar
 var health_bar: ProgressBar
 var xp_bar: ProgressBar
+var xp_pulse_tween: Tween
 var status_label: Label
 var health_value_label: Label
 var wave_label: Label
@@ -93,6 +94,25 @@ func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float,
     xp_bar.max_value = max(1, next_xp)
     xp_bar.value = xp
     status_label.text = "LV %d   KILLS %d   THREATS %d   %02d:%02d" % [level, kills, threats, int(elapsed) / 60, int(elapsed) % 60]
+
+func pulse_xp_collection(amount: int) -> void:
+    if xp_bar == null:
+        return
+    if xp_pulse_tween != null and xp_pulse_tween.is_valid():
+        xp_pulse_tween.kill()
+    var strength := clampf(float(amount) / 8.0, 0.0, 1.0)
+    xp_bar.modulate = Color(
+        lerpf(0.82, 1.0, strength),
+        1.0,
+        lerpf(0.94, 0.72, strength),
+        1.0
+    )
+    xp_bar.scale = Vector2(1.0, 1.35 + strength * 0.18)
+    xp_pulse_tween = xp_bar.create_tween()
+    xp_pulse_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    xp_pulse_tween.set_parallel(true)
+    xp_pulse_tween.tween_property(xp_bar, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    xp_pulse_tween.tween_property(xp_bar, "modulate", Color.WHITE, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func set_wave(text: String) -> void:
     wave_label.text = text
