@@ -7,6 +7,7 @@ func _initialize() -> void:
     get_root().add_child(root)
 
     var palette_samples := {}
+    var rim_samples := {}
     var shared_grade_shader: Shader
     for palette_kind in ["runner", "charger", "harrier", "regenerator", "brute", "elite", "boss"]:
         var visual := DZAssetLibrary.enemy(palette_kind)
@@ -66,6 +67,7 @@ func _initialize() -> void:
             quit(1)
             return
         palette_samples[palette_kind] = palette_material.get_shader_parameter("body_tint") as Color
+        rim_samples[palette_kind] = float(palette_material.get_shader_parameter("rim_strength"))
         visual.free()
 
     var runner_color: Color = palette_samples["runner"]
@@ -78,6 +80,15 @@ func _initialize() -> void:
         return
     if harrier_color.is_equal_approx(brute_color):
         push_error("Harrier and brute must retain distinct authored palettes")
+        quit(1)
+        return
+
+    if float(rim_samples.get("boss", 0.0)) <= float(rim_samples.get("elite", 0.0)):
+        push_error("Boss shader rim must dominate elite silhouette")
+        quit(1)
+        return
+    if float(rim_samples.get("elite", 0.0)) <= float(rim_samples.get("runner", 0.0)):
+        push_error("Elite shader rim must remain stronger than runner")
         quit(1)
         return
 
@@ -165,6 +176,21 @@ func _initialize() -> void:
                 return
             if boss_visual == null or boss_visual.scale.x < 1.78:
                 push_error("Boss authored body lost premium screen-space mass")
+                quit(1)
+                return
+            var aura := enemy.get_node_or_null("BossThreatAura") as Node3D
+            var aura_inner := aura.get_node_or_null("BossAuraInner") as MeshInstance3D if aura != null else null
+            var aura_outer := aura.get_node_or_null("BossAuraOuter") as MeshInstance3D if aura != null else null
+            if aura == null or aura_inner == null or aura_outer == null:
+                push_error("Boss threat aura lost layered ground presence")
+                quit(1)
+                return
+            if aura_inner.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or aura_outer.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                push_error("Boss threat aura must remain shadow-free")
+                quit(1)
+                return
+            if aura.get_child_count() < 6:
+                push_error("Boss threat aura lost directional ticks")
                 quit(1)
                 return
         enemy.queue_free()
