@@ -61,8 +61,13 @@ func _run_test() -> void:
             push_error("Telegraph ticks must reuse shared geometry for one attack radius")
             quit(1)
             return
-    if tick_count != 4:
-        push_error("Attack telegraph must retain four directional ticks")
+    if tick_count != 8:
+        push_error("Boss telegraph must expose eight premium directional ticks")
+        quit(1)
+        return
+    var inner_ring := enemy.telegraph_visual.get_node_or_null("TelegraphInnerRing") as MeshInstance3D
+    if inner_ring == null or inner_ring.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Boss telegraph must include a shadow-free inner danger ring")
         quit(1)
         return
 
@@ -89,6 +94,10 @@ func _run_test() -> void:
         return
     if enemy.telegraph_visual.scale.x <= 0.42:
         push_error("Telegraph scale did not expand")
+        quit(1)
+        return
+    if absf(enemy.telegraph_visual.rotation.y) <= 0.01:
+        push_error("Boss telegraph ticks did not gain rotational escalation")
         quit(1)
         return
 
