@@ -709,13 +709,13 @@ func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     number.name = "DamageNumber_%d" % Time.get_ticks_usec()
     number.add_to_group("damage_numbers")
     number.text = "%d" % int(round(amount))
-    number.font_size = 34 if critical else (30 if killed else 26)
+    number.font_size = 44 if critical else (38 if killed else 32)
     number.outline_size = 8 if critical or killed else 6
     number.modulate = Color(1.0, 0.72, 0.12) if critical else (Color(1.0, 0.42, 0.16) if killed else Color(0.92, 0.97, 1.0))
     number.outline_modulate = Color(0.02, 0.03, 0.05, 0.96)
     number.billboard = BaseMaterial3D.BILLBOARD_ENABLED
     number.no_depth_test = true
-    number.pixel_size = 0.0045 if critical else (0.0041 if killed else 0.0038)
+    number.pixel_size = 0.0068 if critical else (0.0064 if killed else 0.0060)
     get_tree().current_scene.add_child(number)
     number.global_position = global_position + Vector3(0.0, 1.28, 0.0)
 
