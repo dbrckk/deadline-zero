@@ -22,26 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T17:36:49Z
+Generated: 2026-10-05T17:39:07Z
 
 ### Git
 - Branch: `main`
-- Head: `81194a71b0a8`
-- Commit date: 2026-10-05T19:36:30+02:00
-- Commit: Link release gates to free physical-device QA
+- Head: `af1a32218f60`
+- Commit date: 2026-10-05T19:38:20+02:00
+- Commit: Require live physical Firebase Test Lab targets
 - Tracked files: 981
 
 ### Recently changed files
+- `.github/workflows/godot-firebase-physical-qa.yml`
 - `play/store/RELEASE_READINESS.md`
 - `docs/FREE_ANDROID_DEVICE_QA.md`
-- `.github/workflows/godot-firebase-physical-qa.yml`
 - `.github/workflows/godot-android-first-playable.yml`
-- `play/store/feature-graphic.png`
-- `play/store/phone-screenshots/01-first-playable.png`
-- `play/store/phone-screenshots/02-midrun-pressure.png`
-- `play/store/phone-screenshots/03-boss-encounter.png`
-- `play/store/phone-screenshots/04-upgrade-choice.png`
-- `play/store/phone-screenshots/05-run-end.png`
 
 ### Project signals
 - `build.gradle`

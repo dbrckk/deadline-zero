@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 449052cf477a2f4daa26f3cf966133ab5218899e
-Head: 81194a71b0a8d19acbc737c72e00f82f7da3d696
+Base: 958eb9a695d12c76f837b38fe2ba163840cb0937
+Head: af1a32218f6000228784039a6a92207bd3bac3e9
 
 ## Changed files
-- M play/store/RELEASE_READINESS.md
+- M .github/workflows/godot-firebase-physical-qa.yml
 
 ## Affected areas
-- play
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
