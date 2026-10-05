@@ -4,6 +4,7 @@ extends CharacterBody3D
 signal died(xp_value: int, at: Vector3)
 signal impact(at: Vector3, critical: bool, killed: bool, boss: bool)
 signal health_changed(current: float, maximum: float)
+signal boss_phase_changed(phase: int, at: Vector3)
 
 var target: Node3D
 var kind := "shambler"
@@ -306,6 +307,7 @@ func _update_boss_phase() -> void:
     if next_phase != boss_phase:
         boss_phase = next_phase
         _refresh_boss_presence_style()
+        boss_phase_changed.emit(boss_phase, global_position + Vector3(0.0, 0.78, 0.0))
     else:
         boss_phase = next_phase
     match boss_phase:
