@@ -51,6 +51,18 @@ func _initialize() -> void:
         quit(1)
         return
 
+    hud.set_wave("CINDER SURGE")
+    if hud.current_wave_text != "CINDER SURGE" or hud.wave_transition_tween == null:
+        push_error("Run phase transition did not trigger restrained HUD presentation")
+        quit(1)
+        return
+    var phase_tween := hud.wave_transition_tween
+    hud.set_wave("CINDER SURGE")
+    if hud.wave_transition_tween != phase_tween:
+        push_error("Unchanged wave label retriggered transition animation")
+        quit(1)
+        return
+
     hud.set_health(24.0, 100.0)
     if not hud.low_health_panel.visible:
         push_error("Critical health state must remain immediately visible")
