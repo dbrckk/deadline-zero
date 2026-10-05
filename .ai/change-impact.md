@@ -1,13 +1,14 @@
 # Change impact
 
-Base: 105c61a815dc8143f9fdf2a03d7b61f3d321f406
-Head: ba84163be86dedcdae970d89f07ec46817558174
+Base: b48b236c6cb738596b75a768c1d25b5ee7a19db2
+Head: 177117fe6e6aa0d0b0b98667622824a32b07ad92
 
 ## Changed files
-- M .github/workflows/privacy-pages.yml
+- M godot/scripts/Main.gd
+- M godot/tests/first_playable_run_path_test.gd
 
 ## Affected areas
-- .github
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

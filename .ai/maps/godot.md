@@ -2996,6 +2996,7 @@ var camera_shake_enabled := true
 var hit_stop_enabled := true
 var onboarding_hint_active := true
 var onboarding_hint_left := 4.8
+var debug_perf_probe_clock := 5.0
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -3019,6 +3020,7 @@ const MUSIC_GAME_OVER_DB := -32.0
 const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
 const DIRECTOR_REFRESH_INTERVAL := 0.25
+const DEBUG_PERF_PROBE_INTERVAL := 5.0
 
 func _ready() -> void:
     randomize()
@@ -3067,6 +3069,12 @@ func _ready() -> void:
         _spawn_enemy(String(opening_kind))
 
 func _process(delta: float) -> void:
+    if OS.is_debug_build():
+        debug_perf_probe_clock = maxf(0.0, debug_perf_probe_clock - maxf(delta, 0.0))
+        if debug_perf_probe_clock <= 0.0:
+            debug_perf_probe_clock = DEBUG_PERF_PROBE_INTERVAL
+            _emit_debug_perf_probe()
+
     if hit_freeze_left > 0.0:
         var real_delta := DZCombatFeel.unscaled_delta(delta, Engine.time_scale)
         hit_freeze_left = maxf(0.0, hit_freeze_left - real_delta)
@@ -3107,6 +3115,32 @@ func _process(delta: float) -> void:
         if threat_indicator_refresh_clock <= 0.0:
             threat_indicator_refresh_clock = THREAT_INDICATOR_REFRESH_INTERVAL
             _update_offscreen_threat_indicator()
+
+func _performance_snapshot() -> Dictionary:
+    return {
+        "fps": float(Engine.get_frames_per_second()),
+        "memory_bytes": int(Performance.get_monitor(Performance.MEMORY_STATIC)),
+        "enemies": get_tree().get_node_count_in_group("enemies"),
+        "projectiles": get_tree().get_node_count_in_group("player_projectiles"),
+        "hostile_projectiles": get_tree().get_node_count_in_group("hostile_projectiles"),
+        "xp_orbs": get_tree().get_node_count_in_group("xp_orbs"),
+        "elapsed": elapsed
+    }
+
+func _emit_debug_perf_probe() -> void:
+    var snapshot := _performance_snapshot()
+    print(
+        "DZ_PERF fps=%.1f mem_mb=%.1f enemies=%d projectiles=%d hostile=%d xp=%d elapsed=%.1f"
+        % [
+            float(snapshot["fps"]),
+            float(snapshot["memory_bytes"]) / (1024.0 * 1024.0),
+            int(snapshot["enemies"]),
+            int(snapshot["projectiles"]),
+            int(snapshot["hostile_projectiles"]),
+            int(snapshot["xp_orbs"]),
+            float(snapshot["elapsed"])
+        ]
+    )
 
 func _physics_process(delta: float) -> void:
     if game_over:
@@ -7669,6 +7703,16 @@ func _initialize() -> void:
 
     if main.player == null or main.hud == null or main.camera == null:
         push_error("Run path did not initialize player, HUD and camera")
+        quit(1)
+        return
+    var perf_snapshot := main._performance_snapshot()
+    for key in ["fps", "memory_bytes", "enemies", "projectiles", "hostile_projectiles", "xp_orbs", "elapsed"]:
+        if not perf_snapshot.has(key):
+            push_error("Debug performance snapshot is missing key: %s" % key)
+            quit(1)
+            return
+    if int(perf_snapshot["memory_bytes"]) < 0 or int(perf_snapshot["enemies"]) < 0:
+        push_error("Debug performance snapshot returned invalid counters")
         quit(1)
         return
     if main.hud.onboarding_panel == null or not main.hud.onboarding_panel.visible:

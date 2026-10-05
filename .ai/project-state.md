@@ -22,16 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T17:40:08Z
+Generated: 2026-10-05T17:41:47Z
 
 ### Git
 - Branch: `main`
-- Head: `ba84163be86d`
-- Commit date: 2026-10-05T19:39:33+02:00
-- Commit: Publish privacy policy automatically on site changes
+- Head: `177117fe6e6a`
+- Commit date: 2026-10-05T19:41:18+02:00
+- Commit: Add debug performance telemetry for physical QA
 - Tracked files: 981
 
 ### Recently changed files
+- `godot/scripts/Main.gd`
+- `godot/tests/first_playable_run_path_test.gd`
 - `.github/workflows/privacy-pages.yml`
 - `.github/workflows/godot-firebase-physical-qa.yml`
 - `play/store/RELEASE_READINESS.md`
