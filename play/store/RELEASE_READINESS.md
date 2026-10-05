@@ -21,7 +21,7 @@ These can be proven by repository CI/build tooling:
 - [x] arm64-only Play release architecture contract.
 - [x] Ephemeral-keystore AAB verification workflow for package/signature/ABI evidence.
 - [x] 1920×1080 real-runtime Play screenshot candidate workflow.
-- [x] Authored 3D icon/feature-graphic candidate workflow.
+- [x] Authored vector icon and 3D feature-graphic candidate workflow.
 - [x] Store listing copy aligned with current Godot runtime scope.
 - [x] Godot-specific Data Safety and Play Console declaration contracts.
 - [x] Mobile combat performance safeguards and deterministic runtime tests.
