@@ -714,6 +714,7 @@ func _build_world() -> void:
     _build_service_pylons()
     _build_floor_wear()
     _build_floor_seams()
+    _build_light_pool_decals()
     _build_containment_lanes()
     _build_perimeter_bulkheads()
     _build_authored_barrier_clusters()
@@ -774,6 +775,55 @@ void fragment() {
     var material := ShaderMaterial.new()
     material.shader = shader
     return material
+
+func _build_light_pool_decals() -> void:
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_add, depth_draw_never, cull_disabled;
+
+uniform vec4 tint : source_color = vec4(0.08, 0.45, 0.70, 0.22);
+
+void fragment() {
+    vec2 p = UV * 2.0 - 1.0;
+    float d = length(p);
+    float falloff = pow(1.0 - smoothstep(0.08, 1.0, d), 2.2);
+    ALBEDO = tint.rgb;
+    EMISSION = tint.rgb * falloff * 1.35;
+    ALPHA = falloff * tint.a;
+}
+"""
+
+    var cool_material := ShaderMaterial.new()
+    cool_material.shader = shader
+    cool_material.set_shader_parameter("tint", Color(0.04, 0.46, 0.78, 0.22))
+
+    var warm_material := ShaderMaterial.new()
+    warm_material.shader = shader
+    warm_material.set_shader_parameter("tint", Color(1.0, 0.18, 0.035, 0.20))
+
+    var mesh := QuadMesh.new()
+    mesh.size = Vector2(5.8, 3.4)
+
+    var placements := [
+        {"position": Vector3(-7.4, 0.020, -3.6), "rotation": 14.0, "warm": false},
+        {"position": Vector3( 7.6, 0.020,  3.5), "rotation": -18.0, "warm": false},
+        {"position": Vector3(-13.6, 0.020, -7.8), "rotation": -10.0, "warm": true},
+        {"position": Vector3( 13.8, 0.020, -7.5), "rotation": 12.0, "warm": true},
+        {"position": Vector3(-13.4, 0.020,  8.0), "rotation": 16.0, "warm": true},
+        {"position": Vector3( 13.5, 0.020,  7.9), "rotation": -14.0, "warm": true},
+    ]
+
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var pool := MeshInstance3D.new()
+        pool.name = "ArenaLightPool_%02d" % index
+        pool.mesh = mesh
+        pool.position = placement["position"]
+        pool.rotation_degrees = Vector3(-90.0, float(placement["rotation"]), 0.0)
+        pool.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        pool.material_override = warm_material if bool(placement["warm"]) else cool_material
+        add_child(pool)
 
 func _build_floor_panels() -> void:
     # Broad panels stay dark so the arena floor supports combat silhouettes instead of competing
