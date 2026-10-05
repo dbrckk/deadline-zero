@@ -9,6 +9,13 @@ const RUN_MUSIC_PATH := AUTHORED_AUDIO_ROOT + "music_run_loop.wav"
 const PRESSURE_MUSIC_PATH := AUTHORED_AUDIO_ROOT + "music_pressure_layer.wav"
 const BOSS_STINGER_PATH := AUTHORED_AUDIO_ROOT + "boss_stinger.wav"
 
+const UI_PATHS := {
+    "level_up": AUTHORED_AUDIO_ROOT + "ui_level_up.wav",
+    "upgrade_confirm": AUTHORED_AUDIO_ROOT + "ui_upgrade_confirm.wav",
+    "pause_toggle": AUTHORED_AUDIO_ROOT + "ui_pause_toggle.wav",
+    "game_over": AUTHORED_AUDIO_ROOT + "ui_game_over.wav"
+}
+
 const SHOT_PATHS := {
     "vanguard": AUTHORED_AUDIO_ROOT + "weapon_vanguard.wav",
     "scatter": AUTHORED_AUDIO_ROOT + "weapon_scatter.wav",
@@ -44,6 +51,22 @@ static func authored_shot_stream(profile: String) -> AudioStream:
 static func authored_impact_stream(critical: bool, killed: bool, boss: bool) -> AudioStream:
     var key := "boss" if boss else ("kill" if killed else ("critical" if critical else "hit"))
     return _authored_stream(String(IMPACT_PATHS[key]))
+
+static func ui_stream(key: String) -> AudioStream:
+    var path := String(UI_PATHS.get(key, ""))
+    if not path.is_empty():
+        var authored := _authored_stream(path)
+        if authored != null:
+            return authored
+    match key:
+        "level_up":
+            return _chirp(520.0, 1540.0, 0.28, 0.08, 0.72)
+        "upgrade_confirm":
+            return _chirp(980.0, 1260.0, 0.16, 0.06, 0.62)
+        "game_over":
+            return _chirp(260.0, 52.0, 0.62, 0.24, 0.78)
+        _:
+            return _chirp(420.0, 260.0, 0.10, 0.05, 0.52)
 
 static func shot_stream(profile: String) -> AudioStream:
     var authored := authored_shot_stream(profile)

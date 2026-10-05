@@ -27,6 +27,15 @@ func _initialize() -> void:
         push_error("Combat impacts did not initialize bounded 4-voice polyphony")
         quit(1)
         return
+    if main.ui_audio_voices.size() != 2:
+        push_error("UI/progression audio did not initialize bounded 2-voice polyphony")
+        quit(1)
+        return
+    for voice in main.ui_audio_voices:
+        if voice.bus != "SFX" or voice.process_mode != Node.PROCESS_MODE_ALWAYS:
+            push_error("UI audio voice must stay on SFX and continue through paused overlays")
+            quit(1)
+            return
     if main.music_audio == null or main.music_audio.stream == null:
         push_error("Run path did not initialize authored background music")
         quit(1)

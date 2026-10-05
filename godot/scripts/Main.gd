@@ -45,6 +45,9 @@ var impact_audio: AudioStreamPlayer
 var impact_audio_voices: Array[AudioStreamPlayer] = []
 var impact_voice_index := 0
 var boss_audio: AudioStreamPlayer
+var ui_audio_voices: Array[AudioStreamPlayer] = []
+var ui_audio_index := 0
+var ui_audio_streams := {}
 var music_audio: AudioStreamPlayer
 var music_pressure_audio: AudioStreamPlayer
 var music_duck_tween: Tween
@@ -344,6 +347,7 @@ func _try_offer_banked_level_up() -> bool:
     xp -= xp_next
     level += 1
     director_refresh_clock = 0.0
+    _play_ui_audio("level_up")
     xp_next = int(round(float(xp_next) * 1.24 + 4.0))
     _offer_upgrade()
     return true
@@ -372,6 +376,7 @@ func _on_upgrade_chosen(index: int) -> void:
     if index < 0 or index >= pending_upgrades.size():
         return
     player.apply_upgrade(pending_upgrades[index]["id"])
+    _play_ui_audio("upgrade_confirm")
     pending_upgrades.clear()
     hud.hide_upgrade()
     if _try_offer_banked_level_up():
@@ -492,12 +497,14 @@ func _on_pause_requested() -> void:
     if hud != null:
         hud.hide_touch_stick()
         hud.show_pause_settings()
+    _play_ui_audio("pause_toggle", 0.92)
     get_tree().paused = true
 
 func _on_resume_requested() -> void:
     hud.hide_pause_settings()
     if not game_over and pending_upgrades.is_empty():
         get_tree().paused = false
+        _play_ui_audio("pause_toggle", 1.08)
 
 func _on_player_died() -> void:
     _clear_hit_freeze()
@@ -505,6 +512,7 @@ func _on_player_died() -> void:
     boss_reveal_left = 0.0
     boss_reveal_target = null
     game_over = true
+    _play_ui_audio("game_over")
     touch_id = -1
     if hud != null:
         hud.hide_touch_stick()
@@ -1466,6 +1474,16 @@ func _build_combat_audio() -> void:
         impact_audio_voices.append(voice)
     impact_audio = impact_audio_voices[0]
 
+    ui_audio_voices.clear()
+    for voice_index in range(2):
+        var ui_voice := AudioStreamPlayer.new()
+        ui_voice.name = "UiAudio" if voice_index == 0 else "UiAudio_%d" % voice_index
+        ui_voice.bus = "SFX"
+        ui_voice.volume_db = -8.5
+        ui_voice.process_mode = Node.PROCESS_MODE_ALWAYS
+        add_child(ui_voice)
+        ui_audio_voices.append(ui_voice)
+
     boss_audio = AudioStreamPlayer.new()
     boss_audio.name = "BossStinger"
     boss_audio.bus = "SFX"
@@ -1490,6 +1508,20 @@ func _build_combat_audio() -> void:
     add_child(music_pressure_audio)
     if music_pressure_audio.stream != null:
         music_pressure_audio.play()
+
+func _play_ui_audio(key: String, pitch_scale := 1.0) -> void:
+    if ui_audio_voices.is_empty():
+        return
+    if not ui_audio_streams.has(key):
+        ui_audio_streams[key] = DZCombatAudio.ui_stream(key)
+    var stream := ui_audio_streams.get(key) as AudioStream
+    if stream == null:
+        return
+    var voice := ui_audio_voices[ui_audio_index % ui_audio_voices.size()]
+    ui_audio_index = (ui_audio_index + 1) % ui_audio_voices.size()
+    voice.stream = stream
+    voice.pitch_scale = pitch_scale
+    voice.play()
 
 func _play_impact_audio(critical: bool, killed: bool, boss: bool) -> void:
     if haptics_enabled:

@@ -13,7 +13,11 @@ const EXPECTED := [
     "res://assets/audio/authored/impact_boss.wav",
     "res://assets/audio/authored/boss_stinger.wav",
     "res://assets/audio/authored/music_run_loop.wav",
-    "res://assets/audio/authored/music_pressure_layer.wav"
+    "res://assets/audio/authored/music_pressure_layer.wav",
+    "res://assets/audio/authored/ui_level_up.wav",
+    "res://assets/audio/authored/ui_upgrade_confirm.wav",
+    "res://assets/audio/authored/ui_pause_toggle.wav",
+    "res://assets/audio/authored/ui_game_over.wav"
 ]
 
 func _init() -> void:
@@ -43,6 +47,13 @@ func _init() -> void:
         push_error("Authored pressure music is missing or too short")
         quit(1)
         return
+
+    for key in ["level_up", "upgrade_confirm", "pause_toggle", "game_over"]:
+        var cue := DZCombatAudio.ui_stream(key)
+        if cue == null or cue.get_length() < 0.14:
+            push_error("Authored UI/progression cue is missing or too short: %s" % key)
+            quit(1)
+            return
 
     var boss := DZCombatAudio.boss_stinger()
     if boss == null or boss.get_length() < 2.0:

@@ -44,12 +44,19 @@ func _init() -> void:
     assert(pressure_music != null)
     assert(pressure_music.get_length() >= 11.5)
 
+    for key in ["level_up", "upgrade_confirm", "pause_toggle", "game_over"]:
+        var cue := DZCombatAudio.ui_stream(key)
+        assert(cue != null)
+        assert(cue.get_length() >= 0.14)
+
     var player_source := FileAccess.get_file_as_string("res://scripts/Player.gd")
     var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
     assert(player_source.contains("for voice_index in range(3)"))
     assert(player_source.contains("shot_audio_voices"))
     assert(main_source.contains("for voice_index in range(4)"))
     assert(main_source.contains("impact_audio_voices"))
+    assert(main_source.contains("ui_audio_voices"))
+    assert(main_source.contains("PROCESS_MODE_ALWAYS"))
     assert(main_source.contains("RunMusic"))
     assert(main_source.contains("PressureMusic"))
     assert(main_source.contains("_music_pressure_target_db"))

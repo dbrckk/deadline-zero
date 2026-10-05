@@ -19,4 +19,6 @@ Music: a 12-second loopable dark-industrial base score plus a synchronized 12-se
 
 Boss: a 2.4-second authored encounter stinger.
 
-The generated WAV files are build artifacts and are intentionally git-ignored. Official Godot CI/release workflows run the generator before the first Godot import so the exact deterministic audio is packaged into APK/AAB builds.
+UI/progression: level-up, upgrade confirmation, pause/resume toggle, and game-over cues.
+
+The generator currently produces 17 WAV assets. The generated WAV files are build artifacts and are intentionally git-ignored. Official Godot CI/release workflows run the generator before the first Godot import so the exact deterministic audio is packaged into APK/AAB builds.

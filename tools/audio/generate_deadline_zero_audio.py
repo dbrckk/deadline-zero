@@ -193,6 +193,21 @@ def pressure_music() -> None:
     save_stereo("music_pressure_layer", left, right)
 
 
+def ui_cue(name: str, f0: float, f1: float, seconds: float, noise_mix: float, body: float, seed: int) -> None:
+    samples = exp_chirp(f0, f1, seconds, noise_mix, body, seed)
+    for i in range(len(samples)):
+        t = i / SR
+        if name == "level_up":
+            samples[i] += math.sin(math.tau * (880.0 + 520.0 * min(1.0, t / max(seconds, 1e-4))) * t) * math.exp(-t * 4.8) * 0.18
+        elif name == "upgrade_confirm":
+            samples[i] += math.sin(math.tau * 1320.0 * t) * math.exp(-t * 12.0) * 0.12
+        elif name == "pause_toggle":
+            samples[i] += math.sin(math.tau * 310.0 * t) * math.exp(-t * 18.0) * 0.11
+        elif name == "game_over":
+            samples[i] += math.sin(math.tau * 82.0 * t) * math.exp(-t * 2.8) * 0.22
+    save_mono(f"ui_{name}", samples)
+
+
 def boss_stinger() -> None:
     seconds = 2.4
     frames = int(seconds * SR)
@@ -245,4 +260,8 @@ for index, (name, spec) in enumerate(IMPACTS.items()):
 boss_stinger()
 run_music()
 pressure_music()
-print("Generated 13 original Deadline: Zero WAV assets in", OUT)
+ui_cue("level_up", 520.0, 1540.0, 0.46, 0.16, 0.26, SEED + 1001)
+ui_cue("upgrade_confirm", 980.0, 1260.0, 0.28, 0.12, 0.22, SEED + 1002)
+ui_cue("pause_toggle", 420.0, 260.0, 0.16, 0.10, 0.18, SEED + 1003)
+ui_cue("game_over", 260.0, 52.0, 0.92, 0.30, 0.48, SEED + 1004)
+print("Generated 17 original Deadline: Zero WAV assets in", OUT)
