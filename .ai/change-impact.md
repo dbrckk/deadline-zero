@@ -1,20 +1,17 @@
 # Change impact
 
-Base: 3316187805bba16993325cd1804ba872ba7e02f5
-Head: 700861a13efaf3f3d078417ec7b178e481b0e0c5
+Base: 7c1fe495c60a57e75b9fbfd3e5fb1aa22c412ed3
+Head: d58045da6358822a63198046750575c4b6758650
 
 ## Changed files
-- M godot/assets/audio/authored/README.md
-- M godot/scripts/CombatAudio.gd
-- M godot/scripts/Main.gd
-- M godot/tests/authored_audio_asset_test.gd
-- M godot/tests/combat_audio_feedback_test.gd
-- M godot/tests/first_playable_run_path_test.gd
-- M tools/audio/generate_deadline_zero_audio.py
+- A godot/assets/ui/deadline_zero_adaptive_background.svg
+- A godot/assets/ui/deadline_zero_adaptive_foreground.svg
+- A godot/assets/ui/deadline_zero_adaptive_monochrome.svg
+- M godot/export_presets.cfg
+- M godot/tests/android_play_export_contract_test.gd
 
 ## Affected areas
 - godot
-- tools
 
 ## Related test candidates
 - No direct filename-based test match detected.

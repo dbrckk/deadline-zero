@@ -5863,11 +5863,26 @@ func _initialize() -> void:
         'package/name="Deadline: Zero"',
         'package/signed=true',
         'package/show_as_launcher_app=true',
+        'launcher_icons/main_192x192="res://assets/ui/deadline_zero_icon.svg"',
+        'launcher_icons/adaptive_foreground_432x432="res://assets/ui/deadline_zero_adaptive_foreground.svg"',
+        'launcher_icons/adaptive_background_432x432="res://assets/ui/deadline_zero_adaptive_background.svg"',
+        'launcher_icons/adaptive_monochrome_432x432="res://assets/ui/deadline_zero_adaptive_monochrome.svg"',
         'user_data_backup/allow=false'
     ]
     for token in required_release:
         if not preset_source.contains(token):
             push_error("Android Play export contract missing: %s" % token)
+            quit(1)
+            return
+
+    for icon_path in [
+        "res://assets/ui/deadline_zero_icon.svg",
+        "res://assets/ui/deadline_zero_adaptive_foreground.svg",
+        "res://assets/ui/deadline_zero_adaptive_background.svg",
+        "res://assets/ui/deadline_zero_adaptive_monochrome.svg"
+    ]:
+        if not ResourceLoader.exists(icon_path):
+            push_error("Android launcher icon asset missing: %s" % icon_path)
             quit(1)
             return
 

@@ -22,16 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T12:52:00Z
+Generated: 2026-10-05T12:53:32Z
 
 ### Git
 - Branch: `main`
-- Head: `700861a13efa`
-- Commit date: 2026-10-05T14:51:21+02:00
-- Commit: Add original UI and progression audio cues
-- Tracked files: 961
+- Head: `d58045da6358`
+- Commit date: 2026-10-05T14:53:13+02:00
+- Commit: Add authored Android launcher icon set
+- Tracked files: 964
 
 ### Recently changed files
+- `godot/assets/ui/deadline_zero_adaptive_background.svg`
+- `godot/assets/ui/deadline_zero_adaptive_foreground.svg`
+- `godot/assets/ui/deadline_zero_adaptive_monochrome.svg`
+- `godot/export_presets.cfg`
+- `godot/tests/android_play_export_contract_test.gd`
 - `godot/assets/audio/authored/README.md`
 - `godot/scripts/CombatAudio.gd`
 - `godot/scripts/Main.gd`
@@ -41,7 +46,6 @@ Generated: 2026-10-05T12:52:00Z
 - `tools/audio/generate_deadline_zero_audio.py`
 - `godot/tests/run_end_ux_test.gd`
 - `godot/scripts/Hud.gd`
-- `.github/workflows/godot-verify.yml`
 
 ### Project signals
 - `build.gradle`
