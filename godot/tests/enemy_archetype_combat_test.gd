@@ -10,5 +10,8 @@ func _init() -> void:
     assert(source.contains("target.take_damage(damage)"))
     assert(source.contains("_show_telegraph"))
     assert(source.contains("_spawn_attack_impact"))
+    assert(source.contains("_schedule_boss_aftershocks"))
+    assert(source.contains("BossAftershockWarning"))
+    assert(source.contains("_resolve_boss_aftershock"))
     print("enemy_archetype_combat_test: PASS")
     quit()
