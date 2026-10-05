@@ -14,6 +14,16 @@ func _initialize() -> void:
         push_error("Run path did not initialize player, HUD and camera")
         quit(1)
         return
+    var perf_snapshot := main._performance_snapshot()
+    for key in ["fps", "memory_bytes", "enemies", "projectiles", "hostile_projectiles", "xp_orbs", "elapsed"]:
+        if not perf_snapshot.has(key):
+            push_error("Debug performance snapshot is missing key: %s" % key)
+            quit(1)
+            return
+    if int(perf_snapshot["memory_bytes"]) < 0 or int(perf_snapshot["enemies"]) < 0:
+        push_error("Debug performance snapshot returned invalid counters")
+        quit(1)
+        return
     if main.hud.onboarding_panel == null or not main.hud.onboarding_panel.visible:
         push_error("First-playable did not expose the non-blocking movement hint")
         quit(1)
