@@ -55,6 +55,7 @@ The content is organized as follows:
     godot-android-first-playable.yml
     godot-play-aab-verify.yml
     godot-play-screenshots.yml
+    godot-play-signed-release.yml
     godot-verify.yml
     integrate-environment-candidates.yml
     null-sector-candidate.yml
@@ -2409,6 +2410,171 @@ jobs:
         with:
           name: deadline-zero-play-branding-candidates-${{ github.sha }}
           path: build/play-branding-candidates/*.png
+          if-no-files-found: error
+          retention-days: 14
+````
+
+## File: .github/workflows/godot-play-signed-release.yml
+````yaml
+name: Godot Play Signed Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_code:
+        description: "Google Play version code (must be newer than every prior upload)"
+        required: true
+        type: number
+      version_name:
+        description: "User-visible release version, e.g. 0.1.0"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build-signed-aab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      VERSION_CODE: ${{ inputs.version_code }}
+      VERSION_NAME: ${{ inputs.version_name }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Require protected production signing secrets
+        env:
+          KEYSTORE_B64: ${{ secrets.PLAY_UPLOAD_KEYSTORE_BASE64 }}
+          KEY_ALIAS: ${{ secrets.PLAY_UPLOAD_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.PLAY_UPLOAD_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          test -n "$KEYSTORE_B64"
+          test -n "$KEY_ALIAS"
+          test -n "$KEY_PASSWORD"
+
+      - name: Generate original authored audio
+        run: python3 tools/audio/generate_deadline_zero_audio.py
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+
+      - name: Install Android 16 release toolchain
+        run: |
+          set -euo pipefail
+          sdkmanager             "platform-tools"             "platforms;android-36"             "build-tools;35.0.1"             "cmdline-tools;latest"             "cmake;3.10.2.4988404"             "ndk;28.1.13356709"
+
+      - name: Download Godot 4.7.2 and export templates
+        run: |
+          set -euo pipefail
+          curl -fL --retry 4             https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip             -o /tmp/godot.zip
+          curl -fL --retry 4             https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz             -o /tmp/godot-templates.tpz
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+          rm -rf /tmp/godot-template-unpack
+          mkdir -p /tmp/godot-template-unpack
+          unzip -q /tmp/godot-templates.tpz -d /tmp/godot-template-unpack
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp -R /tmp/godot-template-unpack/templates/. "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+
+      - name: Configure Godot Android SDK paths
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<EOF
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/android_sdk_path = "${ANDROID_HOME}"
+          export/android/java_sdk_path = "${JAVA_HOME}"
+          export/android/shutdown_adb_on_exit = true
+          EOF
+
+      - name: Apply requested release version
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+
+          path = Path("godot/export_presets.cfg")
+          text = path.read_text()
+          marker = '[preset.1.options]'
+          if marker not in text:
+              raise SystemExit("Android Play Release preset options are missing")
+          before, play = text.split(marker, 1)
+          play, n_code = re.subn(r'version/code=\d+', f'version/code={int(os.environ["VERSION_CODE"])}', play, count=1)
+          play, n_name = re.subn(r'version/name="[^"]+"', f'version/name="{os.environ["VERSION_NAME"]}"', play, count=1)
+          if n_code != 1 or n_name != 1:
+              raise SystemExit("Unable to patch Play version exactly once")
+          path.write_text(before + marker + play)
+          PY
+          grep -F "version/code=${VERSION_CODE}" godot/export_presets.cfg
+          grep -F "version/name=\"${VERSION_NAME}\"" godot/export_presets.cfg
+
+      - name: Materialize protected upload keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.PLAY_UPLOAD_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$KEYSTORE_B64" | base64 --decode > /tmp/deadline-zero-play-upload.keystore
+          test -s /tmp/deadline-zero-play-upload.keystore
+          chmod 600 /tmp/deadline-zero-play-upload.keystore
+
+      - name: Import project
+        run: |
+          set -euo pipefail
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64             --headless --path godot --editor --quit
+
+      - name: Export production-signed Play AAB
+        env:
+          GODOT_ANDROID_KEYSTORE_RELEASE_PATH: /tmp/deadline-zero-play-upload.keystore
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: ${{ secrets.PLAY_UPLOAD_KEY_ALIAS }}
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: ${{ secrets.PLAY_UPLOAD_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/godot-play-release
+          AAB="build/godot-play-release/deadline-zero-${VERSION_NAME}-${VERSION_CODE}.aab"
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64             --headless --path godot             --install-android-build-template             --export-release "Android Play Release"             "$(pwd)/$AAB"
+          test -s "$AAB"
+
+      - name: Validate production AAB identity and signing
+        env:
+          KEY_ALIAS: ${{ secrets.PLAY_UPLOAD_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.PLAY_UPLOAD_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          AAB="build/godot-play-release/deadline-zero-${VERSION_NAME}-${VERSION_CODE}.aab"
+          unzip -l "$AAB" | tee build/godot-play-release/aab-contents.txt
+          grep -q 'base/lib/arm64-v8a/' build/godot-play-release/aab-contents.txt
+          ! grep -q 'base/lib/x86_64/' build/godot-play-release/aab-contents.txt
+          ! grep -q 'base/lib/armeabi-v7a/' build/godot-play-release/aab-contents.txt
+          unzip -p "$AAB" base/manifest/AndroidManifest.xml | strings > build/godot-play-release/manifest-strings.txt
+          grep -q 'com.deadlinezero.game' build/godot-play-release/manifest-strings.txt
+          jarsigner -verify "$AAB" | tee build/godot-play-release/jarsigner-verify.txt
+          grep -q 'jar verified' build/godot-play-release/jarsigner-verify.txt
+          keytool -list -v             -keystore /tmp/deadline-zero-play-upload.keystore             -storepass "$KEY_PASSWORD"             -alias "$KEY_ALIAS"             > build/godot-play-release/upload-certificate.txt
+          (cd build/godot-play-release && sha256sum *.aab > SHA256SUMS.txt)
+          (cd build/godot-play-release && sha256sum -c SHA256SUMS.txt)
+
+      - name: Upload signed release evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: deadline-zero-signed-play-aab-${{ inputs.version_name }}-${{ inputs.version_code }}
+          path: |
+            build/godot-play-release/*.aab
+            build/godot-play-release/aab-contents.txt
+            build/godot-play-release/manifest-strings.txt
+            build/godot-play-release/jarsigner-verify.txt
+            build/godot-play-release/upload-certificate.txt
+            build/godot-play-release/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 14
 ````

@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T13:01:09Z
+Generated: 2026-10-05T13:02:07Z
 
 ### Git
 - Branch: `main`
-- Head: `84db34d138b0`
-- Commit date: 2026-10-05T15:00:54+02:00
-- Commit: Polish Play feature graphic composition
-- Tracked files: 965
+- Head: `6c74108b49e5`
+- Commit date: 2026-10-05T15:01:53+02:00
+- Commit: Add protected signed Play release workflow
+- Tracked files: 966
 
 ### Recently changed files
+- `.github/workflows/godot-play-signed-release.yml`
 - `godot/tests/play_feature_graphic_render_test.gd`
 - `docs/STORE_RELEASE.md`
 - `play/store/RELEASE_READINESS.md`
 - `play/store/README.md`
-- `godot/PLAY_RELEASE.md`
 
 ### Project signals
 - `build.gradle`

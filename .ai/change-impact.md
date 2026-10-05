@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 64db35c9bfbe1f108f1a673e7964449c4e9ad0f6
-Head: 84db34d138b0456fd99c42bd3f86cf9e52120f5d
+Base: 7af2ce7849c43c6d47e68adf2df39efc9bfecf10
+Head: 6c74108b49e514013f8ed295bb6c47479dfd690d
 
 ## Changed files
-- M godot/tests/play_feature_graphic_render_test.gd
+- A .github/workflows/godot-play-signed-release.yml
 
 ## Affected areas
-- godot
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.
