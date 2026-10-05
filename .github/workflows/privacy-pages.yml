@@ -20,8 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Configure Pages
+      - name: Configure or enable Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Upload privacy site
         uses: actions/upload-pages-artifact@v4
         with:
