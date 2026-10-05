@@ -1,10 +1,10 @@
 # Change impact
 
-Base: abcb4c89780c7e6524165fea7a879df1533687b5
-Head: f31338227fe27f438902119a9308e4d8ccd89b4d
+Base: c19040d90b501dcb0698ed96378dbbdab44404a7
+Head: d07919ab82960e3652d95784fdeef2258fd7652b
 
 ## Changed files
-- M godot/tests/boss_reveal_camera_test.gd
+- M godot/scripts/Hud.gd
 
 ## Affected areas
 - godot

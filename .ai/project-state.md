@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T12:09:48Z
+Generated: 2026-10-05T12:12:16Z
 
 ### Git
 - Branch: `main`
-- Head: `f31338227fe2`
-- Commit date: 2026-10-05T14:09:14+02:00
-- Commit: Lock premium camera framing contract
-- Tracked files: 960
+- Head: `d07919ab8296`
+- Commit date: 2026-10-05T14:12:01+02:00
+- Commit: Activate game-over backdrop on run end
+- Tracked files: 961
 
 ### Recently changed files
-- `godot/tests/boss_reveal_camera_test.gd`
-- `godot/scripts/Main.gd`
-- `play/store/RELEASE_READINESS.md`
-- `godot/tests/play_icon_render_test.gd`
-- `godot/tests/damage_number_budget_test.gd`
+- `godot/scripts/Hud.gd`
+- `.github/workflows/godot-verify.yml`
+- `godot/tests/run_end_ux_test.gd`
+- `godot/tests/game_over_render_test.gd`
 
 ### Project signals
 - `build.gradle`
