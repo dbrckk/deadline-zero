@@ -20,7 +20,15 @@ The `Godot Play AAB Verify` workflow installs the Godot Gradle build template at
 
 ## Production signing rule
 
-The real Play upload keystore must never be committed to this repository. Production export must supply the release keystore path, alias and password through protected release secrets/environment variables.
+The real Play upload keystore must never be committed to this repository.
+
+The manual `Godot Play Signed Release` workflow expects these protected GitHub secrets:
+
+- `PLAY_UPLOAD_KEYSTORE_BASE64` — base64-encoded upload keystore bytes;
+- `PLAY_UPLOAD_KEY_ALIAS` — upload-key alias;
+- `PLAY_UPLOAD_KEY_PASSWORD` — keystore/key password used by the Godot Android exporter.
+
+The workflow materializes the keystore only inside the ephemeral runner, exports the signed AAB, validates package/ABI/signature evidence, records the certificate details and uploads the release artifact. Signed release jobs are serialized so two production builds cannot run concurrently.
 
 ## Launcher identity
 
