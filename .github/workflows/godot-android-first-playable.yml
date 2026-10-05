@@ -5,7 +5,6 @@ on:
     paths:
       - 'godot/**'
       - 'tools/audio/**'
-      - 'tools/audio/**'
       - '.github/workflows/godot-android-first-playable.yml'
   push:
     branches: [main]
@@ -220,6 +219,42 @@ jobs:
             grep -q 'Godot Engine v4.7.2' build/godot-android-smoke/startup-logcat.txt
             grep -Eq 'Forward Mobile|Vulkan .* Mobile' build/godot-android-smoke/startup-logcat.txt
             python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/first-playable.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"expected landscape diagnostic screenshot, got {w}x{h}"; print(f"GODOT_ANDROID_DIAGNOSTIC_SCREENSHOT {w}x{h} bytes={len(b)}")'
+
+            # Prove a normal Android background/foreground cycle. The process must survive Home
+            # and the Godot activity must resume without an ANR/crash.
+            adb shell pidof com.deadlinezero.godot > build/godot-android-smoke/pid-before-background.txt
+            adb shell input keyevent 3
+            sleep 3
+            adb shell pidof com.deadlinezero.godot > build/godot-android-smoke/pid-background.txt
+            test -s build/godot-android-smoke/pid-background.txt
+            adb shell am start -W -a android.intent.action.MAIN -p com.deadlinezero.godot | tee build/godot-android-smoke/am-resume.txt
+            grep -Eq 'Status: ok|Complete' build/godot-android-smoke/am-resume.txt
+            timeout 30s sh -c 'until adb shell dumpsys activity top 2>/dev/null | grep -m1 "ACTIVITY com.deadlinezero.godot/com.godot.game.GodotApp" >/dev/null; do sleep 1; done'
+            sleep 2
+            adb shell pidof com.deadlinezero.godot > build/godot-android-smoke/pid-after-resume.txt
+            test -s build/godot-android-smoke/pid-after-resume.txt
+            adb logcat -d -v threadtime > build/godot-android-smoke/background-resume-logcat.txt || true
+            ! grep -Eq 'FATAL EXCEPTION|ANR in com\.deadlinezero\.godot|Process: com\.deadlinezero\.godot.*has died' build/godot-android-smoke/background-resume-logcat.txt
+
+            # Prove clean process recreation from Android launcher state. This is intentionally a
+            # force-stop/relaunch contract, not a claim that an in-progress run is restored.
+            adb shell am force-stop com.deadlinezero.godot
+            sleep 2
+            if adb shell pidof com.deadlinezero.godot > build/godot-android-smoke/pid-after-force-stop.txt 2>/dev/null; then
+              test ! -s build/godot-android-smoke/pid-after-force-stop.txt
+            fi
+            adb logcat -c
+            adb shell am start -W -a android.intent.action.MAIN -p com.deadlinezero.godot | tee build/godot-android-smoke/am-relaunch.txt
+            grep -Eq 'Status: ok|Complete' build/godot-android-smoke/am-relaunch.txt
+            timeout 30s sh -c 'until adb shell dumpsys activity top 2>/dev/null | grep -m1 "ACTIVITY com.deadlinezero.godot/com.godot.game.GodotApp" >/dev/null; do sleep 1; done'
+            sleep 4
+            adb shell pidof com.deadlinezero.godot > build/godot-android-smoke/pid-after-relaunch.txt
+            test -s build/godot-android-smoke/pid-after-relaunch.txt
+            adb exec-out screencap -p > build/godot-android-smoke/relaunch.png
+            python3 -c 'import struct; from pathlib import Path; p=Path("build/godot-android-smoke/relaunch.png"); b=p.read_bytes(); assert b[:8] == b"\x89PNG\r\n\x1a\n"; w,h=struct.unpack(">II", b[16:24]); assert w > h, f"relaunch lost landscape contract: {w}x{h}"; print(f"GODOT_ANDROID_RELAUNCH_SCREENSHOT {w}x{h} bytes={len(b)}")'
+            adb logcat -d -v threadtime > build/godot-android-smoke/relaunch-logcat.txt || true
+            ! grep -Eq 'FATAL EXCEPTION|ANR in com\.deadlinezero\.godot|Process: com\.deadlinezero\.godot.*has died' build/godot-android-smoke/relaunch-logcat.txt
+            echo "GODOT_ANDROID_LIFECYCLE_OK background_resume=1 process_relaunch=1"
 
       - name: Upload native Godot startup diagnostics
         uses: actions/upload-artifact@v4
