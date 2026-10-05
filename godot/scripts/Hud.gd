@@ -1114,16 +1114,27 @@ func _style_upgrade_card(index: int, id: String) -> void:
     upgrade_card_panels[index].add_theme_stylebox_override("panel", card_style)
 
     var normal := StyleBoxFlat.new()
-    normal.bg_color = Color(0.010, 0.019, 0.026, 0.94)
-    normal.border_color = Color(accent.r, accent.g, accent.b, 0.34)
+    normal.bg_color = Color(
+        0.026 + accent.r * 0.026,
+        0.036 + accent.g * 0.026,
+        0.046 + accent.b * 0.026,
+        0.98
+    )
+    normal.border_color = Color(accent.r, accent.g, accent.b, 0.46)
     normal.set_border_width_all(1)
+    normal.border_width_top = 2
     normal.corner_radius_top_left = 8
     normal.corner_radius_top_right = 8
     normal.corner_radius_bottom_left = 8
     normal.corner_radius_bottom_right = 8
 
     var hover := normal.duplicate() as StyleBoxFlat
-    hover.bg_color = Color(accent.r * 0.15, accent.g * 0.15, accent.b * 0.15, 0.98)
+    hover.bg_color = Color(
+        0.040 + accent.r * 0.18,
+        0.048 + accent.g * 0.18,
+        0.058 + accent.b * 0.18,
+        0.99
+    )
     hover.border_color = Color(accent.r, accent.g, accent.b, 0.96)
     hover.set_border_width_all(2)
 
