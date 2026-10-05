@@ -428,6 +428,9 @@ func _show_telegraph(radius: float, duration: float) -> void:
     telegraph_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     telegraph_visual.material_override = telegraph_material
 
+    if pending_special == "charge" or pending_special == "harrier_shot":
+        _add_directional_telegraph_lane()
+
     # Threat class changes the ring language without filling the danger area:
     # normal = 4 ticks, elite = 6 ticks, boss = 8 ticks plus a second inner ring.
     var tick_count := 8 if kind == "boss" else (6 if kind == "elite" else 4)
@@ -461,6 +464,29 @@ func _show_telegraph(radius: float, duration: float) -> void:
     tween.tween_property(telegraph_material, "emission_energy_multiplier", 5.8 if kind == "boss" else 4.6, duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.07, 0.008, 0.92 if kind == "boss" else 0.78), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.chain().tween_callback(telegraph_visual.queue_free)
+
+func _add_directional_telegraph_lane() -> void:
+    if telegraph_visual == null or telegraph_material == null:
+        return
+    var delta := attack_target_position - global_position
+    delta.y = 0.0
+    var distance := delta.length()
+    if distance < 0.25:
+        return
+
+    var lane := MeshInstance3D.new()
+    lane.name = "ChargeLane" if pending_special == "charge" else "HarrierAimLane"
+    var lane_mesh := BoxMesh.new()
+    var width := 0.30 if pending_special == "charge" else 0.11
+    lane_mesh.size = Vector3(width, 0.014, distance)
+    lane.mesh = lane_mesh
+    lane.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    lane.material_override = telegraph_material
+    telegraph_visual.add_child(lane)
+
+    var midpoint := global_position.lerp(attack_target_position, 0.5) + Vector3(0.0, 0.006, 0.0)
+    lane.global_position = midpoint
+    lane.rotation.y = atan2(delta.x, delta.z)
 
 static func _telegraph_ring_mesh(radius: float, boss: bool) -> TorusMesh:
     var key := "%.3f|%s" % [radius, "boss" if boss else "normal"]
