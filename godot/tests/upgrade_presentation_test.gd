@@ -29,7 +29,11 @@ func _init() -> void:
         "func _style_upgrade_card",
         "StyleBoxFlat.new()",
         "upgrade_family_labels",
-        "upgrade_detail_labels"
+        "upgrade_detail_labels",
+        "upgrade_card_panels",
+        "UpgradeSubtitle",
+        "shadow_size = 14",
+        "card_style.border_width_top = 4"
     ]
     for token in required_hud:
         if not hud_text.contains(token):

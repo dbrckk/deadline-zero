@@ -22,6 +22,7 @@ var wave_label: Label
 var upgrade_panel: PanelContainer
 var upgrade_buttons: Array[Button] = []
 var upgrade_cards: Array[VBoxContainer] = []
+var upgrade_card_panels: Array[PanelContainer] = []
 var upgrade_family_labels: Array[Label] = []
 var upgrade_title_labels: Array[Label] = []
 var upgrade_detail_labels: Array[Label] = []
@@ -868,52 +869,98 @@ func _build() -> void:
     upgrade_panel = PanelContainer.new()
     upgrade_panel.name = "UpgradePanel"
     upgrade_panel.set_anchors_preset(Control.PRESET_CENTER)
-    upgrade_panel.position = Vector2(-480, -155)
-    upgrade_panel.size = Vector2(960, 310)
+    upgrade_panel.position = Vector2(-535, -190)
+    upgrade_panel.size = Vector2(1070, 380)
     upgrade_panel.visible = false
     root.add_child(upgrade_panel)
+
+    var upgrade_panel_style := StyleBoxFlat.new()
+    upgrade_panel_style.bg_color = Color(0.008, 0.016, 0.024, 0.955)
+    upgrade_panel_style.border_color = Color(0.12, 0.52, 0.72, 0.62)
+    upgrade_panel_style.set_border_width_all(2)
+    upgrade_panel_style.corner_radius_top_left = 12
+    upgrade_panel_style.corner_radius_top_right = 12
+    upgrade_panel_style.corner_radius_bottom_left = 12
+    upgrade_panel_style.corner_radius_bottom_right = 12
+    upgrade_panel_style.shadow_color = Color(0.0, 0.0, 0.0, 0.72)
+    upgrade_panel_style.shadow_size = 14
+    upgrade_panel_style.content_margin_left = 24.0
+    upgrade_panel_style.content_margin_right = 24.0
+    upgrade_panel_style.content_margin_top = 18.0
+    upgrade_panel_style.content_margin_bottom = 20.0
+    upgrade_panel.add_theme_stylebox_override("panel", upgrade_panel_style)
+
     var box := VBoxContainer.new()
-    box.add_theme_constant_override("separation", 18)
+    box.add_theme_constant_override("separation", 12)
     upgrade_panel.add_child(box)
+
     var title := Label.new()
     title.text = "SELECT COMBAT UPGRADE"
     title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     title.add_theme_font_size_override("font_size", 30)
+    title.add_theme_color_override("font_color", Color(0.91, 0.96, 0.99))
     box.add_child(title)
+
+    var subtitle := Label.new()
+    subtitle.name = "UpgradeSubtitle"
+    subtitle.text = "CHOOSE ONE // ADAPT THE BUILD"
+    subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    subtitle.add_theme_font_size_override("font_size", 12)
+    subtitle.add_theme_color_override("font_color", Color(0.36, 0.72, 0.86))
+    box.add_child(subtitle)
+
     var row := HBoxContainer.new()
+    row.name = "UpgradeCardRow"
     row.alignment = BoxContainer.ALIGNMENT_CENTER
-    row.add_theme_constant_override("separation", 18)
+    row.add_theme_constant_override("separation", 16)
     box.add_child(row)
+
     for i in range(3):
+        var card_panel := PanelContainer.new()
+        card_panel.name = "UpgradeCard_%d" % i
+        card_panel.custom_minimum_size = Vector2(316, 245)
+        row.add_child(card_panel)
+        upgrade_card_panels.append(card_panel)
+
         var card := VBoxContainer.new()
-        card.custom_minimum_size = Vector2(280, 190)
-        card.add_theme_constant_override("separation", 5)
-        row.add_child(card)
+        card.custom_minimum_size = Vector2(284, 216)
+        card.add_theme_constant_override("separation", 6)
+        card_panel.add_child(card)
         upgrade_cards.append(card)
+
         var family := Label.new()
         family.text = "UPGRADE"
         family.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        family.add_theme_font_size_override("font_size", 13)
+        family.add_theme_font_size_override("font_size", 12)
         card.add_child(family)
         upgrade_family_labels.append(family)
+
         var button := Button.new()
-        button.custom_minimum_size = Vector2(280, 82)
+        button.name = "UpgradeGlyphButton_%d" % i
+        button.custom_minimum_size = Vector2(284, 90)
         button.text = "◆"
-        button.add_theme_font_size_override("font_size", 38)
+        button.add_theme_font_size_override("font_size", 42)
+        button.focus_mode = Control.FOCUS_ALL
         button.pressed.connect(_on_upgrade_pressed.bind(i))
         card.add_child(button)
         upgrade_buttons.append(button)
+
         var upgrade_title := Label.new()
         upgrade_title.text = "UPGRADE"
         upgrade_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
         upgrade_title.add_theme_font_size_override("font_size", 21)
+        upgrade_title.add_theme_color_override("font_color", Color(0.95, 0.97, 1.0))
         card.add_child(upgrade_title)
         upgrade_title_labels.append(upgrade_title)
+
         var detail := Label.new()
         detail.text = ""
+        detail.custom_minimum_size = Vector2(280, 42)
         detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        detail.add_theme_font_size_override("font_size", 16)
-        detail.modulate = Color(0.76, 0.84, 0.90)
+        detail.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+        detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+        detail.add_theme_font_size_override("font_size", 15)
+        detail.add_theme_color_override("font_color", Color(0.72, 0.82, 0.89))
         card.add_child(detail)
         upgrade_detail_labels.append(detail)
 
@@ -955,21 +1002,51 @@ func _style_upgrade_card(index: int, id: String) -> void:
     var accent := _upgrade_color(id)
     upgrade_family_labels[index].modulate = accent
     upgrade_title_labels[index].modulate = Color.WHITE
+
+    var card_style := StyleBoxFlat.new()
+    card_style.bg_color = Color(
+        0.016 + accent.r * 0.018,
+        0.024 + accent.g * 0.018,
+        0.032 + accent.b * 0.018,
+        0.985
+    )
+    card_style.border_color = Color(accent.r, accent.g, accent.b, 0.70)
+    card_style.set_border_width_all(2)
+    card_style.border_width_top = 4
+    card_style.corner_radius_top_left = 10
+    card_style.corner_radius_top_right = 10
+    card_style.corner_radius_bottom_left = 10
+    card_style.corner_radius_bottom_right = 10
+    card_style.content_margin_left = 14.0
+    card_style.content_margin_right = 14.0
+    card_style.content_margin_top = 12.0
+    card_style.content_margin_bottom = 12.0
+    upgrade_card_panels[index].add_theme_stylebox_override("panel", card_style)
+
     var normal := StyleBoxFlat.new()
-    normal.bg_color = Color(0.035, 0.055, 0.070, 0.98)
-    normal.border_color = Color(accent.r, accent.g, accent.b, 0.72)
-    normal.set_border_width_all(2)
+    normal.bg_color = Color(0.010, 0.019, 0.026, 0.94)
+    normal.border_color = Color(accent.r, accent.g, accent.b, 0.34)
+    normal.set_border_width_all(1)
     normal.corner_radius_top_left = 8
     normal.corner_radius_top_right = 8
     normal.corner_radius_bottom_left = 8
     normal.corner_radius_bottom_right = 8
-    var hover := normal.duplicate()
-    hover.bg_color = Color(accent.r * 0.16, accent.g * 0.16, accent.b * 0.16, 1.0)
-    hover.border_color = accent
+
+    var hover := normal.duplicate() as StyleBoxFlat
+    hover.bg_color = Color(accent.r * 0.15, accent.g * 0.15, accent.b * 0.15, 0.98)
+    hover.border_color = Color(accent.r, accent.g, accent.b, 0.96)
+    hover.set_border_width_all(2)
+
+    var pressed := hover.duplicate() as StyleBoxFlat
+    pressed.bg_color = Color(accent.r * 0.22, accent.g * 0.22, accent.b * 0.22, 1.0)
+
     upgrade_buttons[index].add_theme_stylebox_override("normal", normal)
     upgrade_buttons[index].add_theme_stylebox_override("hover", hover)
-    upgrade_buttons[index].add_theme_stylebox_override("pressed", hover)
+    upgrade_buttons[index].add_theme_stylebox_override("focus", hover)
+    upgrade_buttons[index].add_theme_stylebox_override("pressed", pressed)
     upgrade_buttons[index].add_theme_color_override("font_color", accent)
+    upgrade_buttons[index].add_theme_color_override("font_hover_color", accent.lightened(0.14))
+    upgrade_buttons[index].add_theme_color_override("font_pressed_color", Color.WHITE)
 
 func _on_upgrade_pressed(index: int) -> void:
     upgrade_chosen.emit(index)
