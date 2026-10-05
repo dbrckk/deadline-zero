@@ -182,6 +182,12 @@ func _initialize() -> void:
         return
     main.player.global_position = Vector3.ZERO
 
+    main.player._trigger_weapon_accent_pulse()
+    if main.player.weapon_accent_material == null or main.player.weapon_accent_material.emission_energy_multiplier < 4.0:
+        push_error("Weapon accent did not pulse with shot feedback")
+        quit(1)
+        return
+
     var tactical_rig := main.player.get_node_or_null("TacticalRig") as Node3D
     var tactical_backplate := main.player.get_node_or_null("TacticalRig/TacticalBackplate") as MeshInstance3D
     var tactical_edge_l := main.player.get_node_or_null("TacticalRig/TacticalShoulderEdgeL") as MeshInstance3D
