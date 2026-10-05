@@ -33,7 +33,10 @@ func _init() -> void:
         "upgrade_card_panels",
         "UpgradeSubtitle",
         "shadow_size = 14",
-        "card_style.border_width_top = 4"
+        "card_style.border_width_top = 4",
+        "upgrade_entry_tween",
+        "Tween.TWEEN_PAUSE_PROCESS",
+        "float(i) * 0.040"
     ]
     for token in required_hud:
         if not hud_text.contains(token):
