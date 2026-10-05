@@ -22,16 +22,24 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T13:15:21Z
+Generated: 2026-10-05T13:17:10Z
 
 ### Git
 - Branch: `main`
-- Head: `ac60d154a02a`
-- Commit date: 2026-10-05T15:15:06+02:00
-- Commit: Add non-blocking mobile first-run movement hint
+- Head: `9bf1a26a50da`
+- Commit date: 2026-10-05T15:16:48+02:00
+- Commit: Document remaining privacy hosting gate
 - Tracked files: 979
 
 ### Recently changed files
+- `play/store/PLAY_CONSOLE.md`
+- `play/store/RELEASE_READINESS.md`
+- `.github/workflows/privacy-pages.yml`
+- `play/store/phone-screenshots/01-first-playable.png`
+- `play/store/phone-screenshots/02-midrun-pressure.png`
+- `play/store/phone-screenshots/03-boss-encounter.png`
+- `play/store/phone-screenshots/04-upgrade-choice.png`
+- `play/store/phone-screenshots/05-run-end.png`
 - `godot/scripts/Hud.gd`
 - `godot/scripts/Main.gd`
 - `godot/tests/boss_encounter_render_test.gd`
@@ -39,19 +47,6 @@ Generated: 2026-10-05T13:15:21Z
 - `godot/tests/pressure_frame_render_test.gd`
 - `godot/tests/rendered_frame_smoke_test.gd`
 - `godot/tests/upgrade_choice_render_test.gd`
-- `.github/workflows/privacy-pages.yml`
-- `play/store/PRIVACY_POLICY.md`
-- `public/index.html`
-- `public/privacy/index.html`
-- `play/store/feature-graphic.png`
-- `play/store/icon.png`
-- `play/store/phone-screenshots/01-first-playable.png`
-- `play/store/phone-screenshots/02-midrun-pressure.png`
-- `play/store/phone-screenshots/03-boss-encounter.png`
-- `play/store/phone-screenshots/04-upgrade-choice.png`
-- `play/store/phone-screenshots/05-run-end.png`
-- `.github/workflows/godot-play-screenshots.yml`
-- `godot/PLAY_RELEASE.md`
 
 ### Project signals
 - `build.gradle`

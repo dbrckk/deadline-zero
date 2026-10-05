@@ -3041,11 +3041,6 @@ jobs:
 name: Privacy Policy Pages
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'public/**'
-      - '.github/workflows/privacy-pages.yml'
   workflow_dispatch:
 
 permissions:
