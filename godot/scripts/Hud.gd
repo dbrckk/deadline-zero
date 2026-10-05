@@ -32,6 +32,7 @@ var boss_phase_label: Label
 var boss_hp_fill_style: StyleBoxFlat
 var boss_hp_max := 1.0
 var game_over_panel: PanelContainer
+var game_over_scrim: ColorRect
 var game_over_summary: Label
 var low_health_panel: PanelContainer
 var low_health_label: Label
@@ -663,43 +664,99 @@ func _build() -> void:
     threat_style.corner_radius_bottom_right = 8
     threat_panel.add_theme_stylebox_override("panel", threat_style)
 
+    game_over_scrim = ColorRect.new()
+    game_over_scrim.name = "GameOverScrim"
+    game_over_scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    game_over_scrim.color = Color(0.002, 0.006, 0.010, 0.62)
+    game_over_scrim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    game_over_scrim.visible = false
+    root.add_child(game_over_scrim)
+
     game_over_panel = PanelContainer.new()
+    game_over_panel.name = "GameOverPanel"
     game_over_panel.set_anchors_preset(Control.PRESET_CENTER)
-    game_over_panel.position = Vector2(-270, -120)
-    game_over_panel.size = Vector2(540, 240)
+    game_over_panel.position = Vector2(-310, -148)
+    game_over_panel.size = Vector2(620, 296)
     game_over_panel.visible = false
     root.add_child(game_over_panel)
+
     var game_over_box := VBoxContainer.new()
     game_over_box.alignment = BoxContainer.ALIGNMENT_CENTER
-    game_over_box.add_theme_constant_override("separation", 16)
+    game_over_box.add_theme_constant_override("separation", 12)
     game_over_panel.add_child(game_over_box)
+
+    var game_over_kicker := Label.new()
+    game_over_kicker.name = "GameOverKicker"
+    game_over_kicker.text = "QUARANTINE LINK // OFFLINE"
+    game_over_kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    game_over_kicker.add_theme_font_size_override("font_size", 13)
+    game_over_kicker.modulate = Color(0.42, 0.78, 0.90)
+    game_over_box.add_child(game_over_kicker)
+
     var game_over_title := Label.new()
+    game_over_title.name = "GameOverTitle"
     game_over_title.text = "SIGNAL LOST"
     game_over_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-    game_over_title.add_theme_font_size_override("font_size", 34)
-    game_over_title.modulate = Color(1.0, 0.34, 0.20)
+    game_over_title.add_theme_font_size_override("font_size", 38)
+    game_over_title.add_theme_color_override("font_color", Color(1.0, 0.31, 0.16))
+    game_over_title.add_theme_color_override("font_outline_color", Color(0.10, 0.015, 0.008, 0.95))
+    game_over_title.add_theme_constant_override("outline_size", 3)
     game_over_box.add_child(game_over_title)
+
+    var game_over_break := ColorRect.new()
+    game_over_break.name = "GameOverBreak"
+    game_over_break.custom_minimum_size = Vector2(420, 3)
+    game_over_break.color = Color(1.0, 0.22, 0.075, 0.92)
+    game_over_break.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    game_over_box.add_child(game_over_break)
+
     game_over_summary = Label.new()
+    game_over_summary.name = "GameOverSummary"
     game_over_summary.text = "LEVEL 1   •   KILLS 0   •   00:00"
     game_over_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     game_over_summary.add_theme_font_size_override("font_size", 18)
-    game_over_summary.modulate = Color(0.82, 0.88, 0.92)
+    game_over_summary.modulate = Color(0.82, 0.90, 0.94)
     game_over_box.add_child(game_over_summary)
+
+    var game_over_note := Label.new()
+    game_over_note.name = "GameOverNote"
+    game_over_note.text = "COMBAT LOG SEALED // REDEPLOY WHEN READY"
+    game_over_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    game_over_note.add_theme_font_size_override("font_size", 12)
+    game_over_note.modulate = Color(0.44, 0.55, 0.62)
+    game_over_box.add_child(game_over_note)
+
     var restart_button := Button.new()
     restart_button.name = "RestartButton"
     restart_button.text = "REDEPLOY"
-    restart_button.custom_minimum_size = Vector2(260, 58)
+    restart_button.custom_minimum_size = Vector2(300, 60)
     restart_button.add_theme_font_size_override("font_size", 21)
+    var restart_normal := StyleBoxFlat.new()
+    restart_normal.bg_color = Color(0.020, 0.085, 0.115, 0.98)
+    restart_normal.border_color = Color(0.10, 0.72, 0.92, 0.90)
+    restart_normal.set_border_width_all(2)
+    restart_normal.corner_radius_top_left = 6
+    restart_normal.corner_radius_top_right = 6
+    restart_normal.corner_radius_bottom_left = 6
+    restart_normal.corner_radius_bottom_right = 6
+    var restart_hover := restart_normal.duplicate()
+    restart_hover.bg_color = Color(0.035, 0.16, 0.20, 1.0)
+    restart_hover.border_color = Color(0.28, 0.92, 1.0, 1.0)
+    restart_button.add_theme_stylebox_override("normal", restart_normal)
+    restart_button.add_theme_stylebox_override("hover", restart_hover)
+    restart_button.add_theme_stylebox_override("pressed", restart_hover)
+    restart_button.add_theme_color_override("font_color", Color(0.82, 0.96, 1.0))
     restart_button.pressed.connect(func() -> void: restart_requested.emit())
     game_over_box.add_child(restart_button)
+
     var game_over_style := StyleBoxFlat.new()
-    game_over_style.bg_color = Color(0.018, 0.026, 0.034, 0.97)
-    game_over_style.border_color = Color(1.0, 0.22, 0.10, 0.78)
+    game_over_style.bg_color = Color(0.010, 0.018, 0.025, 0.985)
+    game_over_style.border_color = Color(1.0, 0.24, 0.09, 0.82)
     game_over_style.set_border_width_all(2)
-    game_over_style.corner_radius_top_left = 10
-    game_over_style.corner_radius_top_right = 10
-    game_over_style.corner_radius_bottom_left = 10
-    game_over_style.corner_radius_bottom_right = 10
+    game_over_style.corner_radius_top_left = 12
+    game_over_style.corner_radius_top_right = 12
+    game_over_style.corner_radius_bottom_left = 12
+    game_over_style.corner_radius_bottom_right = 12
     game_over_panel.add_theme_stylebox_override("panel", game_over_style)
 
     boss_panel = PanelContainer.new()
