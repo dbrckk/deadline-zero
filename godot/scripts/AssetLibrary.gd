@@ -178,6 +178,8 @@ static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color
     material.set_shader_parameter("highlight_floor", 0.42)
     material.set_shader_parameter("authored_roughness", source_material.roughness)
     material.set_shader_parameter("authored_metallic", source_material.metallic)
+    material.set_shader_parameter("rim_strength", 0.11)
+    material.set_shader_parameter("rim_power", 3.4)
     if source_material.normal_enabled and source_material.normal_texture != null:
         material.set_shader_parameter("use_normal_map", true)
         material.set_shader_parameter("normal_tex", source_material.normal_texture)
@@ -203,6 +205,8 @@ uniform float highlight_end = 0.82;
 uniform float highlight_floor = 0.46;
 uniform float authored_roughness = 0.84;
 uniform float authored_metallic = 0.02;
+uniform float rim_strength = 0.11;
+uniform float rim_power = 3.4;
 
 void fragment() {
     vec4 authored = texture(albedo_tex, UV);
@@ -212,6 +216,9 @@ void fragment() {
     ALBEDO = base * compression;
     ROUGHNESS = max(authored_roughness, 0.82);
     METALLIC = max(authored_metallic, 0.02);
+    float fresnel = 1.0 - max(dot(normalize(NORMAL), normalize(VIEW)), 0.0);
+    float rim = pow(fresnel, rim_power) * rim_strength;
+    EMISSION = body_tint.rgb * rim;
     ALPHA = authored.a * body_tint.a;
     if (use_normal_map) {
         NORMAL_MAP = texture(normal_tex, UV).rgb;
