@@ -81,6 +81,7 @@ const BOSS_REVEAL_FOV_DELTA := 5.5
 const CAMERA_BASE_HEIGHT := 12.8
 const CAMERA_BASE_TRAIL := 9.15
 const CAMERA_BASE_FOV := 46.0
+const CAMERA_LOOK_AHEAD_MAX := 1.25
 const CAMERA_REVEAL_HEIGHT := 14.0
 const CAMERA_REVEAL_TRAIL := 10.4
 const HUD_REFRESH_INTERVAL := 0.10
@@ -164,8 +165,9 @@ func _process(delta: float) -> void:
             _dismiss_onboarding_hint()
 
     if player and is_instance_valid(player):
-        var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0)
-        var desired := player.global_position + Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL)
+        var movement_look_ahead := _camera_motion_look_ahead(player.velocity)
+        var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0) + movement_look_ahead * 0.72
+        var desired := player.global_position + Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL) + movement_look_ahead * 0.42
         var target_fov := CAMERA_BASE_FOV
 
         if boss_reveal_left > 0.0 and boss_reveal_target != null and is_instance_valid(boss_reveal_target) and not boss_reveal_target.dead:
@@ -190,6 +192,13 @@ func _process(delta: float) -> void:
         if threat_indicator_refresh_clock <= 0.0:
             threat_indicator_refresh_clock = THREAT_INDICATOR_REFRESH_INTERVAL
             _update_offscreen_threat_indicator()
+
+func _camera_motion_look_ahead(velocity: Vector3) -> Vector3:
+    var planar := Vector3(velocity.x, 0.0, velocity.z)
+    var speed := planar.length()
+    if speed <= 0.05:
+        return Vector3.ZERO
+    return planar / speed * minf(speed * 0.24, CAMERA_LOOK_AHEAD_MAX)
 
 func _performance_snapshot() -> Dictionary:
     return {
