@@ -14,7 +14,10 @@ func _init() -> void:
         "director_profile[\"spawn_interval\"]",
         "director_profile[\"batch_size\"]",
         "director_profile[\"max_enemies\"]",
-        "director_profile[\"difficulty\"]"
+        "director_profile[\"difficulty\"]",
+        "BOSS_DEFEAT_RELIEF_DURATION",
+        "MUSIC_PRESSURE_RELIEF_DB",
+        "THREAT NEUTRALIZED // PRESSURE DROPPING"
     ]:
         if main_source.find(required) < 0:
             push_error("Main runtime is not wired to RunDirector: %s" % required)
