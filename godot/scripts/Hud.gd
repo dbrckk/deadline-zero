@@ -32,6 +32,7 @@ var boss_hp_bar: ProgressBar
 var boss_phase_label: Label
 var boss_hp_fill_style: StyleBoxFlat
 var boss_hp_max := 1.0
+var boss_phase_tween: Tween
 var game_over_panel: PanelContainer
 var game_over_scrim: ColorRect
 var game_over_summary: Label
@@ -102,6 +103,8 @@ func show_boss(name: String, maximum: float) -> void:
     boss_hp_bar.max_value = boss_hp_max
     boss_hp_bar.value = boss_hp_max
     boss_phase_label.text = "THREAT LOCK"
+    boss_phase_label.modulate = Color(1.0, 0.62, 0.22)
+    boss_phase_label.scale = Vector2.ONE
     boss_panel.visible = true
 
 func set_boss_health(value: float, maximum: float) -> void:
@@ -110,6 +113,7 @@ func set_boss_health(value: float, maximum: float) -> void:
     boss_hp_bar.value = clamp(value, 0.0, boss_hp_max)
     var ratio := boss_hp_bar.value / boss_hp_max
     boss_phase_label.text = "PHASE III // EXECUTE" if ratio <= 0.30 else ("PHASE II // ENRAGED" if ratio <= 0.65 else "PHASE I // HUNT")
+    boss_phase_label.modulate = Color(1.0, 0.18, 0.18) if ratio <= 0.30 else (Color(1.0, 0.42, 0.18) if ratio <= 0.65 else Color(1.0, 0.68, 0.28))
     if boss_hp_fill_style != null:
         if ratio <= 0.30:
             boss_hp_fill_style.bg_color = Color(0.96, 0.16, 0.055, 0.98)
@@ -122,6 +126,20 @@ func set_boss_health(value: float, maximum: float) -> void:
             boss_hp_fill_style.border_color = Color(1.0, 0.80, 0.30, 0.86)
     if boss_hp_bar.value <= 0.0:
         boss_panel.visible = false
+
+func pulse_boss_phase(phase: int) -> void:
+    if boss_phase_label == null:
+        return
+    if boss_phase_tween != null and boss_phase_tween.is_valid():
+        boss_phase_tween.kill()
+    var phase_color := Color(1.0, 0.44, 0.18) if phase == 2 else Color(1.0, 0.12, 0.15)
+    boss_phase_label.modulate = phase_color.lightened(0.18)
+    boss_phase_label.scale = Vector2(1.10, 1.10)
+    boss_phase_tween = boss_phase_label.create_tween()
+    boss_phase_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    boss_phase_tween.set_parallel(true)
+    boss_phase_tween.tween_property(boss_phase_label, "scale", Vector2.ONE, 0.34).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    boss_phase_tween.tween_property(boss_phase_label, "modulate", phase_color, 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func hide_boss() -> void:
     boss_panel.visible = false
