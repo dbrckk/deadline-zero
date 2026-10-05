@@ -174,10 +174,20 @@ func _initialize() -> void:
 
     var tactical_rig := main.player.get_node_or_null("TacticalRig") as Node3D
     var tactical_backplate := main.player.get_node_or_null("TacticalRig/TacticalBackplate") as MeshInstance3D
+    var tactical_edge_l := main.player.get_node_or_null("TacticalRig/TacticalShoulderEdgeL") as MeshInstance3D
+    var tactical_edge_r := main.player.get_node_or_null("TacticalRig/TacticalShoulderEdgeR") as MeshInstance3D
     var weapon_accent := main.player.get_node_or_null("WeaponAccent") as MeshInstance3D
     var authored_rifle := main.player.get_node_or_null("Rifle") as Node3D
-    if tactical_rig == null or tactical_backplate == null or weapon_accent == null or authored_rifle == null:
-        push_error("Player production presentation is missing tactical rig/rifle identity")
+    if tactical_rig == null or tactical_backplate == null or tactical_edge_l == null or tactical_edge_r == null or weapon_accent == null or authored_rifle == null:
+        push_error("Player production presentation is missing tactical rig/rifle silhouette identity")
+        quit(1)
+        return
+    if tactical_edge_l.material_override != tactical_edge_r.material_override:
+        push_error("Player shoulder silhouette accents must share the same emissive material")
+        quit(1)
+        return
+    if tactical_edge_l.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or tactical_edge_r.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Player emissive silhouette accents must not cast mobile-costly shadows")
         quit(1)
         return
 

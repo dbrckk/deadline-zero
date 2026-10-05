@@ -445,6 +445,8 @@ func _build_tactical_rig() -> void:
     spine.material_override = armor_edge_material
     rig.add_child(spine)
 
+    var shoulder_edge_mesh := BoxMesh.new()
+    shoulder_edge_mesh.size = Vector3(0.045, 0.030, 0.255)
     for side in [-1.0, 1.0]:
         var shoulder := MeshInstance3D.new()
         shoulder.name = "TacticalShoulderL" if side < 0.0 else "TacticalShoulderR"
@@ -456,12 +458,22 @@ func _build_tactical_rig() -> void:
         shoulder.material_override = armor_material
         rig.add_child(shoulder)
 
+        var shoulder_edge := MeshInstance3D.new()
+        shoulder_edge.name = "TacticalShoulderEdgeL" if side < 0.0 else "TacticalShoulderEdgeR"
+        shoulder_edge.mesh = shoulder_edge_mesh
+        shoulder_edge.position = Vector3(side * 0.415, 1.155, 0.015)
+        shoulder_edge.rotation_degrees = shoulder.rotation_degrees
+        shoulder_edge.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        shoulder_edge.material_override = weapon_accent_material
+        rig.add_child(shoulder_edge)
+
     var core := MeshInstance3D.new()
     core.name = "TacticalCore"
     var core_mesh := BoxMesh.new()
     core_mesh.size = Vector3(0.24, 0.025, 0.055)
     core.mesh = core_mesh
     core.position = Vector3(0.0, 1.225, -0.085)
+    core.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     core.material_override = weapon_accent_material
     rig.add_child(core)
 
@@ -472,6 +484,7 @@ func _build_tactical_rig() -> void:
     weapon_accent.mesh = accent_mesh
     weapon_accent.position = Vector3(0.33, 1.015, -0.59)
     weapon_accent.rotation_degrees.x = -8.0
+    weapon_accent.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     weapon_accent.material_override = weapon_accent_material
     add_child(weapon_accent)
 
