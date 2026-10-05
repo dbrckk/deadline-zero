@@ -12,6 +12,8 @@ func _init() -> void:
         ["PHASE III // EXECUTE", "Boss phase-III label is missing"],
         ["boss_hp_bar", "Boss health bar is missing"],
         ["boss_hp_fill_style", "Boss health fill style is missing"],
+        ["func pulse_boss_phase(", "Boss phase transition pulse is missing"],
+        ["boss_phase_tween", "Boss phase transition tween is missing"],
         ["BossHealthBar", "Boss health bar node identity is missing"],
         ["add_theme_stylebox_override(\"fill\"", "Boss health bar fill theme is missing"],
         ["ratio <= 0.30", "Boss phase color threshold is missing"]
