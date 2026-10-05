@@ -117,6 +117,10 @@ func _initialize() -> void:
                 return
         var shadow := enemy.get_node_or_null("EnemyContactShadow") as MeshInstance3D
         var shadow_mesh := shadow.mesh as CylinderMesh if shadow != null else null
+        if enemy.spawn_reveal_tween == null:
+            push_error("Enemy spawn did not initialize premium reveal motion for %s" % kind)
+            quit(1)
+            return
         if shadow == null or shadow_mesh == null:
             push_error("Missing mobile-safe contact shadow for %s" % kind)
             quit(1)
