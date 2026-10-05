@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T11:49:13Z
+Generated: 2026-10-05T11:54:55Z
 
 ### Git
 - Branch: `main`
-- Head: `7de7f15ccf3e`
-- Commit date: 2026-10-05T13:48:50+02:00
-- Commit: Make first-playable QA types explicit
+- Head: `184d01d348fa`
+- Commit date: 2026-10-05T13:54:32+02:00
+- Commit: Add premium brand hierarchy to Play feature graphic
 - Tracked files: 960
 
 ### Recently changed files
+- `godot/tests/play_feature_graphic_render_test.gd`
+- `godot/tests/play_icon_render_test.gd`
 - `godot/tests/first_playable_run_path_test.gd`
 - `.github/workflows/godot-play-screenshots.yml`
 - `.github/workflows/godot-verify.yml`
-- `godot/tests/weapon_presentation_test.gd`
-- `godot/tests/player_targeting_stability_test.gd`
 
 ### Project signals
 - `build.gradle`

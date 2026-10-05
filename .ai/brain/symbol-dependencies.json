@@ -7,16 +7,16 @@
   "symbols": {
     "_initialize": {
       "source": {
-        "file": "godot/tests/first_playable_run_path_test.gd",
-        "start": 5,
-        "end": 125
+        "file": "godot/tests/play_feature_graphic_render_test.gd",
+        "start": 4,
+        "end": 124
       },
       "symbol_dependencies": [
         {
-          "symbol": "DZPlayer",
+          "symbol": "DZAssetLibrary",
           "definitions": [
             {
-              "file": "godot/scripts/Player.gd",
+              "file": "godot/scripts/AssetLibrary.gd",
               "line": 1,
               "kind": "class",
               "language": "gdscript"
@@ -24,40 +24,6 @@
           ],
           "relation": "class_like"
         },
-        {
-          "symbol": "Enemy",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Enemy.java",
-              "line": 18,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        },
-        {
-          "symbol": "Player",
-          "definitions": [
-            {
-              "file": "core/src/main/java/com/deadlinezero/game/entities/Player.java",
-              "line": 16,
-              "kind": "class",
-              "language": "java"
-            }
-          ],
-          "relation": "class_like"
-        }
-      ],
-      "dependency_count": 3
-    },
-    "_count_kind": {
-      "source": {
-        "file": "godot/tests/first_playable_run_path_test.gd",
-        "start": 489,
-        "end": 609
-      },
-      "symbol_dependencies": [
         {
           "symbol": "DZEnemy",
           "definitions": [
@@ -69,9 +35,79 @@
             }
           ],
           "relation": "class_like"
+        },
+        {
+          "symbol": "Viewport",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java",
+              "line": 12,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "_capture",
+          "definitions": [
+            {
+              "file": "godot/tests/play_feature_graphic_render_test.gd",
+              "line": 7,
+              "kind": "function",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "same_file"
         }
       ],
-      "dependency_count": 1
+      "dependency_count": 4
+    },
+    "_capture": {
+      "source": {
+        "file": "godot/tests/play_feature_graphic_render_test.gd",
+        "start": 7,
+        "end": 127
+      },
+      "symbol_dependencies": [
+        {
+          "symbol": "DZAssetLibrary",
+          "definitions": [
+            {
+              "file": "godot/scripts/AssetLibrary.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "DZEnemy",
+          "definitions": [
+            {
+              "file": "godot/scripts/Enemy.gd",
+              "line": 1,
+              "kind": "class",
+              "language": "gdscript"
+            }
+          ],
+          "relation": "class_like"
+        },
+        {
+          "symbol": "Viewport",
+          "definitions": [
+            {
+              "file": "core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java",
+              "line": 12,
+              "kind": "record",
+              "language": "java"
+            }
+          ],
+          "relation": "class_like"
+        }
+      ],
+      "dependency_count": 3
     }
   }
 }
