@@ -81,8 +81,8 @@ func _run_capture() -> void:
         quit(1)
         return
 
-    var boss_screen := scene.camera.unproject_position(boss.global_position + Vector3(0.0, 1.0, 0.0))
-    var viewport_size := get_root().get_visible_rect().size
+    var boss_screen: Vector2 = scene.camera.unproject_position(boss.global_position + Vector3(0.0, 1.0, 0.0))
+    var viewport_size: Vector2 = get_root().get_visible_rect().size
     if scene.camera.is_position_behind(boss.global_position):
         push_error("Boss capture camera placed the boss behind the camera")
         quit(1)
