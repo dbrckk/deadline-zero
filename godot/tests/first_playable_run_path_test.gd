@@ -14,6 +14,16 @@ func _initialize() -> void:
         push_error("Run path did not initialize player, HUD and camera")
         quit(1)
         return
+    var camera_look := main._camera_motion_look_ahead(Vector3(8.0, 0.0, 0.0))
+    if camera_look.length() <= 0.2 or camera_look.length() > main.CAMERA_LOOK_AHEAD_MAX + 0.001:
+        push_error("Camera movement look-ahead is outside premium framing budget")
+        quit(1)
+        return
+    if camera_look.x <= 0.0 or absf(camera_look.z) > 0.001:
+        push_error("Camera movement look-ahead lost travel direction")
+        quit(1)
+        return
+
     var perf_snapshot: Dictionary = main._performance_snapshot()
     for key in ["fps", "memory_bytes", "enemies", "projectiles", "hostile_projectiles", "xp_orbs", "elapsed"]:
         if not perf_snapshot.has(key):
