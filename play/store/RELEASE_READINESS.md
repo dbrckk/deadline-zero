@@ -34,9 +34,9 @@ Legacy libGDX release tooling remains in the repository but does not prove the c
 
 These require real account state, visual approval, licensed Play state, or physical hardware and must not be auto-marked complete:
 
-- [ ] Complete player-controlled run on representative physical Android hardware.
+- [ ] Complete player-controlled run on representative physical Android hardware. Free real-device QA procedure: `docs/FREE_ANDROID_DEVICE_QA.md` (Firebase Test Lab + Samsung Remote Test Lab).
 - [ ] Physical lifecycle/background/foreground/process-death matrix.
-- [ ] Low/mid/high device performance and thermal calibration.
+- [ ] Low/mid/high device performance and thermal calibration. Use the free physical-device matrix in `docs/FREE_ANDROID_DEVICE_QA.md` before paying for a device farm.
 - [ ] Physical accessibility/readability pass across touch targets and combat readability.
 - [ ] Public production privacy-policy URL reviewed in browser. The static site is ready under `public/`; GitHub Pages still requires one-time repository enablement, or an authenticated alternative host.
 - [ ] Play Data Safety form completed against the exact Godot AAB.
