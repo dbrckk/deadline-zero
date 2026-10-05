@@ -34,6 +34,16 @@ func _run_test() -> void:
             push_error("%s projectile did not build core/trail runtime visuals" % profile)
             quit(1)
             return
+        var trail_mesh := trail.mesh as BoxMesh
+        var feedback := DZWeaponProfiles.profile(profile)
+        if trail_mesh == null or trail_mesh.size.z + 0.001 < float(feedback.get("trail_length", 0.0)):
+            push_error("%s projectile trail lost configured premium streak length" % profile)
+            quit(1)
+            return
+        if trail_mesh.size.x < 0.030:
+            push_error("%s projectile trail became too thin for phone-scale readability" % profile)
+            quit(1)
+            return
         if core.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
             push_error("%s projectile core must not cast mobile-unfriendly shadows" % profile)
             quit(1)
