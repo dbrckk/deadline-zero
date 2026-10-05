@@ -28,6 +28,9 @@ func _initialize() -> void:
         return
     var phase1_aura_color: Color = boss.boss_aura_inner_material.emission
 
+    var phase_events: Array[int] = []
+    boss.boss_phase_changed.connect(func(phase: int, _at: Vector3) -> void: phase_events.append(phase))
+
     var phase1_speed: float = boss.move_speed
     var phase1_damage: float = boss.contact_damage
 
@@ -41,6 +44,10 @@ func _initialize() -> void:
         push_error("Boss phase II did not escalate movement and damage")
         quit(1)
         return
+    if phase_events != [2]:
+        push_error("Boss phase II transition event was not emitted exactly once")
+        quit(1)
+        return
 
     var phase2_speed: float = boss.move_speed
     var phase2_damage: float = boss.contact_damage
@@ -52,6 +59,10 @@ func _initialize() -> void:
         return
     if boss.move_speed <= phase2_speed or boss.contact_damage <= phase2_damage:
         push_error("Boss phase III did not escalate movement and damage")
+        quit(1)
+        return
+    if phase_events != [2, 3]:
+        push_error("Boss phase III transition event was not emitted exactly once")
         quit(1)
         return
 
