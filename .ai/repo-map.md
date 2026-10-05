@@ -26189,11 +26189,8 @@ func _build_world() -> void:
     var plane := PlaneMesh.new()
     plane.size = Vector2(72.0, 72.0)
     floor.mesh = plane
-    var floor_mat := StandardMaterial3D.new()
-    floor_mat.albedo_color = Color(0.045, 0.055, 0.060)
-    floor_mat.roughness = 0.91
-    floor_mat.metallic = 0.05
-    floor.material_override = floor_mat
+    floor.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    floor.material_override = _build_quarantine_floor_material()
     add_child(floor)
 
     _build_floor_panels()
@@ -26208,6 +26205,52 @@ func _build_world() -> void:
     _build_authored_world_dressing()
     _build_perimeter_street_lights()
     _build_perimeter_beacons()
+
+func _build_quarantine_floor_material() -> ShaderMaterial:
+    # One lightweight procedural material gives the broad arena plane real surface hierarchy
+    # without shipping another texture or adding draw calls. Geometry overlays still carry
+    # authored seams, grates, wear and hazard identity above this subtle base.
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode diffuse_burley, specular_schlick_ggx;
+
+uniform vec3 base_tone = vec3(0.040, 0.052, 0.060);
+
+float hash21(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+}
+
+void fragment() {
+    vec2 panel_uv = UV * 18.0;
+    vec2 panel_cell = floor(panel_uv);
+    vec2 local_uv = fract(panel_uv);
+    float panel_edge_distance = min(
+        min(local_uv.x, 1.0 - local_uv.x),
+        min(local_uv.y, 1.0 - local_uv.y)
+    );
+    float panel_edge = 1.0 - smoothstep(0.0, 0.030, panel_edge_distance);
+
+    float panel_variation = hash21(panel_cell);
+    float micro_variation = hash21(floor(UV * 240.0));
+    float center_lift = 1.0 - smoothstep(0.12, 0.72, distance(UV, vec2(0.5)));
+
+    vec3 tone = base_tone;
+    tone *= 0.94 + panel_variation * 0.075;
+    tone *= 0.965 + micro_variation * 0.055;
+    tone *= 1.0 - panel_edge * 0.055;
+    tone += vec3(0.004, 0.009, 0.013) * center_lift;
+
+    ALBEDO = tone;
+    ROUGHNESS = clamp(0.84 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05, 0.76, 0.96);
+    METALLIC = 0.055 + panel_variation * 0.045;
+}
+"""
+    var material := ShaderMaterial.new()
+    material.shader = shader
+    return material
 
 func _build_floor_panels() -> void:
     # Broad panels stay dark so the arena floor supports combat silhouettes instead of competing

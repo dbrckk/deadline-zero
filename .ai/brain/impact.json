@@ -1,55 +1,372 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "7de7f15ccf3ec59833f9d095f9b76f46493677df",
-  "head": "184d01d348faa3b29e3a0ab63a1aefb335f8f811",
+  "base": "184d01d348faa3b29e3a0ab63a1aefb335f8f811",
+  "head": "7c6bbf2746e67ddf0422fa635f0e94ceb1240c7c",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "godot/tests/play_feature_graphic_render_test.gd",
+      "path": "godot/scripts/Main.gd",
       "status": "M"
     },
     {
-      "path": "godot/tests/play_icon_render_test.gd",
+      "path": "godot/tests/environment_identity_test.gd",
       "status": "M"
     }
   ],
   "changed_source_files": [
-    "godot/tests/play_feature_graphic_render_test.gd",
-    "godot/tests/play_icon_render_test.gd"
+    "godot/scripts/Main.gd",
+    "godot/tests/environment_identity_test.gd"
   ],
   "impacted_files": [
-    "godot/tests/play_feature_graphic_render_test.gd",
-    "godot/tests/play_icon_render_test.gd"
+    "godot/scripts/Main.gd",
+    "godot/tests/environment_identity_test.gd"
   ],
   "impacted_symbols": [
     {
+      "name": "_ready",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 81
+    },
+    {
+      "name": "_process",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 126
+    },
+    {
+      "name": "_physics_process",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 163
+    },
+    {
+      "name": "_unhandled_input",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 196
+    },
+    {
+      "name": "_touch_input_vector",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 219
+    },
+    {
+      "name": "_music_pressure_target_db",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 231
+    },
+    {
+      "name": "_update_music_pressure",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 246
+    },
+    {
+      "name": "_has_active_boss",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 255
+    },
+    {
+      "name": "query_enemies_near",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 258
+    },
+    {
+      "name": "_clamp_spawn_position",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 261
+    },
+    {
+      "name": "_spawn_position_around_player",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 268
+    },
+    {
+      "name": "_spawn_enemy",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 282
+    },
+    {
+      "name": "_on_boss_health_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 305
+    },
+    {
+      "name": "_on_enemy_impact",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 311
+    },
+    {
+      "name": "_on_enemy_died",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 320
+    },
+    {
+      "name": "_on_xp_collected",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 329
+    },
+    {
+      "name": "_try_offer_banked_level_up",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 333
+    },
+    {
+      "name": "_offer_upgrade",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 343
+    },
+    {
+      "name": "_on_upgrade_chosen",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 363
+    },
+    {
+      "name": "_on_health_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 373
+    },
+    {
+      "name": "_ensure_audio_buses",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 384
+    },
+    {
+      "name": "_set_bus_linear_volume",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 392
+    },
+    {
+      "name": "_load_audio_settings",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 399
+    },
+    {
+      "name": "_save_audio_settings",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 422
+    },
+    {
+      "name": "_on_master_volume_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 436
+    },
+    {
+      "name": "_on_sfx_volume_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 440
+    },
+    {
+      "name": "_on_music_volume_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 444
+    },
+    {
+      "name": "_on_haptics_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 448
+    },
+    {
+      "name": "_on_reduced_flashes_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 452
+    },
+    {
+      "name": "_on_camera_shake_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 460
+    },
+    {
+      "name": "_on_hit_stop_changed",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 466
+    },
+    {
+      "name": "_clear_hit_freeze",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 472
+    },
+    {
+      "name": "_on_pause_requested",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 476
+    },
+    {
+      "name": "_on_resume_requested",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 489
+    },
+    {
+      "name": "_on_player_died",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 494
+    },
+    {
+      "name": "_freeze_combat",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 507
+    },
+    {
+      "name": "_on_restart_requested",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 527
+    },
+    {
+      "name": "_wave_name",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 532
+    },
+    {
+      "name": "_build_world",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 543
+    },
+    {
+      "name": "_build_quarantine_floor_material",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 607
+    },
+    {
+      "name": "_build_floor_panels",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 653
+    },
+    {
+      "name": "_build_floor_service_grates",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 698
+    },
+    {
+      "name": "_build_midfield_inspection_panels",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 760
+    },
+    {
+      "name": "_build_service_pylons",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 826
+    },
+    {
+      "name": "_build_floor_wear",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 896
+    },
+    {
+      "name": "_build_perimeter_bulkheads",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 945
+    },
+    {
+      "name": "_build_authored_barrier_clusters",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 1065
+    },
+    {
+      "name": "_build_authored_world_dressing",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 1089
+    },
+    {
+      "name": "_build_floor_seams",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 1183
+    },
+    {
+      "name": "_build_containment_lanes",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 1201
+    },
+    {
+      "name": "_build_perimeter_street_lights",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 1295
+    },
+    {
+      "name": "_build_perimeter_beacons",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 1412
+    },
+    {
+      "name": "_build_combat_audio",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 1433
+    },
+    {
+      "name": "_play_impact_audio",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 1469
+    },
+    {
+      "name": "_play_boss_stinger",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 1483
+    },
+    {
+      "name": "_update_offscreen_threat_indicator",
+      "kind": "function",
+      "file": "godot/scripts/Main.gd",
+      "line": 1495
+    },
+    {
       "name": "_initialize",
       "kind": "function",
-      "file": "godot/tests/play_feature_graphic_render_test.gd",
+      "file": "godot/tests/environment_identity_test.gd",
       "line": 4
-    },
-    {
-      "name": "_capture",
-      "kind": "function",
-      "file": "godot/tests/play_feature_graphic_render_test.gd",
-      "line": 7
-    },
-    {
-      "name": "_initialize",
-      "kind": "function",
-      "file": "godot/tests/play_icon_render_test.gd",
-      "line": 4
-    },
-    {
-      "name": "_capture",
-      "kind": "function",
-      "file": "godot/tests/play_icon_render_test.gd",
-      "line": 7
     }
   ],
   "selected_tests": [
-    "godot/tests/play_feature_graphic_render_test.gd",
-    "godot/tests/play_icon_render_test.gd"
+    "godot/tests/environment_identity_test.gd"
   ]
 }

@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 7f41ab987c89baa4520d6473b9984d1a6049a996
-Head: 184d01d348faa3b29e3a0ab63a1aefb335f8f811
+Base: ea8fc8b124a1959c7930cbc2880e3691aa3f5810
+Head: 7c6bbf2746e67ddf0422fa635f0e94ceb1240c7c
 
 ## Changed files
-- M godot/tests/play_feature_graphic_render_test.gd
+- M godot/tests/environment_identity_test.gd
 
 ## Affected areas
 - godot
