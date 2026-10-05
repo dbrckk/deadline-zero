@@ -1,13 +1,13 @@
 # Change impact
 
-Base: ed7f51c985433478e75bc60ff4af5a9ad2a4189e
-Head: 5648eb6b4f49be7b6d74ce876e6e9f75b62cfb7d
+Base: 25db63f89477c7aeee0a8ae22e303b65a1b80299
+Head: d5b7fda7f97307115ef9eacc0f6b1ab908cc08cc
 
 ## Changed files
-- M godot/tests/damage_number_budget_test.gd
+- M play/store/RELEASE_READINESS.md
 
 ## Affected areas
-- godot
+- play
 
 ## Related test candidates
 - No direct filename-based test match detected.

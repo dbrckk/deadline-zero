@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T12:03:12Z
+Generated: 2026-10-05T12:08:08Z
 
 ### Git
 - Branch: `main`
-- Head: `5648eb6b4f49`
-- Commit date: 2026-10-05T14:02:44+02:00
-- Commit: Test critical damage number screen scale
+- Head: `d5b7fda7f973`
+- Commit date: 2026-10-05T14:07:50+02:00
+- Commit: Align release matrix with vector Play icon
 - Tracked files: 960
 
 ### Recently changed files
+- `play/store/RELEASE_READINESS.md`
+- `godot/tests/play_icon_render_test.gd`
 - `godot/tests/damage_number_budget_test.gd`
 - `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
-- `godot/scripts/AssetLibrary.gd`
-- `godot/tests/first_playable_run_path_test.gd`
 
 ### Project signals
 - `build.gradle`
