@@ -59,9 +59,11 @@ func _run_capture() -> void:
         quit(1)
         return
 
-    boss.global_position = Vector3(0.0, 0.0, -6.6)
-    runner.global_position = Vector3(-4.6, 0.0, -1.6)
-    elite.global_position = Vector3(4.7, 0.0, -1.8)
+    # Keep the encounter hero readable below the boss HUD instead of hiding its face/body
+    # directly behind the health panel in Store captures.
+    boss.global_position = Vector3(3.2, 0.0, 2.6)
+    runner.global_position = Vector3(-4.4, 0.0, 2.2)
+    elite.global_position = Vector3(-3.3, 0.0, -2.0)
     boss.health = boss.max_health * 0.72
     boss.health_changed.emit(boss.health, boss.max_health)
 
@@ -91,8 +93,8 @@ func _run_capture() -> void:
         push_error("Boss capture framing pushed the boss outside the central readable zone")
         quit(1)
         return
-    if boss_screen.y < viewport_size.y * 0.18 or boss_screen.y > viewport_size.y * 0.82:
-        push_error("Boss capture framing pushed the boss outside the vertical readable zone")
+    if boss_screen.y < viewport_size.y * 0.32 or boss_screen.y > viewport_size.y * 0.82:
+        push_error("Boss capture framing must keep the boss below its HUD and inside the readable zone")
         quit(1)
         return
 
