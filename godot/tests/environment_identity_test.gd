@@ -46,6 +46,24 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var ambient_motes := scene.get_node_or_null("AmbientMotes") as GPUParticles3D
+    if ambient_motes == null:
+        push_error("Quarantine arena lost subtle atmospheric depth motes")
+        quit(1)
+        return
+    if ambient_motes.amount > 32 or ambient_motes.lifetime > 6.0:
+        push_error("Ambient motes exceeded mobile-safe particle budget")
+        quit(1)
+        return
+    if ambient_motes.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Ambient motes must never cast dynamic shadows")
+        quit(1)
+        return
+    if not ambient_motes.draw_pass_1 is QuadMesh:
+        push_error("Ambient motes must remain one lightweight billboard draw pass")
+        quit(1)
+        return
+
     var barrier_count := 0
     var lane_count := 0
     var arena_boundary_count := 0
