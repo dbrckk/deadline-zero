@@ -426,10 +426,11 @@ func _show_telegraph(radius: float, duration: float) -> void:
     telegraph_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     telegraph_visual.material_override = telegraph_material
 
-    # Four short ticks make the danger radius readable under bodies/projectiles without filling
-    # the entire floor area with an opaque disk.
-    for tick_index in range(4):
-        var angle := TAU * float(tick_index) / 4.0
+    # Threat class changes the ring language without filling the danger area:
+    # normal = 4 ticks, elite = 6 ticks, boss = 8 ticks plus a second inner ring.
+    var tick_count := 8 if kind == "boss" else (6 if kind == "elite" else 4)
+    for tick_index in range(tick_count):
+        var angle := TAU * float(tick_index) / float(tick_count)
         var tick := MeshInstance3D.new()
         tick.name = "TelegraphTick_%d" % tick_index
         tick.mesh = _telegraph_tick_mesh(radius)
@@ -439,10 +440,22 @@ func _show_telegraph(radius: float, duration: float) -> void:
         tick.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         telegraph_visual.add_child(tick)
 
+    if kind == "boss":
+        var inner_ring := MeshInstance3D.new()
+        inner_ring.name = "TelegraphInnerRing"
+        inner_ring.mesh = _telegraph_ring_mesh(radius * 0.48, true)
+        inner_ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        inner_ring.material_override = telegraph_material
+        telegraph_visual.add_child(inner_ring)
+
     var tween := telegraph_visual.create_tween()
     tween.set_parallel(true)
     telegraph_visual.scale = Vector3(0.42, 1.0, 0.42)
     tween.tween_property(telegraph_visual, "scale", Vector3.ONE, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    if kind == "boss":
+        tween.tween_property(telegraph_visual, "rotation:y", PI * 0.25, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    elif kind == "elite":
+        tween.tween_property(telegraph_visual, "rotation:y", PI / 6.0, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     tween.tween_property(telegraph_material, "emission_energy_multiplier", 5.8 if kind == "boss" else 4.6, duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.07, 0.008, 0.92 if kind == "boss" else 0.78), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.chain().tween_callback(telegraph_visual.queue_free)
