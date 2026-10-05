@@ -1096,7 +1096,6 @@ func _build_boss_presence() -> void:
     boss_aura_inner = MeshInstance3D.new()
     boss_aura_inner.name = "BossAuraInner"
     boss_aura_inner.mesh = _telegraph_ring_mesh(1.20, true)
-    boss_aura_inner.rotation_degrees.x = 90.0
     boss_aura_inner.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     boss_aura_inner.material_override = boss_aura_inner_material
     boss_aura_root.add_child(boss_aura_inner)
@@ -1104,7 +1103,6 @@ func _build_boss_presence() -> void:
     boss_aura_outer = MeshInstance3D.new()
     boss_aura_outer.name = "BossAuraOuter"
     boss_aura_outer.mesh = _telegraph_ring_mesh(1.68, true)
-    boss_aura_outer.rotation_degrees.x = 90.0
     boss_aura_outer.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     boss_aura_outer.material_override = boss_aura_outer_material
     boss_aura_root.add_child(boss_aura_outer)
