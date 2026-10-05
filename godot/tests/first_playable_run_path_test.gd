@@ -509,6 +509,21 @@ func _initialize() -> void:
         quit(1)
         return
 
+    main._on_enemy_impact(Vector3.ZERO, false, true, true)
+    if main.boss_defeat_relief_left < main.BOSS_DEFEAT_RELIEF_DURATION - 0.01:
+        push_error("Boss kill did not arm reward relief beat")
+        quit(1)
+        return
+    if main._wave_name() != "THREAT NEUTRALIZED // PRESSURE DROPPING":
+        push_error("Boss kill did not expose threat-neutralized run banner")
+        quit(1)
+        return
+    if not is_equal_approx(main._music_pressure_target_db(), main.MUSIC_PRESSURE_RELIEF_DB):
+        push_error("Boss kill did not temporarily drop pressure music layer")
+        quit(1)
+        return
+    main.boss_defeat_relief_left = 0.0
+
     var projectile := PROJECTILE_SCRIPT.new()
     main.add_child(projectile)
     projectile.velocity = Vector3(8.0, 0.0, 0.0)
