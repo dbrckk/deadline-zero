@@ -1,14 +1,10 @@
 # Change impact
 
-Base: 7c1fe495c60a57e75b9fbfd3e5fb1aa22c412ed3
-Head: d58045da6358822a63198046750575c4b6758650
+Base: 260bf2572d3eb591862fd69830fa91e34468a8c4
+Head: 68baf41fa92a03c9758e46a5fe179f7efb89b306
 
 ## Changed files
-- A godot/assets/ui/deadline_zero_adaptive_background.svg
-- A godot/assets/ui/deadline_zero_adaptive_foreground.svg
-- A godot/assets/ui/deadline_zero_adaptive_monochrome.svg
-- M godot/export_presets.cfg
-- M godot/tests/android_play_export_contract_test.gd
+- M godot/tests/play_feature_graphic_render_test.gd
 
 ## Affected areas
 - godot
