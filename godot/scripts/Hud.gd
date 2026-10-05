@@ -20,6 +20,9 @@ var xp_pulse_tween: Tween
 var status_label: Label
 var health_value_label: Label
 var wave_label: Label
+var wave_panel: PanelContainer
+var wave_transition_tween: Tween
+var current_wave_text := ""
 var upgrade_panel: PanelContainer
 var upgrade_buttons: Array[Button] = []
 var upgrade_cards: Array[VBoxContainer] = []
@@ -116,7 +119,29 @@ func pulse_xp_collection(amount: int) -> void:
     xp_pulse_tween.tween_property(xp_bar, "modulate", Color.WHITE, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func set_wave(text: String) -> void:
+    if wave_label == null:
+        return
+    if text == current_wave_text:
+        return
+    current_wave_text = text
     wave_label.text = text
+    _pulse_wave_transition(text)
+
+func _pulse_wave_transition(text: String) -> void:
+    if wave_panel == null or wave_label == null:
+        return
+    if wave_transition_tween != null and wave_transition_tween.is_valid():
+        wave_transition_tween.kill()
+    var urgent := text.contains("BOSS") or text.contains("OVERRUN")
+    var accent := Color(1.0, 0.34, 0.12) if urgent else Color(0.22, 0.76, 0.94)
+    wave_panel.pivot_offset = wave_panel.size * 0.5
+    wave_panel.scale = Vector2(0.94, 0.94)
+    wave_label.modulate = accent.lightened(0.16)
+    wave_transition_tween = wave_panel.create_tween()
+    wave_transition_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    wave_transition_tween.set_parallel(true)
+    wave_transition_tween.tween_property(wave_panel, "scale", Vector2.ONE, 0.24).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    wave_transition_tween.tween_property(wave_label, "modulate", Color(0.90, 0.95, 0.98), 0.36).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func show_boss(name: String, maximum: float) -> void:
     boss_hp_max = max(1.0, maximum)
@@ -532,7 +557,7 @@ func _build() -> void:
     status_label.modulate = Color(0.82, 0.90, 0.94)
     vital_stack.add_child(status_label)
 
-    var wave_panel := PanelContainer.new()
+    wave_panel = PanelContainer.new()
     wave_panel.name = "WavePanel"
     wave_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
     wave_panel.position = Vector2(-170, 18)
