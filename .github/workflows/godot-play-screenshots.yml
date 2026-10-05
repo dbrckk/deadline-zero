@@ -184,8 +184,7 @@ jobs:
           git fetch origin main
 
           changed_since_capture="$(git diff --name-only "${GITHUB_SHA}"..origin/main || true)"
-          unsafe_changes="$(printf '%s\n' "$changed_since_capture" | grep -v '^\.ai/' | grep -v '^
- || true)"
+          unsafe_changes="$(printf '%s\n' "$changed_since_capture" | grep -Ev '^(\.ai/|docs/|play/store/.*\.md$|godot/PLAY_RELEASE\.md$|\.github/workflows/godot-play-signed-release\.yml$|$)' || true)"
           if [ -n "$unsafe_changes" ]; then
             echo "Main advanced with runtime/store-relevant changes; refusing stale asset promotion:"
             printf '%s\n' "$unsafe_changes"
