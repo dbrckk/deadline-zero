@@ -48,7 +48,7 @@ jobs:
             source_png="$2"
             target_png="$3"
             rm -f "$source_png"
-            LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a --server-args="-screen 0 1920x1080x24" \
+            timeout 150s env LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a --server-args="-screen 0 1920x1080x24" \
               /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
               --path godot \
               --resolution 1920x1080 \
@@ -92,13 +92,13 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/play-branding-candidates
-          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a --server-args="-screen 0 1280x720x24" \
+          timeout 150s env LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a --server-args="-screen 0 1280x720x24" \
             /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --path godot \
             --rendering-method gl_compatibility \
             --audio-driver Dummy \
             --script res://tests/play_icon_render_test.gd
-          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a --server-args="-screen 0 1280x720x24" \
+          timeout 150s env LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a --server-args="-screen 0 1280x720x24" \
             /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
             --path godot \
             --rendering-method gl_compatibility \
