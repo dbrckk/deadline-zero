@@ -34,6 +34,25 @@ func _initialize() -> void:
         push_error("Debug performance snapshot returned invalid counters")
         quit(1)
         return
+    main.player.velocity = Vector3.ZERO
+    var acceleration_step := main.player._smoothed_movement_velocity(Vector2.RIGHT, 1.0 / 60.0)
+    if acceleration_step.x <= 0.0 or acceleration_step.x >= main.player.move_speed:
+        push_error("Player movement lost short premium acceleration ramp")
+        quit(1)
+        return
+    main.player.velocity = Vector3(main.player.move_speed, 0.0, 0.0)
+    var braking_step := main.player._smoothed_movement_velocity(Vector2.ZERO, 1.0 / 60.0)
+    if braking_step.x <= 0.0 or braking_step.x >= main.player.move_speed:
+        push_error("Player movement braking no longer decelerates smoothly")
+        quit(1)
+        return
+    main.player.velocity = Vector3(main.player.move_speed, 0.0, 0.0)
+    var turn_step := main.player._smoothed_movement_velocity(Vector2.LEFT, 1.0 / 60.0)
+    if turn_step.x >= braking_step.x:
+        push_error("Player direction reversal is not more responsive than passive braking")
+        quit(1)
+        return
+    main.player.velocity = Vector3.ZERO
     if main.hud.onboarding_panel == null or not main.hud.onboarding_panel.visible:
         push_error("First-playable did not expose the non-blocking movement hint")
         quit(1)
