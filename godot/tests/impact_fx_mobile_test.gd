@@ -96,5 +96,18 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var projectile := DZProjectile.new()
+    projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(projectile)
+    current_scene = null
+    var children_before := root.get_child_count()
+    projectile._impact(false, projectile.global_position)
+    await process_frame
+    if root.get_child_count() <= children_before:
+        push_error("Projectile impact FX did not fall back to projectile parent without current_scene")
+        quit(1)
+        return
+    current_scene = root
+
     print("Deadline Zero mobile-safe impact FX: OK")
     quit(0)
