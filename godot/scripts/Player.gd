@@ -49,6 +49,9 @@ const TARGET_REFRESH_INTERVAL := 0.08
 const TARGET_SWITCH_RATIO := 0.78
 const TARGET_ACQUIRE_RADIUS := 18.0
 const ARENA_HALF_EXTENT := 30.0
+const MOVE_ACCELERATION := 46.0
+const MOVE_DECELERATION := 62.0
+const MOVE_TURN_ACCELERATION := 78.0
 
 func _ready() -> void:
     add_to_group("player")
@@ -81,7 +84,7 @@ func _physics_process(delta: float) -> void:
     if input.length() > 1.0:
         input = input.normalized()
 
-    velocity = Vector3(input.x, 0.0, input.y) * move_speed
+    velocity = _smoothed_movement_velocity(input, delta)
     move_and_slide()
     _constrain_to_arena()
     if hit_reaction_left <= 0.0:
@@ -97,6 +100,17 @@ func _physics_process(delta: float) -> void:
         if fire_clock <= 0.0:
             _fire_at(target)
             fire_clock = fire_interval
+
+func _smoothed_movement_velocity(input: Vector2, delta: float) -> Vector3:
+    var desired := Vector2(input.x, input.y) * move_speed
+    var current := Vector2(velocity.x, velocity.z)
+    var rate := MOVE_ACCELERATION
+    if input.length_squared() <= 0.0001:
+        rate = MOVE_DECELERATION
+    elif current.length_squared() > 0.0001 and current.dot(desired) < 0.0:
+        rate = MOVE_TURN_ACCELERATION
+    var next := current.move_toward(desired, rate * maxf(delta, 0.0))
+    return Vector3(next.x, 0.0, next.y)
 
 func _pressure_target(fallback: DZEnemy) -> DZEnemy:
     if nearest_threat != null:
