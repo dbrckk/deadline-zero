@@ -22,21 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T13:02:07Z
+Generated: 2026-10-05T13:08:22Z
 
 ### Git
 - Branch: `main`
-- Head: `6c74108b49e5`
-- Commit date: 2026-10-05T15:01:53+02:00
-- Commit: Add protected signed Play release workflow
-- Tracked files: 966
+- Head: `186a31e19c30`
+- Commit date: 2026-10-05T15:08:08+02:00
+- Commit: Fix safe Store asset promotion filter
+- Tracked files: 967
 
 ### Recently changed files
+- `.github/workflows/godot-play-screenshots.yml`
+- `godot/PLAY_RELEASE.md`
 - `.github/workflows/godot-play-signed-release.yml`
-- `godot/tests/play_feature_graphic_render_test.gd`
-- `docs/STORE_RELEASE.md`
-- `play/store/RELEASE_READINESS.md`
-- `play/store/README.md`
+- `play/store/VISUAL_APPROVAL.md`
 
 ### Project signals
 - `build.gradle`

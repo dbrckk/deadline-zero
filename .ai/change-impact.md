@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 7af2ce7849c43c6d47e68adf2df39efc9bfecf10
-Head: 6c74108b49e514013f8ed295bb6c47479dfd690d
+Base: dd43a9f9dc72980ebfe8ecf8ee9a119d17ee7f79
+Head: 186a31e19c30b0b0a12db445ba1b232d20395cf3
 
 ## Changed files
-- A .github/workflows/godot-play-signed-release.yml
+- M .github/workflows/godot-play-screenshots.yml
 
 ## Affected areas
 - .github

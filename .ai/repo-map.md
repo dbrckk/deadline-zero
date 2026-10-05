@@ -2291,6 +2291,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   capture:
     runs-on: ubuntu-24.04
@@ -2412,6 +2415,64 @@ jobs:
           path: build/play-branding-candidates/*.png
           if-no-files-found: error
           retention-days: 14
+
+      - name: Promote validated Play Store assets
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+
+          mkdir -p play/store/phone-screenshots
+          cp build/play-branding-candidates/icon-candidate.png play/store/icon.png
+          cp build/play-branding-candidates/feature-graphic-candidate.png play/store/feature-graphic.png
+          rm -f play/store/phone-screenshots/*.png
+          cp build/play-store-candidates/*.png play/store/phone-screenshots/
+
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+
+          expected = {
+              Path("play/store/icon.png"): (512, 512),
+              Path("play/store/feature-graphic.png"): (1024, 500),
+          }
+          for path, dims in expected.items():
+              data = path.read_bytes()
+              assert data[:8] == b"\x89PNG\r\n\x1a\n", f"{path} is not PNG"
+              width, height = struct.unpack(">II", data[16:24])
+              assert (width, height) == dims, f"{path} has unexpected dimensions {width}x{height}"
+
+          shots = sorted(Path("play/store/phone-screenshots").glob("*.png"))
+          assert len(shots) == 5, f"expected 5 promoted screenshots, got {len(shots)}"
+          for path in shots:
+              data = path.read_bytes()
+              width, height = struct.unpack(">II", data[16:24])
+              assert (width, height) == (1920, 1080), f"{path} is {width}x{height}"
+          PY
+
+          git config user.name "deadline-zero-ci"
+          git config user.email "actions@users.noreply.github.com"
+          git add play/store/icon.png play/store/feature-graphic.png play/store/phone-screenshots
+
+          if git diff --cached --quiet; then
+            echo "Validated Store assets already match the generated runtime captures."
+            exit 0
+          fi
+
+          git commit -m "chore(store): promote validated Godot listing assets [skip render]"
+          git fetch origin main
+
+          changed_since_capture="$(git diff --name-only "${GITHUB_SHA}"..origin/main || true)"
+          unsafe_changes="$(printf '%s\n' "$changed_since_capture" | grep -Ev '^(\.ai/|docs/|play/store/.*\.md$|godot/PLAY_RELEASE\.md$|\.github/workflows/godot-play-signed-release\.yml$|$)' || true)"
+          if [ -n "$unsafe_changes" ]; then
+            echo "Main advanced with runtime/store-relevant changes; refusing stale asset promotion:"
+            printf '%s\n' "$unsafe_changes"
+            exit 0
+          fi
+
+          if [ "$(git rev-parse origin/main)" != "${GITHUB_SHA}" ]; then
+            git rebase origin/main
+          fi
+          git push origin HEAD:main
 ````
 
 ## File: .github/workflows/godot-play-signed-release.yml
@@ -2432,6 +2493,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: godot-play-signed-release
+  cancel-in-progress: false
 
 jobs:
   build-signed-aab:
