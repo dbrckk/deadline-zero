@@ -52,6 +52,8 @@ const ARENA_HALF_EXTENT := 30.0
 const MOVE_ACCELERATION := 46.0
 const MOVE_DECELERATION := 62.0
 const MOVE_TURN_ACCELERATION := 78.0
+const MOVE_LEAN_ROLL_DEGREES := 4.2
+const MOVE_LEAN_PITCH_DEGREES := 2.4
 
 func _ready() -> void:
     add_to_group("player")
@@ -87,6 +89,7 @@ func _physics_process(delta: float) -> void:
     velocity = _smoothed_movement_velocity(input, delta)
     move_and_slide()
     _constrain_to_arena()
+    _update_movement_lean(delta)
     if hit_reaction_left <= 0.0:
         _update_authored_animation()
 
@@ -112,6 +115,32 @@ func _smoothed_movement_velocity(input: Vector2, delta: float) -> Vector3:
     var next := current.move_toward(desired, rate * maxf(delta, 0.0))
     return Vector3(next.x, 0.0, next.y)
 
+func _movement_lean_target() -> Vector2:
+    if move_speed <= 0.001 or velocity.length_squared() <= 0.0025:
+        return Vector2.ZERO
+    var local_velocity := global_transform.basis.inverse() * Vector3(velocity.x, 0.0, velocity.z)
+    var strafe := clampf(local_velocity.x / move_speed, -1.0, 1.0)
+    var forward := clampf(-local_velocity.z / move_speed, -1.0, 1.0)
+    return Vector2(
+        deg_to_rad(forward * MOVE_LEAN_PITCH_DEGREES),
+        deg_to_rad(-strafe * MOVE_LEAN_ROLL_DEGREES)
+    )
+
+func _update_movement_lean(delta: float) -> void:
+    var visual := get_node_or_null("Visual") as Node3D
+    if visual == null:
+        return
+    var lean := _movement_lean_target()
+    var blend := 1.0 - exp(-maxf(delta, 0.0) * 12.0)
+    visual.rotation.x = lerp_angle(visual.rotation.x, lean.x, blend)
+    visual.rotation.z = lerp_angle(visual.rotation.z, lean.y, blend)
+
+func _reset_movement_lean() -> void:
+    var visual := get_node_or_null("Visual") as Node3D
+    if visual != null:
+        visual.rotation.x = 0.0
+        visual.rotation.z = 0.0
+
 func _pressure_target(fallback: DZEnemy) -> DZEnemy:
     if nearest_threat != null:
         if is_instance_valid(nearest_threat) and not nearest_threat.dead:
@@ -131,6 +160,7 @@ func set_combat_enabled(enabled: bool) -> void:
     current_target = null
     nearest_threat = null
     target_refresh_clock = 0.0
+    _reset_movement_lean()
     _clear_player_marker_pressure()
 
 func _clear_player_marker_pressure() -> void:
