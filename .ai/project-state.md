@@ -22,21 +22,21 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T11:59:29Z
+Generated: 2026-10-05T12:01:17Z
 
 ### Git
 - Branch: `main`
-- Head: `6392eb255c87`
-- Commit date: 2026-10-05T13:59:18+02:00
-- Commit: Simplify Play icon hero composition
+- Head: `d89689e5bb83`
+- Commit date: 2026-10-05T14:00:59+02:00
+- Commit: Test enemy rim-light readability contract
 - Tracked files: 960
 
 ### Recently changed files
-- `godot/tests/play_icon_render_test.gd`
-- `godot/tests/boss_hud_identity_test.gd`
-- `godot/scripts/Hud.gd`
-- `godot/tests/environment_identity_test.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/scripts/AssetLibrary.gd`
+- `godot/tests/first_playable_run_path_test.gd`
 - `godot/scripts/Main.gd`
+- `godot/tests/play_icon_render_test.gd`
 
 ### Project signals
 - `build.gradle`

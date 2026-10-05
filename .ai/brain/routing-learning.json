@@ -2,22 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Refine quarantine arena visual language",
-      "terms": [
-        "arena",
-        "language",
-        "quarantine",
-        "refine",
-        "visual"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Main.gd",
-        "godot/tests/environment_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Polish Godot combat HUD and center markings",
       "terms": [
         "center",
@@ -1054,6 +1038,24 @@
       "tests": [],
       "useful": [
         "godot/tests/play_icon_render_test.gd"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "Test enemy rim-light readability contract",
+      "terms": [
+        "contract",
+        "enemy",
+        "readability",
+        "rim-light",
+        "test"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/AssetLibrary.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/enemy_silhouette_identity_test.gd",
+        "godot/tests/first_playable_run_path_test.gd"
       ]
     }
   ],
@@ -2098,7 +2100,11 @@
     },
     "contract": {
       "core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java": 4,
-      "godot/tests/enemy_hit_reaction_test.gd": 4
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_hit_reaction_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4
     },
     "contrast": {
       "godot/scripts/Main.gd": 4,
@@ -2286,11 +2292,12 @@
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4,
-      "godot/scripts/AssetLibrary.gd": 16,
+      "godot/scripts/AssetLibrary.gd": 20,
       "godot/scripts/Enemy.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 20,
+      "godot/scripts/Main.gd": 8,
+      "godot/tests/enemy_silhouette_identity_test.gd": 24,
+      "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 8
     },
     "envelope": {
@@ -3539,12 +3546,14 @@
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java": 4,
-      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/AssetLibrary.gd": 8,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
+      "godot/scripts/Main.gd": 4,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/enemy_hit_reaction_test.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 8,
+      "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
@@ -3783,6 +3792,12 @@
       "tools/blender/build_rex_actions.py": 4,
       "tools/sprites/assemble_actor_sheet.py": 4,
       "tools/sprites/audit_final_art_status.py": 4
+    },
+    "rim-light": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4
     },
     "ring": {
       "godot/scripts/Player.gd": 4,
@@ -4167,19 +4182,19 @@
       "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4
     },
     "test": {
-      "godot/scripts/AssetLibrary.gd": 12,
+      "godot/scripts/AssetLibrary.gd": 16,
       "godot/scripts/CombatFeel.gd": 4,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
-      "godot/scripts/Main.gd": 12,
+      "godot/scripts/Main.gd": 16,
       "godot/scripts/Player.gd": 12,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/boss_encounter_render_test.gd": 4,
       "godot/tests/combat_feel_test.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 12,
+      "godot/tests/enemy_silhouette_identity_test.gd": 16,
       "godot/tests/environment_identity_test.gd": 4,
-      "godot/tests/first_playable_run_path_test.gd": 8,
+      "godot/tests/first_playable_run_path_test.gd": 12,
       "godot/tests/impact_fx_mobile_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/player_damage_feedback_test.gd": 4,

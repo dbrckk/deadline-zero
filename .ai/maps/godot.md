@@ -293,6 +293,8 @@ static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color
     material.set_shader_parameter("highlight_floor", 0.42)
     material.set_shader_parameter("authored_roughness", source_material.roughness)
     material.set_shader_parameter("authored_metallic", source_material.metallic)
+    material.set_shader_parameter("rim_strength", 0.11)
+    material.set_shader_parameter("rim_power", 3.4)
     if source_material.normal_enabled and source_material.normal_texture != null:
         material.set_shader_parameter("use_normal_map", true)
         material.set_shader_parameter("normal_tex", source_material.normal_texture)
@@ -318,6 +320,8 @@ uniform float highlight_end = 0.82;
 uniform float highlight_floor = 0.46;
 uniform float authored_roughness = 0.84;
 uniform float authored_metallic = 0.02;
+uniform float rim_strength = 0.11;
+uniform float rim_power = 3.4;
 
 void fragment() {
     vec4 authored = texture(albedo_tex, UV);
@@ -327,6 +331,9 @@ void fragment() {
     ALBEDO = base * compression;
     ROUGHNESS = max(authored_roughness, 0.82);
     METALLIC = max(authored_metallic, 0.02);
+    float fresnel = 1.0 - max(dot(normalize(NORMAL), normalize(VIEW)), 0.0);
+    float rim = pow(fresnel, rim_power) * rim_strength;
+    EMISSION = body_tint.rgb * rim;
     ALPHA = authored.a * body_tint.a;
     if (use_normal_map) {
         NORMAL_MAP = texture(normal_tex, UV).rgb;
@@ -2841,6 +2848,7 @@ var boss_audio: AudioStreamPlayer
 var music_audio: AudioStreamPlayer
 var music_pressure_audio: AudioStreamPlayer
 var music_duck_tween: Tween
+var music_end_tween: Tween
 var impact_streams := {}
 var enemy_spatial_index := DZSpatialHash.new(4.0)
 var last_player_health := -1.0
@@ -2868,6 +2876,7 @@ const MUSIC_BASE_DB := -20.0
 const MUSIC_DUCK_DB := -27.0
 const MUSIC_PRESSURE_BREACH_DB := -48.0
 const MUSIC_PRESSURE_BOSS_DB := -11.0
+const MUSIC_GAME_OVER_DB := -32.0
 const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
 const DIRECTOR_REFRESH_INTERVAL := 0.25
@@ -3294,9 +3303,26 @@ func _on_player_died() -> void:
     touch_id = -1
     if hud != null:
         hud.hide_touch_stick()
+    _fade_music_for_run_end()
     _freeze_combat()
     if hud:
         hud.show_game_over(kills, level, elapsed)
+
+func _fade_music_for_run_end() -> void:
+    if boss_audio != null:
+        boss_audio.stop()
+    if music_duck_tween != null and music_duck_tween.is_valid():
+        music_duck_tween.kill()
+    if music_end_tween != null and music_end_tween.is_valid():
+        music_end_tween.kill()
+
+    music_end_tween = create_tween()
+    music_end_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    music_end_tween.set_parallel(true)
+    if music_audio != null and music_audio.playing:
+        music_end_tween.tween_property(music_audio, "volume_db", MUSIC_GAME_OVER_DB, 0.55).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    if music_pressure_audio != null and music_pressure_audio.playing:
+        music_end_tween.tween_property(music_pressure_audio, "volume_db", MUSIC_PRESSURE_BREACH_DB, 0.36).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _freeze_combat() -> void:
     if player != null and is_instance_valid(player):
@@ -7068,6 +7094,12 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var source := FileAccess.get_file_as_string("res://scripts/AssetLibrary.gd")
+    if not source.contains("uniform float rim_strength = 0.11") or not source.contains("EMISSION = body_tint.rgb * rim"):
+        push_error("Enemy shared grading shader lost subtle silhouette rim lighting")
+        quit(1)
+        return
+
     print("Deadline Zero enemy silhouette identity: OK")
     quit(0)
 ```
@@ -7800,6 +7832,10 @@ func _initialize() -> void:
     main.boss_reveal_target = active_boss
     main.hud.impact_flash.visible = true
     main.hud.damage_vignette.visible = true
+    if main.boss_audio != null and main.boss_audio.stream != null:
+        main.boss_audio.play()
+    if main.music_pressure_audio != null:
+        main.music_pressure_audio.volume_db = main.MUSIC_PRESSURE_BOSS_DB
     main._on_player_died()
     if not main.game_over or not main.hud.game_over_panel.visible:
         push_error("Player death did not enter visible game-over state")
@@ -7807,6 +7843,14 @@ func _initialize() -> void:
         return
     if main.camera_kick > 0.0 or main.boss_reveal_left > 0.0 or main.boss_reveal_target != null:
         push_error("Run end retained transient camera combat state")
+        quit(1)
+        return
+    if main.boss_audio != null and main.boss_audio.playing:
+        push_error("Run end retained active boss stinger audio")
+        quit(1)
+        return
+    if main.music_end_tween == null or not main.music_end_tween.is_valid():
+        push_error("Run end did not start adaptive music de-escalation")
         quit(1)
         return
     if main.hud.impact_flash.visible or main.hud.damage_vignette.visible or main.hud.boss_panel.visible:

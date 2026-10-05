@@ -1,10 +1,10 @@
 # Change impact
 
-Base: 0832ccfbe9f23e5678571c03be1b4aecd87709b5
-Head: 6392eb255c87df7c2316e1c441ffae730f35e1d5
+Base: da640c645c700d1fa8e0033e9a3231a09e871372
+Head: d89689e5bb839d09938e23a7c6bb733ff0596100
 
 ## Changed files
-- M godot/tests/play_icon_render_test.gd
+- M godot/tests/enemy_silhouette_identity_test.gd
 
 ## Affected areas
 - godot
