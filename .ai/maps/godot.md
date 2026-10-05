@@ -1809,6 +1809,7 @@ var boss_panel: PanelContainer
 var boss_name_label: Label
 var boss_hp_bar: ProgressBar
 var boss_phase_label: Label
+var boss_hp_fill_style: StyleBoxFlat
 var boss_hp_max := 1.0
 var game_over_panel: PanelContainer
 var game_over_summary: Label
@@ -1885,6 +1886,16 @@ func set_boss_health(value: float, maximum: float) -> void:
     boss_hp_bar.value = clamp(value, 0.0, boss_hp_max)
     var ratio := boss_hp_bar.value / boss_hp_max
     boss_phase_label.text = "PHASE III // EXECUTE" if ratio <= 0.30 else ("PHASE II // ENRAGED" if ratio <= 0.65 else "PHASE I // HUNT")
+    if boss_hp_fill_style != null:
+        if ratio <= 0.30:
+            boss_hp_fill_style.bg_color = Color(0.96, 0.16, 0.055, 0.98)
+            boss_hp_fill_style.border_color = Color(1.0, 0.44, 0.16, 0.90)
+        elif ratio <= 0.65:
+            boss_hp_fill_style.bg_color = Color(0.98, 0.34, 0.075, 0.98)
+            boss_hp_fill_style.border_color = Color(1.0, 0.62, 0.18, 0.88)
+        else:
+            boss_hp_fill_style.bg_color = Color(0.96, 0.58, 0.12, 0.98)
+            boss_hp_fill_style.border_color = Color(1.0, 0.80, 0.30, 0.86)
     if boss_hp_bar.value <= 0.0:
         boss_panel.visible = false
 
@@ -2498,8 +2509,27 @@ func _build() -> void:
     boss_phase_label.modulate = Color(1.0, 0.42, 0.26)
     boss_header.add_child(boss_phase_label)
     boss_hp_bar = ProgressBar.new()
-    boss_hp_bar.custom_minimum_size = Vector2(620, 18)
+    boss_hp_bar.name = "BossHealthBar"
+    boss_hp_bar.custom_minimum_size = Vector2(620, 20)
     boss_hp_bar.show_percentage = false
+    var boss_hp_background := StyleBoxFlat.new()
+    boss_hp_background.bg_color = Color(0.012, 0.017, 0.022, 0.98)
+    boss_hp_background.border_color = Color(0.24, 0.10, 0.06, 0.88)
+    boss_hp_background.set_border_width_all(2)
+    boss_hp_background.corner_radius_top_left = 4
+    boss_hp_background.corner_radius_top_right = 4
+    boss_hp_background.corner_radius_bottom_left = 4
+    boss_hp_background.corner_radius_bottom_right = 4
+    boss_hp_fill_style = StyleBoxFlat.new()
+    boss_hp_fill_style.bg_color = Color(0.96, 0.58, 0.12, 0.98)
+    boss_hp_fill_style.border_color = Color(1.0, 0.80, 0.30, 0.86)
+    boss_hp_fill_style.set_border_width_all(1)
+    boss_hp_fill_style.corner_radius_top_left = 3
+    boss_hp_fill_style.corner_radius_top_right = 3
+    boss_hp_fill_style.corner_radius_bottom_left = 3
+    boss_hp_fill_style.corner_radius_bottom_right = 3
+    boss_hp_bar.add_theme_stylebox_override("background", boss_hp_background)
+    boss_hp_bar.add_theme_stylebox_override("fill", boss_hp_fill_style)
     boss_box.add_child(boss_hp_bar)
     var boss_style := StyleBoxFlat.new()
     boss_style.bg_color = Color(0.025, 0.035, 0.045, 0.96)
@@ -6313,18 +6343,39 @@ func _init() -> void:
     var enemy_source := FileAccess.get_file_as_string("res://scripts/Enemy.gd")
     var main_source := FileAccess.get_file_as_string("res://scripts/Main.gd")
 
-    assert(hud_source.contains("func show_boss("))
-    assert(hud_source.contains("func set_boss_health("))
-    assert(hud_source.contains("PHASE II // ENRAGED"))
-    assert(hud_source.contains("PHASE III // EXECUTE"))
-    assert(hud_source.contains("boss_hp_bar"))
-    assert(enemy_source.contains("signal health_changed"))
-    assert(enemy_source.contains("health_changed.emit(max(0.0, health), max_health)"))
-    assert(main_source.contains("enemy.health_changed.connect(_on_boss_health_changed)"))
-    assert(main_source.contains("hud.show_boss("))
+    var hud_contract := [
+        ["func show_boss(", "Boss HUD show contract is missing"],
+        ["func set_boss_health(", "Boss HUD health update contract is missing"],
+        ["PHASE II // ENRAGED", "Boss phase-II label is missing"],
+        ["PHASE III // EXECUTE", "Boss phase-III label is missing"],
+        ["boss_hp_bar", "Boss health bar is missing"],
+        ["boss_hp_fill_style", "Boss health fill style is missing"],
+        ["BossHealthBar", "Boss health bar node identity is missing"],
+        ["add_theme_stylebox_override(\"fill\"", "Boss health bar fill theme is missing"],
+        ["ratio <= 0.30", "Boss phase color threshold is missing"]
+    ]
+    for requirement in hud_contract:
+        if not _require(hud_source.contains(String(requirement[0])), String(requirement[1])):
+            return
+
+    if not _require(enemy_source.contains("signal health_changed"), "Boss enemy health signal is missing"):
+        return
+    if not _require(enemy_source.contains("health_changed.emit(max(0.0, health), max_health)"), "Boss enemy health emission contract is missing"):
+        return
+    if not _require(main_source.contains("enemy.health_changed.connect(_on_boss_health_changed)"), "Boss health is not connected to HUD"):
+        return
+    if not _require(main_source.contains("hud.show_boss("), "Boss spawn does not reveal HUD"):
+        return
 
     print("Godot boss HUD identity validation passed")
-    quit()
+    quit(0)
+
+func _require(condition: bool, message: String) -> bool:
+    if condition:
+        return true
+    push_error(message)
+    quit(1)
+    return false
 ```
 
 ## File: tests/boss_phase_runtime_test.gd

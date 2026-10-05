@@ -1,10 +1,10 @@
 # Change impact
 
-Base: ea8fc8b124a1959c7930cbc2880e3691aa3f5810
-Head: 7c6bbf2746e67ddf0422fa635f0e94ceb1240c7c
+Base: ee1e583be007902c8302a25daebe4ea90fd17871
+Head: 10339fc5c3d4502dcbafafb87b4c2e18143b2d5f
 
 ## Changed files
-- M godot/tests/environment_identity_test.gd
+- M godot/tests/boss_hud_identity_test.gd
 
 ## Affected areas
 - godot
