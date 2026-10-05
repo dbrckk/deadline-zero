@@ -37,6 +37,7 @@ var touch_id := -1
 var touch_origin := Vector2.ZERO
 var camera_kick := 0.0
 var camera_kick_phase := 0.0
+var impact_fov_pulse := 0.0
 var hit_freeze_left := 0.0
 var boss_reveal_target: DZEnemy
 var boss_reveal_left := 0.0
@@ -155,6 +156,7 @@ func _process(delta: float) -> void:
 
     camera_kick = move_toward(camera_kick, 0.0, delta * 0.95)
     camera_kick_phase += delta * 38.0
+    impact_fov_pulse = move_toward(impact_fov_pulse, 0.0, delta * 4.8)
 
     if onboarding_hint_active and not game_over:
         onboarding_hint_left = maxf(0.0, onboarding_hint_left - maxf(delta, 0.0))
@@ -177,6 +179,8 @@ func _process(delta: float) -> void:
         else:
             boss_reveal_left = 0.0
             boss_reveal_target = null
+
+        target_fov += impact_fov_pulse
 
         var kick_offset := Vector3(sin(camera_kick_phase), 0.0, cos(camera_kick_phase * 1.27)) * camera_kick
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
@@ -376,6 +380,7 @@ func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> 
         hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
     if camera_shake_enabled:
         camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
+        impact_fov_pulse = maxf(impact_fov_pulse, DZCombatFeel.impact_fov_pulse(critical, killed, boss))
     if hud:
         hud.show_impact_flash(critical, killed, boss)
     _play_impact_audio(critical, killed, boss)
@@ -527,6 +532,7 @@ func _on_camera_shake_changed(enabled: bool) -> void:
     camera_shake_enabled = enabled
     if not enabled:
         camera_kick = 0.0
+        impact_fov_pulse = 0.0
     _save_audio_settings()
 
 func _on_hit_stop_changed(enabled: bool) -> void:
@@ -563,6 +569,7 @@ func _on_resume_requested() -> void:
 func _on_player_died() -> void:
     _clear_hit_freeze()
     camera_kick = 0.0
+    impact_fov_pulse = 0.0
     boss_reveal_left = 0.0
     boss_reveal_target = null
     game_over = true

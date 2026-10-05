@@ -25,6 +25,16 @@ static func camera_kick(critical: bool, killed: bool, boss: bool) -> float:
         kick += 0.050
     return min(kick, 0.16)
 
+static func impact_fov_pulse(critical: bool, killed: bool, boss: bool) -> float:
+    var pulse := 0.0
+    if critical:
+        pulse += 0.48
+    if killed:
+        pulse += 0.62
+    if boss:
+        pulse += 0.46
+    return minf(pulse, 1.30)
+
 static func damage_received_camera_kick(damage: float, max_health: float) -> float:
     if damage <= 0.0 or max_health <= 0.0:
         return 0.0

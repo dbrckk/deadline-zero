@@ -7,6 +7,12 @@ func _initialize() -> void:
     _assert(DZCombatFeel.camera_kick(false, false, false) < DZCombatFeel.camera_kick(true, true, true),
         "important impacts must produce stronger camera feedback")
     _assert(DZCombatFeel.camera_kick(true, true, true) <= 0.16, "camera kick comfort bound")
+    _assert(DZCombatFeel.impact_fov_pulse(false, false, false) == 0.0,
+        "normal impacts must not pulse FOV")
+    _assert(DZCombatFeel.impact_fov_pulse(true, false, false) > 0.0,
+        "critical impacts must add restrained FOV punch")
+    _assert(DZCombatFeel.impact_fov_pulse(true, true, true) <= 1.30,
+        "impact FOV pulse comfort bound")
     var light_damage_kick := DZCombatFeel.damage_received_camera_kick(5.0, 100.0)
     var heavy_damage_kick := DZCombatFeel.damage_received_camera_kick(30.0, 100.0)
     _assert(light_damage_kick > 0.0, "received damage must produce camera feedback")
