@@ -1,5 +1,8 @@
 name: Build Industrial 3D Kit
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   push:
@@ -53,6 +56,37 @@ jobs:
           python3 tools/assets/validate_generated_glb.py build/industrial-kit
           (cd build/industrial-kit && sha256sum *.glb > SHA256SUMS.txt)
           (cd build/industrial-kit && sha256sum -c SHA256SUMS.txt)
+
+      - name: Promote validated industrial kit into Godot
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          rm -rf godot/assets/generated/industrial
+          mkdir -p godot/assets/generated/industrial
+          cp build/industrial-kit/*.glb godot/assets/generated/industrial/
+          cp build/industrial-kit/SHA256SUMS.txt godot/assets/generated/industrial/
+          cat > godot/assets/generated/industrial/SOURCE.md <<'EOF'
+          # Deadline: Zero generated industrial kit
+          
+          Project-owned geometry generated deterministically by:
+          tools/blender/build_industrial_kit.py
+          
+          Pinned authoring runtime: Blender 5.2.2 LTS.
+          
+          No third-party meshes or textures are embedded in these GLB files.
+          Triangle/material/file-size budgets are enforced by
+          tools/assets/validate_generated_glb.py before promotion.
+          EOF
+          git config user.name "deadline-zero-assets"
+          git config user.email "actions@users.noreply.github.com"
+          git add godot/assets/generated/industrial
+          if git diff --cached --quiet; then
+            echo "Industrial kit already promoted."
+            exit 0
+          fi
+          git commit -m "assets(godot): promote generated industrial GLB kit [skip render]"
+          git pull --rebase origin main
+          git push origin HEAD:main
 
       - name: Upload generated industrial kit for review
         uses: actions/upload-artifact@v4
