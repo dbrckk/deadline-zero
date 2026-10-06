@@ -43,3 +43,16 @@ Existing environment crack/scorch/blood source decals under `art_sources/environ
 ## Forbidden / reference-only
 - Proprietary Zombie Waves art, meshes, textures, audio, shaders or animations.
 - Hunyuan3D-2 outputs in this project while its current license excludes EU territory.
+
+
+### Kenney — Space Kit
+- License: CC0.
+- Current use: curated FBX source geometry for consoles, service pipes, perimeter structures, satellite dish, station module and barrels.
+- Official page: https://kenney.nl/assets/space-kit
+- Runtime rule: convert/optimize to GLB, then rematerialize with Deadline: Zero PBR; do not treat the original flat materials as final art.
+
+### Kenney — Modular Space Kit
+- License: CC0.
+- Status: approved next-source candidate (2026 release, 40 modular 3D files).
+- Best use: corridor/wall/floor modules where Quaternius geometry would otherwise require Godot-3 conversion.
+- Official page: https://kenney.nl/assets/modular-space-kit
