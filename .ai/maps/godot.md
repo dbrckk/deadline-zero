@@ -12117,7 +12117,7 @@ func _init() -> void:
         ["ProjectileCore", "Projectile core node identity is missing"],
         ["ProjectileTrail", "Projectile trail node identity is missing"],
         ["SHADOW_CASTING_SETTING_OFF", "Projectile visual geometry must remain shadow-free"],
-        ["material.emission_energy_multiplier = 1.65", "Cached projectile trail emission contract regressed"],
+        ["material.emission_energy_multiplier = 2.15", "Premium projectile trail emission contract regressed"],
         ["_add_side_spark(core_mat, -1.0)", "Left scatter spark identity is missing"],
         ["_add_side_spark(core_mat, 1.0)", "Right scatter spark identity is missing"]
     ]

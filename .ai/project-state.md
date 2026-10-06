@@ -22,16 +22,22 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-06T11:07:12Z
+Generated: 2026-10-06T11:09:24Z
 
 ### Git
 - Branch: `main`
-- Head: `f9e82d629a6a`
-- Commit date: 2026-10-06T13:06:58+02:00
-- Commit: Build premium 3D asset production stack
+- Head: `fa94ea1d154c`
+- Commit date: 2026-10-06T13:09:11+02:00
+- Commit: Align projectile presentation test with premium trail pass
 - Tracked files: 985
 
 ### Recently changed files
+- `godot/tests/weapon_presentation_test.gd`
+- `play/store/phone-screenshots/01-first-playable.png`
+- `play/store/phone-screenshots/02-midrun-pressure.png`
+- `play/store/phone-screenshots/03-boss-encounter.png`
+- `play/store/phone-screenshots/04-upgrade-choice.png`
+- `play/store/phone-screenshots/05-run-end.png`
 - `.github/workflows/godot-verify.yml`
 - `docs/ASSET_STACK.md`
 - `godot/assets/asset_manifest.json`
@@ -40,14 +46,7 @@ Generated: 2026-10-06T11:07:12Z
 - `tools/assets/validate_asset_stack.py`
 - `tools/blender/optimize_game_asset.py`
 - `play/store/feature-graphic.png`
-- `play/store/phone-screenshots/01-first-playable.png`
-- `play/store/phone-screenshots/02-midrun-pressure.png`
-- `play/store/phone-screenshots/03-boss-encounter.png`
-- `play/store/phone-screenshots/04-upgrade-choice.png`
-- `play/store/phone-screenshots/05-run-end.png`
 - `godot/tests/upgrade_choice_render_test.gd`
-- `godot/scripts/Hud.gd`
-- `godot/tests/first_playable_run_path_test.gd`
 
 ### Project signals
 - `build.gradle`
