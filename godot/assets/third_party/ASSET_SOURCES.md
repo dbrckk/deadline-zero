@@ -47,7 +47,7 @@ Existing environment crack/scorch/blood source decals under `art_sources/environ
 
 ### Kenney — Space Kit
 - License: CC0.
-- Current use: curated FBX source geometry for consoles, service pipes, perimeter structures, satellite dish, station module and barrels.
+- Current use: curated FBX source geometry stored under `art_sources/third_party/kenney/space_kit/` for consoles, service pipes, perimeter structures, satellite dish, station module and barrels.
 - Official page: https://kenney.nl/assets/space-kit
 - Runtime rule: convert/optimize to GLB, then rematerialize with Deadline: Zero PBR; do not treat the original flat materials as final art.
 
