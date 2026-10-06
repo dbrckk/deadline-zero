@@ -46,6 +46,7 @@ The content is organized as follows:
     actor-production-staging.yml
     ai-repo-map.yml
     android-test-release.yml
+    build-industrial-kit.yml
     cinder-foundry-candidate.yml
     cryo-vault-candidate.yml
     cryogenic-depths-candidate.yml
@@ -414,10 +415,12 @@ tools/
   assets/
     acquire_polyhaven.py
     validate_asset_stack.py
+    validate_generated_glb.py
   audio/
     generate_deadline_zero_audio.py
   blender/
     add_rex_rifle.py
+    build_industrial_kit.py
     build_rex_actions.py
     catalog_blend_actions.py
     inspect_actor_source.py
@@ -1271,6 +1274,75 @@ jobs:
             --title "Deadline Zero Android Test #${GITHUB_RUN_NUMBER}" \
             --notes "APK de test Android généré automatiquement depuis main (${GITHUB_SHA}). Build debug pour test manuel uniquement." \
             --prerelease
+````
+
+## File: .github/workflows/build-industrial-kit.yml
+````yaml
+name: Build Industrial 3D Kit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/blender/build_industrial_kit.py'
+      - 'tools/assets/validate_generated_glb.py'
+      - 'godot/assets/asset_manifest.json'
+      - '.github/workflows/build-industrial-kit.yml'
+  pull_request:
+    paths:
+      - 'tools/blender/build_industrial_kit.py'
+      - 'tools/assets/validate_generated_glb.py'
+      - 'godot/assets/asset_manifest.json'
+      - '.github/workflows/build-industrial-kit.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Download pinned Blender 5.2.2 LTS
+        run: |
+          set -euo pipefail
+          cd /tmp
+          curl -fL --retry 4 https://download.blender.org/release/Blender5.2/blender-5.2.2-linux-x64.tar.xz -o blender.tar.xz
+          curl -fL --retry 4 https://download.blender.org/release/Blender5.2/blender-5.2.2.sha256 -o blender.sha256
+          grep 'blender-5.2.2-linux-x64.tar.xz' blender.sha256 | sed 's#blender-5.2.2-linux-x64.tar.xz#blender.tar.xz#' | sha256sum -c -
+          tar -xf blender.tar.xz
+          test -x /tmp/blender-5.2.2-linux-x64/blender
+
+      - name: Build project-owned industrial GLB kit
+        run: |
+          set -euo pipefail
+          rm -rf build/industrial-kit
+          mkdir -p build/industrial-kit
+          /tmp/blender-5.2.2-linux-x64/blender \
+            -b --factory-startup \
+            -P tools/blender/build_industrial_kit.py -- \
+            --output build/industrial-kit
+
+      - name: Validate GLB budgets and provenance shape
+        run: |
+          set -euo pipefail
+          python3 tools/assets/validate_generated_glb.py build/industrial-kit
+          (cd build/industrial-kit && sha256sum *.glb > SHA256SUMS.txt)
+          (cd build/industrial-kit && sha256sum -c SHA256SUMS.txt)
+
+      - name: Upload generated industrial kit for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: deadline-zero-industrial-kit-${{ github.sha }}
+          path: |
+            build/industrial-kit/*.glb
+            build/industrial-kit/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
 ````
 
 ## File: .github/workflows/cinder-foundry-candidate.yml
@@ -30639,6 +30711,42 @@ source_docs = list(provider_dir.rglob("SOURCE.md")) + list(provider_dir.rglob("S
 licenses = list(provider_dir.rglob("LICENSE.txt")) + list(provider_dir.rglob("LICENSE.md"))
 ````
 
+## File: tools/assets/validate_generated_glb.py
+````python
+#!/usr/bin/env python3
+"""Validate generated Deadline: Zero GLB review assets without third-party packages."""
+⋮----
+EXPECTED = {
+MAX_BYTES = 2 * 1024 * 1024
+⋮----
+def read_glb(path: Path)
+⋮----
+data = path.read_bytes()
+⋮----
+payload = data[20:20 + json_len].decode("utf-8").rstrip(" \t\r\n\0")
+⋮----
+def triangle_count(doc)
+⋮----
+accessors = doc.get("accessors", [])
+total = 0
+⋮----
+pos = prim.get("attributes", {}).get("POSITION")
+⋮----
+def main()
+⋮----
+ap = argparse.ArgumentParser()
+⋮----
+args = ap.parse_args()
+errors = []
+⋮----
+path = args.directory / name
+⋮----
+tris = triangle_count(doc)
+material_count = len(doc.get("materials", []))
+mesh_count = len(doc.get("meshes", []))
+image_count = len(doc.get("images", []))
+````
+
 ## File: tools/audio/generate_deadline_zero_audio.py
 ````python
 #!/usr/bin/env python3
@@ -30842,6 +30950,89 @@ rot = direction.to_track_quat("X", "Z").to_matrix().to_4x4()
 desired = rot
 ⋮----
 grip_error = (rifle.matrix_world.translation - desired.translation).length
+````
+
+## File: tools/blender/build_industrial_kit.py
+````python
+#!/usr/bin/env python3
+"""Build Deadline: Zero's original industrial hard-surface kit.
+
+Run with Blender 5.2 LTS:
+  blender -b --factory-startup -P tools/blender/build_industrial_kit.py -- \
+    --output build/industrial-kit
+
+Outputs are project-owned source geometry. No third-party mesh or texture data is used.
+"""
+⋮----
+def args()
+⋮----
+argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+p = argparse.ArgumentParser()
+⋮----
+def material(name, color, metallic, roughness)
+⋮----
+mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
+⋮----
+STEEL = None
+DARK = None
+HAZARD = None
+CYAN = None
+RUST = None
+⋮----
+def apply_bevel(obj, width=0.025, segments=2)
+⋮----
+mod = obj.modifiers.new("DZ_EdgeBevel", "BEVEL")
+⋮----
+def box(name, size, location, mat, bevel=0.025)
+⋮----
+obj = bpy.context.active_object
+⋮----
+def cylinder(name, radius, depth, location, rotation, mat, vertices=16)
+⋮----
+def ring_bolts(prefix, radius, z, count, mat, bolt_radius=0.025, bolt_depth=0.018)
+⋮----
+result = []
+⋮----
+angle = math.tau * i / count
+x = math.cos(angle) * radius
+y = math.sin(angle) * radius
+⋮----
+def clear_scene()
+⋮----
+def export_asset(path: Path, objects, role: str)
+⋮----
+def build_cargo_crate(out: Path)
+⋮----
+objs = []
+⋮----
+# Recessed front/back plates and corner armor.
+⋮----
+y = side * 0.49
+⋮----
+# Hazard identity is geometry, not a baked texture, so it remains sharp after atlas downsizing.
+⋮----
+def build_service_pillar(out: Path)
+⋮----
+objs = [
+# Four mechanical feet and cap bolts.
+⋮----
+def build_pipe_rack(out: Path)
+⋮----
+def build_bulkhead(out: Path)
+⋮----
+def build_grate(out: Path)
+⋮----
+x = -1.02 + i * (2.04 / 11.0)
+⋮----
+def main()
+⋮----
+a = args()
+⋮----
+STEEL = material("DZ_DarkSteel", (0.035, 0.055, 0.065), 0.72, 0.38)
+DARK = material("DZ_Recess", (0.008, 0.014, 0.018), 0.18, 0.84)
+HAZARD = material("DZ_HazardOrange", (0.64, 0.105, 0.012), 0.34, 0.48)
+CYAN = material("DZ_SystemCyan", (0.015, 0.32, 0.42), 0.28, 0.40)
+RUST = material("DZ_PipeRust", (0.22, 0.070, 0.025), 0.62, 0.50)
 ````
 
 ## File: tools/blender/build_rex_actions.py

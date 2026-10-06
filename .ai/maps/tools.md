@@ -47,6 +47,7 @@ audio/
   generate_deadline_zero_audio.py
 blender/
   add_rex_rifle.py
+  build_industrial_kit.py
   build_rex_actions.py
   catalog_blend_actions.py
   inspect_actor_source.py
@@ -438,6 +439,89 @@ rot = direction.to_track_quat("X", "Z").to_matrix().to_4x4()
 desired = rot
 ⋮----
 grip_error = (rifle.matrix_world.translation - desired.translation).length
+```
+
+## File: blender/build_industrial_kit.py
+```python
+#!/usr/bin/env python3
+"""Build Deadline: Zero's original industrial hard-surface kit.
+
+Run with Blender 5.2 LTS:
+  blender -b --factory-startup -P tools/blender/build_industrial_kit.py -- \
+    --output build/industrial-kit
+
+Outputs are project-owned source geometry. No third-party mesh or texture data is used.
+"""
+⋮----
+def args()
+⋮----
+argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+p = argparse.ArgumentParser()
+⋮----
+def material(name, color, metallic, roughness)
+⋮----
+mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
+⋮----
+STEEL = None
+DARK = None
+HAZARD = None
+CYAN = None
+RUST = None
+⋮----
+def apply_bevel(obj, width=0.025, segments=2)
+⋮----
+mod = obj.modifiers.new("DZ_EdgeBevel", "BEVEL")
+⋮----
+def box(name, size, location, mat, bevel=0.025)
+⋮----
+obj = bpy.context.active_object
+⋮----
+def cylinder(name, radius, depth, location, rotation, mat, vertices=16)
+⋮----
+def ring_bolts(prefix, radius, z, count, mat, bolt_radius=0.025, bolt_depth=0.018)
+⋮----
+result = []
+⋮----
+angle = math.tau * i / count
+x = math.cos(angle) * radius
+y = math.sin(angle) * radius
+⋮----
+def clear_scene()
+⋮----
+def export_asset(path: Path, objects, role: str)
+⋮----
+def build_cargo_crate(out: Path)
+⋮----
+objs = []
+⋮----
+# Recessed front/back plates and corner armor.
+⋮----
+y = side * 0.49
+⋮----
+# Hazard identity is geometry, not a baked texture, so it remains sharp after atlas downsizing.
+⋮----
+def build_service_pillar(out: Path)
+⋮----
+objs = [
+# Four mechanical feet and cap bolts.
+⋮----
+def build_pipe_rack(out: Path)
+⋮----
+def build_bulkhead(out: Path)
+⋮----
+def build_grate(out: Path)
+⋮----
+x = -1.02 + i * (2.04 / 11.0)
+⋮----
+def main()
+⋮----
+a = args()
+⋮----
+STEEL = material("DZ_DarkSteel", (0.035, 0.055, 0.065), 0.72, 0.38)
+DARK = material("DZ_Recess", (0.008, 0.014, 0.018), 0.18, 0.84)
+HAZARD = material("DZ_HazardOrange", (0.64, 0.105, 0.012), 0.34, 0.48)
+CYAN = material("DZ_SystemCyan", (0.015, 0.32, 0.42), 0.28, 0.40)
+RUST = material("DZ_PipeRust", (0.22, 0.070, 0.025), 0.62, 0.50)
 ```
 
 ## File: blender/build_rex_actions.py

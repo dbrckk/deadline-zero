@@ -1,5 +1,29 @@
 {
   "files": {
+    ".github/workflows/build-industrial-kit.yml": {
+      "sha256": "73d5dc2c8242d33de8c0c73dcf4b939c0202345d02c02f892393a5a6192fe1df",
+      "size": 2345
+    },
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java": {
+      "sha256": "d04b046f10641b0c6353a7b2724b8ba17bd4af4247951c42011bfffb73ee8d67",
+      "size": 7415
+    },
+    "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java": {
+      "sha256": "dac9ee3898316f5d08248a4cb310e655387878c6f6dfb7dc8a5125a2a56dd39f",
+      "size": 7188
+    },
+    "core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java": {
+      "sha256": "29472a6838a7528ab86793e9fe3e5ffa369e7d0a267b77acd852d88b52e76b41",
+      "size": 13042
+    },
+    "core/src/main/java/com/deadlinezero/game/world/BiomeEnemyRoster.java": {
+      "sha256": "80514352176fa376ff5706a1bffaea1b285904c59a93fa67612de959047776f5",
+      "size": 5472
+    },
+    "docs/ASSET_STACK.md": {
+      "sha256": "2232f5de9b13de1f1ea736416950350a6531ef7c6ac79951d2f4694d8058783b",
+      "size": 6234
+    },
     "godot/assets/asset_manifest.json": {
       "sha256": "d305b3a192b3e3b3e10ff4be95333056ca2ed0485bf02ff6830312519271b504",
       "size": 8405
@@ -7,18 +31,6 @@
     "godot/assets/decals/quarantine_yard/SOURCE.md": {
       "sha256": "0dfb7f940a59b9fcc5dc260afd1d62648941e97f5dce6abc24f6605236a930f5",
       "size": 675
-    },
-    "godot/assets/decals/quarantine_yard/blood_a.png": {
-      "sha256": "cbe86f5ef129ad4926eedb8ea908d17857084f1093a8a56fb38d4dade9e80a44",
-      "size": 95229
-    },
-    "godot/assets/decals/quarantine_yard/crack_a.png": {
-      "sha256": "13e0d304f2e495f32cae79d54a357a3829fed89046d630d4cb12cbcb136a0dd6",
-      "size": 63035
-    },
-    "godot/assets/decals/quarantine_yard/scorch_a.png": {
-      "sha256": "691174f3249b6856696ca9c013cc65451c31f910beb8bd7a095133ba8595d129",
-      "size": 57991
     },
     "godot/assets/third_party/ASSET_SOURCES.md": {
       "sha256": "71a5f515b43b2c269534b1ffdfb8037a1ad622c530c308b499980c704315b052",
@@ -32,33 +44,29 @@
       "sha256": "2e1a901f819f8466f50afb0e40e70fed3a58db9d961c92fe0d8f9bcce2fad36d",
       "size": 16547
     },
-    "godot/tests/upgrade_choice_render_test.gd": {
-      "sha256": "f22a4f05b759de4b7dbb487a5b2b2abf43bfbfbd23c42c67875317f70549b633",
-      "size": 3382
-    },
     "godot/tests/weapon_presentation_test.gd": {
       "sha256": "271de83ab5c21b7b72d794b8678e496c735b1430218b21b8f3e3ec9a182a2934",
       "size": 3654
     },
     "play/store/phone-screenshots/01-first-playable.png": {
-      "sha256": "565f8cc814e34d049ffc9b65ec0b0b118b3356751fdbe56ada658416ce88cc7a",
-      "size": 471342
+      "sha256": "ad860926a39d2e55cf4a338d2f4d924ce72673baafaf2e6b7d472a0c990117a9",
+      "size": 478649
     },
     "play/store/phone-screenshots/02-midrun-pressure.png": {
-      "sha256": "555da248f4bd2f89f485754b9e93a9c7310c50fce13f8d723d8bde34da73bb5f",
-      "size": 512990
+      "sha256": "1ce162d7d175b056f53ec60951ccc975ddfc95757a867e171f4bd298dea6997a",
+      "size": 531018
     },
     "play/store/phone-screenshots/03-boss-encounter.png": {
-      "sha256": "95250cb1b6c2664e9c8b6deaafcee5ed7ddd930b4efcb6e1f77c1b5d6dd3a731",
-      "size": 494284
+      "sha256": "ea86271ba097f6f7806acb0ab09966eec5fdbe3d822be328b4920209b4a83a41",
+      "size": 517207
     },
     "play/store/phone-screenshots/04-upgrade-choice.png": {
-      "sha256": "16c94ac4e71a2e8603e6787618ef22ed56d52c3b35d9818a12b6e8071030677b",
-      "size": 348476
+      "sha256": "fef6d788757745246d725163108ef2df4b84157ca402b75ff6ce928bbdd8fe72",
+      "size": 366425
     },
     "play/store/phone-screenshots/05-run-end.png": {
-      "sha256": "5e4ac7fbb07d6d379940aab6d8ca3fb9ccd91f7b7712c37621c1b829e1edaf15",
-      "size": 275094
+      "sha256": "b44f13b15cfe2dfcc17916c68f42eedfc1ac63ed3754a1fc03d0ab997f0b0fe3",
+      "size": 284545
     },
     "tools/assets/acquire_polyhaven.py": {
       "sha256": "1400d5c331180ee144d9b23479e72aeee22a3fd43c430a278a34ab0b246b07a8",
@@ -67,6 +75,14 @@
     "tools/assets/validate_asset_stack.py": {
       "sha256": "e101720478bccfe81507288892a588739323aa2ffa32e9950bc60589ad628f86",
       "size": 3214
+    },
+    "tools/assets/validate_generated_glb.py": {
+      "sha256": "eb31d81f27ef667ddb8432638917e66f862951451d1ed6ee25cec649209de6ac",
+      "size": 2995
+    },
+    "tools/blender/build_industrial_kit.py": {
+      "sha256": "c75b201699eb0cfc1f65f6d670eae0caddb171b0406c9599d0e800ce3fe6a2a0",
+      "size": 8021
     },
     "tools/blender/optimize_game_asset.py": {
       "sha256": "35e467056ae6e630ca8ad8b4829536d129794876ae7510218687b2830a4820ed",

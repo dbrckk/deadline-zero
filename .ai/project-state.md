@@ -22,16 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-06T11:15:15Z
+Generated: 2026-10-06T11:19:00Z
 
 ### Git
 - Branch: `main`
-- Head: `5f3dee3adfdf`
-- Commit date: 2026-10-06T13:15:00+02:00
-- Commit: Promote project-owned floor decals into Godot arena
-- Tracked files: 989
+- Head: `8ad28f64962a`
+- Commit date: 2026-10-06T13:18:44+02:00
+- Commit: Generate original industrial 3D kit with Blender
+- Tracked files: 992
 
 ### Recently changed files
+- `.github/workflows/build-industrial-kit.yml`
+- `docs/ASSET_STACK.md`
+- `tools/assets/validate_generated_glb.py`
+- `tools/blender/build_industrial_kit.py`
+- `play/store/phone-screenshots/01-first-playable.png`
+- `play/store/phone-screenshots/02-midrun-pressure.png`
+- `play/store/phone-screenshots/03-boss-encounter.png`
+- `play/store/phone-screenshots/04-upgrade-choice.png`
+- `play/store/phone-screenshots/05-run-end.png`
 - `godot/assets/asset_manifest.json`
 - `godot/assets/decals/quarantine_yard/SOURCE.md`
 - `godot/assets/decals/quarantine_yard/blood_a.png`
@@ -39,18 +48,7 @@ Generated: 2026-10-06T11:15:15Z
 - `godot/assets/decals/quarantine_yard/scorch_a.png`
 - `godot/scripts/Main.gd`
 - `godot/tests/environment_identity_test.gd`
-- `play/store/phone-screenshots/01-first-playable.png`
-- `play/store/phone-screenshots/02-midrun-pressure.png`
-- `play/store/phone-screenshots/03-boss-encounter.png`
-- `play/store/phone-screenshots/04-upgrade-choice.png`
-- `play/store/phone-screenshots/05-run-end.png`
 - `godot/tests/weapon_presentation_test.gd`
-- `.github/workflows/godot-verify.yml`
-- `docs/ASSET_STACK.md`
-- `godot/assets/third_party/ASSET_SOURCES.md`
-- `tools/assets/acquire_polyhaven.py`
-- `tools/assets/validate_asset_stack.py`
-- `tools/blender/optimize_game_asset.py`
 
 ### Project signals
 - `build.gradle`
