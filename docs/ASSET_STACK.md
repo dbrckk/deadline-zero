@@ -92,3 +92,7 @@ Priority order for the current game:
 - Do not redistribute raw paid/restricted marketplace packs.
 - Do not import any proprietary Zombie Waves asset. It remains benchmark/reference only.
 - Generator/tool licenses do not automatically become asset licenses; record generator provenance for project-owned outputs.
+
+## Original procedural industrial kit
+
+`tools/blender/build_industrial_kit.py` creates five project-owned GLB review assets with Blender 5.2.2 LTS: cargo crate, service pillar, pipe rack, bulkhead panel and floor grate. The dedicated `Build Industrial 3D Kit` workflow validates triangle/material/file-size budgets and uploads the GLBs as an artifact. Promote an output into `godot/assets/` only after its structural and gameplay-scale review passes.

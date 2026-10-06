@@ -1,0 +1,65 @@
+name: Build Industrial 3D Kit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/blender/build_industrial_kit.py'
+      - 'tools/assets/validate_generated_glb.py'
+      - 'godot/assets/asset_manifest.json'
+      - '.github/workflows/build-industrial-kit.yml'
+  pull_request:
+    paths:
+      - 'tools/blender/build_industrial_kit.py'
+      - 'tools/assets/validate_generated_glb.py'
+      - 'godot/assets/asset_manifest.json'
+      - '.github/workflows/build-industrial-kit.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Download pinned Blender 5.2.2 LTS
+        run: |
+          set -euo pipefail
+          cd /tmp
+          curl -fL --retry 4 https://download.blender.org/release/Blender5.2/blender-5.2.2-linux-x64.tar.xz -o blender.tar.xz
+          curl -fL --retry 4 https://download.blender.org/release/Blender5.2/blender-5.2.2.sha256 -o blender.sha256
+          grep 'blender-5.2.2-linux-x64.tar.xz' blender.sha256 | sed 's#blender-5.2.2-linux-x64.tar.xz#blender.tar.xz#' | sha256sum -c -
+          tar -xf blender.tar.xz
+          test -x /tmp/blender-5.2.2-linux-x64/blender
+
+      - name: Build project-owned industrial GLB kit
+        run: |
+          set -euo pipefail
+          rm -rf build/industrial-kit
+          mkdir -p build/industrial-kit
+          /tmp/blender-5.2.2-linux-x64/blender \
+            -b --factory-startup \
+            -P tools/blender/build_industrial_kit.py -- \
+            --output build/industrial-kit
+
+      - name: Validate GLB budgets and provenance shape
+        run: |
+          set -euo pipefail
+          python3 tools/assets/validate_generated_glb.py build/industrial-kit
+          (cd build/industrial-kit && sha256sum *.glb > SHA256SUMS.txt)
+          (cd build/industrial-kit && sha256sum -c SHA256SUMS.txt)
+
+      - name: Upload generated industrial kit for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: deadline-zero-industrial-kit-${{ github.sha }}
+          path: |
+            build/industrial-kit/*.glb
+            build/industrial-kit/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
