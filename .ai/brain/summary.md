@@ -1,32 +1,32 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 543
-- Files reparsed this run: 0
-- Symbols: 3006
+- Files indexed: 544
+- Files reparsed this run: 26
+- Symbols: 3033
 - Internal import edges: 808
-- Impacted files: 0
-- Selected tests: 0
+- Impacted files: 109
+- Selected tests: 64
 
 ## Languages
 - java: 422 files
 - gdscript: 69 files
-- python: 52 files
+- python: 53 files
 
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
-- godot/scripts/Main.gd: 61 symbols
+- godot/scripts/Main.gd: 66 symbols
 - android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 55 symbols
+- godot/scripts/Enemy.gd: 52 symbols
 - core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 45 symbols
-- godot/scripts/Enemy.gd: 43 symbols
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
+- godot/scripts/Player.gd: 35 symbols
 - core/src/main/java/com/deadlinezero/game/visual/GameArt.java: 34 symbols
+- godot/scripts/Hud.gd: 32 symbols
 - core/src/main/java/com/deadlinezero/game/entities/Enemy.java: 31 symbols
 - core/src/main/java/com/deadlinezero/game/visual/DirectionalBootstrapArt.java: 31 symbols
-- godot/scripts/Player.gd: 30 symbols
 - core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java: 29 symbols
-- godot/scripts/Hud.gd: 29 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java: 28 symbols
 - core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java: 28 symbols
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
@@ -44,9 +44,9 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 0
-- outline files retained: 472
-- top-level items retained: 3040
+- AST files reparsed this run: 1
+- outline files retained: 473
+- top-level items retained: 3050
 - direct members retained: 3472
 - symbol shards: 27
 - route named symbols via ast-routing.json, then fetch one ast-symbols/<initial>.json shard

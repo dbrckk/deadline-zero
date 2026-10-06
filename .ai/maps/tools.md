@@ -50,6 +50,7 @@ blender/
   build_rex_actions.py
   catalog_blend_actions.py
   inspect_actor_source.py
+  optimize_game_asset.py
   prepare_meshy_actor.py
   refine_rex_rifle_attack.py
   render_actor_8dir.py
@@ -598,6 +599,63 @@ armature_rows = []
 images = []
 ⋮----
 report = {
+```
+
+## File: blender/optimize_game_asset.py
+```python
+#!/usr/bin/env python3
+"""Normalize and budget a game asset in Blender before Godot import.
+
+Usage:
+  blender -b --factory-startup -P tools/blender/optimize_game_asset.py -- \
+    --input source.glb --output build/prop.glb --role environment_prop --lod 0
+
+This is intentionally conservative: it never auto-rigs or invents materials.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+MANIFEST = ROOT / "godot/assets/asset_manifest.json"
+⋮----
+def parse()
+⋮----
+argv = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else []
+p = argparse.ArgumentParser()
+⋮----
+def import_asset(path: Path)
+⋮----
+ext = path.suffix.lower()
+⋮----
+def meshes()
+⋮----
+def triangles(obj)
+⋮----
+dg = bpy.context.evaluated_depsgraph_get()
+eval_obj = obj.evaluated_get(dg)
+mesh = eval_obj.to_mesh()
+⋮----
+count = len(mesh.loop_triangles)
+⋮----
+def main()
+⋮----
+a = parse()
+manifest = json.loads(MANIFEST.read_text())
+budget = manifest["budgets"]["mobile"].get(a.role)
+⋮----
+key = "triangles_lod0" if a.lod == 0 else "triangles_lod1"
+target = a.target_triangles or budget.get(key)
+⋮----
+objs = meshes()
+⋮----
+before = sum(triangles(o) for o in objs)
+⋮----
+ratio = max(0.02, min(1.0, target / float(before)))
+⋮----
+# Do not destructively decimate skinned actors; use authored/retopo LODs for them.
+⋮----
+mod = obj.modifiers.new(f"DZ_LOD{a.lod}_Decimate", "DECIMATE")
+⋮----
+after = sum(triangles(o) for o in objs)
+material_slots = sum(len(o.material_slots) for o in objs)
 ```
 
 ## File: blender/prepare_meshy_actor.py

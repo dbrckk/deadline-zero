@@ -22,22 +22,31 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-05T18:26:13Z
+Generated: 2026-10-06T11:07:12Z
 
 ### Git
 - Branch: `main`
-- Head: `4887eadade10`
-- Commit date: 2026-10-05T20:25:48+02:00
-- Commit: Persist Android smoke toolchain diagnostics
-- Tracked files: 981
+- Head: `f9e82d629a6a`
+- Commit date: 2026-10-06T13:06:58+02:00
+- Commit: Build premium 3D asset production stack
+- Tracked files: 985
 
 ### Recently changed files
-- `.github/workflows/godot-android-first-playable.yml`
+- `.github/workflows/godot-verify.yml`
+- `docs/ASSET_STACK.md`
+- `godot/assets/asset_manifest.json`
+- `godot/assets/third_party/ASSET_SOURCES.md`
+- `tools/assets/acquire_polyhaven.py`
+- `tools/assets/validate_asset_stack.py`
+- `tools/blender/optimize_game_asset.py`
+- `play/store/feature-graphic.png`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
+- `godot/tests/upgrade_choice_render_test.gd`
+- `godot/scripts/Hud.gd`
 - `godot/tests/first_playable_run_path_test.gd`
 
 ### Project signals

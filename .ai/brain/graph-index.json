@@ -1179,6 +1179,43 @@
     },
     {
       "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java",
+        "core/src/main/java/com/deadlinezero/game/meta/EndgameMutatorRules.java",
+        "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
+        "core/src/main/java/com/deadlinezero/game/meta/ThreatTierRules.java",
+        "core/src/main/java/com/deadlinezero/game/services/AdsService.java"
+      ],
+      "dependents": [
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
+        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
+        "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
+        "core/src/main/java/com/deadlinezero/game/meta/BalanceCoefficientAudit.java",
+        "core/src/main/java/com/deadlinezero/game/meta/StageRules.java",
+        "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
+        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+        "core/src/main/java/com/deadlinezero/game/world/WaveDirector.java",
+        "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/BalanceCurveRegressionTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/EndgameMutatorRulesTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/P0RunRegressionTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/RunModifierContextTest.java",
+        "core/src/test/java/com/deadlinezero/game/meta/ThreatTierRulesTest.java",
+        "core/src/test/java/com/deadlinezero/game/world/WaveDirectorTest.java",
+        "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java",
+        "tools/blender/inspect_actor_source.py",
+        "tools/blender/optimize_game_asset.py",
+        "tools/blender/prepare_meshy_actor.py"
+      ],
+      "in_degree": 23,
+      "out_degree": 5,
+      "path": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java"
+    },
+    {
+      "dependencies": [
         "core/src/main/java/com/deadlinezero/game/combat/WeaponCatalog.java",
         "core/src/main/java/com/deadlinezero/game/combat/WeaponDefinition.java",
         "core/src/main/java/com/deadlinezero/game/combat/WeaponSignatureRuntime.java",
@@ -1321,42 +1358,6 @@
       "in_degree": 22,
       "out_degree": 5,
       "path": "core/src/main/java/com/deadlinezero/game/entities/Projectile.java"
-    },
-    {
-      "dependencies": [
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceTelemetryRuntime.java",
-        "core/src/main/java/com/deadlinezero/game/meta/EndgameMutatorRules.java",
-        "core/src/main/java/com/deadlinezero/game/meta/RunStageContext.java",
-        "core/src/main/java/com/deadlinezero/game/meta/ThreatTierRules.java",
-        "core/src/main/java/com/deadlinezero/game/services/AdsService.java"
-      ],
-      "dependents": [
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java",
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidVerticalSliceTest.java",
-        "core/src/main/java/com/deadlinezero/game/DeadlineZeroGame.java",
-        "core/src/main/java/com/deadlinezero/game/meta/BalanceCoefficientAudit.java",
-        "core/src/main/java/com/deadlinezero/game/meta/StageRules.java",
-        "core/src/main/java/com/deadlinezero/game/screen/RunContractScreen.java",
-        "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
-        "core/src/main/java/com/deadlinezero/game/world/WaveDirector.java",
-        "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureBalanceTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/BalanceCurveRegressionTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/EndgameMutatorRulesTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/P0RunRegressionTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/RunModifierContextTest.java",
-        "core/src/test/java/com/deadlinezero/game/meta/ThreatTierRulesTest.java",
-        "core/src/test/java/com/deadlinezero/game/world/WaveDirectorTest.java",
-        "desktop/src/main/java/com/deadlinezero/game/desktop/DesktopSmokeLauncher.java",
-        "tools/blender/inspect_actor_source.py",
-        "tools/blender/prepare_meshy_actor.py"
-      ],
-      "in_degree": 22,
-      "out_degree": 5,
-      "path": "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java"
     },
     {
       "dependencies": [
@@ -2497,8 +2498,8 @@
       "path": "core/src/main/java/com/deadlinezero/game/visual/CombatOverlayViewport.java"
     }
   ],
-  "edge_count": 2555,
+  "edge_count": 2556,
   "generated_by": "dbrckk/repo-brain-v7-graph",
-  "node_count": 475,
+  "node_count": 476,
   "schema_version": 1
 }

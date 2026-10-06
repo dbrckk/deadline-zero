@@ -411,6 +411,9 @@ tools/
     scan_runtime_log.py
     test_build_runtime_release_evidence.py
     test_scan_runtime_log.py
+  assets/
+    acquire_polyhaven.py
+    validate_asset_stack.py
   audio/
     generate_deadline_zero_audio.py
   blender/
@@ -418,6 +421,7 @@ tools/
     build_rex_actions.py
     catalog_blend_actions.py
     inspect_actor_source.py
+    optimize_game_asset.py
     prepare_meshy_actor.py
     refine_rex_rifle_attack.py
     render_actor_8dir.py
@@ -2045,7 +2049,14 @@ jobs:
           set -euo pipefail
           command -v sdkmanager
           command -v adb
+          set +o pipefail
           yes | sdkmanager --licenses >/dev/null
+          license_status=${PIPESTATUS[1]}
+          set -o pipefail
+          if [ "$license_status" -ne 0 ]; then
+            echo "sdkmanager license acceptance failed with exit code $license_status" >&2
+            exit "$license_status"
+          fi
           sdkmanager "platform-tools" "platforms;android-35" "emulator" "system-images;android-35;default;x86_64"
           command -v emulator
           emulator -version | tee /tmp/deadline-zero-emulator-version.txt
@@ -2896,7 +2907,8 @@ on:
     paths:
       - "godot/**"
       - "tools/audio/**"
-      - "tools/audio/**"
+      - "tools/assets/**"
+      - "tools/blender/**"
       - ".github/workflows/godot-verify.yml"
   push:
     branches: [main]
@@ -2913,6 +2925,9 @@ jobs:
 
       - name: Generate original authored audio
         run: python3 tools/audio/generate_deadline_zero_audio.py
+
+      - name: Validate premium asset stack
+        run: python3 tools/assets/validate_asset_stack.py
 
       - name: Download Godot 4.7.2
         run: |
@@ -23452,29 +23467,345 @@ tasks.register('smokeRun', JavaExec) {
 ## File: godot/assets/asset_manifest.json
 ````json
 {
-  "schema": 1,
+  "schema": 2,
   "engine": "Godot 4.7.2",
-  "policy": "CC0 or project-owned assets only unless separately reviewed",
+  "policy": {
+    "shipped_asset_licenses": [
+      "CC0-1.0",
+      "Project-Owned"
+    ],
+    "reviewed_exceptions_only": true,
+    "source_assets_are_not_shipped_raw_when_redistribution_is_restricted": true,
+    "preferred_exchange_format": "glb",
+    "disallowed_generators": [
+      {
+        "id": "hunyuan3d-2",
+        "reason": "Current license excludes EU/UK/South Korea territory; not valid for this France-based commercial pipeline."
+      }
+    ]
+  },
+  "budgets": {
+    "mobile": {
+      "enemy_standard": {
+        "triangles_lod0": 9000,
+        "triangles_lod1": 4500,
+        "materials": 2,
+        "texture_max": 1024
+      },
+      "enemy_elite": {
+        "triangles_lod0": 14000,
+        "triangles_lod1": 7000,
+        "materials": 2,
+        "texture_max": 1024
+      },
+      "boss": {
+        "triangles_lod0": 30000,
+        "triangles_lod1": 15000,
+        "materials": 3,
+        "texture_max": 2048
+      },
+      "survivor": {
+        "triangles_lod0": 22000,
+        "triangles_lod1": 11000,
+        "materials": 3,
+        "texture_max": 2048
+      },
+      "environment_prop": {
+        "triangles_lod0": 12000,
+        "triangles_lod1": 6000,
+        "materials": 2,
+        "texture_max": 2048
+      },
+      "hero_prop": {
+        "triangles_lod0": 32000,
+        "triangles_lod1": 16000,
+        "materials": 3,
+        "texture_max": 2048
+      },
+      "ground_material": {
+        "texture_max": 2048
+      },
+      "decal": {
+        "texture_max": 1024,
+        "atlas_max": 2048
+      }
+    }
+  },
+  "toolchain": [
+    {
+      "id": "blender",
+      "license": "GPL-3.0-or-later",
+      "role": "authoring-retopo-uv-bake-lod",
+      "ship": false
+    },
+    {
+      "id": "material-maker",
+      "license": "MIT",
+      "role": "procedural-pbr-and-decal-authoring",
+      "ship": false
+    },
+    {
+      "id": "trellis-2",
+      "license": "MIT",
+      "role": "optional-source-mesh-generation-own-gpu",
+      "ship": false
+    },
+    {
+      "id": "meshoptimizer-gltfpack",
+      "license": "MIT",
+      "role": "gltf-simplification-and-packing",
+      "ship": false
+    },
+    {
+      "id": "godot",
+      "license": "MIT",
+      "role": "runtime-import-and-mobile-rendering",
+      "ship": true
+    },
+    {
+      "id": "comfyui",
+      "license": "GPL-3.0",
+      "role": "optional-local-mask-reference-generation",
+      "ship": false,
+      "source": "star-list"
+    }
+  ],
   "sources": [
     {
       "id": "quaternius_zombie_apocalypse",
+      "provider": "quaternius",
       "page": "https://quaternius.com/packs/zombieapocalypsekit.html",
-      "license": "CC0",
-      "formats": ["gltf", "fbx", "obj", "blend"],
-      "roles": ["survivor", "enemy", "vehicle", "environment_prop"]
+      "license": "CC0-1.0",
+      "tier": "B",
+      "formats": [
+        "gltf",
+        "fbx",
+        "obj",
+        "blend"
+      ],
+      "roles": [
+        "survivor",
+        "enemy",
+        "environment_prop"
+      ],
+      "usage": "existing base meshes/animations; regrade/retexture before final hero use"
     },
     {
       "id": "quaternius_scifi_essentials",
+      "provider": "quaternius",
       "page": "https://quaternius.com/packs/scifiessentialskit.html",
-      "license": "CC0",
-      "formats": ["gltf", "fbx", "obj"],
-      "roles": ["weapon", "robot_enemy", "crate", "screen", "vfx_reference"]
+      "license": "CC0-1.0",
+      "tier": "B",
+      "formats": [
+        "gltf",
+        "fbx",
+        "obj"
+      ],
+      "roles": [
+        "weapon",
+        "robot_enemy",
+        "crate",
+        "screen",
+        "environment_prop"
+      ],
+      "usage": "kitbash/source geometry; public free subset only"
+    },
+    {
+      "id": "quaternius_modular_scifi_megakit",
+      "provider": "quaternius",
+      "page": "https://quaternius.com/packs/modularscifimegakit.html",
+      "license": "CC0-1.0",
+      "tier": "B",
+      "formats": [
+        "gltf",
+        "fbx",
+        "obj"
+      ],
+      "roles": [
+        "wall",
+        "floor",
+        "door",
+        "column",
+        "environment_prop"
+      ],
+      "usage": "public free subset only; use as modular geometry, then apply DZ materials"
+    },
+    {
+      "id": "quaternius_universal_animation_library_2",
+      "provider": "quaternius",
+      "page": "https://quaternius.com/packs/universalanimationlibrary2.html",
+      "license": "CC0-1.0",
+      "tier": "B",
+      "formats": [
+        "glb",
+        "fbx",
+        "blend"
+      ],
+      "roles": [
+        "animation"
+      ],
+      "usage": "retarget locomotion, zombie, armed and melee actions to validated rigs"
     },
     {
       "id": "polyhaven_concrete_tiles_02",
+      "provider": "polyhaven",
+      "asset_id": "concrete_tiles_02",
       "page": "https://polyhaven.com/a/concrete_tiles_02",
-      "license": "CC0",
-      "roles": ["ground_material"]
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "ground_material"
+      ]
+    },
+    {
+      "id": "polyhaven_asphalt_04",
+      "provider": "polyhaven",
+      "asset_id": "asphalt_04",
+      "page": "https://polyhaven.com/a/asphalt_04",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "ground_material",
+        "road"
+      ]
+    },
+    {
+      "id": "polyhaven_road_damaged_clean",
+      "provider": "polyhaven",
+      "asset_id": "road_damaged_clean",
+      "page": "https://polyhaven.com/a/road_damaged_clean",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "ground_material",
+        "road"
+      ]
+    },
+    {
+      "id": "polyhaven_factory_wall",
+      "provider": "polyhaven",
+      "asset_id": "factory_wall",
+      "page": "https://polyhaven.com/a/factory_wall",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "wall_material"
+      ]
+    },
+    {
+      "id": "polyhaven_rusty_metal_04",
+      "provider": "polyhaven",
+      "asset_id": "rusty_metal_04",
+      "page": "https://polyhaven.com/a/rusty_metal_04",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "prop_material",
+        "wall_material"
+      ]
+    },
+    {
+      "id": "polyhaven_metal_grate_rusty",
+      "provider": "polyhaven",
+      "asset_id": "metal_grate_rusty",
+      "page": "https://polyhaven.com/a/metal_grate_rusty",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "1k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "prop_material",
+        "floor_detail"
+      ]
+    },
+    {
+      "id": "polyhaven_container_side",
+      "provider": "polyhaven",
+      "asset_id": "container_side",
+      "page": "https://polyhaven.com/a/container_side",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "prop_material",
+        "wall_material"
+      ]
+    },
+    {
+      "id": "ambientcg",
+      "provider": "ambientcg",
+      "page": "https://ambientcg.com/",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "roles": [
+        "texture_fallback",
+        "surface_variation"
+      ],
+      "usage": "manual curated fallback when Poly Haven lacks a required material; pin exact asset ID before import"
+    },
+    {
+      "id": "project_owned_decals",
+      "provider": "deadline-zero",
+      "license": "Project-Owned",
+      "tier": "A",
+      "roles": [
+        "decal"
+      ],
+      "root": "art_sources/environment",
+      "usage": "crack/scorch/blood source decals already in repository; promote selected files into Godot through reviewed copy/atlas step"
     }
   ]
 }
@@ -23523,7 +23854,7 @@ static func enemy(kind: String) -> Node3D:
         "brute": tint = Color(0.62, 0.34, 0.30)
         "elite": tint = Color(0.54, 0.42, 0.70)
         "boss": tint = Color(0.68, 0.42, 0.26)
-    _grade_enemy_mesh_tree(root, tint)
+    _grade_enemy_mesh_tree(root, tint, kind)
     return root
 
 static func rifle() -> Node3D:
@@ -23614,15 +23945,15 @@ static func _add_barrier_hazard_signature(root: Node3D) -> void:
         strip.material_override = material
         root.add_child(strip)
 
-static func _grade_enemy_mesh_tree(root: Node3D, tint: Color) -> void:
+static func _grade_enemy_mesh_tree(root: Node3D, tint: Color, kind := "shambler") -> void:
     if root == null:
         return
     if root is MeshInstance3D:
-        _grade_enemy_mesh_instance(root as MeshInstance3D, tint)
+        _grade_enemy_mesh_instance(root as MeshInstance3D, tint, kind)
     for node in root.find_children("*", "MeshInstance3D", true, false):
-        _grade_enemy_mesh_instance(node as MeshInstance3D, tint)
+        _grade_enemy_mesh_instance(node as MeshInstance3D, tint, kind)
 
-static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Color) -> void:
+static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Color, kind := "shambler") -> void:
     if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
         return
 
@@ -23649,10 +23980,10 @@ static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Colo
 
         mesh_instance.set_surface_override_material(
             surface_index,
-            _enemy_surface_material(source_material, tint)
+            _enemy_surface_material(source_material, tint, kind)
         )
 
-static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color) -> ShaderMaterial:
+static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color, kind := "shambler") -> ShaderMaterial:
     var material := ShaderMaterial.new()
     material.shader = _get_enemy_grade_shader()
     material.set_shader_parameter("albedo_tex", source_material.albedo_texture)
@@ -23662,8 +23993,23 @@ static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color
     material.set_shader_parameter("highlight_floor", 0.42)
     material.set_shader_parameter("authored_roughness", source_material.roughness)
     material.set_shader_parameter("authored_metallic", source_material.metallic)
-    material.set_shader_parameter("rim_strength", 0.11)
-    material.set_shader_parameter("rim_power", 3.4)
+    var rim_strength := 0.13
+    var rim_power := 3.25
+    match kind:
+        "runner", "harrier":
+            rim_strength = 0.16
+            rim_power = 3.10
+        "charger", "brute":
+            rim_strength = 0.17
+            rim_power = 3.05
+        "regenerator", "elite":
+            rim_strength = 0.21
+            rim_power = 2.95
+        "boss":
+            rim_strength = 0.30
+            rim_power = 2.65
+    material.set_shader_parameter("rim_strength", rim_strength)
+    material.set_shader_parameter("rim_power", rim_power)
     if source_material.normal_enabled and source_material.normal_texture != null:
         material.set_shader_parameter("use_normal_map", true)
         material.set_shader_parameter("normal_tex", source_material.normal_texture)
@@ -23954,6 +24300,16 @@ static func camera_kick(critical: bool, killed: bool, boss: bool) -> float:
         kick += 0.050
     return min(kick, 0.16)
 
+static func impact_fov_pulse(critical: bool, killed: bool, boss: bool) -> float:
+    var pulse := 0.0
+    if critical:
+        pulse += 0.48
+    if killed:
+        pulse += 0.62
+    if boss:
+        pulse += 0.46
+    return minf(pulse, 1.30)
+
 static func damage_received_camera_kick(damage: float, max_health: float) -> float:
     if damage <= 0.0 or max_health <= 0.0:
         return 0.0
@@ -23974,6 +24330,7 @@ extends CharacterBody3D
 signal died(xp_value: int, at: Vector3)
 signal impact(at: Vector3, critical: bool, killed: bool, boss: bool)
 signal health_changed(current: float, maximum: float)
+signal boss_phase_changed(phase: int, at: Vector3)
 
 var target: Node3D
 var kind := "shambler"
@@ -23992,6 +24349,12 @@ var attack_target_position := Vector3.ZERO
 var elite_burst_clock := 2.4
 var boss_slam_clock := 3.6
 var boss_phase := 1
+var boss_presence_clock := 0.0
+var boss_aura_root: Node3D
+var boss_aura_inner: MeshInstance3D
+var boss_aura_outer: MeshInstance3D
+var boss_aura_inner_material: StandardMaterial3D
+var boss_aura_outer_material: StandardMaterial3D
 var telegraph_visual: Node3D
 var telegraph_material: StandardMaterial3D
 var slow_multiplier := 1.0
@@ -24015,6 +24378,7 @@ var charge_hit := false
 var hit_flash_visual: MeshInstance3D
 var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
+var spawn_reveal_tween: Tween
 static var _shared_contact_shadow_material: StandardMaterial3D
 static var _contact_shadow_mesh_cache := {}
 static var _signature_material_cache := {}
@@ -24080,6 +24444,7 @@ func _ready() -> void:
     _build_visual()
     _build_contact_shadow()
     _build_hit_flash()
+    _play_spawn_reveal()
 
 func _physics_process(delta: float) -> void:
     if not combat_enabled:
@@ -24094,6 +24459,7 @@ func _physics_process(delta: float) -> void:
         return
     if kind == "boss":
         _update_boss_phase()
+        _update_boss_presence(delta)
     attack_cooldown = max(0.0, attack_cooldown - delta)
     elite_burst_clock = max(0.0, elite_burst_clock - delta)
     boss_slam_clock = max(0.0, boss_slam_clock - delta)
@@ -24210,7 +24576,7 @@ func _constrain_to_arena() -> void:
 func _melee_standoff_distance() -> float:
     match kind:
         "boss":
-            return 1.64
+            return 1.82
         "brute":
             return 1.42
         "charger":
@@ -24265,7 +24631,13 @@ func _update_boss_phase() -> void:
     if kind != "boss" or max_health <= 0.0:
         return
     var ratio := clampf(health / max_health, 0.0, 1.0)
-    boss_phase = 3 if ratio <= 0.30 else (2 if ratio <= 0.65 else 1)
+    var next_phase := 3 if ratio <= 0.30 else (2 if ratio <= 0.65 else 1)
+    if next_phase != boss_phase:
+        boss_phase = next_phase
+        _refresh_boss_presence_style()
+        boss_phase_changed.emit(boss_phase, global_position + Vector3(0.0, 0.78, 0.0))
+    else:
+        boss_phase = next_phase
     match boss_phase:
         2:
             move_speed = 1.55
@@ -24288,6 +24660,55 @@ func _boss_slam_cooldown() -> float:
         2: return 3.4
         3: return 2.8
         _: return 4.1
+
+func _boss_aftershock_count() -> int:
+    return 2 if boss_phase >= 3 else (1 if boss_phase >= 2 else 0)
+
+func _schedule_boss_aftershocks(at: Vector3) -> void:
+    var count := _boss_aftershock_count()
+    for index in range(count):
+        var delay := (0.30 + float(index) * 0.28) if boss_phase >= 3 else 0.36
+        var radius := 2.50 + float(index) * 0.66
+        var damage_scale := 0.42 if index == 0 else 0.32
+        _show_boss_aftershock(at, radius, delay, damage_scale)
+
+func _show_boss_aftershock(at: Vector3, radius: float, delay: float, damage_scale: float) -> void:
+    var scene := get_tree().current_scene if get_tree() != null else null
+    if scene == null:
+        return
+    var warning := MeshInstance3D.new()
+    warning.name = "BossAftershockWarning"
+    warning.mesh = _telegraph_ring_mesh(radius, true)
+    warning.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    scene.add_child(warning)
+    warning.global_position = at + Vector3(0.0, 0.040, 0.0)
+
+    var material := StandardMaterial3D.new()
+    material.albedo_color = Color(1.0, 0.10, 0.025, 0.30)
+    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.emission_enabled = true
+    material.emission = Color(1.0, 0.055, 0.008)
+    material.emission_energy_multiplier = 2.0
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    warning.material_override = material
+    warning.scale = Vector3(0.58, 1.0, 0.58)
+
+    var tween := warning.create_tween()
+    tween.set_parallel(true)
+    tween.tween_property(warning, "scale", Vector3.ONE, delay).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(material, "emission_energy_multiplier", 5.2, delay).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.tween_property(material, "albedo_color", Color(1.0, 0.045, 0.006, 0.82), delay).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+    tween.chain().tween_callback(_resolve_boss_aftershock.bind(at, radius, contact_damage * damage_scale, warning))
+
+func _resolve_boss_aftershock(at: Vector3, radius: float, damage: float, warning: MeshInstance3D) -> void:
+    if warning != null and is_instance_valid(warning):
+        warning.queue_free()
+    if target != null and is_instance_valid(target) and target.has_method("take_damage"):
+        var flat_delta := target.global_position - at
+        flat_delta.y = 0.0
+        if flat_delta.length() <= radius:
+            target.take_damage(damage)
+    _spawn_attack_impact(at, radius * 0.72)
 
 func _process_charge(delta: float) -> void:
     charge_left = max(0.0, charge_left - delta)
@@ -24364,6 +24785,8 @@ func _resolve_telegraphed_attack() -> void:
     if target.global_position.distance_to(impact_point) <= radius and target.has_method("take_damage"):
         target.take_damage(damage)
     _spawn_attack_impact(impact_point, radius)
+    if kind == "boss" and boss_phase >= 2:
+        _schedule_boss_aftershocks(impact_point)
     attack_cooldown = 0.88 if kind == "boss" else 0.64
 
 func _show_telegraph(radius: float, duration: float) -> void:
@@ -24384,10 +24807,14 @@ func _show_telegraph(radius: float, duration: float) -> void:
     telegraph_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     telegraph_visual.material_override = telegraph_material
 
-    # Four short ticks make the danger radius readable under bodies/projectiles without filling
-    # the entire floor area with an opaque disk.
-    for tick_index in range(4):
-        var angle := TAU * float(tick_index) / 4.0
+    if pending_special == "charge" or pending_special == "harrier_shot":
+        _add_directional_telegraph_lane()
+
+    # Threat class changes the ring language without filling the danger area:
+    # normal = 4 ticks, elite = 6 ticks, boss = 8 ticks plus a second inner ring.
+    var tick_count := 8 if kind == "boss" else (6 if kind == "elite" else 4)
+    for tick_index in range(tick_count):
+        var angle := TAU * float(tick_index) / float(tick_count)
         var tick := MeshInstance3D.new()
         tick.name = "TelegraphTick_%d" % tick_index
         tick.mesh = _telegraph_tick_mesh(radius)
@@ -24397,13 +24824,48 @@ func _show_telegraph(radius: float, duration: float) -> void:
         tick.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         telegraph_visual.add_child(tick)
 
+    if kind == "boss":
+        var inner_ring := MeshInstance3D.new()
+        inner_ring.name = "TelegraphInnerRing"
+        inner_ring.mesh = _telegraph_ring_mesh(radius * 0.48, true)
+        inner_ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        inner_ring.material_override = telegraph_material
+        telegraph_visual.add_child(inner_ring)
+
     var tween := telegraph_visual.create_tween()
     tween.set_parallel(true)
     telegraph_visual.scale = Vector3(0.42, 1.0, 0.42)
     tween.tween_property(telegraph_visual, "scale", Vector3.ONE, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    if kind == "boss":
+        tween.tween_property(telegraph_visual, "rotation:y", PI * 0.25, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    elif kind == "elite":
+        tween.tween_property(telegraph_visual, "rotation:y", PI / 6.0, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     tween.tween_property(telegraph_material, "emission_energy_multiplier", 5.8 if kind == "boss" else 4.6, duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.tween_property(telegraph_material, "albedo_color", Color(1.0, 0.07, 0.008, 0.92 if kind == "boss" else 0.78), duration).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
     tween.chain().tween_callback(telegraph_visual.queue_free)
+
+func _add_directional_telegraph_lane() -> void:
+    if telegraph_visual == null or telegraph_material == null:
+        return
+    var delta := attack_target_position - global_position
+    delta.y = 0.0
+    var distance := delta.length()
+    if distance < 0.25:
+        return
+
+    var lane := MeshInstance3D.new()
+    lane.name = "ChargeLane" if pending_special == "charge" else "HarrierAimLane"
+    var lane_mesh := BoxMesh.new()
+    var width := 0.30 if pending_special == "charge" else 0.11
+    lane_mesh.size = Vector3(width, 0.014, distance)
+    lane.mesh = lane_mesh
+    lane.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    lane.material_override = telegraph_material
+    telegraph_visual.add_child(lane)
+
+    var midpoint := global_position.lerp(attack_target_position, 0.5) + Vector3(0.0, 0.006, 0.0)
+    lane.global_position = midpoint
+    lane.rotation.y = atan2(delta.x, delta.z)
 
 static func _telegraph_ring_mesh(radius: float, boss: bool) -> TorusMesh:
     var key := "%.3f|%s" % [radius, "boss" if boss else "normal"]
@@ -24608,12 +25070,31 @@ func _build_contact_shadow() -> void:
         "elite":
             radius = 0.54
         "boss":
-            radius = 0.78
+            radius = 0.90
     shadow.mesh = _contact_shadow_mesh(radius)
     shadow.position.y = 0.010
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     shadow.material_override = _enemy_contact_shadow_material()
     add_child(shadow)
+
+func _play_spawn_reveal() -> void:
+    var visual := get_node_or_null("Visual") as Node3D
+    var shadow := get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    if visual == null or shadow == null:
+        return
+    if spawn_reveal_tween != null and spawn_reveal_tween.is_valid():
+        spawn_reveal_tween.kill()
+
+    var final_visual_position := visual.position
+    var final_shadow_scale := shadow.scale
+    visual.position = final_visual_position + Vector3(0.0, -0.12 if kind == "boss" else -0.075, 0.0)
+    shadow.scale = final_shadow_scale * (0.46 if kind == "boss" else 0.62)
+
+    var duration := 0.30 if kind == "boss" else 0.18
+    spawn_reveal_tween = create_tween()
+    spawn_reveal_tween.set_parallel(true)
+    spawn_reveal_tween.tween_property(visual, "position", final_visual_position, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    spawn_reveal_tween.tween_property(shadow, "scale", final_shadow_scale, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 static func _contact_shadow_mesh(radius: float) -> CylinderMesh:
     var key := "%.3f" % radius
@@ -24653,7 +25134,7 @@ func _build_hit_flash() -> void:
     hit_flash_visual = MeshInstance3D.new()
     hit_flash_visual.name = "HitFlash"
     var scale_factor := 1.0
-    if kind == "boss": scale_factor = 1.62
+    if kind == "boss": scale_factor = 1.84
     elif kind in ["elite", "brute", "charger"]: scale_factor = 1.18
     hit_flash_visual.mesh = _hit_flash_mesh(scale_factor)
     hit_flash_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -24679,17 +25160,17 @@ func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     number.name = "DamageNumber_%d" % Time.get_ticks_usec()
     number.add_to_group("damage_numbers")
     number.text = "%d" % int(round(amount))
-    number.font_size = 44 if critical else (38 if killed else 32)
-    number.outline_size = 8 if critical or killed else 6
+    number.font_size = 52 if critical else (44 if killed else 34)
+    number.outline_size = 9 if critical or killed else 7
     number.modulate = Color(1.0, 0.72, 0.12) if critical else (Color(1.0, 0.42, 0.16) if killed else Color(0.92, 0.97, 1.0))
     number.outline_modulate = Color(0.02, 0.03, 0.05, 0.96)
     number.billboard = BaseMaterial3D.BILLBOARD_ENABLED
     number.no_depth_test = true
-    number.pixel_size = 0.0068 if critical else (0.0064 if killed else 0.0060)
+    number.pixel_size = 0.0074 if critical else (0.0069 if killed else 0.0062)
     get_tree().current_scene.add_child(number)
     number.global_position = global_position + Vector3(0.0, 1.28, 0.0)
 
-    var rise := 0.82 if critical else 0.62
+    var rise := 0.96 if critical else (0.78 if killed else 0.66)
     var tween := number.create_tween()
     tween.set_parallel(true)
     tween.tween_property(number, "global_position", number.global_position + Vector3(0.0, rise, 0.0), 0.58).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
@@ -24708,7 +25189,7 @@ func _build_visual() -> void:
             "charger": scale_factor = 1.18
             "harrier": scale_factor = 0.94
             "regenerator": scale_factor = 1.10
-            "boss": scale_factor = 1.62
+            "boss": scale_factor = 1.82
         authored_visual.scale = Vector3.ONE * scale_factor
         add_child(authored_visual)
         authored_anim = DZAssetLibrary.animation_player(authored_visual)
@@ -24895,31 +25376,114 @@ func _add_elite_crown(color: Color) -> void:
     _add_eye_beacon(color, Vector3(0.0, 1.70, -0.34), 0.075)
 
 func _add_boss_frame(color: Color) -> void:
-    var mat := _signature_material(color, 3.4)
+    var mat := _signature_material(color, 3.7)
     for side in [-1.0, 1.0]:
         var wing := MeshInstance3D.new()
-        wing.mesh = _signature_box_mesh("boss_wing", Vector3(0.16, 0.30, 0.58))
+        wing.mesh = _signature_box_mesh("boss_wing_premium", Vector3(0.20, 0.34, 0.72))
         wing.name = "BossWingL" if side < 0.0 else "BossWingR"
-        wing.position = Vector3(side * 0.72, 1.16, 0.04)
-        wing.rotation_degrees = Vector3(0.0, side * 18.0, side * -16.0)
+        wing.position = Vector3(side * 0.84, 1.22, 0.04)
+        wing.rotation_degrees = Vector3(0.0, side * 20.0, side * -17.0)
         wing.material_override = mat
         add_child(wing)
 
         var horn := MeshInstance3D.new()
-        horn.mesh = _signature_box_mesh("boss_horn", Vector3(0.12, 0.62, 0.22))
+        horn.mesh = _signature_box_mesh("boss_horn_premium", Vector3(0.14, 0.72, 0.25))
         horn.name = "BossHornL" if side < 0.0 else "BossHornR"
-        horn.position = Vector3(side * 0.52, 1.80, 0.06)
-        horn.rotation_degrees.z = side * -32.0
+        horn.position = Vector3(side * 0.60, 1.92, 0.05)
+        horn.rotation_degrees.z = side * -34.0
         horn.material_override = mat
         add_child(horn)
 
     var core := MeshInstance3D.new()
-    core.mesh = _signature_sphere_mesh("boss_core", 0.145, 0.29)
+    core.mesh = _signature_sphere_mesh("boss_core_premium", 0.18, 0.36)
     core.name = "BossCore"
-    core.position = Vector3(0.0, 1.32, -0.48)
-    core.material_override = _signature_material(Color(1.0, 0.30, 0.04), 4.6)
+    core.position = Vector3(0.0, 1.40, -0.52)
+    core.material_override = _signature_material(Color(1.0, 0.30, 0.04), 5.0)
     add_child(core)
-    _add_eye_beacon(color, Vector3(0.0, 1.82, -0.46), 0.105)
+    _add_eye_beacon(color, Vector3(0.0, 1.96, -0.50), 0.125)
+    _build_boss_presence()
+
+func _build_boss_presence() -> void:
+    boss_aura_root = Node3D.new()
+    boss_aura_root.name = "BossThreatAura"
+    boss_aura_root.position.y = 0.032
+    add_child(boss_aura_root)
+
+    boss_aura_inner_material = StandardMaterial3D.new()
+    boss_aura_inner_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    boss_aura_inner_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    boss_aura_inner_material.emission_enabled = true
+
+    boss_aura_outer_material = StandardMaterial3D.new()
+    boss_aura_outer_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    boss_aura_outer_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    boss_aura_outer_material.emission_enabled = true
+
+    boss_aura_inner = MeshInstance3D.new()
+    boss_aura_inner.name = "BossAuraInner"
+    boss_aura_inner.mesh = _telegraph_ring_mesh(1.20, true)
+    boss_aura_inner.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    boss_aura_inner.material_override = boss_aura_inner_material
+    boss_aura_root.add_child(boss_aura_inner)
+
+    boss_aura_outer = MeshInstance3D.new()
+    boss_aura_outer.name = "BossAuraOuter"
+    boss_aura_outer.mesh = _telegraph_ring_mesh(1.68, true)
+    boss_aura_outer.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    boss_aura_outer.material_override = boss_aura_outer_material
+    boss_aura_root.add_child(boss_aura_outer)
+
+    var tick_mesh := _signature_box_mesh("boss_aura_tick", Vector3(0.080, 0.018, 0.36))
+    for index in range(4):
+        var tick := MeshInstance3D.new()
+        tick.name = "BossAuraTick_%d" % index
+        tick.mesh = tick_mesh
+        var angle := float(index) * PI * 0.5
+        tick.position = Vector3(sin(angle) * 1.68, 0.006, cos(angle) * 1.68)
+        tick.rotation.y = angle
+        tick.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        tick.material_override = boss_aura_inner_material
+        boss_aura_root.add_child(tick)
+
+    _refresh_boss_presence_style()
+
+func _refresh_boss_presence_style() -> void:
+    if boss_aura_inner_material == null or boss_aura_outer_material == null:
+        return
+    var phase_color := Color(1.0, 0.52, 0.06)
+    if boss_phase == 2:
+        phase_color = Color(1.0, 0.24, 0.035)
+    elif boss_phase >= 3:
+        phase_color = Color(1.0, 0.055, 0.12)
+
+    var inner_color := phase_color
+    inner_color.a = 0.78
+    boss_aura_inner_material.albedo_color = inner_color
+    boss_aura_inner_material.emission = phase_color
+    boss_aura_inner_material.emission_energy_multiplier = 2.8 + float(boss_phase) * 0.55
+
+    var outer_color := phase_color.lightened(0.12)
+    outer_color.a = 0.32
+    boss_aura_outer_material.albedo_color = outer_color
+    boss_aura_outer_material.emission = phase_color
+    boss_aura_outer_material.emission_energy_multiplier = 1.25 + float(boss_phase) * 0.38
+
+func _update_boss_presence(delta: float) -> void:
+    if boss_aura_root == null:
+        return
+    boss_presence_clock += maxf(delta, 0.0)
+    boss_aura_root.rotation.y += delta * (0.42 + float(boss_phase) * 0.10)
+    var pulse := 0.5 + 0.5 * sin(boss_presence_clock * (2.8 + float(boss_phase) * 0.35))
+    if boss_aura_inner != null:
+        var inner_scale := 0.96 + pulse * 0.075
+        boss_aura_inner.scale = Vector3.ONE * inner_scale
+    if boss_aura_outer != null:
+        var outer_scale := 1.035 - pulse * 0.035
+        boss_aura_outer.scale = Vector3.ONE * outer_scale
+    if boss_aura_inner_material != null:
+        boss_aura_inner_material.emission_energy_multiplier = 2.8 + float(boss_phase) * 0.55 + pulse * 0.55
+    if boss_aura_outer_material != null:
+        boss_aura_outer_material.emission_energy_multiplier = 1.25 + float(boss_phase) * 0.38 + pulse * 0.22
 
 func _melee_attack_animation_range() -> float:
     return _contact_attack_range() + 0.08
@@ -25195,21 +25759,28 @@ signal hit_stop_changed(enabled: bool)
 var hp_bar: ProgressBar
 var health_bar: ProgressBar
 var xp_bar: ProgressBar
+var xp_pulse_tween: Tween
 var status_label: Label
 var health_value_label: Label
 var wave_label: Label
+var wave_panel: PanelContainer
+var wave_transition_tween: Tween
+var current_wave_text := ""
 var upgrade_panel: PanelContainer
 var upgrade_buttons: Array[Button] = []
 var upgrade_cards: Array[VBoxContainer] = []
+var upgrade_card_panels: Array[PanelContainer] = []
 var upgrade_family_labels: Array[Label] = []
 var upgrade_title_labels: Array[Label] = []
 var upgrade_detail_labels: Array[Label] = []
+var upgrade_entry_tween: Tween
 var boss_panel: PanelContainer
 var boss_name_label: Label
 var boss_hp_bar: ProgressBar
 var boss_phase_label: Label
 var boss_hp_fill_style: StyleBoxFlat
 var boss_hp_max := 1.0
+var boss_phase_tween: Tween
 var game_over_panel: PanelContainer
 var game_over_scrim: ColorRect
 var game_over_summary: Label
@@ -25271,8 +25842,49 @@ func set_progress(xp: int, next_xp: int, level: int, kills: int, elapsed: float,
     xp_bar.value = xp
     status_label.text = "LV %d   KILLS %d   THREATS %d   %02d:%02d" % [level, kills, threats, int(elapsed) / 60, int(elapsed) % 60]
 
+func pulse_xp_collection(amount: int) -> void:
+    if xp_bar == null:
+        return
+    if xp_pulse_tween != null and xp_pulse_tween.is_valid():
+        xp_pulse_tween.kill()
+    var strength := clampf(float(amount) / 8.0, 0.0, 1.0)
+    xp_bar.modulate = Color(
+        lerpf(0.82, 1.0, strength),
+        1.0,
+        lerpf(0.94, 0.72, strength),
+        1.0
+    )
+    xp_bar.scale = Vector2(1.0, 1.35 + strength * 0.18)
+    xp_pulse_tween = xp_bar.create_tween()
+    xp_pulse_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    xp_pulse_tween.set_parallel(true)
+    xp_pulse_tween.tween_property(xp_bar, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    xp_pulse_tween.tween_property(xp_bar, "modulate", Color.WHITE, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
 func set_wave(text: String) -> void:
+    if wave_label == null:
+        return
+    if text == current_wave_text:
+        return
+    current_wave_text = text
     wave_label.text = text
+    _pulse_wave_transition(text)
+
+func _pulse_wave_transition(text: String) -> void:
+    if wave_panel == null or wave_label == null:
+        return
+    if wave_transition_tween != null and wave_transition_tween.is_valid():
+        wave_transition_tween.kill()
+    var urgent := text.contains("BOSS") or text.contains("OVERRUN")
+    var accent := Color(1.0, 0.34, 0.12) if urgent else Color(0.22, 0.76, 0.94)
+    wave_panel.pivot_offset = wave_panel.size * 0.5
+    wave_panel.scale = Vector2(0.94, 0.94)
+    wave_label.modulate = accent.lightened(0.16)
+    wave_transition_tween = wave_panel.create_tween()
+    wave_transition_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    wave_transition_tween.set_parallel(true)
+    wave_transition_tween.tween_property(wave_panel, "scale", Vector2.ONE, 0.24).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    wave_transition_tween.tween_property(wave_label, "modulate", Color(0.90, 0.95, 0.98), 0.36).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func show_boss(name: String, maximum: float) -> void:
     boss_hp_max = max(1.0, maximum)
@@ -25280,6 +25892,8 @@ func show_boss(name: String, maximum: float) -> void:
     boss_hp_bar.max_value = boss_hp_max
     boss_hp_bar.value = boss_hp_max
     boss_phase_label.text = "THREAT LOCK"
+    boss_phase_label.modulate = Color(1.0, 0.62, 0.22)
+    boss_phase_label.scale = Vector2.ONE
     boss_panel.visible = true
 
 func set_boss_health(value: float, maximum: float) -> void:
@@ -25288,6 +25902,7 @@ func set_boss_health(value: float, maximum: float) -> void:
     boss_hp_bar.value = clamp(value, 0.0, boss_hp_max)
     var ratio := boss_hp_bar.value / boss_hp_max
     boss_phase_label.text = "PHASE III // EXECUTE" if ratio <= 0.30 else ("PHASE II // ENRAGED" if ratio <= 0.65 else "PHASE I // HUNT")
+    boss_phase_label.modulate = Color(1.0, 0.18, 0.18) if ratio <= 0.30 else (Color(1.0, 0.42, 0.18) if ratio <= 0.65 else Color(1.0, 0.68, 0.28))
     if boss_hp_fill_style != null:
         if ratio <= 0.30:
             boss_hp_fill_style.bg_color = Color(0.96, 0.16, 0.055, 0.98)
@@ -25300,6 +25915,20 @@ func set_boss_health(value: float, maximum: float) -> void:
             boss_hp_fill_style.border_color = Color(1.0, 0.80, 0.30, 0.86)
     if boss_hp_bar.value <= 0.0:
         boss_panel.visible = false
+
+func pulse_boss_phase(phase: int) -> void:
+    if boss_phase_label == null:
+        return
+    if boss_phase_tween != null and boss_phase_tween.is_valid():
+        boss_phase_tween.kill()
+    var phase_color := Color(1.0, 0.44, 0.18) if phase == 2 else Color(1.0, 0.12, 0.15)
+    boss_phase_label.modulate = phase_color.lightened(0.18)
+    boss_phase_label.scale = Vector2(1.10, 1.10)
+    boss_phase_tween = boss_phase_label.create_tween()
+    boss_phase_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    boss_phase_tween.set_parallel(true)
+    boss_phase_tween.tween_property(boss_phase_label, "scale", Vector2.ONE, 0.34).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    boss_phase_tween.tween_property(boss_phase_label, "modulate", phase_color, 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func hide_boss() -> void:
     boss_panel.visible = false
@@ -25369,6 +25998,8 @@ func set_reduced_flashes(enabled: bool) -> void:
         reduced_flashes_toggle.set_pressed_no_signal(enabled)
 
 func show_upgrade(items: Array) -> void:
+    if upgrade_entry_tween != null and upgrade_entry_tween.is_valid():
+        upgrade_entry_tween.kill()
     for i in range(upgrade_buttons.size()):
         var item: Dictionary = items[i] if i < items.size() else {}
         var id := str(item.get("id", "damage"))
@@ -25377,10 +26008,34 @@ func show_upgrade(items: Array) -> void:
         upgrade_detail_labels[i].text = str(item.get("detail", ""))
         upgrade_buttons[i].text = _upgrade_glyph(id)
         _style_upgrade_card(i, id)
+
     upgrade_panel.visible = true
+    upgrade_panel.pivot_offset = upgrade_panel.size * 0.5
+    upgrade_panel.scale = Vector2(0.965, 0.965)
+    upgrade_panel.modulate = Color(1.0, 1.0, 1.0, 0.0)
+
+    for card in upgrade_card_panels:
+        card.pivot_offset = card.size * 0.5
+        card.scale = Vector2(0.94, 0.94)
+        card.modulate = Color(1.0, 1.0, 1.0, 0.0)
+
+    upgrade_entry_tween = upgrade_panel.create_tween()
+    upgrade_entry_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+    upgrade_entry_tween.set_parallel(true)
+    upgrade_entry_tween.tween_property(upgrade_panel, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+    upgrade_entry_tween.tween_property(upgrade_panel, "modulate:a", 1.0, 0.10).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    for i in range(upgrade_card_panels.size()):
+        var card := upgrade_card_panels[i]
+        var delay := 0.035 + float(i) * 0.040
+        upgrade_entry_tween.tween_property(card, "scale", Vector2.ONE, 0.16).set_delay(delay).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+        upgrade_entry_tween.tween_property(card, "modulate:a", 1.0, 0.11).set_delay(delay).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func hide_upgrade() -> void:
+    if upgrade_entry_tween != null and upgrade_entry_tween.is_valid():
+        upgrade_entry_tween.kill()
     upgrade_panel.visible = false
+    upgrade_panel.scale = Vector2.ONE
+    upgrade_panel.modulate = Color.WHITE
 
 func show_pause_settings() -> void:
     pause_panel.visible = true
@@ -25645,7 +26300,7 @@ func _build() -> void:
     status_label.modulate = Color(0.82, 0.90, 0.94)
     vital_stack.add_child(status_label)
 
-    var wave_panel := PanelContainer.new()
+    wave_panel = PanelContainer.new()
     wave_panel.name = "WavePanel"
     wave_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
     wave_panel.position = Vector2(-170, 18)
@@ -26047,52 +26702,98 @@ func _build() -> void:
     upgrade_panel = PanelContainer.new()
     upgrade_panel.name = "UpgradePanel"
     upgrade_panel.set_anchors_preset(Control.PRESET_CENTER)
-    upgrade_panel.position = Vector2(-480, -155)
-    upgrade_panel.size = Vector2(960, 310)
+    upgrade_panel.position = Vector2(-535, -190)
+    upgrade_panel.size = Vector2(1070, 380)
     upgrade_panel.visible = false
     root.add_child(upgrade_panel)
+
+    var upgrade_panel_style := StyleBoxFlat.new()
+    upgrade_panel_style.bg_color = Color(0.008, 0.016, 0.024, 0.955)
+    upgrade_panel_style.border_color = Color(0.12, 0.52, 0.72, 0.62)
+    upgrade_panel_style.set_border_width_all(2)
+    upgrade_panel_style.corner_radius_top_left = 12
+    upgrade_panel_style.corner_radius_top_right = 12
+    upgrade_panel_style.corner_radius_bottom_left = 12
+    upgrade_panel_style.corner_radius_bottom_right = 12
+    upgrade_panel_style.shadow_color = Color(0.0, 0.0, 0.0, 0.72)
+    upgrade_panel_style.shadow_size = 14
+    upgrade_panel_style.content_margin_left = 24.0
+    upgrade_panel_style.content_margin_right = 24.0
+    upgrade_panel_style.content_margin_top = 18.0
+    upgrade_panel_style.content_margin_bottom = 20.0
+    upgrade_panel.add_theme_stylebox_override("panel", upgrade_panel_style)
+
     var box := VBoxContainer.new()
-    box.add_theme_constant_override("separation", 18)
+    box.add_theme_constant_override("separation", 12)
     upgrade_panel.add_child(box)
+
     var title := Label.new()
     title.text = "SELECT COMBAT UPGRADE"
     title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     title.add_theme_font_size_override("font_size", 30)
+    title.add_theme_color_override("font_color", Color(0.91, 0.96, 0.99))
     box.add_child(title)
+
+    var subtitle := Label.new()
+    subtitle.name = "UpgradeSubtitle"
+    subtitle.text = "CHOOSE ONE // ADAPT THE BUILD"
+    subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    subtitle.add_theme_font_size_override("font_size", 12)
+    subtitle.add_theme_color_override("font_color", Color(0.36, 0.72, 0.86))
+    box.add_child(subtitle)
+
     var row := HBoxContainer.new()
+    row.name = "UpgradeCardRow"
     row.alignment = BoxContainer.ALIGNMENT_CENTER
-    row.add_theme_constant_override("separation", 18)
+    row.add_theme_constant_override("separation", 16)
     box.add_child(row)
+
     for i in range(3):
+        var card_panel := PanelContainer.new()
+        card_panel.name = "UpgradeCard_%d" % i
+        card_panel.custom_minimum_size = Vector2(316, 245)
+        row.add_child(card_panel)
+        upgrade_card_panels.append(card_panel)
+
         var card := VBoxContainer.new()
-        card.custom_minimum_size = Vector2(280, 190)
-        card.add_theme_constant_override("separation", 5)
-        row.add_child(card)
+        card.custom_minimum_size = Vector2(284, 216)
+        card.add_theme_constant_override("separation", 6)
+        card_panel.add_child(card)
         upgrade_cards.append(card)
+
         var family := Label.new()
         family.text = "UPGRADE"
         family.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        family.add_theme_font_size_override("font_size", 13)
+        family.add_theme_font_size_override("font_size", 12)
         card.add_child(family)
         upgrade_family_labels.append(family)
+
         var button := Button.new()
-        button.custom_minimum_size = Vector2(280, 82)
+        button.name = "UpgradeGlyphButton_%d" % i
+        button.custom_minimum_size = Vector2(284, 90)
         button.text = "◆"
-        button.add_theme_font_size_override("font_size", 38)
+        button.add_theme_font_size_override("font_size", 42)
+        button.focus_mode = Control.FOCUS_ALL
         button.pressed.connect(_on_upgrade_pressed.bind(i))
         card.add_child(button)
         upgrade_buttons.append(button)
+
         var upgrade_title := Label.new()
         upgrade_title.text = "UPGRADE"
         upgrade_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
         upgrade_title.add_theme_font_size_override("font_size", 21)
+        upgrade_title.add_theme_color_override("font_color", Color(0.95, 0.97, 1.0))
         card.add_child(upgrade_title)
         upgrade_title_labels.append(upgrade_title)
+
         var detail := Label.new()
         detail.text = ""
+        detail.custom_minimum_size = Vector2(280, 42)
         detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        detail.add_theme_font_size_override("font_size", 16)
-        detail.modulate = Color(0.76, 0.84, 0.90)
+        detail.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+        detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+        detail.add_theme_font_size_override("font_size", 15)
+        detail.add_theme_color_override("font_color", Color(0.72, 0.82, 0.89))
         card.add_child(detail)
         upgrade_detail_labels.append(detail)
 
@@ -26134,21 +26835,62 @@ func _style_upgrade_card(index: int, id: String) -> void:
     var accent := _upgrade_color(id)
     upgrade_family_labels[index].modulate = accent
     upgrade_title_labels[index].modulate = Color.WHITE
+
+    var card_style := StyleBoxFlat.new()
+    card_style.bg_color = Color(
+        0.016 + accent.r * 0.018,
+        0.024 + accent.g * 0.018,
+        0.032 + accent.b * 0.018,
+        0.985
+    )
+    card_style.border_color = Color(accent.r, accent.g, accent.b, 0.70)
+    card_style.set_border_width_all(2)
+    card_style.border_width_top = 4
+    card_style.corner_radius_top_left = 10
+    card_style.corner_radius_top_right = 10
+    card_style.corner_radius_bottom_left = 10
+    card_style.corner_radius_bottom_right = 10
+    card_style.content_margin_left = 14.0
+    card_style.content_margin_right = 14.0
+    card_style.content_margin_top = 12.0
+    card_style.content_margin_bottom = 12.0
+    upgrade_card_panels[index].add_theme_stylebox_override("panel", card_style)
+
     var normal := StyleBoxFlat.new()
-    normal.bg_color = Color(0.035, 0.055, 0.070, 0.98)
-    normal.border_color = Color(accent.r, accent.g, accent.b, 0.72)
-    normal.set_border_width_all(2)
+    normal.bg_color = Color(
+        0.026 + accent.r * 0.026,
+        0.036 + accent.g * 0.026,
+        0.046 + accent.b * 0.026,
+        0.98
+    )
+    normal.border_color = Color(accent.r, accent.g, accent.b, 0.46)
+    normal.set_border_width_all(1)
+    normal.border_width_top = 2
     normal.corner_radius_top_left = 8
     normal.corner_radius_top_right = 8
     normal.corner_radius_bottom_left = 8
     normal.corner_radius_bottom_right = 8
-    var hover := normal.duplicate()
-    hover.bg_color = Color(accent.r * 0.16, accent.g * 0.16, accent.b * 0.16, 1.0)
-    hover.border_color = accent
+
+    var hover := normal.duplicate() as StyleBoxFlat
+    hover.bg_color = Color(
+        0.040 + accent.r * 0.18,
+        0.048 + accent.g * 0.18,
+        0.058 + accent.b * 0.18,
+        0.99
+    )
+    hover.border_color = Color(accent.r, accent.g, accent.b, 0.96)
+    hover.set_border_width_all(2)
+
+    var pressed := hover.duplicate() as StyleBoxFlat
+    pressed.bg_color = Color(accent.r * 0.22, accent.g * 0.22, accent.b * 0.22, 1.0)
+
     upgrade_buttons[index].add_theme_stylebox_override("normal", normal)
     upgrade_buttons[index].add_theme_stylebox_override("hover", hover)
-    upgrade_buttons[index].add_theme_stylebox_override("pressed", hover)
+    upgrade_buttons[index].add_theme_stylebox_override("focus", hover)
+    upgrade_buttons[index].add_theme_stylebox_override("pressed", pressed)
     upgrade_buttons[index].add_theme_color_override("font_color", accent)
+    upgrade_buttons[index].add_theme_color_override("font_hover_color", accent.lightened(0.14))
+    upgrade_buttons[index].add_theme_color_override("font_pressed_color", Color.WHITE)
 
 func _on_upgrade_pressed(index: int) -> void:
     upgrade_chosen.emit(index)
@@ -26159,17 +26901,20 @@ func _on_upgrade_pressed(index: int) -> void:
 class_name ImpactFx
 extends Node3D
 
-var life := 0.18
+var life := 0.20
 var age := 0.0
 var color := Color(0.25, 0.9, 1.0, 1.0)
 var scale_boost := 1.0
 var mesh_instance: MeshInstance3D
 var ring_instance: MeshInstance3D
+var flare_instance: MeshInstance3D
 var core_material: StandardMaterial3D
 var ring_material: StandardMaterial3D
+var flare_material: StandardMaterial3D
 
 static var _shared_core_mesh: SphereMesh
 static var _shared_ring_mesh: TorusMesh
+static var _shared_flare_mesh: QuadMesh
 static var _spark_process_cache := {}
 static var _spark_mesh_cache := {}
 
@@ -26191,10 +26936,19 @@ func _ready() -> void:
     ring_instance.material_override = ring_material
     add_child(ring_instance)
 
+    flare_instance = MeshInstance3D.new()
+    flare_instance.name = "ImpactFlare"
+    flare_instance.mesh = _flare_mesh()
+    flare_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    flare_material = _make_material(color.lightened(0.24), 5.6)
+    flare_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    flare_instance.material_override = flare_material
+    add_child(flare_instance)
+
     var sparks := GPUParticles3D.new()
     sparks.name = "ImpactSparks"
-    sparks.amount = 8
-    sparks.lifetime = 0.22
+    sparks.amount = 10
+    sparks.lifetime = 0.20
     sparks.one_shot = true
     sparks.explosiveness = 1.0
     sparks.randomness = 0.35
@@ -26209,8 +26963,8 @@ static func _core_mesh() -> SphereMesh:
     if _shared_core_mesh != null:
         return _shared_core_mesh
     _shared_core_mesh = SphereMesh.new()
-    _shared_core_mesh.radius = 0.18
-    _shared_core_mesh.height = 0.36
+    _shared_core_mesh.radius = 0.20
+    _shared_core_mesh.height = 0.40
     _shared_core_mesh.radial_segments = 12
     _shared_core_mesh.rings = 6
     return _shared_core_mesh
@@ -26219,11 +26973,18 @@ static func _ring_mesh() -> TorusMesh:
     if _shared_ring_mesh != null:
         return _shared_ring_mesh
     _shared_ring_mesh = TorusMesh.new()
-    _shared_ring_mesh.inner_radius = 0.24
-    _shared_ring_mesh.outer_radius = 0.34
+    _shared_ring_mesh.inner_radius = 0.27
+    _shared_ring_mesh.outer_radius = 0.39
     _shared_ring_mesh.rings = 16
     _shared_ring_mesh.ring_segments = 6
     return _shared_ring_mesh
+
+static func _flare_mesh() -> QuadMesh:
+    if _shared_flare_mesh != null:
+        return _shared_flare_mesh
+    _shared_flare_mesh = QuadMesh.new()
+    _shared_flare_mesh.size = Vector2(0.62, 0.22)
+    return _shared_flare_mesh
 
 static func _spark_cache_key(tint: Color) -> String:
     return tint.to_html(true)
@@ -26235,8 +26996,8 @@ static func _spark_process_material(tint: Color) -> ParticleProcessMaterial:
     var material := ParticleProcessMaterial.new()
     material.direction = Vector3(0.0, 1.0, 0.0)
     material.spread = 70.0
-    material.initial_velocity_min = 2.2
-    material.initial_velocity_max = 4.2
+    material.initial_velocity_min = 2.8
+    material.initial_velocity_max = 5.0
     material.gravity = Vector3(0.0, -7.0, 0.0)
     material.scale_min = 0.45
     material.scale_max = 1.0
@@ -26275,11 +27036,19 @@ func _make_material(tint: Color, energy: float) -> StandardMaterial3D:
 func _process(delta: float) -> void:
     age += delta
     var t: float = clampf(age / life, 0.0, 1.0)
-    scale = Vector3.ONE * lerp(0.55, 2.2 * scale_boost, t)
+    scale = Vector3.ONE * lerp(0.50, 2.45 * scale_boost, t)
     _fade_material(core_material, t)
     _fade_material(ring_material, t)
+    _fade_material(flare_material, minf(1.0, t * 1.55))
     if ring_instance != null:
-        ring_instance.scale = Vector3.ONE * lerp(0.72, 1.45, t)
+        ring_instance.scale = Vector3.ONE * lerp(0.70, 1.62, t)
+    if flare_instance != null:
+        var flare_t := minf(1.0, t * 1.70)
+        flare_instance.scale = Vector3(
+            lerp(0.58, 2.05 * scale_boost, flare_t),
+            lerp(0.74, 1.28 * scale_boost, flare_t),
+            1.0
+        )
     if age >= life:
         queue_free()
 
@@ -26321,6 +27090,7 @@ var hud: DZHud
 var spawn_clock := 0.0
 var next_boss_time := 75.0
 var boss_banner_timer := 0.0
+var boss_defeat_relief_left := 0.0
 var max_enemies := 110
 var elapsed := 0.0
 var kills := 0
@@ -26333,6 +27103,7 @@ var touch_id := -1
 var touch_origin := Vector2.ZERO
 var camera_kick := 0.0
 var camera_kick_phase := 0.0
+var impact_fov_pulse := 0.0
 var hit_freeze_left := 0.0
 var boss_reveal_target: DZEnemy
 var boss_reveal_left := 0.0
@@ -26376,6 +27147,7 @@ const BOSS_REVEAL_FOV_DELTA := 5.5
 const CAMERA_BASE_HEIGHT := 12.8
 const CAMERA_BASE_TRAIL := 9.15
 const CAMERA_BASE_FOV := 46.0
+const CAMERA_LOOK_AHEAD_MAX := 1.25
 const CAMERA_REVEAL_HEIGHT := 14.0
 const CAMERA_REVEAL_TRAIL := 10.4
 const HUD_REFRESH_INTERVAL := 0.10
@@ -26383,6 +27155,8 @@ const MUSIC_BASE_DB := -20.0
 const MUSIC_DUCK_DB := -27.0
 const MUSIC_PRESSURE_BREACH_DB := -48.0
 const MUSIC_PRESSURE_BOSS_DB := -11.0
+const MUSIC_PRESSURE_RELIEF_DB := -34.0
+const BOSS_DEFEAT_RELIEF_DURATION := 2.2
 const MUSIC_GAME_OVER_DB := -32.0
 const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
@@ -26451,6 +27225,7 @@ func _process(delta: float) -> void:
 
     camera_kick = move_toward(camera_kick, 0.0, delta * 0.95)
     camera_kick_phase += delta * 38.0
+    impact_fov_pulse = move_toward(impact_fov_pulse, 0.0, delta * 4.8)
 
     if onboarding_hint_active and not game_over:
         onboarding_hint_left = maxf(0.0, onboarding_hint_left - maxf(delta, 0.0))
@@ -26458,8 +27233,9 @@ func _process(delta: float) -> void:
             _dismiss_onboarding_hint()
 
     if player and is_instance_valid(player):
-        var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0)
-        var desired := player.global_position + Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL)
+        var movement_look_ahead := _camera_motion_look_ahead(player.velocity)
+        var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0) + movement_look_ahead * 0.72
+        var desired := player.global_position + Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL) + movement_look_ahead * 0.42
         var target_fov := CAMERA_BASE_FOV
 
         if boss_reveal_left > 0.0 and boss_reveal_target != null and is_instance_valid(boss_reveal_target) and not boss_reveal_target.dead:
@@ -26474,6 +27250,8 @@ func _process(delta: float) -> void:
             boss_reveal_left = 0.0
             boss_reveal_target = null
 
+        target_fov += impact_fov_pulse
+
         var kick_offset := Vector3(sin(camera_kick_phase), 0.0, cos(camera_kick_phase * 1.27)) * camera_kick
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.fov = lerpf(camera.fov, target_fov, 1.0 - exp(-delta * 5.5))
@@ -26482,6 +27260,13 @@ func _process(delta: float) -> void:
         if threat_indicator_refresh_clock <= 0.0:
             threat_indicator_refresh_clock = THREAT_INDICATOR_REFRESH_INTERVAL
             _update_offscreen_threat_indicator()
+
+func _camera_motion_look_ahead(velocity: Vector3) -> Vector3:
+    var planar := Vector3(velocity.x, 0.0, velocity.z)
+    var speed := planar.length()
+    if speed <= 0.05:
+        return Vector3.ZERO
+    return planar / speed * minf(speed * 0.24, CAMERA_LOOK_AHEAD_MAX)
 
 func _performance_snapshot() -> Dictionary:
     return {
@@ -26519,6 +27304,7 @@ func _physics_process(delta: float) -> void:
         director_profile = run_director.profile(elapsed, level)
         max_enemies = int(director_profile["max_enemies"])
     boss_banner_timer = max(0.0, boss_banner_timer - delta)
+    boss_defeat_relief_left = maxf(0.0, boss_defeat_relief_left - delta)
     _update_music_pressure(delta)
     if elapsed >= next_boss_time:
         if _has_active_boss():
@@ -26588,6 +27374,8 @@ func _touch_input_vector(current_position: Vector2) -> Vector2:
     return delta.normalized() * strength
 
 func _music_pressure_target_db() -> float:
+    if boss_defeat_relief_left > 0.0:
+        return MUSIC_PRESSURE_RELIEF_DB
     if _has_active_boss():
         return MUSIC_PRESSURE_BOSS_DB
     match String(director_profile.get("phase", "BREACH")):
@@ -26659,6 +27447,7 @@ func _spawn_enemy(forced_kind: String = "") -> void:
         boss_reveal_target = enemy
         boss_reveal_left = BOSS_REVEAL_DURATION
         enemy.health_changed.connect(_on_boss_health_changed)
+        enemy.boss_phase_changed.connect(_on_boss_phase_changed)
         hud.show_boss("REVENANT PRIME", enemy.max_health)
 
 func _on_boss_health_changed(current: float, maximum: float) -> void:
@@ -26667,14 +27456,41 @@ func _on_boss_health_changed(current: float, maximum: float) -> void:
     if current <= 0.0:
         next_boss_time = maxf(next_boss_time, elapsed + BOSS_RETRY_DELAY)
 
+func _on_boss_phase_changed(phase: int, at: Vector3) -> void:
+    if hud != null:
+        hud.pulse_boss_phase(phase)
+    var fx := ImpactFx.new()
+    fx.name = "BossPhaseBurst_%d" % phase
+    fx.color = Color(1.0, 0.24, 0.035) if phase == 2 else Color(1.0, 0.055, 0.12)
+    fx.scale_boost = 1.55 if phase == 2 else 1.95
+    add_child(fx)
+    fx.global_position = at
+    if camera_shake_enabled:
+        impact_fov_pulse = maxf(impact_fov_pulse, 0.82 if phase == 2 else 1.15)
+        camera_kick = maxf(camera_kick, 0.095 if phase == 2 else 0.125)
+
 func _on_enemy_impact(at: Vector3, critical: bool, killed: bool, boss: bool) -> void:
     if hit_stop_enabled:
         hit_freeze_left = max(hit_freeze_left, DZCombatFeel.hit_freeze_seconds(critical, killed, boss))
     if camera_shake_enabled:
         camera_kick = max(camera_kick, DZCombatFeel.camera_kick(critical, killed, boss))
+        impact_fov_pulse = maxf(impact_fov_pulse, DZCombatFeel.impact_fov_pulse(critical, killed, boss))
     if hud:
         hud.show_impact_flash(critical, killed, boss)
+    if killed:
+        _spawn_kill_confirmation_fx(at, boss)
+        if boss:
+            boss_defeat_relief_left = BOSS_DEFEAT_RELIEF_DURATION
+            boss_banner_timer = 0.0
     _play_impact_audio(critical, killed, boss)
+
+func _spawn_kill_confirmation_fx(at: Vector3, boss: bool) -> void:
+    var fx := ImpactFx.new()
+    fx.name = "BossKillBurst" if boss else "KillBurst"
+    fx.color = Color(1.0, 0.18, 0.035) if boss else Color(1.0, 0.50, 0.10)
+    fx.scale_boost = 2.15 if boss else 1.42
+    add_child(fx)
+    fx.global_position = at
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
     kills += 1
@@ -26687,6 +27503,9 @@ func _on_enemy_died(xp_value: int, at: Vector3) -> void:
 
 func _on_xp_collected(amount: int) -> void:
     xp += amount
+    if hud != null:
+        hud.pulse_xp_collection(amount)
+    _play_ui_audio("xp_collect", clampf(0.98 + float(mini(amount, 10)) * 0.018, 0.98, 1.16))
     _try_offer_banked_level_up()
 
 func _try_offer_banked_level_up() -> bool:
@@ -26823,6 +27642,7 @@ func _on_camera_shake_changed(enabled: bool) -> void:
     camera_shake_enabled = enabled
     if not enabled:
         camera_kick = 0.0
+        impact_fov_pulse = 0.0
     _save_audio_settings()
 
 func _on_hit_stop_changed(enabled: bool) -> void:
@@ -26859,6 +27679,7 @@ func _on_resume_requested() -> void:
 func _on_player_died() -> void:
     _clear_hit_freeze()
     camera_kick = 0.0
+    impact_fov_pulse = 0.0
     boss_reveal_left = 0.0
     boss_reveal_target = null
     game_over = true
@@ -26913,6 +27734,8 @@ func _on_restart_requested() -> void:
     get_tree().reload_current_scene()
 
 func _wave_name() -> String:
+    if boss_defeat_relief_left > 0.0:
+        return "THREAT NEUTRALIZED // PRESSURE DROPPING"
     if boss_banner_timer > 0.0:
         return "BOSS INBOUND // ELIMINATE THE THREAT"
     if elapsed < 45.0:
@@ -26933,6 +27756,10 @@ func _build_world() -> void:
     env.ambient_light_color = Color(0.16, 0.27, 0.34)
     env.ambient_light_energy = 0.72
     env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+    env.adjustment_enabled = true
+    env.adjustment_brightness = 1.02
+    env.adjustment_contrast = 1.08
+    env.adjustment_saturation = 1.06
     env.fog_enabled = true
     env.fog_light_color = Color(0.08, 0.16, 0.20)
     env.fog_light_energy = 0.42
@@ -26980,12 +27807,55 @@ func _build_world() -> void:
     _build_service_pylons()
     _build_floor_wear()
     _build_floor_seams()
+    _build_light_pool_decals()
+    _build_ambient_motes()
     _build_containment_lanes()
     _build_perimeter_bulkheads()
     _build_authored_barrier_clusters()
     _build_authored_world_dressing()
     _build_perimeter_street_lights()
     _build_perimeter_beacons()
+
+func _build_ambient_motes() -> void:
+    var particles := GPUParticles3D.new()
+    particles.name = "AmbientMotes"
+    particles.amount = 32
+    particles.lifetime = 6.0
+    particles.preprocess = 6.0
+    particles.randomness = 0.34
+    particles.local_coords = false
+    particles.position = Vector3(0.0, 0.35, 0.0)
+    particles.visibility_aabb = AABB(Vector3(-20.0, -0.5, -20.0), Vector3(40.0, 5.0, 40.0))
+    particles.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+    var process := ParticleProcessMaterial.new()
+    process.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+    process.emission_box_extents = Vector3(18.0, 0.75, 18.0)
+    process.direction = Vector3(0.0, 1.0, 0.0)
+    process.spread = 82.0
+    process.initial_velocity_min = 0.06
+    process.initial_velocity_max = 0.24
+    process.gravity = Vector3(0.0, 0.035, 0.0)
+    process.scale_min = 0.55
+    process.scale_max = 1.45
+    process.angle_min = -180.0
+    process.angle_max = 180.0
+    process.color = Color(0.24, 0.66, 0.78, 0.16)
+    particles.process_material = process
+
+    var mote_mesh := QuadMesh.new()
+    mote_mesh.size = Vector2(0.028, 0.090)
+    var mote_material := StandardMaterial3D.new()
+    mote_material.albedo_color = Color(0.30, 0.72, 0.82, 0.16)
+    mote_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    mote_material.emission_enabled = true
+    mote_material.emission = Color(0.10, 0.32, 0.38)
+    mote_material.emission_energy_multiplier = 0.55
+    mote_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    mote_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    mote_mesh.material = mote_material
+    particles.draw_pass_1 = mote_mesh
+    add_child(particles)
 
 func _build_quarantine_floor_material() -> ShaderMaterial:
     # One lightweight procedural material gives the broad arena plane real surface hierarchy
@@ -27016,22 +27886,79 @@ void fragment() {
 
     float panel_variation = hash21(panel_cell);
     float micro_variation = hash21(floor(UV * 240.0));
-    float center_lift = 1.0 - smoothstep(0.12, 0.72, distance(UV, vec2(0.5)));
+    float macro_a = hash21(floor(UV * 11.0) + vec2(17.0, 9.0));
+    float macro_b = hash21(floor(UV * 23.0) + vec2(7.0, 19.0));
+    float macro_variation = macro_a * 0.68 + macro_b * 0.32;
+    float radial = distance(UV, vec2(0.5));
+    float center_lift = 1.0 - smoothstep(0.12, 0.72, radial);
+    float perimeter_heat = smoothstep(0.34, 0.70, radial);
+    float grime = smoothstep(0.70, 0.96, macro_variation + micro_variation * 0.10);
 
     vec3 tone = base_tone;
     tone *= 0.94 + panel_variation * 0.075;
     tone *= 0.965 + micro_variation * 0.055;
     tone *= 1.0 - panel_edge * 0.055;
-    tone += vec3(0.004, 0.009, 0.013) * center_lift;
+    tone *= 1.0 - grime * 0.055;
+    tone += vec3(0.005, 0.011, 0.015) * center_lift;
+    tone += vec3(0.010, 0.0025, 0.0010) * perimeter_heat;
 
     ALBEDO = tone;
-    ROUGHNESS = clamp(0.84 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05, 0.76, 0.96);
-    METALLIC = 0.055 + panel_variation * 0.045;
+    ROUGHNESS = clamp(0.83 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05 + grime * 0.04, 0.75, 0.97);
+    METALLIC = 0.055 + panel_variation * 0.045 - grime * 0.012;
 }
 """
     var material := ShaderMaterial.new()
     material.shader = shader
     return material
+
+func _build_light_pool_decals() -> void:
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_add, depth_draw_never, cull_disabled;
+
+uniform vec4 tint : source_color = vec4(0.08, 0.45, 0.70, 0.22);
+
+void fragment() {
+    vec2 p = UV * 2.0 - 1.0;
+    float d = length(p);
+    float falloff = pow(1.0 - smoothstep(0.08, 1.0, d), 2.2);
+    ALBEDO = tint.rgb;
+    EMISSION = tint.rgb * falloff * 1.35;
+    ALPHA = falloff * tint.a;
+}
+"""
+
+    var cool_material := ShaderMaterial.new()
+    cool_material.shader = shader
+    cool_material.set_shader_parameter("tint", Color(0.04, 0.46, 0.78, 0.22))
+
+    var warm_material := ShaderMaterial.new()
+    warm_material.shader = shader
+    warm_material.set_shader_parameter("tint", Color(1.0, 0.18, 0.035, 0.20))
+
+    var mesh := QuadMesh.new()
+    mesh.size = Vector2(5.8, 3.4)
+
+    var placements := [
+        {"position": Vector3(-7.4, 0.020, -3.6), "rotation": 14.0, "warm": false},
+        {"position": Vector3( 7.6, 0.020,  3.5), "rotation": -18.0, "warm": false},
+        {"position": Vector3(-13.6, 0.020, -7.8), "rotation": -10.0, "warm": true},
+        {"position": Vector3( 13.8, 0.020, -7.5), "rotation": 12.0, "warm": true},
+        {"position": Vector3(-13.4, 0.020,  8.0), "rotation": 16.0, "warm": true},
+        {"position": Vector3( 13.5, 0.020,  7.9), "rotation": -14.0, "warm": true},
+    ]
+
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var pool := MeshInstance3D.new()
+        pool.name = "ArenaLightPool_%02d" % index
+        pool.mesh = mesh
+        pool.position = placement["position"]
+        pool.rotation_degrees = Vector3(-90.0, float(placement["rotation"]), 0.0)
+        pool.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        pool.material_override = warm_material if bool(placement["warm"]) else cool_material
+        add_child(pool)
 
 func _build_floor_panels() -> void:
     # Broad panels stay dark so the arena floor supports combat silhouettes instead of competing
@@ -27976,6 +28903,7 @@ var rifle_visual: Node3D
 var rifle_rest_position := Vector3.ZERO
 var rifle_recoil_tween: Tween
 var weapon_accent_material: StandardMaterial3D
+var weapon_accent_tween: Tween
 var player_marker_ring: MeshInstance3D
 var player_marker_material: StandardMaterial3D
 var player_marker_pressure := false
@@ -27991,6 +28919,11 @@ const TARGET_REFRESH_INTERVAL := 0.08
 const TARGET_SWITCH_RATIO := 0.78
 const TARGET_ACQUIRE_RADIUS := 18.0
 const ARENA_HALF_EXTENT := 30.0
+const MOVE_ACCELERATION := 46.0
+const MOVE_DECELERATION := 62.0
+const MOVE_TURN_ACCELERATION := 78.0
+const MOVE_LEAN_ROLL_DEGREES := 4.2
+const MOVE_LEAN_PITCH_DEGREES := 2.4
 
 func _ready() -> void:
     add_to_group("player")
@@ -28023,9 +28956,10 @@ func _physics_process(delta: float) -> void:
     if input.length() > 1.0:
         input = input.normalized()
 
-    velocity = Vector3(input.x, 0.0, input.y) * move_speed
+    velocity = _smoothed_movement_velocity(input, delta)
     move_and_slide()
     _constrain_to_arena()
+    _update_movement_lean(delta)
     if hit_reaction_left <= 0.0:
         _update_authored_animation()
 
@@ -28039,6 +28973,43 @@ func _physics_process(delta: float) -> void:
         if fire_clock <= 0.0:
             _fire_at(target)
             fire_clock = fire_interval
+
+func _smoothed_movement_velocity(input: Vector2, delta: float) -> Vector3:
+    var desired := Vector2(input.x, input.y) * move_speed
+    var current := Vector2(velocity.x, velocity.z)
+    var rate := MOVE_ACCELERATION
+    if input.length_squared() <= 0.0001:
+        rate = MOVE_DECELERATION
+    elif current.length_squared() > 0.0001 and current.dot(desired) < 0.0:
+        rate = MOVE_TURN_ACCELERATION
+    var next := current.move_toward(desired, rate * maxf(delta, 0.0))
+    return Vector3(next.x, 0.0, next.y)
+
+func _movement_lean_target() -> Vector2:
+    if move_speed <= 0.001 or velocity.length_squared() <= 0.0025:
+        return Vector2.ZERO
+    var local_velocity := global_transform.basis.inverse() * Vector3(velocity.x, 0.0, velocity.z)
+    var strafe := clampf(local_velocity.x / move_speed, -1.0, 1.0)
+    var forward := clampf(-local_velocity.z / move_speed, -1.0, 1.0)
+    return Vector2(
+        deg_to_rad(forward * MOVE_LEAN_PITCH_DEGREES),
+        deg_to_rad(-strafe * MOVE_LEAN_ROLL_DEGREES)
+    )
+
+func _update_movement_lean(delta: float) -> void:
+    var visual := get_node_or_null("Visual") as Node3D
+    if visual == null:
+        return
+    var lean := _movement_lean_target()
+    var blend := 1.0 - exp(-maxf(delta, 0.0) * 12.0)
+    visual.rotation.x = lerp_angle(visual.rotation.x, lean.x, blend)
+    visual.rotation.z = lerp_angle(visual.rotation.z, lean.y, blend)
+
+func _reset_movement_lean() -> void:
+    var visual := get_node_or_null("Visual") as Node3D
+    if visual != null:
+        visual.rotation.x = 0.0
+        visual.rotation.z = 0.0
 
 func _pressure_target(fallback: DZEnemy) -> DZEnemy:
     if nearest_threat != null:
@@ -28059,6 +29030,7 @@ func set_combat_enabled(enabled: bool) -> void:
     current_target = null
     nearest_threat = null
     target_refresh_clock = 0.0
+    _reset_movement_lean()
     _clear_player_marker_pressure()
 
 func _clear_player_marker_pressure() -> void:
@@ -28388,6 +29360,8 @@ func _build_tactical_rig() -> void:
     spine.material_override = armor_edge_material
     rig.add_child(spine)
 
+    var shoulder_edge_mesh := BoxMesh.new()
+    shoulder_edge_mesh.size = Vector3(0.045, 0.030, 0.255)
     for side in [-1.0, 1.0]:
         var shoulder := MeshInstance3D.new()
         shoulder.name = "TacticalShoulderL" if side < 0.0 else "TacticalShoulderR"
@@ -28399,12 +29373,22 @@ func _build_tactical_rig() -> void:
         shoulder.material_override = armor_material
         rig.add_child(shoulder)
 
+        var shoulder_edge := MeshInstance3D.new()
+        shoulder_edge.name = "TacticalShoulderEdgeL" if side < 0.0 else "TacticalShoulderEdgeR"
+        shoulder_edge.mesh = shoulder_edge_mesh
+        shoulder_edge.position = Vector3(side * 0.415, 1.155, 0.015)
+        shoulder_edge.rotation_degrees = shoulder.rotation_degrees
+        shoulder_edge.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        shoulder_edge.material_override = weapon_accent_material
+        rig.add_child(shoulder_edge)
+
     var core := MeshInstance3D.new()
     core.name = "TacticalCore"
     var core_mesh := BoxMesh.new()
     core_mesh.size = Vector3(0.24, 0.025, 0.055)
     core.mesh = core_mesh
     core.position = Vector3(0.0, 1.225, -0.085)
+    core.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     core.material_override = weapon_accent_material
     rig.add_child(core)
 
@@ -28415,10 +29399,12 @@ func _build_tactical_rig() -> void:
     weapon_accent.mesh = accent_mesh
     weapon_accent.position = Vector3(0.33, 1.015, -0.59)
     weapon_accent.rotation_degrees.x = -8.0
+    weapon_accent.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     weapon_accent.material_override = weapon_accent_material
     add_child(weapon_accent)
 
 func _trigger_rifle_recoil() -> void:
+    _trigger_weapon_accent_pulse()
     if rifle_visual == null or not is_instance_valid(rifle_visual):
         return
     if rifle_recoil_tween != null and rifle_recoil_tween.is_valid():
@@ -28427,6 +29413,15 @@ func _trigger_rifle_recoil() -> void:
     rifle_recoil_tween = create_tween()
     rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position + Vector3(0.0, 0.015, 0.085), 0.035).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position, 0.075).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _trigger_weapon_accent_pulse() -> void:
+    if weapon_accent_material == null:
+        return
+    if weapon_accent_tween != null and weapon_accent_tween.is_valid():
+        weapon_accent_tween.kill()
+    weapon_accent_material.emission_energy_multiplier = 4.6
+    weapon_accent_tween = create_tween()
+    weapon_accent_tween.tween_property(weapon_accent_material, "emission_energy_multiplier", 1.85, 0.085).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _build_player_marker() -> void:
     player_marker_material = StandardMaterial3D.new()
@@ -28687,7 +29682,7 @@ func _apply_profile(profile: String) -> void:
     impact_scale = float(feedback.get("impact_weight", 1.0))
     var projectile_scale := float(feedback.get("projectile_scale", 1.0))
     core_radius = 0.11 * projectile_scale
-    trail_width = 0.055 * projectile_scale
+    trail_width = 0.062 * projectile_scale
     match profile:
         "scatter":
             trail_width *= 1.40
@@ -28780,7 +29775,7 @@ func _cached_core_material() -> StandardMaterial3D:
     material.albedo_color = tint
     material.emission_enabled = true
     material.emission = tint
-    material.emission_energy_multiplier = 3.2
+    material.emission_energy_multiplier = 3.8
     material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     _core_material_cache[key] = material
     return material
@@ -28790,10 +29785,10 @@ func _cached_trail_material() -> StandardMaterial3D:
     if _trail_material_cache.has(key):
         return _trail_material_cache[key] as StandardMaterial3D
     var material := StandardMaterial3D.new()
-    material.albedo_color = Color(tint.r * 0.68, tint.g * 0.68, tint.b * 0.68)
+    material.albedo_color = Color(tint.r * 0.76, tint.g * 0.76, tint.b * 0.76)
     material.emission_enabled = true
-    material.emission = Color(tint.r * 0.74, tint.g * 0.74, tint.b * 0.74)
-    material.emission_energy_multiplier = 1.65
+    material.emission = Color(tint.r * 0.86, tint.g * 0.86, tint.b * 0.86)
+    material.emission_energy_multiplier = 2.15
     material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     _trail_material_cache[key] = material
     return material
@@ -28936,7 +29931,7 @@ func _enemies_near(position: Vector3, range_radius: float) -> Array:
 func _impact(critical := false, at := Vector3.INF) -> void:
     var fx := ImpactFx.new()
     fx.color = Color(1.0, 0.76, 0.18) if critical else tint
-    fx.scale_boost = (1.45 if critical else 1.0) * impact_scale
+    fx.scale_boost = (1.70 if critical else 1.0) * impact_scale
     var fx_parent: Node = get_tree().current_scene if get_tree() != null else null
     if fx_parent == null:
         fx_parent = get_parent()
@@ -29148,8 +30143,8 @@ const PROFILES := {
         "projectile_speed_multiplier": 1.0,
         "fire_interval_multiplier": 1.0,
         "projectile_scale": 1.0,
-        "trail_length": 0.55,
-        "impact_weight": 1.0
+        "trail_length": 0.72,
+        "impact_weight": 1.06
     },
     "scatter": {
         "tint": Color(1.0, 0.56, 0.18),
@@ -29160,8 +30155,8 @@ const PROFILES := {
         "multishot_cap": 5,
         "spread_min": 11.0,
         "projectile_scale": 1.16,
-        "trail_length": 0.32,
-        "impact_weight": 1.18
+        "trail_length": 0.42,
+        "impact_weight": 1.24
     },
     "rail": {
         "tint": Color(0.72, 0.58, 1.0),
@@ -29172,8 +30167,8 @@ const PROFILES := {
         "multishot_set": 1,
         "spread_set": 3.0,
         "projectile_scale": 0.78,
-        "trail_length": 1.25,
-        "impact_weight": 1.34
+        "trail_length": 1.55,
+        "impact_weight": 1.42
     },
     "inferno": {
         "tint": Color(1.0, 0.24, 0.035),
@@ -29182,8 +30177,8 @@ const PROFILES := {
         "fire_interval_multiplier": 1.08,
         "fire_interval_cap": 0.80,
         "projectile_scale": 1.10,
-        "trail_length": 0.72,
-        "impact_weight": 1.22
+        "trail_length": 0.92,
+        "impact_weight": 1.30
     },
     "cryo": {
         "tint": Color(0.30, 0.90, 1.0),
@@ -29192,8 +30187,8 @@ const PROFILES := {
         "fire_interval_multiplier": 0.90,
         "fire_interval_floor": 0.09,
         "projectile_scale": 1.08,
-        "trail_length": 0.82,
-        "impact_weight": 1.24
+        "trail_length": 1.00,
+        "impact_weight": 1.30
     },
     "arc": {
         "tint": Color(0.64, 0.42, 1.0),
@@ -29205,8 +30200,8 @@ const PROFILES := {
         "multishot_cap": 5,
         "spread_max": 4.0,
         "projectile_scale": 0.92,
-        "trail_length": 0.94,
-        "impact_weight": 1.20
+        "trail_length": 1.10,
+        "impact_weight": 1.28
     }
 }
 
@@ -29234,16 +30229,30 @@ const MAGNET_SPEED := 10.0
 const FORCED_MAGNET_SPEED := 14.0
 
 static var _shared_mesh: SphereMesh
+static var _shared_halo_mesh: TorusMesh
 static var _shared_material: StandardMaterial3D
+static var _shared_halo_material: StandardMaterial3D
+
+var orb_visual: MeshInstance3D
+var halo_visual: MeshInstance3D
 
 func _ready() -> void:
     add_to_group("xp_orbs")
-    var orb := MeshInstance3D.new()
-    orb.name = "XpOrbVisual"
-    orb.mesh = _orb_mesh()
-    orb.material_override = _orb_material()
-    orb.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    add_child(orb)
+    orb_visual = MeshInstance3D.new()
+    orb_visual.name = "XpOrbVisual"
+    orb_visual.mesh = _orb_mesh()
+    orb_visual.material_override = _orb_material()
+    orb_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    add_child(orb_visual)
+
+    halo_visual = MeshInstance3D.new()
+    halo_visual.name = "XpOrbHalo"
+    halo_visual.mesh = _halo_mesh()
+    halo_visual.material_override = _halo_material()
+    halo_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    halo_visual.position.y = -0.11
+    halo_visual.scale = Vector3.ONE * 0.82
+    add_child(halo_visual)
 
 static func _orb_mesh() -> SphereMesh:
     if _shared_mesh != null:
@@ -29254,6 +30263,28 @@ static func _orb_mesh() -> SphereMesh:
     _shared_mesh.radial_segments = 12
     _shared_mesh.rings = 6
     return _shared_mesh
+
+static func _halo_mesh() -> TorusMesh:
+    if _shared_halo_mesh != null:
+        return _shared_halo_mesh
+    _shared_halo_mesh = TorusMesh.new()
+    _shared_halo_mesh.inner_radius = 0.16
+    _shared_halo_mesh.outer_radius = 0.205
+    _shared_halo_mesh.rings = 16
+    _shared_halo_mesh.ring_segments = 6
+    return _shared_halo_mesh
+
+static func _halo_material() -> StandardMaterial3D:
+    if _shared_halo_material != null:
+        return _shared_halo_material
+    _shared_halo_material = StandardMaterial3D.new()
+    _shared_halo_material.albedo_color = Color(0.12, 0.92, 0.74, 0.54)
+    _shared_halo_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    _shared_halo_material.emission_enabled = true
+    _shared_halo_material.emission = Color(0.06, 1.0, 0.68)
+    _shared_halo_material.emission_energy_multiplier = 1.75
+    _shared_halo_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    return _shared_halo_material
 
 static func _orb_material() -> StandardMaterial3D:
     if _shared_material != null:
@@ -29277,13 +30308,21 @@ func _process(delta: float) -> void:
     age += delta
     rotation.y += delta * 4.0
     position.y = 0.18 + sin(age * 5.0) * 0.05
+    var idle_pulse := 0.93 + (0.5 + 0.5 * sin(age * 6.4)) * 0.10
+    if orb_visual != null:
+        orb_visual.scale = Vector3.ONE * idle_pulse
     if target == null or not is_instance_valid(target):
         return
     var flat_target := target.global_position
     flat_target.y = global_position.y
     var distance := global_position.distance_to(flat_target)
     var forced_magnet := age >= FORCED_MAGNET_AGE
-    if distance < MAGNET_RADIUS or forced_magnet:
+    var magnetized := distance < MAGNET_RADIUS or forced_magnet
+    if halo_visual != null:
+        var halo_pulse := 0.86 + (0.5 + 0.5 * sin(age * 7.2)) * 0.14
+        var magnet_boost := 1.34 if magnetized else 1.0
+        halo_visual.scale = Vector3.ONE * halo_pulse * magnet_boost
+    if magnetized:
         var dir := global_position.direction_to(flat_target)
         var target_speed := FORCED_MAGNET_SPEED if forced_magnet else MAGNET_SPEED
         velocity = velocity.lerp(dir * target_speed, 1.0 - exp(-delta * 7.0))
@@ -29424,6 +30463,113 @@ def test_detects_native_crash_when_package_is_in_context(self)
 log = """I DEBUG: Cmdline: com.deadlinezero.game
 ⋮----
 def test_ignores_intentional_force_stop(self)
+````
+
+## File: tools/assets/acquire_polyhaven.py
+````python
+#!/usr/bin/env python3
+"""Acquire pinned CC0 Poly Haven source textures for Deadline: Zero.
+
+This is a developer tool, never part of the shipped runtime.
+It uses only the Python standard library and Poly Haven's public read-only API.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+MANIFEST = ROOT / "godot/assets/asset_manifest.json"
+API = "https://api.polyhaven.com"
+UA = "DeadlineZeroAssetPipeline/2.0 (+https://github.com/dbrckk/deadline-zero)"
+⋮----
+def get_json(url: str)
+⋮----
+req = urllib.request.Request(url, headers={"User-Agent": UA})
+⋮----
+def walk_records(node, path=())
+⋮----
+def map_matches(path, wanted: str) -> bool
+⋮----
+p = "/".join(path).lower()
+aliases = {
+⋮----
+def choose_record(files, map_name: str, resolution: str, fmt: str)
+⋮----
+candidates = []
+⋮----
+url = record["url"]
+joined = "/".join(path).lower()
+⋮----
+def download(url: str, dest: Path, md5: str | None)
+⋮----
+h = hashlib.md5()
+⋮----
+chunk = response.read(1024 * 1024)
+⋮----
+def main()
+⋮----
+ap = argparse.ArgumentParser()
+⋮----
+args = ap.parse_args()
+⋮----
+manifest = json.loads(MANIFEST.read_text())
+sources = [s for s in manifest["sources"] if s.get("provider") == "polyhaven" and s.get("asset_id")]
+⋮----
+wanted = set(args.id)
+sources = [s for s in sources if s["id"] in wanted]
+missing = wanted - {s["id"] for s in sources}
+⋮----
+total = 0
+⋮----
+asset_id = source["asset_id"]
+files = get_json(f"{API}/files/{asset_id}")
+selected = []
+⋮----
+choice = choose_record(files, map_name, source.get("resolution", "2k"), source.get("format", "jpg"))
+⋮----
+filename = os.path.basename(record["url"].split("?")[0])
+size = int(record.get("size") or 0)
+⋮----
+target = args.output / asset_id
+⋮----
+metadata = {
+⋮----
+dest = target / filename
+````
+
+## File: tools/assets/validate_asset_stack.py
+````python
+#!/usr/bin/env python3
+"""Validate Deadline: Zero's asset-source and mobile-budget contract."""
+⋮----
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+MANIFEST = ROOT / "godot/assets/asset_manifest.json"
+APPROVED = {"CC0-1.0", "Project-Owned"}
+errors = []
+⋮----
+def fail(message)
+⋮----
+data = json.loads(MANIFEST.read_text())
+⋮----
+policy = data.get("policy", {})
+⋮----
+seen = set()
+⋮----
+sid = source.get("id")
+⋮----
+license_id = source.get("license")
+⋮----
+page = source.get("page")
+⋮----
+maps = {m.lower() for m in source.get("maps", [])}
+⋮----
+budgets = data.get("budgets", {}).get("mobile", {})
+required_roles = {"enemy_standard","enemy_elite","boss","survivor","environment_prop","hero_prop","ground_material","decal"}
+⋮----
+third_party = ROOT / "godot/assets/third_party"
+⋮----
+# Existing imported packs must carry source/license evidence somewhere in the subtree.
+shipped = [p for p in provider_dir.rglob("*") if p.suffix.lower() in {".gltf",".glb",".fbx",".obj",".png",".jpg",".jpeg",".webp"}]
+⋮----
+source_docs = list(provider_dir.rglob("SOURCE.md")) + list(provider_dir.rglob("SOURCE.json"))
+licenses = list(provider_dir.rglob("LICENSE.txt")) + list(provider_dir.rglob("LICENSE.md"))
 ````
 
 ## File: tools/audio/generate_deadline_zero_audio.py
@@ -29790,6 +30936,63 @@ armature_rows = []
 images = []
 ⋮----
 report = {
+````
+
+## File: tools/blender/optimize_game_asset.py
+````python
+#!/usr/bin/env python3
+"""Normalize and budget a game asset in Blender before Godot import.
+
+Usage:
+  blender -b --factory-startup -P tools/blender/optimize_game_asset.py -- \
+    --input source.glb --output build/prop.glb --role environment_prop --lod 0
+
+This is intentionally conservative: it never auto-rigs or invents materials.
+"""
+⋮----
+ROOT = Path(__file__).resolve().parents[2]
+MANIFEST = ROOT / "godot/assets/asset_manifest.json"
+⋮----
+def parse()
+⋮----
+argv = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else []
+p = argparse.ArgumentParser()
+⋮----
+def import_asset(path: Path)
+⋮----
+ext = path.suffix.lower()
+⋮----
+def meshes()
+⋮----
+def triangles(obj)
+⋮----
+dg = bpy.context.evaluated_depsgraph_get()
+eval_obj = obj.evaluated_get(dg)
+mesh = eval_obj.to_mesh()
+⋮----
+count = len(mesh.loop_triangles)
+⋮----
+def main()
+⋮----
+a = parse()
+manifest = json.loads(MANIFEST.read_text())
+budget = manifest["budgets"]["mobile"].get(a.role)
+⋮----
+key = "triangles_lod0" if a.lod == 0 else "triangles_lod1"
+target = a.target_triangles or budget.get(key)
+⋮----
+objs = meshes()
+⋮----
+before = sum(triangles(o) for o in objs)
+⋮----
+ratio = max(0.02, min(1.0, target / float(before)))
+⋮----
+# Do not destructively decimate skinned actors; use authored/retopo LODs for them.
+⋮----
+mod = obj.modifiers.new(f"DZ_LOD{a.lod}_Decimate", "DECIMATE")
+⋮----
+after = sum(triangles(o) for o in objs)
+material_slots = sum(len(o.material_slots) for o in objs)
 ````
 
 ## File: tools/blender/prepare_meshy_actor.py
