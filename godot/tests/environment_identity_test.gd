@@ -95,6 +95,9 @@ func _initialize() -> void:
     var bulkhead_signal_count := 0
     var arena_light_pool_count := 0
     var arena_light_pool_violations := 0
+    var authored_floor_decal_count := 0
+    var authored_floor_decal_violations := 0
+    var authored_floor_decal_materials := {}
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -132,6 +135,25 @@ func _initialize() -> void:
                     arena_light_pool_violations += 1
                 elif not (pool_mesh.material_override as ShaderMaterial).shader.code.contains("blend_add"):
                     arena_light_pool_violations += 1
+        elif child.name.begins_with("AuthoredFloorDecal_"):
+            authored_floor_decal_count += 1
+            if not child is MeshInstance3D:
+                authored_floor_decal_violations += 1
+            else:
+                var decal_mesh := child as MeshInstance3D
+                if not decal_mesh.mesh is QuadMesh:
+                    authored_floor_decal_violations += 1
+                if decal_mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    authored_floor_decal_violations += 1
+                if not decal_mesh.material_override is StandardMaterial3D:
+                    authored_floor_decal_violations += 1
+                else:
+                    var decal_material := decal_mesh.material_override as StandardMaterial3D
+                    if decal_material.albedo_texture == null or decal_material.transparency == BaseMaterial3D.TRANSPARENCY_DISABLED:
+                        authored_floor_decal_violations += 1
+                    authored_floor_decal_materials[decal_material.get_instance_id()] = true
+                if decal_mesh.position.y < 0.025 or decal_mesh.position.y > 0.045:
+                    authored_floor_decal_violations += 1
         elif child.name.begins_with("PerimeterBeacon_"):
             beacon_count += 1
         elif child.name.begins_with("FloorPlate_"):
@@ -208,6 +230,14 @@ func _initialize() -> void:
         return
     if arena_light_pool_count != 6 or arena_light_pool_violations != 0:
         push_error("Expected 6 mobile-safe additive arena light pools, got %d with %d violations" % [arena_light_pool_count, arena_light_pool_violations])
+        quit(1)
+        return
+    if authored_floor_decal_count != 12 or authored_floor_decal_violations != 0:
+        push_error("Expected 12 valid project-owned floor decals, got %d with %d violations" % [authored_floor_decal_count, authored_floor_decal_violations])
+        quit(1)
+        return
+    if authored_floor_decal_materials.size() != 3:
+        push_error("Authored floor decals must reuse exactly 3 shared materials, got %d" % authored_floor_decal_materials.size())
         quit(1)
         return
     if beacon_count != 12:
