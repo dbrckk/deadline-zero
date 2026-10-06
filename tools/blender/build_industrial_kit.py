@@ -176,6 +176,69 @@ def build_grate(out: Path):
         objs.append(box(f"CrossBrace_{i}", (2.18, 0.055, 0.070), (0, y, 0.092), STEEL, 0.008))
     export_asset(out / "dz_floor_grate.glb", objs, "environment_prop")
 
+
+def build_utility_cabinet(out: Path):
+    objs = [
+        box("CabinetBody", (0.86, 0.42, 1.72), (0, 0, 0.86), STEEL, 0.045),
+        box("CabinetDoor", (0.68, 0.035, 1.34), (0, -0.228, 0.88), STEEL, 0.018),
+        box("CabinetTop", (0.92, 0.48, 0.09), (0, 0, 1.76), STEEL, 0.022),
+        box("StatusBar", (0.48, 0.028, 0.055), (0, -0.252, 1.48), CYAN, 0.008),
+    ]
+    for z in (0.42, 0.84, 1.20):
+        objs.append(box(f"DoorRib_{z}", (0.56, 0.022, 0.045), (0, -0.257, z), STEEL, 0.006))
+    export_asset(out / "dz_utility_cabinet.glb", objs, "environment_prop")
+
+def build_wall_vent(out: Path):
+    objs = [
+        box("VentFrame", (1.28, 0.12, 0.88), (0, 0, 0.44), STEEL, 0.032),
+        box("VentRecess", (1.04, 0.045, 0.66), (0, -0.082, 0.44), DARK, 0.015),
+    ]
+    for i in range(7):
+        z = 0.18 + i * 0.085
+        objs.append(box(f"VentSlat_{i:02d}", (0.88, 0.035, 0.038), (0, -0.112, z), STEEL, 0.006))
+    export_asset(out / "dz_wall_vent.glb", objs, "environment_prop")
+
+def build_floor_hatch(out: Path):
+    objs = [
+        box("HatchFrame", (1.62, 1.62, 0.08), (0, 0, 0.04), STEEL, 0.025),
+        box("HatchPanel", (1.34, 1.34, 0.055), (0, 0, 0.095), STEEL, 0.020),
+    ]
+    for side in (-1.0, 1.0):
+        objs.append(box(f"HatchHazard_{side}", (0.16, 1.05, 0.035), (side * 0.53, 0, 0.132), HAZARD, 0.006))
+    for x in (-0.54, 0.54):
+        for y in (-0.54, 0.54):
+            objs.append(cylinder(f"HatchBolt_{x}_{y}", 0.032, 0.026, (x, y, 0.145), (0,0,0), STEEL, vertices=8))
+    export_asset(out / "dz_floor_hatch.glb", objs, "environment_prop")
+
+def build_hazard_bollard(out: Path):
+    objs = [
+        cylinder("BollardBody", 0.17, 1.08, (0,0,0.60), (0,0,0), STEEL, vertices=16),
+        cylinder("BollardBase", 0.31, 0.12, (0,0,0.06), (0,0,0), STEEL, vertices=16),
+        cylinder("BollardCap", 0.20, 0.10, (0,0,1.17), (0,0,0), HAZARD, vertices=16),
+        box("BollardBandA", (0.34, 0.035, 0.10), (0,-0.175,0.48), HAZARD, 0.006),
+        box("BollardBandB", (0.34, 0.035, 0.10), (0,-0.175,0.76), HAZARD, 0.006),
+    ]
+    export_asset(out / "dz_hazard_bollard.glb", objs, "environment_prop")
+
+def build_junction_box(out: Path):
+    objs = [
+        box("JunctionShell", (0.72, 0.32, 0.92), (0,0,0.46), STEEL, 0.035),
+        box("JunctionFace", (0.56, 0.035, 0.70), (0,-0.178,0.47), STEEL, 0.015),
+        box("JunctionStatus", (0.32, 0.025, 0.055), (0,-0.201,0.72), CYAN, 0.006),
+    ]
+    for x in (-0.25, 0.25):
+        objs.append(cylinder(f"CablePort_{x}", 0.065, 0.12, (x,0,0.08), (math.pi/2,0,0), STEEL, vertices=12))
+    export_asset(out / "dz_junction_box.glb", objs, "environment_prop")
+
+def build_light_bar(out: Path):
+    objs = [
+        box("LightBarHousing", (1.42, 0.22, 0.18), (0,0,0.09), STEEL, 0.028),
+        box("LightBarLens", (1.08, 0.045, 0.075), (0,-0.132,0.09), CYAN, 0.012),
+    ]
+    for x in (-0.62, 0.62):
+        objs.append(box(f"LightBarMount_{x}", (0.12, 0.30, 0.24), (x,0,0.02), STEEL, 0.016))
+    export_asset(out / "dz_emergency_light_bar.glb", objs, "environment_prop")
+
 def main():
     global STEEL, DARK, HAZARD, CYAN, RUST
     a = args()
@@ -191,6 +254,12 @@ def main():
     build_pipe_rack(a.output)
     build_bulkhead(a.output)
     build_grate(a.output)
+    build_utility_cabinet(a.output)
+    build_wall_vent(a.output)
+    build_floor_hatch(a.output)
+    build_hazard_bollard(a.output)
+    build_junction_box(a.output)
+    build_light_bar(a.output)
     print("DZ_INDUSTRIAL_KIT_OK output=", a.output)
 
 if __name__ == "__main__":

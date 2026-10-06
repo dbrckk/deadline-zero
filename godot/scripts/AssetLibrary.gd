@@ -12,6 +12,11 @@ const STREET_LIGHTS := "res://assets/third_party/quaternius/zombie_apocalypse/st
 const TRAFFIC_CONE := "res://assets/third_party/quaternius/zombie_apocalypse/trafficcone-1.gltf"
 const TRASH_BAG := "res://assets/third_party/quaternius/zombie_apocalypse/trashbag-1.gltf"
 const STREET_CRACK := "res://assets/third_party/quaternius/zombie_apocalypse/street-straight-crack1.gltf"
+const INDUSTRIAL_FLOOR_GRATE := "res://assets/generated/industrial/dz_floor_grate.glb"
+const INDUSTRIAL_BULKHEAD := "res://assets/generated/industrial/dz_bulkhead_panel.glb"
+const INDUSTRIAL_CRATE := "res://assets/generated/industrial/dz_cargo_crate.glb"
+const INDUSTRIAL_PIPE_RACK := "res://assets/generated/industrial/dz_pipe_rack.glb"
+const INDUSTRIAL_SERVICE_PILLAR := "res://assets/generated/industrial/dz_service_pillar.glb"
 
 static var _enemy_grade_shader: Shader
 
@@ -72,6 +77,21 @@ static func trash_bag() -> Node3D:
 
 static func street_crack() -> Node3D:
     return instantiate_scene(STREET_CRACK)
+
+static func industrial_floor_grate() -> Node3D:
+    return instantiate_scene(INDUSTRIAL_FLOOR_GRATE)
+
+static func industrial_bulkhead() -> Node3D:
+    return instantiate_scene(INDUSTRIAL_BULKHEAD)
+
+static func industrial_crate() -> Node3D:
+    return instantiate_scene(INDUSTRIAL_CRATE)
+
+static func industrial_pipe_rack() -> Node3D:
+    return instantiate_scene(INDUSTRIAL_PIPE_RACK)
+
+static func industrial_service_pillar() -> Node3D:
+    return instantiate_scene(INDUSTRIAL_SERVICE_PILLAR)
 
 static func _apply_street_light_industrial_material(root: Node3D) -> void:
     if root == null:

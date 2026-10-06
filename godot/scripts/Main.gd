@@ -942,66 +942,22 @@ func _build_floor_panels() -> void:
             plate.add_child(accent)
 
 func _build_floor_service_grates() -> void:
-    # Recessed utility grates give the arena functional industrial detail and a second material
-    # frequency without introducing collision or stealing contrast from combat silhouettes.
-    var frame_material := StandardMaterial3D.new()
-    frame_material.albedo_color = Color(0.055, 0.075, 0.085)
-    frame_material.metallic = 0.58
-    frame_material.roughness = 0.48
-
-    var recess_material := StandardMaterial3D.new()
-    recess_material.albedo_color = Color(0.012, 0.018, 0.022)
-    recess_material.metallic = 0.12
-    recess_material.roughness = 0.94
-
-    var slat_material := StandardMaterial3D.new()
-    slat_material.albedo_color = Color(0.10, 0.14, 0.16)
-    slat_material.metallic = 0.72
-    slat_material.roughness = 0.40
-
     var placements := [
         {"position": Vector3(-10.8, 0.012, -8.1), "rotation": 0.18},
         {"position": Vector3(10.7, 0.012, -8.0), "rotation": -0.16},
         {"position": Vector3(-10.6, 0.012, 8.2), "rotation": -0.20},
         {"position": Vector3(10.9, 0.012, 8.0), "rotation": 0.15},
     ]
-
     for index in range(placements.size()):
+        var grate := DZAssetLibrary.industrial_floor_grate()
+        if grate == null:
+            continue
         var placement: Dictionary = placements[index]
-        var grate := Node3D.new()
         grate.name = "ServiceGrate_%02d" % index
         grate.position = placement["position"]
         grate.rotation.y = float(placement["rotation"])
+        grate.scale = Vector3(1.04, 1.0, 0.82)
         add_child(grate)
-
-        var recess := MeshInstance3D.new()
-        recess.name = "Recess"
-        var recess_mesh := BoxMesh.new()
-        recess_mesh.size = Vector3(2.65, 0.012, 0.92)
-        recess.mesh = recess_mesh
-        recess.position.y = -0.004
-        recess.material_override = recess_material
-        grate.add_child(recess)
-
-        for rail_index in range(2):
-            var rail := MeshInstance3D.new()
-            rail.name = "FrameRail_%d" % rail_index
-            var rail_mesh := BoxMesh.new()
-            rail_mesh.size = Vector3(2.78, 0.026, 0.075)
-            rail.mesh = rail_mesh
-            rail.position = Vector3(0.0, 0.012, -0.49 if rail_index == 0 else 0.49)
-            rail.material_override = frame_material
-            grate.add_child(rail)
-
-        for slat_index in range(9):
-            var slat := MeshInstance3D.new()
-            slat.name = "Slat_%02d" % slat_index
-            var slat_mesh := BoxMesh.new()
-            slat_mesh.size = Vector3(0.075, 0.024, 0.80)
-            slat.mesh = slat_mesh
-            slat.position = Vector3(-1.12 + float(slat_index) * 0.28, 0.014, 0.0)
-            slat.material_override = slat_material
-            grate.add_child(slat)
 
 func _build_midfield_inspection_panels() -> void:
     # Small recessed access panels fill the otherwise empty midfield with believable service
@@ -1248,38 +1204,6 @@ func _build_floor_wear() -> void:
             add_child(chip)
 
 func _build_perimeter_bulkheads() -> void:
-    # Layered quarantine bulkheads replace bright kit silhouettes in the active camera frame.
-    # They are collision-free set dressing: readable industrial mass, restrained hazard identity,
-    # and small emissive service signals without adding dynamic-light cost.
-    var shell_material := StandardMaterial3D.new()
-    shell_material.albedo_color = Color(0.022, 0.034, 0.041)
-    shell_material.metallic = 0.68
-    shell_material.roughness = 0.43
-
-    var inset_material := StandardMaterial3D.new()
-    inset_material.albedo_color = Color(0.008, 0.013, 0.017)
-    inset_material.metallic = 0.24
-    inset_material.roughness = 0.91
-
-    var trim_material := StandardMaterial3D.new()
-    trim_material.albedo_color = Color(0.075, 0.105, 0.115)
-    trim_material.metallic = 0.78
-    trim_material.roughness = 0.34
-
-    var hazard_material := StandardMaterial3D.new()
-    hazard_material.albedo_color = Color(0.66, 0.15, 0.018)
-    hazard_material.emission_enabled = true
-    hazard_material.emission = Color(0.30, 0.035, 0.004)
-    hazard_material.emission_energy_multiplier = 0.34
-    hazard_material.roughness = 0.58
-
-    var signal_material := StandardMaterial3D.new()
-    signal_material.albedo_color = Color(0.035, 0.40, 0.56)
-    signal_material.emission_enabled = true
-    signal_material.emission = Color(0.015, 0.23, 0.38)
-    signal_material.emission_energy_multiplier = 1.15
-    signal_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-
     var placements := [
         {"position": Vector3(-17.4, 0.0, -9.5), "rotation": PI * 0.5},
         {"position": Vector3(-17.4, 0.0, 0.0), "rotation": PI * 0.5},
@@ -1292,80 +1216,16 @@ func _build_perimeter_bulkheads() -> void:
         {"position": Vector3(-10.5, 0.0, 13.7), "rotation": PI},
         {"position": Vector3(10.5, 0.0, 13.7), "rotation": PI},
     ]
-
     for index in range(placements.size()):
+        var bulkhead := DZAssetLibrary.industrial_bulkhead()
+        if bulkhead == null:
+            continue
         var placement: Dictionary = placements[index]
-        var bulkhead := Node3D.new()
         bulkhead.name = "PerimeterBulkhead_%02d" % index
         bulkhead.position = placement["position"]
         bulkhead.rotation.y = float(placement["rotation"])
+        bulkhead.scale = Vector3(1.0, 0.46, 1.0)
         add_child(bulkhead)
-
-        var foundation := MeshInstance3D.new()
-        foundation.name = "Foundation"
-        var foundation_mesh := BoxMesh.new()
-        foundation_mesh.size = Vector3(3.05, 0.16, 0.86)
-        foundation.mesh = foundation_mesh
-        foundation.position = Vector3(0.0, 0.08, 0.0)
-        foundation.material_override = inset_material
-        bulkhead.add_child(foundation)
-
-        var shell := MeshInstance3D.new()
-        shell.name = "Shell"
-        var shell_mesh := BoxMesh.new()
-        shell_mesh.size = Vector3(2.72, 0.78, 0.48)
-        shell.mesh = shell_mesh
-        shell.position = Vector3(0.0, 0.53, 0.03)
-        shell.material_override = shell_material
-        bulkhead.add_child(shell)
-
-        for side in [-1.0, 1.0]:
-            var post := MeshInstance3D.new()
-            post.name = "PostL" if side < 0.0 else "PostR"
-            var post_mesh := BoxMesh.new()
-            post_mesh.size = Vector3(0.18, 1.02, 0.60)
-            post.mesh = post_mesh
-            post.position = Vector3(side * 1.39, 0.55, 0.04)
-            post.material_override = trim_material
-            bulkhead.add_child(post)
-
-        var top_rail := MeshInstance3D.new()
-        top_rail.name = "TopRail"
-        var top_mesh := BoxMesh.new()
-        top_mesh.size = Vector3(2.92, 0.13, 0.57)
-        top_rail.mesh = top_mesh
-        top_rail.position = Vector3(0.0, 0.98, 0.03)
-        top_rail.material_override = trim_material
-        bulkhead.add_child(top_rail)
-
-        var inset := MeshInstance3D.new()
-        inset.name = "InsetPanel"
-        var inset_mesh := BoxMesh.new()
-        inset_mesh.size = Vector3(1.32, 0.39, 0.035)
-        inset.mesh = inset_mesh
-        inset.position = Vector3(0.0, 0.56, -0.258)
-        inset.material_override = inset_material
-        bulkhead.add_child(inset)
-
-        for stripe_index in range(3):
-            var stripe := MeshInstance3D.new()
-            stripe.name = "HazardStripe_%d" % stripe_index
-            var stripe_mesh := BoxMesh.new()
-            stripe_mesh.size = Vector3(0.36, 0.045, 0.020)
-            stripe.mesh = stripe_mesh
-            stripe.position = Vector3(-0.46 + float(stripe_index) * 0.46, 0.30, -0.282)
-            stripe.rotation.z = deg_to_rad(-18.0)
-            stripe.material_override = hazard_material
-            bulkhead.add_child(stripe)
-
-        var service_signal := MeshInstance3D.new()
-        service_signal.name = "Signal"
-        var signal_mesh := BoxMesh.new()
-        signal_mesh.size = Vector3(0.42, 0.055, 0.028)
-        service_signal.mesh = signal_mesh
-        service_signal.position = Vector3(0.77 if index % 2 == 0 else -0.77, 0.79, -0.285)
-        service_signal.material_override = signal_material
-        bulkhead.add_child(service_signal)
 
 func _build_authored_barrier_clusters() -> void:
     # Keep authored cover visible at the arena edge without letting the large source meshes

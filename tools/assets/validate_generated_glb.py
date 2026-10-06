@@ -10,6 +10,12 @@ EXPECTED = {
     "dz_pipe_rack.glb": 12000,
     "dz_bulkhead_panel.glb": 12000,
     "dz_floor_grate.glb": 12000,
+    "dz_utility_cabinet.glb": 12000,
+    "dz_wall_vent.glb": 12000,
+    "dz_floor_hatch.glb": 12000,
+    "dz_hazard_bollard.glb": 12000,
+    "dz_junction_box.glb": 12000,
+    "dz_emergency_light_bar.glb": 12000,
 }
 MAX_BYTES = 2 * 1024 * 1024
 
@@ -76,7 +82,7 @@ def main():
         for error in errors:
             print(" -", error)
         sys.exit(1)
-    print("DZ_INDUSTRIAL_KIT_VALID assets=5")
+    print(f"DZ_INDUSTRIAL_KIT_VALID assets={len(EXPECTED)}")
 
 if __name__ == "__main__":
     main()

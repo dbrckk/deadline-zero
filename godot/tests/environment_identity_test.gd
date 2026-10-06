@@ -88,7 +88,7 @@ func _initialize() -> void:
     var service_grate_count := 0
     var inspection_panel_count := 0
     var inspection_service_stripe_count := 0
-    var service_grate_slat_count := 0
+    var service_grate_mesh_count := 0
     var oversized_barrier_count := 0
     var perimeter_bulkhead_count := 0
     var bulkhead_hazard_stripe_count := 0
@@ -117,8 +117,8 @@ func _initialize() -> void:
             hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
         elif child.name.begins_with("PerimeterBulkhead_"):
             perimeter_bulkhead_count += 1
-            bulkhead_hazard_stripe_count += child.find_children("HazardStripe_*", "MeshInstance3D", true, false).size()
-            bulkhead_signal_count += child.find_children("Signal", "MeshInstance3D", true, false).size()
+            bulkhead_hazard_stripe_count += child.find_children("HazardMarker_*", "MeshInstance3D", true, false).size()
+            bulkhead_signal_count += int(child.find_children("*", "MeshInstance3D", true, false).size() >= 10)
         elif child.name.begins_with("ContainmentLane_"):
             lane_count += 1
         elif child.name.begins_with("ArenaBoundary_"):
@@ -167,9 +167,7 @@ func _initialize() -> void:
             floor_seam_count += 1
         elif child.name.begins_with("ServiceGrate_"):
             service_grate_count += 1
-            for slat in child.find_children("Slat_*", "MeshInstance3D", true, false):
-                if slat is MeshInstance3D:
-                    service_grate_slat_count += 1
+            service_grate_mesh_count += child.find_children("*", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("InspectionPanel_"):
             inspection_panel_count += 1
             inspection_service_stripe_count += child.find_children("ServiceStripe_*", "MeshInstance3D", true, false).size()
@@ -216,8 +214,8 @@ func _initialize() -> void:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
         quit(1)
         return
-    if perimeter_bulkhead_count != 10 or bulkhead_hazard_stripe_count != 30 or bulkhead_signal_count != 10:
-        push_error("Expected 10 layered perimeter bulkheads with 30 hazard stripes / 10 signals, got %d/%d/%d" % [perimeter_bulkhead_count, bulkhead_hazard_stripe_count, bulkhead_signal_count])
+    if perimeter_bulkhead_count != 10 or bulkhead_hazard_stripe_count < 40 or bulkhead_signal_count != 10:
+        push_error("Expected 10 authored GLB bulkheads with readable hazard/details, got %d bulkheads / %d hazard markers / %d detailed shells" % [perimeter_bulkhead_count, bulkhead_hazard_stripe_count, bulkhead_signal_count])
         quit(1)
         return
     if lane_count < 40:
@@ -260,8 +258,8 @@ func _initialize() -> void:
         push_error("Expected industrial floor seam structure, got %d" % floor_seam_count)
         quit(1)
         return
-    if service_grate_count != 4 or service_grate_slat_count < 36:
-        push_error("Expected 4 detailed service grates with at least 36 slats, got %d grates / %d slats" % [service_grate_count, service_grate_slat_count])
+    if service_grate_count != 4 or service_grate_mesh_count < 40:
+        push_error("Expected 4 authored GLB service grates with detailed mesh hierarchy, got %d grates / %d mesh nodes" % [service_grate_count, service_grate_mesh_count])
         quit(1)
         return
     if inspection_panel_count != 6 or inspection_service_stripe_count != 12:
