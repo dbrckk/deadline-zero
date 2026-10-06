@@ -12,7 +12,7 @@ Large repository detected. Prefer the relevant segmented map before .ai/repo-map
 ## Segmented maps
 - .ai/maps/core.md (403 source/config files)
 - .ai/maps/godot.md (74 source/config files)
-- .ai/maps/tools.md (59 source/config files)
+- .ai/maps/tools.md (61 source/config files)
 - .ai/maps/config.md (23 source/config files)
 - .ai/maps/android.md (19 source/config files)
 - .ai/maps/desktop.md (3 source/config files)

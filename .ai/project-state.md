@@ -22,36 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-06T11:26:37Z
+Generated: 2026-10-06T20:01:58Z
 
 ### Git
 - Branch: `main`
-- Head: `bb733590436f`
-- Commit date: 2026-10-06T13:26:22+02:00
-- Commit: Promote validated industrial GLBs into Godot
-- Tracked files: 1010
+- Head: `8d4c54c85058`
+- Commit date: 2026-10-06T22:01:08+02:00
+- Commit: Keep run-end orb fixture local to test root
+- Tracked files: 1038
 
 ### Recently changed files
-- `.github/workflows/build-industrial-kit.yml`
-- `godot/assets/third_party/polyhaven/asphalt_04/SOURCE.json`
-- `godot/assets/third_party/polyhaven/asphalt_04/asphalt_04_arm_2k.jpg`
-- `godot/assets/third_party/polyhaven/asphalt_04/asphalt_04_diff_2k.jpg`
-- `godot/assets/third_party/polyhaven/asphalt_04/asphalt_04_nor_gl_2k.jpg`
-- `godot/assets/third_party/polyhaven/factory_wall/SOURCE.json`
-- `godot/assets/third_party/polyhaven/factory_wall/factory_wall_arm_1k.jpg`
-- `godot/assets/third_party/polyhaven/factory_wall/factory_wall_diff_1k.jpg`
-- `godot/assets/third_party/polyhaven/factory_wall/factory_wall_nor_gl_1k.jpg`
-- `godot/assets/third_party/polyhaven/metal_grate_rusty/SOURCE.json`
-- `godot/assets/third_party/polyhaven/metal_grate_rusty/metal_grate_rusty_arm_1k.jpg`
-- `godot/assets/third_party/polyhaven/metal_grate_rusty/metal_grate_rusty_diff_1k.jpg`
-- `godot/assets/third_party/polyhaven/metal_grate_rusty/metal_grate_rusty_nor_gl_1k.jpg`
-- `godot/assets/third_party/polyhaven/rusty_metal_04/SOURCE.json`
-- `godot/assets/third_party/polyhaven/rusty_metal_04/rusty_metal_04_arm_1k.jpg`
-- `godot/assets/third_party/polyhaven/rusty_metal_04/rusty_metal_04_diff_1k.jpg`
-- `godot/assets/third_party/polyhaven/rusty_metal_04/rusty_metal_04_nor_gl_1k.jpg`
-- `.github/workflows/acquire-pbr-sources.yml`
-- `godot/assets/asset_manifest.json`
-- `play/store/phone-screenshots/01-first-playable.png`
+- `godot/tests/run_end_combat_freeze_test.gd`
+- `godot/tests/first_playable_run_path_test.gd`
+- `.github/workflows/build-kenney-space-kit.yml`
+- `tools/assets/validate_generated_kenney_glb.py`
+- `tools/blender/promote_kenney_space_kit.py`
+- `godot/assets/generated/industrial/SHA256SUMS.txt`
+- `godot/assets/generated/industrial/dz_cargo_crate.glb`
+- `godot/assets/generated/industrial/dz_floor_grate.glb`
+- `godot/assets/generated/industrial/dz_floor_hatch.glb`
+- `godot/assets/generated/industrial/dz_hazard_bollard.glb`
+- `godot/assets/generated/industrial/dz_pipe_rack.glb`
+- `godot/assets/generated/industrial/dz_service_pillar.glb`
+- `godot/assets/generated/industrial/dz_wall_vent.glb`
+- `art_sources/third_party/kenney/space_kit/LICENSE.txt`
+- `art_sources/third_party/kenney/space_kit/SOURCE.md`
+- `art_sources/third_party/kenney/space_kit/barrel_large.fbx`
+- `art_sources/third_party/kenney/space_kit/console.fbx`
+- `art_sources/third_party/kenney/space_kit/console_screen.fbx`
+- `art_sources/third_party/kenney/space_kit/metal_fence.fbx`
+- `art_sources/third_party/kenney/space_kit/metal_structure_cross.fbx`
 
 ### Project signals
 - `build.gradle`

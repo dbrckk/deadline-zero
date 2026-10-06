@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 0170e35138eb358ca2bc8e3a872b2e01eb4c1f46
-Head: bb733590436f10517f7421b8cbfe1d9f561bd37d
+Base: 95204ec41937b9b3d31154d168959f2f1b3ebd14
+Head: 8d4c54c85058734606fd17cff6c0b58588e4cffb
 
 ## Changed files
-- M .github/workflows/build-industrial-kit.yml
+- M godot/tests/run_end_combat_freeze_test.gd
 
 ## Affected areas
-- .github
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

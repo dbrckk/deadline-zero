@@ -53,6 +53,7 @@ blender/
   inspect_actor_source.py
   optimize_game_asset.py
   prepare_meshy_actor.py
+  promote_kenney_space_kit.py
   refine_rex_rifle_attack.py
   render_actor_8dir.py
   repair_rex_weights.py
@@ -513,6 +514,20 @@ def build_grate(out: Path)
 ⋮----
 x = -1.02 + i * (2.04 / 11.0)
 ⋮----
+def build_utility_cabinet(out: Path)
+⋮----
+def build_wall_vent(out: Path)
+⋮----
+z = 0.18 + i * 0.085
+⋮----
+def build_floor_hatch(out: Path)
+⋮----
+def build_hazard_bollard(out: Path)
+⋮----
+def build_junction_box(out: Path)
+⋮----
+def build_light_bar(out: Path)
+⋮----
 def main()
 ⋮----
 a = args()
@@ -802,6 +817,78 @@ after = sum(triangles(o) for o in objs)
 # Neutral material makes an untextured Meshy export readable while rigging.
 ⋮----
 mat = bpy.data.materials.new('DZ_RiggingNeutral')
+```
+
+## File: blender/promote_kenney_space_kit.py
+```python
+#!/usr/bin/env python3
+"""Promote curated Kenney CC0 source geometry into Deadline: Zero GLBs.
+
+Run with Blender 5.2.2 LTS:
+  blender -b --factory-startup -P tools/blender/promote_kenney_space_kit.py -- \
+    --source art_sources/third_party/kenney/space_kit \
+    --output build/kenney-space-kit
+
+The source FBX files remain outside Godot. This script creates runtime-ready GLB
+LOD0/LOD1 meshes with project-owned material grading and no embedded textures.
+"""
+⋮----
+ASSETS = {
+⋮----
+def parse()
+⋮----
+argv = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else []
+p = argparse.ArgumentParser()
+⋮----
+def make_material(name, color, metallic, roughness, emission=None)
+⋮----
+mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
+⋮----
+bsdf = mat.node_tree.nodes.get("Principled BSDF")
+⋮----
+def clear_scene()
+⋮----
+def meshes()
+⋮----
+def import_fbx(path: Path)
+⋮----
+def bbox_diagonal(obj)
+⋮----
+corners = [obj.matrix_world @ mathutils.Vector(corner) for corner in obj.bound_box]
+xs=[p.x for p in corners]; ys=[p.y for p in corners]; zs=[p.z for p in corners]
+⋮----
+def prepare_geometry(objs, steel, accent, lod)
+⋮----
+# Normalize source material count to two shared project materials.
+⋮----
+original_names=[slot.material.name.lower() if slot.material else "" for slot in obj.material_slots]
+⋮----
+# Preserve accent-like faces if the imported source exposed a dedicated light/glass material.
+⋮----
+old = original_names[poly.material_index] if poly.material_index < len(original_names) else ""
+⋮----
+# Small real bevels create stable specular edge definition from the gameplay camera.
+dims=max(obj.dimensions.x,obj.dimensions.y,obj.dimensions.z)
+⋮----
+bevel=obj.modifiers.new("DZ_HardSurfaceBevel","BEVEL")
+⋮----
+# Source assets are already lightweight; only decimate meaningful meshes.
+⋮----
+dec=obj.modifiers.new("DZ_LOD1","DECIMATE")
+⋮----
+def export_asset(path: Path, objs)
+⋮----
+def main()
+⋮----
+a=parse()
+# Import mathutils lazily so the file remains inspectable outside Blender.
+⋮----
+source=a.source/filename
+⋮----
+objs=meshes()
+⋮----
+steel=make_material("DZ_KenneyDarkSteel",(0.045,0.065,0.075),0.68,0.42)
+accent=make_material("DZ_KenneySystemAccent",(0.025,0.34,0.46),0.30,0.34,(0.01,0.18,0.28))
 ```
 
 ## File: blender/refine_rex_rifle_attack.py

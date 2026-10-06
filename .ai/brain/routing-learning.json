@@ -2,23 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Add industrial service grates to quarantine floor",
-      "terms": [
-        "add",
-        "floor",
-        "grates",
-        "industrial",
-        "quarantine",
-        "service"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Main.gd",
-        "godot/tests/environment_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Replace bright barrier skins with dark industrial metal",
       "terms": [
         "barrier",
@@ -1100,6 +1083,29 @@
       "useful": [
         "godot/tests/first_playable_run_path_test.gd",
         "tools/blender/build_industrial_kit.py"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "Keep run-end orb fixture local to test root",
+      "terms": [
+        "fixture",
+        "keep",
+        "local",
+        "orb",
+        "root",
+        "run-end",
+        "test"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/AssetLibrary.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/environment_identity_test.gd",
+        "godot/tests/first_playable_run_path_test.gd",
+        "godot/tests/run_end_combat_freeze_test.gd",
+        "tools/blender/build_industrial_kit.py",
+        "tools/blender/promote_kenney_space_kit.py"
       ]
     }
   ],
@@ -2661,6 +2667,15 @@
       "godot/tests/boss_encounter_render_test.gd": 4,
       "godot/tests/upgrade_choice_render_test.gd": 4
     },
+    "fixture": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/run_end_combat_freeze_test.gd": 4,
+      "tools/blender/build_industrial_kit.py": 4,
+      "tools/blender/promote_kenney_space_kit.py": 4
+    },
     "flat": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java": 4,
@@ -3136,11 +3151,16 @@
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
+      "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/Enemy.gd": 12,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Main.gd": 8,
       "godot/tests/enemy_hit_reaction_test.gd": 4,
-      "godot/tests/environment_identity_test.gd": 4,
-      "godot/tests/native_enemy_behavior_test.gd": 8
+      "godot/tests/environment_identity_test.gd": 8,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 8,
+      "godot/tests/run_end_combat_freeze_test.gd": 4,
+      "tools/blender/build_industrial_kit.py": 4,
+      "tools/blender/promote_kenney_space_kit.py": 4
     },
     "kit": {
       "tools/blender/build_industrial_kit.py": 4
@@ -3190,6 +3210,15 @@
     },
     "loaded": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java": 4
+    },
+    "local": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/run_end_combat_freeze_test.gd": 4,
+      "tools/blender/build_industrial_kit.py": 4,
+      "tools/blender/promote_kenney_space_kit.py": 4
     },
     "localization": {
       "core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java": 4,
@@ -3510,6 +3539,15 @@
       "godot/scripts/Main.gd": 4,
       "godot/scripts/RunDirector.gd": 4,
       "godot/tests/run_director_escalation_test.gd": 4
+    },
+    "orb": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/run_end_combat_freeze_test.gd": 4,
+      "tools/blender/build_industrial_kit.py": 4,
+      "tools/blender/promote_kenney_space_kit.py": 4
     },
     "original": {
       "godot/scripts/CombatAudio.gd": 4,
@@ -4220,8 +4258,13 @@
       "godot/scripts/Enemy.gd": 8
     },
     "root": {
-      "godot/scripts/AssetLibrary.gd": 4,
-      "godot/tests/environment_identity_test.gd": 4
+      "godot/scripts/AssetLibrary.gd": 8,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/environment_identity_test.gd": 8,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/run_end_combat_freeze_test.gd": 4,
+      "tools/blender/build_industrial_kit.py": 4,
+      "tools/blender/promote_kenney_space_kit.py": 4
     },
     "roster": {
       "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java": 4,
@@ -4236,9 +4279,15 @@
       "godot/tests/run_end_ux_test.gd": 4
     },
     "run-end": {
+      "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/Hud.gd": 8,
-      "godot/scripts/Main.gd": 4,
-      "godot/tests/run_end_ux_test.gd": 8
+      "godot/scripts/Main.gd": 8,
+      "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/run_end_combat_freeze_test.gd": 4,
+      "godot/tests/run_end_ux_test.gd": 8,
+      "tools/blender/build_industrial_kit.py": 4,
+      "tools/blender/promote_kenney_space_kit.py": 4
     },
     "runner": {
       "godot/scripts/Enemy.gd": 4,
@@ -4645,11 +4694,11 @@
       "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4
     },
     "test": {
-      "godot/scripts/AssetLibrary.gd": 16,
+      "godot/scripts/AssetLibrary.gd": 20,
       "godot/scripts/CombatFeel.gd": 4,
       "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Hud.gd": 4,
-      "godot/scripts/Main.gd": 16,
+      "godot/scripts/Main.gd": 20,
       "godot/scripts/Player.gd": 12,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
@@ -4657,15 +4706,18 @@
       "godot/tests/combat_feel_test.gd": 4,
       "godot/tests/damage_number_budget_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 16,
-      "godot/tests/environment_identity_test.gd": 4,
-      "godot/tests/first_playable_run_path_test.gd": 16,
+      "godot/tests/environment_identity_test.gd": 8,
+      "godot/tests/first_playable_run_path_test.gd": 20,
       "godot/tests/impact_fx_mobile_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/player_damage_feedback_test.gd": 4,
       "godot/tests/player_pressure_marker_test.gd": 4,
       "godot/tests/player_targeting_stability_test.gd": 4,
       "godot/tests/pressure_frame_render_test.gd": 4,
-      "godot/tests/weapon_presentation_test.gd": 4
+      "godot/tests/run_end_combat_freeze_test.gd": 4,
+      "godot/tests/weapon_presentation_test.gd": 4,
+      "tools/blender/build_industrial_kit.py": 4,
+      "tools/blender/promote_kenney_space_kit.py": 4
     },
     "threats": {
       "godot/scripts/Hud.gd": 4,

@@ -129,6 +129,11 @@ const STREET_LIGHTS := "res://assets/third_party/quaternius/zombie_apocalypse/st
 const TRAFFIC_CONE := "res://assets/third_party/quaternius/zombie_apocalypse/trafficcone-1.gltf"
 const TRASH_BAG := "res://assets/third_party/quaternius/zombie_apocalypse/trashbag-1.gltf"
 const STREET_CRACK := "res://assets/third_party/quaternius/zombie_apocalypse/street-straight-crack1.gltf"
+const INDUSTRIAL_FLOOR_GRATE := "res://assets/generated/industrial/dz_floor_grate.glb"
+const INDUSTRIAL_BULKHEAD := "res://assets/generated/industrial/dz_bulkhead_panel.glb"
+const INDUSTRIAL_CRATE := "res://assets/generated/industrial/dz_cargo_crate.glb"
+const INDUSTRIAL_PIPE_RACK := "res://assets/generated/industrial/dz_pipe_rack.glb"
+const INDUSTRIAL_SERVICE_PILLAR := "res://assets/generated/industrial/dz_service_pillar.glb"
 
 static var _enemy_grade_shader: Shader
 
@@ -189,6 +194,21 @@ static func trash_bag() -> Node3D:
 
 static func street_crack() -> Node3D:
     return instantiate_scene(STREET_CRACK)
+
+static func industrial_floor_grate() -> Node3D:
+    return instantiate_scene(INDUSTRIAL_FLOOR_GRATE)
+
+static func industrial_bulkhead() -> Node3D:
+    return instantiate_scene(INDUSTRIAL_BULKHEAD)
+
+static func industrial_crate() -> Node3D:
+    return instantiate_scene(INDUSTRIAL_CRATE)
+
+static func industrial_pipe_rack() -> Node3D:
+    return instantiate_scene(INDUSTRIAL_PIPE_RACK)
+
+static func industrial_service_pillar() -> Node3D:
+    return instantiate_scene(INDUSTRIAL_SERVICE_PILLAR)
 
 static func _apply_street_light_industrial_material(root: Node3D) -> void:
     if root == null:
@@ -4309,66 +4329,22 @@ func _build_floor_panels() -> void:
             plate.add_child(accent)
 
 func _build_floor_service_grates() -> void:
-    # Recessed utility grates give the arena functional industrial detail and a second material
-    # frequency without introducing collision or stealing contrast from combat silhouettes.
-    var frame_material := StandardMaterial3D.new()
-    frame_material.albedo_color = Color(0.055, 0.075, 0.085)
-    frame_material.metallic = 0.58
-    frame_material.roughness = 0.48
-
-    var recess_material := StandardMaterial3D.new()
-    recess_material.albedo_color = Color(0.012, 0.018, 0.022)
-    recess_material.metallic = 0.12
-    recess_material.roughness = 0.94
-
-    var slat_material := StandardMaterial3D.new()
-    slat_material.albedo_color = Color(0.10, 0.14, 0.16)
-    slat_material.metallic = 0.72
-    slat_material.roughness = 0.40
-
     var placements := [
         {"position": Vector3(-10.8, 0.012, -8.1), "rotation": 0.18},
         {"position": Vector3(10.7, 0.012, -8.0), "rotation": -0.16},
         {"position": Vector3(-10.6, 0.012, 8.2), "rotation": -0.20},
         {"position": Vector3(10.9, 0.012, 8.0), "rotation": 0.15},
     ]
-
     for index in range(placements.size()):
+        var grate := DZAssetLibrary.industrial_floor_grate()
+        if grate == null:
+            continue
         var placement: Dictionary = placements[index]
-        var grate := Node3D.new()
         grate.name = "ServiceGrate_%02d" % index
         grate.position = placement["position"]
         grate.rotation.y = float(placement["rotation"])
+        grate.scale = Vector3(1.04, 1.0, 0.82)
         add_child(grate)
-
-        var recess := MeshInstance3D.new()
-        recess.name = "Recess"
-        var recess_mesh := BoxMesh.new()
-        recess_mesh.size = Vector3(2.65, 0.012, 0.92)
-        recess.mesh = recess_mesh
-        recess.position.y = -0.004
-        recess.material_override = recess_material
-        grate.add_child(recess)
-
-        for rail_index in range(2):
-            var rail := MeshInstance3D.new()
-            rail.name = "FrameRail_%d" % rail_index
-            var rail_mesh := BoxMesh.new()
-            rail_mesh.size = Vector3(2.78, 0.026, 0.075)
-            rail.mesh = rail_mesh
-            rail.position = Vector3(0.0, 0.012, -0.49 if rail_index == 0 else 0.49)
-            rail.material_override = frame_material
-            grate.add_child(rail)
-
-        for slat_index in range(9):
-            var slat := MeshInstance3D.new()
-            slat.name = "Slat_%02d" % slat_index
-            var slat_mesh := BoxMesh.new()
-            slat_mesh.size = Vector3(0.075, 0.024, 0.80)
-            slat.mesh = slat_mesh
-            slat.position = Vector3(-1.12 + float(slat_index) * 0.28, 0.014, 0.0)
-            slat.material_override = slat_material
-            grate.add_child(slat)
 
 func _build_midfield_inspection_panels() -> void:
     # Small recessed access panels fill the otherwise empty midfield with believable service
@@ -4615,38 +4591,6 @@ func _build_floor_wear() -> void:
             add_child(chip)
 
 func _build_perimeter_bulkheads() -> void:
-    # Layered quarantine bulkheads replace bright kit silhouettes in the active camera frame.
-    # They are collision-free set dressing: readable industrial mass, restrained hazard identity,
-    # and small emissive service signals without adding dynamic-light cost.
-    var shell_material := StandardMaterial3D.new()
-    shell_material.albedo_color = Color(0.022, 0.034, 0.041)
-    shell_material.metallic = 0.68
-    shell_material.roughness = 0.43
-
-    var inset_material := StandardMaterial3D.new()
-    inset_material.albedo_color = Color(0.008, 0.013, 0.017)
-    inset_material.metallic = 0.24
-    inset_material.roughness = 0.91
-
-    var trim_material := StandardMaterial3D.new()
-    trim_material.albedo_color = Color(0.075, 0.105, 0.115)
-    trim_material.metallic = 0.78
-    trim_material.roughness = 0.34
-
-    var hazard_material := StandardMaterial3D.new()
-    hazard_material.albedo_color = Color(0.66, 0.15, 0.018)
-    hazard_material.emission_enabled = true
-    hazard_material.emission = Color(0.30, 0.035, 0.004)
-    hazard_material.emission_energy_multiplier = 0.34
-    hazard_material.roughness = 0.58
-
-    var signal_material := StandardMaterial3D.new()
-    signal_material.albedo_color = Color(0.035, 0.40, 0.56)
-    signal_material.emission_enabled = true
-    signal_material.emission = Color(0.015, 0.23, 0.38)
-    signal_material.emission_energy_multiplier = 1.15
-    signal_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-
     var placements := [
         {"position": Vector3(-17.4, 0.0, -9.5), "rotation": PI * 0.5},
         {"position": Vector3(-17.4, 0.0, 0.0), "rotation": PI * 0.5},
@@ -4659,80 +4603,16 @@ func _build_perimeter_bulkheads() -> void:
         {"position": Vector3(-10.5, 0.0, 13.7), "rotation": PI},
         {"position": Vector3(10.5, 0.0, 13.7), "rotation": PI},
     ]
-
     for index in range(placements.size()):
+        var bulkhead := DZAssetLibrary.industrial_bulkhead()
+        if bulkhead == null:
+            continue
         var placement: Dictionary = placements[index]
-        var bulkhead := Node3D.new()
         bulkhead.name = "PerimeterBulkhead_%02d" % index
         bulkhead.position = placement["position"]
         bulkhead.rotation.y = float(placement["rotation"])
+        bulkhead.scale = Vector3(1.0, 0.46, 1.0)
         add_child(bulkhead)
-
-        var foundation := MeshInstance3D.new()
-        foundation.name = "Foundation"
-        var foundation_mesh := BoxMesh.new()
-        foundation_mesh.size = Vector3(3.05, 0.16, 0.86)
-        foundation.mesh = foundation_mesh
-        foundation.position = Vector3(0.0, 0.08, 0.0)
-        foundation.material_override = inset_material
-        bulkhead.add_child(foundation)
-
-        var shell := MeshInstance3D.new()
-        shell.name = "Shell"
-        var shell_mesh := BoxMesh.new()
-        shell_mesh.size = Vector3(2.72, 0.78, 0.48)
-        shell.mesh = shell_mesh
-        shell.position = Vector3(0.0, 0.53, 0.03)
-        shell.material_override = shell_material
-        bulkhead.add_child(shell)
-
-        for side in [-1.0, 1.0]:
-            var post := MeshInstance3D.new()
-            post.name = "PostL" if side < 0.0 else "PostR"
-            var post_mesh := BoxMesh.new()
-            post_mesh.size = Vector3(0.18, 1.02, 0.60)
-            post.mesh = post_mesh
-            post.position = Vector3(side * 1.39, 0.55, 0.04)
-            post.material_override = trim_material
-            bulkhead.add_child(post)
-
-        var top_rail := MeshInstance3D.new()
-        top_rail.name = "TopRail"
-        var top_mesh := BoxMesh.new()
-        top_mesh.size = Vector3(2.92, 0.13, 0.57)
-        top_rail.mesh = top_mesh
-        top_rail.position = Vector3(0.0, 0.98, 0.03)
-        top_rail.material_override = trim_material
-        bulkhead.add_child(top_rail)
-
-        var inset := MeshInstance3D.new()
-        inset.name = "InsetPanel"
-        var inset_mesh := BoxMesh.new()
-        inset_mesh.size = Vector3(1.32, 0.39, 0.035)
-        inset.mesh = inset_mesh
-        inset.position = Vector3(0.0, 0.56, -0.258)
-        inset.material_override = inset_material
-        bulkhead.add_child(inset)
-
-        for stripe_index in range(3):
-            var stripe := MeshInstance3D.new()
-            stripe.name = "HazardStripe_%d" % stripe_index
-            var stripe_mesh := BoxMesh.new()
-            stripe_mesh.size = Vector3(0.36, 0.045, 0.020)
-            stripe.mesh = stripe_mesh
-            stripe.position = Vector3(-0.46 + float(stripe_index) * 0.46, 0.30, -0.282)
-            stripe.rotation.z = deg_to_rad(-18.0)
-            stripe.material_override = hazard_material
-            bulkhead.add_child(stripe)
-
-        var service_signal := MeshInstance3D.new()
-        service_signal.name = "Signal"
-        var signal_mesh := BoxMesh.new()
-        signal_mesh.size = Vector3(0.42, 0.055, 0.028)
-        service_signal.mesh = signal_mesh
-        service_signal.position = Vector3(0.77 if index % 2 == 0 else -0.77, 0.79, -0.285)
-        service_signal.material_override = signal_material
-        bulkhead.add_child(service_signal)
 
 func _build_authored_barrier_clusters() -> void:
     # Keep authored cover visible at the arena edge without letting the large source meshes
@@ -8438,7 +8318,7 @@ func _initialize() -> void:
     var service_grate_count := 0
     var inspection_panel_count := 0
     var inspection_service_stripe_count := 0
-    var service_grate_slat_count := 0
+    var service_grate_mesh_count := 0
     var oversized_barrier_count := 0
     var perimeter_bulkhead_count := 0
     var bulkhead_hazard_stripe_count := 0
@@ -8467,8 +8347,8 @@ func _initialize() -> void:
             hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
         elif child.name.begins_with("PerimeterBulkhead_"):
             perimeter_bulkhead_count += 1
-            bulkhead_hazard_stripe_count += child.find_children("HazardStripe_*", "MeshInstance3D", true, false).size()
-            bulkhead_signal_count += child.find_children("Signal", "MeshInstance3D", true, false).size()
+            bulkhead_hazard_stripe_count += child.find_children("HazardMarker_*", "MeshInstance3D", true, false).size()
+            bulkhead_signal_count += int(child.find_children("*", "MeshInstance3D", true, false).size() >= 10)
         elif child.name.begins_with("ContainmentLane_"):
             lane_count += 1
         elif child.name.begins_with("ArenaBoundary_"):
@@ -8517,9 +8397,7 @@ func _initialize() -> void:
             floor_seam_count += 1
         elif child.name.begins_with("ServiceGrate_"):
             service_grate_count += 1
-            for slat in child.find_children("Slat_*", "MeshInstance3D", true, false):
-                if slat is MeshInstance3D:
-                    service_grate_slat_count += 1
+            service_grate_mesh_count += child.find_children("*", "MeshInstance3D", true, false).size()
         elif child.name.begins_with("InspectionPanel_"):
             inspection_panel_count += 1
             inspection_service_stripe_count += child.find_children("ServiceStripe_*", "MeshInstance3D", true, false).size()
@@ -8566,8 +8444,8 @@ func _initialize() -> void:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
         quit(1)
         return
-    if perimeter_bulkhead_count != 10 or bulkhead_hazard_stripe_count != 30 or bulkhead_signal_count != 10:
-        push_error("Expected 10 layered perimeter bulkheads with 30 hazard stripes / 10 signals, got %d/%d/%d" % [perimeter_bulkhead_count, bulkhead_hazard_stripe_count, bulkhead_signal_count])
+    if perimeter_bulkhead_count != 10 or bulkhead_hazard_stripe_count < 40 or bulkhead_signal_count != 10:
+        push_error("Expected 10 authored GLB bulkheads with readable hazard/details, got %d bulkheads / %d hazard markers / %d detailed shells" % [perimeter_bulkhead_count, bulkhead_hazard_stripe_count, bulkhead_signal_count])
         quit(1)
         return
     if lane_count < 40:
@@ -8610,8 +8488,8 @@ func _initialize() -> void:
         push_error("Expected industrial floor seam structure, got %d" % floor_seam_count)
         quit(1)
         return
-    if service_grate_count != 4 or service_grate_slat_count < 36:
-        push_error("Expected 4 detailed service grates with at least 36 slats, got %d grates / %d slats" % [service_grate_count, service_grate_slat_count])
+    if service_grate_count != 4 or service_grate_mesh_count < 40:
+        push_error("Expected 4 authored GLB service grates with detailed mesh hierarchy, got %d grates / %d mesh nodes" % [service_grate_count, service_grate_mesh_count])
         quit(1)
         return
     if inspection_panel_count != 6 or inspection_service_stripe_count != 12:
@@ -8708,13 +8586,13 @@ func _initialize() -> void:
         quit(1)
         return
     main.player.velocity = Vector3(main.player.move_speed, 0.0, 0.0)
-    var strafe_lean: Vector3 = main.player._movement_lean_target()
+    var strafe_lean: Vector2 = main.player._movement_lean_target()
     if strafe_lean.y >= -0.01 or absf(strafe_lean.y) > deg_to_rad(main.player.MOVE_LEAN_ROLL_DEGREES + 0.1):
         push_error("Survivor strafe lean lost bounded directional response")
         quit(1)
         return
     main.player.velocity = Vector3(0.0, 0.0, -main.player.move_speed)
-    var forward_lean: Vector3 = main.player._movement_lean_target()
+    var forward_lean: Vector2 = main.player._movement_lean_target()
     if forward_lean.x <= 0.005 or absf(forward_lean.x) > deg_to_rad(main.player.MOVE_LEAN_PITCH_DEGREES + 0.1):
         push_error("Survivor forward lean lost bounded movement response")
         quit(1)
@@ -11460,7 +11338,7 @@ func _initialize() -> void:
     var orb := XP_ORB_SCRIPT.new()
     orb.target = target
     root.add_child(orb)
-    orb.global_position = Vector3(1.0, 0.18, 0.0)
+    orb.position = Vector3(1.0, 0.18, 0.0)
     orb.velocity = Vector3(-6.0, 0.0, 0.0)
 
     enemy.set_combat_enabled(false)

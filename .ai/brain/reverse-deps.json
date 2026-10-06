@@ -2182,9 +2182,10 @@
         "tools/blender/build_industrial_kit.py",
         "tools/blender/inspect_actor_source.py",
         "tools/blender/optimize_game_asset.py",
-        "tools/blender/prepare_meshy_actor.py"
+        "tools/blender/prepare_meshy_actor.py",
+        "tools/blender/promote_kenney_space_kit.py"
       ],
-      "in_degree": 24,
+      "in_degree": 25,
       "out_degree": 5
     },
     "core/src/main/java/com/deadlinezero/game/meta/RunRecoveryAdvice.java": {
@@ -6943,6 +6944,14 @@
       "out_degree": 1
     },
     "tools/blender/prepare_meshy_actor.py": {
+      "dependencies": [
+        "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java"
+      ],
+      "dependents": [],
+      "in_degree": 0,
+      "out_degree": 1
+    },
+    "tools/blender/promote_kenney_space_kit.py": {
       "dependencies": [
         "core/src/main/java/com/deadlinezero/game/meta/RunModifierContext.java"
       ],
