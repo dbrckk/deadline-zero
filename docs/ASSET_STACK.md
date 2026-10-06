@@ -96,3 +96,7 @@ Priority order for the current game:
 ## Original procedural industrial kit
 
 `tools/blender/build_industrial_kit.py` creates five project-owned GLB review assets with Blender 5.2.2 LTS: cargo crate, service pillar, pipe rack, bulkhead panel and floor grate. The dedicated `Build Industrial 3D Kit` workflow validates triangle/material/file-size budgets and uploads the GLBs as an artifact. Promote an output into `godot/assets/` only after its structural and gameplay-scale review passes.
+
+## PBR acquisition artifact
+
+The `Acquire PBR Source Pack` workflow fetches the four highest-priority pinned Poly Haven materials (asphalt, factory wall, rusty metal, rusty grate), validates CC0 metadata and <=2K JPEG dimensions, verifies source MD5 during acquisition, and uploads a source artifact. Network acquisition remains outside normal game builds; only reviewed processed textures are promoted into the runtime.

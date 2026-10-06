@@ -1,0 +1,51 @@
+name: Acquire PBR Source Pack
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/assets/acquire_polyhaven.py'
+      - 'tools/assets/validate_acquired_pbr.py'
+      - 'godot/assets/asset_manifest.json'
+      - '.github/workflows/acquire-pbr-sources.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  acquire:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validate pinned asset policy
+        run: python3 tools/assets/validate_asset_stack.py
+
+      - name: Acquire priority CC0 PBR sources
+        run: |
+          set -euo pipefail
+          rm -rf build/pbr-source-pack
+          python3 tools/assets/acquire_polyhaven.py \
+            --id polyhaven_asphalt_04 \
+            --id polyhaven_factory_wall \
+            --id polyhaven_rusty_metal_04 \
+            --id polyhaven_metal_grate_rusty \
+            --output build/pbr-source-pack
+
+      - name: Validate source textures
+        run: |
+          set -euo pipefail
+          python3 tools/assets/validate_acquired_pbr.py build/pbr-source-pack
+          (cd build/pbr-source-pack && find . -type f ! -name SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt)
+          (cd build/pbr-source-pack && sha256sum -c SHA256SUMS.txt)
+
+      - name: Upload reviewed-source candidate pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: deadline-zero-pbr-source-pack-${{ github.sha }}
+          path: build/pbr-source-pack/
+          if-no-files-found: error
+          retention-days: 14
