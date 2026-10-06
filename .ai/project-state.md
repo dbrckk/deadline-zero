@@ -22,31 +22,35 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-06T11:09:24Z
+Generated: 2026-10-06T11:15:15Z
 
 ### Git
 - Branch: `main`
-- Head: `fa94ea1d154c`
-- Commit date: 2026-10-06T13:09:11+02:00
-- Commit: Align projectile presentation test with premium trail pass
-- Tracked files: 985
+- Head: `5f3dee3adfdf`
+- Commit date: 2026-10-06T13:15:00+02:00
+- Commit: Promote project-owned floor decals into Godot arena
+- Tracked files: 989
 
 ### Recently changed files
-- `godot/tests/weapon_presentation_test.gd`
+- `godot/assets/asset_manifest.json`
+- `godot/assets/decals/quarantine_yard/SOURCE.md`
+- `godot/assets/decals/quarantine_yard/blood_a.png`
+- `godot/assets/decals/quarantine_yard/crack_a.png`
+- `godot/assets/decals/quarantine_yard/scorch_a.png`
+- `godot/scripts/Main.gd`
+- `godot/tests/environment_identity_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
+- `godot/tests/weapon_presentation_test.gd`
 - `.github/workflows/godot-verify.yml`
 - `docs/ASSET_STACK.md`
-- `godot/assets/asset_manifest.json`
 - `godot/assets/third_party/ASSET_SOURCES.md`
 - `tools/assets/acquire_polyhaven.py`
 - `tools/assets/validate_asset_stack.py`
 - `tools/blender/optimize_game_asset.py`
-- `play/store/feature-graphic.png`
-- `godot/tests/upgrade_choice_render_test.gd`
 
 ### Project signals
 - `build.gradle`

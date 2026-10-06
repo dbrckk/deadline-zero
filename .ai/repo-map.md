@@ -23805,7 +23805,14 @@ tasks.register('smokeRun', JavaExec) {
         "decal"
       ],
       "root": "art_sources/environment",
-      "usage": "crack/scorch/blood source decals already in repository; promote selected files into Godot through reviewed copy/atlas step"
+      "usage": "crack/scorch/blood source decals already in repository; promote selected files into Godot through reviewed copy/atlas step",
+      "runtime_root": "res://assets/decals/quarantine_yard",
+      "files": [
+        "crack_a.png",
+        "scorch_a.png",
+        "blood_a.png"
+      ],
+      "runtime_strategy": "shared transparent QuadMesh materials; no dynamic shadows"
     }
   ]
 }
@@ -27806,6 +27813,7 @@ func _build_world() -> void:
     _build_midfield_inspection_panels()
     _build_service_pylons()
     _build_floor_wear()
+    _build_authored_floor_decals()
     _build_floor_seams()
     _build_light_pool_decals()
     _build_ambient_motes()
@@ -28202,6 +28210,65 @@ func _build_service_pylons() -> void:
         signal_mesh_instance.position = Vector3(0.0, 0.62, -0.215)
         signal_mesh_instance.material_override = signal_material
         pylon.add_child(signal_mesh_instance)
+
+func _build_authored_floor_decals() -> void:
+    # Project-owned texture decals break up the procedural floor with authored marks.
+    # They are lightweight textured quads because the mobile renderer does not rely on
+    # Forward+-only decal projection. All instances share one mesh and three materials.
+    var decal_mesh := QuadMesh.new()
+    decal_mesh.size = Vector2.ONE
+
+    var materials := {
+        "crack": _floor_decal_material(
+            "res://assets/decals/quarantine_yard/crack_a.png", 0.64, 0.96
+        ),
+        "scorch": _floor_decal_material(
+            "res://assets/decals/quarantine_yard/scorch_a.png", 0.52, 0.92
+        ),
+        "blood": _floor_decal_material(
+            "res://assets/decals/quarantine_yard/blood_a.png", 0.46, 0.76
+        ),
+    }
+
+    var placements := [
+        {"kind": "crack", "position": Vector3(-4.6, 0.028, -2.8), "size": Vector2(2.45, 2.05), "yaw": 17.0},
+        {"kind": "crack", "position": Vector3(5.7, 0.029, 4.9), "size": Vector2(2.25, 1.90), "yaw": -28.0},
+        {"kind": "crack", "position": Vector3(-10.4, 0.030, 6.0), "size": Vector2(2.70, 2.20), "yaw": 63.0},
+        {"kind": "crack", "position": Vector3(11.2, 0.031, -5.8), "size": Vector2(2.35, 1.95), "yaw": 101.0},
+        {"kind": "crack", "position": Vector3(1.8, 0.032, 10.8), "size": Vector2(2.10, 1.75), "yaw": -73.0},
+        {"kind": "scorch", "position": Vector3(-6.7, 0.033, 4.4), "size": Vector2(2.10, 1.75), "yaw": 34.0},
+        {"kind": "scorch", "position": Vector3(7.2, 0.034, -3.8), "size": Vector2(1.85, 1.55), "yaw": -12.0},
+        {"kind": "scorch", "position": Vector3(-12.0, 0.035, -9.0), "size": Vector2(2.25, 1.90), "yaw": 82.0},
+        {"kind": "scorch", "position": Vector3(10.0, 0.036, 10.0), "size": Vector2(2.00, 1.70), "yaw": -52.0},
+        {"kind": "blood", "position": Vector3(-3.4, 0.037, 5.8), "size": Vector2(1.65, 1.35), "yaw": 22.0},
+        {"kind": "blood", "position": Vector3(4.6, 0.038, -8.0), "size": Vector2(1.45, 1.20), "yaw": -41.0},
+        {"kind": "blood", "position": Vector3(8.6, 0.039, 6.5), "size": Vector2(1.75, 1.42), "yaw": 116.0},
+    ]
+
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var kind := String(placement["kind"])
+        var decal := MeshInstance3D.new()
+        decal.name = "AuthoredFloorDecal_%02d_%s" % [index, kind]
+        decal.add_to_group("authored_floor_decals")
+        decal.mesh = decal_mesh
+        decal.position = placement["position"]
+        decal.rotation_degrees = Vector3(-90.0, float(placement["yaw"]), 0.0)
+        var size: Vector2 = placement["size"]
+        decal.scale = Vector3(size.x, size.y, 1.0)
+        decal.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        decal.material_override = materials[kind]
+        add_child(decal)
+
+func _floor_decal_material(path: String, opacity: float, roughness: float) -> StandardMaterial3D:
+    var texture := load(path) as Texture2D
+    var material := StandardMaterial3D.new()
+    material.albedo_texture = texture
+    material.albedo_color = Color(1.0, 1.0, 1.0, opacity)
+    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.roughness = roughness
+    material.metallic = 0.0
+    return material
 
 func _build_floor_wear() -> void:
     # Deterministic, collision-free wear breaks the broad uniform floor without competing
