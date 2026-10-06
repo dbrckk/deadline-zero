@@ -107,7 +107,7 @@ def build_cargo_crate(out: Path):
     for side in (-1.0, 1.0):
         y = side * 0.49
         objs.append(box("CratePanelFront" if side < 0 else "CratePanelRear",
-                        (0.94, 0.035, 0.48), (0, y, 0.44), DARK, 0.018))
+                        (0.94, 0.035, 0.48), (0, y, 0.44), STEEL, 0.018))
     for x in (-0.63, 0.63):
         for y in (-0.43, 0.43):
             objs.append(box(f"CornerRail_{x}_{y}", (0.095, 0.095, 0.84), (x, y, 0.44), STEEL, 0.018))
@@ -124,7 +124,7 @@ def build_service_pillar(out: Path):
         box("PillarBase", (0.72, 0.72, 0.18), (0, 0, 0.09), STEEL, 0.045),
         box("PillarBody", (0.46, 0.46, 2.08), (0, 0, 1.18), STEEL, 0.055),
         box("PillarCap", (0.62, 0.62, 0.20), (0, 0, 2.29), STEEL, 0.040),
-        box("ServicePanel", (0.30, 0.028, 0.64), (0, -0.245, 1.16), DARK, 0.012),
+        box("ServicePanel", (0.30, 0.028, 0.64), (0, -0.245, 1.16), STEEL, 0.012),
         box("SignalStrip", (0.21, 0.030, 0.68), (0, -0.264, 1.55), CYAN, 0.010),
     ]
     # Four mechanical feet and cap bolts.
@@ -149,7 +149,7 @@ def build_pipe_rack(out: Path):
 def build_bulkhead(out: Path):
     objs = [
         box("BulkheadShell", (3.00, 0.20, 2.42), (0, 0, 1.21), STEEL, 0.035),
-        box("BulkheadInset", (2.42, 0.055, 1.70), (0, -0.125, 1.20), DARK, 0.020),
+        box("BulkheadInset", (2.42, 0.055, 1.70), (0, -0.125, 1.20), STEEL, 0.020),
     ]
     for x in (-1.42, 1.42):
         objs.append(box(f"VerticalFrame_{x}", (0.16, 0.32, 2.46), (x, 0, 1.22), STEEL, 0.025))
