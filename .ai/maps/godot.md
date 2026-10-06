@@ -8687,7 +8687,7 @@ func _initialize() -> void:
         push_error("Run path did not initialize player, HUD and camera")
         quit(1)
         return
-    var camera_look := main._camera_motion_look_ahead(Vector3(8.0, 0.0, 0.0))
+    var camera_look: Vector3 = main._camera_motion_look_ahead(Vector3(8.0, 0.0, 0.0))
     if camera_look.length() <= 0.2 or camera_look.length() > main.CAMERA_LOOK_AHEAD_MAX + 0.001:
         push_error("Camera movement look-ahead is outside premium framing budget")
         quit(1)
@@ -8708,32 +8708,32 @@ func _initialize() -> void:
         quit(1)
         return
     main.player.velocity = Vector3(main.player.move_speed, 0.0, 0.0)
-    var strafe_lean := main.player._movement_lean_target()
+    var strafe_lean: Vector3 = main.player._movement_lean_target()
     if strafe_lean.y >= -0.01 or absf(strafe_lean.y) > deg_to_rad(main.player.MOVE_LEAN_ROLL_DEGREES + 0.1):
         push_error("Survivor strafe lean lost bounded directional response")
         quit(1)
         return
     main.player.velocity = Vector3(0.0, 0.0, -main.player.move_speed)
-    var forward_lean := main.player._movement_lean_target()
+    var forward_lean: Vector3 = main.player._movement_lean_target()
     if forward_lean.x <= 0.005 or absf(forward_lean.x) > deg_to_rad(main.player.MOVE_LEAN_PITCH_DEGREES + 0.1):
         push_error("Survivor forward lean lost bounded movement response")
         quit(1)
         return
 
     main.player.velocity = Vector3.ZERO
-    var acceleration_step := main.player._smoothed_movement_velocity(Vector2.RIGHT, 1.0 / 60.0)
+    var acceleration_step: Vector2 = main.player._smoothed_movement_velocity(Vector2.RIGHT, 1.0 / 60.0)
     if acceleration_step.x <= 0.0 or acceleration_step.x >= main.player.move_speed:
         push_error("Player movement lost short premium acceleration ramp")
         quit(1)
         return
     main.player.velocity = Vector3(main.player.move_speed, 0.0, 0.0)
-    var braking_step := main.player._smoothed_movement_velocity(Vector2.ZERO, 1.0 / 60.0)
+    var braking_step: Vector2 = main.player._smoothed_movement_velocity(Vector2.ZERO, 1.0 / 60.0)
     if braking_step.x <= 0.0 or braking_step.x >= main.player.move_speed:
         push_error("Player movement braking no longer decelerates smoothly")
         quit(1)
         return
     main.player.velocity = Vector3(main.player.move_speed, 0.0, 0.0)
-    var turn_step := main.player._smoothed_movement_velocity(Vector2.LEFT, 1.0 / 60.0)
+    var turn_step: Vector2 = main.player._smoothed_movement_velocity(Vector2.LEFT, 1.0 / 60.0)
     if turn_step.x >= braking_step.x:
         push_error("Player direction reversal is not more responsive than passive braking")
         quit(1)

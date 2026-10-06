@@ -1,17 +1,13 @@
 # Change impact
 
-Base: 971d18c5b39f095bcf097ba7da8639c9b2faa303
-Head: 13c78a98ad2708f0e5a4658e83b55832a018250b
+Base: 6e86e4d99b76d25ba1822581fe0d190cb5fee591
+Head: ac62704911ae145fd21c89d1e0443d016c788e7c
 
 ## Changed files
-- A .github/workflows/acquire-pbr-sources.yml
-- M docs/ASSET_STACK.md
-- A tools/assets/validate_acquired_pbr.py
+- M godot/tests/first_playable_run_path_test.gd
 
 ## Affected areas
-- .github
-- docs
-- tools
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

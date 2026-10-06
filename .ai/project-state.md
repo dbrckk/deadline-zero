@@ -22,34 +22,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-06T11:21:03Z
+Generated: 2026-10-06T11:23:12Z
 
 ### Git
 - Branch: `main`
-- Head: `13c78a98ad27`
-- Commit date: 2026-10-06T13:20:48+02:00
-- Commit: Acquire pinned CC0 PBR sources through review workflow
+- Head: `ac62704911ae`
+- Commit date: 2026-10-06T13:22:36+02:00
+- Commit: Type first-playable motion feedback probes
 - Tracked files: 994
 
 ### Recently changed files
+- `godot/tests/first_playable_run_path_test.gd`
+- `tools/blender/build_industrial_kit.py`
 - `.github/workflows/acquire-pbr-sources.yml`
 - `docs/ASSET_STACK.md`
 - `tools/assets/validate_acquired_pbr.py`
 - `.github/workflows/build-industrial-kit.yml`
 - `tools/assets/validate_generated_glb.py`
-- `tools/blender/build_industrial_kit.py`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `godot/assets/asset_manifest.json`
-- `godot/assets/decals/quarantine_yard/SOURCE.md`
-- `godot/assets/decals/quarantine_yard/blood_a.png`
-- `godot/assets/decals/quarantine_yard/crack_a.png`
-- `godot/assets/decals/quarantine_yard/scorch_a.png`
-- `godot/scripts/Main.gd`
-- `godot/tests/environment_identity_test.gd`
 
 ### Project signals
 - `build.gradle`
