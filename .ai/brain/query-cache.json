@@ -2342,7 +2342,7 @@
       },
       "task": "privacy consent"
     },
-    "271d08a275454456959a29b5c373c8f46bd398777b811968e55874f8dd4cccf0": {
+    "296a5647d097d5370bef05fa09733e9255ce05a680dd9cbbe71e13ff0450de28": {
       "route": {
         "budget": {
           "confidence": "medium",
@@ -2353,7 +2353,7 @@
           "tier": "bounded",
           "top_score": 27
         },
-        "candidate_count": 45,
+        "candidate_count": 52,
         "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
         "files": [
           {
@@ -2492,88 +2492,6 @@
         ]
       },
       "task": "income progression"
-    },
-    "295e34719dd564889dad68495af43025ffe1d1c1c6f94b5dfbafadfa714fbe2c": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "narrow",
-          "top_score": 43
-        },
-        "candidate_count": 19,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "billing",
-              "purchase"
-            ],
-            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "AndroidBillingService",
-              "beginPurchase",
-              "clearPending",
-              "containsConsumable",
-              "containsDurable",
-              "failPending",
-              "firstConsumable",
-              "firstKnownProduct",
-              "grantDurableProducts",
-              "processPurchase",
-              "succeedPending"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "billing",
-              "purchase"
-            ],
-            "path": "core/src/test/java/com/deadlinezero/game/meta/ConsumablePurchaseDeliveryTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "ConsumablePurchaseDeliveryTest",
-              "RecordingBilling"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "billing",
-              "purchase"
-            ],
-            "path": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 43,
-            "symbols": [
-              "FakeBilling",
-              "PurchaseGrantServiceTest"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "purchase billing",
-        "terms": [
-          "purchase",
-          "billing"
-        ]
-      },
-      "task": "purchase billing"
     },
     "2a4f83e64c9c066b58701c3baac1030c62a335145b8242a6a9dd065482e58067": {
       "route": {
@@ -3659,162 +3577,6 @@
       },
       "task": "privacy consent"
     },
-    "37752b6f389cd495ef7d184a64f4dcae9c07a9b78129b4962d98428dbd824b1a": {
-      "route": {
-        "budget": {
-          "confidence": "medium",
-          "expand_to": 12,
-          "max_files": 6,
-          "requested_max_files": 12,
-          "score_margin": 0,
-          "tier": "bounded",
-          "top_score": 27
-        },
-        "candidate_count": 430,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "AndroidFirstPlayableJourneyTest",
-              "activity",
-              "game",
-              "run",
-              "traversesContractCombatDefeatAndVictorySettlement"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "AndroidGameplayVisualProbeTest",
-              "activity",
-              "armBossReveal",
-              "capture",
-              "capturesBossRevealCameraFraming",
-              "capturesChampionVariantCrowd",
-              "capturesCinderGunnerGameplayAndAttackFrames",
-              "capturesCloudSaveScreen",
-              "capturesCryoVaultGameplay",
-              "capturesCryogenicDepthsGameplay",
-              "capturesExpandedUpgradePoolOverlay",
-              "capturesForgeHoundGameplayAndAttackFrames",
-              "capturesFrostColossusGameplay",
-              "capturesGraphicsQualitySettings",
-              "capturesHarvesterGameplayAndAttackFrames",
-              "capturesNullArchonGameplayAndAttackFrames",
-              "capturesNullWardGameplayAndAttackFrames",
-              "capturesPhaseStalkerGameplayAndAttackFrames",
-              "capturesQuarantineYardGameplay",
-              "capturesRevenantGameplayAndAttackFrames"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "AndroidGraphicsProfileProbeTest",
-              "Result",
-              "activity",
-              "everyGraphicsProfileAndFrameRateTargetReachesGameScreen",
-              "game",
-              "runOnGameThread",
-              "writeMatrix"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "AndroidLauncherSmokeTest",
-              "assertAttachedAndAlive",
-              "launcherCreatesRealLibgdxSurfaceAndStaysAlive",
-              "launcherSurvivesBackgroundForegroundAndActivityRecreation"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "AndroidPerformanceProbeTest",
-              "activity",
-              "game",
-              "injectLoad",
-              "injectStressLoad",
-              "recordsHordeProjectileStressTelemetry",
-              "recordsLoadedGameplayPerformanceTelemetry",
-              "runOnGameThread",
-              "waitForTelemetry",
-              "writeBenchmarkJson"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "game"
-            ],
-            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidProcessPersistenceTest.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "AndroidProcessPersistenceTest",
-              "activity",
-              "game",
-              "phase",
-              "runOnGameThread",
-              "seedProfileBeforeExternalProcessDeath",
-              "verifyProfileAfterExternalProcessRestart"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "game engine",
-        "terms": [
-          "game",
-          "engine"
-        ]
-      },
-      "task": "game engine"
-    },
     "436f0e342aa81a97246aa0a252d33a68b7a6a427e83f7da9b2b916b274dfce1c": {
       "route": {
         "budget": {
@@ -4511,6 +4273,194 @@
         ]
       },
       "task": "purchase billing"
+    },
+    "48a1275f7cbdbad5fc350a29cf06a6441995ed77954778b2184fcbbc3986c8f3": {
+      "route": {
+        "budget": {
+          "confidence": "medium",
+          "expand_to": 12,
+          "max_files": 6,
+          "requested_max_files": 12,
+          "score_margin": 6,
+          "tier": "bounded",
+          "top_score": 27
+        },
+        "candidate_count": 60,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "LevelProgress",
+              "SurvivorProgression",
+              "addXp",
+              "advance",
+              "level",
+              "levelPowerMultiplier",
+              "refreshUnlocks",
+              "setState",
+              "unlock",
+              "unlocked",
+              "xp",
+              "xpCost",
+              "xpForLevel",
+              "xpForNext"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 21,
+            "symbols": [
+              "MissionsScreen",
+              "claimAchievement",
+              "drawClaimRow",
+              "drawDaily",
+              "drawHeader",
+              "drawMissionIcons",
+              "drawMissionProgressBars",
+              "drawMissionRowIcons",
+              "drawMissionStateCard",
+              "drawProgress",
+              "drawRowProgress",
+              "drawWeekly",
+              "f",
+              "handleInput",
+              "heading",
+              "inset",
+              "nextLabel",
+              "progressText",
+              "t"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/ui/UiMotion.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 21,
+            "symbols": [
+              "UiMotion",
+              "easeInOut",
+              "easeOutCubic",
+              "pressScale",
+              "progress"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 21,
+            "symbols": [
+              "ButtonState",
+              "ButtonStyle",
+              "Tone",
+              "UiRenderer",
+              "background",
+              "border",
+              "bottomNav",
+              "button",
+              "buttonStyle",
+              "card",
+              "chip",
+              "cornerMarks",
+              "iconBadge",
+              "panel",
+              "premiumButton",
+              "premiumCard",
+              "premiumCta",
+              "premiumPanel",
+              "progress",
+              "sectionBand"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 21,
+            "symbols": [
+              "CombatHudRenderer",
+              "bossColor",
+              "bossIdentity",
+              "bossName",
+              "drawBars",
+              "drawBossPhaseChrome",
+              "drawBossWarningChrome",
+              "drawBuildStatus",
+              "drawCuePlate",
+              "drawDamageVignette",
+              "drawEventCueChrome",
+              "drawMobileControls",
+              "drawOnboardingHint",
+              "drawProgressTicks",
+              "drawProtocolCue",
+              "drawRailChrome",
+              "drawSentinelIntercept",
+              "drawSynergyUnlock",
+              "drawText",
+              "f"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "progress"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 21,
+            "symbols": [
+              "Impact",
+              "SingularityImpactTracker",
+              "State",
+              "consumeTriggeredCount",
+              "impacts",
+              "progress",
+              "trigger"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "offline progress",
+        "terms": [
+          "offline",
+          "progress"
+        ]
+      },
+      "task": "offline progress"
     },
     "4ba9eff65aae5edbe448d074279debcc4500cb0da58434b1d292cc6ef63b73b1": {
       "route": {
@@ -7038,81 +6988,6 @@
       },
       "task": "privacy consent"
     },
-    "6f055e27571383463bc736eb2a386921a05900d2efd07391a085f9f2d0aa4661": {
-      "route": {
-        "budget": {
-          "confidence": "high",
-          "expand_to": 12,
-          "max_files": 3,
-          "requested_max_files": 12,
-          "score_margin": 8,
-          "tier": "narrow",
-          "top_score": 39
-        },
-        "candidate_count": 11,
-        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
-        "files": [
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "consent",
-              "privacy"
-            ],
-            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidPrivacyService.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 39,
-            "symbols": [
-              "AndroidPrivacyService"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "consent",
-              "privacy"
-            ],
-            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidConsentManager.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 31,
-            "symbols": [
-              "AndroidConsentManager",
-              "canRequestAds",
-              "completeOnce",
-              "gatherConsent",
-              "privacyOptionsRequired",
-              "showPrivacyOptions"
-            ]
-          },
-          {
-            "learning_score": 0,
-            "matched_terms": [
-              "privacy"
-            ],
-            "path": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
-            "reasons": [
-              "search-index"
-            ],
-            "score": 27,
-            "symbols": [
-              "PrivacyService",
-              "noOp"
-            ]
-          }
-        ],
-        "generated_by": "dbrckk/repo-brain-v8",
-        "schema_version": 1,
-        "task": "privacy consent",
-        "terms": [
-          "privacy",
-          "consent"
-        ]
-      },
-      "task": "privacy consent"
-    },
     "6f258b08521861090277f4548c8aa1e59f97ae848d21a3363b9f91fdc509329f": {
       "route": {
         "budget": {
@@ -8572,193 +8447,161 @@
       },
       "task": "privacy consent"
     },
-    "7f92b1ca18cbbaaee19399eade80859b010a124942d93596f581c6208be75bac": {
+    "81061ebf33c09263f2ece8c2d30c613385e5c91c20df20601993088e78eeac3c": {
       "route": {
         "budget": {
           "confidence": "medium",
           "expand_to": 12,
           "max_files": 6,
           "requested_max_files": 12,
-          "score_margin": 6,
+          "score_margin": 0,
           "tier": "bounded",
           "top_score": 27
         },
-        "candidate_count": 60,
+        "candidate_count": 432,
         "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
         "files": [
           {
             "learning_score": 0,
             "matched_terms": [
-              "progress"
+              "game"
             ],
-            "path": "core/src/main/java/com/deadlinezero/game/meta/SurvivorProgression.java",
+            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
             "reasons": [
               "search-index"
             ],
             "score": 27,
             "symbols": [
-              "LevelProgress",
-              "SurvivorProgression",
-              "addXp",
-              "advance",
-              "level",
-              "levelPowerMultiplier",
-              "refreshUnlocks",
-              "setState",
-              "unlock",
-              "unlocked",
-              "xp",
-              "xpCost",
-              "xpForLevel",
-              "xpForNext"
+              "AndroidFirstPlayableJourneyTest",
+              "activity",
+              "game",
+              "run",
+              "traversesContractCombatDefeatAndVictorySettlement"
             ]
           },
           {
             "learning_score": 0,
             "matched_terms": [
-              "progress"
+              "game"
             ],
-            "path": "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java",
+            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
             "reasons": [
               "search-index"
             ],
-            "score": 21,
+            "score": 27,
             "symbols": [
-              "MissionsScreen",
-              "claimAchievement",
-              "drawClaimRow",
-              "drawDaily",
-              "drawHeader",
-              "drawMissionIcons",
-              "drawMissionProgressBars",
-              "drawMissionRowIcons",
-              "drawMissionStateCard",
-              "drawProgress",
-              "drawRowProgress",
-              "drawWeekly",
-              "f",
-              "handleInput",
-              "heading",
-              "inset",
-              "nextLabel",
-              "progressText",
-              "t"
+              "AndroidGameplayVisualProbeTest",
+              "activity",
+              "armBossReveal",
+              "capture",
+              "capturesBossRevealCameraFraming",
+              "capturesChampionVariantCrowd",
+              "capturesCinderGunnerGameplayAndAttackFrames",
+              "capturesCloudSaveScreen",
+              "capturesCryoVaultGameplay",
+              "capturesCryogenicDepthsGameplay",
+              "capturesExpandedUpgradePoolOverlay",
+              "capturesForgeHoundGameplayAndAttackFrames",
+              "capturesFrostColossusGameplay",
+              "capturesGraphicsQualitySettings",
+              "capturesHarvesterGameplayAndAttackFrames",
+              "capturesNullArchonGameplayAndAttackFrames",
+              "capturesNullWardGameplayAndAttackFrames",
+              "capturesPhaseStalkerGameplayAndAttackFrames",
+              "capturesQuarantineYardGameplay",
+              "capturesRevenantGameplayAndAttackFrames"
             ]
           },
           {
             "learning_score": 0,
             "matched_terms": [
-              "progress"
+              "game"
             ],
-            "path": "core/src/main/java/com/deadlinezero/game/ui/UiMotion.java",
+            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
             "reasons": [
               "search-index"
             ],
-            "score": 21,
+            "score": 27,
             "symbols": [
-              "UiMotion",
-              "easeInOut",
-              "easeOutCubic",
-              "pressScale",
-              "progress"
+              "AndroidGraphicsProfileProbeTest",
+              "Result",
+              "activity",
+              "everyGraphicsProfileAndFrameRateTargetReachesGameScreen",
+              "game",
+              "runOnGameThread",
+              "writeMatrix"
             ]
           },
           {
             "learning_score": 0,
             "matched_terms": [
-              "progress"
+              "game"
             ],
-            "path": "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java",
+            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java",
             "reasons": [
               "search-index"
             ],
-            "score": 21,
+            "score": 27,
             "symbols": [
-              "ButtonState",
-              "ButtonStyle",
-              "Tone",
-              "UiRenderer",
-              "background",
-              "border",
-              "bottomNav",
-              "button",
-              "buttonStyle",
-              "card",
-              "chip",
-              "cornerMarks",
-              "iconBadge",
-              "panel",
-              "premiumButton",
-              "premiumCard",
-              "premiumCta",
-              "premiumPanel",
-              "progress",
-              "sectionBand"
+              "AndroidLauncherSmokeTest",
+              "assertAttachedAndAlive",
+              "launcherCreatesRealLibgdxSurfaceAndStaysAlive",
+              "launcherSurvivesBackgroundForegroundAndActivityRecreation"
             ]
           },
           {
             "learning_score": 0,
             "matched_terms": [
-              "progress"
+              "game"
             ],
-            "path": "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java",
+            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
             "reasons": [
               "search-index"
             ],
-            "score": 21,
+            "score": 27,
             "symbols": [
-              "CombatHudRenderer",
-              "bossColor",
-              "bossIdentity",
-              "bossName",
-              "drawBars",
-              "drawBossPhaseChrome",
-              "drawBossWarningChrome",
-              "drawBuildStatus",
-              "drawCuePlate",
-              "drawDamageVignette",
-              "drawEventCueChrome",
-              "drawMobileControls",
-              "drawOnboardingHint",
-              "drawProgressTicks",
-              "drawProtocolCue",
-              "drawRailChrome",
-              "drawSentinelIntercept",
-              "drawSynergyUnlock",
-              "drawText",
-              "f"
+              "AndroidPerformanceProbeTest",
+              "activity",
+              "game",
+              "injectLoad",
+              "injectStressLoad",
+              "recordsHordeProjectileStressTelemetry",
+              "recordsLoadedGameplayPerformanceTelemetry",
+              "runOnGameThread",
+              "waitForTelemetry",
+              "writeBenchmarkJson"
             ]
           },
           {
             "learning_score": 0,
             "matched_terms": [
-              "progress"
+              "game"
             ],
-            "path": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+            "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidProcessPersistenceTest.java",
             "reasons": [
               "search-index"
             ],
-            "score": 21,
+            "score": 27,
             "symbols": [
-              "Impact",
-              "SingularityImpactTracker",
-              "State",
-              "consumeTriggeredCount",
-              "impacts",
-              "progress",
-              "trigger"
+              "AndroidProcessPersistenceTest",
+              "activity",
+              "game",
+              "phase",
+              "runOnGameThread",
+              "seedProfileBeforeExternalProcessDeath",
+              "verifyProfileAfterExternalProcessRestart"
             ]
           }
         ],
         "generated_by": "dbrckk/repo-brain-v8",
         "schema_version": 1,
-        "task": "offline progress",
+        "task": "game engine",
         "terms": [
-          "offline",
-          "progress"
+          "game",
+          "engine"
         ]
       },
-      "task": "offline progress"
+      "task": "game engine"
     },
     "8298c3edf99f6283f0cad74525edd5f158cabcb2c0887429f17e448fd6b95142": {
       "route": {
@@ -9310,6 +9153,88 @@
         ]
       },
       "task": "game engine"
+    },
+    "8e47505f711e02ef234fdf5a16cd2ca0d1ca0058afec98370c9a85d2f67a8eee": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 0,
+          "tier": "narrow",
+          "top_score": 43
+        },
+        "candidate_count": 20,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "billing",
+              "purchase"
+            ],
+            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidBillingService.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "AndroidBillingService",
+              "beginPurchase",
+              "clearPending",
+              "containsConsumable",
+              "containsDurable",
+              "failPending",
+              "firstConsumable",
+              "firstKnownProduct",
+              "grantDurableProducts",
+              "processPurchase",
+              "succeedPending"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "billing",
+              "purchase"
+            ],
+            "path": "core/src/test/java/com/deadlinezero/game/meta/ConsumablePurchaseDeliveryTest.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "ConsumablePurchaseDeliveryTest",
+              "RecordingBilling"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "billing",
+              "purchase"
+            ],
+            "path": "core/src/test/java/com/deadlinezero/game/meta/PurchaseGrantServiceTest.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 43,
+            "symbols": [
+              "FakeBilling",
+              "PurchaseGrantServiceTest"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "purchase billing",
+        "terms": [
+          "purchase",
+          "billing"
+        ]
+      },
+      "task": "purchase billing"
     },
     "8f45487e802deb235adf46a900616e5630fc921c47eae368f20219a97191810a": {
       "route": {
@@ -11491,6 +11416,81 @@
         ]
       },
       "task": "game engine"
+    },
+    "a53dd5bdbddae4406324d4df0a98f9c5e8637402b1dd5369f95af2b8824700ce": {
+      "route": {
+        "budget": {
+          "confidence": "high",
+          "expand_to": 12,
+          "max_files": 3,
+          "requested_max_files": 12,
+          "score_margin": 8,
+          "tier": "narrow",
+          "top_score": 39
+        },
+        "candidate_count": 10,
+        "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
+        "files": [
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "consent",
+              "privacy"
+            ],
+            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidPrivacyService.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 39,
+            "symbols": [
+              "AndroidPrivacyService"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "consent",
+              "privacy"
+            ],
+            "path": "android/src/main/java/com/deadlinezero/game/android/AndroidConsentManager.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 31,
+            "symbols": [
+              "AndroidConsentManager",
+              "canRequestAds",
+              "completeOnce",
+              "gatherConsent",
+              "privacyOptionsRequired",
+              "showPrivacyOptions"
+            ]
+          },
+          {
+            "learning_score": 0,
+            "matched_terms": [
+              "privacy"
+            ],
+            "path": "core/src/main/java/com/deadlinezero/game/services/PrivacyService.java",
+            "reasons": [
+              "search-index"
+            ],
+            "score": 27,
+            "symbols": [
+              "PrivacyService",
+              "noOp"
+            ]
+          }
+        ],
+        "generated_by": "dbrckk/repo-brain-v8",
+        "schema_version": 1,
+        "task": "privacy consent",
+        "terms": [
+          "privacy",
+          "consent"
+        ]
+      },
+      "task": "privacy consent"
     },
     "a57aa66cb7423eb9d5fdbd197981cbf0f85f031d8973aa2df872ddb53b6a923b": {
       "route": {
@@ -16774,11 +16774,6 @@
   },
   "generated_by": "dbrckk/repo-brain-query-cache-v2",
   "order": [
-    "6f055e27571383463bc736eb2a386921a05900d2efd07391a085f9f2d0aa4661",
-    "7f92b1ca18cbbaaee19399eade80859b010a124942d93596f581c6208be75bac",
-    "37752b6f389cd495ef7d184a64f4dcae9c07a9b78129b4962d98428dbd824b1a",
-    "295e34719dd564889dad68495af43025ffe1d1c1c6f94b5dfbafadfa714fbe2c",
-    "271d08a275454456959a29b5c373c8f46bd398777b811968e55874f8dd4cccf0",
     "45bcea8f2fbaed84f61a42fe5a008d2268910314fca9093050b50184b85ba42b",
     "eb570e2ed2104489dc6b917556ed37c3fd4425bca06c005f9ae284d6a58e7239",
     "98b56ff297ccaecd8d0d578b6a906dd1f51c545c402b2d93f2f53e1faa9b1929",
@@ -16901,7 +16896,12 @@
     "a291c36c81a1ae757a1e4145cc7fd42c123e461b6670f2de22e63c7962432f19",
     "6d0d597456eed0ba4ea8b08be0e0f3ac1de4be76b91b3a087f54e531e654ed60",
     "a57aa66cb7423eb9d5fdbd197981cbf0f85f031d8973aa2df872ddb53b6a923b",
-    "668f74714949200bc737f526b5e6157898f7607703cba12269e33cfeaaca96d0"
+    "668f74714949200bc737f526b5e6157898f7607703cba12269e33cfeaaca96d0",
+    "8e47505f711e02ef234fdf5a16cd2ca0d1ca0058afec98370c9a85d2f67a8eee",
+    "296a5647d097d5370bef05fa09733e9255ce05a680dd9cbbe71e13ff0450de28",
+    "a53dd5bdbddae4406324d4df0a98f9c5e8637402b1dd5369f95af2b8824700ce",
+    "48a1275f7cbdbad5fc350a29cf06a6441995ed77954778b2184fcbbc3986c8f3",
+    "81061ebf33c09263f2ece8c2d30c613385e5c91c20df20601993088e78eeac3c"
   ],
   "schema_version": 1
 }

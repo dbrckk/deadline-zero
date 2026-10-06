@@ -1,13 +1,12 @@
 # Change impact
 
-Base: 884dfd3fdb632dbed82f75b0c70d029e81ebe6df
-Head: 8ad28f64962a4129263fd58b8a8eab9ed8eeca1b
+Base: 971d18c5b39f095bcf097ba7da8639c9b2faa303
+Head: 13c78a98ad2708f0e5a4658e83b55832a018250b
 
 ## Changed files
-- A .github/workflows/build-industrial-kit.yml
+- A .github/workflows/acquire-pbr-sources.yml
 - M docs/ASSET_STACK.md
-- A tools/assets/validate_generated_glb.py
-- A tools/blender/build_industrial_kit.py
+- A tools/assets/validate_acquired_pbr.py
 
 ## Affected areas
 - .github

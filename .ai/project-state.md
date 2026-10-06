@@ -22,18 +22,20 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-06T11:19:00Z
+Generated: 2026-10-06T11:21:03Z
 
 ### Git
 - Branch: `main`
-- Head: `8ad28f64962a`
-- Commit date: 2026-10-06T13:18:44+02:00
-- Commit: Generate original industrial 3D kit with Blender
-- Tracked files: 992
+- Head: `13c78a98ad27`
+- Commit date: 2026-10-06T13:20:48+02:00
+- Commit: Acquire pinned CC0 PBR sources through review workflow
+- Tracked files: 994
 
 ### Recently changed files
-- `.github/workflows/build-industrial-kit.yml`
+- `.github/workflows/acquire-pbr-sources.yml`
 - `docs/ASSET_STACK.md`
+- `tools/assets/validate_acquired_pbr.py`
+- `.github/workflows/build-industrial-kit.yml`
 - `tools/assets/validate_generated_glb.py`
 - `tools/blender/build_industrial_kit.py`
 - `play/store/phone-screenshots/01-first-playable.png`
@@ -48,7 +50,6 @@ Generated: 2026-10-06T11:19:00Z
 - `godot/assets/decals/quarantine_yard/scorch_a.png`
 - `godot/scripts/Main.gd`
 - `godot/tests/environment_identity_test.gd`
-- `godot/tests/weapon_presentation_test.gd`
 
 ### Project signals
 - `build.gradle`

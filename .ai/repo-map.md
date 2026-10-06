@@ -42,6 +42,7 @@ The content is organized as follows:
   config.yml
 .github/
   workflows/
+    acquire-pbr-sources.yml
     actor-candidate-validation.yml
     actor-production-staging.yml
     ai-repo-map.yml
@@ -414,6 +415,7 @@ tools/
     test_scan_runtime_log.py
   assets/
     acquire_polyhaven.py
+    validate_acquired_pbr.py
     validate_asset_stack.py
     validate_generated_glb.py
   audio/
@@ -594,6 +596,61 @@ workflows:
           filters:
             branches:
               only: /^circleci-fallback-.*/
+````
+
+## File: .github/workflows/acquire-pbr-sources.yml
+````yaml
+name: Acquire PBR Source Pack
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/assets/acquire_polyhaven.py'
+      - 'tools/assets/validate_acquired_pbr.py'
+      - 'godot/assets/asset_manifest.json'
+      - '.github/workflows/acquire-pbr-sources.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  acquire:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validate pinned asset policy
+        run: python3 tools/assets/validate_asset_stack.py
+
+      - name: Acquire priority CC0 PBR sources
+        run: |
+          set -euo pipefail
+          rm -rf build/pbr-source-pack
+          python3 tools/assets/acquire_polyhaven.py \
+            --id polyhaven_asphalt_04 \
+            --id polyhaven_factory_wall \
+            --id polyhaven_rusty_metal_04 \
+            --id polyhaven_metal_grate_rusty \
+            --output build/pbr-source-pack
+
+      - name: Validate source textures
+        run: |
+          set -euo pipefail
+          python3 tools/assets/validate_acquired_pbr.py build/pbr-source-pack
+          (cd build/pbr-source-pack && find . -type f ! -name SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt)
+          (cd build/pbr-source-pack && sha256sum -c SHA256SUMS.txt)
+
+      - name: Upload reviewed-source candidate pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: deadline-zero-pbr-source-pack-${{ github.sha }}
+          path: build/pbr-source-pack/
+          if-no-files-found: error
+          retention-days: 14
 ````
 
 ## File: .github/workflows/actor-candidate-validation.yml
@@ -30671,6 +30728,40 @@ target = args.output / asset_id
 metadata = {
 ⋮----
 dest = target / filename
+````
+
+## File: tools/assets/validate_acquired_pbr.py
+````python
+#!/usr/bin/env python3
+"""Validate a staged Poly Haven PBR source pack."""
+⋮----
+REQUIRED_MAPS = {"Diffuse", "nor_gl"}
+MAX_DIMENSION = 2048
+⋮----
+def jpeg_size(path: Path)
+⋮----
+data = path.read_bytes()
+⋮----
+i = 2
+⋮----
+marker = data[i + 1]
+⋮----
+length = struct.unpack(">H", data[i:i+2])[0]
+⋮----
+def main()
+⋮----
+ap = argparse.ArgumentParser()
+⋮----
+args = ap.parse_args()
+errors = []
+assets = 0
+⋮----
+meta = json.loads(source.read_text())
+asset_id = meta.get("asset_id", source.parent.name)
+⋮----
+maps = {entry.get("map") for entry in meta.get("files", [])}
+⋮----
+path = source.parent / entry["file"]
 ````
 
 ## File: tools/assets/validate_asset_stack.py
