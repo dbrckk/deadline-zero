@@ -31,7 +31,7 @@ func _initialize() -> void:
     var orb := XP_ORB_SCRIPT.new()
     orb.target = target
     root.add_child(orb)
-    orb.global_position = Vector3(1.0, 0.18, 0.0)
+    orb.position = Vector3(1.0, 0.18, 0.0)
     orb.velocity = Vector3(-6.0, 0.0, 0.0)
 
     enemy.set_combat_enabled(false)
