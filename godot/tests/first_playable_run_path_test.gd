@@ -35,13 +35,13 @@ func _initialize() -> void:
         quit(1)
         return
     main.player.velocity = Vector3(main.player.move_speed, 0.0, 0.0)
-    var strafe_lean: Vector3 = main.player._movement_lean_target()
+    var strafe_lean: Vector2 = main.player._movement_lean_target()
     if strafe_lean.y >= -0.01 or absf(strafe_lean.y) > deg_to_rad(main.player.MOVE_LEAN_ROLL_DEGREES + 0.1):
         push_error("Survivor strafe lean lost bounded directional response")
         quit(1)
         return
     main.player.velocity = Vector3(0.0, 0.0, -main.player.move_speed)
-    var forward_lean: Vector3 = main.player._movement_lean_target()
+    var forward_lean: Vector2 = main.player._movement_lean_target()
     if forward_lean.x <= 0.005 or absf(forward_lean.x) > deg_to_rad(main.player.MOVE_LEAN_PITCH_DEGREES + 0.1):
         push_error("Survivor forward lean lost bounded movement response")
         quit(1)
