@@ -389,6 +389,16 @@ desktop/
   build.gradle
 godot/
   assets/
+    third_party/
+      polyhaven/
+        asphalt_04/
+          SOURCE.json
+        factory_wall/
+          SOURCE.json
+        metal_grate_rusty/
+          SOURCE.json
+        rusty_metal_04/
+          SOURCE.json
     asset_manifest.json
   scripts/
     AssetLibrary.gd
@@ -602,6 +612,9 @@ workflows:
 ````yaml
 name: Acquire PBR Source Pack
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   push:
@@ -643,6 +656,26 @@ jobs:
           python3 tools/assets/validate_acquired_pbr.py build/pbr-source-pack
           (cd build/pbr-source-pack && find . -type f ! -name SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt)
           (cd build/pbr-source-pack && sha256sum -c SHA256SUMS.txt)
+
+      - name: Promote validated PBR sources into Godot
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          mkdir -p godot/assets/third_party/polyhaven
+          for asset in asphalt_04 factory_wall rusty_metal_04 metal_grate_rusty; do
+            rm -rf "godot/assets/third_party/polyhaven/$asset"
+            cp -R "build/pbr-source-pack/$asset" "godot/assets/third_party/polyhaven/$asset"
+          done
+          git config user.name "deadline-zero-assets"
+          git config user.email "actions@users.noreply.github.com"
+          git add godot/assets/third_party/polyhaven
+          if git diff --cached --quiet; then
+            echo "PBR sources already promoted."
+            exit 0
+          fi
+          git commit -m "assets(godot): promote validated CC0 PBR sources [skip render]"
+          git pull --rebase origin main
+          git push origin HEAD:main
 
       - name: Upload reviewed-source candidate pack
         uses: actions/upload-artifact@v4
@@ -1337,6 +1370,9 @@ jobs:
 ````yaml
 name: Build Industrial 3D Kit
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   push:
@@ -1390,6 +1426,37 @@ jobs:
           python3 tools/assets/validate_generated_glb.py build/industrial-kit
           (cd build/industrial-kit && sha256sum *.glb > SHA256SUMS.txt)
           (cd build/industrial-kit && sha256sum -c SHA256SUMS.txt)
+
+      - name: Promote validated industrial kit into Godot
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          rm -rf godot/assets/generated/industrial
+          mkdir -p godot/assets/generated/industrial
+          cp build/industrial-kit/*.glb godot/assets/generated/industrial/
+          cp build/industrial-kit/SHA256SUMS.txt godot/assets/generated/industrial/
+          cat > godot/assets/generated/industrial/SOURCE.md <<'EOF'
+          # Deadline: Zero generated industrial kit
+          
+          Project-owned geometry generated deterministically by:
+          tools/blender/build_industrial_kit.py
+          
+          Pinned authoring runtime: Blender 5.2.2 LTS.
+          
+          No third-party meshes or textures are embedded in these GLB files.
+          Triangle/material/file-size budgets are enforced by
+          tools/assets/validate_generated_glb.py before promotion.
+          EOF
+          git config user.name "deadline-zero-assets"
+          git config user.email "actions@users.noreply.github.com"
+          git add godot/assets/generated/industrial
+          if git diff --cached --quiet; then
+            echo "Industrial kit already promoted."
+            exit 0
+          fi
+          git commit -m "assets(godot): promote generated industrial GLB kit [skip render]"
+          git pull --rebase origin main
+          git push origin HEAD:main
 
       - name: Upload generated industrial kit for review
         uses: actions/upload-artifact@v4
@@ -23593,6 +23660,182 @@ tasks.register('smokeRun', JavaExec) {
 }
 ````
 
+## File: godot/assets/third_party/polyhaven/asphalt_04/SOURCE.json
+````json
+{
+  "source": "https://polyhaven.com/a/asphalt_04",
+  "asset_id": "asphalt_04",
+  "license": "CC0-1.0",
+  "resolution": "2k",
+  "format": "jpg",
+  "api": "https://api.polyhaven.com",
+  "files": [
+    {
+      "map": "Diffuse",
+      "file": "asphalt_04_diff_2k.jpg",
+      "md5": "a9c6f84cfd568368607898351fce9b51",
+      "api_path": [
+        "Diffuse",
+        "2k",
+        "jpg"
+      ]
+    },
+    {
+      "map": "nor_gl",
+      "file": "asphalt_04_nor_gl_2k.jpg",
+      "md5": "7c908104ea09ed7749d287a85bdae485",
+      "api_path": [
+        "nor_gl",
+        "2k",
+        "jpg"
+      ]
+    },
+    {
+      "map": "arm",
+      "file": "asphalt_04_arm_2k.jpg",
+      "md5": "86aa0c868aa1a4c3a0bc0e96732b506a",
+      "api_path": [
+        "arm",
+        "2k",
+        "jpg"
+      ]
+    }
+  ]
+}
+````
+
+## File: godot/assets/third_party/polyhaven/factory_wall/SOURCE.json
+````json
+{
+  "source": "https://polyhaven.com/a/factory_wall",
+  "asset_id": "factory_wall",
+  "license": "CC0-1.0",
+  "resolution": "1k",
+  "format": "jpg",
+  "api": "https://api.polyhaven.com",
+  "files": [
+    {
+      "map": "Diffuse",
+      "file": "factory_wall_diff_1k.jpg",
+      "md5": "d565bb4d4ec2da5791779779573ed452",
+      "api_path": [
+        "Diffuse",
+        "1k",
+        "jpg"
+      ]
+    },
+    {
+      "map": "nor_gl",
+      "file": "factory_wall_nor_gl_1k.jpg",
+      "md5": "b4dc2be92339828c5b3fe460b9144a8a",
+      "api_path": [
+        "nor_gl",
+        "1k",
+        "jpg"
+      ]
+    },
+    {
+      "map": "arm",
+      "file": "factory_wall_arm_1k.jpg",
+      "md5": "0fe5de4fc3bfff5ababb82ada12a3fa0",
+      "api_path": [
+        "arm",
+        "1k",
+        "jpg"
+      ]
+    }
+  ]
+}
+````
+
+## File: godot/assets/third_party/polyhaven/metal_grate_rusty/SOURCE.json
+````json
+{
+  "source": "https://polyhaven.com/a/metal_grate_rusty",
+  "asset_id": "metal_grate_rusty",
+  "license": "CC0-1.0",
+  "resolution": "1k",
+  "format": "jpg",
+  "api": "https://api.polyhaven.com",
+  "files": [
+    {
+      "map": "Diffuse",
+      "file": "metal_grate_rusty_diff_1k.jpg",
+      "md5": "96ca939eb6dd637959ee64d1a03bb2ab",
+      "api_path": [
+        "Diffuse",
+        "1k",
+        "jpg"
+      ]
+    },
+    {
+      "map": "nor_gl",
+      "file": "metal_grate_rusty_nor_gl_1k.jpg",
+      "md5": "54183a92d9fa896d15042a7b30ba5e7f",
+      "api_path": [
+        "nor_gl",
+        "1k",
+        "jpg"
+      ]
+    },
+    {
+      "map": "arm",
+      "file": "metal_grate_rusty_arm_1k.jpg",
+      "md5": "02149a2e91e8ccefd91a22bd042966bc",
+      "api_path": [
+        "arm",
+        "1k",
+        "jpg"
+      ]
+    }
+  ]
+}
+````
+
+## File: godot/assets/third_party/polyhaven/rusty_metal_04/SOURCE.json
+````json
+{
+  "source": "https://polyhaven.com/a/rusty_metal_04",
+  "asset_id": "rusty_metal_04",
+  "license": "CC0-1.0",
+  "resolution": "1k",
+  "format": "jpg",
+  "api": "https://api.polyhaven.com",
+  "files": [
+    {
+      "map": "Diffuse",
+      "file": "rusty_metal_04_diff_1k.jpg",
+      "md5": "91832efd8e5896387e2af18a5b49b895",
+      "api_path": [
+        "Diffuse",
+        "1k",
+        "jpg"
+      ]
+    },
+    {
+      "map": "nor_gl",
+      "file": "rusty_metal_04_nor_gl_1k.jpg",
+      "md5": "25f7f28b3546391532a5567b86e65aeb",
+      "api_path": [
+        "nor_gl",
+        "1k",
+        "jpg"
+      ]
+    },
+    {
+      "map": "arm",
+      "file": "rusty_metal_04_arm_1k.jpg",
+      "md5": "279a6d62861e32e4ee43cce84b932e43",
+      "api_path": [
+        "arm",
+        "1k",
+        "jpg"
+      ]
+    }
+  ]
+}
+````
+
 ## File: godot/assets/asset_manifest.json
 ````json
 {
@@ -23842,7 +24085,7 @@ tasks.register('smokeRun', JavaExec) {
       "license": "CC0-1.0",
       "tier": "A",
       "kind": "texture",
-      "resolution": "2k",
+      "resolution": "1k",
       "format": "jpg",
       "maps": [
         "Diffuse",
@@ -23861,7 +24104,7 @@ tasks.register('smokeRun', JavaExec) {
       "license": "CC0-1.0",
       "tier": "A",
       "kind": "texture",
-      "resolution": "2k",
+      "resolution": "1k",
       "format": "jpg",
       "maps": [
         "Diffuse",

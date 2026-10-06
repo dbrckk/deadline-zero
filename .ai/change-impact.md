@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 6e86e4d99b76d25ba1822581fe0d190cb5fee591
-Head: ac62704911ae145fd21c89d1e0443d016c788e7c
+Base: 0170e35138eb358ca2bc8e3a872b2e01eb4c1f46
+Head: bb733590436f10517f7421b8cbfe1d9f561bd37d
 
 ## Changed files
-- M godot/tests/first_playable_run_path_test.gd
+- M .github/workflows/build-industrial-kit.yml
 
 ## Affected areas
-- godot
+- .github
 
 ## Related test candidates
 - No direct filename-based test match detected.

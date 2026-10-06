@@ -22,28 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-06T11:23:12Z
+Generated: 2026-10-06T11:26:37Z
 
 ### Git
 - Branch: `main`
-- Head: `ac62704911ae`
-- Commit date: 2026-10-06T13:22:36+02:00
-- Commit: Type first-playable motion feedback probes
-- Tracked files: 994
+- Head: `bb733590436f`
+- Commit date: 2026-10-06T13:26:22+02:00
+- Commit: Promote validated industrial GLBs into Godot
+- Tracked files: 1010
 
 ### Recently changed files
-- `godot/tests/first_playable_run_path_test.gd`
-- `tools/blender/build_industrial_kit.py`
-- `.github/workflows/acquire-pbr-sources.yml`
-- `docs/ASSET_STACK.md`
-- `tools/assets/validate_acquired_pbr.py`
 - `.github/workflows/build-industrial-kit.yml`
-- `tools/assets/validate_generated_glb.py`
+- `godot/assets/third_party/polyhaven/asphalt_04/SOURCE.json`
+- `godot/assets/third_party/polyhaven/asphalt_04/asphalt_04_arm_2k.jpg`
+- `godot/assets/third_party/polyhaven/asphalt_04/asphalt_04_diff_2k.jpg`
+- `godot/assets/third_party/polyhaven/asphalt_04/asphalt_04_nor_gl_2k.jpg`
+- `godot/assets/third_party/polyhaven/factory_wall/SOURCE.json`
+- `godot/assets/third_party/polyhaven/factory_wall/factory_wall_arm_1k.jpg`
+- `godot/assets/third_party/polyhaven/factory_wall/factory_wall_diff_1k.jpg`
+- `godot/assets/third_party/polyhaven/factory_wall/factory_wall_nor_gl_1k.jpg`
+- `godot/assets/third_party/polyhaven/metal_grate_rusty/SOURCE.json`
+- `godot/assets/third_party/polyhaven/metal_grate_rusty/metal_grate_rusty_arm_1k.jpg`
+- `godot/assets/third_party/polyhaven/metal_grate_rusty/metal_grate_rusty_diff_1k.jpg`
+- `godot/assets/third_party/polyhaven/metal_grate_rusty/metal_grate_rusty_nor_gl_1k.jpg`
+- `godot/assets/third_party/polyhaven/rusty_metal_04/SOURCE.json`
+- `godot/assets/third_party/polyhaven/rusty_metal_04/rusty_metal_04_arm_1k.jpg`
+- `godot/assets/third_party/polyhaven/rusty_metal_04/rusty_metal_04_diff_1k.jpg`
+- `godot/assets/third_party/polyhaven/rusty_metal_04/rusty_metal_04_nor_gl_1k.jpg`
+- `.github/workflows/acquire-pbr-sources.yml`
+- `godot/assets/asset_manifest.json`
 - `play/store/phone-screenshots/01-first-playable.png`
-- `play/store/phone-screenshots/02-midrun-pressure.png`
-- `play/store/phone-screenshots/03-boss-encounter.png`
-- `play/store/phone-screenshots/04-upgrade-choice.png`
-- `play/store/phone-screenshots/05-run-end.png`
 
 ### Project signals
 - `build.gradle`
