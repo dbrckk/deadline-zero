@@ -5,7 +5,8 @@ on:
     paths:
       - "godot/**"
       - "tools/audio/**"
-      - "tools/audio/**"
+      - "tools/assets/**"
+      - "tools/blender/**"
       - ".github/workflows/godot-verify.yml"
   push:
     branches: [main]
@@ -22,6 +23,9 @@ jobs:
 
       - name: Generate original authored audio
         run: python3 tools/audio/generate_deadline_zero_audio.py
+
+      - name: Validate premium asset stack
+        run: python3 tools/assets/validate_asset_stack.py
 
       - name: Download Godot 4.7.2
         run: |

@@ -1,27 +1,343 @@
 {
-  "schema": 1,
+  "schema": 2,
   "engine": "Godot 4.7.2",
-  "policy": "CC0 or project-owned assets only unless separately reviewed",
+  "policy": {
+    "shipped_asset_licenses": [
+      "CC0-1.0",
+      "Project-Owned"
+    ],
+    "reviewed_exceptions_only": true,
+    "source_assets_are_not_shipped_raw_when_redistribution_is_restricted": true,
+    "preferred_exchange_format": "glb",
+    "disallowed_generators": [
+      {
+        "id": "hunyuan3d-2",
+        "reason": "Current license excludes EU/UK/South Korea territory; not valid for this France-based commercial pipeline."
+      }
+    ]
+  },
+  "budgets": {
+    "mobile": {
+      "enemy_standard": {
+        "triangles_lod0": 9000,
+        "triangles_lod1": 4500,
+        "materials": 2,
+        "texture_max": 1024
+      },
+      "enemy_elite": {
+        "triangles_lod0": 14000,
+        "triangles_lod1": 7000,
+        "materials": 2,
+        "texture_max": 1024
+      },
+      "boss": {
+        "triangles_lod0": 30000,
+        "triangles_lod1": 15000,
+        "materials": 3,
+        "texture_max": 2048
+      },
+      "survivor": {
+        "triangles_lod0": 22000,
+        "triangles_lod1": 11000,
+        "materials": 3,
+        "texture_max": 2048
+      },
+      "environment_prop": {
+        "triangles_lod0": 12000,
+        "triangles_lod1": 6000,
+        "materials": 2,
+        "texture_max": 2048
+      },
+      "hero_prop": {
+        "triangles_lod0": 32000,
+        "triangles_lod1": 16000,
+        "materials": 3,
+        "texture_max": 2048
+      },
+      "ground_material": {
+        "texture_max": 2048
+      },
+      "decal": {
+        "texture_max": 1024,
+        "atlas_max": 2048
+      }
+    }
+  },
+  "toolchain": [
+    {
+      "id": "blender",
+      "license": "GPL-3.0-or-later",
+      "role": "authoring-retopo-uv-bake-lod",
+      "ship": false
+    },
+    {
+      "id": "material-maker",
+      "license": "MIT",
+      "role": "procedural-pbr-and-decal-authoring",
+      "ship": false
+    },
+    {
+      "id": "trellis-2",
+      "license": "MIT",
+      "role": "optional-source-mesh-generation-own-gpu",
+      "ship": false
+    },
+    {
+      "id": "meshoptimizer-gltfpack",
+      "license": "MIT",
+      "role": "gltf-simplification-and-packing",
+      "ship": false
+    },
+    {
+      "id": "godot",
+      "license": "MIT",
+      "role": "runtime-import-and-mobile-rendering",
+      "ship": true
+    },
+    {
+      "id": "comfyui",
+      "license": "GPL-3.0",
+      "role": "optional-local-mask-reference-generation",
+      "ship": false,
+      "source": "star-list"
+    }
+  ],
   "sources": [
     {
       "id": "quaternius_zombie_apocalypse",
+      "provider": "quaternius",
       "page": "https://quaternius.com/packs/zombieapocalypsekit.html",
-      "license": "CC0",
-      "formats": ["gltf", "fbx", "obj", "blend"],
-      "roles": ["survivor", "enemy", "vehicle", "environment_prop"]
+      "license": "CC0-1.0",
+      "tier": "B",
+      "formats": [
+        "gltf",
+        "fbx",
+        "obj",
+        "blend"
+      ],
+      "roles": [
+        "survivor",
+        "enemy",
+        "environment_prop"
+      ],
+      "usage": "existing base meshes/animations; regrade/retexture before final hero use"
     },
     {
       "id": "quaternius_scifi_essentials",
+      "provider": "quaternius",
       "page": "https://quaternius.com/packs/scifiessentialskit.html",
-      "license": "CC0",
-      "formats": ["gltf", "fbx", "obj"],
-      "roles": ["weapon", "robot_enemy", "crate", "screen", "vfx_reference"]
+      "license": "CC0-1.0",
+      "tier": "B",
+      "formats": [
+        "gltf",
+        "fbx",
+        "obj"
+      ],
+      "roles": [
+        "weapon",
+        "robot_enemy",
+        "crate",
+        "screen",
+        "environment_prop"
+      ],
+      "usage": "kitbash/source geometry; public free subset only"
+    },
+    {
+      "id": "quaternius_modular_scifi_megakit",
+      "provider": "quaternius",
+      "page": "https://quaternius.com/packs/modularscifimegakit.html",
+      "license": "CC0-1.0",
+      "tier": "B",
+      "formats": [
+        "gltf",
+        "fbx",
+        "obj"
+      ],
+      "roles": [
+        "wall",
+        "floor",
+        "door",
+        "column",
+        "environment_prop"
+      ],
+      "usage": "public free subset only; use as modular geometry, then apply DZ materials"
+    },
+    {
+      "id": "quaternius_universal_animation_library_2",
+      "provider": "quaternius",
+      "page": "https://quaternius.com/packs/universalanimationlibrary2.html",
+      "license": "CC0-1.0",
+      "tier": "B",
+      "formats": [
+        "glb",
+        "fbx",
+        "blend"
+      ],
+      "roles": [
+        "animation"
+      ],
+      "usage": "retarget locomotion, zombie, armed and melee actions to validated rigs"
     },
     {
       "id": "polyhaven_concrete_tiles_02",
+      "provider": "polyhaven",
+      "asset_id": "concrete_tiles_02",
       "page": "https://polyhaven.com/a/concrete_tiles_02",
-      "license": "CC0",
-      "roles": ["ground_material"]
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "ground_material"
+      ]
+    },
+    {
+      "id": "polyhaven_asphalt_04",
+      "provider": "polyhaven",
+      "asset_id": "asphalt_04",
+      "page": "https://polyhaven.com/a/asphalt_04",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "ground_material",
+        "road"
+      ]
+    },
+    {
+      "id": "polyhaven_road_damaged_clean",
+      "provider": "polyhaven",
+      "asset_id": "road_damaged_clean",
+      "page": "https://polyhaven.com/a/road_damaged_clean",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "ground_material",
+        "road"
+      ]
+    },
+    {
+      "id": "polyhaven_factory_wall",
+      "provider": "polyhaven",
+      "asset_id": "factory_wall",
+      "page": "https://polyhaven.com/a/factory_wall",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "wall_material"
+      ]
+    },
+    {
+      "id": "polyhaven_rusty_metal_04",
+      "provider": "polyhaven",
+      "asset_id": "rusty_metal_04",
+      "page": "https://polyhaven.com/a/rusty_metal_04",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "prop_material",
+        "wall_material"
+      ]
+    },
+    {
+      "id": "polyhaven_metal_grate_rusty",
+      "provider": "polyhaven",
+      "asset_id": "metal_grate_rusty",
+      "page": "https://polyhaven.com/a/metal_grate_rusty",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "1k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "prop_material",
+        "floor_detail"
+      ]
+    },
+    {
+      "id": "polyhaven_container_side",
+      "provider": "polyhaven",
+      "asset_id": "container_side",
+      "page": "https://polyhaven.com/a/container_side",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "kind": "texture",
+      "resolution": "2k",
+      "format": "jpg",
+      "maps": [
+        "Diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "roles": [
+        "prop_material",
+        "wall_material"
+      ]
+    },
+    {
+      "id": "ambientcg",
+      "provider": "ambientcg",
+      "page": "https://ambientcg.com/",
+      "license": "CC0-1.0",
+      "tier": "A",
+      "roles": [
+        "texture_fallback",
+        "surface_variation"
+      ],
+      "usage": "manual curated fallback when Poly Haven lacks a required material; pin exact asset ID before import"
+    },
+    {
+      "id": "project_owned_decals",
+      "provider": "deadline-zero",
+      "license": "Project-Owned",
+      "tier": "A",
+      "roles": [
+        "decal"
+      ],
+      "root": "art_sources/environment",
+      "usage": "crack/scorch/blood source decals already in repository; promote selected files into Godot through reviewed copy/atlas step"
     }
   ]
 }
