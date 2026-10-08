@@ -3266,6 +3266,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_shadow_budget_test.gd
       - name: Validate weapon presentation identities
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_presentation_test.gd
+      - name: Validate authored directional 3D muzzle flare
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/muzzle_flare_3d_test.gd
       - name: Validate player pressure marker lifecycle
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/player_pressure_marker_test.gd
       - name: Validate player targeting stability
@@ -30178,6 +30180,7 @@ func _build_muzzle_flash() -> void:
     flash_mesh.radius = 0.105
     flash_mesh.height = 0.21
     muzzle_flash.mesh = flash_mesh
+    muzzle_flash.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     muzzle_flash.position = Vector3(0.33, 0.98, -0.90)
     muzzle_flash.scale = Vector3(1.0, 0.70, 1.55)
     muzzle_flash.visible = false
@@ -30189,6 +30192,28 @@ func _build_muzzle_flash() -> void:
     muzzle_flash_material.emission_energy_multiplier = 5.6
     muzzle_flash_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     muzzle_flash.material_override = muzzle_flash_material
+    # One low-poly tapered mesh, instanced three times, turns the original
+    # glowing orb into a directional weapon flash visible from the combat
+    # camera. All three spikes share the core material and accessibility pulse.
+    var spike_mesh := CylinderMesh.new()
+    spike_mesh.top_radius = 0.004
+    spike_mesh.bottom_radius = 0.070
+    spike_mesh.height = 0.44
+    spike_mesh.radial_segments = 6
+    spike_mesh.rings = 1
+    for wing_index in [-1, 0, 1]:
+        var spike := MeshInstance3D.new()
+        spike.name = "MuzzleFlashSpear" if wing_index == 0 else (
+            "MuzzleFlashWingL" if wing_index < 0 else "MuzzleFlashWingR"
+        )
+        spike.mesh = spike_mesh
+        spike.position = Vector3(float(wing_index) * 0.075, 0.0, -0.24)
+        spike.rotation_degrees = Vector3(-90.0, float(wing_index) * 24.0, 0.0)
+        if wing_index != 0:
+            spike.scale = Vector3(0.72, 0.72, 0.72)
+        spike.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        spike.material_override = muzzle_flash_material
+        muzzle_flash.add_child(spike)
     add_child(muzzle_flash)
 
 func _trigger_muzzle_flash() -> void:

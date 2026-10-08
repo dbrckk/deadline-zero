@@ -2,21 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Refine ballistic tracer readability",
-      "terms": [
-        "ballistic",
-        "readability",
-        "refine",
-        "tracer"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Projectile.gd",
-        "godot/tests/weapon_presentation_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Fix scatter tracer material binding",
       "terms": [
         "binding",
@@ -1136,6 +1121,25 @@
         "godot/tests/attack_facing_lock_test.gd",
         "godot/tests/multihit_silhouette_stability_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(godot): layer accessibility-aware 3D muzzle flare geometry",
+      "terms": [
+        "3d",
+        "accessibility-aware",
+        "feat",
+        "flare",
+        "geometry",
+        "godot",
+        "layer",
+        "muzzle"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Player.gd",
+        "godot/tests/muzzle_flare_3d_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1426,7 +1430,7 @@
       "godot/scripts/Hud.gd": 20,
       "godot/scripts/ImpactFx.gd": 16,
       "godot/scripts/Main.gd": 36,
-      "godot/scripts/Player.gd": 16,
+      "godot/scripts/Player.gd": 20,
       "godot/scripts/Projectile.gd": 16,
       "godot/scripts/WeaponProfiles.gd": 4,
       "godot/scripts/XpOrb.gd": 8,
@@ -1446,6 +1450,7 @@
       "godot/tests/impact_fx_mobile_test.gd": 4,
       "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/multihit_silhouette_stability_test.gd": 4,
+      "godot/tests/muzzle_flare_3d_test.gd": 4,
       "godot/tests/projectile_profile_runtime_visual_test.gd": 4,
       "godot/tests/run_director_runtime_integration_test.gd": 4,
       "godot/tests/run_end_ux_test.gd": 4,
@@ -1491,6 +1496,10 @@
     },
     "accessibility": {
       "core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java": 4
+    },
+    "accessibility-aware": {
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/muzzle_flare_3d_test.gd": 4
     },
     "acquisition": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java": 8
@@ -2702,13 +2711,14 @@
       "godot/scripts/CombatGroundMark.gd": 4,
       "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Main.gd": 4,
-      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Player.gd": 8,
       "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/combat_ground_mark_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/industrial_prop_material_test.gd": 4,
-      "godot/tests/multihit_silhouette_stability_test.gd": 4
+      "godot/tests/multihit_silhouette_stability_test.gd": 4,
+      "godot/tests/muzzle_flare_3d_test.gd": 4
     },
     "feature": {
       "godot/tests/play_feature_graphic_render_test.gd": 12,
@@ -2778,6 +2788,10 @@
       "godot/tests/run_end_combat_freeze_test.gd": 4,
       "tools/blender/build_industrial_kit.py": 4,
       "tools/blender/promote_kenney_space_kit.py": 4
+    },
+    "flare": {
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/muzzle_flare_3d_test.gd": 4
     },
     "flat": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java": 4,
@@ -2951,6 +2965,10 @@
       "core/src/main/java/com/deadlinezero/game/visual/UpgradePresentation.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/UpgradePresentationTest.java": 4
     },
+    "geometry": {
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/muzzle_flare_3d_test.gd": 4
+    },
     "give": {
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CompanionRenderer.java": 4,
@@ -2982,7 +3000,7 @@
       "godot/scripts/Hud.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 28,
-      "godot/scripts/Player.gd": 8,
+      "godot/scripts/Player.gd": 12,
       "godot/scripts/Projectile.gd": 4,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/archetype_roster_render_test.gd": 4,
@@ -3001,6 +3019,7 @@
       "godot/tests/industrial_prop_material_test.gd": 4,
       "godot/tests/mobile_orientation_test.gd": 24,
       "godot/tests/multihit_silhouette_stability_test.gd": 4,
+      "godot/tests/muzzle_flare_3d_test.gd": 4,
       "godot/tests/offscreen_threat_priority_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/smoke_test.gd": 4
@@ -3306,6 +3325,10 @@
     "launcher": {
       "godot/tests/android_play_export_contract_test.gd": 4
     },
+    "layer": {
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/muzzle_flare_3d_test.gd": 4
+    },
     "legendary": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4
     },
@@ -3586,7 +3609,8 @@
       "godot/tests/run_end_ux_test.gd": 4
     },
     "muzzle": {
-      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Player.gd": 8,
+      "godot/tests/muzzle_flare_3d_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "native": {

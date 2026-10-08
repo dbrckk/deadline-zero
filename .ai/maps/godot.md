@@ -90,6 +90,7 @@ tests/
   industrial_prop_material_test.gd
   mobile_orientation_test.gd
   multihit_silhouette_stability_test.gd
+  muzzle_flare_3d_test.gd
   native_enemy_behavior_test.gd
   native_upgrade_depth_test.gd
   offscreen_threat_priority_test.gd
@@ -5938,6 +5939,7 @@ func _build_muzzle_flash() -> void:
     flash_mesh.radius = 0.105
     flash_mesh.height = 0.21
     muzzle_flash.mesh = flash_mesh
+    muzzle_flash.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     muzzle_flash.position = Vector3(0.33, 0.98, -0.90)
     muzzle_flash.scale = Vector3(1.0, 0.70, 1.55)
     muzzle_flash.visible = false
@@ -5949,6 +5951,28 @@ func _build_muzzle_flash() -> void:
     muzzle_flash_material.emission_energy_multiplier = 5.6
     muzzle_flash_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
     muzzle_flash.material_override = muzzle_flash_material
+    # One low-poly tapered mesh, instanced three times, turns the original
+    # glowing orb into a directional weapon flash visible from the combat
+    # camera. All three spikes share the core material and accessibility pulse.
+    var spike_mesh := CylinderMesh.new()
+    spike_mesh.top_radius = 0.004
+    spike_mesh.bottom_radius = 0.070
+    spike_mesh.height = 0.44
+    spike_mesh.radial_segments = 6
+    spike_mesh.rings = 1
+    for wing_index in [-1, 0, 1]:
+        var spike := MeshInstance3D.new()
+        spike.name = "MuzzleFlashSpear" if wing_index == 0 else (
+            "MuzzleFlashWingL" if wing_index < 0 else "MuzzleFlashWingR"
+        )
+        spike.mesh = spike_mesh
+        spike.position = Vector3(float(wing_index) * 0.075, 0.0, -0.24)
+        spike.rotation_degrees = Vector3(-90.0, float(wing_index) * 24.0, 0.0)
+        if wing_index != 0:
+            spike.scale = Vector3(0.72, 0.72, 0.72)
+        spike.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        spike.material_override = muzzle_flash_material
+        muzzle_flash.add_child(spike)
     add_child(muzzle_flash)
 
 func _trigger_muzzle_flash() -> void:
@@ -10391,6 +10415,94 @@ func _initialize() -> void:
         enemy.free()
 
     print("Deadline Zero rapid multihit 3D silhouette stability: OK (8 archetypes x 10 hits)")
+    quit(0)
+```
+
+## File: tests/muzzle_flare_3d_test.gd
+```
+extends SceneTree
+
+# Rendering-budget QA for directional shot feedback on the actual survivor.
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    var survivor := DZPlayer.new()
+    root.add_child(survivor)
+    survivor.set_combat_enabled(false)
+    await process_frame
+
+    var core := survivor.muzzle_flash
+    if core == null or not core is MeshInstance3D:
+        push_error("Authored survivor is missing its original 3D muzzle core")
+        quit(1)
+        return
+    if core.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Muzzle core must not enter mobile directional shadow map")
+        quit(1)
+        return
+
+    var spikes := [
+        core.get_node_or_null("MuzzleFlashWingL") as MeshInstance3D,
+        core.get_node_or_null("MuzzleFlashSpear") as MeshInstance3D,
+        core.get_node_or_null("MuzzleFlashWingR") as MeshInstance3D,
+    ]
+    var shared_mesh: Mesh
+    for index in range(spikes.size()):
+        var spike: MeshInstance3D = spikes[index]
+        if spike == null:
+            push_error("Production shot flare missing directional 3D spike: %d" % index)
+            quit(1)
+            return
+        if spike.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+            push_error("Muzzle spike creates expensive mobile shadows")
+            quit(1)
+            return
+        if spike.material_override != core.material_override or spike.material_override != survivor.muzzle_flash_material:
+            push_error("Layered muzzle flare lost shared accessibility-aware emissive material")
+            quit(1)
+            return
+        var cone := spike.mesh as CylinderMesh
+        if cone == null or cone.radial_segments > 6 or cone.rings > 1:
+            push_error("Muzzle flare spike exceeded constrained six-sided geometry budget")
+            quit(1)
+            return
+        if shared_mesh == null:
+            shared_mesh = cone
+        elif spike.mesh != shared_mesh:
+            push_error("Muzzle flare creates duplicate tapered mesh resources")
+            quit(1)
+            return
+    if spikes[1].position.z >= -0.10 or spikes[0].position.x >= 0.0 or spikes[2].position.x <= 0.0:
+        push_error("Muzzle flare lost forward-pointing left/center/right silhouette")
+        quit(1)
+        return
+
+    survivor.set_reduced_flashes(false)
+    survivor._trigger_muzzle_flash()
+    if not core.visible or survivor.muzzle_flash_material.emission_energy_multiplier < 6.0:
+        push_error("Ordinary muzzle flare no longer creates readable shot feedback")
+        quit(1)
+        return
+
+    survivor.set_reduced_flashes(true)
+    survivor._trigger_muzzle_flash()
+    if not core.visible or survivor.muzzle_flash_material.emission_energy_multiplier > 2.21:
+        push_error("Reduced-flashes setting did not dim all shared 3D muzzle flare geometry")
+        quit(1)
+        return
+    if survivor.muzzle_flash_tween == null or not survivor.muzzle_flash_tween.is_running():
+        push_error("Short muzzle flash envelope was not triggered")
+        quit(1)
+        return
+
+    await create_timer(0.18).timeout
+    if core.visible:
+        push_error("Mobile muzzle flare persisted beyond its brief shot window")
+        quit(1)
+        return
+
+    print("Deadline Zero authored directional 3D muzzle flare: OK (3 shared tapered spikes)")
     quit(0)
 ```
 

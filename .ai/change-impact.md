@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 73c85f15cda47791fd5dd2a801a6ba61863aad3d
-Head: 31b8b41ab766ea74a8af749708d9bf1e9836f7a5
+Base: 910b7274edad289f11cca86433367a26a7d600c4
+Head: 60a28c47143d3f52286653209ce9802d5b1f61dd
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/Enemy.gd
-- A godot/tests/attack_facing_lock_test.gd
+- M godot/scripts/Player.gd
+- A godot/tests/muzzle_flare_3d_test.gd
 
 ## Affected areas
 - .github
