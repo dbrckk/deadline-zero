@@ -107,6 +107,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_asset_validation_test.gd
       - name: Validate authored prop textures and industrial PBR
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/industrial_prop_material_test.gd
+      - name: Validate shared authored industrial PBR materials
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/industrial_material_sharing_test.gd
       - name: Validate authored world dressing
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_world_dressing_test.gd
       - name: Validate mobile landscape contract
