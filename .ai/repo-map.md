@@ -1928,12 +1928,14 @@ jobs:
         run: |
           set -euo pipefail
 
-          active_count="$(
-            gh api --paginate "repos/$GH_REPO/actions/runs?per_page=100"               --jq '[.workflow_runs[] | select(
-                (.status == "queued" or .status == "in_progress" or .status == "pending")
-                and (.name != "Deadline Zero Work Watch")
-              )] | length' | awk '{s+=$1} END{print s+0}'
-          )"
+          # Query active runs by status instead of paging through the full run
+          # history (thousands of records), which intermittently times out.
+          active_count=0
+          for state in queued in_progress pending; do
+            state_count="$(gh api "repos/$GH_REPO/actions/runs?status=$state&per_page=100" \\
+              --jq '[.workflow_runs[] | select(.name != "Deadline Zero Work Watch")] | length')"
+            active_count=$((active_count + state_count))
+          done
 
           if [[ "$active_count" -gt 0 ]]; then
             echo "Creation/development work is active ($active_count workflow run(s)); no duplicate launch."
@@ -1949,11 +1951,14 @@ jobs:
             pr_number="$(jq -r '.number' <<<"$open_pr")"
             echo "No active run; checking latest open PR #$pr_number ($head_sha)."
 
+            # Retry each failed run only once. Cancelled runs are normally
+            # obsolete by design and should not be resurrected every five minutes.
             failed_run_ids="$(
-              gh api --paginate "repos/$GH_REPO/actions/runs?head_sha=$head_sha&per_page=100"                 --jq '.workflow_runs[]
+              gh api "repos/$GH_REPO/actions/runs?head_sha=$head_sha&per_page=100" \\
+                --jq '.workflow_runs[]
                   | select(.name != "Deadline Zero Work Watch")
-                  | select(.status == "completed")
-                  | select(.conclusion == "failure" or .conclusion == "cancelled" or .conclusion == "timed_out")
+                  | select(.status == "completed" and .conclusion == "failure")
+                  | select(.run_attempt == 1)
                   | .id' | sort -u
             )"
 
@@ -2352,24 +2357,6 @@ jobs:
         with:
           packages: platform-tools
 
-      - name: Prepare pinned Android emulator
-        run: |
-          set -euo pipefail
-          command -v sdkmanager
-          command -v adb
-          set +o pipefail
-          yes | sdkmanager --licenses >/dev/null
-          license_status=${PIPESTATUS[1]}
-          set -o pipefail
-          if [ "$license_status" -ne 0 ]; then
-            echo "sdkmanager license acceptance failed with exit code $license_status" >&2
-            exit "$license_status"
-          fi
-          sdkmanager "platform-tools" "platforms;android-35" "emulator" "system-images;android-35;default;x86_64"
-          command -v emulator
-          emulator -version | tee /tmp/deadline-zero-emulator-version.txt
-          adb version | tee /tmp/deadline-zero-adb-version.txt
-
       - name: Smoke-test native Godot APK
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -2382,8 +2369,11 @@ jobs:
           script: |
             set -eu
             mkdir -p build/godot-android-smoke
-            cp /tmp/deadline-zero-emulator-version.txt build/godot-android-smoke/emulator-version.txt 2>/dev/null || true
-            cp /tmp/deadline-zero-adb-version.txt build/godot-android-smoke/adb-version.txt 2>/dev/null || true
+            # The emulator runner installs the matching system image and emulator.
+            # Do not preinstall them: redundant sdkmanager installation can fail
+            # before runtime smoke testing, even after the APK builds successfully.
+            emulator -version > build/godot-android-smoke/emulator-version.txt 2>&1 || true
+            adb version > build/godot-android-smoke/adb-version.txt 2>&1 || true
             adb wait-for-device
             timeout 300s bash -c 'until [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d "\r")" = "1" ]; do sleep 2; done'
             # sys.boot_completed can flip before Launcher/overlay/display configuration has

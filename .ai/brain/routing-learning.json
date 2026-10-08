@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Replace bright barrier skins with dark industrial metal",
-      "terms": [
-        "barrier",
-        "bright",
-        "dark",
-        "industrial",
-        "metal",
-        "replace",
-        "skins"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/AssetLibrary.gd",
-        "godot/tests/environment_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Fix service pylon GDScript parse",
       "terms": [
         "gdscript",
@@ -1107,6 +1089,23 @@
         "tools/blender/build_industrial_kit.py",
         "tools/blender/promote_kenney_space_kit.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(ci,godot): stabilize runtime QA and Android smoke",
+      "terms": [
+        "android",
+        "ci",
+        "godot",
+        "qa",
+        "runtime",
+        "smoke",
+        "stabilize"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/tests/first_playable_run_path_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1608,6 +1607,7 @@
       "core/src/main/java/com/deadlinezero/game/screen/ShopScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 4,
       "godot/tests/android_play_export_contract_test.gd": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/mobile_orientation_test.gd": 12,
       "godot/tests/rendered_frame_smoke_test.gd": 4
     },
@@ -2061,7 +2061,8 @@
       "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/progression/CombatProtocolStateTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/progression/UpgradePoolTest.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4
     },
     "cinematic": {
       "godot/tests/play_feature_graphic_render_test.gd": 4
@@ -2882,6 +2883,7 @@
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_asset_validation_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 8,
+      "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/hud_readability_hierarchy_test.gd": 8,
       "godot/tests/mobile_orientation_test.gd": 24,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
@@ -3937,7 +3939,7 @@
       "godot/scripts/Main.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
-      "godot/tests/first_playable_run_path_test.gd": 8,
+      "godot/tests/first_playable_run_path_test.gd": 12,
       "godot/tests/mobile_orientation_test.gd": 4,
       "godot/tests/pressure_frame_render_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
@@ -4313,6 +4315,7 @@
       "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogTest.java": 4,
+      "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/projectile_profile_runtime_visual_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4,
       "tools/environment/install_all_environment_candidates.py": 4
@@ -4497,6 +4500,9 @@
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
     },
+    "smoke": {
+      "godot/tests/first_playable_run_path_test.gd": 4
+    },
     "snapshot": {
       "godot/tests/first_playable_run_path_test.gd": 4
     },
@@ -4512,7 +4518,8 @@
       "godot/tests/native_enemy_behavior_test.gd": 4
     },
     "stabilize": {
-      "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java": 8
+      "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java": 8,
+      "godot/tests/first_playable_run_path_test.gd": 4
     },
     "stack": {
       "godot/scripts/AssetLibrary.gd": 4,

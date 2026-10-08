@@ -1,12 +1,15 @@
 # Change impact
 
-Base: 95204ec41937b9b3d31154d168959f2f1b3ebd14
-Head: 8d4c54c85058734606fd17cff6c0b58588e4cffb
+Base: 122dbb0c9629ce6a30eb58dd5338496fe69260c3
+Head: d0b0739a03f7556f0b74689676454edd0e0fd7e7
 
 ## Changed files
-- M godot/tests/run_end_combat_freeze_test.gd
+- M .github/workflows/deadline-zero-work-watch.yml
+- M .github/workflows/godot-android-first-playable.yml
+- M godot/tests/first_playable_run_path_test.gd
 
 ## Affected areas
+- .github
 - godot
 
 ## Related test candidates
