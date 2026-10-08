@@ -24,7 +24,8 @@ func _initialize() -> void:
         push_error("Ground marks must not cast directional shadows")
         quit(1)
         return
-    if not first.mesh is QuadMesh or first.mesh.size != Vector2.ONE:
+    var first_quad := first.mesh as QuadMesh
+    if first_quad == null or first_quad.size != Vector2.ONE:
         push_error("Ground marks must use one lightweight quad")
         quit(1)
         return
