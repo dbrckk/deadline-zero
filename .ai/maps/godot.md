@@ -59,6 +59,7 @@ scripts/
 tests/
   android_play_export_contract_test.gd
   archetype_roster_render_test.gd
+  attack_facing_lock_test.gd
   attack_telegraph_escalation_test.gd
   authored_asset_validation.gd
   authored_audio_asset_test.gd
@@ -88,6 +89,7 @@ tests/
   industrial_material_sharing_test.gd
   industrial_prop_material_test.gd
   mobile_orientation_test.gd
+  multihit_silhouette_stability_test.gd
   native_enemy_behavior_test.gd
   native_upgrade_depth_test.gd
   offscreen_threat_priority_test.gd
@@ -808,6 +810,8 @@ var hit_flash_visual: MeshInstance3D
 var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
 var spawn_reveal_tween: Tween
+var visual_rest_scale := Vector3.ONE
+var visual_rest_position := Vector3.ZERO
 static var _shared_contact_shadow_material: StandardMaterial3D
 static var _contact_shadow_mesh_cache := {}
 static var _signature_material_cache := {}
@@ -871,6 +875,16 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
 func _ready() -> void:
     add_to_group("enemies")
     _build_visual()
+    # Capture each imported archetype's immutable silhouette transform before
+    # spawn reveals and hit reactions begin moving its visual root.
+    if authored_visual != null:
+        visual_rest_scale = authored_visual.scale
+        visual_rest_position = authored_visual.position
+    else:
+        var fallback_visual := get_node_or_null("Visual") as Node3D
+        if fallback_visual != null:
+            visual_rest_scale = fallback_visual.scale
+            visual_rest_position = fallback_visual.position
     _build_contact_shadow()
     _build_hit_flash()
     _apply_mobile_shadow_budget()
@@ -1204,6 +1218,14 @@ func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> voi
     attack_windup = duration
     attack_target_position = target_position
     attack_target_position.y = global_position.y
+    # Aim the imported body at the *locked* attack point before playing its
+    # windup. Harrier strafing and swarm separation can otherwise leave the
+    # windup clip pointing sideways relative to the danger corridor. Never
+    # track the survivor after the tell begins: dodging must still matter.
+    var aim_delta := attack_target_position - global_position
+    if aim_delta.length_squared() > 0.0025:
+        look_at(attack_target_position, Vector3.UP)
+    velocity = Vector3.ZERO
     _show_telegraph(1.75 if kind == "boss" else 1.05, duration)
     if authored_anim != null and authored_anim.has_animation("Idle_Attack"):
         _play_authored("Idle_Attack")
@@ -1473,13 +1495,21 @@ func _play_hit_reaction(critical: bool, killed: bool) -> void:
     if visual == null:
         return
     var profile := hit_reaction_profile()
+    # Rapid multishot hits may interrupt the previous recoil at its peak.
+    # Restart from the authored pose rather than compounding current scale
+    # and displacement. Cancel spawn reveal as well so both tweens never
+    # fight over the same imported GLTF visual transform.
     if hit_reaction_tween != null and hit_reaction_tween.is_valid():
         hit_reaction_tween.kill()
-    var base_scale := visual.scale
+    if spawn_reveal_tween != null and spawn_reveal_tween.is_valid():
+        spawn_reveal_tween.kill()
+    visual.scale = visual_rest_scale
+    visual.position = visual_rest_position
+    var base_scale := visual_rest_scale
     var punch := float(profile["punch"]) * (1.035 if critical else 1.0)
     var duration := float(profile["duration"])
     var recoil := float(profile["recoil"])
-    var base_position := visual.position
+    var base_position := visual_rest_position
     var recoil_direction := Vector3.ZERO
     if target != null and is_instance_valid(target):
         recoil_direction = global_position - target.global_position
@@ -6939,6 +6969,88 @@ func _run_capture() -> void:
     quit(0)
 ```
 
+## File: tests/attack_facing_lock_test.gd
+```
+extends SceneTree
+
+# An authored attack clip should face its world-space warning, never the
+# sideways steering direction inherited from swarm avoidance / strafing.
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    var player := Node3D.new()
+    player.position = Vector3(4.0, 0.0, 1.6)
+    root.add_child(player)
+    await process_frame
+
+    for kind in ["charger", "harrier", "elite", "boss"]:
+        var enemy := DZEnemy.new()
+        enemy.configure(kind, 1.0, player)
+        enemy.process_mode = Node.PROCESS_MODE_DISABLED
+        root.add_child(enemy)
+        await process_frame
+        enemy.global_position = Vector3.ZERO
+        enemy.look_at(Vector3(-3.0, 0.0, 0.0), Vector3.UP)
+        enemy.velocity = Vector3(2.0, 0.0, 1.0)
+
+        enemy.pending_special = "charge" if kind == "charger" else (
+            "harrier_shot" if kind == "harrier" else ""
+        )
+        var locked := player.global_position
+        enemy._begin_telegraphed_attack(0.52, locked)
+        var expected := (locked - enemy.global_position).normalized()
+        var facing := (-enemy.global_transform.basis.z).normalized()
+        if facing.dot(expected) < 0.995:
+            push_error("Attack anticipation body did not face its danger corridor: %s" % kind)
+            quit(1)
+            return
+        if enemy.velocity.length_squared() > 0.0001 or enemy.attack_windup < 0.5:
+            push_error("Attack anticipation did not freeze momentum before warning: %s" % kind)
+            quit(1)
+            return
+        if enemy.telegraph_visual == null or enemy.authored_anim == null:
+            push_error("Attack no longer drives real GLTF body and danger telegraph: %s" % kind)
+            quit(1)
+            return
+        if enemy.authored_anim.has_animation("Idle_Attack") and enemy.current_anim != "Idle_Attack":
+            push_error("Enemy windup did not enter imported attack animation: %s" % kind)
+            quit(1)
+            return
+
+        # Moving the target during the warning must *not* retarget the tell or
+        # rotate the attacker. A dodge remains meaningful.
+        player.global_position = Vector3(-1.0, 0.0, 6.0)
+        enemy._physics_process(0.10)
+        if enemy.attack_target_position.distance_to(locked) > 0.001:
+            push_error("Enemy telegraph unfairly followed survivor dodge: %s" % kind)
+            quit(1)
+            return
+        if (-enemy.global_transform.basis.z).normalized().dot(expected) < 0.995:
+            push_error("Enemy windup turned toward dodging player: %s" % kind)
+            quit(1)
+            return
+        enemy.set_combat_enabled(false)
+        enemy.queue_free()
+        player.global_position = locked
+        await process_frame
+
+    var overlap := DZEnemy.new()
+    overlap.configure("elite", 1.0, player)
+    overlap.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(overlap)
+    await process_frame
+    overlap.global_position = player.global_position
+    overlap._begin_telegraphed_attack(0.32, overlap.global_position)
+    if overlap.attack_windup <= 0.0 or overlap.telegraph_visual == null:
+        push_error("Zero-range telegraph cannot safely begin")
+        quit(1)
+        return
+
+    print("Deadline Zero locked 3D attack anticipation alignment: OK (4 archetypes)")
+    quit(0)
+```
+
 ## File: tests/attack_telegraph_escalation_test.gd
 ```
 extends SceneTree
@@ -10196,6 +10308,89 @@ func _run_test() -> void:
         return
 
     print("Deadline Zero mobile landscape/rendering contract: OK")
+    quit(0)
+```
+
+## File: tests/multihit_silhouette_stability_test.gd
+```
+extends SceneTree
+
+# Combat-grade GLTF regression: simultaneous scatter/arc hits must not enlarge
+# or displace an enemy silhouette by multiplying interrupted recoil tweens.
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    var survivor := Node3D.new()
+    survivor.name = "TestSurvivor"
+    survivor.position = Vector3(-2.0, 0.0, 0.0)
+    root.add_child(survivor)
+    await process_frame
+
+    var archetypes := ["shambler", "runner", "charger", "harrier",
+        "regenerator", "brute", "elite", "boss"]
+    for kind in archetypes:
+        var enemy := DZEnemy.new()
+        enemy.configure(kind, 1.0, survivor)
+        root.add_child(enemy)
+        enemy.set_combat_enabled(false)
+        await process_frame
+
+        var visual := enemy.get_node_or_null("Visual") as Node3D
+        if visual == null or enemy.authored_visual == null:
+            push_error("Imported enemy GLTF visual is absent: %s" % kind)
+            quit(1)
+            return
+        var rest_scale := enemy.visual_rest_scale
+        var rest_position := enemy.visual_rest_position
+        if rest_scale.length_squared() < 0.001:
+            push_error("Enemy authored silhouette baseline was not captured: %s" % kind)
+            quit(1)
+            return
+
+        # An early hit must cancel the unfinished spawn reveal before retiming
+        # the exact same visual root.
+        enemy._play_hit_reaction(false, false)
+        if enemy.spawn_reveal_tween != null and enemy.spawn_reveal_tween.is_running():
+            push_error("Early shot left competing spawn/recoil tweens active: %s" % kind)
+            quit(1)
+            return
+
+        for index in range(9):
+            # Model the worst-case previous frame's recoil peak. The new hit
+            # must discard this temporary visual displacement immediately.
+            visual.scale = rest_scale * 1.35
+            visual.position = rest_position + Vector3(0.5, 0.1, -0.4)
+            enemy._play_hit_reaction(index % 2 == 0, false)
+            if visual.scale.distance_to(rest_scale) > 0.0001 or visual.position.distance_to(rest_position) > 0.0001:
+                push_error("Stacked recoil inflated or displaced silhouette: %s hit %d" % [kind, index])
+                quit(1)
+                return
+            if enemy.hit_flash_visual == null or not enemy.hit_flash_visual.visible:
+                push_error("Repeated hit lost visual confirmation: %s" % kind)
+                quit(1)
+                return
+
+        await create_timer(0.28).timeout
+        if visual.scale.distance_to(rest_scale) > 0.002 or visual.position.distance_to(rest_position) > 0.002:
+            push_error("Interrupted recoil never settled back to imported rest pose: %s" % kind)
+            quit(1)
+            return
+        if enemy.hit_flash_visual.visible:
+            push_error("Repeated hit flash did not finish: %s" % kind)
+            quit(1)
+            return
+
+        enemy._play_hit_reaction(true, true)
+        await create_timer(0.28).timeout
+        var kill_pose := rest_scale * 1.04
+        if visual.scale.distance_to(kill_pose) > 0.004:
+            push_error("Death punch did not respect bounded authored silhouette: %s" % kind)
+            quit(1)
+            return
+        enemy.free()
+
+    print("Deadline Zero rapid multihit 3D silhouette stability: OK (8 archetypes x 10 hits)")
     quit(0)
 ```
 

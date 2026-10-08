@@ -2,22 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Replace filled attack telegraphs with danger rings",
-      "terms": [
-        "attack",
-        "danger",
-        "filled",
-        "replace",
-        "rings",
-        "telegraphs"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Enemy.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Refine ballistic tracer readability",
       "terms": [
         "ballistic",
@@ -1131,6 +1115,27 @@
         "godot/scripts/AssetLibrary.gd",
         "godot/tests/industrial_material_sharing_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(godot): align telegraphed attacks with locked 3D body facing",
+      "terms": [
+        "3d",
+        "align",
+        "attacks",
+        "body",
+        "facing",
+        "feat",
+        "godot",
+        "locked",
+        "telegraphed"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/tests/attack_facing_lock_test.gd",
+        "godot/tests/multihit_silhouette_stability_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1417,7 +1422,7 @@
       "godot/scripts/AssetLibrary.gd": 12,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/CombatFeel.gd": 8,
-      "godot/scripts/Enemy.gd": 24,
+      "godot/scripts/Enemy.gd": 28,
       "godot/scripts/Hud.gd": 20,
       "godot/scripts/ImpactFx.gd": 16,
       "godot/scripts/Main.gd": 36,
@@ -1425,6 +1430,7 @@
       "godot/scripts/Projectile.gd": 16,
       "godot/scripts/WeaponProfiles.gd": 4,
       "godot/scripts/XpOrb.gd": 8,
+      "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/attack_telegraph_escalation_test.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 8,
@@ -1439,6 +1445,7 @@
       "godot/tests/hud_readability_hierarchy_test.gd": 4,
       "godot/tests/impact_fx_mobile_test.gd": 4,
       "godot/tests/industrial_material_sharing_test.gd": 4,
+      "godot/tests/multihit_silhouette_stability_test.gd": 4,
       "godot/tests/projectile_profile_runtime_visual_test.gd": 4,
       "godot/tests/run_director_runtime_integration_test.gd": 4,
       "godot/tests/run_end_ux_test.gd": 4,
@@ -1610,9 +1617,11 @@
     },
     "align": {
       "core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
+      "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/damage_number_budget_test.gd": 4,
       "godot/tests/enemy_hit_reaction_test.gd": 4,
+      "godot/tests/multihit_silhouette_stability_test.gd": 4,
       "godot/tests/play_icon_render_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
@@ -1750,6 +1759,11 @@
     "attack": {
       "godot/scripts/Enemy.gd": 4
     },
+    "attacks": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/attack_facing_lock_test.gd": 4,
+      "godot/tests/multihit_silhouette_stability_test.gd": 4
+    },
     "audio": {
       "godot/scripts/CombatAudio.gd": 8,
       "godot/scripts/Main.gd": 8,
@@ -1864,6 +1878,11 @@
       "godot/tests/enemy_shadow_budget_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/offscreen_threat_priority_test.gd": 4
+    },
+    "body": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/attack_facing_lock_test.gd": 4,
+      "godot/tests/multihit_silhouette_stability_test.gd": 4
     },
     "boss": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 8,
@@ -2656,6 +2675,11 @@
       "godot/tests/hud_readability_hierarchy_test.gd": 4,
       "tools/sprites/audit_final_art_status.py": 4
     },
+    "facing": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/attack_facing_lock_test.gd": 4,
+      "godot/tests/multihit_silhouette_stability_test.gd": 4
+    },
     "fail": {
       "godot/scripts/Hud.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 4
@@ -2676,13 +2700,15 @@
     "feat": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/CombatGroundMark.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Main.gd": 4,
       "godot/scripts/Player.gd": 4,
+      "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/combat_ground_mark_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
-      "godot/tests/industrial_prop_material_test.gd": 4
+      "godot/tests/industrial_prop_material_test.gd": 4,
+      "godot/tests/multihit_silhouette_stability_test.gd": 4
     },
     "feature": {
       "godot/tests/play_feature_graphic_render_test.gd": 12,
@@ -2952,7 +2978,7 @@
     "godot": {
       "godot/scripts/AssetLibrary.gd": 20,
       "godot/scripts/CombatGroundMark.gd": 4,
-      "godot/scripts/Enemy.gd": 16,
+      "godot/scripts/Enemy.gd": 20,
       "godot/scripts/Hud.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 28,
@@ -2960,6 +2986,7 @@
       "godot/scripts/Projectile.gd": 4,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/archetype_roster_render_test.gd": 4,
+      "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/authored_world_dressing_test.gd": 4,
@@ -2973,6 +3000,7 @@
       "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/industrial_prop_material_test.gd": 4,
       "godot/tests/mobile_orientation_test.gd": 24,
+      "godot/tests/multihit_silhouette_stability_test.gd": 4,
       "godot/tests/offscreen_threat_priority_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/smoke_test.gd": 4
@@ -3337,6 +3365,11 @@
     "lock": {
       "godot/scripts/Main.gd": 4,
       "godot/tests/boss_reveal_camera_test.gd": 4
+    },
+    "locked": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/attack_facing_lock_test.gd": 4,
+      "godot/tests/multihit_silhouette_stability_test.gd": 4
     },
     "main": {
       "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java": 4
@@ -4842,8 +4875,10 @@
       "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4
     },
     "telegraphed": {
-      "godot/scripts/Enemy.gd": 4,
-      "godot/tests/enemy_archetype_combat_test.gd": 4
+      "godot/scripts/Enemy.gd": 8,
+      "godot/tests/attack_facing_lock_test.gd": 4,
+      "godot/tests/enemy_archetype_combat_test.gd": 4,
+      "godot/tests/multihit_silhouette_stability_test.gd": 4
     },
     "telegraphs": {
       "godot/scripts/Enemy.gd": 4

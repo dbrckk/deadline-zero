@@ -22,30 +22,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:28:30Z
+Generated: 2026-10-08T21:40:33Z
 
 ### Git
 - Branch: `main`
-- Head: `c9e8a6a4a3f9`
-- Commit date: 2026-10-08T23:28:15+02:00
-- Commit: perf(godot): reuse imported industrial PBR materials across 3D props
-- Tracked files: 1045
+- Head: `31b8b41ab766`
+- Commit date: 2026-10-08T23:39:12+02:00
+- Commit: feat(godot): align telegraphed attacks with locked 3D body facing
+- Tracked files: 1047
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/AssetLibrary.gd`
-- `godot/tests/industrial_material_sharing_test.gd`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/attack_facing_lock_test.gd`
+- `godot/tests/multihit_silhouette_stability_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `godot/scripts/Enemy.gd`
-- `godot/scripts/Player.gd`
-- `godot/tests/authored_gait_sync_test.gd`
-- `godot/scripts/CombatGroundMark.gd`
-- `godot/scripts/Main.gd`
-- `godot/tests/combat_ground_mark_test.gd`
+- `godot/scripts/AssetLibrary.gd`
+- `godot/tests/industrial_material_sharing_test.gd`
 
 ### Project signals
 - `build.gradle`
