@@ -53,6 +53,8 @@ var hit_flash_visual: MeshInstance3D
 var hit_flash_material: StandardMaterial3D
 var hit_reaction_tween: Tween
 var spawn_reveal_tween: Tween
+var visual_rest_scale := Vector3.ONE
+var visual_rest_position := Vector3.ZERO
 static var _shared_contact_shadow_material: StandardMaterial3D
 static var _contact_shadow_mesh_cache := {}
 static var _signature_material_cache := {}
@@ -116,6 +118,16 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
 func _ready() -> void:
     add_to_group("enemies")
     _build_visual()
+    # Capture each imported archetype's immutable silhouette transform before
+    # spawn reveals and hit reactions begin moving its visual root.
+    if authored_visual != null:
+        visual_rest_scale = authored_visual.scale
+        visual_rest_position = authored_visual.position
+    else:
+        var fallback_visual := get_node_or_null("Visual") as Node3D
+        if fallback_visual != null:
+            visual_rest_scale = fallback_visual.scale
+            visual_rest_position = fallback_visual.position
     _build_contact_shadow()
     _build_hit_flash()
     _apply_mobile_shadow_budget()
@@ -718,13 +730,21 @@ func _play_hit_reaction(critical: bool, killed: bool) -> void:
     if visual == null:
         return
     var profile := hit_reaction_profile()
+    # Rapid multishot hits may interrupt the previous recoil at its peak.
+    # Restart from the authored pose rather than compounding current scale
+    # and displacement. Cancel spawn reveal as well so both tweens never
+    # fight over the same imported GLTF visual transform.
     if hit_reaction_tween != null and hit_reaction_tween.is_valid():
         hit_reaction_tween.kill()
-    var base_scale := visual.scale
+    if spawn_reveal_tween != null and spawn_reveal_tween.is_valid():
+        spawn_reveal_tween.kill()
+    visual.scale = visual_rest_scale
+    visual.position = visual_rest_position
+    var base_scale := visual_rest_scale
     var punch := float(profile["punch"]) * (1.035 if critical else 1.0)
     var duration := float(profile["duration"])
     var recoil := float(profile["recoil"])
-    var base_position := visual.position
+    var base_position := visual_rest_position
     var recoil_direction := Vector3.ZERO
     if target != null and is_instance_valid(target):
         recoil_direction = global_position - target.global_position
