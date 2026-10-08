@@ -79,6 +79,7 @@ func _initialize() -> void:
     var street_light_count := 0
     var street_light_pool_count := 0
     var graded_street_light_meshes := 0
+    var graded_street_light_optics := 0
     var offscreen_authored_street_light_count := 0
     var quarantine_mast_count := 0
     var quarantine_mast_lamp_count := 0
@@ -109,10 +110,14 @@ func _initialize() -> void:
             for mesh_node in child.find_children("*", "MeshInstance3D", true, false):
                 barrier_meshes.append(mesh_node as MeshInstance3D)
             for mesh_instance in barrier_meshes:
-                if mesh_instance != null and mesh_instance.material_override is StandardMaterial3D:
-                    var material := mesh_instance.material_override as StandardMaterial3D
-                    if material.roughness >= 0.80 and material.metallic >= 0.30 and material.albedo_color.get_luminance() < 0.16 and material.albedo_texture == null:
-                        graded_barrier_meshes += 1
+                if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.material_override != null:
+                    continue
+                for surface_index in range(mesh_instance.mesh.get_surface_count()):
+                    var source := mesh_instance.mesh.surface_get_material(surface_index) as BaseMaterial3D
+                    var material := mesh_instance.get_surface_override_material(surface_index) as BaseMaterial3D
+                    if source != null and source.albedo_texture != null and material != null:
+                        if material.albedo_texture == source.albedo_texture and material.roughness >= 0.84 and material.metallic >= 0.34:
+                            graded_barrier_meshes += 1
             hazard_strip_count += int(child.find_child("BarrierHazardFront", true, false) != null)
             hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
         elif child.name.begins_with("PerimeterBulkhead_"):
@@ -194,10 +199,18 @@ func _initialize() -> void:
                 if mesh_instance != null and mesh_instance.name != "StreetLightCore":
                     light_meshes.append(mesh_instance)
             for mesh_instance in light_meshes:
-                if mesh_instance.material_override is BaseMaterial3D:
-                    var material := mesh_instance.material_override as BaseMaterial3D
-                    if material.roughness >= 0.76 and material.metallic >= 0.40 and material.albedo_color.get_luminance() < 0.09 and material.albedo_texture == null:
-                        graded_street_light_meshes += 1
+                if mesh_instance.mesh == null or mesh_instance.material_override != null:
+                    continue
+                for surface_index in range(mesh_instance.mesh.get_surface_count()):
+                    var source := mesh_instance.mesh.surface_get_material(surface_index) as BaseMaterial3D
+                    var material := mesh_instance.get_surface_override_material(surface_index) as BaseMaterial3D
+                    if source == null or material == null:
+                        continue
+                    if source.albedo_texture != null and source.albedo_texture == material.albedo_texture:
+                        if material.roughness >= 0.78 and material.metallic >= 0.46:
+                            graded_street_light_meshes += 1
+                    elif source.albedo_texture == null and material.emission_enabled and material.emission_energy_multiplier > 0.8:
+                        graded_street_light_optics += 1
             var pool := child.get_node_or_null("StreetLightPool") as OmniLight3D
             if pool != null:
                 if pool.shadow_enabled:
@@ -290,12 +303,12 @@ func _initialize() -> void:
         push_error("Expected 4 compact visible quarantine masts with emissive lamps, got %d/%d" % [quarantine_mast_count, quarantine_mast_lamp_count])
         quit(1)
         return
-    if graded_street_light_meshes < 4:
-        push_error("Authored street lights must receive dark steel grading, got %d graded meshes" % graded_street_light_meshes)
+    if graded_street_light_meshes < 4 or graded_street_light_optics < 4:
+        push_error("Authored street lights must retain textured steel plus emissive optics, got %d steel / %d optics" % [graded_street_light_meshes, graded_street_light_optics])
         quit(1)
         return
     if graded_barrier_meshes < 12:
-        push_error("Authored barriers must use the dedicated dark industrial material, got %d graded meshes" % graded_barrier_meshes)
+        push_error("Authored barriers must preserve their textured industrial surfaces, got %d graded meshes" % graded_barrier_meshes)
         quit(1)
         return
     if hazard_strip_count < 24:
