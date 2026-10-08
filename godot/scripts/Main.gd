@@ -1681,36 +1681,53 @@ func _play_boss_stinger() -> void:
         music_duck_tween.tween_interval(1.55)
         music_duck_tween.tween_property(music_audio, "volume_db", MUSIC_BASE_DB, 0.70).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
+func _select_offscreen_threat(candidates: Array, origin: Vector3, view_camera: Camera3D, viewport_size: Vector2) -> DZEnemy:
+    # Only off-screen elite/boss threats need a marker. A visible boss must not
+    # suppress the direction cue for a different elite outside the camera.
+    if view_camera == null or not is_instance_valid(view_camera) or viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
+        return null
+    var margin := Vector2(84.0, 72.0)
+    var best: DZEnemy
+    var best_priority := -1
+    var best_distance_sq := INF
+    for node in candidates:
+        if node == null or not is_instance_valid(node):
+            continue
+        var enemy := node as DZEnemy
+        if enemy == null or enemy.dead or (enemy.kind != "elite" and enemy.kind != "boss"):
+            continue
+        var at := enemy.global_position
+        var projected := view_camera.unproject_position(at + Vector3(0.0, 0.9, 0.0))
+        var visible := not view_camera.is_position_behind(at) and (
+            projected.x >= margin.x and projected.y >= margin.y
+            and projected.x <= viewport_size.x - margin.x and projected.y <= viewport_size.y - margin.y
+        )
+        if visible:
+            continue
+        var priority := 2 if enemy.kind == "boss" else 1
+        var distance_sq := origin.distance_squared_to(at)
+        if priority > best_priority or (priority == best_priority and distance_sq < best_distance_sq):
+            best = enemy
+            best_priority = priority
+            best_distance_sq = distance_sq
+    return best
+
 func _update_offscreen_threat_indicator() -> void:
     if hud == null or camera == null or player == null or game_over:
         if hud:
             hud.hide_offscreen_threat()
         return
 
-    var best: DZEnemy
-    var best_distance := INF
-    for node in get_tree().get_nodes_in_group("enemies"):
-        var enemy := node as DZEnemy
-        if enemy == null or enemy.dead or (enemy.kind != "elite" and enemy.kind != "boss"):
-            continue
-        var distance := player.global_position.distance_to(enemy.global_position)
-        if distance < best_distance:
-            best_distance = distance
-            best = enemy
-
+    var viewport_size := get_viewport().get_visible_rect().size
+    var best := _select_offscreen_threat(
+        get_tree().get_nodes_in_group("enemies"), player.global_position, camera, viewport_size
+    )
     if best == null:
         hud.hide_offscreen_threat()
         return
 
-    var viewport_size := get_viewport().get_visible_rect().size
+    var best_distance := player.global_position.distance_to(best.global_position)
     var screen_pos := camera.unproject_position(best.global_position + Vector3(0.0, 0.9, 0.0))
-    var margin := Vector2(84.0, 72.0)
-    var inside := not camera.is_position_behind(best.global_position) and screen_pos.x >= margin.x and screen_pos.y >= margin.y and screen_pos.x <= viewport_size.x - margin.x and screen_pos.y <= viewport_size.y - margin.y
-
-    if inside:
-        hud.hide_offscreen_threat()
-        return
-
     var center := viewport_size * 0.5
     var direction := screen_pos - center
     if camera.is_position_behind(best.global_position):
