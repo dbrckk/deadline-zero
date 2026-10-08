@@ -65,6 +65,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_shadow_budget_test.gd
       - name: Validate weapon presentation identities
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_presentation_test.gd
+      - name: Validate authored directional 3D muzzle flare
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/muzzle_flare_3d_test.gd
       - name: Validate player pressure marker lifecycle
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/player_pressure_marker_test.gd
       - name: Validate player targeting stability
