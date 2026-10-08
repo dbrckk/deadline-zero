@@ -3301,6 +3301,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_identity_test.gd
       - name: Validate authored environment assets
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_asset_validation_test.gd
+      - name: Validate authored prop textures and industrial PBR
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/industrial_prop_material_test.gd
       - name: Validate authored world dressing
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_world_dressing_test.gd
       - name: Validate mobile landscape contract
@@ -24412,10 +24414,14 @@ static func barrier() -> Node3D:
     return root
 
 static func barrel() -> Node3D:
-    return instantiate_scene(BARREL)
+    var root := instantiate_scene(BARREL)
+    _grade_mesh_tree(root, Color(0.64, 0.69, 0.72), 0.83, 0.28)
+    return root
 
 static func pallet() -> Node3D:
-    return instantiate_scene(PALLET)
+    var root := instantiate_scene(PALLET)
+    _grade_mesh_tree(root, Color(0.70, 0.64, 0.54), 0.91, 0.02)
+    return root
 
 static func street_lights() -> Node3D:
     var root := instantiate_scene(STREET_LIGHTS)
@@ -24423,10 +24429,14 @@ static func street_lights() -> Node3D:
     return root
 
 static func traffic_cone() -> Node3D:
-    return instantiate_scene(TRAFFIC_CONE)
+    var root := instantiate_scene(TRAFFIC_CONE)
+    _grade_mesh_tree(root, Color(0.91, 0.78, 0.68), 0.86, 0.01)
+    return root
 
 static func trash_bag() -> Node3D:
-    return instantiate_scene(TRASH_BAG)
+    var root := instantiate_scene(TRASH_BAG)
+    _grade_mesh_tree(root, Color(0.55, 0.63, 0.68), 0.94, 0.01)
+    return root
 
 static func street_crack() -> Node3D:
     return instantiate_scene(STREET_CRACK)
@@ -24449,6 +24459,10 @@ static func industrial_service_pillar() -> Node3D:
 static func _apply_street_light_industrial_material(root: Node3D) -> void:
     if root == null:
         return
+    # Preserve the authored two-surface GLTF: a painted atlas plus its
+    # separate glass/lamp material. Material overrides flattened both into
+    # featureless gray geometry in the combat arena.
+    _grade_mesh_tree(root, Color(0.54, 0.67, 0.75), 0.78, 0.46)
     var meshes: Array[MeshInstance3D] = []
     if root is MeshInstance3D:
         meshes.append(root as MeshInstance3D)
@@ -24458,30 +24472,28 @@ static func _apply_street_light_industrial_material(root: Node3D) -> void:
     for mesh_instance in meshes:
         if mesh_instance == null or mesh_instance.mesh == null:
             continue
-        var material := StandardMaterial3D.new()
-        material.albedo_color = Color(0.040, 0.058, 0.068)
-        material.metallic = 0.46
-        material.roughness = 0.78
-        mesh_instance.material_override = material
+        for surface_index in range(mesh_instance.mesh.get_surface_count()):
+            var source := mesh_instance.mesh.surface_get_material(surface_index) as BaseMaterial3D
+            var graded := mesh_instance.get_surface_override_material(surface_index) as BaseMaterial3D
+            if source == null or graded == null:
+                continue
+            if source.albedo_texture == null:
+                # The authored lamp lens is a separate untextured surface.
+                # Give it a low-power emissive material, not a second light.
+                graded.albedo_color = Color(0.14, 0.48, 0.60, source.albedo_color.a)
+                graded.emission_enabled = true
+                graded.emission = Color(0.08, 0.40, 0.62)
+                graded.emission_energy_multiplier = 1.15
+                graded.metallic = 0.04
+                graded.roughness = 0.34
         mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 
 static func _apply_barrier_industrial_material(root: Node3D) -> void:
     if root == null:
         return
-    var meshes: Array[MeshInstance3D] = []
-    if root is MeshInstance3D:
-        meshes.append(root as MeshInstance3D)
-    for node in root.find_children("*", "MeshInstance3D", true, false):
-        meshes.append(node as MeshInstance3D)
-
-    for mesh_instance in meshes:
-        if mesh_instance == null or mesh_instance.mesh == null:
-            continue
-        var material := StandardMaterial3D.new()
-        material.albedo_color = Color(0.075, 0.105, 0.125)
-        material.metallic = 0.34
-        material.roughness = 0.82
-        mesh_instance.material_override = material
+    # Retain UVs and each Quaternius atlas rather than overwriting the
+    # entire imported mesh with a single dark StandardMaterial3D.
+    _grade_mesh_tree(root, Color(0.58, 0.70, 0.78), 0.84, 0.34)
 
 static func _add_barrier_hazard_signature(root: Node3D) -> void:
     if root == null:
@@ -24501,6 +24513,7 @@ static func _add_barrier_hazard_signature(root: Node3D) -> void:
         strip.mesh = mesh
         strip.position = Vector3(0.0, 0.42, side * 0.176)
         strip.material_override = material
+        strip.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         root.add_child(strip)
 
 static func _grade_enemy_mesh_tree(root: Node3D, tint: Color, kind := "shambler") -> void:

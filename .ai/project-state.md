@@ -22,29 +22,30 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T20:32:58Z
+Generated: 2026-10-08T20:43:46Z
 
 ### Git
 - Branch: `main`
-- Head: `09d86a3859fd`
-- Commit date: 2026-10-08T22:32:43+02:00
-- Commit: perf(godot): reserve dynamic shadows for elite and boss bodies
-- Tracked files: 1040
+- Head: `6e67d5118988`
+- Commit date: 2026-10-08T22:43:31+02:00
+- Commit: feat(godot): preserve authored texture atlases in industrial PBR assets
+- Tracked files: 1041
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_shadow_budget_test.gd`
+- `godot/scripts/AssetLibrary.gd`
+- `godot/tests/environment_identity_test.gd`
+- `godot/tests/industrial_prop_material_test.gd`
+- `play/store/feature-graphic.png`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/enemy_shadow_budget_test.gd`
 - `godot/scripts/Main.gd`
 - `godot/tests/offscreen_threat_priority_test.gd`
-- `.github/workflows/deadline-zero-work-watch.yml`
-- `.github/workflows/godot-android-first-playable.yml`
-- `godot/tests/first_playable_run_path_test.gd`
 
 ### Project signals
 - `build.gradle`

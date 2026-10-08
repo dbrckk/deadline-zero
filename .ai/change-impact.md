@@ -1,12 +1,13 @@
 # Change impact
 
-Base: 32372b08ccf99b419412f003e4189447d2f8f6c9
-Head: 09d86a3859fd24cba59edd837567f1b11f7e04b3
+Base: e1ae9bb18f204850991a03acb6e90f7f47883b17
+Head: 6e67d5118988ed0dfa18ee2bc3ae45ee7fff2bc9
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/Enemy.gd
-- A godot/tests/enemy_shadow_budget_test.gd
+- M godot/scripts/AssetLibrary.gd
+- M godot/tests/environment_identity_test.gd
+- A godot/tests/industrial_prop_material_test.gd
 
 ## Affected areas
 - .github

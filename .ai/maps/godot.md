@@ -82,6 +82,7 @@ tests/
   haptics_service_test.gd
   hud_readability_hierarchy_test.gd
   impact_fx_mobile_test.gd
+  industrial_prop_material_test.gd
   mobile_orientation_test.gd
   native_enemy_behavior_test.gd
   native_upgrade_depth_test.gd
@@ -178,10 +179,14 @@ static func barrier() -> Node3D:
     return root
 
 static func barrel() -> Node3D:
-    return instantiate_scene(BARREL)
+    var root := instantiate_scene(BARREL)
+    _grade_mesh_tree(root, Color(0.64, 0.69, 0.72), 0.83, 0.28)
+    return root
 
 static func pallet() -> Node3D:
-    return instantiate_scene(PALLET)
+    var root := instantiate_scene(PALLET)
+    _grade_mesh_tree(root, Color(0.70, 0.64, 0.54), 0.91, 0.02)
+    return root
 
 static func street_lights() -> Node3D:
     var root := instantiate_scene(STREET_LIGHTS)
@@ -189,10 +194,14 @@ static func street_lights() -> Node3D:
     return root
 
 static func traffic_cone() -> Node3D:
-    return instantiate_scene(TRAFFIC_CONE)
+    var root := instantiate_scene(TRAFFIC_CONE)
+    _grade_mesh_tree(root, Color(0.91, 0.78, 0.68), 0.86, 0.01)
+    return root
 
 static func trash_bag() -> Node3D:
-    return instantiate_scene(TRASH_BAG)
+    var root := instantiate_scene(TRASH_BAG)
+    _grade_mesh_tree(root, Color(0.55, 0.63, 0.68), 0.94, 0.01)
+    return root
 
 static func street_crack() -> Node3D:
     return instantiate_scene(STREET_CRACK)
@@ -215,6 +224,10 @@ static func industrial_service_pillar() -> Node3D:
 static func _apply_street_light_industrial_material(root: Node3D) -> void:
     if root == null:
         return
+    # Preserve the authored two-surface GLTF: a painted atlas plus its
+    # separate glass/lamp material. Material overrides flattened both into
+    # featureless gray geometry in the combat arena.
+    _grade_mesh_tree(root, Color(0.54, 0.67, 0.75), 0.78, 0.46)
     var meshes: Array[MeshInstance3D] = []
     if root is MeshInstance3D:
         meshes.append(root as MeshInstance3D)
@@ -224,30 +237,28 @@ static func _apply_street_light_industrial_material(root: Node3D) -> void:
     for mesh_instance in meshes:
         if mesh_instance == null or mesh_instance.mesh == null:
             continue
-        var material := StandardMaterial3D.new()
-        material.albedo_color = Color(0.040, 0.058, 0.068)
-        material.metallic = 0.46
-        material.roughness = 0.78
-        mesh_instance.material_override = material
+        for surface_index in range(mesh_instance.mesh.get_surface_count()):
+            var source := mesh_instance.mesh.surface_get_material(surface_index) as BaseMaterial3D
+            var graded := mesh_instance.get_surface_override_material(surface_index) as BaseMaterial3D
+            if source == null or graded == null:
+                continue
+            if source.albedo_texture == null:
+                # The authored lamp lens is a separate untextured surface.
+                # Give it a low-power emissive material, not a second light.
+                graded.albedo_color = Color(0.14, 0.48, 0.60, source.albedo_color.a)
+                graded.emission_enabled = true
+                graded.emission = Color(0.08, 0.40, 0.62)
+                graded.emission_energy_multiplier = 1.15
+                graded.metallic = 0.04
+                graded.roughness = 0.34
         mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 
 static func _apply_barrier_industrial_material(root: Node3D) -> void:
     if root == null:
         return
-    var meshes: Array[MeshInstance3D] = []
-    if root is MeshInstance3D:
-        meshes.append(root as MeshInstance3D)
-    for node in root.find_children("*", "MeshInstance3D", true, false):
-        meshes.append(node as MeshInstance3D)
-
-    for mesh_instance in meshes:
-        if mesh_instance == null or mesh_instance.mesh == null:
-            continue
-        var material := StandardMaterial3D.new()
-        material.albedo_color = Color(0.075, 0.105, 0.125)
-        material.metallic = 0.34
-        material.roughness = 0.82
-        mesh_instance.material_override = material
+    # Retain UVs and each Quaternius atlas rather than overwriting the
+    # entire imported mesh with a single dark StandardMaterial3D.
+    _grade_mesh_tree(root, Color(0.58, 0.70, 0.78), 0.84, 0.34)
 
 static func _add_barrier_hazard_signature(root: Node3D) -> void:
     if root == null:
@@ -267,6 +278,7 @@ static func _add_barrier_hazard_signature(root: Node3D) -> void:
         strip.mesh = mesh
         strip.position = Vector3(0.0, 0.42, side * 0.176)
         strip.material_override = material
+        strip.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         root.add_child(strip)
 
 static func _grade_enemy_mesh_tree(root: Node3D, tint: Color, kind := "shambler") -> void:
@@ -8424,6 +8436,7 @@ func _initialize() -> void:
     var street_light_count := 0
     var street_light_pool_count := 0
     var graded_street_light_meshes := 0
+    var graded_street_light_optics := 0
     var offscreen_authored_street_light_count := 0
     var quarantine_mast_count := 0
     var quarantine_mast_lamp_count := 0
@@ -8454,10 +8467,14 @@ func _initialize() -> void:
             for mesh_node in child.find_children("*", "MeshInstance3D", true, false):
                 barrier_meshes.append(mesh_node as MeshInstance3D)
             for mesh_instance in barrier_meshes:
-                if mesh_instance != null and mesh_instance.material_override is StandardMaterial3D:
-                    var material := mesh_instance.material_override as StandardMaterial3D
-                    if material.roughness >= 0.80 and material.metallic >= 0.30 and material.albedo_color.get_luminance() < 0.16 and material.albedo_texture == null:
-                        graded_barrier_meshes += 1
+                if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.material_override != null:
+                    continue
+                for surface_index in range(mesh_instance.mesh.get_surface_count()):
+                    var source := mesh_instance.mesh.surface_get_material(surface_index) as BaseMaterial3D
+                    var material := mesh_instance.get_surface_override_material(surface_index) as BaseMaterial3D
+                    if source != null and source.albedo_texture != null and material != null:
+                        if material.albedo_texture == source.albedo_texture and material.roughness >= 0.84 and material.metallic >= 0.34:
+                            graded_barrier_meshes += 1
             hazard_strip_count += int(child.find_child("BarrierHazardFront", true, false) != null)
             hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
         elif child.name.begins_with("PerimeterBulkhead_"):
@@ -8539,10 +8556,18 @@ func _initialize() -> void:
                 if mesh_instance != null and mesh_instance.name != "StreetLightCore":
                     light_meshes.append(mesh_instance)
             for mesh_instance in light_meshes:
-                if mesh_instance.material_override is BaseMaterial3D:
-                    var material := mesh_instance.material_override as BaseMaterial3D
-                    if material.roughness >= 0.76 and material.metallic >= 0.40 and material.albedo_color.get_luminance() < 0.09 and material.albedo_texture == null:
-                        graded_street_light_meshes += 1
+                if mesh_instance.mesh == null or mesh_instance.material_override != null:
+                    continue
+                for surface_index in range(mesh_instance.mesh.get_surface_count()):
+                    var source := mesh_instance.mesh.surface_get_material(surface_index) as BaseMaterial3D
+                    var material := mesh_instance.get_surface_override_material(surface_index) as BaseMaterial3D
+                    if source == null or material == null:
+                        continue
+                    if source.albedo_texture != null and source.albedo_texture == material.albedo_texture:
+                        if material.roughness >= 0.78 and material.metallic >= 0.46:
+                            graded_street_light_meshes += 1
+                    elif source.albedo_texture == null and material.emission_enabled and material.emission_energy_multiplier > 0.8:
+                        graded_street_light_optics += 1
             var pool := child.get_node_or_null("StreetLightPool") as OmniLight3D
             if pool != null:
                 if pool.shadow_enabled:
@@ -8635,12 +8660,12 @@ func _initialize() -> void:
         push_error("Expected 4 compact visible quarantine masts with emissive lamps, got %d/%d" % [quarantine_mast_count, quarantine_mast_lamp_count])
         quit(1)
         return
-    if graded_street_light_meshes < 4:
-        push_error("Authored street lights must receive dark steel grading, got %d graded meshes" % graded_street_light_meshes)
+    if graded_street_light_meshes < 4 or graded_street_light_optics < 4:
+        push_error("Authored street lights must retain textured steel plus emissive optics, got %d steel / %d optics" % [graded_street_light_meshes, graded_street_light_optics])
         quit(1)
         return
     if graded_barrier_meshes < 12:
-        push_error("Authored barriers must use the dedicated dark industrial material, got %d graded meshes" % graded_barrier_meshes)
+        push_error("Authored barriers must preserve their textured industrial surfaces, got %d graded meshes" % graded_barrier_meshes)
         quit(1)
         return
     if hazard_strip_count < 24:
@@ -9616,6 +9641,99 @@ func _initialize() -> void:
     current_scene = root
 
     print("Deadline Zero mobile-safe impact FX: OK")
+    quit(0)
+```
+
+## File: tests/industrial_prop_material_test.gd
+```
+extends SceneTree
+
+# Imported Quaternius assets ship UV-painted atlases. The runtime must keep
+# those textures and individually grade PBR surface materials, never flatten
+# the whole asset with a single untextured material_override.
+func _initialize() -> void:
+    var fixtures := [
+        {"id": "barrel", "factory": Callable(DZAssetLibrary, "barrel"), "roughness": 0.83, "metallic": 0.28},
+        {"id": "pallet", "factory": Callable(DZAssetLibrary, "pallet"), "roughness": 0.91, "metallic": 0.02},
+        {"id": "traffic_cone", "factory": Callable(DZAssetLibrary, "traffic_cone"), "roughness": 0.86, "metallic": 0.01},
+        {"id": "trash_bag", "factory": Callable(DZAssetLibrary, "trash_bag"), "roughness": 0.94, "metallic": 0.01},
+        {"id": "barrier", "factory": Callable(DZAssetLibrary, "barrier"), "roughness": 0.84, "metallic": 0.34},
+        {"id": "street_lights", "factory": Callable(DZAssetLibrary, "street_lights"), "roughness": 0.78, "metallic": 0.46},
+    ]
+    var total_textured_surfaces := 0
+    for spec in fixtures:
+        var factory: Callable = spec["factory"]
+        var root := factory.call() as Node3D
+        if root == null:
+            push_error("Missing imported industrial 3D scene: %s" % spec["id"])
+            quit(1)
+            return
+        var meshes: Array[MeshInstance3D] = []
+        if root is MeshInstance3D:
+            meshes.append(root as MeshInstance3D)
+        for node in root.find_children("*", "MeshInstance3D", true, false):
+            meshes.append(node as MeshInstance3D)
+
+        var textured_surfaces := 0
+        var optic_surfaces := 0
+        for instance in meshes:
+            if instance == null or instance.mesh == null:
+                continue
+            for surface_index in range(instance.mesh.get_surface_count()):
+                var source := instance.mesh.surface_get_material(surface_index) as BaseMaterial3D
+                if source == null:
+                    continue
+                # Authored hazard strips are separate geometry and should not
+                # affect imported mesh/atlas checks.
+                if instance.material_override != null:
+                    push_error("Flattened industrial material on %s / %s" % [spec["id"], instance.name])
+                    quit(1)
+                    return
+                var graded := instance.get_surface_override_material(surface_index) as BaseMaterial3D
+                if graded == null:
+                    push_error("Missing per-surface PBR material: %s / %s" % [spec["id"], instance.name])
+                    quit(1)
+                    return
+                if source.albedo_texture != null:
+                    if graded.albedo_texture != source.albedo_texture:
+                        push_error("Authoring atlas was replaced for %s" % spec["id"])
+                        quit(1)
+                        return
+                    if graded.roughness < float(spec["roughness"]) - 0.001 or graded.metallic < float(spec["metallic"]) - 0.001:
+                        push_error("Industrial PBR roughness/metalness was lost on %s" % spec["id"])
+                        quit(1)
+                        return
+                    textured_surfaces += 1
+                elif spec["id"] == "street_lights":
+                    if not graded.emission_enabled or graded.emission_energy_multiplier < 1.0 or graded.emission_energy_multiplier > 1.5:
+                        push_error("Authored streetlight lens lost budgeted emissive shading")
+                        quit(1)
+                        return
+                    optic_surfaces += 1
+
+        if textured_surfaces == 0:
+            push_error("No preserved authored texture atlas: %s" % spec["id"])
+            quit(1)
+            return
+        if spec["id"] == "street_lights" and optic_surfaces == 0:
+            push_error("Streetlight GLTF lens surface is missing")
+            quit(1)
+            return
+        if spec["id"] == "barrier":
+            for marker_name in ["BarrierHazardFront", "BarrierHazardRear"]:
+                var marker := root.find_child(marker_name, true, false) as MeshInstance3D
+                if marker == null or marker.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    push_error("Hazard stripe must remain visible but shadowless: %s" % marker_name)
+                    quit(1)
+                    return
+        total_textured_surfaces += textured_surfaces
+        root.free()
+
+    if total_textured_surfaces < 6:
+        push_error("Too few authored PBR surfaces were exercised")
+        quit(1)
+        return
+    print("Deadline Zero authored industrial PBR atlases: OK (%d textured surfaces)" % total_textured_surfaces)
     quit(0)
 ```
 
