@@ -461,6 +461,14 @@ func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> voi
     attack_windup = duration
     attack_target_position = target_position
     attack_target_position.y = global_position.y
+    # Aim the imported body at the *locked* attack point before playing its
+    # windup. Harrier strafing and swarm separation can otherwise leave the
+    # windup clip pointing sideways relative to the danger corridor. Never
+    # track the survivor after the tell begins: dodging must still matter.
+    var aim_delta := attack_target_position - global_position
+    if aim_delta.length_squared() > 0.0025:
+        look_at(attack_target_position, Vector3.UP)
+    velocity = Vector3.ZERO
     _show_telegraph(1.75 if kind == "boss" else 1.05, duration)
     if authored_anim != null and authored_anim.has_animation("Idle_Attack"):
         _play_authored("Idle_Attack")
