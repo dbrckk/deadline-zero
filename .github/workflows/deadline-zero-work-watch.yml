@@ -29,12 +29,14 @@ jobs:
         run: |
           set -euo pipefail
 
-          active_count="$(
-            gh api --paginate "repos/$GH_REPO/actions/runs?per_page=100"               --jq '[.workflow_runs[] | select(
-                (.status == "queued" or .status == "in_progress" or .status == "pending")
-                and (.name != "Deadline Zero Work Watch")
-              )] | length' | awk '{s+=$1} END{print s+0}'
-          )"
+          # Query active runs by status instead of paging through the full run
+          # history (thousands of records), which intermittently times out.
+          active_count=0
+          for state in queued in_progress pending; do
+            state_count="$(gh api "repos/$GH_REPO/actions/runs?status=$state&per_page=100" \\
+              --jq '[.workflow_runs[] | select(.name != "Deadline Zero Work Watch")] | length')"
+            active_count=$((active_count + state_count))
+          done
 
           if [[ "$active_count" -gt 0 ]]; then
             echo "Creation/development work is active ($active_count workflow run(s)); no duplicate launch."
@@ -50,11 +52,14 @@ jobs:
             pr_number="$(jq -r '.number' <<<"$open_pr")"
             echo "No active run; checking latest open PR #$pr_number ($head_sha)."
 
+            # Retry each failed run only once. Cancelled runs are normally
+            # obsolete by design and should not be resurrected every five minutes.
             failed_run_ids="$(
-              gh api --paginate "repos/$GH_REPO/actions/runs?head_sha=$head_sha&per_page=100"                 --jq '.workflow_runs[]
+              gh api "repos/$GH_REPO/actions/runs?head_sha=$head_sha&per_page=100" \\
+                --jq '.workflow_runs[]
                   | select(.name != "Deadline Zero Work Watch")
-                  | select(.status == "completed")
-                  | select(.conclusion == "failure" or .conclusion == "cancelled" or .conclusion == "timed_out")
+                  | select(.status == "completed" and .conclusion == "failure")
+                  | select(.run_attempt == 1)
                   | .id' | sort -u
             )"
 
