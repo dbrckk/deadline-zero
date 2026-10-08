@@ -118,7 +118,25 @@ func _ready() -> void:
     _build_visual()
     _build_contact_shadow()
     _build_hit_flash()
+    _apply_mobile_shadow_budget()
     _play_spawn_reveal()
+
+func _apply_mobile_shadow_budget() -> void:
+    # The arena has one real directional shadow map; a swarm of 100+ animated
+    # characters should not render all of its geometry into that map.
+    # Every enemy retains its already-authored planar contact shadow, while the
+    # boss and elite bodies keep their imported dynamic shadow settings.
+    # Emissive silhouettes and transient hit geometry never cast shadows.
+    var keep_body_shadows := kind == "boss" or kind == "elite"
+    for node in find_children("*", "MeshInstance3D", true, false):
+        var mesh := node as MeshInstance3D
+        if mesh == null:
+            continue
+        var is_body := authored_visual != null and (
+            mesh == authored_visual or authored_visual.is_ancestor_of(mesh)
+        )
+        if not (keep_body_shadows and is_body):
+            mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 func _physics_process(delta: float) -> void:
     if not combat_enabled:
