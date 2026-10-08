@@ -160,6 +160,8 @@ func set_combat_enabled(enabled: bool) -> void:
     current_target = null
     nearest_threat = null
     target_refresh_clock = 0.0
+    if authored_anim != null:
+        authored_anim.speed_scale = 1.0
     _reset_movement_lean()
     _clear_player_marker_pressure()
 
@@ -714,10 +716,25 @@ func _trigger_damage_feedback() -> void:
 func _update_authored_animation() -> void:
     if authored_anim == null:
         return
-    _play_authored("Run_Gun" if velocity.length_squared() > 0.08 else "Idle_Gun")
+    var planar_speed := Vector2(velocity.x, velocity.z).length()
+    if planar_speed <= 0.28:
+        _play_authored("Idle_Gun")
+        authored_anim.speed_scale = 1.0
+        return
+
+    # Match the authored run cycle to the actual acceleration, slowdown and
+    # upgraded movement speed. Retiming is isolated from recoil/hit/death clips.
+    _play_authored("Run_Gun")
+    var fraction := clampf(planar_speed / maxf(move_speed, 0.01), 0.0, 1.0)
+    var desired_rate := lerpf(0.70, 1.12, fraction)
+    authored_anim.speed_scale = move_toward(authored_anim.speed_scale, desired_rate, 0.18)
 
 func _play_authored(name: String) -> void:
-    if authored_anim == null or current_anim == name or not authored_anim.has_animation(name):
+    if authored_anim == null or not authored_anim.has_animation(name):
+        return
+    if name != "Run_Gun":
+        authored_anim.speed_scale = 1.0
+    if current_anim == name:
         return
     current_anim = name
     authored_anim.play(name, 0.12)
