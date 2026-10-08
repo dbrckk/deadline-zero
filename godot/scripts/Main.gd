@@ -429,6 +429,9 @@ func _spawn_kill_confirmation_fx(at: Vector3, boss: bool) -> void:
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
     kills += 1
+    # A quiet world-space stain gives kills lasting weight without stacking
+    # additional combat particles or lights. Bosses leave larger scorch marks.
+    DZCombatGroundMark.spawn_mark(self, at, xp_value >= 30)
     var orb := DZXpOrb.new()
     orb.amount = xp_value
     orb.target = player
