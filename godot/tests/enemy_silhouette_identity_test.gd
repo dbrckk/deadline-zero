@@ -116,7 +116,7 @@ func _initialize() -> void:
                 quit(1)
                 return
         var shadow := enemy.get_node_or_null("EnemyContactShadow") as MeshInstance3D
-        var shadow_mesh := shadow.mesh as CylinderMesh if shadow != null else null
+        var shadow_mesh := shadow.mesh as QuadMesh if shadow != null else null
         if enemy.spawn_reveal_tween == null:
             push_error("Enemy spawn did not initialize premium reveal motion for %s" % kind)
             quit(1)
@@ -129,18 +129,27 @@ func _initialize() -> void:
             push_error("Contact shadow must not cast dynamic shadows for %s" % kind)
             quit(1)
             return
-        if shadow_mesh.radial_segments > 16:
-            push_error("Contact shadow geometry budget regressed for %s" % kind)
+        if shadow_mesh.size.x < 0.69 or shadow_mesh.size.y != shadow_mesh.size.x:
+            push_error("Contact shadow lost its low-poly radial ground footprint for %s" % kind)
+            quit(1)
+            return
+        if absf(shadow.rotation_degrees.x + 90.0) > 0.01:
+            push_error("Contact shadow quad no longer faces the arena floor for %s" % kind)
             quit(1)
             return
         var shadow_material := shadow.material_override
-        if shadow_material == null or not shadow_material is BaseMaterial3D:
-            push_error("Contact shadow material missing for %s" % kind)
+        if shadow_material == null or not shadow_material is ShaderMaterial:
+            push_error("Contact shadow must use shared soft radial shader for %s" % kind)
             quit(1)
             return
-        var base_shadow_material := shadow_material as BaseMaterial3D
-        if base_shadow_material.transparency != BaseMaterial3D.TRANSPARENCY_ALPHA:
-            push_error("Contact shadow must remain alpha blended for %s" % kind)
+        var soft_material := shadow_material as ShaderMaterial
+        if soft_material.shader == null or not soft_material.shader.code.contains("smoothstep") or not soft_material.shader.code.contains("ALPHA = feather * feather"):
+            push_error("Contact shadow lost smooth radial falloff for %s" % kind)
+            quit(1)
+            return
+        var shadow_opacity := float(soft_material.get_shader_parameter("shadow_opacity"))
+        if shadow_opacity > 0.40 or shadow_opacity < 0.20:
+            push_error("Contact shadow opacity escaped subtle mobile visibility budget for %s" % kind)
             quit(1)
             return
         if shared_shadow_material == null:
@@ -149,7 +158,7 @@ func _initialize() -> void:
             push_error("Enemy contact shadows must share one material instance")
             quit(1)
             return
-        shadow_radii[kind] = shadow_mesh.top_radius
+        shadow_radii[kind] = shadow_mesh.size.x * 0.5
         if kind == "runner":
             var blade := enemy.get_node_or_null("RunnerBladeL") as MeshInstance3D
             var blade_mesh := blade.mesh as BoxMesh if blade != null else null
