@@ -14,7 +14,8 @@ func _initialize() -> void:
     ]
     var total_textured_surfaces := 0
     for spec in fixtures:
-        var root: Node3D = (spec["factory"] as Callable).call() as Node3D
+        var factory: Callable = spec["factory"]
+        var root := factory.call() as Node3D
         if root == null:
             push_error("Missing imported industrial 3D scene: %s" % spec["id"])
             quit(1)
