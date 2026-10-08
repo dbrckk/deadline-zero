@@ -1,13 +1,12 @@
 # Change impact
 
-Base: 92d355b2adc53f7b874299ff75fc46f9fc7e454b
-Head: fc88ef802060a9e161e7ca32d9c6693f29813a52
+Base: ac25cbcd473056bbe857ea9db79b81d7f575dea4
+Head: c9e8a6a4a3f9fdc41feb14039c154013d27afc8a
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/Enemy.gd
-- M godot/scripts/Player.gd
-- A godot/tests/authored_gait_sync_test.gd
+- M godot/scripts/AssetLibrary.gd
+- A godot/tests/industrial_material_sharing_test.gd
 
 ## Affected areas
 - .github

@@ -2,21 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Form readable melee pressure rings",
-      "terms": [
-        "form",
-        "melee",
-        "pressure",
-        "readable",
-        "rings"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Enemy.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Replace filled attack telegraphs with danger rings",
       "terms": [
         "attack",
@@ -1125,6 +1110,27 @@
         "godot/scripts/Player.gd",
         "godot/tests/authored_gait_sync_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "perf(godot): reuse imported industrial PBR materials across 3D props",
+      "terms": [
+        "3d",
+        "across",
+        "godot",
+        "imported",
+        "industrial",
+        "materials",
+        "pbr",
+        "perf",
+        "props",
+        "reuse"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/AssetLibrary.gd",
+        "godot/tests/industrial_material_sharing_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1408,7 +1414,7 @@
       "godot/tests/run_end_ux_test.gd": 4
     },
     "3d": {
-      "godot/scripts/AssetLibrary.gd": 8,
+      "godot/scripts/AssetLibrary.gd": 12,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/CombatFeel.gd": 8,
       "godot/scripts/Enemy.gd": 24,
@@ -1432,6 +1438,7 @@
       "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/hud_readability_hierarchy_test.gd": 4,
       "godot/tests/impact_fx_mobile_test.gd": 4,
+      "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/projectile_profile_runtime_visual_test.gd": 4,
       "godot/tests/run_director_runtime_integration_test.gd": 4,
       "godot/tests/run_end_ux_test.gd": 4,
@@ -1480,6 +1487,10 @@
     },
     "acquisition": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java": 8
+    },
+    "across": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/industrial_material_sharing_test.gd": 4
     },
     "activate": {
       "godot/scripts/Hud.gd": 4,
@@ -2939,7 +2950,7 @@
       "godot/tests/mobile_orientation_test.gd": 4
     },
     "godot": {
-      "godot/scripts/AssetLibrary.gd": 16,
+      "godot/scripts/AssetLibrary.gd": 20,
       "godot/scripts/CombatGroundMark.gd": 4,
       "godot/scripts/Enemy.gd": 16,
       "godot/scripts/Hud.gd": 12,
@@ -2959,6 +2970,7 @@
       "godot/tests/environment_identity_test.gd": 12,
       "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/hud_readability_hierarchy_test.gd": 8,
+      "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/industrial_prop_material_test.gd": 4,
       "godot/tests/mobile_orientation_test.gd": 24,
       "godot/tests/offscreen_threat_priority_test.gd": 4,
@@ -3159,6 +3171,10 @@
     "implementation": {
       "core/src/test/java/com/deadlinezero/game/config/LocalizationReleaseContractTest.java": 4
     },
+    "imported": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/industrial_material_sharing_test.gd": 4
+    },
     "improve": {
       "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java": 4,
@@ -3177,9 +3193,10 @@
       "core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java": 4
     },
     "industrial": {
-      "godot/scripts/AssetLibrary.gd": 12,
+      "godot/scripts/AssetLibrary.gd": 16,
       "godot/scripts/Main.gd": 8,
       "godot/tests/environment_identity_test.gd": 20,
+      "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/industrial_prop_material_test.gd": 4,
       "tools/blender/build_industrial_kit.py": 4
     },
@@ -3421,6 +3438,10 @@
       "godot/tests/enemy_silhouette_identity_test.gd": 8,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
+    },
+    "materials": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/industrial_material_sharing_test.gd": 4
     },
     "matrix": {
       "godot/scripts/Enemy.gd": 4,
@@ -3727,8 +3748,9 @@
       "godot/tests/player_pressure_marker_test.gd": 4
     },
     "pbr": {
-      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/AssetLibrary.gd": 8,
       "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/industrial_prop_material_test.gd": 4
     },
     "per-surface": {
@@ -3736,9 +3758,11 @@
       "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
     "perf": {
+      "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Main.gd": 4,
       "godot/tests/enemy_shadow_budget_test.gd": 4,
+      "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/offscreen_threat_priority_test.gd": 4
     },
     "performance": {
@@ -4007,6 +4031,10 @@
     "promote": {
       "godot/scripts/Main.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
+    },
+    "props": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/industrial_material_sharing_test.gd": 4
     },
     "protocol": {
       "core/src/main/java/com/deadlinezero/game/progression/ProtocolUpgradeGuidance.java": 4,
@@ -4311,6 +4339,10 @@
     "restrained": {
       "godot/scripts/Main.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
+    },
+    "reuse": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/industrial_material_sharing_test.gd": 4
     },
     "reveal": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 8,

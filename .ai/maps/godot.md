@@ -85,6 +85,7 @@ tests/
   haptics_service_test.gd
   hud_readability_hierarchy_test.gd
   impact_fx_mobile_test.gd
+  industrial_material_sharing_test.gd
   industrial_prop_material_test.gd
   mobile_orientation_test.gd
   native_enemy_behavior_test.gd
@@ -142,6 +143,10 @@ const INDUSTRIAL_PIPE_RACK := "res://assets/generated/industrial/dz_pipe_rack.gl
 const INDUSTRIAL_SERVICE_PILLAR := "res://assets/generated/industrial/dz_service_pillar.glb"
 
 static var _enemy_grade_shader: Shader
+# Immutable PBR grades are shared between copies of the same authored GLTF
+# surface, avoiding one material allocation per arena prop.
+static var _graded_pbr_material_cache := {}
+static var _shared_barrier_hazard_material: StandardMaterial3D
 
 static func instantiate_scene(path: String) -> Node3D:
     if not ResourceLoader.exists(path):
@@ -183,12 +188,12 @@ static func barrier() -> Node3D:
 
 static func barrel() -> Node3D:
     var root := instantiate_scene(BARREL)
-    _grade_mesh_tree(root, Color(0.64, 0.69, 0.72), 0.83, 0.28)
+    _grade_mesh_tree(root, Color(0.64, 0.69, 0.72), 0.83, 0.28, "barrel")
     return root
 
 static func pallet() -> Node3D:
     var root := instantiate_scene(PALLET)
-    _grade_mesh_tree(root, Color(0.70, 0.64, 0.54), 0.91, 0.02)
+    _grade_mesh_tree(root, Color(0.70, 0.64, 0.54), 0.91, 0.02, "pallet")
     return root
 
 static func street_lights() -> Node3D:
@@ -198,12 +203,12 @@ static func street_lights() -> Node3D:
 
 static func traffic_cone() -> Node3D:
     var root := instantiate_scene(TRAFFIC_CONE)
-    _grade_mesh_tree(root, Color(0.91, 0.78, 0.68), 0.86, 0.01)
+    _grade_mesh_tree(root, Color(0.91, 0.78, 0.68), 0.86, 0.01, "traffic_cone")
     return root
 
 static func trash_bag() -> Node3D:
     var root := instantiate_scene(TRASH_BAG)
-    _grade_mesh_tree(root, Color(0.55, 0.63, 0.68), 0.94, 0.01)
+    _grade_mesh_tree(root, Color(0.55, 0.63, 0.68), 0.94, 0.01, "trash_bag")
     return root
 
 static func street_crack() -> Node3D:
@@ -230,7 +235,7 @@ static func _apply_street_light_industrial_material(root: Node3D) -> void:
     # Preserve the authored two-surface GLTF: a painted atlas plus its
     # separate glass/lamp material. Material overrides flattened both into
     # featureless gray geometry in the combat arena.
-    _grade_mesh_tree(root, Color(0.54, 0.67, 0.75), 0.78, 0.46)
+    _grade_mesh_tree(root, Color(0.54, 0.67, 0.75), 0.78, 0.46, "street_lights")
     var meshes: Array[MeshInstance3D] = []
     if root is MeshInstance3D:
         meshes.append(root as MeshInstance3D)
@@ -261,17 +266,19 @@ static func _apply_barrier_industrial_material(root: Node3D) -> void:
         return
     # Retain UVs and each Quaternius atlas rather than overwriting the
     # entire imported mesh with a single dark StandardMaterial3D.
-    _grade_mesh_tree(root, Color(0.58, 0.70, 0.78), 0.84, 0.34)
+    _grade_mesh_tree(root, Color(0.58, 0.70, 0.78), 0.84, 0.34, "barrier")
 
 static func _add_barrier_hazard_signature(root: Node3D) -> void:
     if root == null:
         return
-    var material := StandardMaterial3D.new()
-    material.albedo_color = Color(0.92, 0.26, 0.035)
-    material.emission_enabled = true
-    material.emission = Color(0.68, 0.10, 0.01)
-    material.emission_energy_multiplier = 0.72
-    material.roughness = 0.54
+    if _shared_barrier_hazard_material == null:
+        _shared_barrier_hazard_material = StandardMaterial3D.new()
+        _shared_barrier_hazard_material.albedo_color = Color(0.92, 0.26, 0.035)
+        _shared_barrier_hazard_material.emission_enabled = true
+        _shared_barrier_hazard_material.emission = Color(0.68, 0.10, 0.01)
+        _shared_barrier_hazard_material.emission_energy_multiplier = 0.72
+        _shared_barrier_hazard_material.roughness = 0.54
+    var material := _shared_barrier_hazard_material
 
     for side in [-1.0, 1.0]:
         var strip := MeshInstance3D.new()
@@ -397,32 +404,49 @@ void fragment() {
 """
     return _enemy_grade_shader
 
-static func _grade_mesh_tree(root: Node3D, tint: Color, roughness: float, metallic: float) -> void:
+static func _grade_mesh_tree(root: Node3D, tint: Color, roughness: float, metallic: float, cache_family: String = "") -> void:
     if root == null:
         return
     if root is MeshInstance3D:
-        _grade_mesh_instance(root as MeshInstance3D, tint, roughness, metallic)
+        _grade_mesh_instance(root as MeshInstance3D, tint, roughness, metallic, cache_family)
     for node in root.find_children("*", "MeshInstance3D", true, false):
-        _grade_mesh_instance(node as MeshInstance3D, tint, roughness, metallic)
+        _grade_mesh_instance(node as MeshInstance3D, tint, roughness, metallic, cache_family)
 
-static func _grade_mesh_instance(mesh_instance: MeshInstance3D, tint: Color, roughness: float, metallic: float) -> void:
+static func _grade_mesh_instance(mesh_instance: MeshInstance3D, tint: Color, roughness: float, metallic: float, cache_family: String = "") -> void:
     if mesh_instance == null or mesh_instance.mesh == null or mesh_instance.mesh.get_surface_count() == 0:
         return
 
     mesh_instance.material_override = null
     for surface_index in range(mesh_instance.mesh.get_surface_count()):
-        var source := mesh_instance.get_active_material(surface_index)
-        if not source is BaseMaterial3D:
+        var source := mesh_instance.get_active_material(surface_index) as BaseMaterial3D
+        if source == null:
             continue
-        var graded := (source as BaseMaterial3D).duplicate(true) as BaseMaterial3D
-        graded.albedo_color = Color(
-            graded.albedo_color.r * tint.r,
-            graded.albedo_color.g * tint.g,
-            graded.albedo_color.b * tint.b,
-            graded.albedo_color.a
-        )
-        graded.roughness = maxf(graded.roughness, roughness)
-        graded.metallic = maxf(graded.metallic, metallic)
+        # Imported GLTF scenes sometimes localize their material resources on
+        # every instantiate(), so object IDs are not a stable deduplication key.
+        # Only cache static props with a known authored asset family: scene mesh
+        # name + surface index + grade identify their immutable source surface.
+        # Animated survivor and weapon surfaces remain instance-local.
+        var grade_key := ""
+        if not cache_family.is_empty():
+            grade_key = "%s|%s|%s|%d|%s|%.3f|%.3f" % [
+                cache_family, mesh_instance.name, source.resource_name,
+                surface_index, tint.to_html(true), roughness, metallic
+            ]
+        var graded: BaseMaterial3D
+        if not grade_key.is_empty():
+            graded = _graded_pbr_material_cache.get(grade_key) as BaseMaterial3D
+        if graded == null:
+            graded = source.duplicate(true) as BaseMaterial3D
+            graded.albedo_color = Color(
+                graded.albedo_color.r * tint.r,
+                graded.albedo_color.g * tint.g,
+                graded.albedo_color.b * tint.b,
+                graded.albedo_color.a
+            )
+            graded.roughness = maxf(graded.roughness, roughness)
+            graded.metallic = maxf(graded.metallic, metallic)
+            if not grade_key.is_empty():
+                _graded_pbr_material_cache[grade_key] = graded
         mesh_instance.set_surface_override_material(surface_index, graded)
 
 static func animation_player(root: Node) -> AnimationPlayer:
@@ -9956,6 +9980,99 @@ func _initialize() -> void:
     current_scene = root
 
     print("Deadline Zero mobile-safe impact FX: OK")
+    quit(0)
+```
+
+## File: tests/industrial_material_sharing_test.gd
+```
+extends SceneTree
+
+# Stress actual imported materials: every repeat prop must share immutable
+# PBR surface resources without flattening its UV atlas.
+func _initialize() -> void:
+    var factories := [
+        {"name": "barrier", "make": Callable(DZAssetLibrary, "barrier")},
+        {"name": "barrel", "make": Callable(DZAssetLibrary, "barrel")},
+        {"name": "pallet", "make": Callable(DZAssetLibrary, "pallet")},
+        {"name": "street_lights", "make": Callable(DZAssetLibrary, "street_lights")},
+        {"name": "traffic_cone", "make": Callable(DZAssetLibrary, "traffic_cone")},
+        {"name": "trash_bag", "make": Callable(DZAssetLibrary, "trash_bag")},
+    ]
+
+    var first_grades := {}
+    var total_textured_instances := 0
+    var barrier_stripe_material: Material
+    for spec in factories:
+        var name := String(spec["name"])
+        var make: Callable = spec["make"]
+        for sample in range(5):
+            var root := make.call() as Node3D
+            if root == null:
+                push_error("Industrial PBR instance missing: %s" % name)
+                quit(1)
+                return
+
+            var surface_count := 0
+            var nodes: Array[MeshInstance3D] = []
+            if root is MeshInstance3D:
+                nodes.append(root as MeshInstance3D)
+            for node in root.find_children("*", "MeshInstance3D", true, false):
+                nodes.append(node as MeshInstance3D)
+            for instance in nodes:
+                if instance.mesh == null or instance.material_override != null:
+                    continue
+                for surface_index in range(instance.mesh.get_surface_count()):
+                    var source := instance.mesh.surface_get_material(surface_index) as BaseMaterial3D
+                    if source == null or source.albedo_texture == null:
+                        continue
+                    var material := instance.get_surface_override_material(surface_index) as BaseMaterial3D
+                    if material == null or material.albedo_texture != source.albedo_texture:
+                        push_error("Authored atlas flattened or lost: %s" % name)
+                        quit(1)
+                        return
+                    if not first_grades.has(name):
+                        first_grades[name] = material
+                    elif first_grades[name] != material:
+                        push_error("Identical imported prop copies allocated distinct PBR materials: %s" % name)
+                        quit(1)
+                        return
+                    surface_count += 1
+
+            if surface_count == 0:
+                push_error("No original textured surface in %s" % name)
+                quit(1)
+                return
+            total_textured_instances += surface_count
+
+            if name == "barrier":
+                var front := root.find_child("BarrierHazardFront", true, false) as MeshInstance3D
+                var rear := root.find_child("BarrierHazardRear", true, false) as MeshInstance3D
+                if front == null or rear == null or front.material_override == null:
+                    push_error("Hazard material sharing fixture missing")
+                    quit(1)
+                    return
+                if rear.material_override != front.material_override:
+                    push_error("Barrier stripes did not share one emissive material")
+                    quit(1)
+                    return
+                if barrier_stripe_material == null:
+                    barrier_stripe_material = front.material_override
+                elif barrier_stripe_material != front.material_override:
+                    push_error("Different barriers allocated duplicate hazard stripe materials")
+                    quit(1)
+                    return
+            root.free()
+
+    if first_grades.size() != factories.size() or total_textured_instances < 30:
+        push_error("PBR sharing stress test did not cover all 30 imported props")
+        quit(1)
+        return
+    if first_grades["barrel"] == first_grades["pallet"]:
+        push_error("Material sharing leaked barrel metal grade into wood pallet")
+        quit(1)
+        return
+
+    print("Deadline Zero shared authored PBR prop materials: OK (%d textured surfaces, %d families)" % [total_textured_instances, first_grades.size()])
     quit(0)
 ```
 
