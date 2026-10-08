@@ -9,10 +9,12 @@ func _initialize() -> void:
 
     var view_camera := Camera3D.new()
     arena.add_child(view_camera)
+    # SceneTree._initialize() runs before initial nodes finish entering the tree.
+    # Project/look-at calls require a live viewport and a valid world transform.
+    await process_frame
     view_camera.global_position = Vector3(0.0, 12.8, 9.15)
     view_camera.look_at(Vector3.ZERO, Vector3.UP)
     view_camera.current = true
-    await process_frame
     await process_frame
 
     var viewport_size := get_root().get_visible_rect().size
