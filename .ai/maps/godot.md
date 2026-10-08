@@ -42,6 +42,7 @@ scripts/
   AssetLibrary.gd
   CombatAudio.gd
   CombatFeel.gd
+  CombatGroundMark.gd
   Enemy.gd
   EnemyProjectile.gd
   GameSettings.gd
@@ -69,6 +70,7 @@ tests/
   combat_audio_feedback_test.gd
   combat_danger_hud_test.gd
   combat_feel_test.gd
+  combat_ground_mark_test.gd
   damage_number_budget_test.gd
   enemy_archetype_combat_test.gd
   enemy_hit_reaction_test.gd
@@ -656,6 +658,72 @@ static func unscaled_delta(scaled_delta: float, time_scale: float) -> float:
     if scaled_delta <= 0.0:
         return 0.0
     return scaled_delta / maxf(time_scale, 0.01)
+```
+
+## File: scripts/CombatGroundMark.gd
+```
+class_name DZCombatGroundMark
+extends MeshInstance3D
+
+# One textured, shadowless ground quad per kill. Dense runs stay bounded to
+# sixteen short-lived marks; no particles, physics bodies, or dynamic lights.
+const MAX_ACTIVE := 16
+const VISIBLE_SECONDS := 1.5
+const FADE_SECONDS := 6.5
+const GROUND_Y := 0.048
+const SCORCH_TEXTURE := "res://assets/decals/quarantine_yard/scorch_a.png"
+const BLOOD_TEXTURE := "res://assets/decals/quarantine_yard/blood_a.png"
+
+static var _shared_quad: QuadMesh
+
+var boss_mark := false
+var fade_tween: Tween
+
+static func spawn_mark(parent: Node3D, at: Vector3, is_boss: bool = false) -> DZCombatGroundMark:
+    if parent == null or not is_instance_valid(parent) or not parent.is_inside_tree():
+        return null
+    var active: Array[Node] = []
+    for node in parent.get_tree().get_nodes_in_group("combat_ground_marks"):
+        if is_instance_valid(node) and not node.is_queued_for_deletion():
+            active.append(node)
+    if active.size() >= MAX_ACTIVE:
+        # Avoid immediate free() while an enemy death callback is running
+        # inside the physics frame.
+        active[0].queue_free()
+    var mark := DZCombatGroundMark.new()
+    mark.boss_mark = is_boss
+    parent.add_child(mark)
+    mark.global_position = Vector3(at.x, GROUND_Y, at.z)
+    mark.rotation_degrees = Vector3(-90.0, randf_range(-180.0, 180.0), 0.0)
+    return mark
+
+func _ready() -> void:
+    name = "BossGroundScorch" if boss_mark else "EnemyGroundStain"
+    add_to_group("combat_ground_marks")
+    cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    mesh = _ground_quad()
+
+    var material := StandardMaterial3D.new()
+    material.albedo_texture = load(SCORCH_TEXTURE if boss_mark else BLOOD_TEXTURE) as Texture2D
+    material.albedo_color = Color(0.42, 0.35, 0.28, 0.40) if boss_mark else Color(0.52, 0.19, 0.17, 0.30)
+    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.roughness = 0.94 if boss_mark else 0.88
+    material.metallic = 0.0
+    material_override = material
+
+    var diameter := 1.95 if boss_mark else randf_range(0.70, 1.12)
+    scale = Vector3(diameter, diameter * 0.84, 1.0)
+
+    fade_tween = create_tween()
+    fade_tween.tween_interval(VISIBLE_SECONDS)
+    fade_tween.tween_property(material, "albedo_color:a", 0.0, FADE_SECONDS).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+    fade_tween.tween_callback(queue_free)
+
+static func _ground_quad() -> QuadMesh:
+    if _shared_quad == null:
+        _shared_quad = QuadMesh.new()
+        _shared_quad.size = Vector2.ONE
+    return _shared_quad
 ```
 
 ## File: scripts/Enemy.gd
@@ -3848,6 +3916,9 @@ func _spawn_kill_confirmation_fx(at: Vector3, boss: bool) -> void:
 
 func _on_enemy_died(xp_value: int, at: Vector3) -> void:
     kills += 1
+    # A quiet world-space stain gives kills lasting weight without stacking
+    # additional combat particles or lights. Bosses leave larger scorch marks.
+    DZCombatGroundMark.spawn_mark(self, at, xp_value >= 30)
     var orb := DZXpOrb.new()
     orb.amount = xp_value
     orb.target = player
@@ -7731,6 +7802,96 @@ func _assert(condition: bool, message: String) -> void:
         return
     push_error(message)
     quit(1)
+```
+
+## File: tests/combat_ground_mark_test.gd
+```
+extends SceneTree
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    await process_frame
+
+    var first := DZCombatGroundMark.spawn_mark(root, Vector3(2.0, 0.8, -3.0))
+    if first == null or not first is MeshInstance3D:
+        push_error("Kill ground mark did not instantiate as real 3D mesh")
+        quit(1)
+        return
+    var mat := first.material_override as StandardMaterial3D
+    if mat == null or mat.albedo_texture != load(DZCombatGroundMark.BLOOD_TEXTURE):
+        push_error("Kill ground mark lost project-owned authored blood decal texture")
+        quit(1)
+        return
+    if mat.transparency != BaseMaterial3D.TRANSPARENCY_ALPHA or mat.roughness < 0.85:
+        push_error("Kill ground mark must use a restrained alpha-blended rough material")
+        quit(1)
+        return
+    if first.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Ground marks must not cast directional shadows")
+        quit(1)
+        return
+    var first_quad := first.mesh as QuadMesh
+    if first_quad == null or first_quad.size != Vector2.ONE:
+        push_error("Ground marks must use one lightweight quad")
+        quit(1)
+        return
+    if absf(first.global_position.y - DZCombatGroundMark.GROUND_Y) > 0.0001:
+        push_error("Kill marks must be placed on the ground, not at enemy's hit height")
+        quit(1)
+        return
+    if first.fade_tween == null or not first.fade_tween.is_running():
+        push_error("Kill ground mark must fade and release its node automatically")
+        quit(1)
+        return
+
+    var boss_mark := DZCombatGroundMark.spawn_mark(root, Vector3(-2.0, 2.0, 3.0), true)
+    var boss_mat := boss_mark.material_override as StandardMaterial3D
+    if boss_mat == null or boss_mat.albedo_texture != load(DZCombatGroundMark.SCORCH_TEXTURE):
+        push_error("Boss kill must use the authored scorch decal instead of blood")
+        quit(1)
+        return
+    if boss_mark.scale.x < first.scale.x or boss_mark.mesh != first.mesh:
+        push_error("Boss scorch must be larger and reuse the same quad mesh")
+        quit(1)
+        return
+
+    for index in range(DZCombatGroundMark.MAX_ACTIVE + 9):
+        var mark := DZCombatGroundMark.spawn_mark(root, Vector3(float(index), 0.0, 0.0))
+        if mark == null:
+            push_error("Dense-run ground mark emitter failed")
+            quit(1)
+            return
+        if mark.mesh != first.mesh:
+            push_error("Ground marks must reuse the single shared quad resource")
+            quit(1)
+            return
+        if mark.get_child_count() != 0:
+            push_error("Ground mark has unexpected mesh/light/particle children")
+            quit(1)
+            return
+    await process_frame
+
+    var marks := get_nodes_in_group("combat_ground_marks")
+    if marks.size() != DZCombatGroundMark.MAX_ACTIVE:
+        push_error("Kill ground mark cap regressed: %d / %d" % [marks.size(), DZCombatGroundMark.MAX_ACTIVE])
+        quit(1)
+        return
+
+    if DZCombatGroundMark.spawn_mark(null, Vector3.ZERO) != null:
+        push_error("Ground marks must reject missing parent")
+        quit(1)
+        return
+
+    var source := FileAccess.get_file_as_string("res://scripts/Main.gd")
+    if not source.contains("DZCombatGroundMark.spawn_mark(self, at, xp_value >= 30)"):
+        push_error("Enemy death callback lost world-space kill mark integration")
+        quit(1)
+        return
+
+    print("Deadline Zero authored mobile ground marks: OK (%d max visible)" % marks.size())
+    quit(0)
 ```
 
 ## File: tests/damage_number_budget_test.gd

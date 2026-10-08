@@ -1,13 +1,13 @@
 # Change impact
 
-Base: e1ae9bb18f204850991a03acb6e90f7f47883b17
-Head: 6e67d5118988ed0dfa18ee2bc3ae45ee7fff2bc9
+Base: 5504a9ba90d275351f8fadeaa6b7b0ade464866e
+Head: c7d5d8f481b04d64da91bf147833cf68893415f1
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/AssetLibrary.gd
-- M godot/tests/environment_identity_test.gd
-- A godot/tests/industrial_prop_material_test.gd
+- A godot/scripts/CombatGroundMark.gd
+- M godot/scripts/Main.gd
+- A godot/tests/combat_ground_mark_test.gd
 
 ## Affected areas
 - .github
