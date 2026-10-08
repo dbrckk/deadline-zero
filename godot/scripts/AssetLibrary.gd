@@ -19,6 +19,10 @@ const INDUSTRIAL_PIPE_RACK := "res://assets/generated/industrial/dz_pipe_rack.gl
 const INDUSTRIAL_SERVICE_PILLAR := "res://assets/generated/industrial/dz_service_pillar.glb"
 
 static var _enemy_grade_shader: Shader
+# Immutable PBR grades are shared between copies of the same imported GLTF
+# surface, avoiding one material allocation per arena prop.
+static var _graded_pbr_material_cache := {}
+static var _shared_barrier_hazard_material: StandardMaterial3D
 
 static func instantiate_scene(path: String) -> Node3D:
     if not ResourceLoader.exists(path):
@@ -143,12 +147,14 @@ static func _apply_barrier_industrial_material(root: Node3D) -> void:
 static func _add_barrier_hazard_signature(root: Node3D) -> void:
     if root == null:
         return
-    var material := StandardMaterial3D.new()
-    material.albedo_color = Color(0.92, 0.26, 0.035)
-    material.emission_enabled = true
-    material.emission = Color(0.68, 0.10, 0.01)
-    material.emission_energy_multiplier = 0.72
-    material.roughness = 0.54
+    if _shared_barrier_hazard_material == null:
+        _shared_barrier_hazard_material = StandardMaterial3D.new()
+        _shared_barrier_hazard_material.albedo_color = Color(0.92, 0.26, 0.035)
+        _shared_barrier_hazard_material.emission_enabled = true
+        _shared_barrier_hazard_material.emission = Color(0.68, 0.10, 0.01)
+        _shared_barrier_hazard_material.emission_energy_multiplier = 0.72
+        _shared_barrier_hazard_material.roughness = 0.54
+    var material := _shared_barrier_hazard_material
 
     for side in [-1.0, 1.0]:
         var strip := MeshInstance3D.new()
@@ -288,18 +294,27 @@ static func _grade_mesh_instance(mesh_instance: MeshInstance3D, tint: Color, rou
 
     mesh_instance.material_override = null
     for surface_index in range(mesh_instance.mesh.get_surface_count()):
-        var source := mesh_instance.get_active_material(surface_index)
-        if not source is BaseMaterial3D:
+        var source := mesh_instance.get_active_material(surface_index) as BaseMaterial3D
+        if source == null:
             continue
-        var graded := (source as BaseMaterial3D).duplicate(true) as BaseMaterial3D
-        graded.albedo_color = Color(
-            graded.albedo_color.r * tint.r,
-            graded.albedo_color.g * tint.g,
-            graded.albedo_color.b * tint.b,
-            graded.albedo_color.a
-        )
-        graded.roughness = maxf(graded.roughness, roughness)
-        graded.metallic = maxf(graded.metallic, metallic)
+        # The underlying PackedScene shares imported source materials across
+        # its mesh instances. Include tint and physical grade in the key so
+        # different props never accidentally receive a different finish.
+        var grade_key := "%d|%s|%.3f|%.3f" % [
+            source.get_instance_id(), tint.to_html(true), roughness, metallic
+        ]
+        var graded := _graded_pbr_material_cache.get(grade_key) as BaseMaterial3D
+        if graded == null:
+            graded = source.duplicate(true) as BaseMaterial3D
+            graded.albedo_color = Color(
+                graded.albedo_color.r * tint.r,
+                graded.albedo_color.g * tint.g,
+                graded.albedo_color.b * tint.b,
+                graded.albedo_color.a
+            )
+            graded.roughness = maxf(graded.roughness, roughness)
+            graded.metallic = maxf(graded.metallic, metallic)
+            _graded_pbr_material_cache[grade_key] = graded
         mesh_instance.set_surface_override_material(surface_index, graded)
 
 static func animation_player(root: Node) -> AnimationPlayer:
