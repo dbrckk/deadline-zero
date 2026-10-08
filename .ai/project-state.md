@@ -22,28 +22,29 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T17:38:25Z
+Generated: 2026-10-08T20:32:58Z
 
 ### Git
 - Branch: `main`
-- Head: `d0b0739a03f7`
-- Commit date: 2026-10-08T19:38:09+02:00
-- Commit: fix(ci,godot): stabilize runtime QA and Android smoke
-- Tracked files: 1038
+- Head: `09d86a3859fd`
+- Commit date: 2026-10-08T22:32:43+02:00
+- Commit: perf(godot): reserve dynamic shadows for elite and boss bodies
+- Tracked files: 1040
 
 ### Recently changed files
-- `.github/workflows/deadline-zero-work-watch.yml`
-- `.github/workflows/godot-android-first-playable.yml`
-- `godot/tests/first_playable_run_path_test.gd`
+- `.github/workflows/godot-verify.yml`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/enemy_shadow_budget_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `godot/tests/run_end_combat_freeze_test.gd`
-- `.github/workflows/build-kenney-space-kit.yml`
-- `tools/assets/validate_generated_kenney_glb.py`
-- `tools/blender/promote_kenney_space_kit.py`
+- `godot/scripts/Main.gd`
+- `godot/tests/offscreen_threat_priority_test.gd`
+- `.github/workflows/deadline-zero-work-watch.yml`
+- `.github/workflows/godot-android-first-playable.yml`
+- `godot/tests/first_playable_run_path_test.gd`
 
 ### Project signals
 - `build.gradle`

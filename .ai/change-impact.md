@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 122dbb0c9629ce6a30eb58dd5338496fe69260c3
-Head: d0b0739a03f7556f0b74689676454edd0e0fd7e7
+Base: 32372b08ccf99b419412f003e4189447d2f8f6c9
+Head: 09d86a3859fd24cba59edd837567f1b11f7e04b3
 
 ## Changed files
-- M .github/workflows/deadline-zero-work-watch.yml
-- M .github/workflows/godot-android-first-playable.yml
-- M godot/tests/first_playable_run_path_test.gd
+- M .github/workflows/godot-verify.yml
+- M godot/scripts/Enemy.gd
+- A godot/tests/enemy_shadow_budget_test.gd
 
 ## Affected areas
 - .github

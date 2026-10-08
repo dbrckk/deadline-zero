@@ -2,21 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Fix service pylon GDScript parse",
-      "terms": [
-        "gdscript",
-        "parse",
-        "pylon",
-        "service"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Main.gd",
-        "godot/tests/environment_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Add midfield industrial inspection detail",
       "terms": [
         "add",
@@ -1106,6 +1091,27 @@
       "useful": [
         "godot/tests/first_playable_run_path_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "perf(godot): reserve dynamic shadows for elite and boss bodies",
+      "terms": [
+        "bodies",
+        "boss",
+        "dynamic",
+        "elite",
+        "godot",
+        "perf",
+        "reserve",
+        "shadows"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/enemy_shadow_budget_test.gd",
+        "godot/tests/offscreen_threat_priority_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1816,8 +1822,11 @@
       "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4
     },
     "bodies": {
-      "godot/scripts/Enemy.gd": 4,
-      "godot/tests/native_enemy_behavior_test.gd": 4
+      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_shadow_budget_test.gd": 4,
+      "godot/tests/native_enemy_behavior_test.gd": 4,
+      "godot/tests/offscreen_threat_priority_test.gd": 4
     },
     "boss": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 8,
@@ -1828,12 +1837,14 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 8,
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Hud.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Main.gd": 8,
       "godot/tests/boss_hud_identity_test.gd": 4,
       "godot/tests/boss_reveal_camera_test.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 4
+      "godot/tests/enemy_shadow_budget_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/offscreen_threat_priority_test.gd": 4
     },
     "bosses": {
       "godot/scripts/Enemy.gd": 8,
@@ -2449,6 +2460,12 @@
       "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java": 4
     },
+    "dynamic": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_shadow_budget_test.gd": 4,
+      "godot/tests/offscreen_threat_priority_test.gd": 4
+    },
     "element": {
       "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java": 4
@@ -2458,6 +2475,12 @@
     },
     "elevate": {
       "godot/tests/play_feature_graphic_render_test.gd": 4
+    },
+    "elite": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_shadow_budget_test.gd": 4,
+      "godot/tests/offscreen_threat_priority_test.gd": 4
     },
     "elites": {
       "godot/scripts/Enemy.gd": 4,
@@ -2870,22 +2893,24 @@
     },
     "godot": {
       "godot/scripts/AssetLibrary.gd": 12,
-      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/Enemy.gd": 12,
       "godot/scripts/Hud.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 20,
+      "godot/scripts/Main.gd": 24,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 4,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/archetype_roster_render_test.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/authored_world_dressing_test.gd": 4,
+      "godot/tests/enemy_shadow_budget_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_asset_validation_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 8,
       "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/hud_readability_hierarchy_test.gd": 8,
       "godot/tests/mobile_orientation_test.gd": 24,
+      "godot/tests/offscreen_threat_priority_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/smoke_test.gd": 4
     },
@@ -3635,6 +3660,12 @@
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
+    "perf": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_shadow_budget_test.gd": 4,
+      "godot/tests/offscreen_threat_priority_test.gd": 4
+    },
     "performance": {
       "godot/scripts/Main.gd": 4,
       "godot/tests/first_playable_run_path_test.gd": 8
@@ -4188,6 +4219,12 @@
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,
       "tools/sprites/validate_final_art_promotion_consistency.py": 4
     },
+    "reserve": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_shadow_budget_test.gd": 4,
+      "godot/tests/offscreen_threat_priority_test.gd": 4
+    },
     "restore": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java": 4,
@@ -4429,6 +4466,12 @@
     },
     "shaders": {
       "godot/tests/mobile_orientation_test.gd": 4
+    },
+    "shadows": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/enemy_shadow_budget_test.gd": 4,
+      "godot/tests/offscreen_threat_priority_test.gd": 4
     },
     "shambler": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 4,

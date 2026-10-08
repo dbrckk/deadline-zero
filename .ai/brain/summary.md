@@ -1,23 +1,23 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 546
-- Files reparsed this run: 1
-- Symbols: 3064
+- Files indexed: 548
+- Files reparsed this run: 4
+- Symbols: 3069
 - Internal import edges: 808
-- Impacted files: 1
-- Selected tests: 1
+- Impacted files: 58
+- Selected tests: 35
 
 ## Languages
 - java: 422 files
-- gdscript: 69 files
+- gdscript: 71 files
 - python: 55 files
 
 ## Highest-density symbol files
 - core/src/main/java/com/deadlinezero/game/progression/Upgrade.java: 75 symbols
-- godot/scripts/Main.gd: 68 symbols
+- godot/scripts/Main.gd: 69 symbols
 - android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 55 symbols
-- godot/scripts/Enemy.gd: 52 symbols
+- godot/scripts/Enemy.gd: 53 symbols
 - core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 45 symbols
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols

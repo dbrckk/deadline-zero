@@ -73,6 +73,7 @@ tests/
   enemy_archetype_combat_test.gd
   enemy_hit_reaction_test.gd
   enemy_projectile_visual_test.gd
+  enemy_shadow_budget_test.gd
   enemy_silhouette_identity_test.gd
   environment_asset_validation_test.gd
   environment_identity_test.gd
@@ -84,6 +85,7 @@ tests/
   mobile_orientation_test.gd
   native_enemy_behavior_test.gd
   native_upgrade_depth_test.gd
+  offscreen_threat_priority_test.gd
   pause_settings_layout_test.gd
   play_feature_graphic_render_test.gd
   play_icon_render_test.gd
@@ -766,7 +768,25 @@ func _ready() -> void:
     _build_visual()
     _build_contact_shadow()
     _build_hit_flash()
+    _apply_mobile_shadow_budget()
     _play_spawn_reveal()
+
+func _apply_mobile_shadow_budget() -> void:
+    # The arena has one real directional shadow map; a swarm of 100+ animated
+    # characters should not render all of its geometry into that map.
+    # Every enemy retains its already-authored planar contact shadow, while the
+    # boss and elite bodies keep their imported dynamic shadow settings.
+    # Emissive silhouettes and transient hit geometry never cast shadows.
+    var keep_body_shadows := kind == "boss" or kind == "elite"
+    for node in find_children("*", "MeshInstance3D", true, false):
+        var mesh := node as MeshInstance3D
+        if mesh == null:
+            continue
+        var is_body := authored_visual != null and (
+            mesh == authored_visual or authored_visual.is_ancestor_of(mesh)
+        )
+        if not (keep_body_shadows and is_body):
+            mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 func _physics_process(delta: float) -> void:
     if not combat_enabled:
@@ -5068,36 +5088,53 @@ func _play_boss_stinger() -> void:
         music_duck_tween.tween_interval(1.55)
         music_duck_tween.tween_property(music_audio, "volume_db", MUSIC_BASE_DB, 0.70).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
+func _select_offscreen_threat(candidates: Array, origin: Vector3, view_camera: Camera3D, viewport_size: Vector2) -> DZEnemy:
+    # Only off-screen elite/boss threats need a marker. A visible boss must not
+    # suppress the direction cue for a different elite outside the camera.
+    if view_camera == null or not is_instance_valid(view_camera) or viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
+        return null
+    var margin := Vector2(84.0, 72.0)
+    var best: DZEnemy
+    var best_priority := -1
+    var best_distance_sq := INF
+    for node in candidates:
+        if node == null or not is_instance_valid(node):
+            continue
+        var enemy := node as DZEnemy
+        if enemy == null or enemy.dead or (enemy.kind != "elite" and enemy.kind != "boss"):
+            continue
+        var at := enemy.global_position
+        var projected := view_camera.unproject_position(at + Vector3(0.0, 0.9, 0.0))
+        var visible := not view_camera.is_position_behind(at) and (
+            projected.x >= margin.x and projected.y >= margin.y
+            and projected.x <= viewport_size.x - margin.x and projected.y <= viewport_size.y - margin.y
+        )
+        if visible:
+            continue
+        var priority := 2 if enemy.kind == "boss" else 1
+        var distance_sq := origin.distance_squared_to(at)
+        if priority > best_priority or (priority == best_priority and distance_sq < best_distance_sq):
+            best = enemy
+            best_priority = priority
+            best_distance_sq = distance_sq
+    return best
+
 func _update_offscreen_threat_indicator() -> void:
     if hud == null or camera == null or player == null or game_over:
         if hud:
             hud.hide_offscreen_threat()
         return
 
-    var best: DZEnemy
-    var best_distance := INF
-    for node in get_tree().get_nodes_in_group("enemies"):
-        var enemy := node as DZEnemy
-        if enemy == null or enemy.dead or (enemy.kind != "elite" and enemy.kind != "boss"):
-            continue
-        var distance := player.global_position.distance_to(enemy.global_position)
-        if distance < best_distance:
-            best_distance = distance
-            best = enemy
-
+    var viewport_size := get_viewport().get_visible_rect().size
+    var best := _select_offscreen_threat(
+        get_tree().get_nodes_in_group("enemies"), player.global_position, camera, viewport_size
+    )
     if best == null:
         hud.hide_offscreen_threat()
         return
 
-    var viewport_size := get_viewport().get_visible_rect().size
+    var best_distance := player.global_position.distance_to(best.global_position)
     var screen_pos := camera.unproject_position(best.global_position + Vector3(0.0, 0.9, 0.0))
-    var margin := Vector2(84.0, 72.0)
-    var inside := not camera.is_position_behind(best.global_position) and screen_pos.x >= margin.x and screen_pos.y >= margin.y and screen_pos.x <= viewport_size.x - margin.x and screen_pos.y <= viewport_size.y - margin.y
-
-    if inside:
-        hud.hide_offscreen_threat()
-        return
-
     var center := viewport_size * 0.5
     var direction := screen_pos - center
     if camera.is_position_behind(best.global_position):
@@ -7903,6 +7940,84 @@ func _initialize() -> void:
     quit(0)
 ```
 
+## File: tests/enemy_shadow_budget_test.gd
+```
+extends SceneTree
+
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var normal_meshes := 0
+    var hero_body_casters := 0
+    for enemy_kind in ["shambler", "runner", "charger", "harrier", "regenerator", "brute", "elite", "boss"]:
+        var enemy := DZEnemy.new()
+        enemy.kind = enemy_kind
+        enemy.process_mode = Node.PROCESS_MODE_DISABLED
+        root.add_child(enemy)
+        await process_frame
+
+        var body := enemy.get_node_or_null("Visual") as Node3D
+        var shadow := enemy.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+        var hit_flash := enemy.get_node_or_null("HitFlash") as MeshInstance3D
+        if body == null or shadow == null or hit_flash == null:
+            push_error("Shadow budget fixture missing authored body/contact shadow/hit flash: %s" % enemy_kind)
+            quit(1)
+            return
+        if shadow.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+            push_error("Contact shadow must never cast into the directional shadow map")
+            quit(1)
+            return
+        if hit_flash.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+            push_error("Hit flash must never cast a dynamic shadow")
+            quit(1)
+            return
+
+        var body_mesh_count := 0
+        var body_casters := 0
+        for node in enemy.find_children("*", "MeshInstance3D", true, false):
+            var mesh := node as MeshInstance3D
+            if mesh == null:
+                continue
+            var is_body := mesh == body or body.is_ancestor_of(mesh)
+            if is_body:
+                body_mesh_count += 1
+                if mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    body_casters += 1
+            elif mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                push_error("FX/signature mesh casts dynamic shadows: %s/%s" % [enemy_kind, mesh.name])
+                quit(1)
+                return
+
+        if body_mesh_count == 0:
+            push_error("Enemy must retain real 3D authored body geometry: %s" % enemy_kind)
+            quit(1)
+            return
+        if enemy_kind in ["boss", "elite"]:
+            if body_casters == 0:
+                push_error("Hero threat has no dynamic body shadow: %s" % enemy_kind)
+                quit(1)
+                return
+            hero_body_casters += body_casters
+        else:
+            if body_casters != 0:
+                push_error("Swarm body is still a dynamic shadow caster: %s" % enemy_kind)
+                quit(1)
+                return
+            normal_meshes += body_mesh_count
+
+        enemy.queue_free()
+        await process_frame
+
+    if normal_meshes < 6 or hero_body_casters < 2:
+        push_error("Shadow-budget regression fixture did not exercise body meshes")
+        quit(1)
+        return
+    print("Deadline Zero swarm shadow budget: OK, shadow-free regular body meshes=%d, elite/boss body casters=%d" % [normal_meshes, hero_body_casters])
+    quit(0)
+```
+
 ## File: tests/enemy_silhouette_identity_test.gd
 ```
 extends SceneTree
@@ -9888,6 +10003,80 @@ func _initialize() -> void:
 
     print("Deadline Zero native upgrade depth: OK")
     quit(0)
+```
+
+## File: tests/offscreen_threat_priority_test.gd
+```
+extends SceneTree
+
+const MAIN_SCRIPT := preload("res://scripts/Main.gd")
+
+func _initialize() -> void:
+    var arena := Node3D.new()
+    get_root().add_child(arena)
+    current_scene = arena
+
+    var view_camera := Camera3D.new()
+    arena.add_child(view_camera)
+    # SceneTree._initialize() runs before initial nodes finish entering the tree.
+    # Project/look-at calls require a live viewport and a valid world transform.
+    await process_frame
+    view_camera.global_position = Vector3(0.0, 12.8, 9.15)
+    view_camera.look_at(Vector3.ZERO, Vector3.UP)
+    view_camera.current = true
+    await process_frame
+
+    var viewport_size := get_root().get_visible_rect().size
+    var main := MAIN_SCRIPT.new()
+
+    var near_elite := _make_threat(arena, "elite", Vector3(20.0, 0.0, 0.0))
+    var far_elite := _make_threat(arena, "elite", Vector3(27.0, 0.0, 0.0))
+    var far_boss := _make_threat(arena, "boss", Vector3(-29.0, 0.0, 0.0))
+    var visible_boss := _make_threat(arena, "boss", Vector3.ZERO)
+    var ordinary := _make_threat(arena, "shambler", Vector3(-24.0, 0.0, 0.0))
+
+    if main._select_offscreen_threat([near_elite, far_boss], Vector3.ZERO, view_camera, viewport_size) != far_boss:
+        push_error("Offscreen boss should outrank nearer elite")
+        quit(1)
+        return
+
+    if main._select_offscreen_threat([visible_boss, near_elite], Vector3.ZERO, view_camera, viewport_size) != near_elite:
+        push_error("Visible boss must not hide offscreen elite warning")
+        quit(1)
+        return
+
+    if main._select_offscreen_threat([far_elite, near_elite], Vector3.ZERO, view_camera, viewport_size) != near_elite:
+        push_error("Nearest elite must win same-priority tie")
+        quit(1)
+        return
+
+    far_boss.dead = true
+    if main._select_offscreen_threat([far_boss, far_elite], Vector3.ZERO, view_camera, viewport_size) != far_elite:
+        push_error("Dead boss must not suppress live offscreen warning")
+        quit(1)
+        return
+
+    if main._select_offscreen_threat([visible_boss, ordinary], Vector3.ZERO, view_camera, viewport_size) != null:
+        push_error("Visible boss or ordinary zombie triggered an unnecessary warning")
+        quit(1)
+        return
+
+    if main._select_offscreen_threat([], Vector3.ZERO, view_camera, viewport_size) != null:
+        push_error("Empty threat list should clear offscreen indicator")
+        quit(1)
+        return
+
+    main.free()
+    print("Deadline Zero offscreen threat priority and visibility: OK")
+    quit(0)
+
+func _make_threat(arena: Node3D, threat_kind: String, at: Vector3) -> DZEnemy:
+    var enemy := DZEnemy.new()
+    enemy.kind = threat_kind
+    enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    arena.add_child(enemy)
+    enemy.global_position = at
+    return enemy
 ```
 
 ## File: tests/pause_settings_layout_test.gd
