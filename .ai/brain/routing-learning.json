@@ -2,22 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Keep enemy swarms spatially readable",
-      "terms": [
-        "enemy",
-        "keep",
-        "readable",
-        "spatially",
-        "swarms"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Enemy.gd",
-        "godot/tests/native_enemy_behavior_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Form readable melee pressure rings",
       "terms": [
         "form",
@@ -1121,6 +1105,26 @@
         "godot/scripts/Main.gd",
         "godot/tests/combat_ground_mark_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(godot): synchronize authored survivor and enemy gait to motion",
+      "terms": [
+        "authored",
+        "enemy",
+        "feat",
+        "gait",
+        "godot",
+        "motion",
+        "survivor",
+        "synchronize"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/scripts/Player.gd",
+        "godot/tests/authored_gait_sync_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1754,9 +1758,11 @@
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 4,
       "godot/scripts/AssetLibrary.gd": 28,
       "godot/scripts/CombatGroundMark.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Main.gd": 20,
+      "godot/scripts/Player.gd": 4,
       "godot/tests/android_play_export_contract_test.gd": 4,
+      "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/authored_world_dressing_test.gd": 8,
       "godot/tests/combat_ground_mark_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 8,
@@ -2522,9 +2528,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4,
       "godot/scripts/AssetLibrary.gd": 20,
-      "godot/scripts/Enemy.gd": 12,
+      "godot/scripts/Enemy.gd": 16,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 8,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 24,
       "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 8
@@ -2657,7 +2665,10 @@
     "feat": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/CombatGroundMark.gd": 4,
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Main.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/combat_ground_mark_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/industrial_prop_material_test.gd": 4
@@ -2837,6 +2848,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/BossRevealCameraProfile.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4
     },
+    "gait": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/authored_gait_sync_test.gd": 4
+    },
     "game-over": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "godot/scripts/Hud.gd": 4,
@@ -2925,15 +2941,16 @@
     "godot": {
       "godot/scripts/AssetLibrary.gd": 16,
       "godot/scripts/CombatGroundMark.gd": 4,
-      "godot/scripts/Enemy.gd": 12,
+      "godot/scripts/Enemy.gd": 16,
       "godot/scripts/Hud.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 28,
-      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 4,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/archetype_roster_render_test.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
+      "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/authored_world_dressing_test.gd": 4,
       "godot/tests/combat_ground_mark_test.gd": 4,
       "godot/tests/enemy_shadow_budget_test.gd": 4,
@@ -3495,6 +3512,9 @@
       "godot/tests/upgrade_choice_render_test.gd": 4
     },
     "motion": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/first_playable_run_path_test.gd": 4,
       "tools/blender/build_industrial_kit.py": 4
     },
@@ -4740,8 +4760,9 @@
     "survivor": {
       "core/src/main/java/com/deadlinezero/game/screen/SurvivorScreen.java": 4,
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/Player.gd": 8,
+      "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
@@ -4764,6 +4785,11 @@
     "swarms": {
       "godot/scripts/Enemy.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 4
+    },
+    "synchronize": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/authored_gait_sync_test.gd": 4
     },
     "synergies": {
       "core/src/main/java/com/deadlinezero/game/abilities/AbilitySynergyUnlockDetector.java": 4,

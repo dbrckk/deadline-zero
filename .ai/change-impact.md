@@ -1,13 +1,13 @@
 # Change impact
 
-Base: 5504a9ba90d275351f8fadeaa6b7b0ade464866e
-Head: c7d5d8f481b04d64da91bf147833cf68893415f1
+Base: 92d355b2adc53f7b874299ff75fc46f9fc7e454b
+Head: fc88ef802060a9e161e7ca32d9c6693f29813a52
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- A godot/scripts/CombatGroundMark.gd
-- M godot/scripts/Main.gd
-- A godot/tests/combat_ground_mark_test.gd
+- M godot/scripts/Enemy.gd
+- M godot/scripts/Player.gd
+- A godot/tests/authored_gait_sync_test.gd
 
 ## Affected areas
 - .github

@@ -22,31 +22,32 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T20:52:47Z
+Generated: 2026-10-08T21:06:43Z
 
 ### Git
 - Branch: `main`
-- Head: `c7d5d8f481b0`
-- Commit date: 2026-10-08T22:52:31+02:00
-- Commit: feat(godot): budgeted authored ground marks on kills
-- Tracked files: 1043
+- Head: `fc88ef802060`
+- Commit date: 2026-10-08T23:06:29+02:00
+- Commit: feat(godot): synchronize authored survivor and enemy gait to motion
+- Tracked files: 1044
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/CombatGroundMark.gd`
-- `godot/scripts/Main.gd`
-- `godot/tests/combat_ground_mark_test.gd`
-- `play/store/feature-graphic.png`
+- `godot/scripts/Enemy.gd`
+- `godot/scripts/Player.gd`
+- `godot/tests/authored_gait_sync_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
+- `godot/scripts/CombatGroundMark.gd`
+- `godot/scripts/Main.gd`
+- `godot/tests/combat_ground_mark_test.gd`
+- `play/store/feature-graphic.png`
 - `godot/scripts/AssetLibrary.gd`
 - `godot/tests/environment_identity_test.gd`
 - `godot/tests/industrial_prop_material_test.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_shadow_budget_test.gd`
 
 ### Project signals
 - `build.gradle`

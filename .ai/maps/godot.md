@@ -62,6 +62,7 @@ tests/
   attack_telegraph_escalation_test.gd
   authored_asset_validation.gd
   authored_audio_asset_test.gd
+  authored_gait_sync_test.gd
   authored_world_dressing_test.gd
   boss_encounter_render_test.gd
   boss_hud_identity_test.gd
@@ -878,6 +879,8 @@ func _physics_process(delta: float) -> void:
         return
     if shock_left > 0.0:
         velocity = Vector3.ZERO
+        if authored_anim != null:
+            authored_anim.speed_scale = 0.0
         return
     if kind == "boss":
         _update_boss_phase()
@@ -1139,6 +1142,7 @@ func _process_charge(delta: float) -> void:
     _constrain_to_arena()
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity, Vector3.UP)
+    _update_authored_animation(8.0)
     if not charge_hit and target != null and is_instance_valid(target):
         var target_offset := target.global_position - global_position
         target_offset.y = 0.0
@@ -1155,6 +1159,8 @@ func set_combat_enabled(enabled: bool) -> void:
     combat_enabled = enabled
     if enabled:
         return
+    if authored_anim != null:
+        authored_anim.speed_scale = 1.0
     velocity = Vector3.ZERO
     attack_windup = 0.0
     pending_special = ""
@@ -1424,6 +1430,7 @@ func take_damage(amount: float, critical := false) -> void:
         velocity = Vector3.ZERO
         died.emit(xp_value, global_position)
         if authored_anim != null and authored_anim.has_animation("Death"):
+            authored_anim.speed_scale = 1.0
             authored_anim.play("Death", 0.06)
             var timer := get_tree().create_timer(0.62)
             timer.timeout.connect(queue_free)
@@ -1915,13 +1922,28 @@ func _update_authored_animation(distance: float) -> void:
         return
     if kind != "harrier" and distance <= _melee_attack_animation_range() and authored_anim.has_animation("Idle_Attack"):
         _play_authored("Idle_Attack")
-    elif kind in ["runner", "elite", "boss"] and authored_anim.has_animation("Run_Arms"):
+        return
+    if kind in ["runner", "elite", "boss"] and authored_anim.has_animation("Run_Arms"):
         _play_authored("Run_Arms")
     else:
         _play_authored("Walk")
 
+    # Slow / standoff movement must slow the imported legs too. Keep the boss'
+    # heavyweight gait deliberately slower without changing its navigation.
+    var planar_speed := Vector2(velocity.x, velocity.z).length()
+    var pace := clampf(planar_speed / maxf(move_speed, 0.01), 0.40, 1.16)
+    if kind == "boss":
+        pace *= 0.82
+    elif kind == "brute":
+        pace *= 0.90
+    authored_anim.speed_scale = move_toward(authored_anim.speed_scale, pace, 0.22)
+
 func _play_authored(name: String) -> void:
-    if authored_anim == null or current_anim == name or not authored_anim.has_animation(name):
+    if authored_anim == null or not authored_anim.has_animation(name):
+        return
+    if name != "Run_Arms" and name != "Walk":
+        authored_anim.speed_scale = 1.0
+    if current_anim == name:
         return
     current_anim = name
     authored_anim.play(name, 0.10)
@@ -5392,6 +5414,8 @@ func set_combat_enabled(enabled: bool) -> void:
     current_target = null
     nearest_threat = null
     target_refresh_clock = 0.0
+    if authored_anim != null:
+        authored_anim.speed_scale = 1.0
     _reset_movement_lean()
     _clear_player_marker_pressure()
 
@@ -5946,10 +5970,25 @@ func _trigger_damage_feedback() -> void:
 func _update_authored_animation() -> void:
     if authored_anim == null:
         return
-    _play_authored("Run_Gun" if velocity.length_squared() > 0.08 else "Idle_Gun")
+    var planar_speed := Vector2(velocity.x, velocity.z).length()
+    if planar_speed <= 0.28:
+        _play_authored("Idle_Gun")
+        authored_anim.speed_scale = 1.0
+        return
+
+    # Match the authored run cycle to the actual acceleration, slowdown and
+    # upgraded movement speed. Retiming is isolated from recoil/hit/death clips.
+    _play_authored("Run_Gun")
+    var fraction := clampf(planar_speed / maxf(move_speed, 0.01), 0.0, 1.0)
+    var desired_rate := lerpf(0.70, 1.12, fraction)
+    authored_anim.speed_scale = move_toward(authored_anim.speed_scale, desired_rate, 0.18)
 
 func _play_authored(name: String) -> void:
-    if authored_anim == null or current_anim == name or not authored_anim.has_animation(name):
+    if authored_anim == null or not authored_anim.has_animation(name):
+        return
+    if name != "Run_Gun":
+        authored_anim.speed_scale = 1.0
+    if current_anim == name:
         return
     current_anim = name
     authored_anim.play(name, 0.12)
@@ -7192,6 +7231,121 @@ func _init() -> void:
         return
 
     print("Deadline Zero generated authored audio assets: OK")
+    quit(0)
+```
+
+## File: tests/authored_gait_sync_test.gd
+```
+extends SceneTree
+
+# Real imported GLTF AnimationPlayer nodes, not string-only source assertions.
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    await process_frame
+
+    var survivor := DZPlayer.new()
+    survivor.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(survivor)
+    await process_frame
+    if survivor.authored_anim == null:
+        push_error("Authored survivor AnimationPlayer missing")
+        quit(1)
+        return
+
+    survivor.velocity = Vector3(0.65, 0.0, 0.0)
+    survivor._update_authored_animation()
+    var slow_rate := survivor.authored_anim.speed_scale
+    if survivor.current_anim != "Run_Gun" or slow_rate >= 1.0 or slow_rate < 0.68:
+        push_error("Survivor walk acceleration does not reduce imported run clip speed")
+        quit(1)
+        return
+
+    survivor.velocity = Vector3(survivor.move_speed, 0.0, 0.0)
+    for _step in range(4):
+        survivor._update_authored_animation()
+    var full_rate := survivor.authored_anim.speed_scale
+    if full_rate <= slow_rate or full_rate > 1.121:
+        push_error("Survivor full-speed gait is not faster than acceleration gait")
+        quit(1)
+        return
+
+    survivor.velocity = Vector3.ZERO
+    survivor._update_authored_animation()
+    if survivor.current_anim != "Idle_Gun" or not is_equal_approx(survivor.authored_anim.speed_scale, 1.0):
+        push_error("Survivor idle animation did not restore normal playback")
+        quit(1)
+        return
+
+    survivor.velocity = Vector3(0.80, 0.0, 0.0)
+    survivor._update_authored_animation()
+    survivor.take_damage(4.0)
+    if survivor.current_anim != "HitReact" or not is_equal_approx(survivor.authored_anim.speed_scale, 1.0):
+        push_error("Survivor hit reaction inherited slowed locomotion playback")
+        quit(1)
+        return
+    survivor.set_combat_enabled(false)
+    if not is_equal_approx(survivor.authored_anim.speed_scale, 1.0):
+        push_error("Survivor combat shutdown retained altered animation speed")
+        quit(1)
+        return
+
+    for kind in ["shambler", "runner", "charger", "harrier", "regenerator", "brute", "elite", "boss"]:
+        var enemy := DZEnemy.new()
+        enemy.kind = kind
+        enemy.process_mode = Node.PROCESS_MODE_DISABLED
+        enemy.configure(kind, 1.0, survivor)
+        root.add_child(enemy)
+        await process_frame
+        if enemy.authored_anim == null:
+            push_error("Imported enemy AnimationPlayer missing: %s" % kind)
+            quit(1)
+            return
+
+        enemy.velocity = Vector3(enemy.move_speed * 0.42, 0.0, 0.0)
+        enemy._update_authored_animation(10.0)
+        var reduced_rate := enemy.authored_anim.speed_scale
+        if reduced_rate < 0.38 or reduced_rate >= 1.0:
+            push_error("Slow/standoff enemy gait did not retime: %s (%.3f)" % [kind, reduced_rate])
+            quit(1)
+            return
+
+        enemy.velocity = Vector3(enemy.move_speed, 0.0, 0.0)
+        for _step in range(4):
+            enemy._update_authored_animation(10.0)
+        if enemy.authored_anim.speed_scale <= reduced_rate:
+            push_error("Full enemy pursuit kept a slower gait than standoff: %s" % kind)
+            quit(1)
+            return
+        if enemy.kind == "boss" and enemy.authored_anim.speed_scale > 0.84:
+            push_error("Boss must retain a weightier imported 3D gait")
+            quit(1)
+            return
+
+        enemy.apply_shock(0.24)
+        enemy._physics_process(0.02)
+        if enemy.authored_anim.speed_scale != 0.0:
+            push_error("Stunned enemy kept cycling its legs in place: %s" % kind)
+            quit(1)
+            return
+        enemy.shock_left = 0.0
+        enemy.velocity = Vector3(enemy.move_speed, 0.0, 0.0)
+        enemy._update_authored_animation(10.0)
+        if enemy.authored_anim.speed_scale <= 0.0:
+            push_error("Enemy gait remained frozen after shock: %s" % kind)
+            quit(1)
+            return
+        enemy.set_combat_enabled(false)
+        if not is_equal_approx(enemy.authored_anim.speed_scale, 1.0):
+            push_error("Enemy combat shutdown did not reset clip rate: %s" % kind)
+            quit(1)
+            return
+
+        enemy.queue_free()
+        await process_frame
+
+    print("Deadline Zero authored 3D gait retiming and shock recovery: OK")
     quit(0)
 ```
 

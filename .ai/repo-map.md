@@ -3258,6 +3258,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/run_director_escalation_test.gd
       - name: Validate enemy silhouette identities
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_silhouette_identity_test.gd
+      - name: Validate authored character gait synchronization
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_gait_sync_test.gd
       - name: Validate mobile swarm shadow-caster budget
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_shadow_budget_test.gd
       - name: Validate weapon presentation identities
@@ -25114,6 +25116,8 @@ func _physics_process(delta: float) -> void:
         return
     if shock_left > 0.0:
         velocity = Vector3.ZERO
+        if authored_anim != null:
+            authored_anim.speed_scale = 0.0
         return
     if kind == "boss":
         _update_boss_phase()
@@ -25375,6 +25379,7 @@ func _process_charge(delta: float) -> void:
     _constrain_to_arena()
     if velocity.length_squared() > 0.01:
         look_at(global_position + velocity, Vector3.UP)
+    _update_authored_animation(8.0)
     if not charge_hit and target != null and is_instance_valid(target):
         var target_offset := target.global_position - global_position
         target_offset.y = 0.0
@@ -25391,6 +25396,8 @@ func set_combat_enabled(enabled: bool) -> void:
     combat_enabled = enabled
     if enabled:
         return
+    if authored_anim != null:
+        authored_anim.speed_scale = 1.0
     velocity = Vector3.ZERO
     attack_windup = 0.0
     pending_special = ""
@@ -25660,6 +25667,7 @@ func take_damage(amount: float, critical := false) -> void:
         velocity = Vector3.ZERO
         died.emit(xp_value, global_position)
         if authored_anim != null and authored_anim.has_animation("Death"):
+            authored_anim.speed_scale = 1.0
             authored_anim.play("Death", 0.06)
             var timer := get_tree().create_timer(0.62)
             timer.timeout.connect(queue_free)
@@ -26151,13 +26159,28 @@ func _update_authored_animation(distance: float) -> void:
         return
     if kind != "harrier" and distance <= _melee_attack_animation_range() and authored_anim.has_animation("Idle_Attack"):
         _play_authored("Idle_Attack")
-    elif kind in ["runner", "elite", "boss"] and authored_anim.has_animation("Run_Arms"):
+        return
+    if kind in ["runner", "elite", "boss"] and authored_anim.has_animation("Run_Arms"):
         _play_authored("Run_Arms")
     else:
         _play_authored("Walk")
 
+    # Slow / standoff movement must slow the imported legs too. Keep the boss'
+    # heavyweight gait deliberately slower without changing its navigation.
+    var planar_speed := Vector2(velocity.x, velocity.z).length()
+    var pace := clampf(planar_speed / maxf(move_speed, 0.01), 0.40, 1.16)
+    if kind == "boss":
+        pace *= 0.82
+    elif kind == "brute":
+        pace *= 0.90
+    authored_anim.speed_scale = move_toward(authored_anim.speed_scale, pace, 0.22)
+
 func _play_authored(name: String) -> void:
-    if authored_anim == null or current_anim == name or not authored_anim.has_animation(name):
+    if authored_anim == null or not authored_anim.has_animation(name):
+        return
+    if name != "Run_Arms" and name != "Walk":
+        authored_anim.speed_scale = 1.0
+    if current_anim == name:
         return
     current_anim = name
     authored_anim.play(name, 0.10)
@@ -29628,6 +29651,8 @@ func set_combat_enabled(enabled: bool) -> void:
     current_target = null
     nearest_threat = null
     target_refresh_clock = 0.0
+    if authored_anim != null:
+        authored_anim.speed_scale = 1.0
     _reset_movement_lean()
     _clear_player_marker_pressure()
 
@@ -30182,10 +30207,25 @@ func _trigger_damage_feedback() -> void:
 func _update_authored_animation() -> void:
     if authored_anim == null:
         return
-    _play_authored("Run_Gun" if velocity.length_squared() > 0.08 else "Idle_Gun")
+    var planar_speed := Vector2(velocity.x, velocity.z).length()
+    if planar_speed <= 0.28:
+        _play_authored("Idle_Gun")
+        authored_anim.speed_scale = 1.0
+        return
+
+    # Match the authored run cycle to the actual acceleration, slowdown and
+    # upgraded movement speed. Retiming is isolated from recoil/hit/death clips.
+    _play_authored("Run_Gun")
+    var fraction := clampf(planar_speed / maxf(move_speed, 0.01), 0.0, 1.0)
+    var desired_rate := lerpf(0.70, 1.12, fraction)
+    authored_anim.speed_scale = move_toward(authored_anim.speed_scale, desired_rate, 0.18)
 
 func _play_authored(name: String) -> void:
-    if authored_anim == null or current_anim == name or not authored_anim.has_animation(name):
+    if authored_anim == null or not authored_anim.has_animation(name):
+        return
+    if name != "Run_Gun":
+        authored_anim.speed_scale = 1.0
+    if current_anim == name:
         return
     current_anim = name
     authored_anim.play(name, 0.12)
