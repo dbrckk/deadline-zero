@@ -1,6 +1,6 @@
 extends SceneTree
 
-# Real renderer evidence for Arc links, Inferno shockwave/scorch and Cryo slow status.
+# Real renderer evidence for Arc links, Inferno shockwave/scorch, actual burn and Cryo slow.
 const OUTPUT_PATH := "/tmp/deadline-zero-elemental-protocols.png"
 const RESIDUE_PATH := "/tmp/deadline-zero-inferno-residue.png"
 const MAIN_SCENE := preload("res://scenes/Main.tscn")
@@ -36,6 +36,7 @@ func _capture() -> void:
         {"kind":"shambler", "position":Vector3(4.7, 0.0, -0.8)}
     ]
     var cryo_victim: DZEnemy
+    var burning_victim: DZEnemy
     for entry in placements:
         var enemy := DZEnemy.new()
         enemy.configure(String(entry["kind"]), 1.0, scene.player)
@@ -44,16 +45,25 @@ func _capture() -> void:
         enemy.global_position = entry["position"]
         if String(entry["kind"]) == "shambler":
             cryo_victim = enemy
+        if String(entry["kind"]) == "brute":
+            burning_victim = enemy
     await process_frame
 
-    if cryo_victim == null:
-        push_error("Cryo visual QA has no shambler to demonstrate the debuff")
+    if cryo_victim == null or burning_victim == null:
+        push_error("Elemental visual QA missing Cryo or burning subjects")
         quit(1)
         return
     cryo_victim.apply_slow(0.62, 1.6)
     var ice := DZCryoStatusFx.attach_to(cryo_victim)
     if ice == null or ice.get_node_or_null("FrostCrystals") == null:
         push_error("Cryo status crown failed to stage in real 3D gameplay rendering")
+        quit(1)
+        return
+
+    burning_victim.apply_burn(4.2, 2.0)
+    var flames := DZBurnStatusFx.attach_to(burning_victim)
+    if flames == null or flames.get_node_or_null("InfernoEmbers") == null:
+        push_error("Actual Inferno burn status failed to stage in the real 3D renderer")
         quit(1)
         return
 
@@ -74,7 +84,7 @@ func _capture() -> void:
     for _frame in range(7):
         await process_frame
 
-    if link_a.get_node_or_null("ArcRibbon") == null or blast.get_node_or_null("BlastFront") == null:
+    if link_a.get_node_or_null("ArcRibbon") == null or blast.get_node_or_null("BlastFront") == null or flames.get_node_or_null("InfernoEmbers") == null:
         push_error("Elemental protocol meshes vanished before capture")
         quit(1)
         return
@@ -116,5 +126,5 @@ func _capture() -> void:
         quit(1)
         return
 
-    print("GODOT_ELEMENTAL_PROTOCOL_VISUAL_QA_OK %dx%d plus persistent residue" % [image.get_width(), image.get_height()])
+    print("GODOT_ELEMENTAL_PROTOCOL_VISUAL_QA_OK %dx%d with real burn, Cryo, Arc and Inferno residue" % [image.get_width(), image.get_height()])
     quit(0)
