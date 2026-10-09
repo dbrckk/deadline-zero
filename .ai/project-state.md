@@ -22,25 +22,26 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T11:17:52Z
+Generated: 2026-10-09T11:21:03Z
 
 ### Git
 - Branch: `main`
-- Head: `8667c9004fb1`
-- Commit date: 2026-10-09T13:17:35+02:00
-- Commit: feat(visual): retain fading heat-scorched ground after Inferno blasts
+- Head: `ef2ead36e838`
+- Commit date: 2026-10-09T13:20:40+02:00
+- Commit: docs(agents): adopt pinned 88-rule development standard
 - Tracked files: 1059
 
 ### Recently changed files
-- `.github/workflows/godot-verify.yml`
-- `godot/scripts/InfernoBlastFx.gd`
-- `godot/tests/elemental_protocols_render_test.gd`
-- `godot/tests/inferno_blast_wave_test.gd`
+- `AGENTS.md`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
+- `.github/workflows/godot-verify.yml`
+- `godot/scripts/InfernoBlastFx.gd`
+- `godot/tests/elemental_protocols_render_test.gd`
+- `godot/tests/inferno_blast_wave_test.gd`
 - `godot/scripts/ArcLinkFx.gd`
 - `godot/scripts/Projectile.gd`
 - `godot/tests/arc_chain_link_fx_test.gd`

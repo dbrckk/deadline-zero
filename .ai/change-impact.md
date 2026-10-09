@@ -1,17 +1,13 @@
 # Change impact
 
-Base: 5e6e0e7b765181e07c31b8dbea91b0e30905e85c
-Head: 8667c9004fb1abd3aea2c27c28594dff4b414cef
+Base: 4bbe2960f3104b20a5d9bd989e2991fa286ed14d
+Head: ef2ead36e83813fabc2d9d4d2e6066829afe2fce
 
 ## Changed files
-- M .github/workflows/godot-verify.yml
-- M godot/scripts/InfernoBlastFx.gd
-- M godot/tests/elemental_protocols_render_test.gd
-- M godot/tests/inferno_blast_wave_test.gd
+- M AGENTS.md
 
 ## Affected areas
-- .github
-- godot
+- (root)
 
 ## Related test candidates
 - No direct filename-based test match detected.
