@@ -37,6 +37,8 @@ var weapon_accent_tween: Tween
 var player_marker_ring: MeshInstance3D
 var player_marker_material: StandardMaterial3D
 var player_marker_pressure := false
+var target_lock_marker: MeshInstance3D
+var target_lock_enemy: DZEnemy
 var hit_reaction_left := 0.0
 var reduced_flashes := false
 var combat_enabled := true
@@ -95,6 +97,7 @@ func _physics_process(delta: float) -> void:
 
     var target := _combat_target()
     _update_player_marker_pressure(_pressure_target(target))
+    _update_target_lock_marker(target, delta)
     if target != null:
         var facing := target.global_position
         facing.y = global_position.y
@@ -164,6 +167,7 @@ func set_combat_enabled(enabled: bool) -> void:
         authored_anim.speed_scale = 1.0
     _reset_movement_lean()
     _clear_player_marker_pressure()
+    _update_target_lock_marker(null, 0.0)
 
 func _clear_player_marker_pressure() -> void:
     if not player_marker_pressure:
@@ -421,6 +425,7 @@ func _build_visual() -> void:
 
         _build_tactical_rig()
         _build_player_marker()
+        _build_target_lock_marker()
         _build_muzzle_flash()
         _build_damage_feedback()
         return
@@ -465,6 +470,7 @@ func _build_visual() -> void:
     visual.add_child(gun)
     _build_tactical_rig()
     _build_player_marker()
+    _build_target_lock_marker()
     _build_muzzle_flash()
     _build_damage_feedback()
 
@@ -618,6 +624,73 @@ func _build_player_marker() -> void:
         chevron.rotation.z = deg_to_rad(side * 32.0)
         chevron.material_override = player_marker_material
         locator.add_child(chevron)
+
+func _build_target_lock_marker() -> void:
+    # Four independent, carefully spaced corner arcs create a calm world-space
+    # aim confirmation. One indexed-looking surface, one small shader-free
+    # material, no light, no particles and no directional shadow contribution.
+    var vertices := PackedVector3Array()
+    const ARC_STEPS := 8
+    var ring_radius := 0.54
+    var ring_width := 0.035
+    for quadrant in range(4):
+        var center_angle := float(quadrant) * PI * 0.5 + PI * 0.25
+        for step in range(ARC_STEPS):
+            var start_angle := center_angle - deg_to_rad(24.0) + deg_to_rad(48.0) * float(step) / float(ARC_STEPS)
+            var end_angle := center_angle - deg_to_rad(24.0) + deg_to_rad(48.0) * float(step + 1) / float(ARC_STEPS)
+            var inner_start := Vector3(cos(start_angle), sin(start_angle), 0.0) * (ring_radius - ring_width)
+            var outer_start := Vector3(cos(start_angle), sin(start_angle), 0.0) * ring_radius
+            var inner_end := Vector3(cos(end_angle), sin(end_angle), 0.0) * (ring_radius - ring_width)
+            var outer_end := Vector3(cos(end_angle), sin(end_angle), 0.0) * ring_radius
+            vertices.append_array(PackedVector3Array([
+                inner_start, outer_start, outer_end,
+                inner_start, outer_end, inner_end,
+            ]))
+    var arrays := []
+    arrays.resize(Mesh.ARRAY_MAX)
+    arrays[Mesh.ARRAY_VERTEX] = vertices
+    var reticle_mesh := ArrayMesh.new()
+    reticle_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+
+    var material := StandardMaterial3D.new()
+    material.albedo_color = Color(0.12, 0.72, 0.94, 0.52)
+    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    material.cull_mode = BaseMaterial3D.CULL_DISABLED
+    material.emission_enabled = true
+    material.emission = Color(0.06, 0.34, 0.46)
+    material.emission_energy_multiplier = 0.82
+
+    target_lock_marker = MeshInstance3D.new()
+    target_lock_marker.name = "TargetLockReticle"
+    target_lock_marker.mesh = reticle_mesh
+    target_lock_marker.material_override = material
+    target_lock_marker.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    target_lock_marker.top_level = true
+    target_lock_marker.rotation_degrees.x = -90.0
+    target_lock_marker.visible = false
+    add_child(target_lock_marker)
+
+func _update_target_lock_marker(target: DZEnemy, delta: float) -> void:
+    if target_lock_marker == null:
+        return
+    if target == null or not is_instance_valid(target) or target.dead:
+        target_lock_marker.visible = false
+        target_lock_enemy = null
+        return
+    var at := target.global_position
+    at.y = 0.070
+    # Switching to a new enemy must be instantaneous. Smoothing is only used
+    # for motion of the same target, avoiding an inaccurate aim cue.
+    if target_lock_enemy != target or not target_lock_marker.visible:
+        target_lock_marker.global_position = at
+    else:
+        var follow_alpha := 1.0 - exp(-maxf(delta, 0.0) * 24.0)
+        target_lock_marker.global_position = target_lock_marker.global_position.lerp(at, follow_alpha)
+    target_lock_enemy = target
+    target_lock_marker.visible = true
+    var radius_scale := 1.85 if target.kind == "boss" else (1.32 if target.kind in ["elite", "brute"] else 1.0)
+    target_lock_marker.scale = Vector3.ONE * radius_scale
 
 func _update_player_marker_pressure(target: DZEnemy) -> void:
     if player_marker_ring == null or player_marker_material == null:
