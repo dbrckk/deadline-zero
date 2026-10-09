@@ -90,7 +90,7 @@ static func _flame_material() -> ShaderMaterial:
     var shader := Shader.new()
     shader.code = """
 shader_type spatial;
-render_mode unshaded, blend_add, cull_disabled, depth_draw_never;
+render_mode unshaded, blend_mix, cull_disabled, depth_draw_never;
 instance uniform float burn_opacity = 1.0;
 
 void vertex() {
@@ -108,9 +108,9 @@ void fragment() {
     float crown = 1.0 - smoothstep(0.84, 1.0, height);
     float flicker = 0.86 + 0.14 * sin(TIME * 11.5 + UV.x * 18.0 + UV.y * 7.0);
     vec3 ember = mix(vec3(1.0, 0.105, 0.018), vec3(1.0, 0.68, 0.17), smoothstep(0.15, 0.79, height));
-    ALBEDO = ember * 0.12;
+    ALBEDO = ember;
     EMISSION = ember * (3.2 + 1.5 * height);
-    ALPHA = burn_opacity * body * foot * crown * flicker * 0.84;
+    ALPHA = burn_opacity * body * foot * crown * flicker * 0.92;
 }
 """
     _shared_material = ShaderMaterial.new()
