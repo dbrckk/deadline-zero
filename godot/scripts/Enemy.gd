@@ -155,10 +155,13 @@ func _physics_process(delta: float) -> void:
         velocity = Vector3.ZERO
         return
     _process_status_effects(delta)
+    var shock_was_active := shock_left > 0.0
     shock_left = maxf(0.0, shock_left - maxf(delta, 0.0))
     if dead or target == null or not is_instance_valid(target):
         return
-    if shock_left > 0.0:
+    # Freeze the entire final shocked frame, even if the timer crosses zero
+    # within this physics step. The next frame resumes from the correct pose.
+    if shock_was_active:
         velocity = Vector3.ZERO
         if authored_anim != null:
             authored_anim.speed_scale = 0.0
