@@ -4,6 +4,8 @@ extends Node3D
 # Burning enemies carry their actual Inferno damage-over-time state in world
 # space. Seven shader-animated flame ribbons share one mesh, one MultiMesh,
 # and one material across the horde; no particles, lights, or shadow maps.
+# The ribbons orbit *outside* the imported GLTF body volumes so they remain
+# visible from the actual top-down gameplay camera, not buried inside torsos.
 const MAX_ACTIVE := 18
 const FLAME_COUNT := 7
 const THAW_SECONDS := 0.30
@@ -53,7 +55,7 @@ static func _flame_mesh() -> QuadMesh:
     if _shared_flame_mesh != null:
         return _shared_flame_mesh
     _shared_flame_mesh = QuadMesh.new()
-    _shared_flame_mesh.size = Vector2(0.43, 0.88)
+    _shared_flame_mesh.size = Vector2(0.50, 1.40)
     return _shared_flame_mesh
 
 static func _flame_multimesh() -> MultiMesh:
@@ -65,11 +67,11 @@ static func _flame_multimesh() -> MultiMesh:
     _shared_multimesh.instance_count = FLAME_COUNT
     for i in range(FLAME_COUNT):
         var angle := TAU * float(i) / float(FLAME_COUNT)
-        var radius := 0.26 if i % 2 == 0 else 0.34
+        var radius := 0.52 if i % 2 == 0 else 0.60
         var scale_y := 0.76 if i % 3 == 0 else (0.96 if i % 3 == 1 else 0.86)
         var transform := Transform3D(
             Basis(Vector3.UP, angle + PI * 0.5).scaled(Vector3(0.9, scale_y, 1.0)),
-            Vector3(cos(angle) * radius, 0.64 * scale_y, sin(angle) * radius)
+            Vector3(cos(angle) * radius, 0.90 * scale_y, sin(angle) * radius)
         )
         _shared_multimesh.set_instance_transform(i, transform)
     return _shared_multimesh
