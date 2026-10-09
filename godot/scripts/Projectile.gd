@@ -331,19 +331,30 @@ func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
             primary.apply_shock(0.24)
             _apply_chain(primary, dealt_damage)
 
+func _secondary_fx_parent() -> Node3D:
+    # Weapon behavior also runs in isolated tests without current_scene.
+    # Missing an FX parent must never change gameplay damage delivery.
+    var scene := get_tree().current_scene if get_tree() != null else null
+    if scene is Node3D:
+        return scene as Node3D
+    if get_parent() is Node3D:
+        return get_parent() as Node3D
+    return null
+
 func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) -> void:
     if range_radius <= 0.0:
         return
+    var fx_parent := _secondary_fx_parent() if spawn_secondary_fx else null
     for node in _enemies_near(primary.global_position, range_radius):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
             continue
         enemy.take_damage(splash_damage, false)
-        if spawn_secondary_fx:
+        if fx_parent != null:
             var fx := ImpactFx.new()
             fx.color = Color(1.0, 0.24, 0.035)
             fx.scale_boost = 0.72
-            get_tree().current_scene.add_child(fx)
+            fx_parent.add_child(fx)
             fx.global_position = enemy.global_position + Vector3(0.0, 0.45, 0.0)
 
 func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
@@ -359,13 +370,19 @@ func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
         return primary.global_position.distance_squared_to(a.global_position) < primary.global_position.distance_squared_to(b.global_position)
     )
     var count: int = mini(chain_targets, candidates.size())
+    var fx_parent := _secondary_fx_parent() if spawn_secondary_fx else null
+    var chain_origin := primary.global_position + Vector3(0.0, 0.62, 0.0)
     for i in range(count):
         var chained := candidates[i]
+        var endpoint := chained.global_position + Vector3(0.0, 0.62, 0.0)
         var falloff := 0.56 if i == 0 else 0.38
         chained.take_damage(dealt_damage * falloff, false)
-        if spawn_secondary_fx:
+        if fx_parent != null:
+            # One real 3D lightning connection for each chain damage event;
+            # both come from the actual hit target, never an invented location.
+            DZArcLinkFx.spawn_link(fx_parent, chain_origin, endpoint, i)
             var fx := ImpactFx.new()
             fx.color = Color(0.64, 0.42, 1.0)
             fx.scale_boost = 0.78
-            get_tree().current_scene.add_child(fx)
-            fx.global_position = chained.global_position + Vector3(0.0, 0.55, 0.0)
+            fx_parent.add_child(fx)
+            fx.global_position = endpoint
