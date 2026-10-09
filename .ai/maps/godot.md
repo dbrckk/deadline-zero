@@ -44,6 +44,7 @@ scripts/
   CombatAudio.gd
   CombatFeel.gd
   CombatGroundMark.gd
+  CryoStatusFx.gd
   Enemy.gd
   EnemyProjectile.gd
   GameSettings.gd
@@ -77,6 +78,7 @@ tests/
   combat_danger_hud_test.gd
   combat_feel_test.gd
   combat_ground_mark_test.gd
+  cryo_status_fx_test.gd
   damage_number_budget_test.gd
   elemental_protocols_render_test.gd
   enemy_archetype_combat_test.gd
@@ -977,6 +979,137 @@ static func _ground_quad() -> QuadMesh:
         _shared_quad = QuadMesh.new()
         _shared_quad.size = Vector2.ONE
     return _shared_quad
+```
+
+## File: scripts/CryoStatusFx.gd
+```
+class_name DZCryoStatusFx
+extends Node3D
+
+# Communicates actual movement slow on its victim, not only projectile color.
+# All affected enemies reuse the same meshes and additive shader; each frost
+# crown uses one torus and one low-poly MultiMesh without lights or particles.
+const MAX_ACTIVE := 24
+const CRYSTAL_COUNT := 8
+
+static var _shared_ring_mesh: TorusMesh
+static var _shared_crystal_mesh: BoxMesh
+static var _shared_material: ShaderMaterial
+
+var tracked_enemy: DZEnemy
+var ring: MeshInstance3D
+var crystals: MultiMeshInstance3D
+
+static func attach_to(enemy: DZEnemy) -> DZCryoStatusFx:
+    if enemy == null or not is_instance_valid(enemy) or not enemy.is_inside_tree():
+        return null
+    if enemy.dead or enemy.slow_left <= 0.0:
+        return null
+    var current := enemy.get_node_or_null("CryoStatusCrown") as DZCryoStatusFx
+    if current != null and not current.is_queued_for_deletion():
+        return current
+    var active := 0
+    for effect in enemy.get_tree().get_nodes_in_group("cryo_status_crowns"):
+        if is_instance_valid(effect) and not effect.is_queued_for_deletion():
+            active += 1
+    if active >= MAX_ACTIVE:
+        return null
+    var effect := DZCryoStatusFx.new()
+    effect.name = "CryoStatusCrown"
+    effect.tracked_enemy = enemy
+    enemy.add_child(effect)
+    return effect
+
+func _ready() -> void:
+    add_to_group("cryo_status_crowns")
+    var radius := 1.40 if tracked_enemy.kind == "boss" else (
+        1.12 if tracked_enemy.kind in ["elite", "brute", "charger"] else 0.90
+    )
+
+    ring = MeshInstance3D.new()
+    ring.name = "FrostFootprint"
+    ring.mesh = _ring_mesh()
+    ring.material_override = _frost_material()
+    ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    ring.position.y = 0.075
+    ring.scale = Vector3(radius, 1.0, radius)
+    add_child(ring)
+
+    crystals = MultiMeshInstance3D.new()
+    crystals.name = "FrostCrystals"
+    crystals.multimesh = _crystal_multimesh()
+    crystals.material_override = _frost_material()
+    crystals.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    crystals.scale = Vector3(radius, 1.0, radius)
+    add_child(crystals)
+    _update_opacity(1.0)
+
+static func _ring_mesh() -> TorusMesh:
+    if _shared_ring_mesh != null:
+        return _shared_ring_mesh
+    _shared_ring_mesh = TorusMesh.new()
+    _shared_ring_mesh.inner_radius = 0.77
+    _shared_ring_mesh.outer_radius = 0.88
+    _shared_ring_mesh.rings = 24
+    _shared_ring_mesh.ring_segments = 4
+    return _shared_ring_mesh
+
+static func _crystal_mesh() -> BoxMesh:
+    if _shared_crystal_mesh != null:
+        return _shared_crystal_mesh
+    _shared_crystal_mesh = BoxMesh.new()
+    _shared_crystal_mesh.size = Vector3(0.075, 0.30, 0.095)
+    return _shared_crystal_mesh
+
+static func _crystal_multimesh() -> MultiMesh:
+    var multi := MultiMesh.new()
+    multi.transform_format = MultiMesh.TRANSFORM_3D
+    multi.mesh = _crystal_mesh()
+    multi.instance_count = CRYSTAL_COUNT
+    for i in range(CRYSTAL_COUNT):
+        var angle := TAU * float(i) / float(CRYSTAL_COUNT)
+        var yaw := Basis(Vector3.UP, angle)
+        var tilt := Basis(Vector3.FORWARD, 0.20 if i % 2 == 0 else -0.20)
+        var pos := Vector3(cos(angle) * 0.69, 0.19, sin(angle) * 0.69)
+        multi.set_instance_transform(i, Transform3D(yaw * tilt, pos))
+    return multi
+
+static func _frost_material() -> ShaderMaterial:
+    if _shared_material != null:
+        return _shared_material
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_add, cull_disabled, depth_draw_never;
+instance uniform float frost_opacity = 1.0;
+
+void fragment() {
+    vec3 ice = mix(vec3(0.04, 0.58, 0.95), vec3(0.58, 0.95, 1.0), UV.y);
+    ALBEDO = ice * 0.16;
+    EMISSION = ice * 2.8;
+    ALPHA = frost_opacity * (0.56 + 0.12 * sin(TIME * 6.0));
+}
+"""
+    _shared_material = ShaderMaterial.new()
+    _shared_material.shader = shader
+    return _shared_material
+
+func _update_opacity(value: float) -> void:
+    if ring != null:
+        ring.set_instance_shader_parameter("frost_opacity", value)
+    if crystals != null:
+        crystals.set_instance_shader_parameter("frost_opacity", value)
+
+func _process(delta: float) -> void:
+    if tracked_enemy == null or not is_instance_valid(tracked_enemy) or tracked_enemy.dead or tracked_enemy.slow_left <= 0.0:
+        queue_free()
+        return
+    # Victim-controlled lifetime also handles refreshed Cryo hits without
+    # duplicating geometry or letting stale marks survive after thawing.
+    var thaw := clampf(tracked_enemy.slow_left / 0.25, 0.0, 1.0)
+    _update_opacity(thaw)
+    if crystals != null:
+        crystals.rotation.y += maxf(delta, 0.0) * 0.55
 ```
 
 ## File: scripts/Enemy.gd
@@ -6957,6 +7090,8 @@ func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
             _apply_splash(primary, dealt_damage * 0.45, splash_radius)
         "cryo":
             primary.apply_slow(slow_multiplier, slow_duration)
+            if spawn_secondary_fx:
+                DZCryoStatusFx.attach_to(primary)
         "arc":
             primary.apply_shock(0.24)
             _apply_chain(primary, dealt_damage)
@@ -8982,6 +9117,153 @@ func _initialize() -> void:
     quit(0)
 ```
 
+## File: tests/cryo_status_fx_test.gd
+```
+extends SceneTree
+
+const FX := preload("res://scripts/CryoStatusFx.gd")
+const PROJECTILE := preload("res://scripts/Projectile.gd")
+
+func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _fail(message: String) -> void:
+    push_error(message)
+    quit(1)
+
+func _run_test() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    var target := Node3D.new()
+    root.add_child(target)
+
+    var first_enemy := DZEnemy.new()
+    first_enemy.configure("shambler", 1.0, target)
+    first_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(first_enemy)
+    first_enemy.global_position = Vector3(2.0, 0.0, -1.0)
+    var second_enemy := DZEnemy.new()
+    second_enemy.configure("elite", 1.0, target)
+    second_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(second_enemy)
+    second_enemy.global_position = Vector3(-2.0, 0.0, 0.0)
+    await process_frame
+
+    if FX.attach_to(first_enemy) != null:
+        _fail("Cryo status FX must not appear without a real slow debuff")
+        return
+
+    var shot := PROJECTILE.new()
+    shot.process_mode = Node.PROCESS_MODE_DISABLED
+    shot.setup(Vector3.ZERO, Vector3.RIGHT, 16.0, 22.0, Color(0.23, 0.88, 1.0), "cryo")
+    root.add_child(shot)
+    await process_frame
+    shot._apply_protocol_hit(first_enemy, 15.0)
+    var first := first_enemy.get_node_or_null("CryoStatusCrown") as DZCryoStatusFx
+    if first == null or first_enemy.slow_left <= 0.0 or first_enemy.slow_multiplier >= 1.0:
+        _fail("Cryo impact failed to apply an actual slow and attach its world visual")
+        return
+    first.set_process(false)
+    if FX.attach_to(first_enemy) != first:
+        _fail("Repeated Cryo hits must reuse one existing slow marker")
+        return
+    if first.get_parent() != first_enemy:
+        _fail("Cryo mark must follow its affected enemy in 3D")
+        return
+
+    second_enemy.apply_slow(0.62, 1.6)
+    var second := FX.attach_to(second_enemy)
+    if second == null or second == first:
+        _fail("A second slowed enemy did not get its own 3D status marker")
+        return
+    second.set_process(false)
+    var ring := first.get_node_or_null("FrostFootprint") as MeshInstance3D
+    var shards := first.get_node_or_null("FrostCrystals") as MultiMeshInstance3D
+    var ring_b := second.get_node_or_null("FrostFootprint") as MeshInstance3D
+    var shards_b := second.get_node_or_null("FrostCrystals") as MultiMeshInstance3D
+    if ring == null or shards == null or ring_b == null or shards_b == null:
+        _fail("Cryo status lost its ring or instanced crystalline silhouette")
+        return
+    if ring.mesh != ring_b.mesh or shards.multimesh.mesh != shards_b.multimesh.mesh:
+        _fail("Cryo geometry must be shared across all slowed enemies")
+        return
+    if ring.material_override != shards.material_override or ring.material_override != ring_b.material_override:
+        _fail("Cryo status must reuse one shader across rings and shard crowns")
+        return
+    if ring.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or shards.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        _fail("Cryo status FX must not create mobile shadow casters")
+        return
+    var torus := ring.mesh as TorusMesh
+    var box := shards.multimesh.mesh as BoxMesh
+    if torus == null or torus.rings > 24 or torus.ring_segments > 4 or box == null:
+        _fail("Cryo geometry exceeds its deliberately low-poly budget")
+        return
+    if shards.multimesh.instance_count != FX.CRYSTAL_COUNT or FX.CRYSTAL_COUNT > 8:
+        _fail("Cryo crown instanced shard count exceeded mobile budget")
+        return
+    if second.ring.scale.x <= first.ring.scale.x:
+        _fail("Elite Cryo markers must adapt to the larger enemy silhouette")
+        return
+
+    var original_ring_position := ring.global_position
+    first_enemy.global_position += Vector3(1.5, 0.0, -0.5)
+    if not is_equal_approx(ring.global_position.x - original_ring_position.x, 1.5):
+        _fail("Cryo crown must remain anchored to the victim during world movement")
+        return
+
+    var previous_rotation := shards.rotation.y
+    first._process(0.06)
+    if shards.rotation.y <= previous_rotation:
+        _fail("Cryo status no longer provides subtle 3D motion")
+        return
+    first_enemy.slow_left = 0.05
+    first._process(0.02)
+    var thaw_opacity := float(ring.get_instance_shader_parameter("frost_opacity"))
+    if thaw_opacity <= 0.0 or thaw_opacity >= 1.0:
+        _fail("Cryo status must visibly fade during actual slow recovery")
+        return
+
+    # Do not allocate a new particle system or mesh when the overlap cap is full.
+    var placeholders: Array[Node3D] = []
+    for i in range(FX.MAX_ACTIVE - 2):
+        var placeholder := Node3D.new()
+        placeholder.add_to_group("cryo_status_crowns")
+        root.add_child(placeholder)
+        placeholders.append(placeholder)
+    var third := DZEnemy.new()
+    third.configure("shambler", 1.0, target)
+    third.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(third)
+    third.apply_slow(0.62, 1.6)
+    if FX.attach_to(third) != null:
+        _fail("Cryo visual effect must respect its mobile overlap cap")
+        return
+    for placeholder in placeholders:
+        placeholder.queue_free()
+
+    first_enemy.slow_left = 0.0
+    first._process(0.1)
+    if not first.is_queued_for_deletion():
+        _fail("Cryo frost crown survived after its victim thawed")
+        return
+
+    shot.spawn_secondary_fx = false
+    shot._apply_protocol_hit(third, 10.0)
+    if third.get_node_or_null("CryoStatusCrown") != null:
+        _fail("Gameplay-only mode must not create Cryo secondary visual FX")
+        return
+
+    second_enemy.dead = true
+    second._process(0.1)
+    if not second.is_queued_for_deletion():
+        _fail("Cryo crown survived after its victim died")
+        return
+
+    print("Deadline Zero Cryo 3D slow status FX: OK")
+    quit(0)
+```
+
 ## File: tests/damage_number_budget_test.gd
 ```
 extends SceneTree
@@ -9044,7 +9326,7 @@ func _initialize() -> void:
 ```
 extends SceneTree
 
-# Real renderer evidence for the connected Arc ribbons and radial Inferno shockwave.
+# Real renderer evidence for Arc links, Inferno shockwave/scorch and Cryo slow status.
 const OUTPUT_PATH := "/tmp/deadline-zero-elemental-protocols.png"
 const RESIDUE_PATH := "/tmp/deadline-zero-inferno-residue.png"
 const MAIN_SCENE := preload("res://scenes/Main.tscn")
@@ -9079,13 +9361,27 @@ func _capture() -> void:
         {"kind":"brute", "position":Vector3(3.0, 0.0, 0.0)},
         {"kind":"shambler", "position":Vector3(4.7, 0.0, -0.8)}
     ]
+    var cryo_victim: DZEnemy
     for entry in placements:
         var enemy := DZEnemy.new()
         enemy.configure(String(entry["kind"]), 1.0, scene.player)
         enemy.process_mode = Node.PROCESS_MODE_DISABLED
         scene.add_child(enemy)
         enemy.global_position = entry["position"]
+        if String(entry["kind"]) == "shambler":
+            cryo_victim = enemy
     await process_frame
+
+    if cryo_victim == null:
+        push_error("Cryo visual QA has no shambler to demonstrate the debuff")
+        quit(1)
+        return
+    cryo_victim.apply_slow(0.62, 1.6)
+    var ice := DZCryoStatusFx.attach_to(cryo_victim)
+    if ice == null or ice.get_node_or_null("FrostCrystals") == null:
+        push_error("Cryo status crown failed to stage in real 3D gameplay rendering")
+        quit(1)
+        return
 
     var anchor := Vector3(-2.6, 0.72, -0.3)
     var link_a := DZArcLinkFx.spawn_link(scene, anchor, Vector3(-4.9, 0.72, 1.4), 0)

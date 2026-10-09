@@ -1,12 +1,32 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "8667c9004fb1abd3aea2c27c28594dff4b414cef",
-  "head": "ef2ead36e83813fabc2d9d4d2e6066829afe2fce",
+  "base": "ef2ead36e83813fabc2d9d4d2e6066829afe2fce",
+  "head": "57ac680108e9aa7b30af461ea9cd0e028b0bf176",
   "index_mode": "incremental",
   "changed_files": [
     {
-      "path": "AGENTS.md",
+      "path": ".github/workflows/ai-repo-map.yml",
+      "status": "M"
+    },
+    {
+      "path": ".github/workflows/godot-verify.yml",
+      "status": "M"
+    },
+    {
+      "path": "godot/scripts/CryoStatusFx.gd",
+      "status": "A"
+    },
+    {
+      "path": "godot/scripts/Projectile.gd",
+      "status": "M"
+    },
+    {
+      "path": "godot/tests/cryo_status_fx_test.gd",
+      "status": "A"
+    },
+    {
+      "path": "godot/tests/elemental_protocols_render_test.gd",
       "status": "M"
     },
     {
@@ -30,8 +50,812 @@
       "status": "M"
     }
   ],
-  "changed_source_files": [],
-  "impacted_files": [],
-  "impacted_symbols": [],
-  "selected_tests": []
+  "changed_source_files": [
+    "godot/scripts/CryoStatusFx.gd",
+    "godot/scripts/Projectile.gd",
+    "godot/tests/cryo_status_fx_test.gd",
+    "godot/tests/elemental_protocols_render_test.gd"
+  ],
+  "impacted_files": [
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+    "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+    "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+    "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
+    "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+    "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+    "core/src/test/java/com/deadlinezero/game/meta/SingularityCoreRuntimeTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
+    "godot/scripts/CryoStatusFx.gd",
+    "godot/scripts/Projectile.gd",
+    "godot/tests/cryo_status_fx_test.gd",
+    "godot/tests/elemental_protocols_render_test.gd"
+  ],
+  "impacted_symbols": [
+    {
+      "name": "AndroidPerformanceProbeTest",
+      "kind": "class",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 30
+    },
+    {
+      "name": "recordsLoadedGameplayPerformanceTelemetry",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 32
+    },
+    {
+      "name": "recordsHordeProjectileStressTelemetry",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 95
+    },
+    {
+      "name": "writeBenchmarkJson",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 156
+    },
+    {
+      "name": "injectLoad",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 198
+    },
+    {
+      "name": "injectStressLoad",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 229
+    },
+    {
+      "name": "waitForTelemetry",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 278
+    },
+    {
+      "name": "activity",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 294
+    },
+    {
+      "name": "game",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 302
+    },
+    {
+      "name": "runOnGameThread",
+      "kind": "symbol",
+      "file": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "line": 308
+    },
+    {
+      "name": "GameScreen",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 65
+    },
+    {
+      "name": "performanceSnapshot",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 145
+    },
+    {
+      "name": "effectiveFrameRateTarget",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 149
+    },
+    {
+      "name": "thermalLevel",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 153
+    },
+    {
+      "name": "effectiveFxQuality",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 157
+    },
+    {
+      "name": "activeEnemyCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 161
+    },
+    {
+      "name": "activeProjectileCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 167
+    },
+    {
+      "name": "activeSpatialBucketCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 175
+    },
+    {
+      "name": "retainedSpatialBucketCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 179
+    },
+    {
+      "name": "update",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 183
+    },
+    {
+      "name": "updateEnemies",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 267
+    },
+    {
+      "name": "bossSummonType",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 322
+    },
+    {
+      "name": "bossSummonType",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 327
+    },
+    {
+      "name": "spawnBossMinions",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 355
+    },
+    {
+      "name": "bossEnragePulse",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 386
+    },
+    {
+      "name": "updatePlayerProjectiles",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 405
+    },
+    {
+      "name": "updateHostileProjectiles",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 448
+    },
+    {
+      "name": "resolveEnemyAttack",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 465
+    },
+    {
+      "name": "spawnHostileShot",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 508
+    },
+    {
+      "name": "chainShock",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 517
+    },
+    {
+      "name": "damagePlayer",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 538
+    },
+    {
+      "name": "damageNumber",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 550
+    },
+    {
+      "name": "onEnemyKilled",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 555
+    },
+    {
+      "name": "spawnEnemy",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 591
+    },
+    {
+      "name": "fire",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 620
+    },
+    {
+      "name": "addCameraShake",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 647
+    },
+    {
+      "name": "impact",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 652
+    },
+    {
+      "name": "prepareUpgrade",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 657
+    },
+    {
+      "name": "prepareStandardUpgrade",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 668
+    },
+    {
+      "name": "finishRun",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 673
+    },
+    {
+      "name": "draw",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 679
+    },
+    {
+      "name": "drawEnemy",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 781
+    },
+    {
+      "name": "drawThreatRing",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 840
+    },
+    {
+      "name": "drawAbilityObjects",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 849
+    },
+    {
+      "name": "drawCombatText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 870
+    },
+    {
+      "name": "drawHud",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 885
+    },
+    {
+      "name": "drawChoiceBackdrop",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 906
+    },
+    {
+      "name": "drawGameOverBackdrop",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 946
+    },
+    {
+      "name": "drawLegendaryText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 985
+    },
+    {
+      "name": "drawUpgradeText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 1007
+    },
+    {
+      "name": "drawGameOverText",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 1054
+    },
+    {
+      "name": "handleOverlayInput",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 1074
+    },
+    {
+      "name": "applyUpgradeWithSynergyFeedback",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 1133
+    },
+    {
+      "name": "t",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 1147
+    },
+    {
+      "name": "f",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
+      "line": 1149
+    },
+    {
+      "name": "Pools",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 12
+    },
+    {
+      "name": "projectile",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 46
+    },
+    {
+      "name": "hostileProjectile",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 56
+    },
+    {
+      "name": "homingMissile",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 66
+    },
+    {
+      "name": "impact",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 76
+    },
+    {
+      "name": "damageNumber",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 86
+    },
+    {
+      "name": "arc",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 96
+    },
+    {
+      "name": "deathFx",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
+      "line": 106
+    },
+    {
+      "name": "PlayerProjectilePresentation",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
+      "line": 14
+    },
+    {
+      "name": "Style",
+      "kind": "enum",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
+      "line": 15
+    },
+    {
+      "name": "Profile",
+      "kind": "record",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
+      "line": 29
+    },
+    {
+      "name": "profile",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
+      "line": 42
+    },
+    {
+      "name": "forWeapon",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java",
+      "line": 48
+    },
+    {
+      "name": "SingularityImpactTracker",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+      "line": 9
+    },
+    {
+      "name": "Impact",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+      "line": 12
+    },
+    {
+      "name": "progress",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+      "line": 18
+    },
+    {
+      "name": "State",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+      "line": 23
+    },
+    {
+      "name": "update",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+      "line": 35
+    },
+    {
+      "name": "trigger",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+      "line": 80
+    },
+    {
+      "name": "impacts",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+      "line": 91
+    },
+    {
+      "name": "consumeTriggeredCount",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/SingularityImpactTracker.java",
+      "line": 93
+    },
+    {
+      "name": "WorldFxRenderer",
+      "kind": "class",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 19
+    },
+    {
+      "name": "fxQuality",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 21
+    },
+    {
+      "name": "smoothedFps",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 23
+    },
+    {
+      "name": "drawGroundShadows",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 24
+    },
+    {
+      "name": "drawPeripheralRing",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 71
+    },
+    {
+      "name": "drawBracketCorners",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 82
+    },
+    {
+      "name": "drawChargeArrows",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 96
+    },
+    {
+      "name": "timeDeg",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 114
+    },
+    {
+      "name": "drawSpecialistTelegraph",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 118
+    },
+    {
+      "name": "drawHarvesterSummonTelegraph",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 175
+    },
+    {
+      "name": "drawAbilityEvolutionAura",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 200
+    },
+    {
+      "name": "drawChampionAuras",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 253
+    },
+    {
+      "name": "drawProjectileTrails",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 310
+    },
+    {
+      "name": "drawPlayerProjectileAccent",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 419
+    },
+    {
+      "name": "drawElectricArcs",
+      "kind": "symbol",
+      "file": "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java",
+      "line": 499
+    },
+    {
+      "name": "WeaponSignatureRuntimeTest",
+      "kind": "class",
+      "file": "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+      "line": 11
+    },
+    {
+      "name": "SingularityCoreRuntimeTest",
+      "kind": "class",
+      "file": "core/src/test/java/com/deadlinezero/game/meta/SingularityCoreRuntimeTest.java",
+      "line": 12
+    },
+    {
+      "name": "SingularityImpactTrackerTest",
+      "kind": "class",
+      "file": "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
+      "line": 10
+    },
+    {
+      "name": "singularity",
+      "kind": "symbol",
+      "file": "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
+      "line": 88
+    },
+    {
+      "name": "DZCryoStatusFx",
+      "kind": "class",
+      "file": "godot/scripts/CryoStatusFx.gd",
+      "line": 1
+    },
+    {
+      "name": "_ready",
+      "kind": "function",
+      "file": "godot/scripts/CryoStatusFx.gd",
+      "line": 37
+    },
+    {
+      "name": "_update_opacity",
+      "kind": "function",
+      "file": "godot/scripts/CryoStatusFx.gd",
+      "line": 111
+    },
+    {
+      "name": "_process",
+      "kind": "function",
+      "file": "godot/scripts/CryoStatusFx.gd",
+      "line": 117
+    },
+    {
+      "name": "DZProjectile",
+      "kind": "class",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 1
+    },
+    {
+      "name": "setup",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 33
+    },
+    {
+      "name": "_apply_profile",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 57
+    },
+    {
+      "name": "_ready",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 82
+    },
+    {
+      "name": "_visual_cache_key",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 118
+    },
+    {
+      "name": "_cached_core_mesh",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 127
+    },
+    {
+      "name": "_cached_trail_mesh",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 139
+    },
+    {
+      "name": "_cached_core_material",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 148
+    },
+    {
+      "name": "_cached_trail_material",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 161
+    },
+    {
+      "name": "_cached_accent_box_mesh",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 174
+    },
+    {
+      "name": "_cached_accent_sphere_mesh",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 182
+    },
+    {
+      "name": "_cached_arc_accent_mesh",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 193
+    },
+    {
+      "name": "_add_side_spark",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 216
+    },
+    {
+      "name": "_add_arc_accent",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 225
+    },
+    {
+      "name": "_add_flame_core",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 233
+    },
+    {
+      "name": "set_combat_enabled",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 242
+    },
+    {
+      "name": "_physics_process",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 247
+    },
+    {
+      "name": "_swept_hit_candidates",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 275
+    },
+    {
+      "name": "_candidate_enemies",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 300
+    },
+    {
+      "name": "_enemies_near",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 303
+    },
+    {
+      "name": "_impact",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 309
+    },
+    {
+      "name": "_apply_protocol_hit",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 322
+    },
+    {
+      "name": "_secondary_fx_parent",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 335
+    },
+    {
+      "name": "_apply_splash",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 345
+    },
+    {
+      "name": "_apply_chain",
+      "kind": "function",
+      "file": "godot/scripts/Projectile.gd",
+      "line": 369
+    },
+    {
+      "name": "_initialize",
+      "kind": "function",
+      "file": "godot/tests/cryo_status_fx_test.gd",
+      "line": 5
+    },
+    {
+      "name": "_fail",
+      "kind": "function",
+      "file": "godot/tests/cryo_status_fx_test.gd",
+      "line": 8
+    },
+    {
+      "name": "_run_test",
+      "kind": "function",
+      "file": "godot/tests/cryo_status_fx_test.gd",
+      "line": 12
+    },
+    {
+      "name": "_initialize",
+      "kind": "function",
+      "file": "godot/tests/elemental_protocols_render_test.gd",
+      "line": 7
+    },
+    {
+      "name": "_capture",
+      "kind": "function",
+      "file": "godot/tests/elemental_protocols_render_test.gd",
+      "line": 10
+    }
+  ],
+  "selected_tests": [
+    "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+    "core/src/test/java/com/deadlinezero/game/combat/WeaponSignatureRuntimeTest.java",
+    "core/src/test/java/com/deadlinezero/game/entities/EnemyProjectileStyleTest.java",
+    "core/src/test/java/com/deadlinezero/game/meta/SingularityCoreRuntimeTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/HostileProjectilePresentationTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java",
+    "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
+    "godot/tests/cryo_status_fx_test.gd",
+    "godot/tests/elemental_protocols_render_test.gd"
+  ]
 }

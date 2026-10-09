@@ -22,29 +22,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T11:21:03Z
+Generated: 2026-10-09T21:43:47Z
 
 ### Git
 - Branch: `main`
-- Head: `ef2ead36e838`
-- Commit date: 2026-10-09T13:20:40+02:00
-- Commit: docs(agents): adopt pinned 88-rule development standard
-- Tracked files: 1059
+- Head: `57ac680108e9`
+- Commit date: 2026-10-09T23:43:32+02:00
+- Commit: fix(ci): unblock unified Repository Standards map budget (#392)
+- Tracked files: 1061
 
 ### Recently changed files
-- `AGENTS.md`
+- `.github/workflows/ai-repo-map.yml`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/InfernoBlastFx.gd`
-- `godot/tests/elemental_protocols_render_test.gd`
-- `godot/tests/inferno_blast_wave_test.gd`
-- `godot/scripts/ArcLinkFx.gd`
+- `godot/scripts/CryoStatusFx.gd`
 - `godot/scripts/Projectile.gd`
-- `godot/tests/arc_chain_link_fx_test.gd`
+- `godot/tests/cryo_status_fx_test.gd`
+- `godot/tests/elemental_protocols_render_test.gd`
+- `AGENTS.md`
 
 ### Project signals
 - `build.gradle`
