@@ -12,9 +12,17 @@ func _initialize() -> void:
     for kind in ["shambler", "runner", "charger", "harrier", "brute", "elite", "boss"]:
         var enemy := DZEnemy.new()
         enemy.configure(kind, 1.0, target)
-        enemy.process_mode = Node.PROCESS_MODE_DISABLED
+        # Keep the collision body registered in PhysicsServer3D; disable only
+        # automatic callbacks so the two frames can be stepped deterministically.
+        # PROCESS_MODE_DISABLED removes the body from its physics space, causing
+        # hidden move_and_slide errors when the test calls _physics_process().
+        enemy.set_physics_process(false)
         root.add_child(enemy)
         await process_frame
+        if not PhysicsServer3D.body_get_space(enemy.get_rid()).is_valid():
+            push_error("Shock QA attempted to simulate an unregistered physics body: %s" % kind)
+            quit(1)
+            return
         enemy.shock_left = 0.005
         enemy.velocity = Vector3(2.0, 0.0, 0.0)
         enemy._physics_process(0.016)
