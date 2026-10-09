@@ -1,21 +1,19 @@
 class_name DZBurnStatusFx
 extends Node3D
 
-# Burning enemies carry their actual Inferno damage-over-time state in world
-# space. Seven shader-animated flame ribbons share one mesh, one MultiMesh,
-# and one material across the horde; no particles, lights, or shadow maps.
-# The ribbons orbit *outside* the imported GLTF body volumes so they remain
-# visible from the actual top-down gameplay camera, not buried inside torsos.
+# True Inferno DoT is visible on its victim in world space. The seven curved
+# flame ribbons are baked into *one* 14-triangle mesh surface: one shared
+# geometry resource and one shared additive shader for every burning enemy.
+# No particle emitters, point lights, transparent overdraw stacks or shadows.
 const MAX_ACTIVE := 18
 const FLAME_COUNT := 7
 const THAW_SECONDS := 0.30
 
-static var _shared_flame_mesh: QuadMesh
-static var _shared_multimesh: MultiMesh
+static var _shared_flame_mesh: ArrayMesh
 static var _shared_material: ShaderMaterial
 
 var tracked_enemy: DZEnemy
-var flames: MultiMeshInstance3D
+var flames: MeshInstance3D
 
 static func attach_to(enemy: DZEnemy) -> DZBurnStatusFx:
     if enemy == null or not is_instance_valid(enemy) or not enemy.is_inside_tree():
@@ -39,9 +37,9 @@ static func attach_to(enemy: DZEnemy) -> DZBurnStatusFx:
 
 func _ready() -> void:
     add_to_group("burn_status_flames")
-    flames = MultiMeshInstance3D.new()
+    flames = MeshInstance3D.new()
     flames.name = "InfernoEmbers"
-    flames.multimesh = _flame_multimesh()
+    flames.mesh = _flame_mesh()
     flames.material_override = _flame_material()
     flames.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     var size := 1.62 if tracked_enemy.kind == "boss" else (
@@ -51,30 +49,40 @@ func _ready() -> void:
     add_child(flames)
     _update_opacity(1.0)
 
-static func _flame_mesh() -> QuadMesh:
+static func _flame_mesh() -> ArrayMesh:
     if _shared_flame_mesh != null:
         return _shared_flame_mesh
-    _shared_flame_mesh = QuadMesh.new()
-    _shared_flame_mesh.size = Vector2(0.50, 1.40)
-    return _shared_flame_mesh
-
-static func _flame_multimesh() -> MultiMesh:
-    if _shared_multimesh != null:
-        return _shared_multimesh
-    _shared_multimesh = MultiMesh.new()
-    _shared_multimesh.transform_format = MultiMesh.TRANSFORM_3D
-    _shared_multimesh.mesh = _flame_mesh()
-    _shared_multimesh.instance_count = FLAME_COUNT
+    var vertices := PackedVector3Array()
+    var uv := PackedVector2Array()
     for i in range(FLAME_COUNT):
         var angle := TAU * float(i) / float(FLAME_COUNT)
+        var outward := Vector3(cos(angle), 0.0, sin(angle))
+        var sideways := Vector3(-outward.z, 0.0, outward.x)
+        # Move flames outside imported body volumes. The flame tips remain
+        # visible from the real top-down gameplay camera, not hidden in torsos.
         var radius := 0.52 if i % 2 == 0 else 0.60
-        var scale_y := 0.76 if i % 3 == 0 else (0.96 if i % 3 == 1 else 0.86)
-        var transform := Transform3D(
-            Basis(Vector3.UP, angle + PI * 0.5).scaled(Vector3(0.9, scale_y, 1.0)),
-            Vector3(cos(angle) * radius, 0.90 * scale_y, sin(angle) * radius)
-        )
-        _shared_multimesh.set_instance_transform(i, transform)
-    return _shared_multimesh
+        var height_scale := 0.76 if i % 3 == 0 else (0.96 if i % 3 == 1 else 0.86)
+        var width := 0.50 * height_scale
+        var height := 1.40 * height_scale
+        var center := outward * radius + Vector3.UP * (0.90 * height_scale)
+        var bottom_l := center - sideways * width * 0.5 - Vector3.UP * height * 0.5
+        var bottom_r := center + sideways * width * 0.5 - Vector3.UP * height * 0.5
+        var top_l := center - sideways * width * 0.5 + Vector3.UP * height * 0.5
+        var top_r := center + sideways * width * 0.5 + Vector3.UP * height * 0.5
+        for point in [bottom_l, top_l, bottom_r, bottom_r, top_l, top_r]:
+            vertices.append(point)
+        for texel in [
+            Vector2(0.0, 0.0), Vector2(0.0, 1.0), Vector2(1.0, 0.0),
+            Vector2(1.0, 0.0), Vector2(0.0, 1.0), Vector2(1.0, 1.0)
+        ]:
+            uv.append(texel)
+    var arrays := []
+    arrays.resize(Mesh.ARRAY_MAX)
+    arrays[Mesh.ARRAY_VERTEX] = vertices
+    arrays[Mesh.ARRAY_TEX_UV] = uv
+    _shared_flame_mesh = ArrayMesh.new()
+    _shared_flame_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+    return _shared_flame_mesh
 
 static func _flame_material() -> ShaderMaterial:
     if _shared_material != null:
@@ -120,6 +128,6 @@ func _process(_delta: float) -> void:
     if tracked_enemy.burn_left <= 0.0 or tracked_enemy.burn_dps <= 0.0:
         queue_free()
         return
-    # Burn can be refreshed by another Inferno hit. Its owner, not the visual,
-    # controls lifetime so the flames never disappear during a renewed DoT.
+    # Refreshed hits renew the source debuff; the visual follows its owner
+    # rather than replacing geometry or running an unrelated fixed timer.
     _update_opacity(clampf(tracked_enemy.burn_left / THAW_SECONDS, 0.0, 1.0))
