@@ -9,11 +9,11 @@ const MAX_ACTIVE := 12
 const MIN_LENGTH := 0.18
 const MAX_LENGTH := 7.5
 const SEGMENTS := 6
-const BAND_WIDTHS := [0.15, 0.075, 0.025]
+const BAND_WIDTHS := [0.24, 0.125, 0.045]
 const BAND_COLORS := [
-    Color(0.25, 0.12, 0.92, 0.18),
-    Color(0.54, 0.35, 1.0, 0.70),
-    Color(0.90, 0.89, 1.0, 1.0)
+    Color(0.34, 0.17, 1.0, 0.34),
+    Color(0.66, 0.46, 1.0, 0.88),
+    Color(0.97, 0.92, 1.0, 1.0)
 ]
 
 static var _shared_material: ShaderMaterial
@@ -68,8 +68,8 @@ render_mode unshaded, blend_add, cull_disabled, depth_draw_never;
 instance uniform float chain_opacity = 1.0;
 
 void fragment() {
-    ALBEDO = COLOR.rgb * 0.10;
-    EMISSION = COLOR.rgb * 3.8;
+    ALBEDO = COLOR.rgb;
+    EMISSION = COLOR.rgb * 6.6;
     ALPHA = COLOR.a * chain_opacity;
 }
 """
