@@ -65,7 +65,7 @@ static func _ring_mesh() -> TorusMesh:
     if _shared_ring_mesh != null:
         return _shared_ring_mesh
     _shared_ring_mesh = TorusMesh.new()
-    _shared_ring_mesh.inner_radius = 0.936
+    _shared_ring_mesh.inner_radius = 0.875
     _shared_ring_mesh.outer_radius = 1.0
     _shared_ring_mesh.rings = 32
     _shared_ring_mesh.ring_segments = 4
@@ -81,9 +81,9 @@ render_mode unshaded, blend_add, cull_disabled, depth_draw_never;
 instance uniform float heat_opacity = 1.0;
 
 void fragment() {
-    ALBEDO = vec3(0.28, 0.035, 0.008);
-    EMISSION = vec3(1.0, 0.24, 0.025) * 4.0;
-    ALPHA = heat_opacity * 0.65;
+    ALBEDO = vec3(1.0, 0.42, 0.11);
+    EMISSION = vec3(1.0, 0.30, 0.055) * 6.0;
+    ALPHA = heat_opacity * 0.95;
 }
 """
     _shared_material = ShaderMaterial.new()
