@@ -22,27 +22,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T02:38:36Z
+Generated: 2026-10-09T02:53:32Z
 
 ### Git
 - Branch: `main`
-- Head: `95a3fcf836d8`
-- Commit date: 2026-10-09T04:38:21+02:00
-- Commit: fix(godot): preserve full final shock frame and gait recovery
-- Tracked files: 1049
+- Head: `23a72f7b2d5b`
+- Commit date: 2026-10-09T04:53:19+02:00
+- Commit: fix(godot): accurate projectile perf counts and clean physics regression
+- Tracked files: 1050
 
 ### Recently changed files
-- `.github/workflows/godot-verify.yml`
-- `godot/scripts/Enemy.gd`
+- `godot/scripts/Main.gd`
 - `godot/tests/shock_expiry_recovery_test.gd`
+- `.github/workflows/godot-verify.yml`
+- `godot/scripts/Player.gd`
+- `godot/tests/rifle_muzzle_ballistics_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `godot/scripts/Player.gd`
-- `godot/tests/muzzle_flare_3d_test.gd`
-- `godot/tests/attack_facing_lock_test.gd`
+- `godot/scripts/Enemy.gd`
 
 ### Project signals
 - `build.gradle`

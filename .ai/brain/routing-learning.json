@@ -2,22 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Exercise all projectile visuals at runtime",
-      "terms": [
-        "all",
-        "at",
-        "exercise",
-        "projectile",
-        "runtime",
-        "visuals"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/tests/projectile_profile_runtime_visual_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Integrate street lights into dark arena palette",
       "terms": [
         "arena",
@@ -1144,6 +1128,27 @@
         "godot/scripts/Enemy.gd",
         "godot/tests/shock_expiry_recovery_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(godot): accurate projectile perf counts and clean physics regression",
+      "terms": [
+        "accurate",
+        "clean",
+        "counts",
+        "godot",
+        "perf",
+        "physics",
+        "projectile",
+        "regression"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Main.gd",
+        "godot/scripts/Player.gd",
+        "godot/tests/rifle_muzzle_ballistics_test.gd",
+        "godot/tests/shock_expiry_recovery_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1504,6 +1509,12 @@
     "accessibility-aware": {
       "godot/scripts/Player.gd": 4,
       "godot/tests/muzzle_flare_3d_test.gd": 4
+    },
+    "accurate": {
+      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "acquisition": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java": 8
@@ -2161,6 +2172,12 @@
       "godot/scripts/Player.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
+    "clean": {
+      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
+    },
     "cleanup": {
       "godot/scripts/Main.gd": 4,
       "godot/scripts/Player.gd": 8,
@@ -2348,6 +2365,12 @@
       "godot/scripts/Main.gd": 4,
       "godot/scripts/RunDirector.gd": 4,
       "godot/tests/run_director_escalation_test.gd": 4
+    },
+    "counts": {
+      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "cover": {
       "godot/scripts/Hud.gd": 4,
@@ -3012,8 +3035,8 @@
       "godot/scripts/Enemy.gd": 24,
       "godot/scripts/Hud.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
-      "godot/scripts/Main.gd": 28,
-      "godot/scripts/Player.gd": 12,
+      "godot/scripts/Main.gd": 32,
+      "godot/scripts/Player.gd": 16,
       "godot/scripts/Projectile.gd": 4,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/archetype_roster_render_test.gd": 4,
@@ -3035,7 +3058,8 @@
       "godot/tests/muzzle_flare_3d_test.gd": 4,
       "godot/tests/offscreen_threat_priority_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
-      "godot/tests/shock_expiry_recovery_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 8,
       "godot/tests/smoke_test.gd": 4
     },
     "grade": {
@@ -3831,10 +3855,13 @@
     "perf": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Main.gd": 8,
+      "godot/scripts/Player.gd": 4,
       "godot/tests/enemy_shadow_budget_test.gd": 4,
       "godot/tests/industrial_material_sharing_test.gd": 4,
-      "godot/tests/offscreen_threat_priority_test.gd": 4
+      "godot/tests/offscreen_threat_priority_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "performance": {
       "godot/scripts/Main.gd": 4,
@@ -3859,6 +3886,12 @@
     "physical": {
       "godot/scripts/Main.gd": 4,
       "godot/tests/first_playable_run_path_test.gd": 4
+    },
+    "physics": {
+      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "pipeline": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
@@ -4096,9 +4129,12 @@
       "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4,
-      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/projectile_profile_runtime_visual_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 8
     },
     "promote": {
@@ -4289,7 +4325,11 @@
     },
     "regression": {
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 4
+      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "release": {
       "core/src/test/java/com/deadlinezero/game/config/AccessibilityReleaseContractTest.java": 4,

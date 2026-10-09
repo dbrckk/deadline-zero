@@ -104,6 +104,7 @@ tests/
   pressure_frame_render_test.gd
   projectile_profile_runtime_visual_test.gd
   rendered_frame_smoke_test.gd
+  rifle_muzzle_ballistics_test.gd
   run_director_escalation_test.gd
   run_director_runtime_integration_test.gd
   run_end_combat_freeze_test.gd
@@ -3776,7 +3777,7 @@ func _performance_snapshot() -> Dictionary:
         "fps": float(Engine.get_frames_per_second()),
         "memory_bytes": int(Performance.get_monitor(Performance.MEMORY_STATIC)),
         "enemies": get_tree().get_node_count_in_group("enemies"),
-        "projectiles": get_tree().get_node_count_in_group("player_projectiles"),
+        "projectiles": get_tree().get_node_count_in_group("projectiles"),
         "hostile_projectiles": get_tree().get_node_count_in_group("hostile_projectiles"),
         "xp_orbs": get_tree().get_node_count_in_group("xp_orbs"),
         "elapsed": elapsed
@@ -5670,20 +5671,29 @@ func _nearest_enemy() -> DZEnemy:
     return best
 
 func _fire_at(enemy: DZEnemy) -> void:
-    _play_shot_audio()
-    _trigger_muzzle_flash()
-    _trigger_rifle_recoil()
     var base_dir := global_position.direction_to(enemy.global_position)
     base_dir.y = 0.0
     base_dir = base_dir.normalized()
     if base_dir.length_squared() < 0.01:
         return
+    # Compensate for the rifle being offset to the player's right. Otherwise
+    # close enemies can fall beside a perfectly aimed-looking muzzle tracer.
+    var barrel_to_target := enemy.global_position - _projectile_muzzle_origin(Vector3.ZERO)
+    barrel_to_target.y = 0.0
+    if barrel_to_target.length_squared() > 0.0001:
+        base_dir = barrel_to_target.normalized()
+    _play_shot_audio()
+    _trigger_muzzle_flash()
+    _trigger_rifle_recoil()
     for i in range(multishot):
         var offset := float(i) - float(multishot - 1) * 0.5
         var dir := base_dir.rotated(Vector3.UP, deg_to_rad(offset * spread_degrees))
         var projectile := DZProjectile.new()
-        projectile.setup(global_position + Vector3(0.0, 0.72, 0.0) + dir * 0.5,
+        # Use the actual visible muzzle rather than a point inside the torso.
+        # Every pellet starts on the same barrel, independent of spread angle.
+        projectile.setup(_projectile_muzzle_origin(dir),
             dir, projectile_speed, weapon_damage, weapon_tint, weapon_profile)
+
         var projectile_parent: Node = get_tree().current_scene
         if projectile_parent == null:
             projectile_parent = get_parent()
@@ -5691,6 +5701,14 @@ func _fire_at(enemy: DZEnemy) -> void:
             projectile.queue_free()
             return
         projectile_parent.add_child(projectile)
+
+func _projectile_muzzle_origin(direction: Vector3) -> Vector3:
+    # Shared barrel origin for all weapon protocols; the small forward offset
+    # places the projectile just outside the transient 3D flash silhouette.
+    var muzzle_position := global_transform * Vector3(0.33, 0.98, -0.90)
+    if muzzle_flash != null and is_instance_valid(muzzle_flash):
+        muzzle_position = muzzle_flash.global_position
+    return muzzle_position + direction * 0.12
 
 func _build_visual() -> void:
     authored_visual = DZAssetLibrary.player()
@@ -12215,6 +12233,95 @@ func _run_capture() -> void:
     quit(0)
 ```
 
+## File: tests/rifle_muzzle_ballistics_test.gd
+```
+extends SceneTree
+
+# Real firing QA: bullets must visibly originate at the authored rifle muzzle,
+# never at the character's torso, across far/close bearings and weapon protocols.
+const PROFILES := ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]
+
+func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _run_test() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+
+    var survivor := DZPlayer.new()
+    survivor.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(survivor)
+
+    var enemy := DZEnemy.new()
+    enemy.configure("shambler", 1.0, survivor)
+    enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(enemy)
+    await process_frame
+
+    if survivor.muzzle_flash == null or survivor.muzzle_flash.get_parent() != survivor:
+        push_error("Real rifle muzzle locator is missing from the production survivor")
+        quit(1)
+        return
+
+    survivor.multishot = 3
+    survivor.spread_degrees = 8.0
+    var bearings := [Vector3(8.0, 0.0, -5.0), Vector3(-7.0, 0.0, 4.0), Vector3(0.0, 0.0, -1.45)]
+    for bearing in bearings:
+        enemy.global_position = bearing
+        survivor.look_at(bearing, Vector3.UP)
+        for profile in PROFILES:
+            survivor.weapon_profile = profile
+            survivor._fire_at(enemy)
+            var shots := get_nodes_in_group("projectiles")
+            if shots.size() != survivor.multishot:
+                push_error("%s barrel origin test produced %d projectiles, expected %d" % [profile, shots.size(), survivor.multishot])
+                quit(1)
+                return
+
+            var base_direction := survivor.global_position.direction_to(enemy.global_position)
+            base_direction.y = 0.0
+            base_direction = base_direction.normalized()
+            var muzzle_to_target := enemy.global_position - survivor._projectile_muzzle_origin(Vector3.ZERO)
+            muzzle_to_target.y = 0.0
+            if muzzle_to_target.length_squared() > 0.0001:
+                base_direction = muzzle_to_target.normalized()
+            for index in range(shots.size()):
+                var projectile := shots[index] as DZProjectile
+                if projectile == null or projectile.visual_profile != profile:
+                    push_error("%s shot routing lost its authored projectile profile" % profile)
+                    quit(1)
+                    return
+                projectile.process_mode = Node.PROCESS_MODE_DISABLED
+                var spread_offset := float(index) - float(survivor.multishot - 1) * 0.5
+                var direction := base_direction.rotated(Vector3.UP, deg_to_rad(spread_offset * survivor.spread_degrees))
+                var expected := survivor.muzzle_flash.global_position + direction * 0.12
+                if projectile.global_position.distance_to(expected) > 0.005:
+                    push_error("%s projectile %d detached from the visible 3D rifle muzzle" % [profile, index])
+                    quit(1)
+                    return
+                if projectile.velocity.normalized().distance_to(direction) > 0.001:
+                    push_error("%s multishot lost the intended directional spread" % profile)
+                    quit(1)
+                    return
+                if projectile.global_position.y < 0.90:
+                    push_error("%s projectile spawned inside the player's torso" % profile)
+                    quit(1)
+                    return
+                if index == 1:
+                    var target_offset := enemy.global_position - projectile.global_position
+                    var lateral_error := absf(Vector2(target_offset.x, target_offset.z).cross(Vector2(direction.x, direction.z)))
+                    if lateral_error > 0.04:
+                        push_error("%s centered shot misses the close target because of the rifle barrel offset" % profile)
+                        quit(1)
+                        return
+                projectile.queue_free()
+            await process_frame
+
+    print("Deadline Zero rifle muzzle ballistics: OK (six protocols, three bearings, 54 shots)")
+    quit(0)
+```
+
 ## File: tests/run_director_escalation_test.gd
 ```
 extends SceneTree
@@ -12755,9 +12862,17 @@ func _initialize() -> void:
     for kind in ["shambler", "runner", "charger", "harrier", "brute", "elite", "boss"]:
         var enemy := DZEnemy.new()
         enemy.configure(kind, 1.0, target)
-        enemy.process_mode = Node.PROCESS_MODE_DISABLED
+        # Keep the collision body registered in PhysicsServer3D; disable only
+        # automatic callbacks so the two frames can be stepped deterministically.
+        # PROCESS_MODE_DISABLED removes the body from its physics space, causing
+        # hidden move_and_slide errors when the test calls _physics_process().
+        enemy.set_physics_process(false)
         root.add_child(enemy)
         await process_frame
+        if not PhysicsServer3D.body_get_space(enemy.get_rid()).is_valid():
+            push_error("Shock QA attempted to simulate an unregistered physics body: %s" % kind)
+            quit(1)
+            return
         enemy.shock_left = 0.005
         enemy.velocity = Vector3(2.0, 0.0, 0.0)
         enemy._physics_process(0.016)

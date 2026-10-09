@@ -1,15 +1,13 @@
 # Change impact
 
-Base: 1173aeade008b1e56c83a1b4110ef046e8b9e882
-Head: 95a3fcf836d852022beacb72886bf04f5f95658b
+Base: 475b5c58ad9a19d697602b9eb592cce95727f7a2
+Head: 23a72f7b2d5b00c1e783887f493b9113d60eb16b
 
 ## Changed files
-- M .github/workflows/godot-verify.yml
-- M godot/scripts/Enemy.gd
-- A godot/tests/shock_expiry_recovery_test.gd
+- M godot/scripts/Main.gd
+- M godot/tests/shock_expiry_recovery_test.gd
 
 ## Affected areas
-- .github
 - godot
 
 ## Related test candidates

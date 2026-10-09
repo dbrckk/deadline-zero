@@ -3270,6 +3270,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/weapon_presentation_test.gd
       - name: Validate authored directional 3D muzzle flare
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/muzzle_flare_3d_test.gd
+      - name: Validate real rifle muzzle projectile alignment
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/rifle_muzzle_ballistics_test.gd
       - name: Validate player pressure marker lifecycle
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/player_pressure_marker_test.gd
       - name: Validate player targeting stability
@@ -28018,7 +28020,7 @@ func _performance_snapshot() -> Dictionary:
         "fps": float(Engine.get_frames_per_second()),
         "memory_bytes": int(Performance.get_monitor(Performance.MEMORY_STATIC)),
         "enemies": get_tree().get_node_count_in_group("enemies"),
-        "projectiles": get_tree().get_node_count_in_group("player_projectiles"),
+        "projectiles": get_tree().get_node_count_in_group("projectiles"),
         "hostile_projectiles": get_tree().get_node_count_in_group("hostile_projectiles"),
         "xp_orbs": get_tree().get_node_count_in_group("xp_orbs"),
         "elapsed": elapsed
@@ -29912,20 +29914,29 @@ func _nearest_enemy() -> DZEnemy:
     return best
 
 func _fire_at(enemy: DZEnemy) -> void:
-    _play_shot_audio()
-    _trigger_muzzle_flash()
-    _trigger_rifle_recoil()
     var base_dir := global_position.direction_to(enemy.global_position)
     base_dir.y = 0.0
     base_dir = base_dir.normalized()
     if base_dir.length_squared() < 0.01:
         return
+    # Compensate for the rifle being offset to the player's right. Otherwise
+    # close enemies can fall beside a perfectly aimed-looking muzzle tracer.
+    var barrel_to_target := enemy.global_position - _projectile_muzzle_origin(Vector3.ZERO)
+    barrel_to_target.y = 0.0
+    if barrel_to_target.length_squared() > 0.0001:
+        base_dir = barrel_to_target.normalized()
+    _play_shot_audio()
+    _trigger_muzzle_flash()
+    _trigger_rifle_recoil()
     for i in range(multishot):
         var offset := float(i) - float(multishot - 1) * 0.5
         var dir := base_dir.rotated(Vector3.UP, deg_to_rad(offset * spread_degrees))
         var projectile := DZProjectile.new()
-        projectile.setup(global_position + Vector3(0.0, 0.72, 0.0) + dir * 0.5,
+        # Use the actual visible muzzle rather than a point inside the torso.
+        # Every pellet starts on the same barrel, independent of spread angle.
+        projectile.setup(_projectile_muzzle_origin(dir),
             dir, projectile_speed, weapon_damage, weapon_tint, weapon_profile)
+
         var projectile_parent: Node = get_tree().current_scene
         if projectile_parent == null:
             projectile_parent = get_parent()
@@ -29933,6 +29944,14 @@ func _fire_at(enemy: DZEnemy) -> void:
             projectile.queue_free()
             return
         projectile_parent.add_child(projectile)
+
+func _projectile_muzzle_origin(direction: Vector3) -> Vector3:
+    # Shared barrel origin for all weapon protocols; the small forward offset
+    # places the projectile just outside the transient 3D flash silhouette.
+    var muzzle_position := global_transform * Vector3(0.33, 0.98, -0.90)
+    if muzzle_flash != null and is_instance_valid(muzzle_flash):
+        muzzle_position = muzzle_flash.global_position
+    return muzzle_position + direction * 0.12
 
 func _build_visual() -> void:
     authored_visual = DZAssetLibrary.player()

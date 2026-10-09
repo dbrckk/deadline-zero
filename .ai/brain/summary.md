@@ -1,16 +1,16 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 557
-- Files reparsed this run: 2
-- Symbols: 3079
+- Files indexed: 558
+- Files reparsed this run: 4
+- Symbols: 3082
 - Internal import edges: 808
-- Impacted files: 56
-- Selected tests: 34
+- Impacted files: 37
+- Selected tests: 14
 
 ## Languages
 - java: 422 files
-- gdscript: 80 files
+- gdscript: 81 files
 - python: 55 files
 
 ## Highest-density symbol files
@@ -21,7 +21,7 @@
 - core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 45 symbols
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
-- godot/scripts/Player.gd: 35 symbols
+- godot/scripts/Player.gd: 36 symbols
 - core/src/main/java/com/deadlinezero/game/visual/GameArt.java: 34 symbols
 - godot/scripts/Hud.gd: 32 symbols
 - core/src/main/java/com/deadlinezero/game/entities/Enemy.java: 31 symbols
