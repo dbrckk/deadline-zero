@@ -47,6 +47,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/impact_fx_mobile_test.gd
       - name: Validate layered 3D Arc chain links and mobile geometry budget
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/arc_chain_link_fx_test.gd
+      - name: Validate Inferno world-space radial blast and splash damage
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/inferno_blast_wave_test.gd
       - name: Validate authored combat ground mark budget
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_ground_mark_test.gd
       - name: Validate enemy archetype combat
@@ -192,6 +194,19 @@ jobs:
             --script res://tests/archetype_roster_render_test.gd
           test -s /tmp/deadline-zero-archetype-roster.png
           cp /tmp/deadline-zero-archetype-roster.png build/godot-visual-smoke/archetype-roster-rendered.png
+
+      - name: Render Arc and Inferno 3D VFX evidence
+        run: |
+          set -euo pipefail
+          rm -f /tmp/deadline-zero-elemental-protocols.png
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a \
+            /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --path godot \
+            --rendering-method gl_compatibility \
+            --audio-driver Dummy \
+            --script res://tests/elemental_protocols_render_test.gd
+          test -s /tmp/deadline-zero-elemental-protocols.png
+          cp /tmp/deadline-zero-elemental-protocols.png build/godot-visual-smoke/elemental-protocols-rendered.png
 
       - name: Render mid-run pressure evidence
         run: |
