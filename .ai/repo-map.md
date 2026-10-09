@@ -3321,6 +3321,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/offscreen_threat_priority_test.gd
       - name: Validate attack telegraph escalation
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/attack_telegraph_escalation_test.gd
+      - name: Validate shared feathered charger and harrier attack lanes
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/attack_lane_gradient_test.gd
       - name: Validate enemy attack windup facing lock
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/attack_facing_lock_test.gd
       - name: Validate player damage feedback
@@ -25444,6 +25446,7 @@ static var _signature_mesh_cache := {}
 static var _shared_brute_armor_material: StandardMaterial3D
 static var _telegraph_ring_mesh_cache := {}
 static var _telegraph_tick_mesh_cache := {}
+static var _shared_aim_lane_material: ShaderMaterial
 static var _hit_flash_mesh_cache := {}
 static var _shared_regeneration_pulse_mesh: CylinderMesh
 
@@ -25962,12 +25965,42 @@ func _add_directional_telegraph_lane() -> void:
     lane_mesh.size = Vector3(width, 0.014, distance)
     lane.mesh = lane_mesh
     lane.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    lane.material_override = telegraph_material
+    # The danger corridor uses a physically flat, feathered emissive texture,
+    # not the telegraph ring's opaque alarm material. One shader is shared by
+    # all harriers and chargers; no additional mesh/light/particle budget.
+    lane.material_override = _aim_lane_material()
     telegraph_visual.add_child(lane)
 
     var midpoint := global_position.lerp(attack_target_position, 0.5) + Vector3(0.0, 0.006, 0.0)
     lane.global_position = midpoint
     lane.rotation.y = atan2(delta.x, delta.z)
+
+static func _aim_lane_material() -> ShaderMaterial:
+    if _shared_aim_lane_material != null:
+        return _shared_aim_lane_material
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, depth_draw_never;
+
+void fragment() {
+    // Top-face BoxMesh UVs are stable, and both path length and width are
+    // expressed as 0..1. The lane stays a warning, never a solid red road.
+    float edge_distance = abs(UV.x * 2.0 - 1.0);
+    float feather = 1.0 - smoothstep(0.25, 0.99, edge_distance);
+    float core = 1.0 - smoothstep(0.04, 0.36, edge_distance);
+    float end_fade = smoothstep(0.0, 0.085, UV.y)
+                   * (1.0 - smoothstep(0.88, 1.0, UV.y));
+    float sweep = exp(-75.0 * pow(fract(UV.y - TIME * 0.85) - 0.5, 2.0));
+    float intensity = (0.18 * feather + 0.54 * core + sweep * 0.19 * feather) * end_fade;
+    ALBEDO = vec3(0.70, 0.09, 0.025);
+    EMISSION = vec3(1.0, 0.18, 0.035) * (1.45 + sweep * 1.1);
+    ALPHA = clamp(intensity, 0.0, 0.74);
+}
+"""
+    _shared_aim_lane_material = ShaderMaterial.new()
+    _shared_aim_lane_material.shader = shader
+    return _shared_aim_lane_material
 
 static func _telegraph_ring_mesh(radius: float, boss: bool) -> TorusMesh:
     var key := "%.3f|%s" % [radius, "boss" if boss else "normal"]

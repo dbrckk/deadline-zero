@@ -2,21 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Stabilize Android stress telemetry acquisition",
-      "terms": [
-        "acquisition",
-        "android",
-        "stabilize",
-        "stress",
-        "telemetry"
-      ],
-      "tests": [],
-      "useful": [
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Keep melee pressure visually separated",
       "terms": [
         "keep",
@@ -1180,6 +1165,26 @@
         "godot/tests/cryo_status_fx_test.gd",
         "godot/tests/elemental_protocols_render_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(visual): soften 3D enemy warning aim lanes (#393)",
+      "terms": [
+        "393",
+        "3d",
+        "aim",
+        "enemy",
+        "feat",
+        "lanes",
+        "soften",
+        "visual",
+        "warning"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/tests/attack_lane_gradient_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1468,12 +1473,16 @@
       "godot/tests/cryo_status_fx_test.gd": 4,
       "godot/tests/elemental_protocols_render_test.gd": 4
     },
+    "393": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/attack_lane_gradient_test.gd": 4
+    },
     "3d": {
       "godot/scripts/ArcLinkFx.gd": 4,
       "godot/scripts/AssetLibrary.gd": 12,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/CombatFeel.gd": 8,
-      "godot/scripts/Enemy.gd": 32,
+      "godot/scripts/Enemy.gd": 36,
       "godot/scripts/Hud.gd": 20,
       "godot/scripts/ImpactFx.gd": 16,
       "godot/scripts/Main.gd": 40,
@@ -1483,6 +1492,7 @@
       "godot/scripts/XpOrb.gd": 8,
       "godot/tests/arc_chain_link_fx_test.gd": 4,
       "godot/tests/attack_facing_lock_test.gd": 4,
+      "godot/tests/attack_lane_gradient_test.gd": 4,
       "godot/tests/attack_telegraph_escalation_test.gd": 4,
       "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
@@ -1687,7 +1697,9 @@
       "godot/tests/native_enemy_behavior_test.gd": 4
     },
     "aim": {
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Player.gd": 4,
+      "godot/tests/attack_lane_gradient_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "align": {
@@ -2706,10 +2718,11 @@
       "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4,
       "godot/scripts/AssetLibrary.gd": 20,
-      "godot/scripts/Enemy.gd": 16,
+      "godot/scripts/Enemy.gd": 20,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 4,
+      "godot/tests/attack_lane_gradient_test.gd": 4,
       "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 24,
       "godot/tests/first_playable_run_path_test.gd": 4,
@@ -2854,13 +2867,14 @@
       "godot/scripts/ArcLinkFx.gd": 8,
       "godot/scripts/AssetLibrary.gd": 8,
       "godot/scripts/CombatGroundMark.gd": 4,
-      "godot/scripts/Enemy.gd": 12,
+      "godot/scripts/Enemy.gd": 16,
       "godot/scripts/InfernoBlastFx.gd": 8,
       "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 12,
       "godot/scripts/Projectile.gd": 8,
       "godot/tests/arc_chain_link_fx_test.gd": 8,
       "godot/tests/attack_facing_lock_test.gd": 4,
+      "godot/tests/attack_lane_gradient_test.gd": 4,
       "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
       "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/combat_ground_mark_test.gd": 4,
@@ -3518,6 +3532,10 @@
     },
     "kit": {
       "tools/blender/build_industrial_kit.py": 4
+    },
+    "lanes": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/attack_lane_gradient_test.gd": 4
     },
     "language": {
       "godot/scripts/Main.gd": 4,
@@ -5005,6 +5023,10 @@
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/soft_contact_shadow_budget_test.gd": 4
     },
+    "soften": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/attack_lane_gradient_test.gd": 4
+    },
     "source-sheet": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 4,
       "tools/blender/build_rex_actions.py": 4,
@@ -5463,10 +5485,11 @@
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 8,
       "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/InfernoBlastFx.gd": 4,
       "godot/scripts/Main.gd": 12,
+      "godot/tests/attack_lane_gradient_test.gd": 4,
       "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
       "godot/tests/boss_encounter_render_test.gd": 4,
       "godot/tests/elemental_protocols_render_test.gd": 4,
@@ -5494,7 +5517,9 @@
       "godot/tests/run_end_ux_test.gd": 4
     },
     "warning": {
-      "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 4
+      "core/src/main/java/com/deadlinezero/game/visual/CombatHudRenderer.java": 4,
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/attack_lane_gradient_test.gd": 4
     },
     "wave": {
       "godot/scripts/Main.gd": 4,

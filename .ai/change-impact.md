@@ -1,13 +1,16 @@
 # Change impact
 
-Base: c37df69bd3daecfcdd204473e3ac03096fe5b2ad
-Head: 57ac680108e9aa7b30af461ea9cd0e028b0bf176
+Base: 5d2c4efcd686e238894193a731ace4ce554a1ed9
+Head: 6d47a1f25cbe35b6563afb6f30d7a468bf2b42b7
 
 ## Changed files
-- M .github/workflows/ai-repo-map.yml
+- M .github/workflows/godot-verify.yml
+- M godot/scripts/Enemy.gd
+- A godot/tests/attack_lane_gradient_test.gd
 
 ## Affected areas
 - .github
+- godot
 
 ## Related test candidates
 - No direct filename-based test match detected.

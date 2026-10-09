@@ -22,23 +22,25 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T21:43:47Z
+Generated: 2026-10-09T21:49:06Z
 
 ### Git
 - Branch: `main`
-- Head: `57ac680108e9`
-- Commit date: 2026-10-09T23:43:32+02:00
-- Commit: fix(ci): unblock unified Repository Standards map budget (#392)
-- Tracked files: 1061
+- Head: `6d47a1f25cbe`
+- Commit date: 2026-10-09T23:48:36+02:00
+- Commit: feat(visual): soften 3D enemy warning aim lanes (#393)
+- Tracked files: 1062
 
 ### Recently changed files
+- `.github/workflows/godot-verify.yml`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/attack_lane_gradient_test.gd`
 - `.github/workflows/ai-repo-map.yml`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `.github/workflows/godot-verify.yml`
 - `godot/scripts/CryoStatusFx.gd`
 - `godot/scripts/Projectile.gd`
 - `godot/tests/cryo_status_fx_test.gd`
