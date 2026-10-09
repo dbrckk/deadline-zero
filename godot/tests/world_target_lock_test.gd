@@ -35,7 +35,7 @@ func _run_test() -> void:
         quit(1)
         return
     var mat := marker.material_override as StandardMaterial3D
-    if mat == null or not mat.emission_enabled or not mat.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA:
+    if mat == null or not mat.emission_enabled or mat.transparency != BaseMaterial3D.TRANSPARENCY_ALPHA:
         push_error("World aim confirmation lost restrained unlit transparent shading")
         quit(1)
         return
