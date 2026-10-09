@@ -362,6 +362,12 @@ func _fire_at(enemy: DZEnemy) -> void:
     base_dir = base_dir.normalized()
     if base_dir.length_squared() < 0.01:
         return
+    # Compensate for the rifle being offset to the player's right. Otherwise
+    # close enemies can fall beside a perfectly aimed-looking muzzle tracer.
+    var barrel_to_target := enemy.global_position - _projectile_muzzle_origin(base_dir)
+    barrel_to_target.y = 0.0
+    if barrel_to_target.length_squared() > 0.0001:
+        base_dir = barrel_to_target.normalized()
     _play_shot_audio()
     _trigger_muzzle_flash()
     _trigger_rifle_recoil()
