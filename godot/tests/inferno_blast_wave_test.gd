@@ -32,8 +32,10 @@ func _run_test() -> void:
         return
     var wave := first.get_node_or_null("BlastFront") as MeshInstance3D
     var echo := first.get_node_or_null("BlastAfterglow") as MeshInstance3D
+    var scorch := first.get_node_or_null("ScorchResidue") as MeshInstance3D
+    var duplicate_scorch := duplicate.get_node_or_null("ScorchResidue") as MeshInstance3D
     var duplicate_wave := duplicate.get_node_or_null("BlastFront") as MeshInstance3D
-    if wave == null or echo == null or duplicate_wave == null:
+    if wave == null or echo == null or duplicate_wave == null or scorch == null or duplicate_scorch == null:
         _fail("Inferno heatwave lost its two independently animated luminous layers")
         return
     if wave.mesh != echo.mesh or wave.mesh != duplicate_wave.mesh:
@@ -53,8 +55,24 @@ func _run_test() -> void:
     for child in first.get_children():
         if child is Light3D or child is GPUParticles3D:
             lights += 1
-    if lights > 0 or first.get_child_count() != 2:
+    if lights > 0 or first.get_child_count() != 3:
         _fail("Inferno heatwave must avoid lights, emitters, and expensive draw nodes")
+        return
+
+    if scorch.mesh != duplicate_scorch.mesh or not (scorch.mesh is QuadMesh):
+        _fail("Inferno residue must reuse one procedural quad without texture allocations")
+        return
+    if scorch.material_override != duplicate_scorch.material_override or not (scorch.material_override is ShaderMaterial):
+        _fail("Inferno residue material must be shared across impacts")
+        return
+    if scorch.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        _fail("Inferno scorch decal must remain shadow-free")
+        return
+    if not is_equal_approx(scorch.scale.x, first.blast_radius) or not is_equal_approx(scorch.rotation_degrees.x, -90.0):
+        _fail("Inferno scorch decal no longer covers the actual horizontal blast footprint")
+        return
+    if scorch.position.y <= 0.0 or scorch.position.y >= 0.10:
+        _fail("Inferno scorch decal risks clipping into the floor or floating")
         return
 
     var initial_scale := wave.scale.x
@@ -64,6 +82,20 @@ func _run_test() -> void:
         return
     if not (first.opacity > 0.0 and first.opacity < 1.0):
         _fail("Inferno radial blast does not fade smoothly")
+        return
+
+    var active_scorch := float(scorch.get_instance_shader_parameter("scorch_opacity"))
+    if active_scorch <= 0.0 or active_scorch > 1.0:
+        _fail("Inferno thermal residue did not ignite after blast impact")
+        return
+    first._process(0.34)
+    var lingering_scorch := float(scorch.get_instance_shader_parameter("scorch_opacity"))
+    if first.is_queued_for_deletion() or lingering_scorch <= 0.0 or lingering_scorch >= active_scorch:
+        _fail("Inferno ground scorch must persist after the expanding shockwave, while fading")
+        return
+    first._process(0.60)
+    if not first.is_queued_for_deletion():
+        _fail("Inferno residue lifetime must stay hard-capped for mobile memory budget")
         return
 
     if BLAST.spawn_blast(root, center, 0.05) != null or BLAST.spawn_blast(root, center, 4.0) != null:
