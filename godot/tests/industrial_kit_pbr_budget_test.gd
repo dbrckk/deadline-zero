@@ -65,7 +65,7 @@ func _run_test() -> void:
             if family["id"] == "grate" and "slat" in identity:
                 grate_slats += 1
                 var slat_material := mesh.get_surface_override_material(0) as StandardMaterial3D
-                if slat_material.albedo_color.max_component() > 0.22 or slat_material.emission_enabled:
+                if maxf(slat_material.albedo_color.r, maxf(slat_material.albedo_color.g, slat_material.albedo_color.b)) > 0.22 or slat_material.emission_enabled:
                     push_error("Grate slat is too bright for the dark combat floor")
                     quit(1)
                     return
