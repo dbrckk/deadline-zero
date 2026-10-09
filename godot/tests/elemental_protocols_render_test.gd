@@ -126,5 +126,40 @@ func _capture() -> void:
         quit(1)
         return
 
+    # A material/mesh contract alone cannot prove that a bright flame actually
+    # survives GLTF body occlusion and the Android-compatible renderer. Compare
+    # two identically staged GPU frames, with only the burn mesh removed. This
+    # specifically protects against the earlier invisible-fire regression.
+    var burn_screen := scene.camera.unproject_position(
+        burning_victim.global_position + Vector3(0.0, 0.85, 0.0)
+    )
+    flames.queue_free()
+    for _frame in range(3):
+        await process_frame
+    var without_burn := get_root().get_texture().get_image()
+    if without_burn == null or without_burn.is_empty():
+        push_error("Burn visibility comparison could not read the second GPU frame")
+        quit(1)
+        return
+    without_burn.convert(Image.FORMAT_RGB8)
+    var visible_flame_pixels := 0
+    var center_x := int(round(burn_screen.x))
+    var center_y := int(round(burn_screen.y))
+    for y in range(maxi(0, center_y - 100), mini(residue_image.get_height(), center_y + 100)):
+        for x in range(maxi(0, center_x - 100), mini(residue_image.get_width(), center_x + 100)):
+            var burning_color := residue_image.get_pixel(x, y)
+            var extinguished_color := without_burn.get_pixel(x, y)
+            var difference := maxf(
+                absf(burning_color.r - extinguished_color.r),
+                absf(burning_color.g - extinguished_color.g)
+            )
+            if difference > 0.12 and burning_color.r > burning_color.b * 1.5:
+                visible_flame_pixels += 1
+    if visible_flame_pixels < 100:
+        push_error("Inferno burning is hidden or too dim in a real rendered frame: only %d distinct pixels" % visible_flame_pixels)
+        quit(1)
+        return
+    print("GODOT_BURN_VISIBLE_PIXELS_OK %d" % visible_flame_pixels)
+
     print("GODOT_ELEMENTAL_PROTOCOL_VISUAL_QA_OK %dx%d with real burn, Cryo, Arc and Inferno residue" % [image.get_width(), image.get_height()])
     quit(0)
