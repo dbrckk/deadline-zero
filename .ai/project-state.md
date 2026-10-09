@@ -22,27 +22,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-08T21:43:50Z
+Generated: 2026-10-09T02:38:36Z
 
 ### Git
 - Branch: `main`
-- Head: `60a28c47143d`
-- Commit date: 2026-10-08T23:43:35+02:00
-- Commit: feat(godot): layer accessibility-aware 3D muzzle flare geometry
-- Tracked files: 1048
+- Head: `95a3fcf836d8`
+- Commit date: 2026-10-09T04:38:21+02:00
+- Commit: fix(godot): preserve full final shock frame and gait recovery
+- Tracked files: 1049
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/Player.gd`
-- `godot/tests/muzzle_flare_3d_test.gd`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/shock_expiry_recovery_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `godot/scripts/Enemy.gd`
+- `godot/scripts/Player.gd`
+- `godot/tests/muzzle_flare_3d_test.gd`
 - `godot/tests/attack_facing_lock_test.gd`
-- `godot/tests/multihit_silhouette_stability_test.gd`
 
 ### Project signals
 - `build.gradle`

@@ -1,12 +1,12 @@
 # Change impact
 
-Base: 910b7274edad289f11cca86433367a26a7d600c4
-Head: 60a28c47143d3f52286653209ce9802d5b1f61dd
+Base: 1173aeade008b1e56c83a1b4110ef046e8b9e882
+Head: 95a3fcf836d852022beacb72886bf04f5f95658b
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/Player.gd
-- A godot/tests/muzzle_flare_3d_test.gd
+- M godot/scripts/Enemy.gd
+- A godot/tests/shock_expiry_recovery_test.gd
 
 ## Affected areas
 - .github

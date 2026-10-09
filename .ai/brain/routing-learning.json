@@ -2,21 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Fix scatter tracer material binding",
-      "terms": [
-        "binding",
-        "material",
-        "scatter",
-        "tracer"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Projectile.gd",
-        "godot/tests/weapon_presentation_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Exercise all projectile visuals at runtime",
       "terms": [
         "all",
@@ -1139,6 +1124,25 @@
       "useful": [
         "godot/scripts/Player.gd",
         "godot/tests/muzzle_flare_3d_test.gd"
+      ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(godot): preserve full final shock frame and gait recovery",
+      "terms": [
+        "final",
+        "frame",
+        "full",
+        "gait",
+        "godot",
+        "preserve",
+        "recovery",
+        "shock"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/tests/shock_expiry_recovery_test.gd"
       ]
     }
   ],
@@ -2745,6 +2749,10 @@
     "filled": {
       "godot/scripts/Enemy.gd": 4
     },
+    "final": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
+    },
     "final-art": {
       "tools/sprites/audit_final_art_status.py": 8
     },
@@ -2836,9 +2844,11 @@
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 4
     },
     "frame": {
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Main.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
-      "godot/tests/rendered_frame_smoke_test.gd": 4
+      "godot/tests/rendered_frame_smoke_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "framing": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 8,
@@ -2879,8 +2889,10 @@
       "tools/sprites/validate_final_art_promotion_consistency.py": 4
     },
     "full": {
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Main.gd": 4,
-      "godot/tests/authored_world_dressing_test.gd": 4
+      "godot/tests/authored_world_dressing_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "full-health": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
@@ -2900,9 +2912,10 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 4
     },
     "gait": {
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Player.gd": 4,
-      "godot/tests/authored_gait_sync_test.gd": 4
+      "godot/tests/authored_gait_sync_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "game-over": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
@@ -2996,7 +3009,7 @@
     "godot": {
       "godot/scripts/AssetLibrary.gd": 20,
       "godot/scripts/CombatGroundMark.gd": 4,
-      "godot/scripts/Enemy.gd": 20,
+      "godot/scripts/Enemy.gd": 24,
       "godot/scripts/Hud.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 28,
@@ -3022,6 +3035,7 @@
       "godot/tests/muzzle_flare_3d_test.gd": 4,
       "godot/tests/offscreen_threat_priority_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4,
       "godot/tests/smoke_test.gd": 4
     },
     "grade": {
@@ -3974,9 +3988,11 @@
     },
     "preserve": {
       "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
-      "godot/tests/industrial_prop_material_test.gd": 4
+      "godot/tests/industrial_prop_material_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "pressure": {
       "godot/scripts/AssetLibrary.gd": 4,
@@ -4226,6 +4242,10 @@
     },
     "reconcile": {
       "tools/sprites/audit_final_art_status.py": 4
+    },
+    "recovery": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "redeploy": {
       "godot/scripts/Hud.gd": 4,
@@ -4655,8 +4675,10 @@
       "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java": 4
     },
     "shock": {
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Player.gd": 4,
-      "godot/tests/player_damage_feedback_test.gd": 4
+      "godot/tests/player_damage_feedback_test.gd": 4,
+      "godot/tests/shock_expiry_recovery_test.gd": 4
     },
     "shop": {
       "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java": 4,

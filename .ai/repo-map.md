@@ -3262,6 +3262,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_silhouette_identity_test.gd
       - name: Validate authored character gait synchronization
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_gait_sync_test.gd
+      - name: Validate final shock frame and authored animation recovery
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/shock_expiry_recovery_test.gd
       - name: Validate mobile swarm shadow-caster budget
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_shadow_budget_test.gd
       - name: Validate weapon presentation identities
@@ -25154,10 +25156,13 @@ func _physics_process(delta: float) -> void:
         velocity = Vector3.ZERO
         return
     _process_status_effects(delta)
+    var shock_was_active := shock_left > 0.0
     shock_left = maxf(0.0, shock_left - maxf(delta, 0.0))
     if dead or target == null or not is_instance_valid(target):
         return
-    if shock_left > 0.0:
+    # Freeze the entire final shocked frame, even if the timer crosses zero
+    # within this physics step. The next frame resumes from the correct pose.
+    if shock_was_active:
         velocity = Vector3.ZERO
         if authored_anim != null:
             authored_anim.speed_scale = 0.0
