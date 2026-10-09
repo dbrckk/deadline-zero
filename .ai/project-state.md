@@ -22,21 +22,18 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T11:02:25Z
+Generated: 2026-10-09T11:17:52Z
 
 ### Git
 - Branch: `main`
-- Head: `fe21d5f0b005`
-- Commit date: 2026-10-09T13:02:10+02:00
-- Commit: feat(gamefeel): add true-radius Inferno blast shockwaves and validate splash radius
+- Head: `8667c9004fb1`
+- Commit date: 2026-10-09T13:17:35+02:00
+- Commit: feat(visual): retain fading heat-scorched ground after Inferno blasts
 - Tracked files: 1059
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/ArcLinkFx.gd`
 - `godot/scripts/InfernoBlastFx.gd`
-- `godot/scripts/Projectile.gd`
-- `godot/tests/arc_chain_link_fx_test.gd`
 - `godot/tests/elemental_protocols_render_test.gd`
 - `godot/tests/inferno_blast_wave_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
@@ -44,10 +41,9 @@ Generated: 2026-10-09T11:02:25Z
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `play/store/feature-graphic.png`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
-- `godot/tests/soft_contact_shadow_budget_test.gd`
+- `godot/scripts/ArcLinkFx.gd`
+- `godot/scripts/Projectile.gd`
+- `godot/tests/arc_chain_link_fx_test.gd`
 
 ### Project signals
 - `build.gradle`

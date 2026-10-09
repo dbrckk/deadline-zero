@@ -3810,12 +3810,15 @@ extends Node3D
 # Two lightweight world-space rings read as a radial blast rather than an
 # unrelated flash on each enemy. The ring radius matches gameplay splash.
 const DURATION := 0.30
+const SCORCH_DURATION := 0.90
 const MAX_ACTIVE := 8
 const MIN_RADIUS := 0.50
 const MAX_RADIUS := 3.50
 
 static var _shared_ring_mesh: TorusMesh
 static var _shared_material: ShaderMaterial
+static var _shared_scorch_mesh: QuadMesh
+static var _shared_scorch_material: ShaderMaterial
 
 var origin := Vector3.ZERO
 var blast_radius := 1.85
@@ -3823,6 +3826,7 @@ var age := 0.0
 var opacity := 1.0
 var wave: MeshInstance3D
 var echo: MeshInstance3D
+var scorch: MeshInstance3D
 
 static func spawn_blast(parent: Node3D, at: Vector3, effect_radius: float) -> DZInfernoBlastFx:
     if parent == null or not is_instance_valid(parent) or not parent.is_inside_tree():
@@ -3867,6 +3871,19 @@ func _ready() -> void:
     add_child(echo)
     echo.set_instance_shader_parameter("heat_opacity", 0.45)
 
+    # A shared procedural ground-scorch decal keeps the impact readable after
+    # the fast expanding rings vanish. No textures, emitters or point lights.
+    scorch = MeshInstance3D.new()
+    scorch.name = "ScorchResidue"
+    scorch.mesh = _scorch_mesh()
+    scorch.material_override = _scorch_material()
+    scorch.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    scorch.rotation_degrees.x = -90.0
+    scorch.position.y = 0.064
+    scorch.scale = Vector3(blast_radius, blast_radius, 1.0)
+    add_child(scorch)
+    scorch.set_instance_shader_parameter("scorch_opacity", 0.0)
+
 static func _ring_mesh() -> TorusMesh:
     if _shared_ring_mesh != null:
         return _shared_ring_mesh
@@ -3896,6 +3913,49 @@ void fragment() {
     _shared_material.shader = shader
     return _shared_material
 
+static func _scorch_mesh() -> QuadMesh:
+    if _shared_scorch_mesh != null:
+        return _shared_scorch_mesh
+    _shared_scorch_mesh = QuadMesh.new()
+    _shared_scorch_mesh.size = Vector2(2.0, 2.0)
+    return _shared_scorch_mesh
+
+static func _scorch_material() -> ShaderMaterial:
+    if _shared_scorch_material != null:
+        return _shared_scorch_material
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, depth_draw_never;
+instance uniform float scorch_opacity = 1.0;
+
+float hash21(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+}
+
+void fragment() {
+    vec2 p = UV * 2.0 - 1.0;
+    float r = length(p);
+    float angle = atan(p.y, p.x);
+    float grain = hash21(floor(p * 31.0));
+    float crackle = sin(angle * 19.0 + r * 23.0 + sin(angle * 7.0) * 1.4);
+    float ragged_edge = 0.035 * sin(angle * 13.0 + sin(angle * 5.0) * 2.0);
+    float footprint = 1.0 - smoothstep(0.70, 0.96 + ragged_edge, r);
+    float embers = pow(max(crackle, 0.0), 17.0)
+                 * smoothstep(0.12, 0.38, r) * (1.0 - smoothstep(0.67, 0.91, r));
+    float hot_rim = (smoothstep(0.48, 0.71, r) - smoothstep(0.71, 0.89, r))
+                  * (0.38 + 0.62 * grain);
+    float heat = clamp(embers * 0.85 + hot_rim * 0.55, 0.0, 1.0);
+    ALBEDO = mix(vec3(0.015, 0.011, 0.016), vec3(0.24, 0.052, 0.019), heat);
+    EMISSION = vec3(1.0, 0.16, 0.018) * heat * 1.75;
+    ALPHA = scorch_opacity * footprint * clamp(
+        0.36 + grain * 0.24 + heat * 0.30, 0.0, 0.92);
+}
+"""
+    _shared_scorch_material = ShaderMaterial.new()
+    _shared_scorch_material.shader = shader
+    return _shared_scorch_material
+
 func _process(delta: float) -> void:
     age += maxf(delta, 0.0)
     var fraction := clampf(age / DURATION, 0.0, 1.0)
@@ -3907,7 +3967,12 @@ func _process(delta: float) -> void:
     if echo != null:
         echo.scale = Vector3.ONE * blast_radius * lerpf(0.14, 0.88, ease_out)
         echo.set_instance_shader_parameter("heat_opacity", opacity * 0.42)
-    if age >= DURATION:
+    if scorch != null:
+        var burn_fraction := clampf(age / SCORCH_DURATION, 0.0, 1.0)
+        var ignition := minf(1.0, age / 0.055)
+        var fade := pow(1.0 - burn_fraction, 1.15)
+        scorch.set_instance_shader_parameter("scorch_opacity", ignition * fade)
+    if age >= SCORCH_DURATION:
         queue_free()
 ```
 
@@ -8981,6 +9046,7 @@ extends SceneTree
 
 # Real renderer evidence for the connected Arc ribbons and radial Inferno shockwave.
 const OUTPUT_PATH := "/tmp/deadline-zero-elemental-protocols.png"
+const RESIDUE_PATH := "/tmp/deadline-zero-inferno-residue.png"
 const MAIN_SCENE := preload("res://scenes/Main.tscn")
 
 func _initialize() -> void:
@@ -9060,7 +9126,27 @@ func _capture() -> void:
         push_error("Failed to save elemental VFX render: %s" % error_string(error))
         quit(1)
         return
-    print("GODOT_ELEMENTAL_PROTOCOL_VISUAL_QA_OK %dx%d" % [image.get_width(), image.get_height()])
+    # A second real frame proves the blast ring disappears while the charred
+    # footprint is still visible, without copying the first render.
+    blast._process(0.36)
+    if blast.is_queued_for_deletion():
+        push_error("Inferno afterglow disappeared before the second rendered frame")
+        quit(1)
+        return
+    for _frame in range(4):
+        await process_frame
+    var residue_image := get_root().get_texture().get_image()
+    if residue_image == null or residue_image.is_empty():
+        push_error("Inferno heat residue did not render")
+        quit(1)
+        return
+    residue_image.convert(Image.FORMAT_RGB8)
+    if residue_image.save_png(RESIDUE_PATH) != OK:
+        push_error("Failed to save rendered Inferno scorch residue")
+        quit(1)
+        return
+
+    print("GODOT_ELEMENTAL_PROTOCOL_VISUAL_QA_OK %dx%d plus persistent residue" % [image.get_width(), image.get_height()])
     quit(0)
 ```
 
@@ -11259,8 +11345,10 @@ func _run_test() -> void:
         return
     var wave := first.get_node_or_null("BlastFront") as MeshInstance3D
     var echo := first.get_node_or_null("BlastAfterglow") as MeshInstance3D
+    var scorch := first.get_node_or_null("ScorchResidue") as MeshInstance3D
+    var duplicate_scorch := duplicate.get_node_or_null("ScorchResidue") as MeshInstance3D
     var duplicate_wave := duplicate.get_node_or_null("BlastFront") as MeshInstance3D
-    if wave == null or echo == null or duplicate_wave == null:
+    if wave == null or echo == null or duplicate_wave == null or scorch == null or duplicate_scorch == null:
         _fail("Inferno heatwave lost its two independently animated luminous layers")
         return
     if wave.mesh != echo.mesh or wave.mesh != duplicate_wave.mesh:
@@ -11280,8 +11368,24 @@ func _run_test() -> void:
     for child in first.get_children():
         if child is Light3D or child is GPUParticles3D:
             lights += 1
-    if lights > 0 or first.get_child_count() != 2:
+    if lights > 0 or first.get_child_count() != 3:
         _fail("Inferno heatwave must avoid lights, emitters, and expensive draw nodes")
+        return
+
+    if scorch.mesh != duplicate_scorch.mesh or not (scorch.mesh is QuadMesh):
+        _fail("Inferno residue must reuse one procedural quad without texture allocations")
+        return
+    if scorch.material_override != duplicate_scorch.material_override or not (scorch.material_override is ShaderMaterial):
+        _fail("Inferno residue material must be shared across impacts")
+        return
+    if scorch.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        _fail("Inferno scorch decal must remain shadow-free")
+        return
+    if not is_equal_approx(scorch.scale.x, first.blast_radius) or not is_equal_approx(scorch.rotation_degrees.x, -90.0):
+        _fail("Inferno scorch decal no longer covers the actual horizontal blast footprint")
+        return
+    if scorch.position.y <= 0.0 or scorch.position.y >= 0.10:
+        _fail("Inferno scorch decal risks clipping into the floor or floating")
         return
 
     var initial_scale := wave.scale.x
@@ -11293,6 +11397,15 @@ func _run_test() -> void:
         _fail("Inferno radial blast does not fade smoothly")
         return
 
+    var active_scorch := float(scorch.get_instance_shader_parameter("scorch_opacity"))
+    if active_scorch <= 0.0 or active_scorch > 1.0:
+        _fail("Inferno thermal residue did not ignite after blast impact")
+        return
+    first._process(0.34)
+    var lingering_scorch := float(scorch.get_instance_shader_parameter("scorch_opacity"))
+    if first.is_queued_for_deletion() or lingering_scorch <= 0.0 or lingering_scorch >= active_scorch:
+        _fail("Inferno ground scorch must persist after the expanding shockwave, while fading")
+        return
     if BLAST.spawn_blast(root, center, 0.05) != null or BLAST.spawn_blast(root, center, 4.0) != null:
         _fail("Inferno visual radius hard limits regressed")
         return
@@ -11343,6 +11456,11 @@ func _run_test() -> void:
         BLAST.spawn_blast(root, center, 1.85)
     if get_nodes_in_group("inferno_blast_waves").size() != BLAST.MAX_ACTIVE:
         _fail("Inferno heatwave mobile overlap cap was exceeded")
+        return
+
+    first._process(0.60)
+    if not first.is_queued_for_deletion():
+        _fail("Inferno residue lifetime must stay hard-capped for mobile memory budget")
         return
 
     print("Deadline Zero Inferno 3D radial splash FX: OK")

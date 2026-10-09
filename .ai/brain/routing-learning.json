@@ -2,23 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Make player marker react to close pressure",
-      "terms": [
-        "close",
-        "make",
-        "marker",
-        "player",
-        "pressure",
-        "react"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Player.gd",
-        "godot/tests/weapon_presentation_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Lift close-pressure locator above melee",
       "terms": [
         "above",
@@ -1171,6 +1154,27 @@
         "godot/tests/elemental_protocols_render_test.gd",
         "godot/tests/inferno_blast_wave_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(visual): retain fading heat-scorched ground after Inferno blasts",
+      "terms": [
+        "after",
+        "blasts",
+        "fading",
+        "feat",
+        "ground",
+        "heat-scorched",
+        "inferno",
+        "retain",
+        "visual"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/InfernoBlastFx.gd",
+        "godot/tests/elemental_protocols_render_test.gd",
+        "godot/tests/inferno_blast_wave_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1662,7 +1666,10 @@
       "core/src/main/java/com/deadlinezero/game/screen/VictoryScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/services/GameServices.java": 4,
       "core/src/main/java/com/deadlinezero/game/services/ReviewService.java": 4,
-      "core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/meta/ReviewPromptPolicyTest.java": 4,
+      "godot/scripts/InfernoBlastFx.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4,
+      "godot/tests/inferno_blast_wave_test.gd": 4
     },
     "against": {
       "godot/scripts/Enemy.gd": 4,
@@ -1930,6 +1937,11 @@
       "godot/scripts/InfernoBlastFx.gd": 4,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/arc_chain_link_fx_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4,
+      "godot/tests/inferno_blast_wave_test.gd": 4
+    },
+    "blasts": {
+      "godot/scripts/InfernoBlastFx.gd": 4,
       "godot/tests/elemental_protocols_render_test.gd": 4,
       "godot/tests/inferno_blast_wave_test.gd": 4
     },
@@ -2798,6 +2810,11 @@
       "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/multihit_silhouette_stability_test.gd": 4
     },
+    "fading": {
+      "godot/scripts/InfernoBlastFx.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4,
+      "godot/tests/inferno_blast_wave_test.gd": 4
+    },
     "fail": {
       "godot/scripts/Hud.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 4
@@ -2820,7 +2837,7 @@
       "godot/scripts/AssetLibrary.gd": 8,
       "godot/scripts/CombatGroundMark.gd": 4,
       "godot/scripts/Enemy.gd": 12,
-      "godot/scripts/InfernoBlastFx.gd": 4,
+      "godot/scripts/InfernoBlastFx.gd": 8,
       "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 12,
       "godot/scripts/Projectile.gd": 8,
@@ -2829,12 +2846,12 @@
       "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
       "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/combat_ground_mark_test.gd": 4,
-      "godot/tests/elemental_protocols_render_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 8,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/industrial_kit_pbr_budget_test.gd": 4,
       "godot/tests/industrial_prop_material_test.gd": 4,
-      "godot/tests/inferno_blast_wave_test.gd": 4,
+      "godot/tests/inferno_blast_wave_test.gd": 8,
       "godot/tests/multihit_silhouette_stability_test.gd": 4,
       "godot/tests/muzzle_flare_3d_test.gd": 4,
       "godot/tests/soft_contact_shadow_budget_test.gd": 4,
@@ -3197,8 +3214,11 @@
     },
     "ground": {
       "godot/scripts/CombatGroundMark.gd": 4,
+      "godot/scripts/InfernoBlastFx.gd": 4,
       "godot/scripts/Main.gd": 4,
-      "godot/tests/combat_ground_mark_test.gd": 4
+      "godot/tests/combat_ground_mark_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4,
+      "godot/tests/inferno_blast_wave_test.gd": 4
     },
     "guard": {
       "godot/tests/mobile_orientation_test.gd": 4
@@ -3210,6 +3230,11 @@
     "hazard": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
+    },
+    "heat-scorched": {
+      "godot/scripts/InfernoBlastFx.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4,
+      "godot/tests/inferno_blast_wave_test.gd": 4
     },
     "hero": {
       "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java": 4,
@@ -3399,11 +3424,11 @@
     },
     "inferno": {
       "godot/scripts/ArcLinkFx.gd": 4,
-      "godot/scripts/InfernoBlastFx.gd": 4,
+      "godot/scripts/InfernoBlastFx.gd": 8,
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/arc_chain_link_fx_test.gd": 4,
-      "godot/tests/elemental_protocols_render_test.gd": 4,
-      "godot/tests/inferno_blast_wave_test.gd": 4
+      "godot/tests/elemental_protocols_render_test.gd": 8,
+      "godot/tests/inferno_blast_wave_test.gd": 8
     },
     "inspection": {
       "godot/scripts/Main.gd": 4,
@@ -4605,6 +4630,11 @@
       "godot/scripts/Main.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
     },
+    "retain": {
+      "godot/scripts/InfernoBlastFx.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4,
+      "godot/tests/inferno_blast_wave_test.gd": 4
+    },
     "reticle": {
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/Player.gd": 4,
@@ -5393,11 +5423,14 @@
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
+      "godot/scripts/InfernoBlastFx.gd": 4,
       "godot/scripts/Main.gd": 12,
       "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
       "godot/tests/boss_encounter_render_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
+      "godot/tests/inferno_blast_wave_test.gd": 4,
       "godot/tests/mobile_orientation_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/soft_contact_shadow_budget_test.gd": 4,
