@@ -1,16 +1,16 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 562
-- Files reparsed this run: 5
-- Symbols: 3092
+- Files indexed: 564
+- Files reparsed this run: 3
+- Symbols: 3099
 - Internal import edges: 808
-- Impacted files: 59
-- Selected tests: 36
+- Impacted files: 12
+- Selected tests: 8
 
 ## Languages
 - java: 422 files
-- gdscript: 85 files
+- gdscript: 87 files
 - python: 55 files
 
 ## Highest-density symbol files
@@ -32,8 +32,8 @@
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 25 symbols
+- godot/scripts/Projectile.gd: 25 symbols
 - core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java: 24 symbols
-- core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java: 24 symbols
 
 ## Agent routing
 - Read impact.json first after project/change context.

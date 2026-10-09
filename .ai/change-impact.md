@@ -1,13 +1,13 @@
 # Change impact
 
-Base: a629514d802f77bf65b0ff70efb2cfe7d3600fbf
-Head: 34406d778bdfed6d8e647f9a87a70f8523d2f22a
+Base: fa3afa65b7794e429eddd9e89968dda98c1ad91c
+Head: e1694007b3dfca1844adddddfc3a3f159bdf1865
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/Enemy.gd
-- M godot/tests/enemy_silhouette_identity_test.gd
-- A godot/tests/soft_contact_shadow_budget_test.gd
+- A godot/scripts/ArcLinkFx.gd
+- M godot/scripts/Projectile.gd
+- A godot/tests/arc_chain_link_fx_test.gd
 
 ## Affected areas
 - .github

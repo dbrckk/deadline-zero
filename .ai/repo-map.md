@@ -402,6 +402,7 @@ godot/
           SOURCE.json
     asset_manifest.json
   scripts/
+    ArcLinkFx.gd
     AssetLibrary.gd
     CombatAudio.gd
     CombatFeel.gd
@@ -3246,6 +3247,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_feel_test.gd
       - name: Validate mobile-safe impact FX
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/impact_fx_mobile_test.gd
+      - name: Validate layered 3D Arc chain links and mobile geometry budget
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/arc_chain_link_fx_test.gd
       - name: Validate authored combat ground mark budget
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_ground_mark_test.gd
       - name: Validate enemy archetype combat
@@ -24376,6 +24379,138 @@ tasks.register('smokeRun', JavaExec) {
 }
 ````
 
+## File: godot/scripts/ArcLinkFx.gd
+````
+class_name DZArcLinkFx
+extends Node3D
+
+# Actual connected secondary-target feedback for the Arc weapon protocol.
+# Each bolt is one unlit ArrayMesh, with three layered ribbons and no
+# particles, physics bodies, dynamic lights, or per-instance materials.
+const DURATION := 0.16
+const MAX_ACTIVE := 12
+const MIN_LENGTH := 0.18
+const MAX_LENGTH := 7.5
+const SEGMENTS := 6
+const BAND_WIDTHS := [0.15, 0.075, 0.025]
+const BAND_COLORS := [
+    Color(0.25, 0.12, 0.92, 0.18),
+    Color(0.54, 0.35, 1.0, 0.70),
+    Color(0.90, 0.89, 1.0, 1.0)
+]
+
+static var _shared_material: ShaderMaterial
+
+var start_at := Vector3.ZERO
+var end_at := Vector3.ZERO
+var branch_index := 0
+var age := 0.0
+var opacity := 1.0
+var ribbon: MeshInstance3D
+
+static func spawn_link(parent: Node3D, start: Vector3, finish: Vector3, branch: int = 0) -> DZArcLinkFx:
+    if parent == null or not is_instance_valid(parent) or not parent.is_inside_tree():
+        return null
+    var distance := start.distance_to(finish)
+    if distance < MIN_LENGTH or distance > MAX_LENGTH:
+        return null
+    var active := 0
+    for link in parent.get_tree().get_nodes_in_group("arc_chain_links"):
+        if is_instance_valid(link) and not link.is_queued_for_deletion():
+            active += 1
+    if active >= MAX_ACTIVE:
+        return null
+    var effect := DZArcLinkFx.new()
+    effect.start_at = start
+    effect.end_at = finish
+    effect.branch_index = branch
+    parent.add_child(effect)
+    return effect
+
+func _ready() -> void:
+    name = "ArcChainLink"
+    add_to_group("arc_chain_links")
+    top_level = true
+    global_position = start_at
+
+    ribbon = MeshInstance3D.new()
+    ribbon.name = "ArcRibbon"
+    ribbon.mesh = _create_bolt_mesh(end_at - start_at, branch_index)
+    ribbon.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    ribbon.material_override = _arc_material()
+    add_child(ribbon)
+    ribbon.set_instance_shader_parameter("chain_opacity", 1.0)
+
+static func _arc_material() -> ShaderMaterial:
+    if _shared_material != null:
+        return _shared_material
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_add, cull_disabled, depth_draw_never;
+instance uniform float chain_opacity = 1.0;
+
+void fragment() {
+    ALBEDO = COLOR.rgb * 0.10;
+    EMISSION = COLOR.rgb * 3.8;
+    ALPHA = COLOR.a * chain_opacity;
+}
+"""
+    _shared_material = ShaderMaterial.new()
+    _shared_material.shader = shader
+    return _shared_material
+
+static func _create_bolt_mesh(displacement: Vector3, branch: int) -> ArrayMesh:
+    var side := displacement.cross(Vector3.UP).normalized()
+    if side.length_squared() < 0.001:
+        side = Vector3.RIGHT
+    var control := PackedVector3Array()
+    for step in range(SEGMENTS + 1):
+        var t := float(step) / float(SEGMENTS)
+        var wobble := 0.0
+        if step > 0 and step < SEGMENTS:
+            var direction_sign := 1.0 if (step + branch) % 2 == 0 else -1.0
+            wobble = direction_sign * (0.055 + 0.045 * float((step + branch) % 3))
+        var lift := 0.07 * sin(t * PI)
+        control.append(displacement * t + side * wobble + Vector3.UP * lift)
+
+    var vertices := PackedVector3Array()
+    var vertex_colors := PackedColorArray()
+    for band in range(BAND_WIDTHS.size()):
+        var width: float = BAND_WIDTHS[band]
+        var tint: Color = BAND_COLORS[band]
+        for segment in range(SEGMENTS):
+            var p0 := control[segment]
+            var p1 := control[segment + 1]
+            # Each polygon spans a local side vector perpendicular to the bolt.
+            # Endpoints taper without changing the contact anchors.
+            var w0 := width * (0.72 if segment == 0 else 1.0)
+            var w1 := width * (0.72 if segment == SEGMENTS - 1 else 1.0)
+            var a := p0 - side * w0 * 0.5
+            var b := p0 + side * w0 * 0.5
+            var c := p1 - side * w1 * 0.5
+            var d := p1 + side * w1 * 0.5
+            for point in [a, c, b, b, c, d]:
+                vertices.append(point)
+                vertex_colors.append(tint)
+    var arrays := []
+    arrays.resize(Mesh.ARRAY_MAX)
+    arrays[Mesh.ARRAY_VERTEX] = vertices
+    arrays[Mesh.ARRAY_COLOR] = vertex_colors
+    var result := ArrayMesh.new()
+    result.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+    return result
+
+func _process(delta: float) -> void:
+    age += maxf(0.0, delta)
+    var fraction := clampf(age / DURATION, 0.0, 1.0)
+    opacity = pow(1.0 - fraction, 1.5)
+    if ribbon != null:
+        ribbon.set_instance_shader_parameter("chain_opacity", opacity)
+    if age >= DURATION:
+        queue_free()
+````
+
 ## File: godot/scripts/AssetLibrary.gd
 ````
 class_name DZAssetLibrary
@@ -30897,19 +31032,30 @@ func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
             primary.apply_shock(0.24)
             _apply_chain(primary, dealt_damage)
 
+func _secondary_fx_parent() -> Node3D:
+    # Weapon behavior also runs in isolated tests without current_scene.
+    # Missing an FX parent must never change gameplay damage delivery.
+    var scene := get_tree().current_scene if get_tree() != null else null
+    if scene is Node3D:
+        return scene as Node3D
+    if get_parent() is Node3D:
+        return get_parent() as Node3D
+    return null
+
 func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) -> void:
     if range_radius <= 0.0:
         return
+    var fx_parent := _secondary_fx_parent() if spawn_secondary_fx else null
     for node in _enemies_near(primary.global_position, range_radius):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
             continue
         enemy.take_damage(splash_damage, false)
-        if spawn_secondary_fx:
+        if fx_parent != null:
             var fx := ImpactFx.new()
             fx.color = Color(1.0, 0.24, 0.035)
             fx.scale_boost = 0.72
-            get_tree().current_scene.add_child(fx)
+            fx_parent.add_child(fx)
             fx.global_position = enemy.global_position + Vector3(0.0, 0.45, 0.0)
 
 func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
@@ -30925,16 +31071,22 @@ func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
         return primary.global_position.distance_squared_to(a.global_position) < primary.global_position.distance_squared_to(b.global_position)
     )
     var count: int = mini(chain_targets, candidates.size())
+    var fx_parent := _secondary_fx_parent() if spawn_secondary_fx else null
+    var chain_origin := primary.global_position + Vector3(0.0, 0.62, 0.0)
     for i in range(count):
         var chained := candidates[i]
+        var endpoint := chained.global_position + Vector3(0.0, 0.62, 0.0)
         var falloff := 0.56 if i == 0 else 0.38
         chained.take_damage(dealt_damage * falloff, false)
-        if spawn_secondary_fx:
+        if fx_parent != null:
+            # One real 3D lightning connection for each chain damage event;
+            # both come from the actual hit target, never an invented location.
+            DZArcLinkFx.spawn_link(fx_parent, chain_origin, endpoint, i)
             var fx := ImpactFx.new()
             fx.color = Color(0.64, 0.42, 1.0)
             fx.scale_boost = 0.78
-            get_tree().current_scene.add_child(fx)
-            fx.global_position = chained.global_position + Vector3(0.0, 0.55, 0.0)
+            fx_parent.add_child(fx)
+            fx.global_position = endpoint
 ````
 
 ## File: godot/scripts/RunDirector.gd
