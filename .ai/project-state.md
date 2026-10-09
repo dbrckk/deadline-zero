@@ -22,31 +22,32 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T09:51:38Z
+Generated: 2026-10-09T11:02:25Z
 
 ### Git
 - Branch: `main`
-- Head: `e1694007b3df`
-- Commit date: 2026-10-09T11:51:23+02:00
-- Commit: feat(gamefeel): connect Arc chained hits with real 3D lightning
-- Tracked files: 1056
+- Head: `fe21d5f0b005`
+- Commit date: 2026-10-09T13:02:10+02:00
+- Commit: feat(gamefeel): add true-radius Inferno blast shockwaves and validate splash radius
+- Tracked files: 1059
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
 - `godot/scripts/ArcLinkFx.gd`
+- `godot/scripts/InfernoBlastFx.gd`
 - `godot/scripts/Projectile.gd`
 - `godot/tests/arc_chain_link_fx_test.gd`
-- `play/store/feature-graphic.png`
+- `godot/tests/elemental_protocols_render_test.gd`
+- `godot/tests/inferno_blast_wave_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
+- `play/store/feature-graphic.png`
 - `godot/scripts/Enemy.gd`
 - `godot/tests/enemy_silhouette_identity_test.gd`
 - `godot/tests/soft_contact_shadow_budget_test.gd`
-- `godot/scripts/Main.gd`
-- `godot/tests/authored_asphalt_pbr_floor_test.gd`
 
 ### Project signals
 - `build.gradle`

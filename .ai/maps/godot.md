@@ -50,6 +50,7 @@ scripts/
   Haptics.gd
   Hud.gd
   ImpactFx.gd
+  InfernoBlastFx.gd
   Main.gd
   Player.gd
   Projectile.gd
@@ -77,6 +78,7 @@ tests/
   combat_feel_test.gd
   combat_ground_mark_test.gd
   damage_number_budget_test.gd
+  elemental_protocols_render_test.gd
   enemy_archetype_combat_test.gd
   enemy_hit_reaction_test.gd
   enemy_projectile_visual_test.gd
@@ -92,6 +94,7 @@ tests/
   industrial_kit_pbr_budget_test.gd
   industrial_material_sharing_test.gd
   industrial_prop_material_test.gd
+  inferno_blast_wave_test.gd
   mobile_orientation_test.gd
   multihit_silhouette_stability_test.gd
   muzzle_flare_3d_test.gd
@@ -144,11 +147,11 @@ const MAX_ACTIVE := 12
 const MIN_LENGTH := 0.18
 const MAX_LENGTH := 7.5
 const SEGMENTS := 6
-const BAND_WIDTHS := [0.15, 0.075, 0.025]
+const BAND_WIDTHS := [0.24, 0.125, 0.045]
 const BAND_COLORS := [
-    Color(0.25, 0.12, 0.92, 0.18),
-    Color(0.54, 0.35, 1.0, 0.70),
-    Color(0.90, 0.89, 1.0, 1.0)
+    Color(0.34, 0.17, 1.0, 0.34),
+    Color(0.66, 0.46, 1.0, 0.88),
+    Color(0.97, 0.92, 1.0, 1.0)
 ]
 
 static var _shared_material: ShaderMaterial
@@ -203,8 +206,8 @@ render_mode unshaded, blend_add, cull_disabled, depth_draw_never;
 instance uniform float chain_opacity = 1.0;
 
 void fragment() {
-    ALBEDO = COLOR.rgb * 0.10;
-    EMISSION = COLOR.rgb * 3.8;
+    ALBEDO = COLOR.rgb;
+    EMISSION = COLOR.rgb * 6.6;
     ALPHA = COLOR.a * chain_opacity;
 }
 """
@@ -3799,6 +3802,115 @@ func _fade_material(material: StandardMaterial3D, t: float) -> void:
     material.emission_energy_multiplier = lerp(4.0, 0.5, t)
 ```
 
+## File: scripts/InfernoBlastFx.gd
+```
+class_name DZInfernoBlastFx
+extends Node3D
+
+# Two lightweight world-space rings read as a radial blast rather than an
+# unrelated flash on each enemy. The ring radius matches gameplay splash.
+const DURATION := 0.30
+const MAX_ACTIVE := 8
+const MIN_RADIUS := 0.50
+const MAX_RADIUS := 3.50
+
+static var _shared_ring_mesh: TorusMesh
+static var _shared_material: ShaderMaterial
+
+var origin := Vector3.ZERO
+var blast_radius := 1.85
+var age := 0.0
+var opacity := 1.0
+var wave: MeshInstance3D
+var echo: MeshInstance3D
+
+static func spawn_blast(parent: Node3D, at: Vector3, effect_radius: float) -> DZInfernoBlastFx:
+    if parent == null or not is_instance_valid(parent) or not parent.is_inside_tree():
+        return null
+    if effect_radius < MIN_RADIUS or effect_radius > MAX_RADIUS:
+        return null
+    var active := 0
+    for node in parent.get_tree().get_nodes_in_group("inferno_blast_waves"):
+        if is_instance_valid(node) and not node.is_queued_for_deletion():
+            active += 1
+    if active >= MAX_ACTIVE:
+        return null
+    var effect := DZInfernoBlastFx.new()
+    effect.origin = at
+    effect.blast_radius = effect_radius
+    parent.add_child(effect)
+    return effect
+
+func _ready() -> void:
+    name = "InfernoWorldBlast"
+    add_to_group("inferno_blast_waves")
+    top_level = true
+    global_position = Vector3(origin.x, 0.0, origin.z)
+
+    wave = MeshInstance3D.new()
+    wave.name = "BlastFront"
+    wave.mesh = _ring_mesh()
+    wave.material_override = _heat_material()
+    wave.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    wave.position.y = 0.095
+    wave.scale = Vector3.ONE * blast_radius * 0.23
+    add_child(wave)
+    wave.set_instance_shader_parameter("heat_opacity", 1.0)
+
+    echo = MeshInstance3D.new()
+    echo.name = "BlastAfterglow"
+    echo.mesh = _ring_mesh()
+    echo.material_override = _heat_material()
+    echo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    echo.position.y = 0.090
+    echo.scale = Vector3.ONE * blast_radius * 0.14
+    add_child(echo)
+    echo.set_instance_shader_parameter("heat_opacity", 0.45)
+
+static func _ring_mesh() -> TorusMesh:
+    if _shared_ring_mesh != null:
+        return _shared_ring_mesh
+    _shared_ring_mesh = TorusMesh.new()
+    _shared_ring_mesh.inner_radius = 0.875
+    _shared_ring_mesh.outer_radius = 1.0
+    _shared_ring_mesh.rings = 32
+    _shared_ring_mesh.ring_segments = 4
+    return _shared_ring_mesh
+
+static func _heat_material() -> ShaderMaterial:
+    if _shared_material != null:
+        return _shared_material
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_add, cull_disabled, depth_draw_never;
+instance uniform float heat_opacity = 1.0;
+
+void fragment() {
+    ALBEDO = vec3(1.0, 0.42, 0.11);
+    EMISSION = vec3(1.0, 0.30, 0.055) * 6.0;
+    ALPHA = heat_opacity * 0.95;
+}
+"""
+    _shared_material = ShaderMaterial.new()
+    _shared_material.shader = shader
+    return _shared_material
+
+func _process(delta: float) -> void:
+    age += maxf(delta, 0.0)
+    var fraction := clampf(age / DURATION, 0.0, 1.0)
+    var ease_out := 1.0 - pow(1.0 - fraction, 2.3)
+    opacity = pow(1.0 - fraction, 1.6)
+    if wave != null:
+        wave.scale = Vector3.ONE * blast_radius * lerpf(0.23, 1.0, ease_out)
+        wave.set_instance_shader_parameter("heat_opacity", opacity)
+    if echo != null:
+        echo.scale = Vector3.ONE * blast_radius * lerpf(0.14, 0.88, ease_out)
+        echo.set_instance_shader_parameter("heat_opacity", opacity * 0.42)
+    if age >= DURATION:
+        queue_free()
+```
+
 ## File: scripts/Main.gd
 ```
 extends Node3D
@@ -6798,9 +6910,17 @@ func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) 
     if range_radius <= 0.0:
         return
     var fx_parent := _secondary_fx_parent() if spawn_secondary_fx else null
+    if fx_parent != null:
+        # The expanding world ring communicates the actual Inferno splash radius
+        # even when no secondary enemy happens to be inside it.
+        DZInfernoBlastFx.spawn_blast(fx_parent, primary.global_position, range_radius)
     for node in _enemies_near(primary.global_position, range_radius):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
+            continue
+        var offset := enemy.global_position - primary.global_position
+        offset.y = 0.0
+        if offset.length_squared() > range_radius * range_radius:
             continue
         enemy.take_damage(splash_damage, false)
         if fx_parent != null:
@@ -6817,6 +6937,10 @@ func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
     for node in _enemies_near(primary.global_position, 3.8):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
+            continue
+        var offset := enemy.global_position - primary.global_position
+        offset.y = 0.0
+        if offset.length_squared() > 3.8 * 3.8:
             continue
         candidates.append(enemy)
     candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
@@ -7343,6 +7467,12 @@ func _run_test() -> void:
     root.add_child(chained_b)
     chained_b.global_position = Vector3(2.8, 0.0, 0.0)
 
+    var far_enemy := DZEnemy.new()
+    far_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    far_enemy.configure("shambler", 1.0, target)
+    root.add_child(far_enemy)
+    far_enemy.global_position = Vector3(8.5, 0.0, 0.0)
+
     var projectile := PROJECTILE.new()
     projectile.process_mode = Node.PROCESS_MODE_DISABLED
     projectile.setup(Vector3.ZERO, Vector3.RIGHT, 12.0, 24.0, Color(0.65, 0.45, 1.0), "arc")
@@ -7360,6 +7490,9 @@ func _run_test() -> void:
         return
     if not is_equal_approx(chained_b.health, chained_b.max_health - 7.6):
         _fail("Arc second-chain damage changed while adding visual links")
+        return
+    if not is_equal_approx(far_enemy.health, far_enemy.max_health):
+        _fail("Arc damage escaped its true chain radius when the spatial index is unavailable")
         return
 
     projectile.spawn_secondary_fx = false
@@ -8839,6 +8972,95 @@ func _initialize() -> void:
         return
 
     print("Deadline Zero damage-number budget: OK")
+    quit(0)
+```
+
+## File: tests/elemental_protocols_render_test.gd
+```
+extends SceneTree
+
+# Real renderer evidence for the connected Arc ribbons and radial Inferno shockwave.
+const OUTPUT_PATH := "/tmp/deadline-zero-elemental-protocols.png"
+const MAIN_SCENE := preload("res://scenes/Main.tscn")
+
+func _initialize() -> void:
+    call_deferred("_capture")
+
+func _capture() -> void:
+    var scene := MAIN_SCENE.instantiate()
+    get_root().add_child(scene)
+    current_scene = scene
+    await process_frame
+    if scene.player == null or scene.camera == null:
+        push_error("Elemental visual QA failed to instantiate player and camera")
+        quit(1)
+        return
+
+    scene.set_physics_process(false)
+    scene.player.set_combat_enabled(false)
+    if scene.hud != null:
+        scene.hud.hide_onboarding_hint()
+    for existing in get_nodes_in_group("enemies"):
+        existing.queue_free()
+    await process_frame
+
+    # Freeze authored zombie poses so 3D protocol readability, rather than
+    # random director spawns, is compared from render to render.
+    var placements := [
+        {"kind":"elite", "position":Vector3(-2.6, 0.0, -0.3)},
+        {"kind":"runner", "position":Vector3(-4.9, 0.0, 1.4)},
+        {"kind":"regenerator", "position":Vector3(-4.4, 0.0, -2.2)},
+        {"kind":"brute", "position":Vector3(3.0, 0.0, 0.0)},
+        {"kind":"shambler", "position":Vector3(4.7, 0.0, -0.8)}
+    ]
+    for entry in placements:
+        var enemy := DZEnemy.new()
+        enemy.configure(String(entry["kind"]), 1.0, scene.player)
+        enemy.process_mode = Node.PROCESS_MODE_DISABLED
+        scene.add_child(enemy)
+        enemy.global_position = entry["position"]
+    await process_frame
+
+    var anchor := Vector3(-2.6, 0.72, -0.3)
+    var link_a := DZArcLinkFx.spawn_link(scene, anchor, Vector3(-4.9, 0.72, 1.4), 0)
+    var link_b := DZArcLinkFx.spawn_link(scene, anchor, Vector3(-4.4, 0.72, -2.2), 1)
+    var blast := DZInfernoBlastFx.spawn_blast(scene, Vector3(3.0, 0.0, 0.0), 1.85)
+    if link_a == null or link_b == null or blast == null:
+        push_error("Elemental visual QA did not stage all three real 3D combat effects")
+        quit(1)
+        return
+
+    # Simulate one time slice, then hold the GPU mesh effects for the screenshot.
+    for effect in [link_a, link_b, blast]:
+        effect.set_process(false)
+        effect._process(0.065)
+
+    for _frame in range(7):
+        await process_frame
+
+    if link_a.get_node_or_null("ArcRibbon") == null or blast.get_node_or_null("BlastFront") == null:
+        push_error("Elemental protocol meshes vanished before capture")
+        quit(1)
+        return
+
+    var texture := get_root().get_texture()
+    if texture == null:
+        push_error("Elemental render capture lacks a viewport texture")
+        quit(1)
+        return
+    var image := texture.get_image()
+    if image == null or image.is_empty() or image.get_width() < 1280 or image.get_height() < 720:
+        push_error("Elemental visual QA did not produce a valid 1280x720 capture")
+        quit(1)
+        return
+
+    image.convert(Image.FORMAT_RGB8)
+    var error := image.save_png(OUTPUT_PATH)
+    if error != OK:
+        push_error("Failed to save elemental VFX render: %s" % error_string(error))
+        quit(1)
+        return
+    print("GODOT_ELEMENTAL_PROTOCOL_VISUAL_QA_OK %dx%d" % [image.get_width(), image.get_height()])
     quit(0)
 ```
 
@@ -10998,6 +11220,132 @@ func _initialize() -> void:
         quit(1)
         return
     print("Deadline Zero authored industrial PBR atlases: OK (%d textured surfaces)" % total_textured_surfaces)
+    quit(0)
+```
+
+## File: tests/inferno_blast_wave_test.gd
+```
+extends SceneTree
+
+const BLAST := preload("res://scripts/InfernoBlastFx.gd")
+const PROJECTILE := preload("res://scripts/Projectile.gd")
+
+func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _fail(message: String) -> void:
+    push_error(message)
+    quit(1)
+
+func _run_test() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    await process_frame
+
+    var center := Vector3(3.2, 0.0, -1.7)
+    var first := BLAST.spawn_blast(root, center, 1.85)
+    var duplicate := BLAST.spawn_blast(root, center + Vector3.LEFT, 1.85)
+    if first == null or duplicate == null:
+        _fail("Inferno ground blast did not spawn within gameplay splash radius")
+        return
+    # Sample an explicit simulated frame; avoid unstable real-time test aging.
+    first.set_process(false)
+    duplicate.set_process(false)
+    await process_frame
+
+    if first.global_position.distance_to(center) > 0.001:
+        _fail("Inferno heatwave is not centered on its real impact")
+        return
+    var wave := first.get_node_or_null("BlastFront") as MeshInstance3D
+    var echo := first.get_node_or_null("BlastAfterglow") as MeshInstance3D
+    var duplicate_wave := duplicate.get_node_or_null("BlastFront") as MeshInstance3D
+    if wave == null or echo == null or duplicate_wave == null:
+        _fail("Inferno heatwave lost its two independently animated luminous layers")
+        return
+    if wave.mesh != echo.mesh or wave.mesh != duplicate_wave.mesh:
+        _fail("Inferno rings must reuse one low-poly mesh resource")
+        return
+    if wave.material_override != echo.material_override or wave.material_override != duplicate_wave.material_override:
+        _fail("Inferno rings must reuse one additive shader resource")
+        return
+    if wave.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or echo.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        _fail("Inferno heatwave must remain shadow-free on mobile")
+        return
+    var mesh := wave.mesh as TorusMesh
+    if mesh == null or mesh.rings > 32 or mesh.ring_segments > 4:
+        _fail("Inferno heatwave geometry budget regressed")
+        return
+    var lights := 0
+    for child in first.get_children():
+        if child is Light3D or child is GPUParticles3D:
+            lights += 1
+    if lights > 0 or first.get_child_count() != 2:
+        _fail("Inferno heatwave must avoid lights, emitters, and expensive draw nodes")
+        return
+
+    var initial_scale := wave.scale.x
+    first._process(0.075)
+    if wave.scale.x <= initial_scale or echo.scale.x <= 0.14 * first.blast_radius:
+        _fail("Inferno radial blast does not expand during its lifetime")
+        return
+    if not (first.opacity > 0.0 and first.opacity < 1.0):
+        _fail("Inferno radial blast does not fade smoothly")
+        return
+
+    if BLAST.spawn_blast(root, center, 0.05) != null or BLAST.spawn_blast(root, center, 4.0) != null:
+        _fail("Inferno visual radius hard limits regressed")
+        return
+
+    var target := Node3D.new()
+    root.add_child(target)
+    var primary := DZEnemy.new()
+    primary.configure("shambler", 1.0, target)
+    primary.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(primary)
+    primary.global_position = Vector3.ZERO
+    var secondary := DZEnemy.new()
+    secondary.configure("shambler", 1.0, target)
+    secondary.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(secondary)
+    secondary.global_position = Vector3(1.1, 0.0, 0.0)
+    var distant := DZEnemy.new()
+    distant.configure("shambler", 1.0, target)
+    distant.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(distant)
+    distant.global_position = Vector3(5.0, 0.0, 0.0)
+
+    var projectile := PROJECTILE.new()
+    projectile.process_mode = Node.PROCESS_MODE_DISABLED
+    projectile.setup(Vector3.ZERO, Vector3.RIGHT, 16.0, 25.0, Color(1.0, 0.3, 0.02), "inferno")
+    root.add_child(projectile)
+    await process_frame
+
+    var count_before := get_nodes_in_group("inferno_blast_waves").size()
+    projectile._apply_splash(primary, 10.0, projectile.splash_radius)
+    if get_nodes_in_group("inferno_blast_waves").size() != count_before + 1:
+        _fail("Actual Inferno splash hit must create one radial blast")
+        return
+    if not is_equal_approx(secondary.health, secondary.max_health - 10.0):
+        _fail("Inferno visual addition modified secondary splash damage")
+        return
+    if not is_equal_approx(distant.health, distant.max_health):
+        _fail("Inferno splash must not damage enemies outside its advertised radius")
+        return
+
+    projectile.spawn_secondary_fx = false
+    projectile._apply_splash(primary, 3.0, projectile.splash_radius)
+    if get_nodes_in_group("inferno_blast_waves").size() != count_before + 1:
+        _fail("Disabled secondary FX still spawned visual heatwaves")
+        return
+
+    for i in range(BLAST.MAX_ACTIVE + 4):
+        BLAST.spawn_blast(root, center, 1.85)
+    if get_nodes_in_group("inferno_blast_waves").size() != BLAST.MAX_ACTIVE:
+        _fail("Inferno heatwave mobile overlap cap was exceeded")
+        return
+
+    print("Deadline Zero Inferno 3D radial splash FX: OK")
     quit(0)
 ```
 

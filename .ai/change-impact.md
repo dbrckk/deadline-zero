@@ -1,13 +1,16 @@
 # Change impact
 
-Base: fa3afa65b7794e429eddd9e89968dda98c1ad91c
-Head: e1694007b3dfca1844adddddfc3a3f159bdf1865
+Base: f903b757f4f7e866e52109e572763fbf22d18a1c
+Head: fe21d5f0b00577577ac53105eb936f15d1ffa742
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- A godot/scripts/ArcLinkFx.gd
+- M godot/scripts/ArcLinkFx.gd
+- A godot/scripts/InfernoBlastFx.gd
 - M godot/scripts/Projectile.gd
-- A godot/tests/arc_chain_link_fx_test.gd
+- M godot/tests/arc_chain_link_fx_test.gd
+- A godot/tests/elemental_protocols_render_test.gd
+- A godot/tests/inferno_blast_wave_test.gd
 
 ## Affected areas
 - .github

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "generated_by": "dbrckk/repo-brain",
-  "base": "34406d778bdfed6d8e647f9a87a70f8523d2f22a",
-  "head": "e1694007b3dfca1844adddddfc3a3f159bdf1865",
+  "base": "e1694007b3dfca1844adddddfc3a3f159bdf1865",
+  "head": "fe21d5f0b00577577ac53105eb936f15d1ffa742",
   "index_mode": "incremental",
   "changed_files": [
     {
@@ -11,6 +11,10 @@
     },
     {
       "path": "godot/scripts/ArcLinkFx.gd",
+      "status": "M"
+    },
+    {
+      "path": "godot/scripts/InfernoBlastFx.gd",
       "status": "A"
     },
     {
@@ -19,11 +23,15 @@
     },
     {
       "path": "godot/tests/arc_chain_link_fx_test.gd",
+      "status": "M"
+    },
+    {
+      "path": "godot/tests/elemental_protocols_render_test.gd",
       "status": "A"
     },
     {
-      "path": "play/store/feature-graphic.png",
-      "status": "M"
+      "path": "godot/tests/inferno_blast_wave_test.gd",
+      "status": "A"
     },
     {
       "path": "play/store/phone-screenshots/01-first-playable.png",
@@ -48,8 +56,11 @@
   ],
   "changed_source_files": [
     "godot/scripts/ArcLinkFx.gd",
+    "godot/scripts/InfernoBlastFx.gd",
     "godot/scripts/Projectile.gd",
-    "godot/tests/arc_chain_link_fx_test.gd"
+    "godot/tests/arc_chain_link_fx_test.gd",
+    "godot/tests/elemental_protocols_render_test.gd",
+    "godot/tests/inferno_blast_wave_test.gd"
   ],
   "impacted_files": [
     "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
@@ -62,8 +73,11 @@
     "core/src/test/java/com/deadlinezero/game/meta/SingularityCoreRuntimeTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
     "godot/scripts/ArcLinkFx.gd",
+    "godot/scripts/InfernoBlastFx.gd",
     "godot/scripts/Projectile.gd",
-    "godot/tests/arc_chain_link_fx_test.gd"
+    "godot/tests/arc_chain_link_fx_test.gd",
+    "godot/tests/elemental_protocols_render_test.gd",
+    "godot/tests/inferno_blast_wave_test.gd"
   ],
   "impacted_symbols": [
     {
@@ -655,6 +669,24 @@
       "line": 120
     },
     {
+      "name": "DZInfernoBlastFx",
+      "kind": "class",
+      "file": "godot/scripts/InfernoBlastFx.gd",
+      "line": 1
+    },
+    {
+      "name": "_ready",
+      "kind": "function",
+      "file": "godot/scripts/InfernoBlastFx.gd",
+      "line": 37
+    },
+    {
+      "name": "_process",
+      "kind": "function",
+      "file": "godot/scripts/InfernoBlastFx.gd",
+      "line": 92
+    },
+    {
       "name": "DZProjectile",
       "kind": "class",
       "file": "godot/scripts/Projectile.gd",
@@ -802,7 +834,7 @@
       "name": "_apply_chain",
       "kind": "function",
       "file": "godot/scripts/Projectile.gd",
-      "line": 359
+      "line": 367
     },
     {
       "name": "_initialize",
@@ -821,6 +853,36 @@
       "kind": "function",
       "file": "godot/tests/arc_chain_link_fx_test.gd",
       "line": 12
+    },
+    {
+      "name": "_initialize",
+      "kind": "function",
+      "file": "godot/tests/elemental_protocols_render_test.gd",
+      "line": 6
+    },
+    {
+      "name": "_capture",
+      "kind": "function",
+      "file": "godot/tests/elemental_protocols_render_test.gd",
+      "line": 9
+    },
+    {
+      "name": "_initialize",
+      "kind": "function",
+      "file": "godot/tests/inferno_blast_wave_test.gd",
+      "line": 5
+    },
+    {
+      "name": "_fail",
+      "kind": "function",
+      "file": "godot/tests/inferno_blast_wave_test.gd",
+      "line": 8
+    },
+    {
+      "name": "_run_test",
+      "kind": "function",
+      "file": "godot/tests/inferno_blast_wave_test.gd",
+      "line": 12
     }
   ],
   "selected_tests": [
@@ -831,6 +893,8 @@
     "core/src/test/java/com/deadlinezero/game/visual/HostileProjectilePresentationTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java",
     "core/src/test/java/com/deadlinezero/game/visual/SingularityImpactTrackerTest.java",
-    "godot/tests/arc_chain_link_fx_test.gd"
+    "godot/tests/arc_chain_link_fx_test.gd",
+    "godot/tests/elemental_protocols_render_test.gd",
+    "godot/tests/inferno_blast_wave_test.gd"
   ]
 }

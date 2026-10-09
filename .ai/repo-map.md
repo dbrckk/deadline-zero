@@ -413,6 +413,7 @@ godot/
     Haptics.gd
     Hud.gd
     ImpactFx.gd
+    InfernoBlastFx.gd
     Main.gd
     Player.gd
     Projectile.gd
@@ -3249,6 +3250,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/impact_fx_mobile_test.gd
       - name: Validate layered 3D Arc chain links and mobile geometry budget
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/arc_chain_link_fx_test.gd
+      - name: Validate Inferno world-space radial blast and splash damage
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/inferno_blast_wave_test.gd
       - name: Validate authored combat ground mark budget
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/combat_ground_mark_test.gd
       - name: Validate enemy archetype combat
@@ -3394,6 +3397,19 @@ jobs:
             --script res://tests/archetype_roster_render_test.gd
           test -s /tmp/deadline-zero-archetype-roster.png
           cp /tmp/deadline-zero-archetype-roster.png build/godot-visual-smoke/archetype-roster-rendered.png
+
+      - name: Render Arc and Inferno 3D VFX evidence
+        run: |
+          set -euo pipefail
+          rm -f /tmp/deadline-zero-elemental-protocols.png
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a \
+            /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 \
+            --path godot \
+            --rendering-method gl_compatibility \
+            --audio-driver Dummy \
+            --script res://tests/elemental_protocols_render_test.gd
+          test -s /tmp/deadline-zero-elemental-protocols.png
+          cp /tmp/deadline-zero-elemental-protocols.png build/godot-visual-smoke/elemental-protocols-rendered.png
 
       - name: Render mid-run pressure evidence
         run: |
@@ -24392,11 +24408,11 @@ const MAX_ACTIVE := 12
 const MIN_LENGTH := 0.18
 const MAX_LENGTH := 7.5
 const SEGMENTS := 6
-const BAND_WIDTHS := [0.15, 0.075, 0.025]
+const BAND_WIDTHS := [0.24, 0.125, 0.045]
 const BAND_COLORS := [
-    Color(0.25, 0.12, 0.92, 0.18),
-    Color(0.54, 0.35, 1.0, 0.70),
-    Color(0.90, 0.89, 1.0, 1.0)
+    Color(0.34, 0.17, 1.0, 0.34),
+    Color(0.66, 0.46, 1.0, 0.88),
+    Color(0.97, 0.92, 1.0, 1.0)
 ]
 
 static var _shared_material: ShaderMaterial
@@ -24451,8 +24467,8 @@ render_mode unshaded, blend_add, cull_disabled, depth_draw_never;
 instance uniform float chain_opacity = 1.0;
 
 void fragment() {
-    ALBEDO = COLOR.rgb * 0.10;
-    EMISSION = COLOR.rgb * 3.8;
+    ALBEDO = COLOR.rgb;
+    EMISSION = COLOR.rgb * 6.6;
     ALPHA = COLOR.a * chain_opacity;
 }
 """
@@ -28047,6 +28063,115 @@ func _fade_material(material: StandardMaterial3D, t: float) -> void:
     material.emission_energy_multiplier = lerp(4.0, 0.5, t)
 ````
 
+## File: godot/scripts/InfernoBlastFx.gd
+````
+class_name DZInfernoBlastFx
+extends Node3D
+
+# Two lightweight world-space rings read as a radial blast rather than an
+# unrelated flash on each enemy. The ring radius matches gameplay splash.
+const DURATION := 0.30
+const MAX_ACTIVE := 8
+const MIN_RADIUS := 0.50
+const MAX_RADIUS := 3.50
+
+static var _shared_ring_mesh: TorusMesh
+static var _shared_material: ShaderMaterial
+
+var origin := Vector3.ZERO
+var blast_radius := 1.85
+var age := 0.0
+var opacity := 1.0
+var wave: MeshInstance3D
+var echo: MeshInstance3D
+
+static func spawn_blast(parent: Node3D, at: Vector3, effect_radius: float) -> DZInfernoBlastFx:
+    if parent == null or not is_instance_valid(parent) or not parent.is_inside_tree():
+        return null
+    if effect_radius < MIN_RADIUS or effect_radius > MAX_RADIUS:
+        return null
+    var active := 0
+    for node in parent.get_tree().get_nodes_in_group("inferno_blast_waves"):
+        if is_instance_valid(node) and not node.is_queued_for_deletion():
+            active += 1
+    if active >= MAX_ACTIVE:
+        return null
+    var effect := DZInfernoBlastFx.new()
+    effect.origin = at
+    effect.blast_radius = effect_radius
+    parent.add_child(effect)
+    return effect
+
+func _ready() -> void:
+    name = "InfernoWorldBlast"
+    add_to_group("inferno_blast_waves")
+    top_level = true
+    global_position = Vector3(origin.x, 0.0, origin.z)
+
+    wave = MeshInstance3D.new()
+    wave.name = "BlastFront"
+    wave.mesh = _ring_mesh()
+    wave.material_override = _heat_material()
+    wave.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    wave.position.y = 0.095
+    wave.scale = Vector3.ONE * blast_radius * 0.23
+    add_child(wave)
+    wave.set_instance_shader_parameter("heat_opacity", 1.0)
+
+    echo = MeshInstance3D.new()
+    echo.name = "BlastAfterglow"
+    echo.mesh = _ring_mesh()
+    echo.material_override = _heat_material()
+    echo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    echo.position.y = 0.090
+    echo.scale = Vector3.ONE * blast_radius * 0.14
+    add_child(echo)
+    echo.set_instance_shader_parameter("heat_opacity", 0.45)
+
+static func _ring_mesh() -> TorusMesh:
+    if _shared_ring_mesh != null:
+        return _shared_ring_mesh
+    _shared_ring_mesh = TorusMesh.new()
+    _shared_ring_mesh.inner_radius = 0.875
+    _shared_ring_mesh.outer_radius = 1.0
+    _shared_ring_mesh.rings = 32
+    _shared_ring_mesh.ring_segments = 4
+    return _shared_ring_mesh
+
+static func _heat_material() -> ShaderMaterial:
+    if _shared_material != null:
+        return _shared_material
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_add, cull_disabled, depth_draw_never;
+instance uniform float heat_opacity = 1.0;
+
+void fragment() {
+    ALBEDO = vec3(1.0, 0.42, 0.11);
+    EMISSION = vec3(1.0, 0.30, 0.055) * 6.0;
+    ALPHA = heat_opacity * 0.95;
+}
+"""
+    _shared_material = ShaderMaterial.new()
+    _shared_material.shader = shader
+    return _shared_material
+
+func _process(delta: float) -> void:
+    age += maxf(delta, 0.0)
+    var fraction := clampf(age / DURATION, 0.0, 1.0)
+    var ease_out := 1.0 - pow(1.0 - fraction, 2.3)
+    opacity = pow(1.0 - fraction, 1.6)
+    if wave != null:
+        wave.scale = Vector3.ONE * blast_radius * lerpf(0.23, 1.0, ease_out)
+        wave.set_instance_shader_parameter("heat_opacity", opacity)
+    if echo != null:
+        echo.scale = Vector3.ONE * blast_radius * lerpf(0.14, 0.88, ease_out)
+        echo.set_instance_shader_parameter("heat_opacity", opacity * 0.42)
+    if age >= DURATION:
+        queue_free()
+````
+
 ## File: godot/scripts/Main.gd
 ````
 extends Node3D
@@ -31046,9 +31171,17 @@ func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) 
     if range_radius <= 0.0:
         return
     var fx_parent := _secondary_fx_parent() if spawn_secondary_fx else null
+    if fx_parent != null:
+        # The expanding world ring communicates the actual Inferno splash radius
+        # even when no secondary enemy happens to be inside it.
+        DZInfernoBlastFx.spawn_blast(fx_parent, primary.global_position, range_radius)
     for node in _enemies_near(primary.global_position, range_radius):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
+            continue
+        var offset := enemy.global_position - primary.global_position
+        offset.y = 0.0
+        if offset.length_squared() > range_radius * range_radius:
             continue
         enemy.take_damage(splash_damage, false)
         if fx_parent != null:
@@ -31065,6 +31198,10 @@ func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
     for node in _enemies_near(primary.global_position, 3.8):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
+            continue
+        var offset := enemy.global_position - primary.global_position
+        offset.y = 0.0
+        if offset.length_squared() > 3.8 * 3.8:
             continue
         candidates.append(enemy)
     candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:

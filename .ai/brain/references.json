@@ -33,12 +33,24 @@
         },
         {
           "file": "godot/scripts/Projectile.gd",
-          "line": 383,
+          "line": 395,
           "preview": "DZArcLinkFx.spawn_link(fx_parent, chain_origin, endpoint, i)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 46,
+          "preview": "var link_a := DZArcLinkFx.spawn_link(scene, anchor, Vector3(-4.9, 0.72, 1.4), 0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 47,
+          "preview": "var link_b := DZArcLinkFx.spawn_link(scene, anchor, Vector3(-4.4, 0.72, -2.2), 1)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 4
+      "occurrence_count": 6
     },
     "_ready": {
       "definition": {
@@ -85,6 +97,12 @@
           "definition_candidate": false
         },
         {
+          "file": "godot/scripts/InfernoBlastFx.gd",
+          "line": 38,
+          "preview": "func _ready() -> void:",
+          "definition_candidate": false
+        },
+        {
           "file": "godot/scripts/Main.gd",
           "line": 101,
           "preview": "func _ready() -> void:",
@@ -109,7 +127,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 10
+      "occurrence_count": 11
     },
     "_process": {
       "definition": {
@@ -132,6 +150,12 @@
           "definition_candidate": false
         },
         {
+          "file": "godot/scripts/InfernoBlastFx.gd",
+          "line": 93,
+          "preview": "func _process(delta: float) -> void:",
+          "definition_candidate": false
+        },
+        {
           "file": "godot/scripts/Main.gd",
           "line": 147,
           "preview": "func _process(delta: float) -> void:",
@@ -150,9 +174,21 @@
           "definition_candidate": false
         },
         {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 57,
+          "preview": "effect._process(0.065)",
+          "definition_candidate": false
+        },
+        {
           "file": "godot/tests/first_playable_run_path_test.gd",
           "line": 162,
           "preview": "main._process(0.020 * 0.12)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 61,
+          "preview": "first._process(0.075)",
           "definition_candidate": false
         },
         {
@@ -180,7 +216,48 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 10
+      "occurrence_count": 13
+    },
+    "DZInfernoBlastFx": {
+      "definition": {
+        "file": "godot/scripts/InfernoBlastFx.gd",
+        "line": 1,
+        "kind": "class",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/InfernoBlastFx.gd",
+          "line": 1,
+          "preview": "class_name DZInfernoBlastFx",
+          "definition_candidate": true
+        },
+        {
+          "file": "godot/scripts/InfernoBlastFx.gd",
+          "line": 21,
+          "preview": "static func spawn_blast(parent: Node3D, at: Vector3, effect_radius: float) -> DZInfernoBlastFx:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/InfernoBlastFx.gd",
+          "line": 32,
+          "preview": "var effect := DZInfernoBlastFx.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 351,
+          "preview": "DZInfernoBlastFx.spawn_blast(fx_parent, primary.global_position, range_radius)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 48,
+          "preview": "var blast := DZInfernoBlastFx.spawn_blast(scene, Vector3(3.0, 0.0, 0.0), 1.85)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
     },
     "DZProjectile": {
       "definition": {
@@ -245,8 +322,14 @@
         },
         {
           "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 96,
+          "line": 102,
           "preview": "projectile.setup(Vector3.ZERO, Vector3.RIGHT, 12.0, 24.0, Color(0.65, 0.45, 1.0), \"arc\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 93,
+          "preview": "projectile.setup(Vector3.ZERO, Vector3.RIGHT, 16.0, 25.0, Color(1.0, 0.3, 0.02), \"inferno\")",
           "definition_candidate": false
         },
         {
@@ -286,7 +369,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 9
+      "occurrence_count": 10
     },
     "_apply_profile": {
       "definition": {
@@ -753,6 +836,12 @@
           "definition_candidate": false
         },
         {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 21,
+          "preview": "scene.player.set_combat_enabled(false)",
+          "definition_candidate": false
+        },
+        {
           "file": "godot/tests/multihit_silhouette_stability_test.gd",
           "line": 21,
           "preview": "enemy.set_combat_enabled(false)",
@@ -819,7 +908,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 26
+      "occurrence_count": 27
     },
     "_physics_process": {
       "definition": {
@@ -1002,13 +1091,13 @@
         },
         {
           "file": "godot/scripts/Projectile.gd",
-          "line": 348,
+          "line": 352,
           "preview": "for node in _enemies_near(primary.global_position, range_radius):",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Projectile.gd",
-          "line": 364,
+          "line": 372,
           "preview": "for node in _enemies_near(primary.global_position, 3.8):",
           "definition_candidate": false
         },
@@ -1107,7 +1196,7 @@
         },
         {
           "file": "godot/scripts/Projectile.gd",
-          "line": 373,
+          "line": 385,
           "preview": "var fx_parent := _secondary_fx_parent() if spawn_secondary_fx else null",
           "definition_candidate": false
         }
@@ -1133,14 +1222,26 @@
           "line": 344,
           "preview": "func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) -> void:",
           "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 98,
+          "preview": "projectile._apply_splash(primary, 10.0, projectile.splash_radius)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 110,
+          "preview": "projectile._apply_splash(primary, 3.0, projectile.splash_radius)",
+          "definition_candidate": false
         }
       ],
-      "occurrence_count": 2
+      "occurrence_count": 4
     },
     "_apply_chain": {
       "definition": {
         "file": "godot/scripts/Projectile.gd",
-        "line": 359,
+        "line": 367,
         "kind": "function",
         "language": "gdscript"
       },
@@ -1153,19 +1254,19 @@
         },
         {
           "file": "godot/scripts/Projectile.gd",
-          "line": 360,
+          "line": 368,
           "preview": "func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:",
           "definition_candidate": false
         },
         {
           "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 101,
+          "line": 107,
           "preview": "projectile._apply_chain(primary, 20.0)",
           "definition_candidate": false
         },
         {
           "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 114,
+          "line": 123,
           "preview": "projectile._apply_chain(primary, 4.0)",
           "definition_candidate": false
         }
@@ -1271,6 +1372,12 @@
           "definition_candidate": false
         },
         {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 7,
+          "preview": "func _initialize() -> void:",
+          "definition_candidate": false
+        },
+        {
           "file": "godot/tests/enemy_hit_reaction_test.gd",
           "line": 3,
           "preview": "func _initialize() -> void:",
@@ -1350,6 +1457,12 @@
         },
         {
           "file": "godot/tests/industrial_prop_material_test.gd",
+          "line": 6,
+          "preview": "func _initialize() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
           "line": 6,
           "preview": "func _initialize() -> void:",
           "definition_candidate": false
@@ -1547,7 +1660,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 61
+      "occurrence_count": 63
     },
     "_fail": {
       "definition": {
@@ -1631,32 +1744,140 @@
         },
         {
           "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 104,
+          "line": 110,
           "preview": "_fail(\"Arc chain damage must spawn exactly two real connecting lightning links\")",
           "definition_candidate": false
         },
         {
           "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 107,
+          "line": 113,
           "preview": "_fail(\"Arc first-chain damage changed while adding visual links\")",
           "definition_candidate": false
         },
         {
           "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 110,
+          "line": 116,
           "preview": "_fail(\"Arc second-chain damage changed while adding visual links\")",
           "definition_candidate": false
         },
         {
           "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 116,
+          "line": 119,
+          "preview": "_fail(\"Arc damage escaped its true chain radius when the spatial index is unavailable\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 125,
           "preview": "_fail(\"Disabling secondary FX must also disable Arc link geometry\")",
           "definition_candidate": false
         },
         {
           "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 123,
+          "line": 132,
           "preview": "_fail(\"Arc chain hard active-link draw budget was exceeded\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 9,
+          "preview": "func _fail(message: String) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 23,
+          "preview": "_fail(\"Inferno ground blast did not spawn within gameplay splash radius\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 31,
+          "preview": "_fail(\"Inferno heatwave is not centered on its real impact\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 37,
+          "preview": "_fail(\"Inferno heatwave lost its two independently animated luminous layers\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 40,
+          "preview": "_fail(\"Inferno rings must reuse one low-poly mesh resource\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 43,
+          "preview": "_fail(\"Inferno rings must reuse one additive shader resource\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 46,
+          "preview": "_fail(\"Inferno heatwave must remain shadow-free on mobile\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 50,
+          "preview": "_fail(\"Inferno heatwave geometry budget regressed\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 57,
+          "preview": "_fail(\"Inferno heatwave must avoid lights, emitters, and expensive draw nodes\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 63,
+          "preview": "_fail(\"Inferno radial blast does not expand during its lifetime\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 66,
+          "preview": "_fail(\"Inferno radial blast does not fade smoothly\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 70,
+          "preview": "_fail(\"Inferno visual radius hard limits regressed\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 100,
+          "preview": "_fail(\"Actual Inferno splash hit must create one radial blast\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 103,
+          "preview": "_fail(\"Inferno visual addition modified secondary splash damage\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 106,
+          "preview": "_fail(\"Inferno splash must not damage enemies outside its advertised radius\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 112,
+          "preview": "_fail(\"Disabled secondary FX still spawned visual heatwaves\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 118,
+          "preview": "_fail(\"Inferno heatwave mobile overlap cap was exceeded\")",
           "definition_candidate": false
         },
         {
@@ -1690,7 +1911,7 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 22
+      "occurrence_count": 40
     },
     "_run_test": {
       "definition": {
@@ -1773,6 +1994,18 @@
           "definition_candidate": false
         },
         {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 7,
+          "preview": "call_deferred(\"_run_test\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 13,
+          "preview": "func _run_test() -> void:",
+          "definition_candidate": false
+        },
+        {
           "file": "godot/tests/mobile_orientation_test.gd",
           "line": 4,
           "preview": "call_deferred(\"_run_test\")",
@@ -1821,7 +2054,54 @@
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 20
+      "occurrence_count": 22
+    },
+    "_capture": {
+      "definition": {
+        "file": "godot/tests/elemental_protocols_render_test.gd",
+        "line": 9,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 8,
+          "preview": "call_deferred(\"_capture\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 10,
+          "preview": "func _capture() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/play_feature_graphic_render_test.gd",
+          "line": 6,
+          "preview": "call_deferred(\"_capture\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/play_feature_graphic_render_test.gd",
+          "line": 8,
+          "preview": "func _capture() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/play_icon_render_test.gd",
+          "line": 7,
+          "preview": "call_deferred(\"_capture\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/play_icon_render_test.gd",
+          "line": 9,
+          "preview": "func _capture() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
     }
   }
 }
