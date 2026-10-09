@@ -93,11 +93,6 @@ func _run_test() -> void:
     if first.is_queued_for_deletion() or lingering_scorch <= 0.0 or lingering_scorch >= active_scorch:
         _fail("Inferno ground scorch must persist after the expanding shockwave, while fading")
         return
-    first._process(0.60)
-    if not first.is_queued_for_deletion():
-        _fail("Inferno residue lifetime must stay hard-capped for mobile memory budget")
-        return
-
     if BLAST.spawn_blast(root, center, 0.05) != null or BLAST.spawn_blast(root, center, 4.0) != null:
         _fail("Inferno visual radius hard limits regressed")
         return
@@ -148,6 +143,11 @@ func _run_test() -> void:
         BLAST.spawn_blast(root, center, 1.85)
     if get_nodes_in_group("inferno_blast_waves").size() != BLAST.MAX_ACTIVE:
         _fail("Inferno heatwave mobile overlap cap was exceeded")
+        return
+
+    first._process(0.60)
+    if not first.is_queued_for_deletion():
+        _fail("Inferno residue lifetime must stay hard-capped for mobile memory budget")
         return
 
     print("Deadline Zero Inferno 3D radial splash FX: OK")
