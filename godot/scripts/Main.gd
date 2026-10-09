@@ -797,15 +797,20 @@ func _build_ambient_motes() -> void:
     add_child(particles)
 
 func _build_quarantine_floor_material() -> ShaderMaterial:
-    # One lightweight procedural material gives the broad arena plane real surface hierarchy
-    # without shipping another texture or adding draw calls. Geometry overlays still carry
-    # authored seams, grates, wear and hazard identity above this subtle base.
+    # The existing Poly Haven CC0 asphalt maps give the arena physical
+    # roughness/normal and color variation under its authored containment
+    # graphics. This remains ONE draw call and ONE material on the broad floor.
+    # Procedural seams, grime, directional wear and scene decals are retained.
     var shader := Shader.new()
     shader.code = """
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx;
 
 uniform vec3 base_tone = vec3(0.040, 0.052, 0.060);
+uniform sampler2D asphalt_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D asphalt_normal : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D asphalt_arm : filter_linear_mipmap_anisotropic, repeat_enable;
+uniform float asphalt_repeat = 16.0;
 
 float hash21(vec2 p) {
     p = fract(p * vec2(123.34, 456.21));
@@ -833,7 +838,17 @@ void fragment() {
     float perimeter_heat = smoothstep(0.34, 0.70, radial);
     float grime = smoothstep(0.70, 0.96, macro_variation + micro_variation * 0.10);
 
+    // Physically authored asphalt grain, not an arbitrary noise-only
+    // checkerboard. Keep the photograph subordinate to gameplay silhouettes
+    // using its luminance rather than reproducing any bright source hue.
+    vec2 asphalt_uv = UV * asphalt_repeat;
+    vec3 authored_surface = texture(asphalt_albedo, asphalt_uv).rgb;
+    vec3 authored_arm = texture(asphalt_arm, asphalt_uv).rgb;
+    float authored_luma = dot(authored_surface, vec3(0.2126, 0.7152, 0.0722));
+    float porous_stone = clamp(0.77 + authored_luma * 1.05, 0.76, 1.23);
+
     vec3 tone = base_tone;
+    tone *= mix(1.0, porous_stone, 0.62);
     tone *= 0.94 + panel_variation * 0.075;
     tone *= 0.965 + micro_variation * 0.055;
     tone *= 1.0 - panel_edge * 0.055;
@@ -842,12 +857,20 @@ void fragment() {
     tone += vec3(0.010, 0.0025, 0.0010) * perimeter_heat;
 
     ALBEDO = tone;
-    ROUGHNESS = clamp(0.83 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05 + grime * 0.04, 0.75, 0.97);
+    float authored_roughness = clamp(authored_arm.g, 0.65, 1.0);
+    float procedural_roughness = clamp(0.83 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05 + grime * 0.04, 0.75, 0.97);
+    ROUGHNESS = clamp(mix(procedural_roughness, authored_roughness, 0.27), 0.72, 0.98);
     METALLIC = 0.055 + panel_variation * 0.045 - grime * 0.012;
+    AO = clamp(mix(1.0, authored_arm.r, 0.24), 0.76, 1.0);
+    NORMAL_MAP = texture(asphalt_normal, asphalt_uv).rgb;
+    NORMAL_MAP_DEPTH = 0.27;
 }
 """
     var material := ShaderMaterial.new()
     material.shader = shader
+    material.set_shader_parameter("asphalt_albedo", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_diff_2k.jpg") as Texture2D)
+    material.set_shader_parameter("asphalt_normal", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_nor_gl_2k.jpg") as Texture2D)
+    material.set_shader_parameter("asphalt_arm", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_arm_2k.jpg") as Texture2D)
     return material
 
 func _build_light_pool_decals() -> void:
