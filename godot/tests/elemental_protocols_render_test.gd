@@ -130,7 +130,7 @@ func _capture() -> void:
     # survives GLTF body occlusion and the Android-compatible renderer. Compare
     # two identically staged GPU frames, with only the burn mesh removed. This
     # specifically protects against the earlier invisible-fire regression.
-    var burn_screen := scene.camera.unproject_position(
+    var burn_screen: Vector2 = scene.camera.unproject_position(
         burning_victim.global_position + Vector3(0.0, 0.85, 0.0)
     )
     flames.queue_free()
