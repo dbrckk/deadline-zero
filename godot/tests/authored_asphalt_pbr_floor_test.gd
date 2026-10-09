@@ -43,7 +43,8 @@ func _run_test() -> void:
         push_error("Large arena ground must stay opaque and shadow-free for mobile")
         quit(1)
         return
-    if floor.mesh.get_surface_count() != 1 or float(material.get_shader_parameter("asphalt_repeat")) < 12.0:
+    var tile_repeat = material.get_shader_parameter("asphalt_repeat")
+    if floor.mesh.get_surface_count() != 1 or typeof(tile_repeat) != TYPE_FLOAT or float(tile_repeat) < 12.0:
         push_error("PBR ground lost single-pass tiled geometry")
         quit(1)
         return
