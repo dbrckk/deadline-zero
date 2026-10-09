@@ -25,6 +25,15 @@ def material(name, color, metallic, roughness):
     mat.diffuse_color = (*color, 1.0)
     mat.metallic = metallic
     mat.roughness = roughness
+    # glTF exports its PBR channels from the node graph. Updating viewport
+    # diffuse_color alone can silently export bright white materials.
+    mat.use_nodes = True
+    bsdf = mat.node_tree.nodes.get("Principled BSDF")
+    if bsdf is None:
+        raise RuntimeError(f"Missing Principled BSDF for {name}")
+    bsdf.inputs["Base Color"].default_value = (*color, 1.0)
+    bsdf.inputs["Metallic"].default_value = metallic
+    bsdf.inputs["Roughness"].default_value = roughness
     return mat
 
 STEEL = None
