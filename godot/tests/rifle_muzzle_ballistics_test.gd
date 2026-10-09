@@ -1,7 +1,7 @@
 extends SceneTree
 
 # Real firing QA: bullets must visibly originate at the authored rifle muzzle,
-# never at the character's torso, across bearings and weapon protocols.
+# never at the character's torso, across far/close bearings and weapon protocols.
 const PROFILES := ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]
 
 func _initialize() -> void:
@@ -29,7 +29,7 @@ func _run_test() -> void:
 
     survivor.multishot = 3
     survivor.spread_degrees = 8.0
-    var bearings := [Vector3(8.0, 0.0, -5.0), Vector3(-7.0, 0.0, 4.0)]
+    var bearings := [Vector3(8.0, 0.0, -5.0), Vector3(-7.0, 0.0, 4.0), Vector3(0.0, 0.0, -1.45)]
     for bearing in bearings:
         enemy.global_position = bearing
         survivor.look_at(bearing, Vector3.UP)
@@ -45,6 +45,10 @@ func _run_test() -> void:
             var base_direction := survivor.global_position.direction_to(enemy.global_position)
             base_direction.y = 0.0
             base_direction = base_direction.normalized()
+            var muzzle_to_target := enemy.global_position - survivor._projectile_muzzle_origin(base_direction)
+            muzzle_to_target.y = 0.0
+            if muzzle_to_target.length_squared() > 0.0001:
+                base_direction = muzzle_to_target.normalized()
             for index in range(shots.size()):
                 var projectile := shots[index] as DZProjectile
                 if projectile == null or projectile.visual_profile != profile:
@@ -67,8 +71,15 @@ func _run_test() -> void:
                     push_error("%s projectile spawned inside the player's torso" % profile)
                     quit(1)
                     return
+                if index == 1:
+                    var target_offset := enemy.global_position - projectile.global_position
+                    var lateral_error := absf(Vector2(target_offset.x, target_offset.z).cross(Vector2(direction.x, direction.z)))
+                    if lateral_error > 0.04:
+                        push_error("%s centered shot misses the close target because of the rifle barrel offset" % profile)
+                        quit(1)
+                        return
                 projectile.queue_free()
             await process_frame
 
-    print("Deadline Zero rifle muzzle ballistics: OK (six protocols, two bearings, 36 shots)")
+    print("Deadline Zero rifle muzzle ballistics: OK (six protocols, three bearings, 54 shots)")
     quit(0)
