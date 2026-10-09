@@ -868,6 +868,7 @@ void fragment() {
 """
     var material := ShaderMaterial.new()
     material.shader = shader
+    material.set_shader_parameter("asphalt_repeat", 16.0)
     material.set_shader_parameter("asphalt_albedo", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_diff_2k.jpg") as Texture2D)
     material.set_shader_parameter("asphalt_normal", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_nor_gl_2k.jpg") as Texture2D)
     material.set_shader_parameter("asphalt_arm", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_arm_2k.jpg") as Texture2D)
