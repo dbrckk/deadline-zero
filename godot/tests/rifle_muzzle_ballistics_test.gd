@@ -45,7 +45,7 @@ func _run_test() -> void:
             var base_direction := survivor.global_position.direction_to(enemy.global_position)
             base_direction.y = 0.0
             base_direction = base_direction.normalized()
-            var muzzle_to_target := enemy.global_position - survivor._projectile_muzzle_origin(base_direction)
+            var muzzle_to_target := enemy.global_position - survivor._projectile_muzzle_origin(Vector3.ZERO)
             muzzle_to_target.y = 0.0
             if muzzle_to_target.length_squared() > 0.0001:
                 base_direction = muzzle_to_target.normalized()
