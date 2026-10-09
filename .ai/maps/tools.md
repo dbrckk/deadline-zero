@@ -463,6 +463,11 @@ def material(name, color, metallic, roughness)
 ⋮----
 mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
 ⋮----
+# glTF exports its PBR channels from the node graph. Updating viewport
+# diffuse_color alone can silently export bright white materials.
+⋮----
+bsdf = mat.node_tree.nodes.get("Principled BSDF")
+⋮----
 STEEL = None
 DARK = None
 HAZARD = None

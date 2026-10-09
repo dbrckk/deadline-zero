@@ -22,27 +22,36 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T02:53:32Z
+Generated: 2026-10-09T04:26:21Z
 
 ### Git
 - Branch: `main`
-- Head: `23a72f7b2d5b`
-- Commit date: 2026-10-09T04:53:19+02:00
-- Commit: fix(godot): accurate projectile perf counts and clean physics regression
-- Tracked files: 1050
+- Head: `908ca0bdd37b`
+- Commit date: 2026-10-09T06:26:06+02:00
+- Commit: feat(gamefeel): world-space target lock reticle aligned to actual autoaim
+- Tracked files: 1052
 
 ### Recently changed files
-- `godot/scripts/Main.gd`
-- `godot/tests/shock_expiry_recovery_test.gd`
 - `.github/workflows/godot-verify.yml`
 - `godot/scripts/Player.gd`
-- `godot/tests/rifle_muzzle_ballistics_test.gd`
+- `godot/tests/world_target_lock_test.gd`
+- `godot/assets/generated/industrial/SHA256SUMS.txt`
+- `godot/assets/generated/industrial/dz_bulkhead_panel.glb`
+- `godot/assets/generated/industrial/dz_cargo_crate.glb`
+- `godot/assets/generated/industrial/dz_emergency_light_bar.glb`
+- `godot/assets/generated/industrial/dz_floor_grate.glb`
+- `godot/assets/generated/industrial/dz_floor_hatch.glb`
+- `godot/assets/generated/industrial/dz_hazard_bollard.glb`
+- `godot/assets/generated/industrial/dz_junction_box.glb`
+- `godot/assets/generated/industrial/dz_pipe_rack.glb`
+- `godot/assets/generated/industrial/dz_service_pillar.glb`
+- `godot/assets/generated/industrial/dz_utility_cabinet.glb`
+- `godot/assets/generated/industrial/dz_wall_vent.glb`
+- `godot/scripts/AssetLibrary.gd`
+- `godot/tests/industrial_kit_pbr_budget_test.gd`
+- `tools/blender/build_industrial_kit.py`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
-- `play/store/phone-screenshots/03-boss-encounter.png`
-- `play/store/phone-screenshots/04-upgrade-choice.png`
-- `play/store/phone-screenshots/05-run-end.png`
-- `godot/scripts/Enemy.gd`
 
 ### Project signals
 - `build.gradle`

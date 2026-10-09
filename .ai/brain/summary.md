@@ -1,16 +1,16 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 558
-- Files reparsed this run: 4
-- Symbols: 3082
+- Files indexed: 560
+- Files reparsed this run: 5
+- Symbols: 3089
 - Internal import edges: 808
-- Impacted files: 37
+- Impacted files: 38
 - Selected tests: 14
 
 ## Languages
 - java: 422 files
-- gdscript: 81 files
+- gdscript: 83 files
 - python: 55 files
 
 ## Highest-density symbol files
@@ -19,9 +19,9 @@
 - android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java: 55 symbols
 - godot/scripts/Enemy.gd: 53 symbols
 - core/src/main/java/com/deadlinezero/game/screen/GameScreen.java: 45 symbols
+- godot/scripts/Player.gd: 38 symbols
 - core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java: 36 symbols
 - core/src/main/java/com/deadlinezero/game/world/ArenaHazardRuntime.java: 36 symbols
-- godot/scripts/Player.gd: 36 symbols
 - core/src/main/java/com/deadlinezero/game/visual/GameArt.java: 34 symbols
 - godot/scripts/Hud.gd: 32 symbols
 - core/src/main/java/com/deadlinezero/game/entities/Enemy.java: 31 symbols
@@ -44,7 +44,7 @@
 ## ast-grep enrichment
 - ast-grep outline: available
 - AST index mode: incremental
-- AST files reparsed this run: 0
+- AST files reparsed this run: 1
 - outline files retained: 475
 - top-level items retained: 3095
 - direct members retained: 3472

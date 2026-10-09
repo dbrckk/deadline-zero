@@ -1,13 +1,15 @@
 # Change impact
 
-Base: 475b5c58ad9a19d697602b9eb592cce95727f7a2
-Head: 23a72f7b2d5b00c1e783887f493b9113d60eb16b
+Base: ee0141abe59b159ba96c4a1b86c0925301980d56
+Head: 908ca0bdd37bc207057488c451df41a1b559af25
 
 ## Changed files
-- M godot/scripts/Main.gd
-- M godot/tests/shock_expiry_recovery_test.gd
+- M .github/workflows/godot-verify.yml
+- M godot/scripts/Player.gd
+- A godot/tests/world_target_lock_test.gd
 
 ## Affected areas
+- .github
 - godot
 
 ## Related test candidates
