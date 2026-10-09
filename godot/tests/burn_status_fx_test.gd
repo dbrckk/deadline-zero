@@ -84,7 +84,7 @@ func _run_test() -> void:
     for vertex in vertices:
         highest = maxf(highest, vertex.y)
         furthest = maxf(furthest, Vector2(vertex.x, vertex.z).length())
-    if highest < 1.15 or furthest < 0.48:
+    if highest < 1.15 or furthest < 0.78:
         _fail("Inferno flames too small/inside body: height=%.3f radius=%.3f" % [highest, furthest])
         return
     if flames_a.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
