@@ -91,6 +91,12 @@ func _run_test() -> void:
     root.add_child(chained_b)
     chained_b.global_position = Vector3(2.8, 0.0, 0.0)
 
+    var far_enemy := DZEnemy.new()
+    far_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+    far_enemy.configure("shambler", 1.0, target)
+    root.add_child(far_enemy)
+    far_enemy.global_position = Vector3(8.5, 0.0, 0.0)
+
     var projectile := PROJECTILE.new()
     projectile.process_mode = Node.PROCESS_MODE_DISABLED
     projectile.setup(Vector3.ZERO, Vector3.RIGHT, 12.0, 24.0, Color(0.65, 0.45, 1.0), "arc")
@@ -108,6 +114,9 @@ func _run_test() -> void:
         return
     if not is_equal_approx(chained_b.health, chained_b.max_health - 7.6):
         _fail("Arc second-chain damage changed while adding visual links")
+        return
+    if not is_equal_approx(far_enemy.health, far_enemy.max_health):
+        _fail("Arc damage escaped its true chain radius when the spatial index is unavailable")
         return
 
     projectile.spawn_secondary_fx = false

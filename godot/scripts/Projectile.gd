@@ -345,9 +345,17 @@ func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) 
     if range_radius <= 0.0:
         return
     var fx_parent := _secondary_fx_parent() if spawn_secondary_fx else null
+    if fx_parent != null:
+        # The expanding world ring communicates the actual Inferno splash radius
+        # even when no secondary enemy happens to be inside it.
+        DZInfernoBlastFx.spawn_blast(fx_parent, primary.global_position, range_radius)
     for node in _enemies_near(primary.global_position, range_radius):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
+            continue
+        var offset := enemy.global_position - primary.global_position
+        offset.y = 0.0
+        if offset.length_squared() > range_radius * range_radius:
             continue
         enemy.take_damage(splash_damage, false)
         if fx_parent != null:
@@ -364,6 +372,10 @@ func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:
     for node in _enemies_near(primary.global_position, 3.8):
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead or enemy == primary:
+            continue
+        var offset := enemy.global_position - primary.global_position
+        offset.y = 0.0
+        if offset.length_squared() > 3.8 * 3.8:
             continue
         candidates.append(enemy)
     candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
