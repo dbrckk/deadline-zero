@@ -207,6 +207,8 @@ jobs:
             --script res://tests/elemental_protocols_render_test.gd
           test -s /tmp/deadline-zero-elemental-protocols.png
           cp /tmp/deadline-zero-elemental-protocols.png build/godot-visual-smoke/elemental-protocols-rendered.png
+          test -s /tmp/deadline-zero-inferno-residue.png
+          cp /tmp/deadline-zero-inferno-residue.png build/godot-visual-smoke/inferno-scorch-residue-rendered.png
 
       - name: Render mid-run pressure evidence
         run: |
