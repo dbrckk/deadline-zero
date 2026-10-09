@@ -3260,6 +3260,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/run_director_escalation_test.gd
       - name: Validate enemy silhouette identities
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/enemy_silhouette_identity_test.gd
+      - name: Validate soft radial contact shadow budget
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/soft_contact_shadow_budget_test.gd
       - name: Validate authored character gait synchronization
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_gait_sync_test.gd
       - name: Validate final shock frame and authored animation recovery
@@ -3316,6 +3318,8 @@ jobs:
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/screen_space_fx_test.gd
       - name: Validate environment identity
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_identity_test.gd
+      - name: Validate real CC0 asphalt terrain PBR textures
+        run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/authored_asphalt_pbr_floor_test.gd
       - name: Validate authored environment assets
         run: timeout 120s /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --script res://tests/environment_asset_validation_test.gd
       - name: Validate authored prop textures and industrial PBR
@@ -25144,7 +25148,7 @@ var hit_reaction_tween: Tween
 var spawn_reveal_tween: Tween
 var visual_rest_scale := Vector3.ONE
 var visual_rest_position := Vector3.ZERO
-static var _shared_contact_shadow_material: StandardMaterial3D
+static var _shared_contact_shadow_material: ShaderMaterial
 static var _contact_shadow_mesh_cache := {}
 static var _signature_material_cache := {}
 static var _signature_mesh_cache := {}
@@ -25890,7 +25894,8 @@ func _build_contact_shadow() -> void:
         "boss":
             radius = 0.90
     shadow.mesh = _contact_shadow_mesh(radius)
-    shadow.position.y = 0.010
+    shadow.rotation_degrees.x = -90.0
+    shadow.position.y = 0.012
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     shadow.material_override = _enemy_contact_shadow_material()
     add_child(shadow)
@@ -25914,26 +25919,39 @@ func _play_spawn_reveal() -> void:
     spawn_reveal_tween.tween_property(visual, "position", final_visual_position, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
     spawn_reveal_tween.tween_property(shadow, "scale", final_shadow_scale, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
-static func _contact_shadow_mesh(radius: float) -> CylinderMesh:
+static func _contact_shadow_mesh(radius: float) -> QuadMesh:
+    # One 2-triangle plane per enemy instead of a 16-segment opaque disk.
+    # UV-driven radial falloff preserves depth grounding without hard edges.
     var key := "%.3f" % radius
     if _contact_shadow_mesh_cache.has(key):
-        return _contact_shadow_mesh_cache[key] as CylinderMesh
-    var mesh := CylinderMesh.new()
-    mesh.top_radius = radius
-    mesh.bottom_radius = radius * 1.04
-    mesh.height = 0.008
-    mesh.radial_segments = 16
+        return _contact_shadow_mesh_cache[key] as QuadMesh
+    var mesh := QuadMesh.new()
+    mesh.size = Vector2.ONE * radius * 2.0
     _contact_shadow_mesh_cache[key] = mesh
     return mesh
 
-static func _enemy_contact_shadow_material() -> StandardMaterial3D:
+static func _enemy_contact_shadow_material() -> ShaderMaterial:
     if _shared_contact_shadow_material != null:
         return _shared_contact_shadow_material
-    _shared_contact_shadow_material = StandardMaterial3D.new()
-    _shared_contact_shadow_material.albedo_color = Color(0.005, 0.008, 0.010, 0.34)
-    _shared_contact_shadow_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    _shared_contact_shadow_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    _shared_contact_shadow_material.roughness = 1.0
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, depth_draw_never;
+
+uniform vec4 shadow_tint : source_color = vec4(0.006, 0.008, 0.010, 1.0);
+uniform float shadow_opacity : hint_range(0.0, 0.6) = 0.35;
+
+void fragment() {
+    vec2 disk_uv = (UV - vec2(0.5)) * 2.0;
+    float radius = length(disk_uv);
+    float feather = 1.0 - smoothstep(0.18, 1.0, radius);
+    ALBEDO = shadow_tint.rgb;
+    ALPHA = feather * feather * shadow_opacity;
+}
+"""
+    _shared_contact_shadow_material = ShaderMaterial.new()
+    _shared_contact_shadow_material.shader = shader
+    _shared_contact_shadow_material.set_shader_parameter("shadow_opacity", 0.35)
     return _shared_contact_shadow_material
 
 static func _hit_flash_mesh(scale_factor: float) -> CylinderMesh:
@@ -28695,15 +28713,20 @@ func _build_ambient_motes() -> void:
     add_child(particles)
 
 func _build_quarantine_floor_material() -> ShaderMaterial:
-    # One lightweight procedural material gives the broad arena plane real surface hierarchy
-    # without shipping another texture or adding draw calls. Geometry overlays still carry
-    # authored seams, grates, wear and hazard identity above this subtle base.
+    # The existing Poly Haven CC0 asphalt maps give the arena physical
+    # roughness/normal and color variation under its authored containment
+    # graphics. This remains ONE draw call and ONE material on the broad floor.
+    # Procedural seams, grime, directional wear and scene decals are retained.
     var shader := Shader.new()
     shader.code = """
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx;
 
 uniform vec3 base_tone = vec3(0.040, 0.052, 0.060);
+uniform sampler2D asphalt_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D asphalt_normal : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D asphalt_arm : filter_linear_mipmap_anisotropic, repeat_enable;
+uniform float asphalt_repeat = 16.0;
 
 float hash21(vec2 p) {
     p = fract(p * vec2(123.34, 456.21));
@@ -28731,7 +28754,17 @@ void fragment() {
     float perimeter_heat = smoothstep(0.34, 0.70, radial);
     float grime = smoothstep(0.70, 0.96, macro_variation + micro_variation * 0.10);
 
+    // Physically authored asphalt grain, not an arbitrary noise-only
+    // checkerboard. Keep the photograph subordinate to gameplay silhouettes
+    // using its luminance rather than reproducing any bright source hue.
+    vec2 asphalt_uv = UV * asphalt_repeat;
+    vec3 authored_surface = texture(asphalt_albedo, asphalt_uv).rgb;
+    vec3 authored_arm = texture(asphalt_arm, asphalt_uv).rgb;
+    float authored_luma = dot(authored_surface, vec3(0.2126, 0.7152, 0.0722));
+    float porous_stone = clamp(0.77 + authored_luma * 1.05, 0.76, 1.23);
+
     vec3 tone = base_tone;
+    tone *= mix(1.0, porous_stone, 0.62);
     tone *= 0.94 + panel_variation * 0.075;
     tone *= 0.965 + micro_variation * 0.055;
     tone *= 1.0 - panel_edge * 0.055;
@@ -28740,12 +28773,21 @@ void fragment() {
     tone += vec3(0.010, 0.0025, 0.0010) * perimeter_heat;
 
     ALBEDO = tone;
-    ROUGHNESS = clamp(0.83 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05 + grime * 0.04, 0.75, 0.97);
+    float authored_roughness = clamp(authored_arm.g, 0.65, 1.0);
+    float procedural_roughness = clamp(0.83 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05 + grime * 0.04, 0.75, 0.97);
+    ROUGHNESS = clamp(mix(procedural_roughness, authored_roughness, 0.27), 0.72, 0.98);
     METALLIC = 0.055 + panel_variation * 0.045 - grime * 0.012;
+    AO = clamp(mix(1.0, authored_arm.r, 0.24), 0.76, 1.0);
+    NORMAL_MAP = texture(asphalt_normal, asphalt_uv).rgb;
+    NORMAL_MAP_DEPTH = 0.27;
 }
 """
     var material := ShaderMaterial.new()
     material.shader = shader
+    material.set_shader_parameter("asphalt_repeat", 16.0)
+    material.set_shader_parameter("asphalt_albedo", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_diff_2k.jpg") as Texture2D)
+    material.set_shader_parameter("asphalt_normal", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_nor_gl_2k.jpg") as Texture2D)
+    material.set_shader_parameter("asphalt_arm", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_arm_2k.jpg") as Texture2D)
     return material
 
 func _build_light_pool_decals() -> void:

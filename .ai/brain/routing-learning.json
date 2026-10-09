@@ -2,23 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Stop floor plates from overpowering combat",
-      "terms": [
-        "combat",
-        "floor",
-        "from",
-        "overpowering",
-        "plates",
-        "stop"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Main.gd",
-        "godot/tests/environment_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Keep perimeter fortifications out of combat focus",
       "terms": [
         "combat",
@@ -1154,6 +1137,28 @@
         "godot/tests/world_target_lock_test.gd",
         "tools/blender/build_industrial_kit.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(visual): soft mobile-safe contact shadows for 3D enemies",
+      "terms": [
+        "3d",
+        "contact",
+        "enemies",
+        "feat",
+        "mobile-safe",
+        "shadows",
+        "soft",
+        "visual"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/scripts/Main.gd",
+        "godot/tests/authored_asphalt_pbr_floor_test.gd",
+        "godot/tests/enemy_silhouette_identity_test.gd",
+        "godot/tests/soft_contact_shadow_budget_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1440,16 +1445,17 @@
       "godot/scripts/AssetLibrary.gd": 12,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/CombatFeel.gd": 8,
-      "godot/scripts/Enemy.gd": 28,
+      "godot/scripts/Enemy.gd": 32,
       "godot/scripts/Hud.gd": 20,
       "godot/scripts/ImpactFx.gd": 16,
-      "godot/scripts/Main.gd": 36,
+      "godot/scripts/Main.gd": 40,
       "godot/scripts/Player.gd": 20,
       "godot/scripts/Projectile.gd": 16,
       "godot/scripts/WeaponProfiles.gd": 4,
       "godot/scripts/XpOrb.gd": 8,
       "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/attack_telegraph_escalation_test.gd": 4,
+      "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
       "godot/tests/authored_asset_validation.gd": 4,
       "godot/tests/boss_hud_identity_test.gd": 8,
       "godot/tests/boss_phase_runtime_test.gd": 4,
@@ -1457,7 +1463,7 @@
       "godot/tests/combat_audio_feedback_test.gd": 4,
       "godot/tests/combat_feel_test.gd": 8,
       "godot/tests/enemy_archetype_combat_test.gd": 8,
-      "godot/tests/enemy_silhouette_identity_test.gd": 8,
+      "godot/tests/enemy_silhouette_identity_test.gd": 12,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/hud_readability_hierarchy_test.gd": 4,
@@ -1469,6 +1475,7 @@
       "godot/tests/run_director_runtime_integration_test.gd": 4,
       "godot/tests/run_end_ux_test.gd": 4,
       "godot/tests/smoke_test.gd": 4,
+      "godot/tests/soft_contact_shadow_budget_test.gd": 4,
       "godot/tests/upgrade_choice_render_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 8,
       "godot/tests/weapon_presentation_test.gd": 4,
@@ -2330,6 +2337,13 @@
     "configuration": {
       "godot/tests/mobile_orientation_test.gd": 4
     },
+    "contact": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/soft_contact_shadow_budget_test.gd": 4
+    },
     "containment": {
       "godot/scripts/Main.gd": 4
     },
@@ -2613,6 +2627,13 @@
       "godot/tests/game_over_render_test.gd": 4,
       "godot/tests/run_end_ux_test.gd": 4
     },
+    "enemies": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/soft_contact_shadow_budget_test.gd": 4
+    },
     "enemy": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java": 4,
@@ -2760,17 +2781,20 @@
     "feat": {
       "godot/scripts/AssetLibrary.gd": 8,
       "godot/scripts/CombatGroundMark.gd": 4,
-      "godot/scripts/Enemy.gd": 8,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Enemy.gd": 12,
+      "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 12,
       "godot/tests/attack_facing_lock_test.gd": 4,
+      "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
       "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/combat_ground_mark_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/industrial_kit_pbr_budget_test.gd": 4,
       "godot/tests/industrial_prop_material_test.gd": 4,
       "godot/tests/multihit_silhouette_stability_test.gd": 4,
       "godot/tests/muzzle_flare_3d_test.gd": 4,
+      "godot/tests/soft_contact_shadow_budget_test.gd": 4,
       "godot/tests/world_target_lock_test.gd": 4,
       "tools/blender/build_industrial_kit.py": 4
     },
@@ -3664,6 +3688,13 @@
       "godot/tests/pressure_frame_render_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/upgrade_choice_render_test.gd": 4
+    },
+    "mobile-safe": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/soft_contact_shadow_budget_test.gd": 4
     },
     "motion": {
       "godot/scripts/Enemy.gd": 4,
@@ -4741,10 +4772,13 @@
       "godot/tests/mobile_orientation_test.gd": 4
     },
     "shadows": {
-      "godot/scripts/Enemy.gd": 4,
-      "godot/scripts/Main.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
+      "godot/scripts/Main.gd": 8,
+      "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
       "godot/tests/enemy_shadow_budget_test.gd": 4,
-      "godot/tests/offscreen_threat_priority_test.gd": 4
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/offscreen_threat_priority_test.gd": 4,
+      "godot/tests/soft_contact_shadow_budget_test.gd": 4
     },
     "shambler": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 4,
@@ -4823,6 +4857,13 @@
     },
     "snapshot": {
       "godot/tests/first_playable_run_path_test.gd": 4
+    },
+    "soft": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Main.gd": 4,
+      "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/soft_contact_shadow_budget_test.gd": 4
     },
     "source-sheet": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 4,
@@ -5240,12 +5281,16 @@
       "core/src/main/java/com/deadlinezero/game/ui/UiRenderer.java": 8,
       "core/src/main/java/com/deadlinezero/game/visual/ArtProfileCatalog.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ArtProfileCatalogPhoneReadabilityTest.java": 4,
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
-      "godot/scripts/Main.gd": 8,
+      "godot/scripts/Main.gd": 12,
+      "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
       "godot/tests/boss_encounter_render_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/mobile_orientation_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
+      "godot/tests/soft_contact_shadow_budget_test.gd": 4,
       "godot/tests/upgrade_choice_render_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 4
     },

@@ -22,17 +22,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T04:26:21Z
+Generated: 2026-10-09T05:21:29Z
 
 ### Git
 - Branch: `main`
-- Head: `908ca0bdd37b`
-- Commit date: 2026-10-09T06:26:06+02:00
-- Commit: feat(gamefeel): world-space target lock reticle aligned to actual autoaim
-- Tracked files: 1052
+- Head: `34406d778bdf`
+- Commit date: 2026-10-09T07:20:49+02:00
+- Commit: feat(visual): soft mobile-safe contact shadows for 3D enemies
+- Tracked files: 1054
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/tests/soft_contact_shadow_budget_test.gd`
+- `godot/scripts/Main.gd`
+- `godot/tests/authored_asphalt_pbr_floor_test.gd`
+- `play/store/phone-screenshots/01-first-playable.png`
+- `play/store/phone-screenshots/02-midrun-pressure.png`
+- `play/store/phone-screenshots/03-boss-encounter.png`
+- `play/store/phone-screenshots/04-upgrade-choice.png`
+- `play/store/phone-screenshots/05-run-end.png`
 - `godot/scripts/Player.gd`
 - `godot/tests/world_target_lock_test.gd`
 - `godot/assets/generated/industrial/SHA256SUMS.txt`
@@ -42,16 +52,6 @@ Generated: 2026-10-09T04:26:21Z
 - `godot/assets/generated/industrial/dz_floor_grate.glb`
 - `godot/assets/generated/industrial/dz_floor_hatch.glb`
 - `godot/assets/generated/industrial/dz_hazard_bollard.glb`
-- `godot/assets/generated/industrial/dz_junction_box.glb`
-- `godot/assets/generated/industrial/dz_pipe_rack.glb`
-- `godot/assets/generated/industrial/dz_service_pillar.glb`
-- `godot/assets/generated/industrial/dz_utility_cabinet.glb`
-- `godot/assets/generated/industrial/dz_wall_vent.glb`
-- `godot/scripts/AssetLibrary.gd`
-- `godot/tests/industrial_kit_pbr_budget_test.gd`
-- `tools/blender/build_industrial_kit.py`
-- `play/store/phone-screenshots/01-first-playable.png`
-- `play/store/phone-screenshots/02-midrun-pressure.png`
 
 ### Project signals
 - `build.gradle`

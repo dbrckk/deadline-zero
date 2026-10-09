@@ -61,6 +61,7 @@ tests/
   archetype_roster_render_test.gd
   attack_facing_lock_test.gd
   attack_telegraph_escalation_test.gd
+  authored_asphalt_pbr_floor_test.gd
   authored_asset_validation.gd
   authored_audio_asset_test.gd
   authored_gait_sync_test.gd
@@ -114,6 +115,7 @@ tests/
   settings_persistence_test.gd
   shock_expiry_recovery_test.gd
   smoke_test.gd
+  soft_contact_shadow_budget_test.gd
   spatial_hash_test.gd
   status_effects_test.gd
   upgrade_choice_render_test.gd
@@ -899,7 +901,7 @@ var hit_reaction_tween: Tween
 var spawn_reveal_tween: Tween
 var visual_rest_scale := Vector3.ONE
 var visual_rest_position := Vector3.ZERO
-static var _shared_contact_shadow_material: StandardMaterial3D
+static var _shared_contact_shadow_material: ShaderMaterial
 static var _contact_shadow_mesh_cache := {}
 static var _signature_material_cache := {}
 static var _signature_mesh_cache := {}
@@ -1645,7 +1647,8 @@ func _build_contact_shadow() -> void:
         "boss":
             radius = 0.90
     shadow.mesh = _contact_shadow_mesh(radius)
-    shadow.position.y = 0.010
+    shadow.rotation_degrees.x = -90.0
+    shadow.position.y = 0.012
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     shadow.material_override = _enemy_contact_shadow_material()
     add_child(shadow)
@@ -1669,26 +1672,39 @@ func _play_spawn_reveal() -> void:
     spawn_reveal_tween.tween_property(visual, "position", final_visual_position, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
     spawn_reveal_tween.tween_property(shadow, "scale", final_shadow_scale, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
-static func _contact_shadow_mesh(radius: float) -> CylinderMesh:
+static func _contact_shadow_mesh(radius: float) -> QuadMesh:
+    # One 2-triangle plane per enemy instead of a 16-segment opaque disk.
+    # UV-driven radial falloff preserves depth grounding without hard edges.
     var key := "%.3f" % radius
     if _contact_shadow_mesh_cache.has(key):
-        return _contact_shadow_mesh_cache[key] as CylinderMesh
-    var mesh := CylinderMesh.new()
-    mesh.top_radius = radius
-    mesh.bottom_radius = radius * 1.04
-    mesh.height = 0.008
-    mesh.radial_segments = 16
+        return _contact_shadow_mesh_cache[key] as QuadMesh
+    var mesh := QuadMesh.new()
+    mesh.size = Vector2.ONE * radius * 2.0
     _contact_shadow_mesh_cache[key] = mesh
     return mesh
 
-static func _enemy_contact_shadow_material() -> StandardMaterial3D:
+static func _enemy_contact_shadow_material() -> ShaderMaterial:
     if _shared_contact_shadow_material != null:
         return _shared_contact_shadow_material
-    _shared_contact_shadow_material = StandardMaterial3D.new()
-    _shared_contact_shadow_material.albedo_color = Color(0.005, 0.008, 0.010, 0.34)
-    _shared_contact_shadow_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    _shared_contact_shadow_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    _shared_contact_shadow_material.roughness = 1.0
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, depth_draw_never;
+
+uniform vec4 shadow_tint : source_color = vec4(0.006, 0.008, 0.010, 1.0);
+uniform float shadow_opacity : hint_range(0.0, 0.6) = 0.35;
+
+void fragment() {
+    vec2 disk_uv = (UV - vec2(0.5)) * 2.0;
+    float radius = length(disk_uv);
+    float feather = 1.0 - smoothstep(0.18, 1.0, radius);
+    ALBEDO = shadow_tint.rgb;
+    ALPHA = feather * feather * shadow_opacity;
+}
+"""
+    _shared_contact_shadow_material = ShaderMaterial.new()
+    _shared_contact_shadow_material.shader = shader
+    _shared_contact_shadow_material.set_shader_parameter("shadow_opacity", 0.35)
     return _shared_contact_shadow_material
 
 static func _hit_flash_mesh(scale_factor: float) -> CylinderMesh:
@@ -4450,15 +4466,20 @@ func _build_ambient_motes() -> void:
     add_child(particles)
 
 func _build_quarantine_floor_material() -> ShaderMaterial:
-    # One lightweight procedural material gives the broad arena plane real surface hierarchy
-    # without shipping another texture or adding draw calls. Geometry overlays still carry
-    # authored seams, grates, wear and hazard identity above this subtle base.
+    # The existing Poly Haven CC0 asphalt maps give the arena physical
+    # roughness/normal and color variation under its authored containment
+    # graphics. This remains ONE draw call and ONE material on the broad floor.
+    # Procedural seams, grime, directional wear and scene decals are retained.
     var shader := Shader.new()
     shader.code = """
 shader_type spatial;
 render_mode diffuse_burley, specular_schlick_ggx;
 
 uniform vec3 base_tone = vec3(0.040, 0.052, 0.060);
+uniform sampler2D asphalt_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D asphalt_normal : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D asphalt_arm : filter_linear_mipmap_anisotropic, repeat_enable;
+uniform float asphalt_repeat = 16.0;
 
 float hash21(vec2 p) {
     p = fract(p * vec2(123.34, 456.21));
@@ -4486,7 +4507,17 @@ void fragment() {
     float perimeter_heat = smoothstep(0.34, 0.70, radial);
     float grime = smoothstep(0.70, 0.96, macro_variation + micro_variation * 0.10);
 
+    // Physically authored asphalt grain, not an arbitrary noise-only
+    // checkerboard. Keep the photograph subordinate to gameplay silhouettes
+    // using its luminance rather than reproducing any bright source hue.
+    vec2 asphalt_uv = UV * asphalt_repeat;
+    vec3 authored_surface = texture(asphalt_albedo, asphalt_uv).rgb;
+    vec3 authored_arm = texture(asphalt_arm, asphalt_uv).rgb;
+    float authored_luma = dot(authored_surface, vec3(0.2126, 0.7152, 0.0722));
+    float porous_stone = clamp(0.77 + authored_luma * 1.05, 0.76, 1.23);
+
     vec3 tone = base_tone;
+    tone *= mix(1.0, porous_stone, 0.62);
     tone *= 0.94 + panel_variation * 0.075;
     tone *= 0.965 + micro_variation * 0.055;
     tone *= 1.0 - panel_edge * 0.055;
@@ -4495,12 +4526,21 @@ void fragment() {
     tone += vec3(0.010, 0.0025, 0.0010) * perimeter_heat;
 
     ALBEDO = tone;
-    ROUGHNESS = clamp(0.83 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05 + grime * 0.04, 0.75, 0.97);
+    float authored_roughness = clamp(authored_arm.g, 0.65, 1.0);
+    float procedural_roughness = clamp(0.83 + (micro_variation - 0.5) * 0.10 + panel_edge * 0.05 + grime * 0.04, 0.75, 0.97);
+    ROUGHNESS = clamp(mix(procedural_roughness, authored_roughness, 0.27), 0.72, 0.98);
     METALLIC = 0.055 + panel_variation * 0.045 - grime * 0.012;
+    AO = clamp(mix(1.0, authored_arm.r, 0.24), 0.76, 1.0);
+    NORMAL_MAP = texture(asphalt_normal, asphalt_uv).rgb;
+    NORMAL_MAP_DEPTH = 0.27;
 }
 """
     var material := ShaderMaterial.new()
     material.shader = shader
+    material.set_shader_parameter("asphalt_repeat", 16.0)
+    material.set_shader_parameter("asphalt_albedo", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_diff_2k.jpg") as Texture2D)
+    material.set_shader_parameter("asphalt_normal", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_nor_gl_2k.jpg") as Texture2D)
+    material.set_shader_parameter("asphalt_arm", load("res://assets/third_party/polyhaven/asphalt_04/asphalt_04_arm_2k.jpg") as Texture2D)
     return material
 
 func _build_light_pool_decals() -> void:
@@ -7396,6 +7436,81 @@ func _run_test() -> void:
     quit(0)
 ```
 
+## File: tests/authored_asphalt_pbr_floor_test.gd
+```
+extends SceneTree
+
+# Confirm that the production arena really uses the downloaded CC0 asphalt
+# PBR textures, not merely an untextured procedural stand-in.
+const MAPS := {
+    "asphalt_albedo": "res://assets/third_party/polyhaven/asphalt_04/asphalt_04_diff_2k.jpg",
+    "asphalt_normal": "res://assets/third_party/polyhaven/asphalt_04/asphalt_04_nor_gl_2k.jpg",
+    "asphalt_arm": "res://assets/third_party/polyhaven/asphalt_04/asphalt_04_arm_2k.jpg",
+}
+
+func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _run_test() -> void:
+    var packed := load("res://scenes/Main.tscn") as PackedScene
+    if packed == null:
+        push_error("Production arena is unavailable for PBR terrain validation")
+        quit(1)
+        return
+    var main := packed.instantiate()
+    get_root().add_child(main)
+    current_scene = main
+    await process_frame
+
+    var floor := main.get_node_or_null("QuarantineFloor") as MeshInstance3D
+    if floor == null or not floor.mesh is PlaneMesh or not floor.material_override is ShaderMaterial:
+        push_error("Main arena floor lost its one-surface industrial shader")
+        quit(1)
+        return
+    var material := floor.material_override as ShaderMaterial
+    var shader := material.shader
+    if shader == null:
+        push_error("Quarantine floor PBR shader is missing")
+        quit(1)
+        return
+    var code := shader.code
+    for required in ["panel_variation", "micro_variation", "macro_variation", "perimeter_heat", "authored_surface", "NORMAL_MAP", "NORMAL_MAP_DEPTH", "ROUGHNESS", "AO ="]:
+        if not code.contains(required):
+            push_error("Floor lost authored terrain detail or grading: %s" % required)
+            quit(1)
+            return
+    if code.contains("ALPHA =") or floor.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        push_error("Large arena ground must stay opaque and shadow-free for mobile")
+        quit(1)
+        return
+    var tile_repeat = material.get_shader_parameter("asphalt_repeat")
+    if floor.mesh.get_surface_count() != 1 or typeof(tile_repeat) != TYPE_FLOAT or float(tile_repeat) < 12.0:
+        push_error("PBR ground lost single-pass tiled geometry")
+        quit(1)
+        return
+
+    for uniform in MAPS:
+        var path: String = MAPS[uniform]
+        var texture := material.get_shader_parameter(uniform) as Texture2D
+        if texture == null or texture.resource_path != path:
+            push_error("Main scene does not bind the actual authored PBR map %s" % uniform)
+            quit(1)
+            return
+        if texture.get_width() < 1024 or texture.get_height() < 1024:
+            push_error("Authored terrain PBR map has insufficient source resolution: %s" % uniform)
+            quit(1)
+            return
+
+    var license_text := FileAccess.get_file_as_string("res://assets/third_party/polyhaven/asphalt_04/SOURCE.json")
+    if not license_text.contains("CC0-1.0"):
+        push_error("Third-party floor source attribution/license is missing")
+        quit(1)
+        return
+
+    print("Deadline Zero authored asphalt PBR floor: OK (diffuse, normal, ARM; 1 draw surface)")
+    quit(0)
+```
+
 ## File: tests/authored_asset_validation.gd
 ```
 extends SceneTree
@@ -8804,7 +8919,7 @@ func _initialize() -> void:
                 quit(1)
                 return
         var shadow := enemy.get_node_or_null("EnemyContactShadow") as MeshInstance3D
-        var shadow_mesh := shadow.mesh as CylinderMesh if shadow != null else null
+        var shadow_mesh := shadow.mesh as QuadMesh if shadow != null else null
         if enemy.spawn_reveal_tween == null:
             push_error("Enemy spawn did not initialize premium reveal motion for %s" % kind)
             quit(1)
@@ -8817,18 +8932,27 @@ func _initialize() -> void:
             push_error("Contact shadow must not cast dynamic shadows for %s" % kind)
             quit(1)
             return
-        if shadow_mesh.radial_segments > 16:
-            push_error("Contact shadow geometry budget regressed for %s" % kind)
+        if shadow_mesh.size.x < 0.69 or shadow_mesh.size.y != shadow_mesh.size.x:
+            push_error("Contact shadow lost its low-poly radial ground footprint for %s" % kind)
+            quit(1)
+            return
+        if absf(shadow.rotation_degrees.x + 90.0) > 0.01:
+            push_error("Contact shadow quad no longer faces the arena floor for %s" % kind)
             quit(1)
             return
         var shadow_material := shadow.material_override
-        if shadow_material == null or not shadow_material is BaseMaterial3D:
-            push_error("Contact shadow material missing for %s" % kind)
+        if shadow_material == null or not shadow_material is ShaderMaterial:
+            push_error("Contact shadow must use shared soft radial shader for %s" % kind)
             quit(1)
             return
-        var base_shadow_material := shadow_material as BaseMaterial3D
-        if base_shadow_material.transparency != BaseMaterial3D.TRANSPARENCY_ALPHA:
-            push_error("Contact shadow must remain alpha blended for %s" % kind)
+        var soft_material := shadow_material as ShaderMaterial
+        if soft_material.shader == null or not soft_material.shader.code.contains("smoothstep") or not soft_material.shader.code.contains("ALPHA = feather * feather"):
+            push_error("Contact shadow lost smooth radial falloff for %s" % kind)
+            quit(1)
+            return
+        var shadow_opacity := float(soft_material.get_shader_parameter("shadow_opacity"))
+        if shadow_opacity > 0.40 or shadow_opacity < 0.20:
+            push_error("Contact shadow opacity escaped subtle mobile visibility budget for %s" % kind)
             quit(1)
             return
         if shared_shadow_material == null:
@@ -8837,7 +8961,7 @@ func _initialize() -> void:
             push_error("Enemy contact shadows must share one material instance")
             quit(1)
             return
-        shadow_radii[kind] = shadow_mesh.top_radius
+        shadow_radii[kind] = shadow_mesh.size.x * 0.5
         if kind == "runner":
             var blade := enemy.get_node_or_null("RunnerBladeL") as MeshInstance3D
             var blade_mesh := blade.mesh as BoxMesh if blade != null else null
@@ -13200,6 +13324,83 @@ func _process(_delta: float) -> bool:
             quit(0)
         return true
     return false
+```
+
+## File: tests/soft_contact_shadow_budget_test.gd
+```
+extends SceneTree
+
+# The dense horde should have softened authored 3D grounding, not hundreds
+# of hard edged multi-triangle discs or individual light/shader allocations.
+func _initialize() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    var shared_material: ShaderMaterial
+    var total_shadows := 0
+    var meshes_by_kind := {}
+    var kinds := ["shambler", "runner", "charger", "harrier",
+        "regenerator", "brute", "elite", "boss"]
+    for kind in kinds:
+        for sample_index in range(2):
+            var enemy := DZEnemy.new()
+            enemy.kind = kind
+            enemy.process_mode = Node.PROCESS_MODE_DISABLED
+            root.add_child(enemy)
+            await process_frame
+
+            var shadow := enemy.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+            if shadow == null or not shadow.mesh is QuadMesh:
+                push_error("Enemy is missing one lightweight radial quad shadow: %s" % kind)
+                quit(1)
+                return
+            if shadow.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                push_error("Contact shadow became an actual shadow caster: %s" % kind)
+                quit(1)
+                return
+            if shadow.rotation_degrees.x > -89.0 or shadow.rotation_degrees.x < -91.0:
+                push_error("Contact shadow quad no longer lies horizontally on the ground: %s" % kind)
+                quit(1)
+                return
+            var quad := shadow.mesh as QuadMesh
+            if quad.size.x > 1.83 or quad.size.x < 0.69 or not is_equal_approx(quad.size.x, quad.size.y):
+                push_error("Contact shadow radius escaped silhouette coverage budget: %s" % kind)
+                quit(1)
+                return
+
+            var material := shadow.material_override as ShaderMaterial
+            if material == null or material.shader == null:
+                push_error("Shadow lost feathered shader material: %s" % kind)
+                quit(1)
+                return
+            if shared_material == null:
+                shared_material = material
+                var shader_code := material.shader.code
+                if not shader_code.contains("smoothstep(0.18, 1.0, radius)") or not shader_code.contains("ALPHA = feather * feather * shadow_opacity"):
+                    push_error("Contact shadow changed to opaque or hard-edged rendering")
+                    quit(1)
+                    return
+            elif shared_material != material:
+                push_error("Enemy copies created individual contact shadow shader instances: %s" % kind)
+                quit(1)
+                return
+
+            if meshes_by_kind.has(kind) and meshes_by_kind[kind] != quad:
+                push_error("Same archetype reallocated identical shadow quad geometry: %s" % kind)
+                quit(1)
+                return
+            meshes_by_kind[kind] = quad
+            total_shadows += 1
+
+            enemy.queue_free()
+            await process_frame
+
+    if total_shadows != 16 or meshes_by_kind.size() != kinds.size():
+        push_error("Soft shadow budget did not exercise all enemy model classes")
+        quit(1)
+        return
+    print("Deadline Zero soft 3D contact shadows: OK (16 fixtures, 8 archetypes, 1 shader)")
+    quit(0)
 ```
 
 ## File: tests/spatial_hash_test.gd
