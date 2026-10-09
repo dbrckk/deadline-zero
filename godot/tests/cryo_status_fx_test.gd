@@ -85,6 +85,12 @@ func _run_test() -> void:
         _fail("Elite Cryo markers must adapt to the larger enemy silhouette")
         return
 
+    var original_ring_position := ring.global_position
+    first_enemy.global_position += Vector3(1.5, 0.0, -0.5)
+    if not is_equal_approx(ring.global_position.x - original_ring_position.x, 1.5):
+        _fail("Cryo crown must remain anchored to the victim during world movement")
+        return
+
     var previous_rotation := shards.rotation.y
     first._process(0.06)
     if shards.rotation.y <= previous_rotation:
@@ -125,6 +131,12 @@ func _run_test() -> void:
     shot._apply_protocol_hit(third, 10.0)
     if third.get_node_or_null("CryoStatusCrown") != null:
         _fail("Gameplay-only mode must not create Cryo secondary visual FX")
+        return
+
+    second_enemy.dead = true
+    second._process(0.1)
+    if not second.is_queued_for_deletion():
+        _fail("Cryo crown survived after its victim died")
         return
 
     print("Deadline Zero Cryo 3D slow status FX: OK")
