@@ -56,31 +56,36 @@ func _run_test() -> void:
         return
     second.set_process(false)
 
-    var flames_a := first.get_node_or_null("InfernoEmbers") as MultiMeshInstance3D
-    var flames_b := second.get_node_or_null("InfernoEmbers") as MultiMeshInstance3D
+    var flames_a := first.get_node_or_null("InfernoEmbers") as MeshInstance3D
+    var flames_b := second.get_node_or_null("InfernoEmbers") as MeshInstance3D
     if flames_a == null or flames_b == null:
         _fail("World-space flame ribbons were not constructed")
         return
     if first.get_parent() != ordinary or second.get_parent() != elite:
         _fail("Burning visual must follow the affected enemy")
         return
-    if flames_a.multimesh != flames_b.multimesh:
-        _fail("Burn status must share one MultiMesh resource across affected enemies")
+    if flames_a.mesh != flames_b.mesh:
+        _fail("Burn status must share one baked ribbon mesh across all burning enemies")
         return
     if flames_a.material_override != flames_b.material_override:
         _fail("Burn status must share the same animated emission shader")
         return
-    if flames_a.multimesh.instance_count != FX.FLAME_COUNT or FX.FLAME_COUNT > 8:
-        _fail("Inferno ribbons exceed their mobile instancing budget")
+    var flame_mesh := flames_a.mesh as ArrayMesh
+    if flame_mesh == null or flame_mesh.get_surface_count() != 1:
+        _fail("Mobile burn effect must draw in exactly one shared mesh surface")
         return
-    if not (flames_a.multimesh.mesh is QuadMesh):
-        _fail("Flame status must use low-cost ribbon geometry")
+    var vertices: PackedVector3Array = flame_mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+    var uv: PackedVector2Array = flame_mesh.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV]
+    if vertices.size() != FX.FLAME_COUNT * 6 or uv.size() != vertices.size() or FX.FLAME_COUNT > 8:
+        _fail("Inferno must use exactly seven two-triangle flames with one UV layout")
         return
-    var flame_quad := flames_a.multimesh.mesh as QuadMesh
-    var first_ribbon := flames_a.multimesh.get_instance_transform(0).origin
-    var outer_radius := Vector2(first_ribbon.x, first_ribbon.z).length()
-    if flame_quad.size.y < 1.20 or outer_radius < 0.48:
-        _fail("Inferno flames too small/inside body: quad_height=%.3f outer_radius=%.3f" % [flame_quad.size.y, outer_radius])
+    var highest := 0.0
+    var furthest := 0.0
+    for vertex in vertices:
+        highest = maxf(highest, vertex.y)
+        furthest = maxf(furthest, Vector2(vertex.x, vertex.z).length())
+    if highest < 1.15 or furthest < 0.48:
+        _fail("Inferno flames too small/inside body: height=%.3f radius=%.3f" % [highest, furthest])
         return
     if flames_a.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
         _fail("Emissive burn FX must never consume shadow-map draws")
