@@ -364,7 +364,7 @@ func _fire_at(enemy: DZEnemy) -> void:
         return
     # Compensate for the rifle being offset to the player's right. Otherwise
     # close enemies can fall beside a perfectly aimed-looking muzzle tracer.
-    var barrel_to_target := enemy.global_position - _projectile_muzzle_origin(base_dir)
+    var barrel_to_target := enemy.global_position - _projectile_muzzle_origin(Vector3.ZERO)
     barrel_to_target.y = 0.0
     if barrel_to_target.length_squared() > 0.0001:
         base_dir = barrel_to_target.normalized()
