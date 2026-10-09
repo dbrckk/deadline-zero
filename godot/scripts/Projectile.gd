@@ -327,6 +327,8 @@ func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
             _apply_splash(primary, dealt_damage * 0.45, splash_radius)
         "cryo":
             primary.apply_slow(slow_multiplier, slow_duration)
+            if spawn_secondary_fx:
+                DZCryoStatusFx.attach_to(primary)
         "arc":
             primary.apply_shock(0.24)
             _apply_chain(primary, dealt_damage)
