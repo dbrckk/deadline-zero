@@ -23,6 +23,10 @@ func _run_test() -> void:
     if first == null or duplicate == null:
         _fail("Arc weapon did not spawn two valid world-space lightning links")
         return
+    # Keep timing deterministic under slow headless runners; manually sample
+    # the fade once instead of depending on real frame scheduling.
+    first.set_process(false)
+    duplicate.set_process(false)
     await process_frame
 
     if first.global_position.distance_to(start) > 0.001:
