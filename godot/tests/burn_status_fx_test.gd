@@ -80,7 +80,7 @@ func _run_test() -> void:
     var first_ribbon := flames_a.multimesh.get_instance_transform(0).origin
     var outer_radius := Vector2(first_ribbon.x, first_ribbon.z).length()
     if flame_quad.size.y < 1.20 or outer_radius < 0.48:
-        _fail("Inferno status must remain readable outside imported 3D character bodies")
+        _fail("Inferno flames too small/inside body: quad_height=%.3f outer_radius=%.3f" % [flame_quad.size.y, outer_radius])
         return
     if flames_a.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
         _fail("Emissive burn FX must never consume shadow-map draws")
