@@ -60,7 +60,7 @@ static func _flame_mesh() -> ArrayMesh:
         var sideways := Vector3(-outward.z, 0.0, outward.x)
         # Move flames outside imported body volumes. The flame tips remain
         # visible from the real top-down gameplay camera, not hidden in torsos.
-        var radius := 0.52 if i % 2 == 0 else 0.60
+        var radius := 0.79 if i % 2 == 0 else 0.92
         var height_scale := 0.76 if i % 3 == 0 else (0.96 if i % 3 == 1 else 0.86)
         var width := 0.50 * height_scale
         var height := 1.40 * height_scale
@@ -110,7 +110,7 @@ void fragment() {
     vec3 ember = mix(vec3(1.0, 0.105, 0.018), vec3(1.0, 0.68, 0.17), smoothstep(0.15, 0.79, height));
     ALBEDO = ember * 0.12;
     EMISSION = ember * (3.2 + 1.5 * height);
-    ALPHA = burn_opacity * body * foot * crown * flicker * 0.64;
+    ALPHA = burn_opacity * body * foot * crown * flicker * 0.84;
 }
 """
     _shared_material = ShaderMaterial.new()
