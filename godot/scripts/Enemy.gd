@@ -55,7 +55,7 @@ var hit_reaction_tween: Tween
 var spawn_reveal_tween: Tween
 var visual_rest_scale := Vector3.ONE
 var visual_rest_position := Vector3.ZERO
-static var _shared_contact_shadow_material: StandardMaterial3D
+static var _shared_contact_shadow_material: ShaderMaterial
 static var _contact_shadow_mesh_cache := {}
 static var _signature_material_cache := {}
 static var _signature_mesh_cache := {}
@@ -801,7 +801,8 @@ func _build_contact_shadow() -> void:
         "boss":
             radius = 0.90
     shadow.mesh = _contact_shadow_mesh(radius)
-    shadow.position.y = 0.010
+    shadow.rotation_degrees.x = -90.0
+    shadow.position.y = 0.012
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     shadow.material_override = _enemy_contact_shadow_material()
     add_child(shadow)
@@ -825,26 +826,39 @@ func _play_spawn_reveal() -> void:
     spawn_reveal_tween.tween_property(visual, "position", final_visual_position, duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
     spawn_reveal_tween.tween_property(shadow, "scale", final_shadow_scale, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
-static func _contact_shadow_mesh(radius: float) -> CylinderMesh:
+static func _contact_shadow_mesh(radius: float) -> QuadMesh:
+    # One 2-triangle plane per enemy instead of a 16-segment opaque disk.
+    # UV-driven radial falloff preserves depth grounding without hard edges.
     var key := "%.3f" % radius
     if _contact_shadow_mesh_cache.has(key):
-        return _contact_shadow_mesh_cache[key] as CylinderMesh
-    var mesh := CylinderMesh.new()
-    mesh.top_radius = radius
-    mesh.bottom_radius = radius * 1.04
-    mesh.height = 0.008
-    mesh.radial_segments = 16
+        return _contact_shadow_mesh_cache[key] as QuadMesh
+    var mesh := QuadMesh.new()
+    mesh.size = Vector2.ONE * radius * 2.0
     _contact_shadow_mesh_cache[key] = mesh
     return mesh
 
-static func _enemy_contact_shadow_material() -> StandardMaterial3D:
+static func _enemy_contact_shadow_material() -> ShaderMaterial:
     if _shared_contact_shadow_material != null:
         return _shared_contact_shadow_material
-    _shared_contact_shadow_material = StandardMaterial3D.new()
-    _shared_contact_shadow_material.albedo_color = Color(0.005, 0.008, 0.010, 0.34)
-    _shared_contact_shadow_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    _shared_contact_shadow_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    _shared_contact_shadow_material.roughness = 1.0
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, depth_draw_never;
+
+uniform vec4 shadow_tint : source_color = vec4(0.006, 0.008, 0.010, 1.0);
+uniform float shadow_opacity : hint_range(0.0, 0.6) = 0.35;
+
+void fragment() {
+    vec2 disk_uv = (UV - vec2(0.5)) * 2.0;
+    float radius = length(disk_uv);
+    float feather = 1.0 - smoothstep(0.18, 1.0, radius);
+    ALBEDO = shadow_tint.rgb;
+    ALPHA = feather * feather * shadow_opacity;
+}
+"""
+    _shared_contact_shadow_material = ShaderMaterial.new()
+    _shared_contact_shadow_material.shader = shader
+    _shared_contact_shadow_material.set_shader_parameter("shadow_opacity", 0.35)
     return _shared_contact_shadow_material
 
 static func _hit_flash_mesh(scale_factor: float) -> CylinderMesh:
