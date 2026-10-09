@@ -324,6 +324,8 @@ func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
     match visual_profile:
         "inferno":
             primary.apply_burn(dealt_damage * 0.16, 2.0)
+            if spawn_secondary_fx:
+                DZBurnStatusFx.attach_to(primary)
             _apply_splash(primary, dealt_damage * 0.45, splash_radius)
         "cryo":
             primary.apply_slow(slow_multiplier, slow_duration)
