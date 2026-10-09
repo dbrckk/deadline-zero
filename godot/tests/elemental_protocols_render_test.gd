@@ -2,6 +2,7 @@ extends SceneTree
 
 # Real renderer evidence for the connected Arc ribbons and radial Inferno shockwave.
 const OUTPUT_PATH := "/tmp/deadline-zero-elemental-protocols.png"
+const RESIDUE_PATH := "/tmp/deadline-zero-inferno-residue.png"
 const MAIN_SCENE := preload("res://scenes/Main.tscn")
 
 func _initialize() -> void:
@@ -81,5 +82,25 @@ func _capture() -> void:
         push_error("Failed to save elemental VFX render: %s" % error_string(error))
         quit(1)
         return
-    print("GODOT_ELEMENTAL_PROTOCOL_VISUAL_QA_OK %dx%d" % [image.get_width(), image.get_height()])
+    # A second real frame proves the blast ring disappears while the charred
+    # footprint is still visible, without copying the first render.
+    blast._process(0.36)
+    if blast.is_queued_for_deletion():
+        push_error("Inferno afterglow disappeared before the second rendered frame")
+        quit(1)
+        return
+    for _frame in range(4):
+        await process_frame
+    var residue_image := get_root().get_texture().get_image()
+    if residue_image == null or residue_image.is_empty():
+        push_error("Inferno heat residue did not render")
+        quit(1)
+        return
+    residue_image.convert(Image.FORMAT_RGB8)
+    if residue_image.save_png(RESIDUE_PATH) != OK:
+        push_error("Failed to save rendered Inferno scorch residue")
+        quit(1)
+        return
+
+    print("GODOT_ELEMENTAL_PROTOCOL_VISUAL_QA_OK %dx%d plus persistent residue" % [image.get_width(), image.get_height()])
     quit(0)
