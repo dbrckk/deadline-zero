@@ -1,6 +1,6 @@
 extends SceneTree
 
-# Real renderer evidence for the connected Arc ribbons and radial Inferno shockwave.
+# Real renderer evidence for Arc links, Inferno shockwave/scorch and Cryo slow status.
 const OUTPUT_PATH := "/tmp/deadline-zero-elemental-protocols.png"
 const RESIDUE_PATH := "/tmp/deadline-zero-inferno-residue.png"
 const MAIN_SCENE := preload("res://scenes/Main.tscn")
@@ -35,13 +35,27 @@ func _capture() -> void:
         {"kind":"brute", "position":Vector3(3.0, 0.0, 0.0)},
         {"kind":"shambler", "position":Vector3(4.7, 0.0, -0.8)}
     ]
+    var cryo_victim: DZEnemy
     for entry in placements:
         var enemy := DZEnemy.new()
         enemy.configure(String(entry["kind"]), 1.0, scene.player)
         enemy.process_mode = Node.PROCESS_MODE_DISABLED
         scene.add_child(enemy)
         enemy.global_position = entry["position"]
+        if String(entry["kind"]) == "shambler":
+            cryo_victim = enemy
     await process_frame
+
+    if cryo_victim == null:
+        push_error("Cryo visual QA has no shambler to demonstrate the debuff")
+        quit(1)
+        return
+    cryo_victim.apply_slow(0.62, 1.6)
+    var ice := DZCryoStatusFx.attach_to(cryo_victim)
+    if ice == null or ice.get_node_or_null("FrostCrystals") == null:
+        push_error("Cryo status crown failed to stage in real 3D gameplay rendering")
+        quit(1)
+        return
 
     var anchor := Vector3(-2.6, 0.72, -0.3)
     var link_a := DZArcLinkFx.spawn_link(scene, anchor, Vector3(-4.9, 0.72, 1.4), 0)
