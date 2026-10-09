@@ -208,7 +208,7 @@ func _performance_snapshot() -> Dictionary:
         "fps": float(Engine.get_frames_per_second()),
         "memory_bytes": int(Performance.get_monitor(Performance.MEMORY_STATIC)),
         "enemies": get_tree().get_node_count_in_group("enemies"),
-        "projectiles": get_tree().get_node_count_in_group("player_projectiles"),
+        "projectiles": get_tree().get_node_count_in_group("projectiles"),
         "hostile_projectiles": get_tree().get_node_count_in_group("hostile_projectiles"),
         "xp_orbs": get_tree().get_node_count_in_group("xp_orbs"),
         "elapsed": elapsed
