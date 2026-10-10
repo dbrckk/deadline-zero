@@ -2,19 +2,42 @@
   "schema_version": 1,
   "updated_at": "2026-10-10",
   "repository": "dbrckk/deadline-zero",
-  "base_commit": "9a1c765ca688520a57d3020c5f0e317f474a8591",
-  "branch": "fix/godot-inferno-dot-noise-budget",
+  "branch": "main",
   "working_area": "Godot 4.7.2 native 3D",
   "completed": [
-    "Confirmed #391 shared Inferno burning visual and seven passed latest gameplay workflows",
-    "Changed Enemy.gd so nonlethal burn DoT does not emit rifle impacts/damage labels/recoil; lethal ticks keep normal kill confirmation",
-    "Expanded existing status_effects_test.gd integration path; no new unit test added",
-    "Updated manual project-state sections"
+    {
+      "pr": 394,
+      "status": "merged",
+      "checks": "5/5 successful",
+      "change": "Quiet nonlethal Inferno damage ticks; lethal impact and XP preserved"
+    },
+    {
+      "pr": 395,
+      "status": "merged",
+      "checks": "5/5 successful",
+      "change": "Shared per-archetype imported shader materials for animated enemy horde"
+    },
+    {
+      "pr": 396,
+      "status": "merged",
+      "checks": "2/2 successful",
+      "change": "Fixed GH API pipelines in scheduled Work Watch"
+    }
   ],
-  "verification": "Pending CI; never claim branch passed before observing completed successful runs.",
+  "visual_qa": "Inspected six Godot-rendered frames; authentic 3D production scene exists but not yet AAA-quality",
+  "android_apk": {
+    "source_pr": 395,
+    "package": "com.deadlinezero.godot",
+    "version": "0.1.0-first-playable",
+    "kind": "debug",
+    "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
+    "physical_device_tested": false
+  },
+  "verification": "All PR checks passed before merge; the patched Work Watch has not yet been observed on its scheduled trigger.",
   "next": [
-    "Open PR and inspect all workflows for branch head",
-    "Fix any failures and merge only when checks pass",
-    "Perform visual and on-device performance review of burn-status dense combat"
+    "Verify next real Deadline Zero Work Watch schedule run on main",
+    "Raise imported 3D character/model/animation/material fidelity and validate new screenshots",
+    "Play debug APK on representative phones and capture stable frame pacing, heat, touch, and legibility metrics",
+    "Review remaining Play Store production/release gates"
   ]
 }
