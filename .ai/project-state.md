@@ -3,22 +3,27 @@
 Status: active
 
 ## Working
-- Godot 4.7.2 native 3D first-playable with authored industrial PBR environment and 3D Inferno, Cryo and Arc effects.
-- Godot CI validates core gameplay, visual captures, Android export, and store assets.
-- The Inferno DoT feedback cleanup is on branch `fix/godot-inferno-dot-noise-budget`; it preserves damage and lethal rewards while suppressing repeated nonlethal shot impacts.
+- Godot 4.7.2 native 3D first-playable has real Quaternius rigged characters, industrial PBR arena, authored effects, and generated Android debug APK.
+- #394 merged: real Inferno DoT remains lethal but nonlethal ticks no longer trigger per-shot HUD/camera/audio noise.
+- #395 merged: identical zombie archetypes reuse immutable graded GLTF atlas materials, preserving unique enemy palettes.
+- #396 merged: repaired broken scheduled Work Watch GH CLI pipelines; first scheduled execution of the fix has not yet been verified.
 
 ## Broken / blockers
-- Gameplay feel and visual quality still require real-device performance and visual review before Play Store release.
-- Repo's "Deadline Zero Work Watch" workflow has repeated failures (separate from Godot verification).
+- No regression found in the five CI workflows for #394 or #395 or two checks for #396.
+- Visual goal remains beyond present real-rendered captures: character model/animation fidelity, scene material depth and physical Android performance need further work.
+- Debug APK has been generated and its SHA-256 verified, but not yet manually played on a representative physical Android phone.
 
 ## Current priority
-- Validate and merge quiet Inferno DoT hit feedback with existing status-effect integration checks.
-- Follow up with real-device render/performance checks and premium character animation polish.
+- Inspect next scheduled Work Watch run after #396 (do not assume PR validation proves the cron execution).
+- Improve actual imported 3D character models, rigged animations, source textures and responsive action feel; do not substitute concept images.
+- Run full physical-device gameplay/frame pacing and touch/readability QA before Play Store readiness claims.
 
 ## Validation
-- Latest completed main gameplay CI (commit `7d1a8c75b7f0`): 7 Godot/Android/standards workflows passed.
-- Inferno feedback branch: validation pending PR CI (do not treat as passed).
-- Two subsequent main administrative commits skip gameplay rendering CI.
+- #394: five workflows successful, merged.
+- #395: five workflows successful, merged; rendered six-frame QA captured and reviewed.
+- #396: both PR workflows successful, merged; scheduled run confirmation pending.
+- #395 CI built debug APK `com.deadlinezero.godot`, version `0.1.0-first-playable`, target SDK 36; SHA-256: `5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e`.
+- Native 3D captures demonstrate playable presentation but do not yet establish premium AAA release quality or device FPS.
 
 ## Last verified
 - 2026-10-10
