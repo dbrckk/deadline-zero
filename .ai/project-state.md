@@ -22,30 +22,29 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-09T21:49:06Z
+Generated: 2026-10-10T19:16:00Z
 
 ### Git
 - Branch: `main`
-- Head: `6d47a1f25cbe`
-- Commit date: 2026-10-09T23:48:36+02:00
-- Commit: feat(visual): soften 3D enemy warning aim lanes (#393)
-- Tracked files: 1062
+- Head: `7d1a8c75b7f0`
+- Commit date: 2026-10-10T21:15:47+02:00
+- Commit: feat(gamefeel): add shared 3D Inferno burning effects (#391)
+- Tracked files: 1064
 
 ### Recently changed files
 - `.github/workflows/godot-verify.yml`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/attack_lane_gradient_test.gd`
-- `.github/workflows/ai-repo-map.yml`
+- `godot/scripts/BurnStatusFx.gd`
+- `godot/scripts/Projectile.gd`
+- `godot/tests/burn_status_fx_test.gd`
+- `godot/tests/elemental_protocols_render_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `godot/scripts/CryoStatusFx.gd`
-- `godot/scripts/Projectile.gd`
-- `godot/tests/cryo_status_fx_test.gd`
-- `godot/tests/elemental_protocols_render_test.gd`
-- `AGENTS.md`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/attack_lane_gradient_test.gd`
+- `.github/workflows/ai-repo-map.yml`
 
 ### Project signals
 - `build.gradle`

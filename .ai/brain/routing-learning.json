@@ -2,22 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Keep melee pressure visually separated",
-      "terms": [
-        "keep",
-        "melee",
-        "pressure",
-        "separated",
-        "visually"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Enemy.gd",
-        "godot/tests/enemy_hit_reaction_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Stabilize loaded Android telemetry acquisition",
       "terms": [
         "acquisition",
@@ -1185,6 +1169,28 @@
         "godot/scripts/Enemy.gd",
         "godot/tests/attack_lane_gradient_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "feat(gamefeel): add shared 3D Inferno burning effects (#391)",
+      "terms": [
+        "391",
+        "3d",
+        "add",
+        "burning",
+        "effects",
+        "feat",
+        "gamefeel",
+        "inferno",
+        "shared"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/BurnStatusFx.gd",
+        "godot/scripts/Projectile.gd",
+        "godot/tests/burn_status_fx_test.gd",
+        "godot/tests/elemental_protocols_render_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1467,6 +1473,12 @@
       "godot/scripts/Main.gd": 4,
       "godot/tests/run_end_ux_test.gd": 4
     },
+    "391": {
+      "godot/scripts/BurnStatusFx.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/burn_status_fx_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4
+    },
     "392": {
       "godot/scripts/CryoStatusFx.gd": 4,
       "godot/scripts/Projectile.gd": 4,
@@ -1480,6 +1492,7 @@
     "3d": {
       "godot/scripts/ArcLinkFx.gd": 4,
       "godot/scripts/AssetLibrary.gd": 12,
+      "godot/scripts/BurnStatusFx.gd": 4,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/CombatFeel.gd": 8,
       "godot/scripts/Enemy.gd": 36,
@@ -1487,7 +1500,7 @@
       "godot/scripts/ImpactFx.gd": 16,
       "godot/scripts/Main.gd": 40,
       "godot/scripts/Player.gd": 20,
-      "godot/scripts/Projectile.gd": 20,
+      "godot/scripts/Projectile.gd": 24,
       "godot/scripts/WeaponProfiles.gd": 4,
       "godot/scripts/XpOrb.gd": 8,
       "godot/tests/arc_chain_link_fx_test.gd": 4,
@@ -1499,8 +1512,10 @@
       "godot/tests/boss_hud_identity_test.gd": 8,
       "godot/tests/boss_phase_runtime_test.gd": 4,
       "godot/tests/boss_reveal_camera_test.gd": 4,
+      "godot/tests/burn_status_fx_test.gd": 4,
       "godot/tests/combat_audio_feedback_test.gd": 4,
       "godot/tests/combat_feel_test.gd": 8,
+      "godot/tests/elemental_protocols_render_test.gd": 4,
       "godot/tests/enemy_archetype_combat_test.gd": 8,
       "godot/tests/enemy_silhouette_identity_test.gd": 12,
       "godot/tests/environment_identity_test.gd": 4,
@@ -1645,6 +1660,7 @@
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnvironmentArtCatalogTest.java": 4,
       "godot/scripts/ArcLinkFx.gd": 4,
+      "godot/scripts/BurnStatusFx.gd": 4,
       "godot/scripts/CombatAudio.gd": 8,
       "godot/scripts/CombatFeel.gd": 4,
       "godot/scripts/Enemy.gd": 4,
@@ -1653,15 +1669,16 @@
       "godot/scripts/InfernoBlastFx.gd": 4,
       "godot/scripts/Main.gd": 40,
       "godot/scripts/Player.gd": 4,
-      "godot/scripts/Projectile.gd": 8,
+      "godot/scripts/Projectile.gd": 12,
       "godot/tests/android_play_export_contract_test.gd": 4,
       "godot/tests/arc_chain_link_fx_test.gd": 4,
       "godot/tests/authored_audio_asset_test.gd": 4,
       "godot/tests/boss_encounter_render_test.gd": 4,
       "godot/tests/boss_reveal_camera_test.gd": 4,
+      "godot/tests/burn_status_fx_test.gd": 4,
       "godot/tests/combat_audio_feedback_test.gd": 8,
       "godot/tests/combat_feel_test.gd": 4,
-      "godot/tests/elemental_protocols_render_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 8,
       "godot/tests/environment_identity_test.gd": 16,
       "godot/tests/first_playable_run_path_test.gd": 12,
       "godot/tests/inferno_blast_wave_test.gd": 4,
@@ -1676,9 +1693,7 @@
       "tools/environment/generate_cinder_foundry_candidate.py": 8,
       "tools/environment/generate_cryo_vault_candidate.py": 8,
       "tools/environment/generate_cryogenic_depths_candidate.py": 8,
-      "tools/environment/generate_null_sector_candidate.py": 8,
-      "tools/environment/generate_quarantine_yard_candidate.py": 4,
-      "tools/environment/pack_environment_art.py": 4
+      "tools/environment/generate_null_sector_candidate.py": 8
     },
     "after": {
       "android/src/main/java/com/deadlinezero/game/android/AndroidLauncher.java": 4,
@@ -2150,6 +2165,12 @@
     "bulkheads": {
       "godot/scripts/Main.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
+    },
+    "burning": {
+      "godot/scripts/BurnStatusFx.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/burn_status_fx_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4
     },
     "camera": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 4,
@@ -2678,6 +2699,12 @@
       "godot/tests/enemy_shadow_budget_test.gd": 4,
       "godot/tests/offscreen_threat_priority_test.gd": 4
     },
+    "effects": {
+      "godot/scripts/BurnStatusFx.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/burn_status_fx_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4
+    },
     "element": {
       "core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java": 4,
       "core/src/main/java/com/deadlinezero/game/screen/RunResultScreen.java": 4
@@ -2866,19 +2893,21 @@
     "feat": {
       "godot/scripts/ArcLinkFx.gd": 8,
       "godot/scripts/AssetLibrary.gd": 8,
+      "godot/scripts/BurnStatusFx.gd": 4,
       "godot/scripts/CombatGroundMark.gd": 4,
       "godot/scripts/Enemy.gd": 16,
       "godot/scripts/InfernoBlastFx.gd": 8,
       "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 12,
-      "godot/scripts/Projectile.gd": 8,
+      "godot/scripts/Projectile.gd": 12,
       "godot/tests/arc_chain_link_fx_test.gd": 8,
       "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/attack_lane_gradient_test.gd": 4,
       "godot/tests/authored_asphalt_pbr_floor_test.gd": 4,
       "godot/tests/authored_gait_sync_test.gd": 4,
+      "godot/tests/burn_status_fx_test.gd": 4,
       "godot/tests/combat_ground_mark_test.gd": 4,
-      "godot/tests/elemental_protocols_render_test.gd": 8,
+      "godot/tests/elemental_protocols_render_test.gd": 12,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/industrial_kit_pbr_budget_test.gd": 4,
@@ -3092,11 +3121,13 @@
     "gamefeel": {
       "godot/scripts/ArcLinkFx.gd": 8,
       "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/BurnStatusFx.gd": 4,
       "godot/scripts/InfernoBlastFx.gd": 4,
       "godot/scripts/Player.gd": 4,
-      "godot/scripts/Projectile.gd": 8,
+      "godot/scripts/Projectile.gd": 12,
       "godot/tests/arc_chain_link_fx_test.gd": 8,
-      "godot/tests/elemental_protocols_render_test.gd": 4,
+      "godot/tests/burn_status_fx_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 8,
       "godot/tests/industrial_kit_pbr_budget_test.gd": 4,
       "godot/tests/inferno_blast_wave_test.gd": 4,
       "godot/tests/world_target_lock_test.gd": 4,
@@ -3456,10 +3487,12 @@
     },
     "inferno": {
       "godot/scripts/ArcLinkFx.gd": 4,
+      "godot/scripts/BurnStatusFx.gd": 4,
       "godot/scripts/InfernoBlastFx.gd": 8,
-      "godot/scripts/Projectile.gd": 4,
+      "godot/scripts/Projectile.gd": 8,
       "godot/tests/arc_chain_link_fx_test.gd": 4,
-      "godot/tests/elemental_protocols_render_test.gd": 8,
+      "godot/tests/burn_status_fx_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 12,
       "godot/tests/inferno_blast_wave_test.gd": 8
     },
     "inspection": {
@@ -4943,6 +4976,12 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatSpritePass.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java": 4
+    },
+    "shared": {
+      "godot/scripts/BurnStatusFx.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/burn_status_fx_test.gd": 4,
+      "godot/tests/elemental_protocols_render_test.gd": 4
     },
     "shock": {
       "godot/scripts/Enemy.gd": 4,

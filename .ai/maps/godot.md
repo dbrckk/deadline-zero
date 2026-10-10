@@ -41,6 +41,7 @@ The content is organized as follows:
 scripts/
   ArcLinkFx.gd
   AssetLibrary.gd
+  BurnStatusFx.gd
   CombatAudio.gd
   CombatFeel.gd
   CombatGroundMark.gd
@@ -75,6 +76,7 @@ tests/
   boss_hud_identity_test.gd
   boss_phase_runtime_test.gd
   boss_reveal_camera_test.gd
+  burn_status_fx_test.gd
   combat_audio_feedback_test.gd
   combat_danger_hud_test.gd
   combat_feel_test.gd
@@ -685,6 +687,143 @@ static func animation_player(root: Node) -> AnimationPlayer:
         return null
     var direct := root.find_child("AnimationPlayer", true, false)
     return direct as AnimationPlayer
+```
+
+## File: scripts/BurnStatusFx.gd
+```
+class_name DZBurnStatusFx
+extends Node3D
+
+# True Inferno DoT is visible on its victim in world space. The seven curved
+# flame ribbons are baked into *one* 14-triangle mesh surface: one shared
+# geometry resource and one shared additive shader for every burning enemy.
+# No particle emitters, point lights, transparent overdraw stacks or shadows.
+const MAX_ACTIVE := 18
+const FLAME_COUNT := 7
+const THAW_SECONDS := 0.30
+
+static var _shared_flame_mesh: ArrayMesh
+static var _shared_material: ShaderMaterial
+
+var tracked_enemy: DZEnemy
+var flames: MeshInstance3D
+
+static func attach_to(enemy: DZEnemy) -> DZBurnStatusFx:
+    if enemy == null or not is_instance_valid(enemy) or not enemy.is_inside_tree():
+        return null
+    if enemy.dead or enemy.burn_left <= 0.0 or enemy.burn_dps <= 0.0:
+        return null
+    var existing := enemy.get_node_or_null("BurnStatusFlames") as DZBurnStatusFx
+    if existing != null and not existing.is_queued_for_deletion():
+        return existing
+    var active := 0
+    for node in enemy.get_tree().get_nodes_in_group("burn_status_flames"):
+        if is_instance_valid(node) and not node.is_queued_for_deletion():
+            active += 1
+    if active >= MAX_ACTIVE:
+        return null
+    var effect := DZBurnStatusFx.new()
+    effect.name = "BurnStatusFlames"
+    effect.tracked_enemy = enemy
+    enemy.add_child(effect)
+    return effect
+
+func _ready() -> void:
+    add_to_group("burn_status_flames")
+    flames = MeshInstance3D.new()
+    flames.name = "InfernoEmbers"
+    flames.mesh = _flame_mesh()
+    flames.material_override = _flame_material()
+    flames.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    var size := 1.62 if tracked_enemy.kind == "boss" else (
+        1.22 if tracked_enemy.kind in ["elite", "brute", "charger"] else 0.93
+    )
+    flames.scale = Vector3.ONE * size
+    add_child(flames)
+    _update_opacity(1.0)
+
+static func _flame_mesh() -> ArrayMesh:
+    if _shared_flame_mesh != null:
+        return _shared_flame_mesh
+    var vertices := PackedVector3Array()
+    var uv := PackedVector2Array()
+    for i in range(FLAME_COUNT):
+        var angle := TAU * float(i) / float(FLAME_COUNT)
+        var outward := Vector3(cos(angle), 0.0, sin(angle))
+        var sideways := Vector3(-outward.z, 0.0, outward.x)
+        # Move flames outside imported body volumes. The flame tips remain
+        # visible from the real top-down gameplay camera, not hidden in torsos.
+        var radius := 0.79 if i % 2 == 0 else 0.92
+        var height_scale := 0.76 if i % 3 == 0 else (0.96 if i % 3 == 1 else 0.86)
+        var width := 0.50 * height_scale
+        var height := 1.40 * height_scale
+        var center := outward * radius + Vector3.UP * (0.90 * height_scale)
+        var bottom_l := center - sideways * width * 0.5 - Vector3.UP * height * 0.5
+        var bottom_r := center + sideways * width * 0.5 - Vector3.UP * height * 0.5
+        var top_l := center - sideways * width * 0.5 + Vector3.UP * height * 0.5
+        var top_r := center + sideways * width * 0.5 + Vector3.UP * height * 0.5
+        for point in [bottom_l, top_l, bottom_r, bottom_r, top_l, top_r]:
+            vertices.append(point)
+        for texel in [
+            Vector2(0.0, 0.0), Vector2(0.0, 1.0), Vector2(1.0, 0.0),
+            Vector2(1.0, 0.0), Vector2(0.0, 1.0), Vector2(1.0, 1.0)
+        ]:
+            uv.append(texel)
+    var arrays := []
+    arrays.resize(Mesh.ARRAY_MAX)
+    arrays[Mesh.ARRAY_VERTEX] = vertices
+    arrays[Mesh.ARRAY_TEX_UV] = uv
+    _shared_flame_mesh = ArrayMesh.new()
+    _shared_flame_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+    return _shared_flame_mesh
+
+static func _flame_material() -> ShaderMaterial:
+    if _shared_material != null:
+        return _shared_material
+    var shader := Shader.new()
+    shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, depth_draw_never;
+instance uniform float burn_opacity = 1.0;
+
+void vertex() {
+    float tip = clamp(UV.y, 0.0, 1.0);
+    VERTEX.x += 0.075 * tip * tip * sin(TIME * 7.2 + MODEL_MATRIX[3].x * 8.0 + MODEL_MATRIX[3].z * 5.0);
+}
+
+void fragment() {
+    float height = clamp(UV.y, 0.0, 1.0);
+    float sway = 0.06 * sin(height * 9.0 + TIME * 8.5);
+    float lateral = abs(UV.x - 0.5 + sway) * 2.0;
+    float width = mix(0.92, 0.03, pow(height, 1.3));
+    float body = 1.0 - smoothstep(width * 0.55, max(width, 0.06), lateral);
+    float foot = smoothstep(0.0, 0.13, height);
+    float crown = 1.0 - smoothstep(0.84, 1.0, height);
+    float flicker = 0.86 + 0.14 * sin(TIME * 11.5 + UV.x * 18.0 + UV.y * 7.0);
+    vec3 ember = mix(vec3(1.0, 0.105, 0.018), vec3(1.0, 0.68, 0.17), smoothstep(0.15, 0.79, height));
+    ALBEDO = ember;
+    EMISSION = ember * (3.2 + 1.5 * height);
+    ALPHA = burn_opacity * body * foot * crown * flicker * 0.92;
+}
+"""
+    _shared_material = ShaderMaterial.new()
+    _shared_material.shader = shader
+    return _shared_material
+
+func _update_opacity(value: float) -> void:
+    if flames != null:
+        flames.set_instance_shader_parameter("burn_opacity", clampf(value, 0.0, 1.0))
+
+func _process(_delta: float) -> void:
+    if tracked_enemy == null or not is_instance_valid(tracked_enemy) or tracked_enemy.dead:
+        queue_free()
+        return
+    if tracked_enemy.burn_left <= 0.0 or tracked_enemy.burn_dps <= 0.0:
+        queue_free()
+        return
+    # Refreshed hits renew the source debuff; the visual follows its owner
+    # rather than replacing geometry or running an unrelated fixed timer.
+    _update_opacity(clampf(tracked_enemy.burn_left / THAW_SECONDS, 0.0, 1.0))
 ```
 
 ## File: scripts/CombatAudio.gd
@@ -7119,6 +7258,8 @@ func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:
     match visual_profile:
         "inferno":
             primary.apply_burn(dealt_damage * 0.16, 2.0)
+            if spawn_secondary_fx:
+                DZBurnStatusFx.attach_to(primary)
             _apply_splash(primary, dealt_damage * 0.45, splash_radius)
         "cryo":
             primary.apply_slow(slow_multiplier, slow_duration)
@@ -8958,6 +9099,167 @@ func _require(condition: bool, message: String) -> bool:
     return false
 ```
 
+## File: tests/burn_status_fx_test.gd
+```
+extends SceneTree
+
+const FX := preload("res://scripts/BurnStatusFx.gd")
+const PROJECTILE := preload("res://scripts/Projectile.gd")
+
+func _initialize() -> void:
+    call_deferred("_run_test")
+
+func _fail(message: String) -> void:
+    push_error(message)
+    quit(1)
+
+func _run_test() -> void:
+    var root := Node3D.new()
+    get_root().add_child(root)
+    current_scene = root
+    var player := Node3D.new()
+    root.add_child(player)
+
+    var ordinary := DZEnemy.new()
+    ordinary.configure("shambler", 1.0, player)
+    ordinary.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(ordinary)
+    ordinary.global_position = Vector3(2.2, 0.0, -1.0)
+
+    var elite := DZEnemy.new()
+    elite.configure("elite", 1.0, player)
+    elite.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(elite)
+    elite.global_position = Vector3(-2.2, 0.0, 1.0)
+    await process_frame
+
+    if FX.attach_to(ordinary) != null:
+        _fail("Inferno burn status must not appear before real DoT is applied")
+        return
+
+    var shot := PROJECTILE.new()
+    shot.process_mode = Node.PROCESS_MODE_DISABLED
+    shot.setup(Vector3.ZERO, Vector3.RIGHT, 15.0, 20.0, Color.ORANGE_RED, "inferno")
+    root.add_child(shot)
+    await process_frame
+    shot._apply_protocol_hit(ordinary, 20.0)
+    var first := ordinary.get_node_or_null("BurnStatusFlames") as DZBurnStatusFx
+    if ordinary.burn_left <= 0.0 or ordinary.burn_dps <= 0.0 or first == null:
+        _fail("Inferno protocol must apply real burning and attach its 3D fire status")
+        return
+    first.set_process(false)
+    if FX.attach_to(ordinary) != first:
+        _fail("Repeated Inferno burns must never duplicate victim flame geometry")
+        return
+
+    elite.apply_burn(3.0, 2.0)
+    var second := FX.attach_to(elite)
+    if second == null or second == first:
+        _fail("A separately burning elite needs its own attached flame marker")
+        return
+    second.set_process(false)
+
+    var flames_a := first.get_node_or_null("InfernoEmbers") as MeshInstance3D
+    var flames_b := second.get_node_or_null("InfernoEmbers") as MeshInstance3D
+    if flames_a == null or flames_b == null:
+        _fail("World-space flame ribbons were not constructed")
+        return
+    if first.get_parent() != ordinary or second.get_parent() != elite:
+        _fail("Burning visual must follow the affected enemy")
+        return
+    if flames_a.mesh != flames_b.mesh:
+        _fail("Burn status must share one baked ribbon mesh across all burning enemies")
+        return
+    if flames_a.material_override != flames_b.material_override:
+        _fail("Burn status must share the same animated emission shader")
+        return
+    var flame_mesh := flames_a.mesh as ArrayMesh
+    if flame_mesh == null or flame_mesh.get_surface_count() != 1:
+        _fail("Mobile burn effect must draw in exactly one shared mesh surface")
+        return
+    var vertices: PackedVector3Array = flame_mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+    var uv: PackedVector2Array = flame_mesh.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV]
+    if vertices.size() != FX.FLAME_COUNT * 6 or uv.size() != vertices.size() or FX.FLAME_COUNT > 8:
+        _fail("Inferno must use exactly seven two-triangle flames with one UV layout")
+        return
+    var highest := 0.0
+    var furthest := 0.0
+    for vertex in vertices:
+        highest = maxf(highest, vertex.y)
+        furthest = maxf(furthest, Vector2(vertex.x, vertex.z).length())
+    if highest < 1.15 or furthest < 0.78:
+        _fail("Inferno flames too small/inside body: height=%.3f radius=%.3f" % [highest, furthest])
+        return
+    if flames_a.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+        _fail("Emissive burn FX must never consume shadow-map draws")
+        return
+    if flames_b.scale.x <= flames_a.scale.x:
+        _fail("Elite burning silhouette should scale with its larger body")
+        return
+    var shader := (flames_a.material_override as ShaderMaterial).shader.code
+    if not shader.contains("TIME") or not shader.contains("EMISSION") or not shader.contains("burn_opacity"):
+        _fail("Burning ribbons lost animated emissive shading and per-victim fade")
+        return
+
+    var previous := flames_a.global_position
+    ordinary.global_position += Vector3(0.75, 0.0, 0.5)
+    if not is_equal_approx(flames_a.global_position.x - previous.x, 0.75):
+        _fail("Fire must stay anchored to the enemy as it moves")
+        return
+
+    ordinary.burn_left = 0.08
+    first._process(0.0)
+    var fade := float(flames_a.get_instance_shader_parameter("burn_opacity"))
+    if fade <= 0.0 or fade >= 1.0:
+        _fail("Inferno ribbons must fade near the true DoT expiry")
+        return
+    ordinary.apply_burn(4.0, 2.0)
+    first._process(0.0)
+    if not is_equal_approx(float(flames_a.get_instance_shader_parameter("burn_opacity")), 1.0):
+        _fail("Refreshing DoT must restore full ember intensity without duplicating FX")
+        return
+
+    # Existing visuals occupy two of the eighteen active world-space slots.
+    var placeholders: Array[Node3D] = []
+    for i in range(FX.MAX_ACTIVE - 2):
+        var placeholder := Node3D.new()
+        placeholder.add_to_group("burn_status_flames")
+        root.add_child(placeholder)
+        placeholders.append(placeholder)
+    var third := DZEnemy.new()
+    third.configure("shambler", 1.0, player)
+    third.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(third)
+    third.apply_burn(3.0, 1.5)
+    if FX.attach_to(third) != null:
+        _fail("Inferno burn visuals must respect the mobile overlap limit")
+        return
+    for placeholder in placeholders:
+        placeholder.queue_free()
+    await process_frame
+
+    shot.spawn_secondary_fx = false
+    shot._apply_protocol_hit(third, 10.0)
+    if third.get_node_or_null("BurnStatusFlames") != null:
+        _fail("Gameplay-only simulation must not create decorative DoT flames")
+        return
+
+    ordinary.burn_left = 0.0
+    first._process(0.0)
+    if not first.is_queued_for_deletion():
+        _fail("Inferno fire visual survived after DoT expiry")
+        return
+
+    elite.dead = true
+    second._process(0.0)
+    if not second.is_queued_for_deletion():
+        _fail("Inferno fire visual survived the enemy's death")
+        return
+
+    print("Deadline Zero native 3D Inferno burning status FX: OK")
+    quit(0)
+```
+
 ## File: tests/combat_audio_feedback_test.gd
 ```
 extends SceneTree
@@ -9444,7 +9746,7 @@ func _initialize() -> void:
 ```
 extends SceneTree
 
-# Real renderer evidence for Arc links, Inferno shockwave/scorch and Cryo slow status.
+# Real renderer evidence for Arc links, Inferno shockwave/scorch, actual burn and Cryo slow.
 const OUTPUT_PATH := "/tmp/deadline-zero-elemental-protocols.png"
 const RESIDUE_PATH := "/tmp/deadline-zero-inferno-residue.png"
 const MAIN_SCENE := preload("res://scenes/Main.tscn")
@@ -9480,6 +9782,7 @@ func _capture() -> void:
         {"kind":"shambler", "position":Vector3(4.7, 0.0, -0.8)}
     ]
     var cryo_victim: DZEnemy
+    var burning_victim: DZEnemy
     for entry in placements:
         var enemy := DZEnemy.new()
         enemy.configure(String(entry["kind"]), 1.0, scene.player)
@@ -9488,16 +9791,25 @@ func _capture() -> void:
         enemy.global_position = entry["position"]
         if String(entry["kind"]) == "shambler":
             cryo_victim = enemy
+        if String(entry["kind"]) == "brute":
+            burning_victim = enemy
     await process_frame
 
-    if cryo_victim == null:
-        push_error("Cryo visual QA has no shambler to demonstrate the debuff")
+    if cryo_victim == null or burning_victim == null:
+        push_error("Elemental visual QA missing Cryo or burning subjects")
         quit(1)
         return
     cryo_victim.apply_slow(0.62, 1.6)
     var ice := DZCryoStatusFx.attach_to(cryo_victim)
     if ice == null or ice.get_node_or_null("FrostCrystals") == null:
         push_error("Cryo status crown failed to stage in real 3D gameplay rendering")
+        quit(1)
+        return
+
+    burning_victim.apply_burn(4.2, 2.0)
+    var flames := DZBurnStatusFx.attach_to(burning_victim)
+    if flames == null or flames.get_node_or_null("InfernoEmbers") == null:
+        push_error("Actual Inferno burn status failed to stage in the real 3D renderer")
         quit(1)
         return
 
@@ -9518,7 +9830,7 @@ func _capture() -> void:
     for _frame in range(7):
         await process_frame
 
-    if link_a.get_node_or_null("ArcRibbon") == null or blast.get_node_or_null("BlastFront") == null:
+    if link_a.get_node_or_null("ArcRibbon") == null or blast.get_node_or_null("BlastFront") == null or flames.get_node_or_null("InfernoEmbers") == null:
         push_error("Elemental protocol meshes vanished before capture")
         quit(1)
         return
@@ -9560,7 +9872,42 @@ func _capture() -> void:
         quit(1)
         return
 
-    print("GODOT_ELEMENTAL_PROTOCOL_VISUAL_QA_OK %dx%d plus persistent residue" % [image.get_width(), image.get_height()])
+    # A material/mesh contract alone cannot prove that a bright flame actually
+    # survives GLTF body occlusion and the Android-compatible renderer. Compare
+    # two identically staged GPU frames, with only the burn mesh removed. This
+    # specifically protects against the earlier invisible-fire regression.
+    var burn_screen: Vector2 = scene.camera.unproject_position(
+        burning_victim.global_position + Vector3(0.0, 0.85, 0.0)
+    )
+    flames.queue_free()
+    for _frame in range(3):
+        await process_frame
+    var without_burn := get_root().get_texture().get_image()
+    if without_burn == null or without_burn.is_empty():
+        push_error("Burn visibility comparison could not read the second GPU frame")
+        quit(1)
+        return
+    without_burn.convert(Image.FORMAT_RGB8)
+    var visible_flame_pixels := 0
+    var center_x := int(round(burn_screen.x))
+    var center_y := int(round(burn_screen.y))
+    for y in range(maxi(0, center_y - 100), mini(residue_image.get_height(), center_y + 100)):
+        for x in range(maxi(0, center_x - 100), mini(residue_image.get_width(), center_x + 100)):
+            var burning_color := residue_image.get_pixel(x, y)
+            var extinguished_color := without_burn.get_pixel(x, y)
+            var difference := maxf(
+                absf(burning_color.r - extinguished_color.r),
+                absf(burning_color.g - extinguished_color.g)
+            )
+            if difference > 0.12 and burning_color.r > burning_color.b * 1.5:
+                visible_flame_pixels += 1
+    if visible_flame_pixels < 100:
+        push_error("Inferno burning is hidden or too dim in a real rendered frame: only %d distinct pixels" % visible_flame_pixels)
+        quit(1)
+        return
+    print("GODOT_BURN_VISIBLE_PIXELS_OK %d" % visible_flame_pixels)
+
+    print("GODOT_ELEMENTAL_PROTOCOL_VISUAL_QA_OK %dx%d with real burn, Cryo, Arc and Inferno residue" % [image.get_width(), image.get_height()])
     quit(0)
 ```
 

@@ -1,16 +1,16 @@
 # Repo Brain
 
 - Index mode: incremental
-- Files indexed: 570
-- Files reparsed this run: 2
-- Symbols: 3117
+- Files indexed: 572
+- Files reparsed this run: 4
+- Symbols: 3124
 - Internal import edges: 808
-- Impacted files: 56
-- Selected tests: 34
+- Impacted files: 13
+- Selected tests: 9
 
 ## Languages
 - java: 422 files
-- gdscript: 93 files
+- gdscript: 95 files
 - python: 55 files
 
 ## Highest-density symbol files

@@ -1,12 +1,14 @@
 # Change impact
 
-Base: 5d2c4efcd686e238894193a731ace4ce554a1ed9
-Head: 6d47a1f25cbe35b6563afb6f30d7a468bf2b42b7
+Base: f67ba7ccf5dfb0a9ef0ae13ac7ba8215e03a32cf
+Head: 7d1a8c75b7f0a185d2c7af8393d575ba1860cc93
 
 ## Changed files
 - M .github/workflows/godot-verify.yml
-- M godot/scripts/Enemy.gd
-- A godot/tests/attack_lane_gradient_test.gd
+- A godot/scripts/BurnStatusFx.gd
+- M godot/scripts/Projectile.gd
+- A godot/tests/burn_status_fx_test.gd
+- M godot/tests/elemental_protocols_render_test.gd
 
 ## Affected areas
 - .github
