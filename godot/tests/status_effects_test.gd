@@ -41,7 +41,7 @@ func _initialize() -> void:
         push_error("Nonlethal Inferno DoT must not emit per-tick impact or recoil")
         quit(1)
         return
-    if get_tree().get_nodes_in_group("damage_numbers").size() != 0:
+    if get_nodes_in_group("damage_numbers").size() != 0:
         push_error("Nonlethal burn ticks must not spam floating damage labels")
         quit(1)
         return
