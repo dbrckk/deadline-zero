@@ -92,6 +92,35 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # Integration budget: independent horde spawns must share their immutable
+    # imported surface grade. Different enemy archetypes must keep unique
+    # color/roughness/rim parameters and never share the same material.
+    var runner_copy_a := DZAssetLibrary.enemy("runner")
+    var runner_copy_b := DZAssetLibrary.enemy("runner")
+    var brute_copy := DZAssetLibrary.enemy("brute")
+    if runner_copy_a == null or runner_copy_b == null or brute_copy == null:
+        push_error("Cannot instantiate enemy materials for horde sharing check")
+        quit(1)
+        return
+    var runner_grade_a := _first_graded_enemy_material(runner_copy_a)
+    var runner_grade_b := _first_graded_enemy_material(runner_copy_b)
+    var brute_grade := _first_graded_enemy_material(brute_copy)
+    if runner_grade_a == null or runner_grade_b == null or brute_grade == null:
+        push_error("Cannot find textured PBR grades in the imported enemy horde")
+        quit(1)
+        return
+    if runner_grade_a != runner_grade_b:
+        push_error("Identical enemy archetypes must share their immutable graded atlas material")
+        quit(1)
+        return
+    if runner_grade_a == brute_grade:
+        push_error("Different enemy archetypes must preserve distinct palette materials")
+        quit(1)
+        return
+    runner_copy_a.free()
+    runner_copy_b.free()
+    brute_copy.free()
+
     var expected := {
         "shambler": ["SignatureBeacon"],
         "runner": ["RunnerBladeL", "RunnerBladeR", "SignatureBeacon"],
@@ -283,3 +312,18 @@ func _initialize() -> void:
 
     print("Deadline Zero enemy silhouette identity: OK")
     quit(0)
+
+func _first_graded_enemy_material(visual: Node3D) -> ShaderMaterial:
+    var mesh_nodes: Array[MeshInstance3D] = []
+    if visual is MeshInstance3D:
+        mesh_nodes.append(visual as MeshInstance3D)
+    for node in visual.find_children("*", "MeshInstance3D", true, false):
+        mesh_nodes.append(node as MeshInstance3D)
+    for mesh_instance in mesh_nodes:
+        if mesh_instance.mesh == null:
+            continue
+        for surface_index in range(mesh_instance.mesh.get_surface_count()):
+            var grade := mesh_instance.get_surface_override_material(surface_index) as ShaderMaterial
+            if grade != null:
+                return grade
+    return null
