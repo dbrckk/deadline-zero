@@ -3,21 +3,25 @@
 Status: active
 
 ## Working
-- Central AI repo-map generation is configured through dbrckk/repo-standards.
-- Repository agent instructions are present.
+- Godot 4.7.2 native 3D first-playable with authored industrial PBR environment and 3D Inferno, Cryo and Arc effects.
+- Godot CI validates core gameplay, visual captures, Android export, and store assets.
+- The Inferno DoT feedback cleanup is on branch `fix/godot-inferno-dot-noise-budget`; it preserves damage and lethal rewards while suppressing repeated nonlethal shot impacts.
 
 ## Broken / blockers
-- None documented here yet.
+- Gameplay feel and visual quality still require real-device performance and visual review before Play Store release.
+- Repo's "Deadline Zero Work Watch" workflow has repeated failures (separate from Godot verification).
 
 ## Current priority
-- Restore task-specific state here when substantial work resumes.
+- Validate and merge quiet Inferno DoT hit feedback with existing status-effect integration checks.
+- Follow up with real-device render/performance checks and premium character animation polish.
 
 ## Validation
-- Standards workflow: configured.
-- Tests/build: use this repository's existing validation commands.
+- Latest completed main gameplay CI (commit `7d1a8c75b7f0`): 7 Godot/Android/standards workflows passed.
+- Inferno feedback branch: validation pending PR CI (do not treat as passed).
+- Two subsequent main administrative commits skip gameplay rendering CI.
 
 ## Last verified
-- 2026-09-18
+- 2026-10-10
 
 <!-- AUTO:START -->
 ## Automatic repository state
