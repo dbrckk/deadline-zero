@@ -26,29 +26,30 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-10T19:53:38Z
+Generated: 2026-10-10T19:55:49Z
 
 ### Git
 - Branch: `main`
-- Head: `42f99b99437b`
-- Commit date: 2026-10-10T21:53:23+02:00
-- Commit: fix(gamefeel): keep Inferno DoT quiet without losing lethal feedback (#394)
+- Head: `891078343e50`
+- Commit date: 2026-10-10T21:55:33+02:00
+- Commit: perf(godot): share zombie PBR atlas materials across waves (#395)
 - Tracked files: 1065
 
 ### Recently changed files
-- `godot/scripts/Enemy.gd`
-- `godot/tests/status_effects_test.gd`
+- `godot/scripts/AssetLibrary.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/status_effects_test.gd`
 - `.github/workflows/godot-verify.yml`
 - `godot/scripts/BurnStatusFx.gd`
 - `godot/scripts/Projectile.gd`
 - `godot/tests/burn_status_fx_test.gd`
 - `godot/tests/elemental_protocols_render_test.gd`
-- `godot/tests/attack_lane_gradient_test.gd`
 
 ### Project signals
 - `build.gradle`

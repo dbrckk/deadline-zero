@@ -2,22 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Replace combat-frame barriers with quarantine bulkheads",
-      "terms": [
-        "barriers",
-        "bulkheads",
-        "combat-frame",
-        "quarantine",
-        "replace"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Main.gd",
-        "godot/tests/environment_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Fix quarantine bulkhead GDScript parse",
       "terms": [
         "bulkhead",
@@ -1197,6 +1181,27 @@
         "godot/scripts/Enemy.gd",
         "godot/tests/status_effects_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "perf(godot): share zombie PBR atlas materials across waves (#395)",
+      "terms": [
+        "395",
+        "across",
+        "atlas",
+        "godot",
+        "materials",
+        "pbr",
+        "perf",
+        "share",
+        "waves",
+        "zombie"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/AssetLibrary.gd",
+        "godot/tests/enemy_silhouette_identity_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1499,6 +1504,10 @@
       "godot/scripts/Enemy.gd": 4,
       "godot/tests/status_effects_test.gd": 4
     },
+    "395": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
+    },
     "3d": {
       "godot/scripts/ArcLinkFx.gd": 4,
       "godot/scripts/AssetLibrary.gd": 12,
@@ -1596,7 +1605,8 @@
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java": 8
     },
     "across": {
-      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/AssetLibrary.gd": 8,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/industrial_material_sharing_test.gd": 4
     },
     "activate": {
@@ -1869,8 +1879,8 @@
       "godot/tests/projectile_profile_runtime_visual_test.gd": 4
     },
     "atlas": {
-      "godot/scripts/AssetLibrary.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/scripts/AssetLibrary.gd": 8,
+      "godot/tests/enemy_silhouette_identity_test.gd": 8,
       "tools/environment/install_all_environment_candidates.py": 4
     },
     "atlases": {
@@ -3234,7 +3244,7 @@
       "godot/tests/mobile_orientation_test.gd": 4
     },
     "godot": {
-      "godot/scripts/AssetLibrary.gd": 20,
+      "godot/scripts/AssetLibrary.gd": 24,
       "godot/scripts/CombatGroundMark.gd": 4,
       "godot/scripts/Enemy.gd": 24,
       "godot/scripts/Hud.gd": 12,
@@ -3250,7 +3260,7 @@
       "godot/tests/authored_world_dressing_test.gd": 4,
       "godot/tests/combat_ground_mark_test.gd": 4,
       "godot/tests/enemy_shadow_budget_test.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 8,
       "godot/tests/environment_asset_validation_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 12,
       "godot/tests/first_playable_run_path_test.gd": 4,
@@ -3789,7 +3799,8 @@
       "godot/tests/weapon_presentation_test.gd": 4
     },
     "materials": {
-      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/AssetLibrary.gd": 8,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/industrial_material_sharing_test.gd": 4
     },
     "matrix": {
@@ -4105,7 +4116,8 @@
       "godot/tests/player_pressure_marker_test.gd": 4
     },
     "pbr": {
-      "godot/scripts/AssetLibrary.gd": 8,
+      "godot/scripts/AssetLibrary.gd": 12,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/industrial_prop_material_test.gd": 4
@@ -4115,11 +4127,12 @@
       "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
     "perf": {
-      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/scripts/AssetLibrary.gd": 8,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 4,
       "godot/tests/enemy_shadow_budget_test.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/offscreen_threat_priority_test.gd": 4,
       "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
@@ -5009,6 +5022,10 @@
       "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ChampionVariantPresentationTest.java": 4
     },
+    "share": {
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
+    },
     "shared": {
       "godot/scripts/BurnStatusFx.gd": 4,
       "godot/scripts/Projectile.gd": 4,
@@ -5611,7 +5628,9 @@
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java": 4,
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
     "weapon": {
       "core/src/main/java/com/deadlinezero/game/audio/AudioCueLimiter.java": 4,
@@ -5669,7 +5688,9 @@
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/PlayerProjectilePresentation.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/WorldFxRenderer.java": 4,
-      "core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java": 4
+      "core/src/test/java/com/deadlinezero/game/visual/PlayerProjectilePresentationTest.java": 4,
+      "godot/scripts/AssetLibrary.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4
     }
   },
   "term_test_scores": {}

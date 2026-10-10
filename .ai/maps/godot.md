@@ -294,6 +294,10 @@ const INDUSTRIAL_PIPE_RACK := "res://assets/generated/industrial/dz_pipe_rack.gl
 const INDUSTRIAL_SERVICE_PILLAR := "res://assets/generated/industrial/dz_service_pillar.glb"
 
 static var _enemy_grade_shader: Shader
+# Enemy palettes are fixed per archetype. Reuse one graded ShaderMaterial per
+# imported surface instead of compiling/allocating duplicates for every horde
+# spawn. Transient hit flashes and elemental effects use separate materials.
+static var _enemy_surface_material_cache := {}
 # Immutable PBR grades are shared between copies of the same authored GLTF
 # surface, avoiding one material allocation per arena prop.
 static var _graded_pbr_material_cache := {}
@@ -557,10 +561,22 @@ static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Colo
             mesh_instance.set_surface_override_material(surface_index, fallback)
             continue
 
-        mesh_instance.set_surface_override_material(
+        # Same archetype always uses the same imported model and grading
+        # parameters. Mesh and material identities keep distinct GLTF atlas
+        # surfaces from being accidentally merged.
+        var cache_key := "%s|%s|%s|%d|%s|%s" % [
+            kind,
+            mesh_instance.mesh.resource_name,
+            mesh_instance.name,
             surface_index,
-            _enemy_surface_material(source_material, tint, kind)
-        )
+            source_material.resource_name,
+            source_material.albedo_texture.resource_path
+        ]
+        var graded := _enemy_surface_material_cache.get(cache_key) as ShaderMaterial
+        if graded == null or graded.get_shader_parameter("albedo_tex") != source_material.albedo_texture:
+            graded = _enemy_surface_material(source_material, tint, kind)
+            _enemy_surface_material_cache[cache_key] = graded
+        mesh_instance.set_surface_override_material(surface_index, graded)
 
 static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color, kind := "shambler") -> ShaderMaterial:
     var material := ShaderMaterial.new()
@@ -10251,6 +10267,35 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # Integration budget: independent horde spawns must share their immutable
+    # imported surface grade. Different enemy archetypes must keep unique
+    # color/roughness/rim parameters and never share the same material.
+    var runner_copy_a := DZAssetLibrary.enemy("runner")
+    var runner_copy_b := DZAssetLibrary.enemy("runner")
+    var brute_copy := DZAssetLibrary.enemy("brute")
+    if runner_copy_a == null or runner_copy_b == null or brute_copy == null:
+        push_error("Cannot instantiate enemy materials for horde sharing check")
+        quit(1)
+        return
+    var runner_grade_a := _first_graded_enemy_material(runner_copy_a)
+    var runner_grade_b := _first_graded_enemy_material(runner_copy_b)
+    var brute_grade := _first_graded_enemy_material(brute_copy)
+    if runner_grade_a == null or runner_grade_b == null or brute_grade == null:
+        push_error("Cannot find textured PBR grades in the imported enemy horde")
+        quit(1)
+        return
+    if runner_grade_a != runner_grade_b:
+        push_error("Identical enemy archetypes must share their immutable graded atlas material")
+        quit(1)
+        return
+    if runner_grade_a == brute_grade:
+        push_error("Different enemy archetypes must preserve distinct palette materials")
+        quit(1)
+        return
+    runner_copy_a.free()
+    runner_copy_b.free()
+    brute_copy.free()
+
     var expected := {
         "shambler": ["SignatureBeacon"],
         "runner": ["RunnerBladeL", "RunnerBladeR", "SignatureBeacon"],
@@ -10442,6 +10487,21 @@ func _initialize() -> void:
 
     print("Deadline Zero enemy silhouette identity: OK")
     quit(0)
+
+func _first_graded_enemy_material(visual: Node3D) -> ShaderMaterial:
+    var mesh_nodes: Array[MeshInstance3D] = []
+    if visual is MeshInstance3D:
+        mesh_nodes.append(visual as MeshInstance3D)
+    for node in visual.find_children("*", "MeshInstance3D", true, false):
+        mesh_nodes.append(node as MeshInstance3D)
+    for mesh_instance in mesh_nodes:
+        if mesh_instance.mesh == null:
+            continue
+        for surface_index in range(mesh_instance.mesh.get_surface_count()):
+            var grade := mesh_instance.get_surface_override_material(surface_index) as ShaderMaterial
+            if grade != null:
+                return grade
+    return null
 ```
 
 ## File: tests/environment_asset_validation_test.gd
