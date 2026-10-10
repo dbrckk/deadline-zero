@@ -19,6 +19,10 @@ const INDUSTRIAL_PIPE_RACK := "res://assets/generated/industrial/dz_pipe_rack.gl
 const INDUSTRIAL_SERVICE_PILLAR := "res://assets/generated/industrial/dz_service_pillar.glb"
 
 static var _enemy_grade_shader: Shader
+# Enemy palettes are fixed per archetype. Reuse one graded ShaderMaterial per
+# imported surface instead of compiling/allocating duplicates for every horde
+# spawn. Transient hit flashes and elemental effects use separate materials.
+static var _enemy_surface_material_cache := {}
 # Immutable PBR grades are shared between copies of the same authored GLTF
 # surface, avoiding one material allocation per arena prop.
 static var _graded_pbr_material_cache := {}
@@ -282,10 +286,22 @@ static func _grade_enemy_mesh_instance(mesh_instance: MeshInstance3D, tint: Colo
             mesh_instance.set_surface_override_material(surface_index, fallback)
             continue
 
-        mesh_instance.set_surface_override_material(
+        # Same archetype always uses the same imported model and grading
+        # parameters. Mesh and material identities keep distinct GLTF atlas
+        # surfaces from being accidentally merged.
+        var cache_key := "%s|%s|%s|%d|%s|%s" % [
+            kind,
+            mesh_instance.mesh.resource_name,
+            mesh_instance.name,
             surface_index,
-            _enemy_surface_material(source_material, tint, kind)
-        )
+            source_material.resource_name,
+            source_material.albedo_texture.resource_path
+        ]
+        var graded := _enemy_surface_material_cache.get(cache_key) as ShaderMaterial
+        if graded == null or graded.get_shader_parameter("albedo_tex") != source_material.albedo_texture:
+            graded = _enemy_surface_material(source_material, tint, kind)
+            _enemy_surface_material_cache[cache_key] = graded
+        mesh_instance.set_surface_override_material(surface_index, graded)
 
 static func _enemy_surface_material(source_material: BaseMaterial3D, tint: Color, kind := "shambler") -> ShaderMaterial:
     var material := ShaderMaterial.new()
