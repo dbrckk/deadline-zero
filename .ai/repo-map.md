@@ -26255,23 +26255,28 @@ func _process_status_effects(delta: float) -> void:
     const BURN_TICK := 0.25
     while burn_tick_accumulator >= BURN_TICK and not dead:
         burn_tick_accumulator -= BURN_TICK
-        take_damage(burn_dps * BURN_TICK, false)
+        take_damage(burn_dps * BURN_TICK, false, true)
 
     if burn_left <= 0.0:
         if burn_tick_accumulator > 0.0 and not dead:
-            take_damage(burn_dps * burn_tick_accumulator, false)
+            take_damage(burn_dps * burn_tick_accumulator, false, true)
         burn_tick_accumulator = 0.0
         burn_dps = 0.0
 
-func take_damage(amount: float, critical := false) -> void:
+func take_damage(amount: float, critical := false, damage_over_time := false) -> void:
     if dead:
         return
     health -= amount
     health_changed.emit(max(0.0, health), max_health)
     var killed := health <= 0.0
-    impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
-    _spawn_damage_number(amount, critical, killed)
-    _play_hit_reaction(critical, killed)
+    # Inferno deals real health damage every quarter-second, but intermediate
+    # ticks must not retrigger gunshot hit-stop, HUD flash, recoil, or audio.
+    # Its dedicated 3D flames already communicate the ongoing status.
+    # Preserve the full impact / kill confirmation on the lethal tick.
+    if not damage_over_time or killed:
+        impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
+        _spawn_damage_number(amount, critical, killed)
+        _play_hit_reaction(critical, killed)
     if killed:
         dead = true
         velocity = Vector3.ZERO

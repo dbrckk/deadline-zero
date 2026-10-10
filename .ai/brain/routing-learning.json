@@ -2,21 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Stabilize loaded Android telemetry acquisition",
-      "terms": [
-        "acquisition",
-        "android",
-        "loaded",
-        "stabilize",
-        "telemetry"
-      ],
-      "tests": [],
-      "useful": [
-        "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Replace combat-frame barriers with quarantine bulkheads",
       "terms": [
         "barriers",
@@ -1191,6 +1176,27 @@
         "godot/tests/burn_status_fx_test.gd",
         "godot/tests/elemental_protocols_render_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(gamefeel): keep Inferno DoT quiet without losing lethal feedback (#394)",
+      "terms": [
+        "394",
+        "dot",
+        "feedback",
+        "gamefeel",
+        "inferno",
+        "keep",
+        "lethal",
+        "losing",
+        "quiet",
+        "without"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/tests/status_effects_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1488,6 +1494,10 @@
     "393": {
       "godot/scripts/Enemy.gd": 4,
       "godot/tests/attack_lane_gradient_test.gd": 4
+    },
+    "394": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/status_effects_test.gd": 4
     },
     "3d": {
       "godot/scripts/ArcLinkFx.gd": 4,
@@ -2663,6 +2673,10 @@
       "godot/scripts/Main.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
     },
+    "dot": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/status_effects_test.gd": 4
+    },
     "dressing": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentRenderer.java": 4,
       "godot/scripts/AssetLibrary.gd": 4,
@@ -2928,7 +2942,7 @@
       "core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java": 8,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/CombatFeel.gd": 8,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 12,
@@ -2938,6 +2952,7 @@
       "godot/tests/combat_feel_test.gd": 8,
       "godot/tests/first_playable_run_path_test.gd": 8,
       "godot/tests/player_damage_feedback_test.gd": 4,
+      "godot/tests/status_effects_test.gd": 4,
       "godot/tests/weapon_presentation_test.gd": 4,
       "tools/blender/build_industrial_kit.py": 4
     },
@@ -3122,6 +3137,7 @@
       "godot/scripts/ArcLinkFx.gd": 8,
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/BurnStatusFx.gd": 4,
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/InfernoBlastFx.gd": 4,
       "godot/scripts/Player.gd": 4,
       "godot/scripts/Projectile.gd": 12,
@@ -3130,6 +3146,7 @@
       "godot/tests/elemental_protocols_render_test.gd": 8,
       "godot/tests/industrial_kit_pbr_budget_test.gd": 4,
       "godot/tests/inferno_blast_wave_test.gd": 4,
+      "godot/tests/status_effects_test.gd": 4,
       "godot/tests/world_target_lock_test.gd": 4,
       "tools/blender/build_industrial_kit.py": 4
     },
@@ -3488,12 +3505,14 @@
     "inferno": {
       "godot/scripts/ArcLinkFx.gd": 4,
       "godot/scripts/BurnStatusFx.gd": 4,
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/InfernoBlastFx.gd": 8,
       "godot/scripts/Projectile.gd": 8,
       "godot/tests/arc_chain_link_fx_test.gd": 4,
       "godot/tests/burn_status_fx_test.gd": 4,
       "godot/tests/elemental_protocols_render_test.gd": 12,
-      "godot/tests/inferno_blast_wave_test.gd": 8
+      "godot/tests/inferno_blast_wave_test.gd": 8,
+      "godot/tests/status_effects_test.gd": 4
     },
     "inspection": {
       "godot/scripts/Main.gd": 4,
@@ -3548,13 +3567,14 @@
       "core/src/test/java/com/deadlinezero/game/meta/ProfileMigrationDocumentationTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/BossRevealCameraProfileTest.java": 4,
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/scripts/Enemy.gd": 12,
+      "godot/scripts/Enemy.gd": 16,
       "godot/scripts/Main.gd": 8,
       "godot/tests/enemy_hit_reaction_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 8,
       "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 8,
       "godot/tests/run_end_combat_freeze_test.gd": 4,
+      "godot/tests/status_effects_test.gd": 4,
       "tools/blender/build_industrial_kit.py": 4,
       "tools/blender/promote_kenney_space_kit.py": 4
     },
@@ -3583,6 +3603,10 @@
     },
     "legendary": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4
+    },
+    "lethal": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/status_effects_test.gd": 4
     },
     "level-up": {
       "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java": 4,
@@ -3655,6 +3679,10 @@
       "godot/scripts/Enemy.gd": 4,
       "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/multihit_silhouette_stability_test.gd": 4
+    },
+    "losing": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/status_effects_test.gd": 4
     },
     "main": {
       "core/src/main/java/com/deadlinezero/game/screen/MissionsScreen.java": 4
@@ -4437,6 +4465,10 @@
       "godot/scripts/Main.gd": 28,
       "godot/tests/environment_identity_test.gd": 32,
       "tools/environment/generate_quarantine_yard_candidate.py": 4
+    },
+    "quiet": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/status_effects_test.gd": 4
     },
     "radius": {
       "godot/scripts/ArcLinkFx.gd": 4,
@@ -5601,6 +5633,10 @@
     "wear": {
       "godot/scripts/Main.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
+    },
+    "without": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/tests/status_effects_test.gd": 4
     },
     "world": {
       "godot/scripts/AssetLibrary.gd": 4,

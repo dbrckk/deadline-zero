@@ -1987,23 +1987,28 @@ func _process_status_effects(delta: float) -> void:
     const BURN_TICK := 0.25
     while burn_tick_accumulator >= BURN_TICK and not dead:
         burn_tick_accumulator -= BURN_TICK
-        take_damage(burn_dps * BURN_TICK, false)
+        take_damage(burn_dps * BURN_TICK, false, true)
 
     if burn_left <= 0.0:
         if burn_tick_accumulator > 0.0 and not dead:
-            take_damage(burn_dps * burn_tick_accumulator, false)
+            take_damage(burn_dps * burn_tick_accumulator, false, true)
         burn_tick_accumulator = 0.0
         burn_dps = 0.0
 
-func take_damage(amount: float, critical := false) -> void:
+func take_damage(amount: float, critical := false, damage_over_time := false) -> void:
     if dead:
         return
     health -= amount
     health_changed.emit(max(0.0, health), max_health)
     var killed := health <= 0.0
-    impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
-    _spawn_damage_number(amount, critical, killed)
-    _play_hit_reaction(critical, killed)
+    # Inferno deals real health damage every quarter-second, but intermediate
+    # ticks must not retrigger gunshot hit-stop, HUD flash, recoil, or audio.
+    # Its dedicated 3D flames already communicate the ongoing status.
+    # Preserve the full impact / kill confirmation on the lethal tick.
+    if not damage_over_time or killed:
+        impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
+        _spawn_damage_number(amount, critical, killed)
+        _play_hit_reaction(critical, killed)
     if killed:
         dead = true
         velocity = Vector3.ZERO
@@ -14998,6 +15003,12 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # Integration check: repeated Inferno ticks change health without sending
+    # the same noisy impact feedback as a direct rifle hit.
+    var direct_hit_feedback: Array[bool] = []
+    enemy.impact.connect(func(_at: Vector3, _crit: bool, killed: bool, _boss: bool) -> void:
+        direct_hit_feedback.append(killed)
+    )
     var before := enemy.health
     enemy.apply_burn(8.0, 1.0)
     enemy._process_status_effects(0.5)
@@ -15006,9 +15017,64 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if not direct_hit_feedback.is_empty() or enemy.hit_reaction_tween != null:
+        push_error("Nonlethal Inferno DoT must not emit per-tick impact or recoil")
+        quit(1)
+        return
+    if get_nodes_in_group("damage_numbers").size() != 0:
+        push_error("Nonlethal burn ticks must not spam floating damage labels")
+        quit(1)
+        return
+
     enemy._process_status_effects(0.6)
     if enemy.burn_left > 0.0:
         push_error("Burn status did not expire after its duration")
+        quit(1)
+        return
+    if not direct_hit_feedback.is_empty():
+        push_error("Burn expiry must not trigger conventional impact feedback")
+        quit(1)
+        return
+    if not is_equal_approx(enemy.health, before - 8.0):
+        push_error("Feedback suppression must preserve the exact total burn DPS")
+        quit(1)
+        return
+
+    enemy.take_damage(5.0, false)
+    if direct_hit_feedback.size() != 1 or direct_hit_feedback[0]:
+        push_error("Conventional rifle damage must still emit nonlethal impacts")
+        quit(1)
+        return
+    if enemy.hit_reaction_tween == null:
+        push_error("Direct projectile damage lost enemy recoil feedback")
+        quit(1)
+        return
+
+    # A lethal DoT should retain the ordinary one-shot kill confirmation,
+    # XP signal and destruction path rather than silently removing enemies.
+    var lethal_target := ENEMY_SCRIPT.new()
+    lethal_target.configure("shambler", 1.0, target)
+    lethal_target.process_mode = Node.PROCESS_MODE_DISABLED
+    lethal_target.spawn_secondary_fx = false
+    root.add_child(lethal_target)
+    await process_frame
+    var lethal_impacts: Array[bool] = []
+    var death_rewards: Array[int] = []
+    lethal_target.impact.connect(func(_at: Vector3, _crit: bool, killed: bool, _boss: bool) -> void:
+        lethal_impacts.append(killed)
+    )
+    lethal_target.died.connect(func(reward: int, _at: Vector3) -> void:
+        death_rewards.append(reward)
+    )
+    lethal_target.health = 2.0
+    lethal_target.apply_burn(8.0, 1.0)
+    lethal_target._process_status_effects(0.25)
+    if not lethal_target.dead or lethal_impacts.size() != 1 or not lethal_impacts[0]:
+        push_error("Lethal Inferno tick must preserve one normal kill impact")
+        quit(1)
+        return
+    if death_rewards != [lethal_target.xp_value]:
+        push_error("Lethal Inferno tick did not award the enemy's normal XP")
         quit(1)
         return
 
