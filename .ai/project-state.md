@@ -3,30 +3,35 @@
 Status: active
 
 ## Working
-- Godot 4.7.2 native 3D first-playable has real Quaternius rigged characters, industrial PBR arena, authored effects, and generated Android debug APK.
-- #394 merged: real Inferno DoT remains lethal but nonlethal ticks no longer trigger per-shot HUD/camera/audio noise.
-- #395 merged: identical zombie archetypes reuse immutable graded GLTF atlas materials, preserving unique enemy palettes.
-- #396 merged: repaired broken scheduled Work Watch GH CLI pipelines; first scheduled execution of the fix has not yet been verified.
+- Godot 4.7.2 native 3D first-playable includes rigged Quaternius actors, an industrial PBR arena, real combat effects, and Android debug APK builds.
+- #397 merged: shared 3D impact materials without coupling the alpha fade of overlapping hits (8/8 CI).
+- #398 merged: tiered 3D XP rewards for ordinary, elite and boss kills (8/8 CI).
+- #399 merged: XP HUD pickup accents follow the same value tiers (8/8 CI).
+- #400 merged: bounded predictive muzzle-space targeting of moving enemies (8/8 CI).
+- #401 open: proportional swept projectile hit footprints for genuinely larger 3D boss/brute actors; existing Godot integration test passed, other CI results pending.
+- #396 scheduled Work Watch was verified on an actual 2026-10-11 scheduled run (successful, not merely PR-triggered).
 
 ## Broken / blockers
-- No regression found in the five CI workflows for #394 or #395 or two checks for #396.
-- Visual goal remains beyond present real-rendered captures: character model/animation fidelity, scene material depth and physical Android performance need further work.
-- Debug APK has been generated and its SHA-256 verified, but not yet manually played on a representative physical Android phone.
+- Native 3D rendering is playable but real 3D animation, source model/texture fidelity, and full phone-scale premium polish are not yet release-grade.
+- Physical Android frame pacing, thermal, touch and legibility QA remain unverified on representative devices.
+- Native Android/process-recreation persistence and Play Billing license-account validation on physical hardware remain required (issues #16 and #17).
+- Closed-test and release candidate criteria remain open (issue #14); no AAA visual-quality or Play Store submission claim should be inferred from headless/CI builds.
 
 ## Current priority
-- Inspect next scheduled Work Watch run after #396 (do not assume PR validation proves the cron execution).
-- Improve actual imported 3D character models, rigged animations, source textures and responsive action feel; do not substitute concept images.
-- Run full physical-device gameplay/frame pacing and touch/readability QA before Play Store readiness claims.
+- Close #401 only after all checks are green; preserve the existing narrower runner/shambler hit silhouette.
+- Improve actual imported 3D rigged character animations and PBR source materials, then review newly rendered captures rather than mockups.
+- Run physical-device gameplay/frame-pacing, thermal and touch QA and follow the #14/#16/#17 release matrices.
+- Keep native Godot, Android, Play AAB and CI verification green.
 
 ## Validation
-- #394: five workflows successful, merged.
-- #395: five workflows successful, merged; rendered six-frame QA captured and reviewed.
-- #396: both PR workflows successful, merged; scheduled run confirmation pending.
-- #395 CI built debug APK `com.deadlinezero.godot`, version `0.1.0-first-playable`, target SDK 36; SHA-256: `5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e`.
-- Native 3D captures demonstrate playable presentation but do not yet establish premium AAA release quality or device FPS.
+- #397, #398, #399 and #400: all eight GitHub Actions checks succeeded before merging.
+- #401: the existing Godot weapon-protocol integration test passed for boss edge hits, runner near-misses and spatial broad phase; full CI was still active on 2026-10-11.
+- #396: scheduled Work Watch success confirmed in GitHub Actions run 38118072708.
+- Earlier #395 Android debug APK (`com.deadlinezero.godot`) was built and SHA-256 verified; this is not a physical-device playtest.
+- CI visual capture and Android-emulator verification do not demonstrate stable FPS or thermal behavior on real phones.
 
 ## Last verified
-- 2026-10-10
+- 2026-10-11
 
 <!-- AUTO:START -->
 ## Automatic repository state
