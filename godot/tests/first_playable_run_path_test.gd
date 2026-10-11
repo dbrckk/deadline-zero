@@ -34,6 +34,47 @@ func _initialize() -> void:
         push_error("Debug performance snapshot returned invalid counters")
         quit(1)
         return
+
+    # Deterministic device QA: average FPS can hide rare 46 ms hitches.
+    # Confirm that p95 tracks real wall-clock samples and the ring buffer
+    # discards old hitches rather than allocating without limit.
+    for key in ["frame_p95_ms", "frame_max_ms", "frame_hitch_pct", "frame_samples"]:
+        if not perf_snapshot.has(key):
+            push_error("Debug frame pacing snapshot is missing key: %s" % key)
+            quit(1)
+            return
+    main.debug_frame_samples_us.clear()
+    main.debug_frame_write_index = 0
+    for _frame in range(220):
+        main._record_debug_frame_interval_us(16667)
+    for _frame in range(20):
+        main._record_debug_frame_interval_us(46000)
+    main._record_debug_frame_interval_us(750000)
+    var hitched_snapshot: Dictionary = main._performance_snapshot()
+    if int(hitched_snapshot["frame_samples"]) != main.DEBUG_FRAME_SAMPLE_CAP:
+        push_error("Debug telemetry sample buffer escaped its 240-frame budget")
+        quit(1)
+        return
+    if float(hitched_snapshot["frame_p95_ms"]) < 45.0 or float(hitched_snapshot["frame_max_ms"]) < 45.0:
+        push_error("Debug p95/max frame pacing missed realistic 46 ms hitches")
+        quit(1)
+        return
+    if float(hitched_snapshot["frame_hitch_pct"]) < 8.0 or float(hitched_snapshot["frame_hitch_pct"]) > 9.0:
+        push_error("Debug pacing histogram miscounted 30 FPS budget misses")
+        quit(1)
+        return
+    # Exactly one bounded replacement window must erase the old spike burst.
+    for _frame in range(main.DEBUG_FRAME_SAMPLE_CAP):
+        main._record_debug_frame_interval_us(16667)
+    var settled_snapshot: Dictionary = main._performance_snapshot()
+    if int(settled_snapshot["frame_samples"]) != main.DEBUG_FRAME_SAMPLE_CAP:
+        push_error("Debug pacing buffer was not bounded after rollover")
+        quit(1)
+        return
+    if float(settled_snapshot["frame_p95_ms"]) > 17.0 or float(settled_snapshot["frame_hitch_pct"]) > 0.001:
+        push_error("Debug telemetry kept expired frame hitches after ring rollover")
+        quit(1)
+        return
     # Auto-aim may rotate the survivor before the test starts. Probe velocity in
     # the survivor's local frame rather than assuming world +X is always strafe.
     main.player.velocity = main.player.global_transform.basis * Vector3(main.player.move_speed, 0.0, 0.0)
