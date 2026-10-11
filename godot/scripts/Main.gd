@@ -38,6 +38,8 @@ var touch_id := -1
 var touch_origin := Vector2.ZERO
 var camera_kick := 0.0
 var camera_kick_phase := 0.0
+var camera_look_ahead := Vector3.ZERO
+var camera_focus_position := Vector3(0.0, 0.65, 0.0)
 var impact_fov_pulse := 0.0
 var hit_freeze_left := 0.0
 var boss_reveal_target: DZEnemy
@@ -86,6 +88,8 @@ const CAMERA_BASE_HEIGHT := 12.0
 const CAMERA_BASE_TRAIL := 8.55
 const CAMERA_BASE_FOV := 45.0
 const CAMERA_LOOK_AHEAD_MAX := 1.25
+const CAMERA_LOOK_AHEAD_RESPONSE := 7.5
+const CAMERA_FOCUS_RESPONSE := 9.0
 const CAMERA_REVEAL_HEIGHT := 14.0
 const CAMERA_REVEAL_TRAIL := 10.4
 const HUD_REFRESH_INTERVAL := 0.10
@@ -125,6 +129,7 @@ func _ready() -> void:
     add_child(camera)
     camera.global_position = Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL)
     camera.look_at(Vector3(0.0, 0.6, 0.0), Vector3.UP)
+    camera_focus_position = Vector3(0.0, 0.65, 0.0)
 
     hud = DZHud.new()
     add_child(hud)
@@ -179,7 +184,11 @@ func _process(delta: float) -> void:
             _dismiss_onboarding_hint()
 
     if player and is_instance_valid(player):
-        var movement_look_ahead := _camera_motion_look_ahead(player.velocity)
+        # Inertial look-ahead prevents camera hunting as the survivor rapidly
+        # changes strafe directions in a dense melee.
+        camera_look_ahead = _camera_smooth_vector(camera_look_ahead,
+            _camera_motion_look_ahead(player.velocity), delta, CAMERA_LOOK_AHEAD_RESPONSE)
+        var movement_look_ahead := camera_look_ahead
         var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0) + movement_look_ahead * 0.72
         var desired := player.global_position + Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL) + movement_look_ahead * 0.42
         var target_fov := CAMERA_BASE_FOV
@@ -201,11 +210,19 @@ func _process(delta: float) -> void:
         var kick_offset := Vector3(sin(camera_kick_phase), 0.0, cos(camera_kick_phase * 1.27)) * camera_kick
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.fov = lerpf(camera.fov, target_fov, 1.0 - exp(-delta * 5.5))
-        camera.look_at(focus_point, Vector3.UP)
+        # Smooth the *look-at point* independently of camera translation. An
+        # instantaneous look_at was rotating the view abruptly on player turns
+        # and boss reveal, even though its position and FOV were interpolated.
+        camera_focus_position = _camera_smooth_vector(camera_focus_position,
+            focus_point, delta, CAMERA_FOCUS_RESPONSE)
+        camera.look_at(camera_focus_position, Vector3.UP)
         threat_indicator_refresh_clock -= delta
         if threat_indicator_refresh_clock <= 0.0:
             threat_indicator_refresh_clock = THREAT_INDICATOR_REFRESH_INTERVAL
             _update_offscreen_threat_indicator()
+
+func _camera_smooth_vector(previous: Vector3, desired: Vector3, delta: float, response: float) -> Vector3:
+    return previous.lerp(desired, 1.0 - exp(-maxf(delta, 0.0) * response))
 
 func _camera_motion_look_ahead(velocity: Vector3) -> Vector3:
     var planar := Vector3(velocity.x, 0.0, velocity.z)
