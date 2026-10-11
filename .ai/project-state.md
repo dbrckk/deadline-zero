@@ -3,33 +3,28 @@
 Status: active
 
 ## Working
-- Native Godot 4.7.2 Android first-playable has real rigged Quaternius GLTF actors, industrial PBR arena, imported textures and 3D combat effects.
-- #397–#403 merged (8/8 CI each): bounded gun feedback, 3D XP tiers, predictive muzzle aim, correct large/small body hit silhouettes, opaque varied zombie PBR atlas, actual swept hit FX.
-- #404 merged (8/8 CI): bounded 240-frame debug p95/max ms and hitch percentage for physical Android phone QA.
-- #405 merged (8/8 CI after one legacy emulator retry): real imported GLTF Death clip followed by instance-only opaque dithered copper-edge dissolve; no material duplication or transparent draw pass.
-- #406 open (7/8 CI): player autoaim reuses the existing arena spatial hash without allocating the full enemy group; indexed query and dead-candidate tests green; Android emulator job pending.
-- #407 merged (8/8 CI): weighted smooth imported enemy locomotion yaw; special attack windup and committed charger facing remain locked.
-- #408 open (7/8 CI): real image QA confirmed brighter existing key/ambient light and ~10% closer camera with source atlas midtones intact; only Android emulator job pending. Six authentic 1280x720 CI captures from prior revision inspected and compared to newly rendered shots; three comparable scenes gained about 8–12% mean luminance while preserving the dark arena.
-- Scheduled Work Watch #396 confirmed success on real 2026-10-11 schedule.
+- Godot 4.7.2 native 3D Android first-playable with Quaternius rigged GLTF actors, industrial PBR environment and authored combat.
+- #397–#408 merged; latest #405–#408 all passed eight GitHub Actions checks each before squash merge.
+- #404 debug p95/max frame time and >33.33ms hitch% sampling over 240 frames.
+- #405 imported GLTF death clips with opaque shared-shader per-instance dissolve.
+- #406 spatial-indexed nearest-enemy player autoaim without whole-horde allocation.
+- #407 smooth weighted archetype 3D turning without disturbing locked attack warnings/charges.
+- #408 actual 720p Godot screenshot-reviewed character key/ambient lighting, PBR atlas midtones and closer mobile framing.
+- #396 Work Watch scheduled verification passed on 2026-10-11.
 
 ## Blockers
-- Fully premium AAA 3D models, texture and animation source fidelity, VFX and 3D gameplay feel remain unverified as a release-quality whole; CI screenshots show a genuine but still low-poly authored scene.
-- Legacy libGDX Android emulator stress runtime is intermittently unreliable; verify all CI checks before merges rather than weakening frame assertions.
-- Physical Android touch, frame p95/hitch, heat/thermal, visibility and process-death restore remain untested on representative devices (#14, #16).
-- Play Billing product/license account testing and Play closed-test/store release checklist remain open (#17, #14).
+- Real Android device FPS/p95/hitches, thermal, touch and legibility QA not yet signed off.
+- Physical-device process death, Play Billing/license-account and Play closed-testing/store release gates (#14, #16, #17) remain open.
+- Premium AAA visuals and gamefeel still require real-device review; CI visual frames do not certify full production quality.
 
-## Current priorities
-- Complete last Android emulator check for #406/#408, guarded SHA merge if successful; investigate failures without bypassing quality gates.
-- Continue analyzing real rendered Godot 3D evidence and upgrading visual fidelity rather than producing concept mockups.
-- Install native Android build on representative devices; capture p95/worst frame and hitch fraction with new debug telemetry.
-- Validate Play Billing/license lifecycle, process death and publishing gates #14/#16/#17.
+## Priorities
+- Inspect actual Godot 3D captures and keep polishing rigged model animation, VFX, lighting and gamefeel.
+- Test physical Android FPS, frame pacing, heat, controls, pause/resume and purchasing lifecycle.
+- Complete Play Store release and closed-test readiness.
 
 ## Validation
-- #405: real GLTF silhouette/death-shader integration, rendered scene and all eight CI checks passed before merge.
-- #408: rerun of Godot scene and camera-contract tests plus real 1280x720 screenshots passed. Full Android checks not yet concluded.
-- #407: eight CI checks green and merged, including real imported animation and attack lock integration.
-- #406: Godot integration and Android build/Play AAB/UI green; emulator runtime still active.
-- CI screenshots cannot substitute physical device frame/thermal/touch testing, and brighter image alone does not prove AAA quality.
+- #405, #406, #407, #408: each 8/8 CI green before merge, including Godot 3D, APK, Play AAB, UI and Android runtime.
+- #408 reviewed native Godot 720p before/after screenshot evidence; on-device visual and performance validation still needed.
 
 ## Last verified
 - 2026-10-11
