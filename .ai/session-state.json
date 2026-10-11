@@ -70,9 +70,15 @@
       "status": "merged",
       "checks": "8/8 successful after targeted Android runtime job rerun",
       "change": "Real Godot debug p95/max frame time and >33.33ms hitch telemetry in 240-frame bounded samples"
+    },
+    {
+      "pr": 405,
+      "status": "merged",
+      "checks": "8/8 successful after targeted legacy Android emulator rerun",
+      "change": "Authentic GLTF enemy Death clip with instance-only opaque copper edge dissolve"
     }
   ],
-  "visual_qa": "Inspected six Godot-rendered frames; authentic 3D production scene exists but not yet AAA-quality",
+  "visual_qa": "Inspected and compared authentic six 1280x720 Godot-rendered frames from CI for #406 baseline and #408 rebalanced lighting/camera. Native authored 3D scene exists; #408 capture first-playable, pressure and roster average luma rose approx 8–12%, more readable character silhouettes; AAA fidelity not yet verified.",
   "android_apk": {
     "source_pr": 395,
     "package": "com.deadlinezero.godot",
@@ -81,34 +87,34 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "#404 merged on eight green checks after targeted Android emulator stress rerun; original stress failed under transient emulator load. #405 Godot, AAB and UI green, 7/8 CI, legacy Android stress rerun active. #406/#407 full CI pending. Physical phone heat/p95/touch, Billing/license and lifecycle still unverified.",
+  "verification": "#404/#405 8/8 CI and merged. #406 second SHA now avoids even allocating full enemy group on indexed path; full CI rerun. #407 Godot enemy turn and Android build AAB/UI passed, runtime pending. #408 revised camera-contract Godot rendered screenshots passed, other Android checks pending. Physical phone FPS/thermal/Billing/process lifecycle remain unverified.",
   "next": [
-    "Close #405 only once the Android emulator rerun succeeds; do not lower performance assertions",
-    "Validate #406 indexed autoaim and #407 rigged enemy turn test in full Godot and Android CI before merge",
-    "Review true rendered GLTF 3D screenshots, material, gait and gameplay feel; run phone FPS/p95/hitch/thermal QA",
-    "Resolve #14/#16/#17 physical-device Play Billing, lifecycle and Play Store release gates"
+    "Close #406 indexed autoaim and #407 weighted locomotion only after full 8/8 CI, guarded head SHA merges",
+    "Assess #408 before/after real 1280x720 screenshots and merge only after full 8/8 green",
+    "Conduct physical Android performance (p95/hitch), heat, touch, readability QA",
+    "Resolve Play Billing license, process death and Play Store issues #14/#16/#17"
   ],
   "in_progress": [
-    {
-      "pr": 405,
-      "status": "open / Android runtime rerun",
-      "branch": "feat/godot-opaque-enemy-death-dissolve",
-      "head_sha": "d5849489bbb8364279909cf631a177dc073e948a",
-      "change": "Actual rigged GLTF Death clips transitioning to per-instance opaque PBR dissolve; Godot and 7/8 CI passed, legacy Android stress rerun underway"
-    },
     {
       "pr": 406,
       "status": "open / CI",
       "branch": "perf/godot-player-spatial-autoaim",
-      "head_sha": "c77b3d4c33c9bf815ebc46756c49509d859a811d",
-      "change": "Reuse production arena enemy spatial index for nearest-player autoaim with standalone scene fallback"
+      "head_sha": "91275b2590bcae2893fb4b3c91711ba48d599bb0",
+      "change": "Reuse arena spatial query with no whole-group allocation, preserve aim stickiness and dead-target filtering"
     },
     {
       "pr": 407,
-      "status": "open / CI",
+      "status": "open / Android-runtime CI",
       "branch": "feat/godot-weighted-archetype-turning",
       "head_sha": "eaf6c8f214fb6e92f7d2c86be60d2189efebb5bb",
-      "change": "Framerate-independent weighted 3D enemy locomotion turning while attacks/charges retain exact warning lock"
+      "change": "Smooth runner, standard, heavy and boss 3D facing without interfering with telegraphed attacks or committed charges"
+    },
+    {
+      "pr": 408,
+      "status": "open / Android-runtime CI",
+      "branch": "feat/godot-cinematic-character-readability",
+      "head_sha": "b000b8e00dae4065cfc8dcb4cc7d0c09c28b90b9",
+      "change": "Evidence-led improved Godot mobile 3D character key/ambient, atlas midtones and 10% tighter camera; actual rendered before/after screenshots inspected"
     }
   ]
 }
