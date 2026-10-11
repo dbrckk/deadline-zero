@@ -1,11 +1,11 @@
 # Change impact
 
-Base: 28b76a79632edf4a7f955399a1ba266c9e77c5b9
-Head: 891078343e504845b91155faab72cdb466f487fd
+Base: 64baa68e2d5a8865522649461477227f8cceee5c
+Head: 9a249f60b9b3fc07a252d0cbba5d80526026a2b9
 
 ## Changed files
-- M godot/scripts/AssetLibrary.gd
-- M godot/tests/enemy_silhouette_identity_test.gd
+- M godot/scripts/Hud.gd
+- M godot/tests/hud_readability_hierarchy_test.gd
 
 ## Affected areas
 - godot

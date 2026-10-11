@@ -1939,8 +1939,7 @@ jobs:
           # history (thousands of records), which intermittently times out.
           active_count=0
           for state in queued in_progress pending; do
-            state_count="$(gh api "repos/$GH_REPO/actions/runs?status=$state&per_page=100" \\
-              --jq '[.workflow_runs[] | select(.name != "Deadline Zero Work Watch")] | length')"
+            state_count="$(gh api "repos/$GH_REPO/actions/runs?status=$state&per_page=100" | jq '[.workflow_runs[] | select(.name != "Deadline Zero Work Watch")] | length')"
             active_count=$((active_count + state_count))
           done
 
@@ -1949,9 +1948,7 @@ jobs:
             exit 0
           fi
 
-          open_pr="$(
-            gh api "repos/$GH_REPO/pulls?state=open&sort=updated&direction=desc&per_page=1"               --jq '.[0] // empty'
-          )"
+          open_pr="$(gh api "repos/$GH_REPO/pulls?state=open&sort=updated&direction=desc&per_page=1" | jq -c '.[0] // empty')"
 
           if [[ -n "$open_pr" ]]; then
             head_sha="$(jq -r '.head.sha' <<<"$open_pr")"
@@ -1960,14 +1957,11 @@ jobs:
 
             # Retry each failed run only once. Cancelled runs are normally
             # obsolete by design and should not be resurrected every five minutes.
-            failed_run_ids="$(
-              gh api "repos/$GH_REPO/actions/runs?head_sha=$head_sha&per_page=100" \\
-                --jq '.workflow_runs[]
-                  | select(.name != "Deadline Zero Work Watch")
-                  | select(.status == "completed" and .conclusion == "failure")
-                  | select(.run_attempt == 1)
-                  | .id' | sort -u
-            )"
+            failed_run_ids="$(gh api "repos/$GH_REPO/actions/runs?head_sha=$head_sha&per_page=100" | jq -r '.workflow_runs[]
+                | select(.name != "Deadline Zero Work Watch")
+                | select(.status == "completed" and .conclusion == "failure")
+                | select(.run_attempt == 1)
+                | .id' | sort -u)"
 
             if [[ -n "$failed_run_ids" ]]; then
               while read -r run_id; do
@@ -27181,14 +27175,17 @@ func pulse_xp_collection(amount: int) -> void:
         return
     if xp_pulse_tween != null and xp_pulse_tween.is_valid():
         xp_pulse_tween.kill()
-    var strength := clampf(float(amount) / 8.0, 0.0, 1.0)
-    xp_bar.modulate = Color(
-        lerpf(0.82, 1.0, strength),
-        1.0,
-        lerpf(0.94, 0.72, strength),
-        1.0
-    )
-    xp_bar.scale = Vector2(1.0, 1.35 + strength * 0.18)
+    # Keep the gain readable but restrained: ordinary pickups glow green,
+    # elite rewards read cyan, and boss-value orbs briefly grade the XP bar
+    # warm amber. This mirrors the world-space reward tiers without adding UI.
+    var strength := clampf(float(amount) / 35.0, 0.0, 1.0)
+    var reward_tint := Color(0.65, 1.0, 0.78)
+    if amount >= 30:
+        reward_tint = Color(1.0, 0.76, 0.34)
+    elif amount >= 8:
+        reward_tint = Color(0.42, 0.84, 1.0)
+    xp_bar.modulate = reward_tint
+    xp_bar.scale = Vector2(1.0, 1.32 + strength * 0.24)
     xp_pulse_tween = xp_bar.create_tween()
     xp_pulse_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
     xp_pulse_tween.set_parallel(true)

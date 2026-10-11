@@ -2913,14 +2913,17 @@ func pulse_xp_collection(amount: int) -> void:
         return
     if xp_pulse_tween != null and xp_pulse_tween.is_valid():
         xp_pulse_tween.kill()
-    var strength := clampf(float(amount) / 8.0, 0.0, 1.0)
-    xp_bar.modulate = Color(
-        lerpf(0.82, 1.0, strength),
-        1.0,
-        lerpf(0.94, 0.72, strength),
-        1.0
-    )
-    xp_bar.scale = Vector2(1.0, 1.35 + strength * 0.18)
+    # Keep the gain readable but restrained: ordinary pickups glow green,
+    # elite rewards read cyan, and boss-value orbs briefly grade the XP bar
+    # warm amber. This mirrors the world-space reward tiers without adding UI.
+    var strength := clampf(float(amount) / 35.0, 0.0, 1.0)
+    var reward_tint := Color(0.65, 1.0, 0.78)
+    if amount >= 30:
+        reward_tint = Color(1.0, 0.76, 0.34)
+    elif amount >= 8:
+        reward_tint = Color(0.42, 0.84, 1.0)
+    xp_bar.modulate = reward_tint
+    xp_bar.scale = Vector2(1.0, 1.32 + strength * 0.24)
     xp_pulse_tween = xp_bar.create_tween()
     xp_pulse_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
     xp_pulse_tween.set_parallel(true)
@@ -11677,6 +11680,36 @@ func _initialize() -> void:
 
     if hud.wave_label == null or hud.wave_label.get_theme_font_size("font_size") > 22:
         push_error("Wave label must not dominate the active combat frame")
+        quit(1)
+        return
+
+    hud.pulse_xp_collection(2)
+    var common_xp_tint := hud.xp_bar.modulate
+    var common_xp_scale := hud.xp_bar.scale.y
+    hud.pulse_xp_collection(8)
+    var elite_xp_tint := hud.xp_bar.modulate
+    var elite_xp_scale := hud.xp_bar.scale.y
+    hud.pulse_xp_collection(35)
+    var boss_xp_tint := hud.xp_bar.modulate
+    var boss_xp_scale := hud.xp_bar.scale.y
+    if common_xp_tint.g <= common_xp_tint.r or common_xp_tint.g <= common_xp_tint.b:
+        push_error("Ordinary XP collection lost its restrained green accent")
+        quit(1)
+        return
+    if elite_xp_tint.b <= elite_xp_tint.r or elite_xp_tint.b <= common_xp_tint.b:
+        push_error("Elite XP collection lost its distinct cyan HUD accent")
+        quit(1)
+        return
+    if boss_xp_tint.r <= boss_xp_tint.b or boss_xp_tint.r <= elite_xp_tint.r:
+        push_error("Boss XP collection lost its distinct warm amber HUD accent")
+        quit(1)
+        return
+    if not (boss_xp_scale > elite_xp_scale and elite_xp_scale > common_xp_scale):
+        push_error("XP HUD collection strength must increase with reward value")
+        quit(1)
+        return
+    if hud.xp_pulse_tween == null or not hud.xp_pulse_tween.is_valid():
+        push_error("XP collection visual feedback must smoothly return to neutral")
         quit(1)
         return
 

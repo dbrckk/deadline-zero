@@ -6,7 +6,7 @@
 - Symbols: 3125
 - Internal import edges: 808
 - Impacted files: 2
-- Selected tests: 1
+- Selected tests: 2
 
 ## Languages
 - java: 422 files
