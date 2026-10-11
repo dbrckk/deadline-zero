@@ -6,9 +6,9 @@ func _init() -> void:
         ["BOSS_REVEAL_DURATION := 1.15", "Boss reveal duration contract regressed"],
         ["BOSS_REVEAL_FOCUS := 0.58", "Boss reveal focus contract regressed"],
         ["BOSS_REVEAL_FOV_DELTA := 5.5", "Boss reveal FOV delta contract regressed"],
-        ["CAMERA_BASE_HEIGHT := 12.8", "Base camera height contract regressed"],
-        ["CAMERA_BASE_TRAIL := 9.15", "Base camera trail contract regressed"],
-        ["CAMERA_BASE_FOV := 46.0", "Base camera FOV contract regressed"],
+        ["CAMERA_BASE_HEIGHT := 12.0", "Base camera height contract regressed"],
+        ["CAMERA_BASE_TRAIL := 8.55", "Base camera trail contract regressed"],
+        ["CAMERA_BASE_FOV := 45.0", "Base camera FOV contract regressed"],
         ["CAMERA_REVEAL_HEIGHT := 14.0", "Boss reveal camera height contract regressed"],
         ["CAMERA_REVEAL_TRAIL := 10.4", "Boss reveal camera trail contract regressed"],
         ["boss_reveal_target = enemy", "Boss spawn no longer arms reveal target"],
@@ -25,7 +25,7 @@ func _init() -> void:
         return
     if not _require(0.58 >= 0.45 and 0.58 <= 0.68, "Boss reveal focus leaves validated framing range"):
         return
-    if not _require(46.0 >= 44.0 and 46.0 <= 49.0, "Base camera FOV leaves readability range"):
+    if not _require(45.0 >= 44.0 and 45.0 <= 49.0, "Base camera FOV leaves readability range"):
         return
 
     print("godot boss reveal camera validation passed")
