@@ -174,5 +174,47 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # Real rig/barrel rotation must interpolate across target swaps and the
+    # +/-PI yaw seam, and locomotion should face movement when unengaged.
+    player.global_position = Vector3.ZERO
+    player.rotation.y = 0.0
+    first.dead = false
+    first.global_position = Vector3(8.0, 0.0, 0.0)
+    player._update_combat_facing(first, 0.016)
+    if player.rotation.y >= -0.01 or player.rotation.y <= -PI * 0.5:
+        push_error("Survivor snapped rather than blending its combat facing")
+        quit(1)
+        return
+    var previous_error := absf(wrapf(-PI * 0.5 - player.rotation.y, -PI, PI))
+    for tick in range(20):
+        player._update_combat_facing(first, 0.016)
+    if absf(wrapf(-PI * 0.5 - player.rotation.y, -PI, PI)) >= previous_error:
+        push_error("Survivor combat yaw did not converge on the selected target")
+        quit(1)
+        return
+
+    player.rotation.y = deg_to_rad(179.0)
+    first.global_position = Vector3(-0.1, 0.0, 8.0)
+    player._update_combat_facing(first, 0.016)
+    if absf(wrapf(player.rotation.y - deg_to_rad(179.0), -PI, PI)) > 0.15:
+        push_error("Survivor combat facing took the long path around the yaw seam")
+        quit(1)
+        return
+
+    player.rotation.y = 0.0
+    player.velocity = Vector3(6.0, 0.0, 0.0)
+    player._update_combat_facing(null, 0.016)
+    if player.rotation.y >= 0.0 or player.rotation.y <= -PI * 0.5:
+        push_error("Survivor traversal facing did not blend toward movement")
+        quit(1)
+        return
+    var yaw_at_rest := player.rotation.y
+    player.velocity = Vector3.ZERO
+    player._update_combat_facing(null, 0.016)
+    if not is_equal_approx(player.rotation.y, yaw_at_rest):
+        push_error("Survivor idle facing should retain the last authored heading")
+        quit(1)
+        return
+
     print("Deadline Zero player targeting stability and spatial autoaim: OK")
     quit(0)
