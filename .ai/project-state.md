@@ -39,27 +39,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T16:20:35Z
+Generated: 2026-10-11T17:36:01Z
 
 ### Git
 - Branch: `main`
-- Head: `6ec528d1f733`
-- Commit date: 2026-10-11T18:20:20+02:00
-- Commit: perf(android QA): add real frame-pacing p95 and hitch telemetry to Godot debug runs (#404)
+- Head: `eb943cfc6c87`
+- Commit date: 2026-10-11T19:35:33+02:00
+- Commit: feat(godot): fade soft zombie contact shadows with rigged death dissolve (#411)
 - Tracked files: 1065
 
 ### Recently changed files
-- `godot/scripts/Main.gd`
-- `godot/tests/first_playable_run_path_test.gd`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `godot/README.md`
-- `play/store/feature-graphic.png`
-- `godot/scripts/Projectile.gd`
-- `godot/tests/weapon_protocol_behavior_test.gd`
+- `godot/scripts/Main.gd`
+- `godot/tests/boss_reveal_camera_test.gd`
+- `godot/tests/first_playable_run_path_test.gd`
+- `godot/scripts/Player.gd`
+- `godot/tests/player_targeting_stability_test.gd`
 
 ### Project signals
 - `build.gradle`

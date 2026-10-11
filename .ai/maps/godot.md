@@ -646,8 +646,20 @@ uniform float authored_metallic = 0.02;
 uniform float rim_strength = 0.11;
 uniform float rim_power = 3.4;
 instance uniform float wear_grade = 0.5;
+instance uniform float death_dissolve = 0.0;
 
 void fragment() {
+    // Clip dying actors in the opaque depth pass instead of blending 100+
+    // skinned characters through costly transparent sorting. Normal bodies
+    // skip all dissolve instructions; one small shader is shared by the horde.
+    float dissolve_edge = 0.0;
+    if (death_dissolve > 0.001) {
+        float grain = fract(sin(dot(floor(UV * 192.0), vec2(12.9898, 78.233))) * 43758.5453);
+        if (grain < death_dissolve) {
+            discard;
+        }
+        dissolve_edge = 1.0 - smoothstep(0.0, 0.07, grain - death_dissolve);
+    }
     vec4 authored = texture(albedo_tex, UV);
     vec3 base = authored.rgb * body_tint.rgb;
     float luma = dot(base, vec3(0.2126, 0.7152, 0.0722));
@@ -655,12 +667,18 @@ void fragment() {
     // Keep the real Quaternius texture atlas. Vary only final PBR grade on
     // each mesh, not its shared authored material or skeletal animation.
     vec3 weathering_tint = mix(vec3(0.89, 0.96, 1.06), vec3(1.08, 0.96, 0.84), wear_grade);
-    ALBEDO = base * compression * weathering_tint;
+    // Keep authored atlas/roughness detail but lift dark textured mid-tones:
+    // 720p production captures left too little separation from industrial floor.
+    // This adds no lights, shader permutations, or transparent surfaces.
+    ALBEDO = min(base * compression * weathering_tint * 1.10, vec3(0.90));
     ROUGHNESS = clamp(max(authored_roughness, 0.82) + (0.5 - wear_grade) * 0.08, 0.78, 0.98);
     METALLIC = max(authored_metallic, 0.02);
     float fresnel = 1.0 - max(dot(normalize(NORMAL), normalize(VIEW)), 0.0);
     float rim = pow(fresnel, rim_power) * rim_strength;
-    EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade);
+    // Luminous copper edge is in the existing shader: no new particles,
+    // lights or render passes, and no per-enemy material duplicates.
+    EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade)
+        + vec3(0.90, 0.22, 0.035) * dissolve_edge * 1.1;
     // Imported zombie_basic / zombie_chubby GLTF materials use default OPAQUE
     // alphaMode. Writing ALPHA here incorrectly moves 100+ skinned bodies to
     // the transparent pass, disables depth/shadow behavior and risks sorting.
@@ -1560,12 +1578,30 @@ func _physics_process(delta: float) -> void:
         velocity = movement_direction * move_speed * slow_multiplier * movement_speed_scale
         move_and_slide()
         _constrain_to_arena()
-        if velocity.length_squared() > 0.01:
-            look_at(global_position + velocity, Vector3.UP)
+        _update_locomotion_facing(delta)
     _update_authored_animation(distance)
     if distance < _contact_attack_range() and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _update_locomotion_facing(delta: float) -> void:
+    # Avoid instantaneous 90/180-degree yaw snaps when swarm avoidance
+    # changes velocity. Keep exact lock-on rotation in attack windups and
+    # charges: those mechanics must remain readable and dodgeable.
+    if dead or attack_windup > 0.0 or charge_active or velocity.length_squared() <= 0.01:
+        return
+    var desired_yaw := atan2(-velocity.x, -velocity.z)
+    var turn_rate := 9.0
+    if kind in ["runner", "harrier"]:
+        turn_rate = 13.0
+    elif kind in ["brute", "elite"]:
+        turn_rate = 6.8
+    elif kind == "boss":
+        turn_rate = 5.4
+    # Framerate-independent easing prevents abrupt foot sliding under 30 FPS
+    # without adding tweens, animation instances or physics body objects.
+    var blend := 1.0 - exp(-maxf(delta, 0.0) * turn_rate)
+    rotation.y = lerp_angle(rotation.y, desired_yaw, blend)
 
 func _constrain_to_arena() -> void:
     var clamped_x := clampf(global_position.x, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
@@ -2073,10 +2109,38 @@ func take_damage(amount: float, critical := false, damage_over_time := false) ->
         if authored_anim != null and authored_anim.has_animation("Death"):
             authored_anim.speed_scale = 1.0
             authored_anim.play("Death", 0.06)
+            _begin_death_dissolve()
             var timer := get_tree().create_timer(0.62)
             timer.timeout.connect(queue_free)
         else:
             queue_free()
+
+func _begin_death_dissolve() -> void:
+    if authored_visual == null:
+        return
+    # Preserve the real rigged death animation for its first 0.16 s, then
+    # dissolve in the existing opaque GLTF shader over the last 0.44 s.
+    # One tween per death only; shared atlas and shader materials stay intact.
+    var dissolve_tween := create_tween()
+    dissolve_tween.set_parallel(true)
+    dissolve_tween.tween_method(_set_death_dissolve, 0.0, 0.97, 0.44).set_delay(0.16)
+    # Fade only this zombie's soft ground contact on the same timeline as
+    # its real rigged GLTF silhouette. Never fade the shared horde material.
+    dissolve_tween.tween_method(_set_death_shadow_opacity, 1.0, 0.0, 0.44).set_delay(0.16)
+
+func _set_death_shadow_opacity(opacity: float) -> void:
+    var shadow := get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    if shadow != null:
+        shadow.set_instance_shader_parameter("death_shadow_opacity", clampf(opacity, 0.0, 1.0))
+
+func _set_death_dissolve(progress: float) -> void:
+    if authored_visual == null:
+        return
+    var clamped := clampf(progress, 0.0, 0.97)
+    if authored_visual is MeshInstance3D:
+        (authored_visual as MeshInstance3D).set_instance_shader_parameter("death_dissolve", clamped)
+    for node in authored_visual.find_children("*", "MeshInstance3D", true, false):
+        (node as MeshInstance3D).set_instance_shader_parameter("death_dissolve", clamped)
 
 func hit_reaction_profile() -> Dictionary:
     if kind == "boss":
@@ -2155,6 +2219,7 @@ func _build_contact_shadow() -> void:
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     shadow.material_override = _enemy_contact_shadow_material()
     add_child(shadow)
+    shadow.set_instance_shader_parameter("death_shadow_opacity", 1.0)
 
 func _play_spawn_reveal() -> void:
     var visual := get_node_or_null("Visual") as Node3D
@@ -2196,13 +2261,14 @@ render_mode unshaded, blend_mix, cull_disabled, depth_draw_never;
 
 uniform vec4 shadow_tint : source_color = vec4(0.006, 0.008, 0.010, 1.0);
 uniform float shadow_opacity : hint_range(0.0, 0.6) = 0.35;
+instance uniform float death_shadow_opacity = 1.0;
 
 void fragment() {
     vec2 disk_uv = (UV - vec2(0.5)) * 2.0;
     float radius = length(disk_uv);
     float feather = 1.0 - smoothstep(0.18, 1.0, radius);
     ALBEDO = shadow_tint.rgb;
-    ALPHA = feather * feather * shadow_opacity;
+    ALPHA = feather * feather * shadow_opacity * death_shadow_opacity;
 }
 """
     _shared_contact_shadow_material = ShaderMaterial.new()
@@ -4394,6 +4460,8 @@ var touch_id := -1
 var touch_origin := Vector2.ZERO
 var camera_kick := 0.0
 var camera_kick_phase := 0.0
+var camera_look_ahead := Vector3.ZERO
+var camera_focus_position := Vector3(0.0, 0.65, 0.0)
 var impact_fov_pulse := 0.0
 var hit_freeze_left := 0.0
 var boss_reveal_target: DZEnemy
@@ -4438,10 +4506,12 @@ const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_INTERVAL := 75.0
 const BOSS_RETRY_DELAY := 15.0
 const BOSS_REVEAL_FOV_DELTA := 5.5
-const CAMERA_BASE_HEIGHT := 12.8
-const CAMERA_BASE_TRAIL := 9.15
-const CAMERA_BASE_FOV := 46.0
+const CAMERA_BASE_HEIGHT := 12.0
+const CAMERA_BASE_TRAIL := 8.55
+const CAMERA_BASE_FOV := 45.0
 const CAMERA_LOOK_AHEAD_MAX := 1.25
+const CAMERA_LOOK_AHEAD_RESPONSE := 7.5
+const CAMERA_FOCUS_RESPONSE := 9.0
 const CAMERA_REVEAL_HEIGHT := 14.0
 const CAMERA_REVEAL_TRAIL := 10.4
 const HUD_REFRESH_INTERVAL := 0.10
@@ -4481,6 +4551,7 @@ func _ready() -> void:
     add_child(camera)
     camera.global_position = Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL)
     camera.look_at(Vector3(0.0, 0.6, 0.0), Vector3.UP)
+    camera_focus_position = Vector3(0.0, 0.65, 0.0)
 
     hud = DZHud.new()
     add_child(hud)
@@ -4535,7 +4606,11 @@ func _process(delta: float) -> void:
             _dismiss_onboarding_hint()
 
     if player and is_instance_valid(player):
-        var movement_look_ahead := _camera_motion_look_ahead(player.velocity)
+        # Inertial look-ahead prevents camera hunting as the survivor rapidly
+        # changes strafe directions in a dense melee.
+        camera_look_ahead = _camera_smooth_vector(camera_look_ahead,
+            _camera_motion_look_ahead(player.velocity), delta, CAMERA_LOOK_AHEAD_RESPONSE)
+        var movement_look_ahead := camera_look_ahead
         var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0) + movement_look_ahead * 0.72
         var desired := player.global_position + Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL) + movement_look_ahead * 0.42
         var target_fov := CAMERA_BASE_FOV
@@ -4557,11 +4632,19 @@ func _process(delta: float) -> void:
         var kick_offset := Vector3(sin(camera_kick_phase), 0.0, cos(camera_kick_phase * 1.27)) * camera_kick
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.fov = lerpf(camera.fov, target_fov, 1.0 - exp(-delta * 5.5))
-        camera.look_at(focus_point, Vector3.UP)
+        # Smooth the *look-at point* independently of camera translation. An
+        # instantaneous look_at was rotating the view abruptly on player turns
+        # and boss reveal, even though its position and FOV were interpolated.
+        camera_focus_position = _camera_smooth_vector(camera_focus_position,
+            focus_point, delta, CAMERA_FOCUS_RESPONSE)
+        camera.look_at(camera_focus_position, Vector3.UP)
         threat_indicator_refresh_clock -= delta
         if threat_indicator_refresh_clock <= 0.0:
             threat_indicator_refresh_clock = THREAT_INDICATOR_REFRESH_INTERVAL
             _update_offscreen_threat_indicator()
+
+func _camera_smooth_vector(previous: Vector3, desired: Vector3, delta: float, response: float) -> Vector3:
+    return previous.lerp(desired, 1.0 - exp(-maxf(delta, 0.0) * response))
 
 func _camera_motion_look_ahead(velocity: Vector3) -> Vector3:
     var planar := Vector3(velocity.x, 0.0, velocity.z)
@@ -5097,8 +5180,11 @@ func _build_world() -> void:
     env.background_mode = Environment.BG_COLOR
     env.background_color = Color(0.008, 0.014, 0.020)
     env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-    env.ambient_light_color = Color(0.16, 0.27, 0.34)
-    env.ambient_light_energy = 0.72
+    # Real 720p phone captures showed imported survivor/enemy meshes too dark
+    # against blue-black asphalt. Lift diffuse ambient bounce modestly while
+    # keeping the authored warm emergency LEDs and hard key/shadow contrast.
+    env.ambient_light_color = Color(0.20, 0.30, 0.36)
+    env.ambient_light_energy = 0.88
     env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
     env.adjustment_enabled = true
     env.adjustment_brightness = 1.02
@@ -5115,7 +5201,7 @@ func _build_world() -> void:
     sun.name = "ColdKeyLight"
     sun.rotation_degrees = Vector3(-58.0, -28.0, 0.0)
     sun.light_color = Color(0.70, 0.84, 1.0)
-    sun.light_energy = 1.28
+    sun.light_energy = 1.42
     sun.shadow_enabled = true
     add_child(sun)
 
@@ -6231,6 +6317,8 @@ const MOVE_DECELERATION := 62.0
 const MOVE_TURN_ACCELERATION := 78.0
 const MOVE_LEAN_ROLL_DEGREES := 4.2
 const MOVE_LEAN_PITCH_DEGREES := 2.4
+const COMBAT_TURN_RESPONSE := 17.0
+const LOCOMOTION_TURN_RESPONSE := 10.0
 const AIM_LEAD_MAX_SECONDS := 0.42
 const AIM_LEAD_MAX_DISTANCE := 1.8
 
@@ -6275,14 +6363,31 @@ func _physics_process(delta: float) -> void:
     var target := _combat_target()
     _update_player_marker_pressure(_pressure_target(target))
     _update_target_lock_marker(target, delta)
+    _update_combat_facing(target, delta)
     if target != null:
-        var facing := target.global_position
-        facing.y = global_position.y
-        if global_position.distance_squared_to(facing) > 0.01:
-            look_at(facing, Vector3.UP)
         if fire_clock <= 0.0:
             _fire_at(target)
             fire_clock = fire_interval
+
+func _update_combat_facing(target: DZEnemy, delta: float) -> void:
+    # Rotate the actual survivor rig and barrel together. Target changes no
+    # longer snap the full character silhouette, while shots continue to use
+    # the current world-space muzzle for physically consistent lead.
+    var direction := Vector3.ZERO
+    var response := COMBAT_TURN_RESPONSE
+    if target != null and is_instance_valid(target) and not target.dead:
+        direction = target.global_position - global_position
+    elif velocity.length_squared() > 0.16:
+        # When the horde is out of range, orient toward traversal rather than
+        # sliding sideways across the arena with a frozen combat heading.
+        direction = Vector3(velocity.x, 0.0, velocity.z)
+        response = LOCOMOTION_TURN_RESPONSE
+    direction.y = 0.0
+    if direction.length_squared() <= 0.0001:
+        return
+    var desired_yaw := atan2(-direction.x, -direction.z)
+    var alpha := 1.0 - exp(-maxf(delta, 0.0) * response)
+    rotation.y = lerp_angle(rotation.y, desired_yaw, alpha)
 
 func _smoothed_movement_velocity(input: Vector2, delta: float) -> Vector3:
     var desired := Vector2(input.x, input.y) * move_speed
@@ -6527,7 +6632,19 @@ func _combat_target() -> DZEnemy:
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
     var best_d2 := TARGET_ACQUIRE_RADIUS * TARGET_ACQUIRE_RADIUS
-    for node in get_tree().get_nodes_in_group("enemies"):
+    # Main already rebuilds the enemy spatial index once per physics frame for
+    # the swarm and projectiles. Consume it rather than scanning the full
+    # 100+ zombie group every 80 ms. Keep a group fallback for standalone
+    # scenes/tests without the production query service.
+    var candidates: Array
+    var scene := get_tree().current_scene
+    if scene != null and scene.has_method("query_enemies_near"):
+        candidates = scene.query_enemies_near(global_position, TARGET_ACQUIRE_RADIUS)
+    else:
+        candidates = get_tree().get_nodes_in_group("enemies")
+    for node in candidates:
+        if node == null or not is_instance_valid(node):
+            continue
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead:
             continue
@@ -8283,7 +8400,67 @@ func _initialize() -> void:
         quit(1)
         return
 
-    print("Deadline Zero locked 3D attack anticipation alignment: OK (4 archetypes)")
+    # Normal movement must turn imported 3D bodies smoothly: agile runners
+    # react faster than a massive boss, while attacks retain their exact
+    # immutable windup facing (verified above).
+    var runner_turn := DZEnemy.new()
+    runner_turn.configure("runner", 1.0, player)
+    runner_turn.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(runner_turn)
+    var boss_turn := DZEnemy.new()
+    boss_turn.configure("boss", 1.0, player)
+    boss_turn.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(boss_turn)
+    await process_frame
+    runner_turn.rotation.y = 0.0
+    boss_turn.rotation.y = 0.0
+    runner_turn.velocity = Vector3.RIGHT * runner_turn.move_speed
+    boss_turn.velocity = Vector3.RIGHT * boss_turn.move_speed
+    runner_turn._update_locomotion_facing(0.016)
+    boss_turn._update_locomotion_facing(0.016)
+    if runner_turn.rotation.y >= -0.05 or runner_turn.rotation.y <= -1.5:
+        push_error("Runner locomotion snapped or refused to turn toward actual planar velocity")
+        quit(1)
+        return
+    if boss_turn.rotation.y <= runner_turn.rotation.y or boss_turn.rotation.y >= -0.01:
+        push_error("Boss locomotion should turn deliberately slower than an agile runner")
+        quit(1)
+        return
+
+    # A telegraphed attack/charge must not inherit the smooth chasing turn.
+    var locked_turn := runner_turn.rotation.y
+    runner_turn.attack_windup = 0.30
+    runner_turn._update_locomotion_facing(0.25)
+    if absf(angle_difference(locked_turn, runner_turn.rotation.y)) > 0.001:
+        push_error("Locomotion smoothing broke locked windup/attack alignment")
+        quit(1)
+        return
+    runner_turn.attack_windup = 0.0
+    runner_turn.charge_active = true
+    runner_turn._update_locomotion_facing(0.25)
+    if absf(angle_difference(locked_turn, runner_turn.rotation.y)) > 0.001:
+        push_error("Locomotion turn interfered with committed charge direction")
+        quit(1)
+        return
+    runner_turn.charge_active = false
+    runner_turn.velocity = Vector3.ZERO
+    runner_turn._update_locomotion_facing(0.25)
+    if absf(angle_difference(locked_turn, runner_turn.rotation.y)) > 0.001:
+        push_error("Stopped enemy continued spinning on the spot")
+        quit(1)
+        return
+
+    # -179° / 179° crossing must turn across the short seam, never through
+    # the entire arena in the opposite direction.
+    runner_turn.rotation.y = deg_to_rad(179.0)
+    runner_turn.velocity = Vector3(0.01745, 0.0, 0.99985)
+    runner_turn._update_locomotion_facing(0.016)
+    if absf(angle_difference(deg_to_rad(179.0), runner_turn.rotation.y)) > 0.15:
+        push_error("Enemy locomotion lost shortest-path wraparound yaw")
+        quit(1)
+        return
+
+    print("Deadline Zero locked 3D attacks and weighted locomotion facing: OK")
     quit(0)
 ```
 
@@ -9271,14 +9448,16 @@ func _init() -> void:
         ["BOSS_REVEAL_DURATION := 1.15", "Boss reveal duration contract regressed"],
         ["BOSS_REVEAL_FOCUS := 0.58", "Boss reveal focus contract regressed"],
         ["BOSS_REVEAL_FOV_DELTA := 5.5", "Boss reveal FOV delta contract regressed"],
-        ["CAMERA_BASE_HEIGHT := 12.8", "Base camera height contract regressed"],
-        ["CAMERA_BASE_TRAIL := 9.15", "Base camera trail contract regressed"],
-        ["CAMERA_BASE_FOV := 46.0", "Base camera FOV contract regressed"],
+        ["CAMERA_BASE_HEIGHT := 12.0", "Base camera height contract regressed"],
+        ["CAMERA_BASE_TRAIL := 8.55", "Base camera trail contract regressed"],
+        ["CAMERA_BASE_FOV := 45.0", "Base camera FOV contract regressed"],
         ["CAMERA_REVEAL_HEIGHT := 14.0", "Boss reveal camera height contract regressed"],
         ["CAMERA_REVEAL_TRAIL := 10.4", "Boss reveal camera trail contract regressed"],
         ["boss_reveal_target = enemy", "Boss spawn no longer arms reveal target"],
         ["target_fov = CAMERA_BASE_FOV + BOSS_REVEAL_FOV_DELTA * envelope", "Boss reveal no longer widens field of view"],
-        ["camera.look_at(focus_point, Vector3.UP)", "Camera focus contract is missing"]
+        ["camera.look_at(camera_focus_position, Vector3.UP)", "Smoothed camera focus contract is missing"],
+        ["CAMERA_FOCUS_RESPONSE := 9.0", "Camera rotation damping contract regressed"],
+        ["CAMERA_LOOK_AHEAD_RESPONSE := 7.5", "Camera travel lead damping contract regressed"]
     ]
     for item in required:
         if not _require(source.contains(String(item[0])), String(item[1])):
@@ -9290,7 +9469,7 @@ func _init() -> void:
         return
     if not _require(0.58 >= 0.45 and 0.58 <= 0.68, "Boss reveal focus leaves validated framing range"):
         return
-    if not _require(46.0 >= 44.0 and 46.0 <= 49.0, "Base camera FOV leaves readability range"):
+    if not _require(45.0 >= 44.0 and 45.0 <= 49.0, "Base camera FOV leaves readability range"):
         return
 
     print("godot boss reveal camera validation passed")
@@ -10690,6 +10869,71 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # An actual imported runner must dissolve through its own opaque shader
+    # instance after death, without whitening/fading the live runner's shared
+    # material. This checks runtime GLTF meshes, not textual source alone.
+    var dying_visual := runner_a.authored_visual
+    var living_visual := runner_b.authored_visual
+    if dying_visual == null or living_visual == null:
+        push_error("Missing real imported GLTF runner for death dissolve integration")
+        quit(1)
+        return
+    var dying_meshes := dying_visual.find_children("*", "MeshInstance3D", true, false)
+    var living_meshes := living_visual.find_children("*", "MeshInstance3D", true, false)
+    if dying_meshes.is_empty() or living_meshes.is_empty():
+        push_error("Dissolve test requires real authored skinned zombie meshes")
+        quit(1)
+        return
+    var dying_mesh := dying_meshes[0] as MeshInstance3D
+    var living_mesh := living_meshes[0] as MeshInstance3D
+    var dying_shadow := runner_a.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    var living_shadow := runner_b.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    if dying_shadow == null or living_shadow == null:
+        push_error("Rigged death dissolve must preserve independent contact shadows")
+        quit(1)
+        return
+    var shadow_shader := (dying_shadow.material_override as ShaderMaterial).shader
+    if shadow_shader == null or not shadow_shader.code.contains("instance uniform float death_shadow_opacity"):
+        push_error("Death contact shadows lost their shared-shader per-instance fade")
+        quit(1)
+        return
+    var shared_dying_grade := _first_graded_enemy_material(dying_visual)
+    if shared_dying_grade == null or shared_dying_grade != _first_graded_enemy_material(living_visual):
+        push_error("Lethal damage FX must preserve one shared imported PBR grade")
+        quit(1)
+        return
+    if not shared_dying_grade.shader.code.contains("instance uniform float death_dissolve") or not shared_dying_grade.shader.code.contains("discard;"):
+        push_error("Zombie death transition must use opaque dither, never transparent alpha")
+        quit(1)
+        return
+    runner_b._set_death_dissolve(0.0)
+    runner_a.take_damage(runner_a.health + 1.0, true)
+    if not runner_a.dead or runner_a.authored_anim.current_animation != "Death":
+        push_error("Imported GLTF death clip must begin before opaque fade")
+        quit(1)
+        return
+    await create_timer(0.43).timeout
+    var dying_amount := float(dying_mesh.get_instance_shader_parameter("death_dissolve"))
+    var living_amount := float(living_mesh.get_instance_shader_parameter("death_dissolve"))
+    var dying_shadow_opacity := float(dying_shadow.get_instance_shader_parameter("death_shadow_opacity"))
+    var living_shadow_opacity := float(living_shadow.get_instance_shader_parameter("death_shadow_opacity"))
+    if dying_shadow_opacity < 0.10 or dying_shadow_opacity > 0.90:
+        push_error("Dying rigged zombie did not fade its ground contact on the death timeline")
+        quit(1)
+        return
+    if absf(living_shadow_opacity - 1.0) > 0.001 or dying_shadow.material_override != living_shadow.material_override:
+        push_error("Death contact fade changed a living zombie or duplicated horde shadow materials")
+        quit(1)
+        return
+    if dying_amount < 0.24 or dying_amount > 0.95:
+        push_error("Dying GLTF enemy failed to advance per-instance opaque dissolve")
+        quit(1)
+        return
+    if absf(living_amount) > 0.001 or _first_graded_enemy_material(living_visual) != shared_dying_grade:
+        push_error("Dying zombie changed the living horde's PBR shader or material")
+        quit(1)
+        return
+
     var source := FileAccess.get_file_as_string("res://scripts/AssetLibrary.gd")
     if not source.contains("uniform float rim_strength = 0.11") or not source.contains("EMISSION = body_tint.rgb * rim"):
         push_error("Enemy shared grading shader lost subtle silhouette rim lighting")
@@ -10800,6 +11044,29 @@ func _initialize() -> void:
         return
     if world_environment.environment.adjustment_contrast < 1.06 or world_environment.environment.adjustment_saturation < 1.04:
         push_error("Quarantine environment color grading is too flat for premium combat readability")
+        quit(1)
+        return
+
+    # Inspect the actual scene's graded PBR light rig, not an offline concept:
+    # the 720p rendered frame needs visible imported zombie/survivor texture
+    # detail while maintaining low-cost shadow budget and dark arena identity.
+    var key_light := scene.get_node_or_null("ColdKeyLight") as DirectionalLight3D
+    var staging_camera := scene.camera as Camera3D
+    var graded_environment := world_environment.environment
+    if key_light == null or not key_light.shadow_enabled:
+        push_error("Quarantine lost its single authored directional character shadow key")
+        quit(1)
+        return
+    if graded_environment.ambient_light_energy < 0.84 or graded_environment.ambient_light_energy > 1.00:
+        push_error("3D actors must receive bounded diffuse bounce for mobile readability")
+        quit(1)
+        return
+    if key_light.light_energy < 1.35 or key_light.light_energy > 1.60:
+        push_error("Authored actor key intensity escaped bounded night-scene contrast")
+        quit(1)
+        return
+    if staging_camera == null or staging_camera.fov < 44.0 or staging_camera.fov > 46.0:
+        push_error("Phone-scale camera framing is not keeping imported 3D actors readable")
         quit(1)
         return
 
@@ -11117,6 +11384,31 @@ func _initialize() -> void:
         return
     if camera_look.x <= 0.0 or absf(camera_look.z) > 0.001:
         push_error("Camera movement look-ahead lost travel direction")
+        quit(1)
+        return
+
+    # Real camera focus and traversal lead must respond without snapping,
+    # preserving the same result at 60 and 120 FPS.
+    var focus_target := Vector3(3.0, 0.75, -1.4)
+    var focus_start := Vector3.ZERO
+    var frame_smooth: Vector3 = main._camera_smooth_vector(focus_start, focus_target, 1.0 / 60.0, main.CAMERA_FOCUS_RESPONSE)
+    var half_smooth: Vector3 = main._camera_smooth_vector(focus_start, focus_target, 1.0 / 120.0, main.CAMERA_FOCUS_RESPONSE)
+    var double_half: Vector3 = main._camera_smooth_vector(half_smooth, focus_target, 1.0 / 120.0, main.CAMERA_FOCUS_RESPONSE)
+    if frame_smooth.length() <= 0.01 or frame_smooth.distance_to(focus_target) <= 0.01:
+        push_error("Camera rotation must ease instead of snapping or freezing")
+        quit(1)
+        return
+    if double_half.distance_to(frame_smooth) > 0.0001:
+        push_error("Cinematic camera response depends on frame rate")
+        quit(1)
+        return
+    if main._camera_smooth_vector(focus_start, focus_target, 0.0, main.CAMERA_FOCUS_RESPONSE) != focus_start:
+        push_error("Paused camera interpolation must not drift")
+        quit(1)
+        return
+    var travel_focus: Vector3 = main._camera_smooth_vector(Vector3.ZERO, camera_look, 1.0 / 60.0, main.CAMERA_LOOK_AHEAD_RESPONSE)
+    if travel_focus.length() <= 0.01 or travel_focus.length() >= camera_look.length():
+        push_error("Camera travel look-ahead is not smoothly bounded")
         quit(1)
         return
 
@@ -13925,6 +14217,17 @@ func _initialize() -> void:
 ```
 extends SceneTree
 
+class AutoAimSpatialScene:
+    extends Node3D
+    var candidates: Array = []
+    var query_calls := 0
+    var query_radius := -1.0
+
+    func query_enemies_near(_position: Vector3, radius: float) -> Array:
+        query_calls += 1
+        query_radius = radius
+        return candidates
+
 func _initialize() -> void:
     var root := Node3D.new()
     get_root().add_child(root)
@@ -14048,7 +14351,89 @@ func _initialize() -> void:
         quit(1)
         return
 
-    print("Deadline Zero player targeting stability: OK")
+    # The actual player search must reuse the production scene's spatial
+    # query rather than scanning all enemy group members on every refresh.
+    # Existing standalone fixtures above also verify the no-service fallback.
+    var player_source := FileAccess.get_file_as_string("res://scripts/Player.gd")
+    if player_source.contains("var candidates: Array = get_tree().get_nodes_in_group"):
+        push_error("Spatial autoaim still allocated a full horde group before the indexed query")
+        quit(1)
+        return
+    var indexed_scene := AutoAimSpatialScene.new()
+    get_root().add_child(indexed_scene)
+    current_scene = indexed_scene
+    indexed_scene.candidates = [first]
+    player.current_target = null
+    player.nearest_threat = null
+    player.target_refresh_clock = 0.0
+    if player._combat_target() != first:
+        push_error("Spatial-indexed autoaim did not select a nearby live enemy")
+        quit(1)
+        return
+    if indexed_scene.query_calls != 1 or absf(indexed_scene.query_radius - DZPlayer.TARGET_ACQUIRE_RADIUS) > 0.001:
+        push_error("Spatial-indexed autoaim ignored production neighborhood radius")
+        quit(1)
+        return
+
+    # A stale index may contain a freed or dead enemy. It must never be
+    # selected, including after a target-refresh invalidation.
+    var dead_neighbor := DZEnemy.new()
+    dead_neighbor.configure("runner", 1.0, player)
+    dead_neighbor.process_mode = Node.PROCESS_MODE_DISABLED
+    indexed_scene.add_child(dead_neighbor)
+    dead_neighbor.global_position = Vector3(0.8, 0.0, 0.0)
+    dead_neighbor.dead = true
+    indexed_scene.candidates = [dead_neighbor, first]
+    player.current_target = null
+    player.target_refresh_clock = 0.0
+    if player._combat_target() != first or indexed_scene.query_calls != 2:
+        push_error("Spatial autoaim selected an excluded/dead candidate or bypassed refresh")
+        quit(1)
+        return
+
+    # Real rig/barrel rotation must interpolate across target swaps and the
+    # +/-PI yaw seam, and locomotion should face movement when unengaged.
+    player.global_position = Vector3.ZERO
+    player.rotation.y = 0.0
+    first.dead = false
+    first.global_position = Vector3(8.0, 0.0, 0.0)
+    player._update_combat_facing(first, 0.016)
+    if player.rotation.y >= -0.01 or player.rotation.y <= -PI * 0.5:
+        push_error("Survivor snapped rather than blending its combat facing")
+        quit(1)
+        return
+    var previous_error := absf(wrapf(-PI * 0.5 - player.rotation.y, -PI, PI))
+    for tick in range(20):
+        player._update_combat_facing(first, 0.016)
+    if absf(wrapf(-PI * 0.5 - player.rotation.y, -PI, PI)) >= previous_error:
+        push_error("Survivor combat yaw did not converge on the selected target")
+        quit(1)
+        return
+
+    player.rotation.y = deg_to_rad(179.0)
+    first.global_position = Vector3(-0.1, 0.0, 8.0)
+    player._update_combat_facing(first, 0.016)
+    if absf(wrapf(player.rotation.y - deg_to_rad(179.0), -PI, PI)) > 0.15:
+        push_error("Survivor combat facing took the long path around the yaw seam")
+        quit(1)
+        return
+
+    player.rotation.y = 0.0
+    player.velocity = Vector3(6.0, 0.0, 0.0)
+    player._update_combat_facing(null, 0.016)
+    if player.rotation.y >= 0.0 or player.rotation.y <= -PI * 0.5:
+        push_error("Survivor traversal facing did not blend toward movement")
+        quit(1)
+        return
+    var yaw_at_rest := player.rotation.y
+    player.velocity = Vector3.ZERO
+    player._update_combat_facing(null, 0.016)
+    if not is_equal_approx(player.rotation.y, yaw_at_rest):
+        push_error("Survivor idle facing should retain the last authored heading")
+        quit(1)
+        return
+
+    print("Deadline Zero player targeting stability and spatial autoaim: OK")
     quit(0)
 ```
 

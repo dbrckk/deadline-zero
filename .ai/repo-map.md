@@ -24908,8 +24908,20 @@ uniform float authored_metallic = 0.02;
 uniform float rim_strength = 0.11;
 uniform float rim_power = 3.4;
 instance uniform float wear_grade = 0.5;
+instance uniform float death_dissolve = 0.0;
 
 void fragment() {
+    // Clip dying actors in the opaque depth pass instead of blending 100+
+    // skinned characters through costly transparent sorting. Normal bodies
+    // skip all dissolve instructions; one small shader is shared by the horde.
+    float dissolve_edge = 0.0;
+    if (death_dissolve > 0.001) {
+        float grain = fract(sin(dot(floor(UV * 192.0), vec2(12.9898, 78.233))) * 43758.5453);
+        if (grain < death_dissolve) {
+            discard;
+        }
+        dissolve_edge = 1.0 - smoothstep(0.0, 0.07, grain - death_dissolve);
+    }
     vec4 authored = texture(albedo_tex, UV);
     vec3 base = authored.rgb * body_tint.rgb;
     float luma = dot(base, vec3(0.2126, 0.7152, 0.0722));
@@ -24917,12 +24929,18 @@ void fragment() {
     // Keep the real Quaternius texture atlas. Vary only final PBR grade on
     // each mesh, not its shared authored material or skeletal animation.
     vec3 weathering_tint = mix(vec3(0.89, 0.96, 1.06), vec3(1.08, 0.96, 0.84), wear_grade);
-    ALBEDO = base * compression * weathering_tint;
+    // Keep authored atlas/roughness detail but lift dark textured mid-tones:
+    // 720p production captures left too little separation from industrial floor.
+    // This adds no lights, shader permutations, or transparent surfaces.
+    ALBEDO = min(base * compression * weathering_tint * 1.10, vec3(0.90));
     ROUGHNESS = clamp(max(authored_roughness, 0.82) + (0.5 - wear_grade) * 0.08, 0.78, 0.98);
     METALLIC = max(authored_metallic, 0.02);
     float fresnel = 1.0 - max(dot(normalize(NORMAL), normalize(VIEW)), 0.0);
     float rim = pow(fresnel, rim_power) * rim_strength;
-    EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade);
+    // Luminous copper edge is in the existing shader: no new particles,
+    // lights or render passes, and no per-enemy material duplicates.
+    EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade)
+        + vec3(0.90, 0.22, 0.035) * dissolve_edge * 1.1;
     // Imported zombie_basic / zombie_chubby GLTF materials use default OPAQUE
     // alphaMode. Writing ALPHA here incorrectly moves 100+ skinned bodies to
     // the transparent pass, disables depth/shadow behavior and risks sorting.
@@ -25822,12 +25840,30 @@ func _physics_process(delta: float) -> void:
         velocity = movement_direction * move_speed * slow_multiplier * movement_speed_scale
         move_and_slide()
         _constrain_to_arena()
-        if velocity.length_squared() > 0.01:
-            look_at(global_position + velocity, Vector3.UP)
+        _update_locomotion_facing(delta)
     _update_authored_animation(distance)
     if distance < _contact_attack_range() and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _update_locomotion_facing(delta: float) -> void:
+    # Avoid instantaneous 90/180-degree yaw snaps when swarm avoidance
+    # changes velocity. Keep exact lock-on rotation in attack windups and
+    # charges: those mechanics must remain readable and dodgeable.
+    if dead or attack_windup > 0.0 or charge_active or velocity.length_squared() <= 0.01:
+        return
+    var desired_yaw := atan2(-velocity.x, -velocity.z)
+    var turn_rate := 9.0
+    if kind in ["runner", "harrier"]:
+        turn_rate = 13.0
+    elif kind in ["brute", "elite"]:
+        turn_rate = 6.8
+    elif kind == "boss":
+        turn_rate = 5.4
+    # Framerate-independent easing prevents abrupt foot sliding under 30 FPS
+    # without adding tweens, animation instances or physics body objects.
+    var blend := 1.0 - exp(-maxf(delta, 0.0) * turn_rate)
+    rotation.y = lerp_angle(rotation.y, desired_yaw, blend)
 
 func _constrain_to_arena() -> void:
     var clamped_x := clampf(global_position.x, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
@@ -26335,10 +26371,38 @@ func take_damage(amount: float, critical := false, damage_over_time := false) ->
         if authored_anim != null and authored_anim.has_animation("Death"):
             authored_anim.speed_scale = 1.0
             authored_anim.play("Death", 0.06)
+            _begin_death_dissolve()
             var timer := get_tree().create_timer(0.62)
             timer.timeout.connect(queue_free)
         else:
             queue_free()
+
+func _begin_death_dissolve() -> void:
+    if authored_visual == null:
+        return
+    # Preserve the real rigged death animation for its first 0.16 s, then
+    # dissolve in the existing opaque GLTF shader over the last 0.44 s.
+    # One tween per death only; shared atlas and shader materials stay intact.
+    var dissolve_tween := create_tween()
+    dissolve_tween.set_parallel(true)
+    dissolve_tween.tween_method(_set_death_dissolve, 0.0, 0.97, 0.44).set_delay(0.16)
+    # Fade only this zombie's soft ground contact on the same timeline as
+    # its real rigged GLTF silhouette. Never fade the shared horde material.
+    dissolve_tween.tween_method(_set_death_shadow_opacity, 1.0, 0.0, 0.44).set_delay(0.16)
+
+func _set_death_shadow_opacity(opacity: float) -> void:
+    var shadow := get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    if shadow != null:
+        shadow.set_instance_shader_parameter("death_shadow_opacity", clampf(opacity, 0.0, 1.0))
+
+func _set_death_dissolve(progress: float) -> void:
+    if authored_visual == null:
+        return
+    var clamped := clampf(progress, 0.0, 0.97)
+    if authored_visual is MeshInstance3D:
+        (authored_visual as MeshInstance3D).set_instance_shader_parameter("death_dissolve", clamped)
+    for node in authored_visual.find_children("*", "MeshInstance3D", true, false):
+        (node as MeshInstance3D).set_instance_shader_parameter("death_dissolve", clamped)
 
 func hit_reaction_profile() -> Dictionary:
     if kind == "boss":
@@ -26417,6 +26481,7 @@ func _build_contact_shadow() -> void:
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     shadow.material_override = _enemy_contact_shadow_material()
     add_child(shadow)
+    shadow.set_instance_shader_parameter("death_shadow_opacity", 1.0)
 
 func _play_spawn_reveal() -> void:
     var visual := get_node_or_null("Visual") as Node3D
@@ -26458,13 +26523,14 @@ render_mode unshaded, blend_mix, cull_disabled, depth_draw_never;
 
 uniform vec4 shadow_tint : source_color = vec4(0.006, 0.008, 0.010, 1.0);
 uniform float shadow_opacity : hint_range(0.0, 0.6) = 0.35;
+instance uniform float death_shadow_opacity = 1.0;
 
 void fragment() {
     vec2 disk_uv = (UV - vec2(0.5)) * 2.0;
     float radius = length(disk_uv);
     float feather = 1.0 - smoothstep(0.18, 1.0, radius);
     ALBEDO = shadow_tint.rgb;
-    ALPHA = feather * feather * shadow_opacity;
+    ALPHA = feather * feather * shadow_opacity * death_shadow_opacity;
 }
 """
     _shared_contact_shadow_material = ShaderMaterial.new()
@@ -28656,6 +28722,8 @@ var touch_id := -1
 var touch_origin := Vector2.ZERO
 var camera_kick := 0.0
 var camera_kick_phase := 0.0
+var camera_look_ahead := Vector3.ZERO
+var camera_focus_position := Vector3(0.0, 0.65, 0.0)
 var impact_fov_pulse := 0.0
 var hit_freeze_left := 0.0
 var boss_reveal_target: DZEnemy
@@ -28700,10 +28768,12 @@ const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_INTERVAL := 75.0
 const BOSS_RETRY_DELAY := 15.0
 const BOSS_REVEAL_FOV_DELTA := 5.5
-const CAMERA_BASE_HEIGHT := 12.8
-const CAMERA_BASE_TRAIL := 9.15
-const CAMERA_BASE_FOV := 46.0
+const CAMERA_BASE_HEIGHT := 12.0
+const CAMERA_BASE_TRAIL := 8.55
+const CAMERA_BASE_FOV := 45.0
 const CAMERA_LOOK_AHEAD_MAX := 1.25
+const CAMERA_LOOK_AHEAD_RESPONSE := 7.5
+const CAMERA_FOCUS_RESPONSE := 9.0
 const CAMERA_REVEAL_HEIGHT := 14.0
 const CAMERA_REVEAL_TRAIL := 10.4
 const HUD_REFRESH_INTERVAL := 0.10
@@ -28743,6 +28813,7 @@ func _ready() -> void:
     add_child(camera)
     camera.global_position = Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL)
     camera.look_at(Vector3(0.0, 0.6, 0.0), Vector3.UP)
+    camera_focus_position = Vector3(0.0, 0.65, 0.0)
 
     hud = DZHud.new()
     add_child(hud)
@@ -28797,7 +28868,11 @@ func _process(delta: float) -> void:
             _dismiss_onboarding_hint()
 
     if player and is_instance_valid(player):
-        var movement_look_ahead := _camera_motion_look_ahead(player.velocity)
+        # Inertial look-ahead prevents camera hunting as the survivor rapidly
+        # changes strafe directions in a dense melee.
+        camera_look_ahead = _camera_smooth_vector(camera_look_ahead,
+            _camera_motion_look_ahead(player.velocity), delta, CAMERA_LOOK_AHEAD_RESPONSE)
+        var movement_look_ahead := camera_look_ahead
         var focus_point := player.global_position + Vector3(0.0, 0.65, 0.0) + movement_look_ahead * 0.72
         var desired := player.global_position + Vector3(0.0, CAMERA_BASE_HEIGHT, CAMERA_BASE_TRAIL) + movement_look_ahead * 0.42
         var target_fov := CAMERA_BASE_FOV
@@ -28819,11 +28894,19 @@ func _process(delta: float) -> void:
         var kick_offset := Vector3(sin(camera_kick_phase), 0.0, cos(camera_kick_phase * 1.27)) * camera_kick
         camera.global_position = camera.global_position.lerp(desired + kick_offset, 1.0 - exp(-delta * 4.5))
         camera.fov = lerpf(camera.fov, target_fov, 1.0 - exp(-delta * 5.5))
-        camera.look_at(focus_point, Vector3.UP)
+        # Smooth the *look-at point* independently of camera translation. An
+        # instantaneous look_at was rotating the view abruptly on player turns
+        # and boss reveal, even though its position and FOV were interpolated.
+        camera_focus_position = _camera_smooth_vector(camera_focus_position,
+            focus_point, delta, CAMERA_FOCUS_RESPONSE)
+        camera.look_at(camera_focus_position, Vector3.UP)
         threat_indicator_refresh_clock -= delta
         if threat_indicator_refresh_clock <= 0.0:
             threat_indicator_refresh_clock = THREAT_INDICATOR_REFRESH_INTERVAL
             _update_offscreen_threat_indicator()
+
+func _camera_smooth_vector(previous: Vector3, desired: Vector3, delta: float, response: float) -> Vector3:
+    return previous.lerp(desired, 1.0 - exp(-maxf(delta, 0.0) * response))
 
 func _camera_motion_look_ahead(velocity: Vector3) -> Vector3:
     var planar := Vector3(velocity.x, 0.0, velocity.z)
@@ -29359,8 +29442,11 @@ func _build_world() -> void:
     env.background_mode = Environment.BG_COLOR
     env.background_color = Color(0.008, 0.014, 0.020)
     env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-    env.ambient_light_color = Color(0.16, 0.27, 0.34)
-    env.ambient_light_energy = 0.72
+    # Real 720p phone captures showed imported survivor/enemy meshes too dark
+    # against blue-black asphalt. Lift diffuse ambient bounce modestly while
+    # keeping the authored warm emergency LEDs and hard key/shadow contrast.
+    env.ambient_light_color = Color(0.20, 0.30, 0.36)
+    env.ambient_light_energy = 0.88
     env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
     env.adjustment_enabled = true
     env.adjustment_brightness = 1.02
@@ -29377,7 +29463,7 @@ func _build_world() -> void:
     sun.name = "ColdKeyLight"
     sun.rotation_degrees = Vector3(-58.0, -28.0, 0.0)
     sun.light_color = Color(0.70, 0.84, 1.0)
-    sun.light_energy = 1.28
+    sun.light_energy = 1.42
     sun.shadow_enabled = true
     add_child(sun)
 
@@ -30493,6 +30579,8 @@ const MOVE_DECELERATION := 62.0
 const MOVE_TURN_ACCELERATION := 78.0
 const MOVE_LEAN_ROLL_DEGREES := 4.2
 const MOVE_LEAN_PITCH_DEGREES := 2.4
+const COMBAT_TURN_RESPONSE := 17.0
+const LOCOMOTION_TURN_RESPONSE := 10.0
 const AIM_LEAD_MAX_SECONDS := 0.42
 const AIM_LEAD_MAX_DISTANCE := 1.8
 
@@ -30537,14 +30625,31 @@ func _physics_process(delta: float) -> void:
     var target := _combat_target()
     _update_player_marker_pressure(_pressure_target(target))
     _update_target_lock_marker(target, delta)
+    _update_combat_facing(target, delta)
     if target != null:
-        var facing := target.global_position
-        facing.y = global_position.y
-        if global_position.distance_squared_to(facing) > 0.01:
-            look_at(facing, Vector3.UP)
         if fire_clock <= 0.0:
             _fire_at(target)
             fire_clock = fire_interval
+
+func _update_combat_facing(target: DZEnemy, delta: float) -> void:
+    # Rotate the actual survivor rig and barrel together. Target changes no
+    # longer snap the full character silhouette, while shots continue to use
+    # the current world-space muzzle for physically consistent lead.
+    var direction := Vector3.ZERO
+    var response := COMBAT_TURN_RESPONSE
+    if target != null and is_instance_valid(target) and not target.dead:
+        direction = target.global_position - global_position
+    elif velocity.length_squared() > 0.16:
+        # When the horde is out of range, orient toward traversal rather than
+        # sliding sideways across the arena with a frozen combat heading.
+        direction = Vector3(velocity.x, 0.0, velocity.z)
+        response = LOCOMOTION_TURN_RESPONSE
+    direction.y = 0.0
+    if direction.length_squared() <= 0.0001:
+        return
+    var desired_yaw := atan2(-direction.x, -direction.z)
+    var alpha := 1.0 - exp(-maxf(delta, 0.0) * response)
+    rotation.y = lerp_angle(rotation.y, desired_yaw, alpha)
 
 func _smoothed_movement_velocity(input: Vector2, delta: float) -> Vector3:
     var desired := Vector2(input.x, input.y) * move_speed
@@ -30789,7 +30894,19 @@ func _combat_target() -> DZEnemy:
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
     var best_d2 := TARGET_ACQUIRE_RADIUS * TARGET_ACQUIRE_RADIUS
-    for node in get_tree().get_nodes_in_group("enemies"):
+    # Main already rebuilds the enemy spatial index once per physics frame for
+    # the swarm and projectiles. Consume it rather than scanning the full
+    # 100+ zombie group every 80 ms. Keep a group fallback for standalone
+    # scenes/tests without the production query service.
+    var candidates: Array
+    var scene := get_tree().current_scene
+    if scene != null and scene.has_method("query_enemies_near"):
+        candidates = scene.query_enemies_near(global_position, TARGET_ACQUIRE_RADIUS)
+    else:
+        candidates = get_tree().get_nodes_in_group("enemies")
+    for node in candidates:
+        if node == null or not is_instance_valid(node):
+            continue
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead:
             continue
