@@ -331,6 +331,50 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # An actual imported runner must dissolve through its own opaque shader
+    # instance after death, without whitening/fading the live runner's shared
+    # material. This checks runtime GLTF meshes, not textual source alone.
+    var dying_visual := runner_a.authored_visual
+    var living_visual := runner_b.authored_visual
+    if dying_visual == null or living_visual == null:
+        push_error("Missing real imported GLTF runner for death dissolve integration")
+        quit(1)
+        return
+    var dying_meshes := dying_visual.find_children("*", "MeshInstance3D", true, false)
+    var living_meshes := living_visual.find_children("*", "MeshInstance3D", true, false)
+    if dying_meshes.is_empty() or living_meshes.is_empty():
+        push_error("Dissolve test requires real authored skinned zombie meshes")
+        quit(1)
+        return
+    var dying_mesh := dying_meshes[0] as MeshInstance3D
+    var living_mesh := living_meshes[0] as MeshInstance3D
+    var shared_dying_grade := _first_graded_enemy_material(dying_visual)
+    if shared_dying_grade == null or shared_dying_grade != _first_graded_enemy_material(living_visual):
+        push_error("Lethal damage FX must preserve one shared imported PBR grade")
+        quit(1)
+        return
+    if not shared_dying_grade.shader.code.contains("instance uniform float death_dissolve") or not shared_dying_grade.shader.code.contains("discard;"):
+        push_error("Zombie death transition must use opaque dither, never transparent alpha")
+        quit(1)
+        return
+    runner_b._set_death_dissolve(0.0)
+    runner_a.take_damage(runner_a.health + 1.0, true)
+    if not runner_a.dead or runner_a.authored_anim.current_animation != "Death":
+        push_error("Imported GLTF death clip must begin before opaque fade")
+        quit(1)
+        return
+    await create_timer(0.43).timeout
+    var dying_amount := float(dying_mesh.get_instance_shader_parameter("death_dissolve"))
+    var living_amount := float(living_mesh.get_instance_shader_parameter("death_dissolve"))
+    if dying_amount < 0.24 or dying_amount > 0.95:
+        push_error("Dying GLTF enemy failed to advance per-instance opaque dissolve")
+        quit(1)
+        return
+    if absf(living_amount) > 0.001 or _first_graded_enemy_material(living_visual) != shared_dying_grade:
+        push_error("Dying zombie changed the living horde's PBR shader or material")
+        quit(1)
+        return
+
     var source := FileAccess.get_file_as_string("res://scripts/AssetLibrary.gd")
     if not source.contains("uniform float rim_strength = 0.11") or not source.contains("EMISSION = body_tint.rgb * rim"):
         push_error("Enemy shared grading shader lost subtle silhouette rim lighting")
