@@ -13,7 +13,9 @@ func _init() -> void:
         ["CAMERA_REVEAL_TRAIL := 10.4", "Boss reveal camera trail contract regressed"],
         ["boss_reveal_target = enemy", "Boss spawn no longer arms reveal target"],
         ["target_fov = CAMERA_BASE_FOV + BOSS_REVEAL_FOV_DELTA * envelope", "Boss reveal no longer widens field of view"],
-        ["camera.look_at(focus_point, Vector3.UP)", "Camera focus contract is missing"]
+        ["camera.look_at(camera_focus_position, Vector3.UP)", "Smoothed camera focus contract is missing"],
+        ["CAMERA_FOCUS_RESPONSE := 9.0", "Camera rotation damping contract regressed"],
+        ["CAMERA_LOOK_AHEAD_RESPONSE := 7.5", "Camera travel lead damping contract regressed"]
     ]
     for item in required:
         if not _require(source.contains(String(item[0])), String(item[1])):
