@@ -979,7 +979,9 @@ func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     tween.chain().tween_callback(number.queue_free)
 
 func _build_visual() -> void:
-    authored_visual = DZAssetLibrary.enemy(kind)
+    # Seven subtle per-body PBR grades break up cloned horde silhouettes while
+    # every imported atlas material stays shared across the entire swarm.
+    authored_visual = DZAssetLibrary.enemy(kind, int(get_instance_id()))
     if authored_visual != null:
         authored_visual.name = "Visual"
         var scale_factor := 1.0
