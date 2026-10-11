@@ -82,6 +82,18 @@
       "status": "merged",
       "checks": "8/8 successful",
       "change": "Weighty framerate-independent rigged 3D enemy turning with attack windup/charge yaw locks intact"
+    },
+    {
+      "pr": 406,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Spatial-indexed nearest-target autoaim without full horde allocation"
+    },
+    {
+      "pr": 408,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Evidence-reviewed 720p native 3D character lighting, shader midtones and camera framing"
     }
   ],
   "visual_qa": "Inspected and compared authentic six 1280x720 Godot-rendered frames from CI for #406 baseline and #408 rebalanced lighting/camera. Native authored 3D scene exists; #408 capture first-playable, pressure and roster average luma rose approx 8–12%, more readable character silhouettes; AAA fidelity not yet verified.",
@@ -93,27 +105,11 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "#404/#405/#407 merged after 8/8 CI. #406 amended indexed autoaim and #408 visually QA-verified Godot lighting/camera have 7/8 green; Android-runtime still in progress on both. Before/after 1280x720 real render capture has ~8–12% higher average scene luminance and larger 3D characters, not an AAA certification. Device QA/Billing/lifecycle unverified.",
+  "verification": "PRs #405–#408 all merged into main after 8/8 successful GitHub Actions checks each; #408 includes real Godot rendered visual comparison. Physical Android frame pacing/thermal/touch and Play Billing/lifecycle remain unverified.",
   "next": [
-    "Merge #406 and #408 only if their last Android emulator jobs succeed; otherwise review logs and fix",
-    "Use CI before/after Godot screenshots and improve real imported 3D art/models and HUD readability without replacing with 2D mockups",
-    "Run physical Android p95/hitch, thermal, input responsiveness tests",
-    "Close Play Billing/license and process-lifecycle/store gates #14/#16/#17"
+    "Audit additional actual rendered 3D animation and character materials against premium target",
+    "Measure on physical Android hardware FPS/p95/hitches, heat, touch and battery",
+    "Resolve Play Billing and process death persistence (#16/#17) and Play release testing (#14)"
   ],
-  "in_progress": [
-    {
-      "pr": 406,
-      "status": "open / CI",
-      "branch": "perf/godot-player-spatial-autoaim",
-      "head_sha": "91275b2590bcae2893fb4b3c91711ba48d599bb0",
-      "change": "Reuse arena spatial query with no whole-group allocation, preserve aim stickiness and dead-target filtering"
-    },
-    {
-      "pr": 408,
-      "status": "open / Android-runtime CI",
-      "branch": "feat/godot-cinematic-character-readability",
-      "head_sha": "b000b8e00dae4065cfc8dcb4cc7d0c09c28b90b9",
-      "change": "Evidence-led improved Godot mobile 3D character key/ambient, atlas midtones and 10% tighter camera; actual rendered before/after screenshots inspected"
-    }
-  ]
+  "in_progress": []
 }
