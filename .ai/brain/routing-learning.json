@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Replace intrusive street lights with compact quarantine masts",
-      "terms": [
-        "compact",
-        "intrusive",
-        "lights",
-        "masts",
-        "quarantine",
-        "replace",
-        "street"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Main.gd",
-        "godot/tests/environment_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Replace full street tiles with real floor cracks",
       "terms": [
         "cracks",
@@ -1210,6 +1192,32 @@
         "godot/scripts/Hud.gd",
         "godot/tests/hud_readability_hierarchy_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "perf(gamefeel): reuse 3D impact materials without coupling hit fades (#397)",
+      "terms": [
+        "397",
+        "3d",
+        "coupling",
+        "fades",
+        "gamefeel",
+        "hit",
+        "impact",
+        "materials",
+        "perf",
+        "reuse",
+        "without"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/ImpactFx.gd",
+        "godot/scripts/Player.gd",
+        "godot/scripts/XpOrb.gd",
+        "godot/tests/impact_fx_mobile_test.gd",
+        "godot/tests/rifle_muzzle_ballistics_test.gd",
+        "godot/tests/xp_orb_runtime_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1516,6 +1524,14 @@
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4
     },
+    "397": {
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/XpOrb.gd": 4,
+      "godot/tests/impact_fx_mobile_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 4
+    },
     "399": {
       "godot/scripts/Hud.gd": 4,
       "godot/tests/hud_readability_hierarchy_test.gd": 4
@@ -1528,12 +1544,12 @@
       "godot/scripts/CombatFeel.gd": 8,
       "godot/scripts/Enemy.gd": 36,
       "godot/scripts/Hud.gd": 24,
-      "godot/scripts/ImpactFx.gd": 16,
+      "godot/scripts/ImpactFx.gd": 20,
       "godot/scripts/Main.gd": 40,
-      "godot/scripts/Player.gd": 20,
+      "godot/scripts/Player.gd": 24,
       "godot/scripts/Projectile.gd": 24,
       "godot/scripts/WeaponProfiles.gd": 4,
-      "godot/scripts/XpOrb.gd": 8,
+      "godot/scripts/XpOrb.gd": 12,
       "godot/tests/arc_chain_link_fx_test.gd": 4,
       "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/attack_lane_gradient_test.gd": 4,
@@ -1552,11 +1568,12 @@
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/first_playable_run_path_test.gd": 4,
       "godot/tests/hud_readability_hierarchy_test.gd": 8,
-      "godot/tests/impact_fx_mobile_test.gd": 4,
+      "godot/tests/impact_fx_mobile_test.gd": 8,
       "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/multihit_silhouette_stability_test.gd": 4,
       "godot/tests/muzzle_flare_3d_test.gd": 4,
       "godot/tests/projectile_profile_runtime_visual_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
       "godot/tests/run_director_runtime_integration_test.gd": 4,
       "godot/tests/run_end_ux_test.gd": 4,
       "godot/tests/smoke_test.gd": 4,
@@ -1564,7 +1581,7 @@
       "godot/tests/upgrade_choice_render_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 8,
       "godot/tests/weapon_presentation_test.gd": 4,
-      "godot/tests/xp_orb_runtime_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 8,
       "tools/blender/build_industrial_kit.py": 4,
       "tools/blender/optimize_game_asset.py": 4
     },
@@ -2542,6 +2559,14 @@
       "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
       "godot/tests/shock_expiry_recovery_test.gd": 4
     },
+    "coupling": {
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/XpOrb.gd": 4,
+      "godot/tests/impact_fx_mobile_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 4
+    },
     "cover": {
       "godot/scripts/Hud.gd": 4,
       "godot/tests/run_end_ux_test.gd": 4
@@ -2904,6 +2929,14 @@
       "godot/tests/attack_facing_lock_test.gd": 4,
       "godot/tests/multihit_silhouette_stability_test.gd": 4
     },
+    "fades": {
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/XpOrb.gd": 4,
+      "godot/tests/impact_fx_mobile_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 4
+    },
     "fading": {
       "godot/scripts/InfernoBlastFx.gd": 4,
       "godot/tests/elemental_protocols_render_test.gd": 4,
@@ -3168,17 +3201,22 @@
       "godot/scripts/BurnStatusFx.gd": 4,
       "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
+      "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/InfernoBlastFx.gd": 4,
-      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Player.gd": 8,
       "godot/scripts/Projectile.gd": 12,
+      "godot/scripts/XpOrb.gd": 4,
       "godot/tests/arc_chain_link_fx_test.gd": 8,
       "godot/tests/burn_status_fx_test.gd": 4,
       "godot/tests/elemental_protocols_render_test.gd": 8,
       "godot/tests/hud_readability_hierarchy_test.gd": 4,
+      "godot/tests/impact_fx_mobile_test.gd": 4,
       "godot/tests/industrial_kit_pbr_budget_test.gd": 4,
       "godot/tests/inferno_blast_wave_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
       "godot/tests/status_effects_test.gd": 4,
       "godot/tests/world_target_lock_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 4,
       "tools/blender/build_industrial_kit.py": 4
     },
     "gameplay": {
@@ -3393,6 +3431,14 @@
       "core/src/main/java/com/deadlinezero/game/visual/OnboardingHintPolicy.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/OnboardingHintPolicyTest.java": 4
     },
+    "hit": {
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/XpOrb.gd": 4,
+      "godot/tests/impact_fx_mobile_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 4
+    },
     "hit-reaction": {
       "godot/scripts/Player.gd": 4,
       "godot/tests/player_damage_feedback_test.gd": 4,
@@ -3492,6 +3538,14 @@
       "godot/scripts/Main.gd": 4,
       "godot/scripts/RunDirector.gd": 4,
       "godot/tests/run_director_escalation_test.gd": 4
+    },
+    "impact": {
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/XpOrb.gd": 4,
+      "godot/tests/impact_fx_mobile_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 4
     },
     "impacts": {
       "godot/scripts/CombatFeel.gd": 4,
@@ -3825,8 +3879,14 @@
     },
     "materials": {
       "godot/scripts/AssetLibrary.gd": 8,
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/XpOrb.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
-      "godot/tests/industrial_material_sharing_test.gd": 4
+      "godot/tests/impact_fx_mobile_test.gd": 4,
+      "godot/tests/industrial_material_sharing_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 4
     },
     "matrix": {
       "godot/scripts/Enemy.gd": 4,
@@ -4154,14 +4214,18 @@
     "perf": {
       "godot/scripts/AssetLibrary.gd": 8,
       "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 8,
-      "godot/scripts/Player.gd": 4,
+      "godot/scripts/Player.gd": 8,
+      "godot/scripts/XpOrb.gd": 4,
       "godot/tests/enemy_shadow_budget_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/impact_fx_mobile_test.gd": 4,
       "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/offscreen_threat_priority_test.gd": 4,
-      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
-      "godot/tests/shock_expiry_recovery_test.gd": 4
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 8,
+      "godot/tests/shock_expiry_recovery_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 4
     },
     "performance": {
       "godot/scripts/Main.gd": 4,
@@ -4793,7 +4857,13 @@
     },
     "reuse": {
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/tests/industrial_material_sharing_test.gd": 4
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/XpOrb.gd": 4,
+      "godot/tests/impact_fx_mobile_test.gd": 4,
+      "godot/tests/industrial_material_sharing_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 4
     },
     "reveal": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 8,
@@ -5688,7 +5758,13 @@
     },
     "without": {
       "godot/scripts/Enemy.gd": 4,
-      "godot/tests/status_effects_test.gd": 4
+      "godot/scripts/ImpactFx.gd": 4,
+      "godot/scripts/Player.gd": 4,
+      "godot/scripts/XpOrb.gd": 4,
+      "godot/tests/impact_fx_mobile_test.gd": 4,
+      "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/status_effects_test.gd": 4,
+      "godot/tests/xp_orb_runtime_test.gd": 4
     },
     "world": {
       "godot/scripts/AssetLibrary.gd": 4,

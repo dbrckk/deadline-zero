@@ -1,11 +1,11 @@
 # Change impact
 
-Base: 64baa68e2d5a8865522649461477227f8cceee5c
-Head: 9a249f60b9b3fc07a252d0cbba5d80526026a2b9
+Base: 8db5196c92d7762ca7393ecad1a9124caae0ed78
+Head: db8a6201fe6082254ea07cb9754c3787e8f0e45d
 
 ## Changed files
-- M godot/scripts/Hud.gd
-- M godot/tests/hud_readability_hierarchy_test.gd
+- M godot/scripts/ImpactFx.gd
+- M godot/tests/impact_fx_mobile_test.gd
 
 ## Affected areas
 - godot

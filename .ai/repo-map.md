@@ -28248,6 +28248,7 @@ static var _shared_ring_mesh: TorusMesh
 static var _shared_flare_mesh: QuadMesh
 static var _spark_process_cache := {}
 static var _spark_mesh_cache := {}
+static var _material_cache := {}
 
 func _ready() -> void:
     mesh_instance = MeshInstance3D.new()
@@ -28271,8 +28272,7 @@ func _ready() -> void:
     flare_instance.name = "ImpactFlare"
     flare_instance.mesh = _flare_mesh()
     flare_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    flare_material = _make_material(color.lightened(0.24), 5.6)
-    flare_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    flare_material = _make_material(color.lightened(0.24), 5.6, true)
     flare_instance.material_override = flare_material
     add_child(flare_instance)
 
@@ -28354,7 +28354,12 @@ static func _spark_mesh(tint: Color) -> QuadMesh:
     _spark_mesh_cache[key] = mesh
     return mesh
 
-func _make_material(tint: Color, energy: float) -> StandardMaterial3D:
+func _make_material(tint: Color, energy: float, billboard := false) -> StandardMaterial3D:
+    # Impact cores, rings and billboard flares keep distinct visual grades but
+    # identical hits reuse their materials across the whole combat session.
+    var key := "%s:%.2f:%s" % [tint.to_html(true), energy, "billboard" if billboard else "world"]
+    if _material_cache.has(key):
+        return _material_cache[key] as StandardMaterial3D
     var material := StandardMaterial3D.new()
     material.albedo_color = tint
     material.emission_enabled = true
@@ -28362,15 +28367,23 @@ func _make_material(tint: Color, energy: float) -> StandardMaterial3D:
     material.emission_energy_multiplier = energy
     material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
     material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    if billboard:
+        material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    _material_cache[key] = material
     return material
 
 func _process(delta: float) -> void:
     age += delta
     var t: float = clampf(age / life, 0.0, 1.0)
     scale = Vector3.ONE * lerp(0.50, 2.45 * scale_boost, t)
-    _fade_material(core_material, t)
-    _fade_material(ring_material, t)
-    _fade_material(flare_material, minf(1.0, t * 1.55))
+    # GeometryInstance3D transparency is per-node, so a dying impact never
+    # mutates the shared material of the next incoming projectile.
+    if mesh_instance != null:
+        mesh_instance.transparency = t
+    if ring_instance != null:
+        ring_instance.transparency = t
+    if flare_instance != null:
+        flare_instance.transparency = minf(1.0, t * 1.55)
     if ring_instance != null:
         ring_instance.scale = Vector3.ONE * lerp(0.70, 1.62, t)
     if flare_instance != null:
@@ -28382,14 +28395,6 @@ func _process(delta: float) -> void:
         )
     if age >= life:
         queue_free()
-
-func _fade_material(material: StandardMaterial3D, t: float) -> void:
-    if material == null:
-        return
-    var faded := material.albedo_color
-    faded.a = 1.0 - t
-    material.albedo_color = faded
-    material.emission_energy_multiplier = lerp(4.0, 0.5, t)
 ````
 
 ## File: godot/scripts/InfernoBlastFx.gd
@@ -30395,6 +30400,8 @@ const MOVE_DECELERATION := 62.0
 const MOVE_TURN_ACCELERATION := 78.0
 const MOVE_LEAN_ROLL_DEGREES := 4.2
 const MOVE_LEAN_PITCH_DEGREES := 2.4
+const AIM_LEAD_MAX_SECONDS := 0.42
+const AIM_LEAD_MAX_DISTANCE := 1.8
 
 func _ready() -> void:
     add_to_group("player")
@@ -30700,17 +30707,9 @@ func _nearest_enemy() -> DZEnemy:
     return best
 
 func _fire_at(enemy: DZEnemy) -> void:
-    var base_dir := global_position.direction_to(enemy.global_position)
-    base_dir.y = 0.0
-    base_dir = base_dir.normalized()
+    var base_dir := _predicted_shot_direction(enemy)
     if base_dir.length_squared() < 0.01:
         return
-    # Compensate for the rifle being offset to the player's right. Otherwise
-    # close enemies can fall beside a perfectly aimed-looking muzzle tracer.
-    var barrel_to_target := enemy.global_position - _projectile_muzzle_origin(Vector3.ZERO)
-    barrel_to_target.y = 0.0
-    if barrel_to_target.length_squared() > 0.0001:
-        base_dir = barrel_to_target.normalized()
     _play_shot_audio()
     _trigger_muzzle_flash()
     _trigger_rifle_recoil()
@@ -30730,6 +30729,30 @@ func _fire_at(enemy: DZEnemy) -> void:
             projectile.queue_free()
             return
         projectile_parent.add_child(projectile)
+
+func _predicted_shot_direction(enemy: DZEnemy) -> Vector3:
+    # Lead strafing/running enemies from the actual barrel position, not the
+    # survivor's center. Two cheap flight-time estimates avoid a physics query
+    # per shot and preserve the exact close-range, stationary aim direction.
+    var offset := enemy.global_position - _projectile_muzzle_origin(Vector3.ZERO)
+    offset.y = 0.0
+    if offset.length_squared() <= 0.0001:
+        return Vector3.ZERO
+
+    var target_velocity := enemy.velocity
+    target_velocity.y = 0.0
+    # Windups, regeneration and shock root the enemy even if the most recent
+    # physics velocity still describes its previous moving frame.
+    if enemy.attack_windup > 0.0 or enemy.regeneration_windup > 0.0 or enemy.shock_left > 0.0 or not enemy.combat_enabled:
+        target_velocity = Vector3.ZERO
+
+    var shot_speed := maxf(projectile_speed, 0.01)
+    var travel_time := minf(offset.length() / shot_speed, AIM_LEAD_MAX_SECONDS)
+    travel_time = minf((offset + target_velocity * travel_time).length() / shot_speed, AIM_LEAD_MAX_SECONDS)
+    # A charging or sharply turning enemy must not pull the muzzle too far
+    # away from its visible body on a small mobile screen.
+    var lead := (target_velocity * travel_time).limit_length(AIM_LEAD_MAX_DISTANCE)
+    return (offset + lead).normalized()
 
 func _projectile_muzzle_origin(direction: Vector3) -> Vector3:
     # Shared barrel origin for all weapon protocols; the small forward offset
@@ -31862,28 +31885,43 @@ const FORCED_MAGNET_SPEED := 14.0
 
 static var _shared_mesh: SphereMesh
 static var _shared_halo_mesh: TorusMesh
-static var _shared_material: StandardMaterial3D
-static var _shared_halo_material: StandardMaterial3D
+static var _core_materials := {}
+static var _halo_materials := {}
+
+const ELITE_XP_AMOUNT := 8
+const BOSS_XP_AMOUNT := 30
+
+var value_tier := "standard"
+var visual_tier_scale := 1.0
 
 var orb_visual: MeshInstance3D
 var halo_visual: MeshInstance3D
 
+static func tier_for_amount(xp_amount: int) -> String:
+    if xp_amount >= BOSS_XP_AMOUNT:
+        return "boss"
+    if xp_amount >= ELITE_XP_AMOUNT:
+        return "elite"
+    return "standard"
+
 func _ready() -> void:
     add_to_group("xp_orbs")
+    value_tier = tier_for_amount(amount)
+    visual_tier_scale = 2.0 if value_tier == "boss" else (1.32 if value_tier == "elite" else 1.0)
     orb_visual = MeshInstance3D.new()
     orb_visual.name = "XpOrbVisual"
     orb_visual.mesh = _orb_mesh()
-    orb_visual.material_override = _orb_material()
+    orb_visual.material_override = _orb_material(value_tier)
     orb_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     add_child(orb_visual)
 
     halo_visual = MeshInstance3D.new()
     halo_visual.name = "XpOrbHalo"
     halo_visual.mesh = _halo_mesh()
-    halo_visual.material_override = _halo_material()
+    halo_visual.material_override = _halo_material(value_tier)
     halo_visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     halo_visual.position.y = -0.11
-    halo_visual.scale = Vector3.ONE * 0.82
+    halo_visual.scale = Vector3.ONE * 0.82 * visual_tier_scale
     add_child(halo_visual)
 
 static func _orb_mesh() -> SphereMesh:
@@ -31906,28 +31944,50 @@ static func _halo_mesh() -> TorusMesh:
     _shared_halo_mesh.ring_segments = 6
     return _shared_halo_mesh
 
-static func _halo_material() -> StandardMaterial3D:
-    if _shared_halo_material != null:
-        return _shared_halo_material
-    _shared_halo_material = StandardMaterial3D.new()
-    _shared_halo_material.albedo_color = Color(0.12, 0.92, 0.74, 0.54)
-    _shared_halo_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-    _shared_halo_material.emission_enabled = true
-    _shared_halo_material.emission = Color(0.06, 1.0, 0.68)
-    _shared_halo_material.emission_energy_multiplier = 1.75
-    _shared_halo_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    return _shared_halo_material
+static func _halo_material(tier: String = "standard") -> StandardMaterial3D:
+    if _halo_materials.has(tier):
+        return _halo_materials[tier] as StandardMaterial3D
+    var material := StandardMaterial3D.new()
+    match tier:
+        "boss":
+            material.albedo_color = Color(1.0, 0.65, 0.12, 0.66)
+            material.emission = Color(1.0, 0.63, 0.08)
+            material.emission_energy_multiplier = 3.2
+        "elite":
+            material.albedo_color = Color(0.24, 0.67, 1.0, 0.60)
+            material.emission = Color(0.14, 0.70, 1.0)
+            material.emission_energy_multiplier = 2.35
+        _:
+            material.albedo_color = Color(0.12, 0.92, 0.74, 0.54)
+            material.emission = Color(0.06, 1.0, 0.68)
+            material.emission_energy_multiplier = 1.75
+    material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    material.emission_enabled = true
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    _halo_materials[tier] = material
+    return material
 
-static func _orb_material() -> StandardMaterial3D:
-    if _shared_material != null:
-        return _shared_material
-    _shared_material = StandardMaterial3D.new()
-    _shared_material.albedo_color = Color(0.18, 0.95, 0.75)
-    _shared_material.emission_enabled = true
-    _shared_material.emission = Color(0.1, 1.0, 0.7)
-    _shared_material.emission_energy_multiplier = 3.0
-    _shared_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-    return _shared_material
+static func _orb_material(tier: String = "standard") -> StandardMaterial3D:
+    if _core_materials.has(tier):
+        return _core_materials[tier] as StandardMaterial3D
+    var material := StandardMaterial3D.new()
+    match tier:
+        "boss":
+            material.albedo_color = Color(1.0, 0.80, 0.30)
+            material.emission = Color(1.0, 0.52, 0.10)
+            material.emission_energy_multiplier = 4.2
+        "elite":
+            material.albedo_color = Color(0.38, 0.82, 1.0)
+            material.emission = Color(0.18, 0.65, 1.0)
+            material.emission_energy_multiplier = 3.5
+        _:
+            material.albedo_color = Color(0.18, 0.95, 0.75)
+            material.emission = Color(0.1, 1.0, 0.7)
+            material.emission_energy_multiplier = 3.0
+    material.emission_enabled = true
+    material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    _core_materials[tier] = material
+    return material
 
 func set_combat_enabled(enabled: bool) -> void:
     combat_enabled = enabled
@@ -31942,7 +32002,7 @@ func _process(delta: float) -> void:
     position.y = 0.18 + sin(age * 5.0) * 0.05
     var idle_pulse := 0.93 + (0.5 + 0.5 * sin(age * 6.4)) * 0.10
     if orb_visual != null:
-        orb_visual.scale = Vector3.ONE * idle_pulse
+        orb_visual.scale = Vector3.ONE * idle_pulse * visual_tier_scale
     if target == null or not is_instance_valid(target):
         return
     var flat_target := target.global_position
@@ -31953,7 +32013,7 @@ func _process(delta: float) -> void:
     if halo_visual != null:
         var halo_pulse := 0.86 + (0.5 + 0.5 * sin(age * 7.2)) * 0.14
         var magnet_boost := 1.34 if magnetized else 1.0
-        halo_visual.scale = Vector3.ONE * halo_pulse * magnet_boost
+        halo_visual.scale = Vector3.ONE * halo_pulse * magnet_boost * visual_tier_scale
     if magnetized:
         var dir := global_position.direction_to(flat_target)
         var target_speed := FORCED_MAGNET_SPEED if forced_magnet else MAGNET_SPEED

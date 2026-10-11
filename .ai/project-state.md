@@ -31,26 +31,29 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T10:26:11Z
+Generated: 2026-10-11T11:01:54Z
 
 ### Git
 - Branch: `main`
-- Head: `9a249f60b9b3`
-- Commit date: 2026-10-11T12:25:56+02:00
-- Commit: feat(gamefeel): match XP HUD gain feedback to rare 3D rewards (#399)
+- Head: `db8a6201fe60`
+- Commit date: 2026-10-11T13:01:36+02:00
+- Commit: perf(gamefeel): reuse 3D impact materials without coupling hit fades (#397)
 - Tracked files: 1065
 
 ### Recently changed files
-- `godot/scripts/Hud.gd`
-- `godot/tests/hud_readability_hierarchy_test.gd`
-- `.github/workflows/deadline-zero-work-watch.yml`
+- `godot/scripts/ImpactFx.gd`
+- `godot/tests/impact_fx_mobile_test.gd`
+- `godot/scripts/XpOrb.gd`
+- `godot/tests/xp_orb_runtime_test.gd`
+- `godot/scripts/Player.gd`
+- `godot/tests/rifle_muzzle_ballistics_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `godot/scripts/AssetLibrary.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/scripts/Hud.gd`
+- `godot/tests/hud_readability_hierarchy_test.gd`
 
 ### Project signals
 - `build.gradle`
