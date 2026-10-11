@@ -371,8 +371,20 @@ uniform float authored_metallic = 0.02;
 uniform float rim_strength = 0.11;
 uniform float rim_power = 3.4;
 instance uniform float wear_grade = 0.5;
+instance uniform float death_dissolve = 0.0;
 
 void fragment() {
+    // Clip dying actors in the opaque depth pass instead of blending 100+
+    // skinned characters through costly transparent sorting. Normal bodies
+    // skip all dissolve instructions; one small shader is shared by the horde.
+    float dissolve_edge = 0.0;
+    if (death_dissolve > 0.001) {
+        float grain = fract(sin(dot(floor(UV * 192.0), vec2(12.9898, 78.233))) * 43758.5453);
+        if (grain < death_dissolve) {
+            discard;
+        }
+        dissolve_edge = 1.0 - smoothstep(0.0, 0.07, grain - death_dissolve);
+    }
     vec4 authored = texture(albedo_tex, UV);
     vec3 base = authored.rgb * body_tint.rgb;
     float luma = dot(base, vec3(0.2126, 0.7152, 0.0722));
@@ -385,7 +397,10 @@ void fragment() {
     METALLIC = max(authored_metallic, 0.02);
     float fresnel = 1.0 - max(dot(normalize(NORMAL), normalize(VIEW)), 0.0);
     float rim = pow(fresnel, rim_power) * rim_strength;
-    EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade);
+    // Luminous copper edge is in the existing shader: no new particles,
+    // lights or render passes, and no per-enemy material duplicates.
+    EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade)
+        + vec3(0.90, 0.22, 0.035) * dissolve_edge * 1.1;
     // Imported zombie_basic / zombie_chubby GLTF materials use default OPAQUE
     // alphaMode. Writing ALPHA here incorrectly moves 100+ skinned bodies to
     // the transparent pass, disables depth/shadow behavior and risks sorting.
