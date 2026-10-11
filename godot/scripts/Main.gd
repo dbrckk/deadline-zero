@@ -82,9 +82,9 @@ const BOSS_REVEAL_FOCUS := 0.58
 const BOSS_INTERVAL := 75.0
 const BOSS_RETRY_DELAY := 15.0
 const BOSS_REVEAL_FOV_DELTA := 5.5
-const CAMERA_BASE_HEIGHT := 12.8
-const CAMERA_BASE_TRAIL := 9.15
-const CAMERA_BASE_FOV := 46.0
+const CAMERA_BASE_HEIGHT := 12.0
+const CAMERA_BASE_TRAIL := 8.55
+const CAMERA_BASE_FOV := 45.0
 const CAMERA_LOOK_AHEAD_MAX := 1.25
 const CAMERA_REVEAL_HEIGHT := 14.0
 const CAMERA_REVEAL_TRAIL := 10.4
@@ -741,8 +741,11 @@ func _build_world() -> void:
     env.background_mode = Environment.BG_COLOR
     env.background_color = Color(0.008, 0.014, 0.020)
     env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-    env.ambient_light_color = Color(0.16, 0.27, 0.34)
-    env.ambient_light_energy = 0.72
+    # Real 720p phone captures showed imported survivor/enemy meshes too dark
+    # against blue-black asphalt. Lift diffuse ambient bounce modestly while
+    # keeping the authored warm emergency LEDs and hard key/shadow contrast.
+    env.ambient_light_color = Color(0.20, 0.30, 0.36)
+    env.ambient_light_energy = 0.88
     env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
     env.adjustment_enabled = true
     env.adjustment_brightness = 1.02
@@ -759,7 +762,7 @@ func _build_world() -> void:
     sun.name = "ColdKeyLight"
     sun.rotation_degrees = Vector3(-58.0, -28.0, 0.0)
     sun.light_color = Color(0.70, 0.84, 1.0)
-    sun.light_energy = 1.28
+    sun.light_energy = 1.42
     sun.shadow_enabled = true
     add_child(sun)
 

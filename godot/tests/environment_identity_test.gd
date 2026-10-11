@@ -41,6 +41,29 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # Inspect the actual scene's graded PBR light rig, not an offline concept:
+    # the 720p rendered frame needs visible imported zombie/survivor texture
+    # detail while maintaining low-cost shadow budget and dark arena identity.
+    var key_light := scene.get_node_or_null("ColdKeyLight") as DirectionalLight3D
+    var staging_camera := scene.camera as Camera3D
+    var graded_environment := world_environment.environment
+    if key_light == null or not key_light.shadow_enabled:
+        push_error("Quarantine lost its single authored directional character shadow key")
+        quit(1)
+        return
+    if graded_environment.ambient_light_energy < 0.84 or graded_environment.ambient_light_energy > 1.00:
+        push_error("3D actors must receive bounded diffuse bounce for mobile readability")
+        quit(1)
+        return
+    if key_light.light_energy < 1.35 or key_light.light_energy > 1.60:
+        push_error("Authored actor key intensity escaped bounded night-scene contrast")
+        quit(1)
+        return
+    if staging_camera == null or staging_camera.fov < 44.0 or staging_camera.fov > 46.0:
+        push_error("Phone-scale camera framing is not keeping imported 3D actors readable")
+        quit(1)
+        return
+
     if floor_mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
         push_error("Broad quarantine floor must not waste shadow-caster budget")
         quit(1)
