@@ -7,9 +7,9 @@ Status: active
 - #397–#403 merged (8/8 CI each): bounded gun feedback, 3D XP tiers, predictive muzzle aim, correct large/small body hit silhouettes, opaque varied zombie PBR atlas, actual swept hit FX.
 - #404 merged (8/8 CI): bounded 240-frame debug p95/max ms and hitch percentage for physical Android phone QA.
 - #405 merged (8/8 CI after one legacy emulator retry): real imported GLTF Death clip followed by instance-only opaque dithered copper-edge dissolve; no material duplication or transparent draw pass.
-- #406 open/in full CI: player autoaim uses production spatial hash without allocating the full enemy group; existing aim stability and filtered candidate tests extended.
-- #407 open (Godot, UI, AAB green; Android-runtime outstanding): weighted smooth imported enemy body turning with locked special attack/charge facing.
-- #408 open (Godot rendered capture green; Android outstanding): rebalanced existing key light/ambient and 10% closer camera, lifted authored atlas midtones. Six authentic 1280x720 CI captures from prior revision inspected and compared to newly rendered shots; three comparable scenes gained about 8–12% mean luminance while preserving the dark arena.
+- #406 open (7/8 CI): player autoaim reuses the existing arena spatial hash without allocating the full enemy group; indexed query and dead-candidate tests green; Android emulator job pending.
+- #407 merged (8/8 CI): weighted smooth imported enemy locomotion yaw; special attack windup and committed charger facing remain locked.
+- #408 open (7/8 CI): real image QA confirmed brighter existing key/ambient light and ~10% closer camera with source atlas midtones intact; only Android emulator job pending. Six authentic 1280x720 CI captures from prior revision inspected and compared to newly rendered shots; three comparable scenes gained about 8–12% mean luminance while preserving the dark arena.
 - Scheduled Work Watch #396 confirmed success on real 2026-10-11 schedule.
 
 ## Blockers
@@ -19,7 +19,7 @@ Status: active
 - Play Billing product/license account testing and Play closed-test/store release checklist remain open (#17, #14).
 
 ## Current priorities
-- Complete required eight CI checks for #406/#407/#408 before guarded merges, resolve failures without bypassing quality gates.
+- Complete last Android emulator check for #406/#408, guarded SHA merge if successful; investigate failures without bypassing quality gates.
 - Continue analyzing real rendered Godot 3D evidence and upgrading visual fidelity rather than producing concept mockups.
 - Install native Android build on representative devices; capture p95/worst frame and hitch fraction with new debug telemetry.
 - Validate Play Billing/license lifecycle, process death and publishing gates #14/#16/#17.
@@ -27,7 +27,8 @@ Status: active
 ## Validation
 - #405: real GLTF silhouette/death-shader integration, rendered scene and all eight CI checks passed before merge.
 - #408: rerun of Godot scene and camera-contract tests plus real 1280x720 screenshots passed. Full Android checks not yet concluded.
-- #406/#407: existing Godot integration tests enhanced; status tracked in session-state and GitHub Actions.
+- #407: eight CI checks green and merged, including real imported animation and attack lock integration.
+- #406: Godot integration and Android build/Play AAB/UI green; emulator runtime still active.
 - CI screenshots cannot substitute physical device frame/thermal/touch testing, and brighter image alone does not prove AAA quality.
 
 ## Last verified
