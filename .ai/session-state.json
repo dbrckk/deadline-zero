@@ -94,9 +94,21 @@
       "status": "merged",
       "checks": "8/8 successful",
       "change": "Evidence-reviewed 720p native 3D character lighting, shader midtones and camera framing"
+    },
+    {
+      "pr": 409,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Frame-rate-independent survivor combat/travel facing and real barrel alignment"
+    },
+    {
+      "pr": 410,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Cinematic camera focus and travel lead inertial damping verified 60 vs 120 FPS"
     }
   ],
-  "visual_qa": "Inspected and compared authentic six 1280x720 Godot-rendered frames from CI for #406 baseline and #408 rebalanced lighting/camera. Native authored 3D scene exists; #408 capture first-playable, pressure and roster average luma rose approx 8–12%, more readable character silhouettes; AAA fidelity not yet verified.",
+  "visual_qa": "Reviewed native 1280x720 Godot 3D scene render from #410: real GLTF survivor/zombies and industrial arena rendered (Compatibility renderer), but stylized low-poly assets still fall short of AAA target. Inspected native Android smoke artifact #410: emulator screenshot is entirely black and logcat shows Vulkan present error on llvmpipe; per workflow this diagnostic screenshot is NOT a visual oracle and does NOT prove actual-device failure. Physical Vulkan Android rendering remains unverified.",
   "android_apk": {
     "source_pr": 395,
     "package": "com.deadlinezero.godot",
@@ -105,11 +117,23 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PRs #405–#408 all merged into main after 8/8 successful GitHub Actions checks each; #408 includes real Godot rendered visual comparison. Physical Android frame pacing/thermal/touch and Play Billing/lifecycle remain unverified.",
+  "verification": "#409 and #410 merged after 8/8 successful checks each. #411 and #412 pending Android runtime checks (7/8 each as last observed); old #412 test parse error was fixed on PR branch and Godot verify subsequently passed. Physical Android GPU/frame pacing/billing remain unverified.",
   "next": [
-    "Audit additional actual rendered 3D animation and character materials against premium target",
-    "Measure on physical Android hardware FPS/p95/hitches, heat, touch and battery",
+    "Complete 8/8 CI and merge #411/#412 if successful",
+    "Prioritize replacing/upgrading stylized low-poly survivor/zombie art and 3D environment with higher fidelity authored assets based on actual Godot renders",
+    "Verify native Mobile/Vulkan on real Android hardware; emulator llvmpipe cannot provide visual QA; measure p95/heat/touch",
     "Resolve Play Billing and process death persistence (#16/#17) and Play release testing (#14)"
   ],
-  "in_progress": []
+  "in_progress": [
+    {
+      "pr": 411,
+      "status": "awaiting last Android runtime check",
+      "change": "Rigged zombie death shadows fade independently in shared shader"
+    },
+    {
+      "pr": 412,
+      "status": "awaiting last Android runtime check",
+      "change": "Six weapon-specific muzzle/recoil signatures and shared survivor contact shadow"
+    }
+  ]
 }
