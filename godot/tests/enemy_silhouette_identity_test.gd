@@ -348,6 +348,17 @@ func _initialize() -> void:
         return
     var dying_mesh := dying_meshes[0] as MeshInstance3D
     var living_mesh := living_meshes[0] as MeshInstance3D
+    var dying_shadow := runner_a.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    var living_shadow := runner_b.get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    if dying_shadow == null or living_shadow == null:
+        push_error("Rigged death dissolve must preserve independent contact shadows")
+        quit(1)
+        return
+    var shadow_shader := (dying_shadow.material_override as ShaderMaterial).shader
+    if shadow_shader == null or not shadow_shader.code.contains("instance uniform float death_shadow_opacity"):
+        push_error("Death contact shadows lost their shared-shader per-instance fade")
+        quit(1)
+        return
     var shared_dying_grade := _first_graded_enemy_material(dying_visual)
     if shared_dying_grade == null or shared_dying_grade != _first_graded_enemy_material(living_visual):
         push_error("Lethal damage FX must preserve one shared imported PBR grade")
@@ -366,6 +377,16 @@ func _initialize() -> void:
     await create_timer(0.43).timeout
     var dying_amount := float(dying_mesh.get_instance_shader_parameter("death_dissolve"))
     var living_amount := float(living_mesh.get_instance_shader_parameter("death_dissolve"))
+    var dying_shadow_opacity := float(dying_shadow.get_instance_shader_parameter("death_shadow_opacity"))
+    var living_shadow_opacity := float(living_shadow.get_instance_shader_parameter("death_shadow_opacity"))
+    if dying_shadow_opacity < 0.10 or dying_shadow_opacity > 0.90:
+        push_error("Dying rigged zombie did not fade its ground contact on the death timeline")
+        quit(1)
+        return
+    if absf(living_shadow_opacity - 1.0) > 0.001 or dying_shadow.material_override != living_shadow.material_override:
+        push_error("Death contact fade changed a living zombie or duplicated horde shadow materials")
+        quit(1)
+        return
     if dying_amount < 0.24 or dying_amount > 0.95:
         push_error("Dying GLTF enemy failed to advance per-instance opaque dissolve")
         quit(1)
