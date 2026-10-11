@@ -813,7 +813,16 @@ func _begin_death_dissolve() -> void:
     # dissolve in the existing opaque GLTF shader over the last 0.44 s.
     # One tween per death only; shared atlas and shader materials stay intact.
     var dissolve_tween := create_tween()
+    dissolve_tween.set_parallel(true)
     dissolve_tween.tween_method(_set_death_dissolve, 0.0, 0.97, 0.44).set_delay(0.16)
+    # Fade only this zombie's soft ground contact on the same timeline as
+    # its real rigged GLTF silhouette. Never fade the shared horde material.
+    dissolve_tween.tween_method(_set_death_shadow_opacity, 1.0, 0.0, 0.44).set_delay(0.16)
+
+func _set_death_shadow_opacity(opacity: float) -> void:
+    var shadow := get_node_or_null("EnemyContactShadow") as MeshInstance3D
+    if shadow != null:
+        shadow.set_instance_shader_parameter("death_shadow_opacity", clampf(opacity, 0.0, 1.0))
 
 func _set_death_dissolve(progress: float) -> void:
     if authored_visual == null:
@@ -901,6 +910,7 @@ func _build_contact_shadow() -> void:
     shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
     shadow.material_override = _enemy_contact_shadow_material()
     add_child(shadow)
+    shadow.set_instance_shader_parameter("death_shadow_opacity", 1.0)
 
 func _play_spawn_reveal() -> void:
     var visual := get_node_or_null("Visual") as Node3D
@@ -942,13 +952,14 @@ render_mode unshaded, blend_mix, cull_disabled, depth_draw_never;
 
 uniform vec4 shadow_tint : source_color = vec4(0.006, 0.008, 0.010, 1.0);
 uniform float shadow_opacity : hint_range(0.0, 0.6) = 0.35;
+instance uniform float death_shadow_opacity = 1.0;
 
 void fragment() {
     vec2 disk_uv = (UV - vec2(0.5)) * 2.0;
     float radius = length(disk_uv);
     float feather = 1.0 - smoothstep(0.18, 1.0, radius);
     ALBEDO = shadow_tint.rgb;
-    ALPHA = feather * feather * shadow_opacity;
+    ALPHA = feather * feather * shadow_opacity * death_shadow_opacity;
 }
 """
     _shared_contact_shadow_material = ShaderMaterial.new()
