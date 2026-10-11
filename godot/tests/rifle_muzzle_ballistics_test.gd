@@ -81,5 +81,48 @@ func _run_test() -> void:
                 projectile.queue_free()
             await process_frame
 
-    print("Deadline Zero rifle muzzle ballistics: OK (six protocols, three bearings, 54 shots)")
+    # The same production firing path must lead a live lateral runner, while
+    # a rooted enemy with a stale physics velocity must still be shot directly.
+    enemy.global_position = Vector3(8.0, 0.0, -5.0)
+    survivor.look_at(enemy.global_position, Vector3.UP)
+    enemy.velocity = Vector3(0.0, 0.0, 3.7)
+    survivor.multishot = 1
+    survivor.weapon_profile = "vanguard"
+    survivor._fire_at(enemy)
+    var moving_shots := get_nodes_in_group("projectiles")
+    if moving_shots.size() != 1:
+        push_error("Moving-target firing produced an unexpected projectile count")
+        quit(1)
+        return
+    var moving_shot := moving_shots[0] as DZProjectile
+    moving_shot.process_mode = Node.PROCESS_MODE_DISABLED
+    var direct_offset := enemy.global_position - moving_shot.global_position
+    direct_offset.y = 0.0
+    var future_offset := direct_offset + enemy.velocity * 0.35
+    var aimed_direction := moving_shot.velocity.normalized()
+    if aimed_direction.dot(future_offset.normalized()) <= direct_offset.normalized().dot(future_offset.normalized()) + 0.0001:
+        push_error("Auto-fire did not lead the lateral moving target")
+        quit(1)
+        return
+    moving_shot.queue_free()
+    await process_frame
+
+    enemy.attack_windup = 0.3
+    survivor._fire_at(enemy)
+    var rooted_shots := get_nodes_in_group("projectiles")
+    if rooted_shots.size() != 1:
+        push_error("Rooted-target firing produced an unexpected projectile count")
+        quit(1)
+        return
+    var rooted_shot := rooted_shots[0] as DZProjectile
+    rooted_shot.process_mode = Node.PROCESS_MODE_DISABLED
+    var rooted_offset := enemy.global_position - rooted_shot.global_position
+    rooted_offset.y = 0.0
+    if rooted_shot.velocity.normalized().distance_to(rooted_offset.normalized()) > 0.001:
+        push_error("Auto-fire incorrectly led a stationary attack-windup enemy")
+        quit(1)
+        return
+    rooted_shot.queue_free()
+
+    print("Deadline Zero rifle muzzle ballistics: OK (six protocols, three bearings, moving and rooted targets)")
     quit(0)
