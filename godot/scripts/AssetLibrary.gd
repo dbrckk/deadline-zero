@@ -380,7 +380,10 @@ void fragment() {
     // Keep the real Quaternius texture atlas. Vary only final PBR grade on
     // each mesh, not its shared authored material or skeletal animation.
     vec3 weathering_tint = mix(vec3(0.89, 0.96, 1.06), vec3(1.08, 0.96, 0.84), wear_grade);
-    ALBEDO = base * compression * weathering_tint;
+    // Keep authored atlas/roughness detail but lift dark textured mid-tones:
+    // 720p production captures left too little separation from industrial floor.
+    // This adds no lights, shader permutations, or transparent surfaces.
+    ALBEDO = min(base * compression * weathering_tint * 1.10, vec3(0.90));
     ROUGHNESS = clamp(max(authored_roughness, 0.82) + (0.5 - wear_grade) * 0.08, 0.78, 0.98);
     METALLIC = max(authored_metallic, 0.02);
     float fresnel = 1.0 - max(dot(normalize(NORMAL), normalize(VIEW)), 0.0);
