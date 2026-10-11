@@ -64,6 +64,12 @@
       "status": "merged",
       "checks": "8/8 successful",
       "change": "Project real 3D hit flare onto swept entry of actual enemy shootable silhouette"
+    },
+    {
+      "pr": 404,
+      "status": "merged",
+      "checks": "8/8 successful after targeted Android runtime job rerun",
+      "change": "Real Godot debug p95/max frame time and >33.33ms hitch telemetry in 240-frame bounded samples"
     }
   ],
   "visual_qa": "Inspected six Godot-rendered frames; authentic 3D production scene exists but not yet AAA-quality",
@@ -75,27 +81,34 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PRs #402 and #403: all eight CI checks green and merged. #404 Godot tests and 7/8 checks passed; legacy libGDX emulator 160-enemy stress test failed with <5 fps, single-job rerun underway; do not merge until green. #405 full CI launched. Physical Android FPS/thermal, Play Billing and process lifecycle still unverified.",
+  "verification": "#404 merged on eight green checks after targeted Android emulator stress rerun; original stress failed under transient emulator load. #405 Godot, AAB and UI green, 7/8 CI, legacy Android stress rerun active. #406/#407 full CI pending. Physical phone heat/p95/touch, Billing/license and lifecycle still unverified.",
   "next": [
-    "Verify #404 single-job emulator rerun: merge only when all checks succeed, investigate persistent FPS failure otherwise",
-    "Verify #405 actual GLTF death fade runtime and render CI, merge only when 8/8 checks pass",
-    "Review additional actual 3D imported animation/texture quality using rendered evidence",
-    "Measure phone FPS p95/hitches, heat, touch and Play Billing/license tests; resolve Play release issues #14, #16, #17"
+    "Close #405 only once the Android emulator rerun succeeds; do not lower performance assertions",
+    "Validate #406 indexed autoaim and #407 rigged enemy turn test in full Godot and Android CI before merge",
+    "Review true rendered GLTF 3D screenshots, material, gait and gameplay feel; run phone FPS/p95/hitch/thermal QA",
+    "Resolve #14/#16/#17 physical-device Play Billing, lifecycle and Play Store release gates"
   ],
   "in_progress": [
     {
-      "pr": 404,
-      "status": "open",
-      "branch": "perf/godot-debug-frame-pacing-probe",
-      "head_sha": "7600badd314e7f867ff0aa0469387e26443939bc",
-      "change": "Real debug frame p95/max/hitch% instrumentation; first CI Android stress test failed on emulator FPS while Godot/7 others passed; single-job rerun in progress"
-    },
-    {
       "pr": 405,
-      "status": "open",
+      "status": "open / Android runtime rerun",
       "branch": "feat/godot-opaque-enemy-death-dissolve",
       "head_sha": "d5849489bbb8364279909cf631a177dc073e948a",
-      "change": "Actual rigged GLTF death animation, then opaque per-instance copper-edge dither instead of pop-out; 3D CI pending"
+      "change": "Actual rigged GLTF Death clips transitioning to per-instance opaque PBR dissolve; Godot and 7/8 CI passed, legacy Android stress rerun underway"
+    },
+    {
+      "pr": 406,
+      "status": "open / CI",
+      "branch": "perf/godot-player-spatial-autoaim",
+      "head_sha": "c77b3d4c33c9bf815ebc46756c49509d859a811d",
+      "change": "Reuse production arena enemy spatial index for nearest-player autoaim with standalone scene fallback"
+    },
+    {
+      "pr": 407,
+      "status": "open / CI",
+      "branch": "feat/godot-weighted-archetype-turning",
+      "head_sha": "eaf6c8f214fb6e92f7d2c86be60d2189efebb5bb",
+      "change": "Framerate-independent weighted 3D enemy locomotion turning while attacks/charges retain exact warning lock"
     }
   ]
 }
