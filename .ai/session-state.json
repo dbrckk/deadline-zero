@@ -76,6 +76,12 @@
       "status": "merged",
       "checks": "8/8 successful after targeted legacy Android emulator rerun",
       "change": "Authentic GLTF enemy Death clip with instance-only opaque copper edge dissolve"
+    },
+    {
+      "pr": 407,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Weighty framerate-independent rigged 3D enemy turning with attack windup/charge yaw locks intact"
     }
   ],
   "visual_qa": "Inspected and compared authentic six 1280x720 Godot-rendered frames from CI for #406 baseline and #408 rebalanced lighting/camera. Native authored 3D scene exists; #408 capture first-playable, pressure and roster average luma rose approx 8–12%, more readable character silhouettes; AAA fidelity not yet verified.",
@@ -87,12 +93,12 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "#404/#405 8/8 CI and merged. #406 second SHA now avoids even allocating full enemy group on indexed path; full CI rerun. #407 Godot enemy turn and Android build AAB/UI passed, runtime pending. #408 revised camera-contract Godot rendered screenshots passed, other Android checks pending. Physical phone FPS/thermal/Billing/process lifecycle remain unverified.",
+  "verification": "#404/#405/#407 merged after 8/8 CI. #406 amended indexed autoaim and #408 visually QA-verified Godot lighting/camera have 7/8 green; Android-runtime still in progress on both. Before/after 1280x720 real render capture has ~8–12% higher average scene luminance and larger 3D characters, not an AAA certification. Device QA/Billing/lifecycle unverified.",
   "next": [
-    "Close #406 indexed autoaim and #407 weighted locomotion only after full 8/8 CI, guarded head SHA merges",
-    "Assess #408 before/after real 1280x720 screenshots and merge only after full 8/8 green",
-    "Conduct physical Android performance (p95/hitch), heat, touch, readability QA",
-    "Resolve Play Billing license, process death and Play Store issues #14/#16/#17"
+    "Merge #406 and #408 only if their last Android emulator jobs succeed; otherwise review logs and fix",
+    "Use CI before/after Godot screenshots and improve real imported 3D art/models and HUD readability without replacing with 2D mockups",
+    "Run physical Android p95/hitch, thermal, input responsiveness tests",
+    "Close Play Billing/license and process-lifecycle/store gates #14/#16/#17"
   ],
   "in_progress": [
     {
@@ -101,13 +107,6 @@
       "branch": "perf/godot-player-spatial-autoaim",
       "head_sha": "91275b2590bcae2893fb4b3c91711ba48d599bb0",
       "change": "Reuse arena spatial query with no whole-group allocation, preserve aim stickiness and dead-target filtering"
-    },
-    {
-      "pr": 407,
-      "status": "open / Android-runtime CI",
-      "branch": "feat/godot-weighted-archetype-turning",
-      "head_sha": "eaf6c8f214fb6e92f7d2c86be60d2189efebb5bb",
-      "change": "Smooth runner, standard, heavy and boss 3D facing without interfering with telegraphed attacks or committed charges"
     },
     {
       "pr": 408,
