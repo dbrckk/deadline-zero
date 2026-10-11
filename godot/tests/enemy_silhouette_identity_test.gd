@@ -95,8 +95,9 @@ func _initialize() -> void:
     # Integration budget: independent horde spawns must share their immutable
     # imported surface grade. Different enemy archetypes must keep unique
     # color/roughness/rim parameters and never share the same material.
-    var runner_copy_a := DZAssetLibrary.enemy("runner")
-    var runner_copy_b := DZAssetLibrary.enemy("runner")
+    # Two real imported bodies: shared atlas/shader, separate PBR wear grades.
+    var runner_copy_a := DZAssetLibrary.enemy("runner", 0)
+    var runner_copy_b := DZAssetLibrary.enemy("runner", 6)
     var brute_copy := DZAssetLibrary.enemy("brute")
     if runner_copy_a == null or runner_copy_b == null or brute_copy == null:
         push_error("Cannot instantiate enemy materials for horde sharing check")
@@ -115,6 +116,32 @@ func _initialize() -> void:
         return
     if runner_grade_a == brute_grade:
         push_error("Different enemy archetypes must preserve distinct palette materials")
+        quit(1)
+        return
+    # Both source zombie GLTF materials use implicit alphaMode=OPAQUE. Writing
+    # ALPHA forces the expensive transparent pass and breaks reliable depth.
+    if runner_grade_a.shader.code.contains("ALPHA ="):
+        push_error("Authored opaque zombie atlases incorrectly render in the transparent pipeline")
+        quit(1)
+        return
+    if not runner_grade_a.shader.code.contains("instance uniform float wear_grade"):
+        push_error("Zombie shader lost material-sharing per-instance weathering")
+        quit(1)
+        return
+    var runner_mesh_a := runner_copy_a.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+    var runner_mesh_b := runner_copy_b.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+    if runner_mesh_a == null or runner_mesh_b == null:
+        push_error("No real imported mesh for per-body wear grading")
+        quit(1)
+        return
+    var wear_a := float(runner_mesh_a.get_instance_shader_parameter("wear_grade"))
+    var wear_b := float(runner_mesh_b.get_instance_shader_parameter("wear_grade"))
+    if absf(wear_a) > 0.001 or absf(wear_b - 1.0) > 0.001:
+        push_error("Independent zombie meshes cannot retain their own wear grades")
+        quit(1)
+        return
+    if runner_grade_a != runner_grade_b or runner_mesh_a.mesh != runner_mesh_b.mesh:
+        push_error("Per-instance wear grade must not duplicate a shader material or authored mesh")
         quit(1)
         return
     runner_copy_a.free()

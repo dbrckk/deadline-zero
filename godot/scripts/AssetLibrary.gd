@@ -46,7 +46,7 @@ static func player() -> Node3D:
     _grade_mesh_tree(root, Color(0.74, 0.82, 0.86), 0.78, 0.02)
     return root
 
-static func enemy(kind: String) -> Node3D:
+static func enemy(kind: String, wear_seed: int = 3) -> Node3D:
     var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite", "boss"] else ZOMBIE_BASIC)
     var tint := Color(0.46, 0.58, 0.48)
     match kind:
@@ -58,6 +58,7 @@ static func enemy(kind: String) -> Node3D:
         "elite": tint = Color(0.54, 0.42, 0.70)
         "boss": tint = Color(0.68, 0.42, 0.26)
     _grade_enemy_mesh_tree(root, tint, kind)
+    _apply_enemy_wear_grade(root, wear_seed)
     return root
 
 static func rifle() -> Node3D:
@@ -253,6 +254,18 @@ static func _add_barrier_hazard_signature(root: Node3D) -> void:
         strip.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         root.add_child(strip)
 
+# Changing the instance uniform keeps one atlas shader material per enemy type.
+# Seven small cool-to-warm grime grades prevent an entire mobile horde from
+# looking cloned, with zero duplicate textures, materials, meshes or lights.
+static func _apply_enemy_wear_grade(root: Node3D, seed: int) -> void:
+    if root == null:
+        return
+    var wear_grade := float(posmod(seed, 7)) / 6.0
+    if root is MeshInstance3D:
+        (root as MeshInstance3D).set_instance_shader_parameter("wear_grade", wear_grade)
+    for node in root.find_children("*", "MeshInstance3D", true, false):
+        (node as MeshInstance3D).set_instance_shader_parameter("wear_grade", wear_grade)
+
 static func _grade_enemy_mesh_tree(root: Node3D, tint: Color, kind := "shambler") -> void:
     if root == null:
         return
@@ -357,19 +370,25 @@ uniform float authored_roughness = 0.84;
 uniform float authored_metallic = 0.02;
 uniform float rim_strength = 0.11;
 uniform float rim_power = 3.4;
+instance uniform float wear_grade = 0.5;
 
 void fragment() {
     vec4 authored = texture(albedo_tex, UV);
     vec3 base = authored.rgb * body_tint.rgb;
     float luma = dot(base, vec3(0.2126, 0.7152, 0.0722));
     float compression = mix(1.0, highlight_floor, smoothstep(highlight_start, highlight_end, luma));
-    ALBEDO = base * compression;
-    ROUGHNESS = max(authored_roughness, 0.82);
+    // Keep the real Quaternius texture atlas. Vary only final PBR grade on
+    // each mesh, not its shared authored material or skeletal animation.
+    vec3 weathering_tint = mix(vec3(0.89, 0.96, 1.06), vec3(1.08, 0.96, 0.84), wear_grade);
+    ALBEDO = base * compression * weathering_tint;
+    ROUGHNESS = clamp(max(authored_roughness, 0.82) + (0.5 - wear_grade) * 0.08, 0.78, 0.98);
     METALLIC = max(authored_metallic, 0.02);
     float fresnel = 1.0 - max(dot(normalize(NORMAL), normalize(VIEW)), 0.0);
     float rim = pow(fresnel, rim_power) * rim_strength;
-    EMISSION = body_tint.rgb * rim;
-    ALPHA = authored.a * body_tint.a;
+    EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade);
+    // Imported zombie_basic / zombie_chubby GLTF materials use default OPAQUE
+    // alphaMode. Writing ALPHA here incorrectly moves 100+ skinned bodies to
+    // the transparent pass, disables depth/shadow behavior and risks sorting.
     if (use_normal_map) {
         NORMAL_MAP = texture(normal_tex, UV).rgb;
         NORMAL_MAP_DEPTH = normal_scale;
