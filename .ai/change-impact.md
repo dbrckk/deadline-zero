@@ -1,10 +1,9 @@
 # Change impact
 
-Base: a66b27b41eff1b6b481f5a43c6c869556f4e56c9
-Head: c8281cb6cbc20fdbc7639b60affd02d768004f64
+Base: 6f38ebe53e9a6b5357066d1096e83133bc60d026
+Head: f9ec8b107f4c9a52eb23fe2b91e1172cb4ac6f00
 
 ## Changed files
-- M godot/scripts/Enemy.gd
 - M godot/scripts/Projectile.gd
 - M godot/tests/weapon_protocol_behavior_test.gd
 

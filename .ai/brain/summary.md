@@ -2,11 +2,11 @@
 
 - Index mode: incremental
 - Files indexed: 572
-- Files reparsed this run: 3
-- Symbols: 3126
+- Files reparsed this run: 5
+- Symbols: 3127
 - Internal import edges: 808
-- Impacted files: 63
-- Selected tests: 38
+- Impacted files: 65
+- Selected tests: 39
 
 ## Languages
 - java: 422 files
@@ -31,8 +31,8 @@
 - core/src/main/java/com/deadlinezero/game/visual/HighResDirectionalBootstrapArt.java: 28 symbols
 - core/src/main/java/com/deadlinezero/game/progression/LegendaryState.java: 26 symbols
 - core/src/main/java/com/deadlinezero/game/screen/ArsenalScreen.java: 26 symbols
+- godot/scripts/Projectile.gd: 26 symbols
 - core/src/main/java/com/deadlinezero/game/visual/CombatPolishController.java: 25 symbols
-- godot/scripts/Projectile.gd: 25 symbols
 - core/src/main/java/com/deadlinezero/game/meta/PlayerProfile.java: 24 symbols
 
 ## Agent routing

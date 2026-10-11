@@ -321,7 +321,7 @@ static func player() -> Node3D:
     _grade_mesh_tree(root, Color(0.74, 0.82, 0.86), 0.78, 0.02)
     return root
 
-static func enemy(kind: String) -> Node3D:
+static func enemy(kind: String, wear_seed: int = 3) -> Node3D:
     var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite", "boss"] else ZOMBIE_BASIC)
     var tint := Color(0.46, 0.58, 0.48)
     match kind:
@@ -333,6 +333,7 @@ static func enemy(kind: String) -> Node3D:
         "elite": tint = Color(0.54, 0.42, 0.70)
         "boss": tint = Color(0.68, 0.42, 0.26)
     _grade_enemy_mesh_tree(root, tint, kind)
+    _apply_enemy_wear_grade(root, wear_seed)
     return root
 
 static func rifle() -> Node3D:
@@ -528,6 +529,18 @@ static func _add_barrier_hazard_signature(root: Node3D) -> void:
         strip.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         root.add_child(strip)
 
+# Changing the instance uniform keeps one atlas shader material per enemy type.
+# Seven small cool-to-warm grime grades prevent an entire mobile horde from
+# looking cloned, with zero duplicate textures, materials, meshes or lights.
+static func _apply_enemy_wear_grade(root: Node3D, seed: int) -> void:
+    if root == null:
+        return
+    var wear_grade := float(posmod(seed, 7)) / 6.0
+    if root is MeshInstance3D:
+        (root as MeshInstance3D).set_instance_shader_parameter("wear_grade", wear_grade)
+    for node in root.find_children("*", "MeshInstance3D", true, false):
+        (node as MeshInstance3D).set_instance_shader_parameter("wear_grade", wear_grade)
+
 static func _grade_enemy_mesh_tree(root: Node3D, tint: Color, kind := "shambler") -> void:
     if root == null:
         return
@@ -632,19 +645,25 @@ uniform float authored_roughness = 0.84;
 uniform float authored_metallic = 0.02;
 uniform float rim_strength = 0.11;
 uniform float rim_power = 3.4;
+instance uniform float wear_grade = 0.5;
 
 void fragment() {
     vec4 authored = texture(albedo_tex, UV);
     vec3 base = authored.rgb * body_tint.rgb;
     float luma = dot(base, vec3(0.2126, 0.7152, 0.0722));
     float compression = mix(1.0, highlight_floor, smoothstep(highlight_start, highlight_end, luma));
-    ALBEDO = base * compression;
-    ROUGHNESS = max(authored_roughness, 0.82);
+    // Keep the real Quaternius texture atlas. Vary only final PBR grade on
+    // each mesh, not its shared authored material or skeletal animation.
+    vec3 weathering_tint = mix(vec3(0.89, 0.96, 1.06), vec3(1.08, 0.96, 0.84), wear_grade);
+    ALBEDO = base * compression * weathering_tint;
+    ROUGHNESS = clamp(max(authored_roughness, 0.82) + (0.5 - wear_grade) * 0.08, 0.78, 0.98);
     METALLIC = max(authored_metallic, 0.02);
     float fresnel = 1.0 - max(dot(normalize(NORMAL), normalize(VIEW)), 0.0);
     float rim = pow(fresnel, rim_power) * rim_strength;
-    EMISSION = body_tint.rgb * rim;
-    ALPHA = authored.a * body_tint.a;
+    EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade);
+    // Imported zombie_basic / zombie_chubby GLTF materials use default OPAQUE
+    // alphaMode. Writing ALPHA here incorrectly moves 100+ skinned bodies to
+    // the transparent pass, disables depth/shadow behavior and risks sorting.
     if (use_normal_map) {
         NORMAL_MAP = texture(normal_tex, UV).rgb;
         NORMAL_MAP_DEPTH = normal_scale;
@@ -2251,7 +2270,9 @@ func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     tween.chain().tween_callback(number.queue_free)
 
 func _build_visual() -> void:
-    authored_visual = DZAssetLibrary.enemy(kind)
+    # Seven subtle per-body PBR grades break up cloned horde silhouettes while
+    # every imported atlas material stays shared across the entire swarm.
+    authored_visual = DZAssetLibrary.enemy(kind, int(get_instance_id()))
     if authored_visual != null:
         authored_visual.name = "Visual"
         var scale_factor := 1.0
@@ -7264,10 +7285,13 @@ func _physics_process(delta: float) -> void:
             continue
         var critical := randf() < critical_chance
         var dealt_damage := damage * (1.75 if critical else 1.0)
+        # World-space VFX must land where the swept shot first entered the
+        # visible 3D target footprint, not in the enemy's arbitrary center.
+        var impact_point := _swept_contact_point(previous_position, global_position, enemy)
         hit_enemy_ids[enemy.get_instance_id()] = true
         enemy.take_damage(dealt_damage, critical)
         _apply_protocol_hit(enemy, dealt_damage)
-        _impact(critical, enemy.global_position + Vector3(0.0, 0.55, 0.0))
+        _impact(critical, impact_point)
         if visual_profile == "rail" and pierce_remaining > 0:
             pierce_remaining -= 1
             continue
@@ -7303,6 +7327,28 @@ func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
         if miss.length_squared() <= effective_hit_radius * effective_hit_radius:
             result.append(enemy)
     return result
+
+func _swept_contact_point(from: Vector3, to: Vector3, enemy: DZEnemy) -> Vector3:
+    # Solve the first 2D segment/circle intersection once per actual hit.
+    # No RayCast3D, physics shape, collision object or extra hash query.
+    var center := Vector2(enemy.global_position.x, enemy.global_position.z)
+    var origin := Vector2(from.x, from.z)
+    var travel := Vector2(to.x - from.x, to.z - from.z)
+    var effective_radius := maxf(radius, enemy.projectile_hit_radius())
+    var a := travel.length_squared()
+    var contact_t := 0.0
+    if a > 0.000001:
+        var offset := origin - center
+        var b := 2.0 * offset.dot(travel)
+        var c := offset.length_squared() - effective_radius * effective_radius
+        if c > 0.0:
+            var discriminant := b * b - 4.0 * a * c
+            # Candidates have already passed the sweep; guard tiny negative
+            # floating-point drift at near-tangent contacts.
+            contact_t = clampf((-b - sqrt(maxf(discriminant, 0.0))) / (2.0 * a), 0.0, 1.0)
+    var contact := from.lerp(to, contact_t)
+    contact.y = enemy.global_position.y + 0.55
+    return contact
 
 func _candidate_enemies() -> Array:
     return _enemies_near(global_position, maxf(radius, DZEnemy.MAX_PROJECTILE_HIT_RADIUS))
@@ -10358,8 +10404,9 @@ func _initialize() -> void:
     # Integration budget: independent horde spawns must share their immutable
     # imported surface grade. Different enemy archetypes must keep unique
     # color/roughness/rim parameters and never share the same material.
-    var runner_copy_a := DZAssetLibrary.enemy("runner")
-    var runner_copy_b := DZAssetLibrary.enemy("runner")
+    # Two real imported bodies: shared atlas/shader, separate PBR wear grades.
+    var runner_copy_a := DZAssetLibrary.enemy("runner", 0)
+    var runner_copy_b := DZAssetLibrary.enemy("runner", 6)
     var brute_copy := DZAssetLibrary.enemy("brute")
     if runner_copy_a == null or runner_copy_b == null or brute_copy == null:
         push_error("Cannot instantiate enemy materials for horde sharing check")
@@ -10378,6 +10425,32 @@ func _initialize() -> void:
         return
     if runner_grade_a == brute_grade:
         push_error("Different enemy archetypes must preserve distinct palette materials")
+        quit(1)
+        return
+    # Both source zombie GLTF materials use implicit alphaMode=OPAQUE. Writing
+    # ALPHA forces the expensive transparent pass and breaks reliable depth.
+    if runner_grade_a.shader.code.contains("ALPHA ="):
+        push_error("Authored opaque zombie atlases incorrectly render in the transparent pipeline")
+        quit(1)
+        return
+    if not runner_grade_a.shader.code.contains("instance uniform float wear_grade"):
+        push_error("Zombie shader lost material-sharing per-instance weathering")
+        quit(1)
+        return
+    var runner_mesh_a := runner_copy_a.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+    var runner_mesh_b := runner_copy_b.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+    if runner_mesh_a == null or runner_mesh_b == null:
+        push_error("No real imported mesh for per-body wear grading")
+        quit(1)
+        return
+    var wear_a := float(runner_mesh_a.get_instance_shader_parameter("wear_grade"))
+    var wear_b := float(runner_mesh_b.get_instance_shader_parameter("wear_grade"))
+    if absf(wear_a) > 0.001 or absf(wear_b - 1.0) > 0.001:
+        push_error("Independent zombie meshes cannot retain their own wear grades")
+        quit(1)
+        return
+    if runner_grade_a != runner_grade_b or runner_mesh_a.mesh != runner_mesh_b.mesh:
+        push_error("Per-instance wear grade must not duplicate a shader material or authored mesh")
         quit(1)
         return
     runner_copy_a.free()
@@ -15878,9 +15951,31 @@ func _initialize() -> void:
         quit(1)
         return
 
-    var impact_anchor := sweep_enemy.global_position + Vector3(0.0, 0.55, 0.0)
-    if impact_anchor.distance_to(sweep_enemy.global_position) < 0.50:
-        push_error("Swept hit impact anchor lost its readable vertical offset")
+    # Visual feedback must appear at the physical segment/footprint entry,
+    # not deep inside the zombie or at its center when grazing the boss.
+    var shot_from := Vector3.ZERO
+    var shot_to := Vector3(0.0, 0.0, -0.80)
+    var shambler_contact := swept_projectile._swept_contact_point(shot_from, shot_to, sweep_enemy)
+    if absf(shambler_contact.z + 0.21) > 0.015 or absf(shambler_contact.y - 0.55) > 0.001:
+        push_error("Swept shot FX was not anchored to the first shambler silhouette entry")
+        quit(1)
+        return
+
+    var boss_contact := swept_projectile._swept_contact_point(shot_from, shot_to, broad_boss)
+    var boss_offset := Vector2(boss_contact.x - broad_boss.global_position.x, boss_contact.z - broad_boss.global_position.z)
+    if absf(boss_offset.length() - broad_boss.projectile_hit_radius()) > 0.015:
+        push_error("Grazing boss FX did not touch the actual large silhouette boundary")
+        quit(1)
+        return
+    if boss_contact.z > shot_from.z + 0.001 or boss_contact.z < shot_to.z - 0.001:
+        push_error("Grazing boss FX escaped its swept projectile frame")
+        quit(1)
+        return
+    var inside_contact := swept_projectile._swept_contact_point(
+        broad_boss.global_position, broad_boss.global_position + Vector3.FORWARD * 0.3, broad_boss
+    )
+    if inside_contact.distance_to(broad_boss.global_position + Vector3(0.0, 0.55, 0.0)) > 0.001:
+        push_error("Shots originating inside a large enemy must use the current contact point")
         quit(1)
         return
 

@@ -24583,7 +24583,7 @@ static func player() -> Node3D:
     _grade_mesh_tree(root, Color(0.74, 0.82, 0.86), 0.78, 0.02)
     return root
 
-static func enemy(kind: String) -> Node3D:
+static func enemy(kind: String, wear_seed: int = 3) -> Node3D:
     var root := instantiate_scene(ZOMBIE_CHUBBY if kind in ["brute", "elite", "boss"] else ZOMBIE_BASIC)
     var tint := Color(0.46, 0.58, 0.48)
     match kind:
@@ -24595,6 +24595,7 @@ static func enemy(kind: String) -> Node3D:
         "elite": tint = Color(0.54, 0.42, 0.70)
         "boss": tint = Color(0.68, 0.42, 0.26)
     _grade_enemy_mesh_tree(root, tint, kind)
+    _apply_enemy_wear_grade(root, wear_seed)
     return root
 
 static func rifle() -> Node3D:
@@ -24790,6 +24791,18 @@ static func _add_barrier_hazard_signature(root: Node3D) -> void:
         strip.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         root.add_child(strip)
 
+# Changing the instance uniform keeps one atlas shader material per enemy type.
+# Seven small cool-to-warm grime grades prevent an entire mobile horde from
+# looking cloned, with zero duplicate textures, materials, meshes or lights.
+static func _apply_enemy_wear_grade(root: Node3D, seed: int) -> void:
+    if root == null:
+        return
+    var wear_grade := float(posmod(seed, 7)) / 6.0
+    if root is MeshInstance3D:
+        (root as MeshInstance3D).set_instance_shader_parameter("wear_grade", wear_grade)
+    for node in root.find_children("*", "MeshInstance3D", true, false):
+        (node as MeshInstance3D).set_instance_shader_parameter("wear_grade", wear_grade)
+
 static func _grade_enemy_mesh_tree(root: Node3D, tint: Color, kind := "shambler") -> void:
     if root == null:
         return
@@ -24894,19 +24907,25 @@ uniform float authored_roughness = 0.84;
 uniform float authored_metallic = 0.02;
 uniform float rim_strength = 0.11;
 uniform float rim_power = 3.4;
+instance uniform float wear_grade = 0.5;
 
 void fragment() {
     vec4 authored = texture(albedo_tex, UV);
     vec3 base = authored.rgb * body_tint.rgb;
     float luma = dot(base, vec3(0.2126, 0.7152, 0.0722));
     float compression = mix(1.0, highlight_floor, smoothstep(highlight_start, highlight_end, luma));
-    ALBEDO = base * compression;
-    ROUGHNESS = max(authored_roughness, 0.82);
+    // Keep the real Quaternius texture atlas. Vary only final PBR grade on
+    // each mesh, not its shared authored material or skeletal animation.
+    vec3 weathering_tint = mix(vec3(0.89, 0.96, 1.06), vec3(1.08, 0.96, 0.84), wear_grade);
+    ALBEDO = base * compression * weathering_tint;
+    ROUGHNESS = clamp(max(authored_roughness, 0.82) + (0.5 - wear_grade) * 0.08, 0.78, 0.98);
     METALLIC = max(authored_metallic, 0.02);
     float fresnel = 1.0 - max(dot(normalize(NORMAL), normalize(VIEW)), 0.0);
     float rim = pow(fresnel, rim_power) * rim_strength;
-    EMISSION = body_tint.rgb * rim;
-    ALPHA = authored.a * body_tint.a;
+    EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade);
+    // Imported zombie_basic / zombie_chubby GLTF materials use default OPAQUE
+    // alphaMode. Writing ALPHA here incorrectly moves 100+ skinned bodies to
+    // the transparent pass, disables depth/shadow behavior and risks sorting.
     if (use_normal_map) {
         NORMAL_MAP = texture(normal_tex, UV).rgb;
         NORMAL_MAP_DEPTH = normal_scale;
@@ -26513,7 +26532,9 @@ func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     tween.chain().tween_callback(number.queue_free)
 
 func _build_visual() -> void:
-    authored_visual = DZAssetLibrary.enemy(kind)
+    # Seven subtle per-body PBR grades break up cloned horde silhouettes while
+    # every imported atlas material stays shared across the entire swarm.
+    authored_visual = DZAssetLibrary.enemy(kind, int(get_instance_id()))
     if authored_visual != null:
         authored_visual.name = "Visual"
         var scale_factor := 1.0
@@ -31526,10 +31547,13 @@ func _physics_process(delta: float) -> void:
             continue
         var critical := randf() < critical_chance
         var dealt_damage := damage * (1.75 if critical else 1.0)
+        # World-space VFX must land where the swept shot first entered the
+        # visible 3D target footprint, not in the enemy's arbitrary center.
+        var impact_point := _swept_contact_point(previous_position, global_position, enemy)
         hit_enemy_ids[enemy.get_instance_id()] = true
         enemy.take_damage(dealt_damage, critical)
         _apply_protocol_hit(enemy, dealt_damage)
-        _impact(critical, enemy.global_position + Vector3(0.0, 0.55, 0.0))
+        _impact(critical, impact_point)
         if visual_profile == "rail" and pierce_remaining > 0:
             pierce_remaining -= 1
             continue
@@ -31565,6 +31589,28 @@ func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
         if miss.length_squared() <= effective_hit_radius * effective_hit_radius:
             result.append(enemy)
     return result
+
+func _swept_contact_point(from: Vector3, to: Vector3, enemy: DZEnemy) -> Vector3:
+    # Solve the first 2D segment/circle intersection once per actual hit.
+    # No RayCast3D, physics shape, collision object or extra hash query.
+    var center := Vector2(enemy.global_position.x, enemy.global_position.z)
+    var origin := Vector2(from.x, from.z)
+    var travel := Vector2(to.x - from.x, to.z - from.z)
+    var effective_radius := maxf(radius, enemy.projectile_hit_radius())
+    var a := travel.length_squared()
+    var contact_t := 0.0
+    if a > 0.000001:
+        var offset := origin - center
+        var b := 2.0 * offset.dot(travel)
+        var c := offset.length_squared() - effective_radius * effective_radius
+        if c > 0.0:
+            var discriminant := b * b - 4.0 * a * c
+            # Candidates have already passed the sweep; guard tiny negative
+            # floating-point drift at near-tangent contacts.
+            contact_t = clampf((-b - sqrt(maxf(discriminant, 0.0))) / (2.0 * a), 0.0, 1.0)
+    var contact := from.lerp(to, contact_t)
+    contact.y = enemy.global_position.y + 0.55
+    return contact
 
 func _candidate_enemies() -> Array:
     return _enemies_near(global_position, maxf(radius, DZEnemy.MAX_PROJECTILE_HIT_RADIUS))
