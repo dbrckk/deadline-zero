@@ -135,9 +135,31 @@ func _initialize() -> void:
         quit(1)
         return
 
-    var impact_anchor := sweep_enemy.global_position + Vector3(0.0, 0.55, 0.0)
-    if impact_anchor.distance_to(sweep_enemy.global_position) < 0.50:
-        push_error("Swept hit impact anchor lost its readable vertical offset")
+    # Visual feedback must appear at the physical segment/footprint entry,
+    # not deep inside the zombie or at its center when grazing the boss.
+    var shot_from := Vector3.ZERO
+    var shot_to := Vector3(0.0, 0.0, -0.80)
+    var shambler_contact := swept_projectile._swept_contact_point(shot_from, shot_to, sweep_enemy)
+    if absf(shambler_contact.z + 0.21) > 0.015 or absf(shambler_contact.y - 0.55) > 0.001:
+        push_error("Swept shot FX was not anchored to the first shambler silhouette entry")
+        quit(1)
+        return
+
+    var boss_contact := swept_projectile._swept_contact_point(shot_from, shot_to, broad_boss)
+    var boss_offset := Vector2(boss_contact.x - broad_boss.global_position.x, boss_contact.z - broad_boss.global_position.z)
+    if absf(boss_offset.length() - broad_boss.projectile_hit_radius()) > 0.015:
+        push_error("Grazing boss FX did not touch the actual large silhouette boundary")
+        quit(1)
+        return
+    if boss_contact.z > shot_from.z + 0.001 or boss_contact.z < shot_to.z - 0.001:
+        push_error("Grazing boss FX escaped its swept projectile frame")
+        quit(1)
+        return
+    var inside_contact := swept_projectile._swept_contact_point(
+        broad_boss.global_position, broad_boss.global_position + Vector3.FORWARD * 0.3, broad_boss
+    )
+    if inside_contact.distance_to(broad_boss.global_position + Vector3(0.0, 0.55, 0.0)) > 0.001:
+        push_error("Shots originating inside a large enemy must use the current contact point")
         quit(1)
         return
 
