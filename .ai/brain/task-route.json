@@ -6,13 +6,13 @@
     "requested_max_files": 12,
     "score_margin": 0,
     "tier": "bounded",
-    "top_score": 33
+    "top_score": 27
   },
   "cache": {
-    "fingerprint": "0a4b2dd25cf0320f488489f1a9a3e2f462ced73a395ca024aa6d901e190fe888",
+    "fingerprint": "0f6f26f5e71e553fb7bdb47062b6e1d9ba3db0cc1b2ae87a127dfca6da81c671",
     "hit": false
   },
-  "candidate_count": 439,
+  "candidate_count": 436,
   "fallback": "If bounded context is insufficient, expand only to budget.expand_to, then use architecture/segmented maps and targeted source search.",
   "files": [
     {
@@ -20,12 +20,29 @@
       "matched_terms": [
         "game"
       ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidFirstPlayableJourneyTest.java",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 33,
+      "score": 27,
+      "symbols": [
+        "AndroidFirstPlayableJourneyTest",
+        "activity",
+        "game",
+        "run",
+        "traversesContractCombatDefeatAndVictorySettlement"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java",
+      "reasons": [
+        "search-index"
+      ],
+      "score": 27,
       "symbols": [
         "AndroidGameplayVisualProbeTest",
         "activity",
@@ -54,12 +71,48 @@
       "matched_terms": [
         "game"
       ],
-      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGraphicsProfileProbeTest.java",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 33,
+      "score": 27,
+      "symbols": [
+        "AndroidGraphicsProfileProbeTest",
+        "Result",
+        "activity",
+        "everyGraphicsProfileAndFrameRateTargetReachesGameScreen",
+        "game",
+        "runOnGameThread",
+        "writeMatrix"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidLauncherSmokeTest.java",
+      "reasons": [
+        "search-index"
+      ],
+      "score": 27,
+      "symbols": [
+        "AndroidLauncherSmokeTest",
+        "assertAttachedAndAlive",
+        "launcherCreatesRealLibgdxSurfaceAndStaysAlive",
+        "launcherSurvivesBackgroundForegroundAndActivityRecreation"
+      ]
+    },
+    {
+      "learning_score": 0,
+      "matched_terms": [
+        "game"
+      ],
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java",
+      "reasons": [
+        "search-index"
+      ],
+      "score": 27,
       "symbols": [
         "AndroidPerformanceProbeTest",
         "activity",
@@ -78,92 +131,19 @@
       "matched_terms": [
         "game"
       ],
-      "path": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
+      "path": "android/src/androidTest/java/com/deadlinezero/game/android/AndroidProcessPersistenceTest.java",
       "reasons": [
-        "impact",
         "search-index"
       ],
-      "score": 33,
+      "score": 27,
       "symbols": [
-        "AbilitySystem",
-        "Listener",
-        "arc",
-        "currentLeaperChance",
-        "damageEnemy",
-        "explode",
-        "impact",
-        "interceptHostileProjectile",
-        "nearest",
-        "onEnemySpawned",
-        "runtime",
-        "update",
-        "updateCryo",
-        "updateDrone",
-        "updateHomingMissiles",
-        "updateLeapers",
-        "updateMissiles",
-        "updateOrbital",
-        "updateTesla"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "core/src/main/java/com/deadlinezero/game/ai/EnemyPatternCatalog.java",
-      "reasons": [
-        "impact",
-        "search-index"
-      ],
-      "score": 33,
-      "symbols": [
-        "ChargePattern",
-        "EnemyPatternCatalog",
-        "RangedPattern",
-        "baseRanged",
-        "charge",
-        "cinderGunner",
-        "ranged",
-        "staticSeer"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "core/src/main/java/com/deadlinezero/game/ai/LeaperRegistry.java",
-      "reasons": [
-        "impact",
-        "search-index"
-      ],
-      "score": 33,
-      "symbols": [
-        "LeaperRegistry",
-        "contains",
-        "register"
-      ]
-    },
-    {
-      "learning_score": 0,
-      "matched_terms": [
-        "game"
-      ],
-      "path": "core/src/main/java/com/deadlinezero/game/ai/LeaperRuntime.java",
-      "reasons": [
-        "impact",
-        "search-index"
-      ],
-      "score": 33,
-      "symbols": [
-        "LeaperRuntime",
-        "State",
-        "consumeImpact",
-        "contains",
-        "register",
-        "telegraphing",
-        "update"
+        "AndroidProcessPersistenceTest",
+        "activity",
+        "game",
+        "phase",
+        "runOnGameThread",
+        "seedProfileBeforeExternalProcessDeath",
+        "verifyProfileAfterExternalProcessRestart"
       ]
     }
   ],

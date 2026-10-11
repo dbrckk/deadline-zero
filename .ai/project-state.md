@@ -35,26 +35,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:52:03Z
+Generated: 2026-10-11T11:58:09Z
 
 ### Git
 - Branch: `main`
-- Head: `f9ec8b107f4c`
-- Commit date: 2026-10-11T13:51:39+02:00
-- Commit: feat(gamefeel): emit 3D impact feedback at actual swept contact (#403)
+- Head: `f95f97eec058`
+- Commit date: 2026-10-11T13:57:51+02:00
+- Commit: docs(godot): replace stale procedural prototype README with verified 3D first-playable and Android QA guide
 - Tracked files: 1065
 
 ### Recently changed files
-- `godot/scripts/Projectile.gd`
-- `godot/tests/weapon_protocol_behavior_test.gd`
-- `godot/scripts/AssetLibrary.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/README.md`
+- `play/store/feature-graphic.png`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
+- `godot/scripts/Projectile.gd`
+- `godot/tests/weapon_protocol_behavior_test.gd`
+- `godot/scripts/AssetLibrary.gd`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
 
 ### Project signals
 - `build.gradle`

@@ -1,11 +1,10 @@
 # Change impact
 
-Base: 6f38ebe53e9a6b5357066d1096e83133bc60d026
-Head: f9ec8b107f4c9a52eb23fe2b91e1172cb4ac6f00
+Base: 2399eaee8bc8ca8ccf6b659c37079f4886f90dc5
+Head: f95f97eec058694016ce71bc8e9ccfb5f55d13b0
 
 ## Changed files
-- M godot/scripts/Projectile.gd
-- M godot/tests/weapon_protocol_behavior_test.gd
+- M godot/README.md
 
 ## Affected areas
 - godot
