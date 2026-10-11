@@ -356,10 +356,12 @@ func _nearest_enemy() -> DZEnemy:
     # the swarm and projectiles. Consume it rather than scanning the full
     # 100+ zombie group every 80 ms. Keep a group fallback for standalone
     # scenes/tests without the production query service.
-    var candidates: Array = get_tree().get_nodes_in_group("enemies")
+    var candidates: Array
     var scene := get_tree().current_scene
     if scene != null and scene.has_method("query_enemies_near"):
         candidates = scene.query_enemies_near(global_position, TARGET_ACQUIRE_RADIUS)
+    else:
+        candidates = get_tree().get_nodes_in_group("enemies")
     for node in candidates:
         if node == null or not is_instance_valid(node):
             continue
