@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-10",
+  "updated_at": "2026-10-11",
   "repository": "dbrckk/deadline-zero",
   "branch": "main",
   "working_area": "Godot 4.7.2 native 3D",
@@ -22,6 +22,30 @@
       "status": "merged",
       "checks": "2/2 successful",
       "change": "Fixed GH API pipelines in scheduled Work Watch"
+    },
+    {
+      "pr": 397,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Share immutable 3D impact materials while fading each hit independently"
+    },
+    {
+      "pr": 398,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Tier luminous 3D experience orbs by kill reward: standard, elite, boss"
+    },
+    {
+      "pr": 399,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Match XP HUD collection pulse to 3D reward tiers"
+    },
+    {
+      "pr": 400,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Bound moving-enemy lead from actual rifle muzzle for accurate autofire"
     }
   ],
   "visual_qa": "Inspected six Godot-rendered frames; authentic 3D production scene exists but not yet AAA-quality",
@@ -33,11 +57,20 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "All PR checks passed before merge; the patched Work Watch has not yet been observed on its scheduled trigger.",
+  "verification": "PRs #397-#400 had 8/8 successful Actions checks before squash merge; Work Watch schedule run 38118072708 succeeded 2026-10-11. PR #401 Godot integration passed, remaining CI is not yet complete.",
   "next": [
-    "Verify next real Deadline Zero Work Watch schedule run on main",
-    "Raise imported 3D character/model/animation/material fidelity and validate new screenshots",
-    "Play debug APK on representative phones and capture stable frame pacing, heat, touch, and legibility metrics",
-    "Review remaining Play Store production/release gates"
+    "Finish #401 CI and merge only if all checks succeed",
+    "Raise imported 3D model, rigged animation and PBR material fidelity using real assets/captures",
+    "Play the native Godot APK on representative physical Android phones and record FPS, heat, touch and readability",
+    "Close physical lifecycle, Play Billing license-test and Play Store release gates (#16, #17 and #14)"
+  ],
+  "in_progress": [
+    {
+      "pr": 401,
+      "status": "open",
+      "branch": "feat/godot-proportional-hit-silhouettes",
+      "head_sha": "6bcb6ea3e28448ff54281b5d49eca2532ee6829c",
+      "change": "Size-based shootable silhouettes for imported 3D archetypes without additional physics nodes"
+    }
   ]
 }
