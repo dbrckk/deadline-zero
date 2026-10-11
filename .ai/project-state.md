@@ -35,28 +35,27 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:58:09Z
+Generated: 2026-10-11T16:20:35Z
 
 ### Git
 - Branch: `main`
-- Head: `f95f97eec058`
-- Commit date: 2026-10-11T13:57:51+02:00
-- Commit: docs(godot): replace stale procedural prototype README with verified 3D first-playable and Android QA guide
+- Head: `6ec528d1f733`
+- Commit date: 2026-10-11T18:20:20+02:00
+- Commit: perf(android QA): add real frame-pacing p95 and hitch telemetry to Godot debug runs (#404)
 - Tracked files: 1065
 
 ### Recently changed files
-- `godot/README.md`
-- `play/store/feature-graphic.png`
+- `godot/scripts/Main.gd`
+- `godot/tests/first_playable_run_path_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
+- `godot/README.md`
+- `play/store/feature-graphic.png`
 - `godot/scripts/Projectile.gd`
 - `godot/tests/weapon_protocol_behavior_test.gd`
-- `godot/scripts/AssetLibrary.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
 
 ### Project signals
 - `build.gradle`

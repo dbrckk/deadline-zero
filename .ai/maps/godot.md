@@ -4426,6 +4426,9 @@ var hit_stop_enabled := true
 var onboarding_hint_active := true
 var onboarding_hint_left := 4.8
 var debug_perf_probe_clock := 5.0
+var debug_frame_last_ticks_us := 0
+var debug_frame_write_index := 0
+var debug_frame_samples_us: Array[int] = []
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -4453,6 +4456,8 @@ const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
 const DIRECTOR_REFRESH_INTERVAL := 0.25
 const DEBUG_PERF_PROBE_INTERVAL := 5.0
+const DEBUG_FRAME_SAMPLE_CAP := 240
+const DEBUG_FRAME_HITCH_THRESHOLD_US := 33333
 
 func _ready() -> void:
     randomize()
@@ -4502,6 +4507,12 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
     if OS.is_debug_build():
+        # Measure monotonic wall-clock frame intervals, not Engine.time_scale's
+        # deliberately slowed hit-stop delta. Ignore app background/resume gaps.
+        var ticks_us := Time.get_ticks_usec()
+        if debug_frame_last_ticks_us > 0:
+            _record_debug_frame_interval_us(ticks_us - debug_frame_last_ticks_us)
+        debug_frame_last_ticks_us = ticks_us
         debug_perf_probe_clock = maxf(0.0, debug_perf_probe_clock - maxf(delta, 0.0))
         if debug_perf_probe_clock <= 0.0:
             debug_perf_probe_clock = DEBUG_PERF_PROBE_INTERVAL
@@ -4559,9 +4570,44 @@ func _camera_motion_look_ahead(velocity: Vector3) -> Vector3:
         return Vector3.ZERO
     return planar / speed * minf(speed * 0.24, CAMERA_LOOK_AHEAD_MAX)
 
+func _record_debug_frame_interval_us(interval_us: int) -> void:
+    # Fixed 240-sample ring buffer: no unbounded allocations or per-frame
+    # sorting. Unrealistic gaps are typically lifecycle transitions.
+    if interval_us <= 0 or interval_us > 250000:
+        return
+    if debug_frame_samples_us.size() < DEBUG_FRAME_SAMPLE_CAP:
+        debug_frame_samples_us.append(interval_us)
+    else:
+        debug_frame_samples_us[debug_frame_write_index] = interval_us
+    debug_frame_write_index = (debug_frame_write_index + 1) % DEBUG_FRAME_SAMPLE_CAP
+
+func _debug_frame_pacing() -> Dictionary:
+    if debug_frame_samples_us.is_empty():
+        return {"p95_ms": 0.0, "max_ms": 0.0, "hitch_pct": 0.0, "samples": 0}
+    # Sorting only at the 5-second telemetry snapshot, never every frame.
+    var sorted_samples := debug_frame_samples_us.duplicate()
+    sorted_samples.sort()
+    var count := sorted_samples.size()
+    var p95_index := clampi(int(ceil(float(count) * 0.95)) - 1, 0, count - 1)
+    var hitches := 0
+    for interval_us in sorted_samples:
+        if interval_us > DEBUG_FRAME_HITCH_THRESHOLD_US:
+            hitches += 1
+    return {
+        "p95_ms": float(sorted_samples[p95_index]) / 1000.0,
+        "max_ms": float(sorted_samples[count - 1]) / 1000.0,
+        "hitch_pct": float(hitches) * 100.0 / float(count),
+        "samples": count
+    }
+
 func _performance_snapshot() -> Dictionary:
+    var pacing := _debug_frame_pacing()
     return {
         "fps": float(Engine.get_frames_per_second()),
+        "frame_p95_ms": float(pacing["p95_ms"]),
+        "frame_max_ms": float(pacing["max_ms"]),
+        "frame_hitch_pct": float(pacing["hitch_pct"]),
+        "frame_samples": int(pacing["samples"]),
         "memory_bytes": int(Performance.get_monitor(Performance.MEMORY_STATIC)),
         "enemies": get_tree().get_node_count_in_group("enemies"),
         "projectiles": get_tree().get_node_count_in_group("projectiles"),
@@ -4573,9 +4619,13 @@ func _performance_snapshot() -> Dictionary:
 func _emit_debug_perf_probe() -> void:
     var snapshot := _performance_snapshot()
     print(
-        "DZ_PERF fps=%.1f mem_mb=%.1f enemies=%d projectiles=%d hostile=%d xp=%d elapsed=%.1f"
+        "DZ_PERF fps=%.1f p95_ms=%.1f max_ms=%.1f hitch_pct=%.1f samples=%d mem_mb=%.1f enemies=%d projectiles=%d hostile=%d xp=%d elapsed=%.1f"
         % [
             float(snapshot["fps"]),
+            float(snapshot["frame_p95_ms"]),
+            float(snapshot["frame_max_ms"]),
+            float(snapshot["frame_hitch_pct"]),
+            int(snapshot["frame_samples"]),
             float(snapshot["memory_bytes"]) / (1024.0 * 1024.0),
             int(snapshot["enemies"]),
             int(snapshot["projectiles"]),
@@ -11078,6 +11128,47 @@ func _initialize() -> void:
             return
     if int(perf_snapshot["memory_bytes"]) < 0 or int(perf_snapshot["enemies"]) < 0:
         push_error("Debug performance snapshot returned invalid counters")
+        quit(1)
+        return
+
+    # Deterministic device QA: average FPS can hide rare 46 ms hitches.
+    # Confirm that p95 tracks real wall-clock samples and the ring buffer
+    # discards old hitches rather than allocating without limit.
+    for key in ["frame_p95_ms", "frame_max_ms", "frame_hitch_pct", "frame_samples"]:
+        if not perf_snapshot.has(key):
+            push_error("Debug frame pacing snapshot is missing key: %s" % key)
+            quit(1)
+            return
+    main.debug_frame_samples_us.clear()
+    main.debug_frame_write_index = 0
+    for _frame in range(220):
+        main._record_debug_frame_interval_us(16667)
+    for _frame in range(20):
+        main._record_debug_frame_interval_us(46000)
+    main._record_debug_frame_interval_us(750000)
+    var hitched_snapshot: Dictionary = main._performance_snapshot()
+    if int(hitched_snapshot["frame_samples"]) != main.DEBUG_FRAME_SAMPLE_CAP:
+        push_error("Debug telemetry sample buffer escaped its 240-frame budget")
+        quit(1)
+        return
+    if float(hitched_snapshot["frame_p95_ms"]) < 45.0 or float(hitched_snapshot["frame_max_ms"]) < 45.0:
+        push_error("Debug p95/max frame pacing missed realistic 46 ms hitches")
+        quit(1)
+        return
+    if float(hitched_snapshot["frame_hitch_pct"]) < 8.0 or float(hitched_snapshot["frame_hitch_pct"]) > 9.0:
+        push_error("Debug pacing histogram miscounted 30 FPS budget misses")
+        quit(1)
+        return
+    # Exactly one bounded replacement window must erase the old spike burst.
+    for _frame in range(main.DEBUG_FRAME_SAMPLE_CAP):
+        main._record_debug_frame_interval_us(16667)
+    var settled_snapshot: Dictionary = main._performance_snapshot()
+    if int(settled_snapshot["frame_samples"]) != main.DEBUG_FRAME_SAMPLE_CAP:
+        push_error("Debug pacing buffer was not bounded after rollover")
+        quit(1)
+        return
+    if float(settled_snapshot["frame_p95_ms"]) > 17.0 or float(settled_snapshot["frame_hitch_pct"]) > 0.001:
+        push_error("Debug telemetry kept expired frame hitches after ring rollover")
         quit(1)
         return
     # Auto-aim may rotate the survivor before the test starts. Probe velocity in

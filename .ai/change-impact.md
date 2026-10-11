@@ -1,10 +1,11 @@
 # Change impact
 
-Base: 2399eaee8bc8ca8ccf6b659c37079f4886f90dc5
-Head: f95f97eec058694016ce71bc8e9ccfb5f55d13b0
+Base: c53b1b3fd4af78a21cac0fd7afcfbc7759149bc7
+Head: 6ec528d1f7332769af2a63ac1a00a8acec0c1cd4
 
 ## Changed files
-- M godot/README.md
+- M godot/scripts/Main.gd
+- M godot/tests/first_playable_run_path_test.gd
 
 ## Affected areas
 - godot
