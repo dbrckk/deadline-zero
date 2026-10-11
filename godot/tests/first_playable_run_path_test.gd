@@ -24,6 +24,31 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # Real camera focus and traversal lead must respond without snapping,
+    # preserving the same result at 60 and 120 FPS.
+    var focus_target := Vector3(3.0, 0.75, -1.4)
+    var focus_start := Vector3.ZERO
+    var frame_smooth: Vector3 = main._camera_smooth_vector(focus_start, focus_target, 1.0 / 60.0, main.CAMERA_FOCUS_RESPONSE)
+    var half_smooth: Vector3 = main._camera_smooth_vector(focus_start, focus_target, 1.0 / 120.0, main.CAMERA_FOCUS_RESPONSE)
+    var double_half: Vector3 = main._camera_smooth_vector(half_smooth, focus_target, 1.0 / 120.0, main.CAMERA_FOCUS_RESPONSE)
+    if frame_smooth.length() <= 0.01 or frame_smooth.distance_to(focus_target) <= 0.01:
+        push_error("Camera rotation must ease instead of snapping or freezing")
+        quit(1)
+        return
+    if double_half.distance_to(frame_smooth) > 0.0001:
+        push_error("Cinematic camera response depends on frame rate")
+        quit(1)
+        return
+    if main._camera_smooth_vector(focus_start, focus_target, 0.0, main.CAMERA_FOCUS_RESPONSE) != focus_start:
+        push_error("Paused camera interpolation must not drift")
+        quit(1)
+        return
+    var travel_focus: Vector3 = main._camera_smooth_vector(Vector3.ZERO, camera_look, 1.0 / 60.0, main.CAMERA_LOOK_AHEAD_RESPONSE)
+    if travel_focus.length() <= 0.01 or travel_focus.length() >= camera_look.length():
+        push_error("Camera travel look-ahead is not smoothly bounded")
+        quit(1)
+        return
+
     var perf_snapshot: Dictionary = main._performance_snapshot()
     for key in ["fps", "memory_bytes", "enemies", "projectiles", "hostile_projectiles", "xp_orbs", "elapsed"]:
         if not perf_snapshot.has(key):
