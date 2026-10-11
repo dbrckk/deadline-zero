@@ -261,10 +261,13 @@ func _physics_process(delta: float) -> void:
             continue
         var critical := randf() < critical_chance
         var dealt_damage := damage * (1.75 if critical else 1.0)
+        # World-space VFX must land where the swept shot first entered the
+        # visible 3D target footprint, not in the enemy's arbitrary center.
+        var impact_point := _swept_contact_point(previous_position, global_position, enemy)
         hit_enemy_ids[enemy.get_instance_id()] = true
         enemy.take_damage(dealt_damage, critical)
         _apply_protocol_hit(enemy, dealt_damage)
-        _impact(critical, enemy.global_position + Vector3(0.0, 0.55, 0.0))
+        _impact(critical, impact_point)
         if visual_profile == "rail" and pierce_remaining > 0:
             pierce_remaining -= 1
             continue
@@ -300,6 +303,28 @@ func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
         if miss.length_squared() <= effective_hit_radius * effective_hit_radius:
             result.append(enemy)
     return result
+
+func _swept_contact_point(from: Vector3, to: Vector3, enemy: DZEnemy) -> Vector3:
+    # Solve the first 2D segment/circle intersection once per actual hit.
+    # No RayCast3D, physics shape, collision object or extra hash query.
+    var center := Vector2(enemy.global_position.x, enemy.global_position.z)
+    var origin := Vector2(from.x, from.z)
+    var travel := Vector2(to.x - from.x, to.z - from.z)
+    var effective_radius := maxf(radius, enemy.projectile_hit_radius())
+    var a := travel.length_squared()
+    var contact_t := 0.0
+    if a > 0.000001:
+        var offset := origin - center
+        var b := 2.0 * offset.dot(travel)
+        var c := offset.length_squared() - effective_radius * effective_radius
+        if c > 0.0:
+            var discriminant := b * b - 4.0 * a * c
+            # Candidates have already passed the sweep; guard tiny negative
+            # floating-point drift at near-tangent contacts.
+            contact_t = clampf((-b - sqrt(maxf(discriminant, 0.0))) / (2.0 * a), 0.0, 1.0)
+    var contact := from.lerp(to, contact_t)
+    contact.y = enemy.global_position.y + 0.55
+    return contact
 
 func _candidate_enemies() -> Array:
     return _enemies_near(global_position, maxf(radius, DZEnemy.MAX_PROJECTILE_HIT_RADIUS))
