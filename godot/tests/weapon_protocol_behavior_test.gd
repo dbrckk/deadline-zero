@@ -106,6 +106,35 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # Mobile top-down aim must match the actual 3D silhouette: a boss can
+    # absorb a grazing shot while a small runner at the same offset cannot.
+    var broad_boss := ENEMY_SCRIPT.new()
+    broad_boss.configure("boss", 1.0, target)
+    broad_boss.process_mode = Node.PROCESS_MODE_DISABLED
+    parent.add_child(broad_boss)
+    broad_boss.global_position = Vector3(0.69, 0.0, -0.55)
+
+    var tight_runner := ENEMY_SCRIPT.new()
+    tight_runner.configure("runner", 1.0, target)
+    tight_runner.process_mode = Node.PROCESS_MODE_DISABLED
+    parent.add_child(tight_runner)
+    tight_runner.global_position = Vector3(-0.69, 0.0, -0.55)
+    await process_frame
+
+    if broad_boss.projectile_hit_radius() <= sweep_enemy.projectile_hit_radius():
+        push_error("Boss shootable silhouette must be wider than an ordinary enemy")
+        quit(1)
+        return
+    var silhouette_hits := swept_projectile._swept_hit_candidates(Vector3.ZERO, Vector3(0.0, 0.0, -0.80))
+    if not silhouette_hits.has(broad_boss):
+        push_error("Swept projectile missed the visible outer edge of a boss silhouette")
+        quit(1)
+        return
+    if silhouette_hits.has(tight_runner):
+        push_error("Swept projectile incorrectly hit a small runner outside its silhouette")
+        quit(1)
+        return
+
     var impact_anchor := sweep_enemy.global_position + Vector3(0.0, 0.55, 0.0)
     if impact_anchor.distance_to(sweep_enemy.global_position) < 0.50:
         push_error("Swept hit impact anchor lost its readable vertical offset")
@@ -141,6 +170,12 @@ func _initialize() -> void:
     spatial_projectile._enemies_near(Vector3.ZERO, 3.8)
     if spatial_probe.query_calls != 1 or not is_equal_approx(spatial_probe.last_radius, 3.8):
         push_error("Weapon protocol neighborhood queries did not route through scene spatial hash")
+        quit(1)
+        return
+    spatial_projectile._swept_hit_candidates(Vector3.ZERO, Vector3(0.0, 0.0, -0.80))
+    var minimum_broad_radius := maxf(spatial_projectile.radius, ENEMY_SCRIPT.MAX_PROJECTILE_HIT_RADIUS) + 0.4
+    if spatial_probe.query_calls != 2 or spatial_probe.last_radius + 0.001 < minimum_broad_radius:
+        push_error("Spatial broad phase would cull boss silhouette hits before narrow-phase checks")
         quit(1)
         return
     print("Deadline Zero weapon protocol behavior: OK")
