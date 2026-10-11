@@ -137,6 +137,11 @@ func _initialize() -> void:
     # The actual player search must reuse the production scene's spatial
     # query rather than scanning all enemy group members on every refresh.
     # Existing standalone fixtures above also verify the no-service fallback.
+    var player_source := FileAccess.get_file_as_string("res://scripts/Player.gd")
+    if player_source.contains("var candidates: Array = get_tree().get_nodes_in_group"):
+        push_error("Spatial autoaim still allocated a full horde group before the indexed query")
+        quit(1)
+        return
     var indexed_scene := AutoAimSpatialScene.new()
     get_root().add_child(indexed_scene)
     current_scene = indexed_scene
