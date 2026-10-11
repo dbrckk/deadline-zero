@@ -62,6 +62,69 @@ func _initialize() -> void:
         quit(1)
         return
 
+    if DZXpOrb.tier_for_amount(2) != "standard" or DZXpOrb.tier_for_amount(8) != "elite" or DZXpOrb.tier_for_amount(35) != "boss":
+        push_error("XP orb value tier thresholds regressed")
+        quit(1)
+        return
+
+    var elite := DZXpOrb.new()
+    elite.amount = 8
+    elite.target = target
+    elite.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(elite)
+    var boss := DZXpOrb.new()
+    boss.amount = 35
+    boss.target = target
+    boss.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(boss)
+    var boss_duplicate := DZXpOrb.new()
+    boss_duplicate.amount = 35
+    boss_duplicate.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(boss_duplicate)
+    await process_frame
+
+    var elite_visual := elite.get_node("XpOrbVisual") as MeshInstance3D
+    var boss_visual := boss.get_node("XpOrbVisual") as MeshInstance3D
+    var boss_duplicate_visual := boss_duplicate.get_node("XpOrbVisual") as MeshInstance3D
+    var elite_halo := elite.get_node("XpOrbHalo") as MeshInstance3D
+    var boss_halo := boss.get_node("XpOrbHalo") as MeshInstance3D
+    var boss_duplicate_halo := boss_duplicate.get_node("XpOrbHalo") as MeshInstance3D
+    if elite.visual_tier_scale <= first.visual_tier_scale or boss.visual_tier_scale <= elite.visual_tier_scale:
+        push_error("Higher-value XP rewards need visibly larger 3D silhouettes")
+        quit(1)
+        return
+    if elite_visual.mesh != first_visual.mesh or boss_visual.mesh != first_visual.mesh:
+        push_error("XP value tiers must share one low-poly core mesh")
+        quit(1)
+        return
+    if elite_halo.mesh != first_halo.mesh or boss_halo.mesh != first_halo.mesh:
+        push_error("XP value tiers must share one low-poly ring mesh")
+        quit(1)
+        return
+    if boss_visual.material_override != boss_duplicate_visual.material_override or boss_halo.material_override != boss_duplicate_halo.material_override:
+        push_error("Boss XP rewards must share cached tier materials")
+        quit(1)
+        return
+    if boss_visual.material_override == first_visual.material_override or elite_visual.material_override == first_visual.material_override:
+        push_error("Premium XP tiers lost their independent color identity")
+        quit(1)
+        return
+    if (boss_visual.material_override as StandardMaterial3D).emission_energy_multiplier <= (first_visual.material_override as StandardMaterial3D).emission_energy_multiplier:
+        push_error("Boss XP reward must be more emissive than ordinary drops")
+        quit(1)
+        return
+    for drop in [elite, boss, boss_duplicate]:
+        for visual in [drop.get_node("XpOrbVisual"), drop.get_node("XpOrbHalo")]:
+            if visual.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                push_error("Premium XP rewards must remain shadow-free")
+                quit(1)
+                return
+        for child in drop.get_children():
+            if child is Light3D or child is GPUParticles3D:
+                push_error("Premium XP tiers may not add lights or emitters per pickup")
+                quit(1)
+                return
+
     var initial_distance := first.global_position.distance_to(target.global_position)
     first.age = DZXpOrb.FORCED_MAGNET_AGE
     var halo_scale_before := first_halo.scale.x
