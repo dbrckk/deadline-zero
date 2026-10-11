@@ -68,6 +68,9 @@ static var _shared_regeneration_pulse_mesh: CylinderMesh
 
 const MAX_DAMAGE_NUMBERS := 18
 const ARENA_HALF_EXTENT := 34.0
+# Conservative horizontal shootable footprint of the biggest imported 3D actor.
+# The broad-phase queries this upper bound; smaller actors retain tight hit areas.
+const MAX_PROJECTILE_HIT_RADIUS := 0.82
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -297,6 +300,25 @@ func _melee_standoff_distance() -> float:
             return 1.16
         _:
             return 1.08
+
+func projectile_hit_radius() -> float:
+    # Match the authored 3D body's horizontal silhouette, independently of
+    # melee reach. Tight runners still demand aim; boss armor is not a pinhead.
+    match kind:
+        "boss":
+            return MAX_PROJECTILE_HIT_RADIUS
+        "brute":
+            return 0.56
+        "charger":
+            return 0.51
+        "elite":
+            return 0.48
+        "regenerator":
+            return 0.43
+        "runner", "harrier":
+            return 0.32
+        _:
+            return 0.34
 
 func _contact_attack_range() -> float:
     return _melee_standoff_distance() + (0.24 if kind in ["boss", "brute"] else 0.20)
