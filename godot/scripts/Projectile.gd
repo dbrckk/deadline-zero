@@ -278,7 +278,9 @@ func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
     segment.y = 0.0
     var travel := segment.length()
     var midpoint := from.lerp(to, 0.5)
-    var query_radius := radius + travel * 0.5
+    # Include boss/brute shootable silhouettes in the hash broad phase.
+    # Still one bounded query per bullet, even during dense mobile waves.
+    var query_radius := maxf(radius, DZEnemy.MAX_PROJECTILE_HIT_RADIUS) + travel * 0.5
     var result: Array[DZEnemy] = []
     for node in _enemies_near(midpoint, query_radius):
         if not is_instance_valid(node):
@@ -294,12 +296,13 @@ func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
         var closest := from + segment * t
         var miss := enemy.global_position - closest
         miss.y = 0.0
-        if miss.length_squared() <= radius * radius:
+        var effective_hit_radius := maxf(radius, enemy.projectile_hit_radius())
+        if miss.length_squared() <= effective_hit_radius * effective_hit_radius:
             result.append(enemy)
     return result
 
 func _candidate_enemies() -> Array:
-    return _enemies_near(global_position, radius)
+    return _enemies_near(global_position, maxf(radius, DZEnemy.MAX_PROJECTILE_HIT_RADIUS))
 
 func _enemies_near(position: Vector3, range_radius: float) -> Array:
     var scene := get_tree().current_scene if get_tree() != null else null
