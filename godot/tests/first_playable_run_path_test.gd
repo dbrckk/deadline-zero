@@ -295,7 +295,7 @@ func _initialize() -> void:
         push_error("Survivor contact shadow created a redundant horde shader/material")
         quit(1)
         return
-    var original_profile := main.player.weapon_profile
+    var original_profile: String = main.player.weapon_profile
     main.player.weapon_profile = "cryo"
     main.player._trigger_muzzle_flash()
     var cryo_color: Color = DZWeaponProfiles.profile("cryo")["muzzle_color"]
