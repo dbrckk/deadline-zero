@@ -3,32 +3,31 @@
 Status: active
 
 ## Working
-- Godot 4.7.2 first-playable uses real imported rigged Quaternius 3D characters, authored industrial PBR world, six weapon protocols and native debug Android APK.
-- #397, #398, #399 and #400 merged with 8/8 CI each: shared independent impact fades, graded 3D XP rewards and HUD, moving-target predictive muzzle ballistics.
-- #401 merged (8/8 CI): heavy/boss projectile hits track wider real 3D shootable silhouettes; smaller runners remain precise.
-- #402 in CI: restore implicit-opaque authored zombie GLTF shading and vary seven per-instance PBR wear grades without duplicated shader/material/mesh; Godot visual and material tests succeeded.
-- #403 in CI: swept impact FX enters at actual enemy silhouette boundary; Godot integration and 3D render checks succeeded.
-- #404 in CI: instrument native debug frame p95/max/hitch% in a bounded 240-frame window, plus deterministic existing first-playable integration coverage.
-- #396 Work Watch was observed successful on its scheduled 2026-10-11 run (Actions 38118072708).
+- Godot 4.7.2 native 3D first-playable has rigged Quaternius GLTF characters, authored industrial PBR arena, six weapon protocols and CI-built native Android APK.
+- #397-#401 merged with 8/8 CI each: independent 3D impact fades, premium XP tiers/HUD, predictive auto-fire and body-size-matched projectile sweeps.
+- #402 merged (8/8 CI): imported zombie atlas shaders now stay opaque, with seven per-body PBR grime grades and reused shaders/materials.
+- #403 merged (8/8 CI): projectile contact flashes land at swept entry of a real 3D enemy silhouette.
+- #404 open: 240-sample debug Godot frame p95/max/hitch% instrumentation passed its Godot integration and 7/8 CI; legacy libGDX Android stress emulator failed an FPS telemetry assertion, single-job rerun requested.
+- #405 open/in CI: actual imported zombie GLTF Death clip transitions into shared-shader instance-only opaque dither dissolve; real GLTF integration tests and full Android CI pending.
+- #396 Work Watch scheduled run 38118072708 was verified successful on 2026-10-11.
 
-## Blockers
-- Native 3D visuals and imported animation remain short of independently verified premium AAA quality.
-- Physical Android frame pacing, thermal throttling, touch control and mobile text legibility are not yet verified; CI emulator is not a real device.
-- Device process lifecycle restore and Play Billing license-account verification are required (#16, #17).
-- Release candidate store assets and closed-test gates remain unfinished (#14).
+## Broken / blockers
+- Godot native 3D visuals and animation still require further real-production polish; do not claim AAA visual readiness from CI screenshots alone.
+- Physical Android frame pacing, heat, screen legibility and touch QA not yet proven; emulator does not qualify.
+- Android process-death persistence on physical hardware and Play Billing license-account test flows remain open (#16, #17).
+- Play closed testing, store claims, accessibility and device-profile release QA remain open (#14).
 
-## Current priorities
-- Finish #402, #403, #404 only when all required CI checks are green and merge if clean.
-- Compare authentic Godot-rendered captures and improve real 3D models, animations, texture detail and shader quality; no concept art substitutions.
-- Use new debug p95/worst/hitch metrics to benchmark actual gameplay on representative Android devices.
-- Resolve issue #14/#16/#17 release gates before any Play Store production readiness claim.
+## Current priority
+- Investigate #404 emulator performance after controlled retry, without weakening genuine performance assertions.
+- Finish #405 runtime imported-model dissolve and full Android gate, merging only with all CI green.
+- Continue improvements grounded in actual 3D assets and rendered frames, not concept art.
+- Validate phone FPS/p95, thermal, touch, in-app purchase lifecycle and store release criteria before final APK/AAB claims.
 
 ## Validation
-- #401: Godot integration verifies heavy edge hits and narrow runner misses; 8/8 CI prior to merge.
-- #402: imported shader test and actual seven-archetype 1280x720 render passed; remaining Android checks were active.
-- #403: swept contact integration and actual 1280x720 enemy render passed; remaining Android checks were active.
-- #404: checks running at this checkpoint, not yet a validated release.
-- Native Android debug APK is built in CI; actual physical handset QA and steady p95 FPS are still unverified.
+- #402 and #403: all eight GitHub Actions checks green before merge.
+- #404: Godot first-playable/p95 telemetry integration test passed and seven checks green; legacy stress emulator failed FPS threshold on first attempt.
+- #405: CI currently running at this checkpoint; no claim of tested death transition yet.
+- Physical Android device performance, purchasing and lifecycle release gates are unverified.
 
 ## Last verified
 - 2026-10-11
