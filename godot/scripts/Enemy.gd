@@ -782,10 +782,29 @@ func take_damage(amount: float, critical := false, damage_over_time := false) ->
         if authored_anim != null and authored_anim.has_animation("Death"):
             authored_anim.speed_scale = 1.0
             authored_anim.play("Death", 0.06)
+            _begin_death_dissolve()
             var timer := get_tree().create_timer(0.62)
             timer.timeout.connect(queue_free)
         else:
             queue_free()
+
+func _begin_death_dissolve() -> void:
+    if authored_visual == null:
+        return
+    # Preserve the real rigged death animation for its first 0.16 s, then
+    # dissolve in the existing opaque GLTF shader over the last 0.44 s.
+    # One tween per death only; shared atlas and shader materials stay intact.
+    var dissolve_tween := create_tween()
+    dissolve_tween.tween_method(_set_death_dissolve, 0.0, 0.97, 0.44).set_delay(0.16)
+
+func _set_death_dissolve(progress: float) -> void:
+    if authored_visual == null:
+        return
+    var clamped := clampf(progress, 0.0, 0.97)
+    if authored_visual is MeshInstance3D:
+        (authored_visual as MeshInstance3D).set_instance_shader_parameter("death_dissolve", clamped)
+    for node in authored_visual.find_children("*", "MeshInstance3D", true, false):
+        (node as MeshInstance3D).set_instance_shader_parameter("death_dissolve", clamped)
 
 func hit_reaction_profile() -> Dictionary:
     if kind == "boss":
