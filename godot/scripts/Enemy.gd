@@ -269,12 +269,30 @@ func _physics_process(delta: float) -> void:
         velocity = movement_direction * move_speed * slow_multiplier * movement_speed_scale
         move_and_slide()
         _constrain_to_arena()
-        if velocity.length_squared() > 0.01:
-            look_at(global_position + velocity, Vector3.UP)
+        _update_locomotion_facing(delta)
     _update_authored_animation(distance)
     if distance < _contact_attack_range() and attack_cooldown <= 0.0 and target.has_method("take_damage"):
         target.take_damage(contact_damage)
         attack_cooldown = 0.72
+
+func _update_locomotion_facing(delta: float) -> void:
+    # Avoid instantaneous 90/180-degree yaw snaps when swarm avoidance
+    # changes velocity. Keep exact lock-on rotation in attack windups and
+    # charges: those mechanics must remain readable and dodgeable.
+    if dead or attack_windup > 0.0 or charge_active or velocity.length_squared() <= 0.01:
+        return
+    var desired_yaw := atan2(-velocity.x, -velocity.z)
+    var turn_rate := 9.0
+    if kind in ["runner", "harrier"]:
+        turn_rate = 13.0
+    elif kind in ["brute", "elite"]:
+        turn_rate = 6.8
+    elif kind == "boss":
+        turn_rate = 5.4
+    # Framerate-independent easing prevents abrupt foot sliding under 30 FPS
+    # without adding tweens, animation instances or physics body objects.
+    var blend := 1.0 - exp(-maxf(delta, 0.0) * turn_rate)
+    rotation.y = lerp_angle(rotation.y, desired_yaw, blend)
 
 func _constrain_to_arena() -> void:
     var clamped_x := clampf(global_position.x, -ARENA_HALF_EXTENT, ARENA_HALF_EXTENT)
