@@ -56,6 +56,8 @@ const MOVE_DECELERATION := 62.0
 const MOVE_TURN_ACCELERATION := 78.0
 const MOVE_LEAN_ROLL_DEGREES := 4.2
 const MOVE_LEAN_PITCH_DEGREES := 2.4
+const AIM_LEAD_MAX_SECONDS := 0.42
+const AIM_LEAD_MAX_DISTANCE := 1.8
 
 func _ready() -> void:
     add_to_group("player")
@@ -361,17 +363,9 @@ func _nearest_enemy() -> DZEnemy:
     return best
 
 func _fire_at(enemy: DZEnemy) -> void:
-    var base_dir := global_position.direction_to(enemy.global_position)
-    base_dir.y = 0.0
-    base_dir = base_dir.normalized()
+    var base_dir := _predicted_shot_direction(enemy)
     if base_dir.length_squared() < 0.01:
         return
-    # Compensate for the rifle being offset to the player's right. Otherwise
-    # close enemies can fall beside a perfectly aimed-looking muzzle tracer.
-    var barrel_to_target := enemy.global_position - _projectile_muzzle_origin(Vector3.ZERO)
-    barrel_to_target.y = 0.0
-    if barrel_to_target.length_squared() > 0.0001:
-        base_dir = barrel_to_target.normalized()
     _play_shot_audio()
     _trigger_muzzle_flash()
     _trigger_rifle_recoil()
@@ -391,6 +385,30 @@ func _fire_at(enemy: DZEnemy) -> void:
             projectile.queue_free()
             return
         projectile_parent.add_child(projectile)
+
+func _predicted_shot_direction(enemy: DZEnemy) -> Vector3:
+    # Lead strafing/running enemies from the actual barrel position, not the
+    # survivor's center. Two cheap flight-time estimates avoid a physics query
+    # per shot and preserve the exact close-range, stationary aim direction.
+    var offset := enemy.global_position - _projectile_muzzle_origin(Vector3.ZERO)
+    offset.y = 0.0
+    if offset.length_squared() <= 0.0001:
+        return Vector3.ZERO
+
+    var target_velocity := enemy.velocity
+    target_velocity.y = 0.0
+    # Windups, regeneration and shock root the enemy even if the most recent
+    # physics velocity still describes its previous moving frame.
+    if enemy.attack_windup > 0.0 or enemy.regeneration_windup > 0.0 or enemy.shock_left > 0.0 or not enemy.combat_enabled:
+        target_velocity = Vector3.ZERO
+
+    var shot_speed := maxf(projectile_speed, 0.01)
+    var travel_time := minf(offset.length() / shot_speed, AIM_LEAD_MAX_SECONDS)
+    travel_time = minf((offset + target_velocity * travel_time).length() / shot_speed, AIM_LEAD_MAX_SECONDS)
+    # A charging or sharply turning enemy must not pull the muzzle too far
+    # away from its visible body on a small mobile screen.
+    var lead := (target_velocity * travel_time).limit_length(AIM_LEAD_MAX_DISTANCE)
+    return (offset + lead).normalized()
 
 func _projectile_muzzle_origin(direction: Vector3) -> Vector3:
     # Shared barrel origin for all weapon protocols; the small forward offset
