@@ -4,7 +4,7 @@ Status: active
 
 ## Working
 - Godot 4.7.2 native 3D Android first-playable with Quaternius rigged GLTF actors, industrial PBR environment and authored combat.
-- #397–#410 merged; latest #409 survivor facing and #410 cinematic camera each passed 8/8 GitHub Actions checks before squash merge.
+- #397–#412 merged; #409 survivor facing, #410 cinematic camera, #411 death shadow, #412 six distinct weapon feedback profiles all passed 8/8 GitHub Actions checks before squash merge.
 - #404 debug p95/max frame time and >33.33ms hitch% sampling over 240 frames.
 - #405 imported GLTF death clips with opaque shared-shader per-instance dissolve.
 - #406 spatial-indexed nearest-enemy player autoaim without whole-horde allocation.
@@ -12,8 +12,8 @@ Status: active
 - #408 actual 720p Godot screenshot-reviewed character key/ambient lighting, PBR atlas midtones and closer mobile framing.
 - #409 smooth real survivor/weapon combat and traversal heading; frame-rate independent.
 - #410 damped camera target and movement look-ahead; verified across 60/120 FPS.
-- #411 independent dying-zombie contact shadow fade with GLTF death (7/8 passing; Android runtime pending).
-- #412 six per-weapon muzzle/recoil signatures and grounded survivor (7/8 passing; Android runtime pending).
+- #411 independent dying-zombie contact shadow fade synchronized with real GLTF death; 8/8 green and merged.
+- #412 six per-weapon muzzle/recoil signatures and grounded survivor; 8/8 green and merged.
 - #396 Work Watch scheduled verification passed on 2026-10-11.
 
 ## Blockers
@@ -29,8 +29,8 @@ Status: active
 - Complete Play Store release and closed-test readiness.
 
 ## Validation
-- #405–#410: each 8/8 CI green before merge, including Godot 3D, APK, Play AAB, UI and Android runtime.
-- #411/#412: Godot 3D verify and 7/8 total green as last checked; Android runtime still pending.
+- #405–#412: each 8/8 CI green before merge, including Godot 3D, APK, Play AAB, UI and Android runtime.
+- #412 corrected a Godot integration fixture type-annotation parse error; final PR head passed all 8 checks.
 - #408 reviewed native Godot 720p before/after screenshot evidence; on-device visual and performance validation still needed.
 
 ## Last verified
