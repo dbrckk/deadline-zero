@@ -307,6 +307,34 @@ func _initialize() -> void:
         quit(1)
         return
 
+    var player_ground := main.player.get_node_or_null("PlayerContactShadow") as MeshInstance3D
+    if player_ground == null or not player_ground.mesh is QuadMesh:
+        push_error("Survivor imported 3D body lost its grounded soft contact shadow")
+        quit(1)
+        return
+    if player_ground.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or absf(player_ground.position.y - 0.013) > 0.002:
+        push_error("Survivor contact shadow regressed mobile shadow/z-fighting budget")
+        quit(1)
+        return
+    if player_ground.material_override != DZEnemy._enemy_contact_shadow_material():
+        push_error("Survivor contact shadow created a redundant horde shader/material")
+        quit(1)
+        return
+    var original_profile: String = main.player.weapon_profile
+    main.player.weapon_profile = "cryo"
+    main.player._trigger_muzzle_flash()
+    var cryo_color: Color = DZWeaponProfiles.profile("cryo")["muzzle_color"]
+    if not main.player.muzzle_flash_material.albedo_color.is_equal_approx(cryo_color):
+        push_error("Cryo protocol fired an orange starter muzzle flash instead of its authored 3D signature")
+        quit(1)
+        return
+    main.player._trigger_rifle_recoil()
+    if main.player.rifle_recoil_tween == null or not main.player.rifle_recoil_tween.is_valid():
+        push_error("Weapon-specific physical rifle recoil did not animate the imported gun")
+        quit(1)
+        return
+    main.player.weapon_profile = original_profile
+
     main.hud.show_touch_stick(Vector2(4.0, 716.0))
     var edge_pos: Vector2 = main.hud.touch_stick_root.position
     var edge_size: Vector2 = main.hud.touch_stick_root.size

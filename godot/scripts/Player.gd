@@ -31,6 +31,7 @@ var muzzle_flash_material: StandardMaterial3D
 var muzzle_flash_tween: Tween
 var rifle_visual: Node3D
 var rifle_rest_position := Vector3.ZERO
+var rifle_rest_rotation := Vector3.ZERO
 var rifle_recoil_tween: Tween
 var weapon_accent_material: StandardMaterial3D
 var weapon_accent_tween: Tween
@@ -469,10 +470,12 @@ func _build_visual() -> void:
             rifle_rest_position = Vector3(0.33, 0.93, -0.38)
             rifle_visual.position = rifle_rest_position
             rifle_visual.rotation_degrees = Vector3(-8.0, 180.0, -4.0)
+            rifle_rest_rotation = rifle_visual.rotation_degrees
             rifle_visual.scale = Vector3.ONE * 0.92
             add_child(rifle_visual)
 
         _build_tactical_rig()
+        _build_player_contact_shadow()
         _build_player_marker()
         _build_target_lock_marker()
         _build_muzzle_flash()
@@ -518,6 +521,7 @@ func _build_visual() -> void:
     gun.material_override = body_mat
     visual.add_child(gun)
     _build_tactical_rig()
+    _build_player_contact_shadow()
     _build_player_marker()
     _build_target_lock_marker()
     _build_muzzle_flash()
@@ -607,16 +611,33 @@ func _build_tactical_rig() -> void:
     weapon_accent.material_override = weapon_accent_material
     add_child(weapon_accent)
 
+func _weapon_feedback_profile() -> Dictionary:
+    # Reuse immutable profile data rather than allocating a dictionary on
+    # every 3D gunshot; the profile id is selected on upgrade.
+    return DZWeaponProfiles.PROFILES.get(weapon_profile, DZWeaponProfiles.PROFILES["vanguard"])
+
 func _trigger_rifle_recoil() -> void:
     _trigger_weapon_accent_pulse()
     if rifle_visual == null or not is_instance_valid(rifle_visual):
         return
     if rifle_recoil_tween != null and rifle_recoil_tween.is_valid():
         rifle_recoil_tween.kill()
+    var feedback := _weapon_feedback_profile()
+    var kick := float(feedback.get("recoil_kick", 0.085))
+    var settle := float(feedback.get("recoil_recover", 0.075))
     rifle_visual.position = rifle_rest_position
+    rifle_visual.rotation_degrees = rifle_rest_rotation
     rifle_recoil_tween = create_tween()
-    rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position + Vector3(0.0, 0.015, 0.085), 0.035).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-    rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position, 0.075).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    rifle_recoil_tween.set_parallel(true)
+    rifle_recoil_tween.tween_property(rifle_visual, "position",
+        rifle_rest_position + Vector3(0.0, 0.015, kick), 0.035).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    rifle_recoil_tween.tween_property(rifle_visual, "rotation_degrees",
+        rifle_rest_rotation + Vector3(-kick * 28.0, 0.0, 0.0), 0.035).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    rifle_recoil_tween.set_parallel(false)
+    rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position,
+        settle).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    rifle_recoil_tween.parallel().tween_property(rifle_visual, "rotation_degrees",
+        rifle_rest_rotation, settle).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _trigger_weapon_accent_pulse() -> void:
     if weapon_accent_material == null:
@@ -626,6 +647,20 @@ func _trigger_weapon_accent_pulse() -> void:
     weapon_accent_material.emission_energy_multiplier = 4.6
     weapon_accent_tween = create_tween()
     weapon_accent_tween.tween_property(weapon_accent_material, "emission_energy_multiplier", 1.85, 0.085).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _build_player_contact_shadow() -> void:
+    # The survivor needs the same soft grounded 3D silhouette as the enemy
+    # horde, rather than hovering above the floor between shadow-map samples.
+    # Reuse the existing two-triangle radial plane and one shared shader:
+    # no new material, shadow caster, projected light or particles.
+    var shadow := MeshInstance3D.new()
+    shadow.name = "PlayerContactShadow"
+    shadow.mesh = DZEnemy._contact_shadow_mesh(0.54)
+    shadow.rotation_degrees.x = -90.0
+    shadow.position.y = 0.013
+    shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    shadow.material_override = DZEnemy._enemy_contact_shadow_material()
+    add_child(shadow)
 
 func _build_player_marker() -> void:
     player_marker_material = StandardMaterial3D.new()
@@ -810,12 +845,22 @@ func _trigger_muzzle_flash() -> void:
         return
     if muzzle_flash_tween != null and muzzle_flash_tween.is_valid():
         muzzle_flash_tween.kill()
+    var feedback := _weapon_feedback_profile()
+    # Protocol identity must be visible at the barrel, not only on HUD icons
+    # and projectiles. Keep the accessibility flash ceiling independent of
+    # the profile's authored burst size.
+    var flash_size := float(feedback.get("muzzle_size", 1.0))
+    if reduced_flashes:
+        flash_size = minf(flash_size, 1.0)
     muzzle_flash.visible = true
-    muzzle_flash.scale = Vector3(0.42, 0.30, 0.58) if reduced_flashes else Vector3(0.58, 0.42, 0.82)
+    muzzle_flash.scale = (Vector3(0.42, 0.30, 0.58) if reduced_flashes else Vector3(0.58, 0.42, 0.82)) * flash_size
     if muzzle_flash_material != null:
+        var flash_color: Color = feedback.get("muzzle_color", Color(1.0, 0.74, 0.18))
+        muzzle_flash_material.albedo_color = flash_color
+        muzzle_flash_material.emission = flash_color
         muzzle_flash_material.emission_energy_multiplier = 2.2 if reduced_flashes else 6.2
-    var flash_duration := 0.032 if reduced_flashes else 0.055
-    var target_scale := Vector3(0.72, 0.48, 1.02) if reduced_flashes else Vector3(1.22, 0.76, 1.72)
+    var flash_duration := 0.032 if reduced_flashes else float(feedback.get("flash_duration", 0.055))
+    var target_scale := (Vector3(0.72, 0.48, 1.02) if reduced_flashes else Vector3(1.22, 0.76, 1.72)) * flash_size
     muzzle_flash_tween = create_tween()
     muzzle_flash_tween.set_parallel(true)
     muzzle_flash_tween.tween_property(muzzle_flash, "scale", target_scale, flash_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)

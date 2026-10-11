@@ -36,7 +36,8 @@ func _initialize() -> void:
     var signatures := {}
     for id in ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]:
         var profile := WEAPON_PROFILES.profile(id)
-        for key in ["projectile_scale", "trail_length", "impact_weight"]:
+        for key in ["projectile_scale", "trail_length", "impact_weight", "muzzle_color",
+            "muzzle_size", "recoil_kick", "recoil_recover", "flash_duration"]:
             if not profile.has(key):
                 push_error("Weapon profile %s is missing feedback key %s" % [id, key])
                 quit(1)
@@ -47,6 +48,36 @@ func _initialize() -> void:
             quit(1)
             return
         signatures[signature] = id
+    # Six gameplay protocols must feel physically distinct at the *actual*
+    # 3D rifle: authored flash colors/width and kick/recovery, no per-shot
+    # particle emitter or duplicated muzzle shader.
+    var flashes := {}
+    for id in ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]:
+        var feedback := WEAPON_PROFILES.profile(id)
+        var flash_color: Color = feedback["muzzle_color"]
+        var flash_signature := flash_color.to_html() + "|%.3f" % float(feedback["muzzle_size"])
+        if flashes.has(flash_signature):
+            push_error("Weapon muzzle signature is duplicated across gameplay protocols")
+            quit(1)
+            return
+        flashes[flash_signature] = true
+        if float(feedback["recoil_kick"]) <= 0.03 or float(feedback["recoil_kick"]) > 0.19:
+            push_error("Weapon recoil escaped plausible real-rifle motion budget for %s" % id)
+            quit(1)
+            return
+        if float(feedback["flash_duration"]) >= 0.085 or float(feedback["flash_duration"]) < 0.03:
+            push_error("Weapon flash exceeded safe rapid-fire visual lifetime for %s" % id)
+            quit(1)
+            return
+    if float(WEAPON_PROFILES.profile("rail")["recoil_kick"]) <= float(WEAPON_PROFILES.profile("vanguard")["recoil_kick"]):
+        push_error("Heavy railgun must kick farther than the starter weapon")
+        quit(1)
+        return
+    if float(WEAPON_PROFILES.profile("scatter")["muzzle_size"]) <= float(WEAPON_PROFILES.profile("vanguard")["muzzle_size"]):
+        push_error("Scatter barrel discharge must read wider than Vanguard")
+        quit(1)
+        return
+
     if float(WEAPON_PROFILES.profile("rail")["impact_weight"]) <= float(WEAPON_PROFILES.profile("vanguard")["impact_weight"]):
         push_error("Rail impact should read heavier than Vanguard")
         quit(1)
