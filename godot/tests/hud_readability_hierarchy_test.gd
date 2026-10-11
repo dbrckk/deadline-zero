@@ -51,6 +51,36 @@ func _initialize() -> void:
         quit(1)
         return
 
+    hud.pulse_xp_collection(2)
+    var common_xp_tint := hud.xp_bar.modulate
+    var common_xp_scale := hud.xp_bar.scale.y
+    hud.pulse_xp_collection(8)
+    var elite_xp_tint := hud.xp_bar.modulate
+    var elite_xp_scale := hud.xp_bar.scale.y
+    hud.pulse_xp_collection(35)
+    var boss_xp_tint := hud.xp_bar.modulate
+    var boss_xp_scale := hud.xp_bar.scale.y
+    if common_xp_tint.g <= common_xp_tint.r or common_xp_tint.g <= common_xp_tint.b:
+        push_error("Ordinary XP collection lost its restrained green accent")
+        quit(1)
+        return
+    if elite_xp_tint.b <= elite_xp_tint.r or elite_xp_tint.b <= common_xp_tint.b:
+        push_error("Elite XP collection lost its distinct cyan HUD accent")
+        quit(1)
+        return
+    if boss_xp_tint.r <= boss_xp_tint.b or boss_xp_tint.r <= elite_xp_tint.r:
+        push_error("Boss XP collection lost its distinct warm amber HUD accent")
+        quit(1)
+        return
+    if not (boss_xp_scale > elite_xp_scale and elite_xp_scale > common_xp_scale):
+        push_error("XP HUD collection strength must increase with reward value")
+        quit(1)
+        return
+    if hud.xp_pulse_tween == null or not hud.xp_pulse_tween.is_valid():
+        push_error("XP collection visual feedback must smoothly return to neutral")
+        quit(1)
+        return
+
     hud.set_wave("CINDER SURGE")
     if hud.current_wave_text != "CINDER SURGE" or hud.wave_transition_tween == null:
         push_error("Run phase transition did not trigger restrained HUD presentation")
