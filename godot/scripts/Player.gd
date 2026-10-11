@@ -56,6 +56,8 @@ const MOVE_DECELERATION := 62.0
 const MOVE_TURN_ACCELERATION := 78.0
 const MOVE_LEAN_ROLL_DEGREES := 4.2
 const MOVE_LEAN_PITCH_DEGREES := 2.4
+const COMBAT_TURN_RESPONSE := 17.0
+const LOCOMOTION_TURN_RESPONSE := 10.0
 const AIM_LEAD_MAX_SECONDS := 0.42
 const AIM_LEAD_MAX_DISTANCE := 1.8
 
@@ -100,14 +102,31 @@ func _physics_process(delta: float) -> void:
     var target := _combat_target()
     _update_player_marker_pressure(_pressure_target(target))
     _update_target_lock_marker(target, delta)
+    _update_combat_facing(target, delta)
     if target != null:
-        var facing := target.global_position
-        facing.y = global_position.y
-        if global_position.distance_squared_to(facing) > 0.01:
-            look_at(facing, Vector3.UP)
         if fire_clock <= 0.0:
             _fire_at(target)
             fire_clock = fire_interval
+
+func _update_combat_facing(target: DZEnemy, delta: float) -> void:
+    # Rotate the actual survivor rig and barrel together. Target changes no
+    # longer snap the full character silhouette, while shots continue to use
+    # the current world-space muzzle for physically consistent lead.
+    var direction := Vector3.ZERO
+    var response := COMBAT_TURN_RESPONSE
+    if target != null and is_instance_valid(target) and not target.dead:
+        direction = target.global_position - global_position
+    elif velocity.length_squared() > 0.16:
+        # When the horde is out of range, orient toward traversal rather than
+        # sliding sideways across the arena with a frozen combat heading.
+        direction = Vector3(velocity.x, 0.0, velocity.z)
+        response = LOCOMOTION_TURN_RESPONSE
+    direction.y = 0.0
+    if direction.length_squared() <= 0.0001:
+        return
+    var desired_yaw := atan2(-direction.x, -direction.z)
+    var alpha := 1.0 - exp(-maxf(delta, 0.0) * response)
+    rotation.y = lerp_angle(rotation.y, desired_yaw, alpha)
 
 func _smoothed_movement_velocity(input: Vector2, delta: float) -> Vector3:
     var desired := Vector2(input.x, input.y) * move_speed
