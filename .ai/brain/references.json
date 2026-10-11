@@ -5,159 +5,956 @@
   "semantic": false,
   "note": "Occurrences are lexical word matches; verify source/LSP/compiler data before relying on them.",
   "symbols": {
-    "ImpactFx": {
+    "DZEnemy": {
       "definition": {
-        "file": "godot/scripts/ImpactFx.gd",
+        "file": "godot/scripts/Enemy.gd",
         "line": 1,
         "kind": "class",
         "language": "gdscript"
       },
       "occurrences": [
         {
-          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
-          "line": 16,
-          "preview": "import com.deadlinezero.game.fx.ImpactFx;",
+          "file": "godot/scripts/BurnStatusFx.gd",
+          "line": 15,
+          "preview": "var tracked_enemy: DZEnemy",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/abilities/AbilitySystem.java",
-          "line": 353,
-          "preview": "ImpactFx fx = pools.impact();",
+          "file": "godot/scripts/BurnStatusFx.gd",
+          "line": 18,
+          "preview": "static func attach_to(enemy: DZEnemy) -> DZBurnStatusFx:",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/fx/ImpactFx.java",
-          "line": 6,
-          "preview": "public final class ImpactFx {",
+          "file": "godot/scripts/CryoStatusFx.gd",
+          "line": 14,
+          "preview": "var tracked_enemy: DZEnemy",
           "definition_candidate": false
         },
         {
-          "file": "core/src/main/java/com/deadlinezero/game/fx/ImpactFx.java",
-          "line": 13,
-          "preview": "public ImpactFx spawn(float x, float y, float size, float duration, Color c) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 36,
-          "preview": "import com.deadlinezero.game.fx.ImpactFx;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 222,
-          "preview": "for (ImpactFx f : pools.impacts) if (f.active) { f.life -= dt; if (f.life <= 0f) f.active = false; }",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 654,
-          "preview": "ImpactFx f = pools.impact();",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/screen/GameScreen.java",
-          "line": 711,
-          "preview": "for (ImpactFx f : pools.impacts) if (f.active) {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-          "line": 11,
-          "preview": "import com.deadlinezero.game.fx.ImpactFx;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-          "line": 24,
-          "preview": "public final Array<ImpactFx> impacts = new Array<>(false, MAX_IMPACTS);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-          "line": 41,
-          "preview": "for (int i = 0; i < MAX_IMPACTS; i++) impacts.add(new ImpactFx());",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-          "line": 77,
-          "preview": "public ImpactFx impact() {",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/util/Pools.java",
-          "line": 81,
-          "preview": "ImpactFx f = impacts.get(impactCursor);",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
-          "line": 12,
-          "preview": "import com.deadlinezero.game.fx.ImpactFx;",
-          "definition_candidate": false
-        },
-        {
-          "file": "core/src/main/java/com/deadlinezero/game/visual/AuthoredVfxRenderer.java",
-          "line": 130,
-          "preview": "for (ImpactFx fx : pools.impacts) {",
+          "file": "godot/scripts/CryoStatusFx.gd",
+          "line": 18,
+          "preview": "static func attach_to(enemy: DZEnemy) -> DZCryoStatusFx:",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 645,
-          "preview": "var fx := ImpactFx.new()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/ImpactFx.gd",
           "line": 1,
-          "preview": "class_name ImpactFx",
+          "preview": "class_name DZEnemy",
           "definition_candidate": true
         },
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 397,
-          "preview": "var fx := ImpactFx.new()",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 338,
+          "preview": "var other := node as DZEnemy",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 423,
-          "preview": "var fx := ImpactFx.new()",
+          "line": 43,
+          "preview": "var boss_reveal_target: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 45,
+          "preview": "var current_boss: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 373,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 653,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 1711,
+          "preview": "func _select_offscreen_threat(candidates: Array, origin: Vector3, view_camera: Camera3D, viewport_size: Vector2) -> DZEnemy:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 1717,
+          "preview": "var best: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 1723,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 41,
+          "preview": "var target_lock_enemy: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 46,
+          "preview": "var current_target: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 47,
+          "preview": "var nearest_threat: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 149,
+          "preview": "func _pressure_target(fallback: DZEnemy) -> DZEnemy:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 313,
+          "preview": "func _combat_target() -> DZEnemy:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 352,
+          "preview": "func _nearest_enemy() -> DZEnemy:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 353,
+          "preview": "var best: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 356,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 365,
+          "preview": "func _fire_at(enemy: DZEnemy) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 389,
+          "preview": "func _predicted_shot_direction(enemy: DZEnemy) -> Vector3:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 692,
+          "preview": "func _update_target_lock_marker(target: DZEnemy, delta: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 713,
+          "preview": "func _update_player_marker_pressure(target: DZEnemy) -> void:",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Projectile.gd",
-          "line": 311,
-          "preview": "var fx := ImpactFx.new()",
+          "line": 256,
+          "preview": "hit_candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Projectile.gd",
-          "line": 366,
-          "preview": "var fx := ImpactFx.new()",
+          "line": 276,
+          "preview": "func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Projectile.gd",
-          "line": 400,
-          "preview": "var fx := ImpactFx.new()",
+          "line": 283,
+          "preview": "var query_radius := maxf(radius, DZEnemy.MAX_PROJECTILE_HIT_RADIUS) + travel * 0.5",
           "definition_candidate": false
         },
         {
-          "file": "godot/tests/impact_fx_mobile_test.gd",
-          "line": 3,
-          "preview": "const IMPACT_SCRIPT := preload(\"res://scripts/ImpactFx.gd\")",
+          "file": "godot/scripts/Projectile.gd",
+          "line": 284,
+          "preview": "var result: Array[DZEnemy] = []",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 288,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 305,
+          "preview": "return _enemies_near(global_position, maxf(radius, DZEnemy.MAX_PROJECTILE_HIT_RADIUS))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 326,
+          "preview": "func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 351,
+          "preview": "func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 360,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 375,
+          "preview": "func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 378,
+          "preview": "var candidates: Array[DZEnemy] = []",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 380,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 388,
+          "preview": "candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 78,
+          "preview": "var primary := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 83,
+          "preview": "var chained_a := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 88,
+          "preview": "var chained_b := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 94,
+          "preview": "var far_enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/archetype_roster_render_test.gd",
+          "line": 46,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/archetype_roster_render_test.gd",
+          "line": 63,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_facing_lock_test.gd",
+          "line": 15,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_facing_lock_test.gd",
+          "line": 65,
+          "preview": "var overlap := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_lane_gradient_test.gd",
+          "line": 19,
+          "preview": "var charger := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_lane_gradient_test.gd",
+          "line": 29,
+          "preview": "var harrier := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_gait_sync_test.gd",
+          "line": 57,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_encounter_render_test.gd",
+          "line": 45,
+          "preview": "var boss: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_encounter_render_test.gd",
+          "line": 46,
+          "preview": "var runner: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_encounter_render_test.gd",
+          "line": 47,
+          "preview": "var elite: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_encounter_render_test.gd",
+          "line": 49,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 20,
+          "preview": "var ordinary := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 26,
+          "preview": "var elite := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 126,
+          "preview": "var third := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 20,
+          "preview": "var first_enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 25,
+          "preview": "var second_enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 113,
+          "preview": "var third := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/damage_number_budget_test.gd",
+          "line": 8,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/damage_number_budget_test.gd",
+          "line": 13,
+          "preview": "for index in range(DZEnemy.MAX_DAMAGE_NUMBERS):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/damage_number_budget_test.gd",
+          "line": 20,
+          "preview": "if baseline != DZEnemy.MAX_DAMAGE_NUMBERS:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 38,
+          "preview": "var cryo_victim: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 39,
+          "preview": "var burning_victim: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 41,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_hit_reaction_test.gd",
+          "line": 33,
+          "preview": "var first := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_hit_reaction_test.gd",
+          "line": 37,
+          "preview": "var second := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_shadow_budget_test.gd",
+          "line": 11,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/first_playable_run_path_test.gd",
+          "line": 327,
+          "preview": "var pressure_enemy: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/first_playable_run_path_test.gd",
+          "line": 329,
+          "preview": "var candidate := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/first_playable_run_path_test.gd",
+          "line": 534,
+          "preview": "var active_boss: DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/first_playable_run_path_test.gd",
+          "line": 536,
+          "preview": "var candidate_boss := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/first_playable_run_path_test.gd",
+          "line": 597,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/first_playable_run_path_test.gd",
+          "line": 615,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 102,
+          "preview": "var primary := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 107,
+          "preview": "var secondary := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 112,
+          "preview": "var distant := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/multihit_silhouette_stability_test.gd",
+          "line": 18,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 216,
+          "preview": "if absf(separation_a.global_position.x) > DZEnemy.ARENA_HALF_EXTENT + 0.001 or absf(separation_a.global_position.z) > DZEnemy.ARENA_HALF_EXTENT + 0.001:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/offscreen_threat_priority_test.gd",
+          "line": 64,
+          "preview": "func _make_threat(arena: Node3D, threat_kind: String, at: Vector3) -> DZEnemy:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/offscreen_threat_priority_test.gd",
+          "line": 65,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/play_feature_graphic_render_test.gd",
+          "line": 151,
+          "preview": "var boss := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/play_feature_graphic_render_test.gd",
+          "line": 160,
+          "preview": "var elite := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/player_pressure_marker_test.gd",
+          "line": 13,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/player_targeting_stability_test.gd",
+          "line": 19,
+          "preview": "var first := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/player_targeting_stability_test.gd",
+          "line": 33,
+          "preview": "var second := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/pressure_frame_render_test.gd",
+          "line": 57,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/pressure_frame_render_test.gd",
+          "line": 85,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/pressure_frame_render_test.gd",
+          "line": 105,
+          "preview": "var enemy := node as DZEnemy",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
+          "line": 19,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/shock_expiry_recovery_test.gd",
+          "line": 13,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/soft_contact_shadow_budget_test.gd",
+          "line": 16,
+          "preview": "var enemy := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/world_target_lock_test.gd",
+          "line": 47,
+          "preview": "var first := DZEnemy.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/world_target_lock_test.gd",
+          "line": 67,
+          "preview": "var boss := DZEnemy.new()",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 23
+      "occurrence_count": 94
+    },
+    "configure": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 74,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 147,
+          "preview": "if (!cloud.available()) return t(\"cloud.configure\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "core/src/main/java/com/deadlinezero/game/screen/CloudSaveScreen.java",
+          "line": 302,
+          "preview": "if (!cloud.available()) return t(\"cloud.configure\");",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 75,
+          "preview": "func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 520,
+          "preview": "shot.configure(attack_target_position, target, contact_damage * 0.88)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/EnemyProjectile.gd",
+          "line": 19,
+          "preview": "func configure(target_position: Vector3, chase_target: Node3D, amount: float, speed := 8.6) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Main.gd",
+          "line": 374,
+          "preview": "enemy.configure(kind, difficulty, player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 80,
+          "preview": "primary.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 85,
+          "preview": "chained_a.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 90,
+          "preview": "chained_b.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 96,
+          "preview": "far_enemy.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/archetype_roster_render_test.gd",
+          "line": 47,
+          "preview": "enemy.configure(KINDS[index], 1.0, main.player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_facing_lock_test.gd",
+          "line": 16,
+          "preview": "enemy.configure(kind, 1.0, player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_facing_lock_test.gd",
+          "line": 66,
+          "preview": "overlap.configure(\"elite\", 1.0, player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_lane_gradient_test.gd",
+          "line": 20,
+          "preview": "charger.configure(\"charger\", 1.0, survivor)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_lane_gradient_test.gd",
+          "line": 30,
+          "preview": "harrier.configure(\"harrier\", 1.0, survivor)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_gait_sync_test.gd",
+          "line": 60,
+          "preview": "enemy.configure(kind, 1.0, survivor)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_phase_runtime_test.gd",
+          "line": 14,
+          "preview": "boss.configure(\"boss\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 21,
+          "preview": "ordinary.configure(\"shambler\", 1.0, player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 27,
+          "preview": "elite.configure(\"elite\", 1.0, player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 127,
+          "preview": "third.configure(\"shambler\", 1.0, player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 21,
+          "preview": "first_enemy.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 26,
+          "preview": "second_enemy.configure(\"elite\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 114,
+          "preview": "third.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 42,
+          "preview": "enemy.configure(String(entry[\"kind\"]), 1.0, scene.player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_hit_reaction_test.gd",
+          "line": 34,
+          "preview": "first.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_hit_reaction_test.gd",
+          "line": 38,
+          "preview": "second.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 103,
+          "preview": "primary.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 108,
+          "preview": "secondary.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 113,
+          "preview": "distant.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/multihit_silhouette_stability_test.gd",
+          "line": 19,
+          "preview": "enemy.configure(kind, 1.0, survivor)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 21,
+          "preview": "charger.configure(\"charger\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 31,
+          "preview": "harrier.configure(\"harrier\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 41,
+          "preview": "regenerator.configure(\"regenerator\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 100,
+          "preview": "dodge_charger.configure(\"charger\", 1.0, dodge_target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 121,
+          "preview": "shooter.configure(\"harrier\", 1.0, harrier_target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 152,
+          "preview": "dodge_shot.configure(harrier_dodge_target.global_position, harrier_dodge_target, 10.0, 8.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 162,
+          "preview": "separation_a.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 166,
+          "preview": "separation_b.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 184,
+          "preview": "melee_brute.configure(\"brute\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 226,
+          "preview": "damage_enemy.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/play_feature_graphic_render_test.gd",
+          "line": 152,
+          "preview": "boss.configure(\"boss\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/play_feature_graphic_render_test.gd",
+          "line": 161,
+          "preview": "elite.configure(\"elite\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/player_pressure_marker_test.gd",
+          "line": 14,
+          "preview": "enemy.configure(\"shambler\", 1.0, player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/player_targeting_stability_test.gd",
+          "line": 20,
+          "preview": "first.configure(\"shambler\", 1.0, player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/player_targeting_stability_test.gd",
+          "line": 34,
+          "preview": "second.configure(\"runner\", 1.0, player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
+          "line": 20,
+          "preview": "enemy.configure(\"shambler\", 1.0, survivor)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/run_end_combat_freeze_test.gd",
+          "line": 16,
+          "preview": "enemy.configure(\"charger\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/shock_expiry_recovery_test.gd",
+          "line": 14,
+          "preview": "enemy.configure(kind, 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 15,
+          "preview": "enemy.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 76,
+          "preview": "lethal_target.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 102,
+          "preview": "inferno_target.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 133,
+          "preview": "arc_target.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 154,
+          "preview": "regenerator_a.configure(\"regenerator\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 158,
+          "preview": "regenerator_b.configure(\"regenerator\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 61,
+          "preview": "enemy.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 92,
+          "preview": "sweep_enemy.configure(\"shambler\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 112,
+          "preview": "broad_boss.configure(\"boss\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 118,
+          "preview": "tight_runner.configure(\"runner\", 1.0, target)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/world_target_lock_test.gd",
+          "line": 48,
+          "preview": "first.configure(\"runner\", 1.0, player)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/world_target_lock_test.gd",
+          "line": 68,
+          "preview": "boss.configure(\"boss\", 1.0, player)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 60
     },
     "_ready": {
       "definition": {
-        "file": "godot/scripts/ImpactFx.gd",
-        "line": 21,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 121,
         "kind": "function",
         "language": "gdscript"
       },
@@ -188,7 +985,7 @@
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 119,
+          "line": 122,
           "preview": "func _ready() -> void:",
           "definition_candidate": false
         },
@@ -243,332 +1040,40 @@
       ],
       "occurrence_count": 13
     },
-    "_make_material": {
+    "_apply_mobile_shadow_budget": {
       "definition": {
-        "file": "godot/scripts/ImpactFx.gd",
-        "line": 125,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/ImpactFx.gd",
-          "line": 27,
-          "preview": "core_material = _make_material(color, 4.2)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/ImpactFx.gd",
-          "line": 36,
-          "preview": "ring_material = _make_material(color.lightened(0.18), 3.4)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/ImpactFx.gd",
-          "line": 44,
-          "preview": "flare_material = _make_material(color.lightened(0.24), 5.6, true)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/ImpactFx.gd",
-          "line": 126,
-          "preview": "func _make_material(tint: Color, energy: float, billboard := false) -> StandardMaterial3D:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "_process": {
-      "definition": {
-        "file": "godot/scripts/ImpactFx.gd",
-        "line": 143,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/ArcLinkFx.gd",
-          "line": 121,
-          "preview": "func _process(delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/BurnStatusFx.gd",
-          "line": 124,
-          "preview": "func _process(_delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/CryoStatusFx.gd",
-          "line": 118,
-          "preview": "func _process(delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/ImpactFx.gd",
-          "line": 144,
-          "preview": "func _process(delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/InfernoBlastFx.gd",
-          "line": 153,
-          "preview": "func _process(delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Main.gd",
-          "line": 147,
-          "preview": "func _process(delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/XpOrb.gd",
-          "line": 128,
-          "preview": "func _process(delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 64,
-          "preview": "first._process(0.05)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/burn_status_fx_test.gd",
-          "line": 108,
-          "preview": "first._process(0.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/burn_status_fx_test.gd",
-          "line": 114,
-          "preview": "first._process(0.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/burn_status_fx_test.gd",
-          "line": 145,
-          "preview": "first._process(0.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/burn_status_fx_test.gd",
-          "line": 151,
-          "preview": "second._process(0.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/cryo_status_fx_test.gd",
-          "line": 95,
-          "preview": "first._process(0.06)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/cryo_status_fx_test.gd",
-          "line": 100,
-          "preview": "first._process(0.02)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/cryo_status_fx_test.gd",
-          "line": 125,
-          "preview": "first._process(0.1)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/cryo_status_fx_test.gd",
-          "line": 137,
-          "preview": "second._process(0.1)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/elemental_protocols_render_test.gd",
-          "line": 82,
-          "preview": "effect._process(0.065)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/elemental_protocols_render_test.gd",
-          "line": 111,
-          "preview": "blast._process(0.36)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 162,
-          "preview": "main._process(0.020 * 0.12)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/impact_fx_mobile_test.gd",
-          "line": 95,
-          "preview": "fx._process(fx.life * 0.5)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/inferno_blast_wave_test.gd",
-          "line": 79,
-          "preview": "first._process(0.075)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/inferno_blast_wave_test.gd",
-          "line": 91,
-          "preview": "first._process(0.34)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/inferno_blast_wave_test.gd",
-          "line": 148,
-          "preview": "first._process(0.60)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/run_end_combat_freeze_test.gd",
-          "line": 68,
-          "preview": "orb._process(0.5)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/smoke_test.gd",
-          "line": 19,
-          "preview": "func _process(_delta: float) -> bool:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/xp_orb_runtime_test.gd",
-          "line": 131,
-          "preview": "first._process(0.20)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/xp_orb_runtime_test.gd",
-          "line": 144,
-          "preview": "second._process(0.20)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 27
-    },
-    "DZPlayer": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 1,
-        "kind": "class",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Main.gd",
-          "line": 22,
-          "preview": "var player: DZPlayer",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Main.gd",
-          "line": 109,
-          "preview": "player = DZPlayer.new()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Main.gd",
-          "line": 1432,
-          "preview": "boundary.position = Vector3(float(segment) * 5.35, 0.016, side * DZPlayer.ARENA_HALF_EXTENT) if axis == 0 else Vector3(side * DZPlayer.ARENA_HALF_EXTENT, 0.016, float(segment) * 5.",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 1,
-          "preview": "class_name DZPlayer",
-          "definition_candidate": true
-        },
-        {
-          "file": "godot/tests/authored_gait_sync_test.gd",
-          "line": 10,
-          "preview": "var survivor := DZPlayer.new()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/boss_encounter_render_test.gd",
-          "line": 29,
-          "preview": "var player := scene.player as DZPlayer",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 189,
-          "preview": "if absf(main.player.global_position.x) > DZPlayer.ARENA_HALF_EXTENT + 0.001 or absf(main.player.global_position.z) > DZPlayer.ARENA_HALF_EXTENT + 0.001:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/muzzle_flare_3d_test.gd",
-          "line": 8,
-          "preview": "var survivor := DZPlayer.new()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_pressure_marker_test.gd",
-          "line": 8,
-          "preview": "var player := DZPlayer.new()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 8,
-          "preview": "var player := DZPlayer.new()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 23,
-          "preview": "first.global_position = Vector3(DZPlayer.TARGET_ACQUIRE_RADIUS + 4.0, 0.0, 0.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 87,
-          "preview": "first.global_position = Vector3(DZPlayer.TARGET_ACQUIRE_RADIUS + 0.5, 0.0, 0.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 88,
-          "preview": "player.target_refresh_clock = DZPlayer.TARGET_REFRESH_INTERVAL",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/pressure_frame_render_test.gd",
-          "line": 31,
-          "preview": "var player := scene.player as DZPlayer",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
-          "line": 15,
-          "preview": "var survivor := DZPlayer.new()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/world_target_lock_test.gd",
-          "line": 12,
-          "preview": "var player := DZPlayer.new()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 16
-    },
-    "_physics_process": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 67,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 139,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 154,
+          "line": 137,
+          "preview": "_apply_mobile_shadow_budget()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 140,
+          "preview": "func _apply_mobile_shadow_budget() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_physics_process": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 156,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 157,
           "preview": "func _physics_process(delta: float) -> void:",
           "definition_candidate": false
         },
@@ -653,174 +1158,501 @@
       ],
       "occurrence_count": 14
     },
-    "_smoothed_movement_velocity": {
+    "_constrain_to_arena": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 111,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 93,
-          "preview": "velocity = _smoothed_movement_velocity(input, delta)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 112,
-          "preview": "func _smoothed_movement_velocity(input: Vector2, delta: float) -> Vector3:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 53,
-          "preview": "var acceleration_step: Vector3 = main.player._smoothed_movement_velocity(Vector2.RIGHT, 1.0 / 60.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 59,
-          "preview": "var braking_step: Vector3 = main.player._smoothed_movement_velocity(Vector2.ZERO, 1.0 / 60.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 65,
-          "preview": "var turn_step: Vector3 = main.player._smoothed_movement_velocity(Vector2.LEFT, 1.0 / 60.0)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "_movement_lean_target": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 122,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 123,
-          "preview": "func _movement_lean_target() -> Vector2:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 138,
-          "preview": "var lean := _movement_lean_target()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 40,
-          "preview": "var strafe_lean: Vector2 = main.player._movement_lean_target()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 46,
-          "preview": "var forward_lean: Vector2 = main.player._movement_lean_target()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "_update_movement_lean": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 133,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 96,
-          "preview": "_update_movement_lean(delta)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 134,
-          "preview": "func _update_movement_lean(delta: float) -> void:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "_reset_movement_lean": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 142,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 143,
-          "preview": "func _reset_movement_lean() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 170,
-          "preview": "_reset_movement_lean()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "_pressure_target": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 148,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 101,
-          "preview": "_update_player_marker_pressure(_pressure_target(target))",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 149,
-          "preview": "func _pressure_target(fallback: DZEnemy) -> DZEnemy:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 114,
-          "preview": "var pressure_target := player._pressure_target(first)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/weapon_presentation_test.gd",
-          "line": 42,
-          "preview": "[\"_update_player_marker_pressure(_pressure_target(target))\", \"Pressure marker is not routed through safe threat validation\"],",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
-    "set_combat_enabled": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 157,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 278,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 443,
+          "line": 271,
+          "preview": "_constrain_to_arena()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 279,
+          "preview": "func _constrain_to_arena() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 449,
+          "preview": "_constrain_to_arena()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 95,
+          "preview": "_constrain_to_arena()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 191,
+          "preview": "func _constrain_to_arena() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/first_playable_run_path_test.gd",
+          "line": 188,
+          "preview": "main.player._constrain_to_arena()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 215,
+          "preview": "separation_a._constrain_to_arena()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "_melee_standoff_distance": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 288,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 247,
+          "preview": "var standoff := _melee_standoff_distance()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 289,
+          "preview": "func _melee_standoff_distance() -> float:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 324,
+          "preview": "return _melee_standoff_distance() + (0.24 if kind in [\"boss\", \"brute\"] else 0.20)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_hit_reaction_test.gd",
+          "line": 14,
+          "preview": "\"_melee_standoff_distance\": \"Close melee pressure must preserve a player-readable standoff envelope\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 187,
+          "preview": "if separation_a._melee_standoff_distance() < 1.05:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 191,
+          "preview": "if melee_brute._melee_standoff_distance() <= separation_a._melee_standoff_distance():",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 195,
+          "preview": "if separation_a._contact_attack_range() <= separation_a._melee_standoff_distance():",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "projectile_hit_radius": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 303,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 304,
+          "preview": "func projectile_hit_radius() -> float:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 299,
+          "preview": "var effective_hit_radius := maxf(radius, enemy.projectile_hit_radius())",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 124,
+          "preview": "if broad_boss.projectile_hit_radius() <= sweep_enemy.projectile_hit_radius():",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_contact_attack_range": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 322,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 275,
+          "preview": "if distance < _contact_attack_range() and attack_cooldown <= 0.0 and target.has_method(\"take_damage\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 323,
+          "preview": "func _contact_attack_range() -> float:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1290,
+          "preview": "return _contact_attack_range() + 0.08",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_hit_reaction_test.gd",
+          "line": 15,
+          "preview": "\"_contact_attack_range\": \"Melee enemies must remain dangerous from the standoff envelope\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 195,
+          "preview": "if separation_a._contact_attack_range() <= separation_a._melee_standoff_distance():",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 200,
+          "preview": "if separation_a._melee_attack_animation_range() < separation_a._contact_attack_range():",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 204,
+          "preview": "if melee_brute._melee_attack_animation_range() < melee_brute._contact_attack_range():",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "_nearby_enemies_for_separation": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 325,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 239,
+          "preview": "var separation := separation_vector(_nearby_enemies_for_separation(separation_radius), separation_radius)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 326,
+          "preview": "func _nearby_enemies_for_separation(radius: float) -> Array:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "separation_vector": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 331,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 239,
+          "preview": "var separation := separation_vector(_nearby_enemies_for_separation(separation_radius), separation_radius)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 332,
+          "preview": "func separation_vector(neighbors: Array, radius: float) -> Vector3:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 172,
+          "preview": "var separation_direction: Vector3 = separation_a.separation_vector([separation_a, separation_b], 1.18)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 178,
+          "preview": "if separation_a.separation_vector([separation_b], 1.18) != Vector3.ZERO:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_update_boss_phase": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 361,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 174,
+          "preview": "_update_boss_phase()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 362,
+          "preview": "func _update_boss_phase() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_phase_runtime_test.gd",
+          "line": 20,
+          "preview": "if not boss.has_method(\"_update_boss_phase\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_phase_runtime_test.gd",
+          "line": 46,
+          "preview": "boss._update_boss_phase()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_phase_runtime_test.gd",
+          "line": 67,
+          "preview": "boss._update_boss_phase()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_boss_slam_windup": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 383,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 223,
+          "preview": "_begin_telegraphed_attack(_boss_slam_windup(), target.global_position)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 384,
+          "preview": "func _boss_slam_windup() -> float:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_phase_runtime_test.gd",
+          "line": 96,
+          "preview": "if boss._boss_slam_windup() >= 0.68 or boss._boss_slam_cooldown() >= 4.1:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_boss_slam_cooldown": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 389,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 224,
+          "preview": "boss_slam_clock = _boss_slam_cooldown()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 390,
+          "preview": "func _boss_slam_cooldown() -> float:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_phase_runtime_test.gd",
+          "line": 96,
+          "preview": "if boss._boss_slam_windup() >= 0.68 or boss._boss_slam_cooldown() >= 4.1:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_boss_aftershock_count": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 395,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 396,
+          "preview": "func _boss_aftershock_count() -> int:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 400,
+          "preview": "var count := _boss_aftershock_count()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_phase_runtime_test.gd",
+          "line": 59,
+          "preview": "if boss._boss_aftershock_count() != 1:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_phase_runtime_test.gd",
+          "line": 80,
+          "preview": "if boss._boss_aftershock_count() != 2:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_schedule_boss_aftershocks": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 398,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 399,
+          "preview": "func _schedule_boss_aftershocks(at: Vector3) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 532,
+          "preview": "_schedule_boss_aftershocks(impact_point)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 13,
+          "preview": "assert(source.contains(\"_schedule_boss_aftershocks\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_show_boss_aftershock": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 406,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 405,
+          "preview": "_show_boss_aftershock(at, radius, delay, damage_scale)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 407,
+          "preview": "func _show_boss_aftershock(at: Vector3, radius: float, delay: float, damage_scale: float) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_resolve_boss_aftershock": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 434,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 433,
+          "preview": "tween.chain().tween_callback(_resolve_boss_aftershock.bind(at, radius, contact_damage * damage_scale, warning))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 435,
+          "preview": "func _resolve_boss_aftershock(at: Vector3, radius: float, damage: float, warning: MeshInstance3D) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 15,
+          "preview": "assert(source.contains(\"_resolve_boss_aftershock\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_process_charge": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 444,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 185,
+          "preview": "_process_charge(delta)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 445,
+          "preview": "func _process_charge(delta: float) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "set_combat_enabled": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 464,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 465,
           "preview": "func set_combat_enabled(enabled: bool) -> void:",
           "definition_candidate": false
         },
@@ -983,277 +1815,635 @@
       ],
       "occurrence_count": 27
     },
-    "_clear_player_marker_pressure": {
+    "_begin_telegraphed_attack": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 173,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 485,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 466,
-          "preview": "player._clear_player_marker_pressure()",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 208,
+          "preview": "_begin_telegraphed_attack(0.52, target.global_position)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 601,
-          "preview": "player._clear_player_marker_pressure()",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 214,
+          "preview": "_begin_telegraphed_attack(0.42, target.global_position)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 171,
-          "preview": "_clear_player_marker_pressure()",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 219,
+          "preview": "_begin_telegraphed_attack(0.46, target.global_position)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 174,
-          "preview": "func _clear_player_marker_pressure() -> void:",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 223,
+          "preview": "_begin_telegraphed_attack(_boss_slam_windup(), target.global_position)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 486,
+          "preview": "func _begin_telegraphed_attack(duration: float, target_position: Vector3) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_facing_lock_test.gd",
+          "line": 28,
+          "preview": "enemy._begin_telegraphed_attack(0.52, locked)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_facing_lock_test.gd",
+          "line": 71,
+          "preview": "overlap._begin_telegraphed_attack(0.32, overlap.global_position)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 6,
+          "preview": "assert(source.contains(\"_begin_telegraphed_attack\"))",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 4
+      "occurrence_count": 8
     },
-    "_constrain_to_arena": {
+    "_resolve_telegraphed_attack": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 190,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 501,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 268,
-          "preview": "_constrain_to_arena()",
+          "line": 203,
+          "preview": "_resolve_telegraphed_attack()",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 276,
-          "preview": "func _constrain_to_arena() -> void:",
+          "line": 502,
+          "preview": "func _resolve_telegraphed_attack() -> void:",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Enemy.gd",
-          "line": 427,
-          "preview": "_constrain_to_arena()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 95,
-          "preview": "_constrain_to_arena()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 191,
-          "preview": "func _constrain_to_arena() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 188,
-          "preview": "main.player._constrain_to_arena()",
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 7,
+          "preview": "assert(source.contains(\"_resolve_telegraphed_attack\"))",
           "definition_candidate": false
         },
         {
           "file": "godot/tests/native_enemy_behavior_test.gd",
-          "line": 215,
-          "preview": "separation_a._constrain_to_arena()",
+          "line": 83,
+          "preview": "charger._resolve_telegraphed_attack()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 108,
+          "preview": "dodge_charger._resolve_telegraphed_attack()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 130,
+          "preview": "shooter._resolve_telegraphed_attack()",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 7
+      "occurrence_count": 6
     },
-    "set_touch_move": {
+    "_show_telegraph": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 200,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 534,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 286,
-          "preview": "player.set_touch_move(Vector2.ZERO)",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 498,
+          "preview": "_show_telegraph(1.75 if kind == \"boss\" else 1.05, duration)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 293,
-          "preview": "player.set_touch_move(vector)",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 535,
+          "preview": "func _show_telegraph(radius: float, duration: float) -> void:",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 465,
-          "preview": "player.set_touch_move(Vector2.ZERO)",
+          "file": "godot/tests/attack_lane_gradient_test.gd",
+          "line": 27,
+          "preview": "charger._show_telegraph(1.05, 0.44)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 602,
-          "preview": "player.set_touch_move(Vector2.ZERO)",
+          "file": "godot/tests/attack_lane_gradient_test.gd",
+          "line": 36,
+          "preview": "harrier._show_telegraph(1.05, 0.44)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 201,
-          "preview": "func set_touch_move(value: Vector2) -> void:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 5
-    },
-    "set_reduced_flashes": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 203,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Hud.gd",
-          "line": 255,
-          "preview": "func set_reduced_flashes(enabled: bool) -> void:",
+          "file": "godot/tests/attack_telegraph_escalation_test.gd",
+          "line": 10,
+          "preview": "var show_start := enemy_source.find(\"func _show_telegraph\")",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 532,
-          "preview": "hud.set_reduced_flashes(reduced_flashes)",
+          "file": "godot/tests/attack_telegraph_escalation_test.gd",
+          "line": 32,
+          "preview": "enemy._show_telegraph(1.75, 0.40)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 536,
-          "preview": "player.set_reduced_flashes(reduced_flashes)",
+          "file": "godot/tests/attack_telegraph_escalation_test.gd",
+          "line": 75,
+          "preview": "enemy._show_telegraph(1.75, 0.40)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 574,
-          "preview": "hud.set_reduced_flashes(enabled)",
+          "file": "godot/tests/attack_telegraph_escalation_test.gd",
+          "line": 108,
+          "preview": "enemy._show_telegraph(1.05, 0.40)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 576,
-          "preview": "player.set_reduced_flashes(enabled)",
+          "file": "godot/tests/attack_telegraph_escalation_test.gd",
+          "line": 124,
+          "preview": "enemy._show_telegraph(1.05, 0.40)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 204,
-          "preview": "func set_reduced_flashes(enabled: bool) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/muzzle_flare_3d_test.gd",
-          "line": 59,
-          "preview": "survivor.set_reduced_flashes(false)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/muzzle_flare_3d_test.gd",
-          "line": 66,
-          "preview": "survivor.set_reduced_flashes(true)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/screen_space_fx_test.gd",
-          "line": 29,
-          "preview": "hud.set_reduced_flashes(true)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/screen_space_fx_test.gd",
-          "line": 45,
-          "preview": "player.set_reduced_flashes(true)",
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 11,
+          "preview": "assert(source.contains(\"_show_telegraph\"))",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 10
     },
-    "take_damage": {
+    "_add_directional_telegraph_lane": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 206,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 589,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 272,
+          "line": 554,
+          "preview": "_add_directional_telegraph_lane()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 590,
+          "preview": "func _add_directional_telegraph_lane() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_spawn_attack_impact": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 663,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 443,
+          "preview": "_spawn_attack_impact(at, radius * 0.72)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 459,
+          "preview": "_spawn_attack_impact(global_position + Vector3(0.0, 0.05, 0.0), 1.05)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 530,
+          "preview": "_spawn_attack_impact(impact_point, radius)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 664,
+          "preview": "func _spawn_attack_impact(at: Vector3, radius: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/attack_telegraph_escalation_test.gd",
+          "line": 11,
+          "preview": "var impact_start := enemy_source.find(\"func _spawn_attack_impact\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_archetype_combat_test.gd",
+          "line": 12,
+          "preview": "assert(source.contains(\"_spawn_attack_impact\"))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "_begin_regeneration": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 682,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 195,
+          "preview": "_begin_regeneration()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 683,
+          "preview": "func _begin_regeneration() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 48,
+          "preview": "regenerator._begin_regeneration()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 63,
+          "preview": "regenerator._begin_regeneration()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 70,
+          "preview": "regenerator._begin_regeneration()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 164,
+          "preview": "regenerator_a._begin_regeneration()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 165,
+          "preview": "regenerator_b._begin_regeneration()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "_process_regeneration": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 708,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 188,
+          "preview": "_process_regeneration(delta)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 709,
+          "preview": "func _process_regeneration(delta: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 57,
+          "preview": "regenerator._process_regeneration(0.50)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 64,
+          "preview": "regenerator._process_regeneration(0.50)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_regenerate": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 721,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 716,
+          "preview": "_regenerate()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 722,
+          "preview": "func _regenerate() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "apply_slow": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 728,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 729,
+          "preview": "func apply_slow(multiplier: float, duration: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 334,
+          "preview": "primary.apply_slow(slow_multiplier, slow_duration)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 54,
+          "preview": "second_enemy.apply_slow(0.62, 1.6)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 117,
+          "preview": "third.apply_slow(0.62, 1.6)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 56,
+          "preview": "cryo_victim.apply_slow(0.62, 1.6)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 62,
+          "preview": "enemy.apply_slow(slow.x, slow.y)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "apply_burn": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 732,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 733,
+          "preview": "func apply_burn(dps: float, duration: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 329,
+          "preview": "primary.apply_burn(dealt_damage * 0.16, 2.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 52,
+          "preview": "elite.apply_burn(3.0, 2.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 113,
+          "preview": "ordinary.apply_burn(4.0, 2.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 130,
+          "preview": "third.apply_burn(3.0, 1.5)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/elemental_protocols_render_test.gd",
+          "line": 63,
+          "preview": "burning_victim.apply_burn(4.2, 2.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 21,
+          "preview": "if not enemy.has_method(\"apply_burn\") or not enemy.has_method(\"_process_status_effects\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 33,
+          "preview": "enemy.apply_burn(8.0, 1.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 90,
+          "preview": "lethal_target.apply_burn(8.0, 1.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 9
+    },
+    "apply_shock": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 738,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 739,
+          "preview": "func apply_shock(duration: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 338,
+          "preview": "primary.apply_shock(0.24)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/authored_gait_sync_test.gd",
+          "line": 88,
+          "preview": "enemy.apply_shock(0.24)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 121,
+          "preview": "if not enemy.has_method(\"apply_shock\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 126,
+          "preview": "enemy.apply_shock(0.40)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_process_status_effects": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 745,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 161,
+          "preview": "_process_status_effects(delta)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 746,
+          "preview": "func _process_status_effects(delta: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 21,
+          "preview": "if not enemy.has_method(\"apply_burn\") or not enemy.has_method(\"_process_status_effects\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 34,
+          "preview": "enemy._process_status_effects(0.5)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 49,
+          "preview": "enemy._process_status_effects(0.6)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 91,
+          "preview": "lethal_target._process_status_effects(0.25)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "take_damage": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 763,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 275,
           "preview": "if distance < _contact_attack_range() and attack_cooldown <= 0.0 and target.has_method(\"take_damage\"):",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 273,
+          "line": 276,
           "preview": "target.take_damage(contact_damage)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 416,
+          "line": 438,
           "preview": "if target != null and is_instance_valid(target) and target.has_method(\"take_damage\"):",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 420,
+          "line": 442,
           "preview": "target.take_damage(damage)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 434,
+          "line": 456,
           "preview": "if target_offset.length() <= 1.0 and target.has_method(\"take_damage\"):",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 435,
+          "line": 457,
           "preview": "target.take_damage(contact_damage * 1.30)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 506,
+          "line": 528,
           "preview": "if target.global_position.distance_to(impact_point) <= radius and target.has_method(\"take_damage\"):",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 507,
+          "line": 529,
           "preview": "target.take_damage(damage)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 734,
+          "line": 756,
           "preview": "take_damage(burn_dps * BURN_TICK, false, true)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 738,
+          "line": 760,
           "preview": "take_damage(burn_dps * burn_tick_accumulator, false, true)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 742,
+          "line": 764,
           "preview": "func take_damage(amount: float, critical := false, damage_over_time := false) -> void:",
           "definition_candidate": false
         },
@@ -1283,13 +2473,13 @@
         },
         {
           "file": "godot/scripts/Projectile.gd",
-          "line": 364,
+          "line": 367,
           "preview": "enemy.take_damage(splash_damage, false)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Projectile.gd",
-          "line": 395,
+          "line": 398,
           "preview": "chained.take_damage(dealt_damage * falloff, false)",
           "definition_candidate": false
         },
@@ -1356,440 +2546,215 @@
       ],
       "occurrence_count": 27
     },
-    "heal_full": {
+    "hit_reaction_profile": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 222,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 789,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 223,
-          "preview": "func heal_full() -> void:",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 790,
+          "preview": "func hit_reaction_profile() -> Dictionary:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 801,
+          "preview": "var profile := hit_reaction_profile()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/enemy_hit_reaction_test.gd",
+          "line": 6,
+          "preview": "\"hit_reaction_profile\": \"Enemy must expose a hit reaction profile\",",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 1
+      "occurrence_count": 3
     },
-    "can_apply_upgrade": {
+    "_play_hit_reaction": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 226,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 796,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
-          "file": "godot/scripts/Main.gd",
-          "line": 472,
-          "preview": "if player == null or player.can_apply_upgrade(id):",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 777,
+          "preview": "_play_hit_reaction(critical, killed)",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 227,
-          "preview": "func can_apply_upgrade(id: String) -> bool:",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 797,
+          "preview": "func _play_hit_reaction(critical: bool, killed: bool) -> void:",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 268,
-          "preview": "if not can_apply_upgrade(id):",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1324,
+          "preview": "_play_hit_reaction(critical, killed)",
           "definition_candidate": false
         },
         {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 52,
-          "preview": "if player.can_apply_upgrade(\"multishot\"):",
+          "file": "godot/tests/enemy_hit_reaction_test.gd",
+          "line": 7,
+          "preview": "\"_play_hit_reaction\": \"Enemy damage must trigger a hit reaction\",",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/multihit_silhouette_stability_test.gd",
+          "line": 38,
+          "preview": "enemy._play_hit_reaction(false, false)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/multihit_silhouette_stability_test.gd",
+          "line": 49,
+          "preview": "enemy._play_hit_reaction(index % 2 == 0, false)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/multihit_silhouette_stability_test.gd",
+          "line": 69,
+          "preview": "enemy._play_hit_reaction(true, true)",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 4
+      "occurrence_count": 7
     },
-    "_apply_weapon_profile_data": {
+    "_build_contact_shadow": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 233,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 841,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 234,
-          "preview": "func _apply_weapon_profile_data(profile_id: String, data: Dictionary) -> void:",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 135,
+          "preview": "_build_contact_shadow()",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 303,
-          "preview": "_apply_weapon_profile_data(\"scatter\", DZWeaponProfiles.profile(\"scatter\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 305,
-          "preview": "_apply_weapon_profile_data(\"rail\", DZWeaponProfiles.profile(\"rail\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 307,
-          "preview": "_apply_weapon_profile_data(\"inferno\", DZWeaponProfiles.profile(\"inferno\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 309,
-          "preview": "_apply_weapon_profile_data(\"cryo\", DZWeaponProfiles.profile(\"cryo\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 311,
-          "preview": "_apply_weapon_profile_data(\"arc\", DZWeaponProfiles.profile(\"arc\"))",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/weapon_profile_data_test.gd",
-          "line": 37,
-          "preview": "if not player.has_method(\"_apply_weapon_profile_data\"):",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/weapon_profile_data_test.gd",
-          "line": 55,
-          "preview": "player._apply_weapon_profile_data(\"test_profile\", custom)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 8
-    },
-    "apply_upgrade": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 266,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Main.gd",
-          "line": 484,
-          "preview": "player.apply_upgrade(pending_upgrades[index][\"id\"])",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 267,
-          "preview": "func apply_upgrade(id: String) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 466,
-          "preview": "main.player.apply_upgrade(\"inferno_protocol\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 19,
-          "preview": "player.apply_upgrade(\"berserker\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 28,
-          "preview": "player.apply_upgrade(\"fortress\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 37,
-          "preview": "player.apply_upgrade(\"scatter_protocol\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 46,
-          "preview": "player.apply_upgrade(\"rail_protocol\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 56,
-          "preview": "player.apply_upgrade(\"multishot\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 65,
-          "preview": "player.apply_upgrade(\"inferno_protocol\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 74,
-          "preview": "player.apply_upgrade(\"cryo_protocol\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 83,
-          "preview": "player.apply_upgrade(\"arc_protocol\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 92,
-          "preview": "player.apply_upgrade(\"inferno_protocol\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 95,
-          "preview": "player.apply_upgrade(\"inferno_protocol\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/native_upgrade_depth_test.gd",
-          "line": 101,
-          "preview": "player.apply_upgrade(\"rail_protocol\")",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 14
-    },
-    "_combat_target": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 312,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 100,
-          "preview": "var target := _combat_target()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 313,
-          "preview": "func _combat_target() -> DZEnemy:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 14,
-          "preview": "if player._combat_target() != null or player.target_refresh_clock <= 0.0:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 26,
-          "preview": "if player._combat_target() != null:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 41,
-          "preview": "if player._combat_target() != null:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 46,
-          "preview": "var selected := player._combat_target()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 54,
-          "preview": "selected = player._combat_target()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 67,
-          "preview": "selected = player._combat_target()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 74,
-          "preview": "selected = player._combat_target()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 81,
-          "preview": "selected = player._combat_target()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 89,
-          "preview": "selected = player._combat_target()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 97,
-          "preview": "selected = player._combat_target()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_targeting_stability_test.gd",
-          "line": 104,
-          "preview": "selected = player._combat_target()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 13
-    },
-    "_nearest_enemy": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 351,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 334,
-          "preview": "var nearest := _nearest_enemy()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 352,
-          "preview": "func _nearest_enemy() -> DZEnemy:",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 842,
+          "preview": "func _build_contact_shadow() -> void:",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "_fire_at": {
+    "_play_spawn_reveal": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 364,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 867,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 109,
-          "preview": "_fire_at(target)",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 138,
+          "preview": "_play_spawn_reveal()",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 365,
-          "preview": "func _fire_at(enemy: DZEnemy) -> void:",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 868,
+          "preview": "func _play_spawn_reveal() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_build_hit_flash": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 933,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 136,
+          "preview": "_build_hit_flash()",
           "definition_candidate": false
         },
         {
-          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
-          "line": 38,
-          "preview": "survivor._fire_at(enemy)",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 934,
+          "preview": "func _build_hit_flash() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_spawn_damage_number": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 953,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 776,
+          "preview": "_spawn_damage_number(amount, critical, killed)",
           "definition_candidate": false
         },
         {
-          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
-          "line": 91,
-          "preview": "survivor._fire_at(enemy)",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 954,
+          "preview": "func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:",
           "definition_candidate": false
         },
         {
-          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
-          "line": 111,
-          "preview": "survivor._fire_at(enemy)",
+          "file": "godot/tests/damage_number_budget_test.gd",
+          "line": 25,
+          "preview": "enemy._spawn_damage_number(12.0, false, false)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/damage_number_budget_test.gd",
+          "line": 31,
+          "preview": "enemy._spawn_damage_number(24.0, true, false)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/damage_number_budget_test.gd",
+          "line": 47,
+          "preview": "enemy._spawn_damage_number(60.0, false, true)",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 5
     },
-    "_predicted_shot_direction": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 388,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 366,
-          "preview": "var base_dir := _predicted_shot_direction(enemy)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 389,
-          "preview": "func _predicted_shot_direction(enemy: DZEnemy) -> Vector3:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "_projectile_muzzle_origin": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 412,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 378,
-          "preview": "projectile.setup(_projectile_muzzle_origin(dir),",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 393,
-          "preview": "var offset := enemy.global_position - _projectile_muzzle_origin(Vector3.ZERO)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 413,
-          "preview": "func _projectile_muzzle_origin(direction: Vector3) -> Vector3:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
-          "line": 48,
-          "preview": "var muzzle_to_target := enemy.global_position - survivor._projectile_muzzle_origin(Vector3.ZERO)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 4
-    },
     "_build_visual": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 420,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 980,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 121,
+          "line": 124,
           "preview": "_build_visual()",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 959,
+          "line": 981,
           "preview": "func _build_visual() -> void:",
           "definition_candidate": false
         },
@@ -1820,414 +2785,384 @@
       ],
       "occurrence_count": 6
     },
-    "_build_tactical_rig": {
+    "_add_archetype_signature": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 494,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1051,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 444,
-          "preview": "_build_tactical_rig()",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 998,
+          "preview": "_add_archetype_signature()",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 489,
-          "preview": "_build_tactical_rig()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 495,
-          "preview": "func _build_tactical_rig() -> void:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "_trigger_rifle_recoil": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 578,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 371,
-          "preview": "_trigger_rifle_recoil()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 579,
-          "preview": "func _trigger_rifle_recoil() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/weapon_presentation_test.gd",
-          "line": 50,
-          "preview": "[\"_trigger_rifle_recoil()\", \"Rifle recoil presentation is not triggered\"]",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "_trigger_weapon_accent_pulse": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 589,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 580,
-          "preview": "_trigger_weapon_accent_pulse()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 590,
-          "preview": "func _trigger_weapon_accent_pulse() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 219,
-          "preview": "main.player._trigger_weapon_accent_pulse()",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "_build_player_marker": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 598,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 445,
-          "preview": "_build_player_marker()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 490,
-          "preview": "_build_player_marker()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 599,
-          "preview": "func _build_player_marker() -> void:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "_build_target_lock_marker": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 645,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 446,
-          "preview": "_build_target_lock_marker()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 491,
-          "preview": "_build_target_lock_marker()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 646,
-          "preview": "func _build_target_lock_marker() -> void:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "_update_target_lock_marker": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 691,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 102,
-          "preview": "_update_target_lock_marker(target, delta)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 172,
-          "preview": "_update_target_lock_marker(null, 0.0)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 692,
-          "preview": "func _update_target_lock_marker(target: DZEnemy, delta: float) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/world_target_lock_test.gd",
-          "line": 54,
-          "preview": "player._update_target_lock_marker(first, 0.016)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/world_target_lock_test.gd",
-          "line": 61,
-          "preview": "player._update_target_lock_marker(first, 0.016)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/world_target_lock_test.gd",
-          "line": 73,
-          "preview": "player._update_target_lock_marker(boss, 0.016)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/world_target_lock_test.gd",
-          "line": 80,
-          "preview": "player._update_target_lock_marker(boss, 0.016)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/world_target_lock_test.gd",
-          "line": 86,
-          "preview": "player._update_target_lock_marker(first, 0.016)",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 8
-    },
-    "_update_player_marker_pressure": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 712,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 101,
-          "preview": "_update_player_marker_pressure(_pressure_target(target))",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 713,
-          "preview": "func _update_player_marker_pressure(target: DZEnemy) -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/first_playable_run_path_test.gd",
-          "line": 338,
-          "preview": "main.player._update_player_marker_pressure(pressure_enemy)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_pressure_marker_test.gd",
-          "line": 21,
-          "preview": "player._update_player_marker_pressure(enemy)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_pressure_marker_test.gd",
-          "line": 52,
-          "preview": "player._update_player_marker_pressure(enemy)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/player_pressure_marker_test.gd",
-          "line": 59,
-          "preview": "player._update_player_marker_pressure(enemy)",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/weapon_presentation_test.gd",
-          "line": 42,
-          "preview": "[\"_update_player_marker_pressure(_pressure_target(target))\", \"Pressure marker is not routed through safe threat validation\"],",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 7
-    },
-    "_build_muzzle_flash": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 733,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 447,
-          "preview": "_build_muzzle_flash()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 492,
-          "preview": "_build_muzzle_flash()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 734,
-          "preview": "func _build_muzzle_flash() -> void:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "_trigger_muzzle_flash": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 776,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 370,
-          "preview": "_trigger_muzzle_flash()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 777,
-          "preview": "func _trigger_muzzle_flash() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/muzzle_flare_3d_test.gd",
-          "line": 60,
-          "preview": "survivor._trigger_muzzle_flash()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/muzzle_flare_3d_test.gd",
-          "line": 67,
-          "preview": "survivor._trigger_muzzle_flash()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/screen_space_fx_test.gd",
-          "line": 46,
-          "preview": "player._trigger_muzzle_flash()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/weapon_presentation_test.gd",
-          "line": 39,
-          "preview": "[\"_trigger_muzzle_flash()\", \"Muzzle flash is not triggered during fire\"],",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 6
-    },
-    "_build_damage_feedback": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 797,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 448,
-          "preview": "_build_damage_feedback()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 493,
-          "preview": "_build_damage_feedback()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 798,
-          "preview": "func _build_damage_feedback() -> void:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 3
-    },
-    "_trigger_damage_feedback": {
-      "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 819,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 213,
-          "preview": "_trigger_damage_feedback()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 820,
-          "preview": "func _trigger_damage_feedback() -> void:",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1052,
+          "preview": "func _add_archetype_signature() -> void:",
           "definition_candidate": false
         }
       ],
       "occurrence_count": 2
     },
-    "_update_authored_animation": {
+    "_signature_material": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 846,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1100,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 271,
+          "line": 1101,
+          "preview": "func _signature_material(color: Color, energy := 2.2) -> StandardMaterial3D:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1120,
+          "preview": "beacon.material_override = _signature_material(color, 3.2)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1124,
+          "preview": "var mat := _signature_material(color, 1.85)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1148,
+          "preview": "var accent := _signature_material(color, 1.55)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1168,
+          "preview": "var mat := _signature_material(color, 1.95)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1180,
+          "preview": "var mat := _signature_material(color, 3.7)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1202,
+          "preview": "core.material_override = _signature_material(Color(1.0, 0.30, 0.04), 5.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "_add_eye_beacon": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1114,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1080,
+          "preview": "_add_eye_beacon(accent, Vector3(0.0, 1.62, -0.28), 0.055)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1115,
+          "preview": "func _add_eye_beacon(color: Color, at: Vector3, size: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1135,
+          "preview": "_add_eye_beacon(color, Vector3(0.0, 1.54, -0.30), 0.060)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1165,
+          "preview": "_add_eye_beacon(color, Vector3(0.0, 1.72, -0.34), 0.060)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1177,
+          "preview": "_add_eye_beacon(color, Vector3(0.0, 1.70, -0.34), 0.075)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1204,
+          "preview": "_add_eye_beacon(color, Vector3(0.0, 1.96, -0.50), 0.125)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "_add_runner_blades": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1122,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1060,
+          "preview": "_add_runner_blades(accent)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1072,
+          "preview": "_add_runner_blades(accent)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1123,
+          "preview": "func _add_runner_blades(color: Color) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_add_brute_shoulders": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1145,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1063,
+          "preview": "_add_brute_shoulders(accent)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1069,
+          "preview": "_add_brute_shoulders(accent)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1146,
+          "preview": "func _add_brute_shoulders(color: Color) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_add_elite_crown": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1166,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1066,
+          "preview": "_add_elite_crown(accent)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1075,
+          "preview": "_add_elite_crown(accent)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1167,
+          "preview": "func _add_elite_crown(color: Color) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_add_boss_frame": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1178,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1078,
+          "preview": "_add_boss_frame(accent)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1179,
+          "preview": "func _add_boss_frame(color: Color) -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_build_boss_presence": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1206,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1205,
+          "preview": "_build_boss_presence()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1207,
+          "preview": "func _build_boss_presence() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_refresh_boss_presence_style": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1250,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 369,
+          "preview": "_refresh_boss_presence_style()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1249,
+          "preview": "_refresh_boss_presence_style()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1251,
+          "preview": "func _refresh_boss_presence_style() -> void:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_update_boss_presence": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1271,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 175,
+          "preview": "_update_boss_presence(delta)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1272,
+          "preview": "func _update_boss_presence(delta: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/boss_phase_runtime_test.gd",
+          "line": 90,
+          "preview": "boss._update_boss_presence(0.16)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_melee_attack_animation_range": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1288,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1289,
+          "preview": "func _melee_attack_animation_range() -> float:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1295,
+          "preview": "if kind != \"harrier\" and distance <= _melee_attack_animation_range() and authored_anim.has_animation(\"Idle_Attack\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 200,
+          "preview": "if separation_a._melee_attack_animation_range() < separation_a._contact_attack_range():",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 204,
+          "preview": "if melee_brute._melee_attack_animation_range() < melee_brute._contact_attack_range():",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/native_enemy_behavior_test.gd",
+          "line": 208,
+          "preview": "if melee_brute._melee_attack_animation_range() <= separation_a._melee_attack_animation_range():",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_update_authored_animation": {
+      "definition": {
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1291,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 274,
           "preview": "_update_authored_animation(distance)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 430,
+          "line": 452,
           "preview": "_update_authored_animation(8.0)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 1270,
+          "line": 1292,
           "preview": "func _update_authored_animation(distance: float) -> void:",
           "definition_candidate": false
         },
@@ -2290,45 +3225,45 @@
     },
     "_play_authored": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 862,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1312,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 478,
+          "line": 500,
           "preview": "_play_authored(\"Idle_Attack\")",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 975,
+          "line": 997,
           "preview": "_play_authored(\"Run_Arms\" if kind == \"runner\" else \"Walk\")",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 1274,
+          "line": 1296,
           "preview": "_play_authored(\"Idle_Attack\")",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 1277,
+          "line": 1299,
           "preview": "_play_authored(\"Run_Arms\")",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 1279,
+          "line": 1301,
           "preview": "_play_authored(\"Walk\")",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Enemy.gd",
-          "line": 1291,
+          "line": 1313,
           "preview": "func _play_authored(name: String) -> void:",
           "definition_candidate": false
         },
@@ -2371,55 +3306,26 @@
       ],
       "occurrence_count": 12
     },
-    "_build_audio": {
+    "_flash": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 872,
+        "file": "godot/scripts/Enemy.gd",
+        "line": 1322,
         "kind": "function",
         "language": "gdscript"
       },
       "occurrences": [
         {
-          "file": "godot/scripts/Player.gd",
-          "line": 65,
-          "preview": "_build_audio()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 873,
-          "preview": "func _build_audio() -> void:",
+          "file": "godot/scripts/Enemy.gd",
+          "line": 1323,
+          "preview": "func _flash(critical := false, killed := false) -> void:",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 2
+      "occurrence_count": 1
     },
-    "_play_shot_audio": {
+    "DZProjectile": {
       "definition": {
-        "file": "godot/scripts/Player.gd",
-        "line": 885,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 369,
-          "preview": "_play_shot_audio()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/scripts/Player.gd",
-          "line": 886,
-          "preview": "func _play_shot_audio() -> void:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 2
-    },
-    "DZXpOrb": {
-      "definition": {
-        "file": "godot/scripts/XpOrb.gd",
+        "file": "godot/scripts/Projectile.gd",
         "line": 1,
         "kind": "class",
         "language": "gdscript"
@@ -2427,71 +3333,859 @@
       "occurrences": [
         {
           "file": "godot/scripts/Main.gd",
-          "line": 435,
-          "preview": "var orb := DZXpOrb.new()",
+          "line": 657,
+          "preview": "var projectile := node as DZProjectile",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 375,
+          "preview": "var projectile := DZProjectile.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 1,
+          "preview": "class_name DZProjectile",
+          "definition_candidate": true
+        },
+        {
+          "file": "godot/tests/impact_fx_mobile_test.gd",
+          "line": 156,
+          "preview": "var projectile := DZProjectile.new()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
+          "line": 53,
+          "preview": "var projectile := shots[index] as DZProjectile",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
+          "line": 97,
+          "preview": "var moving_shot := moving_shots[0] as DZProjectile",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
+          "line": 117,
+          "preview": "var rooted_shot := rooted_shots[0] as DZProjectile",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "setup": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 33,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Player.gd",
+          "line": 378,
+          "preview": "projectile.setup(_projectile_muzzle_origin(dir),",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 34,
+          "preview": "func setup(origin: Vector3, direction: Vector3, speed: float, shot_damage: float, shot_tint: Color,",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 102,
+          "preview": "projectile.setup(Vector3.ZERO, Vector3.RIGHT, 12.0, 24.0, Color(0.65, 0.45, 1.0), \"arc\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 39,
+          "preview": "shot.setup(Vector3.ZERO, Vector3.RIGHT, 15.0, 20.0, Color.ORANGE_RED, \"inferno\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 38,
+          "preview": "shot.setup(Vector3.ZERO, Vector3.RIGHT, 16.0, 22.0, Color(0.23, 0.88, 1.0), \"cryo\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 120,
+          "preview": "projectile.setup(Vector3.ZERO, Vector3.RIGHT, 16.0, 25.0, Color(1.0, 0.3, 0.02), \"inferno\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/projectile_profile_runtime_visual_test.gd",
+          "line": 20,
+          "preview": "projectile.setup(",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/projectile_profile_runtime_visual_test.gd",
+          "line": 59,
+          "preview": "duplicate.setup(",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_presentation_test.gd",
+          "line": 35,
+          "preview": "[\"weapon_profile)\", \"Projectile setup no longer forwards weapon profile\"],",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 100,
+          "preview": "swept_projectile.setup(Vector3.ZERO, Vector3.FORWARD, 40.0, 10.0, Color.WHITE, \"rail\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 147,
+          "preview": "spawned.setup(spawn_origin, Vector3.FORWARD, 10.0, 10.0, Color.WHITE, \"vanguard\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 151,
+          "preview": "push_error(\"Projectile setup did not preserve global spawn origin under a transformed parent\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 12
+    },
+    "_apply_profile": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 57,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 44,
+          "preview": "_apply_profile(profile)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 58,
+          "preview": "func _apply_profile(profile: String) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 114,
+          "preview": "projectile._apply_profile(\"inferno\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 145,
+          "preview": "arc_projectile._apply_profile(\"arc\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 69,
+          "preview": "rail._apply_profile(\"rail\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 75,
+          "preview": "inferno._apply_profile(\"inferno\")",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 81,
+          "preview": "arc._apply_profile(\"arc\")",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "_visual_cache_key": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 118,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 119,
+          "preview": "func _visual_cache_key() -> String:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 129,
+          "preview": "var key := _visual_cache_key()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 141,
+          "preview": "var key := _visual_cache_key()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 150,
+          "preview": "var key := _visual_cache_key()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 163,
+          "preview": "var key := _visual_cache_key()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_cached_core_mesh": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 127,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 90,
+          "preview": "glow.mesh = _cached_core_mesh()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 128,
+          "preview": "func _cached_core_mesh() -> SphereMesh:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_cached_trail_mesh": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 139,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 98,
+          "preview": "trail.mesh = _cached_trail_mesh()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 140,
+          "preview": "func _cached_trail_mesh() -> BoxMesh:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_cached_core_material": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 148,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 92,
+          "preview": "var core_mat := _cached_core_material()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 149,
+          "preview": "func _cached_core_material() -> StandardMaterial3D:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_cached_trail_material": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 161,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 101,
+          "preview": "var trail_mat := _cached_trail_material()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 162,
+          "preview": "func _cached_trail_material() -> StandardMaterial3D:",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_cached_accent_box_mesh": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 174,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 175,
+          "preview": "func _cached_accent_box_mesh(key: String, size: Vector3) -> BoxMesh:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 220,
+          "preview": "spark.mesh = _cached_accent_box_mesh(key, Vector3(0.025, 0.025, trail_length * 0.62))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_cached_accent_sphere_mesh": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 182,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 183,
+          "preview": "func _cached_accent_sphere_mesh(key: String, radius: float, height: float) -> SphereMesh:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 237,
+          "preview": "flame.mesh = _cached_accent_sphere_mesh(key, core_radius * 0.58, core_radius * 1.55)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_cached_arc_accent_mesh": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 193,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 194,
+          "preview": "func _cached_arc_accent_mesh() -> TorusMesh:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 228,
+          "preview": "accent.mesh = _cached_arc_accent_mesh()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 2
+    },
+    "_add_side_spark": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 216,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 109,
+          "preview": "_add_side_spark(core_mat, -1.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 110,
+          "preview": "_add_side_spark(core_mat, 1.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 217,
+          "preview": "func _add_side_spark(mat: StandardMaterial3D, side: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_presentation_test.gd",
+          "line": 16,
+          "preview": "[\"_add_side_spark\", \"Scatter projectile side-spark presentation is missing\"],",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_presentation_test.gd",
+          "line": 23,
+          "preview": "[\"_add_side_spark(core_mat, -1.0)\", \"Left scatter spark identity is missing\"],",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_presentation_test.gd",
+          "line": 24,
+          "preview": "[\"_add_side_spark(core_mat, 1.0)\", \"Right scatter spark identity is missing\"]",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_presentation_test.gd",
+          "line": 29,
+          "preview": "if not _require(not projectile.contains(\"_add_side_spark(mat,\"), \"Legacy scatter spark material call returned\"):",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 7
+    },
+    "_add_arc_accent": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 225,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 112,
+          "preview": "_add_arc_accent()",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 226,
+          "preview": "func _add_arc_accent() -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_presentation_test.gd",
+          "line": 17,
+          "preview": "[\"_add_arc_accent\", \"Arc projectile accent presentation is missing\"],",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_add_flame_core": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 233,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 114,
+          "preview": "_add_flame_core(core_mat)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 234,
+          "preview": "func _add_flame_core(base_material: StandardMaterial3D) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_presentation_test.gd",
+          "line": 18,
+          "preview": "[\"_add_flame_core\", \"Inferno projectile core presentation is missing\"],",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_swept_hit_candidates": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 275,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 254,
+          "preview": "var hit_candidates := _swept_hit_candidates(previous_position, global_position)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 276,
+          "preview": "func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 103,
+          "preview": "var swept_hits := swept_projectile._swept_hit_candidates(Vector3.ZERO, Vector3(0.0, 0.0, -0.80))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 128,
+          "preview": "var silhouette_hits := swept_projectile._swept_hit_candidates(Vector3.ZERO, Vector3(0.0, 0.0, -0.80))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 175,
+          "preview": "spatial_projectile._swept_hit_candidates(Vector3.ZERO, Vector3(0.0, 0.0, -0.80))",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 5
+    },
+    "_candidate_enemies": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 303,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 304,
+          "preview": "func _candidate_enemies() -> Array:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/spatial_hash_test.gd",
+          "line": 44,
+          "preview": "if not projectile.has_method(\"_candidate_enemies\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/spatial_hash_test.gd",
+          "line": 48,
+          "preview": "projectile._candidate_enemies()",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_enemies_near": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 306,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 285,
+          "preview": "for node in _enemies_near(midpoint, query_radius):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 305,
+          "preview": "return _enemies_near(global_position, maxf(radius, DZEnemy.MAX_PROJECTILE_HIT_RADIUS))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 307,
+          "preview": "func _enemies_near(position: Vector3, range_radius: float) -> Array:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 359,
+          "preview": "for node in _enemies_near(primary.global_position, range_radius):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 379,
+          "preview": "for node in _enemies_near(primary.global_position, 3.8):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 170,
+          "preview": "spatial_projectile._enemies_near(Vector3.ZERO, 3.8)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 6
+    },
+    "_impact": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 312,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 267,
+          "preview": "_impact(critical, enemy.global_position + Vector3(0.0, 0.55, 0.0))",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 313,
+          "preview": "func _impact(critical := false, at := Vector3.INF) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/impact_fx_mobile_test.gd",
+          "line": 161,
+          "preview": "projectile._impact(false, projectile.global_position)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_apply_protocol_hit": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 325,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 266,
+          "preview": "_apply_protocol_hit(enemy, dealt_damage)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 326,
+          "preview": "func _apply_protocol_hit(primary: DZEnemy, dealt_damage: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 42,
+          "preview": "shot._apply_protocol_hit(ordinary, 20.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/burn_status_fx_test.gd",
+          "line": 139,
+          "preview": "shot._apply_protocol_hit(third, 10.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 41,
+          "preview": "shot._apply_protocol_hit(first_enemy, 15.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/cryo_status_fx_test.gd",
+          "line": 131,
+          "preview": "shot._apply_protocol_hit(third, 10.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 115,
+          "preview": "projectile._apply_protocol_hit(inferno_target, 24.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/status_effects_test.gd",
+          "line": 147,
+          "preview": "arc_projectile._apply_protocol_hit(arc_target, 24.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 8
+    },
+    "_secondary_fx_parent": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 340,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 341,
+          "preview": "func _secondary_fx_parent() -> Node3D:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 354,
+          "preview": "var fx_parent := _secondary_fx_parent() if spawn_secondary_fx else null",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 392,
+          "preview": "var fx_parent := _secondary_fx_parent() if spawn_secondary_fx else null",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 3
+    },
+    "_apply_splash": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 350,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 332,
+          "preview": "_apply_splash(primary, dealt_damage * 0.45, splash_radius)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 351,
+          "preview": "func _apply_splash(primary: DZEnemy, splash_damage: float, range_radius: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 125,
+          "preview": "projectile._apply_splash(primary, 10.0, projectile.splash_radius)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/inferno_blast_wave_test.gd",
+          "line": 137,
+          "preview": "projectile._apply_splash(primary, 3.0, projectile.splash_radius)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "_apply_chain": {
+      "definition": {
+        "file": "godot/scripts/Projectile.gd",
+        "line": 374,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 339,
+          "preview": "_apply_chain(primary, dealt_damage)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Projectile.gd",
+          "line": 375,
+          "preview": "func _apply_chain(primary: DZEnemy, dealt_damage: float) -> void:",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 107,
+          "preview": "projectile._apply_chain(primary, 20.0)",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/tests/arc_chain_link_fx_test.gd",
+          "line": 123,
+          "preview": "projectile._apply_chain(primary, 4.0)",
+          "definition_candidate": false
+        }
+      ],
+      "occurrence_count": 4
+    },
+    "query_enemies_near": {
+      "definition": {
+        "file": "godot/tests/weapon_protocol_behavior_test.gd",
+        "line": 7,
+        "kind": "function",
+        "language": "gdscript"
+      },
+      "occurrences": [
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 328,
+          "preview": "if scene != null and scene.has_method(\"query_enemies_near\"):",
+          "definition_candidate": false
+        },
+        {
+          "file": "godot/scripts/Enemy.gd",
+          "line": 329,
+          "preview": "return scene.query_enemies_near(global_position, radius)",
           "definition_candidate": false
         },
         {
           "file": "godot/scripts/Main.gd",
-          "line": 665,
-          "preview": "var orb := node as DZXpOrb",
+          "line": 340,
+          "preview": "func query_enemies_near(position: Vector3, radius: float) -> Array:",
           "definition_candidate": false
         },
         {
-          "file": "godot/scripts/XpOrb.gd",
-          "line": 1,
-          "preview": "class_name DZXpOrb",
-          "definition_candidate": true
-        },
-        {
-          "file": "godot/tests/xp_orb_runtime_test.gd",
-          "line": 12,
-          "preview": "var first := DZXpOrb.new()",
+          "file": "godot/scripts/Projectile.gd",
+          "line": 309,
+          "preview": "if scene != null and scene.has_method(\"query_enemies_near\"):",
           "definition_candidate": false
         },
         {
-          "file": "godot/tests/xp_orb_runtime_test.gd",
-          "line": 18,
-          "preview": "var second := DZXpOrb.new()",
+          "file": "godot/scripts/Projectile.gd",
+          "line": 310,
+          "preview": "return scene.query_enemies_near(position, range_radius)",
           "definition_candidate": false
         },
         {
-          "file": "godot/tests/xp_orb_runtime_test.gd",
-          "line": 65,
-          "preview": "if DZXpOrb.tier_for_amount(2) != \"standard\" or DZXpOrb.tier_for_amount(8) != \"elite\" or DZXpOrb.tier_for_amount(35) != \"boss\":",
+          "file": "godot/tests/spatial_hash_test.gd",
+          "line": 9,
+          "preview": "func query_enemies_near(_position: Vector3, _radius: float) -> Array:",
           "definition_candidate": false
         },
         {
-          "file": "godot/tests/xp_orb_runtime_test.gd",
-          "line": 70,
-          "preview": "var elite := DZXpOrb.new()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/xp_orb_runtime_test.gd",
-          "line": 75,
-          "preview": "var boss := DZXpOrb.new()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/xp_orb_runtime_test.gd",
-          "line": 80,
-          "preview": "var boss_duplicate := DZXpOrb.new()",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/xp_orb_runtime_test.gd",
-          "line": 129,
-          "preview": "first.age = DZXpOrb.FORCED_MAGNET_AGE",
+          "file": "godot/tests/weapon_protocol_behavior_test.gd",
+          "line": 8,
+          "preview": "func query_enemies_near(_position: Vector3, radius: float) -> Array:",
           "definition_candidate": false
         }
       ],
-      "occurrence_count": 10
+      "occurrence_count": 7
     },
     "_initialize": {
       "definition": {
-        "file": "godot/tests/impact_fx_mobile_test.gd",
-        "line": 4,
+        "file": "godot/tests/weapon_protocol_behavior_test.gd",
+        "line": 16,
         "kind": "function",
         "language": "gdscript"
       },
@@ -2894,185 +4588,6 @@
         }
       ],
       "occurrence_count": 66
-    },
-    "_run_test": {
-      "definition": {
-        "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
-        "line": 9,
-        "kind": "function",
-        "language": "gdscript"
-      },
-      "occurrences": [
-        {
-          "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 7,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/arc_chain_link_fx_test.gd",
-          "line": 13,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/attack_lane_gradient_test.gd",
-          "line": 6,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/attack_lane_gradient_test.gd",
-          "line": 12,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/attack_telegraph_escalation_test.gd",
-          "line": 6,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/attack_telegraph_escalation_test.gd",
-          "line": 8,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/authored_asphalt_pbr_floor_test.gd",
-          "line": 12,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/authored_asphalt_pbr_floor_test.gd",
-          "line": 14,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/authored_world_dressing_test.gd",
-          "line": 4,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/authored_world_dressing_test.gd",
-          "line": 6,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/burn_status_fx_test.gd",
-          "line": 7,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/burn_status_fx_test.gd",
-          "line": 13,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/cryo_status_fx_test.gd",
-          "line": 7,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/cryo_status_fx_test.gd",
-          "line": 13,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/environment_asset_validation_test.gd",
-          "line": 6,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/environment_asset_validation_test.gd",
-          "line": 8,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/industrial_kit_pbr_budget_test.gd",
-          "line": 6,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/industrial_kit_pbr_budget_test.gd",
-          "line": 8,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/inferno_blast_wave_test.gd",
-          "line": 7,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/inferno_blast_wave_test.gd",
-          "line": 13,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/mobile_orientation_test.gd",
-          "line": 4,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/mobile_orientation_test.gd",
-          "line": 6,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/projectile_profile_runtime_visual_test.gd",
-          "line": 7,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/projectile_profile_runtime_visual_test.gd",
-          "line": 9,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
-          "line": 8,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/rifle_muzzle_ballistics_test.gd",
-          "line": 10,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/world_target_lock_test.gd",
-          "line": 6,
-          "preview": "call_deferred(\"_run_test\")",
-          "definition_candidate": false
-        },
-        {
-          "file": "godot/tests/world_target_lock_test.gd",
-          "line": 8,
-          "preview": "func _run_test() -> void:",
-          "definition_candidate": false
-        }
-      ],
-      "occurrence_count": 28
     }
   }
 }

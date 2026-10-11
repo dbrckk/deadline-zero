@@ -1,14 +1,14 @@
 # CI status
 
-Summary: 0 success / 0 failure / 6 active
+Summary: 2 success / 0 failure / 6 active
 
-- Godot Play Screenshots: in_progress / pending (db8a6201)
-- Godot Android First Playable: queued / pending (db8a6201)
-- Responsive UI QA: in_progress / pending (db8a6201)
-- Godot Play AAB Verify: in_progress / pending (db8a6201)
-- Godot 3D Verify: in_progress / pending (db8a6201)
-- Verify: queued / pending (db8a6201)
-- Godot Play AAB Verify: completed / cancelled (8db5196c)
-- Godot Android First Playable: completed / cancelled (8db5196c)
+- Godot Android First Playable: in_progress / pending (c8281cb6)
+- Verify: in_progress / pending (c8281cb6)
+- Godot Play Screenshots: in_progress / pending (c8281cb6)
+- Responsive UI QA: in_progress / pending (c8281cb6)
+- Godot Play AAB Verify: in_progress / pending (c8281cb6)
+- Godot 3D Verify: in_progress / pending (c8281cb6)
+- Godot 3D Verify: completed / success (6bcb6ea3)
+- Responsive UI QA: completed / success (6bcb6ea3)
 
 > Generated summary only; inspect GitHub Actions for full logs when needed.

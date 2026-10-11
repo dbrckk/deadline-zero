@@ -1,11 +1,12 @@
 # Change impact
 
-Base: 8db5196c92d7762ca7393ecad1a9124caae0ed78
-Head: db8a6201fe6082254ea07cb9754c3787e8f0e45d
+Base: a66b27b41eff1b6b481f5a43c6c869556f4e56c9
+Head: c8281cb6cbc20fdbc7639b60affd02d768004f64
 
 ## Changed files
-- M godot/scripts/ImpactFx.gd
-- M godot/tests/impact_fx_mobile_test.gd
+- M godot/scripts/Enemy.gd
+- M godot/scripts/Projectile.gd
+- M godot/tests/weapon_protocol_behavior_test.gd
 
 ## Affected areas
 - godot

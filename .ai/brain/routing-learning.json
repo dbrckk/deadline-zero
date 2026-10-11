@@ -2,24 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Replace full street tiles with real floor cracks",
-      "terms": [
-        "cracks",
-        "floor",
-        "full",
-        "real",
-        "replace",
-        "street",
-        "tiles"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/Main.gd",
-        "godot/tests/authored_world_dressing_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Give survivor a tactical top-down identity",
       "terms": [
         "give",
@@ -1218,6 +1200,27 @@
         "godot/tests/rifle_muzzle_ballistics_test.gd",
         "godot/tests/xp_orb_runtime_test.gd"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "fix(gamefeel): match projectile hits to real 3D enemy silhouettes (#401)",
+      "terms": [
+        "3d",
+        "401",
+        "enemy",
+        "gamefeel",
+        "hits",
+        "match",
+        "projectile",
+        "real",
+        "silhouettes"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/scripts/Projectile.gd",
+        "godot/tests/weapon_protocol_behavior_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1542,12 +1545,12 @@
       "godot/scripts/BurnStatusFx.gd": 4,
       "godot/scripts/CombatAudio.gd": 4,
       "godot/scripts/CombatFeel.gd": 8,
-      "godot/scripts/Enemy.gd": 36,
+      "godot/scripts/Enemy.gd": 40,
       "godot/scripts/Hud.gd": 24,
       "godot/scripts/ImpactFx.gd": 20,
       "godot/scripts/Main.gd": 40,
       "godot/scripts/Player.gd": 24,
-      "godot/scripts/Projectile.gd": 24,
+      "godot/scripts/Projectile.gd": 28,
       "godot/scripts/WeaponProfiles.gd": 4,
       "godot/scripts/XpOrb.gd": 12,
       "godot/tests/arc_chain_link_fx_test.gd": 4,
@@ -1581,9 +1584,15 @@
       "godot/tests/upgrade_choice_render_test.gd": 4,
       "godot/tests/upgrade_presentation_test.gd": 8,
       "godot/tests/weapon_presentation_test.gd": 4,
+      "godot/tests/weapon_protocol_behavior_test.gd": 4,
       "godot/tests/xp_orb_runtime_test.gd": 8,
       "tools/blender/build_industrial_kit.py": 4,
       "tools/blender/optimize_game_asset.py": 4
+    },
+    "401": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/weapon_protocol_behavior_test.gd": 4
     },
     "70": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
@@ -2806,15 +2815,17 @@
       "core/src/main/java/com/deadlinezero/game/visual/EnemyHealthBarPresentation.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/EnemyHealthBarPresentationTest.java": 4,
       "godot/scripts/AssetLibrary.gd": 20,
-      "godot/scripts/Enemy.gd": 20,
+      "godot/scripts/Enemy.gd": 24,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 8,
       "godot/scripts/Player.gd": 4,
+      "godot/scripts/Projectile.gd": 4,
       "godot/tests/attack_lane_gradient_test.gd": 4,
       "godot/tests/authored_gait_sync_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 24,
       "godot/tests/first_playable_run_path_test.gd": 4,
-      "godot/tests/native_enemy_behavior_test.gd": 8
+      "godot/tests/native_enemy_behavior_test.gd": 8,
+      "godot/tests/weapon_protocol_behavior_test.gd": 4
     },
     "envelope": {
       "godot/scripts/Enemy.gd": 4,
@@ -3199,12 +3210,12 @@
       "godot/scripts/ArcLinkFx.gd": 8,
       "godot/scripts/AssetLibrary.gd": 4,
       "godot/scripts/BurnStatusFx.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Hud.gd": 4,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/InfernoBlastFx.gd": 4,
       "godot/scripts/Player.gd": 8,
-      "godot/scripts/Projectile.gd": 12,
+      "godot/scripts/Projectile.gd": 16,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/arc_chain_link_fx_test.gd": 8,
       "godot/tests/burn_status_fx_test.gd": 4,
@@ -3215,6 +3226,7 @@
       "godot/tests/inferno_blast_wave_test.gd": 4,
       "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
       "godot/tests/status_effects_test.gd": 4,
+      "godot/tests/weapon_protocol_behavior_test.gd": 4,
       "godot/tests/world_target_lock_test.gd": 4,
       "godot/tests/xp_orb_runtime_test.gd": 4,
       "tools/blender/build_industrial_kit.py": 4
@@ -3454,8 +3466,10 @@
     },
     "hits": {
       "godot/scripts/ArcLinkFx.gd": 4,
-      "godot/scripts/Projectile.gd": 4,
-      "godot/tests/arc_chain_link_fx_test.gd": 4
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Projectile.gd": 8,
+      "godot/tests/arc_chain_link_fx_test.gd": 4,
+      "godot/tests/weapon_protocol_behavior_test.gd": 4
     },
     "home": {
       "core/src/main/java/com/deadlinezero/game/screen/MenuScreen.java": 8,
@@ -3862,8 +3876,11 @@
       "godot/tests/environment_identity_test.gd": 4
     },
     "match": {
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Hud.gd": 4,
-      "godot/tests/hud_readability_hierarchy_test.gd": 4
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/hud_readability_hierarchy_test.gd": 4,
+      "godot/tests/weapon_protocol_behavior_test.gd": 4
     },
     "material": {
       "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java": 4,
@@ -4493,13 +4510,15 @@
       "core/src/test/java/com/deadlinezero/game/audio/AudioDirectorFallbackTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ActiveBuildStatusTest.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/CombatVisualEventsProtocolTest.java": 4,
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Main.gd": 4,
       "godot/scripts/Player.gd": 8,
-      "godot/scripts/Projectile.gd": 4,
+      "godot/scripts/Projectile.gd": 8,
       "godot/tests/projectile_profile_runtime_visual_test.gd": 4,
       "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
       "godot/tests/shock_expiry_recovery_test.gd": 4,
-      "godot/tests/weapon_presentation_test.gd": 8
+      "godot/tests/weapon_presentation_test.gd": 8,
+      "godot/tests/weapon_protocol_behavior_test.gd": 4
     },
     "promote": {
       "godot/scripts/Main.gd": 4,
@@ -4625,15 +4644,16 @@
     },
     "real": {
       "godot/scripts/ArcLinkFx.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Main.gd": 4,
-      "godot/scripts/Projectile.gd": 4,
+      "godot/scripts/Projectile.gd": 8,
       "godot/tests/arc_chain_link_fx_test.gd": 4,
       "godot/tests/authored_world_dressing_test.gd": 4,
       "godot/tests/boss_encounter_render_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/pressure_frame_render_test.gd": 8,
-      "godot/tests/upgrade_choice_render_test.gd": 4
+      "godot/tests/upgrade_choice_render_test.gd": 4,
+      "godot/tests/weapon_protocol_behavior_test.gd": 4
     },
     "real-time": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidResponsiveUiVisualProbeTest.java": 4,
@@ -5183,10 +5203,12 @@
       "core/src/main/java/com/deadlinezero/game/visual/ActorMaterialProfile.java": 4,
       "core/src/main/java/com/deadlinezero/game/visual/CharacterSpriteRenderer.java": 4,
       "core/src/test/java/com/deadlinezero/game/visual/ActorMaterialProfileTest.java": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 4,
-      "godot/tests/enemy_silhouette_identity_test.gd": 4
+      "godot/scripts/Projectile.gd": 4,
+      "godot/tests/enemy_silhouette_identity_test.gd": 4,
+      "godot/tests/weapon_protocol_behavior_test.gd": 4
     },
     "simplify": {
       "godot/tests/play_icon_render_test.gd": 4

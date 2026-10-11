@@ -36,29 +36,30 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T11:01:54Z
+Generated: 2026-10-11T11:23:24Z
 
 ### Git
 - Branch: `main`
-- Head: `db8a6201fe60`
-- Commit date: 2026-10-11T13:01:36+02:00
-- Commit: perf(gamefeel): reuse 3D impact materials without coupling hit fades (#397)
+- Head: `c8281cb6cbc2`
+- Commit date: 2026-10-11T13:22:59+02:00
+- Commit: fix(gamefeel): match projectile hits to real 3D enemy silhouettes (#401)
 - Tracked files: 1065
 
 ### Recently changed files
+- `godot/scripts/Enemy.gd`
+- `godot/scripts/Projectile.gd`
+- `godot/tests/weapon_protocol_behavior_test.gd`
+- `play/store/phone-screenshots/01-first-playable.png`
+- `play/store/phone-screenshots/02-midrun-pressure.png`
+- `play/store/phone-screenshots/03-boss-encounter.png`
+- `play/store/phone-screenshots/04-upgrade-choice.png`
+- `play/store/phone-screenshots/05-run-end.png`
 - `godot/scripts/ImpactFx.gd`
 - `godot/tests/impact_fx_mobile_test.gd`
 - `godot/scripts/XpOrb.gd`
 - `godot/tests/xp_orb_runtime_test.gd`
 - `godot/scripts/Player.gd`
 - `godot/tests/rifle_muzzle_ballistics_test.gd`
-- `play/store/phone-screenshots/01-first-playable.png`
-- `play/store/phone-screenshots/02-midrun-pressure.png`
-- `play/store/phone-screenshots/03-boss-encounter.png`
-- `play/store/phone-screenshots/04-upgrade-choice.png`
-- `play/store/phone-screenshots/05-run-end.png`
-- `godot/scripts/Hud.gd`
-- `godot/tests/hud_readability_hierarchy_test.gd`
 
 ### Project signals
 - `build.gradle`

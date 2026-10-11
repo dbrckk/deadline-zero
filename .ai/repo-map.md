@@ -25602,6 +25602,9 @@ static var _shared_regeneration_pulse_mesh: CylinderMesh
 
 const MAX_DAMAGE_NUMBERS := 18
 const ARENA_HALF_EXTENT := 34.0
+# Conservative horizontal shootable footprint of the biggest imported 3D actor.
+# The broad-phase queries this upper bound; smaller actors retain tight hit areas.
+const MAX_PROJECTILE_HIT_RADIUS := 0.82
 
 func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> void:
     kind = enemy_kind
@@ -25831,6 +25834,25 @@ func _melee_standoff_distance() -> float:
             return 1.16
         _:
             return 1.08
+
+func projectile_hit_radius() -> float:
+    # Match the authored 3D body's horizontal silhouette, independently of
+    # melee reach. Tight runners still demand aim; boss armor is not a pinhead.
+    match kind:
+        "boss":
+            return MAX_PROJECTILE_HIT_RADIUS
+        "brute":
+            return 0.56
+        "charger":
+            return 0.51
+        "elite":
+            return 0.48
+        "regenerator":
+            return 0.43
+        "runner", "harrier":
+            return 0.32
+        _:
+            return 0.34
 
 func _contact_attack_range() -> float:
     return _melee_standoff_distance() + (0.24 if kind in ["boss", "brute"] else 0.20)
@@ -31521,7 +31543,9 @@ func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
     segment.y = 0.0
     var travel := segment.length()
     var midpoint := from.lerp(to, 0.5)
-    var query_radius := radius + travel * 0.5
+    # Include boss/brute shootable silhouettes in the hash broad phase.
+    # Still one bounded query per bullet, even during dense mobile waves.
+    var query_radius := maxf(radius, DZEnemy.MAX_PROJECTILE_HIT_RADIUS) + travel * 0.5
     var result: Array[DZEnemy] = []
     for node in _enemies_near(midpoint, query_radius):
         if not is_instance_valid(node):
@@ -31537,12 +31561,13 @@ func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
         var closest := from + segment * t
         var miss := enemy.global_position - closest
         miss.y = 0.0
-        if miss.length_squared() <= radius * radius:
+        var effective_hit_radius := maxf(radius, enemy.projectile_hit_radius())
+        if miss.length_squared() <= effective_hit_radius * effective_hit_radius:
             result.append(enemy)
     return result
 
 func _candidate_enemies() -> Array:
-    return _enemies_near(global_position, radius)
+    return _enemies_near(global_position, maxf(radius, DZEnemy.MAX_PROJECTILE_HIT_RADIUS))
 
 func _enemies_near(position: Vector3, range_radius: float) -> Array:
     var scene := get_tree().current_scene if get_tree() != null else null
