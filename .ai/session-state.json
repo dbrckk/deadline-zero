@@ -46,6 +46,12 @@
       "status": "merged",
       "checks": "8/8 successful",
       "change": "Bound moving-enemy lead from actual rifle muzzle for accurate autofire"
+    },
+    {
+      "pr": 401,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Size-based actual 3D shootable footprints for normal, heavy and boss enemy bodies"
     }
   ],
   "visual_qa": "Inspected six Godot-rendered frames; authentic 3D production scene exists but not yet AAA-quality",
@@ -57,20 +63,34 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PRs #397-#400 had 8/8 successful Actions checks before squash merge; Work Watch schedule run 38118072708 succeeded 2026-10-11. PR #401 Godot integration passed, remaining CI is not yet complete.",
+  "verification": "PR #401 had 8/8 GitHub Actions successes before merge. PR #402 real 3D enemy atlas shader and imported visual checks passed in Godot; #403 swept impact entry test passed in Godot. #404 debug frame pacing in CI. Work Watch cron run 38118072708 succeeded 2026-10-11. Phone thermal/FPS and billing still unverified.",
   "next": [
-    "Finish #401 CI and merge only if all checks succeed",
-    "Raise imported 3D model, rigged animation and PBR material fidelity using real assets/captures",
-    "Play the native Godot APK on representative physical Android phones and record FPS, heat, touch and readability",
-    "Close physical lifecycle, Play Billing license-test and Play Store release gates (#16, #17 and #14)"
+    "Merge #402, #403 and #404 only after full 8/8 CI checks each",
+    "Inspect actual rigged Quaternius 3D visuals and rendered captures after the material upgrade",
+    "Install and play native Godot APK on physical Android phones, measure frame p95 and hitch ratio",
+    "Validate physical lifecycle, Play Billing license testing and Play Store QA gates #14/#16/#17"
   ],
   "in_progress": [
     {
-      "pr": 401,
+      "pr": 402,
       "status": "open",
-      "branch": "feat/godot-proportional-hit-silhouettes",
-      "head_sha": "6bcb6ea3e28448ff54281b5d49eca2532ee6829c",
-      "change": "Size-based shootable silhouettes for imported 3D archetypes without additional physics nodes"
+      "branch": "feat/godot-opaque-varied-enemy-atlases",
+      "head_sha": "8914e2d406e3598f64f66b47ee9e2e1f9ca46935",
+      "change": "Opaque source zombie GLTF materials and per-instance PBR wear without duplicate atlases"
+    },
+    {
+      "pr": 403,
+      "status": "open",
+      "branch": "feat/godot-swept-contact-impact-fx",
+      "head_sha": "15603b5bf0134233c8966405a259f90be11de441",
+      "change": "Place real 3D hit feedback at first swept projectile / enemy silhouette contact"
+    },
+    {
+      "pr": 404,
+      "status": "open",
+      "branch": "perf/godot-debug-frame-pacing-probe",
+      "head_sha": "7600badd314e7f867ff0aa0469387e26443939bc",
+      "change": "Bounded 240-frame debug p95/worst/hitch telemetry for physical Android QA"
     }
   ]
 }
