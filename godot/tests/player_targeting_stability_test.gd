@@ -1,5 +1,16 @@
 extends SceneTree
 
+class AutoAimSpatialScene:
+    extends Node3D
+    var candidates: Array = []
+    var query_calls := 0
+    var query_radius := -1.0
+
+    func query_enemies_near(_position: Vector3, radius: float) -> Array:
+        query_calls += 1
+        query_radius = radius
+        return candidates
+
 func _initialize() -> void:
     var root := Node3D.new()
     get_root().add_child(root)
@@ -123,5 +134,40 @@ func _initialize() -> void:
         quit(1)
         return
 
-    print("Deadline Zero player targeting stability: OK")
+    # The actual player search must reuse the production scene's spatial
+    # query rather than scanning all enemy group members on every refresh.
+    # Existing standalone fixtures above also verify the no-service fallback.
+    var indexed_scene := AutoAimSpatialScene.new()
+    get_root().add_child(indexed_scene)
+    current_scene = indexed_scene
+    indexed_scene.candidates = [first]
+    player.current_target = null
+    player.nearest_threat = null
+    player.target_refresh_clock = 0.0
+    if player._combat_target() != first:
+        push_error("Spatial-indexed autoaim did not select a nearby live enemy")
+        quit(1)
+        return
+    if indexed_scene.query_calls != 1 or absf(indexed_scene.query_radius - DZPlayer.TARGET_ACQUIRE_RADIUS) > 0.001:
+        push_error("Spatial-indexed autoaim ignored production neighborhood radius")
+        quit(1)
+        return
+
+    # A stale index may contain a freed or dead enemy. It must never be
+    # selected, including after a target-refresh invalidation.
+    var dead_neighbor := DZEnemy.new()
+    dead_neighbor.configure("runner", 1.0, player)
+    dead_neighbor.process_mode = Node.PROCESS_MODE_DISABLED
+    indexed_scene.add_child(dead_neighbor)
+    dead_neighbor.global_position = Vector3(0.8, 0.0, 0.0)
+    dead_neighbor.dead = true
+    indexed_scene.candidates = [dead_neighbor, first]
+    player.current_target = null
+    player.target_refresh_clock = 0.0
+    if player._combat_target() != first or indexed_scene.query_calls != 2:
+        push_error("Spatial autoaim selected an excluded/dead candidate or bypassed refresh")
+        quit(1)
+        return
+
+    print("Deadline Zero player targeting stability and spatial autoaim: OK")
     quit(0)
