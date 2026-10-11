@@ -352,7 +352,17 @@ func _combat_target() -> DZEnemy:
 func _nearest_enemy() -> DZEnemy:
     var best: DZEnemy
     var best_d2 := TARGET_ACQUIRE_RADIUS * TARGET_ACQUIRE_RADIUS
-    for node in get_tree().get_nodes_in_group("enemies"):
+    # Main already rebuilds the enemy spatial index once per physics frame for
+    # the swarm and projectiles. Consume it rather than scanning the full
+    # 100+ zombie group every 80 ms. Keep a group fallback for standalone
+    # scenes/tests without the production query service.
+    var candidates: Array = get_tree().get_nodes_in_group("enemies")
+    var scene := get_tree().current_scene
+    if scene != null and scene.has_method("query_enemies_near"):
+        candidates = scene.query_enemies_near(global_position, TARGET_ACQUIRE_RADIUS)
+    for node in candidates:
+        if node == null or not is_instance_valid(node):
+            continue
         var enemy := node as DZEnemy
         if enemy == null or enemy.dead:
             continue
