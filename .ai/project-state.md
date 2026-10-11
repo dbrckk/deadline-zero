@@ -4,26 +4,33 @@ Status: active
 
 ## Working
 - Godot 4.7.2 native 3D Android first-playable with Quaternius rigged GLTF actors, industrial PBR environment and authored combat.
-- #397–#408 merged; latest #405–#408 all passed eight GitHub Actions checks each before squash merge.
+- #397–#410 merged; latest #409 survivor facing and #410 cinematic camera each passed 8/8 GitHub Actions checks before squash merge.
 - #404 debug p95/max frame time and >33.33ms hitch% sampling over 240 frames.
 - #405 imported GLTF death clips with opaque shared-shader per-instance dissolve.
 - #406 spatial-indexed nearest-enemy player autoaim without whole-horde allocation.
 - #407 smooth weighted archetype 3D turning without disturbing locked attack warnings/charges.
 - #408 actual 720p Godot screenshot-reviewed character key/ambient lighting, PBR atlas midtones and closer mobile framing.
+- #409 smooth real survivor/weapon combat and traversal heading; frame-rate independent.
+- #410 damped camera target and movement look-ahead; verified across 60/120 FPS.
+- #411 independent dying-zombie contact shadow fade with GLTF death (7/8 passing; Android runtime pending).
+- #412 six per-weapon muzzle/recoil signatures and grounded survivor (7/8 passing; Android runtime pending).
 - #396 Work Watch scheduled verification passed on 2026-10-11.
 
 ## Blockers
 - Real Android device FPS/p95/hitches, thermal, touch and legibility QA not yet signed off.
+- Android emulation with llvmpipe Vulkan returned entirely black diagnostic screenshot and `Couldn't present to Vulkan queue` logcat. The emulator smoke intentionally verifies lifecycle only, not visible frames. Actual Mobile/Vulkan graphics on physical devices remain unverified.
 - Physical-device process death, Play Billing/license-account and Play closed-testing/store release gates (#14, #16, #17) remain open.
 - Premium AAA visuals and gamefeel still require real-device review; CI visual frames do not certify full production quality.
 
 ## Priorities
-- Inspect actual Godot 3D captures and keep polishing rigged model animation, VFX, lighting and gamefeel.
+- The actual 1280x720 rendered Godot 3D frames still show stylized low-poly actors and visually sparse industrial floor; prioritize higher fidelity authored 3D assets and textured environmental depth.
+- Verify native Mobile/Vulkan on physical Android GPU; compatibility-renderer desktop CI captures are not equivalent.
 - Test physical Android FPS, frame pacing, heat, controls, pause/resume and purchasing lifecycle.
 - Complete Play Store release and closed-test readiness.
 
 ## Validation
-- #405, #406, #407, #408: each 8/8 CI green before merge, including Godot 3D, APK, Play AAB, UI and Android runtime.
+- #405–#410: each 8/8 CI green before merge, including Godot 3D, APK, Play AAB, UI and Android runtime.
+- #411/#412: Godot 3D verify and 7/8 total green as last checked; Android runtime still pending.
 - #408 reviewed native Godot 720p before/after screenshot evidence; on-device visual and performance validation still needed.
 
 ## Last verified
