@@ -17,6 +17,7 @@ static var _shared_ring_mesh: TorusMesh
 static var _shared_flare_mesh: QuadMesh
 static var _spark_process_cache := {}
 static var _spark_mesh_cache := {}
+static var _material_cache := {}
 
 func _ready() -> void:
     mesh_instance = MeshInstance3D.new()
@@ -40,8 +41,7 @@ func _ready() -> void:
     flare_instance.name = "ImpactFlare"
     flare_instance.mesh = _flare_mesh()
     flare_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    flare_material = _make_material(color.lightened(0.24), 5.6)
-    flare_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    flare_material = _make_material(color.lightened(0.24), 5.6, true)
     flare_instance.material_override = flare_material
     add_child(flare_instance)
 
@@ -123,7 +123,12 @@ static func _spark_mesh(tint: Color) -> QuadMesh:
     _spark_mesh_cache[key] = mesh
     return mesh
 
-func _make_material(tint: Color, energy: float) -> StandardMaterial3D:
+func _make_material(tint: Color, energy: float, billboard := false) -> StandardMaterial3D:
+    # Impact cores, rings and billboard flares keep distinct visual grades but
+    # identical hits reuse their materials across the whole combat session.
+    var key := "%s:%.2f:%s" % [tint.to_html(true), energy, "billboard" if billboard else "world"]
+    if _material_cache.has(key):
+        return _material_cache[key] as StandardMaterial3D
     var material := StandardMaterial3D.new()
     material.albedo_color = tint
     material.emission_enabled = true
@@ -131,15 +136,23 @@ func _make_material(tint: Color, energy: float) -> StandardMaterial3D:
     material.emission_energy_multiplier = energy
     material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
     material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    if billboard:
+        material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+    _material_cache[key] = material
     return material
 
 func _process(delta: float) -> void:
     age += delta
     var t: float = clampf(age / life, 0.0, 1.0)
     scale = Vector3.ONE * lerp(0.50, 2.45 * scale_boost, t)
-    _fade_material(core_material, t)
-    _fade_material(ring_material, t)
-    _fade_material(flare_material, minf(1.0, t * 1.55))
+    # GeometryInstance3D transparency is per-node, so a dying impact never
+    # mutates the shared material of the next incoming projectile.
+    if mesh_instance != null:
+        mesh_instance.transparency = t
+    if ring_instance != null:
+        ring_instance.transparency = t
+    if flare_instance != null:
+        flare_instance.transparency = minf(1.0, t * 1.55)
     if ring_instance != null:
         ring_instance.scale = Vector3.ONE * lerp(0.70, 1.62, t)
     if flare_instance != null:
@@ -151,11 +164,3 @@ func _process(delta: float) -> void:
         )
     if age >= life:
         queue_free()
-
-func _fade_material(material: StandardMaterial3D, t: float) -> void:
-    if material == null:
-        return
-    var faded := material.albedo_color
-    faded.a = 1.0 - t
-    material.albedo_color = faded
-    material.emission_energy_multiplier = lerp(4.0, 0.5, t)

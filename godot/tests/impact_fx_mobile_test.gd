@@ -73,6 +73,58 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # Dense combat creates hundreds of overlapping hits. Their PBR-grade
+    # luminous materials must be reused without coupling lifetime fades.
+    if core.material_override != duplicate_core.material_override:
+        push_error("Impact cores must reuse the same luminous material")
+        quit(1)
+        return
+    if ring.material_override != duplicate_ring.material_override:
+        push_error("Impact rings must reuse the same luminous material")
+        quit(1)
+        return
+    if flare.material_override != duplicate_flare.material_override:
+        push_error("Impact billboard flares must reuse the same luminous material")
+        quit(1)
+        return
+    if (flare.material_override as StandardMaterial3D).billboard_mode != BaseMaterial3D.BILLBOARD_ENABLED:
+        push_error("Impact flares lost their camera-facing billboard")
+        quit(1)
+        return
+
+    fx._process(fx.life * 0.5)
+    if absf(core.transparency - 0.5) > 0.01 or absf(ring.transparency - 0.5) > 0.01:
+        push_error("Impact core/ring lost their smooth independent fade")
+        quit(1)
+        return
+    if flare.transparency <= core.transparency:
+        push_error("Impact flare must disappear before the core")
+        quit(1)
+        return
+    if duplicate_core.transparency > 0.01 or duplicate_ring.transparency > 0.01 or duplicate_flare.transparency > 0.01:
+        push_error("Fading one impact changed the duplicate's opacity")
+        quit(1)
+        return
+    if (duplicate_core.material_override as StandardMaterial3D).albedo_color.a < 0.99:
+        push_error("Fading an impact mutated its shared material")
+        quit(1)
+        return
+
+    var alternate := IMPACT_SCRIPT.new()
+    alternate.color = Color(1.0, 0.22, 0.08)
+    alternate.process_mode = Node.PROCESS_MODE_DISABLED
+    root.add_child(alternate)
+    await process_frame
+    var alternate_core := alternate.get_node_or_null("ImpactCore") as MeshInstance3D
+    if alternate_core == null or alternate_core.material_override == core.material_override:
+        push_error("Different impact colors must not share the same tint material")
+        quit(1)
+        return
+    if alternate_core.mesh != core.mesh:
+        push_error("Different impact colors must still reuse the same core geometry")
+        quit(1)
+        return
+
     var sparks := fx.get_node_or_null("ImpactSparks") as GPUParticles3D
     if sparks == null:
         push_error("Impact FX is missing mobile-safe GPU sparks")
