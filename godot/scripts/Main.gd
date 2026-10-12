@@ -813,6 +813,7 @@ func _build_world() -> void:
     _build_floor_service_grates()
     _build_midfield_inspection_panels()
     _build_service_pylons()
+    _build_reinforced_utility_details()
     _build_floor_wear()
     _build_authored_floor_decals()
     _build_floor_seams()
@@ -1191,6 +1192,58 @@ func _build_service_pylons() -> void:
         signal_mesh_instance.position = Vector3(0.0, 0.62, -0.215)
         signal_mesh_instance.material_override = signal_material
         pylon.add_child(signal_mesh_instance)
+
+func _build_reinforced_utility_details() -> void:
+    # Deploy the six previously unused, project-owned Blender GLB assets.
+    # Keep all vertical machinery outside the central 8 m fighting corridor.
+    # Each original bevel, panel, slat and bolt stays real 3D geometry with
+    # the shared industrial PBR palette; no new runtime mesh construction.
+    var factories := {
+        "cabinet": Callable(DZAssetLibrary, "industrial_utility_cabinet"),
+        "vent": Callable(DZAssetLibrary, "industrial_wall_vent"),
+        "hatch": Callable(DZAssetLibrary, "industrial_floor_hatch"),
+        "bollard": Callable(DZAssetLibrary, "industrial_hazard_bollard"),
+        "junction": Callable(DZAssetLibrary, "industrial_junction_box"),
+        "light": Callable(DZAssetLibrary, "industrial_emergency_light_bar")
+    }
+    var placements := [
+        {"type": "cabinet", "at": Vector3(-13.2, 0.0, -4.8), "yaw": 0.15},
+        {"type": "cabinet", "at": Vector3(13.1, 0.0, 5.0), "yaw": -0.24},
+        {"type": "light", "at": Vector3(-13.2, 1.79, -4.8), "yaw": 0.15},
+        {"type": "light", "at": Vector3(13.1, 1.79, 5.0), "yaw": -0.24},
+        {"type": "vent", "at": Vector3(-12.3, 0.0, 8.8), "yaw": -0.45},
+        {"type": "vent", "at": Vector3(12.4, 0.0, -8.6), "yaw": 0.42},
+        {"type": "junction", "at": Vector3(-11.9, 0.0, -8.7), "yaw": 0.34},
+        {"type": "junction", "at": Vector3(11.7, 0.0, 8.4), "yaw": -0.31},
+        {"type": "bollard", "at": Vector3(-11.3, 0.0, -3.6), "yaw": 0.12},
+        {"type": "bollard", "at": Vector3(11.2, 0.0, 3.6), "yaw": -0.18},
+        {"type": "bollard", "at": Vector3(-7.5, 0.0, 10.6), "yaw": 0.22},
+        {"type": "bollard", "at": Vector3(7.6, 0.0, -10.5), "yaw": -0.28},
+        {"type": "hatch", "at": Vector3(-5.8, 0.012, -8.8), "yaw": 0.18},
+        {"type": "hatch", "at": Vector3(5.7, 0.012, 8.7), "yaw": -0.14},
+        {"type": "hatch", "at": Vector3(-5.8, 0.012, 8.6), "yaw": 0.41},
+        {"type": "hatch", "at": Vector3(5.8, 0.012, -8.6), "yaw": -0.38}
+    ]
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var kind := String(placement["type"])
+        var maker: Callable = factories[kind]
+        var detail := maker.call() as Node3D
+        if detail == null:
+            continue
+        detail.name = "AuthoredUtility_%s_%02d" % [kind, index]
+        detail.add_to_group("environment_props")
+        detail.position = placement["at"]
+        detail.rotation.y = float(placement["yaw"])
+        # 16 fixtures total, only two cabinet bodies enter the shadow map.
+        # Small GLB bolts/slats never add dozens of shadow draw passes.
+        for node in detail.find_children("*", "MeshInstance3D", true, false):
+            var mesh := node as MeshInstance3D
+            if mesh != null:
+                mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if (
+                    kind == "cabinet" and mesh.name == "CabinetBody"
+                ) else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        add_child(detail)
 
 func _build_authored_floor_decals() -> void:
     # Project-owned texture decals break up the procedural floor with authored marks.
