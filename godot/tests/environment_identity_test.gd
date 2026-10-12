@@ -128,6 +128,9 @@ func _initialize() -> void:
     var utility_mesh_count := 0
     var utility_materials := {}
     var utility_light_lenses := 0
+    var utility_textured_parts := 0
+    var utility_normal_parts := 0
+    var utility_arm_parts := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -180,6 +183,18 @@ func _initialize() -> void:
                         quit(1)
                         return
                     utility_materials[material.get_instance_id()] = true
+                    if material.albedo_texture != null:
+                        utility_textured_parts += 1
+                        if material.normal_enabled and material.normal_texture != null:
+                            utility_normal_parts += 1
+                        if material.ao_enabled and material.ao_texture != null and (
+                            material.roughness_texture == material.ao_texture
+                            and material.metallic_texture == material.ao_texture
+                            and material.ao_texture_channel == BaseMaterial3D.TEXTURE_CHANNEL_RED
+                            and material.roughness_texture_channel == BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+                            and material.metallic_texture_channel == BaseMaterial3D.TEXTURE_CHANNEL_BLUE
+                        ):
+                            utility_arm_parts += 1
                     if kind == "light" and mesh.name == "LightBarLens" and material.emission_enabled:
                         utility_light_lenses += 1
         elif child.name.begins_with("PerimeterBulkhead_"):
@@ -299,6 +314,12 @@ func _initialize() -> void:
         return
     if utility_mesh_count < 75 or utility_materials.size() > 7 or utility_materials.size() < 4:
         push_error("Industrial kit lost dense 3D geometry or shared PBR palette: meshes=%d materials=%d" % [utility_mesh_count, utility_materials.size()])
+        quit(1)
+        return
+    if utility_textured_parts < 40 or utility_normal_parts != utility_textured_parts or utility_arm_parts != utility_textured_parts:
+        push_error("Project-owned Blender GLBs must retain shared CC0 albedo, normal and packed PBR wear textures: %d / %d / %d" % [
+            utility_textured_parts, utility_normal_parts, utility_arm_parts
+        ])
         quit(1)
         return
     if utility_light_lenses != 2:
