@@ -177,7 +177,7 @@ static func _grade_generated_industrial_kit(root: Node3D, ground_detail := false
         var identity := mesh_instance.name.to_lower()
         var finish := "steel"
         if "lightbarlens" in identity:
-            finish = "alarm"
+            finish = "signal"
         elif "recess" in identity or "inset" in identity:
             finish = "recess"
         elif "hazard" in identity or "warning" in identity or "bollardband" in identity or "bollardcap" in identity:
@@ -214,15 +214,6 @@ static func _industrial_kit_material(finish: String) -> StandardMaterial3D:
             mat.albedo_color = Color(0.56, 0.115, 0.025)
             mat.metallic = 0.28
             mat.roughness = 0.63
-        "alarm":
-            # Lens is a real part of the Blender-authored GLB. Emission
-            # reads from above without adding expensive omni lights.
-            mat.albedo_color = Color(0.12, 0.40, 0.52)
-            mat.emission_enabled = true
-            mat.emission = Color(0.055, 0.48, 0.76)
-            mat.emission_energy_multiplier = 1.8
-            mat.metallic = 0.08
-            mat.roughness = 0.32
         "signal":
             mat.albedo_color = Color(0.035, 0.27, 0.36)
             mat.emission_enabled = true
