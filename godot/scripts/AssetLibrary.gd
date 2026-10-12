@@ -271,7 +271,7 @@ static func _industrial_kit_material(finish: String) -> StandardMaterial3D:
         if finish == "steel":
             mat.albedo_color = Color(0.13, 0.18, 0.20)
         elif finish == "slat":
-            mat.albedo_color = Color(0.23, 0.27, 0.29)
+            mat.albedo_color = Color(0.17, 0.19, 0.21)
         else:
             mat.albedo_color = Color(0.45, 0.21, 0.13)
     _industrial_kit_material_cache[finish] = mat
