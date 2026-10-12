@@ -3,38 +3,31 @@
 Status: active
 
 ## Working
-- Godot 4.7.2 native 3D Android first-playable with Quaternius rigged GLTF actors, industrial PBR environment and authored combat.
-- #397–#412 merged; #409 survivor facing, #410 cinematic camera, #411 death shadow, #412 six distinct weapon feedback profiles all passed 8/8 GitHub Actions checks before squash merge.
-- #404 debug p95/max frame time and >33.33ms hitch% sampling over 240 frames.
-- #405 imported GLTF death clips with opaque shared-shader per-instance dissolve.
-- #406 spatial-indexed nearest-enemy player autoaim without whole-horde allocation.
-- #407 smooth weighted archetype 3D turning without disturbing locked attack warnings/charges.
-- #408 actual 720p Godot screenshot-reviewed character key/ambient lighting, PBR atlas midtones and closer mobile framing.
-- #409 smooth real survivor/weapon combat and traversal heading; frame-rate independent.
-- #410 damped camera target and movement look-ahead; verified across 60/120 FPS.
-- #411 independent dying-zombie contact shadow fade synchronized with real GLTF death; 8/8 green and merged.
-- #412 six per-weapon muzzle/recoil signatures and grounded survivor; 8/8 green and merged.
-- #396 Work Watch scheduled verification passed on 2026-10-11.
+- Godot 4.7.2 native 3D Android first-playable, rigged Quaternius GLTF actors, industrial PBR environment and combat.
+- PRs #397–#412 merged, including latest #409–#412 each passing eight CI checks.
+- #409 smooth survivor travel/combat facing, #410 cinematic camera inertia, #411 per-zombie death contact shadow fade, #412 six weapon signatures and grounded survivor.
+- #413 **open**: all six project-owned previously unused Blender 3D industrial GLB families integrated as 16 real arena assets. CC0 Poly Haven 1k diffuse/normal/packed ARM PBR map reuse. Actual 720p Godot captures reviewed; Godot 3D Verify green; Android runtime remains pending.
+- #414 **open**: per-instance real skinned GLTF hit flash with cached horde mesh references, validated Godot 3D; Android runtime/smoke checks pending.
 
 ## Blockers
-- Real Android device FPS/p95/hitches, thermal, touch and legibility QA not yet signed off.
-- Android emulation with llvmpipe Vulkan returned entirely black diagnostic screenshot and `Couldn't present to Vulkan queue` logcat. The emulator smoke intentionally verifies lifecycle only, not visible frames. Actual Mobile/Vulkan graphics on physical devices remain unverified.
-- Physical-device process death, Play Billing/license-account and Play closed-testing/store release gates (#14, #16, #17) remain open.
-- Premium AAA visuals and gamefeel still require real-device review; CI visual frames do not certify full production quality.
+- #413/#414 must achieve all eight passing CI checks before they are merged.
+- Real physical Android Vulkan rendering, 30/60 FPS p95/hitches, thermal, touch and legibility QA not signed off.
+- Physical-device process death, Play Billing license-account and Play closed-testing/store release gates (#14, #16, #17) remain open.
+- Quaternius stylized characters and arena are below premium AAA fidelity; a genuine replacement of licensed high-fidelity rigged 3D assets is still needed.
 
 ## Priorities
-- The actual 1280x720 rendered Godot 3D frames still show stylized low-poly actors and visually sparse industrial floor; prioritize higher fidelity authored 3D assets and textured environmental depth.
-- Verify native Mobile/Vulkan on physical Android GPU; compatibility-renderer desktop CI captures are not equivalent.
-- Test physical Android FPS, frame pacing, heat, controls, pause/resume and purchasing lifecycle.
-- Complete Play Store release and closed-test readiness.
+- Resolve outstanding Android CI and merge #413/#414 only after complete green checks.
+- Build and integrate licensed higher-fidelity, mobile-budget rigged 3D characters with quality textures and animations.
+- Validate on a representative physical Android device before Play release.
 
 ## Validation
-- #405–#412: each 8/8 CI green before merge, including Godot 3D, APK, Play AAB, UI and Android runtime.
-- #412 corrected a Godot integration fixture type-annotation parse error; final PR head passed all 8 checks.
-- #408 reviewed native Godot 720p before/after screenshot evidence; on-device visual and performance validation still needed.
+- #409–#412 merged after 8/8 CI each.
+- #413 real 1280x720 Godot screenshot artifact inspected; 7/8 checks passed at state update, final legacy Android emulator runtime pending.
+- #414 Godot verify passed; remaining emulator-related checks pending.
+- Linux Compatibility-rendered screenshots are not certification of Android Mobile/Vulkan GPU output.
 
 ## Last verified
-- 2026-10-11
+- 2026-10-12
 
 <!-- AUTO:START -->
 ## Automatic repository state
