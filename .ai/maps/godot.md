@@ -292,6 +292,12 @@ const INDUSTRIAL_BULKHEAD := "res://assets/generated/industrial/dz_bulkhead_pane
 const INDUSTRIAL_CRATE := "res://assets/generated/industrial/dz_cargo_crate.glb"
 const INDUSTRIAL_PIPE_RACK := "res://assets/generated/industrial/dz_pipe_rack.glb"
 const INDUSTRIAL_SERVICE_PILLAR := "res://assets/generated/industrial/dz_service_pillar.glb"
+const INDUSTRIAL_UTILITY_CABINET := "res://assets/generated/industrial/dz_utility_cabinet.glb"
+const INDUSTRIAL_WALL_VENT := "res://assets/generated/industrial/dz_wall_vent.glb"
+const INDUSTRIAL_FLOOR_HATCH := "res://assets/generated/industrial/dz_floor_hatch.glb"
+const INDUSTRIAL_HAZARD_BOLLARD := "res://assets/generated/industrial/dz_hazard_bollard.glb"
+const INDUSTRIAL_JUNCTION_BOX := "res://assets/generated/industrial/dz_junction_box.glb"
+const INDUSTRIAL_EMERGENCY_LIGHT_BAR := "res://assets/generated/industrial/dz_emergency_light_bar.glb"
 
 static var _enemy_grade_shader: Shader
 # Enemy palettes are fixed per archetype. Reuse one graded ShaderMaterial per
@@ -400,6 +406,38 @@ static func industrial_service_pillar() -> Node3D:
     _grade_generated_industrial_kit(root)
     return root
 
+# The remaining project-owned Blender 5.2 kit assets are production meshes,
+# not primitive stand-ins. Reuse the same bounded six-finish PBR palette.
+static func industrial_utility_cabinet() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_UTILITY_CABINET)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_wall_vent() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_WALL_VENT)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_floor_hatch() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_FLOOR_HATCH)
+    _grade_generated_industrial_kit(root, true)
+    return root
+
+static func industrial_hazard_bollard() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_HAZARD_BOLLARD)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_junction_box() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_JUNCTION_BOX)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_emergency_light_bar() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_EMERGENCY_LIGHT_BAR)
+    _grade_generated_industrial_kit(root)
+    return root
+
 static func _grade_generated_industrial_kit(root: Node3D, ground_detail := false) -> void:
     if root == null:
         return
@@ -413,9 +451,11 @@ static func _grade_generated_industrial_kit(root: Node3D, ground_detail := false
             continue
         var identity := mesh_instance.name.to_lower()
         var finish := "steel"
-        if "recess" in identity or "inset" in identity:
+        if "lightbarlens" in identity:
+            finish = "alarm"
+        elif "recess" in identity or "inset" in identity:
             finish = "recess"
-        elif "hazard" in identity or "warning" in identity:
+        elif "hazard" in identity or "warning" in identity or "bollardband" in identity or "bollardcap" in identity:
             finish = "hazard"
         elif "signal" in identity or "status" in identity or "lens" in identity or "capbolt" in identity:
             finish = "signal"
@@ -449,6 +489,15 @@ static func _industrial_kit_material(finish: String) -> StandardMaterial3D:
             mat.albedo_color = Color(0.56, 0.115, 0.025)
             mat.metallic = 0.28
             mat.roughness = 0.63
+        "alarm":
+            # Lens is a real part of the Blender-authored GLB. Emission
+            # reads from above without adding expensive omni lights.
+            mat.albedo_color = Color(0.12, 0.40, 0.52)
+            mat.emission_enabled = true
+            mat.emission = Color(0.055, 0.48, 0.76)
+            mat.emission_energy_multiplier = 1.8
+            mat.metallic = 0.08
+            mat.roughness = 0.32
         "signal":
             mat.albedo_color = Color(0.035, 0.27, 0.36)
             mat.emission_enabled = true
@@ -464,6 +513,42 @@ static func _industrial_kit_material(finish: String) -> StandardMaterial3D:
             mat.albedo_color = Color(0.070, 0.10, 0.115)
             mat.metallic = 0.66
             mat.roughness = 0.58
+    # Real CC0 Poly Haven 1k material sets already shipped with the game.
+    # Share diffuse, tangent-space normal and packed AO/Roughness/Metallic maps
+    # across every imported bolt, face and brace of the same finish. This adds
+    # no shader instances or texture downloads during enemy-horde gameplay.
+    # Preserve solid hazard/lens colors for camera-scale gameplay readability.
+    var pbr_family := ""
+    match finish:
+        "steel":
+            pbr_family = "factory_wall"
+        "slat":
+            pbr_family = "metal_grate_rusty"
+        "rust":
+            pbr_family = "rusty_metal_04"
+    if not pbr_family.is_empty():
+        var prefix := "res://assets/third_party/polyhaven/%s/%s" % [pbr_family, pbr_family]
+        mat.albedo_texture = load(prefix + "_diff_1k.jpg") as Texture2D
+        mat.normal_enabled = true
+        mat.normal_texture = load(prefix + "_nor_gl_1k.jpg") as Texture2D
+        mat.normal_scale = 0.33 if finish == "steel" else 0.47
+        var packed_arm := load(prefix + "_arm_1k.jpg") as Texture2D
+        mat.ao_enabled = true
+        mat.ao_texture = packed_arm
+        mat.ao_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
+        mat.roughness_texture = packed_arm
+        mat.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+        mat.metallic_texture = packed_arm
+        mat.metallic_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_BLUE
+        mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+        # These muted color multipliers prevent bright source photography
+        # from flattening the single-key nocturnal combat contrast.
+        if finish == "steel":
+            mat.albedo_color = Color(0.13, 0.18, 0.20)
+        elif finish == "slat":
+            mat.albedo_color = Color(0.17, 0.19, 0.21)
+        else:
+            mat.albedo_color = Color(0.45, 0.21, 0.13)
     _industrial_kit_material_cache[finish] = mat
     return mat
 
@@ -647,6 +732,7 @@ uniform float rim_strength = 0.11;
 uniform float rim_power = 3.4;
 instance uniform float wear_grade = 0.5;
 instance uniform float death_dissolve = 0.0;
+instance uniform float hit_skin_flash = 0.0;
 
 void fragment() {
     // Clip dying actors in the opaque depth pass instead of blending 100+
@@ -678,7 +764,8 @@ void fragment() {
     // Luminous copper edge is in the existing shader: no new particles,
     // lights or render passes, and no per-enemy material duplicates.
     EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade)
-        + vec3(0.90, 0.22, 0.035) * dissolve_edge * 1.1;
+        + vec3(0.90, 0.22, 0.035) * dissolve_edge * 1.1
+        + vec3(0.92, 0.23, 0.045) * hit_skin_flash * 0.78;
     // Imported zombie_basic / zombie_chubby GLTF materials use default OPAQUE
     // alphaMode. Writing ALPHA here incorrectly moves 100+ skinned bodies to
     // the transparent pass, disables depth/shadow behavior and risks sorting.
@@ -1326,6 +1413,9 @@ var dead := false
 var attack_cooldown := 0.0
 var authored_visual: Node3D
 var authored_anim: AnimationPlayer
+# Imported GLTF mesh references cached once per zombie, never searched every
+# tween frame during rapid gun hits or the opaque death dissolve.
+var authored_skin_meshes: Array[MeshInstance3D] = []
 var current_anim := ""
 var attack_windup := 0.0
 var attack_target_position := Vector3.ZERO
@@ -1431,6 +1521,7 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
 func _ready() -> void:
     add_to_group("enemies")
     _build_visual()
+    _cache_authored_skin_meshes()
     # Capture each imported archetype's immutable silhouette transform before
     # spawn reveals and hit reactions begin moving its visual root.
     if authored_visual != null:
@@ -1445,6 +1536,21 @@ func _ready() -> void:
     _build_hit_flash()
     _apply_mobile_shadow_budget()
     _play_spawn_reveal()
+
+func _cache_authored_skin_meshes() -> void:
+    authored_skin_meshes.clear()
+    if authored_visual == null:
+        return
+    if authored_visual is MeshInstance3D:
+        authored_skin_meshes.append(authored_visual as MeshInstance3D)
+    for node in authored_visual.find_children("*", "MeshInstance3D", true, false):
+        authored_skin_meshes.append(node as MeshInstance3D)
+
+func _set_hit_skin_flash(value: float) -> void:
+    var intensity := clampf(value, 0.0, 1.30)
+    for mesh in authored_skin_meshes:
+        if is_instance_valid(mesh):
+            mesh.set_instance_shader_parameter("hit_skin_flash", intensity)
 
 func _apply_mobile_shadow_budget() -> void:
     # The arena has one real directional shadow map; a swarm of 100+ animated
@@ -2134,13 +2240,12 @@ func _set_death_shadow_opacity(opacity: float) -> void:
         shadow.set_instance_shader_parameter("death_shadow_opacity", clampf(opacity, 0.0, 1.0))
 
 func _set_death_dissolve(progress: float) -> void:
-    if authored_visual == null:
-        return
     var clamped := clampf(progress, 0.0, 0.97)
-    if authored_visual is MeshInstance3D:
-        (authored_visual as MeshInstance3D).set_instance_shader_parameter("death_dissolve", clamped)
-    for node in authored_visual.find_children("*", "MeshInstance3D", true, false):
-        (node as MeshInstance3D).set_instance_shader_parameter("death_dissolve", clamped)
+    # A death tween runs on ~26 frames, so never traverse an entire GLTF
+    # hierarchy every time a zombie disappears during peak-wave combat.
+    for mesh in authored_skin_meshes:
+        if is_instance_valid(mesh):
+            mesh.set_instance_shader_parameter("death_dissolve", clamped)
 
 func hit_reaction_profile() -> Dictionary:
     if kind == "boss":
@@ -2179,8 +2284,14 @@ func _play_hit_reaction(critical: bool, killed: bool) -> void:
         hit_flash_visual.visible = true
         hit_flash_material.emission_energy_multiplier = float(profile["flash"]) * (1.18 if critical else 1.0)
         hit_flash_material.albedo_color.a = 0.30 if critical else 0.20
+    # Pulse the actual imported skinned body, not only the approximate
+    # cylinder impact shell. One GPU instance float leaves horde PBR atlas
+    # materials shared and avoids spawning additional render geometry.
+    var skin_flash := 1.10 if critical else (0.82 if killed else 0.52)
+    _set_hit_skin_flash(skin_flash)
     hit_reaction_tween = create_tween()
     hit_reaction_tween.set_parallel(true)
+    hit_reaction_tween.tween_method(_set_hit_skin_flash, skin_flash, 0.0, duration)
     hit_reaction_tween.tween_property(visual, "scale", base_scale * punch, duration * 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     hit_reaction_tween.tween_property(visual, "position", base_position + recoil_direction, duration * 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     if hit_flash_visual != null:
@@ -5235,6 +5346,7 @@ func _build_world() -> void:
     _build_floor_service_grates()
     _build_midfield_inspection_panels()
     _build_service_pylons()
+    _build_reinforced_utility_details()
     _build_floor_wear()
     _build_authored_floor_decals()
     _build_floor_seams()
@@ -5613,6 +5725,58 @@ func _build_service_pylons() -> void:
         signal_mesh_instance.position = Vector3(0.0, 0.62, -0.215)
         signal_mesh_instance.material_override = signal_material
         pylon.add_child(signal_mesh_instance)
+
+func _build_reinforced_utility_details() -> void:
+    # Deploy the six previously unused, project-owned Blender GLB assets.
+    # Keep all vertical machinery outside the central 8 m fighting corridor.
+    # Each original bevel, panel, slat and bolt stays real 3D geometry with
+    # the shared industrial PBR palette; no new runtime mesh construction.
+    var factories := {
+        "cabinet": Callable(DZAssetLibrary, "industrial_utility_cabinet"),
+        "vent": Callable(DZAssetLibrary, "industrial_wall_vent"),
+        "hatch": Callable(DZAssetLibrary, "industrial_floor_hatch"),
+        "bollard": Callable(DZAssetLibrary, "industrial_hazard_bollard"),
+        "junction": Callable(DZAssetLibrary, "industrial_junction_box"),
+        "light": Callable(DZAssetLibrary, "industrial_emergency_light_bar")
+    }
+    var placements := [
+        {"type": "cabinet", "at": Vector3(-13.2, 0.0, -4.8), "yaw": 0.15},
+        {"type": "cabinet", "at": Vector3(13.1, 0.0, 5.0), "yaw": -0.24},
+        {"type": "light", "at": Vector3(-13.2, 1.79, -4.8), "yaw": 0.15},
+        {"type": "light", "at": Vector3(13.1, 1.79, 5.0), "yaw": -0.24},
+        {"type": "vent", "at": Vector3(-12.3, 0.0, 8.8), "yaw": -0.45},
+        {"type": "vent", "at": Vector3(12.4, 0.0, -8.6), "yaw": 0.42},
+        {"type": "junction", "at": Vector3(-11.9, 0.0, -8.7), "yaw": 0.34},
+        {"type": "junction", "at": Vector3(11.7, 0.0, 8.4), "yaw": -0.31},
+        {"type": "bollard", "at": Vector3(-11.3, 0.0, -3.6), "yaw": 0.12},
+        {"type": "bollard", "at": Vector3(11.2, 0.0, 3.6), "yaw": -0.18},
+        {"type": "bollard", "at": Vector3(-7.5, 0.0, 10.6), "yaw": 0.22},
+        {"type": "bollard", "at": Vector3(7.6, 0.0, -10.5), "yaw": -0.28},
+        {"type": "hatch", "at": Vector3(-5.8, 0.012, -8.8), "yaw": 0.18},
+        {"type": "hatch", "at": Vector3(5.7, 0.012, 8.7), "yaw": -0.14},
+        {"type": "hatch", "at": Vector3(-5.8, 0.012, 8.6), "yaw": 0.41},
+        {"type": "hatch", "at": Vector3(5.8, 0.012, -8.6), "yaw": -0.38}
+    ]
+    for index in range(placements.size()):
+        var placement: Dictionary = placements[index]
+        var kind := String(placement["type"])
+        var maker: Callable = factories[kind]
+        var detail := maker.call() as Node3D
+        if detail == null:
+            continue
+        detail.name = "AuthoredUtility_%s_%02d" % [kind, index]
+        detail.add_to_group("environment_utility_props")
+        detail.position = placement["at"]
+        detail.rotation.y = float(placement["yaw"])
+        # 16 fixtures total, only two cabinet bodies enter the shadow map.
+        # Small GLB bolts/slats never add dozens of shadow draw passes.
+        for node in detail.find_children("*", "MeshInstance3D", true, false):
+            var mesh := node as MeshInstance3D
+            if mesh != null:
+                mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if (
+                    kind == "cabinet" and mesh.name == "CabinetBody"
+                ) else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        add_child(detail)
 
 func _build_authored_floor_decals() -> void:
     # Project-owned texture decals break up the procedural floor with authored marks.
@@ -6292,6 +6456,7 @@ var muzzle_flash_material: StandardMaterial3D
 var muzzle_flash_tween: Tween
 var rifle_visual: Node3D
 var rifle_rest_position := Vector3.ZERO
+var rifle_rest_rotation := Vector3.ZERO
 var rifle_recoil_tween: Tween
 var weapon_accent_material: StandardMaterial3D
 var weapon_accent_tween: Tween
@@ -6730,10 +6895,12 @@ func _build_visual() -> void:
             rifle_rest_position = Vector3(0.33, 0.93, -0.38)
             rifle_visual.position = rifle_rest_position
             rifle_visual.rotation_degrees = Vector3(-8.0, 180.0, -4.0)
+            rifle_rest_rotation = rifle_visual.rotation_degrees
             rifle_visual.scale = Vector3.ONE * 0.92
             add_child(rifle_visual)
 
         _build_tactical_rig()
+        _build_player_contact_shadow()
         _build_player_marker()
         _build_target_lock_marker()
         _build_muzzle_flash()
@@ -6779,6 +6946,7 @@ func _build_visual() -> void:
     gun.material_override = body_mat
     visual.add_child(gun)
     _build_tactical_rig()
+    _build_player_contact_shadow()
     _build_player_marker()
     _build_target_lock_marker()
     _build_muzzle_flash()
@@ -6868,16 +7036,33 @@ func _build_tactical_rig() -> void:
     weapon_accent.material_override = weapon_accent_material
     add_child(weapon_accent)
 
+func _weapon_feedback_profile() -> Dictionary:
+    # Reuse immutable profile data rather than allocating a dictionary on
+    # every 3D gunshot; the profile id is selected on upgrade.
+    return DZWeaponProfiles.PROFILES.get(weapon_profile, DZWeaponProfiles.PROFILES["vanguard"])
+
 func _trigger_rifle_recoil() -> void:
     _trigger_weapon_accent_pulse()
     if rifle_visual == null or not is_instance_valid(rifle_visual):
         return
     if rifle_recoil_tween != null and rifle_recoil_tween.is_valid():
         rifle_recoil_tween.kill()
+    var feedback := _weapon_feedback_profile()
+    var kick := float(feedback.get("recoil_kick", 0.085))
+    var settle := float(feedback.get("recoil_recover", 0.075))
     rifle_visual.position = rifle_rest_position
+    rifle_visual.rotation_degrees = rifle_rest_rotation
     rifle_recoil_tween = create_tween()
-    rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position + Vector3(0.0, 0.015, 0.085), 0.035).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-    rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position, 0.075).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    rifle_recoil_tween.set_parallel(true)
+    rifle_recoil_tween.tween_property(rifle_visual, "position",
+        rifle_rest_position + Vector3(0.0, 0.015, kick), 0.035).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    rifle_recoil_tween.tween_property(rifle_visual, "rotation_degrees",
+        rifle_rest_rotation + Vector3(-kick * 28.0, 0.0, 0.0), 0.035).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    rifle_recoil_tween.set_parallel(false)
+    rifle_recoil_tween.tween_property(rifle_visual, "position", rifle_rest_position,
+        settle).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    rifle_recoil_tween.parallel().tween_property(rifle_visual, "rotation_degrees",
+        rifle_rest_rotation, settle).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _trigger_weapon_accent_pulse() -> void:
     if weapon_accent_material == null:
@@ -6887,6 +7072,20 @@ func _trigger_weapon_accent_pulse() -> void:
     weapon_accent_material.emission_energy_multiplier = 4.6
     weapon_accent_tween = create_tween()
     weapon_accent_tween.tween_property(weapon_accent_material, "emission_energy_multiplier", 1.85, 0.085).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _build_player_contact_shadow() -> void:
+    # The survivor needs the same soft grounded 3D silhouette as the enemy
+    # horde, rather than hovering above the floor between shadow-map samples.
+    # Reuse the existing two-triangle radial plane and one shared shader:
+    # no new material, shadow caster, projected light or particles.
+    var shadow := MeshInstance3D.new()
+    shadow.name = "PlayerContactShadow"
+    shadow.mesh = DZEnemy._contact_shadow_mesh(0.54)
+    shadow.rotation_degrees.x = -90.0
+    shadow.position.y = 0.013
+    shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+    shadow.material_override = DZEnemy._enemy_contact_shadow_material()
+    add_child(shadow)
 
 func _build_player_marker() -> void:
     player_marker_material = StandardMaterial3D.new()
@@ -7071,12 +7270,22 @@ func _trigger_muzzle_flash() -> void:
         return
     if muzzle_flash_tween != null and muzzle_flash_tween.is_valid():
         muzzle_flash_tween.kill()
+    var feedback := _weapon_feedback_profile()
+    # Protocol identity must be visible at the barrel, not only on HUD icons
+    # and projectiles. Keep the accessibility flash ceiling independent of
+    # the profile's authored burst size.
+    var flash_size := float(feedback.get("muzzle_size", 1.0))
+    if reduced_flashes:
+        flash_size = minf(flash_size, 1.0)
     muzzle_flash.visible = true
-    muzzle_flash.scale = Vector3(0.42, 0.30, 0.58) if reduced_flashes else Vector3(0.58, 0.42, 0.82)
+    muzzle_flash.scale = (Vector3(0.42, 0.30, 0.58) if reduced_flashes else Vector3(0.58, 0.42, 0.82)) * flash_size
     if muzzle_flash_material != null:
+        var flash_color: Color = feedback.get("muzzle_color", Color(1.0, 0.74, 0.18))
+        muzzle_flash_material.albedo_color = flash_color
+        muzzle_flash_material.emission = flash_color
         muzzle_flash_material.emission_energy_multiplier = 2.2 if reduced_flashes else 6.2
-    var flash_duration := 0.032 if reduced_flashes else 0.055
-    var target_scale := Vector3(0.72, 0.48, 1.02) if reduced_flashes else Vector3(1.22, 0.76, 1.72)
+    var flash_duration := 0.032 if reduced_flashes else float(feedback.get("flash_duration", 0.055))
+    var target_scale := (Vector3(0.72, 0.48, 1.02) if reduced_flashes else Vector3(1.22, 0.76, 1.72)) * flash_size
     muzzle_flash_tween = create_tween()
     muzzle_flash_tween.set_parallel(true)
     muzzle_flash_tween.tween_property(muzzle_flash, "scale", target_scale, flash_duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
@@ -7769,6 +7978,12 @@ extends RefCounted
 
 const PROFILES := {
     "vanguard": {
+        # Live barrel flash and recoil signature; no additional particles/lights.
+        "muzzle_color": Color(1.0, 0.74, 0.18),
+        "muzzle_size": 1.00,
+        "recoil_kick": 0.085,
+        "recoil_recover": 0.075,
+        "flash_duration": 0.055,
         "tint": Color(0.18, 0.90, 1.0),
         "damage_multiplier": 1.0,
         "projectile_speed_multiplier": 1.0,
@@ -7778,6 +7993,12 @@ const PROFILES := {
         "impact_weight": 1.06
     },
     "scatter": {
+        # Live barrel flash and recoil signature; no additional particles/lights.
+        "muzzle_color": Color(1.0, 0.50, 0.12),
+        "muzzle_size": 1.38,
+        "recoil_kick": 0.145,
+        "recoil_recover": 0.110,
+        "flash_duration": 0.070,
         "tint": Color(1.0, 0.56, 0.18),
         "damage_multiplier": 0.82,
         "projectile_speed_multiplier": 1.0,
@@ -7790,6 +8011,12 @@ const PROFILES := {
         "impact_weight": 1.24
     },
     "rail": {
+        # Live barrel flash and recoil signature; no additional particles/lights.
+        "muzzle_color": Color(0.76, 0.57, 1.0),
+        "muzzle_size": 0.86,
+        "recoil_kick": 0.160,
+        "recoil_recover": 0.145,
+        "flash_duration": 0.050,
         "tint": Color(0.72, 0.58, 1.0),
         "damage_multiplier": 1.50,
         "projectile_speed_multiplier": 1.40,
@@ -7802,6 +8029,12 @@ const PROFILES := {
         "impact_weight": 1.42
     },
     "inferno": {
+        # Live barrel flash and recoil signature; no additional particles/lights.
+        "muzzle_color": Color(1.0, 0.27, 0.055),
+        "muzzle_size": 1.22,
+        "recoil_kick": 0.110,
+        "recoil_recover": 0.095,
+        "flash_duration": 0.065,
         "tint": Color(1.0, 0.24, 0.035),
         "damage_multiplier": 1.20,
         "projectile_speed_multiplier": 1.0,
@@ -7812,6 +8045,12 @@ const PROFILES := {
         "impact_weight": 1.30
     },
     "cryo": {
+        # Live barrel flash and recoil signature; no additional particles/lights.
+        "muzzle_color": Color(0.38, 0.89, 1.0),
+        "muzzle_size": 1.02,
+        "recoil_kick": 0.072,
+        "recoil_recover": 0.070,
+        "flash_duration": 0.052,
         "tint": Color(0.30, 0.90, 1.0),
         "damage_multiplier": 0.95,
         "projectile_speed_multiplier": 1.12,
@@ -7822,6 +8061,12 @@ const PROFILES := {
         "impact_weight": 1.30
     },
     "arc": {
+        # Live barrel flash and recoil signature; no additional particles/lights.
+        "muzzle_color": Color(0.69, 0.44, 1.0),
+        "muzzle_size": 0.96,
+        "recoil_kick": 0.087,
+        "recoil_recover": 0.072,
+        "flash_duration": 0.047,
         "tint": Color(0.64, 0.42, 1.0),
         "damage_multiplier": 0.90,
         "projectile_speed_multiplier": 1.0,
@@ -10886,6 +11131,34 @@ func _initialize() -> void:
         return
     var dying_mesh := dying_meshes[0] as MeshInstance3D
     var living_mesh := living_meshes[0] as MeshInstance3D
+    # Hit light must visibly pulse the REAL skinned, atlas-textured body per
+    # instance. The neighboring 110+ enemies must keep their own dark skin.
+    if runner_a.authored_skin_meshes.size() != dying_meshes.size() or (
+        runner_b.authored_skin_meshes.size() != living_meshes.size()
+    ):
+        push_error("Per-enemy GLTF mesh cache does not cover actual skinned geometry")
+        quit(1)
+        return
+    if not _first_graded_enemy_material(dying_visual).shader.code.contains("instance uniform float hit_skin_flash"):
+        push_error("Shared opaque zombie shader lost per-instance ballistic skin feedback")
+        quit(1)
+        return
+    runner_a._play_hit_reaction(true, false)
+    var impact_skin_flash := float(dying_mesh.get_instance_shader_parameter("hit_skin_flash"))
+    var untouched_skin_flash := float(living_mesh.get_instance_shader_parameter("hit_skin_flash"))
+    if impact_skin_flash < 1.0 or absf(untouched_skin_flash) > 0.001:
+        push_error("Critical impact did not light only the struck imported zombie body")
+        quit(1)
+        return
+    if runner_a.hit_reaction_tween == null:
+        push_error("Actual skinned zombie impact lacked a bounded fade tween")
+        quit(1)
+        return
+    runner_a._set_hit_skin_flash(0.0)
+    if absf(float(dying_mesh.get_instance_shader_parameter("hit_skin_flash"))) > 0.001:
+        push_error("Zombie impact skin glow did not return to neutral without changing shared materials")
+        quit(1)
+        return
     var dying_shadow := runner_a.get_node_or_null("EnemyContactShadow") as MeshInstance3D
     var living_shadow := runner_b.get_node_or_null("EnemyContactShadow") as MeshInstance3D
     if dying_shadow == null or living_shadow == null:
@@ -11128,6 +11401,15 @@ func _initialize() -> void:
     var authored_floor_decal_count := 0
     var authored_floor_decal_violations := 0
     var authored_floor_decal_materials := {}
+    var utility_counts := {}
+    var utility_shadow_casters := 0
+    var utility_shadow_violations := 0
+    var utility_mesh_count := 0
+    var utility_materials := {}
+    var utility_light_lenses := 0
+    var utility_textured_parts := 0
+    var utility_normal_parts := 0
+    var utility_arm_parts := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -11149,6 +11431,51 @@ func _initialize() -> void:
                             graded_barrier_meshes += 1
             hazard_strip_count += int(child.find_child("BarrierHazardFront", true, false) != null)
             hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
+        elif child.name.begins_with("AuthoredUtility_"):
+            # Inspect the actual imported Blender GLB parts and shared PBR
+            # material instances, not only scene-construction source text.
+            var kind := String(child.name).split("_")[1]
+            utility_counts[kind] = int(utility_counts.get(kind, 0)) + 1
+            if not child.is_in_group("environment_utility_props"):
+                push_error("Authored industrial fixture escaped environment group")
+                quit(1)
+                return
+            var parts := child.find_children("*", "MeshInstance3D", true, false)
+            if parts.size() < 4:
+                push_error("Imported industrial fixture lacks authored bevels/fasteners: %s" % kind)
+                quit(1)
+                return
+            for part in parts:
+                var mesh := part as MeshInstance3D
+                if mesh == null or mesh.mesh == null or mesh.mesh.get_surface_count() == 0:
+                    utility_shadow_violations += 1
+                    continue
+                utility_mesh_count += 1
+                if mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    utility_shadow_casters += 1
+                    if kind != "cabinet" or mesh.name != "CabinetBody":
+                        utility_shadow_violations += 1
+                for surf in range(mesh.mesh.get_surface_count()):
+                    var material := mesh.get_surface_override_material(surf) as StandardMaterial3D
+                    if material == null or mesh.material_override != null:
+                        push_error("Blender GLB utility mesh lost its shared authored PBR surface: %s" % kind)
+                        quit(1)
+                        return
+                    utility_materials[material.get_instance_id()] = true
+                    if material.albedo_texture != null:
+                        utility_textured_parts += 1
+                        if material.normal_enabled and material.normal_texture != null:
+                            utility_normal_parts += 1
+                        if material.ao_enabled and material.ao_texture != null and (
+                            material.roughness_texture == material.ao_texture
+                            and material.metallic_texture == material.ao_texture
+                            and material.ao_texture_channel == BaseMaterial3D.TEXTURE_CHANNEL_RED
+                            and material.roughness_texture_channel == BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+                            and material.metallic_texture_channel == BaseMaterial3D.TEXTURE_CHANNEL_BLUE
+                        ):
+                            utility_arm_parts += 1
+                    if kind == "light" and mesh.name == "LightBarLens" and material.emission_enabled:
+                        utility_light_lenses += 1
         elif child.name.begins_with("PerimeterBulkhead_"):
             perimeter_bulkhead_count += 1
             bulkhead_hazard_stripe_count += child.find_children("HazardMarker_*", "MeshInstance3D", true, false).size()
@@ -11251,6 +11578,33 @@ func _initialize() -> void:
                     quit(1)
                     return
                 street_light_pool_count += 1
+
+    var expected_utilities := {
+        "cabinet": 2, "vent": 2, "hatch": 4,
+        "bollard": 4, "junction": 2, "light": 2
+    }
+    if utility_counts != expected_utilities:
+        push_error("Production scene is missing project-authored industrial 3D kit: %s" % str(utility_counts))
+        quit(1)
+        return
+    if utility_shadow_violations != 0 or utility_shadow_casters != 2:
+        push_error("Imported industrial fixtures exceeded two-cabinet shadow budget")
+        quit(1)
+        return
+    if utility_mesh_count < 75 or utility_materials.size() > 7 or utility_materials.size() < 4:
+        push_error("Industrial kit lost dense 3D geometry or shared PBR palette: meshes=%d materials=%d" % [utility_mesh_count, utility_materials.size()])
+        quit(1)
+        return
+    if utility_textured_parts < 40 or utility_normal_parts != utility_textured_parts or utility_arm_parts != utility_textured_parts:
+        push_error("Project-owned Blender GLBs must retain shared CC0 albedo, normal and packed PBR wear textures: %d / %d / %d" % [
+            utility_textured_parts, utility_normal_parts, utility_arm_parts
+        ])
+        quit(1)
+        return
+    if utility_light_lenses != 2:
+        push_error("Industrial quarantine cabinets lost their two real emissive GLB light lenses")
+        quit(1)
+        return
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
@@ -11669,6 +12023,34 @@ func _initialize() -> void:
         push_error("Player emissive silhouette accents must not cast mobile-costly shadows")
         quit(1)
         return
+
+    var player_ground := main.player.get_node_or_null("PlayerContactShadow") as MeshInstance3D
+    if player_ground == null or not player_ground.mesh is QuadMesh:
+        push_error("Survivor imported 3D body lost its grounded soft contact shadow")
+        quit(1)
+        return
+    if player_ground.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF or absf(player_ground.position.y - 0.013) > 0.002:
+        push_error("Survivor contact shadow regressed mobile shadow/z-fighting budget")
+        quit(1)
+        return
+    if player_ground.material_override != DZEnemy._enemy_contact_shadow_material():
+        push_error("Survivor contact shadow created a redundant horde shader/material")
+        quit(1)
+        return
+    var original_profile: String = main.player.weapon_profile
+    main.player.weapon_profile = "cryo"
+    main.player._trigger_muzzle_flash()
+    var cryo_color: Color = DZWeaponProfiles.profile("cryo")["muzzle_color"]
+    if not main.player.muzzle_flash_material.albedo_color.is_equal_approx(cryo_color):
+        push_error("Cryo protocol fired an orange starter muzzle flash instead of its authored 3D signature")
+        quit(1)
+        return
+    main.player._trigger_rifle_recoil()
+    if main.player.rifle_recoil_tween == null or not main.player.rifle_recoil_tween.is_valid():
+        push_error("Weapon-specific physical rifle recoil did not animate the imported gun")
+        quit(1)
+        return
+    main.player.weapon_profile = original_profile
 
     main.hud.show_touch_stick(Vector2(4.0, 716.0))
     var edge_pos: Vector2 = main.hud.touch_stick_root.position
@@ -16328,7 +16710,8 @@ func _initialize() -> void:
     var signatures := {}
     for id in ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]:
         var profile := WEAPON_PROFILES.profile(id)
-        for key in ["projectile_scale", "trail_length", "impact_weight"]:
+        for key in ["projectile_scale", "trail_length", "impact_weight", "muzzle_color",
+            "muzzle_size", "recoil_kick", "recoil_recover", "flash_duration"]:
             if not profile.has(key):
                 push_error("Weapon profile %s is missing feedback key %s" % [id, key])
                 quit(1)
@@ -16339,6 +16722,36 @@ func _initialize() -> void:
             quit(1)
             return
         signatures[signature] = id
+    # Six gameplay protocols must feel physically distinct at the *actual*
+    # 3D rifle: authored flash colors/width and kick/recovery, no per-shot
+    # particle emitter or duplicated muzzle shader.
+    var flashes := {}
+    for id in ["vanguard", "scatter", "rail", "inferno", "cryo", "arc"]:
+        var feedback := WEAPON_PROFILES.profile(id)
+        var flash_color: Color = feedback["muzzle_color"]
+        var flash_signature := flash_color.to_html() + "|%.3f" % float(feedback["muzzle_size"])
+        if flashes.has(flash_signature):
+            push_error("Weapon muzzle signature is duplicated across gameplay protocols")
+            quit(1)
+            return
+        flashes[flash_signature] = true
+        if float(feedback["recoil_kick"]) <= 0.03 or float(feedback["recoil_kick"]) > 0.19:
+            push_error("Weapon recoil escaped plausible real-rifle motion budget for %s" % id)
+            quit(1)
+            return
+        if float(feedback["flash_duration"]) >= 0.085 or float(feedback["flash_duration"]) < 0.03:
+            push_error("Weapon flash exceeded safe rapid-fire visual lifetime for %s" % id)
+            quit(1)
+            return
+    if float(WEAPON_PROFILES.profile("rail")["recoil_kick"]) <= float(WEAPON_PROFILES.profile("vanguard")["recoil_kick"]):
+        push_error("Heavy railgun must kick farther than the starter weapon")
+        quit(1)
+        return
+    if float(WEAPON_PROFILES.profile("scatter")["muzzle_size"]) <= float(WEAPON_PROFILES.profile("vanguard")["muzzle_size"]):
+        push_error("Scatter barrel discharge must read wider than Vanguard")
+        quit(1)
+        return
+
     if float(WEAPON_PROFILES.profile("rail")["impact_weight"]) <= float(WEAPON_PROFILES.profile("vanguard")["impact_weight"]):
         push_error("Rail impact should read heavier than Vanguard")
         quit(1)

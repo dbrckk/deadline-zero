@@ -32,16 +32,17 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-11T17:36:01Z
+Generated: 2026-10-12T14:30:53Z
 
 ### Git
 - Branch: `main`
-- Head: `eb943cfc6c87`
-- Commit date: 2026-10-11T19:35:33+02:00
-- Commit: feat(godot): fade soft zombie contact shadows with rigged death dissolve (#411)
+- Head: `9eaf0e5ead4d`
+- Commit date: 2026-10-12T16:30:36+02:00
+- Commit: feat(godot): ballistic flash on actual skinned zombie bodies, cached horde mesh FX (#414)
 - Tracked files: 1065
 
 ### Recently changed files
+- `godot/scripts/AssetLibrary.gd`
 - `godot/scripts/Enemy.gd`
 - `godot/tests/enemy_silhouette_identity_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
@@ -50,10 +51,11 @@ Generated: 2026-10-11T17:36:01Z
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
 - `godot/scripts/Main.gd`
-- `godot/tests/boss_reveal_camera_test.gd`
-- `godot/tests/first_playable_run_path_test.gd`
+- `godot/tests/environment_identity_test.gd`
 - `godot/scripts/Player.gd`
-- `godot/tests/player_targeting_stability_test.gd`
+- `godot/scripts/WeaponProfiles.gd`
+- `godot/tests/first_playable_run_path_test.gd`
+- `godot/tests/weapon_protocol_behavior_test.gd`
 
 ### Project signals
 - `build.gradle`
