@@ -122,6 +122,15 @@ func _initialize() -> void:
     var authored_floor_decal_count := 0
     var authored_floor_decal_violations := 0
     var authored_floor_decal_materials := {}
+    var utility_counts := {}
+    var utility_shadow_casters := 0
+    var utility_shadow_violations := 0
+    var utility_mesh_count := 0
+    var utility_materials := {}
+    var utility_light_lenses := 0
+    var utility_textured_parts := 0
+    var utility_normal_parts := 0
+    var utility_arm_parts := 0
     for child in scene.get_children():
         if child.name.begins_with("AuthoredBarrier_"):
             barrier_count += 1
@@ -143,6 +152,51 @@ func _initialize() -> void:
                             graded_barrier_meshes += 1
             hazard_strip_count += int(child.find_child("BarrierHazardFront", true, false) != null)
             hazard_strip_count += int(child.find_child("BarrierHazardRear", true, false) != null)
+        elif child.name.begins_with("AuthoredUtility_"):
+            # Inspect the actual imported Blender GLB parts and shared PBR
+            # material instances, not only scene-construction source text.
+            var kind := String(child.name).split("_")[1]
+            utility_counts[kind] = int(utility_counts.get(kind, 0)) + 1
+            if not child.is_in_group("environment_utility_props"):
+                push_error("Authored industrial fixture escaped environment group")
+                quit(1)
+                return
+            var parts := child.find_children("*", "MeshInstance3D", true, false)
+            if parts.size() < 4:
+                push_error("Imported industrial fixture lacks authored bevels/fasteners: %s" % kind)
+                quit(1)
+                return
+            for part in parts:
+                var mesh := part as MeshInstance3D
+                if mesh == null or mesh.mesh == null or mesh.mesh.get_surface_count() == 0:
+                    utility_shadow_violations += 1
+                    continue
+                utility_mesh_count += 1
+                if mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    utility_shadow_casters += 1
+                    if kind != "cabinet" or mesh.name != "CabinetBody":
+                        utility_shadow_violations += 1
+                for surf in range(mesh.mesh.get_surface_count()):
+                    var material := mesh.get_surface_override_material(surf) as StandardMaterial3D
+                    if material == null or mesh.material_override != null:
+                        push_error("Blender GLB utility mesh lost its shared authored PBR surface: %s" % kind)
+                        quit(1)
+                        return
+                    utility_materials[material.get_instance_id()] = true
+                    if material.albedo_texture != null:
+                        utility_textured_parts += 1
+                        if material.normal_enabled and material.normal_texture != null:
+                            utility_normal_parts += 1
+                        if material.ao_enabled and material.ao_texture != null and (
+                            material.roughness_texture == material.ao_texture
+                            and material.metallic_texture == material.ao_texture
+                            and material.ao_texture_channel == BaseMaterial3D.TEXTURE_CHANNEL_RED
+                            and material.roughness_texture_channel == BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+                            and material.metallic_texture_channel == BaseMaterial3D.TEXTURE_CHANNEL_BLUE
+                        ):
+                            utility_arm_parts += 1
+                    if kind == "light" and mesh.name == "LightBarLens" and material.emission_enabled:
+                        utility_light_lenses += 1
         elif child.name.begins_with("PerimeterBulkhead_"):
             perimeter_bulkhead_count += 1
             bulkhead_hazard_stripe_count += child.find_children("HazardMarker_*", "MeshInstance3D", true, false).size()
@@ -245,6 +299,33 @@ func _initialize() -> void:
                     quit(1)
                     return
                 street_light_pool_count += 1
+
+    var expected_utilities := {
+        "cabinet": 2, "vent": 2, "hatch": 4,
+        "bollard": 4, "junction": 2, "light": 2
+    }
+    if utility_counts != expected_utilities:
+        push_error("Production scene is missing project-authored industrial 3D kit: %s" % str(utility_counts))
+        quit(1)
+        return
+    if utility_shadow_violations != 0 or utility_shadow_casters != 2:
+        push_error("Imported industrial fixtures exceeded two-cabinet shadow budget")
+        quit(1)
+        return
+    if utility_mesh_count < 75 or utility_materials.size() > 7 or utility_materials.size() < 4:
+        push_error("Industrial kit lost dense 3D geometry or shared PBR palette: meshes=%d materials=%d" % [utility_mesh_count, utility_materials.size()])
+        quit(1)
+        return
+    if utility_textured_parts < 40 or utility_normal_parts != utility_textured_parts or utility_arm_parts != utility_textured_parts:
+        push_error("Project-owned Blender GLBs must retain shared CC0 albedo, normal and packed PBR wear textures: %d / %d / %d" % [
+            utility_textured_parts, utility_normal_parts, utility_arm_parts
+        ])
+        quit(1)
+        return
+    if utility_light_lenses != 2:
+        push_error("Industrial quarantine cabinets lost their two real emissive GLB light lenses")
+        quit(1)
+        return
 
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)

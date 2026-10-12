@@ -17,6 +17,12 @@ const INDUSTRIAL_BULKHEAD := "res://assets/generated/industrial/dz_bulkhead_pane
 const INDUSTRIAL_CRATE := "res://assets/generated/industrial/dz_cargo_crate.glb"
 const INDUSTRIAL_PIPE_RACK := "res://assets/generated/industrial/dz_pipe_rack.glb"
 const INDUSTRIAL_SERVICE_PILLAR := "res://assets/generated/industrial/dz_service_pillar.glb"
+const INDUSTRIAL_UTILITY_CABINET := "res://assets/generated/industrial/dz_utility_cabinet.glb"
+const INDUSTRIAL_WALL_VENT := "res://assets/generated/industrial/dz_wall_vent.glb"
+const INDUSTRIAL_FLOOR_HATCH := "res://assets/generated/industrial/dz_floor_hatch.glb"
+const INDUSTRIAL_HAZARD_BOLLARD := "res://assets/generated/industrial/dz_hazard_bollard.glb"
+const INDUSTRIAL_JUNCTION_BOX := "res://assets/generated/industrial/dz_junction_box.glb"
+const INDUSTRIAL_EMERGENCY_LIGHT_BAR := "res://assets/generated/industrial/dz_emergency_light_bar.glb"
 
 static var _enemy_grade_shader: Shader
 # Enemy palettes are fixed per archetype. Reuse one graded ShaderMaterial per
@@ -125,6 +131,38 @@ static func industrial_service_pillar() -> Node3D:
     _grade_generated_industrial_kit(root)
     return root
 
+# The remaining project-owned Blender 5.2 kit assets are production meshes,
+# not primitive stand-ins. Reuse the same bounded six-finish PBR palette.
+static func industrial_utility_cabinet() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_UTILITY_CABINET)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_wall_vent() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_WALL_VENT)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_floor_hatch() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_FLOOR_HATCH)
+    _grade_generated_industrial_kit(root, true)
+    return root
+
+static func industrial_hazard_bollard() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_HAZARD_BOLLARD)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_junction_box() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_JUNCTION_BOX)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_emergency_light_bar() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_EMERGENCY_LIGHT_BAR)
+    _grade_generated_industrial_kit(root)
+    return root
+
 static func _grade_generated_industrial_kit(root: Node3D, ground_detail := false) -> void:
     if root == null:
         return
@@ -138,9 +176,11 @@ static func _grade_generated_industrial_kit(root: Node3D, ground_detail := false
             continue
         var identity := mesh_instance.name.to_lower()
         var finish := "steel"
-        if "recess" in identity or "inset" in identity:
+        if "lightbarlens" in identity:
+            finish = "alarm"
+        elif "recess" in identity or "inset" in identity:
             finish = "recess"
-        elif "hazard" in identity or "warning" in identity:
+        elif "hazard" in identity or "warning" in identity or "bollardband" in identity or "bollardcap" in identity:
             finish = "hazard"
         elif "signal" in identity or "status" in identity or "lens" in identity or "capbolt" in identity:
             finish = "signal"
@@ -174,6 +214,15 @@ static func _industrial_kit_material(finish: String) -> StandardMaterial3D:
             mat.albedo_color = Color(0.56, 0.115, 0.025)
             mat.metallic = 0.28
             mat.roughness = 0.63
+        "alarm":
+            # Lens is a real part of the Blender-authored GLB. Emission
+            # reads from above without adding expensive omni lights.
+            mat.albedo_color = Color(0.12, 0.40, 0.52)
+            mat.emission_enabled = true
+            mat.emission = Color(0.055, 0.48, 0.76)
+            mat.emission_energy_multiplier = 1.8
+            mat.metallic = 0.08
+            mat.roughness = 0.32
         "signal":
             mat.albedo_color = Color(0.035, 0.27, 0.36)
             mat.emission_enabled = true
@@ -189,6 +238,42 @@ static func _industrial_kit_material(finish: String) -> StandardMaterial3D:
             mat.albedo_color = Color(0.070, 0.10, 0.115)
             mat.metallic = 0.66
             mat.roughness = 0.58
+    # Real CC0 Poly Haven 1k material sets already shipped with the game.
+    # Share diffuse, tangent-space normal and packed AO/Roughness/Metallic maps
+    # across every imported bolt, face and brace of the same finish. This adds
+    # no shader instances or texture downloads during enemy-horde gameplay.
+    # Preserve solid hazard/lens colors for camera-scale gameplay readability.
+    var pbr_family := ""
+    match finish:
+        "steel":
+            pbr_family = "factory_wall"
+        "slat":
+            pbr_family = "metal_grate_rusty"
+        "rust":
+            pbr_family = "rusty_metal_04"
+    if not pbr_family.is_empty():
+        var prefix := "res://assets/third_party/polyhaven/%s/%s" % [pbr_family, pbr_family]
+        mat.albedo_texture = load(prefix + "_diff_1k.jpg") as Texture2D
+        mat.normal_enabled = true
+        mat.normal_texture = load(prefix + "_nor_gl_1k.jpg") as Texture2D
+        mat.normal_scale = 0.33 if finish == "steel" else 0.47
+        var packed_arm := load(prefix + "_arm_1k.jpg") as Texture2D
+        mat.ao_enabled = true
+        mat.ao_texture = packed_arm
+        mat.ao_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
+        mat.roughness_texture = packed_arm
+        mat.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+        mat.metallic_texture = packed_arm
+        mat.metallic_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_BLUE
+        mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+        # These muted color multipliers prevent bright source photography
+        # from flattening the single-key nocturnal combat contrast.
+        if finish == "steel":
+            mat.albedo_color = Color(0.13, 0.18, 0.20)
+        elif finish == "slat":
+            mat.albedo_color = Color(0.17, 0.19, 0.21)
+        else:
+            mat.albedo_color = Color(0.45, 0.21, 0.13)
     _industrial_kit_material_cache[finish] = mat
     return mat
 
