@@ -180,7 +180,7 @@ static func _grade_generated_industrial_kit(root: Node3D, ground_detail := false
             finish = "alarm"
         elif "recess" in identity or "inset" in identity:
             finish = "recess"
-        elif "hazard" in identity or "warning" in identity:
+        elif "hazard" in identity or "warning" in identity or "bollardband" in identity or "bollardcap" in identity:
             finish = "hazard"
         elif "signal" in identity or "status" in identity or "lens" in identity or "capbolt" in identity:
             finish = "signal"
