@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-11",
+  "updated_at": "2026-10-12",
   "repository": "dbrckk/deadline-zero",
   "branch": "main",
   "working_area": "Godot 4.7.2 native 3D",
@@ -120,7 +120,7 @@
       "change": "Six per-weapon real-time muzzle flash/recoil signatures plus grounded shared-shadow survivor"
     }
   ],
-  "visual_qa": "Reviewed native 1280x720 Godot 3D scene render from #410: real GLTF survivor/zombies and industrial arena rendered (Compatibility renderer), but stylized low-poly assets still fall short of AAA target. Inspected native Android smoke artifact #410: emulator screenshot is entirely black and logcat shows Vulkan present error on llvmpipe; per workflow this diagnostic screenshot is NOT a visual oracle and does NOT prove actual-device failure. Physical Vulkan Android rendering remains unverified.",
+  "visual_qa": "Reviewed authentic first-playable and midrun-pressure Godot 1280x720 rendered screenshots from PR #413 CI. Six existing Blender-authored industrial GLB asset families now add real PBR geometry and licensed CC0 normal/packed ARM textures; scene remains readable but imported Quaternius characters are still stylized low poly and far from AAA certification. Physical Android Vulkan screenshot remains unverified.",
   "android_apk": {
     "source_pr": 395,
     "package": "com.deadlinezero.godot",
@@ -129,11 +129,22 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PRs #409–#412 merged after 8/8 successful CI checks each. #412 first Godot verify failed because a new integration-test variable lacked explicit String annotation; corrected, new head passed all 8/8 checks. Actual 1280x720 Godot Compatibility-rendered scene reviewed; physical Android Mobile/Vulkan visual output, touch, p95/thermal, Play Billing and process-death recovery not certified. Android software-emulator diagnostic screenshot is black with Vulkan queue present error.",
+  "verification": "PRs #409–#412 merged after 8/8 CI. PRs #413–#414 implemented and Godot 3D Verify passed; awaiting all Android emulator checks prior to any merges. #413 real Godot 1280x720 rendered screenshots inspected; physical Android Mobile/Vulkan and p95/thermal/touch unverified.",
   "next": [
-    "Upgrade stylized low-poly imported characters and sparse industrial arena with higher-fidelity authored 3D models, PBR textures, lighting and careful mobile performance budget",
-    "Verify actual native Mobile/Vulkan rendering and p95 FPS/thermal/touch on representative physical Android phone; software-emulator Vulkan diagnostic is not a visual oracle",
-    "Resolve Play Billing and process-death persistence (#16/#17) and Play closed testing (#14)"
+    "Finish required Android emulator CI on PRs #413/#414; merge only after eight successful checks each",
+    "Find higher-fidelity properly licensed rigged 3D character assets and evaluate visual/performance budget on mobile",
+    "Measure physical Android Vulkan render, fps p95, thermal, touch; Play Billing and process death (#16/#17) and closed testing (#14)"
   ],
-  "in_progress": []
+  "in_progress": [
+    {
+      "pr": 413,
+      "status": "open",
+      "change": "Six unused project-authored Blender GLB families deployed as 16 textured PBR fixtures; 7/8 CI green, legacy Android emulator job pending"
+    },
+    {
+      "pr": 414,
+      "status": "open",
+      "change": "Actual skinned zombie hit flash per-instance with cached GLTF mesh refs; 6/8 CI green, Android emulator jobs pending"
+    }
+  ]
 }
