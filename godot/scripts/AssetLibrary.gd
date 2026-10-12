@@ -238,6 +238,42 @@ static func _industrial_kit_material(finish: String) -> StandardMaterial3D:
             mat.albedo_color = Color(0.070, 0.10, 0.115)
             mat.metallic = 0.66
             mat.roughness = 0.58
+    # Real CC0 Poly Haven 1k material sets already shipped with the game.
+    # Share diffuse, tangent-space normal and packed AO/Roughness/Metallic maps
+    # across every imported bolt, face and brace of the same finish. This adds
+    # no shader instances or texture downloads during enemy-horde gameplay.
+    # Preserve solid hazard/lens colors for camera-scale gameplay readability.
+    var pbr_family := ""
+    match finish:
+        "steel":
+            pbr_family = "factory_wall"
+        "slat":
+            pbr_family = "metal_grate_rusty"
+        "rust":
+            pbr_family = "rusty_metal_04"
+    if not pbr_family.is_empty():
+        var prefix := "res://assets/third_party/polyhaven/%s/%s" % [pbr_family, pbr_family]
+        mat.albedo_texture = load(prefix + "_diff_1k.jpg") as Texture2D
+        mat.normal_enabled = true
+        mat.normal_texture = load(prefix + "_nor_gl_1k.jpg") as Texture2D
+        mat.normal_scale = 0.33 if finish == "steel" else 0.47
+        var packed_arm := load(prefix + "_arm_1k.jpg") as Texture2D
+        mat.ao_enabled = true
+        mat.ao_texture = packed_arm
+        mat.ao_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
+        mat.roughness_texture = packed_arm
+        mat.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+        mat.metallic_texture = packed_arm
+        mat.metallic_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_BLUE
+        mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+        # These muted color multipliers prevent bright source photography
+        # from flattening the single-key nocturnal combat contrast.
+        if finish == "steel":
+            mat.albedo_color = Color(0.13, 0.18, 0.20)
+        elif finish == "slat":
+            mat.albedo_color = Color(0.23, 0.27, 0.29)
+        else:
+            mat.albedo_color = Color(0.45, 0.21, 0.13)
     _industrial_kit_material_cache[finish] = mat
     return mat
 
