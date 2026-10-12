@@ -431,7 +431,8 @@ func _spawn_position_around_player(radius: float) -> Vector3:
 func _spawn_enemy(forced_kind: String = "") -> void:
     if player == null or game_over:
         return
-    if forced_kind != "boss" and get_tree().get_nodes_in_group("enemies").size() >= max_enemies:
+    # Avoid allocating a full live-horde Array on every spawn in a batch.
+    if forced_kind != "boss" and get_tree().get_node_count_in_group("enemies") >= max_enemies:
         return
     var radius := spawn_rng.randf_range(12.0, 18.0)
     var pos := _spawn_position_around_player(radius)
