@@ -157,7 +157,7 @@ func _initialize() -> void:
             # material instances, not only scene-construction source text.
             var kind := String(child.name).split("_")[1]
             utility_counts[kind] = int(utility_counts.get(kind, 0)) + 1
-            if not child.is_in_group("environment_props"):
+            if not child.is_in_group("environment_utility_props"):
                 push_error("Authored industrial fixture escaped environment group")
                 quit(1)
                 return
