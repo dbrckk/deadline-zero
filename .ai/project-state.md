@@ -7,7 +7,8 @@ Status: active
 - PRs #397–#414 merged, including #409–#414 each passing eight CI checks.
 - #409 smooth survivor travel/combat facing, #410 cinematic camera inertia, #411 per-zombie death contact shadow fade, #412 six weapon signatures and grounded survivor.
 - #413 **merged, 8/8 CI**: all six project-owned previously unused Blender 3D industrial GLB families integrated as 16 real arena assets. CC0 Poly Haven 1k diffuse/normal/packed ARM PBR map reuse. Actual 720p Godot captures reviewed.
-- #414 **merged, 8/8 CI**: real per-instance skinned GLTF hit flash with cached horde meshes. #415 closed as superseded by #413.\n- #416 **open**: physical-native Godot FPS/p95/hitch logcat verification integrated into existing Android crash scanner, with exact device QA procedure.
+- #414 **merged, 8/8 CI**: real per-instance skinned GLTF hit flash with cached horde meshes. #415 closed as superseded by #413.\n- #417 **open**: remove repeated full-horde array allocation from Godot enemy spawn cap checks; CI pending.
+- #416 **open**: physical-native Godot FPS/p95/hitch logcat verification integrated into existing Android crash scanner, with exact device QA procedure.
 
 ## Blockers
 - #416 must achieve all eight passing CI checks before it is merged.
