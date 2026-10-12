@@ -17,6 +17,9 @@ var dead := false
 var attack_cooldown := 0.0
 var authored_visual: Node3D
 var authored_anim: AnimationPlayer
+# Imported GLTF mesh references cached once per zombie, never searched every
+# tween frame during rapid gun hits or the opaque death dissolve.
+var authored_skin_meshes: Array[MeshInstance3D] = []
 var current_anim := ""
 var attack_windup := 0.0
 var attack_target_position := Vector3.ZERO
@@ -122,6 +125,7 @@ func configure(enemy_kind: String, difficulty: float, chase_target: Node3D) -> v
 func _ready() -> void:
     add_to_group("enemies")
     _build_visual()
+    _cache_authored_skin_meshes()
     # Capture each imported archetype's immutable silhouette transform before
     # spawn reveals and hit reactions begin moving its visual root.
     if authored_visual != null:
@@ -136,6 +140,21 @@ func _ready() -> void:
     _build_hit_flash()
     _apply_mobile_shadow_budget()
     _play_spawn_reveal()
+
+func _cache_authored_skin_meshes() -> void:
+    authored_skin_meshes.clear()
+    if authored_visual == null:
+        return
+    if authored_visual is MeshInstance3D:
+        authored_skin_meshes.append(authored_visual as MeshInstance3D)
+    for node in authored_visual.find_children("*", "MeshInstance3D", true, false):
+        authored_skin_meshes.append(node as MeshInstance3D)
+
+func _set_hit_skin_flash(value: float) -> void:
+    var intensity := clampf(value, 0.0, 1.30)
+    for mesh in authored_skin_meshes:
+        if is_instance_valid(mesh):
+            mesh.set_instance_shader_parameter("hit_skin_flash", intensity)
 
 func _apply_mobile_shadow_budget() -> void:
     # The arena has one real directional shadow map; a swarm of 100+ animated
@@ -825,13 +844,12 @@ func _set_death_shadow_opacity(opacity: float) -> void:
         shadow.set_instance_shader_parameter("death_shadow_opacity", clampf(opacity, 0.0, 1.0))
 
 func _set_death_dissolve(progress: float) -> void:
-    if authored_visual == null:
-        return
     var clamped := clampf(progress, 0.0, 0.97)
-    if authored_visual is MeshInstance3D:
-        (authored_visual as MeshInstance3D).set_instance_shader_parameter("death_dissolve", clamped)
-    for node in authored_visual.find_children("*", "MeshInstance3D", true, false):
-        (node as MeshInstance3D).set_instance_shader_parameter("death_dissolve", clamped)
+    # A death tween runs on ~26 frames, so never traverse an entire GLTF
+    # hierarchy every time a zombie disappears during peak-wave combat.
+    for mesh in authored_skin_meshes:
+        if is_instance_valid(mesh):
+            mesh.set_instance_shader_parameter("death_dissolve", clamped)
 
 func hit_reaction_profile() -> Dictionary:
     if kind == "boss":
@@ -870,8 +888,14 @@ func _play_hit_reaction(critical: bool, killed: bool) -> void:
         hit_flash_visual.visible = true
         hit_flash_material.emission_energy_multiplier = float(profile["flash"]) * (1.18 if critical else 1.0)
         hit_flash_material.albedo_color.a = 0.30 if critical else 0.20
+    # Pulse the actual imported skinned body, not only the approximate
+    # cylinder impact shell. One GPU instance float leaves horde PBR atlas
+    # materials shared and avoids spawning additional render geometry.
+    var skin_flash := 1.10 if critical else (0.82 if killed else 0.52)
+    _set_hit_skin_flash(skin_flash)
     hit_reaction_tween = create_tween()
     hit_reaction_tween.set_parallel(true)
+    hit_reaction_tween.tween_method(_set_hit_skin_flash, skin_flash, 0.0, duration)
     hit_reaction_tween.tween_property(visual, "scale", base_scale * punch, duration * 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     hit_reaction_tween.tween_property(visual, "position", base_position + recoil_direction, duration * 0.34).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     if hit_flash_visual != null:
