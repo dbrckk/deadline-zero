@@ -1232,7 +1232,7 @@ func _build_reinforced_utility_details() -> void:
         if detail == null:
             continue
         detail.name = "AuthoredUtility_%s_%02d" % [kind, index]
-        detail.add_to_group("environment_props")
+        detail.add_to_group("environment_utility_props")
         detail.position = placement["at"]
         detail.rotation.y = float(placement["yaw"])
         # 16 fixtures total, only two cabinet bodies enter the shadow map.
