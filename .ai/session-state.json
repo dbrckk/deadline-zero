@@ -143,7 +143,7 @@
   },
   "verification": "PR #414 merged after 8/8 successful checks; #415 closed as superseded by merged #413; #416 physical Godot DZ_PERF crash/frame evidence is open in CI. CI Android emulator and Linux rendered evidence are not physical Android Vulkan sign-off.",
   "next": [
-    "Review and merge PR #416 only after complete CI; if failed, inspect and correct jobs",
+    "Review PRs #416 and #417 and merge individually only after 8/8 successful CI, then measure real Godot Android frame pacing",
     "Capture real player-controlled Godot Android frame pacing with new documented DZ_PERF scanner, including physical Vulkan/thermal/touch evidence",
     "Replace low-poly placeholder-fidelity rigged 3D characters with appropriately licensed, mobile-budget production sources and QA against actual device",
     "Complete Play Billing/process-death/closed-test release gates (#14, #16, #17)"
@@ -153,6 +153,11 @@
       "pr": 416,
       "status": "open, CI running",
       "change": "Physical Godot 3D debug DZ_PERF p95/FPS/hitch threshold scanner integrated with crash/ANR scan, on-device QA guide"
+    },
+    {
+      "pr": 417,
+      "status": "open, CI running",
+      "change": "Avoid allocating live enemy group Array in each native Godot spawn cap check; preserve boss exception and maximum horde cap"
     }
   ]
 }
