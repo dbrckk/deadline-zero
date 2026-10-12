@@ -118,6 +118,12 @@
       "status": "merged",
       "checks": "8/8 successful after fixing Godot integration-test type inference",
       "change": "Six per-weapon real-time muzzle flash/recoil signatures plus grounded shared-shadow survivor"
+    },
+    {
+      "pr": 413,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "16 real Blender industrial GLBs from six existing asset families, shared CC0 Poly Haven 1k diffuse/normal/ARM PBR materials and strict 2-shadow caster budget; authentic 720p Godot rendering reviewed"
     }
   ],
   "visual_qa": "Reviewed authentic first-playable and midrun-pressure Godot 1280x720 rendered screenshots from PR #413 CI. Six existing Blender-authored industrial GLB asset families now add real PBR geometry and licensed CC0 normal/packed ARM textures; scene remains readable but imported Quaternius characters are still stylized low poly and far from AAA certification. Physical Android Vulkan screenshot remains unverified.",
@@ -129,18 +135,13 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PRs #409–#412 merged after 8/8 CI. PRs #413–#414 implemented and Godot 3D Verify passed; awaiting all Android emulator checks prior to any merges. #413 real Godot 1280x720 rendered screenshots inspected; physical Android Mobile/Vulkan and p95/thermal/touch unverified.",
+  "verification": "PRs #409–#413 now merged after 8/8 CI each. #413 native Godot 1280×720 render screenshots reviewed. PR #414 Godot 3D, Android build, AAB, UI and smoke tests passed 7/8; legacy Android runtime ongoing, no merge yet. Physical Android Mobile/Vulkan and FPS/p95/thermal/touch unverified.",
   "next": [
     "Finish required Android emulator CI on PRs #413/#414; merge only after eight successful checks each",
     "Find higher-fidelity properly licensed rigged 3D character assets and evaluate visual/performance budget on mobile",
     "Measure physical Android Vulkan render, fps p95, thermal, touch; Play Billing and process death (#16/#17) and closed testing (#14)"
   ],
   "in_progress": [
-    {
-      "pr": 413,
-      "status": "open",
-      "change": "Six unused project-authored Blender GLB families deployed as 16 textured PBR fixtures; 7/8 CI green, legacy Android emulator job pending"
-    },
     {
       "pr": 414,
       "status": "open",
