@@ -17,6 +17,12 @@ const INDUSTRIAL_BULKHEAD := "res://assets/generated/industrial/dz_bulkhead_pane
 const INDUSTRIAL_CRATE := "res://assets/generated/industrial/dz_cargo_crate.glb"
 const INDUSTRIAL_PIPE_RACK := "res://assets/generated/industrial/dz_pipe_rack.glb"
 const INDUSTRIAL_SERVICE_PILLAR := "res://assets/generated/industrial/dz_service_pillar.glb"
+const INDUSTRIAL_UTILITY_CABINET := "res://assets/generated/industrial/dz_utility_cabinet.glb"
+const INDUSTRIAL_WALL_VENT := "res://assets/generated/industrial/dz_wall_vent.glb"
+const INDUSTRIAL_FLOOR_HATCH := "res://assets/generated/industrial/dz_floor_hatch.glb"
+const INDUSTRIAL_HAZARD_BOLLARD := "res://assets/generated/industrial/dz_hazard_bollard.glb"
+const INDUSTRIAL_JUNCTION_BOX := "res://assets/generated/industrial/dz_junction_box.glb"
+const INDUSTRIAL_EMERGENCY_LIGHT_BAR := "res://assets/generated/industrial/dz_emergency_light_bar.glb"
 
 static var _enemy_grade_shader: Shader
 # Enemy palettes are fixed per archetype. Reuse one graded ShaderMaterial per
@@ -125,6 +131,38 @@ static func industrial_service_pillar() -> Node3D:
     _grade_generated_industrial_kit(root)
     return root
 
+# The remaining project-owned Blender 5.2 kit assets are production meshes,
+# not primitive stand-ins. Reuse the same bounded six-finish PBR palette.
+static func industrial_utility_cabinet() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_UTILITY_CABINET)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_wall_vent() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_WALL_VENT)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_floor_hatch() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_FLOOR_HATCH)
+    _grade_generated_industrial_kit(root, true)
+    return root
+
+static func industrial_hazard_bollard() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_HAZARD_BOLLARD)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_junction_box() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_JUNCTION_BOX)
+    _grade_generated_industrial_kit(root)
+    return root
+
+static func industrial_emergency_light_bar() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_EMERGENCY_LIGHT_BAR)
+    _grade_generated_industrial_kit(root)
+    return root
+
 static func _grade_generated_industrial_kit(root: Node3D, ground_detail := false) -> void:
     if root == null:
         return
@@ -138,7 +176,9 @@ static func _grade_generated_industrial_kit(root: Node3D, ground_detail := false
             continue
         var identity := mesh_instance.name.to_lower()
         var finish := "steel"
-        if "recess" in identity or "inset" in identity:
+        if "lightbarlens" in identity:
+            finish = "alarm"
+        elif "recess" in identity or "inset" in identity:
             finish = "recess"
         elif "hazard" in identity or "warning" in identity:
             finish = "hazard"
@@ -174,6 +214,15 @@ static func _industrial_kit_material(finish: String) -> StandardMaterial3D:
             mat.albedo_color = Color(0.56, 0.115, 0.025)
             mat.metallic = 0.28
             mat.roughness = 0.63
+        "alarm":
+            # Lens is a real part of the Blender-authored GLB. Emission
+            # reads from above without adding expensive omni lights.
+            mat.albedo_color = Color(0.12, 0.40, 0.52)
+            mat.emission_enabled = true
+            mat.emission = Color(0.055, 0.48, 0.76)
+            mat.emission_energy_multiplier = 1.8
+            mat.metallic = 0.08
+            mat.roughness = 0.32
         "signal":
             mat.albedo_color = Color(0.035, 0.27, 0.36)
             mat.emission_enabled = true
