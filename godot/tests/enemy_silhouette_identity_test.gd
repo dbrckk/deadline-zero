@@ -348,6 +348,34 @@ func _initialize() -> void:
         return
     var dying_mesh := dying_meshes[0] as MeshInstance3D
     var living_mesh := living_meshes[0] as MeshInstance3D
+    # Hit light must visibly pulse the REAL skinned, atlas-textured body per
+    # instance. The neighboring 110+ enemies must keep their own dark skin.
+    if runner_a.authored_skin_meshes.size() != dying_meshes.size() or (
+        runner_b.authored_skin_meshes.size() != living_meshes.size()
+    ):
+        push_error("Per-enemy GLTF mesh cache does not cover actual skinned geometry")
+        quit(1)
+        return
+    if not _first_graded_enemy_material(dying_visual).shader.code.contains("instance uniform float hit_skin_flash"):
+        push_error("Shared opaque zombie shader lost per-instance ballistic skin feedback")
+        quit(1)
+        return
+    runner_a._play_hit_reaction(true, false)
+    var impact_skin_flash := float(dying_mesh.get_instance_shader_parameter("hit_skin_flash"))
+    var untouched_skin_flash := float(living_mesh.get_instance_shader_parameter("hit_skin_flash"))
+    if impact_skin_flash < 1.0 or absf(untouched_skin_flash) > 0.001:
+        push_error("Critical impact did not light only the struck imported zombie body")
+        quit(1)
+        return
+    if runner_a.hit_reaction_tween == null:
+        push_error("Actual skinned zombie impact lacked a bounded fade tween")
+        quit(1)
+        return
+    runner_a._set_hit_skin_flash(0.0)
+    if absf(float(dying_mesh.get_instance_shader_parameter("hit_skin_flash"))) > 0.001:
+        push_error("Zombie impact skin glow did not return to neutral without changing shared materials")
+        quit(1)
+        return
     var dying_shadow := runner_a.get_node_or_null("EnemyContactShadow") as MeshInstance3D
     var living_shadow := runner_b.get_node_or_null("EnemyContactShadow") as MeshInstance3D
     if dying_shadow == null or living_shadow == null:

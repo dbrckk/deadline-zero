@@ -457,6 +457,7 @@ uniform float rim_strength = 0.11;
 uniform float rim_power = 3.4;
 instance uniform float wear_grade = 0.5;
 instance uniform float death_dissolve = 0.0;
+instance uniform float hit_skin_flash = 0.0;
 
 void fragment() {
     // Clip dying actors in the opaque depth pass instead of blending 100+
@@ -488,7 +489,8 @@ void fragment() {
     // Luminous copper edge is in the existing shader: no new particles,
     // lights or render passes, and no per-enemy material duplicates.
     EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade)
-        + vec3(0.90, 0.22, 0.035) * dissolve_edge * 1.1;
+        + vec3(0.90, 0.22, 0.035) * dissolve_edge * 1.1
+        + vec3(0.92, 0.23, 0.045) * hit_skin_flash * 0.78;
     // Imported zombie_basic / zombie_chubby GLTF materials use default OPAQUE
     // alphaMode. Writing ALPHA here incorrectly moves 100+ skinned bodies to
     // the transparent pass, disables depth/shadow behavior and risks sorting.
