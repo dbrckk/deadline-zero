@@ -4,25 +4,25 @@ Status: active
 
 ## Working
 - Godot 4.7.2 native 3D Android first-playable, rigged Quaternius GLTF actors, industrial PBR environment and combat.
-- PRs #397–#412 merged, including latest #409–#412 each passing eight CI checks.
+- PRs #397–#413 merged, including #409–#413 each passing eight CI checks.
 - #409 smooth survivor travel/combat facing, #410 cinematic camera inertia, #411 per-zombie death contact shadow fade, #412 six weapon signatures and grounded survivor.
-- #413 **open**: all six project-owned previously unused Blender 3D industrial GLB families integrated as 16 real arena assets. CC0 Poly Haven 1k diffuse/normal/packed ARM PBR map reuse. Actual 720p Godot captures reviewed; Godot 3D Verify green; Android runtime remains pending.
+- #413 **merged, 8/8 CI**: all six project-owned previously unused Blender 3D industrial GLB families integrated as 16 real arena assets. CC0 Poly Haven 1k diffuse/normal/packed ARM PBR map reuse. Actual 720p Godot captures reviewed.
 - #414 **open**: per-instance real skinned GLTF hit flash with cached horde mesh references, validated Godot 3D; Android runtime/smoke checks pending.
 
 ## Blockers
-- #413/#414 must achieve all eight passing CI checks before they are merged.
+- #414 must achieve all eight passing CI checks before it is merged.
 - Real physical Android Vulkan rendering, 30/60 FPS p95/hitches, thermal, touch and legibility QA not signed off.
 - Physical-device process death, Play Billing license-account and Play closed-testing/store release gates (#14, #16, #17) remain open.
 - Quaternius stylized characters and arena are below premium AAA fidelity; a genuine replacement of licensed high-fidelity rigged 3D assets is still needed.
 
 ## Priorities
-- Resolve outstanding Android CI and merge #413/#414 only after complete green checks.
+- Resolve outstanding Android CI and merge #414 only after complete green checks.
 - Build and integrate licensed higher-fidelity, mobile-budget rigged 3D characters with quality textures and animations.
 - Validate on a representative physical Android device before Play release.
 
 ## Validation
-- #409–#412 merged after 8/8 CI each.
-- #413 real 1280x720 Godot screenshot artifact inspected; 7/8 checks passed at state update, final legacy Android emulator runtime pending.
+- #409–#413 merged after 8/8 CI each.
+- #413 real 1280x720 Godot screenshot artifact inspected; all 8/8 checks passed and merged.
 - #414 Godot verify passed; remaining emulator-related checks pending.
 - Linux Compatibility-rendered screenshots are not certification of Android Mobile/Vulkan GPU output.
 
