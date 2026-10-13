@@ -9,16 +9,17 @@ Status: active
 - #413 **merged, 8/8 CI**: all six project-owned previously unused Blender 3D industrial GLB families integrated as 16 real arena assets. CC0 Poly Haven 1k diffuse/normal/packed ARM PBR map reuse. Actual 720p Godot captures reviewed.
 - #414 **merged, 8/8 CI**: real per-instance skinned GLTF hit flash with cached horde meshes. #415 closed as superseded by #413.\n- #416 **merged, 8/8 CI**: native Godot logcat p95/hitch/FPS and crash evidence, plus physical-device QA guide.
 - #417 **merged, 8/8 CI**: remove repeated full-horde Array creation when checking a spawn cap.
+- #419 **open**: one-command actual physical Android APK log/screenshot/thermal capture with opt-in frame and crash thresholds; CI running.
 - #418 **open**: recycle spatial hash buckets at 60Hz, cache same-batch spawn weights, eliminate damage-number count allocations; CI running.
 
 ## Blockers
-- #418 must achieve all eight passing CI checks before it is merged.
+- #418 and #419 must achieve all required passing CI checks before being merged.
 - Real physical Android Vulkan rendering, 30/60 FPS p95/hitches, thermal, touch and legibility QA not signed off.
 - Physical-device process death, Play Billing license-account and Play closed-testing/store release gates (#14, #16, #17) remain open.
 - Quaternius stylized characters and arena are below premium AAA fidelity; a genuine replacement of licensed high-fidelity rigged 3D assets is still needed.
 
 ## Priorities
-- Merge #418 only after successful full CI; then reduce per-projectile/per-enemy query allocations in the same spatial-index lane.
+- Merge #418/#419 only after successful full CI; then reduce per-projectile/per-enemy query allocations in the same spatial-index lane.
 - Build and integrate licensed higher-fidelity, mobile-budget rigged 3D characters with quality textures and animations.
 - Validate on a representative physical Android device before Play release.
 
