@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-12",
+  "updated_at": "2026-10-13",
   "repository": "dbrckk/deadline-zero",
   "branch": "main",
   "working_area": "Godot 4.7.2 native 3D",
@@ -130,6 +130,18 @@
       "status": "merged",
       "checks": "8/8 successful",
       "change": "Per-instance skinned 3D zombie ballistic hit flash and cached imported GLTF mesh references; actual opaque body grading preserved"
+    },
+    {
+      "pr": 416,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Native Godot DZ_PERF Android diagnostic scanner and reproducible physical-device QA guide"
+    },
+    {
+      "pr": 417,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Avoid full enemy group allocations during capped multi-enemy 3D spawning"
     }
   ],
   "visual_qa": "Reviewed authentic first-playable and midrun-pressure Godot 1280x720 rendered screenshots from PR #413 CI. Six existing Blender-authored industrial GLB asset families now add real PBR geometry and licensed CC0 normal/packed ARM textures; scene remains readable but imported Quaternius characters are still stylized low poly and far from AAA certification. Physical Android Vulkan screenshot remains unverified. #414 adds low-cost per-skinned-zombie hit flash; no new physical screenshots.",
@@ -141,23 +153,19 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PR #414 merged after 8/8 successful checks; #415 closed as superseded by merged #413; #416 physical Godot DZ_PERF crash/frame evidence is open in CI. CI Android emulator and Linux rendered evidence are not physical Android Vulkan sign-off.",
+  "verification": "PRs #416 and #417 merged after each completed 8/8 successful CI. PR #418 Godot/Android CI in progress. Physical-device Android Mobile/Vulkan FPS/p95, thermal and touch unverified.",
   "next": [
-    "Review PRs #416 and #417 and merge individually only after 8/8 successful CI, then measure real Godot Android frame pacing",
-    "Capture real player-controlled Godot Android frame pacing with new documented DZ_PERF scanner, including physical Vulkan/thermal/touch evidence",
-    "Replace low-poly placeholder-fidelity rigged 3D characters with appropriately licensed, mobile-budget production sources and QA against actual device",
-    "Complete Play Billing/process-death/closed-test release gates (#14, #16, #17)"
+    "Review #418 CI, fix any failures and merge only after every required check passes",
+    "Reduce per-enemy/per-projectile spatial query allocation after spatial hash recycling is validated",
+    "Capture physical Android native Godot build player-controlled p95/hitches, GPU and thermal evidence using godot/PHYSICAL_ANDROID_QA.md",
+    "Improve appropriately licensed high-fidelity rigged 3D character assets and real phone visual QA",
+    "Finish Play Store platform gates for process death, licensed Billing and closed testing (#14, #16, #17)"
   ],
   "in_progress": [
     {
-      "pr": 416,
-      "status": "open, CI running",
-      "change": "Physical Godot 3D debug DZ_PERF p95/FPS/hitch threshold scanner integrated with crash/ANR scan, on-device QA guide"
-    },
-    {
-      "pr": 417,
-      "status": "open, CI running",
-      "change": "Avoid allocating live enemy group Array in each native Godot spawn cap check; preserve boss exception and maximum horde cap"
+      "pr": 418,
+      "status": "open, required CI running",
+      "change": "Reuse cleared 60Hz spatial hash cell Arrays, cache same-batch director weights, and avoid allocating damage-number group arrays; expanded existing integration checks"
     }
   ]
 }
