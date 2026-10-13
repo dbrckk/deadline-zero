@@ -166,6 +166,12 @@
       "status": "merged",
       "checks": "8/8 successful",
       "change": "Immediately remove dead zombies from active horde indexing and per-frame physics while preserving rigged death clip, shader dissolve, XP and cleanup"
+    },
+    {
+      "pr": 422,
+      "status": "merged",
+      "checks": "8/8 successful after targeted GitHub KVM emulator smoke retry",
+      "change": "Authentic Blender industrial PBR emergency lights, floor pools, rim and beacon lighting signal actual wave/boss pressure and boss relief; reduced-flash compliance without new dynamic lights"
     }
   ],
   "visual_qa": "Reviewed authentic first-playable and midrun-pressure Godot 1280x720 rendered screenshots from PR #413 CI. Six existing Blender-authored industrial GLB asset families now add real PBR geometry and licensed CC0 normal/packed ARM textures; scene remains readable but imported Quaternius characters are still stylized low poly and far from AAA certification. Physical Android Vulkan screenshot remains unverified. #414 adds low-cost per-skinned-zombie hit flash; no new physical screenshots.",
@@ -177,19 +183,14 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PRs #418–#421 merged after 8/8 checks each. PRs #422–#424 have source and expanded existing integration checks committed, but required full CI remains pending. #422 real 1280x720 Godot Linux pressure render QA passed (5 visible types, clipped 0.00049); GitHub KVM emulator launch/lifecycle flaky and targeted job rerun ongoing. Physical Android Vulkan GPU/p95/thermal/touch unverified.",
+  "verification": "PR #422 merged after all 8 CI checks including targeted retry of GitHub emulator infrastructure KVM error. PRs #423 and #424 still in CI. Godot/Linux 1280x720 environment identity and pressure renders passed. No representative physical Android GPU/frame/thermal/touch certification.",
   "next": [
-    "Check PR #422 #423 #424 8/8 CI; resolve any failed real Godot integration, emulator startup or Android runtime issue; merge individually only when 8/8 verified",
+    "Validate PR #423 and #424 full 8/8 CI then merge individually with GitHub mergeability and expected head checks",
     "Run actual mobile hardware QA with tools/android/godot_capture_physical_qa.sh and inspect its visuals/thermal/fps rather than assuming Linux renderer matches Android Vulkan",
     "Prioritize truly production-grade licensed character animation, meshes and materials after measured physical phone performance",
     "Close Play Store release gates #14 #16 #17"
   ],
   "in_progress": [
-    {
-      "pr": 422,
-      "status": "open; Godot/Linux render and core/Android builds green; emulator smoke re-running after GitHub KVM guest crash; android-runtime passed",
-      "change": "Real Blender industrial PBR light-bar lenses, floor pools, perimeter beacons and existing rim lamps follow wave/boss danger; respect reduced-flashes, no added dynamic lights or draws"
-    },
     {
       "pr": 423,
       "status": "open; 7/8 CI green; android-runtime pending",
