@@ -155,7 +155,7 @@
   },
   "verification": "PRs #416 and #417 merged after each completed 8/8 successful CI. PR #418 Godot/Android CI in progress. Physical-device Android Mobile/Vulkan FPS/p95, thermal and touch unverified.",
   "next": [
-    "Review #418 CI, fix any failures and merge only after every required check passes",
+    "Review PRs #418 and #419; fix issues and merge only after all required CI checks pass",
     "Reduce per-enemy/per-projectile spatial query allocation after spatial hash recycling is validated",
     "Capture physical Android native Godot build player-controlled p95/hitches, GPU and thermal evidence using godot/PHYSICAL_ANDROID_QA.md",
     "Improve appropriately licensed high-fidelity rigged 3D character assets and real phone visual QA",
@@ -166,6 +166,11 @@
       "pr": 418,
       "status": "open, required CI running",
       "change": "Reuse cleared 60Hz spatial hash cell Arrays, cache same-batch director weights, and avoid allocating damage-number group arrays; expanded existing integration checks"
+    },
+    {
+      "pr": 419,
+      "status": "open, CI running",
+      "change": "One-command physical Android Godot APK install/log capture/screenshot/thermal diagnostics, offline performance scan, protected device identifiers and emulator rejection"
     }
   ]
 }
