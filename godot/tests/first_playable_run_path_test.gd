@@ -21,6 +21,10 @@ func _initialize() -> void:
         push_error("Spatial integration requires the real opening zombie roster")
         quit(1)
         return
+    # CI can advance render frames faster than its first physics tick; build
+    # the genuine production index explicitly so this checks queries rather
+    # than depending on scheduler timing.
+    main.enemy_spatial_index.rebuild(living_zombies)
     var reusable_nearby: Array = [main.player]
     main.query_enemies_near_into(main.player.global_position, 30.0, reusable_nearby)
     var allocated_nearby: Array = main.query_enemies_near(main.player.global_position, 30.0)
