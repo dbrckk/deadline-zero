@@ -430,5 +430,76 @@ func _initialize() -> void:
             quit(1)
             return
 
+    # Live threat lighting must act on the real Blender-exported PBR lamp
+    # lenses and existing additive ground pools, not allocate new lights.
+    var authored_light_a := scene.get_node_or_null("AuthoredUtility_light_02") as Node3D
+    var authored_light_b := scene.get_node_or_null("AuthoredUtility_light_03") as Node3D
+    if authored_light_a == null or authored_light_b == null:
+        push_error("Dynamic alarm lost its two authored industrial light bars")
+        quit(1)
+        return
+    var lens_a := authored_light_a.find_child("LightBarLens", true, false) as MeshInstance3D
+    var lens_b := authored_light_b.find_child("LightBarLens", true, false) as MeshInstance3D
+    if lens_a == null or lens_b == null:
+        push_error("Dynamic alarm must use actual Blender GLB lens geometry")
+        quit(1)
+        return
+    var lens_material := lens_a.get_surface_override_material(0) as StandardMaterial3D
+    if lens_material == null or lens_b.get_surface_override_material(0) != lens_material:
+        push_error("Dynamic alarm must reuse a shared PBR lens material on both fixtures")
+        quit(1)
+        return
+    if scene.alert_lens_material != lens_material or scene.alert_warm_pool_material == null or scene.alert_beacon_material == null:
+        push_error("Dynamic alarm is not bound to its production light fixtures")
+        quit(1)
+        return
+    if scene.emergency_rim_lights.size() != 2:
+        push_error("Dynamic alarm must reuse exactly the two existing emergency rim lights")
+        quit(1)
+        return
+
+    scene.elapsed = 0.0
+    scene.boss_defeat_relief_left = 0.0
+    scene._update_world_alert_lighting()
+    var calm_lens_color := lens_material.emission
+    var calm_energy := lens_material.emission_energy_multiplier
+    scene.elapsed = 225.0
+    scene._update_world_alert_lighting()
+    var hazard_color := lens_material.emission
+    if hazard_color.r <= calm_lens_color.r + 0.35 or hazard_color.g >= calm_lens_color.g:
+        push_error("Actual industrial PBR lamp failed to signal escalated threat with copper alert tint")
+        quit(1)
+        return
+    if lens_material.emission_energy_multiplier <= calm_energy or lens_material.emission_energy_multiplier > 2.56:
+        push_error("Industrial alert brightness did not escalate within its mobile light budget")
+        quit(1)
+        return
+
+    scene.boss_defeat_relief_left = 1.0
+    scene._update_world_alert_lighting()
+    if lens_material.emission.r >= hazard_color.r - 0.30:
+        push_error("Boss victory failed to cool the actual world-space emergency fixtures")
+        quit(1)
+        return
+
+    scene.boss_defeat_relief_left = 0.0
+    scene.reduced_flashes = true
+    scene.elapsed = 150.0
+    scene._update_world_alert_lighting()
+    var steady_energy := lens_material.emission_energy_multiplier
+    scene.elapsed = 150.4
+    scene._update_world_alert_lighting()
+    if absf(lens_material.emission_energy_multiplier - steady_energy) > 0.008:
+        push_error("Reduced-flashes setting must remove the animated emergency brightness pulse")
+        quit(1)
+        return
+    if scene.alert_beacon_material.emission_energy_multiplier > 4.01:
+        push_error("Threat alert exceeded existing perimeter emissive beacon budget")
+        quit(1)
+        return
+    scene.elapsed = 0.0
+    scene.reduced_flashes = false
+    scene._update_world_alert_lighting()
+
     print("Deadline Zero environment identity: OK")
     quit(0)
