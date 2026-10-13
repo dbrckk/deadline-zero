@@ -25,6 +25,10 @@ if [[ "$(adb shell getprop ro.kernel.qemu | tr -d '\r')" == "1" ]]; then
   echo "Android emulator detected; this QA path requires physical hardware." >&2
   exit 2
 fi
+if [[ -n "${DZ_APK_COMMIT:-}" && ! "${DZ_APK_COMMIT}" =~ ^[0-9a-fA-F]{40}$ ]]; then
+  echo "DZ_APK_COMMIT must be the full 40-character source commit SHA." >&2
+  exit 2
+fi
 
 mkdir -p "$OUTPUT"
 python3 - "$APK" "$OUTPUT/apk-sha256.txt" <<'PY'
@@ -41,7 +45,8 @@ PY
 
 {
   printf 'Package: %s\n' "$PACKAGE"
-  printf 'Repository commit: %s\n' "$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || echo unavailable)"
+  printf 'APK build commit (user-provided): %s\n' "${DZ_APK_COMMIT:-UNVERIFIED - use SHA from original GitHub Actions artifact}"
+  printf 'Local analysis checkout commit (not necessarily APK source): %s\n' "$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || echo unavailable)"
   printf 'Device model: %s\n' "$(adb shell getprop ro.product.model | tr -d '\r')"
   printf 'Android version: %s\n' "$(adb shell getprop ro.build.version.release | tr -d '\r')"
   printf 'API level: %s\n' "$(adb shell getprop ro.build.version.sdk | tr -d '\r')"
