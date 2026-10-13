@@ -7,17 +7,17 @@ Status: active
 - #413/#414 integrated real 3D industrial PBR fixtures and per-instance rigged zombie impact shaders; #416/#419 native physical-Android evidence path; #417/#418 efficient horde spawning/spatial buckets.
 - #420/#421 **merged after 8/8 successful checks each**: first-contact physically correct swept shot collisions and immediate dead-zombie detachment from live horde physics, preserving visible death clips.
 - #422 **merged, 8/8 CI**: Blender PBR light bars, floor pools, beacons and existing rim lights respond to run pressure and boss defeat. Reduced-flashes keeps danger colors but disables pulse. Real Linux 1280×720 environment identity/pressure rendering passed, and targeted retry of GitHub KVM emulator smoke passed.
-- #423 **open**: warning lanes for Charger/Harrier remain fixed in world while attack rings expand. Existing aim gradient/facing integration extended; CI still pending.
+- #423 **merged, 8/8 CI**: Charger/Harrier target-locked warning lanes stay fixed in actual world space while attack rings animate, preserving exact dodgeable danger corridors; extended existing visual integration.
 - #424 **open**: reuse caller-owned 60Hz spatial neighbor buffers per living enemy instead of allocating each frame; existing spatial index and first-playable integration tests expanded. CI still pending.
 
 ## Blockers
-- Full 8/8 CI and merge required for #423 and #424 before treating these changes as shipped.
+- Full 8/8 CI and merge required for #424 before treating its 60Hz separation optimization as shipped.
 - Real physical Android Mobile/Vulkan camera, FPS/p95/hitches, touch, screen legibility and sustained heat still **unverified**.
 - Genuine higher-fidelity licensed rigged 3D characters and production animation/material sophistication remain below intended AAA visual bar.
 - Physical Android process death, Play licensed Billing/refund checks and Play Store closed testing (#14, #16, #17) remain release blockers.
 
 ## Priorities
-- Finish GitHub Actions checks for #423 and #424, then merge sequentially only after all eight checks are green.
+- Finish PR #424 Android runtime CI and merge only after all eight checks are green.
 - Capture and review a player-controlled native Godot real-phone session with `tools/android/godot_capture_physical_qa.sh`.
 - Improve licensed 3D character/animation quality based on real Mobile/Vulkan frames and enforce bounded thermal/frame pacing.
 - Complete physical lifecycle and store gates before production release.
