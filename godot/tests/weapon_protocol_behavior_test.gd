@@ -165,6 +165,19 @@ func _initialize() -> void:
         push_error("Swept projectile incorrectly hit a small runner outside its silhouette")
         quit(1)
         return
+    # The boss is farther from the muzzle by center distance because of
+    # its lateral offset, but its large real silhouette is struck *first*.
+    # A center-distance sort incorrectly damages the smaller shambler first.
+    if silhouette_hits.is_empty() or silhouette_hits[0] != broad_boss:
+        push_error("Swept collision must resolve the first actual silhouette contact before a closer center")
+        quit(1)
+        return
+    var boss_fraction := swept_projectile._swept_entry_fraction(Vector3.ZERO, Vector3(0.0, 0.0, -0.80), broad_boss)
+    var shambler_fraction := swept_projectile._swept_entry_fraction(Vector3.ZERO, Vector3(0.0, 0.0, -0.80), sweep_enemy)
+    if boss_fraction >= shambler_fraction or boss_fraction < 0.0 or shambler_fraction > 1.0:
+        push_error("Swept physical entry fraction does not match footprint collision ordering")
+        quit(1)
+        return
 
     # Visual feedback must appear at the physical segment/footprint entry,
     # not deep inside the zombie or at its center when grazing the boss.
