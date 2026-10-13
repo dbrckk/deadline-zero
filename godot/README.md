@@ -26,6 +26,8 @@ The repository's GitHub Actions workflows run the real Godot integration scripts
 - `weapon_protocol_behavior_test.gd`, `rifle_muzzle_ballistics_test.gd`, `first_playable_run_path_test.gd` and `xp_orb_runtime_test.gd` exercise actual runtime gameplay.
 - The **Godot Android First Playable** workflow exports and smoke-tests a native Android debug APK; **Godot Play AAB Verify** validates the signed bundle path. The exact workflow artifacts and test results are on GitHub Actions; a green CI job is not evidence of real-device thermal or FPS performance.
 - `.ai/project-state.md` and `.ai/session-state.json` contain the live work state and pending PRs.
+- [Physical Android QA procedure](PHYSICAL_ANDROID_QA.md) grades real Godot `DZ_PERF` p95/hitch/FPS windows together with process crash/ANR findings. This is a diagnostic gate, not a substitute for player-controlled review or thermal measurement.
+
 
 ## Remaining launch gates
 
