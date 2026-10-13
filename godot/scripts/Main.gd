@@ -407,6 +407,12 @@ func _has_active_boss() -> bool:
 func query_enemies_near(position: Vector3, radius: float) -> Array:
     return enemy_spatial_index.query(position, radius)
 
+func query_enemies_near_into(position: Vector3, radius: float, result: Array) -> void:
+    # Enemy steering runs for every live zombie on every physics frame.
+    # Fill its actor-owned scratch Array directly instead of allocating one
+    # short-lived neighbor Array per actor per tick.
+    enemy_spatial_index.query_into(position, radius, result)
+
 func _clamp_spawn_position(position: Vector3) -> Vector3:
     return Vector3(
         clampf(position.x, -SPAWN_ARENA_HALF_EXTENT, SPAWN_ARENA_HALF_EXTENT),
