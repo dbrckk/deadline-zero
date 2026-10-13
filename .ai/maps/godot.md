@@ -2422,7 +2422,8 @@ func _build_hit_flash() -> void:
 func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     if get_tree() == null or get_tree().current_scene == null:
         return
-    var active_numbers := get_tree().get_nodes_in_group("damage_numbers").size()
+    # A damage event needs only the count: avoid allocating the full Label3D group array.
+    var active_numbers := get_tree().get_node_count_in_group("damage_numbers")
     if active_numbers >= MAX_DAMAGE_NUMBERS and not critical and not killed:
         return
     var number := Label3D.new()
@@ -7846,6 +7847,15 @@ const PHASES := [
     {"start": 225.0, "name": "EXTINCTION", "interval": 0.31, "batch": 5, "max_enemies": 118}
 ]
 
+# Multiple enemies share elapsed/level within the same spawn batch. Cache the
+# immutable draw weights for that batch instead of allocating a Dictionary and
+# values/roster Arrays for every zombie.
+const ENEMY_DRAW_ORDER := ["shambler", "runner", "charger", "harrier", "regenerator", "brute", "elite"]
+var _draw_elapsed := -1.0
+var _draw_level := -1
+var _draw_weights: Dictionary = {}
+var _draw_total := 0.0
+
 func opening_roster() -> Array:
     # Establish immediate silhouette and movement contrast without introducing ranged or
     # high-pressure specials before the player has settled into the controls.
@@ -7873,14 +7883,17 @@ func profile(elapsed: float, level: int) -> Dictionary:
     }
 
 func choose_enemy(elapsed: float, level: int, rng: RandomNumberGenerator) -> String:
-    var weights := _weights(elapsed, level)
-    var total := 0.0
-    for weight in weights.values():
-        total += float(weight)
-    var roll := rng.randf() * total
+    if elapsed != _draw_elapsed or level != _draw_level:
+        _draw_weights = _weights(elapsed, level)
+        _draw_total = 0.0
+        for weight in _draw_weights.values():
+            _draw_total += float(weight)
+        _draw_elapsed = elapsed
+        _draw_level = level
+    var roll := rng.randf() * _draw_total
     var cursor := 0.0
-    for kind in ["shambler", "runner", "charger", "harrier", "regenerator", "brute", "elite"]:
-        cursor += float(weights.get(kind, 0.0))
+    for kind in ENEMY_DRAW_ORDER:
+        cursor += float(_draw_weights.get(kind, 0.0))
         if roll <= cursor:
             return kind
     return "shambler"
@@ -7931,18 +7944,30 @@ extends RefCounted
 
 var cell_size := 4.0
 var buckets := {}
+# Recycle occupied cell arrays across 60 Hz rebuilds. The pool is bounded by
+# the peak simultaneously occupied cell count, not by total cells visited.
+var _recycled_buckets: Array = []
 
 func _init(size := 4.0) -> void:
     cell_size = maxf(0.5, float(size))
 
 func rebuild(nodes: Array) -> void:
+    # Drop references to actors that have moved or died before recycling every
+    # cell. Clearing the dictionary alone previously allocated new arrays for
+    # the same horde cells every physics frame.
+    for bucket in buckets.values():
+        bucket.clear()
+        _recycled_buckets.append(bucket)
     buckets.clear()
     for node in nodes:
         if node == null or not is_instance_valid(node) or not node is Node3D:
             continue
         var key := _cell((node as Node3D).global_position)
         if not buckets.has(key):
-            buckets[key] = []
+            var recycled: Array = []
+            if not _recycled_buckets.is_empty():
+                recycled = _recycled_buckets.pop_back()
+            buckets[key] = recycled
         buckets[key].append(node)
 
 func query(position: Vector3, radius: float) -> Array:
@@ -15479,6 +15504,23 @@ func _init() -> void:
         quit(1)
         return
 
+    # The director must reuse weighted probabilities within one spawn batch,
+    # but recompute them as the pressure curve or player level changes.
+    var draw_rng := RandomNumberGenerator.new()
+    draw_rng.seed = 314159
+    director.choose_enemy(0.0, 1, draw_rng)
+    var opening_weight_total: float = director._draw_total
+    director.choose_enemy(0.0, 1, draw_rng)
+    if director._draw_total != opening_weight_total:
+        push_error("Director cached draw probabilities changed within the same spawn batch")
+        quit(1)
+        return
+    director.choose_enemy(180.0, 7, draw_rng)
+    if director._draw_total <= opening_weight_total or director._draw_elapsed != 180.0 or director._draw_level != 7:
+        push_error("Director did not invalidate cached weights when escalation changed")
+        quit(1)
+        return
+
     var seed_a: Array = director.enemy_sequence(135.0, 5, 24680, 12)
     var seed_b: Array = director.enemy_sequence(135.0, 5, 24680, 12)
     var seed_c: Array = director.enemy_sequence(135.0, 5, 24681, 12)
@@ -16158,6 +16200,31 @@ func _initialize() -> void:
     var nearby: Array = index.query(Vector3.ZERO, 3.0)
     if not nearby.has(near_enemy) or nearby.has(far_enemy):
         push_error("Spatial hash query did not isolate nearby enemies")
+        quit(1)
+        return
+
+    # A 60 Hz rebuild must never return stale nodes from the previous cell.
+    # Exercise both moving enemies and a completely empty frame: pooled arrays
+    # must be cleared before any subsequent query can reuse them.
+    near_enemy.position = Vector3(18.0, 0.0, 18.0)
+    index.rebuild([near_enemy, far_enemy])
+    if not index.query(Vector3(18.0, 0.0, 18.0), 2.0).has(near_enemy) or not index.query(Vector3.ZERO, 3.0).is_empty():
+        push_error("Spatial hash retained stale occupants after enemy moved")
+        quit(1)
+        return
+    index.rebuild([])
+    if not index.query(Vector3(18.0, 0.0, 18.0), 2.0).is_empty() or not index.buckets.is_empty():
+        push_error("Spatial hash recycled an uncleared bucket after empty rebuild")
+        quit(1)
+        return
+    near_enemy.position = Vector3(1.0, 0.0, 1.0)
+    index.rebuild([near_enemy, far_enemy])
+    if not index.query(Vector3.ZERO, 3.0).has(near_enemy) or index.query(Vector3.ZERO, 3.0).has(far_enemy):
+        push_error("Spatial hash recycled bucket no longer isolates the original near enemy")
+        quit(1)
+        return
+    if index._recycled_buckets.size() > 2:
+        push_error("Spatial hash pool grew beyond the peak simultaneously occupied buckets")
         quit(1)
         return
 

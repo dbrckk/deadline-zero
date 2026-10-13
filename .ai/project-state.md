@@ -35,28 +35,30 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T06:56:09Z
+Generated: 2026-10-13T13:47:06Z
 
 ### Git
 - Branch: `main`
-- Head: `b22ffb9d4c33`
-- Commit date: 2026-10-13T08:55:19+02:00
-- Commit: perf(godot): avoid full-horde array allocations while enforcing spawn cap (#417)
+- Head: `45b66a11503c`
+- Commit date: 2026-10-13T15:46:51+02:00
+- Commit: perf(godot): recycle 60Hz horde spatial buckets and cache spawn weights (#418)
 - Tracked files: 1066
 
 ### Recently changed files
-- `godot/scripts/Main.gd`
-- `godot/PHYSICAL_ANDROID_QA.md`
-- `godot/README.md`
-- `tools/android/scan_runtime_log.py`
+- `godot/scripts/Enemy.gd`
+- `godot/scripts/RunDirector.gd`
+- `godot/scripts/SpatialHash.gd`
+- `godot/tests/run_director_escalation_test.gd`
+- `godot/tests/spatial_hash_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `godot/scripts/AssetLibrary.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/scripts/Main.gd`
+- `godot/PHYSICAL_ANDROID_QA.md`
+- `godot/README.md`
+- `tools/android/scan_runtime_log.py`
 
 ### Project signals
 - `build.gradle`

@@ -1,10 +1,14 @@
 # Change impact
 
-Base: 5761a000ed8e236d0f7fbd888e428f2c3e8e4bc1
-Head: b22ffb9d4c33dde2e0c11740788f2e2265498b2d
+Base: 5ec32a40624d83d424a38718401d44ec9e0aa4d4
+Head: 45b66a11503c53ad71cea13df726d028e0dab7c7
 
 ## Changed files
-- M godot/scripts/Main.gd
+- M godot/scripts/Enemy.gd
+- M godot/scripts/RunDirector.gd
+- M godot/scripts/SpatialHash.gd
+- M godot/tests/run_director_escalation_test.gd
+- M godot/tests/spatial_hash_test.gd
 
 ## Affected areas
 - godot

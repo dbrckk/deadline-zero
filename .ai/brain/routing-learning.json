@@ -2,22 +2,6 @@
   "examples": [
     {
       "rejected": [],
-      "task": "Test per-surface enemy material grading",
-      "terms": [
-        "enemy",
-        "grading",
-        "material",
-        "per-surface",
-        "test"
-      ],
-      "tests": [],
-      "useful": [
-        "godot/scripts/AssetLibrary.gd",
-        "godot/tests/enemy_silhouette_identity_test.gd"
-      ]
-    },
-    {
-      "rejected": [],
       "task": "Test player and weapon material preservation",
       "terms": [
         "material",
@@ -1267,6 +1251,31 @@
         "godot/scripts/Main.gd",
         "tools/android/scan_runtime_log.py"
       ]
+    },
+    {
+      "rejected": [],
+      "task": "perf(godot): recycle 60Hz horde spatial buckets and cache spawn weights (#418)",
+      "terms": [
+        "418",
+        "60hz",
+        "buckets",
+        "cache",
+        "godot",
+        "horde",
+        "perf",
+        "recycle",
+        "spatial",
+        "spawn",
+        "weights"
+      ],
+      "tests": [],
+      "useful": [
+        "godot/scripts/Enemy.gd",
+        "godot/scripts/RunDirector.gd",
+        "godot/scripts/SpatialHash.gd",
+        "godot/tests/run_director_escalation_test.gd",
+        "godot/tests/spatial_hash_test.gd"
+      ]
     }
   ],
   "generated_by": "dbrckk/repo-brain-learning-v1",
@@ -1677,6 +1686,20 @@
     "417": {
       "godot/scripts/Main.gd": 4,
       "tools/android/scan_runtime_log.py": 4
+    },
+    "418": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4
+    },
+    "60hz": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4
     },
     "70": {
       "core/src/main/java/com/deadlinezero/game/visual/EnvironmentArtCatalog.java": 4,
@@ -2245,6 +2268,13 @@
       "godot/scripts/Main.gd": 4,
       "godot/tests/authored_world_dressing_test.gd": 4
     },
+    "buckets": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4
+    },
     "budget": {
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidGameplayVisualProbeTest.java": 4,
       "android/src/androidTest/java/com/deadlinezero/game/android/AndroidPerformanceProbeTest.java": 4,
@@ -2355,6 +2385,13 @@
       "godot/scripts/Projectile.gd": 4,
       "godot/tests/burn_status_fx_test.gd": 4,
       "godot/tests/elemental_protocols_render_test.gd": 4
+    },
+    "cache": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4
     },
     "cached": {
       "godot/scripts/AssetLibrary.gd": 4,
@@ -3549,12 +3586,14 @@
     "godot": {
       "godot/scripts/AssetLibrary.gd": 32,
       "godot/scripts/CombatGroundMark.gd": 4,
-      "godot/scripts/Enemy.gd": 32,
+      "godot/scripts/Enemy.gd": 36,
       "godot/scripts/Hud.gd": 12,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 40,
       "godot/scripts/Player.gd": 24,
       "godot/scripts/Projectile.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
       "godot/scripts/WeaponProfiles.gd": 4,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/archetype_roster_render_test.gd": 4,
@@ -3579,8 +3618,10 @@
       "godot/tests/player_targeting_stability_test.gd": 4,
       "godot/tests/rendered_frame_smoke_test.gd": 4,
       "godot/tests/rifle_muzzle_ballistics_test.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
       "godot/tests/shock_expiry_recovery_test.gd": 8,
       "godot/tests/smoke_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4,
       "godot/tests/weapon_protocol_behavior_test.gd": 4,
       "tools/android/scan_runtime_log.py": 4
     },
@@ -3719,13 +3760,17 @@
     },
     "horde": {
       "godot/scripts/AssetLibrary.gd": 4,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/Main.gd": 4,
       "godot/scripts/Player.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
       "godot/scripts/WeaponProfiles.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
       "godot/tests/environment_identity_test.gd": 4,
       "godot/tests/first_playable_run_path_test.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4,
       "godot/tests/weapon_protocol_behavior_test.gd": 4
     },
     "hud": {
@@ -4502,10 +4547,12 @@
     },
     "perf": {
       "godot/scripts/AssetLibrary.gd": 8,
-      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/Enemy.gd": 8,
       "godot/scripts/ImpactFx.gd": 4,
       "godot/scripts/Main.gd": 16,
       "godot/scripts/Player.gd": 8,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
       "godot/scripts/XpOrb.gd": 4,
       "godot/tests/enemy_shadow_budget_test.gd": 4,
       "godot/tests/enemy_silhouette_identity_test.gd": 4,
@@ -4514,7 +4561,9 @@
       "godot/tests/industrial_material_sharing_test.gd": 4,
       "godot/tests/offscreen_threat_priority_test.gd": 4,
       "godot/tests/rifle_muzzle_ballistics_test.gd": 8,
+      "godot/tests/run_director_escalation_test.gd": 4,
       "godot/tests/shock_expiry_recovery_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4,
       "godot/tests/xp_orb_runtime_test.gd": 4,
       "tools/android/scan_runtime_log.py": 4
     },
@@ -4960,6 +5009,13 @@
     "recovery": {
       "godot/scripts/Enemy.gd": 4,
       "godot/tests/shock_expiry_recovery_test.gd": 4
+    },
+    "recycle": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4
     },
     "redeploy": {
       "godot/scripts/Hud.gd": 4,
@@ -5561,12 +5617,24 @@
       "tools/sprites/audit_final_art_status.py": 4,
       "tools/sprites/normalize_actor_frames.py": 4
     },
+    "spatial": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4
+    },
     "spatially": {
       "godot/scripts/Enemy.gd": 4,
       "godot/tests/native_enemy_behavior_test.gd": 4
     },
     "spawn": {
+      "godot/scripts/Enemy.gd": 4,
       "godot/scripts/Main.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4,
       "tools/android/scan_runtime_log.py": 4
     },
     "splash": {
@@ -6102,6 +6170,13 @@
     "wear": {
       "godot/scripts/Main.gd": 4,
       "godot/tests/environment_identity_test.gd": 4
+    },
+    "weights": {
+      "godot/scripts/Enemy.gd": 4,
+      "godot/scripts/RunDirector.gd": 4,
+      "godot/scripts/SpatialHash.gd": 4,
+      "godot/tests/run_director_escalation_test.gd": 4,
+      "godot/tests/spatial_hash_test.gd": 4
     },
     "while": {
       "godot/scripts/Main.gd": 4,

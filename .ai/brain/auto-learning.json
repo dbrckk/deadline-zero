@@ -5,28 +5,31 @@
     "example_count": 64,
     "rejected_count": 0,
     "terms": [
-      "417",
-      "allocations",
-      "array",
-      "avoid",
-      "cap",
-      "enforcing",
-      "full-horde",
+      "418",
+      "60hz",
+      "buckets",
+      "cache",
       "godot",
+      "horde",
       "perf",
+      "recycle",
+      "spatial",
       "spawn",
-      "while"
+      "weights"
     ],
     "test_count": 0,
-    "useful_count": 2
+    "useful_count": 5
   },
   "note": "Selected tests are routing hints; this artifact does not claim they executed successfully.",
   "rejected": [],
   "schema_version": 1,
-  "task": "perf(godot): avoid full-horde array allocations while enforcing spawn cap (#417)",
+  "task": "perf(godot): recycle 60Hz horde spatial buckets and cache spawn weights (#418)",
   "tests_selected": [],
   "useful": [
-    "godot/scripts/Main.gd",
-    "tools/android/scan_runtime_log.py"
+    "godot/scripts/Enemy.gd",
+    "godot/scripts/RunDirector.gd",
+    "godot/scripts/SpatialHash.gd",
+    "godot/tests/run_director_escalation_test.gd",
+    "godot/tests/spatial_hash_test.gd"
   ]
 }
