@@ -644,11 +644,16 @@ func _add_directional_telegraph_lane() -> void:
     # not the telegraph ring's opaque alarm material. One shader is shared by
     # all harriers and chargers; no additional mesh/light/particle budget.
     lane.material_override = _aim_lane_material()
+    # The expanding attack ring scales from 0.42 to 1.0 during the windup.
+    # Keep the hit-corridor child in absolute world space: inheriting that
+    # scale moved and shortened the warning despite the target being locked.
+    # It still belongs to the ring node for automatic timed cleanup.
+    lane.top_level = true
     telegraph_visual.add_child(lane)
 
     var midpoint := global_position.lerp(attack_target_position, 0.5) + Vector3(0.0, 0.006, 0.0)
     lane.global_position = midpoint
-    lane.rotation.y = atan2(delta.x, delta.z)
+    lane.global_rotation.y = atan2(delta.x, delta.z)
 
 static func _aim_lane_material() -> ShaderMaterial:
     if _shared_aim_lane_material != null:
