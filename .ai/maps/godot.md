@@ -7653,11 +7653,9 @@ func _physics_process(delta: float) -> void:
     age += delta
     var previous_position := global_position
     global_position += velocity * delta
+    # The swept query already sorts by first silhouette contact, not by
+    # distance to enemy centers (which is wrong for large bosses).
     var hit_candidates := _swept_hit_candidates(previous_position, global_position)
-    if hit_candidates.size() > 1:
-        hit_candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
-            return previous_position.distance_squared_to(a.global_position) < previous_position.distance_squared_to(b.global_position)
-        )
     for enemy in hit_candidates:
         if enemy == null or enemy.dead or hit_enemy_ids.has(enemy.get_instance_id()):
             continue
@@ -7704,27 +7702,42 @@ func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
         var effective_hit_radius := maxf(radius, enemy.projectile_hit_radius())
         if miss.length_squared() <= effective_hit_radius * effective_hit_radius:
             result.append(enemy)
+    # A boss's large visible footprint can be intersected before the center
+    # of a closer small zombie. Sort by first swept-circle intersection so
+    # non-piercing rounds hit the actual frontmost surface, and Rail pierces
+    # targets in physical crossing order. This uses no extra spatial query.
+    if result.size() > 1:
+        result.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
+            var a_fraction := _swept_entry_fraction(from, to, a)
+            var b_fraction := _swept_entry_fraction(from, to, b)
+            if is_equal_approx(a_fraction, b_fraction):
+                return a.get_instance_id() < b.get_instance_id()
+            return a_fraction < b_fraction
+        )
     return result
 
-func _swept_contact_point(from: Vector3, to: Vector3, enemy: DZEnemy) -> Vector3:
-    # Solve the first 2D segment/circle intersection once per actual hit.
-    # No RayCast3D, physics shape, collision object or extra hash query.
+func _swept_entry_fraction(from: Vector3, to: Vector3, enemy: DZEnemy) -> float:
+    # Earliest 2D segment / actual shootable silhouette intersection, in [0, 1].
+    # Starting inside the hit circle yields an immediate contact at fraction 0.
     var center := Vector2(enemy.global_position.x, enemy.global_position.z)
     var origin := Vector2(from.x, from.z)
     var travel := Vector2(to.x - from.x, to.z - from.z)
     var effective_radius := maxf(radius, enemy.projectile_hit_radius())
     var a := travel.length_squared()
-    var contact_t := 0.0
-    if a > 0.000001:
-        var offset := origin - center
-        var b := 2.0 * offset.dot(travel)
-        var c := offset.length_squared() - effective_radius * effective_radius
-        if c > 0.0:
-            var discriminant := b * b - 4.0 * a * c
-            # Candidates have already passed the sweep; guard tiny negative
-            # floating-point drift at near-tangent contacts.
-            contact_t = clampf((-b - sqrt(maxf(discriminant, 0.0))) / (2.0 * a), 0.0, 1.0)
-    var contact := from.lerp(to, contact_t)
+    if a <= 0.000001:
+        return 0.0
+    var offset := origin - center
+    var b := 2.0 * offset.dot(travel)
+    var c := offset.length_squared() - effective_radius * effective_radius
+    if c <= 0.0:
+        return 0.0
+    var discriminant := b * b - 4.0 * a * c
+    # Only hit candidates call this routine. Guard near-tangent float drift.
+    return clampf((-b - sqrt(maxf(discriminant, 0.0))) / (2.0 * a), 0.0, 1.0)
+
+func _swept_contact_point(from: Vector3, to: Vector3, enemy: DZEnemy) -> Vector3:
+    # World-space FX and hit ordering share precisely the same intersection.
+    var contact := from.lerp(to, _swept_entry_fraction(from, to, enemy))
     contact.y = enemy.global_position.y + 0.55
     return contact
 
@@ -16905,6 +16918,19 @@ func _initialize() -> void:
         return
     if silhouette_hits.has(tight_runner):
         push_error("Swept projectile incorrectly hit a small runner outside its silhouette")
+        quit(1)
+        return
+    # The boss is farther from the muzzle by center distance because of
+    # its lateral offset, but its large real silhouette is struck *first*.
+    # A center-distance sort incorrectly damages the smaller shambler first.
+    if silhouette_hits.is_empty() or silhouette_hits[0] != broad_boss:
+        push_error("Swept collision must resolve the first actual silhouette contact before a closer center")
+        quit(1)
+        return
+    var boss_fraction := swept_projectile._swept_entry_fraction(Vector3.ZERO, Vector3(0.0, 0.0, -0.80), broad_boss)
+    var shambler_fraction := swept_projectile._swept_entry_fraction(Vector3.ZERO, Vector3(0.0, 0.0, -0.80), sweep_enemy)
+    if boss_fraction >= shambler_fraction or boss_fraction < 0.0 or shambler_fraction > 1.0:
+        push_error("Swept physical entry fraction does not match footprint collision ordering")
         quit(1)
         return
 

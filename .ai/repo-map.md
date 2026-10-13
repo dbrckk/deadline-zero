@@ -426,6 +426,7 @@ godot/
 tools/
   android/
     build_runtime_release_evidence.py
+    godot_capture_physical_qa.sh
     scan_runtime_log.py
     test_build_runtime_release_evidence.py
     test_scan_runtime_log.py
@@ -5583,6 +5584,8 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.11.1'
+      - name: Parse native Godot physical Android QA capture script
+        run: bash -n tools/android/godot_capture_physical_qa.sh
       - name: Validate final sprite production layout
         run: |
           python3 -m py_compile tools/validate_final_sprite_layout.py tools/validate_rex_reference.py tools/slice_sprite_sheet.py tools/build_final_sprite_frames.py tools/verify_final_atlas.py tools/test_verify_final_atlas.py tools/sprites/assemble_actor_sheet.py tools/sprites/audit_final_art_status.py tools/sprites/validate_final_art_promotion_consistency.py tools/sprites/validate_actor_production_contracts.py tools/sprites/resolve_actor_actions.py tools/sprites/test_resolve_actor_actions.py tools/sprites/validate_actor_role_metrics.py tools/sprites/test_validate_actor_role_metrics.py tools/sprites/test_validate_actor_production_contracts.py tools/android/scan_runtime_log.py tools/android/test_scan_runtime_log.py tools/android/build_runtime_release_evidence.py tools/android/test_build_runtime_release_evidence.py tools/environment/validate_environment_art_contract.py tools/environment/test_validate_environment_art_contract.py tools/environment/pack_environment_art.py tools/environment/upsert_environment_atlas.py tools/environment/test_upsert_environment_atlas.py
@@ -31915,11 +31918,9 @@ func _physics_process(delta: float) -> void:
     age += delta
     var previous_position := global_position
     global_position += velocity * delta
+    # The swept query already sorts by first silhouette contact, not by
+    # distance to enemy centers (which is wrong for large bosses).
     var hit_candidates := _swept_hit_candidates(previous_position, global_position)
-    if hit_candidates.size() > 1:
-        hit_candidates.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
-            return previous_position.distance_squared_to(a.global_position) < previous_position.distance_squared_to(b.global_position)
-        )
     for enemy in hit_candidates:
         if enemy == null or enemy.dead or hit_enemy_ids.has(enemy.get_instance_id()):
             continue
@@ -31966,27 +31967,42 @@ func _swept_hit_candidates(from: Vector3, to: Vector3) -> Array[DZEnemy]:
         var effective_hit_radius := maxf(radius, enemy.projectile_hit_radius())
         if miss.length_squared() <= effective_hit_radius * effective_hit_radius:
             result.append(enemy)
+    # A boss's large visible footprint can be intersected before the center
+    # of a closer small zombie. Sort by first swept-circle intersection so
+    # non-piercing rounds hit the actual frontmost surface, and Rail pierces
+    # targets in physical crossing order. This uses no extra spatial query.
+    if result.size() > 1:
+        result.sort_custom(func(a: DZEnemy, b: DZEnemy) -> bool:
+            var a_fraction := _swept_entry_fraction(from, to, a)
+            var b_fraction := _swept_entry_fraction(from, to, b)
+            if is_equal_approx(a_fraction, b_fraction):
+                return a.get_instance_id() < b.get_instance_id()
+            return a_fraction < b_fraction
+        )
     return result
 
-func _swept_contact_point(from: Vector3, to: Vector3, enemy: DZEnemy) -> Vector3:
-    # Solve the first 2D segment/circle intersection once per actual hit.
-    # No RayCast3D, physics shape, collision object or extra hash query.
+func _swept_entry_fraction(from: Vector3, to: Vector3, enemy: DZEnemy) -> float:
+    # Earliest 2D segment / actual shootable silhouette intersection, in [0, 1].
+    # Starting inside the hit circle yields an immediate contact at fraction 0.
     var center := Vector2(enemy.global_position.x, enemy.global_position.z)
     var origin := Vector2(from.x, from.z)
     var travel := Vector2(to.x - from.x, to.z - from.z)
     var effective_radius := maxf(radius, enemy.projectile_hit_radius())
     var a := travel.length_squared()
-    var contact_t := 0.0
-    if a > 0.000001:
-        var offset := origin - center
-        var b := 2.0 * offset.dot(travel)
-        var c := offset.length_squared() - effective_radius * effective_radius
-        if c > 0.0:
-            var discriminant := b * b - 4.0 * a * c
-            # Candidates have already passed the sweep; guard tiny negative
-            # floating-point drift at near-tangent contacts.
-            contact_t = clampf((-b - sqrt(maxf(discriminant, 0.0))) / (2.0 * a), 0.0, 1.0)
-    var contact := from.lerp(to, contact_t)
+    if a <= 0.000001:
+        return 0.0
+    var offset := origin - center
+    var b := 2.0 * offset.dot(travel)
+    var c := offset.length_squared() - effective_radius * effective_radius
+    if c <= 0.0:
+        return 0.0
+    var discriminant := b * b - 4.0 * a * c
+    # Only hit candidates call this routine. Guard near-tangent float drift.
+    return clampf((-b - sqrt(maxf(discriminant, 0.0))) / (2.0 * a), 0.0, 1.0)
+
+func _swept_contact_point(from: Vector3, to: Vector3, enemy: DZEnemy) -> Vector3:
+    # World-space FX and hit ordering share precisely the same intersection.
+    var contact := from.lerp(to, _swept_entry_fraction(from, to, enemy))
     contact.y = enemy.global_position.y + 0.55
     return contact
 
@@ -32559,6 +32575,104 @@ args = parser.parse_args()
 ⋮----
 evidence = build_evidence(
 rendered = json.dumps(evidence, indent=2, sort_keys=True)
+````
+
+## File: tools/android/godot_capture_physical_qa.sh
+````bash
+#!/usr/bin/env bash
+# Real physical Android evidence for the native Godot game, not the legacy libGDX package.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+PACKAGE="com.deadlinezero.godot"
+APK="${1:-}"
+OUTPUT="${2:-build/godot-physical-qa/$(date +%Y%m%d-%H%M%S)}"
+
+if [[ -z "$APK" || ! -s "$APK" ]]; then
+  echo "Usage: $0 /path/to/deadline-zero-godot-debug.apk [output-directory]" >&2
+  exit 2
+fi
+for command_name in adb python3; do
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    echo "Missing required command: $command_name" >&2
+    exit 2
+  fi
+done
+if [[ "$(adb get-state 2>/dev/null)" != "device" ]]; then
+  echo "Connect one authorized physical Android phone (USB debugging; ANDROID_SERIAL if needed)." >&2
+  exit 2
+fi
+if [[ "$(adb shell getprop ro.kernel.qemu | tr -d '\r')" == "1" ]]; then
+  echo "Android emulator detected; this QA path requires physical hardware." >&2
+  exit 2
+fi
+if [[ -n "${DZ_APK_COMMIT:-}" && ! "${DZ_APK_COMMIT}" =~ ^[0-9a-fA-F]{40}$ ]]; then
+  echo "DZ_APK_COMMIT must be the full 40-character source commit SHA." >&2
+  exit 2
+fi
+
+mkdir -p "$OUTPUT"
+python3 - "$APK" "$OUTPUT/apk-sha256.txt" <<'PY'
+import hashlib
+import pathlib
+import sys
+apk = pathlib.Path(sys.argv[1])
+digest = hashlib.sha256()
+with apk.open("rb") as source:
+    for block in iter(lambda: source.read(1024 * 1024), b""):
+        digest.update(block)
+pathlib.Path(sys.argv[2]).write_text(f"{digest.hexdigest()}  {apk.name}\n")
+PY
+
+{
+  printf 'Package: %s\n' "$PACKAGE"
+  printf 'APK build commit (user-provided): %s\n' "${DZ_APK_COMMIT:-UNVERIFIED - use SHA from original GitHub Actions artifact}"
+  printf 'Local analysis checkout commit (not necessarily APK source): %s\n' "$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || echo unavailable)"
+  printf 'Device model: %s\n' "$(adb shell getprop ro.product.model | tr -d '\r')"
+  printf 'Android version: %s\n' "$(adb shell getprop ro.build.version.release | tr -d '\r')"
+  printf 'API level: %s\n' "$(adb shell getprop ro.build.version.sdk | tr -d '\r')"
+} > "$OUTPUT/device.txt"
+
+echo "Installing actual Godot Android APK on selected device..."
+adb install -r "$APK"
+adb shell pm path "$PACKAGE" | grep -q 'package:'
+adb shell am force-stop "$PACKAGE"
+# This clears the device's prior log buffer; only do this on an explicitly
+# authorized QA device. Captured logcat stays local and may contain private data.
+adb logcat -c
+LOG_PID=""
+stop_capture() {
+  if [[ -n "$LOG_PID" ]]; then
+    kill "$LOG_PID" 2>/dev/null || true
+    wait "$LOG_PID" 2>/dev/null || true
+    LOG_PID=""
+  fi
+}
+trap stop_capture EXIT
+adb logcat -v threadtime > "$OUTPUT/logcat.txt" &
+LOG_PID=$!
+adb shell am start -W -a android.intent.action.MAIN -p "$PACKAGE" | tee "$OUTPUT/launch.txt"
+date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT/session-start-utc.txt"
+
+echo "Play the real 3D game for at least 2–5 minutes with movement, pressure and upgrades."
+echo "Keep the app foregrounded; press ENTER here when the player-controlled session ends."
+read -r -p "Finish capture: " _
+date -u +%Y-%m-%dT%H:%M:%SZ > "$OUTPUT/session-end-utc.txt"
+stop_capture
+
+adb exec-out screencap -p > "$OUTPUT/real-phone-screen.png"
+adb shell dumpsys thermalservice > "$OUTPUT/thermalservice.txt" 2>&1 || true
+adb shell dumpsys battery > "$OUTPUT/battery.txt" 2>&1 || true
+
+python3 "$ROOT/tools/android/scan_runtime_log.py" "$OUTPUT/logcat.txt" \
+  --package "$PACKAGE" --godot-perf \
+  --min-perf-snapshots "${DZ_MIN_SNAPSHOTS:-6}" \
+  --max-p95-ms "${DZ_MAX_P95_MS:-33.33}" \
+  --max-hitch-pct "${DZ_MAX_HITCH_PCT:-5}" \
+  --min-fps "${DZ_MIN_FPS:-25}" \
+  --json-out "$OUTPUT/godot-physical-qa.json"
+echo "Native physical Android evidence saved to: $OUTPUT"
+echo "Review on-phone touch, real GPU output and thermal behavior manually; a passing gate is not Play certification."
 ````
 
 ## File: tools/android/scan_runtime_log.py
