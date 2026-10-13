@@ -10,6 +10,8 @@ From a PC with Bash, Python 3 and Android Platform Tools, connect **one authoriz
 bash tools/android/godot_capture_physical_qa.sh /path/to/deadline-zero-godot-debug.apk
 ```
 
+If you know the source commit from the APK's GitHub Actions run, prefix the command with `DZ_APK_COMMIT=<40-character-commit-SHA>`; otherwise the report marks APK source provenance **UNVERIFIED**, rather than misidentifying your local checkout as the build source.
+
 The script installs the APK, launches the real Godot activity, records logcat while **you play**, then stops on **Enter**. It saves a physical screenshot, Android version/model, APK SHA-256, start/end timestamps, thermal-service diagnostics (when accessible), and the fail-closed `godot-physical-qa.json` performance/crash result under `build/godot-physical-qa/<timestamp>/`. If there are multiple connected devices, select the intended one with `ANDROID_SERIAL`.
 
 The analyzer defaults to six valid snapshots, 33.33 ms p95 per window, at most 5% intervals above 33.33 ms, and at least 25 reported FPS. For a 60 FPS target use `DZ_MAX_P95_MS=16.67 DZ_MIN_FPS=55` in front of the command, and agree on a suitable hitch criterion separately.
