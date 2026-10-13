@@ -397,7 +397,22 @@ func _initialize() -> void:
         quit(1)
         return
     runner_b._set_death_dissolve(0.0)
+    var living_count_before_kill := get_node_count_in_group("enemies")
     runner_a.take_damage(runner_a.health + 1.0, true)
+    # The body remains in the scene for the authored death clip/dissolve, but
+    # must immediately stop consuming horde spatial/movement/spawn capacity.
+    if runner_a.is_in_group("enemies") or not runner_b.is_in_group("enemies"):
+        push_error("Dead corpse stayed indexed as a living enemy, or a living enemy was detached")
+        quit(1)
+        return
+    if get_node_count_in_group("enemies") != living_count_before_kill - 1:
+        push_error("Godot live enemy count did not drop when the zombie died")
+        quit(1)
+        return
+    if not is_instance_valid(runner_a) or not runner_a.is_inside_tree() or runner_a.is_physics_processing():
+        push_error("Dying GLTF body must remain visible but not run zombie physics")
+        quit(1)
+        return
     if not runner_a.dead or runner_a.authored_anim.current_animation != "Death":
         push_error("Imported GLTF death clip must begin before opaque fade")
         quit(1)

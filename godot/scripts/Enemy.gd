@@ -815,6 +815,11 @@ func take_damage(amount: float, critical := false, damage_over_time := false) ->
     if killed:
         dead = true
         velocity = Vector3.ZERO
+        # Preserve the visible rigged 0.62 s death/dissolve, but detach the
+        # corpse immediately from live-combat indexing, spawn caps and 60 Hz
+        # movement/status updates. Its AnimationPlayer and Tween keep running.
+        remove_from_group("enemies")
+        set_physics_process(false)
         died.emit(xp_value, global_position)
         if authored_anim != null and authored_anim.has_animation("Death"):
             authored_anim.speed_scale = 1.0
