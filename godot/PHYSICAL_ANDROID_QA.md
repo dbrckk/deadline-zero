@@ -2,7 +2,22 @@
 
 This procedure evaluates the **native Godot** `com.deadlinezero.godot` debug APK, **not** the older libGDX `com.deadlinezero.game` app. Run on actual hardware; emulator success cannot certify mobile GPU, touch, battery, or thermal performance.
 
-## One reproducible player-controlled session
+## Recommended one-command physical run
+
+From a PC with Bash, Python 3 and Android Platform Tools, connect **one authorized physical phone** with USB debugging. Download the native **Godot Android First Playable** debug APK from GitHub Actions and run this command from the repository root:
+
+```sh
+bash tools/android/godot_capture_physical_qa.sh /path/to/deadline-zero-godot-debug.apk
+```
+
+The script installs the APK, launches the real Godot activity, records logcat while **you play**, then stops on **Enter**. It saves a physical screenshot, Android version/model, APK SHA-256, start/end timestamps, thermal-service diagnostics (when accessible), and the fail-closed `godot-physical-qa.json` performance/crash result under `build/godot-physical-qa/<timestamp>/`. If there are multiple connected devices, select the intended one with `ANDROID_SERIAL`.
+
+The analyzer defaults to six valid snapshots, 33.33 ms p95 per window, at most 5% intervals above 33.33 ms, and at least 25 reported FPS. For a 60 FPS target use `DZ_MAX_P95_MS=16.67 DZ_MIN_FPS=55` in front of the command, and agree on a suitable hitch criterion separately.
+
+**Privacy:** logcat and thermal-service outputs may contain personal or device-sensitive data. They stay local; review and redact before sharing. The script intentionally clears the connected test device's prior log buffer. It does not claim to measure hardware thermal throttling or validate touchscreen comfort automatically.
+
+## Manual fallback and troubleshooting
+
 
 Build/download the native Godot Android debug APK using the **Godot Android First Playable** GitHub Actions workflow. On a PC with Android Platform Tools and Python 3, connect an authorized Android phone with USB debugging enabled.
 
