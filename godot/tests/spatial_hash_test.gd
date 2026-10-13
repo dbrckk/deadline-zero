@@ -35,6 +35,31 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # A 60 Hz rebuild must never return stale nodes from the previous cell.
+    # Exercise both moving enemies and a completely empty frame: pooled arrays
+    # must be cleared before any subsequent query can reuse them.
+    near_enemy.position = Vector3(18.0, 0.0, 18.0)
+    index.rebuild([near_enemy, far_enemy])
+    if not index.query(Vector3(18.0, 0.0, 18.0), 2.0).has(near_enemy) or not index.query(Vector3.ZERO, 3.0).is_empty():
+        push_error("Spatial hash retained stale occupants after enemy moved")
+        quit(1)
+        return
+    index.rebuild([])
+    if not index.query(Vector3(18.0, 0.0, 18.0), 2.0).is_empty() or not index.buckets.is_empty():
+        push_error("Spatial hash recycled an uncleared bucket after empty rebuild")
+        quit(1)
+        return
+    near_enemy.position = Vector3(1.0, 0.0, 1.0)
+    index.rebuild([near_enemy, far_enemy])
+    if not index.query(Vector3.ZERO, 3.0).has(near_enemy) or index.query(Vector3.ZERO, 3.0).has(far_enemy):
+        push_error("Spatial hash recycled bucket no longer isolates the original near enemy")
+        quit(1)
+        return
+    if index._recycled_buckets.size() > 2:
+        push_error("Spatial hash pool grew beyond the peak simultaneously occupied buckets")
+        quit(1)
+        return
+
     var query_scene := QueryScene.new()
     get_root().add_child(query_scene)
     current_scene = query_scene

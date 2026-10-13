@@ -3,18 +3,30 @@ extends RefCounted
 
 var cell_size := 4.0
 var buckets := {}
+# Recycle occupied cell arrays across 60 Hz rebuilds. The pool is bounded by
+# the peak simultaneously occupied cell count, not by total cells visited.
+var _recycled_buckets: Array = []
 
 func _init(size := 4.0) -> void:
     cell_size = maxf(0.5, float(size))
 
 func rebuild(nodes: Array) -> void:
+    # Drop references to actors that have moved or died before recycling every
+    # cell. Clearing the dictionary alone previously allocated new arrays for
+    # the same horde cells every physics frame.
+    for bucket in buckets.values():
+        bucket.clear()
+        _recycled_buckets.append(bucket)
     buckets.clear()
     for node in nodes:
         if node == null or not is_instance_valid(node) or not node is Node3D:
             continue
         var key := _cell((node as Node3D).global_position)
         if not buckets.has(key):
-            buckets[key] = []
+            var recycled: Array = []
+            if not _recycled_buckets.is_empty():
+                recycled = _recycled_buckets.pop_back()
+            buckets[key] = recycled
         buckets[key].append(node)
 
 func query(position: Vector3, radius: float) -> Array:

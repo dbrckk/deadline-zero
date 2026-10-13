@@ -1026,7 +1026,8 @@ func _build_hit_flash() -> void:
 func _spawn_damage_number(amount: float, critical: bool, killed: bool) -> void:
     if get_tree() == null or get_tree().current_scene == null:
         return
-    var active_numbers := get_tree().get_nodes_in_group("damage_numbers").size()
+    # A damage event needs only the count: avoid allocating the full Label3D group array.
+    var active_numbers := get_tree().get_node_count_in_group("damage_numbers")
     if active_numbers >= MAX_DAMAGE_NUMBERS and not critical and not killed:
         return
     var number := Label3D.new()

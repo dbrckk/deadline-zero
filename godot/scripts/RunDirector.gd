@@ -9,6 +9,15 @@ const PHASES := [
     {"start": 225.0, "name": "EXTINCTION", "interval": 0.31, "batch": 5, "max_enemies": 118}
 ]
 
+# Multiple enemies share elapsed/level within the same spawn batch. Cache the
+# immutable draw weights for that batch instead of allocating a Dictionary and
+# values/roster Arrays for every zombie.
+const ENEMY_DRAW_ORDER := ["shambler", "runner", "charger", "harrier", "regenerator", "brute", "elite"]
+var _draw_elapsed := -1.0
+var _draw_level := -1
+var _draw_weights: Dictionary = {}
+var _draw_total := 0.0
+
 func opening_roster() -> Array:
     # Establish immediate silhouette and movement contrast without introducing ranged or
     # high-pressure specials before the player has settled into the controls.
@@ -36,14 +45,17 @@ func profile(elapsed: float, level: int) -> Dictionary:
     }
 
 func choose_enemy(elapsed: float, level: int, rng: RandomNumberGenerator) -> String:
-    var weights := _weights(elapsed, level)
-    var total := 0.0
-    for weight in weights.values():
-        total += float(weight)
-    var roll := rng.randf() * total
+    if elapsed != _draw_elapsed or level != _draw_level:
+        _draw_weights = _weights(elapsed, level)
+        _draw_total = 0.0
+        for weight in _draw_weights.values():
+            _draw_total += float(weight)
+        _draw_elapsed = elapsed
+        _draw_level = level
+    var roll := rng.randf() * _draw_total
     var cursor := 0.0
-    for kind in ["shambler", "runner", "charger", "harrier", "regenerator", "brute", "elite"]:
-        cursor += float(weights.get(kind, 0.0))
+    for kind in ENEMY_DRAW_ORDER:
+        cursor += float(_draw_weights.get(kind, 0.0))
         if roll <= cursor:
             return kind
     return "shambler"

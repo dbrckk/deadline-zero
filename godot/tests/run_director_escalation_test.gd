@@ -42,6 +42,23 @@ func _init() -> void:
         quit(1)
         return
 
+    # The director must reuse weighted probabilities within one spawn batch,
+    # but recompute them as the pressure curve or player level changes.
+    var draw_rng := RandomNumberGenerator.new()
+    draw_rng.seed = 314159
+    director.choose_enemy(0.0, 1, draw_rng)
+    var opening_weight_total: float = director._draw_total
+    director.choose_enemy(0.0, 1, draw_rng)
+    if director._draw_total != opening_weight_total:
+        push_error("Director cached draw probabilities changed within the same spawn batch")
+        quit(1)
+        return
+    director.choose_enemy(180.0, 7, draw_rng)
+    if director._draw_total <= opening_weight_total or director._draw_elapsed != 180.0 or director._draw_level != 7:
+        push_error("Director did not invalidate cached weights when escalation changed")
+        quit(1)
+        return
+
     var seed_a: Array = director.enemy_sequence(135.0, 5, 24680, 12)
     var seed_b: Array = director.enemy_sequence(135.0, 5, 24680, 12)
     var seed_c: Array = director.enemy_sequence(135.0, 5, 24681, 12)
