@@ -160,13 +160,30 @@ start = max(0, i - 3)
 end = min(len(lines), i + 8)
 window = "\n".join(lines[start:end])
 ⋮----
+GODOT_PERF_KEYS = {
+⋮----
+"""Evaluate actual Godot debug DZ_PERF windows; never infer a device-wide p95."""
+⋮----
+windows = []
+malformed = 0
+⋮----
+fields = {}
+⋮----
+window = {key: float(fields[key]) for key in GODOT_PERF_KEYS}
+⋮----
+errors = []
+⋮----
+summary = {
+⋮----
 def main() -> int
 ⋮----
 parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
 ⋮----
-result = scan(Path(args.logcat).read_text(errors="replace"), args.package)
+log_text = Path(args.logcat).read_text(errors="replace")
+result = scan(log_text, args.package)
+⋮----
 rendered = json.dumps(result, indent=2, sort_keys=True)
 ```
 

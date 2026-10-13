@@ -29226,7 +29226,8 @@ func _spawn_position_around_player(radius: float) -> Vector3:
 func _spawn_enemy(forced_kind: String = "") -> void:
     if player == null or game_over:
         return
-    if forced_kind != "boss" and get_tree().get_nodes_in_group("enemies").size() >= max_enemies:
+    # Avoid allocating a full live-horde Array on every spawn in a batch.
+    if forced_kind != "boss" and get_tree().get_node_count_in_group("enemies") >= max_enemies:
         return
     var radius := spawn_rng.randf_range(12.0, 18.0)
     var pos := _spawn_position_around_player(radius)
@@ -32563,13 +32564,30 @@ start = max(0, i - 3)
 end = min(len(lines), i + 8)
 window = "\n".join(lines[start:end])
 ⋮----
+GODOT_PERF_KEYS = {
+⋮----
+"""Evaluate actual Godot debug DZ_PERF windows; never infer a device-wide p95."""
+⋮----
+windows = []
+malformed = 0
+⋮----
+fields = {}
+⋮----
+window = {key: float(fields[key]) for key in GODOT_PERF_KEYS}
+⋮----
+errors = []
+⋮----
+summary = {
+⋮----
 def main() -> int
 ⋮----
 parser = argparse.ArgumentParser()
 ⋮----
 args = parser.parse_args()
 ⋮----
-result = scan(Path(args.logcat).read_text(errors="replace"), args.package)
+log_text = Path(args.logcat).read_text(errors="replace")
+result = scan(log_text, args.package)
+⋮----
 rendered = json.dumps(result, indent=2, sort_keys=True)
 ````
 

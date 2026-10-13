@@ -33,30 +33,28 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-12T14:30:53Z
+Generated: 2026-10-13T06:56:09Z
 
 ### Git
 - Branch: `main`
-- Head: `9eaf0e5ead4d`
-- Commit date: 2026-10-12T16:30:36+02:00
-- Commit: feat(godot): ballistic flash on actual skinned zombie bodies, cached horde mesh FX (#414)
-- Tracked files: 1065
+- Head: `b22ffb9d4c33`
+- Commit date: 2026-10-13T08:55:19+02:00
+- Commit: perf(godot): avoid full-horde array allocations while enforcing spawn cap (#417)
+- Tracked files: 1066
 
 ### Recently changed files
-- `godot/scripts/AssetLibrary.gd`
-- `godot/scripts/Enemy.gd`
-- `godot/tests/enemy_silhouette_identity_test.gd`
+- `godot/scripts/Main.gd`
+- `godot/PHYSICAL_ANDROID_QA.md`
+- `godot/README.md`
+- `tools/android/scan_runtime_log.py`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `godot/scripts/Main.gd`
-- `godot/tests/environment_identity_test.gd`
-- `godot/scripts/Player.gd`
-- `godot/scripts/WeaponProfiles.gd`
-- `godot/tests/first_playable_run_path_test.gd`
-- `godot/tests/weapon_protocol_behavior_test.gd`
+- `godot/scripts/AssetLibrary.gd`
+- `godot/scripts/Enemy.gd`
+- `godot/tests/enemy_silhouette_identity_test.gd`
 
 ### Project signals
 - `build.gradle`
