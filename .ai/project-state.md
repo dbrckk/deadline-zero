@@ -6,25 +6,25 @@ Status: active
 - Godot 4.7.2 native 3D Android first-playable with rigged Quaternius GLTF actors, Blender-authored industrial PBR environment, six playable weapon protocols and integrated combat FX.
 - #413/#414 integrated real 3D industrial PBR fixtures and per-instance rigged zombie impact shaders; #416/#419 native physical-Android evidence path; #417/#418 efficient horde spawning/spatial buckets.
 - #420/#421 **merged after 8/8 successful checks each**: first-contact physically correct swept shot collisions and immediate dead-zombie detachment from live horde physics, preserving visible death clips.
-- #422 **open**: real industrial Blender PBR emergency light bars, floor pools, beacons and existing warm rim lights respond to run pressure and boss defeat. Reduced-flashes control disables pulse. Real Linux 1280x720 environment identity/pressure render passed. Emulator startup KVM failure was independently identified and targeted job rerun issued. Last full CI still pending.
+- #422 **merged, 8/8 CI**: Blender PBR light bars, floor pools, beacons and existing rim lights respond to run pressure and boss defeat. Reduced-flashes keeps danger colors but disables pulse. Real Linux 1280×720 environment identity/pressure rendering passed, and targeted retry of GitHub KVM emulator smoke passed.
 - #423 **open**: warning lanes for Charger/Harrier remain fixed in world while attack rings expand. Existing aim gradient/facing integration extended; CI still pending.
 - #424 **open**: reuse caller-owned 60Hz spatial neighbor buffers per living enemy instead of allocating each frame; existing spatial index and first-playable integration tests expanded. CI still pending.
 
 ## Blockers
-- Full 8/8 CI and merge required for #422, #423 and #424 before treating these changes as shipped.
+- Full 8/8 CI and merge required for #423 and #424 before treating these changes as shipped.
 - Real physical Android Mobile/Vulkan camera, FPS/p95/hitches, touch, screen legibility and sustained heat still **unverified**.
 - Genuine higher-fidelity licensed rigged 3D characters and production animation/material sophistication remain below intended AAA visual bar.
 - Physical Android process death, Play licensed Billing/refund checks and Play Store closed testing (#14, #16, #17) remain release blockers.
 
 ## Priorities
-- Finish targeted emulator rerun and GitHub Actions checks; merge #422–#424 sequentially only after all eight checks are green.
+- Finish GitHub Actions checks for #423 and #424, then merge sequentially only after all eight checks are green.
 - Capture and review a player-controlled native Godot real-phone session with `tools/android/godot_capture_physical_qa.sh`.
 - Improve licensed 3D character/animation quality based on real Mobile/Vulkan frames and enforce bounded thermal/frame pacing.
 - Complete physical lifecycle and store gates before production release.
 
 ## Validation
 - #420 and #421 merged after 8/8 Android/Godot/visual checks each; #422 real Linux Godot 1280x720 pressure screenshot passed with near-zero clipping.
-- #422 Android emulator smoke failure stemmed from a GitHub-hosted KVM map error on process relaunch, not a reported Godot scene crash. Targeted rerun in progress.
+- #422 Android emulator smoke failure stemmed from a GitHub-hosted KVM map error on process relaunch. Targeted rerun passed, after which #422 was merged.
 - Green Linux Godot rendering and emulator smoke are **not** a physical Android GPU/thermal quality sign-off.
 
 ## Last verified
