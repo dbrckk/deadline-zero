@@ -4,31 +4,32 @@ Status: active
 
 ## Working
 - Godot 4.7.2 native 3D Android first-playable, rigged Quaternius GLTF actors, industrial PBR environment and combat.
-- PRs #397–#414 merged, including #409–#414 each passing eight CI checks.
+- PRs #397–#417 merged (except closed superseded #415), including #409–#414 and #416–#417 each passing eight CI checks.
 - #409 smooth survivor travel/combat facing, #410 cinematic camera inertia, #411 per-zombie death contact shadow fade, #412 six weapon signatures and grounded survivor.
 - #413 **merged, 8/8 CI**: all six project-owned previously unused Blender 3D industrial GLB families integrated as 16 real arena assets. CC0 Poly Haven 1k diffuse/normal/packed ARM PBR map reuse. Actual 720p Godot captures reviewed.
-- #414 **merged, 8/8 CI**: real per-instance skinned GLTF hit flash with cached horde meshes. #415 closed as superseded by #413.\n- #417 **open**: remove repeated full-horde array allocation from Godot enemy spawn cap checks; CI pending.
-- #416 **open**: physical-native Godot FPS/p95/hitch logcat verification integrated into existing Android crash scanner, with exact device QA procedure.
+- #414 **merged, 8/8 CI**: real per-instance skinned GLTF hit flash with cached horde meshes. #415 closed as superseded by #413.\n- #416 **merged, 8/8 CI**: native Godot logcat p95/hitch/FPS and crash evidence, plus physical-device QA guide.
+- #417 **merged, 8/8 CI**: remove repeated full-horde Array creation when checking a spawn cap.
+- #418 **open**: recycle spatial hash buckets at 60Hz, cache same-batch spawn weights, eliminate damage-number count allocations; CI running.
 
 ## Blockers
-- #416 must achieve all eight passing CI checks before it is merged.
+- #418 must achieve all eight passing CI checks before it is merged.
 - Real physical Android Vulkan rendering, 30/60 FPS p95/hitches, thermal, touch and legibility QA not signed off.
 - Physical-device process death, Play Billing license-account and Play closed-testing/store release gates (#14, #16, #17) remain open.
 - Quaternius stylized characters and arena are below premium AAA fidelity; a genuine replacement of licensed high-fidelity rigged 3D assets is still needed.
 
 ## Priorities
-- Validate native Godot Android frame diagnostics on a physical Android phone; merge #416 only after all CI checks succeed.
+- Merge #418 only after successful full CI; then reduce per-projectile/per-enemy query allocations in the same spatial-index lane.
 - Build and integrate licensed higher-fidelity, mobile-budget rigged 3D characters with quality textures and animations.
 - Validate on a representative physical Android device before Play release.
 
 ## Validation
 - #409–#413 merged after 8/8 CI each.
 - #413 real 1280x720 Godot screenshot artifact inspected; all 8/8 checks passed and merged.
-- #414 merged after 8/8 checks; #416 CI in progress. Native physical Android p95/thermal/touch still unverified.
+- #414, #416 and #417 merged after 8/8 checks each. #418 CI in progress. Native physical Android p95/thermal/touch still unverified.
 - Linux Compatibility-rendered screenshots are not certification of Android Mobile/Vulkan GPU output.
 
 ## Last verified
-- 2026-10-12
+- 2026-10-13
 
 <!-- AUTO:START -->
 ## Automatic repository state
