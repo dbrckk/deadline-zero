@@ -3,31 +3,32 @@
 Status: active
 
 ## Working
-- Godot 4.7.2 native 3D Android first-playable, rigged Quaternius GLTF actors, industrial PBR environment and combat.
-- PRs #397–#417 merged (except closed superseded #415), including #409–#414 and #416–#417 each passing eight CI checks.
-- #409 smooth survivor travel/combat facing, #410 cinematic camera inertia, #411 per-zombie death contact shadow fade, #412 six weapon signatures and grounded survivor.
-- #413 **merged, 8/8 CI**: all six project-owned previously unused Blender 3D industrial GLB families integrated as 16 real arena assets. CC0 Poly Haven 1k diffuse/normal/packed ARM PBR map reuse. Actual 720p Godot captures reviewed.
-- #414 **merged, 8/8 CI**: real per-instance skinned GLTF hit flash with cached horde meshes. #415 closed as superseded by #413.\n- #416 **merged, 8/8 CI**: native Godot logcat p95/hitch/FPS and crash evidence, plus physical-device QA guide.
-- #417 **merged, 8/8 CI**: remove repeated full-horde Array creation when checking a spawn cap.
-- #419 **open**: one-command actual physical Android APK log/screenshot/thermal capture with opt-in frame and crash thresholds; CI running.
-- #418 **open**: recycle spatial hash buckets at 60Hz, cache same-batch spawn weights, eliminate damage-number count allocations; CI running.
+- Native Godot 4.7.2 first-playable: real imported rigged zombie GLTFs, six weapons, authored PBR industrial arena, mobile-first gameplay.
+- #413: sixteen Blender industrial 3D GLBs and licensed CC0 Poly Haven PBR surfaces integrated; 8/8 CI, genuine Linux Godot 720p renders reviewed.
+- #414: per-instance real zombie hit flash with cached animated skin meshes; 8/8 CI.
+- #416: native Godot frame-time/FPS/crash scanner and device QA guide; 8/8 CI.
+- #417: no full enemy-group allocations for wave spawn-cap checks; 8/8 CI.
+- #418: 60Hz spatial cell-array reuse, cached spawn draw weights, O(1) damage-number count; merged after 8/8 CI.
+- #419: one-command physical Android gameplay capture (APK checksum, screenshot, logcat, thermal diagnostics); merged after 8/8 CI.
+- #420 **open, CI running**: sort projectile impacts by actual first silhouette contact, not body-center distance; existing weapon integration test expanded.
+- #421 **open, CI running**: immediately detach dead zombies from active horde indexing/physics while preserving GLTF death animation/dissolve; existing integration test expanded.
 
 ## Blockers
-- #418 and #419 must achieve all required passing CI checks before being merged.
-- Real physical Android Vulkan rendering, 30/60 FPS p95/hitches, thermal, touch and legibility QA not signed off.
-- Physical-device process death, Play Billing license-account and Play closed-testing/store release gates (#14, #16, #17) remain open.
-- Quaternius stylized characters and arena are below premium AAA fidelity; a genuine replacement of licensed high-fidelity rigged 3D assets is still needed.
+- #420 and #421 require full native Godot/Android CI and mergeability before merging.
+- Real physical Android Vulkan image quality, player-controlled FPS/p95/hitches, sustained thermal, touch comfort and legibility are **not** signed off.
+- Physical-device process death, Play Billing license-account and Play closed testing / store tasks (#14, #16, #17) remain unverified.
+- Quaternius stylized characters are below intended AAA fidelity; compliant higher-fidelity rigged meshes and material/animation refinement still needed.
 
 ## Priorities
-- Merge #418/#419 only after successful full CI; then reduce per-projectile/per-enemy query allocations in the same spatial-index lane.
-- Build and integrate licensed higher-fidelity, mobile-budget rigged 3D characters with quality textures and animations.
-- Validate on a representative physical Android device before Play release.
+- Complete CI and merge #420/#421 only when every required check succeeds.
+- Run `tools/android/godot_capture_physical_qa.sh` on a real Android phone; archive signed-off p95, heat, crash, touch and visual evidence.
+- Source/integrate properly licensed higher-fidelity 3D assets and inspect actual Godot Mobile/Vulkan phone captures.
+- Finish release gates in docs/PLAY_RELEASE.md and related issue tracker.
 
 ## Validation
-- #409–#413 merged after 8/8 CI each.
-- #413 real 1280x720 Godot screenshot artifact inspected; all 8/8 checks passed and merged.
-- #414, #416 and #417 merged after 8/8 checks each. #418 CI in progress. Native physical Android p95/thermal/touch still unverified.
-- Linux Compatibility-rendered screenshots are not certification of Android Mobile/Vulkan GPU output.
+- #418 and #419 completed 8/8 CI each and are merged.
+- #420/#421 have code committed with existing Godot integration coverage extended; complete CI still in progress.
+- Linux Compatibility output and emulator tests cannot certify actual Android Mobile/Vulkan renderer quality.
 
 ## Last verified
 - 2026-10-13
