@@ -41,7 +41,6 @@ PY
   printf 'Device model: %s\n' "$(adb shell getprop ro.product.model | tr -d '\r')"
   printf 'Android version: %s\n' "$(adb shell getprop ro.build.version.release | tr -d '\r')"
   printf 'API level: %s\n' "$(adb shell getprop ro.build.version.sdk | tr -d '\r')"
-  printf 'Device serial: %s\n' "$(adb get-serialno | tr -d '\r')"
 } > "$OUTPUT/device.txt"
 
 echo "Installing actual Godot Android APK on selected device..."
