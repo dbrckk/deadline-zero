@@ -31,6 +31,13 @@ func rebuild(nodes: Array) -> void:
 
 func query(position: Vector3, radius: float) -> Array:
     var result: Array = []
+    query_into(position, radius, result)
+    return result
+
+func query_into(position: Vector3, radius: float, result: Array) -> void:
+    # Reuse one caller-owned candidate Array across 60 Hz queries. It must be
+    # cleared even on empty frames so no stale enemy references survive.
+    result.clear()
     var safe_radius := maxf(0.0, radius)
     var min_key := _cell(position - Vector3(safe_radius, 0.0, safe_radius))
     var max_key := _cell(position + Vector3(safe_radius, 0.0, safe_radius))
@@ -47,7 +54,6 @@ func query(position: Vector3, radius: float) -> Array:
                 delta.y = 0.0
                 if delta.length_squared() <= radius_sq:
                     result.append(node)
-    return result
 
 func _cell(position: Vector3) -> Vector2i:
     return Vector2i(
