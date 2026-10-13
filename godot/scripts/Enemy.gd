@@ -20,6 +20,8 @@ var authored_anim: AnimationPlayer
 # Imported GLTF mesh references cached once per zombie, never searched every
 # tween frame during rapid gun hits or the opaque death dissolve.
 var authored_skin_meshes: Array[MeshInstance3D] = []
+# One reusable neighbor buffer per living zombie; queried every physics tick.
+var separation_candidates: Array = []
 var current_anim := ""
 var attack_windup := 0.0
 var attack_target_position := Vector3.ZERO
@@ -362,6 +364,10 @@ func _contact_attack_range() -> float:
 
 func _nearby_enemies_for_separation(radius: float) -> Array:
     var scene := get_tree().current_scene if get_tree() != null else null
+    if scene != null and scene.has_method("query_enemies_near_into"):
+        scene.query_enemies_near_into(global_position, radius, separation_candidates)
+        return separation_candidates
+    # Preserve isolated Godot test scenes that expose the older query API.
     if scene != null and scene.has_method("query_enemies_near"):
         return scene.query_enemies_near(global_position, radius)
     return get_tree().get_nodes_in_group("enemies") if get_tree() != null else []
