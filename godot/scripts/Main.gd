@@ -75,6 +75,13 @@ var debug_perf_probe_clock := 5.0
 var debug_frame_last_ticks_us := 0
 var debug_frame_write_index := 0
 var debug_frame_samples_us: Array[int] = []
+# Live threat lighting reuses the arena's existing industrial GLB PBR lenses,
+# emergency pools and lamps: no extra lights, meshes or per-frame allocations.
+var alert_lens_material: StandardMaterial3D
+var alert_warm_pool_material: ShaderMaterial
+var alert_beacon_material: StandardMaterial3D
+var emergency_rim_lights: Array[OmniLight3D] = []
+var alert_refresh_clock := 0.0
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -103,6 +110,7 @@ const MUSIC_GAME_OVER_DB := -32.0
 const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
 const DIRECTOR_REFRESH_INTERVAL := 0.25
+const ALERT_LIGHT_REFRESH_INTERVAL := 0.12
 const DEBUG_PERF_PROBE_INTERVAL := 5.0
 const DEBUG_FRAME_SAMPLE_CAP := 240
 const DEBUG_FRAME_HITCH_THRESHOLD_US := 33333
@@ -145,6 +153,7 @@ func _ready() -> void:
     hud.camera_shake_changed.connect(_on_camera_shake_changed)
     hud.hit_stop_changed.connect(_on_hit_stop_changed)
     _load_audio_settings()
+    _update_world_alert_lighting()
     last_player_health = player.health
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
@@ -166,6 +175,11 @@ func _process(delta: float) -> void:
         if debug_perf_probe_clock <= 0.0:
             debug_perf_probe_clock = DEBUG_PERF_PROBE_INTERVAL
             _emit_debug_perf_probe()
+
+    alert_refresh_clock -= maxf(delta, 0.0)
+    if alert_refresh_clock <= 0.0 and not game_over:
+        alert_refresh_clock = ALERT_LIGHT_REFRESH_INTERVAL
+        _update_world_alert_lighting()
 
     if hit_freeze_left > 0.0:
         var real_delta := DZCombatFeel.unscaled_delta(delta, Engine.time_scale)
@@ -220,6 +234,37 @@ func _process(delta: float) -> void:
         if threat_indicator_refresh_clock <= 0.0:
             threat_indicator_refresh_clock = THREAT_INDICATOR_REFRESH_INTERVAL
             _update_offscreen_threat_indicator()
+
+func _update_world_alert_lighting() -> void:
+    # Cinematic scene response follows real director time and boss pressure.
+    # The light bar is a real Blender mesh with one shared textured PBR lens,
+    # and existing additive ground pools remain shadowless.
+    var pressure := clampf(maxf(elapsed - 25.0, 0.0) / 240.0, 0.0, 0.76)
+    if _has_active_boss():
+        pressure = 1.0
+    elif boss_defeat_relief_left > 0.0:
+        pressure = 0.08
+
+    # Slow, restrained breathing signal, not a flash/strobe. Accessibility:
+    # reduced_flashes keeps the threat color but removes its modulation.
+    var pulse := 1.0 if reduced_flashes else 0.88 + 0.12 * (0.5 + 0.5 * sin(elapsed * 3.1))
+    if alert_lens_material != null:
+        alert_lens_material.albedo_color = Color(0.12, 0.40, 0.52).lerp(
+            Color(0.68, 0.11, 0.035), pressure
+        )
+        alert_lens_material.emission = Color(0.055, 0.48, 0.76).lerp(
+            Color(0.94, 0.12, 0.022), pressure
+        )
+        alert_lens_material.emission_energy_multiplier = lerpf(1.8, 2.55, pressure) * pulse
+    if alert_warm_pool_material != null:
+        alert_warm_pool_material.set_shader_parameter("tint", Color(
+            1.0, 0.18, 0.035, (0.18 + 0.08 * pressure) * pulse
+        ))
+    if alert_beacon_material != null:
+        alert_beacon_material.emission_energy_multiplier = lerpf(3.2, 4.0, pressure) * pulse
+    for rim in emergency_rim_lights:
+        if rim != null:
+            rim.light_energy = lerpf(3.1, 3.55, pressure) * pulse
 
 func _camera_smooth_vector(previous: Vector3, desired: Vector3, delta: float, response: float) -> Vector3:
     return previous.lerp(desired, 1.0 - exp(-maxf(delta, 0.0) * response))
@@ -642,6 +687,7 @@ func _on_reduced_flashes_changed(enabled: bool) -> void:
         hud.set_reduced_flashes(enabled)
     if player != null:
         player.set_reduced_flashes(enabled)
+    _update_world_alert_lighting()
     _save_audio_settings()
 
 func _on_camera_shake_changed(enabled: bool) -> void:
@@ -800,6 +846,7 @@ func _build_world() -> void:
         rim.light_energy = 3.4
         rim.omni_range = 13.0
         add_child(rim)
+        emergency_rim_lights.append(rim)
 
     var floor := MeshInstance3D.new()
     floor.name = "QuarantineFloor"
@@ -971,6 +1018,7 @@ void fragment() {
     var warm_material := ShaderMaterial.new()
     warm_material.shader = shader
     warm_material.set_shader_parameter("tint", Color(1.0, 0.18, 0.035, 0.20))
+    alert_warm_pool_material = warm_material
 
     var mesh := QuadMesh.new()
     mesh.size = Vector2(5.8, 3.4)
@@ -1233,6 +1281,10 @@ func _build_reinforced_utility_details() -> void:
         if detail == null:
             continue
         detail.name = "AuthoredUtility_%s_%02d" % [kind, index]
+        if kind == "light" and alert_lens_material == null:
+            var lens := detail.find_child("LightBarLens", true, false) as MeshInstance3D
+            if lens != null:
+                alert_lens_material = lens.get_surface_override_material(0) as StandardMaterial3D
         detail.add_to_group("environment_utility_props")
         detail.position = placement["at"]
         detail.rotation.y = float(placement["yaw"])
@@ -1731,6 +1783,7 @@ func _build_perimeter_beacons() -> void:
     beacon_material.emission_enabled = true
     beacon_material.emission = Color(1.0, 0.045, 0.01)
     beacon_material.emission_energy_multiplier = 4.0
+    alert_beacon_material = beacon_material
 
     for index in range(12):
         var angle := TAU * float(index) / 12.0
