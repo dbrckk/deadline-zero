@@ -177,12 +177,28 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PRs #418, #419, #420 and #421 fully merged after 8/8 successful checks each, including Godot 4.7.2 integration, Android build/AAB, native emulator smoke and legacy Android runtime. Physical Android Mobile/Vulkan FPS/p95, thermal and touch unverified.",
+  "verification": "PRs #418–#421 merged after 8/8 checks each. PRs #422–#424 have source and expanded existing integration checks committed, but required full CI remains pending. #422 real 1280x720 Godot Linux pressure render QA passed (5 visible types, clipped 0.00049); GitHub KVM emulator launch/lifecycle flaky and targeted job rerun ongoing. Physical Android Vulkan GPU/p95/thermal/touch unverified.",
   "next": [
-    "Obtain player-controlled native Godot physical Android gameplay/frame/thermal/touch evidence via tools/android/godot_capture_physical_qa.sh; do not mistake emulator or Linux captures for certification",
-    "Improve appropriately licensed high-fidelity mobile-budget rigged 3D characters, their textures and animations, with actual native Android visual QA",
-    "Review runtime/frame-time measurements before further horde or projectile performance changes",
-    "Complete Play Store release gates (#14, #16, #17), including licensed Billing and physical-device lifecycle"
+    "Check PR #422 #423 #424 8/8 CI; resolve any failed real Godot integration, emulator startup or Android runtime issue; merge individually only when 8/8 verified",
+    "Run actual mobile hardware QA with tools/android/godot_capture_physical_qa.sh and inspect its visuals/thermal/fps rather than assuming Linux renderer matches Android Vulkan",
+    "Prioritize truly production-grade licensed character animation, meshes and materials after measured physical phone performance",
+    "Close Play Store release gates #14 #16 #17"
   ],
-  "in_progress": []
+  "in_progress": [
+    {
+      "pr": 422,
+      "status": "open; Godot/Linux render and core/Android builds green; emulator smoke re-running after GitHub KVM guest crash; android-runtime passed",
+      "change": "Real Blender industrial PBR light-bar lenses, floor pools, perimeter beacons and existing rim lamps follow wave/boss danger; respect reduced-flashes, no added dynamic lights or draws"
+    },
+    {
+      "pr": 423,
+      "status": "open; 7/8 CI green; android-runtime pending",
+      "change": "Keep Charger and Harrier target-locked world-space corridors stable while separate warning rings expand, with existing visual integration coverage"
+    },
+    {
+      "pr": 424,
+      "status": "open; native Godot and Android CI running",
+      "change": "Re-use per-enemy separation candidate arrays across 60Hz spatial queries, preserve generic spatial query behavior and deterministic first-playable integration"
+    }
+  ]
 }
