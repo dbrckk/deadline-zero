@@ -142,6 +142,18 @@
       "status": "merged",
       "checks": "8/8 successful",
       "change": "Avoid full enemy group allocations during capped multi-enemy 3D spawning"
+    },
+    {
+      "pr": 418,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Recycle 60Hz horde spatial buckets; cache same-batch spawn weights and remove repeated damage-number count arrays"
+    },
+    {
+      "pr": 419,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "One-command native Godot physical Android install, logcat capture, screenshot, thermal and offline frame diagnostics"
     }
   ],
   "visual_qa": "Reviewed authentic first-playable and midrun-pressure Godot 1280x720 rendered screenshots from PR #413 CI. Six existing Blender-authored industrial GLB asset families now add real PBR geometry and licensed CC0 normal/packed ARM textures; scene remains readable but imported Quaternius characters are still stylized low poly and far from AAA certification. Physical Android Vulkan screenshot remains unverified. #414 adds low-cost per-skinned-zombie hit flash; no new physical screenshots.",
@@ -153,24 +165,23 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PRs #416 and #417 merged after each completed 8/8 successful CI. PR #418 Godot/Android CI in progress. Physical-device Android Mobile/Vulkan FPS/p95, thermal and touch unverified.",
+  "verification": "PR #418 and #419 merged with 8/8 successful CI each. PR #420 and #421 awaiting full native Godot and Android CI. Real-phone native Godot Vulkan p95, thermal, touch and certification remain unverified.",
   "next": [
-    "Review PRs #418 and #419; fix issues and merge only after all required CI checks pass",
-    "Reduce per-enemy/per-projectile spatial query allocation after spatial hash recycling is validated",
-    "Capture physical Android native Godot build player-controlled p95/hitches, GPU and thermal evidence using godot/PHYSICAL_ANDROID_QA.md",
-    "Improve appropriately licensed high-fidelity rigged 3D character assets and real phone visual QA",
-    "Finish Play Store platform gates for process death, licensed Billing and closed testing (#14, #16, #17)"
+    "Review and merge PR #420 and PR #421 only after full required successful CI, reconcile with newer main",
+    "Capture real-phone native Godot player-controlled frame pacing, screen legibility, thermal and touch evidence with tools/android/godot_capture_physical_qa.sh",
+    "Improve licensed higher-fidelity rigged 3D characters and genuine production textures/animations without compromising mobile budgets",
+    "Finish Play process-death, licensed Billing and closed-test release gates (#14, #16, #17)"
   ],
   "in_progress": [
     {
-      "pr": 418,
-      "status": "open, required CI running",
-      "change": "Reuse cleared 60Hz spatial hash cell Arrays, cache same-batch director weights, and avoid allocating damage-number group arrays; expanded existing integration checks"
+      "pr": 420,
+      "status": "open, CI running",
+      "change": "Use first swept silhouette intersection to order non-piercing and Rail projectile hits, preserving matching world-space VFX; expanded existing weapon protocol integration test"
     },
     {
-      "pr": 419,
+      "pr": 421,
       "status": "open, CI running",
-      "change": "One-command physical Android Godot APK install/log capture/screenshot/thermal diagnostics, offline performance scan, protected device identifiers and emulator rejection"
+      "change": "Remove defeated zombies from active spatial/horde group and stop physics immediately, preserving full GLTF death animation, dissolve and rewards; existing integration test expanded"
     }
   ]
 }
