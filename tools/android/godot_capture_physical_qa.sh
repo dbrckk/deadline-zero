@@ -21,6 +21,10 @@ if [[ "$(adb get-state 2>/dev/null)" != "device" ]]; then
   echo "Connect one authorized physical Android phone (USB debugging; ANDROID_SERIAL if needed)." >&2
   exit 2
 fi
+if [[ "$(adb shell getprop ro.kernel.qemu | tr -d '\r')" == "1" ]]; then
+  echo "Android emulator detected; this QA path requires physical hardware." >&2
+  exit 2
+fi
 
 mkdir -p "$OUTPUT"
 python3 - "$APK" "$OUTPUT/apk-sha256.txt" <<'PY'
