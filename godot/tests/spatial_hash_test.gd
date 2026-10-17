@@ -35,6 +35,26 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # Exercise caller-owned scratch arrays, including stale entries left by
+    # the previous query and an empty query. This is the hot path used by 100+
+    # living zombies for separation at 60 physics ticks per second.
+    var reused_candidates: Array = [far_enemy]
+    index.query_into(Vector3.ZERO, 3.0, reused_candidates)
+    if reused_candidates.size() != 1 or reused_candidates[0] != near_enemy:
+        push_error("Spatial reusable query failed to clear stale enemy references")
+        quit(1)
+        return
+    index.query_into(Vector3(32.0, 0.0, 32.0), 1.0, reused_candidates)
+    if not reused_candidates.is_empty():
+        push_error("Empty reusable spatial query retained stale neighbor references")
+        quit(1)
+        return
+    index.query_into(Vector3.ZERO, 3.0, reused_candidates)
+    if reused_candidates.size() != 1 or reused_candidates[0] != near_enemy:
+        push_error("Reused spatial query buffer lost the same actor on the next frame")
+        quit(1)
+        return
+
     # A 60 Hz rebuild must never return stale nodes from the previous cell.
     # Exercise both moving enemies and a completely empty frame: pooled arrays
     # must be cleared before any subsequent query can reuse them.
