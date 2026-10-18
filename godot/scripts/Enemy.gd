@@ -158,6 +158,13 @@ func _set_hit_skin_flash(value: float) -> void:
         if is_instance_valid(mesh):
             mesh.set_instance_shader_parameter("hit_skin_flash", intensity)
 
+func _set_hit_skin_contact(at: Vector3) -> void:
+    # Set one instance uniform per imported textured GLTF mesh; no resource
+    # duplication, extra lights or geometry during dense multi-shot combat.
+    for mesh in authored_skin_meshes:
+        if is_instance_valid(mesh):
+            mesh.set_instance_shader_parameter("hit_world_position", at)
+
 func _apply_mobile_shadow_budget() -> void:
     # The arena has one real directional shadow map; a swarm of 100+ animated
     # characters should not render all of its geometry into that map.
@@ -809,7 +816,7 @@ func _process_status_effects(delta: float) -> void:
         burn_tick_accumulator = 0.0
         burn_dps = 0.0
 
-func take_damage(amount: float, critical := false, damage_over_time := false) -> void:
+func take_damage(amount: float, critical := false, damage_over_time := false, hit_position: Vector3 = Vector3(0.0, -9999.0, 0.0)) -> void:
     if dead:
         return
     health -= amount
@@ -822,7 +829,7 @@ func take_damage(amount: float, critical := false, damage_over_time := false) ->
     if not damage_over_time or killed:
         impact.emit(global_position + Vector3(0.0, 0.72, 0.0), critical, killed, kind == "boss")
         _spawn_damage_number(amount, critical, killed)
-        _play_hit_reaction(critical, killed)
+        _play_hit_reaction(critical, killed, hit_position)
     if killed:
         dead = true
         velocity = Vector3.ZERO
@@ -874,7 +881,7 @@ func hit_reaction_profile() -> Dictionary:
         return {"id": "elite_hit", "punch": 1.075, "flash": 6.2, "duration": 0.12, "recoil": 0.055}
     return {"id": "normal_hit", "punch": 1.10, "flash": 7.0, "duration": 0.10, "recoil": 0.085}
 
-func _play_hit_reaction(critical: bool, killed: bool) -> void:
+func _play_hit_reaction(critical: bool, killed: bool, hit_position: Vector3 = Vector3(0.0, -9999.0, 0.0)) -> void:
     var visual := get_node_or_null("Visual") as Node3D
     if visual == null:
         return
@@ -908,6 +915,8 @@ func _play_hit_reaction(critical: bool, killed: bool) -> void:
     # cylinder impact shell. One GPU instance float leaves horde PBR atlas
     # materials shared and avoids spawning additional render geometry.
     var skin_flash := 1.10 if critical else (0.82 if killed else 0.52)
+    var skin_impact: Vector3 = hit_position if hit_position.y > -1000.0 else global_position + Vector3(0.0, 0.72, 0.0)
+    _set_hit_skin_contact(skin_impact)
     _set_hit_skin_flash(skin_flash)
     hit_reaction_tween = create_tween()
     hit_reaction_tween.set_parallel(true)
