@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-13",
+  "updated_at": "2026-10-18",
   "repository": "dbrckk/deadline-zero",
   "branch": "main",
   "working_area": "Godot 4.7.2 native 3D",
@@ -178,6 +178,12 @@
       "status": "merged",
       "checks": "8/8 successful",
       "change": "Keep Charger and Harrier aiming lanes world-locked during expanding warning-ring tweens, matching the real attack line; expanded existing visual integration"
+    },
+    {
+      "pr": 424,
+      "status": "merged",
+      "checks": "8/8 successful",
+      "change": "Per-living-zombie 60Hz spatial separation query scratch buffers reused with previous spatial hash bucket optimization; no per-tick neighborhood Array allocation"
     }
   ],
   "visual_qa": "Reviewed authentic first-playable and midrun-pressure Godot 1280x720 rendered screenshots from PR #413 CI. Six existing Blender-authored industrial GLB asset families now add real PBR geometry and licensed CC0 normal/packed ARM textures; scene remains readable but imported Quaternius characters are still stylized low poly and far from AAA certification. Physical Android Vulkan screenshot remains unverified. #414 adds low-cost per-skinned-zombie hit flash; no new physical screenshots.",
@@ -189,18 +195,23 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PRs #422 and #423 merged after 8/8 Godot/Android/visual checks. PR #424 native Godot spatial query optimization passes 7/8, last Android runtime in progress. No real-device physical Android p95/thermal/touch certification.",
+  "verification": "PR #424 merged after 8/8 CI success. #425 first seven Godot, visual/render, AAB and Android smoke checks successful; Android legacy instrumentation in progress. #426 code and existing GLTF integration coverage committed; CI not finalized. Physical Android Vulkan visuals, thermal/fps/p95/touch still unverified.",
   "next": [
-    "Validate final Android-runtime on PR #424 and merge only with all eight checks green",
-    "Run actual mobile hardware QA with tools/android/godot_capture_physical_qa.sh and inspect its visuals/thermal/fps rather than assuming Linux renderer matches Android Vulkan",
-    "Prioritize truly production-grade licensed character animation, meshes and materials after measured physical phone performance",
-    "Close Play Store release gates #14 #16 #17"
+    "Complete all 8 GitHub CI checks and merge #425 and #426 individually only if mergeable and fully green",
+    "Run player-controlled native Godot real-device Mobile/Vulkan QA, preserve screen/thermal/perf evidence using tools/android/godot_capture_physical_qa.sh",
+    "Upgrade properly licensed high-fidelity rigged character models/animations while measuring actual mobile budgets; project-owned industrial GLTF machinery now being integrated",
+    "Close Play Store release gates #14 #16 #17 (physical lifecycle, Billing/refund, closed testing)"
   ],
   "in_progress": [
     {
-      "pr": 424,
-      "status": "open; native Godot and Android CI running",
-      "change": "Re-use per-enemy separation candidate arrays across 60Hz spatial queries, preserve generic spatial query behavior and deterministic first-playable integration"
+      "pr": 425,
+      "status": "open, 7/8 GitHub CI green; legacy Android runtime pending",
+      "change": "Original self-contained 3D glTF production decontamination reactor: 5,712 triangles, 7 bounded imported PBR finish meshes, shared CC0 normal/roughness/metallic textures, four staged non-colliding static arena instances and real alarm lenses"
+    },
+    {
+      "pr": 426,
+      "status": "open, Godot/Android CI running",
+      "change": "World-space localized ballistic first-contact illumination on actual imported Quaternius skinned zombie shader; single per-instance contact vec3 and no new draw calls or materials"
     }
   ]
 }
