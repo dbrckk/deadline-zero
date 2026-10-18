@@ -1,11 +1,15 @@
 # Change impact
 
-Base: ae1f29582a7065b0dbfba6058ce0ef838d51900a
-Head: 2aa7c0705d9532faa812efc2f14f7939f4ee9f2d
+Base: c7c77111d25d48ee3deee598d5d0722856e3c72a
+Head: 5ed6f25027b7d2de577bc18888e6aa83daecbd51
 
 ## Changed files
-- M godot/scripts/Projectile.gd
-- M godot/tests/weapon_protocol_behavior_test.gd
+- M godot/README.md
+- A godot/assets/generated/industrial/REACTOR_ASSET.md
+- A godot/assets/generated/industrial/dz_filtration_reactor.gltf
+- M godot/scripts/AssetLibrary.gd
+- M godot/scripts/Main.gd
+- M godot/tests/environment_identity_test.gd
 
 ## Affected areas
 - godot

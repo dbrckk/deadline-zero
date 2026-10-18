@@ -298,6 +298,7 @@ const INDUSTRIAL_FLOOR_HATCH := "res://assets/generated/industrial/dz_floor_hatc
 const INDUSTRIAL_HAZARD_BOLLARD := "res://assets/generated/industrial/dz_hazard_bollard.glb"
 const INDUSTRIAL_JUNCTION_BOX := "res://assets/generated/industrial/dz_junction_box.glb"
 const INDUSTRIAL_EMERGENCY_LIGHT_BAR := "res://assets/generated/industrial/dz_emergency_light_bar.glb"
+const INDUSTRIAL_FILTRATION_REACTOR := "res://assets/generated/industrial/dz_filtration_reactor.gltf"
 
 static var _enemy_grade_shader: Shader
 # Enemy palettes are fixed per archetype. Reuse one graded ShaderMaterial per
@@ -435,6 +436,14 @@ static func industrial_junction_box() -> Node3D:
 
 static func industrial_emergency_light_bar() -> Node3D:
     var root := instantiate_scene(INDUSTRIAL_EMERGENCY_LIGHT_BAR)
+    _grade_generated_industrial_kit(root)
+    return root
+
+# Detailed project-owned decontamination reactor: 5.7k authored triangles
+# batched into seven PBR finish meshes, shared by each placed instance.
+# No runtime geometry generation or one-off material copies.
+static func industrial_filtration_reactor() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_FILTRATION_REACTOR)
     _grade_generated_industrial_kit(root)
     return root
 
@@ -1416,6 +1425,8 @@ var authored_anim: AnimationPlayer
 # Imported GLTF mesh references cached once per zombie, never searched every
 # tween frame during rapid gun hits or the opaque death dissolve.
 var authored_skin_meshes: Array[MeshInstance3D] = []
+# One reusable neighbor buffer per living zombie; queried every physics tick.
+var separation_candidates: Array = []
 var current_anim := ""
 var attack_windup := 0.0
 var attack_target_position := Vector3.ZERO
@@ -1758,6 +1769,10 @@ func _contact_attack_range() -> float:
 
 func _nearby_enemies_for_separation(radius: float) -> Array:
     var scene := get_tree().current_scene if get_tree() != null else null
+    if scene != null and scene.has_method("query_enemies_near_into"):
+        scene.query_enemies_near_into(global_position, radius, separation_candidates)
+        return separation_candidates
+    # Preserve isolated Godot test scenes that expose the older query API.
     if scene != null and scene.has_method("query_enemies_near"):
         return scene.query_enemies_near(global_position, radius)
     return get_tree().get_nodes_in_group("enemies") if get_tree() != null else []
@@ -2040,11 +2055,16 @@ func _add_directional_telegraph_lane() -> void:
     # not the telegraph ring's opaque alarm material. One shader is shared by
     # all harriers and chargers; no additional mesh/light/particle budget.
     lane.material_override = _aim_lane_material()
+    # The expanding attack ring scales from 0.42 to 1.0 during the windup.
+    # Keep the hit-corridor child in absolute world space: inheriting that
+    # scale moved and shortened the warning despite the target being locked.
+    # It still belongs to the ring node for automatic timed cleanup.
+    lane.top_level = true
     telegraph_visual.add_child(lane)
 
     var midpoint := global_position.lerp(attack_target_position, 0.5) + Vector3(0.0, 0.006, 0.0)
     lane.global_position = midpoint
-    lane.rotation.y = atan2(delta.x, delta.z)
+    lane.global_rotation.y = atan2(delta.x, delta.z)
 
 static func _aim_lane_material() -> ShaderMaterial:
     if _shared_aim_lane_material != null:
@@ -2211,6 +2231,11 @@ func take_damage(amount: float, critical := false, damage_over_time := false) ->
     if killed:
         dead = true
         velocity = Vector3.ZERO
+        # Preserve the visible rigged 0.62 s death/dissolve, but detach the
+        # corpse immediately from live-combat indexing, spawn caps and 60 Hz
+        # movement/status updates. Its AnimationPlayer and Tween keep running.
+        remove_from_group("enemies")
+        set_physics_process(false)
         died.emit(xp_value, global_position)
         if authored_anim != null and authored_anim.has_animation("Death"):
             authored_anim.speed_scale = 1.0
@@ -4609,6 +4634,13 @@ var debug_perf_probe_clock := 5.0
 var debug_frame_last_ticks_us := 0
 var debug_frame_write_index := 0
 var debug_frame_samples_us: Array[int] = []
+# Live threat lighting reuses the arena's existing industrial GLB PBR lenses,
+# emergency pools and lamps: no extra lights, meshes or per-frame allocations.
+var alert_lens_material: StandardMaterial3D
+var alert_warm_pool_material: ShaderMaterial
+var alert_beacon_material: StandardMaterial3D
+var emergency_rim_lights: Array[OmniLight3D] = []
+var alert_refresh_clock := 0.0
 
 const SETTINGS_PATH := "user://deadline-zero-settings.cfg"
 const TOUCH_STICK_RADIUS := 90.0
@@ -4637,6 +4669,7 @@ const MUSIC_GAME_OVER_DB := -32.0
 const SPAWN_ARENA_HALF_EXTENT := 34.0
 const THREAT_INDICATOR_REFRESH_INTERVAL := 0.10
 const DIRECTOR_REFRESH_INTERVAL := 0.25
+const ALERT_LIGHT_REFRESH_INTERVAL := 0.12
 const DEBUG_PERF_PROBE_INTERVAL := 5.0
 const DEBUG_FRAME_SAMPLE_CAP := 240
 const DEBUG_FRAME_HITCH_THRESHOLD_US := 33333
@@ -4679,6 +4712,7 @@ func _ready() -> void:
     hud.camera_shake_changed.connect(_on_camera_shake_changed)
     hud.hit_stop_changed.connect(_on_hit_stop_changed)
     _load_audio_settings()
+    _update_world_alert_lighting()
     last_player_health = player.health
     hud.set_health(player.health, player.max_health)
     hud.set_progress(xp, xp_next, level, kills, elapsed, get_tree().get_node_count_in_group("enemies"))
@@ -4700,6 +4734,11 @@ func _process(delta: float) -> void:
         if debug_perf_probe_clock <= 0.0:
             debug_perf_probe_clock = DEBUG_PERF_PROBE_INTERVAL
             _emit_debug_perf_probe()
+
+    alert_refresh_clock -= maxf(delta, 0.0)
+    if alert_refresh_clock <= 0.0 and not game_over:
+        alert_refresh_clock = ALERT_LIGHT_REFRESH_INTERVAL
+        _update_world_alert_lighting()
 
     if hit_freeze_left > 0.0:
         var real_delta := DZCombatFeel.unscaled_delta(delta, Engine.time_scale)
@@ -4754,6 +4793,37 @@ func _process(delta: float) -> void:
         if threat_indicator_refresh_clock <= 0.0:
             threat_indicator_refresh_clock = THREAT_INDICATOR_REFRESH_INTERVAL
             _update_offscreen_threat_indicator()
+
+func _update_world_alert_lighting() -> void:
+    # Cinematic scene response follows real director time and boss pressure.
+    # The light bar is a real Blender mesh with one shared textured PBR lens,
+    # and existing additive ground pools remain shadowless.
+    var pressure := clampf(maxf(elapsed - 25.0, 0.0) / 240.0, 0.0, 0.76)
+    if _has_active_boss():
+        pressure = 1.0
+    elif boss_defeat_relief_left > 0.0:
+        pressure = 0.08
+
+    # Slow, restrained breathing signal, not a flash/strobe. Accessibility:
+    # reduced_flashes keeps the threat color but removes its modulation.
+    var pulse := 1.0 if reduced_flashes else 0.88 + 0.12 * (0.5 + 0.5 * sin(elapsed * 3.1))
+    if alert_lens_material != null:
+        alert_lens_material.albedo_color = Color(0.12, 0.40, 0.52).lerp(
+            Color(0.68, 0.11, 0.035), pressure
+        )
+        alert_lens_material.emission = Color(0.055, 0.48, 0.76).lerp(
+            Color(0.94, 0.12, 0.022), pressure
+        )
+        alert_lens_material.emission_energy_multiplier = lerpf(1.8, 2.55, pressure) * pulse
+    if alert_warm_pool_material != null:
+        alert_warm_pool_material.set_shader_parameter("tint", Color(
+            1.0, 0.18, 0.035, (0.18 + 0.08 * pressure) * pulse
+        ))
+    if alert_beacon_material != null:
+        alert_beacon_material.emission_energy_multiplier = lerpf(3.2, 4.0, pressure) * pulse
+    for rim in emergency_rim_lights:
+        if rim != null:
+            rim.light_energy = lerpf(3.1, 3.55, pressure) * pulse
 
 func _camera_smooth_vector(previous: Vector3, desired: Vector3, delta: float, response: float) -> Vector3:
     return previous.lerp(desired, 1.0 - exp(-maxf(delta, 0.0) * response))
@@ -4940,6 +5010,12 @@ func _has_active_boss() -> bool:
 
 func query_enemies_near(position: Vector3, radius: float) -> Array:
     return enemy_spatial_index.query(position, radius)
+
+func query_enemies_near_into(position: Vector3, radius: float, result: Array) -> void:
+    # Enemy steering runs for every live zombie on every physics frame.
+    # Fill its actor-owned scratch Array directly instead of allocating one
+    # short-lived neighbor Array per actor per tick.
+    enemy_spatial_index.query_into(position, radius, result)
 
 func _clamp_spawn_position(position: Vector3) -> Vector3:
     return Vector3(
@@ -5176,6 +5252,7 @@ func _on_reduced_flashes_changed(enabled: bool) -> void:
         hud.set_reduced_flashes(enabled)
     if player != null:
         player.set_reduced_flashes(enabled)
+    _update_world_alert_lighting()
     _save_audio_settings()
 
 func _on_camera_shake_changed(enabled: bool) -> void:
@@ -5334,6 +5411,7 @@ func _build_world() -> void:
         rim.light_energy = 3.4
         rim.omni_range = 13.0
         add_child(rim)
+        emergency_rim_lights.append(rim)
 
     var floor := MeshInstance3D.new()
     floor.name = "QuarantineFloor"
@@ -5349,6 +5427,7 @@ func _build_world() -> void:
     _build_midfield_inspection_panels()
     _build_service_pylons()
     _build_reinforced_utility_details()
+    _build_decontamination_reactors()
     _build_floor_wear()
     _build_authored_floor_decals()
     _build_floor_seams()
@@ -5505,6 +5584,7 @@ void fragment() {
     var warm_material := ShaderMaterial.new()
     warm_material.shader = shader
     warm_material.set_shader_parameter("tint", Color(1.0, 0.18, 0.035, 0.20))
+    alert_warm_pool_material = warm_material
 
     var mesh := QuadMesh.new()
     mesh.size = Vector2(5.8, 3.4)
@@ -5767,6 +5847,10 @@ func _build_reinforced_utility_details() -> void:
         if detail == null:
             continue
         detail.name = "AuthoredUtility_%s_%02d" % [kind, index]
+        if kind == "light" and alert_lens_material == null:
+            var lens := detail.find_child("LightBarLens", true, false) as MeshInstance3D
+            if lens != null:
+                alert_lens_material = lens.get_surface_override_material(0) as StandardMaterial3D
         detail.add_to_group("environment_utility_props")
         detail.position = placement["at"]
         detail.rotation.y = float(placement["yaw"])
@@ -5779,6 +5863,36 @@ func _build_reinforced_utility_details() -> void:
                     kind == "cabinet" and mesh.name == "CabinetBody"
                 ) else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         add_child(detail)
+
+func _build_decontamination_reactors() -> void:
+    # Genuine authored glTF 2.0 geometry, not a camera-facing image or
+    # collection of per-frame Godot primitives. Seven static baked mesh
+    # surfaces combine more than 5,700 industrial triangles per machine:
+    # machined rotor, bent coolant conduits, radiator fins, bolts, grilles
+    # and illuminated alarm lenses. Every finish reuses the existing PBR kit.
+    #
+    # These four fixtures are outside the central combat corridor, face into
+    # the arena and have no gameplay collision. Large meshes deliberately do
+    # not enter the directional shadow atlas on 30/60 FPS Android targets.
+    var positions := [
+        Vector3(-13.8, 0.0, 2.1),
+        Vector3(13.8, 0.0, -2.1),
+        Vector3(-9.2, 0.0, -12.5),
+        Vector3(9.2, 0.0, 12.5)
+    ]
+    for index in range(positions.size()):
+        var reactor := DZAssetLibrary.industrial_filtration_reactor()
+        if reactor == null:
+            continue
+        reactor.name = "DecontaminationReactor_%02d" % index
+        reactor.add_to_group("environment_utility_props")
+        reactor.position = positions[index]
+        reactor.rotation.y = atan2(reactor.position.x, reactor.position.z)
+        for node in reactor.find_children("*", "MeshInstance3D", true, false):
+            var part := node as MeshInstance3D
+            if part != null:
+                part.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        add_child(reactor)
 
 func _build_authored_floor_decals() -> void:
     # Project-owned texture decals break up the procedural floor with authored marks.
@@ -6265,6 +6379,7 @@ func _build_perimeter_beacons() -> void:
     beacon_material.emission_enabled = true
     beacon_material.emission = Color(1.0, 0.045, 0.01)
     beacon_material.emission_energy_multiplier = 4.0
+    alert_beacon_material = beacon_material
 
     for index in range(12):
         var angle := TAU * float(index) / 12.0
@@ -7985,6 +8100,13 @@ func rebuild(nodes: Array) -> void:
 
 func query(position: Vector3, radius: float) -> Array:
     var result: Array = []
+    query_into(position, radius, result)
+    return result
+
+func query_into(position: Vector3, radius: float, result: Array) -> void:
+    # Reuse one caller-owned candidate Array across 60 Hz queries. It must be
+    # cleared even on empty frames so no stale enemy references survive.
+    result.clear()
     var safe_radius := maxf(0.0, radius)
     var min_key := _cell(position - Vector3(safe_radius, 0.0, safe_radius))
     var max_key := _cell(position + Vector3(safe_radius, 0.0, safe_radius))
@@ -8001,7 +8123,6 @@ func query(position: Vector3, radius: float) -> Array:
                 delta.y = 0.0
                 if delta.length_squared() <= radius_sq:
                     result.append(node)
-    return result
 
 func _cell(position: Vector3) -> Vector2i:
     return Vector2i(
@@ -8828,6 +8949,43 @@ func _run_test() -> void:
 
     if charger.telegraph_visual.material_override != charger.telegraph_material:
         _fail("New lane shading must not weaken the original attack ring threat contrast")
+        return
+
+    # The authoritative attack target is locked at anticipation start. The
+    # danger corridor must remain on that world-space line even while the
+    # parent's luminous ring scales/rotates to announce the strike.
+    var charge_origin := charger.global_position
+    var charge_target := charger.attack_target_position
+    var expected_charge_midpoint := charge_origin.lerp(charge_target, 0.5) + Vector3(0.0, 0.006, 0.0)
+    var expected_aim_midpoint := harrier.global_position.lerp(harrier.attack_target_position, 0.5) + Vector3(0.0, 0.006, 0.0)
+    if not charge_lane.top_level or not aim_lane.top_level:
+        _fail("Aim warning must ignore scaling of its animated parent telegraph ring")
+        return
+    if charge_lane.get_parent() != charger.telegraph_visual or aim_lane.get_parent() != harrier.telegraph_visual:
+        _fail("World-locked aim corridor must still be owned by its timed ring for cleanup")
+        return
+    if charge_lane.global_position.distance_to(expected_charge_midpoint) > 0.015:
+        _fail("Charge danger corridor does not cover the actual locked attack path")
+        return
+    if aim_lane.global_position.distance_to(expected_aim_midpoint) > 0.015:
+        _fail("Harrier danger corridor does not cover the actual locked shot path")
+        return
+    var charge_heading := Vector3(charge_target.x - charge_origin.x, 0.0, charge_target.z - charge_origin.z).normalized()
+    var lane_heading := charge_lane.global_transform.basis.z.normalized()
+    if charge_heading.dot(lane_heading) < 0.997:
+        _fail("Charge danger corridor orientation no longer points along the committed charge")
+        return
+    var charge_locked_transform := charge_lane.global_transform
+    var aim_locked_transform := aim_lane.global_transform
+    await create_timer(0.16).timeout
+    if charger.telegraph_visual.scale.x <= 0.46:
+        _fail("Attack telegraph did not animate its ring during charge warning")
+        return
+    if charge_lane.global_transform.origin.distance_to(charge_locked_transform.origin) > 0.015 or aim_lane.global_transform.origin.distance_to(aim_locked_transform.origin) > 0.015:
+        _fail("Expanding attack ring displaced a locked ground warning mid-windup")
+        return
+    if charge_lane.global_transform.basis.z.distance_to(charge_locked_transform.basis.z) > 0.015 or aim_lane.global_transform.basis.z.distance_to(aim_locked_transform.basis.z) > 0.015:
+        _fail("Attack ring animation rotated or shrank actual target-locked warning lane")
         return
 
     print("Deadline Zero feathered mobile 3D enemy aim lane shaders: OK")
@@ -11219,7 +11377,22 @@ func _initialize() -> void:
         quit(1)
         return
     runner_b._set_death_dissolve(0.0)
+    var living_count_before_kill := get_node_count_in_group("enemies")
     runner_a.take_damage(runner_a.health + 1.0, true)
+    # The body remains in the scene for the authored death clip/dissolve, but
+    # must immediately stop consuming horde spatial/movement/spawn capacity.
+    if runner_a.is_in_group("enemies") or not runner_b.is_in_group("enemies"):
+        push_error("Dead corpse stayed indexed as a living enemy, or a living enemy was detached")
+        quit(1)
+        return
+    if get_node_count_in_group("enemies") != living_count_before_kill - 1:
+        push_error("Godot live enemy count did not drop when the zombie died")
+        quit(1)
+        return
+    if not is_instance_valid(runner_a) or not runner_a.is_inside_tree() or runner_a.is_physics_processing():
+        push_error("Dying GLTF body must remain visible but not run zombie physics")
+        quit(1)
+        return
     if not runner_a.dead or runner_a.authored_anim.current_animation != "Death":
         push_error("Imported GLTF death clip must begin before opaque fade")
         quit(1)
@@ -11446,6 +11619,14 @@ func _initialize() -> void:
     var utility_mesh_count := 0
     var utility_materials := {}
     var utility_light_lenses := 0
+    var reactor_count := 0
+    var reactor_mesh_count := 0
+    var reactor_textured_count := 0
+    var reactor_emissive_lenses := 0
+    var reactor_finishes := {}
+    var reactor_shared_materials := {}
+    var reactor_shadow_violations := 0
+    var reactor_placement_violations := 0
     var utility_textured_parts := 0
     var utility_normal_parts := 0
     var utility_arm_parts := 0
@@ -11515,6 +11696,42 @@ func _initialize() -> void:
                             utility_arm_parts += 1
                     if kind == "light" and mesh.name == "LightBarLens" and material.emission_enabled:
                         utility_light_lenses += 1
+        elif child.name.begins_with("DecontaminationReactor_"):
+            reactor_count += 1
+            if not child.is_in_group("environment_utility_props"):
+                reactor_placement_violations += 1
+            if Vector2(child.position.x, child.position.z).length() < 12.0:
+                reactor_placement_violations += 1
+            var details := child.find_children("*", "MeshInstance3D", true, false)
+            if details.size() != 7:
+                push_error("Project-owned filtration reactor lost one of its seven baked material finish meshes")
+                quit(1)
+                return
+            for detail in details:
+                var mesh := detail as MeshInstance3D
+                if mesh == null or mesh.mesh == null or mesh.mesh.get_surface_count() != 1:
+                    push_error("Filtration reactor imported a missing or malformed real glTF mesh")
+                    quit(1)
+                    return
+                reactor_mesh_count += 1
+                if mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    reactor_shadow_violations += 1
+                var finish_id := String(mesh.name)
+                reactor_finishes[finish_id] = true
+                var material := mesh.get_surface_override_material(0) as StandardMaterial3D
+                if material == null or mesh.material_override != null:
+                    push_error("Filtration reactor lost its shared per-finish PBR geometry material: %s" % finish_id)
+                    quit(1)
+                    return
+                if reactor_shared_materials.has(finish_id) and reactor_shared_materials[finish_id] != material:
+                    push_error("Filtration reactor created material copies per prop instance: %s" % finish_id)
+                    quit(1)
+                    return
+                reactor_shared_materials[finish_id] = material
+                if material.albedo_texture != null and material.normal_enabled and material.normal_texture != null and material.ao_enabled:
+                    reactor_textured_count += 1
+                if finish_id == "LightBarLens" and material.emission_enabled and material.emission_energy_multiplier >= 1.7:
+                    reactor_emissive_lenses += 1
         elif child.name.begins_with("PerimeterBulkhead_"):
             perimeter_bulkhead_count += 1
             bulkhead_hazard_stripe_count += child.find_children("HazardMarker_*", "MeshInstance3D", true, false).size()
@@ -11645,6 +11862,30 @@ func _initialize() -> void:
         quit(1)
         return
 
+    # Authored 3D reactor: verified real importer meshes, not an image or
+    # project screenshot, while keeping 4 props × 7 baked draws mobile-safe.
+    if reactor_count != 4 or reactor_mesh_count != 28:
+        push_error("Expected four detailed imported filtration reactors, seven mesh finishes each")
+        quit(1)
+        return
+    for finish in ["HullSteel", "SlatExchanger", "Pipe_Coolant", "HazardBands", "SignalStatus", "LightBarLens", "RecessInserts"]:
+        if not reactor_finishes.has(finish):
+            push_error("Filtration reactor is missing authored mechanical surface: %s" % finish)
+            quit(1)
+            return
+    if reactor_textured_count < 12 or reactor_emissive_lenses != 4:
+        push_error("Filtration reactors must preserve shared Poly Haven CC0 PBR steel/slat/pipe finishes and actual emissive lens mesh")
+        quit(1)
+        return
+    if reactor_shared_materials.get("LightBarLens") != scene.alert_lens_material:
+        push_error("Real reactor warning lenses must share the scene's threat-driven emergency PBR light material")
+        quit(1)
+        return
+    if reactor_shadow_violations != 0 or reactor_placement_violations != 0:
+        push_error("Filtration reactor obscures the playable corridor or exceeds the mobile shadow budget")
+        quit(1)
+        return
+
     if barrier_count < 12:
         push_error("Expected authored barrier clusters, got %d" % barrier_count)
         quit(1)
@@ -11748,6 +11989,77 @@ func _initialize() -> void:
             quit(1)
             return
 
+    # Live threat lighting must act on the real Blender-exported PBR lamp
+    # lenses and existing additive ground pools, not allocate new lights.
+    var authored_light_a := scene.get_node_or_null("AuthoredUtility_light_02") as Node3D
+    var authored_light_b := scene.get_node_or_null("AuthoredUtility_light_03") as Node3D
+    if authored_light_a == null or authored_light_b == null:
+        push_error("Dynamic alarm lost its two authored industrial light bars")
+        quit(1)
+        return
+    var lens_a := authored_light_a.find_child("LightBarLens", true, false) as MeshInstance3D
+    var lens_b := authored_light_b.find_child("LightBarLens", true, false) as MeshInstance3D
+    if lens_a == null or lens_b == null:
+        push_error("Dynamic alarm must use actual Blender GLB lens geometry")
+        quit(1)
+        return
+    var lens_material := lens_a.get_surface_override_material(0) as StandardMaterial3D
+    if lens_material == null or lens_b.get_surface_override_material(0) != lens_material:
+        push_error("Dynamic alarm must reuse a shared PBR lens material on both fixtures")
+        quit(1)
+        return
+    if scene.alert_lens_material != lens_material or scene.alert_warm_pool_material == null or scene.alert_beacon_material == null:
+        push_error("Dynamic alarm is not bound to its production light fixtures")
+        quit(1)
+        return
+    if scene.emergency_rim_lights.size() != 2:
+        push_error("Dynamic alarm must reuse exactly the two existing emergency rim lights")
+        quit(1)
+        return
+
+    scene.elapsed = 0.0
+    scene.boss_defeat_relief_left = 0.0
+    scene._update_world_alert_lighting()
+    var calm_lens_color := lens_material.emission
+    var calm_energy := lens_material.emission_energy_multiplier
+    scene.elapsed = 225.0
+    scene._update_world_alert_lighting()
+    var hazard_color := lens_material.emission
+    if hazard_color.r <= calm_lens_color.r + 0.35 or hazard_color.g >= calm_lens_color.g:
+        push_error("Actual industrial PBR lamp failed to signal escalated threat with copper alert tint")
+        quit(1)
+        return
+    if lens_material.emission_energy_multiplier <= calm_energy or lens_material.emission_energy_multiplier > 2.56:
+        push_error("Industrial alert brightness did not escalate within its mobile light budget")
+        quit(1)
+        return
+
+    scene.boss_defeat_relief_left = 1.0
+    scene._update_world_alert_lighting()
+    if lens_material.emission.r >= hazard_color.r - 0.30:
+        push_error("Boss victory failed to cool the actual world-space emergency fixtures")
+        quit(1)
+        return
+
+    scene.boss_defeat_relief_left = 0.0
+    scene.reduced_flashes = true
+    scene.elapsed = 150.0
+    scene._update_world_alert_lighting()
+    var steady_energy := lens_material.emission_energy_multiplier
+    scene.elapsed = 150.4
+    scene._update_world_alert_lighting()
+    if absf(lens_material.emission_energy_multiplier - steady_energy) > 0.008:
+        push_error("Reduced-flashes setting must remove the animated emergency brightness pulse")
+        quit(1)
+        return
+    if scene.alert_beacon_material.emission_energy_multiplier > 4.01:
+        push_error("Threat alert exceeded existing perimeter emissive beacon budget")
+        quit(1)
+        return
+    scene.elapsed = 0.0
+    scene.reduced_flashes = false
+    scene._update_world_alert_lighting()
+
     print("Deadline Zero environment identity: OK")
     quit(0)
 ```
@@ -11770,6 +12082,45 @@ func _initialize() -> void:
         push_error("Run path did not initialize player, HUD and camera")
         quit(1)
         return
+    # Verify the production scene actually provides reusable neighborhood
+    # queries to its live 60Hz swarm, not just the isolated index service.
+    var living_zombies := get_nodes_in_group("enemies")
+    if living_zombies.is_empty():
+        push_error("Spatial integration requires the real opening zombie roster")
+        quit(1)
+        return
+    # CI can advance render frames faster than its first physics tick; build
+    # the genuine production index explicitly so this checks queries rather
+    # than depending on scheduler timing.
+    main.enemy_spatial_index.rebuild(living_zombies)
+    var reusable_nearby: Array = [main.player]
+    main.query_enemies_near_into(main.player.global_position, 30.0, reusable_nearby)
+    var allocated_nearby: Array = main.query_enemies_near(main.player.global_position, 30.0)
+    if reusable_nearby.is_empty() or reusable_nearby.size() != allocated_nearby.size() or reusable_nearby.has(main.player):
+        push_error("Live reusable separation query differs from the existing projectile/player spatial API")
+        quit(1)
+        return
+    for zombie in allocated_nearby:
+        if not reusable_nearby.has(zombie):
+            push_error("Reusable live enemy spatial buffer missed an indexed zombie")
+            quit(1)
+            return
+    var reference_enemy := living_zombies[0] as DZEnemy
+    if reference_enemy == null:
+        push_error("Opening roster is missing concrete 3D enemy actor")
+        quit(1)
+        return
+    var separation_neighbors: Array = reference_enemy._nearby_enemies_for_separation(30.0)
+    if not separation_neighbors.has(reference_enemy) or separation_neighbors != reference_enemy.separation_candidates:
+        push_error("Live zombies did not reuse their own spatial separation buffers")
+        quit(1)
+        return
+    main.query_enemies_near_into(Vector3(999.0, 0.0, 999.0), 1.0, reusable_nearby)
+    if not reusable_nearby.is_empty():
+        push_error("Production spatial query retained actors after an empty neighborhood")
+        quit(1)
+        return
+
     var camera_look: Vector3 = main._camera_motion_look_ahead(Vector3(8.0, 0.0, 0.0))
     if camera_look.length() <= 0.2 or camera_look.length() > main.CAMERA_LOOK_AHEAD_MAX + 0.001:
         push_error("Camera movement look-ahead is outside premium framing budget")
@@ -16213,6 +16564,26 @@ func _initialize() -> void:
     var nearby: Array = index.query(Vector3.ZERO, 3.0)
     if not nearby.has(near_enemy) or nearby.has(far_enemy):
         push_error("Spatial hash query did not isolate nearby enemies")
+        quit(1)
+        return
+
+    # Exercise caller-owned scratch arrays, including stale entries left by
+    # the previous query and an empty query. This is the hot path used by 100+
+    # living zombies for separation at 60 physics ticks per second.
+    var reused_candidates: Array = [far_enemy]
+    index.query_into(Vector3.ZERO, 3.0, reused_candidates)
+    if reused_candidates.size() != 1 or reused_candidates[0] != near_enemy:
+        push_error("Spatial reusable query failed to clear stale enemy references")
+        quit(1)
+        return
+    index.query_into(Vector3(32.0, 0.0, 32.0), 1.0, reused_candidates)
+    if not reused_candidates.is_empty():
+        push_error("Empty reusable spatial query retained stale neighbor references")
+        quit(1)
+        return
+    index.query_into(Vector3.ZERO, 3.0, reused_candidates)
+    if reused_candidates.size() != 1 or reused_candidates[0] != near_enemy:
+        push_error("Reused spatial query buffer lost the same actor on the next frame")
         quit(1)
         return
 

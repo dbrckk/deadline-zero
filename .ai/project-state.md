@@ -32,31 +32,32 @@ Status: active
 <!-- AUTO:START -->
 ## Automatic repository state
 
-Generated: 2026-10-13T13:59:46Z
+Generated: 2026-10-18T12:29:05Z
 
 ### Git
 - Branch: `main`
-- Head: `2aa7c0705d95`
-- Commit date: 2026-10-13T15:59:31+02:00
-- Commit: fix(godot): order projectile hits by actual 3D silhouette entry (#420)
-- Tracked files: 1067
+- Head: `5ed6f25027b7`
+- Commit date: 2026-10-18T08:28:51-04:00
+- Commit: art(godot): ship original 3D industrial filtration reactors with shared CC0 PBR (#425)
+- Tracked files: 1069
 
 ### Recently changed files
-- `godot/scripts/Projectile.gd`
-- `godot/tests/weapon_protocol_behavior_test.gd`
+- `godot/README.md`
+- `godot/assets/generated/industrial/REACTOR_ASSET.md`
+- `godot/assets/generated/industrial/dz_filtration_reactor.gltf`
+- `godot/scripts/AssetLibrary.gd`
+- `godot/scripts/Main.gd`
+- `godot/tests/environment_identity_test.gd`
 - `play/store/phone-screenshots/01-first-playable.png`
 - `play/store/phone-screenshots/02-midrun-pressure.png`
 - `play/store/phone-screenshots/03-boss-encounter.png`
 - `play/store/phone-screenshots/04-upgrade-choice.png`
 - `play/store/phone-screenshots/05-run-end.png`
-- `.github/workflows/verify.yml`
-- `godot/PHYSICAL_ANDROID_QA.md`
-- `tools/android/godot_capture_physical_qa.sh`
 - `godot/scripts/Enemy.gd`
-- `godot/scripts/RunDirector.gd`
 - `godot/scripts/SpatialHash.gd`
-- `godot/tests/run_director_escalation_test.gd`
+- `godot/tests/first_playable_run_path_test.gd`
 - `godot/tests/spatial_hash_test.gd`
+- `godot/tests/attack_lane_gradient_test.gd`
 
 ### Project signals
 - `build.gradle`
