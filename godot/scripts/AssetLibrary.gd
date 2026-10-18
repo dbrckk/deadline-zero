@@ -23,6 +23,7 @@ const INDUSTRIAL_FLOOR_HATCH := "res://assets/generated/industrial/dz_floor_hatc
 const INDUSTRIAL_HAZARD_BOLLARD := "res://assets/generated/industrial/dz_hazard_bollard.glb"
 const INDUSTRIAL_JUNCTION_BOX := "res://assets/generated/industrial/dz_junction_box.glb"
 const INDUSTRIAL_EMERGENCY_LIGHT_BAR := "res://assets/generated/industrial/dz_emergency_light_bar.glb"
+const INDUSTRIAL_FILTRATION_REACTOR := "res://assets/generated/industrial/dz_filtration_reactor.gltf"
 
 static var _enemy_grade_shader: Shader
 # Enemy palettes are fixed per archetype. Reuse one graded ShaderMaterial per
@@ -160,6 +161,14 @@ static func industrial_junction_box() -> Node3D:
 
 static func industrial_emergency_light_bar() -> Node3D:
     var root := instantiate_scene(INDUSTRIAL_EMERGENCY_LIGHT_BAR)
+    _grade_generated_industrial_kit(root)
+    return root
+
+# Detailed project-owned decontamination reactor: 5.7k authored triangles
+# batched into seven PBR finish meshes, shared by each placed instance.
+# No runtime geometry generation or one-off material copies.
+static func industrial_filtration_reactor() -> Node3D:
+    var root := instantiate_scene(INDUSTRIAL_FILTRATION_REACTOR)
     _grade_generated_industrial_kit(root)
     return root
 
