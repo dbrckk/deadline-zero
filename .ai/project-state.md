@@ -3,32 +3,31 @@
 Status: active
 
 ## Working
-- Godot 4.7.2 native 3D Android first-playable with rigged Quaternius GLTF actors, Blender-authored industrial PBR environment, six playable weapon protocols and integrated combat FX.
-- #413/#414 integrated real 3D industrial PBR fixtures and per-instance rigged zombie impact shaders; #416/#419 native physical-Android evidence path; #417/#418 efficient horde spawning/spatial buckets.
-- #420/#421 **merged after 8/8 successful checks each**: first-contact physically correct swept shot collisions and immediate dead-zombie detachment from live horde physics, preserving visible death clips.
-- #422 **merged, 8/8 CI**: Blender PBR light bars, floor pools, beacons and existing rim lights respond to run pressure and boss defeat. Reduced-flashes keeps danger colors but disables pulse. Real Linux 1280×720 environment identity/pressure rendering passed, and targeted retry of GitHub KVM emulator smoke passed.
-- #423 **merged, 8/8 CI**: Charger/Harrier target-locked warning lanes stay fixed in actual world space while attack rings animate, preserving exact dodgeable danger corridors; extended existing visual integration.
-- #424 **open**: reuse caller-owned 60Hz spatial neighbor buffers per living enemy instead of allocating each frame; existing spatial index and first-playable integration tests expanded. CI still pending.
+- Native Godot 4.7.2 3D Android first playable: licensed Quaternius rigged zombies, six weapon protocols, authored industrial 3D PBR art, adaptive lighting, physics-correct projectile hits and progressive enemy AI.
+- PRs #413–#423 have been merged after their required CI gates: shared PBR assets, skinned hit lights, real GLTF death dissolve, industrial environment, performance capture, adaptive environment alert lighting and world-locked attack lanes.
+- **#424 merged (8/8 CI)**: 60Hz live-horde spatial separation reuses a caller-owned Array per zombie and recycles spatial cell buckets; no new per-frame neighbor arrays.
+- **#425 open, 7/8 CI at last check**: original self-contained 5,712-triangle glTF mechanical air filtration reactor with seven shared CC0 1k PBR finishes. Four static rendered instances integrated around playable arena. Existing Godot scene identity, actual 720p render and Android smoke build checks passed; legacy Android instrumented runtime pending.
+- **#426 open, CI running**: copper ballistic contact glow localized to actual projectile swept first-impact position on the existing opaque skinned zombie shader, with one per-instance vec3 and without extra draw calls. Existing rigged GLTF tests expanded.
 
-## Blockers
-- Full 8/8 CI and merge required for #424 before treating its 60Hz separation optimization as shipped.
-- Real physical Android Mobile/Vulkan camera, FPS/p95/hitches, touch, screen legibility and sustained heat still **unverified**.
-- Genuine higher-fidelity licensed rigged 3D characters and production animation/material sophistication remain below intended AAA visual bar.
-- Physical Android process death, Play licensed Billing/refund checks and Play Store closed testing (#14, #16, #17) remain release blockers.
+## Remaining blockers
+- Merge #425/#426 only when all 8 expected CI checks have finished successfully and GitHub reports mergeability.
+- **No signed-off physical Android Mobile/Vulkan capture, FPS/p95/hitches, touch or sustained thermal session**; Linux renderer and emulator smoke are insufficient.
+- High-end rigged hero and enemy meshes/animations remain visually below the user's premium AAA target; the new industrial glTF strengthens the environment only.
+- Play Billing real licensed purchases/refunds, process-death on phone and closed-test Play Store gates remain unresolved (#14, #16, #17).
 
 ## Priorities
-- Finish PR #424 Android runtime CI and merge only after all eight checks are green.
-- Capture and review a player-controlled native Godot real-phone session with `tools/android/godot_capture_physical_qa.sh`.
-- Improve licensed 3D character/animation quality based on real Mobile/Vulkan frames and enforce bounded thermal/frame pacing.
-- Complete physical lifecycle and store gates before production release.
+- Validate/merge current actual imported 3D machinery and rigged ballistic shader PRs.
+- Run `tools/android/godot_capture_physical_qa.sh` on representative physical mobile Vulkan hardware, review frame pacing, temperature and actual rendered legibility.
+- Improve licensed and truly high-fidelity rigged 3D models, animations and non-repetitive visual design within measured device budgets.
+- Close Play Store release/lifecycle and account-backed billing gates.
 
 ## Validation
-- #420 and #421 merged after 8/8 Android/Godot/visual checks each; #422 real Linux Godot 1280x720 pressure screenshot passed with near-zero clipping.
-- #422 Android emulator smoke failure stemmed from a GitHub-hosted KVM map error on process relaunch. Targeted rerun passed, after which #422 was merged.
-- Green Linux Godot rendering and emulator smoke are **not** a physical Android GPU/thermal quality sign-off.
+- #424 merged after 8/8 checks and existing Godot integration tests.
+- #425 imported real glTF with seven shared PBR finishes; full CI still in flight.
+- Screenshots from Linux Godot and Android emulator must not be represented as physical-device fidelity or AAA certification.
 
 ## Last verified
-- 2026-10-13
+- 2026-10-18
 
 <!-- AUTO:START -->
 ## Automatic repository state
