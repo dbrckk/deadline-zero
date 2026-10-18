@@ -868,6 +868,7 @@ func _build_world() -> void:
     _build_midfield_inspection_panels()
     _build_service_pylons()
     _build_reinforced_utility_details()
+    _build_decontamination_reactors()
     _build_floor_wear()
     _build_authored_floor_decals()
     _build_floor_seams()
@@ -1303,6 +1304,36 @@ func _build_reinforced_utility_details() -> void:
                     kind == "cabinet" and mesh.name == "CabinetBody"
                 ) else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
         add_child(detail)
+
+func _build_decontamination_reactors() -> void:
+    # Genuine authored glTF 2.0 geometry, not a camera-facing image or
+    # collection of per-frame Godot primitives. Seven static baked mesh
+    # surfaces combine more than 5,700 industrial triangles per machine:
+    # machined rotor, bent coolant conduits, radiator fins, bolts, grilles
+    # and illuminated alarm lenses. Every finish reuses the existing PBR kit.
+    #
+    # These four fixtures are outside the central combat corridor, face into
+    # the arena and have no gameplay collision. Large meshes deliberately do
+    # not enter the directional shadow atlas on 30/60 FPS Android targets.
+    var positions := [
+        Vector3(-13.8, 0.0, 2.1),
+        Vector3(13.8, 0.0, -2.1),
+        Vector3(-9.2, 0.0, -12.5),
+        Vector3(9.2, 0.0, 12.5)
+    ]
+    for index in range(positions.size()):
+        var reactor := DZAssetLibrary.industrial_filtration_reactor()
+        if reactor == null:
+            continue
+        reactor.name = "DecontaminationReactor_%02d" % index
+        reactor.add_to_group("environment_utility_props")
+        reactor.position = positions[index]
+        reactor.rotation.y = atan2(reactor.position.x, reactor.position.z)
+        for node in reactor.find_children("*", "MeshInstance3D", true, false):
+            var part := node as MeshInstance3D
+            if part != null:
+                part.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+        add_child(reactor)
 
 func _build_authored_floor_decals() -> void:
     # Project-owned texture decals break up the procedural floor with authored marks.
