@@ -386,6 +386,10 @@ func _initialize() -> void:
         push_error("Filtration reactors must preserve shared Poly Haven CC0 PBR steel/slat/pipe finishes and actual emissive lens mesh")
         quit(1)
         return
+    if reactor_shared_materials.get("LightBarLens") != scene.alert_lens_material:
+        push_error("Real reactor warning lenses must share the scene's threat-driven emergency PBR light material")
+        quit(1)
+        return
     if reactor_shadow_violations != 0 or reactor_placement_violations != 0:
         push_error("Filtration reactor obscures the playable corridor or exceeds the mobile shadow budget")
         quit(1)
