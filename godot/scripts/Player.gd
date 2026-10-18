@@ -941,7 +941,10 @@ func _play_authored(name: String) -> void:
         return
     if name != "Run_Gun":
         authored_anim.speed_scale = 1.0
-    if current_anim == name:
+    # AnimationPlayer may stop a non-looping HitReact clip before our short
+    # recovery timer expires. Never let the cached name suppress replay after
+    # the animation has ended, especially on repeated mobile combat impacts.
+    if current_anim == name and authored_anim.is_playing():
         return
     current_anim = name
     authored_anim.play(name, 0.12)
