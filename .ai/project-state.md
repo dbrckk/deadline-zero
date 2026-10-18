@@ -6,24 +6,24 @@ Status: active
 - Native Godot 4.7.2 3D Android first playable: licensed Quaternius rigged zombies, six weapon protocols, authored industrial 3D PBR art, adaptive lighting, physics-correct projectile hits and progressive enemy AI.
 - PRs #413–#423 have been merged after their required CI gates: shared PBR assets, skinned hit lights, real GLTF death dissolve, industrial environment, performance capture, adaptive environment alert lighting and world-locked attack lanes.
 - **#424 merged (8/8 CI)**: 60Hz live-horde spatial separation reuses a caller-owned Array per zombie and recycles spatial cell buckets; no new per-frame neighbor arrays.
-- **#425 open, 7/8 CI at last check**: original self-contained 5,712-triangle glTF mechanical air filtration reactor with seven shared CC0 1k PBR finishes. Four static rendered instances integrated around playable arena. Existing Godot scene identity, actual 720p render and Android smoke build checks passed; legacy Android instrumented runtime pending.
+- **#425 merged (8/8 CI)**: original 5,712-triangle glTF filtration reactor, seven CC0 PBR shared finishes and 4 real production arena instances, Godot rendering and native/legacy Android runtime checks successful.
 - **#426 open, CI running**: copper ballistic contact glow localized to actual projectile swept first-impact position on the existing opaque skinned zombie shader, with one per-instance vec3 and without extra draw calls. Existing rigged GLTF tests expanded.
 
 ## Remaining blockers
-- Merge #425/#426 only when all 8 expected CI checks have finished successfully and GitHub reports mergeability.
+- Merge #426 only when all 8 expected CI checks have finished successfully and GitHub reports mergeability.
 - **No signed-off physical Android Mobile/Vulkan capture, FPS/p95/hitches, touch or sustained thermal session**; Linux renderer and emulator smoke are insufficient.
 - High-end rigged hero and enemy meshes/animations remain visually below the user's premium AAA target; the new industrial glTF strengthens the environment only.
 - Play Billing real licensed purchases/refunds, process-death on phone and closed-test Play Store gates remain unresolved (#14, #16, #17).
 
 ## Priorities
-- Validate/merge current actual imported 3D machinery and rigged ballistic shader PRs.
+- Validate/merge #426 localized rigged ballistic impact shader only after full Android runtime success.
 - Run `tools/android/godot_capture_physical_qa.sh` on representative physical mobile Vulkan hardware, review frame pacing, temperature and actual rendered legibility.
 - Improve licensed and truly high-fidelity rigged 3D models, animations and non-repetitive visual design within measured device budgets.
 - Close Play Store release/lifecycle and account-backed billing gates.
 
 ## Validation
 - #424 merged after 8/8 checks and existing Godot integration tests.
-- #425 imported real glTF with seven shared PBR finishes; full CI still in flight.
+- #425 verified real glTF imported with seven shared PBR finishes and 1280×720 Godot pressure render; merged after 8/8 CI.
 - Screenshots from Linux Godot and Android emulator must not be represented as physical-device fidelity or AAA certification.
 
 ## Last verified
