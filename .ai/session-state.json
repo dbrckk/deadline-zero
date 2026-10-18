@@ -184,6 +184,12 @@
       "status": "merged",
       "checks": "8/8 successful",
       "change": "Per-living-zombie 60Hz spatial separation query scratch buffers reused with previous spatial hash bucket optimization; no per-tick neighborhood Array allocation"
+    },
+    {
+      "pr": 425,
+      "status": "merged",
+      "checks": "8/8 successful including Godot import, Linux render, Android native smoke and legacy Android runtime",
+      "change": "New original 5712-triangle detailed glTF filtration reactor model with 7 PBR finish meshes and four static placements around playable arena; shared CC0 PBR surfaces and live alarm lenses"
     }
   ],
   "visual_qa": "Reviewed authentic first-playable and midrun-pressure Godot 1280x720 rendered screenshots from PR #413 CI. Six existing Blender-authored industrial GLB asset families now add real PBR geometry and licensed CC0 normal/packed ARM textures; scene remains readable but imported Quaternius characters are still stylized low poly and far from AAA certification. Physical Android Vulkan screenshot remains unverified. #414 adds low-cost per-skinned-zombie hit flash; no new physical screenshots.",
@@ -195,19 +201,14 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PR #424 merged after 8/8 CI success. #425 first seven Godot, visual/render, AAB and Android smoke checks successful; Android legacy instrumentation in progress. #426 code and existing GLTF integration coverage committed; CI not finalized. Physical Android Vulkan visuals, thermal/fps/p95/touch still unverified.",
+  "verification": "PR #424 and #425 merged after 8/8 CI success each. PR #426 rigged skinned hit shader has seven successful Godot/Android/render checks; legacy Android runtime is still in progress. Real Android Mobile/Vulkan physical-device FPS/p95/thermal/legibility/touch not certified.",
   "next": [
-    "Complete all 8 GitHub CI checks and merge #425 and #426 individually only if mergeable and fully green",
+    "Check PR #426 final Android-runtime 8/8 CI, merge only after pass and mergeability",
     "Run player-controlled native Godot real-device Mobile/Vulkan QA, preserve screen/thermal/perf evidence using tools/android/godot_capture_physical_qa.sh",
     "Upgrade properly licensed high-fidelity rigged character models/animations while measuring actual mobile budgets; project-owned industrial GLTF machinery now being integrated",
     "Close Play Store release gates #14 #16 #17 (physical lifecycle, Billing/refund, closed testing)"
   ],
   "in_progress": [
-    {
-      "pr": 425,
-      "status": "open, 7/8 GitHub CI green; legacy Android runtime pending",
-      "change": "Original self-contained 3D glTF production decontamination reactor: 5,712 triangles, 7 bounded imported PBR finish meshes, shared CC0 normal/roughness/metallic textures, four staged non-colliding static arena instances and real alarm lenses"
-    },
     {
       "pr": 426,
       "status": "open, Godot/Android CI running",
