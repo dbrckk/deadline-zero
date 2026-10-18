@@ -190,6 +190,12 @@
       "status": "merged",
       "checks": "8/8 successful including Godot import, Linux render, Android native smoke and legacy Android runtime",
       "change": "New original 5712-triangle detailed glTF filtration reactor model with 7 PBR finish meshes and four static placements around playable arena; shared CC0 PBR surfaces and live alarm lenses"
+    },
+    {
+      "pr": 426,
+      "status": "merged",
+      "checks": "8/8 successful including real Godot 4.7.2 integration, 1280x720 render and Android runtime",
+      "change": "Localized per-instance skinned zombie ballistic copper hit pulse around actual world-space swept contact with existing shared opaque materials and no extra draw calls"
     }
   ],
   "visual_qa": "Reviewed authentic first-playable and midrun-pressure Godot 1280x720 rendered screenshots from PR #413 CI. Six existing Blender-authored industrial GLB asset families now add real PBR geometry and licensed CC0 normal/packed ARM textures; scene remains readable but imported Quaternius characters are still stylized low poly and far from AAA certification. Physical Android Vulkan screenshot remains unverified. #414 adds low-cost per-skinned-zombie hit flash; no new physical screenshots.",
@@ -201,18 +207,12 @@
     "sha256": "5b86ffcb72814fa7a7805d31871d71049c11f6f66423a80ccacc2a7d2d0d913e",
     "physical_device_tested": false
   },
-  "verification": "PR #424 and #425 merged after 8/8 CI success each. PR #426 rigged skinned hit shader has seven successful Godot/Android/render checks; legacy Android runtime is still in progress. Real Android Mobile/Vulkan physical-device FPS/p95/thermal/legibility/touch not certified.",
+  "verification": "PR #424, #425 and #426 merged after each passed eight GitHub checks. #425 added four original 5712-triangle glTF filtration reactors with shared PBR; #426 localized first-contact glow on actual animated zombie skin. Individual PR native render/Android CI green; composite main check status should be confirmed separately. Physical Android Mobile/Vulkan sustained FPS/p95, thermal, touch and screen quality remain unverified.",
   "next": [
-    "Check PR #426 final Android-runtime 8/8 CI, merge only after pass and mergeability",
-    "Run player-controlled native Godot real-device Mobile/Vulkan QA, preserve screen/thermal/perf evidence using tools/android/godot_capture_physical_qa.sh",
-    "Upgrade properly licensed high-fidelity rigged character models/animations while measuring actual mobile budgets; project-owned industrial GLTF machinery now being integrated",
-    "Close Play Store release gates #14 #16 #17 (physical lifecycle, Billing/refund, closed testing)"
+    "Inspect composite main after merges #425 #426 and run/confirm main CI if GitHub scheduled it",
+    "Collect real-phone player-controlled Godot Mobile/Vulkan graphics, sustained FPS/p95, heat, UI touch and lifecycle QA using tools/android/godot_capture_physical_qa.sh",
+    "Prioritize truly licensed high-fidelity rigged survivor and enemy model/animation assets; current imported stylized characters remain below target quality despite richer authored arena and localized hits",
+    "Complete Play billing/refund, process-death, Play closed testing and release gates #14 #16 #17"
   ],
-  "in_progress": [
-    {
-      "pr": 426,
-      "status": "open, Godot/Android CI running",
-      "change": "World-space localized ballistic first-contact illumination on actual imported Quaternius skinned zombie shader; single per-instance contact vec3 and no new draw calls or materials"
-    }
-  ]
+  "in_progress": []
 }
