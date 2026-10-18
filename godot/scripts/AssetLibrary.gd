@@ -467,6 +467,7 @@ uniform float rim_power = 3.4;
 instance uniform float wear_grade = 0.5;
 instance uniform float death_dissolve = 0.0;
 instance uniform float hit_skin_flash = 0.0;
+instance uniform vec3 hit_world_position = vec3(0.0, 0.0, 0.0);
 
 void fragment() {
     // Clip dying actors in the opaque depth pass instead of blending 100+
@@ -497,9 +498,18 @@ void fragment() {
     float rim = pow(fresnel, rim_power) * rim_strength;
     // Luminous copper edge is in the existing shader: no new particles,
     // lights or render passes, and no per-enemy material duplicates.
+    // Use the actual bullet/footprint entry in world space. The hit is a
+    // brief local hot spot on the SKINNED mesh, not a flat whole-body orange
+    // paint flash. Idle zombies skip the matrix/distance calculation entirely.
+    float ballistic_flash = 0.0;
+    if (hit_skin_flash > 0.001) {
+        vec3 world_surface = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+        float local_contact = 1.0 - smoothstep(0.10, 0.95, distance(world_surface, hit_world_position));
+        ballistic_flash = hit_skin_flash * (0.12 + 0.88 * local_contact);
+    }
     EMISSION = body_tint.rgb * rim * mix(0.88, 1.10, wear_grade)
         + vec3(0.90, 0.22, 0.035) * dissolve_edge * 1.1
-        + vec3(0.92, 0.23, 0.045) * hit_skin_flash * 0.78;
+        + vec3(0.92, 0.23, 0.045) * ballistic_flash * 0.78;
     // Imported zombie_basic / zombie_chubby GLTF materials use default OPAQUE
     // alphaMode. Writing ALPHA here incorrectly moves 100+ skinned bodies to
     // the transparent pass, disables depth/shadow behavior and risks sorting.

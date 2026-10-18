@@ -360,7 +360,18 @@ func _initialize() -> void:
         push_error("Shared opaque zombie shader lost per-instance ballistic skin feedback")
         quit(1)
         return
-    runner_a._play_hit_reaction(true, false)
+    var skin_shader := _first_graded_enemy_material(dying_visual).shader
+    if not skin_shader.code.contains("instance uniform vec3 hit_world_position") or not skin_shader.code.contains("INV_VIEW_MATRIX"):
+        push_error("Real rigged zombie hit light must localize to the 3D swept impact point")
+        quit(1)
+        return
+    var contact_world := runner_a.global_position + Vector3(0.20, 0.75, -0.28)
+    runner_a._play_hit_reaction(true, false, contact_world)
+    var stored_impact: Vector3 = dying_mesh.get_instance_shader_parameter("hit_world_position")
+    if stored_impact.distance_to(contact_world) > 0.001:
+        push_error("Skinned GLTF shader lost independent world-space ballistic contact")
+        quit(1)
+        return
     var impact_skin_flash := float(dying_mesh.get_instance_shader_parameter("hit_skin_flash"))
     var untouched_skin_flash := float(living_mesh.get_instance_shader_parameter("hit_skin_flash"))
     if impact_skin_flash < 1.0 or absf(untouched_skin_flash) > 0.001:
