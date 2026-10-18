@@ -14,6 +14,45 @@ func _initialize() -> void:
         push_error("Run path did not initialize player, HUD and camera")
         quit(1)
         return
+    # Verify the production scene actually provides reusable neighborhood
+    # queries to its live 60Hz swarm, not just the isolated index service.
+    var living_zombies := get_nodes_in_group("enemies")
+    if living_zombies.is_empty():
+        push_error("Spatial integration requires the real opening zombie roster")
+        quit(1)
+        return
+    # CI can advance render frames faster than its first physics tick; build
+    # the genuine production index explicitly so this checks queries rather
+    # than depending on scheduler timing.
+    main.enemy_spatial_index.rebuild(living_zombies)
+    var reusable_nearby: Array = [main.player]
+    main.query_enemies_near_into(main.player.global_position, 30.0, reusable_nearby)
+    var allocated_nearby: Array = main.query_enemies_near(main.player.global_position, 30.0)
+    if reusable_nearby.is_empty() or reusable_nearby.size() != allocated_nearby.size() or reusable_nearby.has(main.player):
+        push_error("Live reusable separation query differs from the existing projectile/player spatial API")
+        quit(1)
+        return
+    for zombie in allocated_nearby:
+        if not reusable_nearby.has(zombie):
+            push_error("Reusable live enemy spatial buffer missed an indexed zombie")
+            quit(1)
+            return
+    var reference_enemy := living_zombies[0] as DZEnemy
+    if reference_enemy == null:
+        push_error("Opening roster is missing concrete 3D enemy actor")
+        quit(1)
+        return
+    var separation_neighbors: Array = reference_enemy._nearby_enemies_for_separation(30.0)
+    if not separation_neighbors.has(reference_enemy) or separation_neighbors != reference_enemy.separation_candidates:
+        push_error("Live zombies did not reuse their own spatial separation buffers")
+        quit(1)
+        return
+    main.query_enemies_near_into(Vector3(999.0, 0.0, 999.0), 1.0, reusable_nearby)
+    if not reusable_nearby.is_empty():
+        push_error("Production spatial query retained actors after an empty neighborhood")
+        quit(1)
+        return
+
     var camera_look: Vector3 = main._camera_motion_look_ahead(Vector3(8.0, 0.0, 0.0))
     if camera_look.length() <= 0.2 or camera_look.length() > main.CAMERA_LOOK_AHEAD_MAX + 0.001:
         push_error("Camera movement look-ahead is outside premium framing budget")
