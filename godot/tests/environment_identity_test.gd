@@ -128,6 +128,14 @@ func _initialize() -> void:
     var utility_mesh_count := 0
     var utility_materials := {}
     var utility_light_lenses := 0
+    var reactor_count := 0
+    var reactor_mesh_count := 0
+    var reactor_textured_count := 0
+    var reactor_emissive_lenses := 0
+    var reactor_finishes := {}
+    var reactor_shared_materials := {}
+    var reactor_shadow_violations := 0
+    var reactor_placement_violations := 0
     var utility_textured_parts := 0
     var utility_normal_parts := 0
     var utility_arm_parts := 0
@@ -197,6 +205,42 @@ func _initialize() -> void:
                             utility_arm_parts += 1
                     if kind == "light" and mesh.name == "LightBarLens" and material.emission_enabled:
                         utility_light_lenses += 1
+        elif child.name.begins_with("DecontaminationReactor_"):
+            reactor_count += 1
+            if not child.is_in_group("environment_utility_props"):
+                reactor_placement_violations += 1
+            if Vector2(child.position.x, child.position.z).length() < 12.0:
+                reactor_placement_violations += 1
+            var details := child.find_children("*", "MeshInstance3D", true, false)
+            if details.size() != 7:
+                push_error("Project-owned filtration reactor lost one of its seven baked material finish meshes")
+                quit(1)
+                return
+            for detail in details:
+                var mesh := detail as MeshInstance3D
+                if mesh == null or mesh.mesh == null or mesh.mesh.get_surface_count() != 1:
+                    push_error("Filtration reactor imported a missing or malformed real glTF mesh")
+                    quit(1)
+                    return
+                reactor_mesh_count += 1
+                if mesh.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+                    reactor_shadow_violations += 1
+                var finish_id := String(mesh.name)
+                reactor_finishes[finish_id] = true
+                var material := mesh.get_surface_override_material(0) as StandardMaterial3D
+                if material == null or mesh.material_override != null:
+                    push_error("Filtration reactor lost its shared per-finish PBR geometry material: %s" % finish_id)
+                    quit(1)
+                    return
+                if reactor_shared_materials.has(finish_id) and reactor_shared_materials[finish_id] != material:
+                    push_error("Filtration reactor created material copies per prop instance: %s" % finish_id)
+                    quit(1)
+                    return
+                reactor_shared_materials[finish_id] = material
+                if material.albedo_texture != null and material.normal_enabled and material.normal_texture != null and material.ao_enabled:
+                    reactor_textured_count += 1
+                if finish_id == "LightBarLens" and material.emission_enabled and material.emission_energy_multiplier >= 1.7:
+                    reactor_emissive_lenses += 1
         elif child.name.begins_with("PerimeterBulkhead_"):
             perimeter_bulkhead_count += 1
             bulkhead_hazard_stripe_count += child.find_children("HazardMarker_*", "MeshInstance3D", true, false).size()
@@ -324,6 +368,30 @@ func _initialize() -> void:
         return
     if utility_light_lenses != 2:
         push_error("Industrial quarantine cabinets lost their two real emissive GLB light lenses")
+        quit(1)
+        return
+
+    # Authored 3D reactor: verified real importer meshes, not an image or
+    # project screenshot, while keeping 4 props × 7 baked draws mobile-safe.
+    if reactor_count != 4 or reactor_mesh_count != 28:
+        push_error("Expected four detailed imported filtration reactors, seven mesh finishes each")
+        quit(1)
+        return
+    for finish in ["HullSteel", "SlatExchanger", "Pipe_Coolant", "HazardBands", "SignalStatus", "LightBarLens", "RecessInserts"]:
+        if not reactor_finishes.has(finish):
+            push_error("Filtration reactor is missing authored mechanical surface: %s" % finish)
+            quit(1)
+            return
+    if reactor_textured_count < 12 or reactor_emissive_lenses != 4:
+        push_error("Filtration reactors must preserve shared Poly Haven CC0 PBR steel/slat/pipe finishes and actual emissive lens mesh")
+        quit(1)
+        return
+    if reactor_shared_materials.get("LightBarLens") != scene.alert_lens_material:
+        push_error("Real reactor warning lenses must share the scene's threat-driven emergency PBR light material")
+        quit(1)
+        return
+    if reactor_shadow_violations != 0 or reactor_placement_violations != 0:
+        push_error("Filtration reactor obscures the playable corridor or exceeds the mobile shadow budget")
         quit(1)
         return
 
