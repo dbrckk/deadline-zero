@@ -263,7 +263,9 @@ func _physics_process(delta: float) -> void:
         # visible 3D target footprint, not in the enemy's arbitrary center.
         var impact_point := _swept_contact_point(previous_position, global_position, enemy)
         hit_enemy_ids[enemy.get_instance_id()] = true
-        enemy.take_damage(dealt_damage, critical)
+        # The actual 3D impact flare and the imported skinned surface now
+        # share the same swept first-contact position.
+        enemy.take_damage(dealt_damage, critical, false, impact_point)
         _apply_protocol_hit(enemy, dealt_damage)
         _impact(critical, impact_point)
         if visual_profile == "rail" and pierce_remaining > 0:
